@@ -160,7 +160,6 @@ const template = props => `<div id='common_dialogue_iam_edit'>
  *                      commonMountdiv:string,
  *                      app_id:number,
  *                      iam_user_id:number,
- *                      user_account_id:number,
  *                      common_app_id:number,
  *                      admin_app_id:number,
  *                      },

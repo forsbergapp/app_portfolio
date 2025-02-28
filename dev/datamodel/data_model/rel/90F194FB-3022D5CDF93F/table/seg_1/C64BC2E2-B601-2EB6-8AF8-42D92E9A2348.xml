@@ -1,9 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="C64BC2E2-B601-2EB6-8AF8-42D92E9A2348" name="app_data_resource_detail">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="C64BC2E2-B601-2EB6-8AF8-42D92E9A2348" name="AppDataResourceDetail">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>CF8AF38C-2C89-7AB5-AAEF-9DE390610949</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<ordsAlias>app_data_resource_detail</ordsAlias>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
@@ -17,7 +18,7 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="app_data_resourec_master_id" id="30F0403E-CA5C-6559-CFD9-DC9AA6022548">
+<Column name="app_data_resource_master_id" id="30F0403E-CA5C-6559-CFD9-DC9AA6022548">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>C3A2C6B3-1D37-4500-9871-E820C97728E7</generatorID>
@@ -59,6 +60,7 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>329B8349-598E-458C-A0C1-B851B10A502C</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <previousColumn>false</previousColumn>

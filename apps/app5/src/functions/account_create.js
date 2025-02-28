@@ -3,7 +3,9 @@
  */
 
 /**
- * @import {server_server_response, server_db_common_result_insert} from '../../../../server/types.js'
+ * @import {    server_server_response, 
+ *              server_db_table_AppDataResourceDetail,
+ *              server_db_common_result_insert} from '../../../../server/types.js'
  */
 /**@type{import('../../../../server/security.js')} */
 const {securitySecretCreate, securityUUIDCreate} = await import(`file://${process.cwd()}/server/security.js`);
@@ -17,7 +19,10 @@ const createBankAccountVPA = ()=>securityUUIDCreate();
  * @description Creates bank account
  * @function
  * @param {{app_id:number,
- *          data:*,
+ *          data:{      app_data_entity_resource_app_data_entity_id : number,
+ *                      app_data_resource_master_id                 : number
+ *                      app_data_entity_resource_id                 : number,
+ *                      app_data_resource_master_attribute_id       : number|null},
  *          user_agent:string,
  *          ip:string,
  *          host:string,
@@ -27,14 +32,15 @@ const createBankAccountVPA = ()=>securityUUIDCreate();
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
 const createBankAccount = async parameters =>{
-    /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
-    const {post} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
-    parameters.data.json_data = {
-            bank_account_number :createBankAccountNumber(),
-            bank_account_secret :createBankAccountSecret(),
-            bank_account_vpa    :createBankAccountVPA()
-    };
-    return post({app_id:parameters.app_id, data:parameters.data});
+    /**@type{import('../../../../server/db/AppDataResourceDetail.js')} */
+    const AppDataResourceDetail = await import(`file://${process.cwd()}/server/db/AppDataResourceDetail.js`);
+    return AppDataResourceDetail.post({app_id:parameters.app_id, data:{...{json_data:{
+                                                                                        bank_account_number :createBankAccountNumber(),
+                                                                                        bank_account_secret :createBankAccountSecret(),
+                                                                                        bank_account_vpa    :createBankAccountVPA()
+                                                                                }},
+                                                                        ...{...parameters.data}}}
+                                                                        );
 };
 
 export default createBankAccount;

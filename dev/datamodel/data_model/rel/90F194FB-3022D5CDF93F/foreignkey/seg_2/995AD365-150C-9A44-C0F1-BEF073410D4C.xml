@@ -4,12 +4,12 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>66AEF56D-62FE-6DF1-BFAA-8708A0BA8BFB</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<referredTableLongName>app_data_resourec_master</referredTableLongName>
+<referredTableLongName>AppDataResourceMaster</referredTableLongName>
 <deleteRule>NO ACTION</deleteRule>
 <referredTableID>95AA75DC-87D3-6DE1-A9C4-C19C55719B19</referredTableID>
 <keyObject>AD9CDF86-D754-6AA6-D21D-FF40AAEF83E8</keyObject>
 <referredKeyID>AD9CDF86-D754-6AA6-D21D-FF40AAEF83E8</referredKeyID>
-<mandatory>true</mandatory>
+<mandatory>false</mandatory>
 <refColNames>id</refColNames>
 <transferable>true</transferable>
 <rely>false</rely>

@@ -11,7 +11,7 @@ const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
  * @name get
  * @description Get record
  * @function
- * @param {{app_id:number|null,
+ * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{data_app_id?:number|null}}} parameters
  * @returns {server_server_response & {result?:server_db_table_AppDataEntity[] }}

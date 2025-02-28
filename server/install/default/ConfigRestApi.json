@@ -70,7 +70,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "description":"IamUser.id",
                             "required":true
                         }
                 ],
@@ -91,7 +91,7 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/app_data/${resource_id_number}": {
+        "/bff/app_id/v1/server-db/appdata/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.AppData.get",
@@ -105,7 +105,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db app_data.id"
+                            "description":"AppData.id"
                         },
                         {
                             "name":"name",
@@ -149,7 +149,7 @@
                 }
             }
         },
-        "/bff/app_access_verification/v1/server-db/user_account-activate/${IAM_user_account_id}": {
+        "/bff/app_access_verification/v1/server-db/iamuser-activate/${IAM_iam_user_id}": {
             "put": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserActivate",
@@ -163,7 +163,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
                             "in":"path",
                             "required":true
                         },
@@ -224,7 +224,7 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/user_account-forgot": {
+        "/bff/app_id/v1/server-db/iamuser-forgot": {
             "post": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserForgot",
@@ -290,10 +290,10 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/user_account-profile-stat": {
+        "/bff/app_id/v1/server-db/iamuser-profile-stat": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccount.getProfileStat",
+                "operationId": "server_db.IamUser.getViewProfileStat",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -328,10 +328,10 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/user_account-profile/${resource_id_number}": {
+        "/bff/app_id/v1/server-db/iamuser-profile/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccount.getProfile",
+                "operationId": "server_db.IamUser.getViewProfile",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -342,7 +342,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id"
+                            "description":"IamUser.id"
                         },
                         {
                             "name":"id",
@@ -416,10 +416,10 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/user_account_app_data_post/${resource_id_number}": {
+        "/bff/app_id/v1/server-db/iamuserappdatapost/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPost.getUserPostsByUserId",
+                "operationId": "server_db.IamUserAppDataPost.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -429,57 +429,16 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/resource_id_number"
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "in":"query",
                             "required":true
                         },
                         {
                             "$ref": "#/components/parameters/IAM_data_app_id",
-                            "in":"query"
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "oneOf":[
-                                        {
-                                            "allOf":[
-                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
-                                                {"rows": ""}
-                                            ]
-                                        },
-                                        {
-                                            "allOf":[
-                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                                    {"properties": ""}
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
-        "/bff/app_id/v1/server-db/user_account_app_data_post-profile-stat-like/${resource_id_number}": {
-            "get": {
-                "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPost.getProfileStatLike",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "in":"query",
                             "required":true
                         }
                 ],
@@ -510,10 +469,10 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/user_account_app_data_post-profile/${resource_id_number}": {
+        "/bff/app_id/v1/server-db/iamuserappdatapost-profile-stat-like/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPost.getProfileUserPosts",
+                "operationId": "server_db.IamUserAppDataPost.getViewProfileStatLike",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -524,7 +483,52 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "description":"IamUser.id",
+                            "required":true
+                        }
+                ],
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
+        "/bff/app_id/v1/server-db/iamuserappdatapost-profile/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "server_db.IamUserAppDataPost.getViewProfileUserPosts",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"IamUser.id",
                             "required":true
                         },
                         {
@@ -563,10 +567,10 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/user_account_app_data_post-profile-stat": {
+        "/bff/app_id/v1/server-db/iamuserappdatapost-profile-stat": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPost.getProfileStatPost",
+                "operationId": "server_db.IamUserAppDatapost.getViewProfileStatPost",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -601,7 +605,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-module-metadata/${resource_id_number}": {
+        "/bff/admin/v1/appmodule-metadata/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleMetaDataGet",
@@ -616,7 +620,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"app_module.id"
+                            "description":"AppModule.id"
                         },
                         {
                             "name":"type",
@@ -654,7 +658,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-module-report/${resource_id_string}": {
+        "/bff/admin/v1/appmodule-report/${resource_id_string}": {
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonAppReport",
@@ -669,7 +673,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "description":"app_module.common_name",
+                            "description":"AppModule.common_name",
                             "required":true
                         },
                         {
@@ -722,7 +726,7 @@
                 }
             }
         },
-        "/bff/app/v1/app-module-report/${resource_id_string}": {
+        "/bff/app/v1/appmodule-report/${resource_id_string}": {
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonAppReport",
@@ -736,7 +740,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "description":"app_module.common_name",
+                            "description":"AppModule.common_name",
                             "required":true
                         },
                         {
@@ -789,7 +793,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-module-report-queue/${resource_id_number}": {
+        "/bff/admin/v1/appmodule-report-queue/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.AppModuleQueue.get",
@@ -804,7 +808,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"app_module_queue.id"
+                            "description":"AppModuleQueue.id"
                         }
                 ],
                 "responses": {
@@ -847,7 +851,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"app_module.id",
+                            "description":"AppModule.id",
                             "required":true
                         },
                         {
@@ -899,7 +903,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-module-report-queue-result/${resource_id_number}": {
+        "/bff/admin/v1/appmodule-report-queue-result/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.AppModuleQueue.getResult",
@@ -914,7 +918,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"app_module_queue.id"
+                            "description":"AppModuleQueue.id"
                         }
                 ],
                 "responses": {
@@ -944,7 +948,7 @@
                 }
             }
         },
-        "/bff/app/v1/app-module-asset/${resource_id_string}": {
+        "/bff/app/v1/appmodule-asset/${resource_id_string}": {
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleAsset",
@@ -958,7 +962,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "description":"app_module.common_name",
+                            "description":"AppModule.common_name",
                             "required":true
                         },
                         {
@@ -1007,7 +1011,7 @@
                 }
             }
         },
-        "/bff/app_id/v1/app-module/${resource_id_string}": {
+        "/bff/app_id/v1/appmodule/${resource_id_string}": {
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
@@ -1021,7 +1025,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "description":"app_module.common_name",
+                            "description":"AppModule.common_name",
                             "required":true
                         },
                         {
@@ -1096,7 +1100,7 @@
                 }
             }
         },
-        "/bff/app_external/v1/app-module/${resource_id_string}": {
+        "/bff/app_external/v1/appmodule/${resource_id_string}": {
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
@@ -1107,7 +1111,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "description":"app_module.common_name",
+                            "description":"AppModule.common_name",
                             "required":true
                         },
                         {
@@ -1172,7 +1176,7 @@
                 }
             }
         },
-        "/bff/app_access_external/v1/app-module/${resource_id_string}": {
+        "/bff/app_access_external/v1/appmodule/${resource_id_string}": {
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
@@ -1186,7 +1190,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "description":"app_module.common_name",
+                            "description":"AppModule.common_name",
                             "required":true
                         },
                         {
@@ -1260,7 +1264,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/app-module/${resource_id_string}": {
+        "/bff/app_access/v1/appmodule/${resource_id_string}": {
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
@@ -1275,7 +1279,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "description":"app_module.common_name",
+                            "description":"AppModule.common_name",
                             "required":true
                         },
                         {
@@ -1315,7 +1319,7 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "IAM_user_account_id":{
+                                            "IAM_iam_user_id":{
                                                 "required":false
                                             },
                                             "IAM_data_app_id": {
@@ -1345,7 +1349,7 @@
                 }
             }
         },
-        "/bff/app_access_verification/v1/server-iam/iam_user-password/${IAM_iam_user_id}": {
+        "/bff/app_access_verification/v1/server-iam/iamuser-password/${IAM_iam_user_id}": {
             "patch": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserUpdatePassword",
@@ -1417,10 +1421,10 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account/${IAM_user_account_id}": {
+        "/bff/app_access/v1/server-db/iamuser/${IAM_iam_user_id}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccount.get",
+                "operationId": "server_db.IamUser.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1431,7 +1435,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
                             "in":"path",
                             "required":true
                         }
@@ -1453,10 +1457,10 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account-profile-detail/${IAM_user_account_id}": {
+        "/bff/app_access/v1/server-db/iamuser-profile-detail/${IAM_iam_user_id}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccount.getProfileDetail",
+                "operationId": "server_db.IamUser.getViewProfileDetail",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1467,7 +1471,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
                             "in":"path",
                             "required":true
                         },
@@ -1497,10 +1501,10 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account_follow/${IAM_user_account_id}": {
+        "/bff/app_access/v1/server-db/iamuserfollow": {
             "post": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountFollow.post",
+                "operationId": "server_db.IamUserFollow.post",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1509,11 +1513,6 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
-                            "in":"path",
-                            "required":true
                         }
                 ],
                 "requestBody":{
@@ -1524,7 +1523,11 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "user_account_id":{
+                                            "IAM_iam_user_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            },
+                                            "iam_user_id_follow":{
                                                 "required":true,
                                                 "type":"number"
                                             }
@@ -1548,10 +1551,12 @@
                         {"$ref": "#/components/schema/ErrorResponse"}
                     ]
                 }
-            },
+            }
+        },
+        "/bff/app_access/v1/server-db/iamuserfollow/${resource_id_number}": {
             "delete": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountFollow.deleteRecord",
+                "operationId": "server_db.IamUserFollow.deleteRecord",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1562,8 +1567,8 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
-                            "in":"path",
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"IamUserFollow.id",
                             "required":true
                         }
                 ],
@@ -1575,7 +1580,7 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "user_account_id":{
+                                            "IAM_iam_user_id":{
                                                 "required":true,
                                                 "type":"number"
                                             }
@@ -1601,10 +1606,10 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account_like/${IAM_user_account_id}": {
+        "/bff/app_access/v1/server-db/iamuserlike": {
             "post": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountLike.post",
+                "operationId": "server_db.IamUserLike.post",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1613,11 +1618,6 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
-                            "in":"path",
-                            "required":true
                         }
                 ],
                 "requestBody":{
@@ -1628,7 +1628,11 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "user_account_id":{
+                                            "IAM_iam_user_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            },
+                                            "iam_user_id_like":{
                                                 "required":true,
                                                 "type":"number"
                                             }
@@ -1652,10 +1656,12 @@
                         {"$ref": "#/components/schema/ErrorResponse"}
                     ]
                 }
-            },
+            }
+        },
+        "/bff/app_access/v1/server-db/iamuserlike/${resource_id_number}": {
             "delete": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountLike.deleteRecord",
+                "operationId": "server_db.IamUserLike.deleteRecord",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1666,8 +1672,8 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
-                            "in":"path",
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"IamUserLike.id",
                             "required":true
                         }
                 ],
@@ -1679,7 +1685,11 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "user_account_id":{
+                                            "IAM_iam_user_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            },
+                                            "iam_user_id_like":{
                                                 "required":true,
                                                 "type":"number"
                                             }
@@ -1705,10 +1715,10 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account_app/${IAM_user_account_id}": {
+        "/bff/app_access/v1/server-db/iamuserapp/${IAM_iam_user_app_id}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountApp.get",
+                "operationId": "server_db.IamUserApp.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1719,13 +1729,19 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "$ref": "#/components/parameters/IAM_iam_user_app_id",
                             "in":"path",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "in":"query",
                             "required":true
                         },
                         {
                             "$ref": "#/components/parameters/IAM_data_app_id",
-                            "in":"query"
+                            "in":"query",
+                            "required":true
                         }
                 ],
                 "responses": {
@@ -1756,7 +1772,7 @@
             },
             "patch": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountApp.update",
+                "operationId": "server_db.IamUserApp.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1767,7 +1783,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "$ref": "#/components/parameters/IAM_iam_user_app_id",
                             "in":"path",
                             "required":true
                         }
@@ -1781,7 +1797,12 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_data_app_id": {
-                                                "$ref": "#/components/parameters/IAM_data_app_id"
+                                                "$ref": "#/components/parameters/IAM_data_app_id",
+                                                "required":true
+                                            },
+                                            "IAM_iam_user_id": {
+                                                "$ref": "#/components/parameters/IAM_iam_user_id",
+                                                "required":true
                                             },
                                             "json_data":{
                                                 "required":true,
@@ -1810,7 +1831,7 @@
             },
             "delete": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountApp.deleteRecord",
+                "operationId": "server_db.IamUserApp.deleteRecord",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1821,7 +1842,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "$ref": "#/components/parameters/IAM_iam_user_app_id",
                             "in":"path",
                             "required":true
                         }
@@ -1835,7 +1856,12 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_data_app_id": {
-                                                "$ref": "#/components/parameters/IAM_data_app_id"
+                                                "$ref": "#/components/parameters/IAM_data_app_id",
+                                                "required":true
+                                            },
+                                            "IAM_iam_user_id": {
+                                                "$ref": "#/components/parameters/IAM_iam_user_id",
+                                                "required":true
                                             }
                                         }
                                     }
@@ -1859,10 +1885,10 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account_app-apps/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/iamuserapp-apps/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountApp.getApps",
+                "operationId": "server_db.IamUserApp.getApps",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1874,7 +1900,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "description":"IamUser.id",
                             "required":true
                         },
                         {
@@ -1909,10 +1935,10 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account_app_data_post-profile-detail/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/iamuserappdatapost-profile-detail/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPost.getProfileUserPostDetail",
+                "operationId": "server_db.IamUserAppDataPost.getProfileUserPostDetail",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1924,7 +1950,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "description":"IamUser.id",
                             "required":true
                         },
                         {
@@ -1963,10 +1989,10 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account_app_data_post": {
+        "/bff/app_access/v1/server-db/iamuserappdatapost": {
             "post": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPost.createUserPost",
+                "operationId": "server_db.IamUserAppDataPost.createUserPost",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1994,11 +2020,7 @@
                                             "json_data":{
                                                 "type":"string"
                                             },
-                                            "IAM_data_app_id":{
-                                                "required":true,
-                                                "type":"number"
-                                            },
-                                            "IAM_user_account_id":{
+                                            "IAM_iam_user_app_id":{
                                                 "required":true,
                                                 "type":"number"
                                             }
@@ -2024,10 +2046,10 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/iamuserappdatapost/${resource_id_number}": {
             "put": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPost.updateUserPost",
+                "operationId": "server_db.IamUserAppDataPost.updateUserPost",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -2039,7 +2061,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account_app_data_post.id",
+                            "description":"IamUserAppDataPost.id",
                             "required":true
                         }
                 ],
@@ -2057,7 +2079,7 @@
                                             "json_data":{
                                                 "type":"string"
                                             },
-                                            "IAM_user_account_id":{
+                                            "IAM_iam_user_app_id":{
                                                 "required":true,
                                                 "type":"number"
                                             }
@@ -2084,7 +2106,7 @@
             },
             "delete": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPost.deleteUserPost",
+                "operationId": "server_db.IamUserAppDataPost.deleteUserPost",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -2096,7 +2118,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account_app_data_post.id",
+                            "description":"IamUserAppDataPost.id",
                             "required":true
                         }
                 ],
@@ -2108,7 +2130,7 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "IAM_user_account_id":{
+                                            "IAM_iam_user_app_id":{
                                                 "required":true,
                                                 "type":"number"
                                             }
@@ -2134,10 +2156,10 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account_app_data_post_like/${IAM_user_account_id}": {
-            "post": {
+        "/bff/app_access/v1/server-db/iamuserappdatapostlike/${resource_id_number}": {
+            "delete": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPostLike.post",
+                "operationId": "server_db.IamUserAppDataPostLike.deleteRecord",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -2148,9 +2170,8 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
-                            "in":"path",
-                            "required":true
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"IamUserAppDataPostLike.id"
                         }
                 ],
                 "requestBody":{
@@ -2164,6 +2185,63 @@
                                             "user_account_app_data_post_id":{
                                                 "required":true,
                                                 "type":"number"
+                                            },
+                                            "IAM_iam_user_id":{
+                                                "$ref": "#/components/parameters/IAM_iam_user_id"
+                                            },
+                                            "IAM_data_app_id":{
+                                                "$ref": "#/components/parameters/IAM_data_app_id"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
+        "/bff/app_access/v1/server-db/iamuserappdatapostlike": {
+            "post": {
+                "summary": "",
+                "operationId": "server_db.IamUserAppDataPostLike.post",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        }                        
+                ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "iam_user_app_data_post_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            },
+                                            "IAM_iam_user_d":{
+                                                "$ref": "#/components/parameters/IAM_iam_user_id"
                                             },
                                             "IAM_data_app_id": {
                                                 "$ref": "#/components/parameters/IAM_data_app_id"
@@ -2188,66 +2266,12 @@
                         {"$ref": "#/components/schema/ErrorResponse"}
                     ]
                 }
-            },
-            "delete": {
-                "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPostLike.deleteRecord",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
-                            "in":"path",
-                            "required":true
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "user_account_app_data_post_id":{
-                                                "required":true,
-                                                "type":"number"
-                                            },
-                                            "IAM_data_app_id": {
-                                                "$ref": "#/components/parameters/IAM_data_app_id"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
             }
         },
-        "/bff/app_access/v1/server-iam/iam_user-db/${IAM_iam_user_id}":{
+        "/bff/app_access/v1/server-iam/iamuserapp/${IAM_iam_user_app_id}": {
             "delete": {
                 "summary": "",
-                "operationId": "server.iam.iamAuthenticateUserDbDelete",
+                "operationId": "server.iam.iamAuthenticateUserAppDelete",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -2258,7 +2282,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "$ref": "#/components/parameters/IAM_iam_user_app_id",
                             "in":"path",
                             "required":true
                         },
@@ -2294,6 +2318,14 @@
                                             "password":{
                                                 "required":true,
                                                 "type":"string"
+                                            },
+                                            "IAM_iam_user_id":{
+                                                "$ref": "#/components/parameters/IAM_iam_user_id",
+                                                "required":true
+                                            },
+                                            "IAM_data_app_id":{
+                                                "$ref": "#/components/parameters/IAM_data_app_id",
+                                                "required":true
                                             }
                                         }
                                     }
@@ -2317,7 +2349,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-iam/iam_user/${IAM_iam_user_id}": {
+        "/bff/app_access/v1/server-iam/iamuser/${IAM_iam_user_id}": {
             "get": {
                 "summary": "",
                 "operationId": "server.iam.iamUserGet",
@@ -2847,7 +2879,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-common-app-module/${resource_id_number}": {
+        "/bff/admin/v1/app-common-appmodule/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.AppModule.get",
@@ -2862,7 +2894,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"app_module.id"
+                            "description":"AppModule.id"
                         },
                         {
                             "name":"data_app_id",
@@ -2913,7 +2945,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"app_module.id",
+                            "description":"AppModule.id",
                             "required":true
                         }
                 ],
@@ -2965,7 +2997,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-common-app-parameter/${resource_id_number}": {
+        "/bff/admin/v1/app-common-appparameter/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.AppParameter.get",
@@ -3057,7 +3089,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-common-app-secret/${resource_id_number}": {
+        "/bff/admin/v1/app-common-appsecret/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.AppSecret.get",
@@ -3146,10 +3178,10 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/user_account-stat": {
+        "/bff/admin/v1/server-db/iamuser-stat": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccount.getStatCountAdmin",
+                "operationId": "server_db.IamUserApp.getStatCountAdmin",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3174,10 +3206,10 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/user_account/${resource_id_number}": {
+        "/bff/admin/v1/server-db/iamuser/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccount.get",
+                "operationId": "server_db.IamUser.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3369,7 +3401,7 @@
         "/bff/admin/v1/server-db/database-demo": {
             "post": {
                 "summary": "",
-                "operationId": "server_db.dbModelDatabase.dbDemoInstall",
+                "operationId": "server.installation.postDemo",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3419,7 +3451,7 @@
             },
             "delete": {
                 "summary": "",
-                "operationId": "server_db.dbModelDatabase.dbDemoUninstall",
+                "operationId": "server.installation.deleteDemo",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3442,37 +3474,6 @@
                                     "allOf":[
                                             {"$ref": "#/components/schema/SuccessResponseSingleResource"},
                                             {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
-        "/bff/admin/v1/server-db/database-installation": {
-            "get": {
-                "summary": "",
-                "operationId": "server_db.dbModelDatabase.dbInstalledCheck",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
-                                        {"rows": ""}
                                     ]
                                 }
                             ]
@@ -3535,72 +3536,6 @@
                                     "allOf":[
                                         {"$ref": "#/components/schema/SuccessResponseList/properties"},
                                         {"rows": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            },
-            "post": {
-                "summary": "",
-                "operationId": "server_db.dbModelDatabase.dbInstall",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            },
-            "delete": {
-                "summary": "",
-                "operationId": "server_db.dbModelDatabase.dbUninstall",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
                                     ]
                                 }
                             ]
@@ -3856,7 +3791,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-iam/iam_user/${resource_id_number}": {
+        "/bff/admin/v1/server-iam/iamuser/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server.iam.iamUserGet",
@@ -3989,7 +3924,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-iam/iam_user": {
+        "/bff/admin/v1/server-iam/iamuser": {
             "get": {
                 "summary": "",
                 "operationId": "server.iam.iamUserGetAdmin",
@@ -4053,10 +3988,10 @@
                 }
             }
         },
-        "/bff/admin/v1/server-iam/iam_app_access": {
+        "/bff/admin/v1/server-iam/iamappaccess": {
             "get": {
                 "summary": "",
-                "operationId": "server.iam.iamUserAppAccessGet",
+                "operationId": "server.iam.iamAppAccessGet",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -4070,7 +4005,7 @@
                             "$ref": "#/components/parameters/resource_id_number"
                         },
                         {
-                            "name":"data_user_account_id",
+                            "name":"iam_user_id",
                             "in":"query",
                             "required":false,
                             "schema":{
@@ -4281,7 +4216,7 @@
                 }
             }
         },
-        "/bff/iam_signup/v1/server-iam/iam_user": {
+        "/bff/iam_signup/v1/server-iam/iamuser": {
             "post": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserSignup",
@@ -5058,12 +4993,12 @@
                 "scheme":"basic"
             },
             "AuthorizationBearer":{
-                "description":"Syntax: Bearer [app access, app_access_verification or admin token using base64], claims: app_id:[APP_ID], db: [current db], app_custom_id[ex payment request id], iam_user_id:[IAM_USER.ID], user_account_id[DB USER_ACCOUNT.ID], iam_user_username:[USERNAME], ip:[IP], scope:[APP_ACCESS_VERIFICATION|APP_ACCESS|APP_ACCESS_EXTERNAL|ADMIN], tokentimestamp: [TIMESTAMP]",
+                "description":"Syntax: Bearer [app access, app_access_verification or admin token using base64], claims: app_id:[APP_ID], app_custom_id[ex payment request id], iam_user_app_id: [IamUserApp.ID], iam_user_id:[IamUser.ID], iam_user_username:[USERNAME], ip:[IP], scope:[APP_ACCESS_VERIFICATION|APP_ACCESS|APP_ACCESS_EXTERNAL|ADMIN], tokentimestamp: [TIMESTAMP]",
                 "type":"http",
                 "schema":"bearer"
             },
             "id-token":{
-                "description":"Created when app starts. Should be in all requests to protect all paths. Syntax Bearer [app id token using base64], claims: app_id:[APP_ID], db: [current db], ]app_custom_id:null, iam_user_id:null, user_account_id:null, iam_user_username:null, ip:[IP], scope:[APP|REPORT|MAINTENANCE], tokentimestamp: [TIMESTAMP]",
+                "description":"Created when app starts. Should be in all requests to protect all paths. Syntax Bearer [app id token using base64], claims: app_id:[APP_ID], app_custom_id:null, iam_user_app_id:null, iam_user_id:null, iam_user_username:null, ip:[IP], scope:[APP|REPORT|MAINTENANCE], tokentimestamp: [TIMESTAMP]",
                 "type":"string"
             }
         },
@@ -5098,14 +5033,6 @@
             "IAM_iam_user_id":{
                 "description":"iam_user.id to be authenticated in IAM can be in query or in body, admin does not use IAM authentication",
                 "name":	"IAM_iam_user_id",
-                "required":true,
-                "schema":{
-                    "type": "number"
-                }
-            },
-            "IAM_user_account_id":{
-                "description":"db user_account.id to be authenticated in IAM that user has access to, can be in query or in body, admin does not use IAM authentication",
-                "name":	"IAM_user_account_id",
                 "required":true,
                 "schema":{
                     "type": "number"

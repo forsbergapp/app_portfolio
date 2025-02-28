@@ -11,19 +11,9 @@
  * @name template
  * @description Template
  * @function
- * @param {{installed:boolean|null}} props
  * @returns {string}
  */
-const template = props => ` <div id='menu_installation_content_widget1' class='widget'>
-                                <div id='menu_installation_db'>
-                                    <div id='menu_installation_db_icon' class='common_icon ${props.installed?'installed':''}'></div>
-                                    <div id='menu_installation_db_button_row'>
-                                        <div id='menu_installation_db_button_install' class='common_dialogue_button common_icon'></div>
-                                        <div id='menu_installation_db_button_uninstall' class='common_dialogue_button common_icon'></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id='menu_installation_content_widget2' class='widget'>
+const template = () => ` <div id='menu_installation_content_widget1' class='widget'>
                                 <div id='menu_installation_demo'>
                                     <div id='menu_installation_demo_demo_users_icon' class='common_icon'></div>
                                     <div id='menu_installation_demo_button_row'>
@@ -45,8 +35,7 @@ const template = props => ` <div id='menu_installation_content_widget1' class='w
  * @function
  * @param {{data:        {commonMountdiv:string},
  *          methods:     {
- *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonFFB:CommonModuleCommon['commonFFB']
+ *                       COMMON_DOCUMENT:COMMON_DOCUMENT
  *                       },
  *          lifecycle:   null}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -55,16 +44,12 @@ const template = props => ` <div id='menu_installation_content_widget1' class='w
  *                      template:string}>}
  */
 const component = async props => {
-    //checks installed if admin
-    /**@type{boolean|null} */
-    const installed = await props.methods.commonFFB({path:'/server-db/database-installation', method:'GET', authorization_type:'ADMIN'})
-                                .then((/**@type{string}*/result)=>JSON.parse(result).rows[0].installed==1?true:false);
+    props;
    return {
        lifecycle:   null,
        data:        null,
        methods:     null,
-       template:    template({  installed:installed
-       })
+       template:    template()
    };
 };
 export default component;

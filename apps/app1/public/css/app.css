@@ -108,10 +108,6 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 
 #menu_config_config_iam_policy::before{												content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_misc_book)}
 
-#menu_installation_db_icon::before{													content:var(--common_app_icon_database)}
-#menu_installation_db_button_install::before{										content:var(--common_app_icon_add)}
-#menu_installation_db_button_uninstall::before{										content:var(--common_app_icon_delete)}
-
 #menu_installation_demo_demo_users_icon::before{									content:var(--common_app_icon_users)}
 #menu_installation_demo_button_install::before{										content:var(--common_app_icon_add)}
 #menu_installation_demo_button_uninstall::before{									content:var(--common_app_icon_delete)}
@@ -891,37 +887,10 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 }
 /* MENU INSTALLATION*/
 #menu_installation_content_widget1{
-	height: calc(50% - 10px);
+	height: calc(100% - 10px);
 	display: flex;
 	flex-direction: column;
-}
-#menu_installation_content_widget2{
-	height: calc(50% - 10px);
-	display: flex;
-	flex-direction: column;
-}
-#menu_installation_db_input{
-	margin:20px;
-}
-#menu_installation_db_input div{
-	margin:10px;
-}
-#menu_installation_db, #menu_installation_demo{
-	margin:auto;
-}
-#menu_installation_db_icon.installed{
-	animation: common_pulsate 2s ease-out;
-	animation-iteration-count: infinite;
-}    
-#menu_installation_db_icon, #menu_installation_demo_demo_users_icon{
-	display: inline-block;
-	font-size: 30px;
-}
-#menu_installation_db_button_row, #menu_installation_demo_button_row{
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	margin-bottom: 10px;
+    justify-content: center;
 }
 #menu_installation_demo_button_row >div{
 	height: 36px;

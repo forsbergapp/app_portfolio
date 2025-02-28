@@ -134,7 +134,6 @@ const update = async parameters =>{
  * @name deleteRecord
  * @description Delete record
  * @function
- * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}

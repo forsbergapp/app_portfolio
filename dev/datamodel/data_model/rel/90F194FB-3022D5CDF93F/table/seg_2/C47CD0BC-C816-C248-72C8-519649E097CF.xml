@@ -1,9 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="C47CD0BC-C816-C248-72C8-519649E097CF" name="iam_user_event">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="C47CD0BC-C816-C248-72C8-519649E097CF" name="IamUserEvent">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>2A12C975-58C5-4C4D-12BC-CE949E269EE5</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<ordsAlias>iam_user_event</ordsAlias>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>

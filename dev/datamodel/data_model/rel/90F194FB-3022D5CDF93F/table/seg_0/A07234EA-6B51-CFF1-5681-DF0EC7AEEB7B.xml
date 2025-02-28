@@ -1,9 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="A07234EA-6B51-CFF1-5681-DF0EC7AEEB7B" name="message_queue_error">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="A07234EA-6B51-CFF1-5681-DF0EC7AEEB7B" name="MessageQueueError">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:18 UTC</createdTime>
 <generatorID>58935CCB-EB26-2DEC-CAC8-6A725FA1209E</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<ordsAlias>message_queue_error</ordsAlias>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>

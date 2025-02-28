@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server_server_response, server_db_table_AppDataEntity} from '../../../../server/types.js'
+ * @import {server_server_response, server_db_table_AppDataResourceMaster, server_db_table_AppDataEntity} from '../../../../server/types.js'
  */
 
 /**
@@ -39,12 +39,6 @@ const paymentRequestCreate = async parameters =>{
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-    /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
-    const dbModelAppDataEntity = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
-
-    /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
-    const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
-
     /**@type{import('../../../../apps/common/src/common.js')} */
     const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
@@ -53,32 +47,41 @@ const paymentRequestCreate = async parameters =>{
 
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
+
+    /**@type{import('../../../../server/db/AppDataEntity.js')} */
+    const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
+
+     /**@type{import('../../../../server/db/AppDataResourceMaster.js')} */
+    const AppDataResourceMaster = await import(`file://${process.cwd()}/server/db/AppDataResourceMaster.js`);
     
-    /**
-     * @type{{  description:string, 
-     *          name:string, 
-     *          entity_type:string, 
-     *          store_type:string,
-     *          merchant_id:string|null,
-     *          merchant_name:string|null,
-     *          merchant_api_url_payment_request_create:string|null, 
-     *          merchant_api_url_payment_request_get_status:string|null,
-     *          merchant_api_secret:string|null, 
-     *          merchant_public_key:string|null,
-     *          merchant_private_key:string|null,
-     *          merchant_vpa:string|null,
-     *          iam_user_id_anonymous:number|null}}
-     */
-    const entity_data = JSON.parse((await dbModelAppDataEntity.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id}})).result[0].json_data);
-    const currency = await dbModelAppDataResourceMaster.get({   app_id:parameters.app_id, 
+    /**@type{server_db_table_AppDataEntity & 
+     *       {json_data:{   description:string, 
+     *                      name:string, 
+     *                      entity_type:string, 
+     *                      store_type:string,
+     *                      merchant_id:string|null,
+     *                      merchant_name:string|null,
+     *                      merchant_api_url_payment_request_create:string|null, 
+     *                      merchant_api_url_payment_request_get_status:string|null,
+     *                      merchant_api_secret:string|null, 
+     *                      merchant_public_key:string|null,
+     *                      merchant_private_key:string|null,
+     *                      merchant_vpa:string|null,
+     *                      iam_user_id_anonymous:number|null}}} */
+    const Entity            = AppDataEntity.get({   app_id:parameters.app_id, 
+                                                    resource_id:null, 
+                                                    data:{data_app_id:parameters.data.data_app_id}}).result[0];
+
+    /**@type{server_db_table_AppDataResourceMaster} */
+    const currency = AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                 resource_id:null, 
-                                                                data:{  data_app_id:parameters.data.data_app_id,
+                                                                data:{  iam_user_id:null,
+                                                                        data_app_id:parameters.data.data_app_id,
                                                                         resource_name:'CURRENCY',
-                                                                        user_null:'1'
-                                                                }})
-                            .then(result=>JSON.parse(result.result[0].json_data));
+                                                                        app_data_entity_id:Entity.id
+                                                                }}).result[0];
     //validate
-	if (parameters.data.currency_code==currency.currency_code && parameters.data.payerid !='' && parameters.data.payerid !=null){
+	if (parameters.data.currency_code==currency.json_data?.currency_code && parameters.data.payerid !='' && parameters.data.payerid !=null){
         /** 
         * @type {{ api_secret:     string,
         *          reference:      string,
@@ -89,22 +92,22 @@ const paymentRequestCreate = async parameters =>{
         *          message:        string,
         *          origin:         string}}
         */
-        const body = {	api_secret:     entity_data.merchant_api_secret??'',
+        const body = {	api_secret:     Entity.json_data.merchant_api_secret??'',
                         reference:      parameters.data.reference.substring(0,30),
-                        payeeid:        entity_data.merchant_vpa??'', 
+                        payeeid:        Entity.json_data.merchant_vpa??'', 
                         payerid:        parameters.data.payerid,
-                        currency_code:  currency.currency_code,
+                        currency_code:  currency.json_data.currency_code,
                         amount:         serverUtilNumberValue(parameters.data.amount) ?? 0, 
                         message:        parameters.data.message,
                         origin:         parameters.host
         };
         //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
         //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-        const body_encrypted = {id:     serverUtilNumberValue(entity_data.merchant_id),
+        const body_encrypted = {id:     serverUtilNumberValue(Entity.json_data.merchant_id),
                                 message:securityPublicEncrypt(
-                                                                entity_data.merchant_public_key??'', 
+                                                                Entity.json_data.merchant_public_key??'', 
                                                                 JSON.stringify(body))};
-        const result_commonBFE = await commonBFE({url:entity_data.merchant_api_url_payment_request_create??'', 
+        const result_commonBFE = await commonBFE({url:Entity.json_data.merchant_api_url_payment_request_create??'', 
                                                     method:'POST', 
                                                     //send body in base64 format
                                                     body:{data:Buffer.from(JSON.stringify(body_encrypted)).toString('base64')}, 
@@ -135,7 +138,7 @@ const paymentRequestCreate = async parameters =>{
             *          currency_symbol:string}}
             */
             const body_decrypted = JSON.parse(securityPrivateDecrypt(
-                                                    entity_data.merchant_private_key??'', 
+                                                    Entity.json_data.merchant_private_key??'', 
                                                     result_commonBFE.result.rows.message));
 
             return {result:[{token:                 body_decrypted.token,
@@ -145,9 +148,9 @@ const paymentRequestCreate = async parameters =>{
                             payment_request_id:     body_decrypted.payment_request_id,
                             payment_request_message:'Check your bank app to authorize this payment',
                             status:                 body_decrypted.status,
-                            merchant_name:          entity_data.merchant_name??'',
+                            merchant_name:          Entity.json_data.merchant_name??'',
                             amount:			        body_decrypted.amount,
-                            currency_symbol:        currency.currency_symbol,
+                            currency_symbol:        currency.json_data.currency_symbol,
                             countdown:              ''
                         }], type:'JSON'};
         }

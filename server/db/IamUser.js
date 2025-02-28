@@ -67,10 +67,10 @@ const getViewProfile = async parameters =>{
                                     const friends =  IamUserFollow.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:serverUtilNumberValue(parameters.data?.id),
-                                                                            iam_user_id_follow:row.id}}).result[0] ??
+                                                                            iam_user_id_follow:row.id??null}}).result[0] ??
                                                     IamUserFollow.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
-                                                                    data:{  iam_user_id:row.id,
+                                                                    data:{  iam_user_id:row.id??null,
                                                                             iam_user_id_follow:serverUtilNumberValue(parameters.data?.id)}}).result[0];
                                     return {id:             row.id,
                                             active:         row.active,
@@ -85,38 +85,38 @@ const getViewProfile = async parameters =>{
                                                                 null:
                                                                     IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                         resource_id:null, 
-                                                                                        data:{  iam_user_id:row.id,
+                                                                                        data:{  iam_user_id:row.id??null,
                                                                                                 iam_user_id_follow:null}}).result.length,
                                             count_followed: ((row.private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
                                                                     IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                         resource_id:null, 
                                                                                         data:{  iam_user_id:null,
-                                                                                                iam_user_id_follow:row.id}}).result.length,
+                                                                                                iam_user_id_follow:row.id??null}}).result.length,
                                             count_likes:    ((row.private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
                                                                     IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
-                                                                                data:{  iam_user_id:row.id,
+                                                                                data:{  iam_user_id:row.id??null,
                                                                                         iam_user_id_like:null}}).result.length,
                                             count_liked:    ((row.private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
                                                                     IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
-                                                                                        iam_user_id_like:row.id}}).result.length,
+                                                                                        iam_user_id_like:row.id??null}}).result.length,
                                             count_views:    IamUserView.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
-                                                                                        iam_user_id_view:row.id}}).result.length,
+                                                                                        iam_user_id_view:row.id??null}}).result.length,
                                             followed:       IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:serverUtilNumberValue(parameters.data?.id),
-                                                                                        iam_user_id_follow:row.id}}).result.length,
+                                                                                        iam_user_id_follow:row.id??null}}).result.length,
                                             liked:          IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:serverUtilNumberValue(parameters.data?.id),
-                                                                                        iam_user_id_like:row.id}}).result.length};
+                                                                                        iam_user_id_like:row.id??null}}).result.length};
                                 });
   if (parameters.data.search){
       return {result:result_getProfileUser, type:'JSON'};
@@ -168,7 +168,7 @@ const getViewProfileStat = async parameters =>{
                                     IamUserApp.get({  app_id:parameters.app_id, 
                                                                 resource_id:null,
                                                                 data: {
-                                                                    iam_user_id: row.id,
+                                                                    iam_user_id: row.id??null,
                                                                     data_app_id: parameters.app_id}
                                                                 }).result[0]
                             )              
@@ -184,17 +184,17 @@ const getViewProfileStat = async parameters =>{
                                                 IamUserView.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
-                                                                            iam_user_id_view:row.id}}).result.length:
+                                                                            iam_user_id_view:row.id??null}}).result.length:
                                             serverUtilNumberValue(parameters.data?.statchoice)==2?
                                                 IamUserFollow.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
-                                                                            iam_user_id_follow:row.id}}).result.length:
+                                                                            iam_user_id_follow:row.id??null}}).result.length:
                                             serverUtilNumberValue(parameters.data?.statchoice)==3?
                                                 IamUserLike.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
-                                                                            iam_user_id_like:row.id}}).result.length:
+                                                                            iam_user_id_like:row.id??null}}).result.length:
                                             null
                                 };
                             })
@@ -280,7 +280,33 @@ const getViewProfileDetail = async parameters =>{
 const getViewStatCountAdmin = parameters => {return {result: [{count_users:get(parameters.app_id,null).result?.length}],
                                                     type:'JSON'};};
 
-
+/**
+ * @name validationData
+ * @description Validates user data
+ * @function
+ * @param {server_db_table_IamUser} data
+ */
+const validationData = data =>{
+    return (data.username==null || data.password==null || data.type==null||
+            //check not allowed attributes when creating a user
+            data.id||data.user_level ||data.status||data.created||data.modified||
+            //must be valid username
+            (data.username != null &&
+                (data.username.indexOf(' ') > -1 || 
+                data.username.indexOf('?') > -1 ||
+                data.username.indexOf('/') > -1 ||
+                data.username.indexOf('+') > -1 ||
+                data.username.indexOf('"') > -1 ||
+                data.username.indexOf('\'\'') > -1))||
+            //username 5 - 100 characters '👤 5-100!'
+            (data.username != null && (data.username.length < 5 || data.username.length > 100))||
+            //bio max 100 characters
+            (data.bio != null && data.bio.length > 100)||
+            //reminder max 100 characters
+            (data.password_reminder != null && data.password_reminder.length > 100)||
+            //password 10 - 100 characters, '🔑 10-100!'
+            (data.password_new != null && data.password_new.length < 10 && data.password_new.length > 100)) == false;
+}; 
 /**
  * @name post
  * @description Add record
@@ -290,13 +316,7 @@ const getViewStatCountAdmin = parameters => {return {result: [{count_users:get(p
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
-    //check required attributes
-    if (data.username==null || data.password==null || data.type==null||
-        //check not allowed attributes when creating a user
-        data.id||data.user_level ||data.status||data.created||data.modified){
-            return ORM.getError(app_id, 400);
-    }
-    else{
+    if (validationData(data)){
         /**@type{import('../security.js')} */
         const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
         /**@type{server_db_iam_user_admin} */
@@ -305,15 +325,15 @@ const post = async (app_id, data) => {
                                 username:data.username, 
                                 //save encrypted password
                                 password:await securityPasswordCreate(data.password), 
-                                password_reminder:data.password_reminder,
+                                password_reminder:data.password_reminder ?? null,
                                 type: data.type, 
-                                bio:data.bio, 
+                                bio:data.bio ?? null, 
                                 private:data.private, 
                                 email:data.email, 
                                 email_unverified:data.email_unverified, 
                                 avatar:data.avatar,
                                 user_level:data.user_level, 
-                                verification_code: data.verification_code, 
+                                verification_code: data.verification_code ?? null, 
                                 status:data.status, 
                                 active:data.active,
                                 created:new Date().toISOString(), 
@@ -328,6 +348,8 @@ const post = async (app_id, data) => {
                 return ORM.getError(app_id, 404);
         });
     }
+    else
+        return ORM.getError(app_id, 400);
 };
 /**
  * @name postAdmin
@@ -385,7 +407,7 @@ const update = async (app_id, resource_id, data) => {
     /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        if (user.username == data.username && data.password && await securityPasswordCompare(data.password, user.password)){
+        if (validationData(data) && user.username == data.username && data.password && await securityPasswordCompare(data.password, user.password)){
             /**@type{server_db_table_IamUser} */
             const data_update = {};
             //allowed parameters to update:
@@ -528,40 +550,6 @@ const updateVerificationCodeAuthenticate = async (app_id, resource_id, data) => 
 };
 
 /**
- * @name update
- * @description Update
- * @function
- * @param {number} app_id
- * @param {number} resource_id
- * @param {{password_new:string}} data
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
- */
-const updatePassword = async (app_id, resource_id, data) => {
-    /**@type{server_db_table_IamUser}*/
-    const user = get(app_id, resource_id).result[0];
-    if (user){
-        /**@type{server_db_table_IamUser} */
-        const data_update = {};
-        data_update.password = data.password_new;
-        data_update.modified = new Date().toISOString();
-        if (Object.entries(data_update).length>0)
-            return ORM.Execute({  app_id:app_id, 
-                                        dml:'UPDATE', 
-                                        object:'IamUser', 
-                                        update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
-                if (result.affectedRows>0)
-                    return {result:result, type:'JSON'};
-                else
-                    return ORM.getError(app_id, 404);
-            });
-        else
-            return ORM.getError(app_id, 400);
-    }
-    else
-        return ORM.getError(app_id, 404);
-};
-
-/**
  * @name deleteRecord
  * @description Delete
  * @function
@@ -670,4 +658,4 @@ const deleteRecordAdmin = async (app_id, resource_id) => {
         return user;
 };
 
-export {get, getViewProfile, getViewProfileStat, getViewProfileDetail, getViewStatCountAdmin, post, postAdmin, update, updateAdmin, updateVerificationCodeAuthenticate, updatePassword, deleteRecord, deleteRecordAdmin};
+export {get, getViewProfile, getViewProfileStat, getViewProfileDetail, getViewStatCountAdmin, post, postAdmin, update, updateAdmin, updateVerificationCodeAuthenticate, deleteRecord, deleteRecordAdmin};

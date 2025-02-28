@@ -350,15 +350,12 @@ const appReportUrl = (id, sid, papersize, item, format, profile_display=true) =>
         module_parameters += '&type=1';
     if (item == 'profile_user_settings_year' || item.substr(0,9)=='user_year')
         module_parameters += '&type=2';
-    if (profile_display){
-        //send viewing user account id if logged in or set empty
-        const uid_view = common.COMMON_GLOBAL.user_account_id==null?'':common.COMMON_GLOBAL.user_account_id;
-        module_parameters += `&uid_view=${uid_view}`;
-    }
+    if (profile_display)
+        module_parameters += `&uid_view=${common.COMMON_GLOBAL.iam_user_app_id??''}`;
     const service_parameter = `&format=${format}&ps=${papersize}`;
     const encodedurl = common.commonWindowToBase64( module_parameters + service_parameter);
     //url query parameters are decoded in report module and in report service
-    return `${common.commonWindowHostname()}/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-report/${APP_GLOBAL.app_report_timetable}?parameters=${common.commonWindowToBase64(`type=REPORT&reportid=${encodedurl}`)}`;
+    return `${common.commonWindowHostname()}/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/appmodule-report/${APP_GLOBAL.app_report_timetable}?parameters=${common.commonWindowToBase64(`type=REPORT&reportid=${encodedurl}`)}`;
     
 
 };
@@ -617,7 +614,7 @@ const appToolbarButton = async (choice) => {
                 common.commonComponentRender({  
                     mountDiv:   'settings',
                     data:       {
-                                user_account_id:common.COMMON_GLOBAL.user_account_id,
+                                iam_user_id:common.COMMON_GLOBAL.iam_user_id,
                                 avatar:COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img')?.getAttribute('data-image')
                                 },
                     methods:    {
@@ -1134,7 +1131,7 @@ const appUserProfileStatUpdate = async () => {
  * @returns {void}
  */
 const appUserProfileDetail = (detailchoice) => {
-    if (common.COMMON_GLOBAL.user_account_id || 0 !== 0) {
+    if (common.COMMON_GLOBAL.iam_user_id || 0 !== 0) {
         if (detailchoice == 0){
             //user settings
             COMMON_DOCUMENT.querySelector('#profile_user_settings_row').style.display = 'block';
@@ -1159,7 +1156,7 @@ const appUserProfileDetail = (detailchoice) => {
  */
 const appUserSettingsGet = async () => {
     return new Promise(resolve=>{
-        common.commonFFB({path:`/server-db/user_account_app_data_post/${common.COMMON_GLOBAL.user_account_id??''}`, query:`IAM_data_app_id=${common.COMMON_GLOBAL.app_id}`, method:'GET', authorization_type:'APP_ID'})
+        common.commonFFB({path:'/server-db/IamUserAppDataPost/', query:`IAM_data_app_id=${common.COMMON_GLOBAL.app_id}&IAM_iam_user_id=${common.COMMON_GLOBAL.iam_user_id??''}`, method:'GET', authorization_type:'APP_ID'})
         .then((/**@type{string}*/result)=>{
             const settings = JSON.parse(result).map((/** @type{APP_user_setting_record}*/setting)=>{
                 const json_data = {description:setting.description,
@@ -1227,13 +1224,12 @@ const appUserSettingsGet = async () => {
  * @returns {void}
  */
 const appUserSettingLink = (item) => {
-    const user_account_id = common.COMMON_GLOBAL.user_account_id;    
     const sid = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].id;
     switch (item.id){
         case 'user_day_html':
         case 'user_month_html':
         case 'user_year_html':{
-            const url = appReportUrl( user_account_id, 
+            const url = appReportUrl( common.COMMON_GLOBAL.iam_user_id, 
                                         sid ?? 0, 
                                         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
                                         item.id,
@@ -1279,8 +1275,7 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
         
         const body = {  description:            APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
                         json_data:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
-                        IAM_data_app_id:        common.COMMON_GLOBAL.app_id,
-                        IAM_user_account_id:    common.COMMON_GLOBAL.user_account_id
+                        IAM_iam_user_app_id:    common.COMMON_GLOBAL.iam_user_app_id
                     };
         /**@type {CommonRESTAPIMethod}*/
         let method;
@@ -1292,7 +1287,7 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                 if (function_name=='ADD')
                     spinner_id = 'setting_btn_user_add';
                 method = 'POST';
-                path = '/server-db/user_account_app_data_post';
+                path = '/server-db/IamUserAppDataPost';
                 /**@ts-ignore */
                 body.initial = initial_user_setting==true?1:0;
                 break;
@@ -1301,7 +1296,7 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                 spinner_id = 'setting_btn_user_save';
                 method = 'PUT';
                 const user_setting_id = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].id;
-                path = `/server-db/user_account_app_data_post/${user_setting_id}`;
+                path = `/server-db/IamUserAppDataPost/${user_setting_id}`;
                 break;
             }
         }
@@ -1365,7 +1360,10 @@ const appUserSettingDelete = (choice=null) => {
             break;
         }
         case 1:{
-            common.commonFFB({path:`/server-db/user_account_app_data_post/${user_setting_id}`, method:'DELETE', authorization_type:'APP_ACCESS', body:{user_account_id:common.COMMON_GLOBAL.user_account_id}, spinner_id:'setting_btn_user_delete'})
+            common.commonFFB({  path:`/server-db/IamUserAppDataPost/${user_setting_id}`, 
+                                method:'DELETE', 
+                                authorization_type:'APP_ACCESS', 
+                                body:{IAM_iam_user_app_id:common.COMMON_GLOBAL.iam_user_app_id}, spinner_id:'setting_btn_user_delete'})
             .then(()=>{
                 common.commonComponentRemove('common_dialogue_message', true);
                 //check if last setting
@@ -1590,14 +1588,13 @@ const appUserSettingUpdate = setting_tab => {
  */
 const appUserSettingProfileLink = item => {
     const select_user_setting = COMMON_DOCUMENT.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');
-    const user_account_id = JSON.parse(select_user_setting).user_account_id;
     const sid = JSON.parse(select_user_setting).sid;
     const paper_size = JSON.parse(select_user_setting).paper_size;
     switch (item.id){
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
         case 'profile_user_settings_year':{
-            const url = appReportUrl(user_account_id, 
+            const url = appReportUrl(JSON.parse(select_user_setting).iam_user_id, 
                                      sid, 
                                      paper_size,
                                      item.id,
@@ -1633,15 +1630,20 @@ const appUserSettingProfileLink = item => {
 const appUserSettingsLike = user_account_app_data_post_id => {
     /**@type{CommonRESTAPIMethod} */
     let method;
-    const json_data = {user_account_app_data_post_id: user_account_app_data_post_id, IAM_data_app_id:common.COMMON_GLOBAL.app_id};
-    if (common.COMMON_GLOBAL.user_account_id == null)
+    const json_data = { user_account_app_data_post_id: user_account_app_data_post_id, 
+                        IAM_iam_user_id: common.COMMON_GLOBAL.iam_user_id,
+                        IAM_data_app_id:common.COMMON_GLOBAL.app_id};
+    if (common.COMMON_GLOBAL.iam_user_id == null)
         common.commonDialogueShow('LOGIN');
     else {
         if (COMMON_DOCUMENT.querySelector('#profile_user_settings_like').children[0].style.display == 'block')
             method = 'POST';
         else
             method = 'DELETE';
-        common.commonFFB({path:`/server-db/user_account_app_data_post_like/${common.COMMON_GLOBAL.user_account_id??''}`, method:method, authorization_type:'APP_ACCESS', body:json_data})
+        common.commonFFB({  path:'/server-db/IamUserAppDataPostLike/', 
+                            method:method, 
+                            authorization_type:'APP_ACCESS', 
+                            body:json_data})
         .then(()=>APP_GLOBAL.function_profile_user_setting_update(  COMMON_DOCUMENT.querySelector('#common_profile_id').textContent,
                                                                     JSON.parse(COMMON_DOCUMENT.querySelector('#profile_select_user_settings .common_select_dropdown_value')
                                                                                 .getAttribute('data-value')).sid))
@@ -2020,11 +2022,11 @@ const appEventClick = event => {
                     break;
                 }
                 case 'profile_stat_row2_1':{
-                    appUserProfileStat(4, '/server-db/user_account_app_data_post-profile-stat');
+                    appUserProfileStat(4, '/server-db/IamUserAppDataPost-profile-stat');
                     break;
                 }
                 case 'profile_stat_row2_2':{
-                    appUserProfileStat(5, '/server-db/user_account_app_data_post-profile-stat');
+                    appUserProfileStat(5, '/server-db/IamUserAppDataPost-profile-stat');
                     break;
                 }
                 case 'profile_user_settings_day':
@@ -2110,8 +2112,8 @@ const appEventClick = event => {
                         common.commonComponentRender({
                             mountDiv:   'common_profile_main_stat_row2',
                             data:       {   
-                                        user_account_id:common.COMMON_GLOBAL.user_account_id,
-                                        profile_id:common.commonMiscElementRow(event.target).getAttribute('data-user_account_id')},
+                                        iam_user_id:common.COMMON_GLOBAL.iam_user_id,
+                                        profile_id:common.commonMiscElementRow(event.target).getAttribute('data-iam_user_id')},
                             methods:    {
                                         commonComponentRender:common.commonComponentRender,
                                        commonFFB:common.commonFFB
@@ -2333,7 +2335,7 @@ const appFrameworkSet = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const appInit = async parameters => {
-    const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-asset/MODULE_LIB_TIMETABLE`;
+    const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/appmodule-asset/MODULE_LIB_TIMETABLE`;
     /**@type {CommonModuleLibTimetable} */
     appLibTimetable = await import(appLibTimetable_path);
     await appFrameworkSet();

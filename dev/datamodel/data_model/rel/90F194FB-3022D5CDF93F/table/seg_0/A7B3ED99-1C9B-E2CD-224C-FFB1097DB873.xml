@@ -1,9 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="A7B3ED99-1C9B-E2CD-224C-FFB1097DB873" name="message_queue_publish">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="A7B3ED99-1C9B-E2CD-224C-FFB1097DB873" name="MessageQueuePublish">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:18 UTC</createdTime>
 <generatorID>674D4981-DB4B-9ECF-7A02-697290C9910D</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<ordsAlias>message_queue_publish</ordsAlias>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>

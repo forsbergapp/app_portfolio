@@ -37,6 +37,7 @@ const post = async (app_id, data) => {
         const id = Date.now();
         return ORM.Execute({  app_id:app_id, dml:'POST', object:'IamControlObserve', 
                                     post:{data:{id:id, 
+                                                iam_user_id:data.iam_user_id,
                                                 app_id:data.app_id,
                                                 ip:data.ip, 
                                                 user_agent:data.user_agent,

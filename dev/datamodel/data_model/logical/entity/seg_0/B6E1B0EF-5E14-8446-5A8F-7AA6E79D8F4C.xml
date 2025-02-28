@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B6E1B0EF-5E14-8446-5A8F-7AA6E79D8F4C" name="app_translation">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B6E1B0EF-5E14-8446-5A8F-7AA6E79D8F4C" name="AppTranslation">
 <createdBy>admin</createdBy>
 <createdTime>2024-12-20 14:07:54 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>

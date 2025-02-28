@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{user_account_id:number,
+ * @param {{iam_user_id:number,
  *          users:CommonIAMUser[],
  *          function_get_order_by:function}} props
  * @returns {string}
@@ -35,7 +35,7 @@ const template = props => ` <div class='menu_users_list_row'>
                                 <div data-column='date_modified' class='menu_apps_col list_sort_click list_title common_icon ${props.function_get_order_by('date_modified')}'></div>
                             </div>
                             ${props.users.map(user=>
-                                `<div data-changed-record='0' data-user_account_id='${user.id}' class='menu_users_list_row ${user.id==props.user_account_id?'list_current_user_row':''} common_row' >
+                                `<div data-changed-record='0' data-iam_user_id='${user.id}' class='menu_users_list_row ${user.id==props.iam_user_id?'list_current_user_row':''} common_row' >
                                     <div data-column='avatar' data-image=${user.avatar} class='menu_users_list_col list_readonly common_image common_image_avatar_list' style='${user.avatar==null?'':`background-image:url(${user.avatar});`}'></div>
                                     <div data-column='id' class='menu_users_list_col list_readonly'>${user.id}</div>
                                     <div data-column='type' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.type ?? ''}</div>
@@ -60,7 +60,7 @@ const template = props => ` <div class='menu_users_list_row'>
  * @description Component
  * @function
  * @param {{ data:{      commonMountdiv:string,
- *                       user_account_id:number,
+ *                       iam_user_id:number,
  *                       sort:string,
  *                       order_by:string},
  *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
@@ -97,7 +97,7 @@ const component = async props => {
       lifecycle:    {onMounted:onMounted},
       data:         null,
       methods:      null,
-      template:     template({  user_account_id:props.data.user_account_id,
+      template:     template({  iam_user_id:props.data.iam_user_id,
                                 users:users,
                                 function_get_order_by:get_order_by
       })

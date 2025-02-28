@@ -25,7 +25,6 @@ let SOCKET_CONNECTED_CLIENTS = [];
  * @description Get geodata and user account data for connected user
  * @function
  * @param {number} app_id 
- * @param {number|null} user_account_id 
  * @param {string} ip
  * @param {string} headers_user_agent 
  * @param {string} headers_accept_language
@@ -34,7 +33,7 @@ let SOCKET_CONNECTED_CLIENTS = [];
  *               place:string,
  *               timezone:string}>}
  */
-const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language) =>{
+const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, headers_accept_language) =>{
     /**@type{import('./bff.js')} */
     const { bffServer } = await import(`file://${process.cwd()}/server/bff.js`);
     //get GPS from IP
@@ -133,7 +132,6 @@ const socketClientAdd = (newClient) => {
  * @function
  * @param {number} app_id,
  * @param {{idToken:string,
- *          user_account_id:number|null,
  *          iam_user_id:number|null,
  *          iam_user_username:string|null,
  *          iam_user_type:'ADMIN'|'USER'|null,
@@ -159,9 +157,8 @@ const socketClientAdd = (newClient) => {
     else{
         for (const connected of SOCKET_CONNECTED_CLIENTS){
             if (connected.authorization_bearer == parameters.idToken){
-                const connectUserData =  await socketConnectedUserDataGet(app_id, parameters.user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
+                const connectUserData =  await socketConnectedUserDataGet(app_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
                 connected.connection_date = new Date().toISOString();
-                connected.user_account_id = parameters.user_account_id;
                 connected.token_access = parameters.token_access;
                 connected.iam_user_id = parameters.iam_user_id;
                 connected.iam_user_username = parameters.iam_user_username;
@@ -188,11 +185,11 @@ const socketClientAdd = (newClient) => {
  * @name socketConnectedGet
  * @description Socket check connected
  * @function
- * @param {number} user_account_id
+ * @param {number} iam_user_id
  * @returns {server_socket_connected_list[]}
  */
- const socketConnectedGet = user_account_id => {
-    return SOCKET_CONNECTED_CLIENTS.filter(client => client.user_account_id == user_account_id);
+ const socketConnectedGet = iam_user_id => {
+    return SOCKET_CONNECTED_CLIENTS.filter(client => client.iam_user_id == iam_user_id);
 };
 
 /**
@@ -284,7 +281,6 @@ const socketClientAdd = (newClient) => {
                                 iam_user_id:            client.iam_user_id,
                                 iam_user_username:      client.iam_user_username,
                                 iam_user_type:          client.iam_user_type,
-                                user_account_id:        client.user_account_id,
                                 connection_date:        client.connection_date,
                                 gps_latitude:           client.gps_latitude ?? '',
                                 gps_longitude:          client.gps_longitude ?? '',
@@ -385,7 +381,7 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
     const access_token =    parameters.authorization?iamUtilTokenGet(   parameters.app_id,
                                             parameters.authorization, 
                                             parameters.app_id==serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID'))?'ADMIN':'APP_ACCESS'):null;
-    const user_account_id = parameters.authorization?serverUtilNumberValue(access_token?.user_account_id):null;
+
     const iam_user =        parameters.authorization?
                                 (serverUtilNumberValue(access_token?.iam_user_id)?
                                     IamUser.get(parameters.app_id, serverUtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
@@ -401,14 +397,13 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
         socketClientConnect(parameters.data.res);
         socketClientOnClose(parameters.data.res, client_id);
     
-        const connectUserData =  await socketConnectedUserDataGet(parameters.app_id, user_account_id, parameters.ip, parameters.user_agent, parameters.accept_language);
+        const connectUserData =  await socketConnectedUserDataGet(parameters.app_id, parameters.ip, parameters.user_agent, parameters.accept_language);
         /**@type{server_socket_connected_list} */
         const newClient = {
                             id:                     client_id,
                             connection_date:        new Date().toISOString(),
                             app_id:                 parameters.app_id,
                             authorization_bearer:   parameters.idToken,
-                            user_account_id:        user_account_id,
                             token_access:           null,
                             iam_user_id:            iam_user?iam_user.id:null,
                             iam_user_username:      iam_user?iam_user.username:null,
@@ -465,7 +460,6 @@ const socketExpiredTokensUpdate = () =>{
             client.token_access && iamUtilTokenExpired(client.app_id, 'APP_ACCESS_VERIFICATION', client.token_access)) ||
             client.token_admin && iamUtilTokenExpired(client.app_id, 'ADMIN', client.token_admin)){
                 client.iam_user_id=null;
-                client.user_account_id=null;
                 client.iam_user_type=null;
                 client.iam_user_username=null;
                 client.token_access=null;

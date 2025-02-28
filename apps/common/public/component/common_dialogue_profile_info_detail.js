@@ -9,8 +9,8 @@
  * @name template
  * @description Template
  * @function
- * @param {{user_account_id:number,
- *          user_account_id_profile:number,
+ * @param {{iam_user_id:number,
+ *          iam_user_id_profile:number,
  *          detailchoice:number,
  *          list:[{ id:number|null, 
  *                  app_id:number, 
@@ -41,7 +41,7 @@ const template = props => `     ${props.list.map(row=>
                                                 </div>
                                             </div>
                                             <div class='common_profile_detail_list_col'>
-                                                ${props.user_account_id==props.user_account_id_profile?
+                                                ${props.iam_user_id==props.iam_user_id_profile?
                                                     '<div class=\'common_profile_detail_list_app_delete common_icon\'></div>':
                                                     ''
                                                 }
@@ -50,9 +50,9 @@ const template = props => `     ${props.list.map(row=>
                                                 <div class='common_profile_detail_list_date_created'>${row.date_created}</div>
                                             </div>
                                         </div>`:
-                                        `<div data-user_account_id='${row.id}' class='common_profile_detail_list_row common_row'>
+                                        `<div data-iam_user_id='${row.id}' class='common_profile_detail_list_row common_row'>
                                             <div class='common_profile_detail_list_col'>
-                                                <div class='common_profile_detail_list_user_account_id'>${row.id}</div>
+                                                <div class='common_profile_detail_list_iam_user_id'>${row.id}</div>
                                             </div>
                                             <div class='common_profile_detail_list_col'>
                                                 <div class='common_image common_image_avatar_list' style='${row.avatar==null?'':`background-image:url(${row.avatar});`}'></div>
@@ -72,8 +72,8 @@ const template = props => `     ${props.list.map(row=>
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_account_id:number,
- *                      user_account_id_profile:number,
+ *                      iam_user_id:number,
+ *                      iam_user_id_profile:number,
  *                      detailchoice:number
  *                      },
  *          methods:    {
@@ -94,33 +94,33 @@ const component = async props => {
         case 3:
         case 4:{
             /*detailchoice 1,2,3, 4: user_account*/
-            path = '/server-db/user_account-profile-detail';
+            path = '/server-db/iamuser-profile-detail';
             break;
         }
         case 5:{
             /* detailchoice 5, apps, returns same columns*/
-            path = '/server-db/user_account_app-apps';
+            path = '/server-db/iamuserapp-apps';
             break;
         }
         case 6:
         case 7:{
             /*detailchoice 6, 7: app specific */
-            path = '/server-db/user_account_app_data_post-profile-detail';
+            path = '/server-db/iamuserappdatapost-profile-detail';
             break;
         }    
     }
-    if (!props.data.user_account_id)
+    if (!props.data.iam_user_id)
         props.methods.commonDialogueShow('LOGIN');
 
     return {
       lifecycle:    null,
       data:         null,
       methods:      null,
-      template:     template({  user_account_id:props.data.user_account_id,
-                                user_account_id_profile:props.data.user_account_id_profile,
+      template:     template({  iam_user_id:props.data.iam_user_id,
+                                iam_user_id_profile:props.data.iam_user_id_profile,
                                 detailchoice:props.data.detailchoice,
-                                list:props.data.user_account_id?
-                                        await props.methods.commonFFB({path:`${path}/${props.data.user_account_id_profile}`, query:`detailchoice=${props.data.detailchoice}`, method:'GET', authorization_type:'APP_ACCESS'})
+                                list:props.data.iam_user_id?
+                                        await props.methods.commonFFB({path:`${path}/${props.data.iam_user_id_profile}`, query:`detailchoice=${props.data.detailchoice}`, method:'GET', authorization_type:'APP_ACCESS'})
                                                 .then((/**@type{string}*/result)=>JSON.parse(result)):
                                         []
                             })

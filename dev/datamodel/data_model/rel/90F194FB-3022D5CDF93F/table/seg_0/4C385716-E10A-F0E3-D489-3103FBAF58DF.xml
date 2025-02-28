@@ -1,9 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="4C385716-E10A-F0E3-D489-3103FBAF58DF" name="config_rest_api">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="4C385716-E10A-F0E3-D489-3103FBAF58DF" name="ConfigRestApi">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:34 UTC</createdTime>
 <generatorID>F934CF57-3CDB-6745-1199-B666E51633AB</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<ordsAlias>config_rest_api</ordsAlias>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>

@@ -42,7 +42,6 @@
  *                  uses getFsLog and postFsLog
  *  TABLE_LOG_DATE  json record, comma separateed with file name suffixes
  *                  uses fileFsLogGet, postFsLog and fileSuffix
- *  BINARY          used by sqLite database and *.js file not implemented
  *  Admin can also use postFsAdmin and deleteFsAdmin without transaction if needed
  * 
  * @module server/db/ORM
@@ -93,9 +92,7 @@ const getObjectRecord = filename =>JSON.parse(JSON.stringify(DB.data.filter(file
  */
 const fileRecordFilename = file => {const record = getObjectRecord(file);
                                     return {filename:file, 
-                                            suffix:record.type=='BINARY'?
-                                                        '':
-                                                        record.type.startsWith('TABLE_LOG')?
+                                            suffix:record.type.startsWith('TABLE_LOG')?
                                                             '.log':
                                                                 '.json'};};
 

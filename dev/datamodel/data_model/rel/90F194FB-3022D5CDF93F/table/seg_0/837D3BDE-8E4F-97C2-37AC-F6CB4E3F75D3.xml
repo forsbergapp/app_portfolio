@@ -1,9 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="837D3BDE-8E4F-97C2-37AC-F6CB4E3F75D3" name="config_microservice">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="837D3BDE-8E4F-97C2-37AC-F6CB4E3F75D3" name="ConfigMicroservice">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:34 UTC</createdTime>
 <generatorID>45DE1F00-9239-3701-74C1-E85B4F447FB3</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<ordsAlias>config_microservice</ordsAlias>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>

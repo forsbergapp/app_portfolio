@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="CF8AF38C-2C89-7AB5-AAEF-9DE390610949" name="app_data_resource_detail">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="CF8AF38C-2C89-7AB5-AAEF-9DE390610949" name="AppDataResoureDetail">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 21:26:42 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -62,6 +62,19 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="app_data_entity_id" id="F75946C2-4911-E934-850B-50DE756947C3">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-24 21:01:28 UTC</createdTime>
+<generatorID>5B51BFBA-12BD-CE08-261B-DC7939D219D4</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>7AE56DD0-85D6-54FD-3167-02204289C890</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="created" id="CB9D57FD-2424-278B-0541-92CA2AF150CE">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 21:40:42 UTC</createdTime>
@@ -92,19 +105,6 @@
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_data_entity_id" id="F75946C2-4911-E934-850B-50DE756947C3">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-24 21:01:28 UTC</createdTime>
-<generatorID>5B51BFBA-12BD-CE08-261B-DC7939D219D4</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>7AE56DD0-85D6-54FD-3167-02204289C890</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>

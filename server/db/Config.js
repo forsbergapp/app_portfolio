@@ -154,35 +154,6 @@ const configDefault = async () => {
     }
 };
 /**
- * @name configInit
- * @description Init config
- * @function
- * @returns {Promise<null>}
- */
-const configInit = async () => {
-    return await new Promise((resolve, reject) => {
-        ORM.getFsDataExists().then((result) => {
-            if (result==true)
-                ORM.Init().then(() => {
-                    resolve(null);
-                })
-                .catch((/**@type{server_server_error}*/error)=>{
-                    reject (error);
-                });
-            else{
-                configDefault().then(() => {
-                    ORM.Init().then(() => {
-                        resolve(null);
-                    })
-                    .catch((/**@type{server_server_error}*/error)=>{
-                        reject (error);
-                    });
-                });
-            }
-        });
-    });
-};
-/**
  * @name getFile
  * @description Config get saved
  * @function
@@ -251,4 +222,4 @@ const update = async parameters => {
     await ORM.updateFsFile(parameters.resource_id, file_config.transaction_id, file_config.file_content);
     return {result:{affectedRows:1}, type:'JSON'};
 };
-export{ getFile, update, get, configInit};
+export{ getFile, update, get, configDefault};

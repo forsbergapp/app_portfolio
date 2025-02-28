@@ -6,25 +6,24 @@
 
 /**@type{import('./ORM.js')} */
 const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
+/**@type{import('./AppData.js')} */
+const AppData = await import(`file://${process.cwd()}/server/db/AppData.js`);
 
 /**
  * @name get
  * @description Get record
  * @function
- * @param {{app_id:number|null,
+ * @param {{app_id:number,
  *          resource_id:number|null,
- *          data:{  entity_id?:string|null,
+ *          data:{  app_data_entity_id?:number|null,
  *                  resource_name?:string|null}}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_table_AppDataEntityResource & {app_data_name:string, app_data_value:string, app_data_display_data:string}[] }>}
+ * @returns {server_server_response & {result?:server_db_table_AppDataEntityResource & {app_data_name:string, app_data_value:string, app_data_display_data:string}[] }}
  */
-const get = async parameters =>{ 
-    /**@type{import('./AppData.js')} */
-    const AppData = await import(`file://${process.cwd()}/server/db/AppData.js`);
-
+const get = parameters =>{ 
     const result = ORM.getObject(parameters.app_id, 'AppDataEntityResource',parameters.resource_id, null).rows
                     .filter((/**@type{server_db_table_AppDataEntityResource}*/row)=>
                                 row.id                      == (parameters.resource_id ?? row.id) &&
-                                row.app_data_entity_id      == (parameters.data.entity_id ?? row.app_data_entity_id));
+                                row.app_data_entity_id      == (parameters.data.app_data_entity_id ?? row.app_data_entity_id));
     if (result.length>0 || parameters.resource_id==null)
         /**@ts-ignore */
         return {result:result

@@ -94,8 +94,8 @@ const template = props =>`  <div id='common_profile_main'>
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_account_id:number,
- *                      user_account_id_other:number,
+ *                      iam_user_id:number,
+ *                      iam_user_id_other:number,
  *                      username:string
  *                      },
  *          methods:    {
@@ -115,18 +115,18 @@ const template = props =>`  <div id='common_profile_main'>
  */
 const component = async props => {
     const pathInfoGet =() =>{
-        if (props.data.user_account_id_other !== null)
-            return `/server-db/user_account-profile/${props.data.user_account_id_other ?? ''}`;
+        if (props.data.iam_user_id_other !== null)
+            return `/server-db/iamuser-profile/${props.data.iam_user_id_other ?? ''}`;
         else
             if (props.data.username !== null)
-                return '/server-db/user_account-profile/';
+                return '/server-db/iamuser-profile/';
             else
-                return `/server-db/user_account-profile/${props.data.user_account_id ?? ''}`;
+                return `/server-db/isamuser-profile/${props.data.iam_user_id ?? ''}`;
     };
     const profile = await props.methods.commonFFB(
                             {
                                 path:pathInfoGet(), 
-                                query:`id=${props.data.user_account_id ?? ''}` + (props.data.username!=null?`&name=${props.data.username}`:''), 
+                                query:`id=${props.data.iam_user_id ?? ''}` + (props.data.username!=null?`&name=${props.data.username}`:''), 
                                 method:'GET', 
                                 authorization_type:'APP_ID'
                             })
@@ -154,7 +154,7 @@ const component = async props => {
             props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'block';
             props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'none';
         } 
-        if (props.data.user_account_id ==null)
+        if (props.data.iam_user_id ==null)
             props.methods.commonWindowSetTimeout(()=> {props.methods.commonDialogueShow('LOGIN');}, 2000);
         else
             props.methods.commonSocketConnectOnlineCheck('common_profile_avatar_online_status', profile.id);

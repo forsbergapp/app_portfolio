@@ -4,7 +4,8 @@
 
 /**
  * 
- * @import {server_server_response} from '../../../../server/types.js'
+ * @import {server_server_response, 
+ *          server_db_table_AppDataEntity, server_db_table_AppDataResourceMaster, server_db_table_AppDataResourceDetail} from '../../../../server/types.js'
  * @import {payment_request, bank_account, merchant} from './types.js'
  */
 /**
@@ -12,7 +13,7 @@
  * @description Get payment request status
  * @function
  * @param {{app_id:number,
- *          data:{  id:string,
+ *          data:{  id:number,
  *                  message:string},
  *          user_agent:string,
  *          ip:string,
@@ -27,11 +28,8 @@ const paymentRequestGetStatus = async parameters =>{
     /**@type{import('./payment_request_create.js')} */
     const {getToken} = await import('./payment_request_create.js');
 
-    /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
-    const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
-
-    /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
-    const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
+    /**@type{import('../../../../server/server.js')} */
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
@@ -41,34 +39,54 @@ const paymentRequestGetStatus = async parameters =>{
 
     /**@type{import('../../../../server/socket.js')} */
     const {socketClientSend, socketConnectedGet} = await import(`file://${process.cwd()}/server/socket.js`);
+    
+    /**@type{import('../../../../server/db/AppDataEntity.js')} */
+    const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
 
-    const merchant = await dbModelAppDataResourceMaster.get({   app_id:parameters.app_id, 
+    /**@type{import('../../../../server/db/AppDataResourceMaster.js')} */
+    const AppDataResourceMaster = await import(`file://${process.cwd()}/server/db/AppDataResourceMaster.js`);
+
+    /**@type{import('../../../../server/db/AppDataResourceDetail.js')} */
+    const AppDataResourceDetail = await import(`file://${process.cwd()}/server/db/AppDataResourceDetail.js`);
+
+   /**@type{import('../../../../server/db/IamUserApp.js')} */
+   const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
+
+    /**@type{server_db_table_AppDataEntity} */
+    const Entity    = AppDataEntity.get({   app_id:parameters.app_id, 
+                                            resource_id:null, 
+                                            data:{data_app_id:parameters.app_id}}).result[0];
+
+
+    const merchant = await AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                 resource_id:null, 
-                                                                data:{  data_app_id:parameters.app_id,
+                                                                data:{  iam_user_id:null,
+                                                                        data_app_id:parameters.app_id,
                                                                         resource_name:'MERCHANT',
-                                                                        user_null:'0'
-                                                                }})
-                           .then(result=>result.result
-                                                .map((/**@type{merchant}*/merchant)=>JSON.parse(merchant.json_data))
-                                                .filter((/**@type{merchant}*/merchant)=>merchant.merchant_id==parameters.data.id)[0]);
+                                                                        app_data_entity_id:Entity.id
+                                                                }}).result
+                            .filter((/**@type{server_db_table_AppDataResourceMaster}*/merchant)=>
+                                serverUtilNumberValue(merchant.json_data?.merchant_id)==parameters.data.id
+                            )[0];
     if (merchant){
         /** 
-        * @type {{  api_secret:             string,
-        *           payment_request_id:     string,
-        *           origin:                 string}}
-        */
+         * @type {{  api_secret:             string,
+         *           payment_request_id:     string,
+         *           origin:                 string}}
+         */
         const  body_decrypted = JSON.parse(securityPrivateDecrypt(merchant.merchant_private_key, parameters.data.message));
-        if (merchant.merchant_api_secret==body_decrypted.api_secret && merchant.merchant_url == body_decrypted.origin){
-            const payment_request = await dbModelAppDataResourceMaster.get({   app_id:parameters.app_id, 
+        if (merchant.json_data.merchant_api_secret==body_decrypted.api_secret && merchant.json_data.merchant_url == body_decrypted.origin){
+            /**@type{payment_request} */
+            const payment_request = await AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
-                                                                                data:{  data_app_id:parameters.app_id,
+                                                                                data:{  iam_user_id:null,
+                                                                                        data_app_id:parameters.app_id,
                                                                                         resource_name:'PAYMENT_REQUEST',
-                                                                                        user_null:'0'
-                                                                                }})
-                                            .then(result=>
-                                                result.result
-                                                .map((/**@type{payment_request}*/payment_request)=>JSON.parse(payment_request.json_data??''))
-                                                .filter((/**@type{payment_request}*/payment_request)=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0]);
+                                                                                        app_data_entity_id:Entity.id
+                                                                                }}).result
+                                            .filter((/**@type{server_db_table_AppDataResourceMaster}*/payment_request)=>
+                                                payment_request.json_data?.payment_request_id==body_decrypted.payment_request_id
+                                            )[0];
             try {
                 const access_token = await getToken({app_id:parameters.app_id, authorization:parameters.authorization, ip:parameters.ip});
                 //authenticate the app_custom_id is the payment request id
@@ -79,30 +97,37 @@ const paymentRequestGetStatus = async parameters =>{
                     const data_return = {   status:                 payment_request.status};
                     const data_encrypted = securityPublicEncrypt(merchant.merchant_public_key, JSON.stringify(data_return));
 
-                    const account_payer =  await dbModelAppDataResourceDetail.get({ app_id:parameters.app_id, 
-                                                                                    resource_id:null, 
-                                                                                    data:{  data_app_id:parameters.app_id,
-                                                                                            resource_name:'ACCOUNT',
-                                                                                            user_null:'0'
-                                                                                    }})
-                                                    .then(result=>result.result.filter((/**@type{bank_account}*/result)=>result.bank_account_vpa == payment_request.payerid)[0]);
+                    /**@type{bank_account & {app_data_resource_master_id:server_db_table_AppDataResourceDetail['app_data_resource_master_id']}}*/
+                    const account_payer =  AppDataResourceDetail.get({  app_id:parameters.app_id, 
+                                                                        resource_id:null, 
+                                                                        data:{  iam_user_id:null,
+                                                                                data_app_id:parameters.app_id,
+                                                                                resource_name:'ACCOUNT',
+                                                                                app_data_resource_master_id:null,
+                                                                                app_data_entity_id:Entity.id
+                                                                        }}).result
+                                        .filter((/**@type{server_db_table_AppDataResourceDetail}*/result)=>
+                                            result.json_data?.bank_account_vpa == payment_request.payerid
+                                        )[0];
                     if (account_payer){
                         //if status is still pending then send server side event message to customer
                         if (payment_request.status=='PENDING'){
-                            const customer = await dbModelAppDataResourceMaster.get({   app_id:parameters.app_id, 
-                                                                                        resource_id:account_payer.app_data_resource_master_id, 
-                                                                                        data:{  data_app_id:parameters.app_id,
-                                                                                                resource_name:'CUSTOMER',
-                                                                                                user_null:'0'
-                                                                                        }})
-                                                    .then(result=>result.result[0]);
+                            /**@type{server_db_table_AppDataResourceMaster} */
+                            const customer = AppDataResourceMaster.get({app_id:parameters.app_id, 
+                                                                        resource_id:account_payer.app_data_resource_master_id, 
+                                                                        data:{  iam_user_id:null,
+                                                                                data_app_id:parameters.app_id,
+                                                                                resource_name:'CUSTOMER',
+                                                                                app_data_entity_id:Entity.id
+                                                                        }}).result[0];
                             //check SOCKET connected list
-                            for (const user_connected of socketConnectedGet(customer.user_account_app_user_account_id ?? 0)){
+                            for (const user_connected of socketConnectedGet(IamUserApp.get({app_id:parameters.app_id, resource_id:customer.iam_user_app_id, data:{iam_user_id:null, data_app_id:null}}).result[0].id)){
                                 const message = {
                                     type: 'PAYMENT_REQUEST', 
                                     token:parameters.authorization.split('Bearer ')[1], 
                                     exp:access_token.exp
                                 };
+                                //send payment request message
                                 socketClientSend(user_connected.response, Buffer.from(JSON.stringify(message)).toString('base64'), 'APP_FUNCTION');    
                             }
                         }

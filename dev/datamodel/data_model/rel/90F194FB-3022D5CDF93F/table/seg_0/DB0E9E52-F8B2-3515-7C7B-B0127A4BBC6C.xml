@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="DB0E9E52-F8B2-3515-7C7B-B0127A4BBC6C" name="log_app_info">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="DB0E9E52-F8B2-3515-7C7B-B0127A4BBC6C" name="LogAppInfo">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:34 UTC</createdTime>
 <generatorID>A3C6E3A4-F9EB-A23A-0FAE-3A14124ABC75</generatorID>

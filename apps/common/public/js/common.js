@@ -37,11 +37,11 @@ const COMMON_GLOBAL = {
     info_link_disclaimer_url:null,
     info_link_terms_url:null,
     info_link_about_url:null,
+    iam_user_app_id:null,
     iam_user_id:null,
     iam_user_username:null,
     admin_first_time:null,
     admin_only:null,
-    user_account_id:null,
     client_latitude:'',
     client_longitude:'',
     client_place:'',
@@ -1078,7 +1078,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                     mountDiv:   'common_dialogue_iam_verify',
                     data:       {
                                     common_app_id:              COMMON_GLOBAL.common_app_id,
-                                    user_account_id:            COMMON_GLOBAL.user_account_id,
+                                    iam_user_id:                COMMON_GLOBAL.iam_user_id,
                                     user_verification_type:     user_verification_type
                                 },
                     methods:    {   commonFFB:                  commonFFB,
@@ -1175,11 +1175,9 @@ const commonMesssageNotAuthorized = () => '⛔';
  */
 const commonUserSessionClear = () => {
     //iam user
+    COMMON_GLOBAL.iam_user_app_id =         null;
     COMMON_GLOBAL.iam_user_id =             null;
     COMMON_GLOBAL.iam_user_username =       null;
-
-    //db user
-    COMMON_GLOBAL.user_account_id =         null;
 
     //admin access token
     COMMON_GLOBAL.token_admin_at =          null;
@@ -1466,8 +1464,8 @@ const commonProfileDetail = (detailchoice) => {
         commonComponentRender({
             mountDiv:   'common_profile_detail_list',
             data:       {
-                        user_account_id:COMMON_GLOBAL.user_account_id,
-                        user_account_id_profile:COMMON_DOCUMENT.querySelector('#common_profile_id').textContent,
+                        iam_user_id:COMMON_GLOBAL.iam_user_id,
+                        iam_user_id_profile:COMMON_DOCUMENT.querySelector('#common_profile_id').textContent,
                         detailchoice:detailchoice
                         },
             methods:    {
@@ -1488,7 +1486,7 @@ const commonProfileSearch = click_function => {
     commonComponentRender({
         mountDiv:   'common_profile_search_list_wrap',
         data:       {
-                    user_account_id:COMMON_GLOBAL.user_account_id
+                    iam_user_id:COMMON_GLOBAL.iam_user_id
                     },
         methods:    {
                     commonMiscInputControl:commonMiscInputControl,
@@ -1508,11 +1506,11 @@ const commonProfileSearch = click_function => {
  *              commonProfileShow(userid, null)     from choosing profile in commonProfileStat, profile_detail and commonProfileSearch
  *              commonProfileShow(null, username)   from init startup when user enters url
  * @function
- * @param {number|null} user_account_id_other 
+ * @param {number|null} iam_user_id_other 
  * @param {string|null} username 
  * @returns {Promise.<void>}
  */
-const commonProfileShow = async (user_account_id_other = null, username = null) => {
+const commonProfileShow = async (iam_user_id_other = null, username = null) => {
     await commonComponentRender({
         mountDiv:   'common_dialogue_profile',
         data:       {   
@@ -1527,8 +1525,8 @@ const commonProfileShow = async (user_account_id_other = null, username = null) 
     await commonComponentRender({
         mountDiv:   'common_dialogue_profile_content',
         data:       {   
-                    user_account_id:COMMON_GLOBAL.user_account_id,
-                    user_account_id_other:user_account_id_other,
+                    iam_user_id:COMMON_GLOBAL.iam_user_id,
+                    iam_user_id_other:iam_user_id_other,
                     username:username
                     },
         methods:    {
@@ -1552,7 +1550,7 @@ const commonProfileUpdateStat = async () => {
     return new Promise((resolve, reject) => {
         const profile_id = COMMON_DOCUMENT.querySelector('#common_profile_id');
         //get updated stat for given user
-       commonFFB({path:`/server-db/user_account-profile/${profile_id.textContent}`, 
+       commonFFB({path:`/server-db/iamuser-profile/${profile_id.textContent}`, 
             query:`id=${profile_id.textContent}`, 
             method:'GET', 
             authorization_type:'APP_ID'})
@@ -1612,9 +1610,9 @@ const commonUserLogin = async () => {
                                                                 COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password').textContent),
                                         spinner_id:spinner_item});
     if (JSON.parse(result_iam).active==1){
+        COMMON_GLOBAL.iam_user_app_id =         JSON.parse(result_iam).iam_user_app_id;
         COMMON_GLOBAL.iam_user_id =             JSON.parse(result_iam).iam_user_id;
         COMMON_GLOBAL.iam_user_username =       JSON.parse(result_iam).iam_user_username;
-        COMMON_GLOBAL.user_account_id =         JSON.parse(result_iam).user_account_id;
         COMMON_GLOBAL.token_exp =               JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat =               JSON.parse(result_iam).iat;
         COMMON_GLOBAL.token_timestamp =         JSON.parse(result_iam).tokentimestamp;
@@ -1636,25 +1634,25 @@ const commonUserLogin = async () => {
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
     
-            const result = await commonFFB({path:`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, 
-                                            query:`IAM_data_app_id=${COMMON_GLOBAL.app_id}`,
+            const result = await commonFFB({path:`/server-db/iamuserapp/${COMMON_GLOBAL.iam_user_app_id ?? ''}`, 
+                                            query:`IAM_data_app_id=${COMMON_GLOBAL.app_id}&IAM_iam_user_id=${COMMON_GLOBAL.iam_user_id}`,
                                             method:'GET', authorization_type:'APP_ACCESS', spinner_id:spinner_item});
-            const user_account_app = JSON.parse(result)[0];
+            const IamUserApp = JSON.parse(result)[0];
     
             //locale
-            if (user_account_app.preference_locale==null)
+            if (IamUserApp.preference_locale==null)
                 commonUserPreferencesGlobalSetDefault('LOCALE');
             else
-                COMMON_GLOBAL.user_locale = user_account_app.preference_locale;
+                COMMON_GLOBAL.user_locale = IamUserApp.preference_locale;
             //timezone
-            if (user_account_app.preference_timezone==null)
+            if (IamUserApp.preference_timezone==null)
                 commonUserPreferencesGlobalSetDefault('TIMEZONE');
             else
-                COMMON_GLOBAL.user_timezone = user_account_app.preference_timezone;
+                COMMON_GLOBAL.user_timezone = IamUserApp.preference_timezone;
             //direction
-            COMMON_GLOBAL.user_direction = user_account_app.preference_direction;
+            COMMON_GLOBAL.user_direction = IamUserApp.preference_direction;
             //arabic script
-            COMMON_GLOBAL.user_arabic_script = user_account_app.preference_arabic_script;
+            COMMON_GLOBAL.user_arabic_script = IamUserApp.preference_arabic_script;
             //update body class with app theme, direction and arabic script usage classes
             commonMiscPreferencesUpdateBodyClassFromPreferences();
             commonComponentRemove(current_dialogue, true);
@@ -1663,9 +1661,9 @@ const commonUserLogin = async () => {
         }
     }
     else{
+        COMMON_GLOBAL.iam_user_app_id =         JSON.parse(result_iam).iam_user_app_id;
         COMMON_GLOBAL.iam_user_id =             JSON.parse(result_iam).iam_user_id;
         COMMON_GLOBAL.iam_user_username =       JSON.parse(result_iam).iam_user_username;
-        COMMON_GLOBAL.user_account_id =         JSON.parse(result_iam).user_account_id;
         COMMON_GLOBAL.token_at	=               JSON.parse(result_iam).token_at;
         COMMON_GLOBAL.token_exp =               JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat =               JSON.parse(result_iam).iat;
@@ -1835,7 +1833,7 @@ const commonUserSignup = () => {
            
        commonFFB({path:'/server-iam/iam_user', method:'POST', authorization_type:'IAM_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
         .then(result=>{
-            COMMON_GLOBAL.user_account_id = JSON.parse(result).user_account_id;
+            COMMON_GLOBAL.iam_user_app_id = JSON.parse(result).iam_user_app_id;
             COMMON_GLOBAL.iam_user_id =     JSON.parse(result).iam_user_id;
             COMMON_GLOBAL.token_at =        JSON.parse(result).token_at;
             COMMON_GLOBAL.token_exp =       JSON.parse(result).exp;
@@ -1900,16 +1898,16 @@ const commonUserFunction = function_name => {
         /**@type{import('../../../common_types.js').CommonRESTAPIMethod} */
         let method;
         let path;
-        const json_data = { user_account_id: user_id_profile};
+        const json_data = { iam_user_id: user_id_profile};
         const check_div = COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`);
         if (check_div.children[0].style.display == 'block') {
-            path = `/server-db/user_account_${function_name.toLowerCase()}/${COMMON_GLOBAL.user_account_id ?? ''}`;
+            path = `/server-db/iamuser${function_name.toLowerCase()}/${COMMON_GLOBAL.iam_user_id ?? ''}`;
             method = 'POST';
         } else {
-            path = `/server-db/user_account_${function_name.toLowerCase()}/${COMMON_GLOBAL.user_account_id ?? ''}`;
+            path = `/server-db/iamuser${function_name.toLowerCase()}/${COMMON_GLOBAL.iam_user_id ?? ''}`;
             method = 'DELETE';
         }
-        if (COMMON_GLOBAL.user_account_id == null)
+        if (COMMON_GLOBAL.iam_user_id == null)
             commonDialogueShow('LOGIN');
         else {
            commonFFB({path:path, method:method, authorization_type:'APP_ACCESS', body:json_data})
@@ -1931,16 +1929,16 @@ const commonUserFunction = function_name => {
     });
 };
 /**
- * @name commonUserAccountAppDelete
+ * @name commonIamUserAppDelete
  * @description User account app delete
  * @function
  * @param {number|null} choice 
- * @param {number} user_account_id 
+ * @param {number|null} iam_user_app_id 
  * @param {number} app_id 
  * @param {function|null} function_delete_event 
  * @returns {void}
  */
-const commonUserAccountAppDelete = (choice=null, user_account_id, app_id, function_delete_event=null) => {
+const commonIamUserAppDelete = (choice=null, iam_user_app_id, app_id, function_delete_event=null) => {
     switch (choice){
         case null:{
             commonMessageShow('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
@@ -1948,7 +1946,7 @@ const commonUserAccountAppDelete = (choice=null, user_account_id, app_id, functi
         }
         case 1:{
             commonComponentRemove('common_dialogue_message');
-            commonFFB({path:`/server-db/user_account_app/${user_account_id}`, 
+            commonFFB({path:`/server-db/iamuserapp/${iam_user_app_id}`, 
                         body:{IAM_data_app_id:app_id}, method:'DELETE', authorization_type:'APP_ACCESS'})
             .then(()=>{
                 //execute event and refresh app list
@@ -1975,11 +1973,11 @@ const commonUserForgot = async () => {
                     email: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_forgot_email')
                     })==true){
         
-       commonFFB({path:'/server-db/user_account-forgot', method:'POST', authorization_type:'APP_ID', body:json_data, spinner_id:'common_dialogue_iam_start_forgot_button'})
+       commonFFB({path:'/server-db/iamuser-forgot', method:'POST', authorization_type:'APP_ID', body:json_data, spinner_id:'common_dialogue_iam_start_forgot_button'})
         .then(result=>{
             if (JSON.parse(result).sent == 1){
+                COMMON_GLOBAL.iam_user_app_id = null;
                 COMMON_GLOBAL.iam_user_id =     JSON.parse(result).iam_user_id;
-                COMMON_GLOBAL.user_account_id = JSON.parse(result).user_account_id;
                 COMMON_GLOBAL.token_at	=       JSON.parse(result).token_at;
                 COMMON_GLOBAL.token_exp =       JSON.parse(result).exp;
                 COMMON_GLOBAL.token_iat =       JSON.parse(result).iat;
@@ -1998,7 +1996,7 @@ const commonUserForgot = async () => {
  * @returns {Promise.<boolean>}
  */
 const commonUserAuthenticateCode = async (verification_code, verification_type) => {
-    return await commonFFB({ path:`/server-db/user_account-activate/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
+    return await commonFFB({ path:`/server-db/iamuser-activate/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
                 method:'PUT', 
                 authorization_type:'APP_ACCESS_VERIFICATION', 
                 body:{   verification_code:  verification_code,
@@ -2013,9 +2011,9 @@ const commonUserAuthenticateCode = async (verification_code, verification_type) 
     .then(result=>{
             if (JSON.parse(result).activated == 1){
                 //returns a new APP_ACCESS_VERIFICATION token
+                COMMON_GLOBAL.iam_user_app_id =         JSON.parse(result).iam_user_app_id;
                 COMMON_GLOBAL.iam_user_id =             JSON.parse(result).iam_user_id;
                 COMMON_GLOBAL.iam_user_username =       JSON.parse(result).iam_user_username;
-                COMMON_GLOBAL.user_account_id =         JSON.parse(result).user_account_id;
                 COMMON_GLOBAL.token_at	=               JSON.parse(result).token_at;
                 COMMON_GLOBAL.token_exp =               JSON.parse(result).exp;
                 COMMON_GLOBAL.token_iat =               JSON.parse(result).iat;
@@ -2059,7 +2057,7 @@ const commonUserUpdatePassword = () => {
  * @returns {Promise.<void>}
  */
 const commonUserPreferenceSave = async () => {
-    if (COMMON_GLOBAL.user_account_id != null){
+    if (COMMON_GLOBAL.iam_user_id != null){
         const body = {
                         IAM_data_app_id: COMMON_GLOBAL.app_id,
                         json_data: 
@@ -2074,7 +2072,7 @@ const commonUserPreferenceSave = async () => {
                                                                         .getAttribute('data-value'),
                         }
                     };
-        await commonFFB({path:`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PATCH', authorization_type:'APP_ACCESS', body:body});
+        await commonFFB({path:`/server-db/iamuserapp/${COMMON_GLOBAL.iam_user_id ?? ''}`, method:'PATCH', authorization_type:'APP_ACCESS', body:body});
     }
 };
 /**
@@ -2457,11 +2455,11 @@ const commonSocketConnectOnline = async () => {
  * @description Socket check online
  * @function
  * @param {string} div_icon_online 
- * @param {number} user_account_id 
+ * @param {number} iam_user_id 
  * @returns {void}
  */
-const commonSocketConnectOnlineCheck = (div_icon_online, user_account_id) => {
-   commonFFB({path:`/server-socket/socket-status/${user_account_id}`, method:'GET', authorization_type:'APP_ID'})
+const commonSocketConnectOnlineCheck = (div_icon_online, iam_user_id) => {
+   commonFFB({path:`/server-socket/socket-status/${iam_user_id}`, method:'GET', authorization_type:'APP_ID'})
     .then(result=>COMMON_DOCUMENT.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online==1?'online':'offline'));
 };
 /**
@@ -2587,7 +2585,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
                     default_data_value:COMMON_GLOBAL.user_locale,
                     default_value:'',
                     options: await commonFFB({
-                                                path:'/app-module/COMMON_LOCALE', 
+                                                path:'/appmodule/COMMON_LOCALE', 
                                                 query:`locale=${COMMON_GLOBAL.user_locale}`, 
                                                 method:'POST', authorization_type:'APP_ID',
                                                 body:{type:'FUNCTION',IAM_data_app_id : COMMON_GLOBAL.common_app_id}
@@ -2613,7 +2611,6 @@ const commonEventSelectAction = async (event_target_id, target) =>{
                    data:       {
                                 app_id:COMMON_GLOBAL.app_id,
                                 iam_user_id:COMMON_GLOBAL.iam_user_id,
-                                user_account_id:COMMON_GLOBAL.user_account_id,
                                 common_app_id:COMMON_GLOBAL.common_app_id,
                                 admin_app_id:COMMON_GLOBAL.admin_app_id
                                },
@@ -2909,7 +2906,6 @@ const commonEvent = async (event_type,event=null) =>{
                                 data:       {
                                             app_id:COMMON_GLOBAL.app_id,
                                             iam_user_id:COMMON_GLOBAL.iam_user_id,
-                                            user_account_id:COMMON_GLOBAL.user_account_id,
                                             common_app_id:COMMON_GLOBAL.common_app_id,
                                             admin_app_id:COMMON_GLOBAL.admin_app_id
                                             },
@@ -2966,10 +2962,10 @@ const commonEvent = async (event_type,event=null) =>{
                         case 'common_profile_search_list':{
                             if (event.target.classList.contains('common_profile_search_list_username')){
                                 if (COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function']){
-                                    await COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function'](commonMiscElementRow(event.target).getAttribute('data-user_account_id'));
+                                    await COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function'](commonMiscElementRow(event.target).getAttribute('data-iam_user_id'));
                                 }
                                 else
-                                    await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-user_account_id')),null);
+                                    await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
                             }
                             break;
                         }
@@ -3035,26 +3031,26 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_profile_stat_list':{
-                            await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-user_account_id')),null);
+                            await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
                             break;
                         }
                         case 'common_profile_detail_list':{
                             if (event.target.classList.contains('common_profile_detail_list_username'))
-                                await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-user_account_id')),null);
+                                await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
                             else{
                                 //app list
                                 if (event.target.classList.contains('common_profile_detail_list_app_name'))
                                     COMMON_WINDOW.open(commonMiscElementRow(event.target).getAttribute('data-url') ?? '', '_blank');
                                 else
-                                    if (COMMON_DOCUMENT.querySelector('#common_profile_id').textContent==COMMON_GLOBAL.user_account_id &&
+                                    if (COMMON_DOCUMENT.querySelector('#common_profile_id').textContent==COMMON_GLOBAL.iam_user_id &&
                                         event.target.parentNode.classList.contains('common_profile_detail_list_app_delete')){
-                                            await commonUserAccountAppDelete(null, 
-                                                                    COMMON_DOCUMENT.querySelector('#common_profile_id').textContent,
+                                            commonIamUserAppDelete( null, 
+                                                                    COMMON_GLOBAL.iam_user_app_id,
                                                                     Number(commonMiscElementRow(event.target).getAttribute('data-app_id')),
                                                                     () => { 
                                                                         commonComponentRemove('common_dialogue_message');
-                                                                        commonUserAccountAppDelete(1, 
-                                                                                                COMMON_DOCUMENT.querySelector('#common_profile_id').textContent, 
+                                                                        commonIamUserAppDelete(1, 
+                                                                            COMMON_GLOBAL.iam_user_app_id, 
                                                                                                 Number(commonMiscElementRow(event.target).getAttribute('data-app_id')), 
                                                                                                 null);
                                                                     });
@@ -3323,15 +3319,14 @@ const commonInitParametersInfoSet = parameters => {
     //client credentials
     COMMON_GLOBAL.token_dt = parameters.app_idtoken;
 
-    //admin
+    //user info
+    COMMON_GLOBAL.iam_user_app_id = null;
     COMMON_GLOBAL.iam_user_id = null;
     COMMON_GLOBAL.iam_user_username = null;
     COMMON_GLOBAL.admin_only = parameters.admin_only;
     COMMON_GLOBAL.admin_first_time = parameters.first_time;
 
-    //user info
-    COMMON_GLOBAL.user_account_id = null;
-    
+   
     //client info
     COMMON_GLOBAL.client_latitude  = parameters.client_latitude;
     COMMON_GLOBAL.client_longitude = parameters.client_longitude;

@@ -85,7 +85,7 @@ const template = () => `<div id='mapid'></div>
 const component = async props => {
     //fetch all settings for current app id
     /**@type{CommonAppDataRecord[]} */
-    const settings = await props.methods.commonFFB({path:'/server-db/app_data/',
+    const settings = await props.methods.commonFFB({path:'/server-db/appdata/',
                                                     query:`IAM_data_app_id=${props.data.app_id}&name=PLACE`,
                                                     method:'GET', 
                                                     authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));

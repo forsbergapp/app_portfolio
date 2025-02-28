@@ -67,7 +67,7 @@ const component = async props => {
                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     };
     /**@type{[{count_users:number, count_connected:number}]} */
-    const user_stat = await props.methods.commonFFB({path:'/server-db/user_account-stat', method:'GET', authorization_type:'ADMIN'})
+    const user_stat = await props.methods.commonFFB({path:'/server-db/iamuser-stat', method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     //add count stat
     for (const row of user_stat)

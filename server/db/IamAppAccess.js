@@ -47,13 +47,12 @@ const post = async (app_id, data) =>{
             data_new.res =                  data.res;
             data_new.ip =                   data.ip;
             data_new.type =                 data.type;
-            data_new.iam_user_id =          data.iam_user_id;
             //optional
+            data_new.iam_user_app_id =      data.iam_user_app_id;
+            data_new.iam_user_id =          data.iam_user_id;
             data_new.iam_user_username =    data.iam_user_username; //for security reason can be omitted in a user verification process
-            data_new.user_account_id =      data.user_account_id;
             data_new.app_custom_id =        data.app_custom_id; //used by app_access_external
             data_new.token =                data.token;
-            data_new.db =                   data.db;
             data_new.ua =                   data.ua;
             //required server value
             data_new.created =              new Date().toISOString();

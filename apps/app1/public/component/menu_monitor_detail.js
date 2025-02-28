@@ -53,9 +53,6 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                             <div data-column='app_id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
                                                 APP ID
                                             </div>
-                                            <div data-column='user_account_id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('user_account_id')}'>
-                                                DB USER ID
-                                            </div>
                                             <div data-column='iam_user_id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('iam_user_id')}'>
                                                 IAM ID
                                             </div>
@@ -94,7 +91,6 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                                     iam_user_username:string|null,
                                                                     iam_user_type:'ADMIN'|'USER'|null,
                                                                     ip:string,
-                                                                    user_account_id:number,
                                                                     gps_latitude:string,
                                                                     gps_longitude:string,
                                                                     place:string,
@@ -110,9 +106,6 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
                                                     ${log.app_id}
-                                                </div>
-                                                <div class='menu_monitor_detail_connected_col'>
-                                                    ${log.user_account_id ?? ''}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
                                                     ${log.iam_user_id ?? ''}

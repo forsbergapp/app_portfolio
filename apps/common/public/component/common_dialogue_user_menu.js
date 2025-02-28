@@ -104,7 +104,7 @@ const component = async props => {
 
     //fetch all settings for common app id
     /**@type{CommonAppDataRecord[]} */
-    const settings = props.data.admin_only == 1?[]:await props.methods.commonFFB({  path:'/server-db/app_data/', 
+    const settings = props.data.admin_only == 1?[]:await props.methods.commonFFB({  path:'/server-db/appdata/', 
                                                                                     query:`IAM_data_app_id=${props.data.common_app_id}`, 
                                                                                     method:'GET', 
                                                                                     authorization_type:'APP_ID'})
@@ -112,7 +112,7 @@ const component = async props => {
 
     /**@type{{locale:string, text:string}[]} */
     const locales = await props.methods.commonFFB({
-                                                    path:'/app-module/COMMON_LOCALE', 
+                                                    path:'/appmodule/COMMON_LOCALE', 
                                                     query:`locale=${props.data.user_locale}`, 
                                                     method:'POST', authorization_type:'APP_ID',
                                                     body:{type:'FUNCTION',IAM_data_app_id : props.data.common_app_id}

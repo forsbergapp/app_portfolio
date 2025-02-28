@@ -4,12 +4,7 @@
   "main": "server.js",
   "dependencies": {
     "jsonwebtoken": "^9.0.0",
-    "mysql": "^2.18.1",
-    "nodemailer": "^6.9.1",
-    "oracledb": "^6.2.0",
-    "pg": "^8.10.0",
-    "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "nodemailer": "^6.9.1"
   },
   "scripts": {
     "test": "jasmine --config=test/jasmine.json"
@@ -22,11 +17,7 @@
   "devDependencies": {
     "@types/jasmine": "^5.1.0",
     "@types/jsonwebtoken": "^9.0.3",
-    "@types/mysql": "^2.15.22",
     "@types/nodemailer": "^6.4.11",
-    "@types/oracledb": "^6.0.1",
-    "@types/pg": "^8.10.3",
-    "@types/sqlite3": "^3.1.11",
     "eslint": "^8.49.0",
     "jasmine": "^5.1.0"
   }

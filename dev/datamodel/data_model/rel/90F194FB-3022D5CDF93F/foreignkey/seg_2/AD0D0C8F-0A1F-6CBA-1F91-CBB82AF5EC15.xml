@@ -4,7 +4,7 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>31604114-EF33-D163-A5FE-228074B7D8AF</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<referredTableLongName>app_data_resourec_master</referredTableLongName>
+<referredTableLongName>AppDataResourceMaster</referredTableLongName>
 <deleteRule>NO ACTION</deleteRule>
 <referredTableID>95AA75DC-87D3-6DE1-A9C4-C19C55719B19</referredTableID>
 <keyObject>AD9CDF86-D754-6AA6-D21D-FF40AAEF83E8</keyObject>

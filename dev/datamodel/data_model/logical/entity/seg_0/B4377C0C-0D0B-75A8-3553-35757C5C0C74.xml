@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B4377C0C-0D0B-75A8-3553-35757C5C0C74" name="iam_app_access">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B4377C0C-0D0B-75A8-3553-35757C5C0C74" name="IamAppAccess">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:35:47 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -65,6 +65,18 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="iam_user_app_id" id="86E0F8AB-C41A-C1CD-2376-EC3A9C7E953B">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-27 15:40:00 UTC</createdTime>
+<generatorID>D06D84C5-606D-7882-C2A7-E1EF568944C1</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>7FBFB51D-9077-C03B-C96E-F42E247BBF89</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>

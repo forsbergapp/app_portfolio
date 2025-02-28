@@ -263,7 +263,7 @@ const component = async props => {
      * @returns {Promise.<{value:string, text:string}[]>}
      */
     const map_country = async locale =>  [{value:'', text:'...'}].concat(await props.methods.commonFFB({
-                                                                                                            path:'/app-module/COMMON_COUNTRY', 
+                                                                                                            path:'/appmodule/COMMON_COUNTRY', 
                                                                                                             query:`locale=${locale}`,
                                                                                                             method:'POST', 
                                                                                                             authorization_type:'APP_ID', 
@@ -285,7 +285,7 @@ const component = async props => {
     const map_city = async country_code =>{
         if (country_code!=null){
             /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
-            const cities = await props.methods.commonFFB({path:'/app-module/COMMON_WORLDCITIES_COUNTRY', 
+            const cities = await props.methods.commonFFB({path:'/appmodule/COMMON_WORLDCITIES_COUNTRY', 
                 method:'POST', 
                 authorization_type:'APP_ID', 
                 body:{type:'FUNCTION',country:country_code.toUpperCase(), IAM_data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
