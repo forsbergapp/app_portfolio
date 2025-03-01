@@ -51,8 +51,7 @@ const get = parameters =>{
                                                             resource_name:parameters.data.resource_name_data_master_attribute,
                                                             app_data_entity_id:parameters.data.app_data_entity_id}}).result
                         .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
-                            ((parameters.data.iam_user_id==null && row_master.iam_user_app_id ==null) || 
-                                (parameters.data.iam_user_id!=null && row_master.iam_user_app_id == iam_user_app?.id && row_master.iam_user_app_id !=null)) 
+                            (parameters.data.iam_user_id==null || (parameters.data.iam_user_id!=null && row_master.iam_user_app_id == iam_user_app?.id && row_master.iam_user_app_id !=null)) 
                         ).length>0 &&
 
                         AppDataResourceDetail.get({ app_id:parameters.app_id, 
@@ -73,6 +72,7 @@ const get = parameters =>{
                                                                 resource_name:parameters.data.resource_name_master_attribute,
                                                                 app_data_entity_id:parameters.data.app_data_entity_id}}).result
                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
+                                (parameters.data.iam_user_id==null || (parameters.data.iam_user_id!=null && row_master.iam_user_app_id == iam_user_app?.id && row_master.iam_user_app_id !=null)) &&
                                 AppDataEntity.get({ app_id:parameters.app_id, 
                                                     resource_id:row_master.app_data_entity_resource_app_data_entity_id,
                                                     data:{data_app_id:parameters.data.data_app_id}}).result.length>0

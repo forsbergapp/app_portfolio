@@ -191,7 +191,7 @@ const paymentRequestCreate = async parameters =>{
                                                                                                                             resource_id:null, 
                                                                                                                             data:{  resource_name:'PAYMENT_REQUEST',
                                                                                                                                     app_data_entity_id:Entity.id
-                                                                                                                            }}).result.result[0].id
+                                                                                                                            }}).result[0].id
                                     };
                 await AppDataResourceMaster.post({app_id:parameters.app_id, data:data_new_payment_request});
                 const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS_EXTERNAL', {   
