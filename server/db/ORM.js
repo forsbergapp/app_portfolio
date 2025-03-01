@@ -470,7 +470,15 @@ const getObject = (app_id, table, resource_id, data_app_id) =>{
     try {
         //copy array using JON.stringify and JSON.parse since spread operator, Array.from() and Object.assign({},array) do not work
         /**@type{*} */
-        const records = JSON.parse(JSON.stringify(DB.data.filter(object=>object.name == table && object.type=='TABLE')[0].cache_content.filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id))));
+        const records = JSON.parse(JSON.stringify(DB.data.filter(object=>object.name == table && object.type=='TABLE')[0].cache_content.filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id))))
+                        .map((/**@type{*}*/row)=>{
+                            if ('json_data' in row)
+                                return {...row,
+                                        ...{...row.json_data}
+                                };
+                            else
+                                return row;
+                        });
         
         //log in background without waiting if db log is enabled
         import(`file://${process.cwd()}/server/db/Log.js`).then((/**@type{import('./Log.js')} */Log)=>

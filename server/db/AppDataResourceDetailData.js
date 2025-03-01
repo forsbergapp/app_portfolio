@@ -31,7 +31,7 @@ const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js
  *                  resource_name_data_master_attribute:string|null,
  *                  app_data_resource_detail_id:number|null,
  *                  app_data_entity_id:number}}} parameters
- * @returns {server_server_response & {result?:server_db_table_AppDataResourceDetailData[] }}
+ * @returns {server_server_response & {result?:server_db_table_AppDataResourceDetailData & {adrm_attribute_master_json_data:{}}[]|*}}
  */
 const get = parameters =>{ 
     const result = ORM.getObject(parameters.app_id, 'AppDataResourceDetailData',parameters.resource_id, null).rows
@@ -40,13 +40,13 @@ const get = parameters =>{
                         //detail data master attribute
                         AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                             resource_id:row.app_data_resource_master_attribute_id,
-                                                            data:{  data_app_id:null,
-                                                                    iam_user_id:null,
+                                                            data:{  data_app_id:parameters.data.iam_user_id==null?null:parameters.data.data_app_id??null,
+                                                                    iam_user_id:parameters.data.iam_user_id,
                                                                     resource_name:parameters.data.resource_name_data_master_attribute,
                                                                     app_data_entity_id:parameters.data.app_data_entity_id}}).result.length>0 &&
                         AppDataResourceDetail.get({ app_id:parameters.app_id, 
                                                     resource_id:row.app_data_resource_detail_id,
-                                                    data:{  data_app_id:parameters.data.data_app_id,
+                                                    data:{  data_app_id:parameters.data.iam_user_id==null?null:parameters.data.data_app_id??null,
                                                             iam_user_id:parameters.data.iam_user_id,
                                                             resource_name:parameters.data.resource_name,
                                                             app_data_resource_master_id:null,
@@ -54,33 +54,37 @@ const get = parameters =>{
                         .filter((/**@type{server_db_table_AppDataResourceDetail}*/row_detail)=>
                             //detail master attribute
                             AppDataResourceMaster.get({ app_id:parameters.app_id, 
-                                resource_id:row_detail.app_data_resource_master_attribute_id,
-                                data:{  data_app_id:null,
-                                        iam_user_id:null,
-                                        resource_name:parameters.data.resource_name_master_attribute,
-                                        app_data_entity_id:parameters.data.app_data_entity_id}}).result.length>0 &&
-                            AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         resource_id:row_detail.app_data_resource_master_id,
-                                                        data:{  data_app_id:parameters.data.data_app_id,
+                                                        data:{  data_app_id:parameters.data.iam_user_id==null?null:parameters.data.data_app_id??null,
                                                                 iam_user_id:parameters.data.iam_user_id,
-                                                                resource_name:parameters.data.resource_name,
+                                                                resource_name:parameters.data.resource_name_master_attribute,
                                                                 app_data_entity_id:parameters.data.app_data_entity_id}}).result
                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
-                                IamUserApp.get({app_id:parameters.app_id, 
+                                (parameters.data.iam_user_id==null?true:IamUserApp.get({app_id:parameters.app_id, 
                                                 resource_id:row_master.iam_user_app_id, 
-                                                data:{  data_app_id:parameters.data.data_app_id??null,
-                                                        iam_user_id:parameters.data.iam_user_id}}).result.length>0 &&
+                                                data:{  data_app_id:parameters.data.iam_user_id==null?null:parameters.data.data_app_id??null,
+                                                        iam_user_id:parameters.data.iam_user_id}}).result.length>0) &&
                                 AppDataEntity.get({ app_id:parameters.app_id, 
                                                     resource_id:row_master.app_data_entity_resource_app_data_entity_id,
                                                     data:{data_app_id:parameters.data.data_app_id}}).result.length>0
                             )
                         ).length>0
-                    );               
+                    )
+                    .map((/**@type{server_db_table_AppDataResourceDetailData & {adrm_attribute_master_json_data:{}}}*/row)=>{     
+                            row.adrm_attribute_master_json_data = AppDataResourceMaster.get({ app_id:parameters.app_id, 
+                                                                                        resource_id:row.app_data_resource_master_attribute_id,
+                                                                                        data:{  data_app_id:null,
+                                                                                                iam_user_id:null,
+                                                                                                resource_name:null,
+                                                                                                app_data_entity_id:parameters.data.app_data_entity_id}}).result[0].json_data;
+                        return row;
+                    });
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
         return ORM.getError(parameters.app_id, 404);
 };
+
 /**
  * @name post
  * @description Create record
