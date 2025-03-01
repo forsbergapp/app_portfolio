@@ -274,9 +274,8 @@ const component = async props => {
                                                             query:props.data.master_query, 
                                                             method:props.data.master_method, authorization_type:props.data.master_token_type, body:props.data.master_body})
                                         .then((/**@type{*}*/result)=>
-                                            props.data.new_resource?JSON.parse(result).rows.map((/**@type{*}*/row)=>
-                                                JSON.parse(row.json_data)):
-                                JSON.parse(result).rows[0]):{};
+                                            props.data.new_resource?JSON.parse(result).rows:JSON.parse(result).rows[0]):
+                                    {};
     const detail_rows = props.data.detail_path?
                                 await props.methods.commonFFB({   path:props.data.detail_path, 
                                                             query:props.data.detail_query, 
@@ -289,12 +288,12 @@ const component = async props => {
                                                             query:'fields=json_data', 
                                                             method:'POST', authorization_type:'APP_ID', 
                                                             body:{type:'FUNCTION',IAM_data_app_id:props.data.app_id}})
-                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
+                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows);
         for (const key of Object.entries(master_object)){
             master_object[key[0]] = {   
                                         value:key[1], 
-                                        default_text:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].default_text:key[0],
-                                        type:master_metadata.filter((/**@type{*}*/row)=>key[0] in row).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row)[0][key[0]].type:key[0]
+                                        default_text:master_metadata.filter((/**@type{*}*/row)=>key[0] in row.json_data).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row.json_data)[0].json_data[key[0]].default_text:key[0],
+                                        type:master_metadata.filter((/**@type{*}*/row)=>key[0] in row.json_data).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row.json_data)[0].json_data[key[0]].type:key[0]
                                     };
         }
     }
@@ -303,10 +302,10 @@ const component = async props => {
                                                             query:'fields=json_data', 
                                                             method:'POST', authorization_type:'APP_ID', 
                                                             body:{type:'FUNCTION',IAM_data_app_id:props.data.app_id}})
-                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
+                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows);
         for (const row of detail_rows){
             for (const key of Object.entries(row)){
-                for (const key_metadata of detail_metadata){
+                for (const key_metadata of detail_metadata.json_data){
                     if (Object.entries(key_metadata)[0][0] == key[0]){
                         row[key[0]] = {value:key[1], default_text: Object.entries(key_metadata)[0][1].default_text};
                     }

@@ -46,16 +46,17 @@ const get = parameters =>{
                                                 data:{data_app_id:parameters.data.data_app_id}}).result.length>0 &&
                             AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         resource_id:row.app_data_resource_master_id,
-                                                        data:{data_app_id:parameters.data.data_app_id,
+                                                        data:{data_app_id:parameters.data.iam_user_id==null?null:parameters.data.data_app_id,
                                                               iam_user_id:parameters.data.iam_user_id,
-                                                              resource_name:parameters.data.resource_name,
+                                                              resource_name:null,
                                                               app_data_entity_id:row.app_data_entity_resource_app_data_entity_id}}).result
                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
-                                IamUserApp.get({app_id:parameters.app_id, 
+                                parameters.data.iam_user_id==null?true:IamUserApp.get({app_id:parameters.app_id, 
                                                 resource_id:row_master.iam_user_app_id, 
-                                                data:{  data_app_id:parameters.data.data_app_id??null,
+                                                data:{  data_app_id:parameters.data.iam_user_id==null?null:parameters.data.data_app_id??null,
                                                         iam_user_id:parameters.data.iam_user_id}}).result.length>0
-                            ).length>0);
+                            )
+                        );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
