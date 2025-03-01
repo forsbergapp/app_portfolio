@@ -884,6 +884,7 @@ const serverREST_API = async (routesparameters) =>{
         
     const configPath = Object.entries(Config.get('ConfigRestApi').paths)
                         .filter(path=>
+                            path[0].replace('/${IAM_iam_user_app_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
                             path[0].replace('/${IAM_iam_user_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
                             path[0].replace('/${IAM_data_app_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
                             path[0].replace('/${resource_id_number}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||

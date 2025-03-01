@@ -38,6 +38,7 @@ const getTransacions = async parameters =>{
                                                                             resource_name:'ACCOUNT',
                                                                             resource_name_master_attribute:'CUSTOMER',
                                                                             resource_name_data_master_attribute:null,
+                                                                            app_data_resource_detail_id:null,
                                                                             app_data_entity_id:Entity.id
                                                                     }});
 }; 
