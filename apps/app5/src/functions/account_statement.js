@@ -119,22 +119,24 @@ const getStatement = async parameters =>{
                                                                 resource_name:'ACCOUNT',
                                                                 resource_name_master_attribute:'CUSTOMER',
                                                                 resource_name_data_master_attribute:null,
+                                                                app_data_resource_detail_id:null,
                                                                 app_data_entity_id:Entity.id
                                                         }});
     
 
     const AccountMetaData   = AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
-                                                            data:{  iam_user_id:parameters.data.iam_user_id,
-                                                                    data_app_id:parameters.data.data_app_id,
+                                                            data:{  iam_user_id:null,
+                                                                    data_app_id:null,
                                                                     resource_name:'ACCOUNT',
                                                                     app_data_entity_id:Entity.id
-                                                            }}).result[0];
+                                                            }}).result;
     const CustomerAccount   = AppDataResourceDetail.get(   {app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:parameters.data.iam_user_id,
                                                                     data_app_id:parameters.data.data_app_id,
                                                                     resource_name:'ACCOUNT',
+                                                                    app_data_resource_master_id:null,
                                                                     app_data_entity_id:Entity.id
                                                             }}).result[0];
     const currency          = AppDataResourceMaster.get({   app_id:parameters.app_id, 
@@ -145,8 +147,8 @@ const getStatement = async parameters =>{
                                                                     app_data_entity_id:Entity.id
                                                             }}).result[0];
     //amount_deposit and amount_withdrawal from JSON.parse(json_data) column, each app is responsible for APP_ID json_data content
-    const balance = transactions.result.reduce((/**@type{number}*/balance, /**@type{bank_transaction}*/current_row)=>balance += 
-                                                                    (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0) ?? 0;
+    const balance = transactions.result.reduce((/**@type{number}*/balance, /**@type{{json_data:bank_transaction}}*/current_row)=>balance += 
+                                                                    (current_row.json_data.amount_deposit ?? current_row.json_data.amount_withdrawal) ?? 0,0) ?? 0;
     return {result:[{
                     //ENTITY ACCOUNT resource
                     title_sub	            :Entity.json_data?.name??'',
