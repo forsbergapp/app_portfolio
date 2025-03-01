@@ -572,7 +572,7 @@ const appSecureCommonRecordUpdate = async ( table,
     let method;
     switch (table){
         case 'user_account':{
-            path = `/server-iam/iam_user/${resource_id}`;
+            path = `/server-iam/iamuser/${resource_id}`;
             method = 'PATCH';
             break;
         }
@@ -582,17 +582,17 @@ const appSecureCommonRecordUpdate = async ( table,
             break;
         }
         case 'app_module':{
-            path = `/app-common-app-module/${resource_id}`;
+            path = `/app-common-appmodule/${resource_id}`;
             method = 'PUT';
             break;
         }
         case 'app_parameter':{
-            path = `/app-common-app-parameter/${resource_id}`;
+            path = `/app-common-appparameter/${resource_id}`;
             method = 'PATCH';
             break;
         }
         case 'app_secret':{
-            path = `/app-common-app-secret/${resource_id}`;
+            path = `/app-common-appsecret/${resource_id}`;
             method = 'PATCH';
             break;
         }

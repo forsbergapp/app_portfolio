@@ -41,8 +41,7 @@ const get = parameters =>{
                             AppDataEntity.get({ app_id:parameters.app_id, 
                                                 resource_id:row.app_data_entity_resource_app_data_entity_id,
                                                 data:{data_app_id:parameters.data.data_app_id}}).result.length>0 &&
-                            ((parameters.data.iam_user_id==null && row.iam_user_app_id ==null) || 
-                            (parameters.data.iam_user_id!=null && row.iam_user_app_id == iam_user_app?.id && row.iam_user_app_id !=null))
+                            (parameters.data.iam_user_id==null || (parameters.data.iam_user_id!=null && row.iam_user_app_id == iam_user_app?.id && row.iam_user_app_id !=null))
                     );
     if (result.length>0 || parameters.resource_id==null ||parameters.join)
         return {result:result, type:'JSON'};

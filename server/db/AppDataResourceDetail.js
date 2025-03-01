@@ -56,8 +56,7 @@ const get = parameters =>{
                                                               resource_name:null,
                                                               app_data_entity_id:row.app_data_entity_resource_app_data_entity_id}}).result
                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
-                                ((parameters.data.iam_user_id==null && row_master.iam_user_app_id ==null) || 
-                                (parameters.data.iam_user_id!=null && row_master.iam_user_app_id == iam_user_app?.id && row_master.iam_user_app_id !=null))
+                                (parameters.data.iam_user_id==null  || (parameters.data.iam_user_id!=null && row_master.iam_user_app_id == iam_user_app?.id && row_master.iam_user_app_id !=null))
                             )
                         );
     if (result.length>0 || parameters.resource_id==null ||parameters.join)
