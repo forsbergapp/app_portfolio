@@ -18,6 +18,7 @@ const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null,
+ *          join?:boolean,
  *          data:{  data_app_id?:number|null,
  *                  iam_user_id:number|null,
  *                  resource_name :string|null,
@@ -25,6 +26,10 @@ const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js
  * @returns {server_server_response & {result?:server_db_table_AppDataResourceMaster[] }}
  */
 const get = parameters =>{ 
+    const iam_user_app = parameters.data.iam_user_id==null?null:IamUserApp.get({app_id:parameters.app_id, 
+                                                                                resource_id:null, 
+                                                                                data:{  data_app_id:parameters.data.data_app_id??null,
+                                                                                        iam_user_id:parameters.data.iam_user_id}}).result[0];
     const result = ORM.getObject(parameters.app_id, 'AppDataResourceMaster',parameters.resource_id, null).rows
                     .filter((/**@type{server_db_table_AppDataResourceMaster}*/row)=>
                             row.app_data_entity_resource_app_data_entity_id == parameters.data.app_data_entity_id && 
@@ -36,12 +41,10 @@ const get = parameters =>{
                             AppDataEntity.get({ app_id:parameters.app_id, 
                                                 resource_id:row.app_data_entity_resource_app_data_entity_id,
                                                 data:{data_app_id:parameters.data.data_app_id}}).result.length>0 &&
-                            (parameters.data.iam_user_id== null?true:IamUserApp.get({app_id:parameters.app_id, 
-                                            resource_id:row.iam_user_app_id, 
-                                            data:{  data_app_id:parameters.data.data_app_id??null,
-                                                    iam_user_id:parameters.data.iam_user_id}}).result.length>0)
+                            ((parameters.data.iam_user_id==null && row.iam_user_app_id ==null) || 
+                            (parameters.data.iam_user_id!=null && row.iam_user_app_id == iam_user_app?.id && row.iam_user_app_id !=null))
                     );
-    if (result.length>0 || parameters.resource_id==null)
+    if (result.length>0 || parameters.resource_id==null ||parameters.join)
         return {result:result, type:'JSON'};
     else
         return ORM.getError(parameters.app_id, 404);

@@ -36,6 +36,7 @@ const accountGet = async parameters =>{
                                                             data:{  iam_user_id:parameters.data.iam_user_id,
                                                                     data_app_id:parameters.data.data_app_id,
                                                                     resource_name:'ACCOUNT',
+                                                                    app_data_resource_master_id:null,
                                                                     app_data_entity_id:Entity.id}});
 };
 export default accountGet;

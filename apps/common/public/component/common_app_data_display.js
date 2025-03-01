@@ -51,7 +51,7 @@
  * @returns {string}
  */
 const template = props =>`  ${(props.master_object && props.new_resource)?
-                                `<div class='common_app_data_display_master_title'>${props.master_object.filter((/**@type{*}*/row)=>row.title).length>0?props.master_object.filter((/**@type{*}*/row)=>row.title)[0].title.default_text:''}</div>`:''
+                                `<div class='common_app_data_display_master_title'>${props.master_object.filter((/**@type{*}*/row)=>row.json_data.title).length>0?props.master_object.filter((/**@type{*}*/row)=>row.json_data.title)[0].json_data.title.default_text:''}</div>`:''
                             }
                             ${(props.master_object && props.new_resource==false)?
                                 `<div class='common_app_data_display_master_title'>${props.master_object.title?props.master_object.title.default_text:''}</div>
@@ -62,15 +62,15 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                 `
                                 ${(props.master_object && props.new_resource)?
                                     `<div class='common_app_data_display_master'>
-                                        ${props.master_object.filter((/**@type{*}*/row)=>!row.title && !row.title_sub).map((/**@type{*}*/master_row)=>
+                                        ${props.master_object.filter((/**@type{*}*/row)=>!row.json_data.title && !row.json_data.title_sub).map((/**@type{*}*/master_row)=>
                                             `<div class='common_app_data_display_master_row common_row'>
-                                                    <div    data-key='${Object.keys(master_row)[0]}' 
-                                                            class='common_app_data_display_master_col1'>${Object.values(master_row)[0].default_text}</div>
-                                                    <div    data-value='${Object.keys(master_row)[0]}'
-                                                            class='common_app_data_display_master_col2 ${Object.values(master_row)[0].type=='LOV'?'common_lov_value':''}'
-                                                            contentEditable='${(Object.values(master_row)[0].type=='LOV'||props.mode=='READ')?'false':'true'}'></div>
-                                                    ${Object.values(master_row)[0].type=='LOV'?
-                                                        `<div data-lov='${Object.values(master_row)[0].lov}' class='common_lov_button common_list_lov_click common_icon'></div>`:''
+                                                    <div    data-key='${Object.keys(master_row.json_data)[0]}' 
+                                                            class='common_app_data_display_master_col1'>${Object.values(master_row.json_data)[0].default_text}</div>
+                                                    <div    data-value='${Object.keys(master_row.json_data)[0]}'
+                                                            class='common_app_data_display_master_col2 ${Object.values(master_row.json_data)[0].type=='LOV'?'common_lov_value':''}'
+                                                            contentEditable='${(Object.values(master_row.json_data)[0].type=='LOV'||props.mode=='READ')?'false':'true'}'></div>
+                                                    ${Object.values(master_row.json_data)[0].type=='LOV'?
+                                                        `<div data-lov='${Object.values(master_row.json_data)[0].lov}' class='common_lov_button common_list_lov_click common_icon'></div>`:''
                                                     }
                                             </div>
                                             `).join('')

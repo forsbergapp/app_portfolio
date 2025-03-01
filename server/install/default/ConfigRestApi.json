@@ -1319,6 +1319,9 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
+                                            "IAM_iam_user_app_id":{
+                                                "required":false
+                                            },
                                             "IAM_iam_user_id":{
                                                 "required":false
                                             },

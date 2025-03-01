@@ -1638,21 +1638,21 @@ const commonUserLogin = async () => {
                                             query:`IAM_data_app_id=${COMMON_GLOBAL.app_id}&IAM_iam_user_id=${COMMON_GLOBAL.iam_user_id}`,
                                             method:'GET', authorization_type:'APP_ACCESS', spinner_id:spinner_item});
             const IamUserApp = JSON.parse(result)[0];
-    
+             //get preferences saved in json_data column
             //locale
-            if (IamUserApp.preference_locale==null)
+            if (IamUserApp.json_data?.preference_locale==null)
                 commonUserPreferencesGlobalSetDefault('LOCALE');
             else
-                COMMON_GLOBAL.user_locale = IamUserApp.preference_locale;
+                COMMON_GLOBAL.user_locale = IamUserApp.json_data.preference_locale;
             //timezone
-            if (IamUserApp.preference_timezone==null)
+            if (IamUserApp.json_data?.preference_timezone==null)
                 commonUserPreferencesGlobalSetDefault('TIMEZONE');
             else
-                COMMON_GLOBAL.user_timezone = IamUserApp.preference_timezone;
+                COMMON_GLOBAL.user_timezone = IamUserApp.json_data.preference_timezone;
             //direction
-            COMMON_GLOBAL.user_direction = IamUserApp.preference_direction;
+            COMMON_GLOBAL.user_direction = IamUserApp.json_data?.preference_direction;
             //arabic script
-            COMMON_GLOBAL.user_arabic_script = IamUserApp.preference_arabic_script;
+            COMMON_GLOBAL.user_arabic_script = IamUserApp.json_data?.preference_arabic_script;
             //update body class with app theme, direction and arabic script usage classes
             commonMiscPreferencesUpdateBodyClassFromPreferences();
             commonComponentRemove(current_dialogue, true);

@@ -36,6 +36,6 @@ const customerMetadata = async parameters =>{
                                                 data_app_id:null,
                                                 resource_name:'CUSTOMER',
                                                 app_data_entity_id:Entity.id
-                                    });
+                                    }});
 };
 export default customerMetadata;
