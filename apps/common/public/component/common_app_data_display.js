@@ -305,9 +305,9 @@ const component = async props => {
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows);
         for (const row of detail_rows){
             for (const key of Object.entries(row)){
-                for (const key_metadata of detail_metadata.json_data){
-                    if (Object.entries(key_metadata)[0][0] == key[0]){
-                        row[key[0]] = {value:key[1], default_text: Object.entries(key_metadata)[0][1].default_text};
+                for (const key_metadata of detail_metadata){
+                    if (Object.entries(key_metadata.json_data)[0][0] == key[0]){
+                        row[key[0]] = {value:key[1], default_text: Object.entries(key_metadata.json_data)[0][1].default_text};
                     }
                 }
             }

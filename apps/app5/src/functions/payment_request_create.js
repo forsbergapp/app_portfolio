@@ -102,6 +102,7 @@ const paymentRequestCreate = async parameters =>{
                                                 }}).result[0];
     /**@type{merchant} */
     const merchant = AppDataResourceMaster.get({app_id:parameters.app_id, 
+                                                all_users:true,
                                                 resource_id:null, 
                                                 data:{  iam_user_id:null,
                                                         data_app_id:parameters.app_id,
@@ -137,6 +138,7 @@ const paymentRequestCreate = async parameters =>{
 
         /**@type{bank_account} */
         const merchant_bankaccount = AppDataResourceDetail.get({app_id:parameters.app_id, 
+                                                                all_users:true,
                                                                 resource_id:null, 
                                                                 data:{  iam_user_id:null,
                                                                         data_app_id:parameters.app_id,
@@ -150,6 +152,7 @@ const paymentRequestCreate = async parameters =>{
                                         )[0];
         /**@type{bank_account} */                                                            
         const bankaccount_payer = AppDataResourceDetail.get({   app_id:parameters.app_id, 
+                                                                all_users:true,
                                                                 resource_id:null, 
                                                                 data:{  iam_user_id:null,
                                                                         data_app_id:parameters.app_id,

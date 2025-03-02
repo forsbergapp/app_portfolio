@@ -18,6 +18,7 @@ const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null,
+ *          all_users?:boolean,
  *          join?:boolean,
  *          data:{  data_app_id?:number|null,
  *                  iam_user_id:number|null,
@@ -30,18 +31,22 @@ const get = parameters =>{
                                                                                 resource_id:null, 
                                                                                 data:{  data_app_id:parameters.data.data_app_id??null,
                                                                                         iam_user_id:parameters.data.iam_user_id}}).result[0];
+    const entity_id = parameters.data?.app_data_entity_id?? AppDataEntity.get({  app_id:parameters.app_id, 
+                                        resource_id:null,
+                                        data:{data_app_id:parameters.app_id}}).result[0].id;
+
     const result = ORM.getObject(parameters.app_id, 'AppDataResourceMaster',parameters.resource_id, null).rows
                     .filter((/**@type{server_db_table_AppDataResourceMaster}*/row)=>
-                            row.app_data_entity_resource_app_data_entity_id == parameters.data.app_data_entity_id && 
+                            row.app_data_entity_resource_app_data_entity_id == entity_id && 
+                            (parameters.all_users ||
+                                ((parameters.data.iam_user_id==null && row.iam_user_app_id==null)|| 
+                                 (parameters.data.iam_user_id!=null && row.iam_user_app_id == iam_user_app?.id && row.iam_user_app_id !=null))) &&
                             AppDataEntityResource.get({ app_id:parameters.app_id, 
                                                         resource_id:row.app_data_entity_resource_id,
                                                         data:{  app_data_entity_id:row.app_data_entity_resource_app_data_entity_id,
                                                                 resource_name:parameters.data.resource_name
-                                                        }}).result.length>0 &&
-                            AppDataEntity.get({ app_id:parameters.app_id, 
-                                                resource_id:row.app_data_entity_resource_app_data_entity_id,
-                                                data:{data_app_id:parameters.data.data_app_id}}).result.length>0 &&
-                            (parameters.data.iam_user_id==null || (parameters.data.iam_user_id!=null && row.iam_user_app_id == iam_user_app?.id && row.iam_user_app_id !=null))
+                                                        }}).result.length>0
+                            
                     );
     if (result.length>0 || parameters.resource_id==null ||parameters.join)
         return {result:result, type:'JSON'};

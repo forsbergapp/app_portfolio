@@ -66,6 +66,7 @@ const paymentRequestUpdate = async parameters =>{
     //get payment request using app_custom_id that should be the payment request id
     /**@type{payment_request & {id:server_db_table_AppDataResourceMaster['id']}}*/
     const payment_request = AppDataResourceMaster.get({ app_id:parameters.app_id, 
+                                                        all_users:true,
                                                         resource_id:null, 
                                                         data:{  iam_user_id:null,
                                                                 data_app_id:parameters.data.data_app_id,
@@ -118,6 +119,7 @@ const paymentRequestUpdate = async parameters =>{
                     await AppDataResourceDetailData.post({app_id:parameters.app_id, data:data_debit});
                     /**@type{bank_account & {id:server_db_table_AppDataResourceDetail['id']}} */
                     const account_payee         =  AppDataResourceDetail.get({  app_id:parameters.app_id, 
+                                                                                all_users:true,
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
                                                                                         data_app_id:parameters.data.data_app_id,
