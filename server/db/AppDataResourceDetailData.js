@@ -14,8 +14,6 @@ const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEnt
 const AppDataResourceMaster = await import(`file://${process.cwd()}/server/db/AppDataResourceMaster.js`);
 /**@type{import('./AppDataResourceDetail.js')} */
 const AppDataResourceDetail = await import(`file://${process.cwd()}/server/db/AppDataResourceDetail.js`);
-/**@type{import('./IamUserApp.js')} */
-const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
 
 
 /**
@@ -24,6 +22,7 @@ const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null,
+ *          all_users?:boolean,
  *          join?:boolean,
  *          data:{  data_app_id?:number|null,
  *                  iam_user_id:number|null,
@@ -35,49 +34,49 @@ const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js
  * @returns {server_server_response & {result?:server_db_table_AppDataResourceDetailData & {adrm_attribute_master_json_data:{}}[]|*}}
  */
 const get = parameters =>{ 
-    const iam_user_app = parameters.data.iam_user_id==null?null:IamUserApp.get({app_id:parameters.app_id, 
-                                                                                resource_id:null, 
-                                                                                data:{  data_app_id:parameters.data.data_app_id??null,
-                                                                                        iam_user_id:parameters.data.iam_user_id}}).result[0];
+    const entity_id = parameters.data?.app_data_entity_id?? AppDataEntity.get({  app_id:parameters.app_id, 
+                                        resource_id:null,
+                                        data:{data_app_id:parameters.app_id}}).result[0].id;
     const result = ORM.getObject(parameters.app_id, 'AppDataResourceDetailData',parameters.resource_id, null).rows
                     .filter((/**@type{server_db_table_AppDataResourceDetailData}*/row)=>
                         row.app_data_resource_detail_id == (parameters.data.app_data_resource_detail_id??row.app_data_resource_detail_id) && 
-                        //detail data master attribute
-                        AppDataResourceMaster.get({ app_id:parameters.app_id, 
-                                                    join:true,
-                                                    resource_id:row.app_data_resource_master_attribute_id,
-                                                    data:{  data_app_id:null,
-                                                            iam_user_id:null,
-                                                            resource_name:parameters.data.resource_name_data_master_attribute,
-                                                            app_data_entity_id:parameters.data.app_data_entity_id}}).result
-                        .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
-                            (parameters.data.iam_user_id==null || (parameters.data.iam_user_id!=null && row_master.iam_user_app_id == iam_user_app?.id && row_master.iam_user_app_id !=null)) 
-                        ).length>0 &&
-
                         AppDataResourceDetail.get({ app_id:parameters.app_id, 
-                                                    join:true,
-                                                    resource_id:row.app_data_resource_detail_id,
-                                                    data:{  data_app_id:null,
-                                                            iam_user_id:null,
-                                                            resource_name:parameters.data.resource_name,
-                                                            app_data_resource_master_id:null,
-                                                            app_data_entity_id:parameters.data.app_data_entity_id}}).result
+                                                        join:true,
+                                                        resource_id:row.app_data_resource_detail_id,
+                                                        data:{  data_app_id:parameters.data.data_app_id,
+                                                                iam_user_id:parameters.data.iam_user_id,
+                                                                resource_name:parameters.data.resource_name,
+                                                                app_data_resource_master_id:null,
+                                                                app_data_entity_id:entity_id}}).result
                         .filter((/**@type{server_db_table_AppDataResourceDetail}*/row_detail)=>
+                            row_detail.id == row.app_data_resource_detail_id && 
+                            row_detail.app_data_entity_resource_app_data_entity_id == entity_id && 
                             //detail master attribute
                             AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         join:true,
-                                                        resource_id:row_detail.app_data_resource_master_id,
-                                                        data:{  data_app_id:null,
-                                                                iam_user_id:null,
+                                                        resource_id: row_detail.app_data_resource_master_id,
+                                                        data:{  data_app_id:parameters.data.data_app_id,
+                                                                iam_user_id:parameters.data.iam_user_id,
                                                                 resource_name:parameters.data.resource_name_master_attribute,
-                                                                app_data_entity_id:parameters.data.app_data_entity_id}}).result
+                                                                app_data_entity_id:entity_id}}).result
                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
-                                (parameters.data.iam_user_id==null || (parameters.data.iam_user_id!=null && row_master.iam_user_app_id == iam_user_app?.id && row_master.iam_user_app_id !=null)) &&
-                                AppDataEntity.get({ app_id:parameters.app_id, 
-                                                    resource_id:row_master.app_data_entity_resource_app_data_entity_id,
-                                                    data:{data_app_id:parameters.data.data_app_id}}).result.length>0
-                            )
+                                row_master.id == row_detail.app_data_resource_master_id && 
+                                row_master.app_data_entity_resource_app_data_entity_id == entity_id
+                            ).length>0
+                        ).length>0 &&
+                        //detail data master attribute
+                        AppDataResourceMaster.get({ app_id:parameters.app_id, 
+                                                    join:true,
+                                                    resource_id:null,
+                                                    data:{  data_app_id:parameters.data.data_app_id,
+                                                            iam_user_id:parameters.data.iam_user_id,
+                                                            resource_name:parameters.data.resource_name_data_master_attribute,
+                                                            app_data_entity_id:entity_id}}).result
+                        .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
+                            row_master.id == (row.app_data_resource_master_attribute_id ?? row_master.id) &&
+                            row_master.app_data_entity_resource_app_data_entity_id == entity_id
                         ).length>0
+                        
                     )
                     .map((/**@type{server_db_table_AppDataResourceDetailData & {adrm_attribute_master_json_data:{}}}*/row)=>{     
                             row.adrm_attribute_master_json_data = AppDataResourceMaster.get({   app_id:parameters.app_id, 

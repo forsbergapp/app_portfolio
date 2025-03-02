@@ -127,7 +127,7 @@ const getStatement = async parameters =>{
     const AccountMetaData   = AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
-                                                                    data_app_id:null,
+                                                                    data_app_id:parameters.data.data_app_id,
                                                                     resource_name:'ACCOUNT',
                                                                     app_data_entity_id:Entity.id
                                                             }}).result;
