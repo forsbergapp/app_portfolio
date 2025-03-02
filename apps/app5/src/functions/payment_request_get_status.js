@@ -59,6 +59,7 @@ const paymentRequestGetStatus = async parameters =>{
 
 
     const merchant = await AppDataResourceMaster.get({   app_id:parameters.app_id, 
+                                                                all_users:true,
                                                                 resource_id:null, 
                                                                 data:{  iam_user_id:null,
                                                                         data_app_id:parameters.app_id,
@@ -78,12 +79,13 @@ const paymentRequestGetStatus = async parameters =>{
         if (merchant.json_data.merchant_api_secret==body_decrypted.api_secret && merchant.json_data.merchant_url == body_decrypted.origin){
             /**@type{payment_request} */
             const payment_request = await AppDataResourceMaster.get({   app_id:parameters.app_id, 
-                                                                                resource_id:null, 
-                                                                                data:{  iam_user_id:null,
-                                                                                        data_app_id:parameters.app_id,
-                                                                                        resource_name:'PAYMENT_REQUEST',
-                                                                                        app_data_entity_id:Entity.id
-                                                                                }}).result
+                                                                        all_users:true,
+                                                                        resource_id:null, 
+                                                                        data:{  iam_user_id:null,
+                                                                                data_app_id:parameters.app_id,
+                                                                                resource_name:'PAYMENT_REQUEST',
+                                                                                app_data_entity_id:Entity.id
+                                                                        }}).result
                                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/payment_request)=>
                                                 payment_request.json_data?.payment_request_id==body_decrypted.payment_request_id
                                             )[0];
@@ -99,6 +101,7 @@ const paymentRequestGetStatus = async parameters =>{
 
                     /**@type{bank_account & {app_data_resource_master_id:server_db_table_AppDataResourceDetail['app_data_resource_master_id']}}*/
                     const account_payer =  AppDataResourceDetail.get({  app_id:parameters.app_id, 
+                                                                        all_users:true,
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:null,
                                                                                 data_app_id:parameters.app_id,
@@ -114,6 +117,7 @@ const paymentRequestGetStatus = async parameters =>{
                         if (payment_request.status=='PENDING'){
                             /**@type{server_db_table_AppDataResourceMaster} */
                             const customer = AppDataResourceMaster.get({app_id:parameters.app_id, 
+                                                                        all_users:true,
                                                                         resource_id:account_payer.app_data_resource_master_id, 
                                                                         data:{  iam_user_id:null,
                                                                                 data_app_id:parameters.app_id,
@@ -121,7 +125,7 @@ const paymentRequestGetStatus = async parameters =>{
                                                                                 app_data_entity_id:Entity.id
                                                                         }}).result[0];
                             //check SOCKET connected list
-                            for (const user_connected of socketConnectedGet(IamUserApp.get({app_id:parameters.app_id, resource_id:customer.iam_user_app_id, data:{iam_user_id:null, data_app_id:null}}).result[0].id)){
+                            for (const user_connected of socketConnectedGet(IamUserApp.get({app_id:parameters.app_id, resource_id:customer.iam_user_app_id, data:{iam_user_id:null, data_app_id:null}}).result[0].iam_user_id)){
                                 const message = {
                                     type: 'PAYMENT_REQUEST', 
                                     token:parameters.authorization.split('Bearer ')[1], 

@@ -63,6 +63,7 @@ const paymentRequestGet = async parameters =>{
     //get payment request using app_custom_id that should be the payment request id
     /**@type{payment_request} */
     const payment_request = AppDataResourceMaster.get({ app_id:parameters.app_id, 
+                                                        all_users:true,
                                                         resource_id:null, 
                                                         data:{  iam_user_id:null,
                                                                 data_app_id:parameters.data.data_app_id,
@@ -75,6 +76,7 @@ const paymentRequestGet = async parameters =>{
     if (payment_request){
         /**@type{bank_account} */
         const account_payer = AppDataResourceDetail.get({   app_id:parameters.app_id, 
+                                                            all_users:true,
                                                             resource_id:null, 
                                                             data:{  iam_user_id:parameters.data.iam_user_id,
                                                                     data_app_id:parameters.app_id,
@@ -87,6 +89,7 @@ const paymentRequestGet = async parameters =>{
                                 )[0];
         /**@type{merchant} */
         const merchant      = AppDataResourceMaster.get({   app_id:parameters.app_id, 
+                                                            all_users:true,
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
                                                                     data_app_id:parameters.app_id,
