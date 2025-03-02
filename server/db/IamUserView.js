@@ -41,7 +41,7 @@ const get = parameters =>{
  */
 const post = async (app_id, data) =>{
     //check required attributes
-    if (data.iam_user_id==null || data.iam_user_id_view==null){
+    if (data.iam_user_id_view==null){
         return ORM.getError(app_id, 400);
     }
     else{
