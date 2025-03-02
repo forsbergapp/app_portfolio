@@ -3,6 +3,7 @@
 /**
  * @import {server_server_response,
  *          server_db_table_IamUserAppDataPostView,
+ *          server_db_table_IamUserApp,
  *          server_db_common_result_delete,
  *          server_db_common_result_insert} from '../types.js'
  */
@@ -22,11 +23,15 @@ const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js
  * @returns {server_server_response & {result?:server_db_table_IamUserAppDataPostView[] }}
  */
 const get = parameters =>{
-    const result = ORM.getObject(parameters.app_id, 'IamUserAppDataPostView',parameters.resource_id, parameters.data.data_app_id??null).rows
+    const result = ORM.getObject(parameters.app_id, 'IamUserAppDataPostView',parameters.resource_id, null).rows
                     .filter((/**@type{server_db_table_IamUserAppDataPostView}*/row)=>
-                        IamUserApp.get({app_id:parameters.app_id,
-                                        resource_id:row.iam_user_app_id, 
-                                        data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result.length>0
+                        IamUserApp.get({ app_id:parameters.app_id,
+                            resource_id:null, 
+                            data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result
+                        .filter((/**@type{server_db_table_IamUserApp}*/rowIamUserApp)=>
+                            row.iam_user_app_id == rowIamUserApp.id
+                        )
+                        .length>0
                     );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
@@ -44,7 +49,7 @@ const get = parameters =>{
  */
 const post = async (app_id, data) =>{
     //check required attributes
-    if (data.iam_user_app_id==null || data.iam_user_app_data_post_id==null){
+    if (data.iam_user_app_data_post_id==null){
         return ORM.getError(app_id, 400);
     }
     else{

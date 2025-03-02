@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,
- *          server_db_table_IamUserAppDataPost,server_db_table_IamUser, server_db_table_IamUserAppDataPostLike,
+ *          server_db_table_IamUserAppDataPost,server_db_table_IamUser, server_db_table_IamUserApp, server_db_table_IamUserAppDataPostLike,
  *          server_db_common_result_insert,server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
 /**@type{import('./ORM.js')} */
@@ -24,11 +24,15 @@ const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js
  * @returns {server_server_response & {result?:server_db_table_IamUserAppDataPost[] }}
  */
 const get = parameters =>{
-    const result = ORM.getObject(parameters.app_id, 'IamUserAppDataPost',parameters.resource_id, parameters.data.data_app_id??null).rows
+    const result = ORM.getObject(parameters.app_id, 'IamUserAppDataPost',parameters.resource_id, null).rows
                     .filter((/**@type{server_db_table_IamUserAppDataPost}*/row)=>
                         IamUserApp.get({ app_id:parameters.app_id,
-                                        resource_id:row.iam_user_app_id, 
-                                        data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result.length>0
+                                        resource_id:null, 
+                                        data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result
+                        .filter((/**@type{server_db_table_IamUserApp}*/rowIamUserApp)=>
+                            row.iam_user_app_id == rowIamUserApp.id
+                        )
+                        .length>0
                     );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};

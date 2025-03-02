@@ -516,8 +516,9 @@ const fileConstraints = (table, table_rows, data, dml, resource_id) =>{
     else{
         //no record can exist having given values for POST
         if (dml=='POST' && filerecord.uk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
+            //ignore empty value
             /**@ts-ignore */
-            filerecord.uk?.filter(column=>record[column]==data[column]).length==filerecord.uk?.length))
+            filerecord.uk?.filter(column=>record[column] && record[column]==data[column]).length==filerecord.uk?.length))
                 return false;
         else
             //max one record can exist having given values for UPDATE

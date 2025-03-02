@@ -53,8 +53,8 @@ const postDemo = async parameters=> {
    const {socketClientGet, socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
    /**@type{import('./db/Log.js')} */
    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
-   /**@type{import('./db/common.js')} */
-   const {getError} = await import(`file://${process.cwd()}/server/db/common.js`);
+   /**@type{import('./db/ORM.js')} */
+   const {getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
    /**@type{import('./db/IamUser.js')} */
    const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
    /**@type{import('./db/IamUserApp.js')} */
@@ -72,6 +72,9 @@ const postDemo = async parameters=> {
    /**@type{import('./db/IamUserAppDataPostView.js')} */
    const IamUserAppDataPostView = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostView.js`);
 
+   /**@type{import('./db/App.js')} */
+   const App = await import(`file://${process.cwd()}/server/db/App.js`);
+
    /**@type{import('./db/AppDataEntity.js')} */
    const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
 
@@ -84,6 +87,9 @@ const postDemo = async parameters=> {
 
    /**@type{import('./db/Config.js')} */
    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+ 
+   /**@type{import('./server.js')} */
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
    /**@type{import('./security.js')} */
    const {securityKeyPairCreate, securityUUIDCreate, securitySecretCreate} = await import(`file://${process.cwd()}/server/security.js`);
@@ -107,6 +113,9 @@ const postDemo = async parameters=> {
    let install_count=0;
    const install_total_count = demo_users.length + social_types.length;
    install_count++;
+   const common_app_id = serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
+   const admin_app_id = serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID'));
+
    try {
        /**
         * Create demo users
@@ -342,13 +351,18 @@ const postDemo = async parameters=> {
            //3A.Generate vpa for each user that can be saved both in resource and apps configuration
            const demo_vpa = securityUUIDCreate();
            //3B.Create iam_user_app record
+           //save iam_user_app.id for creating records with this FK
            const iam_user_app_id = await create_iam_user_app(demo_user.iam_user_app.app_id, demo_user.id).then(result=>{
-            if (result)
-                return result.insertId;
-            else
-                throw getError(parameters.app_id, 500, '');
-           });
-                                                    
+                                            if (result)
+                                                return result.insertId;
+                                            else
+                                                throw getError(parameters.app_id, 500, '');
+                                        });
+            //create for others apps except common, admin and already created
+            for (const app of App.get({app_id:parameters.app_id,resource_id:null}).result
+                            .filter((/**@type{server_db_table_App}*/row)=>row.id!=common_app_id && row.id!=admin_app_id && row.id!=demo_user.iam_user_app.app_id)){
+                await create_iam_user_app(app.id, demo_user.id);
+            }                                    
                 
            //3C.Create user posts if any
            for (const demo_user_account_app_data_post of demo_user.iam_user_app_data_post){
@@ -371,7 +385,7 @@ const postDemo = async parameters=> {
                demo_user_account_app_data_post.json_data.design_theme_month_id = Math.floor(20001 + Math.random() * 22);
                demo_user_account_app_data_post.json_data.design_theme_year_id = 30001;
                const json_data_user_account_app_data_post = {
-                                               json_data: JSON.parse(JSON.stringify(demo_user_account_app_data_post.json_data)),
+                                               json_data: demo_user_account_app_data_post.json_data,
                                                iam_user_app_id: iam_user_app_id
                                            };	
                                                     /**@ts-ignore */
@@ -563,8 +577,8 @@ const postDemo = async parameters=> {
                 if (result_posts.result){
                     const random_posts_index = Math.floor(1 + Math.random() * result_posts.result.length - 1 );
                     IamUserAppDataPostLike.post({app_id:parameters.app_id, 
-                                                            /**@ts-ignore */
-                                                            data:{  iam_user_app_id:IamUserApp.get({app_id:app_id, resource_id:null, data:{iam_user_id:user2, data_app_id:app_id}}).result[0].id,
+                                                            data:{  iam_user_id:user2,
+                                                                    data_app_id:app_id,
                                                                     iam_user_app_data_post_id:result_posts.result[random_posts_index].id}})
                     .then(result => {
                         if (result.result){
@@ -752,8 +766,8 @@ const deleteDemo = async parameters => {
    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
    /**@type{import('./db/IamUser.js')} */
    const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
-   /**@type{import('./db/common.js')} */
-   const {getError} = await import(`file://${process.cwd()}/server/db/common.js`);
+   /**@type{import('./db/ORM.js')} */
+   const {getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
    
    const result_demo_users = IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/row)=>row.user_level==2);
    if (result_demo_users){
@@ -789,8 +803,7 @@ const deleteDemo = async parameters => {
            const result_get = AppDataEntity.get({ app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}});
            if(result_get.result){
                for (const row of result_get.result){
-                   const update_json_data = JSON.parse(row.json_data);
-                   for (const key of Object.entries(update_json_data??{})){
+                   for (const key of Object.entries(row.json_data??{})){
                        if (key[0]=='iam_user_id_owner' ||
                            key[0]=='merchant_id' ||
                            key[0]=='merchant_name' ||
@@ -802,12 +815,12 @@ const deleteDemo = async parameters => {
                            key[0]=='merchant_vpa' ||
                            key[0]=='iam_user_id_anonymous' 
                        )
-                           update_json_data[key[0]] = null;
+                           row.json_data[key[0]] = null;
                    }
                    await AppDataEntity.update({ app_id:parameters.app_id,
                                                 resource_id:row.id,
                                                 /**@ts-ignore */
-                                                data:{json_data:update_json_data}});
+                                                data:{json_data:row.json_data}});
                }
            }
            else

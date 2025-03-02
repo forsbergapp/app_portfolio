@@ -23,12 +23,16 @@ const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js
  * @returns {server_server_response & {result?:server_db_table_IamUserAppDataPostLike[] }}
  */
 const get = parameters =>{
-    const result = ORM.getObject(parameters.app_id, 'IamUserAppDataPostLike',parameters.resource_id, parameters.data.data_app_id??null).rows
+    const result = ORM.getObject(parameters.app_id, 'IamUserAppDataPostLike',parameters.resource_id, null).rows
                         .filter((/**@type{server_db_table_IamUserAppDataPostLike}*/row)=>
                             row.iam_user_app_data_post_id == (parameters.data.iam_user_app_data_post_id ?? row.iam_user_app_data_post_id) &&
-                            IamUserApp.get({app_id:parameters.app_id,
-                                            resource_id:row.iam_user_app_id, 
-                                            data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result.length>0
+                            IamUserApp.get({ app_id:parameters.app_id,
+                                            resource_id:null, 
+                                            data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result
+                            .filter((/**@type{server_db_table_IamUserApp}*/rowIamUserApp)=>
+                                row.iam_user_app_id == rowIamUserApp.id
+                            )
+                            .length>0
                         );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
@@ -44,7 +48,7 @@ const get = parameters =>{
  * @param {{app_id:number,
  *          data: { iam_user_app_data_post_id:server_db_table_IamUserAppDataPostLike['iam_user_app_data_post_id'],
  *                  iam_user_id:server_db_table_IamUserApp['iam_user_id'],
- *                  data_app_id:server_db_table_IamUserApp['iam_user_id'],}}} parameters
+ *                  data_app_id:server_db_table_IamUserApp['app_id'],}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async parameters =>{
@@ -53,9 +57,8 @@ const post = async parameters =>{
         return ORM.getError(parameters.app_id, 400);
     }
     else{
-        const result = get({app_id:parameters.app_id, resource_id:null, data:{  iam_user_id:parameters.data.iam_user_id, 
-                                                                                data_app_id:parameters.data.data_app_id,
-                                                                                iam_user_app_data_post_id:parameters.data.iam_user_app_data_post_id}}).result[0];
+        const result = IamUserApp.get({app_id:parameters.app_id, resource_id:null, data:{   iam_user_id:parameters.data.iam_user_id, 
+                                                                                            data_app_id:parameters.data.data_app_id}}).result[0];
         /**@type{server_db_table_IamUserAppDataPostLike} */
         const data_new =     {
                                 id:Date.now(),
