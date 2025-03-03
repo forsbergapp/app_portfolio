@@ -74,15 +74,19 @@ const post = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
-    return ORM.Execute({  app_id:parameters.app_id, 
-                                dml:'DELETE', 
-                                object:'IamUserFollow', 
-                                delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
-        if (result.affectedRows>0)
-            return {result:result, type:'JSON'};
-        else
-            return ORM.getError(parameters.app_id, 404);
-    });
+    if (parameters.resource_id==null){
+        return ORM.getError(parameters.app_id, 400);
+    }
+    else
+        return ORM.Execute({  app_id:parameters.app_id, 
+                                    dml:'DELETE', 
+                                    object:'IamUserFollow', 
+                                    delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+            if (result.affectedRows>0)
+                return {result:result, type:'JSON'};
+            else
+                return ORM.getError(parameters.app_id, 404);
+        });
 };
 
 export {get, post, deleteRecord};
