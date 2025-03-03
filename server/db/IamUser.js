@@ -109,11 +109,11 @@ const getViewProfile = async parameters =>{
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
                                                                                         iam_user_id_view:row.id??null}}).result.length,
-                                            followed_id:    IamUserFollow.get({ app_id:parameters.app_id, 
+                                            followed_id:    (parameters.data?.id==null ||parameters.data?.id=='')?null:IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:serverUtilNumberValue(parameters.data?.id),
                                                                                         iam_user_id_follow:row.id??null}}).result[0]?.id??null,
-                                            liked_id:       IamUserLike.get({   app_id:parameters.app_id, 
+                                            liked_id:       (parameters.data?.id==null ||parameters.data?.id=='')?null:IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:serverUtilNumberValue(parameters.data?.id),
                                                                                         iam_user_id_like:row.id??null}}).result[0]?.id??null};
