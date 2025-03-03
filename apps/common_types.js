@@ -422,7 +422,7 @@
 
 /**
  * @description Type CommonProfileUser
- * @typedef {{  id:number|null,
+ * @typedef {{  id:number,
  *              bio:string|null,
  *              private:number|null,
  *              friends:number|null,
@@ -435,8 +435,8 @@
  *              count_likes:number|null,
  *              count_liked:number|null,
  *              count_views:number|null,
- *              followed:number|null,
- *              liked:number|null}} CommonProfileUser
+ *              followed_id:number|null,
+ *              liked_id:number|null}} CommonProfileUser
  */
 
 /**

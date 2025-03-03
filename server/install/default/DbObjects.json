@@ -29,7 +29,7 @@
     {"name":"IamUserAppDataPostView",       "type":"TABLE",           "pk":"id",      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},    
     {"name":"IamUserFollow",                "type":"TABLE",           "pk":"id",      "uk":["iam_user_id","iam_user_id_follow"],                          "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},    
     {"name":"IamUserLike",                  "type":"TABLE",           "pk":"id",      "uk":["iam_user_id","iam_user_id_like"],                          "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},    
-    {"name":"IamUserView",                  "type":"TABLE",           "pk":"id",      "uk":["iam_user_id","iam_user_id_view"],                          "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},    
+    {"name":"IamUserView",                  "type":"TABLE",           "pk":"id",      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},    
     {"name":"IamUserEvent",                 "type":"TABLE",           "pk":"id",      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},
     {"name":"LogAppInfo",                   "type":"TABLE_LOG_DATE",  "pk":null,      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null},
     {"name":"LogAppError",                  "type":"TABLE_LOG_DATE",  "pk":null,      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null},

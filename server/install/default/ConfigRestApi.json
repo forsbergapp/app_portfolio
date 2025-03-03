@@ -1691,10 +1691,6 @@
                                             "IAM_iam_user_id":{
                                                 "required":true,
                                                 "type":"number"
-                                            },
-                                            "iam_user_id_like":{
-                                                "required":true,
-                                                "type":"number"
                                             }
                                         }
                                     }

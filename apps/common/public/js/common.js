@@ -1894,33 +1894,40 @@ const commonUserDelete = async (choice=null, function_delete_event ) => {
  */
 const commonUserFunction = function_name => {
     return new Promise((resolve, reject)=>{
-        const user_id_profile = COMMON_DOCUMENT.querySelector('#common_profile_id').textContent;
+        const user_id_profile = Number(COMMON_DOCUMENT.querySelector('#common_profile_id').textContent);
         /**@type{import('../../../common_types.js').CommonRESTAPIMethod} */
         let method;
         let path;
-        const json_data = { iam_user_id: user_id_profile};
+        let json_data;
         const check_div = COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`);
         if (check_div.children[0].style.display == 'block') {
-            path = `/server-db/iamuser${function_name.toLowerCase()}/${COMMON_GLOBAL.iam_user_id ?? ''}`;
+            path = `/server-db/iamuser${function_name.toLowerCase()}`;
             method = 'POST';
+            json_data = {   IAM_iam_user_id: COMMON_GLOBAL.iam_user_id,
+                            [`iam_user_id_${function_name.toLowerCase()}`]: user_id_profile
+
+};
         } else {
-            path = `/server-db/iamuser${function_name.toLowerCase()}/${COMMON_GLOBAL.iam_user_id ?? ''}`;
+            path = `/server-db/iamuser${function_name.toLowerCase()}/${COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).getAttribute('data-record_id')}`;
             method = 'DELETE';
+            json_data = { IAM_iam_user_id: COMMON_GLOBAL.iam_user_id};
         }
         if (COMMON_GLOBAL.iam_user_id == null)
             commonDialogueShow('LOGIN');
         else {
            commonFFB({path:path, method:method, authorization_type:'APP_ACCESS', body:json_data})
-            .then(()=> {
+            .then(result=> {
                 if (COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
                     //follow/like
                     COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'none';
                     COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'block';
+                    COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).setAttribute('data-record_id',JSON.parse(result).insertId);
                 }
                 else{
                     //unfollow/unlike
                     COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'block';
                     COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'none';
+                    COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).setAttribute('data-record_id',null);
                 }
                 resolve(null);
             })

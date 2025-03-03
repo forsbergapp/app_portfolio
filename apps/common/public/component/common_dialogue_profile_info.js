@@ -40,11 +40,11 @@ const template = props =>`  <div id='common_profile_main'>
                                         </div>
                                     </div>    
                                     <div class='common_profile_main_col'>
-                                        <div id='common_profile_follow' >
+                                        <div id='common_profile_follow' data-record_id='${props.profile.followed_id}'>
                                             <div class='common_icon common_user_follow common_link'></div>
                                             <div class='common_icon common_user_followed common_link'></div>
                                         </div>
-                                        <div id='common_profile_like'>
+                                        <div id='common_profile_like' data-record_id='${props.profile.liked_id}'>
                                             <div class='common_icon common_unlike common_link'></div>
                                             <div class='common_icon common_like common_link'></div>
                                         </div>
@@ -123,6 +123,7 @@ const component = async props => {
             else
                 return `/server-db/iamuser-profile/${props.data.iam_user_id ?? ''}`;
     };
+    /**@type{CommonProfileUser}*/
     const profile = await props.methods.commonFFB(
                             {
                                 path:pathInfoGet(), 
@@ -136,7 +137,7 @@ const component = async props => {
         
         props.methods.commonModuleEasyQRCODECreate('common_profile_qr', props.methods.commonWindowHostname() + '/' + profile.username);
         //User account followed and liked
-        if (profile.followed == 1) {
+        if (profile.followed_id!=null) {
             //followed
             props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'none';
             props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'block';
@@ -145,7 +146,7 @@ const component = async props => {
             props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'block';
             props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'none';
         }
-        if (profile.liked == 1) {
+        if (profile.liked_id!=null) {
             //liked
             props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'none';
             props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'block';
