@@ -340,7 +340,7 @@ const component = async props => {
         let sort = get_sort();
         const order_by = get_sort(1);
         if (sort =='')
-            sort = 'date_created';
+            sort = 'created';
         switch (item){
             case 'menu_monitor_pagination_first':{
                 page = 1;

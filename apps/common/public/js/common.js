@@ -1787,7 +1787,7 @@ const commonUserUpdate = async () => {
         const password_new =        COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new').textContent;
         const password_reminder =   COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_reminder').textContent;
 
-       commonFFB({  path:`/server-iam/iam_user/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
+       commonFFB({  path:`/server-iam/iamuser/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
                     method:'PATCH', 
                     authorization_type:COMMON_GLOBAL.app_id==COMMON_GLOBAL.admin_app_id?'ADMIN':'APP_ACCESS', 
                     body:{  username:           username,
@@ -1831,7 +1831,7 @@ const commonUserSignup = () => {
                             active:             0
                             };
            
-       commonFFB({path:'/server-iam/iam_user', method:'POST', authorization_type:'IAM_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
+       commonFFB({path:'/server-iam/iamuser', method:'POST', authorization_type:'IAM_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
         .then(result=>{
             COMMON_GLOBAL.iam_user_app_id = JSON.parse(result).iam_user_app_id;
             COMMON_GLOBAL.iam_user_id =     JSON.parse(result).iam_user_id;
@@ -1874,7 +1874,7 @@ const commonUserDelete = async (choice=null, function_delete_event ) => {
                 
                 const json_data = { password: password};
     
-               commonFFB({path:`/server-iam/iam_user-db/${COMMON_GLOBAL.iam_user_id}`, method:'DELETE', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_dialogue_iam_edit_btn_user_delete_account'})
+               commonFFB({path:`/server-iam/iamuser-db/${COMMON_GLOBAL.iam_user_id}`, method:'DELETE', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_dialogue_iam_edit_btn_user_delete_account'})
                 .then(()=>  resolve({deleted: 1}))
                 .catch(err=>reject(err));
                 break;
@@ -2043,7 +2043,7 @@ const commonUserUpdatePassword = () => {
                      password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_confirm'),
                      
                      })==true){
-       commonFFB({path:`/server-iam/iam_user-password/${COMMON_GLOBAL.iam_user_id}`, method:'PATCH', authorization_type:'APP_ACCESS_VERIFICATION', body:json_data, spinner_id:'common_dialogue_iam_password_new_icon'})
+       commonFFB({path:`/server-iam/iamuser-password/${COMMON_GLOBAL.iam_user_id}`, method:'PATCH', authorization_type:'APP_ACCESS_VERIFICATION', body:json_data, spinner_id:'common_dialogue_iam_password_new_icon'})
         .then(()=>{
             commonComponentRemove('common_dialogue_iam_password_new', true);
             commonDialogueShow('LOGIN');

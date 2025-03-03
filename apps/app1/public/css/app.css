@@ -62,8 +62,8 @@
 #menu_users_list .list_title[data-column='provider_image']::before{					content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_user_avatar)}
 #menu_users_list .list_title[data-column='provider_image_url']::before{				content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_user_avatar) ' URL'}
 #menu_users_list .list_title[data-column='provider_email']::before{					content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_email)}
-#menu_users_list .list_title[data-column='date_created']::before{					content:var(--common_app_icon_user_account_created)}
-#menu_users_list .list_title[data-column='date_modified']::before{					content:var(--common_app_icon_user_account_modified)}
+#menu_users_list .list_title[data-column='created']::before{					    content:var(--common_app_icon_user_account_created)}
+#menu_users_list .list_title[data-column='modified']::before{					    content:var(--common_app_icon_user_account_modified)}
 
 #menu_apps_title::before{															content:var(--common_app_icon_apps)}
 #menu_apps_detail_parameter::before{												content:var(--common_app_icon_settings)}

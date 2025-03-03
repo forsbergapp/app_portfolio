@@ -658,7 +658,6 @@
  *              ['SERVICE_MICROSERVICE']:[server_db_config_server_service_microservice],
  *              ['SERVICE_IAM']:[server_db_config_server_service_iam],
  *              ['SERVICE_SOCKET']:[server_db_config_server_service_socket],
- *              ['SERVICE_DB']:[server_db_config_server_service_db],
  *              ['SERVICE_LOG']:[server_db_config_server_service_log],
  *              ['METADATA']:server_db_config_server_metadata}} server_db_document_ConfigServer
  */
@@ -868,41 +867,6 @@
  * @typedef {{CHECK_INTERVAL:string}} server_db_config_server_service_socket
  */
 
-/**
- * @description DB server_db_config_server_service_db
- * @typedef {{   START:string,
- *               USE:string,
- *               DB1_DBA_USER:string,
- *               DB1_DBA_PASS:string,
- *               DB1_PORT:string,
- *               DB1_HOST:string,
- *               DB1_NAME:string,
- *               DB1_CHARACTERSET:string,
- *               DB1_CONNECTION_LIMIT:string,
- *               DB2_DBA_USER:string,
- *               DB2_DBA_PASS:string,
- *               DB2_PORT:string,
- *               DB2_HOST:string,
- *               DB2_NAME:string,
- *               DB2_CHARACTERSET:string,
- *               DB2_CONNECTION_LIMIT:string,
- *               DB3_DBA_USER:string,
- *               DB3_DBA_PASS:string,
- *               DB3_PORT:string,
- *               DB3_HOST:string,
- *               DB3_NAME:string,
- *               DB3_TIMEOUT_CONNECTION:string,
- *               DB3_TIMEOUT_IDLE:string,
- *               DB3_MAX:string,
- *               DB4_DBA_USER:string,
- *               DB4_DBA_PASS:string,
- *               DB4_HOST:string,
- *               DB4_NAME:string,
- *               DB4_CONNECT_STRING:string,
- *               DB4_POOL_MIN:string,
- *               DB4_POOL_MAX:string,
- *               DB4_POOL_INCREMENT:string}} server_db_config_server_service_db
- */
 
 /**
  * @description DB server_db_config_server_service_log
