@@ -3184,7 +3184,7 @@
         "/bff/admin/v1/server-db/iamuser-stat": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.IamUserApp.getStatCountAdmin",
+                "operationId": "server_db.IamUser.getViewStatCountAdmin",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}

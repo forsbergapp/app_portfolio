@@ -1020,12 +1020,12 @@ const iamAuthenticateUserAppDelete = async parameters => {
  * @name iamAuthenticateRequest
  * @description IAM Authorize request
  *              Controls if AUTHENTICATE_REQUEST_ENABLE=1 else skips all checks
- *              if ip is blocked in IAM_CONTROL_OBSERVE or ip range is blocked in IAM_CONTROL_IP 
+ *              if ip is blocked in IamControlObserve or ip range is blocked in IAM_CONTROL_IP 
  *                  return 401
  *              else
  *                  if request count > rate limit (anonymous, user or admin)
  *                      if fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
- *                          add IAM_CONTROL_OBSERVE with status = 1 and type=BLOCK_IP
+ *                          add IamControlObserve with status = 1 and type=BLOCK_IP
  *                      return status 429
  *                  else
  *                      if subdomain is known
@@ -1036,7 +1036,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *                      if decodeURIComponent() has error 
  *                      if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'
  *                      if fail block or fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
- *                          add IAM_CONTROL_OBSERVE with status = 1 and type=BLOCK_IP
+ *                          add IamControlObserver with status = 1 and type=BLOCK_IP
  *                          return 401
  * @function
  * @param {string} ip
@@ -1081,7 +1081,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
             //check if IP is blocked
             if (IamControlObserve.get( app_id, 
                                                 null).result.filter((/**@type{server_db_table_IamControlObserve}*/row)=>row.ip==ip_v4 && row.app_id == data_app_id && row.status==1).length>0)
-                //IP is blocked in IAM_CONTROL_OBSERVE
+                //IP is blocked in IamControlObserve
                 return true;
             else
                 if ((ip_v4.match(/\./g)||[]).length==3){

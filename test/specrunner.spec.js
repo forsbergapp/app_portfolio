@@ -9,9 +9,8 @@
  * 
  * Test order           Path
  * 1.Spy test           /apps/common/src/common.spec.js
- * 2.Unit test          /server/db/db.spec.js
- * 3.Integration test   /test/integration.spec.js
- * 4.Performance test   /test/performance.spec.js
+ * 2.Integration test   /test/integration.spec.js
+ * 3.Performance test   /test/performance.spec.js
  * 
  * @module test/specrunner.spec
  */
@@ -21,12 +20,6 @@
  *  should call AppSecret.get and read APP_SECRET and IAM_APP_ID_TOKEN at least 1 time each when requesting app
  */
 import '../apps/common/src/common.spec.js';
-
-/**
- * Unit test, dbSQLParamConvert 
- *  should return converted sql and parameters in correct format for the database used for SELECT, INSERT, DELETE and UPDATE sql
- */
-import '../server/db/db.spec.js';
 
 /**
  * Integration test, setting FILE_DB cache

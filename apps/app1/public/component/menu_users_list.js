@@ -31,8 +31,8 @@ const template = props => ` <div class='menu_users_list_row'>
                                 <div data-column='password' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('password')}'></div>
                                 <div data-column='password_reminder' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('password_reminder')}'></div>
                                 <div data-column='verification_code' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('verification_code')}'></div>
-                                <div data-column='date_created' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('date_created')}'></div>
-                                <div data-column='date_modified' class='menu_apps_col list_sort_click list_title common_icon ${props.function_get_order_by('date_modified')}'></div>
+                                <div data-column='created' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('created')}'></div>
+                                <div data-column='modified' class='menu_apps_col list_sort_click list_title common_icon ${props.function_get_order_by('modified')}'></div>
                             </div>
                             ${props.users.map(user=>
                                 `<div data-changed-record='0' data-iam_user_id='${user.id}' class='menu_users_list_row ${user.id==props.iam_user_id?'list_current_user_row':''} common_row' >
@@ -83,7 +83,7 @@ const component = async props => {
     //show all records if no search criteria
     if (props.methods.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').textContent!='')
         search_user = encodeURI(props.methods.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').textContent);
-    const users = await props.methods.commonFFB({path:'/server-iam/iam_user', query:`search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, method:'GET', authorization_type:'ADMIN'})
+    const users = await props.methods.commonFFB({path:'/server-iam/iamuser', query:`search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const onMounted = async () =>{
