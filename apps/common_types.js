@@ -427,7 +427,7 @@
  *              private:number|null,
  *              friends:number|null,
  *              user_level:string|null,
- *              date_created:string|null,
+ *              created:string|null,
  *              username:string|null, 
  *              avatar:string|null,
  *              count_following:number|null,

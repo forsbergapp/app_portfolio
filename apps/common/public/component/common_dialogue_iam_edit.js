@@ -179,7 +179,7 @@ const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     /**@type{CommonIAMUser} */    
-    const user = await props.methods.commonFFB({path:`/server-iam/iam_user/${props.data.iam_user_id}`, 
+    const user = await props.methods.commonFFB({path:`/server-iam/iamuser/${props.data.iam_user_id}`, 
                                                 method:'GET', authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
                         .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
     /**

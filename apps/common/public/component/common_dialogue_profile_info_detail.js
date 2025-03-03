@@ -21,7 +21,7 @@
  *                  logo:string,
  *                  name:string,
  *                  app_name_translation:string,
- *                  date_created:string,
+ *                  created:string,
  *                  avatar:string,
  *                  username:string}]|[]}} props
  * @returns {string}
@@ -47,7 +47,7 @@ const template = props => `     ${props.list.map(row=>
                                                 }
                                             </div>
                                             <div class='common_profile_detail_list_col'>
-                                                <div class='common_profile_detail_list_date_created'>${row.date_created}</div>
+                                                <div class='common_profile_detail_list_created'>${row.created}</div>
                                             </div>
                                         </div>`:
                                         `<div data-iam_user_id='${row.id}' class='common_profile_detail_list_row common_row'>
