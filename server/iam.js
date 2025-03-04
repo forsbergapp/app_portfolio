@@ -867,7 +867,8 @@ const iamAuthenticateUserDelete = async parameters => IamUser.deleteRecord(param
 *          authorization:string,
 *          user_agent:string,
 *          accept_language:string,
-*          data:{   iam_user_id:number,
+*          data:{   data_app_id:number,
+*                   iam_user_id:number,
 *                   password:string},
 *          locale:string}} parameters
 * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}

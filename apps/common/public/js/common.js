@@ -1048,18 +1048,21 @@ const commonComponentRender = async commonComponentRender => {
  */
 const commonComponentRemove = (div, remove_modal=false) => {
     const APPDIV = COMMON_DOCUMENT.querySelector(`#${div}`);
-    APPDIV.textContent = '';
-    if (div.indexOf('dialogue')>-1){
-        APPDIV.classList.remove('common_dialogue_show0');
-        APPDIV.classList.remove('common_dialogue_show1');
-        APPDIV.classList.remove('common_dialogue_show2');
-        APPDIV.classList.remove('common_dialogue_show3');
-        if (remove_modal){
-            if (COMMON_DOCUMENT.querySelector('#app .common_dialogues_modal'))
-                COMMON_DOCUMENT.querySelector('#app .common_dialogues_modal').classList.remove('common_dialogues_modal');
-            COMMON_DOCUMENT.querySelector('#common_app #common_dialogues').classList.remove('common_dialogues_modal');
+    if (APPDIV){
+        APPDIV.textContent = '';
+        if (div.indexOf('dialogue')>-1){
+            APPDIV.classList.remove('common_dialogue_show0');
+            APPDIV.classList.remove('common_dialogue_show1');
+            APPDIV.classList.remove('common_dialogue_show2');
+            APPDIV.classList.remove('common_dialogue_show3');
+            if (remove_modal){
+                if (COMMON_DOCUMENT.querySelector('#app .common_dialogues_modal'))
+                    COMMON_DOCUMENT.querySelector('#app .common_dialogues_modal').classList.remove('common_dialogues_modal');
+                COMMON_DOCUMENT.querySelector('#common_app #common_dialogues').classList.remove('common_dialogues_modal');
+            }
         }
     }
+    
 };
 
 /**
@@ -1846,46 +1849,6 @@ const commonUserSignup = () => {
 };
 
 /**
- * @name commonUserDelete
- * @description User delete
- * @function
- * @param {number|null} choice 
- * @param {function|null} function_delete_event 
- * @returns {Promise.<{deleted:number}|null>}
- */
-const commonUserDelete = async (choice=null, function_delete_event ) => {
-    return new Promise((resolve, reject)=>{
-        const password = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password').textContent;
-        switch (choice){
-            case null:{
-                if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
-                                    {
-                                        password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password')
-                                    })==false)
-                    resolve(null);
-                else{
-                    commonMessageShow('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
-                    resolve(null);
-                }
-                break;
-            }
-            case 1:{
-                commonComponentRemove('common_dialogue_message');
-                
-                const json_data = { password: password};
-    
-               commonFFB({path:`/server-iam/iamuser-db/${COMMON_GLOBAL.iam_user_id}`, method:'DELETE', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_dialogue_iam_edit_btn_user_delete_account'})
-                .then(()=>  resolve({deleted: 1}))
-                .catch(err=>reject(err));
-                break;
-            }
-            default:
-                resolve(null);
-                break;
-        }
-    });
-};
-/**
  * @name commonUserFunction
  * @description User function FOLLOW and LIKE with delete and post for both
  * @function
@@ -1937,34 +1900,47 @@ const commonUserFunction = function_name => {
 };
 /**
  * @name commonIamUserAppDelete
- * @description User account app delete
+ * @description IamUserApp delete
  * @function
  * @param {number|null} choice 
- * @param {number|null} iam_user_app_id 
- * @param {number} app_id 
  * @param {function|null} function_delete_event 
- * @returns {void}
+ * @returns {Promise.<null|{deleted:1}>}
  */
-const commonIamUserAppDelete = (choice=null, iam_user_app_id, app_id, function_delete_event=null) => {
-    switch (choice){
-        case null:{
-            commonMessageShow('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
-            break;
+const commonIamUserAppDelete = (choice=null, function_delete_event=null) => {
+    return new Promise((resolve, reject)=>{
+        const password = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password').textContent;
+        switch (choice){
+            case null:{
+                if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
+                                    {
+                                        password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password')
+                                    })==false)
+                    resolve(null);
+                else{
+                    commonMessageShow('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
+                    resolve(null);
+                }
+                break;
+            }
+            case 1:{
+                commonComponentRemove('common_dialogue_message');
+    
+                commonFFB({ path:`/server-db/iamuserapp/${COMMON_GLOBAL.iam_user_app_id}`, 
+                            body:{  password: password,
+                                    IAM_data_app_id:COMMON_GLOBAL.app_id, 
+                                    IAM_iam_user_id:COMMON_GLOBAL.iam_user_id}, 
+                            method:'DELETE', 
+                            authorization_type:'APP_ACCESS',
+                            spinner_id:'common_dialogue_iam_edit_btn_user_delete_account'})
+                .then(()=>  resolve({deleted: 1}))
+                .catch(err=>reject(err));
+                break;
+            }
+            default:
+                resolve(null);
+                break;
         }
-        case 1:{
-            commonComponentRemove('common_dialogue_message');
-            commonFFB({path:`/server-db/iamuserapp/${iam_user_app_id}`, 
-                        body:{IAM_data_app_id:app_id}, method:'DELETE', authorization_type:'APP_ACCESS'})
-            .then(()=>{
-                //execute event and refresh app list
-                COMMON_DOCUMENT.querySelector('#common_profile_info_main_btn_cloud').click();
-            })
-            .catch(()=>null);
-            break;
-        }
-        default:
-            break;
-    }
+    });
 };
 /**
  * @name commonUserForgot
@@ -2953,9 +2929,9 @@ const commonEvent = async (event_type,event=null) =>{
                         }
                         case 'common_dialogue_iam_edit_btn_user_delete_account':{
                             const function_delete_user_account = () => { 
-                                commonUserDelete(1, null);
+                                commonIamUserAppDelete(1, null);
                             };
-                            await commonUserDelete(null, function_delete_user_account);
+                            await commonIamUserAppDelete(null, function_delete_user_account);
                             
                             break;
                         }        
@@ -3039,30 +3015,6 @@ const commonEvent = async (event_type,event=null) =>{
                         }
                         case 'common_profile_stat_list':{
                             await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
-                            break;
-                        }
-                        case 'common_profile_detail_list':{
-                            if (event.target.classList.contains('common_profile_detail_list_username'))
-                                await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
-                            else{
-                                //app list
-                                if (event.target.classList.contains('common_profile_detail_list_app_name'))
-                                    COMMON_WINDOW.open(commonMiscElementRow(event.target).getAttribute('data-url') ?? '', '_blank');
-                                else
-                                    if (COMMON_DOCUMENT.querySelector('#common_profile_id').textContent==COMMON_GLOBAL.iam_user_id &&
-                                        event.target.parentNode.classList.contains('common_profile_detail_list_app_delete')){
-                                            commonIamUserAppDelete( null, 
-                                                                    COMMON_GLOBAL.iam_user_app_id,
-                                                                    Number(commonMiscElementRow(event.target).getAttribute('data-app_id')),
-                                                                    () => { 
-                                                                        commonComponentRemove('common_dialogue_message');
-                                                                        commonIamUserAppDelete(1, 
-                                                                            COMMON_GLOBAL.iam_user_app_id, 
-                                                                                                Number(commonMiscElementRow(event.target).getAttribute('data-app_id')), 
-                                                                                                null);
-                                                                    });
-                                    }
-                            }
                             break;
                         }
                         //broadcast
@@ -3823,8 +3775,8 @@ export{/* GLOBALS*/
        commonProfileStat, 
        commonProfileUpdateStat, 
        /* USER  */
-       commonUserDelete, 
        commonUserFunction,
+       commonIamUserAppDelete,
        commonUserLogin, 
        commonUserLogout,
        commonUserSessionCountdown, 

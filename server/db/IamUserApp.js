@@ -29,40 +29,6 @@ const get = parameters =>{
     else
         return ORM.getError(parameters.app_id, 404);
 };
-/**
- * @name getViewApps
- * @description Get record with app info
- * @function
- * @memberof ROUTE_REST_API
- * @param {{app_id:number,
- *          resource_id:number|null,
- *          data:{  data_app_id:number|null,
- *                  iam_user_id:number|null}
- *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_table_IamUserApp & {name:server_db_table_App['name'],
- *                                                                                      app_name_translation:server_db_table_AppTranslation['text'],
- *                                                                                      subdomain:server_db_table_App['subdomain'],
- *                                                                                      logo:server_db_table_App['logo'],
- *                                                                                      protocol:string,
- *                                                                                      host:string|null,
- *                                                                                      port:number|null}[] }>}
- */
-const getViewApps = async parameters => {
-    /**@type{import('../../apps/common/src/common.js')} */
-    const {commonAppsGet} = await import(`file://${process.cwd()}/server/apps/src/common.js`);
-    
-    /**@type{server_db_table_IamUserApp []} */
-    const result = ORM.getObject(parameters.app_id, 'IamUserApp',parameters.resource_id, parameters.data.data_app_id??null).rows
-                    .filter(row=>row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) );
-    if (result.length>0 || parameters.resource_id==null){
-        return {result:(await commonAppsGet({app_id:parameters.app_id, resource_id:parameters.app_id, locale:parameters.locale})).result
-                    .filter((/**@type{server_config_apps_with_db_columns}*/app)=>
-                                    app.app_id == result.filter(app_db=>app_db.app_id==app.app_id)[0].app_id), 
-                type:'JSON'};
-    }
-    else
-        return ORM.getError(parameters.app_id, 404);
-};
 
 /**
  * @name post
@@ -147,4 +113,4 @@ const deleteRecord = async parameters =>{
     });
 };
 
-export {get, getViewApps, post,update, deleteRecord};
+export {get, post,update, deleteRecord};

@@ -56,7 +56,6 @@
 #common_profile_main_btn_following::before{								content:var(--common_app_icon_user_follows)}
 #common_profile_main_btn_followed::before{								content:var(--common_app_icon_user_followed)}
 #common_profile_main_btn_liked_users::before{							content:var(--common_app_icon_user_followed)}
-#common_profile_detail_list_app_delete::before{							content:var(--common_app_icon_delete)}
 #common_profile_btn_top::before{										content:var(--common_app_icon_user_profile_stat)}
 
 /*Icons dialogue user edit*/
@@ -156,9 +155,6 @@
 
 /*Icons module leaflet popup*/
 .common_module_leaflet_popup_sub_title::before{							content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_gps_position)}
-
-/*Icons profile info*/
-#common_profile_info_main_btn_cloud::before{							content:var(--common_app_icon_sky_cloud)}
 
 /*Icons profile search*/
 #common_profile_search_icon::before{									content:var(--common_app_icon_search)}
@@ -1227,18 +1223,6 @@ body.rtl{
 	display: inline-block;
     margin-inline-end: 10px;
 }
-.common_profile_detail_list_app_delete{
-	cursor:pointer;
-}
-.common_profile_detail_list_app_delete{
-	height:1.4em;
-	width:1.4em;
-	border-radius: 50%;
-	vertical-align: middle;
-}
-.common_profile_detail_list_app_url, .common_profile_detail_list_created{
-	display: none;
-}
 /*dialogue profile stat*/
 #common_profile_stat_row1{
 	text-align: center;
@@ -1292,8 +1276,7 @@ body.rtl{
 }
 .common_profile_search_list_username,
 .common_profile_stat_list_username,
-.common_profile_detail_list_username,
-.common_profile_detail_list_app_name {
+.common_profile_detail_list_username {
 	width:200px;
 	display:inline-block;
 	text-align: start;
