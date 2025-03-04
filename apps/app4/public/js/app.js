@@ -1599,7 +1599,7 @@ const appUserSettingProfileLink = item => {
                                      paper_size,
                                      item.id,
                                      'HTML',
-                                     false);
+                                     true);
             common.commonComponentRender({
                     mountDiv:   'common_window_info',
                     data:       {
