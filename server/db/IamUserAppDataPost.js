@@ -113,7 +113,12 @@ const getViewProfileUserPosts = async parameters =>{
  */
  const getViewProfileStatLike = async parameters =>{
 
-    /**@type{import('./IamUserAppDataPostLike.js')} */
+    const result_liked = get({  app_id:parameters.app_id, 
+                                resource_id:null, 
+                                data:{  iam_user_id:parameters.resource_id, 
+                                        data_app_id:parameters.app_id}}).result;
+
+                            /**@type{import('./IamUserAppDataPostLike.js')} */
     const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
     return {result:{
                     count_user_post_likes:IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
@@ -134,10 +139,7 @@ const getViewProfileUserPosts = async parameters =>{
                                                                                 data_app_id:parameters.app_id,
                                                                                 iam_user_app_data_post_id:null}}).result
                                             .filter((/**@type{server_db_table_IamUserAppDataPostLike}*/row_like)=>
-                                                get({app_id:parameters.app_id, 
-                                                    resource_id:null, 
-                                                    data:{  iam_user_id:parameters.resource_id, 
-                                                            data_app_id:parameters.app_id}}).result
+                                                result_liked
                                                 .filter((/**@type{server_db_table_IamUserAppDataPost}*/data_post)=>
                                                     row_like.iam_user_app_data_post_id==data_post.id
                                                 ).length>0
