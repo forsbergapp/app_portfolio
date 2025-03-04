@@ -20,12 +20,13 @@
  *              started:number},
  *          db_detail:[{    name:string,
  *                          type:string,
- *                          pk:[],
- *                          uk:[],
  *                          lock:number,
  *                          transaction_id:number|null,
  *                          rows:number|null,
- *                          size:number|null}]|[],
+ *                          size:number|null,
+ *                          pk:[],
+ *                          uk:[],
+ *                          fk:[]}]|[],
  *          function_seconds_to_time:CommonModuleCommon['commonMiscSecondsToTime'],
  *          function_roundOff:CommonModuleCommon['commonMiscRoundOff']}} props
  * @returns {string}
@@ -45,24 +46,25 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
                                     <div id='menu_db_info_detail_row_title' class='menu_db_info_detail_row'>
                                         <div class='menu_db_info_detail_col list_title'>NAME</div>
                                         <div class='menu_db_info_detail_col list_title'>TYPE</div>
-                                        <div class='menu_db_info_detail_col list_title'>PK</div>
-                                        <div class='menu_db_info_detail_col list_title'>UK</div>
                                         <div class='menu_db_info_detail_col list_title'>LOCK</div>
                                         <div class='menu_db_info_detail_col list_title'>TRANSACTION_ID</div>
                                         <div class='menu_db_info_detail_col menu_db_info_detail_col_number list_title'>ROWS</div>
                                         <div class='menu_db_info_detail_col menu_db_info_detail_col_number list_title'>SIZE ${props.size}</div>
+                                        <div class='menu_db_info_detail_col list_title'>PK</div>
+                                        <div class='menu_db_info_detail_col list_title'>UK</div>
+                                        <div class='menu_db_info_detail_col list_title'>FK</div>
                                     </div>
                                     ${props.db_detail.map(row=>
                                         `<div class='menu_db_info_detail_row' >
                                             <div class='menu_db_info_detail_col'>${row.name}</div>
                                             <div class='menu_db_info_detail_col'>${row.type}</div>
-                                            <div class='menu_db_info_detail_col'>${row.pk==null?'':row.pk}</div>
-                                            <div class='menu_db_info_detail_col'>${row.uk==null?'':row.uk.join(',')}</div>
                                             <div class='menu_db_info_detail_col'>${row.lock==null?'':row.lock}</div>
                                             <div class='menu_db_info_detail_col'>${row.transaction_id==null?'':row.transaction_id}</div>
                                             <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${row.rows==null?'':row.rows}</div>
                                             <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${row.size==null?'':props.function_roundOff(row.size/1024/1024)}</div>
-                                            
+                                            <div class='menu_db_info_detail_col'>${row.pk==null?'':row.pk}</div>
+                                            <div class='menu_db_info_detail_col'>${row.uk==null?'':row.uk.join(', ')}</div>
+                                            <div class='menu_db_info_detail_col'>${row.fk==null?'':row.fk.join(', ')}</div>
                                         </div>`
                                     ).join('')}
                                     <div id='menu_db_info_detail_row_total' class='menu_db_info_detail_row' >
@@ -70,10 +72,11 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
                                         <div class='menu_db_info_detail_col'></div>
                                         <div class='menu_db_info_detail_col'></div>
                                         <div class='menu_db_info_detail_col'></div>
-                                        <div class='menu_db_info_detail_col'></div>
-                                        <div class='menu_db_info_detail_col'></div>
                                         <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${props.function_roundOff(props.db_detail.reduce((total_rows, row)=>total_rows += row.rows??0,0))}</div>
                                         <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${props.function_roundOff(props.db_detail.reduce((total_size, row)=>total_size += (row.size??0)/1024/1024,0))}</div>
+                                        <div class='menu_db_info_detail_col'></div>
+                                        <div class='menu_db_info_detail_col'></div>
+                                        <div class='menu_db_info_detail_col'></div>
                                     </div>
                                 </div>
                             </div>`;

@@ -9,10 +9,9 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="logdate" id="BD20E17A-9E6F-C4EF-3C40-F74E8CB4C4AA">
+<Column name="id" id="3D327CDF-FDD4-4E66-A0BC-6088C289A79C">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:36:34 UTC</createdTime>
-<generatorID>82926773-EB1E-30AE-B425-009E5C4161A8</generatorID>
+<createdTime>2025-03-04 22:02:09 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
@@ -58,17 +57,26 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-</columns>
-<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="B4614046-4F3D-B975-7527-1AD82DC961A3" name="service_error_logdate_UN">
+<Column name="created" id="BD20E17A-9E6F-C4EF-3C40-F74E8CB4C4AA">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:34 UTC</createdTime>
-<generatorID>A16F60A3-4956-E974-A7F7-7189FD9A9B66</generatorID>
+<generatorID>82926773-EB1E-30AE-B425-009E5C4161A8</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="99C3CC83-A661-5092-3FA8-0B6824CA0D22" name="LogServiceError_PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-03-04 22:02:09 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="BD20E17A-9E6F-C4EF-3C40-F74E8CB4C4AA"/>
+<colUsage columnID="3D327CDF-FDD4-4E66-A0BC-6088C289A79C"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="590EB87F-0824-1F45-6E36-20A0FC247184" name="service_error_app_FK">

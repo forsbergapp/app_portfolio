@@ -9,10 +9,9 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="logdate" id="DC24A38D-1091-8C22-1315-D0624CBAA140">
+<Column name="id" id="0DD59211-85D3-6B79-993B-16810FF789DF">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:36:34 UTC</createdTime>
-<generatorID>1F708070-C74C-B7FF-4BD9-76279AE9522F</generatorID>
+<createdTime>2025-03-04 22:01:49 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
@@ -59,17 +58,26 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-</columns>
-<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="65848FA5-FB8B-F86F-136E-3E33C58E0FE3" name="service_info_logdate_UN">
+<Column name="created" id="DC24A38D-1091-8C22-1315-D0624CBAA140">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:34 UTC</createdTime>
-<generatorID>F9BE21D4-6B97-2CE5-EF4C-67D7D580BE4F</generatorID>
+<generatorID>1F708070-C74C-B7FF-4BD9-76279AE9522F</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="812C7851-6AF0-3FBF-B439-19E2005753A1" name="LogServiceInfo_PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-03-04 22:01:49 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="DC24A38D-1091-8C22-1315-D0624CBAA140"/>
+<colUsage columnID="0DD59211-85D3-6B79-993B-16810FF789DF"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="DDE14891-709E-21D7-5B02-07BDDC7ECB8B" name="service_info_app_FK">

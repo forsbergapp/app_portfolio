@@ -16,13 +16,12 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="logdate" id="82926773-EB1E-30AE-B425-009E5C4161A8">
+<Attribute name="id" id="E0DD70F0-0FD4-E8AF-CD3D-5DC27D07493B">
 <createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:35:01 UTC</createdTime>
+<createdTime>2025-03-04 22:15:45 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
@@ -72,6 +71,17 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="created" id="82926773-EB1E-30AE-B425-009E5C4161A8">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 10:35:01 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="A16F60A3-4956-E974-A7F7-7189FD9A9B66" name="SERVICE_ERROR_YYYYMMDD PK">
@@ -84,7 +94,7 @@
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>
-<attributeRef>82926773-EB1E-30AE-B425-009E5C4161A8</attributeRef>
+<attributeRef>E0DD70F0-0FD4-E8AF-CD3D-5DC27D07493B</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>
