@@ -1965,7 +1965,7 @@
         "/bff/app_access/v1/server-db/iamuserappdatapost": {
             "post": {
                 "summary": "",
-                "operationId": "server_db.IamUserAppDataPost.createUserPost",
+                "operationId": "server_db.IamUserAppDataPost.post",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
