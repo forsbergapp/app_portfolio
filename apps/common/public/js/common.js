@@ -2942,14 +2942,10 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         //search list
-                        case 'common_profile_search_list':{
-                            if (event.target.classList.contains('common_profile_search_list_username')){
-                                if (COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function']){
-                                    await COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function'](commonMiscElementRow(event.target).getAttribute('data-iam_user_id'));
-                                }
-                                else
-                                    await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
-                            }
+                        case 'common_profile_detail_list':
+                        case 'common_profile_search_list':
+                        case 'common_profile_stat_list':{
+                            await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
                             break;
                         }
                         //dialogue button stat
@@ -3007,16 +3003,7 @@ const commonEvent = async (event_type,event=null) =>{
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                             break;
                         }
-                        case 'common_profile_info_main_btn_cloud':{
-                            COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                            commonProfileDetail(5);
-                            break;
-                        }
-                        case 'common_profile_stat_list':{
-                            await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
-                            break;
-                        }
+                        
                         //broadcast
                         case 'common_broadcast_close':{
                             commonComponentRemove('common_broadcast');
