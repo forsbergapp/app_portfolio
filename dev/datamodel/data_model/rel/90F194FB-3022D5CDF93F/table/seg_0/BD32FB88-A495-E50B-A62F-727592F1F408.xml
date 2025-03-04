@@ -9,7 +9,7 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="message_id" id="9FC98765-35FA-45A3-23A9-E0B917C8EDBB">
+<Column name="id" id="9FC98765-35FA-45A3-23A9-E0B917C8EDBB">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:18 UTC</createdTime>
 <generatorID>43B7977B-4F83-9BEB-0B0D-71D3793EC313</generatorID>
@@ -59,6 +59,23 @@
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:18 UTC</createdTime>
 <generatorID>5E1C9F16-E0A3-0216-FA59-6BDA49831D0D</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="created" id="C9AD5CDC-722B-3208-926E-6DAE08869DAE">
+<createdBy>admin</createdBy>
+<createdTime>2025-03-04 22:10:38 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="modified" id="482A46F7-2082-6BD0-B646-952DAA8FDF7D">
+<createdBy>admin</createdBy>
+<createdTime>2025-03-04 22:11:29 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>

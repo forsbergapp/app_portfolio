@@ -9,10 +9,9 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="logdate" id="A5D6ED6C-714A-9AA9-5F31-3B88260A4B83">
+<Column name="id" id="82B169E6-D706-AA86-71B9-9A77131552B8">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:36:34 UTC</createdTime>
-<generatorID>D3F5F993-B0B4-4B01-3F04-1AF983AD72D3</generatorID>
+<createdTime>2025-03-04 22:06:30 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
@@ -169,17 +168,26 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-</columns>
-<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="CBCAFEAC-AA11-077E-26D8-CC3D16F3AF4B" name="request_error_logdate_UN">
+<Column name="created" id="A5D6ED6C-714A-9AA9-5F31-3B88260A4B83">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:34 UTC</createdTime>
-<generatorID>6F96AC12-492E-9A29-8C74-D8B0C0411951</generatorID>
+<generatorID>D3F5F993-B0B4-4B01-3F04-1AF983AD72D3</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A97FECA5-E666-CE61-9FD2-352E824E357B" name="LogRequestError_PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-03-04 22:06:30 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="A5D6ED6C-714A-9AA9-5F31-3B88260A4B83"/>
+<colUsage columnID="82B169E6-D706-AA86-71B9-9A77131552B8"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

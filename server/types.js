@@ -567,12 +567,13 @@
 /**
  * @description DB TABLE_LOG LogAppInfo
  * @memberof dbObjects
- * @typedef {{   logdate:string,
+ * @typedef {{   id?:number,
  *               app_id:number|null,
  *               app_filename:string,
  *               app_function_name:string,
  *               app_app_line:number,
- *               logtext:string}} server_db_table_LogAppInfo
+ *               logtext:string,
+ *               created?:string}} server_db_table_LogAppInfo
  */
 
 /**
@@ -583,12 +584,13 @@
 /**
  * @description DB TABLE_LOG LogDbInfo
  * @memberof dbObjects
- * @typedef {{logdate:string,
- *            app_id:number|null,
- *            object:string,
- *            dml:string,
- *            parameters:{},
- *            logtext:string}} server_db_table_LogDbInfo
+ * @typedef {{  id?:number,
+ *              app_id:number|null,
+ *              object:string,
+ *              dml:string,
+ *              parameters:{},
+ *              logtext:string,
+ *              created?:string}} server_db_table_LogDbInfo
  */
 /**
  * @description DB TABLE_LOG LogDbError
@@ -598,11 +600,12 @@
 /**
  * @description DB TABLE_LOG LogServiceInfo
  * @memberof dbObjects
- * @typedef {{   logdate:string,
- *               app_id:number|null,
- *               service:string,
- *               parameters:string,
- *               logtext:string}} server_db_table_LogServiceInfo
+ * @typedef {{  id?:number,
+ *              app_id:number|null,
+ *              service:string,
+ *              parameters:string,
+ *              logtext:string,
+ *              created?:string}} server_db_table_LogServiceInfo
  */
 /**
  * @description DB TABLE_LOG LogServiceError
@@ -613,7 +616,7 @@
 /**
  * @description DB TABLE_LOG LogRequestInfo
  * @memberof dbObjects
- * @typedef {{  logdate:string,
+ * @typedef {{  id?:number,
  *              host:string,
  *              ip:string,
  *              requestid:string,
@@ -629,7 +632,8 @@
  *              size_received:number,
  *              size_sent:number,
  *               responsetime:number,
- *              logtext:string}} server_db_table_LogRequestInfo
+ *              logtext:string,
+ *              created?:string}} server_db_table_LogRequestInfo
  */
 /**
  * @description DB TABLE_LOG LogRequestError
@@ -640,8 +644,9 @@
 /**
  * @description DB TABLE_LOG LogServerInfo
  * @memberof dbObjects
- * @typedef {{  logdate:string,
- *              logtext:string}} server_db_table_LogServerInfo
+ * @typedef {{  id?:number,
+ *              logtext:string,
+ *              created?:string}} server_db_table_LogServerInfo
  */
 /**
  * @description DB TABLE_LOG LogServerError
@@ -728,27 +733,30 @@
 /**
  * @description DB TABLE MessageQueuePublish
  * @memberof dbObjects
- * @typedef {{  message_id:number,
-*              created:string,
-*              service:string,
-*              message:object|null}} server_db_table_MessageQueuePublish
+ * @typedef {{  id?:number,
+*               service:string,
+*               message:object|null,
+*               created?:string}} server_db_table_MessageQueuePublish
 */
 /**
 * @description DB TABLE MessageQueueConsume
 * @memberof dbObjects
-* @typedef {{  message_id:number|null,
+* @typedef {{  id?:number,
 *              service:string|null,
 *              message:*,
 *              start:string|null,
 *              finished:string|null,
-*              result:*}} server_db_table_MessageQueueConsume
+*              result:*,
+*              created?:string,
+*              modified?:string}} server_db_table_MessageQueueConsume
 */
 /**
 * @description DB TABLE MessageQueueError
 * @memberof dbObjects
-* @typedef {{  message_id:number,
+* @typedef {{  id:number,
 *              message:*,
-*              result:*}} server_db_table_MessageQueueError
+*              result:*,
+*              created:string}} server_db_table_MessageQueueError
 */
 
 /**
@@ -1023,12 +1031,13 @@
  * @namespace dbObjects
  * @typedef {{  name:server_DbObject, 
  *              type:'DOCUMENT'|'TABLE'|'TABLE_LOG'|'TABLE_LOG_DATE'|'BINARY',
- *              pk:string|null,
- *              uk:string[]|null,
  *              lock:number, 
  *              transaction_id:number|null, 
  *              transaction_content: object|string|[]|null, 
- *              cache_content?:* }} server_DbObject_record
+ *              cache_content?:* ,
+ *              pk:string|null,
+ *              uk:string[]|null,
+ *              fk:[string,string][]|null}} server_DbObject_record
  */
 
 /** 
@@ -1107,7 +1116,7 @@
 
 /**
  * @description DB server_log_request_record_keys
- * @typedef {   'logdate'|
+ * @typedef {   'created'|
  *              'host'|
  *              'ip'|
  *              'requestid'|
