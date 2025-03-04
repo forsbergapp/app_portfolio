@@ -19,8 +19,7 @@ const createBankAccountVPA = ()=>securityUUIDCreate();
  * @description Creates bank account
  * @function
  * @param {{app_id:number,
- *          data:{      app_data_entity_resource_app_data_entity_id : number,
- *                      app_data_resource_master_id                 : number
+ *          data:{      app_data_resource_master_id                 : number
  *                      app_data_entity_resource_id                 : number,
  *                      app_data_resource_master_attribute_id       : number|null},
  *          user_agent:string,

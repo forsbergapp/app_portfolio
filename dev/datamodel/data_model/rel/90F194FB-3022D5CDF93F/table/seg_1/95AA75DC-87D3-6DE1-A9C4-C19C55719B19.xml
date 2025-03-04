@@ -31,16 +31,6 @@
 <colAssociation fkAssociation="E1EED21E-E321-6D42-E6CC-067E85CBF5BE" referredColumn="190EA51A-48C5-D629-EC4B-1B93E685C6B2"/>
 </associations>
 </Column>
-<Column name="app_data_entity_resource_app_data_entity_id" id="8CCCC8B5-8D07-1EDE-7FD2-0AC0C578616E">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>1A22CD03-BADB-328F-817D-5843D679452B</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 <Column name="app_data_entity_resource_id" id="32E122D0-0CDC-0303-725A-70AE826C3861">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
