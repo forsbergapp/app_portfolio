@@ -21,7 +21,7 @@
 const template = props => `     ${props.list.map(row=>
                                     `<div data-iam_user_id='${row.iam_user_id}' class='common_profile_detail_list_row common_row'>
                                             <div class='common_profile_detail_list_col'>
-                                                <div class='common_profile_detail_list_iam_user_id'>${row.id}</div>
+                                                <div class='common_profile_detail_list_iam_user_id'>${row.iam_user_id}</div>
                                             </div>
                                             <div class='common_profile_detail_list_col'>
                                                 <div class='common_image common_image_avatar_list' style='${row.avatar==null?'':`background-image:url(${row.avatar});`}'></div>
