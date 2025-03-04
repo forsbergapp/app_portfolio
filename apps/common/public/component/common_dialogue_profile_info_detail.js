@@ -12,22 +12,14 @@
  * @param {{iam_user_id:number,
  *          iam_user_id_profile:number,
  *          detailchoice:number,
- *          list:[{ id:number|null, 
- *                  app_id:number, 
- *                  protocol:string, 
- *                  subdomain:string, 
- *                  host:string, 
- *                  port:string,
- *                  logo:string,
- *                  name:string,
- *                  app_name_translation:string,
- *                  created:string,
+ *          list:[{ iam_user_id:number|null, 
+ *                  detail:string, 
  *                  avatar:string,
  *                  username:string}]|[]}} props
  * @returns {string}
  */
 const template = props => `     ${props.list.map(row=>
-                                    `<div data-iam_user_id='${row.id}' class='common_profile_detail_list_row common_row'>
+                                    `<div data-iam_user_id='${row.iam_user_id}' class='common_profile_detail_list_row common_row'>
                                             <div class='common_profile_detail_list_col'>
                                                 <div class='common_profile_detail_list_iam_user_id'>${row.id}</div>
                                             </div>
