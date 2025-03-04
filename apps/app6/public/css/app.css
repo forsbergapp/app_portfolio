@@ -43,6 +43,7 @@ body {
 	display: block;
 	align-content: center;
 	max-width: 700px;
+    overflow-x: auto;
 }
 #app_top_end{
 	width: 60px;
