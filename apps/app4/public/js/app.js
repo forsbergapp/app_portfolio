@@ -1156,7 +1156,7 @@ const appUserProfileDetail = (detailchoice) => {
  */
 const appUserSettingsGet = async () => {
     return new Promise(resolve=>{
-        common.commonFFB({path:'/server-db/IamUserAppDataPost/', query:`IAM_data_app_id=${common.COMMON_GLOBAL.app_id}&IAM_iam_user_id=${common.COMMON_GLOBAL.iam_user_id??''}`, method:'GET', authorization_type:'APP_ID'})
+        common.commonFFB({path:'/server-db/iamuserappdatapost/', query:`IAM_data_app_id=${common.COMMON_GLOBAL.app_id}&IAM_iam_user_id=${common.COMMON_GLOBAL.iam_user_id??''}`, method:'GET', authorization_type:'APP_ID'})
         .then((/**@type{string}*/result)=>{
             const settings = JSON.parse(result).map((/** @type{APP_user_setting_record}*/setting)=>{
                 const json_data = {description:setting.description,
@@ -1287,7 +1287,7 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                 if (function_name=='ADD')
                     spinner_id = 'setting_btn_user_add';
                 method = 'POST';
-                path = '/server-db/IamUserAppDataPost';
+                path = '/server-db/iamuserappdatapost';
                 /**@ts-ignore */
                 body.initial = initial_user_setting==true?1:0;
                 break;
@@ -1296,7 +1296,7 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                 spinner_id = 'setting_btn_user_save';
                 method = 'PUT';
                 const user_setting_id = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].id;
-                path = `/server-db/IamUserAppDataPost/${user_setting_id}`;
+                path = `/server-db/iamuserappdatapost/${user_setting_id}`;
                 break;
             }
         }
@@ -1360,7 +1360,7 @@ const appUserSettingDelete = (choice=null) => {
             break;
         }
         case 1:{
-            common.commonFFB({  path:`/server-db/IamUserAppDataPost/${user_setting_id}`, 
+            common.commonFFB({  path:`/server-db/iamuserappdatapost/${user_setting_id}`, 
                                 method:'DELETE', 
                                 authorization_type:'APP_ACCESS', 
                                 body:{IAM_iam_user_app_id:common.COMMON_GLOBAL.iam_user_app_id}, spinner_id:'setting_btn_user_delete'})
@@ -1640,7 +1640,7 @@ const appUserSettingsLike = user_account_app_data_post_id => {
             method = 'POST';
         else
             method = 'DELETE';
-        common.commonFFB({  path:'/server-db/IamUserAppDataPostLike/', 
+        common.commonFFB({  path:'/server-db/Iamiamuserappdatapostlike/', 
                             method:method, 
                             authorization_type:'APP_ACCESS', 
                             body:json_data})
@@ -2022,11 +2022,11 @@ const appEventClick = event => {
                     break;
                 }
                 case 'profile_stat_row2_1':{
-                    appUserProfileStat(4, '/server-db/IamUserAppDataPost-profile-stat');
+                    appUserProfileStat(4, '/server-db/iamuserappdatapost-profile-stat');
                     break;
                 }
                 case 'profile_stat_row2_2':{
-                    appUserProfileStat(5, '/server-db/IamUserAppDataPost-profile-stat');
+                    appUserProfileStat(5, '/server-db/iamuserappdatapost-profile-stat');
                     break;
                 }
                 case 'profile_user_settings_day':
