@@ -67,29 +67,33 @@ const getViewProfileUserPosts = async parameters =>{
     const result = get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id, iam_user_id:parameters.resource_id}});
     if (result.result)
         if (result.result.length>0)
-            return result.result
+            return {result:result.result
                     .map((/**@type{server_db_table_IamUserAppDataPost}*/row)=>{
                         return {
                             id: row.id,
                             description:row.json_data?.description, 
                             iam_user_id:IamUserApp.get({app_id:parameters.app_id, 
                                                         resource_id:row.iam_user_app_id, 
-                                                        data:{iam_user_id:parameters.resource_id, data_app_id:parameters.app_id}}).result[0]?.iam_user_id,
+                                                        data:{  iam_user_id:    parameters.resource_id, 
+                                                                data_app_id:    parameters.app_id}}).result[0]?.iam_user_id,
                             count_likes:IamUserAppDataPostLike.get({app_id:parameters.app_id, 
-                                                                    resource_id:row.id, 
-                                                                    data:{  iam_user_id:null, 
-                                                                            data_app_id:parameters.app_id,
-                                                                            iam_user_app_data_post_id:null}}).result.length,
+                                                                    resource_id:null, 
+                                                                    data:{  iam_user_id:                null, 
+                                                                            data_app_id:                parameters.app_id,
+                                                                            iam_user_app_data_post_id:  row.id}}).result.length,
                             count_views:IamUserAppDataPostView.get({app_id:parameters.app_id, 
-                                                                    resource_id:row.id, 
-                                                                    data:{iam_user_id:null, data_app_id:parameters.app_id}}).result.length,
+                                                                    resource_id:null, 
+                                                                    data:{  iam_user_id:    null, 
+                                                                            data_app_id:    parameters.app_id,
+                                                                            iam_user_app_data_post_id:  row.id}}).result.length,
                             liked: IamUserAppDataPostLike.get({ app_id:parameters.app_id, 
-                                                                resource_id:row.id, 
-                                                                data:{  iam_user_id:serverUtilNumberValue(parameters.data?.id_current_user), 
-                                                                        data_app_id:parameters.app_id,
-                                                                        iam_user_app_data_post_id:null}}).result.length,
+                                                                resource_id:null, 
+                                                                data:{  iam_user_id:                serverUtilNumberValue(parameters.data?.id_current_user), 
+                                                                        data_app_id:                parameters.app_id,
+                                                                        iam_user_app_data_post_id:  row.id}}).result.length
                             };
-                        });
+                        })
+                        ,type:'JSON'};
         else
             return ORM.getError(parameters.app_id, 404);
     else
@@ -185,7 +189,8 @@ const getViewProfileStatPost = async parameters =>{
                                             IamUserAppDataPostView.get({app_id:parameters.app_id, 
                                                                         resource_id:null,
                                                                         data:{  iam_user_id:row.id??null, 
-                                                                                data_app_id:parameters.app_id}}).result.length
+                                                                                data_app_id:parameters.app_id,
+                                                                                iam_user_app_data_post_id:null}}).result.length
                             };
                         })
                         .sort(( /**@type{server_db_table_IamUser & {count:number}}*/a,

@@ -259,9 +259,9 @@ const getViewProfileDetail = async parameters =>{
                                     serverUtilNumberValue(parameters.data?.detailchoice)==2?'FOLLOWED':
                                     serverUtilNumberValue(parameters.data?.detailchoice)==3?'LIKE_USER':
                                     serverUtilNumberValue(parameters.data?.detailchoice)==4?'LIKED_USER':null,
-                            iam_user_id:  row.iam_user_id,
-                            avatar: get(parameters.app_id,row.iam_user_id).result[0]?.avatar,
-                            username:get(parameters.app_id,row.iam_user_id).result[0]?.username
+                            iam_user_id:  row.iam_user_id_follow,
+                            avatar: get(parameters.app_id,row.iam_user_id_follow).result[0]?.avatar,
+                            username:get(parameters.app_id,row.iam_user_id_follow).result[0]?.username
                         };
                     })
                     .sort(( /**@type{server_db_table_IamUser}*/a,
