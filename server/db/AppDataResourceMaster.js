@@ -1,7 +1,9 @@
 /** @module server/db/AppDataResourceMaster */
 
 /**
- * @import {server_server_response,server_db_table_AppDataResourceMaster, server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
+ * @import {server_server_response,
+ *          server_db_table_AppDataResourceMaster, server_db_table_AppDataEntityResource,
+ *          server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
 
 /**@type{import('./ORM.js')} */
@@ -31,22 +33,25 @@ const get = parameters =>{
                                                                                 resource_id:null, 
                                                                                 data:{  data_app_id:parameters.data.data_app_id??null,
                                                                                         iam_user_id:parameters.data.iam_user_id}}).result[0];
-    const entity_id = parameters.data?.app_data_entity_id?? AppDataEntity.get({  app_id:parameters.app_id, 
-                                        resource_id:null,
-                                        data:{data_app_id:parameters.app_id}}).result[0].id;
+
+    const result_AppDataEntityResource = AppDataEntityResource.get({ app_id:parameters.app_id, 
+                                                                    resource_id:null,
+                                                                    data:{  app_data_entity_id:parameters.data?.app_data_entity_id?? 
+                                                                                                AppDataEntity.get({ app_id:parameters.app_id, 
+                                                                                                                    resource_id:null,
+                                                                                                                    data:{data_app_id:parameters.app_id}}).result[0].id,
+                                                                            resource_name:parameters.data.resource_name
+                                                                    }}).result;
 
     const result = ORM.getObject(parameters.app_id, 'AppDataResourceMaster',parameters.resource_id, null).rows
                     .filter((/**@type{server_db_table_AppDataResourceMaster}*/row)=>
-                            row.app_data_entity_resource_app_data_entity_id == entity_id && 
                             (parameters.all_users ||
                                 ((parameters.data.iam_user_id==null && row.iam_user_app_id==null)|| 
                                  (parameters.data.iam_user_id!=null && row.iam_user_app_id == iam_user_app?.id && row.iam_user_app_id !=null))) &&
-                            AppDataEntityResource.get({ app_id:parameters.app_id, 
-                                                        resource_id:row.app_data_entity_resource_id,
-                                                        data:{  app_data_entity_id:row.app_data_entity_resource_app_data_entity_id,
-                                                                resource_name:parameters.data.resource_name
-                                                        }}).result.length>0
-                            
+                            result_AppDataEntityResource
+                            .filter((/**@type{server_db_table_AppDataEntityResource}*/row_AppDataEntityResource)=>
+                                row_AppDataEntityResource.id == row.app_data_entity_resource_id
+                            ).length>0
                     );
     if (result.length>0 || parameters.resource_id==null ||parameters.join)
         return {result:result, type:'JSON'};
@@ -63,8 +68,7 @@ const get = parameters =>{
  */
 const post = async parameters => {
     //check required attributes
-    if (parameters.data.app_data_entity_resource_app_data_entity_id==null ||
-        parameters.data.app_data_entity_resource_id==null){
+    if (parameters.data.app_data_entity_resource_id==null){
         return ORM.getError(parameters.app_id, 400);
     }
     else{
@@ -72,7 +76,6 @@ const post = async parameters => {
         const data_new =     {
                                 id:Date.now(),
                                 iam_user_app_id:parameters.data.iam_user_app_id,
-                                app_data_entity_resource_app_data_entity_id:parameters.data.app_data_entity_resource_app_data_entity_id,
                                 app_data_entity_resource_id:parameters.data.app_data_entity_resource_id,
                                 json_data:parameters.data.json_data,
                                 created:new Date().toISOString(),

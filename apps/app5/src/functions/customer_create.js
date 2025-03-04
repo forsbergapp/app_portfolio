@@ -61,7 +61,6 @@ const customerCreate = async parameters =>{
                                                             country         :parameters.data.country
                                                         },
             iam_user_app_id                             : parameters.data.iam_user_app_id,
-            app_data_entity_resource_app_data_entity_id : Entity.id,
             app_data_entity_resource_id                 : resource_customer.result[0].id,
             };
         //create CUSTOMER    
@@ -72,8 +71,7 @@ const customerCreate = async parameters =>{
                                                                 data:{  app_data_entity_id:Entity.id, 
                                                                         resource_name:'ACCOUNT'}});
             if (resource_account.result){
-                const post_data_account = { app_data_entity_resource_app_data_entity_id : Entity.id,
-                                            app_data_resource_master_id                 : Customer.result.insertId, //CUSTOMER
+                const post_data_account = { app_data_resource_master_id                 : Customer.result.insertId, //CUSTOMER
                                             app_data_entity_resource_id                 : resource_account.result[0].id,
                                             app_data_resource_master_attribute_id       : null
                                             };

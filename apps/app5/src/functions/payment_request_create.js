@@ -189,7 +189,6 @@ const paymentRequestCreate = async parameters =>{
                 const data_new_payment_request = {
                                                 json_data                                   : data_payment_request,
                                                 iam_user_app_id                             : merchant.iam_user_app_id,
-                                                app_data_entity_resource_app_data_entity_id : Entity.id,
                                                 app_data_entity_resource_id                 : AppDataEntityResource.get({   app_id:parameters.app_id, 
                                                                                                                             resource_id:null, 
                                                                                                                             data:{  resource_name:'PAYMENT_REQUEST',

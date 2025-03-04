@@ -220,7 +220,6 @@ const postDemo = async parameters=> {
         * 
         * @param {{ json_data:                                      server_db_table_AppDataResourceMaster['json_data'],
         *           iam_user_app_id:                                server_db_table_AppDataResourceMaster['iam_user_app_id'],
-        *           app_data_entity_resource_app_data_entity_id:    server_db_table_AppDataResourceMaster['app_data_entity_resource_app_data_entity_id'],
         *           app_data_entity_resource_id:                    server_db_table_AppDataResourceMaster['app_data_entity_resource_id']}} data 
         * @returns {Promise.<number>}
         */
@@ -242,7 +241,6 @@ const postDemo = async parameters=> {
        /**
         * 
         * @param {{app_data_resource_master_id: number;
-        *          app_data_entity_resource_app_data_entity_id: number;
         *          app_data_entity_resource_id: number;
         *          app_data_resource_master_attribute_id: number|null,
         *          json_data: server_db_table_AppDataResourceDetail['json_data'],}} data 
@@ -439,7 +437,6 @@ const postDemo = async parameters=> {
            for (const resource_master of demo_user.app_data_resource_master ?? []){
                const data = {  
                                iam_user_app_id:                                 iam_user_app_id,
-                               app_data_entity_resource_app_data_entity_id:     resource_master.app_data_entity_resource_app_data_entity_id,
                                app_data_entity_resource_id:                     resource_master.app_data_entity_resource_id,
                                json_data:                                       await demo_data_update(resource_master)
                };
@@ -473,7 +470,6 @@ const postDemo = async parameters=> {
                for (const resource_detail of resource_master.app_data_resource_detail ?? []){
                    const data = {  app_data_resource_master_id                     : master_id,
                                    app_data_entity_resource_id                     : resource_detail.app_data_entity_resource_id,
-                                   app_data_entity_resource_app_data_entity_id     : resource_detail.app_data_entity_resource_app_data_entity_id,
                                    app_data_resource_master_attribute_id           : resource_detail.app_data_resource_master_attribute_id,
                                    json_data                                       : await demo_data_update(resource_detail)
                                    };
