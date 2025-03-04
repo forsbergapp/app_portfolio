@@ -50,7 +50,6 @@ const get = parameters =>{
                                                                 app_data_entity_id:entity_id}}).result
                         .filter((/**@type{server_db_table_AppDataResourceDetail}*/row_detail)=>
                             row_detail.id == row.app_data_resource_detail_id && 
-                            row_detail.app_data_entity_resource_app_data_entity_id == entity_id && 
                             //detail master attribute
                             AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         join:true,
@@ -60,8 +59,7 @@ const get = parameters =>{
                                                                 resource_name:parameters.data.resource_name_master_attribute,
                                                                 app_data_entity_id:entity_id}}).result
                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
-                                row_master.id == row_detail.app_data_resource_master_id && 
-                                row_master.app_data_entity_resource_app_data_entity_id == entity_id
+                                row_master.id == row_detail.app_data_resource_master_id
                             ).length>0
                         ).length>0 &&
                         //detail data master attribute
@@ -73,8 +71,7 @@ const get = parameters =>{
                                                             resource_name:parameters.data.resource_name_data_master_attribute,
                                                             app_data_entity_id:entity_id}}).result
                         .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
-                            row_master.id == (row.app_data_resource_master_attribute_id ?? row_master.id) &&
-                            row_master.app_data_entity_resource_app_data_entity_id == entity_id
+                            row_master.id == (row.app_data_resource_master_attribute_id ?? row_master.id)
                         ).length>0
                         
                     )

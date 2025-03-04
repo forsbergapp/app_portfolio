@@ -45,16 +45,6 @@
 <colAssociation fkAssociation="9CE9F407-B3CA-8245-F8FF-5F82A5DA6CB1" referredColumn="D706059D-F6BA-40E7-1A87-B930D8893865"/>
 </associations>
 </Column>
-<Column name="app_data_entity_resource_app_data_entity_id" id="1FCDBAEF-C4BB-281D-5B73-A6F02EB67F88">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>4FB1DD1E-2BCF-E604-1B2D-399D9BE59B32</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 <Column name="app_data_resource_master_attribute_id" id="43C2225D-F8D5-9722-9E7C-04E063ABFCFE">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
