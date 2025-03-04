@@ -1911,7 +1911,7 @@
         "/bff/app_access/v1/server-db/iamuserappdatapost-profile-detail/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.IamUserAppDataPost.getProfileUserPostDetail",
+                "operationId": "server_db.IamUserAppDataPost.getViewProfileUserPostDetail",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -2213,7 +2213,7 @@
                                                 "required":true,
                                                 "type":"number"
                                             },
-                                            "IAM_iam_user_d":{
+                                            "IAM_iam_user_id":{
                                                 "$ref": "#/components/parameters/IAM_iam_user_id"
                                             },
                                             "IAM_data_app_id": {

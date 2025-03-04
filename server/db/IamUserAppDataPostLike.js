@@ -57,12 +57,14 @@ const post = async parameters =>{
         return ORM.getError(parameters.app_id, 400);
     }
     else{
+        /**@type{server_db_table_IamUserApp} */
         const result = IamUserApp.get({app_id:parameters.app_id, resource_id:null, data:{   iam_user_id:parameters.data.iam_user_id, 
                                                                                             data_app_id:parameters.data.data_app_id}}).result[0];
         /**@type{server_db_table_IamUserAppDataPostLike} */
         const data_new =     {
                                 id:Date.now(),
-                                iam_user_app_id:result.iam_user_app_id, 
+                                /**@ts-ignore */
+                                iam_user_app_id:result.id, 
                                 iam_user_app_data_post_id:parameters.data.iam_user_app_data_post_id,
                                 created:new Date().toISOString()
                         };
