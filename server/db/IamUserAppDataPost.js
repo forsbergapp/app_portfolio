@@ -194,7 +194,7 @@ const getViewProfileStatPost = async parameters =>{
                             };
                         })
                         .sort(( /**@type{server_db_table_IamUser & {count:number}}*/a,
-                            /**@type{server_db_table_IamUser & {count:number}}*/b)=>a.count > b.count),
+                            /**@type{server_db_table_IamUser & {count:number}}*/b)=>a.count>b.count?-1:1),
                 type:'JSON'};
     }
 };
@@ -215,61 +215,64 @@ const getViewProfileStatPost = async parameters =>{
  *                                                      username:server_db_table_IamUser['username']}[] }>}
  */
 const getViewProfileUserPostDetail = async parameters =>{
-   /**@type{import('./IamUserAppDataPostLike.js')} */
-   const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
-   if (parameters.data.detailchoice==null)
-       return ORM.getError(parameters.app_id, 400);
-   else{
-       /**@type{import('./IamUser.js')} */
-       const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
-       return { result: IamUser.get(parameters.app_id, null).result
-                        .filter((/**@type{server_db_table_IamUser}*/row_user)=>
-                            serverUtilNumberValue(parameters.data.detailchoice)==1?
-                                IamUserAppDataPostLike.get({app_id:parameters.app_id, 
-                                                            resource_id:null, 
-                                                            data:{  iam_user_id:parameters.resource_id, 
-                                                                    data_app_id:parameters.app_id,
-                                                                    iam_user_app_data_post_id:null}}).result
-                                .filter((/**@type{server_db_table_IamUserAppDataPostLike}*/row_like)=>
-                                    row_user.id == IamUserApp.get({ app_id:parameters.app_id, 
-                                                                    resource_id:row_like.iam_user_app_id,
-                                                                    data:{iam_user_id:null, data_app_id:null}}).result[0]?.iam_user_id &&
-                                    row_like.iam_user_app_id == get({   app_id:parameters.app_id, 
-                                                                        resource_id:row_like.iam_user_app_data_post_id, 
-                                                                        data:{  iam_user_id:null, 
-                                                                                data_app_id:parameters.app_id}}).result[0]?.iam_user_app_id
-                                    
-                                ):
+    /**@type{import('./IamUserAppDataPostLike.js')} */
+    const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
+    if (parameters.data.detailchoice==null)
+        return ORM.getError(parameters.app_id, 400);
+    else{
+        /**@type{import('./IamUser.js')} */
+        const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
+        const result_IamUserAppDataPost = serverUtilNumberValue(parameters.data.detailchoice)==6?
+                                            null:
+                                                get({   app_id:parameters.app_id, 
+                                                        resource_id:null, 
+                                                        data:{  iam_user_id:parameters.resource_id, 
+                                                                data_app_id:parameters.app_id}}).result;
+        //filter iam_user_app_data_post_id where iam_user_app_id = IamUserApp.id where iam_user_id = parameters.resource_id, 
+        const result = serverUtilNumberValue(parameters.data.detailchoice)==6?
+                            //LIKE
+                            IamUserAppDataPostLike.get({app_id:parameters.app_id, 
+                                resource_id:null, 
+                                data:{  iam_user_id:parameters.resource_id, 
+                                        data_app_id:parameters.app_id,
+                                        iam_user_app_data_post_id:null}}).result:
+                                //LIKED
                                 IamUserAppDataPostLike.get({app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null, 
                                                                     data_app_id:parameters.app_id,
-                                                                iam_user_app_data_post_id:null}}).result
-                                .filter((/**@type{server_db_table_IamUserAppDataPostLike}*/row_iam_user_app_data_post_like)=>
-                                    row_user.id == IamUserApp.get({ app_id:parameters.app_id, 
-                                                                    resource_id:row_iam_user_app_data_post_like.iam_user_app_id,
-                                                                    data:{iam_user_id:null, data_app_id:null}}).result[0]?.iam_user_id &&
-                                    get({app_id:parameters.app_id, 
-                                        resource_id:null, 
-                                        data:{  iam_user_id:parameters.resource_id, 
-                                                data_app_id:parameters.app_id}}).result
+                                                                    iam_user_app_data_post_id:null}}).result
+                                .filter ((/**@type{server_db_table_IamUserAppDataPostLike}*/row)=>
+                                    result_IamUserAppDataPost
                                     .filter((/**@type{server_db_table_IamUserAppDataPost}*/data_post)=>
-                                        row_iam_user_app_data_post_like.iam_user_app_data_post_id==data_post.id
+                                        data_post.id == row.iam_user_app_data_post_id
                                     ).length>0
-                                )
-                        )
-                        .map((/**@type{server_db_table_IamUser}*/row)=>{
+                                );
+
+        return { result: result
+                        .map((/**@type{server_db_table_IamUserAppDataPostLike}*/row)=>{
+                            const result_IamUserApp_id =    IamUserApp.get({app_id:parameters.app_id, 
+                                                                            resource_id:serverUtilNumberValue(parameters.data.detailchoice)==6?
+                                                                                            get({   app_id:parameters.app_id, 
+                                                                                                    resource_id:row.iam_user_app_data_post_id, 
+                                                                                                    data:{  iam_user_id:null, 
+                                                                                                            data_app_id:null}}).result[0].iam_user_app_id:
+                                                                                                row.iam_user_app_id,
+                                                                            data:{iam_user_id:null, data_app_id:null}}).result[0]?.iam_user_id;
+                            /**@type{server_db_table_IamUser} */
+                            const result_IamUser = IamUser.get(parameters.app_id, 
+                                                                result_IamUserApp_id).result[0];
                             return {
                                 detail:serverUtilNumberValue(parameters.data.detailchoice)==1?
                                         'LIKE_POST':
                                             'LIKED_POST',
-                                iam_user_id:row.id,
-                                avatar:row.avatar,
-                                username:row.username
+                                iam_user_id:result_IamUserApp_id,
+                                avatar:result_IamUser?.avatar,
+                                username:result_IamUser?.username
                             };
                         })
                         .sort(( /**@type{server_db_table_IamUser}*/a,
-                                /**@type{server_db_table_IamUser}*/b)=>a.username > b.username),
+                                /**@type{server_db_table_IamUser}*/b)=>a.username<b.username?-1:1),
                 type:'JSON'};
    }
 };

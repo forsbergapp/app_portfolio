@@ -1630,17 +1630,22 @@ const appUserSettingProfileLink = item => {
 const appUserSettingsLike = user_account_app_data_post_id => {
     /**@type{CommonRESTAPIMethod} */
     let method;
-    const json_data = { user_account_app_data_post_id: user_account_app_data_post_id, 
+    const json_data = { iam_user_app_data_post_id: user_account_app_data_post_id, 
                         IAM_iam_user_id: common.COMMON_GLOBAL.iam_user_id,
                         IAM_data_app_id:common.COMMON_GLOBAL.app_id};
     if (common.COMMON_GLOBAL.iam_user_id == null)
         common.commonDialogueShow('LOGIN');
     else {
-        if (COMMON_DOCUMENT.querySelector('#profile_user_settings_like').children[0].style.display == 'block')
+        let path;
+        if (COMMON_DOCUMENT.querySelector('#profile_user_settings_like').children[0].style.display == 'block'){
+            path= '/server-db/iamuserappdatapostlike';
             method = 'POST';
-        else
+        }
+        else{
+            path= '/server-db/iamuserappdatapostlike/';
             method = 'DELETE';
-        common.commonFFB({  path:'/server-db/Iamiamuserappdatapostlike/', 
+        }
+        common.commonFFB({  path:path, 
                             method:method, 
                             authorization_type:'APP_ACCESS', 
                             body:json_data})
