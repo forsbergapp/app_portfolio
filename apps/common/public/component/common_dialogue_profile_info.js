@@ -77,7 +77,6 @@ const template = props =>`  <div id='common_profile_main'>
                                             </div>
                                             <div id='common_profile_info_liked_count'>${props.profile.count_liked}</div>
                                         </div>
-                                        <div id='common_profile_info_main_btn_cloud' class='common_link common_icon'></div>
                                     </div>
                                     <div id='common_profile_main_stat_row2'></div>
                                     <div id='common_profile_detail'>

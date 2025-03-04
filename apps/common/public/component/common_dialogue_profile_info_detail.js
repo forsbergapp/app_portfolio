@@ -27,30 +27,7 @@
  * @returns {string}
  */
 const template = props => `     ${props.list.map(row=>
-                                    `${props.detailchoice==5 && typeof row.id =='undefined'?
-                                        `<div data-app_id='${row.app_id}' data-url='${row.protocol}${row.subdomain}.${row.host}:${row.port}' class='common_profile_detail_list_row common_row'>
-                                            <div class='common_profile_detail_list_col'>
-                                                <div class='common_profile_detail_list_app_id'>${row.app_id}</div>
-                                            </div>
-                                            <div class='common_profile_detail_list_col'>
-                                                <div class='common_image common_image_avatar_list' style='${row.logo==null?'':`background-image:url(${row.logo});`}'></div>
-                                            </div>
-                                            <div class='common_profile_detail_list_col'>
-                                                <div class='common_profile_detail_list_app_name common_wide_list_column common_link'>
-                                                    ${row.app_name_translation}
-                                                </div>
-                                            </div>
-                                            <div class='common_profile_detail_list_col'>
-                                                ${props.iam_user_id==props.iam_user_id_profile?
-                                                    '<div class=\'common_profile_detail_list_app_delete common_icon\'></div>':
-                                                    ''
-                                                }
-                                            </div>
-                                            <div class='common_profile_detail_list_col'>
-                                                <div class='common_profile_detail_list_created'>${row.created}</div>
-                                            </div>
-                                        </div>`:
-                                        `<div data-iam_user_id='${row.id}' class='common_profile_detail_list_row common_row'>
+                                    `<div data-iam_user_id='${row.id}' class='common_profile_detail_list_row common_row'>
                                             <div class='common_profile_detail_list_col'>
                                                 <div class='common_profile_detail_list_iam_user_id'>${row.id}</div>
                                             </div>
@@ -63,7 +40,6 @@ const template = props => `     ${props.list.map(row=>
                                                 </div>
                                             </div>
                                         </div>`
-                                    }`
                                 ).join('')
                                 }`;
 /**
@@ -95,11 +71,6 @@ const component = async props => {
         case 4:{
             /*detailchoice 1,2,3, 4: user_account*/
             path = '/server-db/iamuser-profile-detail';
-            break;
-        }
-        case 5:{
-            /* detailchoice 5, apps, returns same columns*/
-            path = '/server-db/iamuserapp-apps';
             break;
         }
         case 6:
