@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_table_IamUser, server_db_table_IamUserFollow, server_db_table_IamAppAccess, server_db_table_IamUserEvent,server_db_iam_user_admin} from '../types.js'
+ *          server_db_table_IamUser, server_db_table_IamUserLike, server_db_table_IamUserFollow, server_db_table_IamAppAccess, server_db_table_IamUserEvent,server_db_iam_user_admin} from '../types.js'
  */
 /**@type{import('./ORM.js')} */
 const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
@@ -160,7 +160,6 @@ const getViewProfileStat = async parameters =>{
     /**@type{import('./IamUserView.js')} */
     const IamUserView = await import(`file://${process.cwd()}/server/db/IamUserView.js`);
     
-
     return {result:get(parameters.app_id, null).result
                             .filter((/**@type{server_db_table_IamUser}*/row)=>
                                     row.active==1 && row.private !=1 &&
@@ -199,7 +198,7 @@ const getViewProfileStat = async parameters =>{
                                 };
                             })
                             .sort(( /**@type{server_db_table_IamUser & {count:number}}*/a,
-                                    /**@type{server_db_table_IamUser & {count:number}}*/b)=>a.count > b.count),
+                                    /**@type{server_db_table_IamUser & {count:number}}*/b)=>a.count>b.count?-1:1),
             type:'JSON'};
 };
     
@@ -228,7 +227,8 @@ const getViewProfileDetail = async parameters =>{
                         IamUserFollow.get({ app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:parameters.resource_id,
-                                                    iam_user_id_follow:null}}).result:
+                                                    iam_user_id_follow:null}}).result
+                            .map((/**@type{server_db_table_IamUserFollow}*/row)=>{return {iam_user_id:row.iam_user_id_follow};}):
                     //followed
                     serverUtilNumberValue(parameters.data?.detailchoice)==2?
                         IamUserFollow.get({ app_id:parameters.app_id, 
@@ -240,7 +240,8 @@ const getViewProfileDetail = async parameters =>{
                         IamUserLike.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:parameters.resource_id,
-                                                    iam_user_id_like:null}}).result:
+                                                    iam_user_id_like:null}}).result
+                            .map((/**@type{server_db_table_IamUserLike}*/row)=>{return {iam_user_id:row.iam_user_id_like};}):
                     //liked user
                     serverUtilNumberValue(parameters.data?.detailchoice)==4?
                         IamUserLike.get({   app_id:parameters.app_id, 
@@ -259,13 +260,13 @@ const getViewProfileDetail = async parameters =>{
                                     serverUtilNumberValue(parameters.data?.detailchoice)==2?'FOLLOWED':
                                     serverUtilNumberValue(parameters.data?.detailchoice)==3?'LIKE_USER':
                                     serverUtilNumberValue(parameters.data?.detailchoice)==4?'LIKED_USER':null,
-                            iam_user_id:  row.iam_user_id_follow,
-                            avatar: get(parameters.app_id,row.iam_user_id_follow).result[0]?.avatar,
-                            username:get(parameters.app_id,row.iam_user_id_follow).result[0]?.username
+                            iam_user_id:  row.iam_user_id,
+                            avatar: get(parameters.app_id,row.iam_user_id).result[0]?.avatar,
+                            username:get(parameters.app_id,row.iam_user_id).result[0]?.username
                         };
                     })
                     .sort(( /**@type{server_db_table_IamUser}*/a,
-                            /**@type{server_db_table_IamUser}*/b)=>a.username < b.username),
+                            /**@type{server_db_table_IamUser}*/b)=>a.username<b.username?-1:1),
            type:'JSON'};
 };
 
