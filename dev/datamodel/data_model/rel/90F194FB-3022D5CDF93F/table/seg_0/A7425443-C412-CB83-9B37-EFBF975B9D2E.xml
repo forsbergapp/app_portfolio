@@ -9,10 +9,9 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="logdate" id="4BF280CF-4FFF-7953-ECE1-CD998EC944F0">
+<Column name="id" id="3110C116-A3A5-9420-CE71-5B5724578EB9">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:36:34 UTC</createdTime>
-<generatorID>F71B1D3C-1C90-0E66-3DA9-8EAAB662E3F5</generatorID>
+<createdTime>2025-03-04 22:01:20 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
@@ -65,17 +64,26 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-</columns>
-<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="999FE6C7-2585-5B36-7D7F-EF12B3F12F94" name="db_error_logdate_UN">
+<Column name="created" id="4BF280CF-4FFF-7953-ECE1-CD998EC944F0">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:34 UTC</createdTime>
-<generatorID>CD8D0A30-BFEC-92C8-AA8E-3E1AD902038E</generatorID>
+<generatorID>F71B1D3C-1C90-0E66-3DA9-8EAAB662E3F5</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="8160C6E1-63F7-6164-E694-67C14142D1E0" name="LogDbError_PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-03-04 22:01:20 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="4BF280CF-4FFF-7953-ECE1-CD998EC944F0"/>
+<colUsage columnID="3110C116-A3A5-9420-CE71-5B5724578EB9"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="43745AD8-D7D3-7239-0501-C3B71B970783" name="db_error_app_FK">

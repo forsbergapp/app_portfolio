@@ -777,12 +777,13 @@ const getViewInfo = async parameters =>{
  * @param {{app_id:number}}parameters
  * @returns {server_server_response & {result?:{name:server_DbObject_record['name'],
  *                                              type:server_DbObject_record['type'],
- *                                              pk:server_DbObject_record['pk'],
- *                                              uk:server_DbObject_record['uk'],
  *                                              lock:server_DbObject_record['lock'],
  *                                              transaction_id:server_DbObject_record['transaction_id'],
  *                                              rows:number|null,
- *                                              size:number|null}[]}}
+ *                                              size:number|null,
+ *                                              pk:server_DbObject_record['pk'],
+ *                                              uk:server_DbObject_record['uk'],
+ *                                              fk:server_DbObject_record['fk']}[]}}
  */
 const getViewObjects = parameters =>{
     
@@ -791,8 +792,6 @@ const getViewObjects = parameters =>{
         return {
             name: row.name,
             type: row.type,
-            pk: row.pk,
-            uk: row.uk,
             lock: row.lock,
             transaction_id: row.transaction_id,
             rows: ('cache_content' in row && row.type=='TABLE')?
@@ -804,7 +803,10 @@ const getViewObjects = parameters =>{
                     row.cache_content?
                         JSON.stringify(row.cache_content)?.length??0:
                             0:
-                                null
+                                null,
+            pk: row.pk,
+            uk: row.uk,
+            fk: row.fk
         };
     });
     if (result.length>0)

@@ -731,10 +731,10 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 .menu_monitor_detail_server_log_service_log_col:nth-child(1),
 .menu_monitor_detail_server_log_db_log_col:nth-child(1)
 {
-	width:120px;
+	width:80px;
 }
 .menu_monitor_detail_server_log_request_log_col:nth-child(2){
-	width:90px;
+	width:120px;
 }
 .menu_monitor_detail_server_log_request_log_col:nth-child(3){
 	width:90px;
@@ -746,10 +746,10 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	width:170px;
 }
 .menu_monitor_detail_server_log_request_log_col:nth-child(6){
-	width:1700px;
+	width:170px;
 }
 .menu_monitor_detail_server_log_request_log_col:nth-child(7){
-	width:70px;
+	width:1000px;
 }
 .menu_monitor_detail_server_log_request_log_col:nth-child(8){
 	width:70px;
@@ -758,37 +758,39 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	width: 60px;
 }
 .menu_monitor_detail_server_log_request_log_col:nth-child(10){
-	width:150px;
+	width:70px;
 }
 .menu_monitor_detail_server_log_request_log_col:nth-child(11){
-	width:540px;
+	width:70px;
 }
 .menu_monitor_detail_server_log_request_log_col:nth-child(12){
 	width:350px;
 }
 .menu_monitor_detail_server_log_request_log_col:nth-child(13){
-	width:230px;
+	width:100px;
 }
 .menu_monitor_detail_server_log_request_log_col:nth-child(14){
-	width:80px;
+	width:350px;
 }
-.menu_monitor_detail_server_log_request_log_col:nth-child(15){
-	width:80px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(16){
+.menu_monitor_detail_server_log_request_log_col:nth-child(15),
+.menu_monitor_detail_server_log_request_log_col:nth-child(16),
+.menu_monitor_detail_server_log_request_log_col:nth-child(17){
 	width:80px;
 }
 .menu_monitor_detail_server_log_app_data_stat_col:nth-child(2){
-	width:30px;
-}
-.menu_monitor_detail_server_log_app_data_stat_col:nth-child(3){
 	width:120px;
 }
+.menu_monitor_detail_server_log_app_data_stat_col:nth-child(3){
+	width:30px;
+}
 .menu_monitor_detail_server_log_app_data_stat_col:nth-child(4){
-	width:90px;
+	width:150px;
 }
 .menu_monitor_detail_server_log_app_data_stat_col:nth-child(5){
-	width:20px;
+	width:100px;
+}
+.menu_monitor_detail_server_log_app_data_stat_col:nth-child(6){
+	width:100px;
 }
 .menu_monitor_detail_server_log_service_log_col:nth-child(2){
 	width:30px;
@@ -806,16 +808,19 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	width:500px;
 }
 .menu_monitor_detail_server_log_db_log_col:nth-child(2){
-	width:30px;
+	width:120px;
 }
 .menu_monitor_detail_server_log_db_log_col:nth-child(3){
-	width:120px;
+	width:30px;
 }
 .menu_monitor_detail_server_log_db_log_col:nth-child(4){
 	width:250px;
 }
 .menu_monitor_detail_server_log_db_log_col:nth-child(5){
-	width:500px;
+	width:50px;
+}
+.menu_monitor_detail_server_log_db_log_col:nth-child(6){
+	width:400px;
 }
 /*MAP*/
 #menu_monitor_mapid{
@@ -952,7 +957,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	padding-inline-start: 5px;
 	text-align: start;
 	display: grid;
-	grid-template-columns: 20em 10em 10em 30em 5em 12em 12em 12em;
+	grid-template-columns: 20em 10em 10em 10em 10em 10em 12em 20em 35em;
 }   
 #menu_db_info_detail_row_total{
 	border-top: 1px solid black;
@@ -963,6 +968,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	margin-inline-end: 10px;
 	overflow: auto;
 	text-align: start;
+    white-space: wrap;
 }
 .menu_db_info_detail_col.menu_db_info_detail_col_number{
 	text-align: end;

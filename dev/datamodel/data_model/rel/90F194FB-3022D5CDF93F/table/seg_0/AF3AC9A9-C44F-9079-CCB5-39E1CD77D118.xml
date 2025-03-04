@@ -9,10 +9,9 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="logdate" id="7D828FB6-4AC0-E883-F2A2-D8D10E9C56B0">
+<Column name="id" id="FA546ADA-66AA-1912-3B0E-2F18927B10A7">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:36:34 UTC</createdTime>
-<generatorID>9B5489CA-9145-16FD-96B8-3C91D679EB74</generatorID>
+<createdTime>2025-03-04 22:00:23 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
@@ -67,17 +66,26 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-</columns>
-<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="79FFF51C-B1AF-96A1-7264-9CF9240AE1F2" name="app_error_logdate_UN">
+<Column name="created" id="7D828FB6-4AC0-E883-F2A2-D8D10E9C56B0">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:34 UTC</createdTime>
-<generatorID>DE78BC48-FF9E-A6DD-3750-ED799E87B78C</generatorID>
+<generatorID>9B5489CA-9145-16FD-96B8-3C91D679EB74</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="ED418DFB-2F9A-A137-8AA9-877B0076C429" name="LogAppError_PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-03-04 22:00:23 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="7D828FB6-4AC0-E883-F2A2-D8D10E9C56B0"/>
+<colUsage columnID="FA546ADA-66AA-1912-3B0E-2F18927B10A7"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="32D3314B-22C5-F895-636B-CEB34036096D" name="app_error_app_FK">

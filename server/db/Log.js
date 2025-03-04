@@ -20,24 +20,18 @@ const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 /**
- * @name logDate
- * @description Log date format
- * @function
- * @returns {string}
- */
-const logDate = () => new Date().toISOString();
-
-/**
  * @name post
  * @description Write log
  * @function
  * @param {server_log_scope} logscope 
  * @param {server_log_level} loglevel 
- * @param {object} log 
+ * @param {object & {id?:number, created?:string}} log 
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
  const post = async (logscope, loglevel, log) => {
     const config_file_interval = Config.get('ConfigServer','SERVICE_LOG', 'FILE_INTERVAL');
+    log.id = Date.now();
+    log.created = new Date().toISOString();
     await ORM.postFsLog(null, `Log${logscope}${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
             .catch((/**@type{server_server_error}*/error)=>{
                 console.log(error);
@@ -58,8 +52,7 @@ const logDate = () => new Date().toISOString();
  */
 const postRequestE = async (req, statusCode, statusMessage, responsetime, err) => {
     /**@type{server_db_table_LogRequestError}*/
-    const log_json_server = {   logdate:            logDate(),
-                                host:               req.headers.host,
+    const log_json_server = {   host:               req.headers.host,
                                 ip:                 req.ip,
                                 requestid:          req.headers['X-Request-Id'],
                                 correlationid:      req.headers['X-Correlation-Id'],
@@ -90,13 +83,12 @@ const postRequestE = async (req, statusCode, statusMessage, responsetime, err) =
  */
 const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
     let log_level;
-    /**@type{server_db_table_LogRequestInfo|{}}*/
-    let log_json_server = {};
+    /**@type{server_db_table_LogRequestInfo}*/
+    let log_json_server;
     switch (Config.get('ConfigServer','SERVICE_LOG', 'REQUEST_LEVEL')){
         case '1':{
             log_level = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO');
-            log_json_server = { logdate:            logDate(),
-                                host:               req.headers.host,
+            log_json_server = { host:               req.headers.host,
                                 ip:                 req.ip,
                                 requestid:          req.headers['X-Request-Id'],
                                 correlationid:      req.headers['X-Correlation-Id'],
@@ -139,8 +131,7 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
                 if (rawheader.startsWith('Basic'))
                     logtext_req.rawHeaders[index] = 'Basic ...';
             });
-            log_json_server = { logdate:            logDate(),
-                                host:               req.headers.host,
+            log_json_server = { host:               req.headers.host,
                                 ip:                 req.ip,
                                 requestid:          req.headers['X-Request-Id'],
                                 correlationid:      req.headers['X-Correlation-Id'],
@@ -177,7 +168,6 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
 const postServer = async (log_level, logtext) =>{
     /**@type{server_db_table_LogServerInfo} */
     const log_json_server = {
-                            logdate: logDate(),
                             logtext: logtext
                             };
     return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server);
@@ -221,7 +211,6 @@ const postDBI = async (app_id, object, dml, parameters, result) => {
         case '1':{
             level_info = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO');
             log_json_db = {
-                            logdate:        logDate(),
                             app_id:         app_id,
                             object:         object,
                             dml:            dml,
@@ -234,7 +223,6 @@ const postDBI = async (app_id, object, dml, parameters, result) => {
         case '2':{
             level_info = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_VERBOSE');
             log_json_db = {
-                            logdate:        logDate(),
                             app_id:         app_id,
                             object:         object,
                             dml:            dml,
@@ -264,7 +252,6 @@ const postDBI = async (app_id, object, dml, parameters, result) => {
 const postDBE = async (app_id, object, dml, parameters, result) => {
     /**@type{server_db_table_LogDbError} */
     const log_json_db = {
-        logdate:        logDate(),
         app_id:         app_id,
         object:         object,
         dml:            dml,
@@ -290,8 +277,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
     switch (Config.get('ConfigServer','SERVICE_LOG', 'SERVICE_LEVEL')){
         case '1':{
             level_info = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO');
-            log_json = {logdate:    logDate(),
-                        app_id:     app_id,
+            log_json = {app_id:     app_id,
                         service:    service,
                         parameters: parameters,
                         logtext:    logtext
@@ -300,8 +286,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
         }
         case '2':{
             level_info = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_VERBOSE');
-            log_json = {logdate:    logDate(),
-                        app_id:     app_id,
+            log_json = {app_id:     app_id,
                         service:    service,
                         parameters: parameters,
                         logtext:    logtext
@@ -328,7 +313,6 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
 const postServiceE = async (app_id, service, parameters, logtext) => {
     /**@type{server_db_table_LogServiceError}*/   
     const log_json = {
-                    logdate:    logDate(),
                     app_id:     app_id,
                     service:    service,
                     parameters: parameters,
@@ -351,7 +335,6 @@ const postServiceE = async (app_id, service, parameters, logtext) => {
 const postApp = async (app_id, level_info, app_filename, app_function_name, app_line, logtext) => {
     /**@type{server_db_table_LogAppInfo} */
     const log_json ={
-                    logdate:            logDate(),
                     app_id:             app_id,
                     app_filename:       app_filename,
                     app_function_name:  app_function_name,
@@ -487,12 +470,12 @@ const get = async parameters => {
                 let first_sort, second_sort;
                 //sort default is connection_date if sort missing as argument
                 /**@ts-ignore */
-                if (typeof first[data.sort==null?'logdate':data.sort] == 'number'){
+                if (typeof first[data.sort==null?'created':data.sort] == 'number'){
                     //number sort
                     /**@ts-ignore */
-                    first_sort = first[data.sort==null?'logdate':data.sort];
+                    first_sort = first[data.sort==null?'created':data.sort];
                     /**@ts-ignore */
-                    second_sort = second[data.sort==null?'logdate':data.sort];
+                    second_sort = second[data.sort==null?'created':data.sort];
                     if (first_sort< second_sort )
                         return -1 * order_by_num;
                     else if (first_sort> second_sort)
@@ -503,7 +486,7 @@ const get = async parameters => {
                 else{
                     //string sort with lowercase and localcompare
                     /**@ts-ignore */
-                    first_sort = first[data.sort==null?'logdate':data.sort];
+                    first_sort = first[data.sort==null?'created':data.sort];
                     if (first_sort == undefined)
                         first_sort = 'undefined';
                     else

@@ -480,7 +480,7 @@ const component = async props => {
                                     props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').setAttribute('data-value', day);
                                     props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').textContent = day;
                                 }
-                                monitorDetailShowServerLog( 0, 'logdate', 'desc');
+                                monitorDetailShowServerLog( 0, 'created', 'desc');
                                 props.methods.commonLovClose();
                             };
         props.methods.commonLovShow({lov:'SERVER_LOG_FILES', function_event:function_event});
