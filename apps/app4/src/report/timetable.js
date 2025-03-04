@@ -3,6 +3,8 @@
 /**
  * @import {server_apps_report_create_parameters,
  * 			server_db_table_IamUserAppDataPostView,
+ *          server_server_response,
+ *          server_db_table_IamUserAppDataPost,
  * 			server_server_error} from './../../../../server/types.js'
  * @import {APP_user_setting_record} from '../types.js'
  */
@@ -25,71 +27,86 @@ const {APP_REPORT_GLOBAL, component} = await import('./lib_timetable.js');
 const timetable_user_account_app_data_post_get = async (app_id, user_account_app_data_post_id) => {
 	/**@type{import('../../../../server/db/IamUserAppDataPost.js')} */
     const IamUserAppDataPost = await import(`file://${process.cwd()}/server/db/IamUserAppDataPost.js`);
-	/**@ts-ignore */
-	return IamUserAppDataPost.getViewProfileUserPosts(app_id, user_account_app_data_post_id)
-	.then(result_user_account_app_data_post=>{
-		/**@type{APP_user_setting_record}*/
-		const user_account_app_data_post = JSON.parse(result_user_account_app_data_post.result[0].json_data);
-		return  {  	locale              	: user_account_app_data_post.regional_language_locale,  
-					timezone            	: user_account_app_data_post.regional_timezone,
-					number_system       	: user_account_app_data_post.regional_number_system,
-					direction           	: user_account_app_data_post.regional_layout_direction,
-					second_locale       	: user_account_app_data_post.regional_second_language_locale,
-					arabic_script       	: user_account_app_data_post.regional_arabic_script,
-					calendartype        	: user_account_app_data_post.regional_calendar_type,
-					calendar_hijri_type 	: user_account_app_data_post.regional_calendar_hijri_type,
+	
+	const result_user_account_app_data_post =  IamUserAppDataPost.get({app_id:app_id, resource_id:user_account_app_data_post_id, data:{data_app_id:null, iam_user_id:null}});
+    if (result_user_account_app_data_post.result){
+        /**@type{APP_user_setting_record}*/
+        const user_account_app_data_post = result_user_account_app_data_post.result[0].json_data;
+        return  {  	locale              	: user_account_app_data_post.regional_language_locale,  
+                    timezone            	: user_account_app_data_post.regional_timezone,
+                    number_system       	: user_account_app_data_post.regional_number_system,
+                    direction           	: user_account_app_data_post.regional_layout_direction,
+                    second_locale       	: user_account_app_data_post.regional_second_language_locale,
+                    arabic_script       	: user_account_app_data_post.regional_arabic_script,
+                    /**@ts-ignore */
+                    calendartype        	: user_account_app_data_post.regional_calendar_type,
+                    calendar_hijri_type 	: user_account_app_data_post.regional_calendar_hijri_type,
 
-					place               	: user_account_app_data_post.description,
-					gps_lat					: typeof user_account_app_data_post.gps_lat_text== 'string'?parseFloat(user_account_app_data_post.gps_lat_text):user_account_app_data_post.gps_lat_text,
+                    place               	: user_account_app_data_post.description,
+                    /**@ts-ignore */
+                    gps_lat					: typeof user_account_app_data_post.gps_lat_text== 'string'?parseFloat(user_account_app_data_post.gps_lat_text):user_account_app_data_post.gps_lat_text,
+                    /**@ts-ignore */
                     gps_long				: typeof user_account_app_data_post.gps_long_text=='string'?parseFloat(user_account_app_data_post.gps_long_text):user_account_app_data_post.gps_long_text,
-					
-					theme_day           	: 'theme_day_' + user_account_app_data_post.design_theme_day_id,
-					theme_month         	: 'theme_month_' + user_account_app_data_post.design_theme_month_id,
-					theme_year          	: 'theme_year_' + user_account_app_data_post.design_theme_year_id,
-					papersize				: user_account_app_data_post.design_paper_size,
-					highlight           	: user_account_app_data_post.design_row_highlight,
-					show_weekday        	: serverUtilNumberValue(user_account_app_data_post.design_column_weekday_checked),
-					show_calendartype   	: serverUtilNumberValue(user_account_app_data_post.design_column_calendartype_checked),
-					show_notes          	: serverUtilNumberValue(user_account_app_data_post.design_column_notes_checked),
-					show_gps   	       		: serverUtilNumberValue(user_account_app_data_post.design_column_gps_checked),
-					show_timezone       	: serverUtilNumberValue(user_account_app_data_post.design_column_timezone_checked),
-								
-					header_img_src      	: (user_account_app_data_post.image_header_image_img == '' || user_account_app_data_post.image_header_image_img == null)?null:user_account_app_data_post.image_header_image_img,
-					footer_img_src      	: (user_account_app_data_post.image_footer_image_img == '' || user_account_app_data_post.image_footer_image_img == null)?null:user_account_app_data_post.image_footer_image_img,
+                    
+                    theme_day           	: 'theme_day_' + user_account_app_data_post.design_theme_day_id,
+                    theme_month         	: 'theme_month_' + user_account_app_data_post.design_theme_month_id,
+                    theme_year          	: 'theme_year_' + user_account_app_data_post.design_theme_year_id,
+                    papersize				: user_account_app_data_post.design_paper_size,
+                    highlight           	: user_account_app_data_post.design_row_highlight,
+                    /**@ts-ignore */
+                    show_weekday        	: serverUtilNumberValue(user_account_app_data_post.design_column_weekday_checked),
+                    /**@ts-ignore */
+                    show_calendartype   	: serverUtilNumberValue(user_account_app_data_post.design_column_calendartype_checked),
+                    /**@ts-ignore */
+                    show_notes          	: serverUtilNumberValue(user_account_app_data_post.design_column_notes_checked),
+                    /**@ts-ignore */
+                    show_gps   	       		: serverUtilNumberValue(user_account_app_data_post.design_column_gps_checked),
+                    /**@ts-ignore */
+                    show_timezone       	: serverUtilNumberValue(user_account_app_data_post.design_column_timezone_checked),
+                    /**@ts-ignore */
+                    header_img_src      	: (user_account_app_data_post.image_header_image_img == '' || user_account_app_data_post.image_header_image_img == null)?null:user_account_app_data_post.image_header_image_img,
+                    /**@ts-ignore */
+                    footer_img_src      	: (user_account_app_data_post.image_footer_image_img == '' || user_account_app_data_post.image_footer_image_img == null)?null:user_account_app_data_post.image_footer_image_img,
 
-					header_txt1         	: user_account_app_data_post.text_header_1_text,
-					header_txt2         	: user_account_app_data_post.text_header_2_text,
-					header_txt3         	: user_account_app_data_post.text_header_3_text,
-					header_align      		: (user_account_app_data_post.text_header_align == '' || user_account_app_data_post.text_header_align ==null)?null:user_account_app_data_post.text_header_align,
-					footer_txt1         	: user_account_app_data_post.text_footer_1_text,
-					footer_txt2         	: user_account_app_data_post.text_footer_2_text,
-					footer_txt3    	   		: user_account_app_data_post.text_footer_3_text,
-					footer_align			: (user_account_app_data_post.text_footer_align == '' || user_account_app_data_post.text_footer_align ==null)?null:user_account_app_data_post.text_footer_align,
+                    header_txt1         	: user_account_app_data_post.text_header_1_text,
+                    header_txt2         	: user_account_app_data_post.text_header_2_text,
+                    header_txt3         	: user_account_app_data_post.text_header_3_text,
+                    /**@ts-ignore */
+                    header_align      		: (user_account_app_data_post.text_header_align == '' || user_account_app_data_post.text_header_align ==null)?null:user_account_app_data_post.text_header_align,
+                    footer_txt1         	: user_account_app_data_post.text_footer_1_text,
+                    footer_txt2         	: user_account_app_data_post.text_footer_2_text,
+                    footer_txt3    	   		: user_account_app_data_post.text_footer_3_text,
+                    /**@ts-ignore */
+                    footer_align			: (user_account_app_data_post.text_footer_align == '' || user_account_app_data_post.text_footer_align ==null)?null:user_account_app_data_post.text_footer_align,
 
-					method              	: user_account_app_data_post.prayer_method,
-					asr                 	: user_account_app_data_post.prayer_asr_method,
-					highlat             	: user_account_app_data_post.prayer_high_latitude_adjustment,
-					format              	: user_account_app_data_post.prayer_time_format,
-					hijri_adj           	: serverUtilNumberValue(user_account_app_data_post.prayer_hijri_date_adjustment),
-					iqamat_fajr         	: user_account_app_data_post.prayer_fajr_iqamat,
-					iqamat_dhuhr        	: user_account_app_data_post.prayer_dhuhr_iqamat,
-					iqamat_asr          	: user_account_app_data_post.prayer_asr_iqamat,
-					iqamat_maghrib      	: user_account_app_data_post.prayer_maghrib_iqamat,
-					iqamat_isha         	: user_account_app_data_post.prayer_isha_iqamat,
-					show_imsak          	: serverUtilNumberValue(user_account_app_data_post.prayer_column_imsak_checked),
-					show_sunset         	: serverUtilNumberValue(user_account_app_data_post.prayer_column_sunset_checked),
-					show_midnight       	: serverUtilNumberValue(user_account_app_data_post.prayer_column_midnight_checked),
-					show_fast_start_end 	: serverUtilNumberValue(user_account_app_data_post.prayer_column_fast_start_end),
-					
-					timetable_class			: 'timetable_class',
-					timetable_month         : 'timetable_month_class',
-					timetable_year_month    : 'timetable_year_month',
-					reporttype_year_month  	: 'MONTH'
-				};
-	})
-	.catch((/**@type{server_server_error}*/error)=>{
-		throw error;
-	});
+                    method              	: user_account_app_data_post.prayer_method,
+                    asr                 	: user_account_app_data_post.prayer_asr_method,
+                    highlat             	: user_account_app_data_post.prayer_high_latitude_adjustment,
+                    format              	: user_account_app_data_post.prayer_time_format,
+                    /**@ts-ignore */
+                    hijri_adj           	: serverUtilNumberValue(user_account_app_data_post.prayer_hijri_date_adjustment),
+                    iqamat_fajr         	: user_account_app_data_post.prayer_fajr_iqamat,
+                    iqamat_dhuhr        	: user_account_app_data_post.prayer_dhuhr_iqamat,
+                    iqamat_asr          	: user_account_app_data_post.prayer_asr_iqamat,
+                    iqamat_maghrib      	: user_account_app_data_post.prayer_maghrib_iqamat,
+                    iqamat_isha         	: user_account_app_data_post.prayer_isha_iqamat,
+                    /**@ts-ignore */
+                    show_imsak          	: serverUtilNumberValue(user_account_app_data_post.prayer_column_imsak_checked),
+                    /**@ts-ignore */
+                    show_sunset         	: serverUtilNumberValue(user_account_app_data_post.prayer_column_sunset_checked),
+                    /**@ts-ignore */
+                    show_midnight       	: serverUtilNumberValue(user_account_app_data_post.prayer_column_midnight_checked),
+                    /**@ts-ignore */
+                    show_fast_start_end 	: serverUtilNumberValue(user_account_app_data_post.prayer_column_fast_start_end),
+                    
+                    timetable_class			: 'timetable_class',
+                    timetable_month         : 'timetable_month_class',
+                    timetable_year_month    : 'timetable_year_month',
+                    reporttype_year_month  	: 'MONTH'
+                };
+    }
+    else
+        throw result_user_account_app_data_post;
 };
 /**
  * @name timetable_day_user_account_app_data_posts_get
@@ -114,7 +131,7 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, iam_user_id
 			//would be difficult to consider all settings on same page using
 			//different texts, images, second languages, directions, column titles, 
 			//arabic script, themes or what columns to display, for these use current users setting
-			const settings = JSON.parse(user_account_app_data_post.json_data);
+			const settings = user_account_app_data_post.json_data;
 			user_account_app_data_posts.push(
 				{
 				'description' : settings.description,
@@ -145,8 +162,10 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, iam_user_id
  * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
-	/**@type{import('../../../../server/db/AppParameter.js')} */
-	const AppParameter = await import(`file://${process.cwd()}/server/db/AppParameter.js`);
+	/**@type{import('../../../../server/db/App.js')} */
+	const App = await import(`file://${process.cwd()}/server/db/App.js`);
+    /**@type{import('../../../../server/db/AppParameter.js')} */
+    const AppParameter = await import(`file://${process.cwd()}/server/db/AppParameter.js`);
 
 	/**@ts-ignore */
 	const decodedReportparameters = Buffer.from(timetable_parameters.reportid, 'base64').toString('utf-8');
@@ -162,8 +181,9 @@ const timetable = async (timetable_parameters) => {
 	 */
 	
 	const parametersApp = AppParameter.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
+    const result_app = App.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
 	return await new Promise((resolve) => {
-		APP_REPORT_GLOBAL.app_copyright = parametersApp.app_copyright.value;
+		APP_REPORT_GLOBAL.app_copyright = result_app.app_copyright;
 		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_calendar_lang = parametersApp.app_regional_default_calendar_lang.value;
 		/**@ts-ignore */
