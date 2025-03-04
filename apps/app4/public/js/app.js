@@ -1047,23 +1047,23 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
  * @returns {Promise.<void>}
  */
 const appUserLogin = async () => {
-    await common.commonUserLogin()
-    .then(()=>{
-        //create intitial user setting if not exist, send initial=true
-        appUserSettingFunction('ADD_LOGIN', true)
-        .then(()=>{
-            //Hide settings
-            COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
-            common.commonComponentRemove('common_dialogue_profile');
-            
-            COMMON_DOCUMENT.querySelector('#paper').textContent='';
-            appUserSettingsGet().then(() => {
-                //show default startup
-                appToolbarButton(APP_GLOBAL.app_default_startup_page);
-            });
-        });
-    })
-    .catch(()=>null);
+    await common.commonUserLogin();
+    //if user has not any posts saved then create default
+    const result = await common.commonFFB({ path:'/server-db/iamuserappdatapost/', 
+                                            query:`IAM_data_app_id=${common.COMMON_GLOBAL.app_id}&iam_user_id=${common.COMMON_GLOBAL.iam_user_id??''}`, 
+                                            method:'GET', authorization_type:'APP_ID'});
+    if (JSON.parse(result).rows.length==0){
+        await appUserSettingFunction('ADD_LOGIN', true);
+    }
+    //Hide settings
+    COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
+    common.commonComponentRemove('common_dialogue_profile');
+    
+    COMMON_DOCUMENT.querySelector('#paper').textContent='';
+    appUserSettingsGet().then(() => {
+        //show default startup
+        appToolbarButton(APP_GLOBAL.app_default_startup_page);
+    });
 };
 
 /**
@@ -1156,9 +1156,9 @@ const appUserProfileDetail = (detailchoice) => {
  */
 const appUserSettingsGet = async () => {
     return new Promise(resolve=>{
-        common.commonFFB({path:'/server-db/iamuserappdatapost/', query:`IAM_data_app_id=${common.COMMON_GLOBAL.app_id}&IAM_iam_user_id=${common.COMMON_GLOBAL.iam_user_id??''}`, method:'GET', authorization_type:'APP_ID'})
+        common.commonFFB({path:'/server-db/iamuserappdatapost/', query:`IAM_data_app_id=${common.COMMON_GLOBAL.app_id}&iam_user_id=${common.COMMON_GLOBAL.iam_user_id??''}`, method:'GET', authorization_type:'APP_ID'})
         .then((/**@type{string}*/result)=>{
-            const settings = JSON.parse(result).map((/** @type{APP_user_setting_record}*/setting)=>{
+            const settings = JSON.parse(result).rows.map((/** @type{APP_user_setting_record}*/setting)=>{
                 const json_data = {description:setting.description,
                     regional_language_locale:setting.regional_language_locale,
                     regional_timezone:setting.regional_timezone,
@@ -1254,11 +1254,10 @@ const appUserSettingLink = (item) => {
  * @description User settings function
  * @function
  * @param {'ADD'|'ADD_LOGIN'|'SAVE'} function_name 
- * @param {boolean} initial_user_setting 
  * @param {boolean} add_settings
  * @returns {Promise.<void>}
  */
-const appUserSettingFunction = async (function_name, initial_user_setting, add_settings=true) => {
+const appUserSettingFunction = async (function_name, add_settings=true) => {
    
     if (common.commonMiscInputControl(null,{
                                     check_valid_list_values:[
@@ -1273,8 +1272,7 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                                                 [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_3_text,null]
                                                 ]})==true){
         
-        const body = {  description:            APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
-                        json_data:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+        const body = {  json_data:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
                         IAM_iam_user_app_id:    common.COMMON_GLOBAL.iam_user_app_id
                     };
         /**@type {CommonRESTAPIMethod}*/
@@ -1288,8 +1286,6 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                     spinner_id = 'setting_btn_user_add';
                 method = 'POST';
                 path = '/server-db/iamuserappdatapost';
-                /**@ts-ignore */
-                body.initial = initial_user_setting==true?1:0;
                 break;
             }
             case 'SAVE':{
@@ -1332,10 +1328,6 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                         path:       '/common/component/common_select.js'});
                     break;
                 }
-                case 'ADD_LOGIN':{
-                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].id = JSON.parse(result).id ?? JSON.parse(result).insertId;
-                    break;
-                }
                 default:{
                     break;
                 }
@@ -1368,7 +1360,7 @@ const appUserSettingDelete = (choice=null) => {
                 common.commonComponentRemove('common_dialogue_message', true);
                 //check if last setting
                 if (APP_GLOBAL.user_settings.data.length == 1)
-                    appUserSettingFunction('ADD', false, false);
+                    appUserSettingFunction('ADD', false);
                 else{
                     //remove current element from array
                     APP_GLOBAL.user_settings.data.splice(COMMON_DOCUMENT.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value'),1);

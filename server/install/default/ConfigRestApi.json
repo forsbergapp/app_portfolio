@@ -432,7 +432,7 @@
                             "$ref": "#/components/parameters/resource_id_number"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "$ref": "#/components/parameters/iam_user_id",
                             "in":"query",
                             "required":true
                         },
