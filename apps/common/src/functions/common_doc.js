@@ -200,11 +200,11 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
  *                  APP_CONFIGURATION       ConfigServer->METADATA->CONFIGURATION
  *                  COPYRIGHT               App
  *                  MODULE_FUNCTION replaced by all functions found in getFileFunctions()
- *              type ROUTE and template 6.restapi
+ *              type ROUTE and template 7.restapi
  *                  CONFIG_REST_API variable is rendered directly to HTML using common_openapi.js component because of complexity
- *              type ROUTE and template 6.restapiFunctions
+ *              type ROUTE and template 7.restapiFunctions
  *                  ROUTE_FUNCTIONS all functions with tag ROUTE_REST_API
- *              type ROUTE and template 6.appRoutes
+ *              type ROUTE and template 7.appRoutes
  *                  ROUTE_FUNCTIONS with tag ROUTE_APP
  *              any file in menu of type GUIDE
  *                  GIT_REPOSITORY_URL replaces with GIT_REPOSITORY_URL parameter in ConfigServer if used in any document 
@@ -260,7 +260,7 @@ const markdownRender = async parameters =>{
         }
         case parameters.type.toUpperCase().startsWith('MODULE'):{
             //replace variables for MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER            
-            const markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/7.module.md`)
+            const markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/8.module.md`)
                         .then(markdown=>
                                 markdown
                                 .replaceAll('@{MODULE_NAME}',       parameters.module ?? '')
@@ -281,8 +281,8 @@ const markdownRender = async parameters =>{
                                                         }));
         }
         case parameters.type.toUpperCase()=='ROUTE':{           
-            if (parameters.doc=='6.restapi'){
-                return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.restapi.md`)
+            if (parameters.doc=='7.restapi'){
+                return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/7.restapi.md`)
                             .then(markdown=>
                                     //remove all '\r' in '\r\n'
                                     markdown
@@ -468,7 +468,7 @@ const appFunction = async parameters =>{
                                                                     module:parameters.data.doc,
                                                                     locale:parameters.locale})},
                                                             methods:null}))
-                                        .replace(parameters.data.doc=='6.restapi'?'@{CONFIG_REST_API}':'',parameters.data.doc=='6.restapi'?
+                                        .replace(parameters.data.doc=='7.restapi'?'@{CONFIG_REST_API}':'',parameters.data.doc=='7.restapi'?
                                                 await ComponentOpenAPI({data:   {  
                                                                                 app_id: parameters.app_id
                                                                                 },
