@@ -21,101 +21,111 @@
     },
     {
         "id":3,
-        "menu":"3 Installation",
+        "menu":"3 Server",
         "type":"GUIDE",
         "menu_sub":[
                 {   "id":1,
                     "menu":"",
-                    "doc":"3.installationAbout"
-                },
-                {   "id":2,
-                    "menu":"",
-                    "doc":"3.installationLocalhost"
-                },
-                {   "id":3,
-                    "menu":"",
-                    "doc":"3.installationServerTerraform"
-                },
-                {   "id":4,
-                    "menu":"",
-                    "doc":"3.installationServerNoTerraform"
-                },
-                {   "id":5,
-                    "menu":"",
-                    "doc":"3.installationPMMicroservices"
-                },
-                {   "id":6,
-                    "menu":"",
-                    "doc":"3.installationSSLDNS"
+                    "doc":"3.Server"
                 }]
     },
     {
         "id":4,
+        "menu":"4 Installation",
+        "type":"GUIDE",
+        "menu_sub":[
+                {   "id":1,
+                    "menu":"",
+                    "doc":"4.installationAbout"
+                },
+                {   "id":2,
+                    "menu":"",
+                    "doc":"4.installationLocalhost"
+                },
+                {   "id":3,
+                    "menu":"",
+                    "doc":"4.installationServerTerraform"
+                },
+                {   "id":4,
+                    "menu":"",
+                    "doc":"4.installationServerNoTerraform"
+                },
+                {   "id":5,
+                    "menu":"",
+                    "doc":"4.installationPMMicroservices"
+                },
+                {   "id":6,
+                    "menu":"",
+                    "doc":"4.installationSSLDNS"
+                }]
+    },
+    {
+        "id":5,
         "menu":"4 Configuration",
         "type":"GUIDE",
         "menu_sub":[
                 {   "id":1,
                     "menu":"",
-                    "doc":"4.configurationServer"
+                    "doc":"5.configurationServer"
                 },
                 {   "id":2,
                     "menu":"",
-                    "doc":"4.configurationApp"
-                }]
-    },
-    {
-        "id":5,
-        "menu":"5 Development",
-        "type":"GUIDE",
-        "menu_sub":[
-                {   "id":1,
-                    "menu":"",
-                    "doc":"5.development_repository"
-                },
-                {   "id":2,
-                    "menu":"",
-                    "doc":"5.development"
+                    "doc":"5.configurationApp"
                 }]
     },
     {
         "id":6,
-        "menu":"6 Routes",
-        "type":"ROUTE",
+        "menu":"6 Development",
+        "type":"GUIDE",
         "menu_sub":[
                 {   "id":1,
                     "menu":"",
-                    "doc":"6.appRoutes"
+                    "doc":"6.development_repository"
                 },
                 {   "id":2,
                     "menu":"",
-                    "doc":"6.restapi"
-                },
-                {   "id":3,
-                    "menu":"",
-                    "doc":"6.restapiFunctions"
+                    "doc":"6.development"
                 }]
     },
     {
         "id":7,
-        "menu":"7 Modules Apps",
+        "menu":"7 Routes",
+        "type":"ROUTE",
+        "menu_sub":[
+                {   "id":1,
+                    "menu":"",
+                    "doc":"7.appRoutes"
+                },
+                {   "id":2,
+                    "menu":"",
+                    "doc":"7.restapi"
+                },
+                {   "id":3,
+                    "menu":"",
+                    "doc":"7.restapiFunctions"
+                }]
+    },
+    {
+        "id":8,
+        "menu":"8 Modules Apps",
         "type":"MODULE_APPS",
         "menu_sub":null
     },
     {
-        "id":8,
-        "menu":"8 Modules Microservice",
+        "id":9,
+        "menu":"9 Modules Microservice",
         "type":"MODULE_MICROSERVICE",
         "menu_sub":null
     },
     {
-        "id":9,
-        "menu":"9 Modules Server",
+        "id":10,
+        "menu":"10 Modules Server",
         "type":"MODULE_SERVER",
         "menu_sub":null
     },
     {
-        "id":10,
-        "menu":"10 Modules Test",
+        "id":11,
+        "menu":"11 Modules Test",
         "type":"MODULE_TEST",
         "menu_sub":null
     }
