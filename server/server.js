@@ -133,8 +133,8 @@ const serverResponse = async parameters =>{
         const message = {error:{
                                 http:parameters.result_request.http, 
                                 code:parameters.result_request.code, 
-                                //return SERVER ERROR if status code ==500
-                                text:(admin_app_id!=app_id_host && parameters.result_request.http == 500)?
+                                //return SERVER ERROR if status code starts with 5
+                                text:(admin_app_id!=app_id_host && parameters.result_request.http.toString().startsWith('5'))?
                                         'SERVER ERROR':
                                             parameters.result_request.text?.code=='DB'?
                                                 parameters.result_request.text.text:
