@@ -446,7 +446,7 @@ const component = async props => {
          * @param {CommonAppEvent} event 
          */
         const function_event = event => {
-                                //format [db object]_YYYYMMDD.log
+                                //format [db object]_YYYYMMDD.json
                                 
                                 const filename = props.methods.commonMiscElementRow(event.target).getAttribute('data-value') ?? '';
                                 const logscope = filename.split('_')[0]

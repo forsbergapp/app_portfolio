@@ -573,31 +573,31 @@ const getStat = async parameters => {
     /**@type{import('../../apps/common/src/common.js')} */
     const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
-    const files = await ORM.getFsDir();
+    const files = await ORM.getFsDir().then(files=>files.filter(file=>file.isDirectory()==false));
     /**@type{string} */
     let sample;
     let day = '';
     //declare ES6 Set to save unique status codes and days
     const log_stat_value = new Set();
     const log_days = new Set();
-    const regexp_request_day = /LogRequestInfo_\d\d\d\d\d\d\d\d.log/g;
-    const regexp_verbose_day = /LogRequestVerbose_\d\d\d\d\d\d\d\d.log/g;
-    const regexp_request_month = /LogRequestInfo_\d\d\d\d\d\d.log/g;
-    const regexp_verbose_month = /LogRequestVerbose_\d\d\d\d\d\d.log/g;
+    const regexp_request_day = /LogRequestInfo_\d\d\d\d\d\d\d\d.json/g;
+    const regexp_verbose_day = /LogRequestVerbose_\d\d\d\d\d\d\d\d.json/g;
+    const regexp_request_month = /LogRequestInfo_\d\d\d\d\d\d.json/g;
+    const regexp_verbose_month = /LogRequestVerbose_\d\d\d\d\d\d.json/g;
     for (const file of files){
-        if ((file.startsWith(`LogRequestInfo_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
-            (regexp_request_day.exec(file)!=null||regexp_request_month.exec(file)!=null)) ||
-            (file.startsWith(`LogRequestVerbose_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
-            (regexp_verbose_day.exec(file)!=null||regexp_verbose_month.exec(file)!=null))){
+        if ((file.name.startsWith(`LogRequestInfo_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
+            (regexp_request_day.exec(file.name)!=null||regexp_request_month.exec(file.name)!=null)) ||
+            (file.name.startsWith(`LogRequestVerbose_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
+            (regexp_verbose_day.exec(file.name)!=null||regexp_verbose_month.exec(file.name)!=null))){
             //filename format: log_request_info_YYYMMDD.log
             if (Config.get('ConfigServer','SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
                 //return DD
-                day = file.slice(-6).substring(0,2);
+                day = file.name.slice(-7).substring(0,2);
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;
             }
             else
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
-            await ORM.getFsLog(parameters.app_id, file.startsWith('LogRequestInfo')?'LogRequestInfo':'LogRequestVerbose', null, null, sample)
+            await ORM.getFsLog(parameters.app_id, file.name.startsWith('LogRequestInfo')?'LogRequestInfo':'LogRequestVerbose', null, null, sample)
             .then((logs)=>{
                 logs.rows.forEach((/**@type{server_db_table_LogRequestInfo|''}*/record) => {
                     if (record != ''){
@@ -691,9 +691,9 @@ const getFiles = async () => {
     return {result:await ORM.getFsDir()
                     .then(result=>
                         result
-                        .filter(row=>row.startsWith('Log'))
+                        .filter(row=>row.name.startsWith('Log') && row.isDirectory()==false)
                         .map((file, index)=>{return {id: index, 
-                                                    filename:file
+                                                    filename:file.name
                                                     };
                                             })
                     ),

@@ -48,6 +48,5 @@
     {"name":"LogServiceVerbose",            "type":"TABLE_LOG_DATE",  "lock":0, "transaction_id":0,   "transaction_content": null, "pk":"id",      "uk":null,                                            "fk":null},
     {"name":"MessageQueuePublish",          "type":"TABLE_LOG",       "lock":0, "transaction_id":0,   "transaction_content": null, "pk":"id",      "uk":null,                                            "fk":null},
     {"name":"MessageQueueConsume",          "type":"TABLE_LOG",       "lock":0, "transaction_id":0,   "transaction_content": null, "pk":"id",      "uk":null,                                            "fk":null},
-    {"name":"MessageQueueError",            "type":"TABLE_LOG",       "lock":0, "transaction_id":0,   "transaction_content": null, "pk":"id",      "uk":null,                                            "fk":null},
-    {"name":"DbObjects",                    "type":"DOCUMENT",        "lock":0, "transaction_id":0,   "transaction_content": null, "pk":null,      "uk":null,                                            "fk":null}
+    {"name":"MessageQueueError",            "type":"TABLE_LOG",       "lock":0, "transaction_id":0,   "transaction_content": null, "pk":"id",      "uk":null,                                            "fk":null}
 ]
