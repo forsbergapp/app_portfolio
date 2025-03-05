@@ -1,12 +1,12 @@
 /** 
  *  Database using race condition, pessimistic lock, constraints and database transaction pattern
  *  Tables implemented using object mapping relation (ORM), PK and UK patterns
- *  See data Model for an overview.
+ *  See data model for an overview.
  *  
- *  File types supported
- *  DOCUMENT        json
- *                  uses getFsFile and updateFsFile by admin and config files
- *  TABLE           json that can be managed as table and implemented using object mapping relation (ORM) pattern
+ *  File types supported, all files are json format
+ * 
+ *  DOCUMENT        contains configurations
+ *  TABLE           array of records managed as table and implemented using object mapping relation (ORM) pattern
  *                  consists of 3 layers
  *                  App layer
  *                  *.js                app logic, ex iamAuthenticateUser() in /server/iam.js
@@ -20,28 +20,11 @@
  *                                      manages objects, constraints, transactions with commit and rollback
  *                                      returns database result
  * 
- *                  Explanation Execute():
- *                                  getObject               reads file content from `cache_content` and should be used by default for performance
- *                                                          so a synchronous function can be used and to avoid disk read
- *                                                          since TABLE files stores new content in `cache_content` after each change
- *                                  getFsFile              reads file content from file, 
- *                                                          used at transaction start,in microservice that does not read `cache_content`
- *                                                          from other server process and at server start
- *                                  postObject              saves file content to file and updates `cachec_content`
- *                                  updateObject            saves file content to file and updates `cache_content`
- *                                  deleteObject            saves file content to file and updates `cache_content`
- *                                  fileConstraints         checks constraints for postObject and deleteObject
- *                                  fileTransactionStart    reads and sets `transaction_id` and `lock` key in DB and 
- *                                                          uses setTimeout loop until lock is available,
- *                                                          waits maximum 10 seconds for lock,
- *                                                          saves file content in `transaction_content` that is used to rollback info if
- *                                                          something goes wrong and can also be used for debugging purpose
- *                                  fileTransactionCommit   empties `transaction_id`, `transaction_content` and sets `lock =0`
- *                                  fileTransactionRollback empties `transaction_id`, `transaction_content` and sets `lock =0`
- *  TABLE_LOG       json records, comma separated
+ *  TABLE_LOG       array of records records, does not use cache_content, only admin should read logs
+ *                  uses temporary transaction_content from file on disk to concat new log record
  *                  uses getFsLog and postFsLog
- *  TABLE_LOG_DATE  json record, comma separateed with file name suffixes
- *                  uses fileFsLogGet, postFsLog and fileSuffix
+ *  TABLE_LOG_DATE  same as TABLE_LOG but uses additional filenam partition with date implemented as partition
+ * 
  *  Admin can also use postFsAdmin and deleteFsAdmin without transaction if needed
  * 
  * @module server/db/ORM
@@ -52,6 +35,7 @@
  *          server_DbObject, server_DbObject_record, 
  *          server_db_result_fileFsRead,
  *          server_db_common_result_select, server_db_common_result_update, server_db_common_result_delete,server_db_common_result_insert} from '../types.js'
+ * @import {Dirent} from 'node:fs'
  */
 
 const fs = await import('node:fs');
@@ -84,22 +68,12 @@ Object.seal(DB_DIR);
 const getObjectRecord = filename =>JSON.parse(JSON.stringify(DB.data.filter(file_db=>file_db.name == filename)[0]));
 
 /**
- * @name fileRecordFilename
- * @description Get filename from file db for given file
- * @function
- * @param {server_DbObject} file
- * @returns {{filename:string, suffix:string}}
- */
-const fileRecordFilename = file => {const record = getObjectRecord(file);
-                                    return {filename:file, 
-                                            suffix:record.type.startsWith('TABLE_LOG')?
-                                                            '.log':
-                                                                '.json'};};
-
-/**
  * @name fileTransactionStart
  * @description Start transaction
  *              Using race condition, pessmistic lock and database transaction pattern
+ *              Uses setTimeout loop until lock is available and waits maximum 10 seconds for lock
+ *              Reads and sets `transaction_id`, `transaction_content` and `lock` key in DB 
+ *              `transaction_content` is used to rollback info if something goes wrong and can also be used for debugging purpose
  * @function
  * @param {server_DbObject} file 
  * @param {string} filepath
@@ -111,8 +85,7 @@ const fileTransactionStart = async (file, filepath)=>{
         const transaction_id = Date.now();
         record.transaction_id = transaction_id;
         const file_content = await fs.promises.readFile(process.cwd() + filepath, 'utf8').catch(()=>'');
-        //parse TABLE and DOCUMENT, others are binary or json log files
-        record.transaction_content = (record.type=='TABLE' || record.type=='DOCUMENT')?JSON.parse(file_content==''?'[]':file_content):file_content;
+        record.transaction_content = JSON.parse(file_content==''?(record.type.startsWith('TABLE')?'[]':'{}'):file_content);
         return transaction_id;
     };
     return new Promise((resolve, reject)=>{
@@ -144,6 +117,7 @@ const fileTransactionStart = async (file, filepath)=>{
 /**
  * @name fileTransactionCommit
  * @description Transaction commit
+ *              Empties `transaction_id` and `transaction_content`, sets `lock =0` and updates cache_content if used
  * @function
  * @param {server_DbObject} file 
  * @param {number} transaction_id 
@@ -166,6 +140,7 @@ const fileTransactionCommit = (file, transaction_id, cache_content=null)=>{
 /**
  * @name fileTransactionRollback
  * @description Transaction rollback
+ *              Empties `transaction_id` and `transaction_content`, sets `lock =0` and updates cache_content if used
  * @function
  * @param {server_DbObject} file 
  * @param {number} transaction_id 
@@ -215,24 +190,17 @@ const fileTransactionRollback = (file, transaction_id)=>{
 };
 
 /**
- * @name getFsPath
- * @description Returns file path for given file
- * @function
- * @param {server_DbObject} file 
- * @returns {string}
- */
-const getFsPath = file =>DB_DIR.db + fileRecordFilename(file).filename + fileRecordFilename(file).suffix;
-
-/**
  * @name getFsDir
  * @description Get files from directory
  * @function
- * @returns {Promise.<string[]>}
+ * @returns {Promise.<Dirent[]>}
  */
-const getFsDir = async () => await fs.promises.readdir(`${process.cwd()}${DB_DIR.db}`);
+const getFsDir = async () => await fs.promises.readdir(`${process.cwd()}${DB_DIR.db}`,{ withFileTypes: true });
+
 /**
  * @name getFsFile
  * @description Returns file content for given file
+ *              Microservice uses this function without lock only and to read table content from file since DB is only loaded in main server
  *              Specify lock=true when updating a file to get transaction id 
  *              when file is available to update.
  *              Function returns file content after a lock of file and transaction id is given, lock info and transaction id.
@@ -243,7 +211,7 @@ const getFsDir = async () => await fs.promises.readdir(`${process.cwd()}${DB_DIR
  * @returns {Promise.<server_db_result_fileFsRead>}
  */
 const getFsFile = async (file, lock=false) =>{
-    const filepath = DB_DIR.db + fileRecordFilename(file).filename + fileRecordFilename(file).suffix;
+    const filepath = DB_DIR.db + file + '.json';
     if (lock){
         const transaction_id = await fileTransactionStart(file, filepath);
         return {   file_content:    getObjectRecord(file).transaction_content,
@@ -278,10 +246,8 @@ const updateFsFile = async (file, transaction_id, file_content) =>{
     }
     else{
         try {
-            const fileRecordFile = fileRecordFilename(file);
-            const filepath = fileRecordFile.filename + fileRecordFile.suffix;
             //write backup of old config file
-            await fs.promises.writeFile(process.cwd() + `${DB_DIR.backup + filepath}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
+            await fs.promises.writeFile(process.cwd() + `${DB_DIR.backup + file + '.json'}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
                                         record.type=='TABLE'?
                                         //save records in new row and compact format
                                         /**@ts-ignore */
@@ -291,7 +257,7 @@ const updateFsFile = async (file, transaction_id, file_content) =>{
                                         ,  
                                         'utf8');
             //write new file content
-            await fs.promises.writeFile( process.cwd() + DB_DIR.db + filepath, 
+            await fs.promises.writeFile( process.cwd() + DB_DIR.db + file + '.json', 
                                                 record.type=='TABLE'?
                                                 //save records in new row and compact format
                                                 '[\n' + file_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
@@ -363,8 +329,7 @@ const postFsDir = async paths => {
  */
 const postFsAdmin = async (file, file_content) =>{
     await fs.promises.writeFile(process.cwd() + 
-                                DB_DIR.db +
-                                fileRecordFilename(file).filename + fileRecordFilename(file).suffix, 
+                                DB_DIR.db + file + '.json', 
                                 file_content?JSON.stringify(file_content, undefined, 2):'',  'utf8')
     .catch((error)=> {
         throw error;
@@ -383,7 +348,7 @@ const postFsAdmin = async (file, file_content) =>{
 const deleteFsAdmin = async file => {                                 
     const filepath =    process.cwd() + 
                         DB_DIR.db +
-                        fileRecordFilename(file).filename + fileRecordFilename(file).suffix;
+                        file + '.json';
     await fs.promises.rm(filepath)
             .then(()=>{if (DB.data.filter(file_db=>file_db.name == file)[0].cache_content)
                         DB.data.filter(file_db=>file_db.name == file)[0].cache_content = null;
@@ -405,10 +370,10 @@ const deleteFsAdmin = async file => {
   * @returns {Promise.<server_db_common_result_select>}
   */
  const getFsLog = async (app_id, file, resource_id, filenamepartition=null, sample=null) =>{
-    const record = fileRecordFilename(file);
-    const filepath = `${record.filename}_${fileNamePartition(filenamepartition, sample)}${record.suffix}`;
-    const fileBuffer = await fs.promises.readFile(process.cwd() + DB_DIR.db + filepath, 'utf8');
-    return {rows:fileBuffer.toString().split('\r\n').filter(row=>row !='').map(row=>row = JSON.parse(row)).filter(row=>row.id == (resource_id??row.id))};
+    const filepath = `${file}_${fileNamePartition(filenamepartition, sample)}.json`;
+    /**@type{*[]} */
+    const log = await fs.promises.readFile(process.cwd() + DB_DIR.db + filepath, 'utf8').then(result=>JSON.parse(result.toString()));
+    return {rows:log.filter(row=>row.id == (resource_id??row.id))};
 };
 /**
  * @name postFsLog
@@ -422,12 +387,13 @@ const deleteFsAdmin = async file => {
  */
 const postFsLog = async (app_id, file, file_content, filenamepartition = null) =>{
 
-    const record = fileRecordFilename(file);
-
-    const filepath = `${DB_DIR.db}${record.filename}_${fileNamePartition(filenamepartition, null)}${record.suffix}`;
+    const filepath = `${DB_DIR.db}${file}_${fileNamePartition(filenamepartition, null)}.json`;
     const transaction_id = await fileTransactionStart(file, filepath);
     
-     await fs.promises.appendFile(`${process.cwd()}${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
+     await fs.promises.writeFile(  `${process.cwd()}${filepath}`, 
+                                    /**@ts-ignore */
+                                    JSON.stringify((DB.data.filter(row=>row.name==file)[0].transaction_content?? []).concat(file_content)), 
+                                    'utf8')
             .catch((error)=>{
                 if (fileTransactionRollback(file, transaction_id))
                     throw(error);
@@ -456,9 +422,11 @@ const getObjectDocument = file => JSON.parse(JSON.stringify(DB.data.filter(objec
 
 /**
  * @name getObject
- * @description Gets a record or records in a TABLE
+ * @description Gets a record or records in a TABLE from memory only for performance
  *              for given app id and if resource id if specified
- *              TABLE should have column id as primary key using this function
+ *              TABLE should have column id or app_id as primary key using this function
+ *              Uses JSON.stringify and JSON.parse to copy records from DB variable
+ *              
  * @function
  * @param {number|null} app_id
  * @param {server_DbObject} table
@@ -468,7 +436,6 @@ const getObjectDocument = file => JSON.parse(JSON.stringify(DB.data.filter(objec
  */
 const getObject = (app_id, table, resource_id, data_app_id) =>{
     try {
-        //copy array using JON.stringify and JSON.parse since spread operator, Array.from() and Object.assign({},array) do not work
         /**@type{*} */
         const records = JSON.parse(JSON.stringify(DB.data.filter(object=>object.name == table && object.type=='TABLE')[0].cache_content.filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id))))
                         .map((/**@type{*}*/row)=>{
@@ -498,7 +465,7 @@ const getObject = (app_id, table, resource_id, data_app_id) =>{
  * @name fileConstraints
  * @description Authenticates PK constraint that can have one primary key column and UK constraint that can have several columns. 
  *              Implements contraints pattern using some() function for best performane to check if value already exist
- * @function
+  * @function
  * @param {server_DbObject} table
  * @param {[]} table_rows
  * @param {*} data
@@ -733,7 +700,7 @@ const getError = (app_id, statusCode, error=null) =>{
     if (default_db == null)
         for (const file_db_record of DB.data){
             if ('cache_content' in file_db_record){
-                const file = await fs.promises.readFile(process.cwd() + DB_DIR.db + fileRecordFilename(file_db_record.name).filename + fileRecordFilename(file_db_record.name).suffix, 'utf8')
+                const file = await fs.promises.readFile(process.cwd() + DB_DIR.db + file_db_record.name + '.json', 'utf8')
                                     .then((/**@type{string}*/file)=>JSON.parse(file.toString()))
                                     .catch(()=>null);
                 file_db_record.cache_content = file?file:null;
@@ -817,7 +784,7 @@ const getViewObjects = parameters =>{
 
 
 export {
-        getFsPath, getFsFile, getFsDir, getFsDataExists, postFsDir, updateFsFile, 
+        getFsFile, getFsDir, getFsDataExists, postFsDir, updateFsFile, 
         postFsAdmin, deleteFsAdmin,
         getFsLog, postFsLog,
         getObjectDocument,

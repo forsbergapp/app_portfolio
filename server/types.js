@@ -977,8 +977,7 @@
 /**
  * @description DB object
  * 
- * @typedef {   'DbObjects'| 
- *              'App'|
+ * @typedef {   'App'|
  *              'AppData'|
  *              'AppDataEntity'|
  *              'AppDataEntityResource'|
@@ -1030,10 +1029,10 @@
  * @description DB object record
  * @namespace dbObjects
  * @typedef {{  name:server_DbObject, 
- *              type:'DOCUMENT'|'TABLE'|'TABLE_LOG'|'TABLE_LOG_DATE'|'BINARY',
+ *              type:'DOCUMENT'|'TABLE'|'TABLE_LOG'|'TABLE_LOG_DATE',
  *              lock:number, 
  *              transaction_id:number|null, 
- *              transaction_content: object|string|[]|null, 
+ *              transaction_content: object|[]|null, 
  *              cache_content?:* ,
  *              pk:string|null,
  *              uk:string[]|null,
