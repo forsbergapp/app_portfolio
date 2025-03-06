@@ -1037,7 +1037,7 @@
  *              cache_content?:* ,
  *              pk:string|null,
  *              uk:string[]|null,
- *              fk:[string,string][]|null}} server_DbObject_record
+ *              fk:[string,string, string][]|null}} server_DbObject_record
  */
 
 /** 
