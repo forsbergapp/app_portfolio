@@ -52,7 +52,7 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
                                         <div class='menu_db_info_detail_col menu_db_info_detail_col_number list_title'>SIZE ${props.size}</div>
                                         <div class='menu_db_info_detail_col list_title'>PK</div>
                                         <div class='menu_db_info_detail_col list_title'>UK</div>
-                                        <div class='menu_db_info_detail_col list_title'>FK</div>
+                                        <div class='menu_db_info_detail_col list_title'>FK (FK column, ref PK column, ref object)</div>
                                     </div>
                                     ${props.db_detail.map(row=>
                                         `<div class='menu_db_info_detail_row' >
@@ -64,7 +64,7 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
                                             <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${row.size==null?'':props.function_roundOff(row.size/1024/1024)}</div>
                                             <div class='menu_db_info_detail_col'>${row.pk==null?'':row.pk}</div>
                                             <div class='menu_db_info_detail_col'>${row.uk==null?'':row.uk.join(', ')}</div>
-                                            <div class='menu_db_info_detail_col'>${row.fk==null?'':row.fk.join(', ')}</div>
+                                            <div class='menu_db_info_detail_col'>${row.fk==null?'':row.fk.map(fk=>{ return `(${fk[0]},${fk[1]},${fk[2]})`;}).join('\n')}</div>
                                         </div>`
                                     ).join('')}
                                     <div id='menu_db_info_detail_row_total' class='menu_db_info_detail_row' >
