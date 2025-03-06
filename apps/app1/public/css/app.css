@@ -968,7 +968,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	margin-inline-end: 10px;
 	overflow: auto;
 	text-align: start;
-    white-space: wrap;
+    white-space: preserve;
 }
 .menu_db_info_detail_col.menu_db_info_detail_col_number{
 	text-align: end;
