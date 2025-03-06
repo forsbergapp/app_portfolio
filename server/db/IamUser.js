@@ -288,9 +288,9 @@ const getViewStatCountAdmin = parameters => {return {result: [{count_users:get(p
  * @param {server_db_table_IamUser} data
  */
 const validationData = data =>{
-    return (data.username==null || data.password==null || data.type==null||
-            //check not allowed attributes when creating a user
-            data.id||data.user_level ||data.status||data.created||data.modified||
+    return (data.username==null || data.password==null || ('type' in data && data.type==null)||
+            //check not allowed attributes when creating or updating a user
+            'id' in data||'user_level' in data ||'status' in data||'created' in data||'modified' in data||
             //must be valid username
             (data.username != null &&
                 (data.username.indexOf(' ') > -1 || 
