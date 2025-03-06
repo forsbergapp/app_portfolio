@@ -248,7 +248,7 @@ const updateFsFile = async (file, transaction_id, file_content) =>{
         try {
             //write backup of old config file
             await fs.promises.writeFile(process.cwd() + `${DB_DIR.backup + file + '.json'}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
-                                        record.type=='TABLE'?
+                                        (record.type=='TABLE'||record.type=='TABLE_KEY_VALUE')?
                                         //save records in new row and compact format
                                         /**@ts-ignore */
                                         '[\n' + record.transaction_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
@@ -258,7 +258,7 @@ const updateFsFile = async (file, transaction_id, file_content) =>{
                                         'utf8');
             //write new file content
             await fs.promises.writeFile( process.cwd() + DB_DIR.db + file + '.json', 
-                                                record.type=='TABLE'?
+                                                (record.type=='TABLE'||record.type=='TABLE_KEY_VALUE')?
                                                 //save records in new row and compact format
                                                 '[\n' + file_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
                                                     //JSON, convert to string
@@ -437,7 +437,7 @@ const getObjectDocument = file => JSON.parse(JSON.stringify(DB.data.filter(objec
 const getObject = (app_id, table, resource_id, data_app_id) =>{
     try {
         /**@type{*} */
-        const records = JSON.parse(JSON.stringify(DB.data.filter(object=>object.name == table && object.type=='TABLE')[0].cache_content.filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id))))
+        const records = JSON.parse(JSON.stringify(DB.data.filter(object=>object.name == table && (object.type=='TABLE'||object.type=='TABLE_KEY_VALUE'))[0].cache_content.filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id))))
                         .map((/**@type{*}*/row)=>{
                             if ('json_data' in row)
                                 return {...row,
@@ -768,7 +768,7 @@ const getViewObjects = parameters =>{
             type: row.type,
             lock: row.lock,
             transaction_id: row.transaction_id,
-            rows: ('cache_content' in row && row.type=='TABLE')?
+            rows: ('cache_content' in row && (row.type=='TABLE' ||row.type=='TABLE_KEY_VALUE'))?
                     row.cache_content?
                         row.cache_content.length??0:
                             0:
