@@ -463,7 +463,10 @@ const getObject = (app_id, table, resource_id, data_app_id) =>{
 };
 /**
  * @name fileConstraints
- * @description Authenticates PK constraint that can have one primary key column and UK constraint that can have several columns. 
+ * @description Validates:
+ *              PK constraint that can have one primary key column
+ *              UK constraint that can have several columns
+ *              FK constraint that should have a value in referref column and object, checked for TABLE and TABLE_KEY_VALUE
  *              Implements contraints pattern using some() function for best performane to check if value already exist
   * @function
  * @param {server_DbObject} table
@@ -498,7 +501,23 @@ const fileConstraints = (table, table_rows, data, dml, resource_id) =>{
                 record[filerecord.pk]!=resource_id))
                     return false;
             else
-                return true;
+                //check FK exist in the referred object in a row in cache_content
+                //ignore empty fk and check only TABLE and TABLE_KEY_VALUE objects
+                if (	filerecord.fk==null||
+                        (filerecord.type!='TABLE'&& filerecord.type!='TABLE_KEY_VALUE')||
+                        filerecord.fk
+                            .filter(fk=>
+                                DB.data
+                                .filter(object=>
+                                    object.name == fk[2]
+                                )[0].cache_content
+                                .some((/**@type{*}*/row)=> 
+                                        row[fk[1]]==data[fk[0]]
+                                )
+                            ).length>0)
+                    return true;
+                else
+                    return false;
     }
 };
 /**
