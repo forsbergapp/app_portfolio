@@ -1,6 +1,6 @@
 /** 
  *  Database using race condition, pessimistic lock, constraints and database transaction pattern
- *  Tables implemented using object mapping relation (ORM), PK and UK patterns
+ *  Tables implemented using object mapping relation (ORM), PK, UK and FK patterns
  *  See data model for an overview.
  *  
  *  File types supported, all files are json format
