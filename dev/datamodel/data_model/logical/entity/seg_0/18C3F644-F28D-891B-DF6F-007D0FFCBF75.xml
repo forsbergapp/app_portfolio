@@ -58,16 +58,6 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="SERVICE_DB" id="14144C8F-AF88-1BB3-EE6E-CA57E68EE433">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:30:32 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="SERVICE_LOG" id="4ACACE82-E407-3D6F-4ACF-D3234780A6B8">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:30:39 UTC</createdTime>

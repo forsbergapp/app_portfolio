@@ -45,15 +45,6 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="SERVICE_DB" id="0ADFC325-1D19-78A7-4F57-4EF6B2BF1DCB">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:36:34 UTC</createdTime>
-<generatorID>14144C8F-AF88-1BB3-EE6E-CA57E68EE433</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 <Column name="SERVICE_LOG" id="8346A66A-2903-D225-1993-BAD20ADE29C8">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:34 UTC</createdTime>
