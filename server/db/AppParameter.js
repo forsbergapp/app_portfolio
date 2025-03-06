@@ -30,8 +30,8 @@ const get = parameters =>{
 /**
  * @name post
  * @description Add record
- *              Table is designed to add one parameter in the same record
- *              so update function is called  and returns same resource id
+ *              Object saves key values for given app id and adds one parameter to the same record
+ *              and update function is called and returns same resource id
  * @function
  * @param {number} app_id 
  * @param {number} resource_id
@@ -45,7 +45,7 @@ const post = async (app_id, resource_id, data) => update({app_id:app_id, resourc
 /**
  * @name update
  * @description Update record
- *              Table is designed to update one parameter in the same record
+ *              Object saves key values for given app id and adds one parameter to the same record
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,

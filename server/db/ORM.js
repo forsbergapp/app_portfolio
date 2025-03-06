@@ -613,6 +613,8 @@ const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
 /**
  * @name Execute
  * @description Execute a db statement
+ *              TABLE that saves record uses resource_id as PK with all records using same columns
+ *              TABLE_KEY_VALUE that saves key values uses app_id as PK and can have different keys
  * @function
  * @param {{app_id:number,
  *          dml:'UPDATE'|'POST'|'DELETE',
@@ -627,7 +629,12 @@ const Execute = async parameters =>{
     /**@type{import('./Log.js')} */
     const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
     try{
-        if (parameters.dml!='UPDATE' && parameters.dml!='POST' && parameters.dml!='DELETE'){
+        const object_type = getObjectRecord(parameters.object).type;
+        if (parameters.dml!='UPDATE' && parameters.dml!='POST' && parameters.dml!='DELETE' &&
+            (parameters.update?.resource_id && parameters.delete?.resource_id && object_type=='TABLE_KEY_VALUE' ||
+            parameters.update?.data_app_id && parameters.delete?.data_app_id && object_type=='TABLE' ||
+            (object_type!='TABLE' && object_type!='TABLE_KEY_VALUE'))
+        ){
             /**@type{import('../iam.js')} */
             const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
             throw iamUtilMessageNotAuthorized();

@@ -77,7 +77,7 @@ const update = async parameters =>{
             data_update.json_data = parameters.data.json_data;
         data_update.modified = new Date().toISOString();
         if (Object.entries(data_update).length>0)
-            return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE',object:'AppDataEntity', update:{resource_id:parameters.resource_id, data_app_id:parameters.data.app_id, data:data_update}}).then((result)=>{
+            return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE',object:'AppDataEntity', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
