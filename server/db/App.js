@@ -1,7 +1,9 @@
 /** @module server/db/App */
 
 /**
- * @import {server_server_response,server_db_common_result_update, server_db_common_result_delete, server_db_table_App} from '../types.js'
+ * @import {server_server_response,server_db_common_result_update, server_db_common_result_delete, 
+ *          server_db_table_App, server_db_table_AppTranslation,
+ *          server_config_apps_with_db_columns} from '../types.js'
  */
 
 /**@type{import('./ORM.js')} */
@@ -22,6 +24,55 @@ const get = parameters =>{
         return {result:result.rows, type:'JSON'};
     else
         return ORM.getError(parameters.app_id, 404);
+};
+
+/**
+ * @name getViewInfo
+ * @description Get all apps with translated name if any, logo from file and info to create url links
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+*          resource_id:number|null,
+*          locale:string}} parameters
+* @returns {Promise.<server_server_response & {result?:server_config_apps_with_db_columns[] }>}
+*/
+const getViewInfo = async parameters =>{
+    /**@type{import('./AppTranslation.js')} */
+    const AppTranslation = await import(`file://${process.cwd()}/server/db/AppTranslation.js`);
+    /**@type{import('./Config.js')} */
+    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+
+    /**@type{import('../server.js')} */
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    
+    const fs = await import('node:fs');
+
+    /**@type{server_db_table_App[]}*/
+    const apps = get({app_id:parameters.app_id, resource_id:null}).result
+                    //do not show common app id
+                    .filter((/**@type{server_db_table_App}*/app)=>app.id != serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID')));
+    for (const app of apps){
+        const image = await fs.promises.readFile(`${process.cwd()}${app.path + app.logo}`);
+        /**@ts-ignore */
+        app.logo        = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
+       }
+    const HTTPS_ENABLE = Config.get('ConfigServer','SERVER','HTTPS_ENABLE');
+    return {result:apps
+            .filter(app=>app.id == (parameters.resource_id ?? app.id))
+            .map(app=>{
+                return {
+                            app_id:app.id,
+                            name:app.name,
+                            subdomain:app.subdomain,
+                            protocol : HTTPS_ENABLE =='1'?'https://':'http://',
+                            host : Config.get('ConfigServer','SERVER','HOST'),
+                            port : serverUtilNumberValue(HTTPS_ENABLE=='1'?
+                                                Config.get('ConfigServer','SERVER','HTTPS_PORT'):
+                                                    Config.get('ConfigServer','SERVER','HTTP_PORT')),
+                            app_name_translation : AppTranslation.get(parameters.app_id,null,parameters.locale, app.id).result.filter((/**@type{server_db_table_AppTranslation}*/appTranslation)=>appTranslation.app_id==app.id)[0].json_data.name,
+                            logo:app.logo
+                        };
+            }), type:'JSON'};
 };
 
 /**
@@ -167,4 +218,4 @@ const deleteRecord = async (app_id, resource_id) => {
     });
 };
                    
-export {get, post, update, deleteRecord};
+export {get, getViewInfo, post, update, deleteRecord};

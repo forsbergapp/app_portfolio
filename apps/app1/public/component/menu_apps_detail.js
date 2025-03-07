@@ -80,18 +80,18 @@ const component = async props => {
     switch (props.data.detail){
         case 'menu_apps_detail_parameter':{
             //APP_PARAMETER uses one record for all parameters for each app
-            path = `/app-common-appparameter/${props.data.app_id_data}`;
+            path = `/server-db/appparameter/${props.data.app_id_data}`;
             break;
         }
         case 'menu_apps_detail_module':{
             //APP_MODULE saves records for each app
-            path = '/app-common-appmodule/';
+            path = '/server-db/appmodule/';
             query = `data_app_id=${props.data.app_id_data}`;
             break;
         }
         case 'menu_apps_detail_secret':{
             //APP_SECRET uses one record for all secrets for each app
-            path = `/app-common-appsecret/${props.data.app_id_data}`;
+            path = `/server-db/appsecret/${props.data.app_id_data}`;
             break;
         }
     }

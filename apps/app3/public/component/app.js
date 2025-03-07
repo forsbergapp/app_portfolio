@@ -51,7 +51,7 @@ const template = props =>`  <div id='menu_open' class='common_icon'></div>
  *                      template:string}>}
  */
 const component = async props => {
-    const menu = await props.methods.commonFFB({path:'/appmodule/COMMON_DOC', 
+    const menu = await props.methods.commonFFB({path:'/app-common-module/COMMON_DOC', 
                                                 method:'POST', 
                                                 authorization_type:'APP_ID', 
                                                 body:{type:'FUNCTION',documentType:'MENU', IAM_data_app_id:props.data.app_id}})

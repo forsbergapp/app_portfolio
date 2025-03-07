@@ -90,7 +90,7 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
  */
 const component = async props => {
     /**@type{CommonAppRecord[]} */
-    const apps = await props.methods.commonFFB({path:'/app-common', method:'GET', authorization_type:'ADMIN'})
+    const apps = await props.methods.commonFFB({path:'/server-db/app', method:'GET', authorization_type:'ADMIN'})
                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const onMounted = async () =>{
