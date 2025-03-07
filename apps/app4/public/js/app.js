@@ -1984,7 +1984,7 @@ const appEventClick = event => {
                     break;
                 }
                 case 'setting_btn_user_add':{
-                    appUserSettingFunction('ADD', false);
+                    appUserSettingFunction('ADD', true);
                     break;
                 }
                 case 'setting_btn_user_delete':{
