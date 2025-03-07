@@ -1,15 +1,15 @@
 /** 
  * @module apps/common/src/common.spec 
  */
-let filterCount_APP_SECRET = 0;
-let filterCount_IAM_APP_ID_TOKEN = 0;
+let filterCount_AppSecret = 0;
+let filterCount_IamAppIdToken = 0;
 //Save original filter function
 const ORIGINAL_FILTER = Array.prototype.filter;
 /**
  * @name describe
  * @description describe: Spy test, commonApp as called from bff
- *              it: should call AppSecret.get and read APP_SECRET and IAM_APP_ID_TOKEN at least 1 time each when requesting app
- *              beforeAll:  Modifies Array.prototype.filter and reviews what filter function is doing and if used with APP_SECRET and APP_TOKEN
+ *              it: should call AppSecret.get and read AppSecret and IamAppIdToken at least 1 time each when requesting app
+ *              beforeAll:  Modifies Array.prototype.filter and reviews what filter function is doing and if used with AppSecret and APP_TOKEN
  *              afterAll:   restores Array.prototype.filter
  * @function
  * @returns {void}
@@ -17,28 +17,28 @@ const ORIGINAL_FILTER = Array.prototype.filter;
 describe('Spy test, commonApp as called from bff', ()=> {   
     beforeAll(()=>{
         /**
-         * Custom filter function to count and log Error().stack when APP_SECRET is read 
+         * Custom filter function to count and log Error().stack when AppSecret is read 
          * @param {(value: any, index: number, array: any[])=>any} callBack
          * @param {*} thisArg
          */
         Array.prototype.filter = function (callBack, thisArg){
-            if (ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.NAME=='APP_SECRET'){
-                filterCount_APP_SECRET++;
+            if (ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.name=='AppSecret'){
+                filterCount_AppSecret++;
                 //Review Error().stack if necessary
-                console.log('Spy test commonApp reading APP_SECRET using custom filter function');
+                console.log('Spy test commonApp reading AppSecret using custom filter function');
             }
-            if (ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.NAME=='IAM_APP_ID_TOKEN'){
-                filterCount_IAM_APP_ID_TOKEN++;
+            if (ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.name=='IamAppIdToken'){
+                filterCount_IamAppIdToken++;
                 //Review Error().stack if necessary
-                console.log('Spy test commonApp reading IAM_APP_ID_TOKEN using custom filter function');
+                console.log('Spy test commonApp reading IamAppIdToken using custom filter function');
             }
             return ORIGINAL_FILTER.call(this, callBack, thisArg);  
         };
         
     });
-    it('should call AppSecret.get and read APP_SECRET and IAM_APP_ID_TOKEN at least 1 time each when requesting app', async () =>{
-        //Solution to test if FILE_DB object is fetching the APP_SECRET or IAM_APP_ID_TOKEN record is to create a custom filter function 
-        //that is available in global scope in NodeJS since FILE_DB object uses Object.seal() so no getter can be added 
+    it('should call AppSecret.get and read AppSecret and IamAppIdToken at least 1 time each when requesting app', async () =>{
+        //Solution to test if DB object is fetching the AppSecret or IamAppIdToken record is to create a custom filter function 
+        //that is available in global scope in NodeJS since DB object uses Object.seal() so no getter can be added 
         //and module is using closure pattern.
         
         /**@type{import('./common.js')} */
@@ -63,8 +63,8 @@ describe('Spy test, commonApp as called from bff', ()=> {
             query:null};
         await app_common.commonApp(parameters);
         
-        expect (filterCount_APP_SECRET).toBeGreaterThan(0);
-        expect (filterCount_IAM_APP_ID_TOKEN).toBeGreaterThan(0);
+        expect (filterCount_AppSecret).toBeGreaterThan(0);
+        expect (filterCount_IamAppIdToken).toBeGreaterThan(0);
     });
     afterAll(()=>{
         Array.prototype.filter = ORIGINAL_FILTER;
