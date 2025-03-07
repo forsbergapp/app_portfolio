@@ -104,8 +104,8 @@ const component = async props => {
      *          connections:string,
      *          started:number}}
      */
-    const db = await props.methods.commonFFB({path:'/server-db/database', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows[0]);
-    const db_detail = await props.methods.commonFFB({path:'/server-db/database-objects', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const db = await props.methods.commonFFB({path:'/server-db/ORM', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows[0]);
+    const db_detail = await props.methods.commonFFB({path:'/server-db/ORM-objects', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
   return {
       lifecycle:    null,

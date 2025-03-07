@@ -630,34 +630,6 @@ const appSecureMenuInstallationDbInstallationFunction = (id, db_icon, path, meth
     });
 };
 /**
- * @name appSecureMenuInstallationDbInstall
- * @description Installs DB
- * @function
- * @returns {void}
- */
-const appSecureMenuInstallationDbInstall = () =>{
-    common.commonComponentRemove('common_dialogue_message');
-    appSecureMenuInstallationDbInstallationFunction('menu_installation_db_button_install', 
-                                                    true, 
-                                                    '/server-db/database', 
-                                                    'POST', 
-                                                    null);
-};
-/**
- * @name appSecureMenuInstallationDbUninstall
- * @description Uninstalls DB
- * @function
- * @returns {void}
- */
-const appSecureMenuInstallationDbUninstall = () =>{
-    common.commonComponentRemove('common_dialogue_message');
-    appSecureMenuInstallationDbInstallationFunction('menu_installation_db_button_uninstall', 
-                                                    false, 
-                                                    '/server-db/database', 
-                                                    'DELETE', 
-                                                    null);
-};
-/**
  * @name appSecureMenuInstallationDemoInstall
  * @description Installs Demo data
  * @function
@@ -670,7 +642,7 @@ const appSecureMenuInstallationDemoInstall = () =>{
                         })==true){
         const json_data = { demo_password: COMMON_DOCUMENT.querySelector('#menu_installation_demo_password').textContent};
         appSecureMenuInstallationDbInstallationFunction(  'menu_installation_demo_button_install', null, 
-                                '/server-db/database-demo', 
+                                '/server-installation-demo', 
                                 'POST', 
                                 json_data);
     }
@@ -683,7 +655,7 @@ const appSecureMenuInstallationDemoInstall = () =>{
  */
 const appSecureMenuInstallationDemoUninstall = () =>{
     appSecureMenuInstallationDbInstallationFunction(  'menu_installation_demo_button_uninstall', null, 
-                            '/server-db/database-demo', 
+                            '/server-installation-demo', 
                             'DELETE', 
                             null);
 };
@@ -817,14 +789,6 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                         data:           {file:COMMON_DOCUMENT.querySelector(`#${event_target_id}`).getAttribute('data-table')},
                         methods:        {commonFFB:common.commonFFB},
                         path:           '/component/menu_config_detail.js'});
-                    break;
-                }
-                case 'menu_installation_db_button_install':{
-                    common.commonMessageShow('CONFIRM',null,appSecureMenuInstallationDbInstall, null, null, common.COMMON_GLOBAL.app_id);
-                    break;
-                }
-                case 'menu_installation_db_button_uninstall':{
-                    common.commonMessageShow('CONFIRM',null,appSecureMenuInstallationDbUninstall, null, null, common.COMMON_GLOBAL.app_id);
                     break;
                 }
                 case 'menu_installation_demo_button_install':{
