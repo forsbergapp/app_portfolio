@@ -566,72 +566,20 @@ const deleteRecord = async (app_id, resource_id, data) => {
     const user = get(app_id, resource_id).result[0];
     if (user){
         if (data.password && await securityPasswordCompare(data.password, user.password))
-            return deleteCascade(app_id, resource_id).then(result_cascade=>result_cascade.http?
-                                                            result_cascade:ORM.Execute({  app_id:app_id, 
-                                                                                                dml:'DELETE', 
-                                                                                                object:'IamUser', 
-                                                                                                delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
-                                                            if (result.affectedRows>0)
-                                                                return {result:result, type:'JSON'};
-                                                            else
-                                                                return ORM.getError(app_id, 404);
-                                                        }));
+            return ORM.Execute({app_id:app_id, 
+                                dml:'DELETE', 
+                                object:'IamUser', 
+                                delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+                if (result.affectedRows>0)
+                    return {result:result, type:'JSON'};
+                else
+                    return ORM.getError(app_id, 404);
+            });
         else
             return ORM.getError(app_id, 400);
     }
     else
         return user;
-};
-/**
- * @name deleteCascade
- * @description delete records in table with FK to IAM_USER
- * @function
- * @param {number} app_id
- * @param {number} resource_id
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
- */
-const deleteCascade = async (app_id, resource_id) =>{
-    /**@type{import('./IamUserEvent.js')} */
-    const IamUserEvent = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
-    /**@type{import('./IamAppAccess.js')} */
-    const IamAppAccess = await import(`file://${process.cwd()}/server/db/IamAppAccess.js`);
-
-    const result_recordsUserEvent = IamUserEvent.get(app_id, resource_id);        
-    if (result_recordsUserEvent.result){
-        let count_delete = 0;
-        let error ;
-        for (const record of result_recordsUserEvent.result.filter((/**@type{server_db_table_IamUserEvent}*/row)=>row.iam_user_id == resource_id)){
-            count_delete++;
-            const result_delete = await IamUserEvent.deleteRecord( app_id, 
-                                                                            /**@ts-ignore */
-                                                                            record.id);
-            if (result_delete.http)
-                error = result_delete;
-        }
-        if (error)
-            return error;
-        else{
-            const result_recordsIamAppAccess = IamAppAccess.get(app_id, null);
-            if (result_recordsIamAppAccess.result){
-                for (const record of result_recordsIamAppAccess.result.filter((/**@type{server_db_table_IamAppAccess}*/row)=>row.iam_user_id == resource_id)){
-                    count_delete++;
-                    const result_delete = await IamAppAccess.deleteRecord( app_id, 
-                                                                                    /**@ts-ignore */
-                                                                                    record.id);
-                    if (result_delete.http)
-                        error = result_delete;
-                }
-                if (error)
-                    return error;
-                else
-                    return {result:{affectedRows:count_delete}, type:'JSON'};
-            }
-            else
-                return result_recordsIamAppAccess;
-        }
-    }
-    else
-        return result_recordsUserEvent;
 };
 /**
  * @name deleteRecordAdmin
@@ -645,15 +593,13 @@ const deleteRecordAdmin = async (app_id, resource_id) => {
     /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        return deleteCascade(app_id, resource_id).then(result_cascade=>result_cascade.http?
-                                result_cascade:
-                                    ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUser', delete:{resource_id:resource_id, data_app_id:null}})
-                                    .then(result=>{
-                                            if (result.affectedRows>0)
-                                                return {result:result, type:'JSON'};
-                                            else
-                                                return ORM.getError(app_id, 404);
-                                            }));
+        return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUser', delete:{resource_id:resource_id, data_app_id:null}})
+                .then(result=>{
+                    if (result.affectedRows>0)
+                        return {result:result, type:'JSON'};
+                    else
+                        return ORM.getError(app_id, 404);
+                    });
     }
     else
         return user;
