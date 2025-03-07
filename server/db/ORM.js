@@ -635,7 +635,7 @@ const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
                                 ).length>0
                                 )){
             //remove all rows with FK referring to current PK
-            for (const row of objectCascade.cache_content
+            for (const row of (objectCascade.cache_content??[])
                                 .filter((/**@type{*[]}*/row)=>
                                     (objectCascade.fk??[]).filter(fk=>
                                             /**@ts-ignore */
@@ -668,7 +668,10 @@ const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
     /**@type{server_db_result_fileFsRead} */
     const file = await getFsFile(table, true);
     if (file.file_content.filter((/**@type{*}*/row)=>(data_app_id==null && row.id==resource_id && resource_id!=null)|| (resource_id==null && row.app_id == data_app_id && data_app_id != null)).length>0){
-        await cascadeDelete({app_id:app_id, object:table, pk:resource_id??data_app_id});
+        await cascadeDelete({app_id:app_id, object:table, pk:resource_id??data_app_id})
+        .catch(error=>{
+            throw error;
+        });
         await updateFsFile(  table, 
                             file.transaction_id, 
                             //filter unique id
