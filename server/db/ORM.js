@@ -478,12 +478,14 @@ const getObject = (app_id, table, resource_id, data_app_id) =>{
  */
 const fileConstraints = (table, table_rows, data, dml, resource_id) =>{
     const filerecord = getObjectRecord(table);
+    //check PK for POST
     //update of PK not alllowed
     if (dml=='POST' && filerecord.pk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
         /**@ts-ignore */
         record[filerecord.pk]==data[filerecord.pk]))
             return false;
     else{
+        //check UK for POST
         //no record can exist having given values for POST
         if (dml=='POST' && filerecord.uk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
             //ignore empty value
@@ -491,6 +493,7 @@ const fileConstraints = (table, table_rows, data, dml, resource_id) =>{
             filerecord.uk?.filter(column=>record[column] && record[column]==data[column]).length==filerecord.uk?.length))
                 return false;
         else
+            //check UK for UPDATE
             //max one record can exist having given values for UPDATE
             if (dml=='UPDATE' && filerecord.uk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
                 //check value is the same, ignore empty UK
@@ -501,23 +504,28 @@ const fileConstraints = (table, table_rows, data, dml, resource_id) =>{
                 record[filerecord.pk]!=resource_id))
                     return false;
             else
-                //check FK exist in the referred object in a row in cache_content
-                //ignore empty fk and check only TABLE and TABLE_KEY_VALUE objects
-                if (	filerecord.fk==null||
-                        (filerecord.type!='TABLE'&& filerecord.type!='TABLE_KEY_VALUE')||
-                        filerecord.fk
+                //check FK for POST and UPDATE
+                //for TABLE and TABLE_KEY_VALUE objects for data that should be updated
+                //check if there is a key that does not exists in the referred object in a row in cache_content
+                //ignore empty fk
+                if (	(filerecord.type=='TABLE'|| filerecord.type=='TABLE_KEY_VALUE') &&
+                        (filerecord.fk??[])
+                            .filter(fk=>
+                                fk[0] in data && data[fk[0]]
+                            )
                             .filter(fk=>
                                 DB.data
                                 .filter(object=>
                                     object.name == fk[2]
                                 )[0].cache_content
                                 .some((/**@type{*}*/row)=> 
-                                        row[fk[1]]==data[fk[0]]
+                                    data[fk[0]] && row[fk[1]]==data[fk[0]]
                                 )
-                            ).length>0)
-                    return true;
-                else
+                            ).length!=(filerecord.fk??[]).filter(fk=>fk[0] in data && data[fk[0]]).length
+                        )
                     return false;
+                else
+                    return true;
     }
 };
 /**
@@ -612,9 +620,55 @@ const updateObject = async (app_id, table, resource_id, data_app_id, data) =>{
  * @returns {Promise<server_db_common_result_delete>}
  */
 const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
+    /**
+	 * @param {{app_id:number,
+	 *		    object:server_DbObject,
+	 *		    pk:number|null}} parameters
+	 */
+	const cascadeDelete = async parameters =>{
+        //find referring to object
+		for (const objectCascade of DB.data.filter(object=>
+                                (object.type=='TABLE'||object.type=='TABLE_KEY_VALUE') && 
+                                (object.fk??[])
+                                .filter((/**@type{[string,string,server_DbObject]}*/fk)=>
+                                    fk[2]==parameters.object
+                                ).length>0
+                                )){
+            //remove all rows with FK referring to current PK
+            for (const row of objectCascade.cache_content
+                                .filter((/**@type{*[]}*/row)=>
+                                    (objectCascade.fk??[]).filter(fk=>
+                                            /**@ts-ignore */
+                                            row[fk[0]]==parameters.pk
+                                        ).length>0
+                                )){
+                //recursive call delete all rows in objects with FK referring to this row
+                await cascadeDelete({   app_id:app_id, 
+                                        object:objectCascade.name,
+                                        /**@ts-ignore */
+                                        pk:row[objectCascade.pk]});
+                const file = await getFsFile(objectCascade.name, true);
+                await updateFsFile(  objectCascade.name, 
+                    file.transaction_id, 
+                    //filter pk
+                    file.file_content
+                    .filter((/**@type{*}*/rowFile)=>
+                        (objectCascade.fk??[])
+                        .filter(fk=>
+                            rowFile[fk[0]]==parameters.pk
+                        ).length==0
+                    )
+                )
+                .catch((/**@type{server_server_error}*/error)=>{throw error;});
+            }
+            
+        }
+	};
+
     /**@type{server_db_result_fileFsRead} */
     const file = await getFsFile(table, true);
     if (file.file_content.filter((/**@type{*}*/row)=>(data_app_id==null && row.id==resource_id && resource_id!=null)|| (resource_id==null && row.app_id == data_app_id && data_app_id != null)).length>0){
+        await cascadeDelete({app_id:app_id, object:table, pk:resource_id??data_app_id});
         await updateFsFile(  table, 
                             file.transaction_id, 
                             //filter unique id
