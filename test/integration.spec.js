@@ -4,12 +4,12 @@
  */
 /**
  * @name describe
- * @description describe: Integration test, setting FILE_DB cache
+ * @description describe: Integration test, setting DB cache
  *              it: should return values when using ORM pattern for Config
  * @function
  * @returns {void}
  */
-describe('Integration test, setting FILE_DB cache', ()=> {
+describe('Integration test, setting DB cache', ()=> {
     it('should return values when using ORM pattern for Config', async () =>{
         /**@type{import('../server/server.js')} */
         const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
@@ -21,9 +21,9 @@ describe('Integration test, setting FILE_DB cache', ()=> {
         const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
                         Config.get('ConfigServer','SERVER','HTTPS_PORT'):
                             Config.get('ConfigServer','SERVER','HTTP_PORT'));
-        console.log('Integration test FILE_DB cache HTTPS_ENABLE:', HTTPS_ENABLE);
-        console.log('Integration test FILE_DB cache HOST:', HOST);
-        console.log('Integration test FILE_DB cache POR:', PORT);
+        console.log('Integration test DB cache HTTPS_ENABLE:', HTTPS_ENABLE);
+        console.log('Integration test DB cache HOST:', HOST);
+        console.log('Integration test DB cache POR:', PORT);
         expect(HTTPS_ENABLE).not.toBe(null);
         expect(HOST).not.toBe(null);
         expect(PORT).not.toBe(null);
@@ -42,7 +42,7 @@ describe('Integration test, microservice geolocation IP cache (should exist befo
         const App = await import(`file://${process.cwd()}/server/db/App.js`);
 
         /**@type{server_db_table_App[]}*/
-        const apps = App.get({app_id:null, resource_id:null}).result;
+        const apps = App.get({app_id:0, resource_id:null}).result;
 
         for (const app of apps){
             /**@type{import('../server/bff.js')} */
@@ -88,7 +88,7 @@ describe('Integration test, server function worldcities random city called from 
         /**@type{import('../server/db/Config.js')} */
         const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
         /**@type{server_db_table_App[]}*/
-        const apps = App.get({app_id:null, resource_id:null}).result;
+        const apps = App.get({app_id:0, resource_id:null}).result;
         /**@type{import('../server/server.js')} */
         const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
         for (const app of apps){

@@ -9,8 +9,9 @@
  * 
  * Test order           Path
  * 1.Spy test           /apps/common/src/common.spec.js
- * 2.Integration test   /test/integration.spec.js
- * 3.Performance test   /test/performance.spec.js
+ * 2.Unit test          /server/db/db.spec.js
+ * 3.Integration test   /test/integration.spec.js
+ * 4.Performance test   /test/performance.spec.js
  * 
  * @module test/specrunner.spec
  */
@@ -22,7 +23,13 @@
 import '../apps/common/src/common.spec.js';
 
 /**
- * Integration test, setting FILE_DB cache
+ * Unit test, test ORM post, update, get and delete
+ *  should create a record, update the record, get correct value from updated record and delete the record
+ */
+import '../server/db/db.spec.js';
+
+/**
+ * Integration test, setting DB cache
  *  should return values when using ORM pattern for Config
  * Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps
  *  should return values
