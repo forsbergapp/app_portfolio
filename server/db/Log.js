@@ -229,7 +229,7 @@ const getStat = async parameters => {
            (regexp_request_day.exec(file.name)!=null||regexp_request_month.exec(file.name)!=null)) ||
            (file.name.startsWith(`LogRequestVerbose_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
            (regexp_verbose_day.exec(file.name)!=null||regexp_verbose_month.exec(file.name)!=null))){
-           //filename format: log_request_info_YYYMMDD.log
+           //filename format: log_request_info_YYYMMDD.json
            if (Config.get('ConfigServer','SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
                //return DD
                day = file.name.slice(-7).substring(0,2);
