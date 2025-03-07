@@ -64,7 +64,7 @@ const component = async props => {
                     default_value:'∞',
                     default_data_value:'',
                     options:[{id:'', name:'∞'}],
-                    path:'/app-common',
+                    path:'/server-db/app',
                     query:'key=name',
                     method:'GET',
                     authorization_type:'ADMIN',

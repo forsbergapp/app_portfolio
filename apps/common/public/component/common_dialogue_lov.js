@@ -86,7 +86,7 @@ const component = async props => {
         case 'COUNTRY':{
             method = 'POST', 
             lov_column = 'text';
-            path = '/appmodule/COMMON_COUNTRY';
+            path = '/app-common-module/COMMON_COUNTRY';
             query= `locale=${props.data.user_locale}`;
             token_type = 'APP_ID';
             body = {type:'FUNCTION',IAM_data_app_id : props.data.common_app_id};
