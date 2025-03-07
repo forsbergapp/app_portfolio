@@ -3371,7 +3371,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/database-demo": {
+        "/bff/admin/v1/server-installation-demo": {
             "post": {
                 "summary": "",
                 "operationId": "server.installation.postDemo",
@@ -3456,7 +3456,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/database-objects": {
+        "/bff/admin/v1/server-db/ORM-objects": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.ORM.getViewObjects",
@@ -3487,7 +3487,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/database": {
+        "/bff/admin/v1/server-db/ORM": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.ORM.getViewInfo",
