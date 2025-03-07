@@ -72,7 +72,7 @@ const component = async props => {
      */
     const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
     /**@type{CommonAppModuleQueue[]} */
-    const report_queue = await props.methods.commonFFB({path:'/appmodule-report-queue/', method:'GET', authorization_type:'ADMIN'})
+    const report_queue = await props.methods.commonFFB({path:'/app-common-module-report-queue/', method:'GET', authorization_type:'ADMIN'})
                                 .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
     
     return {

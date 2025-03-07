@@ -54,7 +54,7 @@ const template = props => ` <div id='app_page_secure'>
  *                      template:string}>}
  */
 const component = async props => {
-    const customer = await props.methods.commonFFB({path:'/appmodule/CUSTOMER_GET', method:'POST', authorization_type:'APP_ACCESS', body:{type:'FUNCTION',IAM_iam_user_id:props.data.iam_user_id,IAM_data_app_id:props.data.app_id}})
+    const customer = await props.methods.commonFFB({path:'/app-common-module/CUSTOMER_GET', method:'POST', authorization_type:'APP_ACCESS', body:{type:'FUNCTION',IAM_iam_user_id:props.data.iam_user_id,IAM_data_app_id:props.data.app_id}})
                         .then((/**@type{string}*/result)=>JSON.parse(result));
 
     const onMounted = async () =>{
@@ -67,7 +67,7 @@ const component = async props => {
                 data:       {
                             app_id:props.data.app_id,
                             display_type:'VERTICAL_KEY_VALUE',
-                            master_path:'/appmodule/CUSTOMER_METADATA',
+                            master_path:'/app-common-module/CUSTOMER_METADATA',
                             master_query:'fields=json_data',
                             master_body:{type:'FUNCTION',data_app_id:props.data.app_id},
                             master_method:'POST',

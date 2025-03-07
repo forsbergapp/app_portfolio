@@ -56,13 +56,13 @@ const appEventClick = event => {
                                 data:       {
                                             app_id:common.COMMON_GLOBAL.app_id,
                                             display_type:'MASTER_DETAIL_HORIZONTAL',
-                                            master_path:'/appmodule/ACCOUNT_STATEMENT',
+                                            master_path:'/app-common-module/ACCOUNT_STATEMENT',
                                             master_query:'fields=title,bank_account_balance,bank_account_number,bank_account_iban,currency,currency_name',
                                             master_body:{type:'FUNCTION',IAM_iam_user_app_id: common.COMMON_GLOBAL.iam_user_app_id,IAM_iam_user_id: common.COMMON_GLOBAL.iam_user_id, IAM_data_app_id:common.COMMON_GLOBAL.app_id},
                                             master_method:'POST',
                                             master_token_type:'APP_ACCESS',
                                             master_resource:'ACCOUNT_METADATA',
-                                            detail_path:'/appmodule/ACCOUNT_TRANSACTIONS',
+                                            detail_path:'/app-common-module/ACCOUNT_TRANSACTIONS',
                                             detail_query: 'fields=timestamp,logo,origin,amount_deposit,amount_withdrawal',
                                             detail_body: {type:'FUNCTION',IAM_iam_user_id:common.COMMON_GLOBAL.iam_user_id,IAM_data_app_id:common.COMMON_GLOBAL.app_id},
                                             detail_method:'POST',
@@ -94,7 +94,7 @@ const appEventClick = event => {
                                 data:       {
                                             app_id:common.COMMON_GLOBAL.app_id,
                                             display_type:'VERTICAL_KEY_VALUE',
-                                            master_path:'/appmodule/CUSTOMER_GET',
+                                            master_path:'/app-common-module/CUSTOMER_GET',
                                             master_query: 'fields=name,customer_type,address,city,country',
                                             master_body:{type:'FUNCTION',IAM_iam_user_app_id: common.COMMON_GLOBAL.iam_user_app_id,IAM_iam_user_id:common.COMMON_GLOBAL.iam_user_id, IAM_data_app_id:common.COMMON_GLOBAL.app_id},
                                             master_method:'POST',
@@ -130,7 +130,7 @@ const appEventClick = event => {
                                 data:       {
                                             app_id:common.COMMON_GLOBAL.app_id,
                                             display_type:'VERTICAL_KEY_VALUE',
-                                            master_path:'/appmodule/ACCOUNT_GET',
+                                            master_path:'/app-common-module/ACCOUNT_GET',
                                             master_query: 'fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa',
                                             master_body: {type:'FUNCTION',IAM_iam_user_id:common.COMMON_GLOBAL.iam_user_id, IAM_data_app_id:common.COMMON_GLOBAL.app_id},
                                             master_method:'POST',
@@ -312,7 +312,7 @@ const appFrameworkSet = async (framework=null) => {
  */
 const appCustomerCreate = async () => {
     
-    await common.commonFFB({  path:'/appmodule/CUSTOMER_CREATE', 
+    await common.commonFFB({  path:'/app-common-module/CUSTOMER_CREATE', 
                         method:'POST', 
                         authorization_type:'APP_ACCESS', 
                         body:{
@@ -338,7 +338,7 @@ const appCustomerCreate = async () => {
  * @returns {Promise.<void>}
  */
 const appPaymentRequestUpdate = async status => {
-    await common.commonFFB({  path:'/appmodule/PAYMENT_REQUEST_UPDATE', 
+    await common.commonFFB({  path:'/app-common-module/PAYMENT_REQUEST_UPDATE', 
                         method:'POST', 
                         authorization_type:'APP_ACCESS', 
                         body:{
@@ -393,7 +393,7 @@ const appPaymentRequestShow = async message =>{
                             app_id:common.COMMON_GLOBAL.app_id,
                             display_type:'VERTICAL_KEY_VALUE',
                             dialogue:true,
-                            master_path:'/appmodule/PAYMENT_REQUEST_GET',
+                            master_path:'/app-common-module/PAYMENT_REQUEST_GET',
                             master_query:'',
                             master_body:{	
                                             type:'FUNCTION',

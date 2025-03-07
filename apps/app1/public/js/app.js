@@ -577,22 +577,22 @@ const appSecureCommonRecordUpdate = async ( table,
             break;
         }
         case 'app':{
-            path = `/app-common-app/${resource_id}`;
+            path = `/server-db/app${resource_id}`;
             method = 'PUT';
             break;
         }
         case 'app_module':{
-            path = `/app-common-appmodule/${resource_id}`;
+            path = `/server-db/appmodule/${resource_id}`;
             method = 'PUT';
             break;
         }
         case 'app_parameter':{
-            path = `/app-common-appparameter/${resource_id}`;
+            path = `/server-db/appparameter/${resource_id}`;
             method = 'PATCH';
             break;
         }
         case 'app_secret':{
-            path = `/app-common-appsecret/${resource_id}`;
+            path = `/server-db/appsecret/${resource_id}`;
             method = 'PATCH';
             break;
         }

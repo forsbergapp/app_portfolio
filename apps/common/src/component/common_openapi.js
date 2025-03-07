@@ -56,7 +56,7 @@ const template = props =>`
                                     <div class='common_markdown_table_col'>${Object.entries(props.openapi)[2][0]}</div> 
                                     <div class='common_markdown_table_col'></div> 
                                 </div> 
-                                ${props.sortByRole(Object.entries(props.openapi.paths)).map((/**@type{*}*/path) => `
+                                ${props.sortByRole(Object.entries(props.openapi.paths).sort((a,b)=>a[0]>b[0]?1:-1)).map((/**@type{*}*/path) => `
                                     ${Object.entries(path[1]).map(method => `
                                         <div class='common_markdown_table_row'>
                                             <div class='common_markdown_table_row_master common_markdown_table_row_title'>

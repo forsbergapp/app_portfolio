@@ -45,7 +45,7 @@ const template = () => ` <div id='menu_report_content_widget1' class='widget'>
 const component = async props => {
     
     /**@type{CommonAppModuleWithMetadata[]} */
-    const reports = await props.methods.commonFFB({path:'/appmodule-metadata/', query:'type=REPORT',method:'GET', authorization_type:'ADMIN'})
+    const reports = await props.methods.commonFFB({path:'/app-common-module-metadata/', query:'type=REPORT',method:'GET', authorization_type:'ADMIN'})
                                 .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
     /**
      * Updates reports metadata
@@ -66,7 +66,7 @@ const component = async props => {
             return element.getAttribute('data-parameter') + '=' + element.querySelector('.menu_report_metadata_col2')?.textContent;
         }).join('&');
         const report_id = JSON.parse(props.methods.COMMON_DOCUMENT.querySelector('#menu_report_select_report .common_select_dropdown_value').getAttribute('data-value')).id;
-        await props.methods.commonFFB({path:`/appmodule-report-queue/${report_id}`, body:{ps:'A4', report_parameters:parameters},method:'POST', authorization_type:'ADMIN', spinner_id:'menu_report_run'});
+        await props.methods.commonFFB({path:`/app-common-module-report-queue/${report_id}`, body:{ps:'A4', report_parameters:parameters},method:'POST', authorization_type:'ADMIN', spinner_id:'menu_report_run'});
         reportQueueUpdate();        
     };
     /**
@@ -95,7 +95,7 @@ const component = async props => {
                         info:4,
                         url:null,
                         content_type:'HTML', 
-                        path:`/appmodule-report-queue-result/${id}`,
+                        path:`/app-common-module-report-queue-result/${id}`,
                         method:'GET',
                         body:null,
                         authorization_type:'ADMIN',

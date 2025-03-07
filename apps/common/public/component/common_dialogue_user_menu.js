@@ -112,7 +112,7 @@ const component = async props => {
 
     /**@type{{locale:string, text:string}[]} */
     const locales = await props.methods.commonFFB({
-                                                    path:'/appmodule/COMMON_LOCALE', 
+                                                    path:'/app-common-module/COMMON_LOCALE', 
                                                     query:`locale=${props.data.user_locale}`, 
                                                     method:'POST', authorization_type:'APP_ID',
                                                     body:{type:'FUNCTION',IAM_data_app_id : props.data.common_app_id}

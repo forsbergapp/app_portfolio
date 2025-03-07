@@ -8,10 +8,10 @@
         {"url": ""}
     ],
     "paths": {
-        "/bff/app_id/v1/app-common/${resource_id_number}": {
+        "/bff/app_id/v1/server-db/app-info/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "apps_common_src.common.commonAppsGet",
+                "operationId": "server_db.App.getViewInfo",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -55,42 +55,7 @@
                     ]
                 }
             }
-        },
-        "/bff/app_id/v1/server-socket/socket-status/${resource_id_number}": {
-            "get": {
-                "summary": "",
-                "operationId": "server.socket.CheckOnline",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"IamUser.id",
-                            "required":true
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
+        },        
         "/bff/app_id/v1/server-db/appdata/${resource_id_number}": {
             "get": {
                 "summary": "",
@@ -605,7 +570,42 @@
                 }
             }
         },
-        "/bff/admin/v1/appmodule-metadata/${resource_id_number}": {
+        "/bff/app_id/v1/server-socket/socket-status/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "server.socket.CheckOnline",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"IamUser.id",
+                            "required":true
+                        }
+                ],
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
+        "/bff/admin/v1/app-common-module-metadata/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleMetaDataGet",
@@ -658,7 +658,7 @@
                 }
             }
         },
-        "/bff/admin/v1/appmodule-report/${resource_id_string}": {
+        "/bff/admin/v1/app-common-module-report/${resource_id_string}": {
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonAppReport",
@@ -726,7 +726,7 @@
                 }
             }
         },
-        "/bff/app/v1/appmodule-report/${resource_id_string}": {
+        "/bff/app/v1/app-common-module-report/${resource_id_string}": {
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonAppReport",
@@ -793,7 +793,7 @@
                 }
             }
         },
-        "/bff/admin/v1/appmodule-report-queue/${resource_id_number}": {
+        "/bff/admin/v1/app-common-module-report-queue/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.AppModuleQueue.get",
@@ -903,7 +903,7 @@
                 }
             }
         },
-        "/bff/admin/v1/appmodule-report-queue-result/${resource_id_number}": {
+        "/bff/admin/v1/app-common-module-report-queue-result/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.AppModuleQueue.getResult",
@@ -948,7 +948,7 @@
                 }
             }
         },
-        "/bff/app/v1/appmodule-asset/${resource_id_string}": {
+        "/bff/app/v1/app-common-module-asset/${resource_id_string}": {
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleAsset",
@@ -1011,7 +1011,7 @@
                 }
             }
         },
-        "/bff/app_id/v1/appmodule/${resource_id_string}": {
+        "/bff/app_id/v1/app-common-module/${resource_id_string}": {
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
@@ -1100,7 +1100,7 @@
                 }
             }
         },
-        "/bff/app_external/v1/appmodule/${resource_id_string}": {
+        "/bff/app_external/v1/app-common-module/${resource_id_string}": {
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
@@ -1176,7 +1176,7 @@
                 }
             }
         },
-        "/bff/app_access_external/v1/appmodule/${resource_id_string}": {
+        "/bff/app_access_external/v1/app-common-module/${resource_id_string}": {
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
@@ -1264,7 +1264,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/appmodule/${resource_id_string}": {
+        "/bff/app_access/v1/app-common-module/${resource_id_string}": {
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
@@ -2724,7 +2724,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-common": {
+        "/bff/admin/v1/server-db/app": {
             "get": {
                 "summary": "Gets all apps",
                 "operationId": "server_db.App.get",
@@ -2752,7 +2752,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-common-app/${resource_id_number}": {
+        "/bff/admin/v1/server-db/app${resource_id_number}": {
             "put": {
                 "summary": "",
                 "operationId": "server_db.App.update",
@@ -2852,7 +2852,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-common-appmodule/${resource_id_number}": {
+        "/bff/admin/v1/server-db/appmodule/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.AppModule.get",
@@ -2970,7 +2970,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-common-appparameter/${resource_id_number}": {
+        "/bff/admin/v1/server-db/appparameter/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.AppParameter.get",
@@ -3062,7 +3062,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-common-appsecret/${resource_id_number}": {
+        "/bff/admin/v1/server-db/appsecret/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.AppSecret.get",
