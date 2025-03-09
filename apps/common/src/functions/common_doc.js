@@ -325,7 +325,7 @@ const markdownRender = async parameters =>{
                                 .replace('@{ROUTE_FUNCTIONS}',membersof.join('\n\n'))
                             );
                 };
-                if (parameters.doc=='6.appRoutes')
+                if (parameters.doc=='7.appRoutes')
                     return await renderRouteFuntions('ROUTE_APP', '/apps/common/src/common', ['apps'], parameters.doc);
                 else
                     return await renderRouteFuntions('ROUTE_REST_API', '/server/server', ['apps', 'microservice','server'], parameters.doc);

@@ -821,7 +821,7 @@ const getViewInfo = async parameters =>{
         
 /**
  * @name getViewObjects
- * @description Database info
+ * @description Get all objects in ORM
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
