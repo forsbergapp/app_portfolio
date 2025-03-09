@@ -26,7 +26,11 @@
         "menu_sub":[
                 {   "id":1,
                     "menu":"",
-                    "doc":"3.server"
+                    "doc":"3.arquitecture"
+                },
+                {   "id":2,
+                    "menu":"",
+                    "doc":"3.database"
                 }]
     },
     {
