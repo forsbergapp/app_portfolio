@@ -12,7 +12,7 @@ const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
  * @name get
  * @description Get user 
  * @function
- * @param {number|null} app_id
+ * @param {number} app_id
  * @param {number|null} resource_id
  * @returns {server_server_response & {result?:server_db_table_IamControlUserAgent[] }}
  */

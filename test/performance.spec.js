@@ -18,12 +18,12 @@ describe('Performance test, calling main server url according to configured valu
 
         /**@type{number} */
         let status;
-        const HTTPS_ENABLE = Config.get('ConfigServer','SERVER','HTTPS_ENABLE');
+        const HTTPS_ENABLE = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_ENABLE'}});
         const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
-        const HOST = Config.get('ConfigServer','SERVER', 'HOST');
+        const HOST = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER', parameter:'HOST'}});
         const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                        Config.get('ConfigServer','SERVER','HTTPS_PORT'):
-                            Config.get('ConfigServer','SERVER','HTTP_PORT'));
+                        Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_PORT'}}):
+                            Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTP_PORT'}}));
         const requests = [];
         const totalRequests = 100;
         //set parameter to avoid certificate errors

@@ -202,11 +202,12 @@ const component = async props => {
             
     };
 
-    const HTTPS_ENABLE = props.methods.Config.get('ConfigServer','SERVER','HTTPS_ENABLE');
-    const HOST = props.methods.Config.get('ConfigServer','SERVER', 'HOST');
+                                            
+    const HTTPS_ENABLE = props.methods.Config.get({app_id:props.data.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_ENABLE'}});
+    const HOST = props.methods.Config.get({app_id:props.data.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HOST'}});
     const PORT = props.methods.serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                    props.methods.Config.get('ConfigServer','SERVER','HTTPS_PORT'):
-                        props.methods.Config.get('ConfigServer','SERVER','HTTP_PORT'));
+                    props.methods.Config.get({app_id:props.data.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_PORT'}}):
+                        props.methods.Config.get({app_id:props.data.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTP_PORT'}}));
 
     const roleOrder = ['app_id', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'app_access_external', 'iam', 'iam_signup', 'socket'];
     /**
@@ -215,7 +216,8 @@ const component = async props => {
      * @returns []
      */
     const sortByRole = paths => paths.sort((a,b) => roleOrder.indexOf(a[0].split('/')[2]) - roleOrder.indexOf(b[0].split('/')[2]));
-    const CONFIG_REST_API = props.methods.Config.get('ConfigRestApi');
+                                                    
+    const CONFIG_REST_API = props.methods.Config.get({app_id:props.data.app_id, data:{object:'ConfigRestApi'}});
     //return object with 'servers key modified with list from configuration
     CONFIG_REST_API.servers = props.methods.App.get({app_id:props.data.app_id, resource_id:null}).result
                         .map((/**@type{server_db_table_App}*/row)=>{

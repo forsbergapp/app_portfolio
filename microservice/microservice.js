@@ -79,7 +79,7 @@ const microserviceRequest = async parameters =>{
 
     /**@type{microservice_registry_service} */
     const microservice = parameters.path.split('/')[1].toUpperCase();
-    if ((microservice == 'GEOLOCATION' && microserviceUtilNumberValue(Config.get('ConfigServer','SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1)||
+    if ((microservice == 'GEOLOCATION' && microserviceUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer', config_group:'SERVICE_IAM', parameter:'ENABLE_GEOLOCATION'}}))==1)||
         microservice != 'GEOLOCATION'){
         //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
         const authorization = `Basic ${Buffer.from(     AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_id + ':' + 
@@ -91,7 +91,8 @@ const microserviceRequest = async parameters =>{
         /**@ts-ignore */
         return await circuitBreaker.MicroServiceCall( microserviceHttpRequest, 
                                                 microservice, 
-                                                parameters.app_id == microserviceUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin, 
+                                                
+                                                parameters.app_id == microserviceUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer', config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}})), //if appid = APP_COMMON_APP_ID then admin, 
                                                 `/api/v${registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
                                                 query, 
                                                 parameters.data, 
