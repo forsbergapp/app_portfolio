@@ -113,8 +113,8 @@ const postDemo = async parameters=> {
    let install_count=0;
    const install_total_count = demo_users.length + social_types.length;
    install_count++;
-   const common_app_id = serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
-   const admin_app_id = serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID'));
+   const common_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}})) ?? 0;
+   const admin_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_ADMIN_APP_ID'}}));
 
    try {
        /**
@@ -421,7 +421,7 @@ const postDemo = async parameters=> {
                            default:{
                                //replace if containing HOST parameter
                                if (key_name[1]!=null && typeof key_name[1]=='string' && key_name[1].indexOf('<HOST/>')>-1)
-                                   return key_name[1]?.replaceAll('<HOST/>', Config.get('ConfigServer','SERVER','HOST') ?? '');
+                                   return key_name[1]?.replaceAll('<HOST/>', Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HOST'}}) ?? '');
                                else
                                    return key_name[1];
                            }        
