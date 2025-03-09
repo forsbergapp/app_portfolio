@@ -230,7 +230,7 @@ const getStat = async parameters => {
            (file.name.startsWith(`LogRequestVerbose_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
            (regexp_verbose_day.exec(file.name)!=null||regexp_verbose_month.exec(file.name)!=null))){
            //filename format: log_request_info_YYYMMDD.json
-           if (Config.get('ConfigServer','SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
+           if (Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'FILE_INTERVAL'}})=='1D'){
                //return DD
                day = file.name.slice(-7).substring(0,2);
                sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;
@@ -350,7 +350,7 @@ const getFiles = async () => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
  const post = async (logscope, loglevel, log) => {
-    const config_file_interval = Config.get('ConfigServer','SERVICE_LOG', 'FILE_INTERVAL');
+    const config_file_interval = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'FILE_INTERVAL'}});
     log.id = Date.now();
     log.created = new Date().toISOString();
     await ORM.postFsLog(null, `Log${logscope}${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
@@ -390,7 +390,8 @@ const postRequestE = async (req, statusCode, statusMessage, responsetime, err) =
                                 responsetime:       responsetime,
                                 logtext:            err.status + '-' + err.message
                             };
-    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_REQUEST'), Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_ERROR'), log_json_server);
+    return post(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'SCOPE_REQUEST'}}), 
+                Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_ERROR'}}), log_json_server);
 };
 /**
  * @name postRequestI
@@ -406,9 +407,9 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
     let log_level;
     /**@type{server_db_table_LogRequestInfo}*/
     let log_json_server;
-    switch (Config.get('ConfigServer','SERVICE_LOG', 'REQUEST_LEVEL')){
+    switch (Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}})){
         case '1':{
-            log_level = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO');
+            log_level = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_INFO'}});
             log_json_server = { host:               req.headers.host,
                                 ip:                 req.ip,
                                 requestid:          req.headers['X-Request-Id'],
@@ -429,7 +430,7 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
             break;
         }
         case '2':{
-            log_level = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_VERBOSE');
+            log_level = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_VERBOSE'}});
             /**@type{server_server_req_verbose} */
             const logtext_req = Object.assign({}, req);
             const getCircularReplacer = () => {
@@ -476,7 +477,7 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
             return {result:{affectedRows:0}, type:'JSON'};
         }
     }   
-    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server);
+    return post(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'SCOPE_REQUEST'}}), log_level, log_json_server);
 };
 /**
  * @name postServer
@@ -491,7 +492,7 @@ const postServer = async (log_level, logtext) =>{
     const log_json_server = {
                             logtext: logtext
                             };
-    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server);
+    return post(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'SCOPE_SERVER'}}), log_level, log_json_server);
 };
 /**
  * @name postServerI
@@ -501,7 +502,7 @@ const postServer = async (log_level, logtext) =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServerI = async (logtext)=>{
-    return postServer(Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO'), logtext);
+    return postServer(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_INFO'}}), logtext);
 };
 /**
  * @name postServerE
@@ -511,13 +512,13 @@ const postServerI = async (logtext)=>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServerE = async (logtext)=>{
-    return postServer(Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_ERROR'), logtext);
+    return postServer(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_ERROR'}}), logtext);
 };
 /**
  * @name postDBI
  * @description Log DB Info
  * @function
- * @param {number|null} app_id 
+ * @param {number} app_id 
  * @param {string} object
  * @param {string} dml
  * @param {object} parameters 
@@ -528,9 +529,9 @@ const postDBI = async (app_id, object, dml, parameters, result) => {
     /**@type{server_db_table_LogDbInfo} */
     let log_json_db;
     let level_info;
-    switch (Config.get('ConfigServer','SERVICE_LOG', 'DB_LEVEL')){
+    switch (Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'DB_LEVEL'}})){
         case '1':{
-            level_info = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO');
+            level_info = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_INFO'}});
             log_json_db = {
                             app_id:         app_id,
                             object:         object,
@@ -542,7 +543,7 @@ const postDBI = async (app_id, object, dml, parameters, result) => {
             break;
         }
         case '2':{
-            level_info = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_VERBOSE');
+            level_info = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_VERBOSE'}});
             log_json_db = {
                             app_id:         app_id,
                             object:         object,
@@ -557,13 +558,13 @@ const postDBI = async (app_id, object, dml, parameters, result) => {
             return {result:{affectedRows:0}, type:'JSON'};
         }
     }
-    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db);
+    return post(Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'SCOPE_DB'}}), level_info, log_json_db);
 };
 /**
  * @name postDBE
  * @description Log DB error
  * @function
- * @param {number|null} app_id 
+ * @param {number} app_id 
  * @param {string} object
  * @param {string} dml
  * @param {object} parameters 
@@ -579,7 +580,7 @@ const postDBE = async (app_id, object, dml, parameters, result) => {
         parameters:     parameters,
         logtext:        result
         };
-    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_DB'), Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_ERROR'), log_json_db);
+    return post(Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'SCOPE_DB'}}), Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_ERROR'}}), log_json_db);
 };
 /**
  * @name postServiceI
@@ -595,9 +596,9 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
     /**@type{server_db_table_LogServiceInfo}*/
     let log_json;
     let level_info;
-    switch (Config.get('ConfigServer','SERVICE_LOG', 'SERVICE_LEVEL')){
+    switch (Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'SERVICE_LEVEL'}})){
         case '1':{
-            level_info = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO');
+            level_info = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_INFO'}});
             log_json = {app_id:     app_id,
                         service:    service,
                         parameters: parameters,
@@ -606,7 +607,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
             break;
         }
         case '2':{
-            level_info = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_VERBOSE');
+            level_info = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_VERBOSE'}});
             log_json = {app_id:     app_id,
                         service:    service,
                         parameters: parameters,
@@ -619,7 +620,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
             return {result:{affectedRows:0}, type:'JSON'};
         }
     }
-    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json);
+    return post(Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'SCOPE_SERVICE'}}), level_info, log_json);
 };
 /**
  * @name postServiceE
@@ -639,7 +640,7 @@ const postServiceE = async (app_id, service, parameters, logtext) => {
                     parameters: parameters,
                     logtext:    logtext.stack??logtext
                     };
-    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_SERVICE'), Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_ERROR'), log_json);
+    return post(Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'SCOPE_SERVICE'}}), Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_ERROR'}}), log_json);
 };
 /**
  * @name postApp
@@ -663,7 +664,7 @@ const postApp = async (app_id, level_info, app_filename, app_function_name, app_
                     logtext:            logtext
                     };
     
-    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_APP'), level_info, log_json);
+    return post(Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'SCOPE_APP'}}), level_info, log_json);
 };
 /**
  * @name postAppI
@@ -678,8 +679,9 @@ const postApp = async (app_id, level_info, app_filename, app_function_name, app_
  */
 const postAppI = async (app_id, app_filename, app_function_name, app_line, logtext) => {
     //log if INFO or VERBOSE level
-    if (Config.get('ConfigServer','SERVICE_LOG', 'APP_LEVEL')=='1' || Config.get('ConfigServer','SERVICE_LOG', 'APP_LEVEL')=='2')
-        return postApp(app_id, Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext);
+    if (Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'APP_LEVEL'}})=='1' || 
+        Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'APP_LEVEL'}})=='2')
+        return postApp(app_id, Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_INFO'}}), app_filename, app_function_name, app_line, logtext);
     else
         return {result:{affectedRows:0}, type:'JSON'};
 };
@@ -695,7 +697,7 @@ const postAppI = async (app_id, app_filename, app_function_name, app_line, logte
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postAppE = async (app_id, app_filename, app_function_name, app_line, logtext) => postApp( app_id, 
-                                                                                                Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_ERROR'), 
+                                                                                                Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'LEVEL_ERROR'}}),
                                                                                                 app_filename, 
                                                                                                 app_function_name, 
                                                                                                 app_line, 

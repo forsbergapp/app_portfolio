@@ -19,9 +19,10 @@ class circuitBreakerClass {
     constructor() {
         /**@type{[index:any][*]} */
         this.states = {};
-        this.failureThreshold = Config.get('ConfigServer','SERVICE_MICROSERVICE','CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS') ?? 5;
-        this.cooldownPeriod = Config.get('ConfigServer','SERVICE_MICROSERVICE','CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS') ?? 10;
-        this.requestTimetout = Config.get('ConfigServer','SERVICE_MICROSERVICE','CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS') ?? 20;
+                                                        
+        this.failureThreshold = Config.get({app_id:0, data:{object:'ConfigServer', config_group:'SERVICE_MICROSERVICE', parameter:'CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS'}}) ?? 5;
+        this.cooldownPeriod = Config.get({app_id:0, data:{object:'ConfigServer', config_group:'SERVICE_MICROSERVICE', parameter:'CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS'}}) ?? 10;
+        this.requestTimetout = Config.get({app_id:0, data:{object:'ConfigServer', config_group:'SERVICE_MICROSERVICE', parameter:'CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS'}}) ?? 20;
     }
     /**
      * @name MicroServiceCall
@@ -53,7 +54,7 @@ class circuitBreakerClass {
             }
             else
                 if (admin)
-                    timeout = 60 * 1000 * (Config.get('ConfigServer','SERVICE_MICROSERVICE','CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES') ?? 60);
+                    timeout = 60 * 1000 * (Config.get({app_id:0, data:{object:'ConfigServer', config_group:'SERVICE_MICROSERVICE', parameter:'CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES'}}) ?? 60);
                 else
                     timeout = this.requestTimetout * 1000;
             const response = await function_httpRequest (service, path, query, body, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language);

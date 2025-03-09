@@ -21,7 +21,7 @@ const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
  */
 const get = parameters =>{
     const result = ORM.getObject(parameters.app_id, 'IamUserView',parameters.resource_id, null).rows
-                    .filter(row=>
+                    .filter((/**@type{server_db_table_IamUserView}*/row)=>
                         row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) &&
                         row.iam_user_id_view == (parameters.data.iam_user_id_view ?? row.iam_user_id_view) );
     if (result.length>0 || parameters.resource_id==null)

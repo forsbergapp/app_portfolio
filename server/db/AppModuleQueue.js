@@ -39,7 +39,7 @@ const get = parameters =>{
 const getResult = async parameters => {
     /**@type{import('./Config.js')} */
     const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-    return {sendfile:process.cwd() + `/data/${Config.get('ConfigServer','SERVER','PATH_JOBS')}/${parameters.resource_id}.html`, type:'HTML'};
+    return {sendfile:process.cwd() + `/data/${Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'PATH_JOBS'}})}/${parameters.resource_id}.html`, type:'HTML'};
 };
 /**
  * @name post
@@ -97,7 +97,7 @@ const postResult = async (app_id, id, result) =>{
     /**@type{import('./Config.js')} */
     const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     const fs = await import('node:fs');
-    await fs.promises.writeFile(process.cwd() + `/data/${Config.get('ConfigServer','SERVER','PATH_JOBS')}/${id}.html`, result,  'utf8');
+    await fs.promises.writeFile(process.cwd() + `/data/${Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'PATH_JOBS'}})}/${id}.html`, result,  'utf8');
     return {result:{affectedRows:1}, type:'JSON'};
 };
 /**

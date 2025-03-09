@@ -50,13 +50,13 @@ const getViewInfo = async parameters =>{
     /**@type{server_db_table_App[]}*/
     const apps = get({app_id:parameters.app_id, resource_id:null}).result
                     //do not show common app id
-                    .filter((/**@type{server_db_table_App}*/app)=>app.id != serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID')));
+                    .filter((/**@type{server_db_table_App}*/app)=>app.id != serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}})));
     for (const app of apps){
         const image = await fs.promises.readFile(`${process.cwd()}${app.path + app.logo}`);
         /**@ts-ignore */
         app.logo        = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
        }
-    const HTTPS_ENABLE = Config.get('ConfigServer','SERVER','HTTPS_ENABLE');
+    const HTTPS_ENABLE = Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_ENABLE'}});
     return {result:apps
             .filter(app=>app.id == (parameters.resource_id ?? app.id))
             .map(app=>{
@@ -65,10 +65,10 @@ const getViewInfo = async parameters =>{
                             name:app.name,
                             subdomain:app.subdomain,
                             protocol : HTTPS_ENABLE =='1'?'https://':'http://',
-                            host : Config.get('ConfigServer','SERVER','HOST'),
+                            host : Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HOST'}}),
                             port : serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                                                Config.get('ConfigServer','SERVER','HTTPS_PORT'):
-                                                    Config.get('ConfigServer','SERVER','HTTP_PORT')),
+                                                Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_PORT'}}):
+                                                    Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTP_PORT'}})),
                             app_name_translation : AppTranslation.get(parameters.app_id,null,parameters.locale, app.id).result.filter((/**@type{server_db_table_AppTranslation}*/appTranslation)=>appTranslation.app_id==app.id)[0].json_data.name,
                             logo:app.logo
                         };

@@ -325,7 +325,7 @@ const post = async (app_id, data) => {
                                 id:Date.now(),
                                 username:data.username, 
                                 //save encrypted password
-                                password:await securityPasswordCreate(data.password), 
+                                password:await securityPasswordCreate(app_id, data.password), 
                                 password_reminder:data.password_reminder ?? null,
                                 type: data.type, 
                                 bio:data.bio ?? null, 
@@ -368,7 +368,7 @@ const postAdmin = async (app_id, data) => {
                             id:Date.now(),
                             username:data.username, 
                             //save encrypted password
-                            password:await securityPasswordCreate(data.password), 
+                            password:await securityPasswordCreate(app_id, data.password), 
                             password_reminder:data.password_reminder,
                             type: data.type, 
                             bio:data.bio, 
@@ -408,14 +408,14 @@ const update = async (app_id, resource_id, data) => {
     /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        if (validationData(data) && user.username == data.username && data.password && await securityPasswordCompare(data.password, user.password)){
+        if (validationData(data) && user.username == data.username && data.password && await securityPasswordCompare(app_id, data.password, user.password)){
             /**@type{server_db_table_IamUser} */
             const data_update = {};
             //allowed parameters to update:
             if (data.username!=null && data.username != '')
                 data_update.username = data.username;
             if (data.password!=null && data.password != '')
-                data_update.password = await securityPasswordCreate(data.password_new ?? data.password);
+                data_update.password = await securityPasswordCreate(app_id, data.password_new ?? data.password);
             if (data.password_reminder!=null)
                 data_update.password_reminder = data.password_reminder;
             if (data.bio!=null)
@@ -468,7 +468,7 @@ const updateAdmin = async parameters => {
             if (parameters.data?.username!=null && parameters.data?.username!='')
                 data_update.username = parameters.data.username;
             if (parameters.data?.password!=null && parameters.data?.password!='')
-                data_update.password = await securityPasswordCreate(parameters.data?.password_new ?? parameters.data.password);
+                data_update.password = await securityPasswordCreate(parameters.app_id, parameters.data?.password_new ?? parameters.data.password);
             if (parameters.data?.password_reminder!=null)
                 data_update.password_reminder = parameters.data.password_reminder;
             if (parameters.data?.bio!=null)
@@ -565,7 +565,7 @@ const deleteRecord = async (app_id, resource_id, data) => {
     /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        if (data.password && await securityPasswordCompare(data.password, user.password))
+        if (data.password && await securityPasswordCompare(app_id, data.password, user.password))
             return ORM.Execute({app_id:app_id, 
                                 dml:'DELETE', 
                                 object:'IamUser', 

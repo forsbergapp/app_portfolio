@@ -21,32 +21,34 @@ const APP_PORTFOLIO_TITLE = 'App Portfolio';
  * @name get
  * @description Config get
  * @function
- * @param {server_db_db_name_config} file
- * @param {string|null} [config_group]
- * @param {string|null} [parameter]
+ * @param {{app_id:number,
+ *          resource_id?:number|null,
+ *          data:{  object:server_db_db_name_config,
+ *                  config_group?:string|null,
+ *                  parameter?:string|null}}} parameters
  * @returns {*}
  */
-const get = (file, config_group, parameter) => {
+const get = parameters => {
     try {
-        if (config_group && parameter){
-            if (ORM.getObjectDocument('ConfigServer')[config_group].length>0){
+        if (parameters.data.config_group && parameters.data.parameter){
+            if (ORM.getObject(parameters.app_id,'ConfigServer')[parameters.data.config_group].length>0){
                 //return parameter in array
-                return ORM.getObjectDocument(file)[config_group].filter((/**@type{*}*/row)=>parameter in row)[0][parameter];
+                return ORM.getObject(parameters.app_id,parameters.data.object)[parameters.data.config_group]
+                        .filter((/**@type{*}*/row)=>parameters.data.parameter && parameters.data.parameter in row)[0][parameters.data.parameter];
             }
             else{
                 //return key
-                return ORM.getObjectDocument(file)[config_group][parameter];
+                return ORM.getObject(parameters.app_id,parameters.data.object)[parameters.data.config_group][parameters.data.parameter];
             }
         }
         else
-            if (config_group)
-                return ORM.getObjectDocument(file)[config_group];
+            if (parameters.data.config_group)
+                return ORM.getObject(parameters.app_id,parameters.data.object)[parameters.data.config_group];
             else
-                return ORM.getObjectDocument(file);    
+                return ORM.getObject(parameters.app_id,parameters.data.object);    
     } catch (error) {
         return null;
     }
-    
 };
 /**
  * @name configDefault
@@ -158,7 +160,8 @@ const configDefault = async () => {
  * @description Config get saved
  * @function
  * @memberof ROUTE_REST_API
- * @param {{resource_id:server_db_db_name_config,
+ * @param {{app_id:number,
+ *          resource_id:server_db_db_name_config,
  *          data:{  config_group?:string|null,
  *                  parameter?:string|null,
  *                  saved?:string|null}|null}} parameters
@@ -169,7 +172,7 @@ const getFile = async parameters => {
     const parameter = parameters.data?.parameter?parameters.data.parameter:null;
     /**@type{import('../server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-    const config = serverUtilNumberValue(parameters.data?.saved)?await ORM.getFsFile(parameters.resource_id).then((/**@type{*}*/config)=>config.file_content):ORM.getObjectDocument(parameters.resource_id);
+    const config = serverUtilNumberValue(parameters.data?.saved)?await ORM.getFsFile(parameters.resource_id).then((/**@type{*}*/config)=>config.file_content):ORM.getObject(parameters.app_id, parameters.resource_id);
     if (config_group)
         if (config_group =='METADATA')
             return {result:parameter?config[config_group][parameter]:config[config_group], type:'JSON'};

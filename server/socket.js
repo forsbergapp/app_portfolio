@@ -197,7 +197,7 @@ const socketClientAdd = (newClient) => {
  * @description Socket client send as admin
  * @function
  * @memberof ROUTE_REST_API
- * @param {{app_id:number|null,
+ * @param {{app_id:number,
  *          idToken:string,
  *          data:{  app_id:number|null,
  *                  client_id:number|null,
@@ -214,7 +214,7 @@ const socketClientAdd = (newClient) => {
         let sent = 0;
         for (const client of SOCKET_CONNECTED_CLIENTS){
             if (client.id != socketClientGet(parameters.idToken))
-                if (parameters.data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID')))
+                if (parameters.data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_ADMIN_APP_ID'}})))
                     null;
                 else
                     if (client.app_id == parameters.data.app_id || parameters.data.app_id == null){
@@ -380,7 +380,7 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
     //get access token if any
     const access_token =    parameters.authorization?iamUtilTokenGet(   parameters.app_id,
                                             parameters.authorization, 
-                                            parameters.app_id==serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID'))?'ADMIN':'APP_ACCESS'):null;
+                                            parameters.app_id==serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_ADMIN_APP_ID'}}))?'ADMIN':'APP_ACCESS'):null;
 
     const iam_user =        parameters.authorization?
                                 (serverUtilNumberValue(access_token?.iam_user_id)?
@@ -435,8 +435,9 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
  */
  const socketIntervalCheck = () => {
     setInterval(() => {
-        if (serverUtilNumberValue(Config.get('ConfigServer','METADATA','MAINTENANCE'))==1){
-            socketAdminSend({   app_id:null,
+        //server interval run as app 0
+        if (serverUtilNumberValue(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'METADATA',parameter:'MAINTENANCE'}}))==1){
+            socketAdminSend({   app_id:0,
                                 idToken:'',
                                 data:{app_id:null,
                                     client_id:null,
@@ -446,7 +447,7 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
         }
         socketExpiredTokensUpdate();
     //set default interval to 5 seconds if no parameter is set
-    }, serverUtilNumberValue(Config.get('ConfigServer','SERVICE_SOCKET', 'CHECK_INTERVAL'))??5000);
+    }, serverUtilNumberValue(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVICE_SOCKET', parameter:'CHECK_INTERVAL'}}))??5000);
 };
 /**
  * @name socketExpiredTokensUpdate

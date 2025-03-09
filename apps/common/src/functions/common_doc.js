@@ -267,8 +267,8 @@ const markdownRender = async parameters =>{
                                 .replaceAll('@{MODULE}',            parameters.module ??'')
                                 .replaceAll('@{SOURCE_LINK}',       parameters.module ??'')
                                 //metadata tags                            
-                                .replaceAll('@{SERVER_HOST}',       Config.get('ConfigServer', 'SERVER', 'HOST')??'')
-                                .replaceAll('@{APP_CONFIGURATION}', Config.get('ConfigServer', 'METADATA', 'CONFIGURATION')??'')
+                                .replaceAll('@{SERVER_HOST}',       Config.get({app_id:parameters.app_id, data:{object:'ConfigServer', config_group:'SERVER', parameter:'HOST'}})??'')
+                                .replaceAll('@{APP_CONFIGURATION}', Config.get({app_id:parameters.app_id, data:{object:'ConfigServer', config_group:'METADATA', parameter:'CONFIGURATION'}})??'')
                                 .replaceAll('@{APP_COPYRIGHT}',     App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].copyright)
                         );
             
@@ -333,7 +333,7 @@ const markdownRender = async parameters =>{
         }
         case parameters.type.toUpperCase()=='GUIDE':{
             return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${parameters.doc}.md`, true)
-                        .then(markdown=>markdown.replaceAll('@{GIT_REPOSITORY_URL}',Config.get('ConfigServer', 'SERVER', 'GIT_REPOSITORY_URL')));
+                        .then(markdown=>markdown.replaceAll('@{GIT_REPOSITORY_URL}',Config.get({app_id:parameters.app_id, data:{object:'ConfigServer', config_group:'SERVER', parameter:'GIT_REPOSITORY_URL'}})));
         }
         default:{
             return '';

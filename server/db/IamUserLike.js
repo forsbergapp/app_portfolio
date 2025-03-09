@@ -21,7 +21,7 @@ const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
  */
 const get = parameters =>{
     const result = ORM.getObject(parameters.app_id, 'IamUserLike',parameters.resource_id, null).rows
-                    .filter(row=>
+                    .filter((/**@type{server_db_table_IamUserLike}*/row)=>
                         row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) &&
                         row.iam_user_id_like == (parameters.data.iam_user_id_like ?? row.iam_user_id_like) );
     if (result.length>0 || parameters.resource_id==null)

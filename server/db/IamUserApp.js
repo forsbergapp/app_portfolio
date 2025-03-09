@@ -3,7 +3,6 @@
 /**
  * @import {server_server_response,
  *          server_db_table_IamUserApp,
- *          server_config_apps_with_db_columns,
  *          server_db_common_result_delete,
  *          server_db_common_result_update,
  *          server_db_common_result_insert} from '../types.js'
@@ -23,7 +22,7 @@ const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
  */
 const get = parameters =>{
     const result = ORM.getObject(parameters.app_id, 'IamUserApp',parameters.resource_id, parameters.data.data_app_id??null).rows
-                    .filter(row=>row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) );
+                    .filter((/**@type{server_db_table_IamUserApp}*/row)=>row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else

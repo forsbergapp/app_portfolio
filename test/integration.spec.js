@@ -16,11 +16,11 @@ describe('Integration test, setting DB cache', ()=> {
         /**@type{import('../server/db/Config.js')} */
         const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     
-        const HTTPS_ENABLE = Config.get('ConfigServer','SERVER','HTTPS_ENABLE');
-        const HOST = Config.get('ConfigServer','SERVER', 'HOST');
+        const HTTPS_ENABLE = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_ENABLE'}});
+        const HOST = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER', parameter:'HOST'}});
         const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                        Config.get('ConfigServer','SERVER','HTTPS_PORT'):
-                            Config.get('ConfigServer','SERVER','HTTP_PORT'));
+                        Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_PORT'}}):
+                            Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTP_PORT'}}));
         console.log('Integration test DB cache HTTPS_ENABLE:', HTTPS_ENABLE);
         console.log('Integration test DB cache HOST:', HOST);
         console.log('Integration test DB cache POR:', PORT);
@@ -101,7 +101,7 @@ describe('Integration test, server function worldcities random city called from 
                 route_path:'/app-common-module/COMMON_WORLDCITIES_CITY_RANDOM',
                 method:'POST', 
                 query:'',
-                body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(Config.get('ConfigServer','SERVER','APP_COMMON_APP_ID'))},
+                body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}))},
                 authorization:null,
                 ip:':1', 
                 user_agent:'*', 

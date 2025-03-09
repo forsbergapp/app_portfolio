@@ -412,15 +412,6 @@ const postFsLog = async (app_id, file, file_content, filenamepartition = null) =
     }
 };
 /**
- * @name getObjectDocument
- * @description Get document from cache already JSON parsed
- * @function
- * @param {server_DbObject} file
- * @returns {*}
- */
-const getObjectDocument = file => JSON.parse(JSON.stringify(DB.data.filter(object=>object.name == file && object.type=='DOCUMENT')[0].cache_content));
-
-/**
  * @name getObject
  * @description Gets a record or records in a TABLE from memory only for performance
  *              for given app id and if resource id if specified
@@ -428,34 +419,42 @@ const getObjectDocument = file => JSON.parse(JSON.stringify(DB.data.filter(objec
  *              Uses JSON.stringify and JSON.parse to copy records from DB variable
  *              
  * @function
- * @param {number|null} app_id
- * @param {server_DbObject} table
- * @param {number|null} resource_id
- * @param {number|null} data_app_id
- * @returns {server_db_common_result_select}
+ * @param {number} app_id
+ * @param {server_DbObject} object
+ * @param {number|null} [resource_id]
+ * @param {number|null} [data_app_id]
+ * @returns {*}
  */
-const getObject = (app_id, table, resource_id, data_app_id) =>{
+const getObject = (app_id, object, resource_id, data_app_id) =>{
     try {
-        /**@type{*} */
-        const records = JSON.parse(JSON.stringify(DB.data.filter(object=>object.name == table && (object.type=='TABLE'||object.type=='TABLE_KEY_VALUE'))[0].cache_content.filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id))))
-                        .map((/**@type{*}*/row)=>{
-                            if ('json_data' in row)
-                                return {...row,
-                                        ...{...row.json_data}
-                                };
-                            else
-                                return row;
-                        });
-        
-        //log in background without waiting if db log is enabled
-        import(`file://${process.cwd()}/server/db/Log.js`).then((/**@type{import('./Log.js')} */Log)=>
-            Log.postDBI(app_id, table, 'GET', {resource_id:resource_id, data_app_id:data_app_id}, records));
-
-        if (records.length>0)
-            return {rows:records};
-        else{
-            return {rows:[]};
-        }    
+        //fetch record with already removed object reference
+        const record = getObjectRecord(object);
+        switch(record.type){
+            case 'TABLE':
+            case 'TABLE_KEY_VALUE':{
+                const records = record.cache_content
+                                .filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id))
+                                .map((/**@type{*}*/row)=>{
+                                    if ('json_data' in row)
+                                        return {...row,
+                                                ...{...row.json_data}
+                                        };
+                                    else
+                                        return row;
+                                });
+                //log in background without waiting if db log is enabled
+                import(`file://${process.cwd()}/server/db/Log.js`).then((/**@type{import('./Log.js')} */Log)=>
+                    Log.postDBI(app_id, object, 'GET', {resource_id:resource_id, data_app_id:data_app_id}, records));
+                if (records.length>0)
+                    return {rows:records};
+                else
+                    return {rows:[]};
+            }
+            case 'DOCUMENT':
+                return record.cache_content;
+            default:
+                return {};
+        }
     } catch (error) {
         return {rows:[]};
     }
@@ -804,17 +803,14 @@ const getError = (app_id, statusCode, error=null) =>{
  *                                                          started:number}[]}>}
  */
 const getViewInfo = async parameters =>{
-    parameters;
-    /**@type{import('./Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     /**@type{import('../socket.js')} */
     const {socketConnectedCount} = await import(`file://${process.cwd()}/server/socket.js`);
     return {result: [{
-                        database_name: Config.get('ConfigServer','METADATA').CONFIGURATION,
-                        version: 1,
-                        hostname:Config.get('ConfigServer','SERVER','HOST')??'',
-                        connections: socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
-                        started: process.uptime()
+                        database_name:  getObject(parameters.app_id,'ConfigServer')['METADATA'].CONFIGURATION,
+                        version:        1,
+                        hostname:       getObject(parameters.app_id,'ConfigServer')['SERVER'].HOST,
+                        connections:    socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
+                        started:        process.uptime()
                     }],
             type:'JSON'};
 };
@@ -870,7 +866,6 @@ export {
         getFsFile, getFsDir, getFsDataExists, postFsDir, updateFsFile, 
         postFsAdmin, deleteFsAdmin,
         getFsLog, postFsLog,
-        getObjectDocument,
         getObject, Execute,
         getError,
         Init,
