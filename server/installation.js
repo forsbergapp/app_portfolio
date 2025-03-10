@@ -737,7 +737,11 @@ const postDemo = async parameters=> {
        install_result.push({'app_data_resource_detail': records_app_data_resource_detail});
        install_result.push({'app_data_resource_detail_data': records_app_data_resource_detail_data});
        install_result.push({'finished': new Date().toISOString()});
-       Log.postServerI(`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
+       Log.post({   app_id:parameters.app_id, 
+                    data:{  object:'LogServerInfo', 
+                            log:`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`
+                        }
+                    });
        return {result:{info: install_result}, type:'JSON'};
    } catch (error) {
        /**@ts-ignore */
@@ -818,15 +822,23 @@ const deleteDemo = async parameters => {
                                                 /**@ts-ignore */
                                                 data:{json_data:row.json_data}});
                }
-           }
-           else
-               throw result_get;
-           Log.postServerI(`Demo uninstall count: ${deleted_user}`);
-           return {result:{info: [{'count': deleted_user}]}, type:'JSON'};
+            }
+            else
+                throw result_get;
+            Log.post({  app_id:parameters.app_id, 
+                        data:{  object:'LogServerInfo', 
+                                log:`Demo uninstall count: ${deleted_user}`
+                            }
+                        });
+            return {result:{info: [{'count': deleted_user}]}, type:'JSON'};
        }
        else{
-           Log.postServerI(`Demo uninstall count: ${result_demo_users.length}`);
-           return {result:{info: [{'count': result_demo_users.length}]},type:'JSON'};
+            Log.post({  app_id:parameters.app_id, 
+                data:{  object:'LogServerInfo', 
+                        log:`Demo uninstall count: ${result_demo_users.length}`
+                    }
+                });
+            return {result:{info: [{'count': result_demo_users.length}]},type:'JSON'};
        }
    }
    else

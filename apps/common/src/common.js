@@ -491,7 +491,15 @@ const commonAssetfile = parameters =>{
                     break;
                 }
                 default:{
-                    Log.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonAssetfile()', serverUtilAppLine(), `Invalid file type ${parameters.url}`)
+                    Log.post({  app_id:parameters.app_id, 
+                        data:{  object:'LogAppError', 
+                                app:{   app_filename:serverUtilAppFilename(import.meta.url),
+                                        app_function_name:'commonAssetfile()',
+                                        app_line:serverUtilAppLine()
+                                },
+                                log:`Invalid file type ${parameters.url}`
+                            }
+                        })
                     .then(()=>{
                         resolve({http:404, code:'APP', text:null, developerText:null, moreInfo:null, type:'JSON'});
 
@@ -583,11 +591,15 @@ const commonModuleRun = async parameters => {
                                             locale:parameters.locale});
             }
             else{
-                return Log.postAppE(   parameters.app_id, 
-                                                serverUtilAppFilename(import.meta.url), 
-                                                'commonModuleRun()', 
-                                                serverUtilAppLine(), 
-                                                `Module ${parameters.resource_id} not found`)
+                return Log.post({   app_id:parameters.app_id, 
+                                    data:{  object:'LogAppError', 
+                                            app:{   app_filename:serverUtilAppFilename(import.meta.url),
+                                                    app_function_name:'commonModuleRun()',
+                                                    app_line:serverUtilAppLine()
+                                            },
+                                            log:`Module ${parameters.resource_id} not found`
+                                        }
+                                    })
                 .then((result)=>{          
                     return result.http?result:{http:404,
                         code:'APP',
@@ -707,7 +719,15 @@ const commonAppReport = async parameters => {
                                             methods:{function_report:RunReport}}), type:'HTML'};
             }
             else{
-                return Log.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonAppReport()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
+                return Log.post({   app_id:parameters.app_id, 
+                    data:{  object:'LogAppError', 
+                            app:{   app_filename:serverUtilAppFilename(import.meta.url),
+                                    app_function_name:'commonAppReport()',
+                                    app_line:serverUtilAppLine()
+                            },
+                            log:`Module ${parameters.resource_id} not found`
+                        }
+                    })
                 .then((result)=>{          
                     return result.http?result:{http:404,
                         code:'APP',
@@ -805,11 +825,15 @@ const commonAppReportQueue = async parameters =>{
             return result_post;
     }
     else
-        return Log.postAppE(   parameters.app_id, 
-                                        serverUtilAppFilename(import.meta.url), 
-                                        'commonAppReportQueue',
-                                        serverUtilAppLine(), 
-                                        `Module ${parameters.resource_id} not found`)
+        return Log.post({   app_id:parameters.app_id, 
+                            data:{  object:'LogAppError', 
+                                    app:{   app_filename:serverUtilAppFilename(import.meta.url),
+                                            app_function_name:'commonAppReportQueue()',
+                                            app_line:serverUtilAppLine()
+                                    },
+                                    log:`Module ${parameters.resource_id} not found`
+                                }
+                            })
                 .then((result)=>{          
                     return result.http?result:{http:404,
                         code:'APP',
@@ -848,11 +872,15 @@ const commonModuleMetaDataGet = async parameters =>{
                 return {result:module_reports, type:'JSON'};
             }
             else
-                return Log.postAppE(   parameters.app_id, 
-                                                serverUtilAppFilename(import.meta.url), 
-                                                'commonModuleMetaDataGet', 
-                                                serverUtilAppLine(), 
-                                                `Module ${parameters.resource_id} not found`)
+                return Log.post({   app_id:parameters.app_id, 
+                                    data:{  object:'LogAppError', 
+                                            app:{   app_filename:serverUtilAppFilename(import.meta.url),
+                                                    app_function_name:'commonModuleMetaDataGet()',
+                                                    app_line:serverUtilAppLine()
+                                            },
+                                            log:`Module ${parameters.resource_id} not found`
+                                        }
+                                    })
                     .then((result)=>{          
                         return result.http?result:{http:404,
                             code:'APP',
@@ -1093,10 +1121,16 @@ const commonApp = async parameters =>{
                                         const redirect = {http:301, type:'HTML'};
                                         return app.result==null?redirect:app;})
                                     .catch((error)=>{
-                                        return Log.postAppE(
-                                                /**@ts-ignore */
-                                                parameters.app_id, 
-                                                serverUtilAppFilename(import.meta.url), 'commonApp()', serverUtilAppLine(), error)
+                                                            /**@ts-ignore */
+                                        return Log.post({   app_id:parameters.app_id, 
+                                            data:{  object:'LogAppError', 
+                                                    app:{   app_filename:serverUtilAppFilename(import.meta.url),
+                                                            app_function_name:'commonApp()',
+                                                            app_line:serverUtilAppLine()
+                                                    },
+                                                    log:error
+                                                }
+                                            })
                                         .then(()=>{
                                             return import('./component/common_server_error.js')
                                                 .then(({default:serverError})=>{

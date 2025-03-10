@@ -444,7 +444,15 @@ const getObject = (app_id, object, resource_id, data_app_id) =>{
                                 });
                 //log in background without waiting if db log is enabled
                 import(`file://${process.cwd()}/server/db/Log.js`).then((/**@type{import('./Log.js')} */Log)=>
-                    Log.postDBI(app_id, object, 'GET', {resource_id:resource_id, data_app_id:data_app_id}, records));
+                    Log.post({  app_id:app_id, 
+                                data:{  object:'LogDbInfo', 
+                                        db:{object:object,
+                                            dml:'GET', 
+                                            parameters:{resource_id:resource_id, data_app_id:data_app_id}
+                                            }, 
+                                        log:records
+                                    }
+                                }));
                 if (records.length>0)
                     return {rows:records};
                 else
@@ -728,15 +736,29 @@ const Execute = async parameters =>{
                                                                             parameters.delete?.resource_id??null, 
                                                                             parameters.delete?.data_app_id??null);
             
-            return Log.postDBI(parameters.app_id, parameters.object, parameters.dml, parameters, result)
-                    .then(()=>result);
+            return Log.post({   app_id:parameters.app_id, 
+                                data:{  object:'LogDbInfo', 
+                                        db:{object:parameters.object,
+                                            dml:'GET', 
+                                            parameters:parameters
+                                            }, 
+                                        log:result
+                                    }
+                                }).then(()=>result);
         }
     } 
     catch (error) {
-        return Log.postDBE(parameters.app_id, parameters.object, parameters.dml, parameters, error)
-			.then(()=>{
-                throw error;
-            });
+        return Log.post({   app_id:parameters.app_id, 
+                            data:{  object:'LogDbError', 
+                                    db:{object:parameters.object,
+                                        dml:parameters.dml, 
+                                        parameters:parameters.update ?? parameters.post ?? parameters.delete
+                                        }, 
+                                    log:error
+                                }
+                            }).then(()=>{
+                                throw error;
+                            });
     }
 };
 

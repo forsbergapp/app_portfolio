@@ -44,11 +44,29 @@ const fs = await import('node:fs');
 const bffInit = async (req, res) =>{
     if (req.headers.accept == 'text/event-stream'){
         //SSE, log since response is open and log again when closing
-        Log.postRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', serverUtilResponseTime(res));
+        Log.post({  app_id:0, 
+            data:{  object:'LogRequestInfo', 
+                    request:{   req:req,
+                                responsetime:serverUtilResponseTime(res),
+                                statusCode:res.statusCode,
+                                statusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
+                            },
+                    log:''
+                }
+            });
     }
     res.on('close',()=>{	
         //SSE response time will be time connected until disconnected
-        Log.postRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', serverUtilResponseTime(res)).then(() => {
+        Log.post({  app_id:0, 
+            data:{  object:'LogRequestInfo', 
+                    request:{   req:req,
+                                responsetime:serverUtilResponseTime(res),
+                                statusCode:res.statusCode,
+                                statusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
+                            },
+                    log:''
+                }
+            }).then(() => {
             // do not return any StatusMessage to client, this is only used for logging purpose
             res.statusMessage = '';
             res.end();
@@ -189,7 +207,14 @@ const bffStart = async (req, res) =>{
                             route : 'APP',
                             res:bff_parameters.res})
             .catch((error)=>
-                Log.postServiceE(app_id, service, bff_parameters.query, error).then(() =>
+                Log.post({  app_id:app_id, 
+                    data:{  object:'LogServiceError', 
+                            service:{   service:service,
+                                        parameters:bff_parameters.query
+                                    },
+                            log:error
+                        }
+                    }).then(() =>
                     import('../apps/common/src/component/common_server_error.js')
                         .then(({default:serverError})=>{
                             return {result:serverError({data:null, methods:null}), type:'HTML'};
@@ -218,10 +243,24 @@ const bffStart = async (req, res) =>{
                                                                     res:bff_parameters.res})
                                                     .then((/**@type{*}*/result_service) => {
                                                         const log_result = serverUtilNumberValue(Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}))==2?result_service:'✅';
-                                                        return Log.postServiceI(app_id, service, bff_parameters.query, log_result).then(result_log=>result_log.http?result_log:result_service);
+                                                        return Log.post({  app_id:app_id, 
+                                                            data:{  object:'LogServiceInfo', 
+                                                                    service:{   service:service,
+                                                                                parameters:bff_parameters.query
+                                                                            },
+                                                                    log:log_result
+                                                                }
+                                                            }).then(result_log=>result_log.http?result_log:result_service);
                                                     })
                                                     .catch((/**@type{server_server_error}*/error) => {
-                                                        return Log.postServiceE(app_id, service, bff_parameters.query, error).then(() => {
+                                                        return Log.post({  app_id:app_id, 
+                                                            data:{  object:'LogServiceError', 
+                                                                    service:{   service:service,
+                                                                                parameters:bff_parameters.query
+                                                                            },
+                                                                    log:error
+                                                                }
+                                                            }).then(() => {
                                                             return {http:500, code:null, text:error, developerText:'bff', moreInfo:null, type:'JSON'};
                                                         });
                                                     }), 
@@ -267,8 +306,15 @@ const bffStart = async (req, res) =>{
                             res:bff_parameters.res})
             .then(result=>resolve(result))
             .catch((/**@type{server_server_error}*/error)=>{
-                Log.postServiceE(app_id, service, bff_parameters.query, error).then(() => {
-                    reject(error);
+                Log.post({  app_id:app_id, 
+                    data:{  object:'LogServiceError', 
+                            service:{   service:service,
+                                        parameters:bff_parameters.query
+                                    },
+                            log:error
+                        }
+                    }).then(() => {
+                        reject(error);
                 });
             });
         }
