@@ -13,11 +13,11 @@ const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
  * @name get
  * @description Get user 
  * @function
- * @param {server_db_db_name_message_queue} file
+ * @param {server_db_db_name_message_queue} table
  * @returns {Promise.<server_server_response & {result?:server_db_table_MessageQueuePublish[]|server_db_table_MessageQueueConsume[]|server_db_table_MessageQueueError[] }>}
  */
-const get = async file =>{
-    const result = await ORM.getFsLog(null, file, null, null,'');
+const get = async table =>{
+    const result = await ORM.getFsLog(null, table, null, null,'');
     if (result.rows.length>0)
         return {result:result.rows, type:'JSON'};
     else
@@ -27,10 +27,18 @@ const get = async file =>{
  * @name post
  * @description Add record
  * @function
- * @param {server_db_db_name_message_queue} file
+ * @param {server_db_db_name_message_queue} table
  * @param {*} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
-const post = async (file,data) => {return {result:await ORM.postFsLog(null, file,data, ''), type:'JSON'};};
+const post = async (table,data) => {return {result:await ORM.Execute({ app_id:0, 
+    dml:'POST',object:table, 
+    post:{data:{...{id:Date.now()}, 
+                ...data, 
+                ...{created:new Date().toISOString()}
+                }
+        }
+    }), type:'JSON'};
+};
 
 export {get, post};

@@ -33,6 +33,7 @@
 /**
  * @import {server_server_response, server_server_error,
  *          server_DbObject, server_DbObject_record, 
+ *          server_db_config_server_server,server_db_config_server_service_log,
  *          server_db_result_fileFsRead,
  *          server_db_common_result_select, server_db_common_result_update, server_db_common_result_delete,server_db_common_result_insert} from '../types.js'
  * @import {Dirent} from 'node:fs'
@@ -376,42 +377,6 @@ const deleteFsAdmin = async file => {
     return {rows:log.filter(row=>row.id == (resource_id??row.id))};
 };
 /**
- * @name postFsLog
- * @description Create log record with given suffix or none
- * @function
- * @param {number|null} app_id
- * @param {server_DbObject} file
- * @param {object} file_content 
- * @param {string|null} filenamepartition
- * @returns {Promise.<server_db_common_result_insert>}
- */
-const postFsLog = async (app_id, file, file_content, filenamepartition = null) =>{
-
-    const filepath = `${DB_DIR.db}${file}_${fileNamePartition(filenamepartition, null)}.json`;
-    const transaction_id = await fileTransactionStart(file, filepath);
-    
-     await fs.promises.writeFile(  `${process.cwd()}${filepath}`, 
-                                    /**@ts-ignore */
-                                    JSON.stringify((DB.data.filter(row=>row.name==file)[0].transaction_content?? []).concat(file_content)), 
-                                    'utf8')
-            .catch((error)=>{
-                if (fileTransactionRollback(file, transaction_id))
-                    throw(error);
-                else{
-                    import(`file://${process.cwd()}/server/iam.js`).then(({iamUtilMessageNotAuthorized})=>{
-                        throw iamUtilMessageNotAuthorized() + ' ' + error;
-                    });
-                }
-            });
-    if (fileTransactionCommit(file, transaction_id))
-        return {affectedRows:1};
-    else{
-        /**@type{import('../iam.js')} */
-        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-        throw (iamUtilMessageNotAuthorized());
-    }
-};
-/**
  * @name getObject
  * @description Gets a record or records in a TABLE from memory only for performance
  *              for given app id and if resource id if specified
@@ -547,18 +512,46 @@ const fileConstraints = (table, table_rows, data, dml, resource_id) =>{
  */
 const postObject = async (app_id, table, data) =>{
     if (app_id!=null){
-        /**@type{server_db_result_fileFsRead} */
-        const file = await getFsFile(table, true);
-        if (fileConstraints(table, file.file_content, data, 'POST')){
-            await updateFsFile(table, file.transaction_id, file.file_content.concat(data))
-            .catch((/**@type{server_server_error}*/error)=>{throw error;});
-            return {affectedRows:1};
+        if (DB.data.filter(object=>object.name == table && (object.type == 'TABLE_LOG' ||object.type =='TABLE_KEY_VALUE'))[0]){
+            const config_file_interval = getObject(app_id,'ConfigServer')['SERVICE_LOG']
+                                        .filter((/**@type{server_db_config_server_service_log}*/row)=>row.FILE_INTERVAL)[0].FILE_INTERVAL;
+            const filepath = `${DB_DIR.db}${table}_${fileNamePartition(config_file_interval=='1D'?'YYYYMMDD':'YYYYMM', null)}.json`;
+            const transaction_id = await fileTransactionStart(table, filepath);
+            await fs.promises.writeFile(  `${process.cwd()}${filepath}`, 
+                                            /**@ts-ignore */
+                                            '[\n' + (DB.data.filter(row=>row.name==table)[0].transaction_content?? []).concat(data).map(row=>JSON.stringify(row)).join(',\n') + '\n]', 
+                                            'utf8')
+            .catch((error)=>{
+                if (fileTransactionRollback(table, transaction_id))
+                    throw(error);
+                else{
+                    import(`file://${process.cwd()}/server/iam.js`).then(({iamUtilMessageNotAuthorized})=>{
+                        throw iamUtilMessageNotAuthorized() + ' ' + error;
+                    });
+                }
+            });
+            if (fileTransactionCommit(table, transaction_id))
+                return {affectedRows:1};
+            else{
+                /**@type{import('../iam.js')} */
+                const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                throw (iamUtilMessageNotAuthorized());
+            }
         }
         else{
-            fileTransactionRollback(table,
-                                    /**@ts-ignore */
-                                    file.transaction_id);
-            return {affectedRows:0};
+            /**@type{server_db_result_fileFsRead} */
+            const file = await getFsFile(table, true);
+            if (fileConstraints(table, file.file_content, data, 'POST')){
+                await updateFsFile(table, file.transaction_id, file.file_content.concat(data))
+                .catch((/**@type{server_server_error}*/error)=>{throw error;});
+                return {affectedRows:1};
+            }
+            else{
+                fileTransactionRollback(table,
+                                        /**@ts-ignore */
+                                        file.transaction_id);
+                return {affectedRows:0};
+            }
         }
     }
     else{
@@ -716,7 +709,7 @@ const Execute = async parameters =>{
         if (parameters.dml!='UPDATE' && parameters.dml!='POST' && parameters.dml!='DELETE' &&
             (parameters.update?.resource_id && parameters.delete?.resource_id && object_type=='TABLE_KEY_VALUE' ||
             parameters.update?.data_app_id && parameters.delete?.data_app_id && object_type=='TABLE' ||
-            (object_type!='TABLE' && object_type!='TABLE_KEY_VALUE'))
+            !object_type.startsWith('TABLE'))
         ){
             /**@type{import('../iam.js')} */
             const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
@@ -830,7 +823,7 @@ const getViewInfo = async parameters =>{
     return {result: [{
                         database_name:  getObject(parameters.app_id,'ConfigServer')['METADATA'].CONFIGURATION,
                         version:        1,
-                        hostname:       getObject(parameters.app_id,'ConfigServer')['SERVER'].HOST,
+                        hostname:       getObject(parameters.app_id,'ConfigServer')['SERVER'].filter((/**@type{server_db_config_server_server}*/row)=>row.HOST)[0].HOST,
                         connections:    socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
                         started:        process.uptime()
                     }],
@@ -887,7 +880,7 @@ const getViewObjects = parameters =>{
 export {
         getFsFile, getFsDir, getFsDataExists, postFsDir, updateFsFile, 
         postFsAdmin, deleteFsAdmin,
-        getFsLog, postFsLog,
+        getFsLog, 
         getObject, Execute,
         getError,
         Init,
