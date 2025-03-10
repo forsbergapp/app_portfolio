@@ -120,15 +120,12 @@ const serverResponse = async parameters =>{
         }
     };
     if (parameters.result_request.http){
-        /**@type{import('./db/Log.js')} */
-        const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
-
         /**@type{import('../apps/common/src/common.js')} */
         const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
         const app_id_host = app_common.commonAppHost((parameters.host??'').substring(0,(parameters.host??'').indexOf(':')==-1?
                                                 (parameters.host??'').length:
                                                     (parameters.host??'').indexOf(':')));
-        await Log.postServiceI(parameters.app_id ?? app_id_host ?? common_app_id, (parameters.result_request.http ?? '').toString(), parameters.result_request.code?.toString()??'', parameters.result_request.text??'');
+    
         //ISO20022 error format
         const message = {error:{
                                 http:parameters.result_request.http, 
@@ -177,7 +174,14 @@ const serverResponse = async parameters =>{
                         parameters.res.sendFile(parameters.result_request.sendfile);
                     })
                     .catch(error=>{
-                        Log.postServiceI(parameters.app_id ?? common_app_id, '400', parameters.result_request.sendfile ?? '', error)
+                        Log.post({    app_id:parameters.app_id ?? common_app_id, 
+                            data:{  object:'LogServiceInfo', 
+                                    service:{service:parameters.result_request.code?.toString()??'',
+                                            parameters:parameters.decodedquery??''
+                                    },
+                                    log:error
+                                }
+                            })
                         .then(result=>{if (result.http)
                             parameters.res.statusCode =400;
                             parameters.res.write(iamUtilMessageNotAuthorized(), 'utf8');
@@ -743,7 +747,16 @@ const serverJs = async () => {
         if (req.body && JSON.stringify(req.body).length/1024/1024 > 
                 (serverUtilNumberValue((Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'JSON_LIMIT'}}) ?? '0').replace('MB',''))??0)){
             //log error
-            Log.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), 'PayloadTooLargeError').then(() => {
+            Log.post({  app_id:0, 
+                        data:{  object:'LogRequestError', 
+                                request:{   req:req,
+                                            responsetime:serverUtilResponseTime(res),
+                                            statusCode:res.statusCode,
+                                            statusMessage:res.statusMessage
+                                        },
+                                log:'PayloadTooLargeError'
+                            }
+                        }).then(() => {
                 serverResponse({
                                 result_request:{http:400, 
                                                 code:null, 
@@ -1114,11 +1127,19 @@ const serverStart = async () =>{
     process.env.TZ = 'UTC';
     process.on('uncaughtException', err =>{
         console.log(err);
-        Log.postServerE('Process uncaughtException: ' + err.stack);
+        Log.post({   app_id:0, 
+            data:{  object:'LogServerError', 
+                    log:'Process uncaughtException: ' + err.stack
+                }
+            });
     });
     process.on('unhandledRejection', (/**@type{*}*/reason) =>{
         console.log(reason.stack ?? reason.message ?? reason);
-        Log.postServerE('Process unhandledRejection: ' + reason.stack ?? reason.message ?? reason);
+        Log.post({   app_id:0, 
+            data:{  object:'LogServerError', 
+                    log:'Process unhandledRejection: ' + reason.stack ?? reason.message ?? reason
+                }
+            });
     });
     try {
         const result_data = await ORM.getFsDataExists();
@@ -1133,9 +1154,11 @@ const serverStart = async () =>{
         const NETWORK_INTERFACE = Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'NETWORK_INTERFACE'}});
         //START HTTP SERVER                                                     
         http.createServer(await serverJs()).listen(Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTP_PORT'}}), NETWORK_INTERFACE, () => {
-            Log.postServerI('HTTP Server up and running on PORT: ' + Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTP_PORT'}})).then(() => {
-                null;
-            });
+            Log.post({   app_id:0, 
+                data:{  object:'LogServerInfo', 
+                        log:'HTTP Server up and running on PORT: ' + Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTP_PORT'}})
+                    }
+                });
         });
         if (Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_ENABLE'}})=='1'){
             //START HTTPS SERVER
@@ -1146,15 +1169,20 @@ const serverStart = async () =>{
                 key: HTTPS_KEY.toString(),
                 cert: HTTPS_CERT.toString()
             };
-            /**@ts-ignore*/
             https.createServer(options,  await serverJs()).listen(Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_PORT'}}),NETWORK_INTERFACE, () => {
-                Log.postServerI('HTTPS Server up and running on PORT: ' + Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_PORT'}})).then(() => {
-                    null;
-                });
+                Log.post({   app_id:0, 
+                    data:{  object:'LogServerInfo', 
+                            log:'HTTPS Server up and running on PORT: ' + Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_PORT'}})
+                        }
+                    });
             });            
         }
     } catch (/**@type{server_server_error}*/error) {
-        Log.postServerE('serverStart: ' + error.stack);
+        Log.post({   app_id:0, 
+            data:{  object:'LogServerError', 
+                    log:'serverStart: ' + error.stack
+                }
+            });
     }
     
 };

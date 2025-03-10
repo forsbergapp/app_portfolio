@@ -964,6 +964,7 @@
  * @typedef {  'LogAppInfo'|
  *             'LogAppError'|
  *             'LogDbInfo'|
+ *             'LogDbVerbose'|
  *             'LogDbError'|
  *             'LogRequestInfo'|
  *             'LogRequestVerbose'|
