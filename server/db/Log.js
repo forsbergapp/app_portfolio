@@ -360,7 +360,6 @@ const getFiles = async () => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async parameters => {
-    const config_file_interval = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'FILE_INTERVAL'}});
     let log;
     /**@type{server_db_tables_log|null}*/
     let log_object = null;
@@ -476,7 +475,14 @@ const post = async parameters => {
     if (log==null || log_object==null)
         return {result:{affectedRows:0}, type:'JSON'};
     else{
-        await ORM.postFsLog(null, log_object, {...{id:Date.now()}, ...log, ...{created:new Date().toISOString()}}, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
+        await ORM.Execute({ app_id:parameters.app_id, 
+                            dml:'POST',object:log_object, 
+                            post:{data:{...{id:Date.now()}, 
+                                        ...log, 
+                                        ...{created:new Date().toISOString()}
+                                        }
+                                }
+                            })
         .catch((/**@type{server_server_error}*/error)=>{
             console.log(error);
             console.log(parameters.data.log);
