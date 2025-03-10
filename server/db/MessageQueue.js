@@ -17,7 +17,7 @@ const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
  * @returns {Promise.<server_server_response & {result?:server_db_table_MessageQueuePublish[]|server_db_table_MessageQueueConsume[]|server_db_table_MessageQueueError[] }>}
  */
 const get = async table =>{
-    const result = await ORM.getFsLog(null, table, null, null,'');
+    const result = await ORM.getFsLog(null, table, null, null);
     if (result.rows.length>0)
         return {result:result.rows, type:'JSON'};
     else

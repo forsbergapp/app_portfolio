@@ -81,7 +81,7 @@ const get = async parameters => {
 
        const sample = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
        
-       ORM.getFsLog(parameters.app_id, data.logobject, null, null, sample)
+       ORM.getFsLog(parameters.app_id, data.logobject, null, sample)
        .then(log_rows_array_obj=>{
            data.search = data.search=='null'?'':data.search;
            data.search = data.search==null?'':data.search;
@@ -233,7 +233,7 @@ const getStat = async parameters => {
            }
            else
                sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
-           await ORM.getFsLog(parameters.app_id, file.name.startsWith('LogRequestInfo')?'LogRequestInfo':'LogRequestVerbose', null, null, sample)
+           await ORM.getFsLog(parameters.app_id, file.name.startsWith('LogRequestInfo')?'LogRequestInfo':'LogRequestVerbose', null, sample)
            .then((logs)=>{
                logs.rows.forEach((/**@type{server_db_table_LogRequestInfo|''}*/record) => {
                    if (record != ''){
