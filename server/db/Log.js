@@ -176,7 +176,7 @@ const getStatusCodes = async () =>{
 };
 /**
 * @name getStat
-* @description Get log stat
+* @description Get log stat, returns base64 string with server_log_result_logStatGet[] to avoid record limit issue
 * @function
 * @memberof ROUTE_REST_API
 * @param {{app_id:number,
@@ -186,7 +186,7 @@ const getStatusCodes = async () =>{
 *                  statValue?:string|null,
 *                  year?:string|null,
 *                  month?:string|null}}} parameters
-* @returns{Promise.<server_server_response & {result?:server_log_result_logStatGet[]|[]}>}
+* @returns{Promise.<server_server_response & {result?:string|[]}>}
 */
 const getStat = async parameters => {
    /**@type{import('../server.js')} */
@@ -314,7 +314,7 @@ const getStat = async parameters => {
            amount: logfiles.filter(log=>log.day == day).length
        });
    });
-   return {result:logstat, type:'JSON'};
+   return {result:Buffer.from (JSON.stringify(logstat)).toString('base64'), type:'JSON'};
 };
 /**
 * @name getFiles
