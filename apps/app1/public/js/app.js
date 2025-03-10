@@ -235,6 +235,7 @@ const appSecureMenuStartChartShow = async () => {
         data:       null,
         methods:    {
                     commonComponentRender:common.commonComponentRender,
+                    commonWindowFromBase64:common.commonWindowFromBase64,
                     commonFFB:common.commonFFB
                     },
         path:       '/component/menu_start_chart.js'});
