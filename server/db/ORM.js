@@ -160,21 +160,22 @@ const fileTransactionRollback = (file, transaction_id)=>{
 };
 /**
  * @name fileNamePartition
- * @description Get filename partition using YYYYMMDD or YYYYMM format
+ * @description Get given partition or current day partition using YYYYMMDD or YYYYMM format
  * @function
- * @param {string|null} partitionformat
- * @param {string|null} sample 
+ * @param {string|null} partition
  * @returns 
  */
- const fileNamePartition = (partitionformat=null, sample=null) =>{
-    const year = new Date().toLocaleString('en-US', { timeZone: 'UTC', year: 'numeric'});
-    const month = new Date().toLocaleString('en-US', { timeZone: 'UTC', month: '2-digit'});
-    const day   = new Date().toLocaleString('en-US', { timeZone: 'UTC', day: '2-digit'});
+ const fileNamePartition = (partition=null) =>{
     let file_partition = '';
-    if (sample)
-        file_partition = `${sample}`;
-    else
-        switch (partitionformat){
+    if (partition)
+        file_partition = `${partition}`;
+    else{
+        const config_file_interval = getObject(0,'ConfigServer')['SERVICE_LOG']
+                                    .filter((/**@type{server_db_config_server_service_log}*/row)=>row.FILE_INTERVAL)[0].FILE_INTERVAL;
+        const year = new Date().toLocaleString('en-US', { timeZone: 'UTC', year: 'numeric'});
+        const month = new Date().toLocaleString('en-US', { timeZone: 'UTC', month: '2-digit'});
+        const day   = new Date().toLocaleString('en-US', { timeZone: 'UTC', day: '2-digit'});
+        switch (config_file_interval=='1D'?'YYYYMMDD':'YYYYMM'){
             case 'YYYYMMDD':{
                 file_partition = `${year}${month}${day}`;
                 break;
@@ -187,6 +188,7 @@ const fileTransactionRollback = (file, transaction_id)=>{
                 break;
             }
         }
+    }
     return file_partition;
 };
 
@@ -207,15 +209,15 @@ const getFsDir = async () => await fs.promises.readdir(`${process.cwd()}${DB_DIR
  *              Function returns file content after a lock of file and transaction id is given, lock info and transaction id.
  *              This transaction id must be provided when updating file in updateFsFile()
  * @function
- * @param {server_DbObject} file 
+ * @param {server_DbObject} object
  * @param {boolean} lock
  * @returns {Promise.<server_db_result_fileFsRead>}
  */
-const getFsFile = async (file, lock=false) =>{
-    const filepath = DB_DIR.db + file + '.json';
+const getFsFile = async (object, lock=false) =>{
+    const filepath = DB_DIR.db + object + '.json';
     if (lock){
-        const transaction_id = await fileTransactionStart(file, filepath);
-        return {   file_content:    getObjectRecord(file).transaction_content,
+        const transaction_id = await fileTransactionStart(object, filepath);
+        return {   file_content:    getObjectRecord(object).transaction_content,
                     lock:           lock,
                     transaction_id: transaction_id};
     }
@@ -366,12 +368,11 @@ const deleteFsAdmin = async file => {
   * @param {number|null} app_id
   * @param {server_DbObject} file
   * @param {number|null} resource_id
-  * @param {string|null} filenamepartition
-  * @param {string|null} sample
+  * @param {string|null} partition
   * @returns {Promise.<server_db_common_result_select>}
   */
- const getFsLog = async (app_id, file, resource_id, filenamepartition=null, sample=null) =>{
-    const filepath = `${file}_${fileNamePartition(filenamepartition, sample)}.json`;
+ const getFsLog = async (app_id, file, resource_id, partition=null) =>{
+    const filepath = `${file}_${fileNamePartition(partition)}.json`;
     /**@type{*[]} */
     const log = await fs.promises.readFile(process.cwd() + DB_DIR.db + filepath, 'utf8').then(result=>JSON.parse(result.toString()));
     return {rows:log.filter(row=>row.id == (resource_id??row.id))};
@@ -513,9 +514,7 @@ const fileConstraints = (table, table_rows, data, dml, resource_id) =>{
 const postObject = async (app_id, table, data) =>{
     if (app_id!=null){
         if (DB.data.filter(object=>object.name == table && (object.type == 'TABLE_LOG' ||object.type =='TABLE_KEY_VALUE'))[0]){
-            const config_file_interval = getObject(app_id,'ConfigServer')['SERVICE_LOG']
-                                        .filter((/**@type{server_db_config_server_service_log}*/row)=>row.FILE_INTERVAL)[0].FILE_INTERVAL;
-            const filepath = `${DB_DIR.db}${table}_${fileNamePartition(config_file_interval=='1D'?'YYYYMMDD':'YYYYMM', null)}.json`;
+            const filepath = `${DB_DIR.db}${table}_${fileNamePartition()}.json`;
             const transaction_id = await fileTransactionStart(table, filepath);
             await fs.promises.writeFile(  `${process.cwd()}${filepath}`, 
                                             /**@ts-ignore */
