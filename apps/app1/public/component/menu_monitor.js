@@ -119,59 +119,30 @@ const component = async props => {
     /**
      * Get log parameters
      * @returns {Promise.<{ parameters:{ 
-     *                                  SCOPE_REQUEST:string,
-     *                                  SCOPE_SERVER:string, 
-     *                                  SCOPE_SERVICE:string,
-     *                                  SCOPE_APP:string,
-     *                                  SCOPE_DB:string,
      *                                  REQUEST_LEVEL:number,
      *                                  SERVICE_LEVEL:number,
      *                                  DB_LEVEL:number,
      *                                  APP_LEVEL:number,
-     *                                  LEVEL_VERBOSE:string 
-     *                                  LEVEL_ERROR:string
-     *                                  LEVEL_INFO:string,
      *                                  FILE_INTERVAL:string},
-     *                      logscope_level_options:{log_scope:string, log_level:string}[]}>}
+     *                      logObjects:{VALUE:string, TEXT:string}[]}>}
      */
     const get_log_parameters = async () => {
-       return new Promise((resolve)=>{
-           props.methods.commonFFB({path:'/server-db/config/ConfigServer', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'ADMIN'})
-           .then((/**@type{string}*/result)=>{
-               const log_parameters = {
-                   SCOPE_REQUEST : JSON.parse(result).filter((/**@type{*}*/row)=>'SCOPE_REQUEST' in row)[0]['SCOPE_REQUEST'],
-                   SCOPE_SERVER :  JSON.parse(result).filter((/**@type{*}*/row)=>'SCOPE_SERVER' in row)[0]['SCOPE_SERVER'],
-                   SCOPE_SERVICE : JSON.parse(result).filter((/**@type{*}*/row)=>'SCOPE_SERVICE' in row)[0]['SCOPE_SERVICE'],
-                   SCOPE_APP :     JSON.parse(result).filter((/**@type{*}*/row)=>'SCOPE_APP' in row)[0]['SCOPE_APP'],
-                   SCOPE_DB :      JSON.parse(result).filter((/**@type{*}*/row)=>'SCOPE_DB' in row)[0]['SCOPE_DB'],
-                   REQUEST_LEVEL : JSON.parse(result).filter((/**@type{*}*/row)=>'REQUEST_LEVEL' in row)[0]['REQUEST_LEVEL'],
-                   SERVICE_LEVEL : JSON.parse(result).filter((/**@type{*}*/row)=>'SERVICE_LEVEL' in row)[0]['SERVICE_LEVEL'],
-                   DB_LEVEL :      JSON.parse(result).filter((/**@type{*}*/row)=>'DB_LEVEL' in row)[0]['DB_LEVEL'],
-                   APP_LEVEL :     JSON.parse(result).filter((/**@type{*}*/row)=>'APP_LEVEL' in row)[0]['APP_LEVEL'],
-                   LEVEL_INFO :    JSON.parse(result).filter((/**@type{*}*/row)=>'LEVEL_INFO' in row)[0]['LEVEL_INFO'],
-                   LEVEL_ERROR :   JSON.parse(result).filter((/**@type{*}*/row)=>'LEVEL_ERROR' in row)[0]['LEVEL_ERROR'],
-                   LEVEL_VERBOSE : JSON.parse(result).filter((/**@type{*}*/row)=>'LEVEL_VERBOSE' in row)[0]['LEVEL_VERBOSE'],
-                   FILE_INTERVAL : JSON.parse(result).filter((/**@type{*}*/row)=>'FILE_INTERVAL' in row)[0]['FILE_INTERVAL']
-                  };
-               const logscope_level_options = [
-                   {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_INFO},
-                   {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_ERROR},
-                   {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_VERBOSE},
-                   {log_scope:log_parameters.SCOPE_SERVER,     log_level: log_parameters.LEVEL_INFO},
-                   {log_scope:log_parameters.SCOPE_SERVER,     log_level: log_parameters.LEVEL_ERROR},
-                   {log_scope:log_parameters.SCOPE_APP,        log_level: log_parameters.LEVEL_INFO},
-                   {log_scope:log_parameters.SCOPE_APP,        log_level: log_parameters.LEVEL_ERROR},
-                   {log_scope:log_parameters.SCOPE_SERVICE,    log_level: log_parameters.LEVEL_INFO},
-                   {log_scope:log_parameters.SCOPE_SERVICE,    log_level: log_parameters.LEVEL_ERROR},
-                   {log_scope:log_parameters.SCOPE_DB,         log_level: log_parameters.LEVEL_INFO},
-                   {log_scope:log_parameters.SCOPE_DB,         log_level: log_parameters.LEVEL_ERROR}
-               ];
-               resolve({parameters:log_parameters,
-                        logscope_level_options:logscope_level_options
-                        });
-           });
-       })
-       .catch(()=>null);
+        const result_parameters = await props.methods.commonFFB({path:'/server-db/config/ConfigServer', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'ADMIN'});
+        const result_log_objects = await props.methods.commonFFB({path:'/server-db/ORM-objects', method:'GET', authorization_type:'ADMIN'});
+        
+        const log_parameters = {
+            REQUEST_LEVEL : JSON.parse(result_parameters).filter((/**@type{*}*/row)=>'REQUEST_LEVEL' in row)[0]['REQUEST_LEVEL'],
+            SERVICE_LEVEL : JSON.parse(result_parameters).filter((/**@type{*}*/row)=>'SERVICE_LEVEL' in row)[0]['SERVICE_LEVEL'],
+            DB_LEVEL :      JSON.parse(result_parameters).filter((/**@type{*}*/row)=>'DB_LEVEL' in row)[0]['DB_LEVEL'],
+            APP_LEVEL :     JSON.parse(result_parameters).filter((/**@type{*}*/row)=>'APP_LEVEL' in row)[0]['APP_LEVEL'],
+            FILE_INTERVAL : JSON.parse(result_parameters).filter((/**@type{*}*/row)=>'FILE_INTERVAL' in row)[0]['FILE_INTERVAL']
+            };
+        
+        return {parameters:log_parameters,
+                logObjects:JSON.parse(result_log_objects).rows
+                            .filter((/**@type{{name:string}}*/row)=>row.name.startsWith('Log'))
+                            .map((/**@type{{name:string}}*/row)=>{return {VALUE:row.name, TEXT:row.name};})
+                };
     };
     const SERVICE_LOG_DATA = await get_log_parameters();
     //save value for query

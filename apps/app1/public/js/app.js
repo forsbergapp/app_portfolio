@@ -706,7 +706,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                                 }
                             }
                         }
-                    if( event_target_id == 'menu_monitor_detail_select_logscope')
+                    if( event_target_id == 'menu_monitor_detail_select_logobject')
                         APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog(0,'created', 'desc');
                     if( event_target_id == 'menu_report_select_report')
                         APP_SECURE_GLOBAL.component.MENU_REPORT.updateMetadata();

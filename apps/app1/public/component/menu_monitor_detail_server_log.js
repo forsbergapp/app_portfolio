@@ -14,14 +14,14 @@
  * @param {{function_get_order_by:function,
  *          function_roundOff:CommonModuleCommon['commonMiscRoundOff'],
  *          logs:[],
- *          logscope:'Request'|'Server'|'App'|'Service'|'Db'|''}} props
+ *          logscope:'LogRequest'|'LogServer'|'LogApp'|'LogService'|'LogDb'|''}} props
  * @returns {string}
  */
 const template = props => ` ${  /*
                                 use this grouping to decide column orders
                                 [log columns][server columns][user columns][detail columms][app columns(broadcast, edit etc)]
                                 */
-                                props.logscope=='Request'?
+                                props.logscope=='LogRequest'?
                                 `<div class='menu_monitor_detail_server_log_row'>
                                     <div data-column='id' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                         ID
@@ -154,7 +154,7 @@ const template = props => ` ${  /*
                                     ).join('')
                                 }`:''
                             }
-                            ${props.logscope=='Server'?
+                            ${props.logscope=='LogServer'?
                                 `<div class='menu_monitor_detail_server_log_row'>
                                     <div data-column='id' class='menu_monitor_detail_server_log_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                         ID
@@ -184,7 +184,7 @@ const template = props => ` ${  /*
                                     ).join('')
                                 }`:''
                             }
-                            ${props.logscope=='App'?
+                            ${props.logscope=='LogApp'?
                                 `<div class='menu_monitor_detail_server_log_row'>
                                     <div data-column='id' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                         ID
@@ -242,7 +242,7 @@ const template = props => ` ${  /*
                                     ).join('')
                                 }`:''
                             }
-                            ${props.logscope=='Service'?
+                            ${props.logscope=='LogService'?
                                 `<div class='menu_monitor_detail_server_log_row'>
                                     <div data-column='id' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                         ID
@@ -293,7 +293,7 @@ const template = props => ` ${  /*
                                     ).join('')
                                 }`:''
                             }    
-                            ${props.logscope=='Db'?
+                            ${props.logscope=='LogDb'?
                                 `<div class='menu_monitor_detail_server_log_row'>
                                     <div data-column='id' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                         ID
@@ -389,7 +389,7 @@ const component = async props => {
         template:   template({  function_get_order_by:get_order_by,
                                 function_roundOff:props.methods.commonMiscRoundOff,
                                 logs:logs.rows,
-                                logscope:props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[0]})
+                                logscope:props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').getAttribute('data-value').replace('Info','').replace('Error','').replace('Verbose','')})
     };
 };
 export default component;
