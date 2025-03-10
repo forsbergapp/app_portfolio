@@ -26,9 +26,8 @@ const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
-*          data:{  select_app_id?:string|null,
-*                  logscope?:server_log_scope,
-*                  loglevel?:server_log_level,
+*          data:{  data_app_id?:string|null,
+*                  logobject?:server_db_tables_log,
 *                  search?:string|null,
 *                  sort?:string|null,
 *                  order_by?:string|null,
@@ -44,11 +43,9 @@ const get = async parameters => {
 
    /**@type{server_log_data_parameter_logGet} */
    const data = {  app_id:			parameters.app_id,
-                   select_app_id:	serverUtilNumberValue(parameters.data.select_app_id),
+                   data_app_id:	    serverUtilNumberValue(parameters.data.data_app_id),
                    /**@ts-ignore */
-                   logscope:		parameters.data.logscope,
-                   /**@ts-ignore */
-                   loglevel:		parameters.data.loglevel,
+                   logobject:		parameters.data.logobject,
                    /**@ts-ignore */
                    search:			parameters.data.search,
                    /**@ts-ignore */
@@ -81,20 +78,19 @@ const get = async parameters => {
            }
            return false;
        };
-       /**@type{server_db_tables_log} */
-       const file = `Log${data.logscope}${data.loglevel}`;
+
        const sample = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
        
-       ORM.getFsLog(parameters.app_id, file, null, null, sample)
+       ORM.getFsLog(parameters.app_id, data.logobject, null, null, sample)
        .then(log_rows_array_obj=>{
            data.search = data.search=='null'?'':data.search;
            data.search = data.search==null?'':data.search;
-           if (data.logscope!='App' && data.logscope!='Service' && data.logscope!='Db')
-               data.select_app_id = null;
+           if (!data.logobject.startsWith('LogApp') && !data.logobject.startsWith('LogService') && !data.logobject.startsWith('LogDb'))
+               data.data_app_id = null;
            //filter records
            log_rows_array_obj.rows = log_rows_array_obj.rows.filter((/**@type{*}*/record) => {
                    return (
-                           (record.app_id == data.select_app_id ||data.select_app_id ==null)
+                           (record.app_id == data.data_app_id ||data.data_app_id ==null)
                                &&
                            (data.search==''|| (data.search!='' && match(record, data.search)))
                        );
@@ -184,7 +180,7 @@ const getStatusCodes = async () =>{
 * @function
 * @memberof ROUTE_REST_API
 * @param {{app_id:number,
-*          data:{  select_app_id?:string|null,
+*          data:{  data_app_id?:string|null,
 *                  statGroup?:string|null,
 *                  unique?:string|null,
 *                  statValue?:string|null,
@@ -197,7 +193,7 @@ const getStat = async parameters => {
    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
    /**@type{server_log_data_parameter_getLogStats} */
-   const data = {	app_id:			serverUtilNumberValue(parameters.data.select_app_id),
+   const data = {	app_id:			serverUtilNumberValue(parameters.data.data_app_id),
                    /**@ts-ignore */
                    statGroup:		parameters.data.statGroup==''?null:parameters.data.statGroup,
                    unique:		    serverUtilNumberValue(parameters.data.unique),
@@ -460,11 +456,12 @@ const post = async parameters => {
                         size_sent:          parameters.data.request?.req.socket.bytesWritten,
                         responsetime:       parameters.data.request?.responsetime,
                         logtext:            parameters.data.object=='LogRequestInfo'?
-                                                request_level=='1'?
-                                                    'req:' + JSON.stringify(Object.assign({}, parameters.data.request?.req), getCircularReplacer())
-                                                        :'':
+                                                (request_level=='1'?
+                                                    '':
+                                                        'req:' + JSON.stringify(Object.assign({}, parameters.data.request?.req), getCircularReplacer())): 
                                             parameters.data.object=='LogRequestError'?
-                                            (parameters.data.log.status + '-' + parameters.data.log.message):''
+                                                (parameters.data.log.status + '-' + parameters.data.log.message):
+                                                    ''
                     };
                 log_object = parameters.data.object;
             }

@@ -242,7 +242,7 @@ const socketClientAdd = (newClient) => {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{  select_app_id?:string|null,
+ *          data:{  data_app_id?:string|null,
  *                  offset?:string|null,
  *                  year?:string|null,
  *                  month?:string|null,
@@ -253,7 +253,7 @@ const socketClientAdd = (newClient) => {
  * @returns{Promise.<server_server_response & {result?:server_socket_connected_list_no_res[]}>}
  */
  const socketConnectedList = async parameters => {
-    const app_id_select = serverUtilNumberValue(parameters.data.select_app_id);
+    const app_id_select = serverUtilNumberValue(parameters.data.data_app_id);
     /**@type{number|null} */
     const year = serverUtilNumberValue(parameters.data.year);
     /**@type{number|null} */
