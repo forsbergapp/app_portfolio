@@ -1,11 +1,6 @@
 /**
- * Displays monitor
+ * Displays monitor of connected clients and server logs
  * 
- * Connected
- *      menu_monitor_detail_connected          contains records
- * Server log 
- *      menu_monitor_detail_server_log_form    contains log parameters and is mounted first so records knows what logscope is used
- *      menu_monitor_detail_server_log         contains records
  * @module apps/app1/component/menu_monitor_detail
  */
 
@@ -26,17 +21,9 @@
  *          function_roundOff:CommonModuleCommon['commonMiscRoundOff'],
  *          logs:[],
  *          SERVICE_LOG_DATA_PARAMETERS:{
- *                                      SCOPE_REQUEST:string,
- *                                      SCOPE_SERVER:string, 
- *                                      SCOPE_SERVICE:string,
- *                                      SCOPE_APP:string,
- *                                      SCOPE_DB:string,
  *                                      REQUEST_LEVEL:number,
  *                                      SERVICE_LEVEL:number,
  *                                      DB_LEVEL:number,
- *                                      LEVEL_VERBOSE:string,
- *                                      LEVEL_ERROR:string,
- *                                      LEVEL_INFO:string,
  *                                      FILE_INTERVAL:string}}} props
  * @returns {string}
  */
@@ -148,7 +135,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                             }
                             ${props.monitor_detail=='SERVER_LOG'?
                                 `<div id='menu_monitor_detail_server_log_form'>
-                                    <div id='menu_monitor_detail_select_logscope'></div>
+                                    <div id='menu_monitor_detail_select_logobject'></div>
                                     <div id='menu_monitor_detail_filesearch' class='common_dialogue_button common_icon'></div>
                                     <div id='menu_monitor_detail_parameters_row'>
                                         <div class='menu_monitor_detail_parameters_row_col'>
@@ -196,21 +183,13 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *                       page_last:number|null,
  *                       iam_user_id:number,
  *                       SERVICE_LOG_FILE_INTERVAL:string,
- *                       SERVICE_LOG_DATA:{parameters:{  SCOPE_REQUEST:string,
- *                                                       SCOPE_SERVER:string, 
- *                                                       SCOPE_SERVICE:string,
- *                                                       SCOPE_APP:string,
- *                                                       SCOPE_DB:string,
- *                                                       REQUEST_LEVEL:number,
+ *                       SERVICE_LOG_DATA:{parameters:{  REQUEST_LEVEL:number,
  *                                                       SERVICE_LEVEL:number,
  *                                                       DB_LEVEL:number,
  *                                                       APP_LEVEL:number,
- *                                                       LEVEL_VERBOSE:string 
- *                                                       LEVEL_ERROR:string
- *                                                       LEVEL_INFO:string,
  *                                                       FILE_INTERVAL:string
  *                                                    },
- *                                       logscope_level_options:{log_scope:string, log_level:string}[]}
+ *                                       logObjects:{VALUE:string, TEXT:string}[]}
  *                       },
  *           methods:    {
  *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
@@ -260,29 +239,27 @@ const component = async props => {
             case 'CONNECTED':{
                 props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
                 //search month + 1 for CONNECTED
-                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${sort}&order_by=${order_by}&offset=${offset}`;
+                return `data_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${sort}&order_by=${order_by}&offset=${offset}`;
             }
             case 'SERVER_LOG':{
-                //search default logscope REQUEST and loglevel INFO
-                const logscope = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
-                const loglevel = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
+                const logObject = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').getAttribute('data-value');
                 let app_id_filter='';
-                if (logscope=='App' || logscope=='Service' || logscope=='Db'){
+                if (logObject.startsWith('LogApp') || logObject.startsWith('LogService') || logObject.startsWith('LogDb')){
                     //show app filter and use it
                     props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
-                    app_id_filter = `select_app_id=${app_id}&`;
+                    app_id_filter = `data_app_id=${app_id}&`;
                 }
                 else{
                     //no app filter for request
                     props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'none';
-                    app_id_filter = 'select_app_id=&';
+                    app_id_filter = 'data_app_id=&';
                 }
                 let url_parameters;
 
                 if (props.data.SERVICE_LOG_FILE_INTERVAL=='1M')
-                    url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
+                    url_parameters = `${app_id_filter}logobject=${logObject}&year=${year}&month=${month}`;
                 else
-                    url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
+                    url_parameters = `${app_id_filter}logobject=${logObject}&year=${year}&month=${month}&day=${day}`;
                 return `${url_parameters}&sort=${sort}&order_by=${order_by}&offset=${offset}`;
                 
             }
@@ -449,25 +426,12 @@ const component = async props => {
                                 //format [db object]_YYYYMMDD.json
                                 
                                 const filename = props.methods.commonMiscElementRow(event.target).getAttribute('data-value') ?? '';
-                                const logscope = filename.split('_')[0]
-                                                    .replace('Log','')
-                                                    .replace('Info','')
-                                                    .replace('Error','')
-                                                    .replace('Verbose','');
-                                const loglevel = filename.split('_')[0]
-                                                    .replace('LogApp','')
-                                                    .replace('LogDb','')
-                                                    .replace('LogRequest','')
-                                                    .replace('LogServer','')
-                                                    .replace('LogService','')
-                                                    .replace('LogRequest','');
                                 const year     = parseInt(filename.split('_')[1].substring(0,4));
                                 const month    = parseInt(filename.split('_')[1].substring(4,6));
                                 const day      = parseInt(filename.split('_')[1].substring(6,8));
 
-                                //logscope and loglevel
-                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
-                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').textContent = `${logscope} - ${loglevel}`;
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').setAttribute('data-value', `${filename.split('_')[0]}`);
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').textContent = `${filename.split('_')[0]}`;
                                 //year
                                 props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').setAttribute('data-value', year);
                                 props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').textContent = year;
@@ -532,17 +496,12 @@ const component = async props => {
 
     const onMounted = async () =>{
         if (props.data.monitor_detail=='SERVER_LOG'){
-            //convert normalized arrary to options in array format
-            /**@type{{VALUE:string, TEXT:string}[]} */
-            const options = props.data.SERVICE_LOG_DATA.logscope_level_options.map((/**@type{{log_scope:string, log_level: string}}*/row)=>{
-                                return {VALUE:`${row.log_scope}-${row.log_level}`, TEXT:`${row.log_scope} - ${row.log_level}`};});
-
             await props.methods.commonComponentRender({
-                mountDiv:'menu_monitor_detail_select_logscope', 
+                mountDiv:'menu_monitor_detail_select_logobject', 
                 data:{ 
-                            default_value:'Request - Info',
-                            default_data_value:'Request-Info',
-                            options:options,
+                            default_value:props.data.SERVICE_LOG_DATA.logObjects.filter(row=>row.VALUE=='LogRequestInfo')[0].VALUE,
+                            default_data_value:props.data.SERVICE_LOG_DATA.logObjects.filter(row=>row.TEXT=='LogRequestInfo')[0].TEXT,
+                            options:props.data.SERVICE_LOG_DATA.logObjects,
                             path:'',
                             query:'',
                             method:'',

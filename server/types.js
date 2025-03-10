@@ -876,18 +876,10 @@
 
 /**
  * @description DB server_db_config_server_service_log
- * @typedef {{  SCOPE_REQUEST:string,
- *              SCOPE_SERVER:string,
- *              SCOPE_APP:string,
- *              SCOPE_SERVICE:string,
- *              SCOPE_DB:string,
- *              ENABLE_REQUEST_INFO:string,
+ * @typedef {{  ENABLE_REQUEST_INFO:string,
  *              ENABLE_REQUEST_VERBOSE:string,
  *              ENABLE_DB:string,
- *              ENABLE_SERVICE:string,
- *              LEVEL_VERBOSE:string,
- *              LEVEL_ERROR:string,
- *              LEVEL_INFO:string,
+ *              ENABLE_SERVICE:string
  *              FILE_INTERVAL:string}} server_db_config_server_service_log
  */
 
@@ -1102,9 +1094,8 @@
   * @description DB server_log_data_parameter_logGet
   * @typedef{object}             server_log_data_parameter_logGet
   * @property {number}           app_id
-  * @property {number|null}      select_app_id
-  * @property {server_log_scope} logscope
-  * @property {server_log_level} loglevel
+  * @property {number|null}      data_app_id
+  * @property {server_db_tables_log} logobject
   * @property {string}           search
   * @property {string|null}      sort
   * @property {string}           order_by

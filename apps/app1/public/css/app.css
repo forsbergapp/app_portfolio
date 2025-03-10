@@ -671,7 +671,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 /*CONNECTED + APP LOG*/
 .menu_monitor_detail_connected_row{
 	display:grid;
-	grid-template-columns: 9em 14em 4em 7em 9em 10em 8em 10em 7em 7em 15em 15em 12em 8em !important
+	grid-template-columns: 9em 14em 4em 9em 9em 10em 8em 10em 7em 7em 15em 15em 12em 8em !important
 }
 #menu_monitor_detail_app_data_stat, #menu_monitor_detail_connected{
 	border-radius: var(--common_app_css_border_radius);
@@ -691,7 +691,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	margin-inline-end: 10px;
 }
 /* SERVER LOG*/
-#menu_monitor_detail_select_logscope{
+#menu_monitor_detail_select_logobject{
 	white-space: nowrap;
 	width: 15em;
 }

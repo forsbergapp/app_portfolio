@@ -55,18 +55,10 @@
         {"CHECK_INTERVAL": "5000", "COMMENT": "maintenance check interval in milliseconds"}
     ],
     "SERVICE_LOG":[
-        {"SCOPE_REQUEST": "Request", "COMMENT": ""},
-        {"SCOPE_SERVER": "Server", "COMMENT": ""},
-        {"SCOPE_APP": "App", "COMMENT": ""},
-        {"SCOPE_SERVICE": "Service", "COMMENT": ""},
-        {"SCOPE_DB": "Db", "COMMENT": ""},
         {"REQUEST_LEVEL": "1", "COMMENT": "0=none, 1=INFO, 2=Verbose"},
         {"APP_LEVEL": "0", "COMMENT": "0=none, 1=INFO, 2=Verbose"},
         {"DB_LEVEL": "0", "COMMENT": "0=none, 1=INFO, 2=Verbose"},
         {"SERVICE_LEVEL": "1", "COMMENT": "0=none, 1=INFO, 2=Verbose    "},
-        {"LEVEL_VERBOSE": "Verbose", "COMMENT": ""},
-        {"LEVEL_ERROR": "Error", "COMMENT": ""},
-        {"LEVEL_INFO": "Info", "COMMENT": ""},
         {"FILE_INTERVAL": "1D", "COMMENT": "1D or 1M"}
     ],
     "METADATA":{

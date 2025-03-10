@@ -147,10 +147,10 @@ const component = async props => {
     };
     let query;
     if (admin_statGroup=='REQUEST'){
-        query = `select_app_id=${app_id}&statGroup=${admin_statValues.statGroup}&statValue=&unique=${admin_statValues.unique}&year=${year}&month=${month}`;
+        query = `data_app_id=${app_id}&statGroup=${admin_statValues.statGroup}&statValue=&unique=${admin_statValues.unique}&year=${year}&month=${month}`;
     }
     else
-        query = `select_app_id=${app_id}&statGroup=&statValue=${admin_statValues.value}&unique=&year=${year}&month=${month}`;
+        query = `data_app_id=${app_id}&statGroup=&statValue=${admin_statValues.value}&unique=&year=${year}&month=${month}`;
     
     //return result for both charts
     /**@type{{  chart:number,

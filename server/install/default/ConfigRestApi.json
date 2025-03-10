@@ -2562,7 +2562,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "name":"select_app_id",
+                            "name":"data_app_id",
                             "in":"query",
                             "required":false,
                             "schema":{
@@ -3532,7 +3532,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "name":"select_app_id",
+                            "name":"data_app_id",
                             "in":"query",
                             "required":false,
                             "schema":{
@@ -3540,15 +3540,7 @@
                             }    
                         },
                         {
-                            "name":"logscope",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "string"
-                            }    
-                        },
-                        {
-                            "name":"loglevel",
+                            "name":"logobject",
                             "in":"query",
                             "required":false,
                             "schema":{
@@ -3671,7 +3663,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "name":"select_app_id",
+                            "name":"data_app_id",
                             "in":"query",
                             "required":false,
                             "schema":{
