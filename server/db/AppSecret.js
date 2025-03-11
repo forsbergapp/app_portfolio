@@ -34,7 +34,7 @@ const get = parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_table_AppSecret }>}
  */
 const getFile = async app_id => {
-    return {result:await ORM.getFsFile('AppSecret').then(result=>result.file_content.filter((/**@type{server_db_table_AppSecret}*/row)=> row.app_id == app_id)[0]),
+    return {result:await ORM.Execute({app_id:app_id, dml:'GET', object:'AppSecret', get:{resource_id:null, partition:null}}).then(result=>result.file_content.filter((/**@type{server_db_table_AppSecret}*/row)=> row.app_id == app_id)[0]),
             type:'JSON'};};
 
 /**

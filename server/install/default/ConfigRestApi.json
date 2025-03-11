@@ -3229,7 +3229,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "description":"config file name, CONFIG_SERVER, CONFIG_REST_API, CONFIG_IAM_POLICY, CONFIG_MICROSERVICE or CONFIG_MICROSERVICE_SERVICES",
+                            "description":"config file name, ConfigServer, ConfigRestApi, ConfigIamPolicy or ConfigMicroserviceServices",
                             "required":true
                         },
                         {
@@ -3297,7 +3297,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "description":"config file name, CONFIG_SERVER, CONFIG_REST_API, CONFIG_IAM_POLICY, CONFIG_MICROSERVICE or CONFIG_MICROSERVICE_SERVICES",
+                            "description":"config file name, ConfigServer, ConfigRestApi, ConfigIamPolicy or ConfigMicroserviceServices",
                             "required":true
                         }
                 ],
