@@ -172,7 +172,11 @@ const getFile = async parameters => {
     const parameter = parameters.data?.parameter?parameters.data.parameter:null;
     /**@type{import('../server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-    const config = serverUtilNumberValue(parameters.data?.saved)?await ORM.getFsFile(parameters.resource_id).then((/**@type{*}*/config)=>config.file_content):ORM.getObject(parameters.app_id, parameters.resource_id);
+    const config = serverUtilNumberValue(parameters.data?.saved)?await ORM.Execute({app_id:parameters.app_id, 
+                                                                                    dml:'GET', 
+                                                                                    object:parameters.resource_id, 
+                                                                                    get:{resource_id:null, partition:null}})
+                                                                        .then((/**@type{*}*/config)=>config.file_content):ORM.getObject(parameters.app_id, parameters.resource_id);
     if (config_group)
         if (config_group =='METADATA')
             return {result:parameter?config[config_group][parameter]:config[config_group], type:'JSON'};
@@ -188,9 +192,9 @@ const getFile = async parameters => {
  * @description Config save
  * @function
  * @memberof ROUTE_REST_API
- * @param {{resource_id:server_db_db_name_config,
+ * @param {{app_id:number,
+ *          resource_id:server_db_db_name_config,
  *          data:{  config: server_db_document_ConfigServer|
- *                          server_db_table_App[]|
  *                          server_db_document_ConfigIamPolicy|
  *                          server_db_document_config_microservice_services|null,
  *                  maintenance:string,
@@ -199,30 +203,23 @@ const getFile = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters => {
-    /**@type{import('../server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-    const maintenance = serverUtilNumberValue(parameters.data.maintenance);
-    const comment = parameters.data.comment;
-    const configuration = parameters.data.configuration;
+    const old_config = get({app_id:parameters.app_id, data:{object:parameters.resource_id}});
 
-    const file_config = await ORM.getFsFile(parameters.resource_id, true);
-    if (parameters.data.config){
-        //file updated
-        if (parameters.resource_id=='ConfigServer'){
-            const metadata = file_config.file_content.METADATA;
-            file_config.file_content = parameters.data.config;
-            file_config.file_content.METADATA = metadata;
-        }
-        else
-            file_config.file_content = parameters.data.config;
+    if (parameters.resource_id=='ConfigServer' && parameters.data.config){
+        /**@ts-ignore */
+        parameters.data.config.METADATA.MAINTENANCE = old_config.METADATA.MAINTENANCE;
+        /**@ts-ignore */
+        parameters.data.config.METADATA.CONFIGURATION = old_config.METADATA.CONFIGURATION;
+        /**@ts-ignore */
+        parameters.data.config.METADATA.COMMENT = old_config.METADATA.COMMENT;
+        /**@ts-ignore */
+        parameters.data.config.METADATA.MODIFIED = new Date().toISOString();
     }
-    if (parameters.resource_id=='ConfigServer'){
-        file_config.file_content.METADATA.MAINTENANCE = maintenance ?? file_config.file_content.METADATA.MAINTENANCE;
-        file_config.file_content.METADATA.CONFIGURATION = configuration ?? file_config.file_content.METADATA.CONFIGURATION;
-        file_config.file_content.METADATA.COMMENT = comment ?? file_config.file_content.METADATA.COMMENT;
-        file_config.file_content.METADATA.MODIFIED = new Date().toISOString();
-    }
-    await ORM.updateFsFile(parameters.resource_id, file_config.transaction_id, file_config.file_content);
-    return {result:{affectedRows:1}, type:'JSON'};
+    return {result:await ORM.Execute({app_id:parameters.app_id, 
+                        dml:'UPDATE', 
+                        object:'ConfigServer', 
+                        update:{resource_id:null, data_app_id:null, data:parameters.data.config}}),
+            type:'JSON'};
+
 };
 export{ getFile, update, get, configDefault};
