@@ -175,8 +175,8 @@ const getFile = async parameters => {
     const config = serverUtilNumberValue(parameters.data?.saved)?await ORM.Execute({app_id:parameters.app_id, 
                                                                                     dml:'GET', 
                                                                                     object:parameters.resource_id, 
-                                                                                    get:{resource_id:null, partition:null}})
-                                                                        .then((/**@type{*}*/config)=>config.file_content):ORM.getObject(parameters.app_id, parameters.resource_id);
+                                                                                    get:{resource_id:null, partition:null}}):
+                                                                        ORM.getObject(parameters.app_id, parameters.resource_id);
     if (config_group)
         if (config_group =='METADATA')
             return {result:parameter?config[config_group][parameter]:config[config_group], type:'JSON'};
@@ -207,11 +207,7 @@ const update = async parameters => {
 
     if (parameters.resource_id=='ConfigServer' && parameters.data.config){
         /**@ts-ignore */
-        parameters.data.config.METADATA.MAINTENANCE = old_config.METADATA.MAINTENANCE;
-        /**@ts-ignore */
-        parameters.data.config.METADATA.CONFIGURATION = old_config.METADATA.CONFIGURATION;
-        /**@ts-ignore */
-        parameters.data.config.METADATA.COMMENT = old_config.METADATA.COMMENT;
+        parameters.data.config.METADATA = old_config.METADATA;
         /**@ts-ignore */
         parameters.data.config.METADATA.MODIFIED = new Date().toISOString();
     }
