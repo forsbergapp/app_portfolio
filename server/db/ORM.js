@@ -620,7 +620,7 @@ const updateObject = async (app_id, object, resource_id, data_app_id, data) =>{
         }
         else{
             //document
-            await updateFsFile(object, file.transaction_id, file.file_content);
+            await updateFsFile(object, file.transaction_id, data);
             return {affectedRows:1};
         }
     }
