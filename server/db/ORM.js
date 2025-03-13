@@ -210,7 +210,7 @@ const getFsDir = async () => await fs.promises.readdir(`${process.cwd()}${DB_DIR
  * @returns {Promise.<server_db_result_fileFsRead>}
  */
 const lockObject = async (app_id, object, filepath_partition=null) =>{
-    const filepath = DB_DIR.db + (filepath_partition??object) + '.json';
+    const filepath = filepath_partition ?? (DB_DIR.db + object + '.json');
     const transaction_id = await fileTransactionStart(object, filepath);
     return {   file_content:    getObjectRecord(object).transaction_content,
                 lock:           true,
