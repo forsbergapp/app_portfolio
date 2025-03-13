@@ -46,7 +46,7 @@ Any regional setting supported including direction right to left. More than 500 
 country translations. The mayor 30 languages are translated in the apps. Icons are frequently used 
 to minmize text usage and to provide simplier and better explanation to a global audience.
 
-Developed in Visual Studio Code in Windows with integration with Github and Jira following 
+Developed in Visual Studio Code in Windows with integration with Github following 
 Scrum agile project management framework and deployed on Oracle Cloud and Ubuntu server.
 
 # Installation
