@@ -3489,12 +3489,7 @@ const commonFrameworkSet = async (framework, events) => {
     switch (framework ?? COMMON_GLOBAL.app_framework){
         case 2:{
             //Vue
-            const template = `  <div id='${COMMON_GLOBAL.app_root}'
-                                    @change ='CommonAppEventChange($event)'
-                                    @click  ='CommonAppEventClick($event)'
-                                    @input  ='CommonAppEventInput($event)' 
-                                    @keydown='CommonAppEventKeyDown($event)' 
-                                    @keyup  ='CommonAppEventKeyUp($event)'>
+            const template = `  <div id='${COMMON_GLOBAL.app_root}'>
                                     ${app_element.outerHTML}
                                     ${common_app_element.outerHTML}
                                 </div>`;
@@ -3517,8 +3512,13 @@ const commonFrameworkSet = async (framework, events) => {
                             };
             //App events are used on Vue events using event delegation on app root
             await commonFrameworkMount(2, template, methods, COMMON_GLOBAL.app_root, false);
-            //Does not work in Vue
+            //App events are not supported and not used on app root and are managed in event delegation
+            events.Click();
+            events.Change();
             events.Focus();
+            events.Input();
+            events.KeyDown();
+            events.KeyUp();
             break;
         }
         case 3:{
