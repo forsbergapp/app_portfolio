@@ -67,7 +67,6 @@ App Portfolio
 optional:
 Microservice Geolocation
 Microservice Batch
-Microservice Mail
 
 enter http://localhost 
 set admin name and password first time in admin app
@@ -91,11 +90,10 @@ pm2 start $HOME/app_portfolio/server/init.js --cwd $HOME/app_portfolio --name ap
 ```
 	optional (batch and git are used for CD/CI solution):
 ```	
-pm2 start $HOME/app_portfolio/microservice/batch/server.js --cwd $HOME/app_portfolio --name batch --watch="microservice" --ignore-watch="microservice/geolocation microservice/mail" --watch-delay 10
+pm2 start $HOME/app_portfolio/microservice/batch/server.js --cwd $HOME/app_portfolio --name batch --watch="microservice" --ignore-watch="microservice/geolocation" --watch-delay 10
 
-pm2 start $HOME/app_portfolio/microservice/geolocation/server.js --cwd $HOME/app_portfolio --name geolocation --watch="microservice" --ignore-watch="microservice/batch microservice/mail"
+pm2 start $HOME/app_portfolio/microservice/geolocation/server.js --cwd $HOME/app_portfolio --name geolocation --watch="microservice" --ignore-watch="microservice/batch"
 
-pm2 start $HOME/app_portfolio/microservice/mail/server.js --cwd $HOME/app_portfolio --name mail --watch="microservice" --ignore-watch="microservice/batch microservice/geolocation"
 ```
 
 enter http://[domain]

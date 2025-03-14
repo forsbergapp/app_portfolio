@@ -20,29 +20,6 @@
  * @module server/types 
  */
 
-/**
- * @description APP server_apps_email_param_data
- * @typedef {object} server_apps_email_param_data
- * @property {string} emailtype         - [1-4], 1=SIGNUP, 2=UNVERIFIED, 3=PASSWORD RESET (FORGOT), 4=CHANGE EMAIL
- * @property {string|null} host              
- * @property {number} app_user_id       
- * @property {string|null} verificationCode  
- * @property {string} to                - to email
- */
-
-/**
- * @description APP server_apps_email_return_createMail
- * @typedef {object} server_apps_email_return_createMail
- * @property {string} host
- * @property {string} port
- * @property {string} secure
- * @property {string} auth_user
- * @property {string} auth_pass
- * @property {string} from
- * @property {string} to
- * @property {string} subject
- * @property {string} html
- */
 
 /**
  * @description APP server_apps_app_info
@@ -358,19 +335,6 @@
  *              SERVICE_MAIL* only used by common app
  * @memberof dbObjects
  * @typedef {{  app_id:number,
- *              service_mail_host: string,
- *              service_mail_port: string,
- *              service_mail_secure: string,
- *              service_mail_username: string,
- *              service_mail_password: string,
- *              service_mail_type_signup: string,
- *              service_mail_type_signup_from_name: string,
- *              service_mail_type_unverified: string,
- *              service_mail_type_unverified_from_name: string,
- *              service_mail_type_password_reset: string,
- *              service_mail_type_password_reset_from_name: string,
- *              service_mail_type_change_email: string,
- *              service_mail_type_change_email_from_name: string,
  *              common_client_id: string, 
  *              common_client_secret:string, 
  *              common_app_id_secret:string, 
@@ -443,10 +407,9 @@
  *          password_new?:string|null, 
  *          password_reminder:string|null, 
  *          bio:string|null, 
- *          private:number|null, 
- *          email:string|null, 
- *          email_unverified:string|null, 
+ *          private:number|null,
  *          avatar:string|null,
+ *          otp_key?:string|null,
  *          type?: 'ADMIN'|'USER', 
  *          user_level?:number|null, 
  *          verification_code?: string|null, 
@@ -926,8 +889,7 @@
  *          password_reminder?:string|null, 
  *          bio?:string|null, 
  *          private?:number|null, 
- *          email?:string|null, 
- *          email_unverified?:string|null, 
+ *          otp_key?:string|null, 
  *          avatar?:string|null,
  *          type?: 'ADMIN'|'USER', 
  *          user_level?:number|null, 
@@ -946,8 +908,7 @@
  *          password_new:string|null,
  *          bio:string|null, 
  *          private:number|null, 
- *          email:string|null, 
- *          email_unverified:string|null, 
+ *          otp_key:string|null, 
  *          avatar:string|null}} server_db_iam_user_update
  */
 

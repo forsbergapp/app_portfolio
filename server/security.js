@@ -1,10 +1,6 @@
 /** @module server/security */
 
-const { randomUUID, 
-        createHash, 
-        createCipheriv, createDecipheriv,
-        generateKeyPair,
-        publicEncrypt, privateDecrypt} = await import('node:crypto');
+const Crypto = await import('node:crypto');
 
 /**
  * @name securityCreateRandomString
@@ -27,14 +23,14 @@ const { randomUUID,
  * @function
  * @returns {string}
  */
-const securityUUIDCreate = () =>randomUUID();
+const securityUUIDCreate = () =>Crypto.randomUUID();
 /**
  * @name securityRequestIdCreate
  * @description Creates request id using UUID and removes '-'
  * @function
  * @returns {string}
  */
-const securityRequestIdCreate = () =>randomUUID().replaceAll('-','');
+const securityRequestIdCreate = () =>Crypto.randomUUID().replaceAll('-','');
 /**
  * @name securityCorrelationIdCreate
  * @description Creates correlation id using MD5
@@ -42,7 +38,7 @@ const securityRequestIdCreate = () =>randomUUID().replaceAll('-','');
  * @param {string} text 
  * @returns {string}
  */
-const securityCorrelationIdCreate = text =>createHash('md5').update(text).digest('hex');
+const securityCorrelationIdCreate = text =>Crypto.createHash('md5').update(text).digest('hex');
 
 /**
  * @name securitySecretCreate
@@ -55,19 +51,149 @@ const securityCorrelationIdCreate = text =>createHash('md5').update(text).digest
 const securitySecretCreate = (extra=false, max_length=null) =>{
     if (extra){
         if (max_length)
-            return createHash('sha256').update(securityCreateRandomString()).digest('hex').substring(0,max_length - 2) + 
+            return Crypto.createHash('sha256').update(securityCreateRandomString()).digest('hex').substring(0,max_length - 2) + 
                 '!' + String.fromCharCode(0|Math.random()*26+97).toUpperCase();
         else{
-            const secret = createHash('sha256').update(securityCreateRandomString()).digest('hex');
+            const secret = Crypto.createHash('sha256').update(securityCreateRandomString()).digest('hex');
             return secret.substring(0,secret.length - 2) + '!' + String.fromCharCode(0|Math.random()*26+97).toUpperCase();
         }
     }
     else
         if (max_length)
-            return createHash('sha256').update(securityCreateRandomString()).digest('hex').substring(0,max_length);
+            return Crypto.createHash('sha256').update(securityCreateRandomString()).digest('hex').substring(0,max_length);
         else
-            return createHash('sha256').update(securityCreateRandomString()).digest('hex');
+            return Crypto.createHash('sha256').update(securityCreateRandomString()).digest('hex');
 };
+
+/**
+ * @name securityOTPKeyCreate
+ * @description Creates OTP KEy using base32encode and 
+ * @function
+ * @returns {string}
+ */
+const securityOTPKeyCreate = () =>{
+    /**
+     *  @param {Uint8Array} data
+     */
+    const base32Encode = data => {
+        //Key can only use these characters and 20 characters:
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+        let binaryData = '';
+        
+        // Convert each byte to binary
+        data.forEach(byte => {
+            binaryData += byte.toString(2).padStart(8, '0');
+        });
+    
+        // Pad with zeros if necessary
+        while (binaryData.length % 5 !== 0) {
+            binaryData += '0';
+        }
+    
+        let encodedData = '';
+        
+        // Split into 5-bit chunks and map to Base32 characters
+        for (let i = 0; i < binaryData.length; i += 5) {
+            const chunk = binaryData.slice(i, i + 5);
+            const index = parseInt(chunk, 2);
+            encodedData += alphabet[index];
+        }
+    
+        return encodedData;
+    };
+    const randomValues = new Uint8Array(16);
+    return base32Encode(Crypto.getRandomValues(randomValues));
+
+};
+/**
+ * @name securityOTPKeyValidate
+ * @description Validates OTP key has correct format
+ *              otp key should be a string, use 26 characters and use characters A-Z or digits 234567 only
+ * @function
+ * @param {string} otp_key
+ * @returns {boolean}
+ */
+const securityOTPKeyValidate = otp_key =>otp_key !=null && typeof otp_key=='string' && otp_key.length==26 && /^[A-Z234567]$/g.exec(otp_key)!=null;
+
+/**
+ * @name securityTOTPGenerate
+ * @description Generates TOTP 6 digit value valid for 30 seconds using UTC timezone
+ *              using HMAC and SHA256
+ * @function
+ * @param {string} otp_key
+ * @returns {Promise<string|null>}
+ */
+const securityTOTPGenerate = async otp_key =>{
+    if (securityOTPKeyValidate(otp_key)){
+        const getTimeCounter = () =>{
+            // Time step in seconds
+            const timeStep = 30; 
+            // Use current time to UTC seconds
+            return Math.floor( Date.now() / 1000 / timeStep);
+        };
+    
+        /**
+         * @param {string} otp_key
+         * @param {*} message
+         */
+        const hmacSHA256 = async (otp_key, message) => {
+            const encoder = new TextEncoder();
+            const keyData = encoder.encode(otp_key);
+            const msgData = encoder.encode(message);
+    
+            const cryptoKey = await crypto.subtle.importKey(
+                'raw',
+                keyData,
+                { name: 'HMAC', hash: 'SHA-256' },
+                false,
+                ['sign']
+            );
+    
+            const signature = await crypto.subtle.sign('HMAC', cryptoKey, msgData);
+            
+            return new Uint8Array(signature);
+        };
+        const timeCounter = getTimeCounter();
+        
+        // Convert time counter to byte array
+        const counterBytes = new Uint8Array(8);
+        for (let i = 0; i < 8; i++) {
+            counterBytes[7 - i] = (timeCounter >> (i * 8)) & 0xff;
+        }
+    
+        // Generate HMAC-SHA256
+        const hmacResult = await hmacSHA256(otp_key, counterBytes);
+    
+        // Extract dynamic binary code from HMAC result
+        const offset = hmacResult[hmacResult.length - 1] & 0xf;
+        
+        // Create a binary code from the extracted bytes
+        const binaryCode =
+            ((hmacResult[offset] & 0x7f) << 24) |
+            ((hmacResult[offset + 1] & 0xff) << 16) |
+            ((hmacResult[offset + 2] & 0xff) << 8) |
+            (hmacResult[offset + 3] & 0xff);
+    
+        // Modulo operation to get TOTP value within desired range
+        const totpValue = binaryCode % Math.pow(10, 6); // For a six-digit code
+    
+        return totpValue.toString().padStart(6, '0'); // Return as string with leading zeros
+    }
+    else{
+        //return null without any explication
+        return null;
+    }
+};
+/**
+ * @name securityTOTPValidate
+ * @description Validates totp value for given otp key
+ * @function
+ * @param {string} totp_value
+ * @param {string} otp_key
+ * @returns {Promise<boolean>}
+ */
+const securityTOTPValidate = async (totp_value, otp_key) =>totp_value == await securityTOTPGenerate(otp_key);
+
 /**
  * @name securityPasswordCreate
  * @description Creates password for IAM using aes-256-cbc and base64, encryption key parameter and init vector parameter from server config
@@ -88,7 +214,7 @@ const securityPasswordCreate = async (app_id, password) => {
     const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     const AppPasswordEncryptionKey = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ADMIN_PASSWORD_ENCRYPTION_KEY'}});
     const AppPasswordInitializationVector = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ADMIN_PASSWORD_INIT_VECTOR'}});
-    const cipher = createCipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
+    const cipher = Crypto.createCipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
     let encrypted = cipher.update(password, 'utf8', 'base64');
     encrypted += cipher.final('base64');
     return encrypted;
@@ -116,7 +242,7 @@ const securityPasswordCompare = async (app_id, password, compare_password) =>{
     //admin uses different parameters than apps
     const AppPasswordEncryptionKey = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ADMIN_PASSWORD_ENCRYPTION_KEY'}});
     const AppPasswordInitializationVector = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ADMIN_PASSWORD_INIT_VECTOR'}});
-    const decipher = createDecipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
+    const decipher = Crypto.createDecipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
     const  decrypted = decipher.update(compare_password, 'base64', 'utf8'); //ERR_OSSL_WRONG_FINAL_BLOCK_LENGTH, Provider routines::wrong final block length
     try {
         return (decrypted + decipher.final('utf8')) == password;    
@@ -136,7 +262,7 @@ const securityPasswordCompare = async (app_id, password, compare_password) =>{
  */
 const securityKeyPairCreate = async () => {
     return new Promise((resolve, reject)=>{
-        generateKeyPair('rsa', {
+        Crypto.generateKeyPair('rsa', {
             modulusLength: 8192,
             publicKeyEncoding: {
                     type: 'spki',
@@ -163,7 +289,7 @@ const securityKeyPairCreate = async () => {
  * @param {string} text 
  * @returns {string}
  */
-const securityPublicEncrypt = (publicKey, text) => publicEncrypt(publicKey,Buffer.from(text)).toString('base64');
+const securityPublicEncrypt = (publicKey, text) => Crypto.publicEncrypt(publicKey,Buffer.from(text)).toString('base64');
 /**
  * @name securityPrivateDecrypt
  * @description Decrypt with private key
@@ -172,8 +298,11 @@ const securityPublicEncrypt = (publicKey, text) => publicEncrypt(publicKey,Buffe
  * @param {string} text 
  * @returns {string}
  */
-const securityPrivateDecrypt = (privateKey, text) => privateDecrypt(privateKey,
+const securityPrivateDecrypt = (privateKey, text) => Crypto.privateDecrypt(privateKey,
                                                             /**@ts-ignore */
                                                             Buffer.from(text, 'base64')).toString('utf-8');
 
-export {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate, securitySecretCreate, securityPasswordCreate, securityPasswordCompare, securityKeyPairCreate, securityPublicEncrypt, securityPrivateDecrypt };
+export {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate, securitySecretCreate, 
+        securityOTPKeyCreate,securityOTPKeyValidate, securityTOTPGenerate,securityTOTPValidate,
+        securityPasswordCreate, securityPasswordCompare, 
+        securityKeyPairCreate, securityPublicEncrypt, securityPrivateDecrypt };

@@ -189,72 +189,6 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/iamuser-forgot": {
-            "post": {
-                "summary": "",
-                "operationId": "server.iam.iamAuthenticateUserForgot",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/locale",
-                            "required":true
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "email":{
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]   
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
         "/bff/app_id/v1/server-db/iamuser-profile-stat": {
             "get": {
                 "summary": "",
@@ -2410,12 +2344,6 @@
                                             "private":{
                                                 "type":"string"
                                             },
-                                            "email":{
-                                                "type":"string"
-                                            },
-                                            "email_unverified":{
-                                                "type":"string"
-                                            },
                                             "avatar":{
                                                 "type":"string"
                                             }
@@ -3842,10 +3770,7 @@
                                             "private":{
                                                 "type":"string"
                                             },
-                                            "email":{
-                                                "type":"string"
-                                            },
-                                            "email_unverified":{
+                                            "otp_key":{
                                                 "type":"string"
                                             },
                                             "avatar":{
@@ -4227,9 +4152,6 @@
                                                 "type":"string"
                                             },
                                             "password_reminder":{
-                                                "type":"string"
-                                            },
-                                            "email":{
                                                 "type":"string"
                                             }
                                         }
@@ -4742,110 +4664,6 @@
                                 {"$ref": "#/components/schema/ErrorResponse"}
                             ]
                         }
-                    ]
-                }
-            }
-        },
-        "/bff/admin/v1/mail/sendemail": {
-            "post": {
-                "summary": "",
-                "operationId": "microservice.microservice.microserviceRequest",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_endpoint",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_resource_path",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_method",
-                            "required":true
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{                                            
-                                            "host":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "port":{
-                                                "required":true,
-                                                "type":"number"
-                                            },
-                                            "secure":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "auth_user":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "auth_pass":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "from":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "to":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "subject":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "html":{
-                                                "required":true,
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
                     ]
                 }
             }

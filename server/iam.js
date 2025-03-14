@@ -189,7 +189,6 @@ const iamUtilVerificationCode = () => {
  *                                              iam_user_id:        number,
  *                                              iam_user_username:  string,
  *                                              bio?:               string | null,
- *                                              email?:             string,
  *                                              avatar?:            string | null,
  *                                              token_at:           string,
  *                                              exp:                number,
@@ -276,7 +275,6 @@ const iamAuthenticateUser = async parameters =>{
                                                                             //return only if account is active:
                                                                             ...(user.active==1 && {iam_user_username:  user.username}),
                                                                             ...(user.active==1 && {bio:  user.bio}),
-                                                                            ...(user.active==1 && {email:  user.email}),
                                                                             ...(user.active==1 && {avatar:  user.avatar}),
                                                                             token_at:       jwt_data?jwt_data.token:null,
                                                                             exp:            jwt_data?jwt_data.exp:null,
@@ -347,8 +345,6 @@ const iamAuthenticateUser = async parameters =>{
                             bio:                null, 
                             private:            1, 
                             user_level:         null,
-                            email:              'admin@localhost', 
-                            email_unverified:   null,
                             active:             1, 
                             avatar:             null})
                     .then(result=>result.http?result:check_user(1, {id:         result.result.insertId,
@@ -359,8 +355,6 @@ const iamAuthenticateUser = async parameters =>{
                                                                     private:    1,
                                                                     user_level: null,
                                                                     bio:        null,
-                                                                    email:      'admin@localhost',
-                                                                    email_unverified:null, 
                                                                     avatar:     null,
                                                                     active:     1
                                                                     }, 'ADMIN'));
@@ -423,9 +417,9 @@ const iamAuthenticateUser = async parameters =>{
  *          locale:string,
  *          data:{  username:string,
  *                  password:string,
- *                  password_reminder:string|null
- *                  email:string}}} parameters
+ *                  password_reminder:string|null}}} parameters
  * @returns {Promise.<server_server_response & {result?:{
+ *                                              otp_key:string,
  *                                              token_at:string|null,
  *                                              exp:number,
  *                                              iat:number,
@@ -440,7 +434,6 @@ const iamAuthenticateUserSignup = async parameters =>{
     const new_user = await IamUser.post(parameters.app_id, { username:parameters.data.username,
                                                             password:parameters.data.password,
                                                             password_reminder:parameters.data.password_reminder,
-                                                            email:parameters.data.email,
                                                             bio:null,
                                                             private:0,
                                                             avatar:null,
@@ -484,6 +477,7 @@ const iamAuthenticateUserSignup = async parameters =>{
                 headers_accept_language:parameters.accept_language})
         .then(result_socket=>result_socket.http?result_socket:
                                 {result:{
+                                                otp_key:        IamUser.get(parameters.app_id, new_user.result.id)[0].otp_key,
                                                 token_at:       jwt_data.token,
                                                 exp:            jwt_data.exp,
                                                 iat:            jwt_data.iat,
@@ -512,7 +506,7 @@ const iamAuthenticateUserSignup = async parameters =>{
  *          user_agent:string,
  *          accept_language:string,
  *          locale:string,
- *          data:{  verification_type:'1'|'2'|'3',   //1 LOGIN, 2 SIGNUP, 3 FORGOT/ PASSWORD RESET
+ *          data:{  verification_type:'1'|'2',   //1 LOGIN, 2 SIGNUP
  *                  verification_code:string}}} parameters
  * @returns {Promise.<server_server_response & { result?:{
  *                                              token_at: string|null,
@@ -525,25 +519,24 @@ const iamAuthenticateUserSignup = async parameters =>{
  *                                              iam_user_username:string|null} }>}
  */
 const iamAuthenticateUserActivate = async parameters =>{
-        
-    const result_activate =  await IamUser.updateVerificationCodeAuthenticate(
+    if (parameters.data.verification_code=='1' || parameters.data.verification_code=='2'){
+        const result_activate =  await IamUser.updateVerificationCodeAuthenticate(
                                     parameters.app_id, 
                                     parameters.resource_id, 
                                     { verification_code:parameters.data.verification_code});
-    if (result_activate.result){
-        /**@type{import('./db/IamUserEvent.js')} */
-        const IamUserEvent = await import(`file://${process.cwd()}/server/db/IamUserEvent.js`);
-        /**@type{server_db_table_IamUserEvent}*/
-        const eventData = {
-            /**@ts-ignore */
-            iam_user_id: iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_VERIFICATION').iam_user_id,
-            event: serverUtilNumberValue(parameters.data.verification_type)==1?
-                        'OTP_LOGIN':
-                            serverUtilNumberValue(parameters.data.verification_type)==2?
-                                'OTP_SIGNUP':
-                                    'OTP_FORGOT'
-        };
-        if (result_activate.result.affectedRows==1 && (serverUtilNumberValue(parameters.data.verification_type)==1||serverUtilNumberValue(parameters.data.verification_type)==2)){
+        if (result_activate.result){
+            /**@type{import('./db/IamUserEvent.js')} */
+            const IamUserEvent = await import(`file://${process.cwd()}/server/db/IamUserEvent.js`);
+            /**@type{server_db_table_IamUserEvent}*/
+            const eventData = {
+                /**@ts-ignore */
+                iam_user_id: iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_VERIFICATION').iam_user_id,
+                event: serverUtilNumberValue(parameters.data.verification_type)==1?
+                            'OTP_LOGIN':
+                                serverUtilNumberValue(parameters.data.verification_type)==2?
+                                    'OTP_SIGNUP':
+                                        'OTP_FORGOT'
+            };
             eventData.event_status='SUCCESSFUL';
             return IamUserEvent.post(parameters.app_id, eventData)
                         .then(result=>result.http?result:
@@ -567,173 +560,19 @@ const iamAuthenticateUserActivate = async parameters =>{
                                                         type:'JSON'
                                                     }));
         }
-        else{
-            if (result_activate.result.affectedRows==1){
-                eventData.event_status='SUCCESSFUL';
-                //verification type 3 FORGOT/ PASSWORD RESET
-                const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS_VERIFICATION', 
-                                                    {   app_id:                 parameters.app_id, 
-                                                        app_custom_id:          null,
-                                                        iam_user_app_id:        null,
-                                                        iam_user_id:            parameters.resource_id, 
-                                                        iam_user_username:      null, 
-                                                        ip:                     parameters.ip, 
-                                                        scope:                  'USER'});
-                //email was verified and activated with id token, but now the password will be updated
-                //return accessToken and authentication code
-                /**@type{server_db_table_IamAppAccess} */
-                const data_body = { 
-                    type:                   'APP_ACCESS_VERIFICATION',
-                    app_custom_id:          null,
-                    iam_user_app_id:        null,
-                    iam_user_id:            parameters.resource_id,
-                    iam_user_username:      null,
-                    app_id:                 parameters.app_id,
-                    res:                    1,
-                    token:                  jwt_data.token,
-                    ip:                     parameters.ip,
-                    ua:                     parameters.user_agent};
-                return IamUserEvent.post(parameters.app_id, eventData)
-                        .then(result=>result.http?result:
-                                        IamAppAccess.post(parameters.app_id, data_body)
-                                        .then(()=>{
-                                            return {result:{
-                                                        token_at:               jwt_data.token,
-                                                        exp:                    jwt_data.exp,
-                                                        iat:                    jwt_data.iat,
-                                                        tokentimestamp:         jwt_data.tokentimestamp,
-                                                        activated:              1,
-                                                        iam_user_app_id:        null,
-                                                        iam_user_id:            parameters.resource_id,
-                                                        iam_user_username:      null}, 
-                                                    type:'JSON'};
-                                        }));
-            }
-            else{
-                eventData.event_status='FAIL';
-                return IamUserEvent.post(parameters.app_id, eventData)
-                        .then(result=>result.http?result:
-                            {result:{
-                                        token_at: null,
-                                        exp:null,
-                                        iat:null,
-                                        tokentimestamp:null,
-                                        activated:0,
-                                        iam_user_app_id: null,
-                                        iam_user_id:null,
-                                        iam_user_username:null}, 
-                                type:'JSON'});
-            }
-                
-        }
-    }
-    else
-        return result_activate;
-};
-
-/**
- * @name iamAuthenticateUserForgot
- * @description IAM Authenticates user password forgot, returns APP_ACCESS_VERIFICATION token
- * @function
- * @memberof ROUTE_REST_API
- * @param {{app_id:number, 
- *          idToken:string,
- *          ip:string, 
- *          user_agent:string, 
- *          accept_language:string, 
- *          data:{  email:string}}} parameters
- * @returns {Promise.<server_server_response & {result?:{   sent: number,
- *                                                          token_at?: string,
- *                                                          exp?:number,
- *                                                          iat?:number,
- *                                                          tokentimestamp?:number,
- *                                                          iam_user_id?: number} }>}
- */
-const iamAuthenticateUserForgot = async parameters =>{
-
-    /**@type{import('./db/IamUserEvent.js')} */
-    const IamUserEvent = await import(`file://${process.cwd()}/server/db/IamUserEvent.js`);
-    /**@type{import('./socket.js')} */
-    const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
-
-    if (parameters.data.email != '' && parameters.data.email != null){
-        const user = IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/row)=>row.email==parameters.data.email)[0];
-        if (user){
-            /**@type{server_db_table_IamUserEvent}*/
-            const eventData = {
-                                iam_user_id: user.id,
-                                event: 'PASSWORD_RESET',
-                                event_status: 'INPROGRESS'
-                            };
-            const result_IamUserEvent = await IamUserEvent.post(parameters.app_id, eventData);
-            if (result_IamUserEvent.result){
-                const jwt_data = iamAuthorizeToken( parameters.app_id, 
-                                                    'APP_ACCESS_VERIFICATION', 
-                                                    {   app_id:                 parameters.app_id, 
-                                                        app_custom_id:          null,
-                                                        iam_user_app_id:        null,
-                                                        iam_user_id:            user.id, 
-                                                        iam_user_username:      user.username, 
-                                                        ip:                     parameters.ip, 
-                                                        scope:                  'USER'});
-                /**@type{server_db_table_IamAppAccess} */
-                const data_body = { 
-                    type:                   'APP_ACCESS_VERIFICATION',
-                    app_custom_id:          null,
-                    iam_user_app_id:        null,
-                    iam_user_id:            user?.id,
-                    iam_user_username:      user.username,
-                    app_id:                 parameters.app_id,
-                    res:                    1,
-                    token:                  null,
-                    ip:                     parameters.ip,
-                    ua:                     parameters.user_agent
-                };
-                data_body.token = jwt_data.token;
-                await IamAppAccess.post(parameters.app_id, data_body);
-                return await IamUser.updateAdmin({app_id:parameters.app_id,
-                                                            /**@ts-ignore */
-                                                            resource_id:user.id,
-                                                            data :{ active:0,
-                                                                    verification_code:iamUtilVerificationCode()}})
-                            .then((result_updateUserVerificationCode)=>
-                                result_updateUserVerificationCode.result?
-                                    socketConnectedUpdate(parameters.app_id, 
-                                        {   idToken:                parameters.idToken,
-                                            iam_user_id:            user.id,
-                                            iam_user_username:      user.username, 
-                                            iam_user_type:          'USER',
-                                            token_access:           jwt_data.token,
-                                            token_admin:            null,
-                                            ip:                     parameters.ip,
-                                            headers_user_agent:     parameters.user_agent,
-                                            headers_accept_language:parameters.accept_language})
-                                    .then((result_socket)=>
-                                        result_socket.http?
-                                            result_socket:
-                                                {result:{
-                                                        sent:                   1,
-                                                        token_at:               jwt_data.token,
-                                                        exp:                    jwt_data.exp,
-                                                        iat:                    jwt_data.iat,
-                                                        tokentimestamp:         jwt_data.tokentimestamp,
-                                                        iam_user_id:            user.id
-                                                    }, 
-                                                    type:'JSON'}
-                                    ):
-                                    result_updateUserVerificationCode
-                            );
-            }
-            else
-                return result_IamUserEvent;
-        }
         else
-            return user.http?user:{result:{sent: 0}, type:'JSON'};                   
+            return result_activate;
     }
     else
-        return {result:{sent: 0}, type:'JSON'};
-
+        return {http:400,
+            code:'IAM',
+            text:iamUtilMessageNotAuthorized(),
+            developerText:null,
+            moreInfo:null,
+            type:'JSON'
+        };
 };
+
 
 /**
  * @name iamAuthenticateUserUpdate
@@ -752,8 +591,6 @@ const iamAuthenticateUserForgot = async parameters =>{
  *                  bio:string,
  *                  private:number,
  *                  avatar:string,
- *                  email:string,
- *                  new_email:string,
  *                  verification_code:string},
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:{updated: number} }>}
@@ -766,8 +603,6 @@ const iamAuthenticateUserUpdate = async parameters => {
                             password:           parameters.data.password,
                             password_new:       (parameters.data.password_new && parameters.data.password_new!='')==true?parameters.data.password_new:null,
                             password_reminder:  (parameters.data.password_reminder && parameters.data.password_reminder!='')==true?parameters.data.password_reminder:null,
-                            email:              parameters.data.email,
-                            email_unverified:   (parameters.data.new_email && parameters.data.new_email!='')==true?parameters.data.new_email:null,
                             avatar:             parameters.data.avatar
                         };
     return IamUser.update(parameters.app_id, parameters.resource_id, data_update)
@@ -1540,8 +1375,8 @@ const iamUserGet = async parameters =>{
                                 type: row.type,
                                 bio: row.bio,
                                 private: row.private,
-                                email: row.email,
-                                email_unverified: row.email_unverified,
+                                //remove OTP key, should only be displayed once at signup
+                                otp_key: null,
                                 avatar: row.avatar,
                                 user_level: row.user_level,
                                 status: row.status,
@@ -1574,8 +1409,7 @@ const iamUserGetAdmin = async parameters => {
                                 parameters.data.search=='*'?row:
                                 (commonSearchMatch(row.username??'', parameters.data?.search??'') ||
                                 commonSearchMatch(row.bio??'', parameters.data?.search??'') ||
-                                commonSearchMatch(row.email??'', parameters.data?.search??'') ||
-                                commonSearchMatch(row.email_unverified??'', parameters.data?.search??'') ||
+                                commonSearchMatch(row.otp_key??'', parameters.data?.search??'') ||
                                 commonSearchMatch(row.id?.toString()??'', parameters.data?.search??''))
                             )
                     .sort((/**@type{server_db_table_IamUser}*/first, /**@type{server_db_table_IamUser}*/second)=>{
@@ -1673,7 +1507,6 @@ export{ iamUtilMessageNotAuthorized,
         iamAuthenticateUser,
         iamAuthenticateUserSignup,
         iamAuthenticateUserActivate,
-        iamAuthenticateUserForgot,
         iamAuthenticateUserUpdate,
         iamAuthenticateUserUpdatePassword,
         iamAuthenticateUserDelete,
