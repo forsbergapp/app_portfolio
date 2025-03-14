@@ -11,7 +11,7 @@
  * @description Template
  * @function
  * @param {{admin_app:boolean,
- *          type:'LOGIN'|'SIGNUP'|'FORGOT',
+ *          type:'LOGIN'|'SIGNUP',
  *          first_time: boolean}} props 
  * @returns {string}
  */
@@ -20,7 +20,6 @@ const template = props =>`  <div id='common_dialogue_iam_start_logo' class='comm
                                `<div id='common_dialogue_iam_start_nav'>
                                     <div id='common_dialogue_iam_start_login'  class='common_icon ${props.type=='LOGIN'?'common_dialogue_iam_start_selected':''}'></div>
                                     <div id='common_dialogue_iam_start_signup' class='common_icon ${props.type=='SIGNUP'?'common_dialogue_iam_start_selected':''}'></div>
-                                    <div id='common_dialogue_iam_start_forgot' class='common_icon ${props.type=='FORGOT'?'common_dialogue_iam_start_selected':''}'></div>
                                 </div>`
                             }
                             ${props.admin_app?
@@ -57,7 +56,6 @@ const template = props =>`  <div id='common_dialogue_iam_start_logo' class='comm
                                 ${props.type=='SIGNUP'? 
                                     `<div id='common_dialogue_iam_start_signup_form' class='common_dialogue_iam_start_form'>
                                         <div id='common_dialogue_iam_start_signup_username' contentEditable='true'  class='common_input common_placeholder'></div>
-                                        <div id='common_dialogue_iam_start_signup_email' contentEditable='true'  class='common_input common_placeholder'></div>
                                         <div class='common_password_container'>
                                             <div id='common_dialogue_iam_start_signup_password' contentEditable='true'  class='common_input common_password common_placeholder'></div>
                                             <div id='common_dialogue_iam_start_signup_password_mask' class='common_input common_password_mask'></div>
@@ -70,12 +68,6 @@ const template = props =>`  <div id='common_dialogue_iam_start_logo' class='comm
                                         <div id='common_dialogue_iam_start_signup_button' class='common_dialogue_button common_dialogue_iam_start_button common_icon' ></div>
                                     </div>`:''
                                 }
-                                ${props.type=='FORGOT'? 
-                                    `<div id='common_dialogue_iam_start_forgot_form' class='common_dialogue_iam_start_form'>
-                                        <div id='common_dialogue_iam_start_forgot_email' contentEditable='true' class='common_input common_placeholder'></div>
-                                        <div id='common_dialogue_iam_start_forgot_button' class='common_dialogue_button common_dialogue_iam_start_button common_icon' ></div>
-                                    </div>`:''
-                                }
                                 <div id='common_dialogue_iam_start_close' class='common_dialogue_button common_icon' ></div>`
                             }`;
 /**
@@ -84,7 +76,7 @@ const template = props =>`  <div id='common_dialogue_iam_start_logo' class='comm
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      type:'LOGIN'|'SIGNUP'|'FORGOT',
+ *                      type:'LOGIN'|'SIGNUP',
  *                      app_id:number,
  *                      admin_app_id:number,
  *                      admin_first_time:number},

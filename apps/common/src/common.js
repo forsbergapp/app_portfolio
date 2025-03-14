@@ -2,12 +2,9 @@
 
 /**
  * @import {server_db_table_App,
- *          server_db_table_AppSecret,
  *          server_db_table_AppModule,
  *          server_db_app_parameter_common,
- *          server_db_table_AppTranslation,
  *          server_db_table_IamUser,
- *          server_config_apps_with_db_columns,
  *          server_apps_report_create_parameters,
  *          server_apps_app_service_parameters,
  *          server_apps_module_with_metadata,
@@ -17,8 +14,7 @@
  *          server_bff_endpoint_type,
  *          server_bff_parameters,
  *          server_server_error,
- *          server_server_response,
- *          server_apps_email_return_createMail, server_apps_email_param_data} from '../../../server/types.js'
+ *          server_server_response} from '../../../server/types.js'
  * 
  */
 
@@ -30,9 +26,6 @@ const AppModule = await import(`file://${process.cwd()}/server/db/AppModule.js`)
 
 /**@type{import('../../../server/db/AppParameter.js')} */
 const AppParameter = await import(`file://${process.cwd()}/server/db/AppParameter.js`);
-
-/**@type{import('../../../server/db/AppSecret.js')} */
-const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
 
 /**@type{import('../../../server/db/Config.js')} */
 const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
@@ -61,106 +54,6 @@ const commonSearchMatch = (col, search) =>{
     return col_check.search(search_check)>-1;
 };
 
-/**
- * @name commonMailCreate
- * @description Creates email
- * @function
- * @param {number} app_id                                   - Application id
- * @param {server_apps_email_param_data} data               - Email param data
- * @returns {Promise<server_apps_email_return_createMail>}  - Email return data
- */
-const commonMailCreate = async (app_id, data) =>{
-    const {default:ComponentCreate} = await import('./component/common_mail.js');
-    const email_html    = await ComponentCreate({data:{host:data.host ?? '', verification_code:data.verificationCode ?? ''}, methods:null});
-    const common_app_id = serverUtilNumberValue(Config.get({app_id:app_id,data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}));
-    const secrets       = AppSecret.get({app_id:app_id, resource_id:common_app_id}).result[0];
-    //email type 1-4 implemented are emails with verification code
-    if (parseInt(data.emailtype)==1 || 
-        parseInt(data.emailtype)==2 || 
-        parseInt(data.emailtype)==3 ||
-        parseInt(data.emailtype)==4){
-
-        /** @type {string} */
-        let email_from = '';
-        switch (parseInt(data.emailtype)){
-            case 1:{
-                email_from = secrets.service_mail_type_signup_from_name;
-                break;
-            }
-            case 2:{
-                email_from = secrets.service_mail_type_unverified_from_name;
-                break;
-            }
-            case 3:{
-                email_from = secrets.service_mail_type_password_reset_from_name;
-                break;
-            }
-            case 4:{
-                email_from = secrets.service_mail_type_change_email_from_name;
-                break;
-            }
-        }
-        return {
-            host:         secrets.service_mail_host,
-            port:         secrets.service_mail_port,
-            secure:       secrets.service_mail_secure,
-            auth_user:    secrets.service_mail_username,
-            auth_pass:    secrets.service_mail_password,
-            from:               email_from,
-            to:                 data.to,
-            subject:            '❂❂❂❂❂❂',
-            html:               email_html
-        };
-    }
-    else
-        throw '';
-};
-/**
- * @name commonMailSend
- * @description Creates and sends email
- * @function
- * @param {number} app_id 
- * @param {string} emailtype 
- * @param {string} ip
- * @param {string} user_agent
- * @param {string} accept_language
- * @param {number} userid 
- * @param {string|null} verification_code 
- * @param {string} email 
- * @returns {Promise.<*>}
- */
-const commonMailSend = async (app_id, emailtype, ip, user_agent, accept_language, userid, verification_code, email) => {
-    /**@type{import('../../../server/bff.js')} */
-    const {bffServer} = await import(`file://${process.cwd()}/server/bff.js`);
-    /**@type{import('../../../server/db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-
-    const email_rendered = await commonMailCreate( app_id, 
-                                    {
-                                        emailtype:        emailtype,
-                                        host:             Config.get({app_id:app_id,data:{object:'ConfigServer',config_group:'SERVER', parameter:'HOST'}}),
-                                        app_user_id:      userid,
-                                        verificationCode: verification_code,
-                                        to:               email,
-                                    })
-                                    .catch((/**@type{server_server_error}*/error)=>{throw error;});
-        
-    /**@type{server_bff_parameters}*/
-    const parameters = {endpoint:'SERVER',
-                        host:null,
-                        url:'/bff/admin/v1/mail/sendemail',
-                        route_path:'/mail/sendemail',
-                        method:'POST', 
-                        query:'',
-                        body:email_rendered,
-                        authorization:null,
-                        ip:ip, 
-                        user_agent:user_agent, 
-                        accept_language:accept_language,
-                        /**@ts-ignore */
-                        res:null};
-    return await bffServer(app_id, parameters);
-};
 /**
  * @name commonAppStart
  * @description Checks if ok to start app
@@ -911,7 +804,6 @@ const commonModuleMetaDataGet = async parameters =>{
  *              app
  *              reports
  *              maintenance
- *              mail
  *              info disclaimer
  *              info privacy policy
  *              info terms
@@ -1163,7 +1055,6 @@ const commonRegistryAppModule = (app_id, parameters) => AppModule.get({app_id:ap
                                                                app.common_role == parameters.role)[0];
 
 export {commonSearchMatch,
-        commonMailCreate, commonMailSend,
         commonAppStart, commonAppHost, commonAssetfile,
         commonModuleAsset,commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
         commonApp, commonBFE,

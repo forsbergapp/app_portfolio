@@ -26,8 +26,7 @@ const template = props => ` <div class='menu_users_list_row'>
                                 <div data-column='private' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('private')}'></div>
                                 <div data-column='username' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('username')}'></div>
                                 <div data-column='bio' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('bio')}'></div>
-                                <div data-column='email' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('email')}'></div>
-                                <div data-column='emal_unverified' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('email_unverified')}'></div>
+                                <div data-column='otp_key' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('otp_key')}'></div>
                                 <div data-column='password' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('password')}'></div>
                                 <div data-column='password_reminder' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('password_reminder')}'></div>
                                 <div data-column='verification_code' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('verification_code')}'></div>
@@ -45,8 +44,7 @@ const template = props => ` <div class='menu_users_list_row'>
                                     <div data-column='private' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.private ?? ''}</div>
                                     <div data-column='username' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.username ?? ''}</div>
                                     <div data-column='bio' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.bio ?? ''}</div>
-                                    <div data-column='email' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.email ?? ''}</div>
-                                    <div data-column='email_unverified' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.email_unverified ?? ''}</div>
+                                    <div data-column='otp_key' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.otp_key ?? ''}</div>
                                     <div data-column='password' class='menu_users_list_col common_input list_edit' contentEditable='true' ></div>
                                     <div data-column='password_reminder' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.password_reminder ?? ''}</div>
                                     <div data-column='verification_code' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.verification_code ?? ''}</div>

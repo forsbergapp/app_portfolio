@@ -88,20 +88,9 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="email" id="67E2F707-722B-74AE-A992-2D884F69C35A">
+<Attribute name="otp_key" id="67E2F707-722B-74AE-A992-2D884F69C35A">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:30:00 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="email_unverified" id="C5730A63-A317-435C-393A-668BA036020E">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:30:04 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>

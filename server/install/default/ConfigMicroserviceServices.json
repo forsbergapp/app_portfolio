@@ -21,11 +21,6 @@
             {"APP_REST_API_VERSION":1,"COMMENT":"REST API version"},
             {"URL_IP":"http://www.geoplugin.net/json.gp?ip=<IP/>",   "COMMENT":"" },
             {"URL_PLACE":"http://www.geoplugin.net/extras/location.gp?format=json&lat=<LATITUDE/>&long=<LONGITUDE/>",   "COMMENT":"" }
-        ]},
-    {"NAME":"MAIL",         "HOST":"localhost","PORT":3003,"HTTPS_ENABLE":0,"HTTPS_KEY":"privkey.pem","HTTPS_CERT":"fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT":4003,"STATUS":"ONLINE","PATH":"mail","PATH_DATA":"/data/microservices/data",
-        "CONFIG":[
-            {"APP_REST_API_VERSION":1,"COMMENT":"REST API version"},
-            {"MAIL_TEST": "1", "COMMENT": "0=using parameters from database, 1=returns test message"}
-            ] }
+        ]}
     ]
 }

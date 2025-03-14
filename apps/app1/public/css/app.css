@@ -49,8 +49,7 @@
 #menu_users_list .list_title[data-column='private']::before{						content:var(--common_app_icon_private)}
 #menu_users_list .list_title[data-column='username']::before{						content:var(--common_app_icon_user) ' ' var(--common_app_icon_username)}
 #menu_users_list .list_title[data-column='bio']::before{							content:var(--common_app_icon_user_bio)}
-#menu_users_list .list_title[data-column='email']::before{							content:var(--common_app_icon_email)}
-#menu_users_list .list_title[data-column='emal_unverified']::before{				content:var(--common_app_icon_email ' ' var(--common_app_icon_forgot))}
+#menu_users_list .list_title[data-column='otp_key']::before{						content:var(--common_app_icon_otp)' 123456'}
 #menu_users_list .list_title[data-column='password']::before{						content:var(--common_app_icon_user_password)}
 #menu_users_list .list_title[data-column='password_reminder']::before{				content:var(--common_app_icon_user_password) ' ' var(--common_app_icon_info)}
 #menu_users_list .list_title[data-column='verification_code']::before{				content:var(--common_app_icon_verification_code)}
@@ -528,7 +527,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 }
 .menu_users_list_row{
 	display:grid;
-	grid-template-columns: 3em 9em 6em 5em 5em 5em 5em 15em 20em 15em 15em 20em 10em 10em 15em 15em;
+	grid-template-columns: 3em 9em 6em 5em 5em 5em 5em 15em 20em 20em 20em 10em 10em 15em 15em;
 }
 .menu_users_iam_app_access_row{
 	display:grid;

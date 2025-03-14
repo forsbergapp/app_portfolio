@@ -319,26 +319,25 @@ const validationData = data =>{
 const post = async (app_id, data) => {
     if (validationData(data)){
         /**@type{import('../security.js')} */
-        const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
+        const Security= await import(`file://${process.cwd()}/server/security.js`);
         /**@type{server_db_iam_user_admin} */
         const data_new =     {
-                                id:Date.now(),
-                                username:data.username, 
+                                id:                 Date.now(),
+                                username:           data.username, 
                                 //save encrypted password
-                                password:await securityPasswordCreate(app_id, data.password), 
-                                password_reminder:data.password_reminder ?? null,
-                                type: data.type, 
-                                bio:data.bio ?? null, 
-                                private:data.private, 
-                                email:data.email, 
-                                email_unverified:data.email_unverified, 
-                                avatar:data.avatar,
-                                user_level:data.user_level, 
-                                verification_code: data.verification_code ?? null, 
-                                status:data.status, 
-                                active:data.active,
-                                created:new Date().toISOString(), 
-                                modified:new Date().toISOString()
+                                password:           await Security.securityPasswordCreate(app_id, data.password), 
+                                password_reminder:  data.password_reminder ?? null,
+                                type:               data.type, 
+                                bio:                data.bio ?? null, 
+                                private:            data.private, 
+                                otp_key:            Security.securityOTPKeyCreate(),
+                                avatar:             data.avatar,
+                                user_level:         data.user_level, 
+                                verification_code:  data.verification_code ?? null, 
+                                status:             data.status, 
+                                active:             data.active,
+                                created:            new Date().toISOString(), 
+                                modified:           new Date().toISOString()
                         };
         return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
@@ -363,6 +362,8 @@ const post = async (app_id, data) => {
 const postAdmin = async (app_id, data) => {
     /**@type{import('../security.js')} */
     const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
+    /**@type{import('../security.js')} */
+    const Security= await import(`file://${process.cwd()}/server/security.js`);
     /**@type{server_db_iam_user_admin} */
     const data_new =     {
                             id:Date.now(),
@@ -373,8 +374,7 @@ const postAdmin = async (app_id, data) => {
                             type: data.type, 
                             bio:data.bio, 
                             private:data.private, 
-                            email:data.email, 
-                            email_unverified:data.email_unverified, 
+                            otp_key: Security.securityOTPKeyCreate(),
                             avatar:data.avatar,
                             user_level:data.user_level, 
                             verification_code: data.verification_code, 
@@ -422,10 +422,6 @@ const update = async (app_id, resource_id, data) => {
                 data_update.bio = data.bio;
             if (data.private!=null)
                 data_update.private = serverUtilNumberValue(data.private);
-            if (data.email!=null)
-                data_update.email = data.email;
-            if (data.email_unverified!=null)
-                data_update.email_unverified = data.email_unverified;
             if (data.avatar!=null)
                 data_update.avatar = data.avatar;
             data_update.modified = new Date().toISOString();
@@ -475,10 +471,8 @@ const updateAdmin = async parameters => {
                 data_update.bio = parameters.data.bio;
             if (parameters.data?.private!=null)
                 data_update.private = serverUtilNumberValue(parameters.data.private) ?? 0;
-            if (parameters.data?.email!=null)
-                data_update.email = parameters.data.email;
-            if (parameters.data?.email_unverified!=null)
-                data_update.email_unverified = parameters.data.email_unverified;
+            if (parameters.data?.otp_key!=null)
+                data_update.otp_key = parameters.data.otp_key;
             if (parameters.data?.avatar!=null)
                 data_update.avatar = parameters.data.avatar;
             //admin columns
