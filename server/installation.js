@@ -92,7 +92,7 @@ const postDemo = async parameters=> {
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
    /**@type{import('./security.js')} */
-   const {securityKeyPairCreate, securityUUIDCreate, securitySecretCreate} = await import(`file://${process.cwd()}/server/security.js`);
+   const Security = await import(`file://${process.cwd()}/server/security.js`);
 
    const fs = await import('node:fs');
    /**@type{{[key:string]: string|number}[]} */
@@ -103,7 +103,6 @@ const postDemo = async parameters=> {
    const demo_users = JSON.parse(fileBuffer.toString()).demo_users;
    //create social records
    const social_types = ['LIKE', 'VIEW', 'VIEW_ANONYMOUS', 'FOLLOWER', 'POSTS_LIKE', 'POSTS_VIEW', 'POSTS_VIEW_ANONYMOUS'];
-   let email_index = 1000;
    let records_iam_user = 0;
    let records_iam_user_app = 0;
    let records_iam_user_app_data_post = 0;
@@ -134,8 +133,6 @@ const postDemo = async parameters=> {
                     *          avatar:             server_db_table_IamUser['avatar'],
                     *          password:           server_db_table_IamUser['password'],
                     *          password_reminder:  server_db_table_IamUser['password_reminder'],
-                    *          email:              server_db_table_IamUser['email'],
-                    *          email_unverified:   server_db_table_IamUser['email_unverified'],
                     *          active:             server_db_table_IamUser['active'],
                     *          private:            server_db_table_IamUser['private'],
                     *          user_level:         server_db_table_IamUser['user_level'],
@@ -148,8 +145,6 @@ const postDemo = async parameters=> {
                                            avatar:                 demo_user.avatar,
                                            password:               parameters.data.demo_password ?? '',
                                            password_reminder:      null,
-                                           email:                  `demo${++email_index}@localhost`,
-                                           email_unverified:       null,
                                            active:                 1,
                                            private:                0,
                                            user_level:             2,
@@ -331,7 +326,7 @@ const postDemo = async parameters=> {
                                    broadcast_type:'PROGRESS',
                                    broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'})).toString('base64')
                                }});
-       const {publicKey, privateKey} = await securityKeyPairCreate();
+       const {publicKey, privateKey} = await Security.securityKeyPairCreate();
        const demo_public_key = publicKey;
        const demo_private_key = privateKey;
        //3.Loop users created
@@ -347,7 +342,7 @@ const postDemo = async parameters=> {
            install_count++;
 
            //3A.Generate vpa for each user that can be saved both in resource and apps configuration
-           const demo_vpa = securityUUIDCreate();
+           const demo_vpa = Security.securityUUIDCreate();
            //3B.Create iam_user_app record
            //save iam_user_app.id for creating records with this FK
            const iam_user_app_id = await create_iam_user_app(demo_user.iam_user_app.app_id, demo_user.id).then(result=>{
@@ -411,7 +406,7 @@ const postDemo = async parameters=> {
                            case '<UUID/>':
                                return demo_vpa;
                            case '<SECRET/>':
-                               return securitySecretCreate();
+                               return Security.securitySecretCreate();
                            case '<PUBLIC_KEY/>':
                                return demo_public_key;
                            case '<PRIVATE_KEY/>':

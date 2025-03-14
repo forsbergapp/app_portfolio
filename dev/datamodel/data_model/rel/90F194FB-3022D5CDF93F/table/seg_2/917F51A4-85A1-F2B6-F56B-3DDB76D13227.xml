@@ -75,20 +75,10 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="email" id="1CD8289E-462B-6AFA-19E1-F0BC9A7735E5">
+<Column name="otp_key" id="1CD8289E-462B-6AFA-19E1-F0BC9A7735E5">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>67E2F707-722B-74AE-A992-2D884F69C35A</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="email_unverified" id="1D15D76D-71AF-60D9-6B85-D0DD0D6F017F">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>C5730A63-A317-435C-393A-668BA036020E</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>

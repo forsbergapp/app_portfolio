@@ -67,8 +67,7 @@
 #common_dialogue_iam_edit_label_provider_email::before{							content:var(--common_app_icon_email)}
 #common_dialogue_iam_edit_input_username_icon::before{							content:var(--common_app_icon_user)}
 #common_dialogue_iam_edit_input_bio_icon::before{								content:var(--common_app_icon_user_profile)}
-#common_dialogue_iam_edit_input_email_icon::before{								content:var(--common_app_icon_email)}
-#common_dialogue_iam_edit_input_new_email_icon::before{							content:var(--common_app_icon_email)}
+#common_dialogue_iam_edit_input_otp_icon::before{								content:var(--common_app_icon_otp)}
 #common_dialogue_iam_edit_input_password_icon::before{							content:var(--common_app_icon_user_password)}
 #common_dialogue_iam_edit_input_password_confirm_icon::before{					content:var(--common_app_icon_user_password_confirm)}
 #common_dialogue_iam_edit_input_password_new_icon::before{						content:var(--common_app_icon_user_password)}
@@ -103,14 +102,6 @@
 #common_dialogue_user_menu_preference_arabic_script::before{			content:var(--common_app_icon_regional_script)}
 #common_dialogue_user_menu_close::before{								content:var(--common_app_icon_close)}
 
-/*Icons dialogue user password new*/
-#common_dialogue_iam_password_new_icon::before{									content:var(--common_app_icon_user_password)}
-#common_dialogue_iam_password_new_cancel::before{								content:var(--common_app_icon_cancel)}
-#common_dialogue_iam_password_new_ok::before{									content:var(--common_app_icon_close)}
-
-#common_dialogue_iam_password_new::before{										content:var(--common_app_icon_password)}
-#common_dialogue_iam_password_new_confirm::before{								content:var(--common_app_icon_password_confirm)}
-
 /*Icons dialogue user start*/
 #common_dialogue_iam_start_login::before{										content:var(--common_app_icon_user)}
 #common_dialogue_iam_start_login_button::before{								content:var(--common_app_icon_login)}
@@ -127,16 +118,9 @@
 #common_dialogue_iam_start_signup_button::before{								content:var(--common_app_icon_signup)}
 
 #common_dialogue_iam_start_signup_username:empty::before{						content:var(--common_app_icon_user)}
-#common_dialogue_iam_start_signup_email:empty::before{							content:var(--common_app_icon_email)}
 #common_dialogue_iam_start_signup_password:empty::before{						content:var(--common_app_icon_user_password)}
 #common_dialogue_iam_start_signup_password_confirm:empty::before{				content:var(--common_app_icon_user_password_confirm)}
 #common_dialogue_iam_start_signup_password_reminder:empty::before{				content:var(--common_app_icon_user_password) ' ' var(--common_app_icon_question)}
-#common_dialogue_iam_start_forgot_email:empty::before{							content:var(--common_app_icon_email)}
-
-#common_dialogue_iam_start_forgot::before{										content:var(--common_app_icon_forgot)}
-#common_dialogue_iam_start_forgot_button::before{								content:var(--common_app_icon_email)}
-
-#common_dialogue_iam_start_forgot_email:empty::before{							content:var(--common_app_icon_email)}
 
 #common_dialogue_iam_start_close::before{										content:var(--common_app_icon_close)}
 #common_dialogue_iam_start_login_admin_first_time::before{						content:var(--common_app_icon_init)}
@@ -883,69 +867,46 @@ body.rtl{
 	width: 100%;
 	border: 0.5px solid;
 }
-#common_dialogue_iam_edit_avatar{
-	width:48px;
-	height:48px;
-	position: fixed;
-    top: 4px;
-}
 #common_dialogue_iam_edit_input_avatar_img{
 	display:none;
 }
 #common_dialogue_iam_edit_btn_avatar_img{
+    width: 50%;
+    border-radius:var(--common_app_css_border_radius);
+    margin-top: 25%;
+}
+#common_dialogue_iam_edit_avatar{
 	border: 0.5px solid;
-	border-radius: var(--common_app_css_border_radius);
-    width: 26px;	
-    margin-top: 20px;
+	border-radius: 50%;
+    width: 48px;
 	cursor: pointer;
 	display: inline-block;
 }
-#common_dialogue_iam_edit .common_setting_horizontal_row{
-	display: block;
+#common_dialogue_iam_edit .common_dialogue_iam_edit_iamuser_row_title{
+    display: block;
+    text-align:center;
 }
-#common_dialogue_iam_edit #common_dialogue_iam_edit_common .common_setting_horizontal_row:first-child{
-	height: 60px;
+#common_dialogue_iam_edit #common_dialogue_iam_edit_private{
+    display: block;
+    margin-top: 1em;
 }
-#common_dialogue_iam_edit #common_dialogue_iam_edit_common .common_setting_horizontal_row:first-child .common_setting_horizontal_col:nth-child(2){
-	text-align: center !important;
-	vertical-align: top;
+#common_dialogue_iam_edit #common_dialogue_iam_edit_checkbox_profile_private{
+    margin-bottom: 1em;;
 }
-#common_dialogue_iam_edit .common_setting_horizontal_col:nth-child(1){
-	width :10%;
-	display: inline-block;
-}
-#common_dialogue_iam_edit .common_setting_horizontal_col:nth-child(2){
-	width :85%;
-	text-align: start;
-	display: inline-block;
-}
-#common_dialogue_iam_edit #common_dialogue_iam_edit_provider .common_setting_horizontal_row:nth-child(5){
-	height:0px;
-}
-#common_dialogue_iam_edit #common_dialogue_iam_edit_provider{
-	margin-top: 10px;
-    margin-bottom: 10px;
-}
-#common_dialogue_iam_edit_buttons{
-	margin-bottom: 10px;
-}
-#common_dialogue_iam_edit_close{
-	margin-bottom:20px;
-}
-#common_dialogue_iam_edit #common_dialogue_iam_edit_buttons .common_setting_horizontal_col:nth-child(1) {
-	width: 0%;
-	display: none;
-}
-#common_dialogue_iam_edit #common_dialogue_iam_edit_buttons .common_setting_horizontal_col:nth-child(2) {
-	width: 100%;
-	text-align: center !important;
+#common_dialogue_iam_edit .common_dialogue_iam_edit_iamuser_row{
+	display: grid;
+    text-align: start;
+    grid-template-columns: 10% 90%;
 }
 #common_dialogue_iam_edit_label_data_last_logintime,
 #common_dialogue_iam_edit_label_data_account_created,
 #common_dialogue_iam_edit_label_data_account_modified {
 	font-size: 0.5em;
 }
-
+#common_dialogue_iam_edit #common_dialogue_iam_edit_buttons,
+#common_dialogue_iam_edit #common_dialogue_iam_edit_close{
+    margin-bottom:1em;
+}
 /*Dialogue lov*/
 #common_dialogue_lov.common_dialogue_show2{
 	height:auto;
@@ -1280,33 +1241,6 @@ body.rtl{
 	width:200px;
 	display:inline-block;
 	text-align: start;
-}
-
-/*Dialogue User Edit*/
-
-#common_dialogue_iam_edit_btn_label_user_update,
-#common_dialogue_iam_edit_btn_label_user_delete_account{
-	display:inline-block;
-	width:120px;
-	text-align: center;
-	vertical-align: top;
-	text-transform: uppercase;
-}
-#common_dialogue_iam_edit_label_provider_image_url,
-#common_dialogue_iam_edit_label_provider_image_url_data{
-	display:none !important;
-}
-#common_dialogue_iam_edit #common_dialogue_iam_edit_btn_user_delete_account
-{
-	display: inline-block;
-}
-#common_dialogue_iam_edit_btn_user_update,
-#common_dialogue_iam_edit_btn_user_delete_account
-{
-	margin-left:10px;
-	margin-right:10px;
-	font-size:30px;
-	height: 30px;
 }
 
 /*User account*/

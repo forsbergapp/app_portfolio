@@ -62,7 +62,6 @@ const component = async props => {
      *              TYPE                        COMMENT                                                         BFF endpoint to use when activating
      *              1 LOGIN                     after login, no data returned if active=0                       APP_ACCESS_VERIFICATION
      *              2 SIGNUP                    not logged in                                                   APP_ACCESS_VERIFICATION
-     *              3 FORGOT / PASSWORD RESET   not logged in                                                   APP_ACCESS_VERIFICATION
      * 
      *              User will be required to login again after activation
      * @function
@@ -95,19 +94,7 @@ const component = async props => {
 
                 if (await props.methods.commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
                     props.methods.commonComponentRemove('common_dialogue_iam_verify', true);
-                    if (props.data.user_verification_type=='FORGOT'){
-                        //show dialogue new password
-                            props.methods.commonComponentRender({
-                                mountDiv:   'common_dialogue_iam_password_new',
-                                data:       null,
-                                methods:    {
-                                            commonUserSessionCountdown:props.methods.commonUserSessionCountdown
-                                            },
-                                path:'/common/component/common_dialogue_iam_password_new.js'});
-                        
-                    }
-                    else
-                        props.methods.commonDialogueShow('LOGIN');
+                    props.methods.commonDialogueShow('LOGIN');
                 }
                 else{
                     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').classList.add('common_input_error');
