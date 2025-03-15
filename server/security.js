@@ -113,7 +113,11 @@ const securityOTPKeyCreate = () =>{
  * @param {string} otp_key
  * @returns {boolean}
  */
-const securityOTPKeyValidate = otp_key =>otp_key !=null && typeof otp_key=='string' && otp_key.length==26 && /^[A-Z234567]$/g.exec(otp_key)!=null;
+const securityOTPKeyValidate = otp_key =>
+            otp_key !=null && 
+            typeof otp_key=='string' && 
+            otp_key.length==26 && 
+            otp_key.length == Array.from(otp_key).filter(character=>'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'.indexOf(character)>-1).length;
 
 /**
  * @name securityTOTPGenerate
@@ -121,7 +125,8 @@ const securityOTPKeyValidate = otp_key =>otp_key !=null && typeof otp_key=='stri
  *              using HMAC and SHA256
  * @function
  * @param {string} otp_key
- * @returns {Promise<string|null>}
+ * @returns {Promise<{  totp_value:string,
+ *                      expire:number}|null>}
  */
 const securityTOTPGenerate = async otp_key =>{
     if (securityOTPKeyValidate(otp_key)){
@@ -177,7 +182,10 @@ const securityTOTPGenerate = async otp_key =>{
         // Modulo operation to get TOTP value within desired range
         const totpValue = binaryCode % Math.pow(10, 6); // For a six-digit code
     
-        return totpValue.toString().padStart(6, '0'); // Return as string with leading zeros
+        //const millisecondsuntilnext = Math.floor((((timeCounter +1) *30) -  Date.now() / 1000) * 1000);
+        return {totp_value:totpValue.toString().padStart(6, '0'),// Return as string with leading zeros
+                expire:(timeCounter +1) *30,
+                }; 
     }
     else{
         //return null without any explication
@@ -192,7 +200,7 @@ const securityTOTPGenerate = async otp_key =>{
  * @param {string} otp_key
  * @returns {Promise<boolean>}
  */
-const securityTOTPValidate = async (totp_value, otp_key) =>totp_value == await securityTOTPGenerate(otp_key);
+const securityTOTPValidate = async (totp_value, otp_key) =>totp_value == (await securityTOTPGenerate(otp_key))?.totp_value;
 
 /**
  * @name securityPasswordCreate
