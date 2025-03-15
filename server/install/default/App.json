@@ -178,5 +178,25 @@
         "link_title":"",
         "link_url": "",
         "status":"ONLINE"
+    },
+    {
+        "id": 9, 
+        "name": "OTP",
+        "subdomain": "app9",
+        "path": "/apps/app9/public",    
+        "logo":"/images/logo.png",     
+        "showparam":0, 
+        "manifest": "/common/manifest.json",
+        "js":"/js/app.js",
+        "css": "/css/app.css",
+        "css_report": "",
+        "favicon_32x32":"/images/favicon-32x32.png",
+        "favicon_192x192":"/images/favicon-192x192.png",
+        "text_edit": "1",
+        "copyright":"©",
+        "email": "",
+        "link_title":"",
+        "link_url": "",
+        "status":"ONLINE"
     }
 ]
