@@ -151,6 +151,21 @@
     },
     {
         "id": 9,
+        "app_id": 9,
+        "locale": "en",
+        "text": "",
+        "json_data":{"name":"OTP", 
+                    "screenshot_start":"[![OTP](/common/documents/screenshot_app9_small.webp)](/common/documents/screenshot_app9.webp)",
+                    "description":"Authenticator app using Time-based One-Time Password (TOTP) SHA256 and One Time Password (OTP) key and is used for authenticating user activites when required", 
+                    "pattern":"OTP, TOTP", 
+                    "technology":"TOTP using SHA256 key, UTC time and 30 seconds interval, OTP key using Base32", 
+                    "reference":"RFC 3548, RFC 3648, RFC 4226, RFC 6238", 
+                    "security":"OWASP",
+                    "solution":"",
+                    "screenshot_end":[""]}
+    },
+    {
+        "id": 10,
         "app_id": 0,
         "locale": "en",
         "text": "",
