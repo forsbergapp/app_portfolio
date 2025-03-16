@@ -121,7 +121,9 @@ const configDefault = async () => {
                             ['AppSecret',                       await fs.promises.readFile(process.cwd() + '/server/install/default/AppSecret.json')
                                                                         .then(filebuffer=>
                                                                         //generate secrets
-                                                                        JSON.parse(filebuffer.toString()).map((/**@type{server_db_table_AppSecret}*/row)=>{
+                                                                        JSON.parse(filebuffer.toString())
+                                                                            .filter((/**@type{server_db_table_AppSecret}*/row)=>row.app_id!=0)
+                                                                            .map((/**@type{server_db_table_AppSecret}*/row)=>{
                                                                             row.common_client_id = securitySecretCreate();
                                                                             row.common_client_secret = securitySecretCreate();
                                                                             row.common_app_id_secret = securitySecretCreate();
