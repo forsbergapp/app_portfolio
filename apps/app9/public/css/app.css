@@ -26,6 +26,7 @@ body {
 }
 #otp_key{
     width:20em;
+    text-transform: uppercase;
 }
 #otp_row{
     display: flex;

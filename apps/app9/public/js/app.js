@@ -39,7 +39,7 @@ const appTotpGet = otp_key =>{
         if (COMMON_DOCUMENT.querySelector('#otp_key').textContent !=''){
             const time_left = (expire * 1000) - (Date.now());
             if (time_left < 0)
-                appTotpGet(otp_key);
+                appTotpGet(COMMON_DOCUMENT.querySelector('#otp_key').textContent);
             else{
                 const seconds = Math.floor((time_left % (1000 * 60)) / 1000);
                 //show count down using locale
@@ -61,6 +61,10 @@ const appTotpGet = otp_key =>{
         if (JSON.parse(result).rows[0]?.expire){
             COMMON_DOCUMENT.querySelector('#totp_value').textContent = JSON.parse(result).rows[0]?.totp_value;
             countdown(JSON.parse(result).rows[0]?.expire);
+        }
+        else{
+            COMMON_DOCUMENT.querySelector('#totp_value').textContent=null;
+            COMMON_DOCUMENT.querySelector('#totp_countdown_time').textContent=null;
         }
     });
 };
@@ -123,8 +127,8 @@ const appEventKeyUp = event => {
         .then(()=>{
             switch(event_target_id){
                 case 'otp_key':{
-                    event.target.textContent = event.target.textContent.toUpperCase();
                     if (event.target.textContent.length==26){
+                        event.target.textContent = event.target.textContent.toUpperCase();
                         appTotpGet(event.target.textContent);
                     }
                     break;
