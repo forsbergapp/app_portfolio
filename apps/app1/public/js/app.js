@@ -577,7 +577,7 @@ const appSecureCommonRecordUpdate = async ( table,
             break;
         }
         case 'app':{
-            path = `/server-db/app${resource_id}`;
+            path = `/server-db/app/${resource_id}`;
             method = 'PUT';
             break;
         }

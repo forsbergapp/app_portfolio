@@ -2680,7 +2680,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/app${resource_id_number}": {
+        "/bff/admin/v1/server-db/app/${resource_id_number}": {
             "put": {
                 "summary": "",
                 "operationId": "server_db.App.update",
