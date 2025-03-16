@@ -1816,6 +1816,7 @@ const commonUserSignup = () => {
             COMMON_GLOBAL.token_exp =       JSON.parse(result).exp;
             COMMON_GLOBAL.token_iat =       JSON.parse(result).iat;
             COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
+            commonMessageShow('INFO', null, null, null,JSON.parse(result).otp_key, COMMON_GLOBAL.common_app_id);
             
             commonDialogueShow('VERIFY', 'SIGNUP');
         });
@@ -1939,14 +1940,13 @@ const commonUserAuthenticateCode = async (verification_code, verification_type) 
                 spinner_id:'common_app_icon_verification_code'})
     .then(result=>{
             if (JSON.parse(result).activated == 1){
-                //returns a new APP_ACCESS_VERIFICATION token
-                COMMON_GLOBAL.iam_user_app_id =         JSON.parse(result).iam_user_app_id;
-                COMMON_GLOBAL.iam_user_id =             JSON.parse(result).iam_user_id;
-                COMMON_GLOBAL.iam_user_username =       JSON.parse(result).iam_user_username;
-                COMMON_GLOBAL.token_at	=               JSON.parse(result).token_at;
-                COMMON_GLOBAL.token_exp =               JSON.parse(result).exp;
-                COMMON_GLOBAL.token_iat =               JSON.parse(result).iat;
-                COMMON_GLOBAL.token_timestamp =         JSON.parse(result).tokentimestamp;
+                COMMON_GLOBAL.iam_user_app_id =         null;
+                COMMON_GLOBAL.iam_user_id =             null;
+                COMMON_GLOBAL.iam_user_username =       null;
+                COMMON_GLOBAL.token_at	=               null;
+                COMMON_GLOBAL.token_exp =               null;
+                COMMON_GLOBAL.token_iat =               null;
+                COMMON_GLOBAL.token_timestamp =         null;
                 return true;
             }
             else

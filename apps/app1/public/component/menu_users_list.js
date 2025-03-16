@@ -29,7 +29,6 @@ const template = props => ` <div class='menu_users_list_row'>
                                 <div data-column='otp_key' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('otp_key')}'></div>
                                 <div data-column='password' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('password')}'></div>
                                 <div data-column='password_reminder' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('password_reminder')}'></div>
-                                <div data-column='verification_code' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('verification_code')}'></div>
                                 <div data-column='created' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('created')}'></div>
                                 <div data-column='modified' class='menu_apps_col list_sort_click list_title common_icon ${props.function_get_order_by('modified')}'></div>
                             </div>
@@ -47,7 +46,6 @@ const template = props => ` <div class='menu_users_list_row'>
                                     <div data-column='otp_key' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.otp_key ?? ''}</div>
                                     <div data-column='password' class='menu_users_list_col common_input list_edit' contentEditable='true' ></div>
                                     <div data-column='password_reminder' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.password_reminder ?? ''}</div>
-                                    <div data-column='verification_code' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.verification_code ?? ''}</div>
                                     <div data-column='created' class='menu_users_list_col list_readonly'>${user.created ?? ''}</div>
                                     <div data-column='modified' class='menu_users_list_col list_readonly'>${user.modified ?? ''}</div>
                                 </div>`

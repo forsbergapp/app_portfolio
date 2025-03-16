@@ -536,7 +536,6 @@
  *              otp_key:string|null,
  *              avatar:string|null,
  *              user_level:number|null, 
- *              verification_code?: number|null, 
  *              status:number|null, 
  *              active:number,
  *              created:string, 
