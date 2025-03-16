@@ -165,16 +165,6 @@ const iamUtilResponseNotAuthorized = (res, status, reason, bff=false) => {
 };
 
 /**
- * @name iamUtilVerificationCode
- * @description Generate random verification code between 100000 and 999999
- * @function
- * @returns {string}
- */
-const iamUtilVerificationCode = () => {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-};
-
-/**
  * @name iamAuthenticateUser
  * @description IAM Authenticates admin login
  * @function
@@ -245,45 +235,31 @@ const iamAuthenticateUser = async parameters =>{
                         ip:                     parameters.ip,
                         ua:                     null};
                 await IamAppAccess.post(parameters.app_id, file_content);
-                //save verification code if user account is not active
-                const verification = user.active==1?
-                                    null:
-                                        await IamUser.updateAdmin({app_id:parameters.app_id,
-                                                                            /**@ts-ignore */
-                                                                            resource_id:user.id,
-                                                                            data :{ active:0,
-                                                                                    verification_code:iamUtilVerificationCode()}});
-                if (verification?.http){
-                    //return error
-                    return verification.result;
-                }
-                else{
-                    //updated info in connected list and then return login result
-                    return await socketConnectedUpdate(parameters.app_id, 
-                        {   idToken:                parameters.idToken,
-                            iam_user_id:            user.id,
-                            iam_user_username:      user.username,
-                            iam_user_type:          user.type,
-                            token_access:           token_type=='ADMIN'?null:jwt_data?jwt_data.token:null,
-                            token_admin:            token_type=='ADMIN'?jwt_data?jwt_data.token:null:null,
-                            ip:                     parameters.ip,
-                            headers_user_agent:     parameters.user_agent,
-                            headers_accept_language:parameters.accept_language})
-                    .then((result_socket)=>{
-                        return  result_socket.http?result_socket:{result:{  iam_user_id:    user.id,
-                                                                            iam_user_app_id: iam_user_app_id,
-                                                                            //return only if account is active:
-                                                                            ...(user.active==1 && {iam_user_username:  user.username}),
-                                                                            ...(user.active==1 && {bio:  user.bio}),
-                                                                            ...(user.active==1 && {avatar:  user.avatar}),
-                                                                            token_at:       jwt_data?jwt_data.token:null,
-                                                                            exp:            jwt_data?jwt_data.exp:null,
-                                                                            iat:            jwt_data?jwt_data.iat:null,
-                                                                            tokentimestamp: jwt_data?jwt_data.tokentimestamp:null,
-                                                                            active:         user.active}, 
-                                                                        type:'JSON'};
-                    });
-                }
+                //update info in connected list and then return login result
+                return await socketConnectedUpdate(parameters.app_id, 
+                    {   idToken:                parameters.idToken,
+                        iam_user_id:            user.id,
+                        iam_user_username:      user.username,
+                        iam_user_type:          user.type,
+                        token_access:           token_type=='ADMIN'?null:jwt_data?jwt_data.token:null,
+                        token_admin:            token_type=='ADMIN'?jwt_data?jwt_data.token:null:null,
+                        ip:                     parameters.ip,
+                        headers_user_agent:     parameters.user_agent,
+                        headers_accept_language:parameters.accept_language})
+                .then((result_socket)=>{
+                    return  result_socket.http?result_socket:{result:{  iam_user_id:    user.id,
+                                                                        iam_user_app_id: iam_user_app_id,
+                                                                        //return only if account is active:
+                                                                        ...(user.active==1 && {iam_user_username:  user.username}),
+                                                                        ...(user.active==1 && {bio:  user.bio}),
+                                                                        ...(user.active==1 && {avatar:  user.avatar}),
+                                                                        token_at:       jwt_data?jwt_data.token:null,
+                                                                        exp:            jwt_data?jwt_data.exp:null,
+                                                                        iat:            jwt_data?jwt_data.iat:null,
+                                                                        tokentimestamp: jwt_data?jwt_data.tokentimestamp:null,
+                                                                        active:         user.active}, 
+                                                                    type:'JSON'};
+                });
             };
             //user authorized access
             //return result without iam user id for admin
@@ -438,8 +414,6 @@ const iamAuthenticateUserSignup = async parameters =>{
                                                             private:0,
                                                             avatar:null,
                                                             active:0,
-                                                            //signup process needs verification
-                                                            verification_code:iamUtilVerificationCode(),
                                                             type:'USER'});
     if (new_user.result){
         const jwt_data = iamAuthorizeToken( parameters.app_id, 
@@ -447,7 +421,7 @@ const iamAuthenticateUserSignup = async parameters =>{
                                             {   app_id:                 parameters.app_id, 
                                                 app_custom_id:          null,
                                                 iam_user_app_id:        null,
-                                                iam_user_id:            new_user.result.id, 
+                                                iam_user_id:            new_user.result.insertId, 
                                                 iam_user_username:      parameters.data.username, 
                                                 ip:                     parameters.ip, 
                                                 scope:                  'USER'});
@@ -456,7 +430,7 @@ const iamAuthenticateUserSignup = async parameters =>{
             type:                   'APP_ACCESS_VERIFICATION',
             app_custom_id:          null,
             iam_user_app_id:        null,
-            iam_user_id:            new_user.result.id,
+            iam_user_id:            new_user.result.insertId,
             iam_user_username:      parameters.data.username,
             app_id:                 parameters.app_id,
             res:                    1,
@@ -467,7 +441,7 @@ const iamAuthenticateUserSignup = async parameters =>{
         //updated info in connected list and then return signup result
         return await socketConnectedUpdate(parameters.app_id, 
             {   idToken:                parameters.idToken,
-                iam_user_id:            new_user.result.id,
+                iam_user_id:            new_user.result.insertId,
                 iam_user_username:      parameters.data.username,
                 iam_user_type:          'USER',
                 token_access:           jwt_data?jwt_data.token:null,
@@ -477,13 +451,13 @@ const iamAuthenticateUserSignup = async parameters =>{
                 headers_accept_language:parameters.accept_language})
         .then(result_socket=>result_socket.http?result_socket:
                                 {result:{
-                                                otp_key:        IamUser.get(parameters.app_id, new_user.result.id)[0].otp_key,
+                                                otp_key:        IamUser.get(parameters.app_id, new_user.result.insertId).result[0]?.otp_key,
                                                 token_at:       jwt_data.token,
                                                 exp:            jwt_data.exp,
                                                 iat:            jwt_data.iat,
                                                 tokentimestamp: jwt_data.tokentimestamp,
                                                 iam_user_app_id: null,
-                                                iam_user_id:    new_user.result.id},
+                                                iam_user_id:    new_user.result.insertId},
                                         type:'JSON'});
             
     }
@@ -508,34 +482,26 @@ const iamAuthenticateUserSignup = async parameters =>{
  *          locale:string,
  *          data:{  verification_type:'1'|'2',   //1 LOGIN, 2 SIGNUP
  *                  verification_code:string}}} parameters
- * @returns {Promise.<server_server_response & { result?:{
- *                                              token_at: string|null,
- *                                              exp:number|null,
- *                                              iat:number|null,
- *                                              tokentimestamp:number|null,
- *                                              activated:number,
- *                                              iam_user_app_id:number|null,
- *                                              iam_user_id:number|null,
- *                                              iam_user_username:string|null} }>}
+ * @returns {Promise.<server_server_response & { result?:{activated:number} }>}
  */
 const iamAuthenticateUserActivate = async parameters =>{
-    if (parameters.data.verification_code=='1' || parameters.data.verification_code=='2'){
-        const result_activate =  await IamUser.updateVerificationCodeAuthenticate(
-                                    parameters.app_id, 
-                                    parameters.resource_id, 
-                                    { verification_code:parameters.data.verification_code});
-        if (result_activate.result){
+    if (parameters.data.verification_type=='1' || parameters.data.verification_type=='2'){
+        /**@type{import('./security.js')} */
+        const Security= await import(`file://${process.cwd()}/server/security.js`);    
+        const result_activate =  await Security.securityTOTPValidate(parameters.data.verification_code, IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.otp_key);
+        if (result_activate){
+            //set user active = 1
+            IamUser.updateAdmin({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{active:1}});
+
             /**@type{import('./db/IamUserEvent.js')} */
             const IamUserEvent = await import(`file://${process.cwd()}/server/db/IamUserEvent.js`);
             /**@type{server_db_table_IamUserEvent}*/
             const eventData = {
                 /**@ts-ignore */
-                iam_user_id: iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_VERIFICATION').iam_user_id,
-                event: serverUtilNumberValue(parameters.data.verification_type)==1?
-                            'OTP_LOGIN':
-                                serverUtilNumberValue(parameters.data.verification_type)==2?
-                                    'OTP_SIGNUP':
-                                        'OTP_FORGOT'
+                iam_user_id:    iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_VERIFICATION').iam_user_id,
+                event:          serverUtilNumberValue(parameters.data.verification_type)==1?
+                                    'OTP_LOGIN':
+                                        'OTP_SIGNUP'
             };
             eventData.event_status='SUCCESSFUL';
             return IamUserEvent.post(parameters.app_id, eventData)
@@ -547,21 +513,18 @@ const iamAuthenticateUserActivate = async parameters =>{
                                                 user_agent:parameters.user_agent,
                                                 accept_language:parameters.accept_language})
                                     .then(result=>result.http?result:
-                                                    {result:{
-                                                            token_at: null,
-                                                            exp:null,
-                                                            iat:null,
-                                                            tokentimestamp:null,
-                                                            activated:1,
-                                                            iam_user_app_id: null,
-                                                            iam_user_id:null,
-                                                            iam_user_username:null
-                                                        }, 
-                                                        type:'JSON'
-                                                    }));
+                                                    {result:{activated:1}, type:'JSON'}
+                                        )
+                            );
         }
         else
-            return result_activate;
+            return {http:401,
+                code:'IAM',
+                text:iamUtilMessageNotAuthorized(),
+                developerText:null,
+                moreInfo:null,
+                type:'JSON'
+            };
     }
     else
         return {http:400,
@@ -590,8 +553,7 @@ const iamAuthenticateUserActivate = async parameters =>{
  *                  password_reminder:string,
  *                  bio:string,
  *                  private:number,
- *                  avatar:string,
- *                  verification_code:string},
+ *                  avatar:string},
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:{updated: number} }>}
  */

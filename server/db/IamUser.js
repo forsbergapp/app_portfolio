@@ -333,7 +333,6 @@ const post = async (app_id, data) => {
                                 otp_key:            Security.securityOTPKeyCreate(),
                                 avatar:             data.avatar,
                                 user_level:         data.user_level, 
-                                verification_code:  data.verification_code ?? null, 
                                 status:             data.status, 
                                 active:             data.active,
                                 created:            new Date().toISOString(), 
@@ -377,7 +376,6 @@ const postAdmin = async (app_id, data) => {
                             otp_key: Security.securityOTPKeyCreate(),
                             avatar:data.avatar,
                             user_level:data.user_level, 
-                            verification_code: data.verification_code, 
                             status:data.status, 
                             active:data.active,
                             created:new Date().toISOString(), 
@@ -480,8 +478,6 @@ const updateAdmin = async parameters => {
                 data_update.type = parameters.data.type;
             if (parameters.data?.user_level!=null)
                 data_update.user_level = serverUtilNumberValue(parameters.data.user_level);
-            if (parameters.data?.verification_code!=null)
-                data_update.verification_code = parameters.data.verification_code;
             if (parameters.data?.status!=null)
                 data_update.status = parameters.data.status;
             if (parameters.data?.active!=null)
@@ -503,45 +499,6 @@ const updateAdmin = async parameters => {
     }
     else
         return ORM.getError(parameters.app_id, 404);
-};
-
-/**
- * @name updateVerificationCodeAuthenticate
- * @description updateVerificationCodeAuthenticate
- * @function
- * @param {number} app_id
- * @param {number} resource_id
- * @param {{verification_code:string}} data
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
- */
-const updateVerificationCodeAuthenticate = async (app_id, resource_id, data) => {
-    /**@type{server_db_table_IamUser}*/
-    const user = get(app_id, resource_id).result[0];
-    if (user){
-        if (user.verification_code==data.verification_code){
-            /**@type{server_db_table_IamUser} */
-            const data_update = {};
-            data_update.verification_code = null;
-            data_update.active = 1;
-            data_update.modified = new Date().toISOString();
-            if (Object.entries(data_update).length>0)
-                return ORM.Execute({  app_id:app_id, 
-                                            dml:'UPDATE', 
-                                            object:'IamUser', 
-                                            update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
-                    if (result.affectedRows>0)
-                        return {result:result, type:'JSON'};
-                    else
-                        return ORM.getError(app_id, 404);
-                });
-            else
-                return ORM.getError(app_id, 400);
-        }
-        else
-            return ORM.getError(app_id, 401);
-    }
-    else
-        return ORM.getError(app_id, 404);
 };
 
 /**
@@ -599,4 +556,4 @@ const deleteRecordAdmin = async (app_id, resource_id) => {
         return user;
 };
 
-export {get, getViewProfile, getViewProfileStat, getViewProfileDetail, getViewStatCountAdmin, post, postAdmin, update, updateAdmin, updateVerificationCodeAuthenticate, deleteRecord, deleteRecordAdmin};
+export {get, getViewProfile, getViewProfileStat, getViewProfileDetail, getViewStatCountAdmin, post, postAdmin, update, updateAdmin, deleteRecord, deleteRecordAdmin};

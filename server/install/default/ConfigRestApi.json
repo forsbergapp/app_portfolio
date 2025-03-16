@@ -3783,9 +3783,6 @@
                                             "user_level":{
                                                 "type":"string"
                                             },
-                                            "verification_code":{
-                                                "type":"string"
-                                            },
                                             "status":{
                                                 "type":"string"
                                             },

@@ -121,17 +121,6 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="verification_code" id="2D636ABA-8AB9-2BDB-ABEC-EE87B4303220">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:30:24 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="status" id="4150DF4F-3158-C6F7-6E09-1B619D938C1F">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:30:30 UTC</createdTime>

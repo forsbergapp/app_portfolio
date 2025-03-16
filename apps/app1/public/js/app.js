@@ -513,8 +513,7 @@ const appSecureCommonButtonSave = async (item) => {
                                                                              record.querySelector('[data-column=\'password\']').textContent==null)?
                                                                                 null:
                                                                                     record.querySelector('[data-column=\'password\']').textContent,
-                                                        password_reminder:  record.querySelector('[data-column=\'password_reminder\']').textContent,
-                                                        verification_code:  record.querySelector('[data-column=\'verification_code\']').textContent
+                                                        password_reminder:  record.querySelector('[data-column=\'password_reminder\']').textContent
                                                     });
             }
             break;

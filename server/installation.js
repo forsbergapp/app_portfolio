@@ -136,8 +136,7 @@ const postDemo = async parameters=> {
                     *          active:             server_db_table_IamUser['active'],
                     *          private:            server_db_table_IamUser['private'],
                     *          user_level:         server_db_table_IamUser['user_level'],
-                    *          type:               server_db_table_IamUser['type'],
-                    *          verification_code:  server_db_table_IamUser['verification_code']
+                    *          type:               server_db_table_IamUser['type']
                     * 
                    }}*/
                    const data_create = {   username:               demo_user.username,
@@ -148,8 +147,7 @@ const postDemo = async parameters=> {
                                            active:                 1,
                                            private:                0,
                                            user_level:             2,
-                                           type:                   'USER',
-                                           verification_code:      null
+                                           type:                   'USER'
                                        };
                    //create iam user then database user
                    /**@ts-ignore */

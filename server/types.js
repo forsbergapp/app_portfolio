@@ -412,7 +412,6 @@
  *          otp_key?:string|null,
  *          type?: 'ADMIN'|'USER', 
  *          user_level?:number|null, 
- *          verification_code?: string|null, 
  *          status?:number|null, 
  *          active?:number,
  *          created?:string, 
@@ -872,7 +871,7 @@
 
 /**
  * @description DB server_db_iam_user_event_name
- * @typedef {'OTP_LOGIN'|'OTP_SIGNUP'|'OTP_FORGOT'|'PASSWORD_RESET'|'OTP_2FA'|'SUSPENDED'|'UNSUSPENDED'} server_db_iam_user_event_name
+ * @typedef {'OTP_LOGIN'|'OTP_SIGNUP'|'PASSWORD_RESET'|'OTP_2FA'|'SUSPENDED'|'UNSUSPENDED'} server_db_iam_user_event_name
  */
 /**
  * @description DB server_db_iam_user_event_status
@@ -893,7 +892,6 @@
  *          avatar?:string|null,
  *          type?: 'ADMIN'|'USER', 
  *          user_level?:number|null, 
- *          verification_code?: string|null, 
  *          status?:number|null, 
  *          active?:number,
  *          created?:string, 

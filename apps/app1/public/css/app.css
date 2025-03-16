@@ -527,7 +527,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 }
 .menu_users_list_row{
 	display:grid;
-	grid-template-columns: 3em 9em 6em 5em 5em 5em 5em 15em 20em 20em 20em 10em 10em 15em 15em;
+	grid-template-columns: 3em 9em 6em 5em 5em 5em 5em 15em 20em 20em 20em 10em 15em 15em;
 }
 .menu_users_iam_app_access_row{
 	display:grid;
