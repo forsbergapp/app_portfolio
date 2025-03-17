@@ -61,6 +61,9 @@ Object.seal(DB);
 const DB_DIR = {db:'/data/db/', backup:'/data/db/backup/'};
 Object.seal(DB_DIR);
 
+/**@type{import('./Log.js')}*/
+const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
+
 /**
  * @name getObjectRecord
  * @description Get file record from file db
@@ -384,16 +387,15 @@ const getObject = (app_id, object, resource_id, data_app_id) =>{
                                         return row;
                                 });
                 //log in background without waiting if db log is enabled
-                import(`file://${process.cwd()}/server/db/Log.js`).then((/**@type{import('./Log.js')} */Log)=>
-                    Log.post({  app_id:app_id, 
-                                data:{  object:'LogDbInfo', 
-                                        db:{object:object,
-                                            dml:'GET', 
-                                            parameters:{resource_id:resource_id, data_app_id:data_app_id}
-                                            }, 
-                                        log:records
-                                    }
-                                }));
+                Log.post({  app_id:app_id, 
+                            data:{  object:'LogDbInfo', 
+                                    db:{object:object,
+                                        dml:'GET', 
+                                        parameters:{resource_id:resource_id, data_app_id:data_app_id}
+                                        }, 
+                                    log:records
+                                }
+                            });
                 if (records.length>0)
                     return {rows:records};
                 else
@@ -529,19 +531,19 @@ const postObject = async (app_id, object, data) =>{
                         /**@ts-ignore */
                         (DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data))
                     .catch((error)=>{
-                        return import(`file://${process.cwd()}/server/db/Log.js`).then((/**@type{import('./Log.js')} */Log)=>Log.post({   app_id:app_id, 
-                                            data:{  object:'LogDbError', 
-                                                    db:{object:object,
-                                                        dml:'POST', 
-                                                        parameters:null
-                                                        }, 
-                                                    log:error
-                                                }
-                                            }).then(()=>{
-                                                rollback(object, 
-                                                    /*@ts-ignore*/
-                                                    file.transaction_id);
-                                            }));
+                        Log.post({  app_id:app_id, 
+                                    data:{  object:'LogDbError', 
+                                            db:{object:object,
+                                                dml:'POST', 
+                                                parameters:null
+                                                }, 
+                                            log:error
+                                        }
+                                    }).then(()=>{
+                                        rollback(object, 
+                                            /*@ts-ignore*/
+                                            file.transaction_id);
+                                    });
                     });
                     //commit and update cache for TABLE
                     if (commit(  object, 
@@ -580,8 +582,7 @@ const postObject = async (app_id, object, data) =>{
  *          parameters:*
  *          error:*}} parameters
  */
-const errorRollback = parameters => {
-   import(`file://${process.cwd()}/server/db/Log.js`).then((/**@type{import('./Log.js')} */Log)=>
+const errorRollback = parameters =>
         Log.post({  app_id:parameters.app_id, 
                     data:{  object:'LogDbError', 
                             db:{object:parameters.object,
@@ -593,8 +594,7 @@ const errorRollback = parameters => {
                     }).then(()=>{
                         if (parameters.transaction_id)
                             rollback(parameters.object, parameters.transaction_id);
-                    }));
-};
+                    });
 /**
  * @name updateObject
  * @description Updates a record in a TABLE
@@ -741,15 +741,14 @@ const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
                 await updateFsFile(  objectCascade.name, file.transaction_id, new_content)
                 .catch((/**@type{server_server_error}*/error)=>{
                     errorRollback({ app_id:app_id,
-                        object:table, 
+                        object:objectCascade.name, 
                         dml:'DELETE', 
                         parameters:{resource_id:resource_id, data_app_id:data_app_id}, 
                         transaction_id:file.transaction_id, 
                         error:error});
-                    throw error;
                 });
                 //commit and update cache without removed record
-                if (commit(  table, 
+                if (commit(  objectCascade.name, 
                                             /*@ts-ignore*/
                                             file.transaction_id,
                                             new_content))
@@ -767,8 +766,8 @@ const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
     const file = await lockObject(app_id, table);
     if (file.file_content.filter((/**@type{*}*/row)=>(data_app_id==null && row.id==resource_id && resource_id!=null)|| (resource_id==null && row.app_id == data_app_id && data_app_id != null)).length>0){
         await cascadeDelete({app_id:app_id, object:table, pk:resource_id??data_app_id})
-                .catch(error=>{
-                    throw error;
+                .catch(()=>{
+                    null;
                 });
         //get content to update and filter unique id
         const new_content = file.file_content
@@ -818,8 +817,6 @@ const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
  * @returns {Promise<*>}
  */
 const Execute = async parameters =>{
-    /**@type{import('./Log.js')} */
-    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
     try{
         if (parameters.dml!='GET' && parameters.dml!='UPDATE' && parameters.dml!='POST' && parameters.dml!='DELETE')
         {
