@@ -98,7 +98,7 @@ const fileTransactionStart = async (file, filepath)=>{
             record.lock = 1;
             //add 1ms wait so transaction_id will be guaranteed unique on a fast server
             setTimeout(()=>{
-                resolve(transaction()); 
+                transaction().then((result)=>resolve(result)); 
                 }, 1);
         }
         else{
@@ -110,7 +110,7 @@ const fileTransactionStart = async (file, filepath)=>{
                 else
                     if (record.lock==0){
                         record.lock = 1;
-                        resolve(transaction());
+                        transaction().then((result)=>resolve(result)); 
                     }
                     else
                         setTimeout(()=>{lock(), 1;});
@@ -248,10 +248,11 @@ const getFsDbObject = async () => getFsFile(DB_DIR.db + 'DbObjects.json');
  * @param {server_DbObject} file 
  * @param {number|null} transaction_id 
  * @param {[]} file_content 
+ * @param {string|null} filepath
  * @returns {Promise.<void>}
  */
 
-const updateFsFile = async (file, transaction_id, file_content) =>{  
+const updateFsFile = async (file, transaction_id, file_content, filepath=null) =>{  
     const record = getObjectRecord(file);
     if (!transaction_id || record.transaction_id != transaction_id){
         /**@type{import('../iam.js')} */
@@ -264,7 +265,7 @@ const updateFsFile = async (file, transaction_id, file_content) =>{
             await postFsFile(`${DB_DIR.backup + file + '.json'}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, file_content, record.type=='TABLE');
         }
         //write new file content
-        await postFsFile(DB_DIR.db + file + '.json', file_content, record.type.startsWith('TABLE'));
+        await postFsFile(filepath ?? (DB_DIR.db + file + '.json'), file_content, record.type.startsWith('TABLE'));
     }
 };
 
@@ -532,7 +533,8 @@ const postObject = async (app_id, object, data) =>{
                     await updateFsFile( object, 
                         file.transaction_id, 
                         /**@ts-ignore */
-                        (DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data))
+                        (DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data),
+                        object_type=='TABLE'?null:filepath)
                     .catch(()=>{
                         rollback(object, 
                             /*@ts-ignore*/
