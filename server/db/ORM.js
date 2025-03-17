@@ -432,8 +432,11 @@ const getObjectFile = async (app_id, object, resource_id, partition) =>{
                             DB_DIR.db + `${object}_${fileNamePartition(partition)}.json`:
                                 DB_DIR.db + `${object}.json`;
         /**@type{*[]} */
-        const log = await getFsFile(filepath, record.type.startsWith('TABLE'));
-        return {rows:log.filter(row=>row.id == (resource_id??row.id))};    
+        const file = await getFsFile(filepath, record.type.startsWith('TABLE'));
+        if (record.type=='TABLE_KEY_VALUE')
+            return {rows:file.filter(row=>row.app_id == (resource_id??row.app_id))};    
+        else
+            return {rows:file.filter(row=>row.id == (resource_id??row.id))};    
     }
     else
         return await getFsFile(DB_DIR.db + object + '.json', record.type.startsWith('TABLE'));
@@ -530,20 +533,11 @@ const postObject = async (app_id, object, data) =>{
                         file.transaction_id, 
                         /**@ts-ignore */
                         (DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data))
-                    .catch((error)=>{
-                        Log.post({  app_id:app_id, 
-                                    data:{  object:'LogDbError', 
-                                            db:{object:object,
-                                                dml:'POST', 
-                                                parameters:null
-                                                }, 
-                                            log:error
-                                        }
-                                    }).then(()=>{
-                                        rollback(object, 
-                                            /*@ts-ignore*/
-                                            file.transaction_id);
-                                    });
+                    .catch(()=>{
+                        rollback(object, 
+                            /*@ts-ignore*/
+                            file.transaction_id);
+                        
                     });
                     //commit and update cache for TABLE
                     if (commit(  object, 
@@ -574,27 +568,6 @@ const postObject = async (app_id, object, data) =>{
         return {affectedRows:0};
     }
 };
-/**
- * @param {{app_id:number,
- *          object:server_DbObject,
- *          transaction_id:number|null,
- *          dml:'UPDATE'|'DELETE'|'POST',
- *          parameters:*
- *          error:*}} parameters
- */
-const errorRollback = parameters =>
-        Log.post({  app_id:parameters.app_id, 
-                    data:{  object:'LogDbError', 
-                            db:{object:parameters.object,
-                                dml:parameters.dml,
-                                parameters:parameters.parameters
-                                }, 
-                            log:parameters.error
-                        }
-                    }).then(()=>{
-                        if (parameters.transaction_id)
-                            rollback(parameters.object, parameters.transaction_id);
-                    });
 /**
  * @name updateObject
  * @description Updates a record in a TABLE
@@ -636,12 +609,9 @@ const updateObject = async (app_id, object, resource_id, data_app_id, data) =>{
                         }
                     if (update){
                         await updateFsFile(object, file.transaction_id, file.file_content)
-                                .catch((/**@type{server_server_error}*/error)=>errorRollback({  app_id:app_id,
-                                                                                                object:object, 
-                                                                                                dml:'UPDATE', 
-                                                                                                parameters:{resource_id:resource_id, data_app_id:data_app_id}, 
-                                                                                                transaction_id:file.transaction_id, 
-                                                                                                error:error}));
+                                .catch(()=>rollback(object, 
+                                                    /**@ts-ignore */
+                                                    file.transaction_id));
                         //commit and update cache for TABLE
                         if (commit( object,
                                     /*@ts-ignore*/
@@ -667,12 +637,9 @@ const updateObject = async (app_id, object, resource_id, data_app_id, data) =>{
             else{
                 //document
                 await updateFsFile(object, file.transaction_id, data)
-                .catch((/**@type{server_server_error}*/error)=>errorRollback({  app_id:app_id,
-                                                                                object:object, 
-                                                                                dml:'UPDATE', 
-                                                                                parameters:{resource_id:resource_id, data_app_id:data_app_id}, 
-                                                                                transaction_id:file.transaction_id, 
-                                                                                error:error}));
+                .catch(()=>rollback(object, 
+                                    /**@ts-ignore */
+                                    file.transaction_id));
                 //commit and update cache for DOCUMENT
                 if (commit(  object, 
                                             /*@ts-ignore*/
@@ -739,14 +706,9 @@ const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
                                         ).length==0
                                     );
                 await updateFsFile(  objectCascade.name, file.transaction_id, new_content)
-                .catch((/**@type{server_server_error}*/error)=>{
-                    errorRollback({ app_id:app_id,
-                        object:objectCascade.name, 
-                        dml:'DELETE', 
-                        parameters:{resource_id:resource_id, data_app_id:data_app_id}, 
-                        transaction_id:file.transaction_id, 
-                        error:error});
-                });
+                .catch(()=> rollback(objectCascade.name, 
+                                    /**@ts-ignore */
+                                    file.transaction_id));
                 //commit and update cache without removed record
                 if (commit(  objectCascade.name, 
                                             /*@ts-ignore*/
@@ -771,20 +733,16 @@ const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
                 });
         //get content to update and filter unique id
         const new_content = file.file_content
-                        .filter((/**@type{*}*/row)=>(data_app_id==null && resource_id!=null && row.id!=resource_id) || (resource_id==null && data_app_id!=null && row.app_id!=data_app_id));
+                            .filter((/**@type{*}*/row)=>(data_app_id==null && resource_id!=null && row.id!=resource_id) || (resource_id==null && data_app_id!=null && row.app_id!=data_app_id));
         await updateFsFile(  table, 
                             file.transaction_id, 
                             new_content)
                 .catch((/**@type{server_server_error}*/error)=>{
-                    errorRollback({ app_id:app_id,
-                        object:table, 
-                        dml:'DELETE', 
-                        parameters:{resource_id:resource_id, data_app_id:data_app_id}, 
-                        transaction_id:file.transaction_id, 
-                        error:error});
+                    rollback(table, 
+                            /*@ts-ignore*/
+                            file.transaction_id);
                     throw error;
-                    }
-                );
+                });
                 //commit and update cache without removed record
                 if (commit(  table, 
                                             /*@ts-ignore*/
@@ -841,30 +799,35 @@ const Execute = async parameters =>{
                                                                             parameters.object, 
                                                                             parameters.delete?.resource_id??null, 
                                                                             parameters.delete?.data_app_id??null);
-            
-            return Log.post({   app_id:parameters.app_id, 
-                                data:{  object:'LogDbInfo', 
-                                        db:{object:parameters.object,
-                                            dml:parameters.dml, 
-                                            parameters:parameters
-                                            }, 
-                                        log:result
-                                    }
-                                }).then(()=>result);
+            if (parameters.object.startsWith('Log'))
+                return result;
+            else
+                return Log.post({   app_id:parameters.app_id, 
+                                    data:{  object:'LogDbInfo', 
+                                            db:{object:parameters.object,
+                                                dml:parameters.dml, 
+                                                parameters:parameters
+                                                }, 
+                                            log:result
+                                        }
+                                    }).then(()=>result);
         }
     } 
     catch (error) {
-        return Log.post({   app_id:parameters.app_id, 
-                            data:{  object:'LogDbError', 
-                                    db:{object:parameters.object,
-                                        dml:parameters.dml, 
-                                        parameters:parameters.update ?? parameters.post ?? parameters.delete
-                                        }, 
-                                    log:error
-                                }
-                            }).then(()=>{
-                                throw error;
-                            });
+        if (parameters.object.startsWith('Log'))
+            throw error;
+        else
+            return Log.post({   app_id:parameters.app_id, 
+                                data:{  object:'LogDbError', 
+                                        db:{object:parameters.object,
+                                            dml:parameters.dml, 
+                                            parameters:parameters.update ?? parameters.post ?? parameters.delete
+                                            }, 
+                                        log:error
+                                    }
+                                }).then(()=>{
+                                    throw error;
+                                });
     }
 };
 
