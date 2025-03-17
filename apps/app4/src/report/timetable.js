@@ -183,7 +183,7 @@ const timetable = async (timetable_parameters) => {
 	const parametersApp = AppParameter.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
     const result_app = App.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
 	return await new Promise((resolve) => {
-		APP_REPORT_GLOBAL.app_copyright = result_app.app_copyright;
+		APP_REPORT_GLOBAL.app_copyright = result_app.copyright;
 		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_calendar_lang = parametersApp.app_regional_default_calendar_lang.value;
 		/**@ts-ignore */
