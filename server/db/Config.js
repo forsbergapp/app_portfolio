@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_update,
- *          server_DbObject, server_db_db_name_config, server_server_error, 
+ *          server_DbObject, server_DbObject_record, server_db_db_name_config, server_server_error, 
  *          server_db_document_ConfigServer,server_db_document_ConfigRestApi, server_db_document_ConfigIamPolicy,
  *          server_db_config_server_service_iam,
  *          server_db_table_IamUser, server_db_table_App, server_db_table_AppModule, server_db_table_AppParameter, server_db_table_AppSecret,server_db_table_AppData,
@@ -79,7 +79,7 @@ const configDefault = async () => {
      *           [server_DbObject, server_db_table_AppSecret[]],
      *           [server_DbObject, server_db_table_AppData[]],
      *           [server_DbObject, server_db_table_AppTranslation[]],
-     *           [server_DbObject, server_DbObject[]]
+     *           [server_DbObject, server_DbObject_record[]]
      *       ]}
      */
     const config_obj = [
