@@ -545,6 +545,8 @@ const iamAuthenticateUserActivate = async parameters =>{
  * @param {{app_id:number,
  *          resource_id:number,
  *          ip:string,
+ *          idToken:string,
+ *          authorization:string,
  *          user_agent:string,
  *          accept_language:string,
  *          data :{ username:string,
@@ -553,87 +555,78 @@ const iamAuthenticateUserActivate = async parameters =>{
  *                  password_reminder:string,
  *                  bio:string,
  *                  private:number,
- *                  avatar:string},
+ *                  avatar:string,
+ *                  totp:string},
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:{updated: number} }>}
  */
 const iamAuthenticateUserUpdate = async parameters => {
-    /**@type{server_db_table_IamUser} */
-    const data_update = {   bio:                parameters.data.bio,
-                            private:            parameters.data.private,
-                            username:           parameters.data.username,
-                            password:           parameters.data.password,
-                            password_new:       (parameters.data.password_new && parameters.data.password_new!='')==true?parameters.data.password_new:null,
-                            password_reminder:  (parameters.data.password_reminder && parameters.data.password_reminder!='')==true?parameters.data.password_reminder:null,
-                            avatar:             parameters.data.avatar
-                        };
-    return IamUser.update(parameters.app_id, parameters.resource_id, data_update)
-            .then(result_update=>{
-            if (result_update.result)
-                return {result:{updated: 1}, type:'JSON'};
-            else
-                return result_update;
-            });
-};
-/**
- * @name iamAuthenticateUserUpdatePassword
- * @description Updates users password and logs out the user
- * @function
- * @memberof ROUTE_REST_API
- * @param {{app_id:number,
- *          resource_id:number,
- *          ip:string,
- *          idToken:string,
- *          authorization:string,
- *          user_agent:string,
- *          accept_language:string,
- *          data:{  password_new:string},
- *          locale:string}} parameters
- * @returns {Promise.<server_server_response>}
- */
-const iamAuthenticateUserUpdatePassword = async parameters => {
-    /**@type{import('./db/IamUserEvent.js')} */
-    const IamUserEvent = await import(`file://${process.cwd()}/server/db/IamUserEvent.js`);
+    /**@type{import('./security.js')} */
+    const Security= await import(`file://${process.cwd()}/server/security.js`);    
+    const result_totp =  await Security.securityTOTPValidate(parameters.data.totp, IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.otp_key);
+    if (result_totp){
+        /**@type{import('./db/IamUserEvent.js')} */
+        const IamUserEvent = await import(`file://${process.cwd()}/server/db/IamUserEvent.js`);
 
-    const result_update = await  IamUser.updateAdmin(
-                                    {   app_id:parameters.app_id,
-                                        resource_id:parameters.resource_id,
-                                        data:{  password: parameters.data.password_new,
-                                                password_new: parameters.data.password_new}
-                                    });
-    /**@type{server_db_table_IamUserEvent}*/
-    const eventData = {
-        /**@ts-ignore */
-        iam_user_id: iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_VERIFICATION').iam_user_id,
-        event: 'PASSWORD_RESET'
-    };
-    if (result_update.result) {
-        eventData.event_status='SUCCESSFUL';
-        return  IamUserEvent.post(parameters.app_id, eventData)
-                .then(result=>result.http?
-                                result:
-                                    iamUserLogout({app_id:parameters.app_id,
-                                        idToken:parameters.idToken,
-                                        authorization:parameters.authorization,
-                                        ip:parameters.ip,
-                                        user_agent:parameters.user_agent,
-                                        accept_language:parameters.accept_language})
-                );
+        /**@type{server_db_table_IamUser} */
+        const data_update = {   bio:                parameters.data.bio,
+                                private:            parameters.data.private,
+                                username:           parameters.data.username,
+                                password:           parameters.data.password,
+                                password_new:       (parameters.data.password_new && parameters.data.password_new!='')==true?parameters.data.password_new:null,
+                                password_reminder:  (parameters.data.password_reminder && parameters.data.password_reminder!='')==true?parameters.data.password_reminder:null,
+                                avatar:             parameters.data.avatar
+                            };
+        /**@type{server_db_table_IamUserEvent}*/
+        const eventData = {
+            /**@ts-ignore */
+            iam_user_id: parameters.resource_id,
+            event: 'USER_UPDATE'
+        };
+        return IamUser.update(parameters.app_id, parameters.resource_id, data_update)
+            .then(result_update=>{
+            if (result_update.result){
+                eventData.event_status='SUCCESSFUL';
+                return  IamUserEvent.post(parameters.app_id, eventData)
+                        .then(result=>result.http?
+                                        result:
+                                        iamUserLogout({app_id:parameters.app_id,
+                                            idToken:parameters.idToken,
+                                            authorization:parameters.authorization,
+                                            ip:parameters.ip,
+                                            user_agent:parameters.user_agent,
+                                            accept_language:parameters.accept_language})
+                                        .then(result_logout=>result_logout.http?
+                                                                result_logout:
+                                                                    {result:{updated:1}, type:'JSON'})
+                            );
+            }
+            else{
+                eventData.event_status='FAIL';
+                return IamUserEvent.post(parameters.app_id, eventData)
+                        .then(result=>result.http?
+                                        result:
+                                            result_update.http?
+                                                result_update:
+                                                    {   http:404,
+                                                        code:'IAM',
+                                                        text:'?!',
+                                                        developerText:null,
+                                                        moreInfo:null,
+                                                        type:'JSON'
+                                                    }
+                        );
+            }
+        });
     }
-    else{
-        eventData.event_status='FAIL';
-        return IamUserEvent.post(parameters.app_id, eventData)
-                .then(result=>result.http?
-                                result:
-                                    result_update.http?result_update:{   http:404,
-                                        code:'IAM',
-                                        text:'?!',
-                                        developerText:null,
-                                        moreInfo:null,
-                                        type:'JSON'
-                                    }
-                );
-    }
+    else
+        return {   http:401,
+            code:'IAM',
+            text:iamUtilMessageNotAuthorized(),
+            developerText:null,
+            moreInfo:null,
+            type:'JSON'
+        };
 };
 /**
  * @name iamAuthenticateUserDelete
@@ -1470,7 +1463,6 @@ export{ iamUtilMessageNotAuthorized,
         iamAuthenticateUserSignup,
         iamAuthenticateUserActivate,
         iamAuthenticateUserUpdate,
-        iamAuthenticateUserUpdatePassword,
         iamAuthenticateUserDelete,
         iamAuthenticateUserAppDelete,
         iamAuthenticateUserCommon,

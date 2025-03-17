@@ -1286,78 +1286,6 @@
                 }
             }
         },
-        "/bff/app_access_verification/v1/server-iam/iamuser-password/${IAM_iam_user_id}": {
-            "patch": {
-                "summary": "",
-                "operationId": "server.iam.iamAuthenticateUserUpdatePassword",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/IAM_iam_user_id",
-                            "in":"path",
-                            "required":true
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "password_new":{
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
         "/bff/app_access/v1/server-db/iamuser/${IAM_iam_user_id}": {
             "get": {
                 "summary": "",
@@ -2317,6 +2245,26 @@
                             "$ref": "#/components/parameters/IAM_iam_user_id",
                             "in":   "path",
                             "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_authorization",
+                            "required":true
                         }
                 ],
                 "requestBody":{
@@ -2345,6 +2293,9 @@
                                                 "type":"string"
                                             },
                                             "avatar":{
+                                                "type":"string"
+                                            },
+                                            "totp":{
                                                 "type":"string"
                                             }
                                         }
