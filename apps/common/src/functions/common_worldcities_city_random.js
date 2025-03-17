@@ -30,7 +30,7 @@ const appFunction = async parameters =>{
         /**@ts-ignore */
         const PATH = `${import.meta.dirname.replaceAll('\\', '/')}/worldcities`;
         const FILE = 'worldcities.json';
-        return fs.promises.readFile(`${PATH}/${FILE}`, 'utf8').then(file=>JSON.parse(file.toString()));
+        return fs.promises.readFile(`${PATH}/${FILE}`, 'utf8').then(file=>JSON.parse(file.toString()).filter((/**@type{}*/row)=>row.iso2 !='US'));
     };
     return {result:await getFile().then(cities=>cities[Math.floor(Math.random() * cities.length - 1)]), type:'JSON'};
     
