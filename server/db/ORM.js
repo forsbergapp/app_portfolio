@@ -209,10 +209,10 @@ const getFsDir = async () => await fs.promises.readdir(`${process.cwd()}${DB_DIR
  * @returns {Promise.<*>}
  */
 const getFsFile = async (filepath, table=false) => fs.promises.readFile(process.cwd() + filepath, 'utf8')
-                                                .then(result=>
-                                                    JSON.parse(result==''?(table?'[]':'{}'):result)
-                                                )
-                                                .catch(()=>'');
+                                                    .then(result=>
+                                                        JSON.parse(result==''?(table?'[]':'{}'):result)
+                                                    )
+                                                    .catch(()=>JSON.parse(table?'[]':'{}'));
 
 /**
  * @name getFsDataExists
