@@ -492,7 +492,7 @@
  *          id?:number, 
  *          iam_user_id:number,
  *          event:server_db_iam_user_event_name, 
- *          event_status:server_db_iam_user_event_status
+ *          event_status?:server_db_iam_user_event_status
  *          created?:string}} server_db_table_IamUserEvent
  */
 
@@ -871,7 +871,7 @@
 
 /**
  * @description DB server_db_iam_user_event_name
- * @typedef {'OTP_LOGIN'|'OTP_SIGNUP'|'PASSWORD_RESET'|'OTP_2FA'|'SUSPENDED'|'UNSUSPENDED'} server_db_iam_user_event_name
+ * @typedef {'OTP_LOGIN'|'OTP_SIGNUP'|'OTP_2FA'|'USER_UPDATE'} server_db_iam_user_event_name
  */
 /**
  * @description DB server_db_iam_user_event_status

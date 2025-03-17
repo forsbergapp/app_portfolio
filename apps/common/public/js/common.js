@@ -1084,6 +1084,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                                     commonDialogueShow:         commonDialogueShow,
                                     commonUserLogout:           commonUserLogout,
                                     commonMesssageNotAuthorized:commonMesssageNotAuthorized,
+                                    commonUserUpdate:           commonUserUpdate,
                                     commonUserAuthenticateCode: commonUserAuthenticateCode,
                                     commonUserSessionCountdown: commonUserSessionCountdown
                                 },
@@ -1744,49 +1745,59 @@ const commonLogout = async () => {
  * @name commonUserUpdate
  * @description User update
  * @function
- * @returns {Promise.<null>}
+ * @param {string|null} totp
+ * @returns {Promise.<boolean>}
  */
-const commonUserUpdate = async () => {
-    return new Promise(resolve=>{
-        if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
-                        {
-                        username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_username'),
-                        password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password'),
-                        password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_confirm'),
-                        password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_reminder'),
-                        password_new: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new'),
-                        password_new_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new_confirm'),
-                        bio: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_bio')
-                        })==false)
-            return null;
-        const username =            COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_username').textContent;
-        const bio =                 COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_bio').textContent;
-        const avatar =              COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar').getAttribute('data-image').replace('null','')==''?
-                                        null:
-                                            COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar').getAttribute('data-image').replace('null','');
-        const password =            COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password').textContent;
-        const password_new =        COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new').textContent;
-        const password_reminder =   COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_reminder').textContent;
+const commonUserUpdate = async (totp=null) => {
+    if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
+                            {
+                            username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_username'),
+                            password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password'),
+                            password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_confirm'),
+                            password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_reminder'),
+                            password_new: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new'),
+                            password_new_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new_confirm'),
+                            bio: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_bio')
+                            })==false)
+                return false;
+    if (totp==null){
+        commonDialogueShow('VERIFY', '3');
+        return false;
+    }
+    else
+        return new Promise(resolve=>{
+            const username =            COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_username').textContent;
+            const bio =                 COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_bio').textContent;
+            const avatar =              COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar').getAttribute('data-image').replace('null','')==''?
+                                            null:
+                                                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar').getAttribute('data-image').replace('null','');
+            const password =            COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password').textContent;
+            const password_new =        COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new').textContent;
+            const password_reminder =   COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_reminder').textContent;
 
-       commonFFB({  path:`/server-iam/iamuser/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
-                    method:'PATCH', 
-                    authorization_type:COMMON_GLOBAL.app_id==COMMON_GLOBAL.admin_app_id?'ADMIN':'APP_ACCESS', 
-                    body:{  username:           username,
-                            password:           password,
-                            password_new:       password_new==''?null:password_new,
-                            bio:                bio,
-                            private:            Number(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_checkbox_profile_private').classList.contains('checked')),
-                            password_reminder:  password_reminder,
-                            avatar:             avatar
-                        }, 
-                    spinner_id:'common_dialogue_iam_edit_btn_user_update'})
-        .then(()=>{
-            COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= avatar?`url('${avatar}')`:'url()';
-            COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',avatar);
-            commonComponentRemove('common_dialogue_iam_edit', true);
-            resolve(null);
+            commonFFB({ path:`/server-iam/iamuser/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
+                        method:'PATCH', 
+                        authorization_type:COMMON_GLOBAL.app_id==COMMON_GLOBAL.admin_app_id?'ADMIN':'APP_ACCESS', 
+                        body:{  username:           username,
+                                password:           password,
+                                password_new:       password_new==''?null:password_new,
+                                bio:                bio,
+                                private:            Number(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_checkbox_profile_private').classList.contains('checked')),
+                                password_reminder:  password_reminder,
+                                avatar:             avatar,
+                                totp:               totp
+                            }, 
+                        spinner_id:'common_dialogue_iam_edit_btn_user_update'})
+            .then((result)=>{
+                if (JSON.parse(result).updated==1){
+                    commonUserSessionClear();
+                    resolve(true);
+                }
+                else
+                    resolve(false);
+            })
+            .catch(()=>false);
         });
-    });
 };
 /**
  * @name commonUserSignup
@@ -1940,13 +1951,7 @@ const commonUserAuthenticateCode = async (verification_code, verification_type) 
                 spinner_id:'common_app_icon_verification_code'})
     .then(result=>{
             if (JSON.parse(result).activated == 1){
-                COMMON_GLOBAL.iam_user_app_id =         null;
-                COMMON_GLOBAL.iam_user_id =             null;
-                COMMON_GLOBAL.iam_user_username =       null;
-                COMMON_GLOBAL.token_at	=               null;
-                COMMON_GLOBAL.token_exp =               null;
-                COMMON_GLOBAL.token_iat =               null;
-                COMMON_GLOBAL.token_timestamp =         null;
+                commonUserSessionClear();
                 return true;
             }
             else
@@ -1957,28 +1962,6 @@ const commonUserAuthenticateCode = async (verification_code, verification_type) 
     });
 };
 
-/**
- * @name commonUserUpdatePassword
- * @description Update password
- * @function
- * @returns {void}
- */
-const commonUserUpdatePassword = () => {
-    const json_data = { password_new:   COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_password').textContent,
-                     };
-    if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
-                     {
-                     password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_password'),
-                     password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_confirm'),
-                     
-                     })==true){
-       commonFFB({path:`/server-iam/iamuser-password/${COMMON_GLOBAL.iam_user_id}`, method:'PATCH', authorization_type:'APP_ACCESS_VERIFICATION', body:json_data, spinner_id:'common_dialogue_iam_password_new_icon'})
-        .then(()=>{
-            commonComponentRemove('common_dialogue_iam_password_new', true);
-            commonDialogueShow('LOGIN');
-        });
-    }    
-};
 /**
  * @name commonUserPreferenceSave
  * @description User preference save
@@ -2870,7 +2853,8 @@ const commonEvent = async (event_type,event=null) =>{
                         }        
                         //dialogue verify
                         case 'common_dialogue_iam_verify_cancel':{
-                            commonUserSessionClear();
+                            if (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_iamuser')==null)
+                                commonUserSessionClear();
                             commonComponentRemove('common_dialogue_iam_verify', true);
                             break;
                         }
@@ -3693,7 +3677,6 @@ export{/* GLOBALS*/
        commonUserSignup, 
        commonUserUpdate, 
        commonUserAuthenticateCode,
-       commonUserUpdatePassword,
        /* MODULE LEAFLET  */
        commonModuleLeafletInit, 
        /* MODULE EASY.QRCODE */

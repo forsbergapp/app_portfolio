@@ -44,6 +44,7 @@ const template = () => `
  *                      commonDialogueShow:CommonModuleCommon['commonDialogueShow'],
  *                      commonUserLogout:CommonModuleCommon['commonUserLogout'],
  *                      commonMesssageNotAuthorized:CommonModuleCommon['commonMesssageNotAuthorized'],
+ *                      commonUserUpdate:CommonModuleCommon['commonUserUpdate'],
  *                      commonUserAuthenticateCode:CommonModuleCommon['commonUserAuthenticateCode'],
  *                      commonUserSessionCountdown:CommonModuleCommon['commonUserSessionCountdown']
  *                      }}} props
@@ -92,7 +93,8 @@ const component = async props => {
                 props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').classList.remove('common_input_error');
                 props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').classList.remove('common_input_error');
 
-                if (await props.methods.commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
+                if ((props.data.user_verification_type== '3' && await props.methods.commonUserUpdate(verification_code)) ||
+                    await props.methods.commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
                     props.methods.commonComponentRemove('common_dialogue_iam_verify', true);
                     props.methods.commonDialogueShow('LOGIN');
                 }
