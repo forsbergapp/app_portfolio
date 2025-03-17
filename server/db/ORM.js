@@ -3,24 +3,27 @@
  *  Tables implemented using object mapping relation (ORM), PK, UK and FK patterns
  *  See data model for an overview.
  *  
+ *  ORM consists of 3 layers
+ *  App layer
+ *  *.js                app logic, ex iamAuthenticateUser() in /server/iam.js
+ *  Object layer
+ *  /server/db/*.js     data model API with constraints, ex IamUser() in /server/db/IamUser.js
+ *                      returns server response format
+ *  Database layer
+ *  ORM.js              file management API using async Execute() with file read and write
+ *                      and getObject() reading directly from cached object in memory using closure pattern
+ *                      in /server/db/ORM.js
+ *                      getObjectFile is used if to read from file instead of from memory
+ *                      manages objects, constraints, transactions with commit and rollback
+ *                      returns database result
+ *
  *  File types supported, all files are json format
  * 
- *  DOCUMENT        contains configurations
- *  TABLE           array of records managed as table and implemented using object mapping relation (ORM) pattern
- *                  consists of 3 layers
- *                  App layer
- *                  *.js                app logic, ex iamAuthenticateUser() in /server/iam.js
- *                  Object layer
- *                  /server/db/*.js     data model API with constraints, ex IamUser() in /server/db/IamUser.js
- *                                      returns server response format
- *                  Database layer
- *                  ORM.js              file management API using async Execute() with file read and write
- *                                      and getObject() reading directly from cached object in memory using closure pattern
- *                                      in /server/db/ORM.js
- *                                      manages objects, constraints, transactions with commit and rollback
- *                                      returns database result
- * 
- *  TABLE_LOG       array of records records, does not use cache_content, only admin should read logs
+ *  DOCUMENT        JSON object with any content
+ *  TABLE           JSON object with array of records managed as table identified by id and all records have same attributes
+ *                  DOCUMENT with any content can be saved in a record using name json_data implemented
+ *  TABLE_KEY_VALUE JSON object with array of records managed as table identified by app_id and records can have different attributes
+ *  TABLE_LOG       JSON object with array of records, does not use cache_content, only admin should read logs
  *                  uses temporary transaction_content from file on disk to concat new log record
  *  TABLE_LOG_DATE  same as TABLE_LOG but uses additional filename partition with date implemented as partition
  * 
@@ -84,8 +87,7 @@ const fileTransactionStart = async (file, filepath)=>{
     const transaction = async ()=>{
         const transaction_id = Date.now();
         record.transaction_id = transaction_id;
-        const file_content = await fs.promises.readFile(process.cwd() + filepath, 'utf8').catch(()=>'');
-        record.transaction_content = JSON.parse(file_content==''?(record.type.startsWith('TABLE')?'[]':'{}'):file_content);
+        record.transaction_content = await getFsFile(filepath,record.type.startsWith('TABLE'));
         return transaction_id;
     };
     return new Promise((resolve, reject)=>{
@@ -115,7 +117,7 @@ const fileTransactionStart = async (file, filepath)=>{
     });
 };
 /**
- * @name fileTransactionCommit
+ * @name commit
  * @description Transaction commit
  *              Empties `transaction_id` and `transaction_content`, sets `lock =0` and updates cache_content if used
  * @function
@@ -124,21 +126,21 @@ const fileTransactionStart = async (file, filepath)=>{
  * @param {*} [cache_content]
  * @returns {boolean}
  */
-const fileTransactionCommit = (file, transaction_id, cache_content=null)=>{
+const commit = (file, transaction_id, cache_content=null)=>{
     const record = DB.data.filter(file_db=>file_db.name == file)[0];
     if (record.transaction_id==transaction_id){
+        if (cache_content)
+            record.cache_content = cache_content;
         record.lock = 0;
         record.transaction_id = null;
         record.transaction_content = null;
-        if (cache_content)
-            record.cache_content = cache_content;
         return true;
     }
     else
         return false;
 };
 /**
- * @name fileTransactionRollback
+ * @name rollback
  * @description Transaction rollback
  *              Empties `transaction_id` and `transaction_content`, sets `lock =0` and updates cache_content if used
  * @function
@@ -146,7 +148,7 @@ const fileTransactionCommit = (file, transaction_id, cache_content=null)=>{
  * @param {number} transaction_id 
  * @returns {boolean}
  */
-const fileTransactionRollback = (file, transaction_id)=>{
+const rollback = (file, transaction_id)=>{
     const record = DB.data.filter(file_db=>file_db.name == file)[0];
     if (record.transaction_id==transaction_id){
         record.lock = 0;
@@ -199,107 +201,18 @@ const fileTransactionRollback = (file, transaction_id)=>{
  */
 const getFsDir = async () => await fs.promises.readdir(`${process.cwd()}${DB_DIR.db}`,{ withFileTypes: true });
 
-
-/**
- * @name lockObject
- * @description Locks object in DB
- * @function
- * @param {number} app_id
- * @param {server_DbObject} object
- * @param {string |null} filepath_partition
- * @returns {Promise.<server_db_result_fileFsRead>}
- */
-const lockObject = async (app_id, object, filepath_partition=null) =>{
-    const filepath = filepath_partition ?? (DB_DIR.db + object + '.json');
-    const transaction_id = await fileTransactionStart(object, filepath);
-    return {   file_content:    getObjectRecord(object).transaction_content,
-                lock:           true,
-                transaction_id: transaction_id};
-};
 /**
  * @name getFsFile
- * @description Returns file content for given file
- *              Microservice uses this function to read table content from file since DB is only loaded in main server
- *              if object type starts with TABLE: filter resource id in rows 
- *              if object type TABLE_LOG and TABLE_LOG_DATE: uses partition 
- *              else returns document
- * @function
- * @param {number} app_id
- * @param {server_DbObject} object
- * @param {number|null} resource_id
- * @param {string|null} partition
- * @returns {Promise.<{rows:*[]|{}}>}
+ * @description Get parsed file for given filepath
+ * @param {string} filepath
+ * @param {boolean} table
+ * @returns {Promise.<*>}
  */
-const getFsFile = async (app_id, object, resource_id, partition) =>{
-    const record = getObjectRecord(object);
-    if (record.type.startsWith('TABLE')){
-        const filepath = record.type.startsWith('TABLE_LOG')?
-                            DB_DIR.db + `${object}_${fileNamePartition(partition)}.json`:
-                                DB_DIR.db + `${object}.json`;
-        /**@type{*[]} */
-        const log = await fs.promises.readFile( process.cwd() + filepath, 
-                                                'utf8').then(result=>JSON.parse(result.toString()));
-        return {rows:log.filter(row=>row.id == (resource_id??row.id))};    
-    }
-    else
-        return await fs.promises.readFile(process.cwd() + DB_DIR.db + object + '.json', 'utf8').then((file)=>JSON.parse(file.toString()));
-};
-/**
- * @name updateFsFile
- * @description Writes file
- *              Must specify valid transaction id given from getFsFile()
- *              to be able to update a file
- *              Backup of old file will be written to backup directory
- * @function
- * @param {server_DbObject} file 
- * @param {number|null} transaction_id 
- * @param {[]} file_content 
- * @returns {Promise.<string|null>}
- */
-
-const updateFsFile = async (file, transaction_id, file_content) =>{  
-    const record = getObjectRecord(file);
-    if (!transaction_id || record.transaction_id != transaction_id){
-        /**@type{import('../iam.js')} */
-        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-        return iamUtilMessageNotAuthorized();
-    }
-    else{
-        try {
-            //write backup of old config file
-            await fs.promises.writeFile(process.cwd() + `${DB_DIR.backup + file + '.json'}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
-                                        (record.type=='TABLE'||record.type=='TABLE_KEY_VALUE')?
-                                        //save records in new row and compact format
-                                        /**@ts-ignore */
-                                        '[\n' + record.transaction_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
-                                            //JSON, convert to string
-                                            JSON.stringify(record.transaction_content, undefined, 2)
-                                        ,  
-                                        'utf8');
-            //write new file content
-            await fs.promises.writeFile( process.cwd() + DB_DIR.db + file + '.json', 
-                                                (record.type=='TABLE'||record.type=='TABLE_KEY_VALUE')?
-                                                //save records in new row and compact format
-                                                '[\n' + file_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
-                                                    //JSON, convert to string
-                                                    JSON.stringify(file_content, undefined, 2)
-                                                ,  
-                                                'utf8');
-            if (fileTransactionCommit(file, transaction_id, file_content))
-                return null;
-            else{
-                /**@type{import('../iam.js')} */
-                const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-                throw (iamUtilMessageNotAuthorized());
-            }
-        } catch (error) {
-            if (fileTransactionRollback(file, transaction_id))
-                throw(error);
-            else
-                throw('⛔ ' + error);
-        }   
-    }
-};
+const getFsFile = async (filepath, table=false) => fs.promises.readFile(process.cwd() + filepath, 'utf8')
+                                                .then(result=>
+                                                    JSON.parse(result==''?(table?'[]':'{}'):result)
+                                                )
+                                                .catch(()=>'');
 
 /**
  * @name getFsDataExists
@@ -316,7 +229,58 @@ const getFsDataExists = async () => {
         return false;
     }
 };
+/**
+ * @name getFsDbObject
+ * @description Get DbObjects file content
+ * @returns {Promise.<server_DbObject_record[]>}
+ */
+const getFsDbObject = async () => getFsFile(DB_DIR.db + 'DbObjects.json');
 
+/**
+ * @name updateFsFile
+ * @description Writes file
+ *              Must specify valid transaction id to be able to update a file
+ *              Backup of old file will be written to backup directory
+ * @function
+ * @param {server_DbObject} file 
+ * @param {number|null} transaction_id 
+ * @param {[]} file_content 
+ * @returns {Promise.<void>}
+ */
+
+const updateFsFile = async (file, transaction_id, file_content) =>{  
+    const record = getObjectRecord(file);
+    if (!transaction_id || record.transaction_id != transaction_id){
+        /**@type{import('../iam.js')} */
+        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+        throw iamUtilMessageNotAuthorized();
+    }
+    else{
+        if (record.type=='TABLE'){
+            //write backup of old file
+            await postFsFile(`${DB_DIR.backup + file + '.json'}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, file_content, record.type=='TABLE');
+        }
+        //write new file content
+        await postFsFile(DB_DIR.db + file + '.json', file_content, record.type.startsWith('TABLE'));
+    }
+};
+
+/**
+ * @name postFsFile
+ * @description Write to a file
+ * @function
+ * @param {string} path
+ * @param {*} content
+ * @param {boolean} table
+ * @returns{Promise.<void>}
+ */
+const postFsFile = async (path, content, table) => await fs.promises.writeFile(process.cwd() + path, 
+                                                    table?
+                                                        //table, save records in new row and compact format
+                                                        '[\n' + content.map((/**@type{*}*/row)=>JSON.stringify(row)).join(',\n') + '\n]':
+                                                            //not a table, convert to string
+                                                            JSON.stringify(content, undefined, 2),
+                                                    'utf8');                                            
 /**
  * @name postFsDir
  * @description Created directories and should be used only when server is started first time
@@ -343,19 +307,14 @@ const postFsDir = async paths => {
  * @description Write to a file in database
  *              Should only be used by admin since no transaction is used
  * @function
- * @param {server_DbObject} file 
+ * @param {server_DbObject} object
  * @param {{}} file_content 
  * @returns {Promise.<void>}
  */
-const postFsAdmin = async (file, file_content) =>{
-    await fs.promises.writeFile(process.cwd() + 
-                                DB_DIR.db + file + '.json', 
-                                file_content?JSON.stringify(file_content, undefined, 2):'',  'utf8')
-    .catch((error)=> {
-        throw error;
-    });
-    if (DB.data.filter(file_db=>file_db.name == file)[0].cache_content)
-        DB.data.filter(file_db=>file_db.name == file)[0].cache_content = file_content;
+const postFsAdmin = async (object, file_content) =>{
+    await postFsFile(DB_DIR.db + object + '.json', file_content, DB.data.filter(file_db=>file_db.name==object)[0]?.type.startsWith('TABLE'));
+    if (DB.data.filter(file_db=>file_db.name == object)[0].cache_content)
+        DB.data.filter(file_db=>file_db.name == object)[0].cache_content = file_content;
 };
 
 /**
@@ -374,6 +333,23 @@ const deleteFsAdmin = async file => {
                         DB.data.filter(file_db=>file_db.name == file)[0].cache_content = null;
             })
             .catch((error=>{throw error;}));
+};
+
+/**
+ * @name lockObject
+ * @description Locks object in DB
+ * @function
+ * @param {number} app_id
+ * @param {server_DbObject} object
+ * @param {string |null} filepath_partition
+ * @returns {Promise.<server_db_result_fileFsRead>}
+ */
+const lockObject = async (app_id, object, filepath_partition=null) =>{
+    const filepath = filepath_partition ?? (DB_DIR.db + object + '.json');
+    const transaction_id = await fileTransactionStart(object, filepath);
+    return {   file_content:    getObjectRecord(object).transaction_content,
+                lock:           true,
+                transaction_id: transaction_id};
 };
 
  /**
@@ -434,13 +410,41 @@ const getObject = (app_id, object, resource_id, data_app_id) =>{
     
 };
 /**
- * @name fileConstraints
+ * @name getObjectFile
+ * @description Returns file content for given file
+ *              Microservice uses this function to read table content from file since DB is only loaded in main server
+ *              if object type starts with TABLE: filter resource id in rows 
+ *              if object type TABLE_LOG and TABLE_LOG_DATE: uses partition 
+ *              else returns document
+ * @function
+ * @param {number} app_id
+ * @param {server_DbObject} object
+ * @param {number|null} resource_id
+ * @param {string|null} partition
+ * @returns {Promise.<{rows:*[]|{}}>}
+ */
+const getObjectFile = async (app_id, object, resource_id, partition) =>{
+    const record = (await getFsDbObject()).filter(row=>row.name==object)[0];
+    if (record.type.startsWith('TABLE')){
+        const filepath = record.type.startsWith('TABLE_LOG')?
+                            DB_DIR.db + `${object}_${fileNamePartition(partition)}.json`:
+                                DB_DIR.db + `${object}.json`;
+        /**@type{*[]} */
+        const log = await getFsFile(filepath, record.type.startsWith('TABLE'));
+        return {rows:log.filter(row=>row.id == (resource_id??row.id))};    
+    }
+    else
+        return await getFsFile(DB_DIR.db + object + '.json', record.type.startsWith('TABLE'));
+};
+
+/**
+ * @name constraintsValidate
  * @description Validates:
  *              PK constraint that can have one primary key column
  *              UK constraint that can have several columns
  *              FK constraint that should have a value in referref column and object, checked for TABLE and TABLE_KEY_VALUE
  *              Implements contraints pattern using some() function for best performane to check if value already exist
-  * @function
+ * @function
  * @param {server_DbObject} table
  * @param {[]} table_rows
  * @param {*} data
@@ -448,7 +452,7 @@ const getObject = (app_id, object, resource_id, data_app_id) =>{
  * @param {number|null} [resource_id]
  * @returns {boolean}
  */
-const fileConstraints = (table, table_rows, data, dml, resource_id) =>{
+const constraintsValidate = (table, table_rows, data, dml, resource_id) =>{
     const filerecord = getObjectRecord(table);
     //check PK for POST
     //update of PK not alllowed
@@ -516,59 +520,80 @@ const postObject = async (app_id, object, data) =>{
         if (object_type.startsWith('TABLE')){
             const filepath = object_type=='TABLE'?`${DB_DIR.db}${object}.json`:`${DB_DIR.db}${object}_${fileNamePartition()}.json`;
             const file = await lockObject(app_id, object, object_type=='TABLE'?null:filepath);
-            await fs.promises.writeFile(  `${process.cwd()}${filepath}`, 
-                                            /**@ts-ignore */
-                                            '[\n' + (DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data).map(row=>JSON.stringify(row)).join(',\n') + '\n]', 
-                                            'utf8')
-            .catch((error)=>{
-                if (fileTransactionRollback(object, 
-                                            /*@ts-ignore*/
-                                            file.transaction_id))
-                    throw(error);
-                else{
-                    import(`file://${process.cwd()}/server/iam.js`).then(({iamUtilMessageNotAuthorized})=>{
-                        throw iamUtilMessageNotAuthorized() + ' ' + error;
+            if ((object_type =='TABLE'  && constraintsValidate(object, 
+                /**@ts-ignore */
+                file.file_content, 
+                data, 'POST')) ||object_type !='TABLE' ){
+                    await updateFsFile( object, 
+                        file.transaction_id, 
+                        /**@ts-ignore */
+                        (DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data))
+                    .catch((error)=>{
+                        return import(`file://${process.cwd()}/server/db/Log.js`).then((/**@type{import('./Log.js')} */Log)=>Log.post({   app_id:app_id, 
+                                            data:{  object:'LogDbError', 
+                                                    db:{object:object,
+                                                        dml:'POST', 
+                                                        parameters:null
+                                                        }, 
+                                                    log:error
+                                                }
+                                            }).then(()=>{
+                                                rollback(object, 
+                                                    /*@ts-ignore*/
+                                                    file.transaction_id);
+                                            }));
                     });
-                }
-            });
-            //update cache for TABLE
-            if (fileTransactionCommit(  object, 
-                                        /*@ts-ignore*/
-                                        file.transaction_id,
-                                        /*@ts-ignore*/
-                                        object_type=='TABLE'?(DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data):null))
-                return {affectedRows:1};
+                    //commit and update cache for TABLE
+                    if (commit(  object, 
+                                                /*@ts-ignore*/
+                                                file.transaction_id,
+                                                /*@ts-ignore*/
+                                                object_type=='TABLE'?(DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data):null))
+                        return {affectedRows:1};
+                    else{
+                        /**@type{import('../iam.js')} */
+                        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                        throw (iamUtilMessageNotAuthorized());
+                    }
+            }
             else{
-                /**@type{import('../iam.js')} */
-                const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-                throw (iamUtilMessageNotAuthorized());
+                rollback(object, 
+                    /*@ts-ignore*/
+                    file.transaction_id);
+                return {affectedRows:0};
             }
         }
         else{
-            const file = await lockObject(app_id, object);
-            if (fileConstraints(object, 
-                                /**@ts-ignore */
-                                file.file_content, 
-                                data, 'POST')){
-                await updateFsFile( object, 
-                                    /**@ts-ignore */
-                                    file.transaction_id, 
-                                    /**@ts-ignore */
-                                    file.file_content.concat(data))
-                .catch((/**@type{server_server_error}*/error)=>{throw error;});
-                return {affectedRows:1};
-            }
-            else{
-                fileTransactionRollback(object,
-                                        /**@ts-ignore */
-                                        file.transaction_id);
-                return {affectedRows:0};
-            }
+            //no post on documents
+            return {affectedRows:0};
         }
     }
     else{
         return {affectedRows:0};
     }
+};
+/**
+ * @param {{app_id:number,
+ *          object:server_DbObject,
+ *          transaction_id:number|null,
+ *          dml:'UPDATE'|'DELETE'|'POST',
+ *          parameters:*
+ *          error:*}} parameters
+ */
+const errorRollback = parameters => {
+   import(`file://${process.cwd()}/server/db/Log.js`).then((/**@type{import('./Log.js')} */Log)=>
+        Log.post({  app_id:parameters.app_id, 
+                    data:{  object:'LogDbError', 
+                            db:{object:parameters.object,
+                                dml:parameters.dml,
+                                parameters:parameters.parameters
+                                }, 
+                            log:parameters.error
+                        }
+                    }).then(()=>{
+                        if (parameters.transaction_id)
+                            rollback(parameters.object, parameters.transaction_id);
+                    }));
 };
 /**
  * @name updateObject
@@ -585,44 +610,81 @@ const postObject = async (app_id, object, data) =>{
  * @returns {Promise<server_db_common_result_update>}
  */
 const updateObject = async (app_id, object, resource_id, data_app_id, data) =>{
+    
     if (app_id!=null){
         const object_type = getObjectRecord(object).type;
         /**@type{server_db_result_fileFsRead} */
         const file = await lockObject(app_id, object);
-        if (object_type.startsWith('TABLE')){
-            if (fileConstraints(object, file.file_content, data, 'UPDATE', resource_id)){
-                let update = false;
-                let count = 0;
-                for (const index in file.file_content)
-                    //a TABLE must have ID or APP_ID as PK to be able to update
-                    if ((file.file_content[index].id==resource_id && resource_id!=null)|| (file.file_content[index].app_id == data_app_id && data_app_id != null)){
-                        count++;
-                        //update columns requested
-                        for (const key of Object.entries(data)){
-                            update = true;
-                            file.file_content[index][key[0]] = key[1];
+        if (object_type == 'TABLE_LOG' || object_type == 'TABLE_LOG_DATE'){
+            //no update of log tables
+            return {affectedRows:0};
+        }
+        else
+            if (object_type == 'TABLE'){
+                if (constraintsValidate(object, file.file_content, data, 'UPDATE', resource_id)){
+                    let update = false;
+                    let count = 0;
+                    for (const index in file.file_content)
+                        //a TABLE must have ID or APP_ID as PK to be able to update
+                        if ((file.file_content[index].id==resource_id && resource_id!=null)|| (file.file_content[index].app_id == data_app_id && data_app_id != null)){
+                            count++;
+                            //update columns requested
+                            for (const key of Object.entries(data)){
+                                update = true;
+                                file.file_content[index][key[0]] = key[1];
+                            }
+                        }
+                    if (update){
+                        await updateFsFile(object, file.transaction_id, file.file_content)
+                                .catch((/**@type{server_server_error}*/error)=>errorRollback({  app_id:app_id,
+                                                                                                object:object, 
+                                                                                                dml:'UPDATE', 
+                                                                                                parameters:{resource_id:resource_id, data_app_id:data_app_id}, 
+                                                                                                transaction_id:file.transaction_id, 
+                                                                                                error:error}));
+                        //commit and update cache for TABLE
+                        if (commit( object,
+                                    /*@ts-ignore*/
+                                    file.transaction_id,
+                                    file.file_content))
+                            return {affectedRows:count};
+                        else{
+                            /**@type{import('../iam.js')} */
+                            const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                            throw (iamUtilMessageNotAuthorized());
                         }
                     }
-                if (update){
-                    await updateFsFile(object, file.transaction_id, file.file_content)
-                            .catch((/**@type{server_server_error}*/error)=>{throw error;});
-                    return {affectedRows:count};
+                    else
+                        return {affectedRows:0};
                 }
-                else
+                else{
+                    rollback(object,
+                                            /*@ts-ignore*/
+                                            file.transaction_id);
                     return {affectedRows:0};
+                }
             }
             else{
-                fileTransactionRollback(object,
-                                        /**@ts-ignore */
-                                        file.transaction_id);
-                return {affectedRows:0};
+                //document
+                await updateFsFile(object, file.transaction_id, data)
+                .catch((/**@type{server_server_error}*/error)=>errorRollback({  app_id:app_id,
+                                                                                object:object, 
+                                                                                dml:'UPDATE', 
+                                                                                parameters:{resource_id:resource_id, data_app_id:data_app_id}, 
+                                                                                transaction_id:file.transaction_id, 
+                                                                                error:error}));
+                //commit and update cache for DOCUMENT
+                if (commit(  object, 
+                                            /*@ts-ignore*/
+                                            file.transaction_id, 
+                                            data))
+                    return {affectedRows:1};
+                else{
+                    /**@type{import('../iam.js')} */
+                    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                    throw (iamUtilMessageNotAuthorized());
+                }
             }
-        }
-        else{
-            //document
-            await updateFsFile(object, file.transaction_id, data);
-            return {affectedRows:1};
-        }
     }
     else
         return {affectedRows:0};
@@ -668,20 +730,36 @@ const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
                                         /**@ts-ignore */
                                         pk:row[objectCascade.pk]});
                 const file = await lockObject(app_id, objectCascade.name);
-                await updateFsFile(  objectCascade.name, 
-                    file.transaction_id, 
-                    //filter pk
-                    file.file_content
-                    .filter((/**@type{*}*/rowFile)=>
-                        (objectCascade.fk??[])
-                        .filter(fk=>
-                            rowFile[fk[0]]==parameters.pk
-                        ).length==0
-                    )
-                )
-                .catch((/**@type{server_server_error}*/error)=>{throw error;});
+                //get content to update and filter PK
+                const new_content = file.file_content
+                                    .filter((/**@type{*}*/rowFile)=>
+                                        (objectCascade.fk??[])
+                                        .filter(fk=>
+                                            rowFile[fk[0]]==parameters.pk
+                                        ).length==0
+                                    );
+                await updateFsFile(  objectCascade.name, file.transaction_id, new_content)
+                .catch((/**@type{server_server_error}*/error)=>{
+                    errorRollback({ app_id:app_id,
+                        object:table, 
+                        dml:'DELETE', 
+                        parameters:{resource_id:resource_id, data_app_id:data_app_id}, 
+                        transaction_id:file.transaction_id, 
+                        error:error});
+                    throw error;
+                });
+                //commit and update cache without removed record
+                if (commit(  table, 
+                                            /*@ts-ignore*/
+                                            file.transaction_id,
+                                            new_content))
+                    return {affectedRows:   file.file_content.length - new_content.length};
+                else{
+                    /**@type{import('../iam.js')} */
+                    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                    throw (iamUtilMessageNotAuthorized());
+                }
             }
-            
         }
 	};
 
@@ -689,19 +767,36 @@ const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
     const file = await lockObject(app_id, table);
     if (file.file_content.filter((/**@type{*}*/row)=>(data_app_id==null && row.id==resource_id && resource_id!=null)|| (resource_id==null && row.app_id == data_app_id && data_app_id != null)).length>0){
         await cascadeDelete({app_id:app_id, object:table, pk:resource_id??data_app_id})
-        .catch(error=>{
-            throw error;
-        });
+                .catch(error=>{
+                    throw error;
+                });
+        //get content to update and filter unique id
+        const new_content = file.file_content
+                        .filter((/**@type{*}*/row)=>(data_app_id==null && resource_id!=null && row.id!=resource_id) || (resource_id==null && data_app_id!=null && row.app_id!=data_app_id));
         await updateFsFile(  table, 
                             file.transaction_id, 
-                            //filter unique id
-                            file.file_content
-                            .filter((/**@type{*}*/row)=>(data_app_id==null && resource_id!=null && row.id!=resource_id) || (resource_id==null && data_app_id!=null && row.app_id!=data_app_id)))
-                .catch((/**@type{server_server_error}*/error)=>{throw error;});
-        return {affectedRows:   file.file_content.length -
-                                file.file_content
-                                .filter((/**@type{*}*/row)=>(data_app_id==null && resource_id!=null && row.id!=resource_id) || (resource_id==null && data_app_id!=null && row.app_id!=data_app_id)).length
-                };
+                            new_content)
+                .catch((/**@type{server_server_error}*/error)=>{
+                    errorRollback({ app_id:app_id,
+                        object:table, 
+                        dml:'DELETE', 
+                        parameters:{resource_id:resource_id, data_app_id:data_app_id}, 
+                        transaction_id:file.transaction_id, 
+                        error:error});
+                    throw error;
+                    }
+                );
+                //commit and update cache without removed record
+                if (commit(  table, 
+                                            /*@ts-ignore*/
+                                            file.transaction_id,
+                                            new_content))
+                    return {affectedRows:   file.file_content.length - new_content.length};
+                else{
+                    /**@type{import('../iam.js')} */
+                    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                    throw (iamUtilMessageNotAuthorized());
+                }
     }
     else
         return {affectedRows:0};    
@@ -733,7 +828,7 @@ const Execute = async parameters =>{
             throw iamUtilMessageNotAuthorized();
         }
         else{
-            const result =  parameters.dml=='GET'?  await getFsFile(parameters.app_id, 
+            const result =  parameters.dml=='GET'?  await getObjectFile(parameters.app_id, 
                                                                     parameters.object, 
                                                                     parameters.get?.resource_id??null, 
                                                                     parameters.get?.partition??null):
@@ -806,21 +901,17 @@ const getError = (app_id, statusCode, error=null) =>{
  * @name Init
  * @description Load default database or read existing from disk. Set cache for files in existing database using `cache_content` key to increase performance
  * @function
- * @param {server_DbObject[]|null} default_db
+ * @param {server_DbObject_record[]|null} default_db
  * @returns {Promise.<void>}
  */
  const Init = async (default_db=null) => {
     
-    DB.data = default_db?default_db:await fs.promises.readFile(process.cwd() + DB_DIR.db + 'DbObjects.json', 'utf8')
-                    .then(result=>JSON.parse(result))
-                    .catch(()=>'');
+    DB.data = default_db?default_db:await getFsDbObject();
     
     if (default_db == null)
         for (const file_db_record of DB.data){
             if ('cache_content' in file_db_record){
-                const file = await fs.promises.readFile(process.cwd() + DB_DIR.db + file_db_record.name + '.json', 'utf8')
-                                    .then((/**@type{string}*/file)=>JSON.parse(file.toString()))
-                                    .catch(()=>null);
+                const file = await getFsFile(DB_DIR.db + file_db_record.name + '.json', file_db_record.type.startsWith('TABLE'));
                 file_db_record.cache_content = file?file:null;
             }
         }
@@ -868,7 +959,6 @@ const getViewInfo = async parameters =>{
  *                                              fk:server_DbObject_record['fk']}[]}}
  */
 const getViewObjects = parameters =>{
-    
 
     const result = DB.data.map(row=>{
         return {
@@ -899,9 +989,12 @@ const getViewObjects = parameters =>{
 
 
 export {
-        getFsDir, getFsDataExists, postFsDir,
-        postFsAdmin, deleteFsAdmin,
-        getObject, Execute,
+        getFsDir, getFsDataExists,
+        postFsDir,postFsAdmin, 
+        deleteFsAdmin,
+        getObject,
+        getObjectFile,
+        Execute,
         getError,
         Init,
         getViewInfo, getViewObjects};
