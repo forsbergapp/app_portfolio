@@ -1911,7 +1911,7 @@ const commonIamUserAppDelete = (choice=null, function_delete_event=null) => {
             case 1:{
                 commonComponentRemove('common_dialogue_message');
     
-                commonFFB({ path:`/server-db/iamuserapp/${COMMON_GLOBAL.iam_user_app_id}`, 
+                commonFFB({ path:`/server-iam/iamuserapp/${COMMON_GLOBAL.iam_user_app_id}`, 
                             body:{  password: password,
                                     IAM_data_app_id:COMMON_GLOBAL.app_id, 
                                     IAM_iam_user_id:COMMON_GLOBAL.iam_user_id}, 
