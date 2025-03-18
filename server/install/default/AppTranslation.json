@@ -11,7 +11,7 @@
                     "technology":"chart pie, chart bar, server side events without using EventSource", 
                     "reference":"", 
                     "security":"OWASP",
-                    "solution":"",
+                    "comparison":[],
                     "screenshot_end": [
                                         "[![Menu start](/common/documents/screenshot_app1_menu_start_small.webp)](/common/documents/screenshot_app1_menu_start.webp)",
                                         "[![Menu start server side event message](/common/documents/screenshot_app1_menu_start_SSE_small.webp)](/common/documents/screenshot_app1_menu_start_SSE.webp)",
@@ -45,7 +45,7 @@
                     "technology":"", 
                     "reference":"OS app presentation Ubuntu and Windows", 
                     "security":"OWASP",
-                    "solution":"",
+                    "comparison":[],
                     "screenshot_end":[""]}
     },
     {
@@ -60,7 +60,7 @@
                     "technology":"Markdown render, Markdown to HTML conversion using Vue SFC pattern on server, Typescript, ER Model, arquitecture diagram including ORM, Infrastructure as code diagram", 
                     "reference":"jsdoc.app, www.readthedocs.com, www.openapis.org, Oracle SQL Data modeler, Terraform, www.iso20022.org", 
                     "security":"OWASP",
-                    "solution":"",
+                    "comparison":[],
                     "screenshot_end":[""]}
     },
     {
@@ -75,7 +75,7 @@
                     "technology":"Regional settings and languages in the whole world, Gregorian and Hijri calendar calculations, advanced CSS theme management", 
                     "reference":"Prayertime sun and moon calculations", 
                     "security":"OWASP",
-                    "solution":"",
+                    "comparison":[],
                     "screenshot_end":["[![Showing arabic Nastaliq font and chinese timetable and spanish ui using default font and mixing RTL and LTR](/common/documents/screenshot_app4_arabic_chinese_hanidec_nastaliq_timetable_rtl_user_menu_ltr_spanish_ui_small.webp)](/common/documents/screenshot_app4_arabic_chinese_hanidec_nastaliq_timetable_rtl_user_menu_ltr_spanish_ui.webp)"]}
     },
     {
@@ -90,7 +90,20 @@
                     "technology":"serverless functions, server side events without using EventSource", 
                     "reference":"Virtual Private Address: Pix Brazil www.bcb.gov.br/en/financialstability/pix_en, Payment request process: Swish developer.swish.nu, Payment REST API: Stripe docs.stripe.com/payments", 
                     "security":"OWASP improved security solution compared to references with higher level of encrypted messages, server controlled events using IAM authenticated server side events without thirdparty webhooks, without exposed messages and stateless design without any certificates saved in clients",
-                    "solution":"",
+                    "comparison":[  
+                                    [   ["Swish payment UI",                                "App Portfolio"], 
+                                        ["stateful, certificates saved on users phones",    "stateless, nothing saved on any users device"], 
+                                        ["256 bit message exposed with explanation",        "8192 bit secure messages without explanation"]
+                                    ],
+                                    [   ["Stripe payment process",                          "App Portfolio"], 
+                                        ["Web hook",                                        "Server side event managed"],
+                                        ["Server client comunication",                      "Authorized server only communication"],
+                                        ["Direct callbacks to clients from third party server", "No client callbacks allowed from third party server"]
+                                    ],
+                                    [   ["Pix Brazil",                                      "App Portfolio"], 
+                                        ["VPA, Virtual private address sender/receiver id", "VPA, Virtual private address for payer and payee in bank and shop solution"]
+                                    ]
+                    ],
                     "screenshot_end": [
                                         "[![Bank statement](/common/documents/screenshot_app5_bank_statement_small.webp)](/common/documents/screenshot_app5_bank_statement.webp)",
                                         "[![Bank account info](/common/documents/screenshot_app5_bank_account_info_small.webp)](/common/documents/screenshot_app5_bank_account_info.webp)",
@@ -112,7 +125,7 @@
                     "technology":"serverless functions, server side events without using EventSource", 
                     "reference":"Payment request process: Swish developer.swish.nu, Payment REST API: Stripe docs.stripe.com/payments", 
                     "security":"OWASP improved security solution compared to references with higher level of encrypted messages, server controlled events using IAM authenticated server side events without thirdparty webhooks, without exposed messages and stateless design without any certificates saved in clients",
-                    "solution":"",
+                    "comparison":[],
                     "screenshot_end": [
                                         "[![Payment request](/common/documents/screenshot_app6_payment_request_small.webp)](/common/documents/screenshot_app6_payment_request.webp)",
                                         "[![Payment request paid](/common/documents/screenshot_app6_payment_request_paid_small.webp)](/common/documents/screenshot_app6_payment_request_paid.webp)",
@@ -131,7 +144,7 @@
                     "technology":"Leaflet", 
                     "reference":"OpenStreetMap, simplemaps, Leaflet", 
                     "security":"OWASP",
-                    "solution":"",
+                    "comparison":[],
                     "screenshot_end":[""]}
     },
     {
@@ -146,7 +159,7 @@
                     "technology":"svg animation, worker_threads in NodeJs to execute long time running Javascript functions without blocking main server process and sending client updates with server side events without using EventSource, javascript performance", 
                     "reference":"Kociemba algorithm, CFOP / Fridrich method, Thistlewaite, Singmaster notation", 
                     "security":"OWASP refactored thirdparty obscure animation by replacing canvas with svg animation without events and removing unnecessary obscure code",
-                    "solution":"",
+                    "comparison":[],
                     "screenshot_end":[""]}
     },
     {
@@ -161,7 +174,7 @@
                     "technology":"TOTP using SHA256 key, UTC time and 30 seconds interval, OTP key using Base32", 
                     "reference":"RFC 3548, RFC 3648, RFC 4226, RFC 6238", 
                     "security":"OWASP",
-                    "solution":"",
+                    "comparison":[],
                     "screenshot_end":[""]}
     },
     {
@@ -176,7 +189,27 @@
                     "technology":"HTML to React conversion, React and Vue custom restricted event and app mount management, React and Vue components without transpilers, JWT token secured server side events without using EventSource", 
                     "reference":"", 
                     "security":"OWASP",
-                    "solution":"",
+                    "comparison":[  
+                                    [   ["Vue,React",                                           "App Portfolio"], 
+                                        ["function declarations",                               "ES6+ and syntax and classes, no support for old browsers and much code moved to server"], 
+                                        ["prototope functions",                                 "classes and methods or function expressions"], 
+                                        ["var variables",                                       "const or let allowed"],
+                                        ["commonJS support",                                    "module only"], 
+                                        ["callback",                                            "promise and async"], 
+                                        ["semantic html",                                       "pure div"], 
+                                        ["windows event management",                            "replaced with document event or events on app div"],
+                                        ["massive events added on all levels",                  "third party events disabled and replaced by controlled event delegation"],
+                                        ["JSX or SFC with transpiler recommended",              "pure Javascript usage with Vue and React implemented"],
+                                        ["renders components with events and extra elements",   "renders components with pure HTML without extras element or events"],
+                                        ["only supports oww framework at the same time",        "supports simultaneous multiframework switchable at any time"],
+                                        ["library does not support module format",              "modifies library at request to support module format so await import() syntax can be used"],
+                                        ["saves library and clutters window object",            "library imported as module using closure pattern and used when needed only, window object kept clean"],
+                                        ["JSX template iteration",                              "pure Javascript iteration"],
+                                        ["lifecycle methods",                                   "pure Javascript lifecycle pattern"],
+                                        ["suspense/waiting pattern info on current div only",   "pure Javascript waiting pattern, info on any div"],
+                                        ["no or few JSDoc comments",                            "fully JSDoc commented with all basic tags"]
+                                    ]
+                    ],
                     "screenshot_end":[
                                         "[![Component App Data Display Form Vertical key value](/common/documents/screenshot_app5_payment_request_small.webp)](/common/documents/screenshot_app5_payment_request.webp)",
                                         "[![Component App Data Display Form Master detail horizontal](/common/documents/screenshot_app5_bank_statement_small.webp)](/common/documents/screenshot_app5_bank_statement.webp)",

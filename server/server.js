@@ -783,11 +783,7 @@ const serverJs = async () => {
                                 .reduce((query, param)=>{
                                     const key = {[param[0]] : decodeURIComponent(param[1])};
                                     return {...query, ...key};
-                                }, {}):null;
-            
-            res.status =        (/**@type{number}*/code) =>{
-                                    res.statusCode = code;
-                                };
+                                }, {}):null;           
             res.type =          (/**@type{string}*/type)=>{
                                     res.setHeader('Content-Type', type);
                                 };

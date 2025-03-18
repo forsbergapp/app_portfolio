@@ -190,7 +190,7 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
  *                  TECHNOLOGY              AppTranslation
  *                  SECURITY                AppTranslation
  *                  PATTERN                 AppTranslation
- *                  SOLUTION                AppTranslation
+ *                  COMPARISON              AppTranslation
  *                  SCREENSHOT_END (arrray) AppTranslation
  *              type MODULE*
  *                  MODULE_NAME
@@ -252,8 +252,20 @@ const markdownRender = async parameters =>{
             markdown = markdown.replaceAll('@{SECURITY}', app_translation?app_translation.json_data.security:'');
             //replace PATTERN
             markdown = markdown.replaceAll('@{PATTERN}', app_translation?app_translation.json_data.pattern:'');
-            //replace SOLUTION
-            markdown = markdown.replaceAll('@{SOLUTION}', app_translation?app_translation.json_data.solution:'');
+            //replace COMPARISON
+            markdown = markdown.replaceAll('@{COMPARISON}', app_translation.json_data.comparison==[]?
+                                                                '':
+                                                                'Comparison' + '\n\n' + 
+                                                                app_translation.json_data.comparison
+                                                                .map((/**@type{[]}*/table)=>
+                                                                        table.map((row, index)=>
+                                                                                index==0?
+                                                                                ('|' + row[0] + '|' + row[1] + '|'+'\n' +
+                                                                                '|:-------------|:-------------|' + '\n'):
+                                                                                ('|' + row[0] + '|' + row[1] + '|'+'\n')
+                                                                                ).join('')
+                                                                    ).join('\n')
+                                            );
             //replace SCREENSHOT_END
             //images are saved in an array
             return markdown.replaceAll('@{SCREENSHOT_END}', app_translation?app_translation.json_data.screenshot_end.join('\n'):'');
