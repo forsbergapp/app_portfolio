@@ -34,6 +34,9 @@
         {"CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS": 5,"COMMENT":""},
         {"CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES": 60,"COMMENT":""}
     ],
+    "SERVICE_DB":[
+        {"JOURNAL":"1", "COMMENT": "1=on, 0=off"}
+    ],
     "SERVICE_IAM":[
         {"AUTHENTICATE_REQUEST_ENABLE": "0", "COMMENT": "0=NO, 1=YES"},
         {"AUTHENTICATE_REQUEST_OBSERVE_LIMIT": "5", "COMMENT": "If observe limit reached then IP should be blocked"},
