@@ -837,7 +837,8 @@ const commonComponentCreate = async parameters =>{
                                                         user_agent:parameters.componentParameters.user_agent ??'', 
                                                         accept_language:parameters.componentParameters.locale??''}):
                                     null;
-    const admin_only = await commonAppStart(parameters.app_id)==true?0:1;
+    const count_user = IamUser.get(parameters.app_id, null).result.length;
+    const admin_only = (await commonAppStart(parameters.app_id)==true?false:true) && count_user==0;
     
     switch (parameters.type){
         case 'APP':{
@@ -847,7 +848,7 @@ const commonComponentCreate = async parameters =>{
                 app_logo:               App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].logo,
                 app_idtoken:            idtoken ?? '',
                 locale:                 parameters.componentParameters.locale ?? '',
-                admin_only:             admin_only,
+                admin_only:             admin_only?1:0,
                 client_latitude:        result_geodata?.latitude,
                 client_longitude:       result_geodata?.longitude,
                 client_place:           result_geodata?.place ?? '',
@@ -858,7 +859,7 @@ const commonComponentCreate = async parameters =>{
                 framework_messages:     Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVICE_APP',   parameter:'FRAMEWORK_MESSAGES'}}),
                 rest_resource_bff:      Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',        parameter:'REST_RESOURCE_BFF'}}),
                 rest_api_version:       Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',        parameter:'REST_API_VERSION'}}),
-                first_time:             admin_only==1?(IamUser.get(parameters.app_id, null).result.length==0?1:0):0
+                first_time:             count_user==0?1:0
             };
             /**@type{server_db_app_parameter_common} */
             const common_parameter = AppParameter.get({app_id:parameters.app_id, resource_id:common_app_id}).result[0];

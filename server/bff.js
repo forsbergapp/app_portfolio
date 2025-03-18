@@ -114,7 +114,6 @@ const bffInit = async (req, res) =>{
                 res.setHeader('cross-origin-opener-policy','same-origin');
                 res.setHeader('cross-origin-resource-policy',	'same-origin');
                 res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
-                res.setHeader('strict-transport-security', `max-age=${180 * 24 * 60 * 60}; includeSubDomains`);
                 res.setHeader('x-content-type-options', 'nosniff');
                 res.setHeader('x-dns-prefetch-control', 'off');
                 res.setHeader('x-download-options', 'noopen');

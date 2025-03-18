@@ -288,25 +288,28 @@ const getViewStatCountAdmin = parameters => {return {result: [{count_users:get(p
  * @param {server_db_table_IamUser} data
  */
 const validationData = data =>{
-    return (data.username==null || data.password==null || ('type' in data && data.type==null)||
+    return (data.type !=null &&
             //check not allowed attributes when creating or updating a user
-            'id' in data||'user_level' in data ||'status' in data||'created' in data||'modified' in data||
+            ('id' in data||'user_level' in data ||'status' in data||'created' in data||'modified' in data)==false &&
             //must be valid username
-            (data.username != null &&
-                (data.username.indexOf(' ') > -1 || 
-                data.username.indexOf('?') > -1 ||
-                data.username.indexOf('/') > -1 ||
-                data.username.indexOf('+') > -1 ||
-                data.username.indexOf('"') > -1 ||
-                data.username.indexOf('\'\'') > -1))||
+            data.username!=null &&
+            data.username.indexOf(' ')==-1 &&
+            data.username.indexOf('?')==-1 &&
+            data.username.indexOf('/')==-1 &&
+            data.username.indexOf('+')==-1 &&
+            data.username.indexOf('"')==-1 &&
+            data.username.indexOf('\'\'')==-1 &&
             //username 5 - 100 characters '👤 5-100!'
-            (data.username != null && (data.username.length < 5 || data.username.length > 100))||
-            //bio max 100 characters
-            (data.bio != null && data.bio.length > 100)||
-            //reminder max 100 characters
-            (data.password_reminder != null && data.password_reminder.length > 100)||
+            data.username.length >= 5 &&
+            data.username.length <= 100 &&
+            //bio max 100 characters if used
+            (data.bio == null || (data.bio != null && data.bio.length <= 100))&&
+            //reminder max 100 characters if used
+            (data.password_reminder==null || (data.password_reminder != null && data.password_reminder.length <= 100))||
             //password 10 - 100 characters, '🔑 10-100!'
-            (data.password_new != null && data.password_new.length < 10 && data.password_new.length > 100)) == false;
+            ((data.password != null && data.password.length >= 10 && data.password.length <= 100)) &&
+            //new password 10 - 100 characters, '🔑 10-100!'
+            (data.password_new==null || (data.password_new != null && data.password_new.length >= 10 && data.password_new.length <= 100)));
 }; 
 /**
  * @name post
