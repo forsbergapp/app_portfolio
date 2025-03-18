@@ -70,7 +70,8 @@ const post = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          resource_id:number}} parameters
+ *          resource_id:number,
+ *          data:{iam_user_id:number}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
@@ -78,15 +79,21 @@ const deleteRecord = async parameters =>{
         return ORM.getError(parameters.app_id, 400);
     }
     else
-        return ORM.Execute({  app_id:parameters.app_id, 
-                                    dml:'DELETE', 
-                                    object:'IamUserFollow', 
-                                    delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
-            if (result.affectedRows>0)
-                return {result:result, type:'JSON'};
-            else
-                return ORM.getError(parameters.app_id, 404);
-        });
+        if (get({   app_id:parameters.app_id, 
+            resource_id:parameters.resource_id, 
+            data:{  iam_user_id:parameters.data.iam_user_id, 
+                    iam_user_id_follow:null}}).result?.[0])
+            return ORM.Execute({  app_id:parameters.app_id, 
+                                        dml:'DELETE', 
+                                        object:'IamUserFollow', 
+                                        delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+                if (result.affectedRows>0)
+                    return {result:result, type:'JSON'};
+                else
+                    return ORM.getError(parameters.app_id, 404);
+            });
+        else
+            return ORM.getError(parameters.app_id, 401);
 };
 
 export {get, post, deleteRecord};
