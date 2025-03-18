@@ -146,7 +146,7 @@ const configDefault = async () => {
                             '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH_DATA' in key)[0].PATH_DATA,
                             '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH_SSL' in key)[0].PATH_SSL,
                             '/data/db',
-                            '/data/db/backup'
+                            '/data/db/journal'
                             ])
     .catch((/**@type{server_server_error}*/err) => {
         throw err;
