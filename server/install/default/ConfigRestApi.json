@@ -1286,42 +1286,6 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/iamuser/${IAM_iam_user_id}": {
-            "get": {
-                "summary": "",
-                "operationId": "server_db.IamUser.get",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/IAM_iam_user_id",
-                            "in":"path",
-                            "required":true
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
         "/bff/app_access/v1/server-db/iamuser-profile-detail/${IAM_iam_user_id}": {
             "get": {
                 "summary": "",
@@ -1668,85 +1632,6 @@
                                             "json_data":{
                                                 "required":true,
                                                 "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            },
-            "delete": {
-                "summary": "",
-                "operationId": "server.iam.iamAuthenticateUserAppDelete",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/IAM_iam_user_app_id",
-                            "in":"path",
-                            "required":true
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "password":{
-                                                "type":"string",
-                                                "required":true
-                                            },
-                                            "IAM_data_app_id": {
-                                                "$ref": "#/components/parameters/IAM_data_app_id",
-                                                "required":true
-                                            },
-                                            "IAM_iam_user_id": {
-                                                "$ref": "#/components/parameters/IAM_iam_user_id",
-                                                "required":true
                                             }
                                         }
                                     }
