@@ -3,16 +3,7 @@
  *              Type groups
  *              APP     App types
  *              BFF     Backend for frontend (BFF) types
- *              DB      entities in data model are either TABLE, TABLE_LOG or DOCUMENT tables in database and 
- *                      description with DB TABLE and DB DOCUMENT are sorted first rest of are other DB types
- *                      db object name syntax:
- *                      table:      server_db_table_[table name]
- *                                  files with backup of old content
- *                      table_log:  server_db_table_log_[table log name] 
- *                                  files with no backup with content of appended records
- *                      document:   server_db_document_[document name]
- *                                  files with backup of old content
- *                      database use tag `namespace` dbObjects and all objects use tag `memberof` dbObjects
+ *              DB      objects in data model 
  *              IAM     IAM types
  *              INFO    Info types
  *              SERVER  Server types
@@ -621,6 +612,7 @@
  * @typedef  {{ ['SERVER']:[server_db_config_server_server], 
  *              ['SERVICE_APP']:[server_db_config_server_service_app], 
  *              ['SERVICE_MICROSERVICE']:[server_db_config_server_service_microservice],
+ *              ['SERVICE_DB']:[server_db_config_server_service_db],
  *              ['SERVICE_IAM']:[server_db_config_server_service_iam],
  *              ['SERVICE_SOCKET']:[server_db_config_server_service_socket],
  *              ['SERVICE_LOG']:[server_db_config_server_service_log],
@@ -812,6 +804,10 @@
  *            CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}} server_db_config_server_service_microservice
  */
 
+/**
+ * @description DB server_db_config_server_service_db
+ * @typedef {{  JOURNAL:string}} server_db_config_server_service_db
+ */
 /**
  * @description DB server_db_config_server_service_iam
  * @typedef {{  AUTHENTICATE_REQUEST_ENABLE:string,

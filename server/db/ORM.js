@@ -27,7 +27,7 @@
  *                  uses temporary transaction_content from file on disk to concat new log record
  *  TABLE_LOG_DATE  same as TABLE_LOG but uses additional filename partition with date implemented as partition
  * 
- *  Admin can also use postFsAdmin and deleteFsAdmin without transaction if needed
+ *  Admin uses postFsAdmin to create initial object content
  * 
  * @module server/db/ORM
  */
@@ -56,9 +56,9 @@ Object.seal(DB);
  * @name DB_DIR
  * @description File database paths
  * @constant
- * @type{{db:string, backup:string}}
+ * @type{{db:string, journal:string}}
  */
-const DB_DIR = {db:'/data/db/', backup:'/data/db/backup/'};
+const DB_DIR = {db:'/data/db/', journal:'/data/db/journal/'};
 Object.seal(DB_DIR);
 
 /**@type{import('./Log.js')}*/
@@ -243,29 +243,29 @@ const getFsDbObject = async () => getFsFile(DB_DIR.db + 'DbObjects.json');
  * @name updateFsFile
  * @description Writes file
  *              Must specify valid transaction id to be able to update a file
- *              Backup of old file will be written to backup directory
+ *              Backup of old file will be written to journal directory
  * @function
- * @param {server_DbObject} file 
+ * @param {server_DbObject} object
  * @param {number|null} transaction_id 
  * @param {[]} file_content 
  * @param {string|null} filepath
  * @returns {Promise.<void>}
  */
 
-const updateFsFile = async (file, transaction_id, file_content, filepath=null) =>{  
-    const record = getObjectRecord(file);
+const updateFsFile = async (object, transaction_id, file_content, filepath=null) =>{  
+    const record = getObjectRecord(object);
     if (!transaction_id || record.transaction_id != transaction_id){
         /**@type{import('../iam.js')} */
         const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         throw iamUtilMessageNotAuthorized();
     }
     else{
-        if (record.type=='TABLE'){
-            //write backup of old file
-            await postFsFile(`${DB_DIR.backup + file + '.json'}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, file_content, record.type=='TABLE');
+        if (record.type=='TABLE' && getObject(0,'ConfigServer').SERVICE_DB.filter((/**@type{*}*/key)=>'JOURNAL' in key)[0]?.JOURNAL=='1'){
+            //write to journal using format [Date.now()].[ISO Date string].[object].json
+            await postFsFile(`${DB_DIR.journal}${Date.now()}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}.${object}.json`, file_content, record.type=='TABLE');
         }
         //write new file content
-        await postFsFile(filepath ?? (DB_DIR.db + file + '.json'), file_content, record.type.startsWith('TABLE'));
+        await postFsFile(filepath ?? (DB_DIR.db + object + '.json'), file_content, record.type.startsWith('TABLE'));
     }
 };
 
@@ -306,6 +306,7 @@ const postFsDir = async paths => {
         });
     }
 };
+
 /**
  * @name postFsAdmin
  * @description Write to a file in database
@@ -319,24 +320,6 @@ const postFsAdmin = async (object, file_content) =>{
     await postFsFile(DB_DIR.db + object + '.json', file_content, DB.data.filter(file_db=>file_db.name==object)[0]?.type.startsWith('TABLE'));
     if (DB.data.filter(file_db=>file_db.name == object)[0].cache_content)
         DB.data.filter(file_db=>file_db.name == object)[0].cache_content = file_content;
-};
-
-/**
- * @name deleteFsAdmin
- * @description Delete a file in database
- * @function
- * @param {server_DbObject} file 
- * @returns {Promise.<void>}
- */
-const deleteFsAdmin = async file => {                                 
-    const filepath =    process.cwd() + 
-                        DB_DIR.db +
-                        file + '.json';
-    await fs.promises.rm(filepath)
-            .then(()=>{if (DB.data.filter(file_db=>file_db.name == file)[0].cache_content)
-                        DB.data.filter(file_db=>file_db.name == file)[0].cache_content = null;
-            })
-            .catch((error=>{throw error;}));
 };
 
 /**
@@ -952,8 +935,8 @@ const getViewObjects = parameters =>{
 
 export {
         getFsDir, getFsDataExists,
-        postFsDir,postFsAdmin, 
-        deleteFsAdmin,
+        postFsDir,
+        postFsAdmin,
         getObject,
         getObjectFile,
         Execute,
