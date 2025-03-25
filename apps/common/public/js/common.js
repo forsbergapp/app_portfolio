@@ -3264,7 +3264,10 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
             Vue.createApp({
                 data(){return {};},
                 template: template,
-                methods:methods
+                methods:methods,
+                compilerOptions: {
+                    whitespace: 'preserve'
+                }
             }).mount('#tempmount');
 
             if (component){
