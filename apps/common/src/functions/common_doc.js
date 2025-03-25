@@ -253,7 +253,7 @@ const markdownRender = async parameters =>{
             //replace PATTERN
             markdown = markdown.replaceAll('@{PATTERN}', app_translation?app_translation.json_data.pattern:'');
             //replace COMPARISON
-            markdown = markdown.replaceAll('@{COMPARISON}', app_translation.json_data.comparison==[]?
+            markdown = markdown.replaceAll('@{COMPARISON}', app_translation.json_data.comparison?.length==0?
                                                                 '':
                                                                 'Comparison' + '\n\n' + 
                                                                 app_translation.json_data.comparison
