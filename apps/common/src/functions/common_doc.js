@@ -164,7 +164,9 @@ const HTMLEntities = text => text
                             .replaceAll('[','&#91;')
                             .replaceAll(']','&#93;')
                             .replaceAll('<','&lt;')
-                            .replaceAll('>','&gt;');
+                            .replaceAll('>','&gt;')
+                            .replaceAll('}}','&rbrace; &rbrace;')
+                            .replaceAll('{{','&lbrace; &lbrace;');
 
 /**
  * @name commentType
