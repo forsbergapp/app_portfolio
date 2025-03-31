@@ -469,7 +469,7 @@
         "/bff/app_id/v1/server-db/iamuserappdatapost-profile-stat": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.IamUserAppDatapost.getViewProfileStatPost",
+                "operationId": "server_db.IamUserAppDataPost.getViewProfileStatPost",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
