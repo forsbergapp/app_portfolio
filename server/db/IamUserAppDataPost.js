@@ -176,13 +176,13 @@ const getViewProfileStatPost = async parameters =>{
         return {result:IamUser.get(parameters.app_id, null).result
                         .map((/**@type{server_db_table_IamUser}*/row)=>{
                             return {
-                                top:serverUtilNumberValue(parameters.data.statchoice)==1?
+                                top:serverUtilNumberValue(parameters.data.statchoice)==4?
                                         'LIKED_POST':
                                             'VIEWED_POST',
                                 iam_user_id:row.id,
                                 avatar:row.avatar,
                                 username:row.username,
-                                count:serverUtilNumberValue(parameters.data.statchoice)==1?
+                                count:serverUtilNumberValue(parameters.data.statchoice)==4?
                                         IamUserAppDataPostLike.get({app_id:parameters.app_id, 
                                                                     resource_id:null,
                                                                     data:{  iam_user_id:row.id??null, 
