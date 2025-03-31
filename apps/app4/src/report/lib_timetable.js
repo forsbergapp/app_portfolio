@@ -1334,11 +1334,11 @@ const component = props => {
 	 * Checks if today
 	 * compares the current date in the timetable with current date of the client using the timetable timezone
 	 * @param {Date} checkdate 
-	 * @param {string|null} timezone
+	 * @param {number} timezoneOffset
 	 * @returns {boolean}
 	 */
-	const isToday = (checkdate, timezone=null) => {
-		const date_user_timetable_timezone = 	new Date(new Date().setHours(new Date().getHours()+getTimezoneOffset(timezone ?? 'UTC')))
+	const isToday = (checkdate, timezoneOffset) => {
+		const date_user_timetable_timezone = 	new Date(new Date().setHours(new Date().getHours()+timezoneOffset))
 												.toLocaleDateString('en', {timeZone: 'UTC', year:'numeric',month:'numeric',day:'numeric'});
 		return (checkdate.getMonth()+1 	== Number(date_user_timetable_timezone.split('/')[0])) && 
 				(checkdate.getDate() 	== Number(date_user_timetable_timezone.split('/')[1])) && 
@@ -1361,9 +1361,7 @@ const component = props => {
 		const options_calendartype = {timeZone: timezone,
 									month: 'numeric'};
 		if (calendartype=='GREGORIAN'){
-			const date_temp = new Date(year,month,day);
-			date_temp.setDate(date_temp.getDate() + (hijri_adj ?? 0));
-			const ramadan_day = date_temp.toLocaleString(	APP_REPORT_GLOBAL.regional_def_calendar_lang + 
+			const ramadan_day = new Date(Date.UTC(year,month,day, 12, 0)+((hijri_adj ?? 0) *1000*24*60*60)).toLocaleString(	APP_REPORT_GLOBAL.regional_def_calendar_lang + 
 															APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 															APP_REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 															calendar_hijri_type + 
@@ -1830,7 +1828,7 @@ const component = props => {
 				
 
 				return	{
-					row_class:		`timetable_day_timetable_row_data ${isToday(date_current, settings.timezone)==true?'timetable_day_today_row':''}`,
+					row_class:		`timetable_day_timetable_row_data ${isToday(date_current, timezone_offset)==true?'timetable_day_today_row':''}`,
 					col_imsak:		settings.show_imsak == 1?show_col('DAY', 'imsak', times.imsak, show_col_data ):null,
 					col_fajr:		show_col('DAY', 'fajr', times.fajr, show_col_data),
 					col_sunrise:	show_col('DAY', 'sunrise', times.sunrise, show_col_data),
@@ -2095,10 +2093,10 @@ const component = props => {
 	 * Timetable month
 	 * @param {APP_REPORT_settings} settings 
 	 * @param {APP_REPORT_settings['ui_navigation_left']|APP_REPORT_settings['ui_navigation_right']} button_id
-	 * @param {string} year_class 
+	 * @param {string|null} year_class 
 	 * @returns {string}
 	 */
-	const displayMonth = (settings, button_id, year_class='') => {
+	const displayMonth = (settings, button_id, year_class=null) => {
 		const timezone_offset = getTimezoneOffset(settings.timezone);
 		if (button_id)
 			setCurrent('MONTH', settings.ui_navigation_left, settings.ui_navigation_right, settings.calendartype, button_id);
@@ -2111,7 +2109,7 @@ const component = props => {
 		*				title_gregorian:string,
 		*				title_hijri:	string,
 		*				date:			Date,
-		*				endDate:		Date,
+		*				days:		    number,
 		*				date_hijri : 	[number, number,number],
 		*				endDate_hijri: 	[number, number,number]}} 
 		*/
@@ -2136,11 +2134,11 @@ const component = props => {
 				const month_gregorian 		= APP_REPORT_GLOBAL.session_currentDate.getMonth();
 				const year_gregorian 		= APP_REPORT_GLOBAL.session_currentDate.getFullYear();
 
-				//use format new Date('[year]-[month]-01T12:00:00.000Z')
-				//format new Date(	year,month,1) will not produce same month for all timezones
+                //use format new Date('[year]-[month]-01T12:00:00.000Z')
+				//format new Date(	year,month,1) or new Date(Date.UTC(year,month,1)) will not produce same month for all timezones
 				const gregorian_date_start 	= new Date(`${year_gregorian}-${(month_gregorian+1).toString().padStart(2,'0')}-01T12:00:00.000Z`);
-				let gregorian_date_end = new Date(gregorian_date_start);
-				gregorian_date_end 	= new Date(gregorian_date_end.setMonth(gregorian_date_end.getMonth()+1));
+				let gregorian_date_end_tmp = new Date(gregorian_date_start);
+				gregorian_date_end_tmp 	= new Date(gregorian_date_end_tmp.setMonth(gregorian_date_end_tmp.getMonth()+1));
 
 				return {month:			month_gregorian,
 						year:			year_gregorian,
@@ -2153,7 +2151,7 @@ const component = props => {
 						title_hijri:	'',
 										
 						date:			gregorian_date_start,
-						endDate: 		gregorian_date_end,
+						days: 		    (Date.UTC(gregorian_date_end_tmp.getFullYear(), gregorian_date_end_tmp.getMonth(), 1) - Date.UTC(year_gregorian, month_gregorian, 1))/1000/24/60/60,
 						date_hijri : 	[0,0,0],
 						endDate_hijri: 	[0,0,0]};
 			}	
@@ -2168,7 +2166,8 @@ const component = props => {
 				const dateGregorian = getGregorian(date_hijri, settings.hijri_adj);
 				/**@type{[number, number, number]} */
 				const endDateGregorian = getGregorian(endDate_hijri, settings.hijri_adj);
-				const title_date = getGregorian([year_hijri,month_hijri,1], 0);
+				const title_date = getGregorian([year_hijri,month_hijri,1], 2);
+            
 				return {
 						month:			month_hijri,
 						year:			year_hijri,
@@ -2181,7 +2180,7 @@ const component = props => {
 											(settings.number_system=='hanidec'?'latn':settings.number_system),
 											options).toLocaleUpperCase(),
 						date:			new Date(dateGregorian[0], dateGregorian[1]-1, dateGregorian[2]),
-						endDate:		new Date(endDateGregorian[0], endDateGregorian[1]-1, endDateGregorian[2]),
+						days:		    (Date.UTC(endDateGregorian[0], endDateGregorian[1]-1, endDateGregorian[2]) - Date.UTC(dateGregorian[0], dateGregorian[1]-1, dateGregorian[2]))/1000/24/60/60,
 						date_hijri : 	date_hijri,
 						endDate_hijri: 	endDate_hijri
 				};
@@ -2234,7 +2233,7 @@ const component = props => {
 		// get start date and end date for both gregorian and hijri
 		const timetable_data = ()=>{
 			//DATA
-			return Array(...Array(Math.floor((Number(data.endDate) -Number(data.date))/1000/24/60/60)))
+			return Array(data.days).fill(null)
 							.map((day,index)=>{
 								data.date.setDate(data.date.getDate()+ (index==0?0:1));
 								const times = PRAYTIMES.getTimes(data.date, [settings.gps_lat, settings.gps_long], timezone_offset, 0, 'Float');
@@ -2242,9 +2241,8 @@ const component = props => {
 									times.day = data.date.getDate();
 								else
 									times.day = ++data.date_hijri[2] - 1;
-				
 								return {
-										class:	`${'timetable_month_data_row'} ${isToday(data.date, settings.timezone)?'timetable_month_data_today_row':''} ${highlight_row(settings.highlight, data.date.getDay(), times.day)}`,
+										class:	`${'timetable_month_data_row'} ${isToday(data.date, timezone_offset)?'timetable_month_data_today_row':''} ${highlight_row(settings.highlight, data.date.getDay(), times.day)}`,
 										columns: makeTableRow(times, data.year, data.month, settings, settings.calendartype=='HIJRI'?getGregorian([data.year,data.month,times.day], settings.hijri_adj):null)
 										};
 
@@ -2259,7 +2257,7 @@ const component = props => {
 							TIMETABLE_YEAR_MONTH:year_class?true:false,
 							TIMETABLE_ID: settings.reporttype_year_month =='MONTH'?'timetable_month':'', 
 							TIMETABLE_STYLE:null,
-							TIMETABLE_CLASS:`${settings.timetable_class} ${settings.timetable_month} ${settings.theme_month} ${settings.arabic_script} ${year_class}`, 
+							TIMETABLE_CLASS:`${settings.timetable_class} ${settings.timetable_month} ${settings.theme_month} ${settings.arabic_script} ${year_class??''}`, 
 							TIMETABLE_TITLE1: data.title_gregorian,
 							TIMETABLE_TITLE2: data.title_hijri,
 							TIMETABLE_MONTH_DATA:timetable_data(),
@@ -2277,6 +2275,7 @@ const component = props => {
 	 * @returns {string}
 	 */
 	const displayYear = (settings, button_id) => {
+        const startday            = APP_REPORT_GLOBAL.session_currentDate.getDate();
 		const startmonth            = APP_REPORT_GLOBAL.session_currentDate.getMonth();
 		const starthijrimonth       = APP_REPORT_GLOBAL.session_currentHijriDate[0];
 		
@@ -2310,12 +2309,14 @@ const component = props => {
 		const months = new Array(12);
 		
 		for (let monthindex = 1; monthindex <= 12; monthindex++) { 
+            APP_REPORT_GLOBAL.session_currentDate.setDate(1);
 			if (settings.calendartype=='GREGORIAN')
 				APP_REPORT_GLOBAL.session_currentDate.setMonth(monthindex -1);
 			else
 				APP_REPORT_GLOBAL.session_currentHijriDate[0] = monthindex;
 			months[monthindex-1] = displayMonth(settings, null, settings.timetable_year_month);		
 		}
+        APP_REPORT_GLOBAL.session_currentDate.setDate(startday);
 		APP_REPORT_GLOBAL.session_currentDate.setMonth(startmonth);
 		APP_REPORT_GLOBAL.session_currentHijriDate[0] = starthijrimonth;
 		return template({	TIMETABLE:'YEAR', 
