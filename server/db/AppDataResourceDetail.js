@@ -40,6 +40,13 @@ const get = parameters =>{
                                                                                 resource_name:parameters.data.resource_name
                                                                         }}).result;
 
+    const  result_AppDataResourceMaster = AppDataResourceMaster.get({   app_id:parameters.app_id, 
+                                                                        join:true,
+                                                                        resource_id:null,
+                                                                        data:{data_app_id:parameters.data.data_app_id,
+                                                                            iam_user_id:parameters.data.iam_user_id,
+                                                                            resource_name:null,
+                                                                            app_data_entity_id:entity_id}}).result;
     const result = ORM.getObject(parameters.app_id, 'AppDataResourceDetail',parameters.resource_id, null).rows
                     .filter((/**@type{server_db_table_AppDataResourceDetail}*/row)=>
                             row.app_data_resource_master_id == (parameters.data.app_data_resource_master_id ?? row.app_data_resource_master_id) &&
@@ -47,13 +54,7 @@ const get = parameters =>{
                             .filter((/**@type{server_db_table_AppDataEntityResource}*/row_AppDataEntityResource)=>
                                 row_AppDataEntityResource.id == row.app_data_entity_resource_id
                             ).length>0 &&
-                            AppDataResourceMaster.get({ app_id:parameters.app_id, 
-                                                        join:true,
-                                                        resource_id:null,
-                                                        data:{data_app_id:parameters.data.data_app_id,
-                                                              iam_user_id:parameters.data.iam_user_id,
-                                                              resource_name:null,
-                                                              app_data_entity_id:entity_id}}).result
+                            result_AppDataResourceMaster
                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
                                 parameters.all_users || row_master.id == row.app_data_resource_master_id
                             ).length>0
