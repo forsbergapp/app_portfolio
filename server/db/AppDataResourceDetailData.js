@@ -37,6 +37,13 @@ const get = parameters =>{
     const entity_id = parameters.data?.app_data_entity_id?? AppDataEntity.get({  app_id:parameters.app_id, 
                                         resource_id:null,
                                         data:{data_app_id:parameters.app_id}}).result[0].id;
+    const result_AppDataResourceMasterAttribute = AppDataResourceMaster.get({app_id:parameters.app_id, 
+                                                                    join:true,
+                                                                    resource_id:null,
+                                                                    data:{  data_app_id:parameters.data.data_app_id,
+                                                                            iam_user_id:parameters.data.iam_user_id,
+                                                                            resource_name:parameters.data.resource_name_data_master_attribute,
+                                                                            app_data_entity_id:entity_id}}).result;
     const result = ORM.getObject(parameters.app_id, 'AppDataResourceDetailData',parameters.resource_id, null).rows
                     .filter((/**@type{server_db_table_AppDataResourceDetailData}*/row)=>
                         row.app_data_resource_detail_id == (parameters.data.app_data_resource_detail_id??row.app_data_resource_detail_id) && 
@@ -63,13 +70,7 @@ const get = parameters =>{
                             ).length>0
                         ).length>0 &&
                         //detail data master attribute
-                        AppDataResourceMaster.get({ app_id:parameters.app_id, 
-                                                    join:true,
-                                                    resource_id:null,
-                                                    data:{  data_app_id:parameters.data.data_app_id,
-                                                            iam_user_id:parameters.data.iam_user_id,
-                                                            resource_name:parameters.data.resource_name_data_master_attribute,
-                                                            app_data_entity_id:entity_id}}).result
+                        result_AppDataResourceMasterAttribute
                         .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
                             row_master.id == (row.app_data_resource_master_attribute_id ?? row_master.id)
                         ).length>0
