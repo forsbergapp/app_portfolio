@@ -37,40 +37,42 @@ const get = parameters =>{
     const entity_id = parameters.data?.app_data_entity_id?? AppDataEntity.get({  app_id:parameters.app_id, 
                                         resource_id:null,
                                         data:{data_app_id:parameters.app_id}}).result[0].id;
-    const result_AppDataResourceMasterAttribute = AppDataResourceMaster.get({app_id:parameters.app_id, 
+    const restult_AppDataResourceMasterAttributeDetail = AppDataResourceMaster.get({  app_id:parameters.app_id, 
+                                                                    join:true,
+                                                                    resource_id: null,
+                                                                    data:{  data_app_id:parameters.data.data_app_id,
+                                                                            iam_user_id:parameters.data.iam_user_id,
+                                                                            resource_name:parameters.data.resource_name_master_attribute,
+                                                                            app_data_entity_id:entity_id}}).result;
+    const result_AppDataResourceMasterAttributeDetailData = AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                     join:true,
                                                                     resource_id:null,
                                                                     data:{  data_app_id:parameters.data.data_app_id,
                                                                             iam_user_id:parameters.data.iam_user_id,
                                                                             resource_name:parameters.data.resource_name_data_master_attribute,
                                                                             app_data_entity_id:entity_id}}).result;
+    const result_AppDataResourceDetail = AppDataResourceDetail.get({app_id:parameters.app_id, 
+                                                                    join:true,
+                                                                    resource_id:null,
+                                                                    data:{  data_app_id:parameters.data.data_app_id,
+                                                                            iam_user_id:parameters.data.iam_user_id,
+                                                                            resource_name:parameters.data.resource_name,
+                                                                            app_data_resource_master_id:null,
+                                                                            app_data_entity_id:entity_id}}).result;    
     const result = ORM.getObject(parameters.app_id, 'AppDataResourceDetailData',parameters.resource_id, null).rows
                     .filter((/**@type{server_db_table_AppDataResourceDetailData}*/row)=>
                         row.app_data_resource_detail_id == (parameters.data.app_data_resource_detail_id??row.app_data_resource_detail_id) && 
-                        AppDataResourceDetail.get({ app_id:parameters.app_id, 
-                                                        join:true,
-                                                        resource_id:row.app_data_resource_detail_id,
-                                                        data:{  data_app_id:parameters.data.data_app_id,
-                                                                iam_user_id:parameters.data.iam_user_id,
-                                                                resource_name:parameters.data.resource_name,
-                                                                app_data_resource_master_id:null,
-                                                                app_data_entity_id:entity_id}}).result
+                        result_AppDataResourceDetail
                         .filter((/**@type{server_db_table_AppDataResourceDetail}*/row_detail)=>
                             row_detail.id == row.app_data_resource_detail_id && 
                             //detail master attribute
-                            AppDataResourceMaster.get({ app_id:parameters.app_id, 
-                                                        join:true,
-                                                        resource_id: row_detail.app_data_resource_master_id,
-                                                        data:{  data_app_id:parameters.data.data_app_id,
-                                                                iam_user_id:parameters.data.iam_user_id,
-                                                                resource_name:parameters.data.resource_name_master_attribute,
-                                                                app_data_entity_id:entity_id}}).result
+                            restult_AppDataResourceMasterAttributeDetail
                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
                                 row_master.id == row_detail.app_data_resource_master_id
                             ).length>0
                         ).length>0 &&
                         //detail data master attribute
-                        result_AppDataResourceMasterAttribute
+                        result_AppDataResourceMasterAttributeDetailData
                         .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
                             row_master.id == (row.app_data_resource_master_attribute_id ?? row_master.id)
                         ).length>0
