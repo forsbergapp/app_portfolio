@@ -452,8 +452,8 @@ const post = async parameters => {
             if (request_level=='1'||request_level=='2'){
                 log = { host:               parameters.data.request?.req.headers.host,
                         ip:                 parameters.data.request?.req.ip,
-                        requestid:          parameters.data.request?.req.headers['X-Request-Id'],
-                        correlationid:      parameters.data.request?.req.headers['X-Correlation-Id'],
+                        requestid:          parameters.data.request?.req.headers['x-request-id'],
+                        correlationid:      parameters.data.request?.req.headers['x-correlation-id'],
                         url:                parameters.data.request?.req.originalUrl,
                         http_info:          parameters.data.request?.req.protocol + '/' + parameters.data.request?.req.httpVersion,
                         method:             parameters.data.request?.req.method,

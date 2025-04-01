@@ -1324,8 +1324,9 @@
  *              'sec-fetch-mode':string,
  *              accept:string, 
  *              referer:string,
- *              'X-Request-Id':string,
- *              'X-Correlation-Id':string}} headers
+ *              'x-request-id':string,
+ *              'x-forwarded-for':string,
+ *              'x-correlation-id':string}} headers
  * socket
  * @property {object} socket
  * @property {number} socket.bytesRead

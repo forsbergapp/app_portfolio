@@ -16,12 +16,9 @@
  * @returns {Promise.<void|null>}
  */
 const messageQueue = async (service, message_type, message, message_id) => {
-    /**@type{import('../microservice/mail/service.js')} */
-    const {sendEmail} = await import(`file://${process.cwd()}/microservice/mail/service.js`);
-    
+   
     /**@type{import('../server/db/MessageQueue.js')} */
     const MessageQueue = await import(`file://${process.cwd()}/server/db/MessageQueue.js`);
-
 
     return new Promise((resolve, reject) =>{
         /**
@@ -70,34 +67,19 @@ const messageQueue = async (service, message_type, message, message_id) => {
                             }
                         }
                         switch (service){
-                            case 'MAIL':{
+                            default:{
                                 message_consume.start = new Date().toISOString();
-                                sendEmail(message_consume.message)
-                                .then((/**@type{object}*/result_sendEmail)=>{
-                                    message_consume.finished = new Date().toISOString();
-                                    message_consume.result = result_sendEmail;
-                                    message_consume.modified = new Date().toISOString();
-                                    //write to message_queue_consume.json
-                                    write_file('MessageQueueConsume', message_consume)
-                                    .then(()=>{
-                                        resolve (null);
-                                    })
-                                    .catch((/**@type{server_server_error}*/error)=>{
-                                        write_file('MessageQueueError', {id: message_id, message:   message_consume, result:error, created:new Date().toISOString()})
-                                        .then(()=>{
-                                            reject (error);
-                                        })
-                                        .catch(error=>{
-                                            reject(error);
-                                        });
-                                    });
+                                //write to message_queue_consume.json
+                                write_file('MessageQueueConsume', message_consume)
+                                .then(()=>{
+                                    resolve (null);
                                 })
                                 .catch((/**@type{server_server_error}*/error)=>{
                                     write_file('MessageQueueError', {id: message_id, message:   message_consume, result:error, created:new Date().toISOString()})
                                     .then(()=>{
                                         reject (error);
                                     })
-                                    .catch((/**@type{server_server_error}*/error)=>{
+                                    .catch(error=>{
                                         reject(error);
                                     });
                                 });
