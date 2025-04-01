@@ -90,7 +90,7 @@ const bffService = await import('./bff.js');
         idToken:  req.headers['id-token']?.replace('Bearer ',''), 
         authorization:  req.headers.authorization, 
         //metadata
-        ip: req.ip, 
+        ip: req.headers['x-forwarded-for'] || req.ip, 
         user_agent: req.headers['user-agent'], 
         accept_language: req.headers['accept-language'], 
         //response

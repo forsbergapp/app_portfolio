@@ -570,7 +570,7 @@ const serverResponse = async parameters =>{
  * @returns {number}
  */
 const serverUtilResponseTime = (res) => {
-    const diff = process.hrtime(res.getHeader('X-Response-Time'));
+    const diff = process.hrtime(res.getHeader('x-response-time'));
     return diff[0] * 1e3 + diff[1] * 1e-6;
 };    
 

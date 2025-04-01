@@ -35,7 +35,7 @@ const getToken = async parameters => {
                                                                 row.type                    == 'APP_ACCESS_EXTERNAL' &&
                                                                 //Authenticate app id corresponds to current subdomain
                                                                 row.app_id                  == token_verify.app_id &&
-                                                                //Authenticate IP address, the server should use 'X-Forwarded-For' to authenticate client ip
+                                                                //Authenticate IP address, the server should use 'x-forwarded-for' to authenticate client ip
                                                                 row.ip                      == token_verify.ip &&
                                                                 //Authenticate token is valid
                                                                 row.res                     == 1 &&
@@ -203,7 +203,7 @@ const paymentRequestCreate = async parameters =>{
                                                                                                 iam_user_username:  null,
                                                                                                 //save the payment request id
                                                                                                 app_custom_id:      payment_request_id,
-                                                                                                //authorize to client IP, the server should use 'X-Forwarded-For'
+                                                                                                //authorize to client IP, the server should use 'x-forwarded-for'
                                                                                                 ip:                 parameters.ip,
                                                                                                 scope:              'APP_EXTERNAL'});
                 //Save access info in IAM_APP_ACCESS table
