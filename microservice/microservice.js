@@ -220,7 +220,7 @@ const microserviceHttpRequest = async (service, path, query, body, method, timeo
                     'User-Agent': headers_user_agent,
                     'Accept-Language': headers_accept_language,
                     'Authorization': authorization,
-                    'X-Forwarded-For': client_ip
+                    'x-forwarded-for': client_ip
                 };
             else
                 headers = {
@@ -229,7 +229,7 @@ const microserviceHttpRequest = async (service, path, query, body, method, timeo
                     'Content-Type': 'application/json',
                     'Content-Length': Buffer.byteLength(JSON.stringify(body)),
                     'Authorization': authorization,
-                    'X-Forwarded-For': client_ip
+                    'x-forwarded-for': client_ip
                 };
             options = {
                 method: method,

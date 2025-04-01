@@ -99,12 +99,12 @@ const bffInit = async (req, res) =>{
             else{
 
                 //set headers
-                res.setHeader('X-Response-Time', process.hrtime());
-                req.headers['X-Request-Id'] =  securityUUIDCreate().replaceAll('-','');
+                res.setHeader('x-response-time', process.hrtime());
+                req.headers['x-request-id'] =  securityUUIDCreate().replaceAll('-','');
                 if (req.headers.authorization)
-                    req.headers['X-Correlation-Id'] = securityRequestIdCreate();
+                    req.headers['x-correlation-id'] = securityRequestIdCreate();
                 else
-                    req.headers['X-Correlation-Id'] = securityCorrelationIdCreate(req.hostname +  req.ip + req.method);
+                    req.headers['x-correlation-id'] = securityCorrelationIdCreate(req.hostname +  req.ip + req.method);
                 res.setHeader('Access-Control-Max-Age','5');
                 res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
                 res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
@@ -120,7 +120,6 @@ const bffInit = async (req, res) =>{
                 res.setHeader('x-frame-options', 'SAMEORIGIN');
                 res.setHeader('x-permitted-cross-domain-policies', 'none');
                 res.setHeader('x-xss-protection', '0');
-                res.removeHeader('X-Powered-By');
                 //check robots.txt
                 if (req.originalUrl=='/robots.txt'){
                     res.statusMessage = ' ';
