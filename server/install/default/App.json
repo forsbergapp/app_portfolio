@@ -82,7 +82,7 @@
     {
         "id": 4,
         "name": "Timetables",
-        "subdomain": "app4",
+        "subdomain": "timetables",
         "path": "/apps/app4/public",
         "logo":"/images/logo.png",
         "showparam":1,
@@ -102,7 +102,7 @@
     {
         "id": 5, 
         "name": "Bank",           
-        "subdomain": "app5",    
+        "subdomain": "bank",    
         "path": "/apps/app5/public",    
         "logo":"/images/logo.png",     
         "showparam":1, 
@@ -122,7 +122,7 @@
     {
         "id": 6, 
         "name": "Shop",           
-        "subdomain": "app6",    
+        "subdomain": "shop",    
         "path": "/apps/app6/public",    
         "logo":"/images/logo.png",     
         "showparam":1, 
@@ -142,7 +142,7 @@
     {
         "id": 7, 
         "name": "Maps",           
-        "subdomain": "app7",    
+        "subdomain": "maps",    
         "path": "/apps/app7/public",    
         "logo":"/images/logo.png",     
         "showparam":1, 
@@ -162,7 +162,7 @@
     {
         "id": 8, 
         "name": "Cube",           
-        "subdomain": "app8",
+        "subdomain": "cube",
         "path": "/apps/app8/public",    
         "logo":"/images/logo.png",     
         "showparam":1, 
@@ -182,7 +182,7 @@
     {
         "id": 9, 
         "name": "OTP",
-        "subdomain": "app9",
+        "subdomain": "otp",
         "path": "/apps/app9/public",    
         "logo":"/images/logo.png",     
         "showparam":0, 
