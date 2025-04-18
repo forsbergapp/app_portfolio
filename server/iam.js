@@ -2,6 +2,9 @@
 
 /**
  * @import {server_server_response,
+ *          server_db_document_ConfigServer,
+ *          server_db_config_server_service_iam,
+ *          server_db_config_server_server,
  *          server_db_table_IamAppIdToken,
  *          server_db_table_IamAppAccess,
  *          server_db_table_IamUser,
@@ -830,16 +833,27 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *                          add IamControlObserver with status = 1 and type=BLOCK_IP
  *                          return 401
  * @function
- * @param {string} ip
- * @param {string} host
- * @param {string} method
- * @param {string} user_agent
- * @param {string} accept_language
- * @param {string} path
+ * @param {{ip:string, 
+ *          host:string,
+ *          method:string,
+ *          'user-agent':string,
+ *          'accept-language': string,
+ *          path: string}} parameters
  * @returns {Promise.<null|{statusCode:number,
  *                          statusMessage: string}>}
  */
- const iamAuthenticateRequest = async (ip, host, method, user_agent, accept_language, path) => {
+ const iamAuthenticateRequest = async parameters => {
+    const app_id = commonAppHost(parameters.host);
+    //set calling app_id using app_id or common app_id if app_id is unknown
+    const calling_app_id = app_id ?? serverUtilNumberValue(Config.get({app_id:app_id??0, data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}})) ?? 0;
+
+    /**@type{server_db_document_ConfigServer} */
+    const config_SERVER = Config.get({app_id:calling_app_id, data:{object:'ConfigServer'}});
+    /**@type{server_db_config_server_server[]} */
+    const config_SERVER_SERVER = config_SERVER.SERVER;
+    /**@type{server_db_config_server_service_iam[]} */
+    const config_SERVICE_IAM = config_SERVER.SERVICE_IAM;
+
     /**
      * IP to number
      * @function
@@ -862,7 +876,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
      * @returns {boolean}
      */
     const block_ip_control = (app_id, data_app_id, ip_v4) => {
-        if (Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'AUTHENTICATE_REQUEST_IP'}}) == '1'){
+        if (config_SERVICE_IAM.filter(row=>'AUTHENTICATE_REQUEST_IP' in row)[0].AUTHENTICATE_REQUEST_IP == '1'){
             /**@type{server_db_table_IamControlIp[]} */
             const ranges = IamControlIp.get(
                                                     app_id, 
@@ -902,25 +916,27 @@ const iamAuthenticateUserAppDelete = async parameters => {
      * @param {string} ip
      * @returns {boolean}
      */
-    const rateLimiter = (app_id, ip) =>{		
-        const RATE_LIMIT_WINDOW_MS = Config.get({app_id:app_id, data:{object:'ConfigServer', config_group:'SERVICE_IAM', parameter:'RATE_LIMIT_WINDOW_MS'}});
-        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS = Config.get({app_id:app_id, data:{object:'ConfigServer', config_group:'SERVICE_IAM', parameter:'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS'}});
-        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER = Config.get({app_id:app_id, data:{object:'ConfigServer', config_group:'SERVICE_IAM', parameter:'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER'}});
-        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN = Config.get({app_id:app_id, data:{object:'ConfigServer', config_group:'SERVICE_IAM', parameter:'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN'}});
+    const rateLimiter = (app_id, ip) =>{	
+        
+        const RATE_LIMIT_WINDOW_MS =                            config_SERVICE_IAM.filter(row=>'RATE_LIMIT_WINDOW_MS' in row)[0].RATE_LIMIT_WINDOW_MS;
+        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS =    config_SERVICE_IAM.filter(row=>'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS' in row)[0].RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS;
+        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER =         config_SERVICE_IAM.filter(row=>'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER' in row)[0].RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER; 
+        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN =        config_SERVICE_IAM.filter(row=>'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN' in row)[0].RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN;
   
         const currentTime = Date.now();
         if (!iamRequestRateLimiterCount[ip])
             iamRequestRateLimiterCount[ip] = {count:0, firstRequestTime:currentTime};
           
         const {count, firstRequestTime} = iamRequestRateLimiterCount[ip];
-        const USER = path?.toLowerCase().startsWith('/bff/app_access')?1:null;                                                                              
-        const ADMIN = path?.toLowerCase().startsWith('/bff/admin')?1:null;    
+        const USER = parameters.path?.toLowerCase().startsWith('/bff/app_access')?1:null;                                                                              
+        const ADMIN = parameters.path?.toLowerCase().startsWith('/bff/admin')?1:null;    
                                                                               
         if (currentTime - firstRequestTime > RATE_LIMIT_WINDOW_MS){
             iamRequestRateLimiterCount[ip] = {count:1, firstRequestTime:currentTime};
             return false;
         }
         else
+            /**@ts-ignore */
             if (count < (   (USER && RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER) ||
                             (ADMIN && RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN)||
                             (USER==null && ADMIN==null && RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS)
@@ -931,23 +947,21 @@ const iamAuthenticateUserAppDelete = async parameters => {
             else
                 return true;
     };
-    const app_id = commonAppHost(host);
-    //set calling app_id using app_id or common app_id if app_id is unknown
-    const calling_app_id = app_id ?? serverUtilNumberValue(Config.get({app_id:app_id??0, data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}})) ?? 0;
-    if (Config.get({app_id:calling_app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'AUTHENTICATE_REQUEST_ENABLE'}})=='1'){
+
+    if (config_SERVICE_IAM.filter(row=>'AUTHENTICATE_REQUEST_ENABLE' in row)[0].AUTHENTICATE_REQUEST_ENABLE=='1'){
         let fail = 0;
         let fail_block = false;
-        const ip_v4 = ip.replace('::ffff:','');
+        const ip_v4 = parameters.ip.replace('::ffff:','');
         
         //set record with app_id or empty app_id
         const record = {    iam_user_id:null,
                             app_id:app_id,
                             ip:ip_v4, 
-                            user_agent:user_agent, 
-                            host:host, 
-                            accept_language:accept_language, 
-                            method:method,
-                            url:path};
+                            user_agent:parameters['user-agent'], 
+                            host:parameters.host, 
+                            accept_language:parameters['accept-language'], 
+                            method:parameters.method,
+                            url:parameters.path};
         const result_range = block_ip_control(calling_app_id, app_id, ip_v4);
         if (result_range){
             return {statusCode: 401, 
@@ -960,7 +974,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
             }
             else{
                 //check if host exists
-                if (typeof host=='undefined'){
+                if (typeof parameters.host=='undefined'){
                     await IamControlObserve.post(calling_app_id, 
                                                             {   ...record,
                                                                 status:1, 
@@ -1006,14 +1020,14 @@ const iamAuthenticateUserAppDelete = async parameters => {
                             //account names should start with /profile/ and not contain any more '/'
                             (path.startsWith('/profile/') && path.split('/').length==3)||
                             //SSL verification path
-                            (   path.startsWith(Config.get({app_id:calling_app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'HTTPS_SSL_VERIFICATION_PATH'}})) &&
-                                serverUtilNumberValue(Config.get({app_id:calling_app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'HTTPS_SSL_VERIFICATION'}}))==1
+                            (   path.startsWith(config_SERVER_SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH) &&
+                                serverUtilNumberValue(config_SERVER_SERVER.filter(row=>'HTTPS_SSL_VERIFICATION' in row)[0].HTTPS_SSL_VERIFICATION)==1
                             )
                         )==false;
                 };
-                if (invalid_path(path)){
+                if (invalid_path(parameters.path)){
                     //stop if trying to access any SSL path not enabled
-                    if (path.startsWith(Config.get({app_id:calling_app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'HTTPS_SSL_VERIFICATION_PATH'}})))
+                    if (parameters.path.startsWith(config_SERVER_SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH))
                         fail_block = true;
                     await IamControlObserve.post(calling_app_id, 
                         {   ...record,
@@ -1023,7 +1037,8 @@ const iamAuthenticateUserAppDelete = async parameters => {
                 }
                 
                 //check if not accessed from domain or from os hostname
-                if (host.toUpperCase()==hostname().toUpperCase() ||host.toUpperCase().indexOf(Config.get({app_id:calling_app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'HOST'}}).toUpperCase())<0){
+                if (parameters.host.toUpperCase()==hostname().toUpperCase() ||
+                    parameters.host.toUpperCase().indexOf(config_SERVER_SERVER.filter(row=>'HOST' in row)[0].HOST.toUpperCase())<0){
                     //stop always
                     fail_block = true;
                     await IamControlObserve.post(calling_app_id, 
@@ -1033,7 +1048,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                     fail ++;
                 }
                 //check if user-agent is blocked
-                if(IamControlUserAgent.get(calling_app_id, null).result.filter((/**@type{server_db_table_IamControlUserAgent}*/row)=>row.user_agent== user_agent).length>0){
+                if(IamControlUserAgent.get(calling_app_id, null).result.filter((/**@type{server_db_table_IamControlUserAgent}*/row)=>row.user_agent== parameters['user-agent']).length>0){
                     //stop always
                     fail_block = true;
                     await IamControlObserve.post(calling_app_id, 
@@ -1045,7 +1060,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                 //check request
                 let err = null;
                 try {
-                    decodeURIComponent(path);
+                    decodeURIComponent(parameters.path);
                 }
                 catch(e) {
                     err = e;
@@ -1058,7 +1073,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                     fail ++;
                 }
                 //check method
-                if (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].filter(allowed=>allowed==method).length==0){
+                if (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].filter(allowed=>allowed==parameters.method).length==0){
                     //stop always
                     fail_block = true;
                     await IamControlObserve.post(calling_app_id, 
@@ -1071,8 +1086,12 @@ const iamAuthenticateUserAppDelete = async parameters => {
                     if (fail_block ||
                         //check how many observation exists for given app_id or records with unknown app_id
                         IamControlObserve.get(calling_app_id, 
-                                                        null).result.filter((/**@type{server_db_table_IamControlObserve}*/row)=>row.ip==ip_v4 && row.app_id == app_id).length>
-                        Config.get({app_id:calling_app_id, data:{object:'ConfigServer', config_group:'SERVICE_IAM', parameter:'AUTHENTICATE_REQUEST_OBSERVE_LIMIT'}})){
+                                                        null).result
+                        .filter((/**@type{server_db_table_IamControlObserve}*/row)=>
+                                row.ip==ip_v4 && 
+                                row.app_id == app_id).length>
+                                                    config_SERVICE_IAM
+                                                    .filter(row=>'AUTHENTICATE_REQUEST_OBSERVE_LIMIT' in row)[0].AUTHENTICATE_REQUEST_OBSERVE_LIMIT){
                         await IamControlObserve.post(calling_app_id,
                                                             {   ...record,
                                                                 status:1, 
