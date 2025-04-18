@@ -821,6 +821,7 @@
  *              ENABLE_GEOLOCATION:string,
  *              ENABLE_USER_REGISTRATION:string,
  *              ENABLE_USER_LOGIN:string,
+ *              RATE_LIMIT_WINDOW_MS:number,
  *              RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS:number,
  *              RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER:number,
  *              RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN:number}} server_db_config_server_service_iam
