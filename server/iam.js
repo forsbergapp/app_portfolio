@@ -709,58 +709,58 @@ const iamAuthenticateUserAppDelete = async parameters => {
  * @name iamAuthenticateUserCommon
  * @description IAM Middleware authenticate IAM users
  * @function
- * @param {string} idToken
- * @param {server_bff_endpoint_type} endpoint
- * @param {string} authorization
- * @param {string} host
- * @param {string} ip
- * @param {server_server_res} res
- * @param {function} next
+ * @param {{idToken: string,
+ *          endpoint: server_bff_endpoint_type,
+ *          authorization: string,
+ *          host: string,
+ *          ip: string,
+ *          res: server_server_res,
+ *          next: function}} parameters 
  * @returns {Promise.<void>}
  */
- const iamAuthenticateUserCommon = async (idToken, endpoint, authorization, host, ip, res, next) =>{
-    const app_id_host = commonAppHost(host);
+ const iamAuthenticateUserCommon = async parameters  =>{
+    const app_id_host = commonAppHost(parameters.host);
     //APP_EXTERNAL and APP_ACCESS_EXTERNALK do not use idToken
-    if ((idToken ||endpoint=='APP_EXTERNAL' ||endpoint=='APP_ACCESS_EXTERNAL') && endpoint && app_id_host !=null){
+    if ((parameters.idToken ||parameters.endpoint=='APP_EXTERNAL' ||parameters.endpoint=='APP_ACCESS_EXTERNAL') && parameters.endpoint && app_id_host !=null){
         const app_id_admin = serverUtilNumberValue(Config.get({app_id:app_id_host, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}));
         try {
             //authenticate id token
-            const id_token_decoded = (endpoint=='APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL')?null:iamUtilTokenGet(app_id_host, idToken, 'APP_ID');
+            const id_token_decoded = (parameters.endpoint=='APP_EXTERNAL' || parameters.endpoint=='APP_ACCESS_EXTERNAL')?null:iamUtilTokenGet(app_id_host, parameters.idToken, 'APP_ID');
             /**@type{server_db_table_IamAppIdToken}*/
-            const log_id_token = (endpoint=='APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL')?null:IamAppToken.get({app_id:app_id_host, resource_id:null}).result.filter((/**@type{server_db_table_IamAppIdToken}*/row)=> 
-                                                                                    row.app_id == app_id_host && row.ip == ip && row.token == idToken
+            const log_id_token = (parameters.endpoint=='APP_EXTERNAL' || parameters.endpoint=='APP_ACCESS_EXTERNAL')?null:IamAppToken.get({app_id:app_id_host, resource_id:null}).result.filter((/**@type{server_db_table_IamAppIdToken}*/row)=> 
+                                                                                    row.app_id == app_id_host && row.ip == parameters.ip && row.token == parameters.idToken
                                                                                     )[0];
-            if (endpoint=='APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL' || (id_token_decoded?.app_id == app_id_host && 
+            if (parameters.endpoint=='APP_EXTERNAL' || parameters.endpoint=='APP_ACCESS_EXTERNAL' || (id_token_decoded?.app_id == app_id_host && 
                 (id_token_decoded.scope == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
-                id_token_decoded.ip == ip &&
+                id_token_decoded.ip == parameters.ip &&
                 log_id_token)){
                 //External token is not authenticated here
-                if (endpoint=='APP_ID' || endpoint=='APP_EXTERNAL' ||endpoint=='APP_ACCESS_EXTERNAL')
-                    next();
+                if (parameters.endpoint=='APP_ID' || parameters.endpoint=='APP_EXTERNAL' ||parameters.endpoint=='APP_ACCESS_EXTERNAL')
+                    parameters.next();
                 else{
-                    //validate endpoint, app_id and authorization
+                    //validate parameters.endpoint, app_id and authorization
                     switch (true){
-                        case endpoint=='IAM' && authorization.toUpperCase().startsWith('BASIC'):{
+                        case parameters.endpoint=='IAM' && parameters.authorization.toUpperCase().startsWith('BASIC'):{
                             if (app_id_host=== app_id_admin)
-                                next();
+                                parameters.next();
                             else
                                 if (serverUtilNumberValue(Config.get({app_id:app_id_host, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ENABLE_USER_LOGIN'}}))==1)
-                                    next();
+                                    parameters.next();
                                 else
-                                    iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
+                                    iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
-                        case endpoint=='ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):
-                        case endpoint=='APP_ACCESS_VERIFICATION' && authorization.toUpperCase().startsWith('BEARER'):
-                        case endpoint=='APP_ACCESS' && serverUtilNumberValue(Config.get({app_id:app_id_host, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ENABLE_USER_LOGIN'}}))==1 && authorization.toUpperCase().startsWith('BEARER'):{
+                        case parameters.endpoint=='ADMIN' && app_id_host== app_id_admin && parameters.authorization.toUpperCase().startsWith('BEARER'):
+                        case parameters.endpoint=='APP_ACCESS_VERIFICATION' && parameters.authorization.toUpperCase().startsWith('BEARER'):
+                        case parameters.endpoint=='APP_ACCESS' && serverUtilNumberValue(Config.get({app_id:app_id_host, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ENABLE_USER_LOGIN'}}))==1 && parameters.authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
-                            const access_token = authorization?.split(' ')[1] ?? '';
-                            const access_token_decoded = iamUtilTokenGet(app_id_host, access_token, endpoint);
+                            const access_token = parameters.authorization?.split(' ')[1] ?? '';
+                            const access_token_decoded = iamUtilTokenGet(app_id_host, access_token, parameters.endpoint);
                             
                             /**@type{server_db_table_IamAppAccess[]}*/
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
-                                access_token_decoded.ip == ip ){
+                                access_token_decoded.ip == parameters.ip ){
                                 /**@type{server_db_table_IamAppAccess}*/
                                 const iam_app_access = IamAppAccess.get(app_id_host, null).result
                                                         .filter((/**@type{server_db_table_IamAppAccess}*/row)=>
@@ -773,38 +773,38 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                                                                 //Authenticate token is valid
                                                                                                 row.res                     == 1 &&
                                                                                                 //Authenticate IP address
-                                                                                                row.ip                      == ip &&
+                                                                                                row.ip                      == parameters.ip &&
                                                                                                 //Authenticate the token string
                                                                                                 row.token                   == access_token
                                                                                             )[0];
                                 if (iam_app_access)
-                                    next();
+                                    parameters.next();
                                 else
-                                    iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
+                                    iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
                             }
                             else
-                                iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
+                                iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
-                        case endpoint=='IAM_SIGNUP' && serverUtilNumberValue(Config.get({app_id:app_id_host, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ENABLE_USER_REGISTRATION'}}))==1 && app_id_host!= app_id_admin:{
-                            next();
+                        case parameters.endpoint=='IAM_SIGNUP' && serverUtilNumberValue(Config.get({app_id:app_id_host, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ENABLE_USER_REGISTRATION'}}))==1 && app_id_host!= app_id_admin:{
+                            parameters.next();
                             break;
                         }
                         default:{
-                            iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
+                            iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
                     }
                 }
             }
             else
-                iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
+                iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
         } catch (error) {
-            iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
+            iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
         }
     }
     else
-        iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
+        iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
 };
 
 /**
