@@ -85,7 +85,12 @@ const bffInit = async (req, res) =>{
         else{
             //access control that stops request if not passing controls
             /**@type{server_iam_authenticate_request}*/
-            const result = await iamAuthenticateRequest(req.ip, req.headers.host, req.method, req.headers['user-agent'], req.headers['accept-language'], req.path)
+            const result = await iamAuthenticateRequest({ip:req.ip, 
+                                                        host:req.headers.host.split(':')[0] ?? '', 
+                                                        method: req.method, 
+                                                        'user-agent': req.headers['user-agent'], 
+                                                        'accept-language':req.headers['accept-language'], 
+                                                        path:req.path})
                                 .catch((/**@type{server_server_error}*/error)=>{return { statusCode: 500, statusMessage: error};});
             if (result != null){
                 res.statusCode = result.statusCode;
@@ -157,7 +162,7 @@ const bffInit = async (req, res) =>{
  */
 const bffStart = async (req, res) =>{
     //if first time, when no user exists, then redirect everything to admin
-    if (IamUser.get(app_common.commonAppHost(req.headers.host ?? '')??0, null).result.length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
+    if (IamUser.get(app_common.commonAppHost(req.headers.host.split(':')[0] ?? '')??0, null).result.length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
         return {reason:'REDIRECT', redirect:`http://admin.${Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HOST'}})}`};
     else{
         //check if SSL verification using letsencrypt is enabled when validating domains
