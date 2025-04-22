@@ -2199,8 +2199,6 @@ const commonFFB = async parameter => {
                     return response.text();
                 })
                 .then((result) => {
-                    if (parameter.spinner_id && COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`))
-                        COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`).classList.remove('css_spinner');
                     switch (status){
                         case 200:
                         case 201:{
@@ -2209,7 +2207,7 @@ const commonFFB = async parameter => {
                         }
                         case 400:{
                             //Bad request
-                            commonMessageShow('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
+                            commonMessageShow('ERROR_BFF', null, null, 'message_text', '!', COMMON_GLOBAL.app_id);
                             throw result;
                         }
                         case 404:{
@@ -2240,9 +2238,11 @@ const commonFFB = async parameter => {
                     }
                 })
                 .catch(error=>{
+                    throw error;
+                })
+                .finally(()=>{
                     if (parameter.spinner_id && COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`))
                         COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`).classList.remove('css_spinner');
-                    throw error;
                 });
     }        
 };
