@@ -305,7 +305,7 @@ const validationData = data =>{
             //bio max 100 characters if used
             (data.bio == null || (data.bio != null && data.bio.length <= 100))&&
             //reminder max 100 characters if used
-            (data.password_reminder==null || (data.password_reminder != null && data.password_reminder.length <= 100))||
+            (data.password_reminder==null || (data.password_reminder != null && data.password_reminder.length <= 100))&&
             //password 10 - 100 characters, '🔑 10-100!'
             ((data.password != null && data.password.length >= 10 && data.password.length <= 100)) &&
             //new password 10 - 100 characters, '🔑 10-100!'
