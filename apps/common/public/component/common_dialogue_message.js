@@ -85,9 +85,13 @@ const component = async props => {
     let display_message_font_class = null;
     switch (props.data.message_type){
         case 'ERROR_BFF':{
-            /**@type{import('../../../common_types.js').CommonErrorMessageISO20022} */
-            const message_iso = typeof props.data.message == 'string'?props.data.message:JSON.parse(props.data.message);
-            display_message = message_iso.error?.text ?? message_iso;
+            try {
+                /**@type{import('../../../common_types.js').CommonErrorMessageISO20022} */
+                const message_iso = JSON.parse(props.data.message);
+                display_message = message_iso.error?.text ?? message_iso;
+            } catch (error) {
+                display_message = props.data.message;
+            }
             display_message_font_class = 'common_font_normal';
             break;
         }
