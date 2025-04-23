@@ -122,9 +122,7 @@ const serverResponse = async parameters =>{
     if (parameters.result_request.http){
         /**@type{import('../apps/common/src/common.js')} */
         const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-        const app_id_host = app_common.commonAppHost((parameters.host??'').substring(0,(parameters.host??'').indexOf(':')==-1?
-                                                (parameters.host??'').length:
-                                                    (parameters.host??'').indexOf(':')));
+        const app_id_host = app_common.commonAppHost(parameters.host ?? '');
     
         //ISO20022 error format
         const message = {error:{
@@ -706,7 +704,7 @@ const serverJs = async () => {
                                                     developerText:'',
                                                     moreInfo:'',
                                                     type:'HTML'},
-                                    host:req.headers.host,
+                                    host:req.headers.host.split(':')[0],
                                     route:null,
                                     res:res});
                 }
@@ -764,7 +762,7 @@ const serverJs = async () => {
                                                 developerText:'',
                                                 moreInfo:'',
                                                 type:'HTML'},
-                                host:req.headers.host,
+                                host:req.headers.host.split(':')[0],
                                 route:null,
                                 res:res});
             });
