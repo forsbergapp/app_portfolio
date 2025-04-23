@@ -323,7 +323,6 @@ const iamAuthenticateUser = async parameters =>{
                             type:               'ADMIN', 
                             bio:                null, 
                             private:            1, 
-                            user_level:         null,
                             active:             1, 
                             avatar:             null})
                     .then(result=>result.http?result:check_user(1, {id:         result.result.insertId,
