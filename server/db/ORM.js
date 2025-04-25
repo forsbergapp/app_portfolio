@@ -318,7 +318,7 @@ const postFsDir = async paths => {
  */
 const postFsAdmin = async (object, file_content) =>{
     await postFsFile(DB_DIR.db + object + '.json', file_content, DB.data.filter(file_db=>file_db.name==object)[0]?.type.startsWith('TABLE'));
-    if (DB.data.filter(file_db=>file_db.name == object)[0].cache_content)
+    if (DB.data.filter(file_db=>file_db.name == object)[0]?.cache_content)
         DB.data.filter(file_db=>file_db.name == object)[0].cache_content = file_content;
 };
 

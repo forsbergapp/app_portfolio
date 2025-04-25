@@ -114,7 +114,7 @@ const configDefault = async () => {
                             ['AppDataEntityResource',           await fs.promises.readFile(process.cwd() + '/server/install/default/AppDataEntityResource.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['AppDataEntity',                   await fs.promises.readFile(process.cwd() + '/server/install/default/AppDataEntity.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['AppDataResourceDetailData',       await fs.promises.readFile(process.cwd() + '/server/install/default/AppDataResourceDetailData.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppDataResourceMaster',           await fs.promises.readFile(process.cwd() + '/server/install/default/AppDataResourceDetail.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppDataResourceDetail',           await fs.promises.readFile(process.cwd() + '/server/install/default/AppDataResourceDetail.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['AppDataResourceMaster',           await fs.promises.readFile(process.cwd() + '/server/install/default/AppDataResourceMaster.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['AppModule',                       await fs.promises.readFile(process.cwd() + '/server/install/default/AppModule.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['AppParameter',                    await fs.promises.readFile(process.cwd() + '/server/install/default/AppParameter.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
