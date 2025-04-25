@@ -183,7 +183,10 @@ const bffStart = async (req, res) =>{
     
     //if first time, when no user exists, then redirect everything to admin
     if (IamUser.get(app_common.commonAppHost(req.headers.host.split(':')[0] ?? '')??0, null).result.length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
-        return {reason:'REDIRECT', redirect:`http://admin.${config_SERVER_SERVER.filter(row=>'HOST' in row)[0].HOST}`};
+        return {reason:'REDIRECT', redirect:`http://admin.${config_SERVER_SERVER.filter(row=>'HOST' in row)[0].HOST + 
+                                            (serverUtilNumberValue(config_SERVER_SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT)==80?
+                                                '':
+                                                    ':' + config_SERVER_SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT)}`};
     else{
         //check if SSL verification using letsencrypt is enabled when validating domains
         if (config_SERVER_SERVER.filter(row=>'HTTPS_SSL_VERIFICATION' in row)[0].HTTPS_SSL_VERIFICATION=='1'){
