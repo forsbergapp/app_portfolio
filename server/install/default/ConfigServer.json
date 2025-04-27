@@ -19,8 +19,8 @@
         {"HTTPS_CERT": "/ssl/fullchain.pem", "COMMENT": ""}
     ],
     "SERVICE_APP":[
-        {"CACHE_CONTROL":"", "COMMENT": "Cache control for assets except fonts, max-age value in milliseconds ex 1 hour = max-age=3600 or use any valid Cache-Control setting, default is empty"},
-        {"CACHE_CONTROL_FONT":"", "COMMENT": "Cache control for fonts, max-age value in milliseconds ex 1 hour max-age=3600 or use any valid Cache-Control setting, default is empty"},
+        {"CACHE_CONTROL":"no-store", "COMMENT": "Cache control for assets except fonts, max-age value in milliseconds ex 1 hour = max-age=3600 or use any valid Cache-Control setting, default is to not cache anything"},
+        {"CACHE_CONTROL_FONT":"no-store", "COMMENT": "Cache control for fonts, max-age value in milliseconds ex 1 hour max-age=3600 or use any valid Cache-Control setting, default is to not cache anything"},
         {"FRAMEWORK":"0", "COMMENT": "0=choosable, 1=Javascript (default if choosable), 2=Vue, 3=React"},
         {"FRAMEWORK_MESSAGES":"1", "COMMENT": "0=NO, 1=YES"},
         {"LIMIT_RECORDS":"100", "COMMENT": ""}
