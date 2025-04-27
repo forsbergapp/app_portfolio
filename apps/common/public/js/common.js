@@ -2174,7 +2174,7 @@ const commonFFB = async parameter => {
                         cache: 'no-store',  //browser should never cache result from REST API
                         method: parameter.method,
                         headers: {
-                                    
+                                    'Connection': 'close',
                                     'id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
                                     ...(authorization && {Authorization: authorization})
                                 },
@@ -2186,6 +2186,7 @@ const commonFFB = async parameter => {
                     method: parameter.method,
                     headers: {
                                 'Content-Type': 'application/json',
+                                'Connection': 'close',
                                 'id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
                                 ...(authorization && {Authorization: authorization})
                             },

@@ -151,6 +151,8 @@ const serverResponse = async parameters =>{
             null;
         }
         else{
+            parameters.res.setHeader('Connection', 'Close');
+            setType(parameters.result_request.type);
             if (parameters.route=='APP' && parameters.res.statusCode==301){
                 //result from APP can request to redirect
                 parameters.res.redirect('/');
@@ -168,7 +170,6 @@ const serverResponse = async parameters =>{
                     const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
                     await fs.promises.access(parameters.result_request.sendfile)
                     .then(()=>{
-                        setType(parameters.result_request.type);
                         parameters.res.sendFile(parameters.result_request.sendfile);
                     })
                     .catch(error=>{
