@@ -62,6 +62,12 @@ const bffInit = async (req, res) =>{
                 }
             });
     }
+    else{
+        //set default no cache response header and close connection request header
+        res.setHeader('Cache-Control', 'no-store');
+        req.headers.connection = 'close';
+    }
+        
     res.on('close',()=>{	
         //SSE response time will be time connected until disconnected
         Log.post({  app_id:0, 
