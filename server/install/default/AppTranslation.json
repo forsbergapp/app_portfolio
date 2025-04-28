@@ -236,6 +236,12 @@
                                         ["lifecycle methods",                                   "pure Javascript lifecycle pattern"],
                                         ["suspense/waiting pattern info on current div only",   "pure Javascript waiting pattern, info on any div"],
                                         ["no or few JSDoc comments",                            "fully JSDoc commented with all basic tags"]
+                                    ],
+                                    [   ["Polyfill",                                            "App Portfolio without polyfill"], 
+                                        ["thirdparty complex obscure code for old browsers",    "no old browsers support"],
+                                        ["not following OWASP",                                 "OWASP directives includes not using unnecessary dependencies and obscure code"],
+                                        ["slower performance for old browser",                  "no old browsers support"],
+                                        ["differenct logic for old browser",                    "no old browsers support and differenct logic requires multiple implementations of logic to guarantee same functionality"]
                                     ]
                     ],
                     "screenshot_end":[
