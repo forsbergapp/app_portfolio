@@ -8,6 +8,7 @@
  *              INFO    Info types
  *              SERVER  Server types
  *              SOCKET  Socket types
+ *              TEST    test types
  * @module server/types 
  */
 
@@ -1460,4 +1461,11 @@
  *              null} server_socket_connected_list_sort
  */
 
+/**
+ * @description TEST test_expect_result
+ * @typedef {{  method:string|undefined,
+ *              actual:*,
+ *              expected:*,
+ *              result:*}} test_expect_result
+ */
 export {};
