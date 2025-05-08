@@ -11,10 +11,12 @@
  * @name template
  * @description Template
  * @function
- * @param {{report_metadata:CommonAppModuleMetadata[]}} props
+ * @param {{report_description:string,
+ *          report_metadata:CommonAppModuleMetadata[]}} props
  * @returns {string}
  */
-const template = props => ` ${props.report_metadata.map(report_metadata=>
+const template = props => ` <div id='menu_report_metadata_description'>${props.report_description}</div>
+                            ${props.report_metadata.map(report_metadata=>
                                 `<div class='menu_report_metadata_row common_row' data-parameter='${report_metadata.param.name}'>
                                     <div class='menu_report_metadata_col1 list_readonly'>${report_metadata.param.text}</div>
                                     <div class='menu_report_metadata_col2 common_input list_edit' contentEditable='true'>${report_metadata.param.default}</div>
@@ -27,6 +29,7 @@ const template = props => ` ${props.report_metadata.map(report_metadata=>
  * @function 
  * @param {{data:        {
  *                       commonMountdiv:string,
+ *                       report_description:string,
  *                       report_metadata:CommonAppModuleMetadata[]
  *                       },
  *          methods:     {
@@ -44,7 +47,8 @@ const component = async props => {
             lifecycle:   null,
             data:        null,
             methods:     null,
-            template:    template({ report_metadata:props.data.report_metadata})
+            template:    template({ report_description:props.data.report_description,
+                                    report_metadata:props.data.report_metadata})
    };
 };
 export default component;
