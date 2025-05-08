@@ -617,6 +617,7 @@
  *              ['SERVICE_IAM']:[server_db_config_server_service_iam],
  *              ['SERVICE_SOCKET']:[server_db_config_server_service_socket],
  *              ['SERVICE_LOG']:[server_db_config_server_service_log],
+ *              ['SERVICE_TEST']:[server_db_config_server_service_test],
  *              ['METADATA']:server_db_config_server_metadata}} server_db_document_ConfigServer
  */
 
@@ -833,7 +834,6 @@
  * @typedef {{CHECK_INTERVAL:string}} server_db_config_server_service_socket
  */
 
-
 /**
  * @description DB server_db_config_server_service_log
  * @typedef {{  ENABLE_REQUEST_INFO:string,
@@ -841,6 +841,14 @@
  *              ENABLE_DB:string,
  *              ENABLE_SERVICE:string
  *              FILE_INTERVAL:string}} server_db_config_server_service_log
+ */
+
+/**
+ * @description DB server_db_config_server_service_test
+ * @typedef {{  FAIL_SPEC_WITH_NO_EXPECTATIONS:string,
+ *              STOP_SPEC_ON_EXPECTATION_FAILURE:string,
+ *              STOP_ON_SPEC_FAILURE:string,
+ *              RANDOM:string}} server_db_config_server_service_test
  */
 
 /**
@@ -1460,12 +1468,34 @@
  *              'user_agent'|
  *              null} server_socket_connected_list_sort
  */
+/**
+ * @description TEST test_type
+ * @typedef {{ type:'SPY'|'UNIT'|'INTEGRATION'|'PERFORMANCE'}} test_type
+*/
+
+/**
+ * @description TEST test_spec_result
+ * @typedef {{ type:test_type, 
+ *             path:string, 
+ *             result:boolean,
+ *             detail:{ test:string,
+ *                      expect:test_expect_result[]}[]}} test_spec_result
+ */
 
 /**
  * @description TEST test_expect_result
  * @typedef {{  method:string|undefined,
+ *              desc:string,
  *              actual:*,
  *              expected:*,
  *              result:*}} test_expect_result
  */
+
+/**
+ * @description TEST test_specrunner
+ * @typedef {{  description:string,
+ *              specFiles:{ type:test_type, 
+ *                          path:string}[]}} test_specrunner
+ */
+
 export {};
