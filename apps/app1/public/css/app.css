@@ -987,10 +987,16 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	margin-top: 20px;
 	margin-bottom: 20px;
 }
+
 #menu_report_metadata{
 	width: 100%;
   	display: inline-block;
 	height: calc(100% - 120px);
+}
+#menu_report_metadata_description{
+    white-space: wrap !important;
+    margin-left: 2em;
+    margin-right: 2em;  
 }
 .menu_report_metadata_row{
 	margin: 0.5em	;

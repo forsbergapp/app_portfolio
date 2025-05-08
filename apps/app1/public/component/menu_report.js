@@ -53,6 +53,7 @@ const component = async props => {
     const updateMetadata = async ()=>{
         await props.methods.commonComponentRender({mountDiv:'menu_report_metadata',
             data:{
+                report_description:JSON.parse(props.methods.COMMON_DOCUMENT.querySelector('#menu_report_select_report .common_select_dropdown_value').getAttribute('data-value')).common_description,
                 report_metadata:JSON.parse(props.methods.COMMON_DOCUMENT.querySelector('#menu_report_select_report .common_select_dropdown_value').getAttribute('data-value')).common_metadata
                 },
             methods:null,
