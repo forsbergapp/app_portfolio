@@ -598,7 +598,8 @@ const commonAppReport = async parameters => {
                                                                                 {   end:new Date().toISOString(), 
                                                                                     progress:1, 
                                                                                     status:'FAIL',
-                                                                                    message:error});
+                                                                                    message:typeof error == 'string'?
+                                                                                                error:JSON.stringify(error.message ?? error)});
                                             });
                     return {result:'', type:'HTML'};
                 }
