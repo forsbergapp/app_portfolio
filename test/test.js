@@ -58,15 +58,17 @@ class customExpect {
      * @name result
      * @description static method that returns expect result object
      * @method
+     * @param {string} desc
      * @param {*} actual
      * @param {*} expect
      * @param {*} expect_result
      * @returns {test_expect_result}
      */
-    static result = (actual, expect, expect_result) => {
+    static result = (desc, actual, expect, expect_result) => {
         return {
             //method/function name that calls this function
             method: new Error().stack?.split('\n')[2].split(' ')[5],
+            desc:desc,
             actual: actual,
             expected:expect,
             result:expect_result
@@ -78,53 +80,59 @@ class customExpect {
      * @description toBe method simple comparison without array, object, function 
      *              or other complex data structure support
 	 * @method
+     * @param {string} desc
      * @param {*} expected
      * @returns {test_expect_result}
      */
-    toBe = expected => customExpect.result(this.actual, expected, this.actual == expected);
+    toBe = (desc, expected) => customExpect.result(desc, this.actual, expected, this.actual == expected);
 
     /**
      * @name not.toBe
      * @description not.toBe method 
 	 * @method
+     * @param {string} desc
      * @param {*} expected
      * @returns {test_expect_result}
      */
-    'not.toBe' = expected => customExpect.result(this.actual, expected, !this.toBe(expected));
+    'not.toBe' = (desc, expected) => customExpect.result(desc, this.actual, expected, !this.toBe(desc, expected));
     
     /**
      * @name toBeUndefined
      * @description toBeUndefined method
 	 * @method
+     * @param {string} desc
      * @returns {test_expect_result}
      */
-    toBeUndefined = () => customExpect.result(this.actual, undefined, this.actual == undefined);
+    toBeUndefined = desc => customExpect.result(desc, this.actual, undefined, this.actual == undefined);
 
     /**
      * @name not.toBeUndefined
      * @description not.toBeUndefined method 
 	 * @method
+     * @param {string} desc
      * @returns {test_expect_result}
      */
-    'not.toBeUndefined' = () => customExpect.result(this.actual, null, !this.toBeUndefined());
+    'not.toBeUndefined' = desc => customExpect.result(desc, this.actual, null, !this.toBeUndefined(desc));
 
     /**
      * @name toBeLessThan
      * @description toBeLessThan method
      * @param {number} expected
 	 * @method
+     * @param {string} desc
      * @returns {test_expect_result}
      */
-    toBeLessThan = expected => customExpect.result(this.actual, expected, this.actual < expected);
+    toBeLessThan = (desc, expected) => customExpect.result(desc, this.actual, expected, this.actual < expected);
 
     /**
      * @name toBeGreaterThan
      * @description toBeGreaterThan method
      * @param {number} expected
 	 * @method
+     * @param {string} desc
      * @returns {test_expect_result}
      */
-    toBeGreaterThan = expected => customExpect.result(this.actual, expected, this.actual > expected);
+    toBeGreaterThan = (desc, expected) => customExpect.result(desc, this.actual, expected, this.actual > expected);
     
 }
 /**
