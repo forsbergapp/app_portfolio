@@ -64,6 +64,12 @@
         {"SERVICE_LEVEL": "1", "COMMENT": "0=none, 1=INFO, 2=Verbose    "},
         {"FILE_INTERVAL": "1D", "COMMENT": "1D or 1M"}
     ],
+    "SERVICE_TEST":[
+        {"FAIL_SPEC_WITH_NO_EXPECTATIONS": "0", "COMMENT": "0=NO, 1=YES"},
+        {"STOP_SPEC_ON_EXPECTATION_FAILURE": "0", "COMMENT": "0=NO, 1=YES"},
+        {"STOP_ON_SPEC_FAILURE": "0", "COMMENT": "0=NO, 1=YES"},
+        {"RANDOM": "0", "COMMENT": "0=NO, 1=YES"}
+    ],
     "METADATA":{
         "MAINTENANCE":0,
         "CONFIGURATION":"",

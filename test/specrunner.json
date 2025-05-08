@@ -1,0 +1,9 @@
+{
+    "description": "Test files in given order using behaviour driven development (BDD) test framework pattern. Tests critical success factor (CSF) part of the project. Snapshot tests, acceptance tests and UI/browser tests are out of scope in this project",
+    "specFiles": [
+        {"type":"SPY",          "path": "/apps/common/src/common.spec.js"},
+        {"type":"UNIT",         "path": "/server/db/db.spec.js"},
+        {"type":"INTEGRATION",  "path": "/test/integration.spec.js"},
+        {"type":"PERFORMANCE",  "path": "/test/performance.spec.js"}
+    ]
+}
