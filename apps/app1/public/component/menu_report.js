@@ -110,7 +110,7 @@ const component = async props => {
             data:{
                 default_value:reports[0].common_name,
                 default_data_value:JSON.stringify(reports[0]),
-                options:reports.map(row=>{return{value:JSON.stringify(reports[0]), text:row.common_name};}),
+                options:reports.map(row=>{return{value:JSON.stringify(row), text:row.common_name};}),
                 path:null,
                 query:null,
                 method:null,
