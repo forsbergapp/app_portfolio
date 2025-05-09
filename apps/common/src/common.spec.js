@@ -1,72 +1,118 @@
 /** 
  * @module apps/common/src/common.spec 
  */
-let filterCount_AppSecret = 0;
-let filterCount_IamAppIdToken = 0;
-//Save original filter function
-const ORIGINAL_FILTER = Array.prototype.filter;
+
 /**
- * @name describe
- * @description describe: Spy test, commonApp as called from bff
+ * @import {test_spec_result} from '../../../server/types.js'
+ */
+
+let test_running = false;
+/**
+ * @name test
+ * @description describe: Spy test, commonApp as called from bff, will return expect false if test is already running
  *              it: should call AppSecret.get and read AppSecret and IamAppIdToken at least 1 time each when requesting app
  *              beforeAll:  Modifies Array.prototype.filter and reviews what filter function is doing and if used with AppSecret and APP_TOKEN
  *              afterAll:   restores Array.prototype.filter
  * @function
- * @returns {void}
+ * @param {import('../../../test/test.js')} t
+ * @returns {Promise.<test_spec_result['detail']>}
  */
-describe('Spy test, commonApp as called from bff', ()=> {   
-    beforeAll(()=>{
+const test = async t =>
+[await t.describe('Spy test, commonApp as called from bff', async ()=> {
+    //check if test is already running
+    if (test_running)
+        return [
+                /**@ts-ignore */
+                t.expect('Test is running',    test_running).toBe(false)
+            ];
+    else{
+        test_running = true;
+        const spyId = Date.now();
+        /**@type{{id:number, caller?:string, object:string}[]} */
+        const spyObject = [];
+        //Save original filter function
+        const ORIGINAL_FILTER = Array.prototype.filter;
         /**
-         * Custom filter function to count and log Error().stack when AppSecret is read 
-         * @param {(value: any, index: number, array: any[])=>any} callBack
-         * @param {*} thisArg
+         * @name beforeAll
+         * @description helper beforeAll pattern that modifies Array.filter function cheking what object is used
+         * @function
+         * @returns  {void}
          */
-        Array.prototype.filter = function (callBack, thisArg){
-            if (ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.name=='AppSecret'){
-                filterCount_AppSecret++;
-                //Review Error().stack if necessary
-                console.log('Spy test commonApp reading AppSecret using custom filter function');
-            }
-            if (ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.name=='IamAppIdToken'){
-                filterCount_IamAppIdToken++;
-                //Review Error().stack if necessary
-                console.log('Spy test commonApp reading IamAppIdToken using custom filter function');
-            }
-            return ORIGINAL_FILTER.call(this, callBack, thisArg);  
+        const beforeAll = ()=>{
+            /**
+             * Custom filter function to count and log Error().stack when AppSecret is read 
+             * @param {(value: any, index: number, array: any[])=>any} callBack
+             * @param {*} thisArg
+             */
+            Array.prototype.filter = function (callBack, thisArg){
+                const caller = (new Error().stack?.split('\n'))?.map(row=>row.trimStart().split(' ')[1])[2];
+                if (spyId>0 && ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.name && caller=='getObjectRecord')
+                    spyObject.push({id:spyId, caller:caller, object:ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.name});
+                return ORIGINAL_FILTER.call(this, callBack, thisArg);  
+            };
+            
         };
-        
-    });
-    it('should call AppSecret.get and read AppSecret and IamAppIdToken at least 1 time each when requesting app', async () =>{
-        //Solution to test if DB object is fetching the AppSecret or IamAppIdToken record is to create a custom filter function 
-        //that is available in global scope in NodeJS since DB object uses Object.seal() so no getter can be added 
-        //and module is using closure pattern.
-        
-        /**@type{import('./common.js')} */
-        const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-             
         /**
-         * @type{{  app_id:number,
-         *          ip:string,
-         *          host:string,
-         *          user_agent:string,
-         *          accept_language:string,
-         *          url:string,
-         *          query:*}}
+         * @name afterAll
+         * @description helper afterAll pattern that restores Array.filter function 
+         * @function
+         * @returns  {void}
          */
-        const parameters = {
-            app_id:app_common.commonAppHost('localhost') ?? 0,
-            ip:'::1',
-            host:'localhost',
-            user_agent:'Jasmine test',
-            accept_language:'*',
-            url:'/',
-            query:null};
-        await app_common.commonApp(parameters);
-        
-        expect (filterCount_AppSecret).toBeGreaterThan(0);
-        expect (filterCount_IamAppIdToken).toBeGreaterThan(0);
-    });
-    afterAll(()=>{
-        Array.prototype.filter = ORIGINAL_FILTER;
-    });
-});
+        const afterAll = ()=>{
+            Array.prototype.filter = ORIGINAL_FILTER;
+        };
+    
+        beforeAll();
+        return await new Promise(resolve=>
+        t.it('should call AppSecret.get and read AppSecret and IamAppIdToken at least 1 time each when requesting app', async () =>{
+            //Solution to test if DB object is fetching the AppSecret or IamAppIdToken record is to create a custom filter function 
+            //that is available in global scope in NodeJS since DB object uses Object.seal() so no getter can be added 
+            //and module is using closure pattern.
+            
+            /**@type{import('./common.js')} */
+            const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+                 
+            /**
+             * @type{{  app_id:number,
+             *          ip:string,
+             *          host:string,
+             *          user_agent:string,
+             *          accept_language:string,
+             *          url:string,
+             *          query:*}}
+             */
+            const parameters = {
+                app_id:app_common.commonAppHost('localhost') ?? 0,
+                ip:'::1',
+                host:'localhost',
+                user_agent:'BDD test',
+                accept_language:'*',
+                url:'/',
+                query:null};
+            await app_common.commonApp(parameters);
+            
+            test_running = false;
+            return [
+                /**@ts-ignore */
+                t.expect(   'Count AppSecret',    
+                            spyObject.filter(row=>row.id == spyId && row.object=='AppSecret').length).toBeGreaterThan(0),
+                /**@ts-ignore */
+                t.expect(   'Count IamAppIdToken',    
+                            spyObject.filter(row=>row.id == spyId && row.object=='IamAppIdToken').length).toBeGreaterThan(0)
+            ];
+        })
+        .then(result=>{
+            afterAll();
+            resolve(result);
+        })
+        .catch(error=>{
+            afterAll();
+            test_running = false;
+            return [
+                /**@ts-ignore */
+                t.expect('Error',    typeof error == 'string'?error:JSON.stringify(error.message ?? error)).toBe(null)
+            ];
+        }));
+    }
+})];
+export default test;
