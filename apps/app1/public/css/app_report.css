@@ -96,6 +96,13 @@
 .report_row_4col .report_col2_2{
 	text-align: start;
 }
+.report_section {
+    margin-bottom: 2em;
+}
+.report_section_detail{
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
 .report_row_5col .report_col{
     display: inline-block;
     width: calc(20% - 1em);

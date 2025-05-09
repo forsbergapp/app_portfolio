@@ -43,11 +43,11 @@ const it = async (itDescription, fn, timeout=null) =>{
    
 };
 /**
- * @name customExpect
+ * @name expect
  * @description expect class with methods for Behaviour Driven Development (BDD) test pattern
  * @class
  */
-class customExpect {
+class Expect {
     /**
      * @param {string} desc
      * @param {*} actual 
@@ -70,7 +70,7 @@ class customExpect {
     static result = (desc, actual, expect, expect_result) => {
         return {
             //method/function name that calls this function
-            method: new Error().stack?.split('\n')[2].split(' ')[5],
+            method: (new Error().stack?.split('\n')[2].split(' ')[5])?.replace('Expect.',''),
             desc:desc,
             actual: actual,
             expected:expect,
@@ -86,7 +86,7 @@ class customExpect {
      * @param {*} expected
      * @returns {test_expect_result}
      */
-    toBe = expected => customExpect.result(this.desc, this.actual, expected, this.actual == expected);
+    toBe = expected => Expect.result(this.desc, this.actual, expected, this.actual == expected);
 
     /**
      * @name not.toBe
@@ -95,7 +95,7 @@ class customExpect {
      * @param {*} expected
      * @returns {test_expect_result}
      */
-    'not.toBe' = expected => customExpect.result(this.desc, this.actual, expected, this.actual != expected);
+    'not.toBe' = expected => Expect.result(this.desc, this.actual, expected, this.actual != expected);
     
     /**
      * @name toBeUndefined
@@ -103,7 +103,7 @@ class customExpect {
 	 * @method
      * @returns {test_expect_result}
      */
-    toBeUndefined = () => customExpect.result(this.desc, this.actual, undefined, this.actual == undefined);
+    toBeUndefined = () => Expect.result(this.desc, this.actual, undefined, this.actual == undefined);
 
     /**
      * @name not.toBeUndefined
@@ -111,7 +111,7 @@ class customExpect {
 	 * @method
      * @returns {test_expect_result}
      */
-    'not.toBeUndefined' = () => customExpect.result(this.desc, this.actual, '!=undefined', this.actual != undefined);
+    'not.toBeUndefined' = () => Expect.result(this.desc, this.actual, '!=undefined', this.actual != undefined);
 
     /**
      * @name toBeLessThan
@@ -120,7 +120,7 @@ class customExpect {
 	 * @method
      * @returns {test_expect_result}
      */
-    toBeLessThan = expected => customExpect.result(this.desc, this.actual, expected, this.actual < expected);
+    toBeLessThan = expected => Expect.result(this.desc, this.actual, expected, this.actual < expected);
 
     /**
      * @name toBeGreaterThan
@@ -129,13 +129,13 @@ class customExpect {
 	 * @method
      * @returns {test_expect_result}
      */
-    toBeGreaterThan = expected => customExpect.result(this.desc, this.actual, expected, this.actual > expected);
+    toBeGreaterThan = expected => Expect.result(this.desc, this.actual, expected, this.actual > expected);
     
 }
 /**
  * @name
  * @description expect function for Behaviour Driven Development (BDD) test pattern
- *              calls class customExpect with methods available:
+ *              calls class expect with methods available:
  *              toBe()
  *              'not.toBe'
  *              toBeUndefined()
@@ -146,6 +146,6 @@ class customExpect {
  * @param {string} desc
  * @param {*} actual
  */
-const expect = (desc,actual) => new customExpect(desc, actual);
+const expect = (desc,actual) => new Expect(desc, actual);
 
 export {describe, it, expect};
