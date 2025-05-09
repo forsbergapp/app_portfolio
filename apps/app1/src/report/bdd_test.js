@@ -31,40 +31,46 @@ const template = props => ` <div id='report'>
                                 <div id='report_title'>${props.title}</div>
                                 <div id='report_date'>${props.date}</div>
                                 ${props.specs.map(spec=>
-                                    `<div class='report_row report_row_2col report_row_title'>
+                                    `<div class='report_row report_row_2col'>
                                        <div class='report_col1'>Type</div>
                                        <div class='report_col2'>${spec.type}</div>
                                     </div>
-                                    <div class='report_row report_row_2col report_row_title'>
+                                    <div class='report_row report_row_2col '>
                                        <div class='report_col1'>Path</div>
                                        <div class='report_col2'>${spec.path}</div>
                                     </div>
-                                    <div class='report_row report_row_2col report_row_title'>
+                                    <div class='report_row report_row_2col'>
                                        <div class='report_col1'>Result</div>
                                        <div class='report_col2'>${spec.result}</div>
                                     </div>
                                     ${spec.detail.map(detail=>
                                         `<div class='report_row report_row_2col'>
-                                            <div class='report_col1'>Test<= </div>
-                                            <div class='report_col2'>${detail.test}</div>
+                                            <div class='report_col1'>Describe</div>
+                                            <div class='report_col2'>${detail.describe}</div>
                                         </div>
-                                        <div class='report_row report_row_5col report_row_title'>
-                                                <div class='report_col1'>Method</div>
-                                                <div class='report_col2'>Desc</div>
-                                                <div class='report_col3'>Actual</div>
-                                                <div class='report_col4'>Expected</div>
-                                                <div class='report_col5'>Result</div>
+                                        <div class='report_row report_row_2col'>
+                                            <div class='report_col1'>It</div>
+                                            <div class='report_col2'>${detail.it.should}</div>
                                         </div>
-                                        ${detail.expect.map(expect=>
-                                            `<div class='report_row report_row_5col'>
-                                                <div class='report_col1'>${expect.method}</div>
-                                                <div class='report_col2'>${expect.desc}</div>
-                                                <div class='report_col3'>${expect.actual}</div>
-                                                <div class='report_col4'>${expect.expected}</div>
-                                                <div class='report_col5'>${expect.result}</div>
-                                            </div>`
-                                            ).join('')
-                                        }`
+                                        <div class='report_row_5col'>
+                                            <div class='report_row report_row_title'>
+                                                    <div class='report_col'>Method</div>
+                                                    <div class='report_col'>Desc</div>
+                                                    <div class='report_col'>Actual</div>
+                                                    <div class='report_col'>Expected</div>
+                                                    <div class='report_col'>Result</div>
+                                            </div>
+                                            ${detail.it.expect.map(expect=>
+                                                `<div class='report_row'>
+                                                    <div class='report_col'>${expect.method}</div>
+                                                    <div class='report_col'>${expect.desc}</div>
+                                                    <div class='report_col'>${expect.actual}</div>
+                                                    <div class='report_col'>${expect.expected}</div>
+                                                    <div class='report_col'>${expect.result}</div>
+                                                </div>`
+                                                ).join('')
+                                            }
+                                        </div>`
                                         ).join('')
                                     }`
                                 ).join('')
@@ -110,11 +116,11 @@ const component = async props => {
             const detail_result = await testResult(test_lib);
             //check if any test inside spec file has empty expect length
             const FAIL_SPEC_WITH_NO_EXPECTATIONS = 
-                    detail_result.filter(describe=>describe.expect.length==0).length > 0 &&
+                    detail_result.filter(detail=>detail.it.expect.length==0).length > 0 &&
                     params.filter(row=>'FAIL_SPEC_WITH_NO_EXPECTATIONS' in row)[0].FAIL_SPEC_WITH_NO_EXPECTATIONS=='1';
             //check if any expect has result false
-            const ANY_EXPECT_FALSE = detail_result.filter(describe=>
-                                            describe.expect.filter(expect=>expect.result==false)).length > 0;
+            const ANY_EXPECT_FALSE = detail_result.filter(detail=>
+                                            detail.it.expect.filter(expect=>expect.result==false).length > 0).length > 0;
             specs.push({type:spec.type, 
                         path:spec.path,
                         result: FAIL_SPEC_WITH_NO_EXPECTATIONS==false && ANY_EXPECT_FALSE == false,

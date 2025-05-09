@@ -1478,8 +1478,9 @@
  * @typedef {{ type:test_type, 
  *             path:string, 
  *             result:boolean,
- *             detail:{ test:string,
- *                      expect:test_expect_result[]}[]}} test_spec_result
+ *             detail:{ describe:string,
+ *                      it:{should:string,
+ *                          expect:test_expect_result[]}}[]}} test_spec_result
  */
 
 /**
