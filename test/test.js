@@ -11,12 +11,13 @@
  * @param {string} description
  * @param {function} fn
  * @returns {Promise.<{ describe:string,
- *                      result:*}>}
+ *                      it:{should:string,
+ *                          expect:test_expect_result[]}}>}
  */
 const describe = async (description, fn) =>{
     return {
         describe:description,
-        result: fn()
+        it: await fn()
     };
     
 };
@@ -26,17 +27,17 @@ const describe = async (description, fn) =>{
  * @function
  * @param {string} itDescription
  * @param {function} fn
- * @param {number} timeout
- * @returns {Promise.<{ it:string,
-*                      result:*}>}
+ * @param {number|null} timeout
+ * @returns {Promise.<{ should:string,
+*                       expect:Promise.<test_expect_result[]>}>}
 */
-const it = async (itDescription, fn, timeout) =>{
+const it = async (itDescription, fn, timeout=null) =>{
    return {
-       it:itDescription,
-       result: Promise.race([   fn, 
-                                new Promise((resolve, reject)=>
-                                    setTimeout(()=>reject('TIMEOUT'), timeout||5000))
-                            ])
+       should:itDescription,
+       expect: await Promise.race([ fn(), 
+                                    new Promise((resolve, reject)=>
+                                        setTimeout(()=>reject('TIMEOUT'), timeout||5000))
+                                ])
                                 
    };
    
@@ -48,10 +49,12 @@ const it = async (itDescription, fn, timeout) =>{
  */
 class customExpect {
     /**
+     * @param {string} desc
      * @param {*} actual 
      * @constructor
      */
-    constructor(actual){
+    constructor(desc, actual){
+        this.desc = desc;
         this.actual = actual;
     }
     /**
@@ -80,59 +83,53 @@ class customExpect {
      * @description toBe method simple comparison without array, object, function 
      *              or other complex data structure support
 	 * @method
-     * @param {string} desc
      * @param {*} expected
      * @returns {test_expect_result}
      */
-    toBe = (desc, expected) => customExpect.result(desc, this.actual, expected, this.actual == expected);
+    toBe = expected => customExpect.result(this.desc, this.actual, expected, this.actual == expected);
 
     /**
      * @name not.toBe
      * @description not.toBe method 
 	 * @method
-     * @param {string} desc
      * @param {*} expected
      * @returns {test_expect_result}
      */
-    'not.toBe' = (desc, expected) => customExpect.result(desc, this.actual, expected, !this.toBe(desc, expected));
+    'not.toBe' = expected => customExpect.result(this.desc, this.actual, expected, this.actual != expected);
     
     /**
      * @name toBeUndefined
      * @description toBeUndefined method
 	 * @method
-     * @param {string} desc
      * @returns {test_expect_result}
      */
-    toBeUndefined = desc => customExpect.result(desc, this.actual, undefined, this.actual == undefined);
+    toBeUndefined = () => customExpect.result(this.desc, this.actual, undefined, this.actual == undefined);
 
     /**
      * @name not.toBeUndefined
      * @description not.toBeUndefined method 
 	 * @method
-     * @param {string} desc
      * @returns {test_expect_result}
      */
-    'not.toBeUndefined' = desc => customExpect.result(desc, this.actual, null, !this.toBeUndefined(desc));
+    'not.toBeUndefined' = () => customExpect.result(this.desc, this.actual, '!=undefined', this.actual != undefined);
 
     /**
      * @name toBeLessThan
      * @description toBeLessThan method
      * @param {number} expected
 	 * @method
-     * @param {string} desc
      * @returns {test_expect_result}
      */
-    toBeLessThan = (desc, expected) => customExpect.result(desc, this.actual, expected, this.actual < expected);
+    toBeLessThan = expected => customExpect.result(this.desc, this.actual, expected, this.actual < expected);
 
     /**
      * @name toBeGreaterThan
      * @description toBeGreaterThan method
      * @param {number} expected
 	 * @method
-     * @param {string} desc
      * @returns {test_expect_result}
      */
-    toBeGreaterThan = (desc, expected) => customExpect.result(desc, this.actual, expected, this.actual > expected);
+    toBeGreaterThan = expected => customExpect.result(this.desc, this.actual, expected, this.actual > expected);
     
 }
 /**
@@ -146,8 +143,9 @@ class customExpect {
  *              toBeLessThan()
  *              toBeGreaterThan()
  * @function
+ * @param {string} desc
  * @param {*} actual
  */
-const expect = actual => new customExpect(actual);
+const expect = (desc,actual) => new customExpect(desc, actual);
 
 export {describe, it, expect};

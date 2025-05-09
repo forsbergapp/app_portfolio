@@ -63,6 +63,7 @@
 }
 .report_col1 {
 	width: calc(40% - 5px);
+    vertical-align: top;
 }
 .report_col2 {
 	width: calc(60% - 5px);
@@ -94,6 +95,11 @@
 .report_row_4col .report_col1_2,
 .report_row_4col .report_col2_2{
 	text-align: start;
+}
+.report_row_5col .report_col{
+    display: inline-block;
+    width: calc(20% - 1em);
+    font-size: 0.7em;
 }
 .report_col1{
 	background-color: var(--common_report_color_darkblue);
