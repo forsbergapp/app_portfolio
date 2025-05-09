@@ -31,48 +31,52 @@ const template = props => ` <div id='report'>
                                 <div id='report_title'>${props.title}</div>
                                 <div id='report_date'>${props.date}</div>
                                 ${props.specs.map(spec=>
-                                    `<div class='report_row report_row_2col'>
-                                       <div class='report_col1'>Type</div>
-                                       <div class='report_col2'>${spec.type}</div>
-                                    </div>
-                                    <div class='report_row report_row_2col '>
-                                       <div class='report_col1'>Path</div>
-                                       <div class='report_col2'>${spec.path}</div>
-                                    </div>
-                                    <div class='report_row report_row_2col'>
-                                       <div class='report_col1'>Result</div>
-                                       <div class='report_col2'>${spec.result}</div>
-                                    </div>
-                                    ${spec.detail.map(detail=>
-                                        `<div class='report_row report_row_2col'>
-                                            <div class='report_col1'>Describe</div>
-                                            <div class='report_col2'>${detail.describe}</div>
+                                    `<div class='report_section'>
+                                        <div class='report_row report_row_2col'>
+                                        <div class='report_col1'>Type</div>
+                                        <div class='report_col2'>${spec.type}</div>
+                                        </div>
+                                        <div class='report_row report_row_2col '>
+                                        <div class='report_col1'>Path</div>
+                                        <div class='report_col2'>${spec.path}</div>
                                         </div>
                                         <div class='report_row report_row_2col'>
-                                            <div class='report_col1'>It</div>
-                                            <div class='report_col2'>${detail.it.should}</div>
+                                        <div class='report_col1'>Result</div>
+                                        <div class='report_col2'>${spec.result}</div>
                                         </div>
-                                        <div class='report_row_5col'>
-                                            <div class='report_row report_row_title'>
-                                                    <div class='report_col'>Method</div>
-                                                    <div class='report_col'>Desc</div>
-                                                    <div class='report_col'>Actual</div>
-                                                    <div class='report_col'>Expected</div>
-                                                    <div class='report_col'>Result</div>
-                                            </div>
-                                            ${detail.it.expect.map(expect=>
-                                                `<div class='report_row'>
-                                                    <div class='report_col'>${expect.method}</div>
-                                                    <div class='report_col'>${expect.desc}</div>
-                                                    <div class='report_col'>${expect.actual}</div>
-                                                    <div class='report_col'>${expect.expected}</div>
-                                                    <div class='report_col'>${expect.result}</div>
-                                                </div>`
-                                                ).join('')
-                                            }
-                                        </div>`
-                                        ).join('')
-                                    }`
+                                        ${spec.detail.map(detail=>
+                                            `<div class='report_section_detail'>
+                                                <div class='report_row report_row_2col'>
+                                                    <div class='report_col1'>Describe</div>
+                                                    <div class='report_col2'>${detail.describe}</div>
+                                                </div>
+                                                <div class='report_row report_row_2col'>
+                                                    <div class='report_col1'>It</div>
+                                                    <div class='report_col2'>${detail.it.should}</div>
+                                                </div>
+                                                <div class='report_row_5col'>
+                                                    <div class='report_row report_row_title'>
+                                                            <div class='report_col'>Desc</div>
+                                                            <div class='report_col'>Actual</div>
+                                                            <div class='report_col'>Method</div>
+                                                            <div class='report_col'>Expected</div>
+                                                            <div class='report_col'>Result</div>
+                                                    </div>
+                                                    ${detail.it.expect.map(expect=>
+                                                        `<div class='report_row'>
+                                                            <div class='report_col'>${expect.desc}</div>
+                                                            <div class='report_col'>${expect.actual}</div>
+                                                            <div class='report_col'>${expect.method}</div>
+                                                            <div class='report_col'>${expect.expected}</div>
+                                                            <div class='report_col'>${expect.result}</div>
+                                                        </div>`
+                                                        ).join('')
+                                                    }
+                                                </div>
+                                            </div>`
+                                            ).join('')
+                                        }
+                                    </div>`
                                 ).join('')
                                 }
                             </div>`;
