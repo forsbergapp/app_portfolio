@@ -1327,6 +1327,7 @@
  
  * @property {{ 'id-token':string,
  *              authorization: string, 
+ *              connection:string,
  *              'user-agent': string, 
  *              'accept-language': string, 
  *              'content-type': string, 
