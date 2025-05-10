@@ -1,5 +1,8 @@
 /** @module server/security */
 
+/**
+ * @import {server_security_jwt} from './types.js'}
+ */
 const Crypto = await import('node:crypto');
 
 /**
@@ -310,7 +313,157 @@ const securityPrivateDecrypt = (privateKey, text) => Crypto.privateDecrypt(priva
                                                             /**@ts-ignore */
                                                             Buffer.from(text, 'base64')).toString('utf-8');
 
+/**
+ * @name Jwt
+ * @description class with methods using jsonwebtoken pattern and RFC 7519
+ * @class
+ */
+class Jwt {
+    constructor() {
+    }
+    /**
+     * @name bufferEqual
+     * @description static bufferEqual
+     * @method
+     * @param {Buffer} a
+     * @param {Buffer} b
+     * @returns {boolean}
+     */
+    static bufferEqual(a, b) {
+        if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b))
+            return false;
+        else
+            if (a.length !== b.length)
+                return false;
+            else{
+                let c = 0;
+                for (let i = 0; i < a.length; i++) {
+                    c |= a[i] ^ b[i];
+                }
+                return c === 0;
+            }
+    }
+    /**
+     * @name fromBase64
+     * @description static fromBase64
+     * @method
+     * @param {string} base64
+     * @returns {string}
+     */
+    static fromBase64(base64) {
+        return base64
+          .replace(/=/g, '')
+          .replace(/\+/g, '-')
+          .replace(/\//g, '_');
+      }
+    /**
+     * @name signatureCompute
+     * @description static signatureCompute
+     * @method
+     * @param {string} secret
+     * @param {string} securedInput
+     * @returns {string}
+     */
+    static signatureCompute (securedInput, secret) {
+        const hmac = Crypto.createHmac('sha256', secret);
+        return (hmac.update(JSON.stringify(securedInput)), hmac.digest('base64'));
+    }
+    /**
+     * @name verify
+     * @description verify jsonwebtoken pattern using RFC 7519
+     * @method
+     * @param {string} token
+     * @param {string} secret
+     * @returns  {server_security_jwt}
+     */
+    verify (token, secret) {
+        const signature = token.split('.')[2];
+        const securedInput = token.split('.', 2).join('.');
+
+        const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('utf8'));
+
+        //check expire, not before and return token object or throw error
+        if (payload.exp > (Date.now()/1000))
+            if (payload.nbf < (Date.now()/1000))
+                if (Jwt.bufferEqual(Buffer.from(signature), 
+                                    Buffer.from(Jwt.signatureCompute(securedInput, secret))))
+                    return this.decode(token);
+                else
+                    throw 'JWTError';
+            else
+                throw 'JWTNotBeforeError';
+        else
+            throw 'JWTTokenExpiredError';
+    }
+    /**
+     * @name sign
+     * @description verify jsonwebtoken pattern using RFC 7519 and HS256 algorithm
+     *              returns base64 encoded token with syntax: 
+     *              [header].[payload].[encrypted signature]
+     * @method
+     * @param {Object.<string,*>} claim
+     * @param {string} secret
+     * @param {{expiresIn:string}} options
+     * @returns  {string}
+     */
+    sign (claim, secret, options) {
+        //calculate expire time
+        const exp = options?.expiresIn.toLowerCase().indexOf('d')>-1?
+                        ((Date.now()/1000) + (1000*60*60*24)):
+                    options?.expiresIn.toLowerCase().indexOf('h')>-1?
+                        ((Date.now()/1000) + (1000*60*60)):
+                    options?.expiresIn.toLowerCase().indexOf('m')>-1?
+                        ((Date.now()/1000) + (1000*60)):
+                    //default 1 hour
+                    (Date.now()/1000) + (1000*60*60);
+
+        const payload = {//Private claim names should not be any of registered claim names
+                         ...claim,
+                         ...{
+                            //Registered claim names
+                            //token id
+                            jtid:Date.now(),
+                            //issuer
+                            iss:'APP_PORTFOLIO SERVER SECURITY',
+                            //subject
+                            sub:'APP_PORTFOLIO',
+                            //audience
+                            aud:'APP_PORTFOLIO USERS',
+                            //expire timestamp in seconds    
+                            exp: exp,
+                            //issued at timestamp in seconds
+                            iat:(Date.now()/1000), //replace tokentimestamp with iat usage in apps
+                            //not before timestamp in seconds
+                            nbf:(Date.now()/1000)
+                            }
+                        };
+        //encode header and payload to base64
+        const securedInput = //header
+                             `${Buffer.from(JSON.stringify({'alg':'HS256','typ':'JWT'}), 'utf8').toString('base64')}` + '.' + 
+                             //payload
+                             `${Buffer.from(JSON.stringify(payload), 'utf8').toString('base64')}`;
+        return `${securedInput}.${Jwt.fromBase64(Jwt.signatureCompute(securedInput, secret))}`;
+    }
+    /**
+     * @name verify
+     * @description verify jsonwebtoken pattern using RFC 7519
+     * @method
+     * @param {string} token
+     * @param {{complete:boolean}|null} options
+     * @returns  {server_security_jwt}
+     */
+    decode (token, options=null ) {
+        return options?.complete==true?
+                    {...JSON.parse(Buffer.from(token.split('.')[0], 'base64').toString('utf8')),
+                     ...JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('utf8'))
+                    }:
+                       JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('utf8'));
+    }
+}
+const jwt = new Jwt();
+
 export {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate, securitySecretCreate, 
         securityOTPKeyCreate,securityOTPKeyValidate, securityTOTPGenerate,securityTOTPValidate,
         securityPasswordCreate, securityPasswordCompare, 
-        securityKeyPairCreate, securityPublicEncrypt, securityPrivateDecrypt };
+        securityKeyPairCreate, securityPublicEncrypt, securityPrivateDecrypt,
+        jwt};

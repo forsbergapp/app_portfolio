@@ -1397,6 +1397,20 @@
  * @description SERVER server_server_error
  * @typedef {Object.<Error | null , undefined>} server_server_error
  */
+
+/**
+ * @description SECURITY server_secruity_jwt
+ * @typedef {{  
+ *              iss:string, 
+ *              sub:string, 
+ *              aud:string|[],
+ *              jwtid: string,
+ *              exp:number,
+ *              nbf:number,
+ *              iat:number
+ *          } & Object.<string,*>} server_security_jwt
+ */
+
 /**
  * @description SOCKET config_user_parameter
  * @typedef {'username'|'password'|'created'|'modified'} config_user_parameter
