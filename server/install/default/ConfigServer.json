@@ -66,7 +66,6 @@
     ],
     "SERVICE_TEST":[
         {"FAIL_SPEC_WITH_NO_EXPECTATIONS": "0", "COMMENT": "0=NO, 1=YES"},
-        {"STOP_SPEC_ON_EXPECTATION_FAILURE": "0", "COMMENT": "0=NO, 1=YES"},
         {"STOP_ON_SPEC_FAILURE": "0", "COMMENT": "0=NO, 1=YES"},
         {"RANDOM": "0", "COMMENT": "0=NO, 1=YES"}
     ],
