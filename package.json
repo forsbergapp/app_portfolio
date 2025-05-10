@@ -5,18 +5,14 @@
   "dependencies": {
     "jsonwebtoken": "^9.0.0"
   },
-  "scripts": {
-    "test": "jasmine --config=test/jasmine.json"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "",
   "type": "module",
   "description": "",
   "devDependencies": {
-    "@types/jasmine": "^5.1.0",
     "@types/jsonwebtoken": "^9.0.3",
-    "eslint": "^8.49.0",
-    "jasmine": "^5.1.0"
+    "eslint": "^8.49.0"
   }
 }
