@@ -193,7 +193,7 @@ const commonBFE = async parameters =>{
                     'Content-Type': 'application/json',
                     'Content-Length': Buffer.byteLength(JSON.stringify(parameters.body)),
                     'Authorization': parameters.authorization ?? '',
-                    'x-forwarded-For': parameters.ip
+                    'x-forwarded-for': parameters.ip
                 },
                 rejectUnauthorized: false
             };
