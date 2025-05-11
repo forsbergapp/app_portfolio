@@ -1,7 +1,7 @@
 /** @module server/security */
 
 /**
- * @import {server_security_jwt} from './types.js'}
+ * @import {server_security_jwt_complete, server_security_jwt_payload} from './types.js'}
  */
 const Crypto = await import('node:crypto');
 
@@ -322,28 +322,6 @@ class Jwt {
     constructor() {
     }
     /**
-     * @name bufferEqual
-     * @description static bufferEqual
-     * @method
-     * @param {Buffer} a
-     * @param {Buffer} b
-     * @returns {boolean}
-     */
-    static bufferEqual(a, b) {
-        if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b))
-            return false;
-        else
-            if (a.length !== b.length)
-                return false;
-            else{
-                let c = 0;
-                for (let i = 0; i < a.length; i++) {
-                    c |= a[i] ^ b[i];
-                }
-                return c === 0;
-            }
-    }
-    /**
      * @name fromBase64
      * @description static fromBase64
      * @method
@@ -374,9 +352,10 @@ class Jwt {
      * @method
      * @param {string} token
      * @param {string} secret
-     * @returns  {server_security_jwt}
+     * @param {{complete:boolean}|null} options
+     * @returns  {server_security_jwt_complete|server_security_jwt_payload}
      */
-    verify (token, secret) {
+    verify (token, secret, options=null) {
         const signature = token.split('.')[2];
         const securedInput = token.split('.', 2).join('.');
 
@@ -385,9 +364,8 @@ class Jwt {
         //check expire, not before and return token object or throw error
         if (payload.exp > (Date.now()/1000))
             if (payload.nbf < (Date.now()/1000))
-                if (Jwt.bufferEqual(Buffer.from(signature), 
-                                    Buffer.from(Jwt.signatureCompute(securedInput, secret))))
-                    return this.decode(token);
+                if (signature == Jwt.fromBase64(Jwt.signatureCompute(securedInput, secret)))
+                    return this.decode(token, options);
                 else
                     throw 'JWTError';
             else
@@ -408,14 +386,14 @@ class Jwt {
      */
     sign (claim, secret, options) {
         //calculate expire time
-        const exp = options?.expiresIn.toLowerCase().indexOf('d')>-1?
-                        ((Date.now()/1000) + (1000*60*60*24)):
+        const exp = Math.floor(options?.expiresIn.toLowerCase().indexOf('d')>-1?
+                        ((Date.now()/1000) + (60*60*24)):
                     options?.expiresIn.toLowerCase().indexOf('h')>-1?
-                        ((Date.now()/1000) + (1000*60*60)):
+                        ((Date.now()/1000) + (60*60)):
                     options?.expiresIn.toLowerCase().indexOf('m')>-1?
-                        ((Date.now()/1000) + (1000*60)):
+                        ((Date.now()/1000) + (60)):
                     //default 1 hour
-                    (Date.now()/1000) + (1000*60*60);
+                    (Date.now()/1000) + (60*60));
 
         const payload = {//Private claim names should not be any of registered claim names
                          ...claim,
@@ -442,7 +420,7 @@ class Jwt {
                              `${Buffer.from(JSON.stringify({'alg':'HS256','typ':'JWT'}), 'utf8').toString('base64')}` + '.' + 
                              //payload
                              `${Buffer.from(JSON.stringify(payload), 'utf8').toString('base64')}`;
-        return `${securedInput}.${Jwt.fromBase64(Jwt.signatureCompute(securedInput, secret))}`;
+        return `${Jwt.fromBase64(securedInput)}.${Jwt.fromBase64(Jwt.signatureCompute(securedInput, secret))}`;
     }
     /**
      * @name verify
@@ -450,12 +428,13 @@ class Jwt {
      * @method
      * @param {string} token
      * @param {{complete:boolean}|null} options
-     * @returns  {server_security_jwt}
+     * @returns  {server_security_jwt_complete|server_security_jwt_payload}
      */
     decode (token, options=null ) {
         return options?.complete==true?
-                    {...JSON.parse(Buffer.from(token.split('.')[0], 'base64').toString('utf8')),
-                     ...JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('utf8'))
+                    {header:JSON.parse(Buffer.from(token.split('.')[0], 'base64').toString('utf8')),
+                     payload:JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('utf8')),
+                     signature:token.split('.')[2],
                     }:
                        JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('utf8'));
     }
