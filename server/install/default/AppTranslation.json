@@ -257,6 +257,13 @@
                                         ["not following OWASP",                                 "OWASP directives includes not using unnecessary dependencies and obscure code"],
                                         ["slower performance for old browser",                  "no old browsers support"],
                                         ["differenct logic for old browser",                    "no old browsers support and differenct logic requires multiple implementations of logic to guarantee same functionality"]
+                                    ],
+                                    [   ["Json Web token",                                      "App Portfolio Jwt pattern and RFC 7519"], 
+                                        ["thirdparty complex obscure code           ",          "<130 lines of code including 50% type declarations and comments in one js file"],
+                                        ["many dependencies",                                   "using inbuilt Crypto module as only dependency"],
+                                        ["supports many algorithms",                            "supports HMAC and SHA256 (HS256) algorithm"],
+                                        ["not following OWASP",                                 "following OWASP"],
+                                        ["verify, sign and decode functions",                   "verify, sign and decode functions"]
                                     ]
                     ],
                     "screenshot_end":[
