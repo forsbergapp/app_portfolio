@@ -51,7 +51,9 @@ const IamAppAccess = await import(`file://${process.cwd()}/server/db/IamAppAcces
 /**@type{import('./db/IamAppIdToken.js')} */
 const IamAppToken = await import(`file://${process.cwd()}/server/db/IamAppIdToken.js`);
 
-const {default:jwt} = await import('jsonwebtoken');
+/**@type{import('./security.js')} */
+const {jwt} = await import(`file://${process.cwd()}/server/security.js`);
+
 const {hostname} = await import('node:os');
 /**
  * @name iamRequestRateLimiterCount

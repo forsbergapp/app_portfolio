@@ -2,9 +2,6 @@
   "name": "app_portfolio",
   "version": "1.0.0",
   "main": "server.js",
-  "dependencies": {
-    "jsonwebtoken": "^9.0.0"
-  },
   "scripts": {},
   "keywords": [],
   "author": "",
@@ -12,7 +9,7 @@
   "type": "module",
   "description": "",
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.3",
+    "@types/node": "^22.15.17",
     "eslint": "^8.49.0"
   }
 }
