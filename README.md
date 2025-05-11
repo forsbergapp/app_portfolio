@@ -80,9 +80,7 @@ see full documentation how to install on a cloud service using Terraform
 ```
 git clone [repository .git url] app_portfolio
 sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-	    sudo apt install nodejs
-        sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/node
-        npm install --omit=dev
+sudo apt install nodejs
 sudo npm install -g pm2
 
 pm2 start $HOME/app_portfolio/server/init.js --cwd $HOME/app_portfolio --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".git .vscode .well-known data docs node_modules microservice .gitignore .eslintignore .eslintrc.js README.md tsconfig.json"

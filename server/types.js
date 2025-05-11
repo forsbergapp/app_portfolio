@@ -7,6 +7,7 @@
  *              IAM     IAM types
  *              INFO    Info types
  *              SERVER  Server types
+ *              SECURITY Security types
  *              SOCKET  Socket types
  *              TEST    test types
  * @module server/types 
@@ -1399,7 +1400,7 @@
  */
 
 /**
- * @description SECURITY server_secruity_jwt
+ * @description SECURITY server_security_jwt_payload
  * @typedef {{  
  *              iss:string, 
  *              sub:string, 
@@ -1408,9 +1409,14 @@
  *              exp:number,
  *              nbf:number,
  *              iat:number
- *          } & Object.<string,*>} server_security_jwt
+ *          } & Object.<string,*>} server_security_jwt_payload
  */
-
+/**
+ * @description SECURITY server_security_jwt_complete
+ * @typedef {{  header:   {algo:string, typ:string}, 
+ *              payload:  server_security_jwt_payload,
+ *              signature:string}} server_security_jwt_complete
+ */
 /**
  * @description SOCKET config_user_parameter
  * @typedef {'username'|'password'|'created'|'modified'} config_user_parameter
@@ -1513,5 +1519,8 @@
  *              specFiles:{ type:test_type, 
  *                          path:string}[]}} test_specrunner
  */
-
+/**
+ * @description PROCESS process
+ * @typedef {*} process
+ */
 export {};
