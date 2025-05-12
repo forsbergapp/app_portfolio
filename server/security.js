@@ -420,7 +420,7 @@ class Jwt {
                              `${Buffer.from(JSON.stringify({'alg':'HS256','typ':'JWT'}), 'utf8').toString('base64')}` + '.' + 
                              //payload
                              `${Buffer.from(JSON.stringify(payload), 'utf8').toString('base64')}`;
-        return `${Jwt.fromBase64(securedInput)}.${Jwt.fromBase64(Jwt.signatureCompute(securedInput, secret))}`;
+        return Jwt.fromBase64(`${securedInput}.${Jwt.signatureCompute(Jwt.fromBase64(securedInput), secret)}`);
     }
     /**
      * @name verify
