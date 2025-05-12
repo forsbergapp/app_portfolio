@@ -116,7 +116,7 @@ const component = async props => {
         props.methods.COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent = props.data.user_settings.gps_lat_text;
         props.methods.COMMON_DOCUMENT.querySelector('#setting_input_long').textContent = props.data.user_settings.gps_long_text;
 
-        //init map thirdparty module
+        //init map third party module
         /**
          * @param{import('../../../common_types.js').CommonModuleLeafletEvent} event
          */
