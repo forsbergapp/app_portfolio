@@ -507,8 +507,7 @@ const appSecureCommonButtonSave = async (item) => {
                                                         private:            record.querySelector('[data-column=\'private\']').textContent,
                                                         username:           record.querySelector('[data-column=\'username\']').textContent,
                                                         bio:                record.querySelector('[data-column=\'bio\']').textContent,
-                                                        email:              record.querySelector('[data-column=\'email\']').textContent,
-                                                        email_unverified:   record.querySelector('[data-column=\'email_unverified\']').textContent,
+                                                        otp_key:            record.querySelector('[data-column=\'otp_key\']').textContent,
                                                         password:           (record.querySelector('[data-column=\'password\']').textContent=='' ||
                                                                              record.querySelector('[data-column=\'password\']').textContent==null)?
                                                                                 null:
@@ -572,7 +571,7 @@ const appSecureCommonRecordUpdate = async ( table,
     let method;
     switch (table){
         case 'user_account':{
-            path = `/server-iam/iamuser/${resource_id}`;
+            path = `/server-iam-admin/iamuser/${resource_id}`;
             method = 'PATCH';
             break;
         }

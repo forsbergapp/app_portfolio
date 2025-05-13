@@ -1366,12 +1366,13 @@ const iamUserGet = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
-*          data:{  sort?:string|null,
-*                  order_by?:string|null,
-*                  search?:string|null,
-*                  offset?:string|null}}} parameters
-* @returns {Promise.<server_server_response & {result?:server_db_table_IamUser[]}>}
-*/
+ *          resource_id:number,
+ *          data:{  sort?:string|null,
+ *                  order_by?:string|null,
+ *                  search?:string|null,
+ *                  offset?:string|null}}} parameters
+ * @returns {Promise.<server_server_response & {result?:server_db_table_IamUser[]}>}
+ */
 const iamUserGetAdmin = async parameters => {
     /**@type{import('./db/IamUser.js')} */
     const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
@@ -1379,7 +1380,7 @@ const iamUserGetAdmin = async parameters => {
     const {commonSearchMatch} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     const order_by_num = parameters.data.order_by =='asc'?1:-1;
     return {
-            result:IamUser.get(parameters.app_id, null).result
+            result:IamUser.get(parameters.app_id, parameters.resource_id).result
                     .filter((/**@type{server_db_table_IamUser}*/row)=>
                                 parameters.data.search=='*'?row:
                                 (commonSearchMatch(row.username??'', parameters.data?.search??'') ||
