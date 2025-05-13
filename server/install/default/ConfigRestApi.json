@@ -2582,9 +2582,6 @@
                                             "copyright":{
                                                 "type":"string"
                                             },
-                                            "email":{
-                                                "type":"string"
-                                            },
                                             "link_title":{
                                                 "type":"string"
                                             },

@@ -14,7 +14,6 @@
         "favicon_192x192":"",
         "text_edit": "1",
         "copyright":"©",
-        "email": "",
         "link_title":"",
         "link_url": "",
         "status":""
@@ -34,7 +33,6 @@
         "favicon_192x192":"/images/favicon-192x192.png",
         "text_edit": "1",
         "copyright":"©",
-        "email": "",
         "link_title":"",
         "link_url": "",
         "status":"ONLINE"
@@ -54,7 +52,6 @@
         "favicon_192x192":"/images/favicon-192x192.png",
         "text_edit": "1",
         "copyright":"©",
-        "email": "",
         "link_title":"",
         "link_url": "",
         "status":"ONLINE"
@@ -74,7 +71,6 @@
         "favicon_192x192":"/images/favicon-192x192.png",
         "text_edit": "1",
         "copyright":"©",
-        "email": "",
         "link_title":"",
         "link_url": "",
         "status":"ONLINE"
@@ -94,7 +90,6 @@
         "favicon_192x192":"/images/favicon-192x192.png",
         "text_edit": "1",
         "copyright":"©",
-        "email": "",
         "link_title":"",
         "link_url": "",
         "status":"ONLINE"
@@ -114,7 +109,6 @@
         "favicon_192x192":"/images/favicon-192x192.png",
         "text_edit": "0",
         "copyright":"©",
-        "email": "",
         "link_title":"",
         "link_url": "",
         "status":"ONLINE"
@@ -134,7 +128,6 @@
         "favicon_192x192":"/images/favicon-192x192.png",
         "text_edit": "0",
         "copyright":"©",
-        "email": "",
         "link_title":"",
         "link_url": "",
         "status":"ONLINE"
@@ -154,7 +147,6 @@
         "favicon_192x192":"/images/favicon-192x192.png",
         "text_edit": "1",
         "copyright":"©",
-        "email": "",
         "link_title":"",
         "link_url": "",
         "status":"ONLINE"
@@ -174,7 +166,6 @@
         "favicon_192x192":"/images/favicon-192x192.png",
         "text_edit": "1",
         "copyright":"©",
-        "email": "",
         "link_title":"",
         "link_url": "",
         "status":"ONLINE"
@@ -194,8 +185,7 @@
         "favicon_192x192":"/images/favicon-192x192.png",
         "text_edit": "1",
         "copyright":"©",
-        "email": "",
-        "link_title":"",
+         "link_title":"",
         "link_url": "",
         "status":"ONLINE"
     }

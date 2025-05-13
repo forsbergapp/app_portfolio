@@ -103,7 +103,6 @@ const post = async (app_id, data) => {
             favicon_192x192: data.favicon_192x192,
             text_edit:data.app_text_edit,
             copyright:data.app_copyright,
-            email:data.app_email,
             link_title:data.app_link_title,
             link_url:data.app_link_url,
             status: 'ONLINE'
@@ -140,7 +139,6 @@ const post = async (app_id, data) => {
  *                  favicon_192x192:string,
  *                  text_edit:string,
  *                  copyright:string,
- *                  email:string,
  *                  link_title:string,
  *                  link_url:string,
  *                  status:'ONLINE'|'OFFLINE'}}} parameters
@@ -178,8 +176,6 @@ const update = async parameters => {
             data_update.text_edit = parameters.data.text_edit;
         if (parameters.data.copyright!=null)
             data_update.copyright = parameters.data.copyright;
-        if (parameters.data.email!=null)
-            data_update.email = parameters.data.email;
         if (parameters.data.link_title!=null)
             data_update.link_title = parameters.data.link_title;
         if (parameters.data.link_url!=null)

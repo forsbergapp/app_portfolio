@@ -85,7 +85,6 @@
 
 #common_dialogue_iam_edit_input_username:empty::before{					content:var(--common_app_icon_user)}
 #common_dialogue_iam_edit_input_bio:empty::before{						content:var(--common_app_icon_user_profile)}
-#common_dialogue_iam_edit_input_new_email:empty::before{				content:var(--common_app_icon_email)}
 #common_dialogue_iam_edit_input_password:empty::before{					content:var(--common_app_icon_user_password)}
 #common_dialogue_iam_edit_input_password_confirm:empty::before{			content:var(--common_app_icon_user_password_confirm)}
 #common_dialogue_iam_edit_input_password_new:empty::before{				content:var(--common_app_icon_user_password)}

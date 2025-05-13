@@ -33,7 +33,6 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                         <div data-column='favicon_192x192' class='menu_apps_col list_title'>FAVICON_192x192</div>
                                         <div data-column='text_edit' class='menu_apps_col list_title'>TEXT_EDIT</div>
                                         <div data-column='copyright' class='menu_apps_col list_title'>COPYRIGHT</div>
-                                        <div data-column='email' class='menu_apps_col list_title'>EMAIL</div>
                                         <div data-column='link_title' class='menu_apps_col list_title'>LINK_TITLE</div>
                                         <div data-column='link_url' class='menu_apps_col list_title'>LINK_URL</div>
                                         <div id='menu_apps_col_title5' data-column='status' class='menu_apps_col list_title'>STATUS</div>
@@ -54,7 +53,6 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                             <div class='menu_apps_col common_input list_edit' data-column='favicon_192x192' contentEditable='true' >${app.favicon_192x192}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='text_edit' contentEditable='true' >${app.text_edit}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='copyright' contentEditable='true' >${app.copyright}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='email' contentEditable='true' >${app.email}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='link_title' contentEditable='true' >${app.link_title}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='link_url' contentEditable='true' >${app.link_url}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='status' contentEditable='true' >${app.status}</div>

@@ -241,7 +241,7 @@ const getStat = async parameters => {
                logs.rows.forEach((/**@type{server_db_table_LogRequestInfo|''}*/record) => {
                    if (record != ''){
                        if (data.statGroup != null){
-                           const domain_app_id = record.host?commonAppHost(record.host.split(':')[0]):null;
+                           const domain_app_id = record.host?commonAppHost(record.host):null;
                            if (data.app_id == null || data.app_id == domain_app_id){
                                const statGroupvalue = (data.statGroup=='url' && record[data.statGroup].indexOf('?')>0)?record[data.statGroup].substring(0,record[data.statGroup].indexOf('?')):record[data.statGroup];
                                //add unique statGroup to a set
@@ -263,7 +263,7 @@ const getStat = async parameters => {
                            //add for given status code or all status codes if all should be returned
                            //save this as chart 2 with days
                            if (data.statValue == null || data.statValue == record.statusCode){
-                               const domain_app_id = record.host?commonAppHost(record.host.split(':')[0]):null;
+                               const domain_app_id = record.host?commonAppHost(record.host):null;
                                if (data.app_id == null || data.app_id == domain_app_id){
                                    //add unique status codes to a set
                                    log_stat_value.add(record.statusCode);

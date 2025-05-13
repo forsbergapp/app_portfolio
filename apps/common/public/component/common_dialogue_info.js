@@ -46,7 +46,6 @@ const template = props => `
 * @param {{data:       {
 *                      commonMountdiv:string,
 *                      app_copyright:string,
-*                      app_email:string,
 *                      app_link_url:string,
 *                      app_link_title:string,
 *                      info_link_policy_name:string,

@@ -26,7 +26,7 @@ const iamService = await import(`file://${process.cwd()}/server/iam.js`);
 const iamCommon = (req, res) =>{
    return {
     authorization: req.headers.authorization, 
-    host: req.headers.host.split(':')[0] ?? '', 
+    host: req.headers.host ?? '', 
     ip: req.ip, 
     res:res
    };

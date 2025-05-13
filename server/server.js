@@ -705,7 +705,7 @@ const serverJs = async () => {
                                                     developerText:'',
                                                     moreInfo:'',
                                                     type:'HTML'},
-                                    host:req.headers.host.split(':')[0],
+                                    host:req.headers.host,
                                     route:null,
                                     res:res});
                 }
@@ -763,7 +763,7 @@ const serverJs = async () => {
                                                 developerText:'',
                                                 moreInfo:'',
                                                 type:'HTML'},
-                                host:req.headers.host.split(':')[0],
+                                host:req.headers.host,
                                 route:null,
                                 res:res});
             });

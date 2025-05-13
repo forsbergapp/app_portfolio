@@ -871,7 +871,6 @@ const commonComponentCreate = async parameters =>{
                                                      ...{
                                                         app_text_edit:  app.text_edit,
                                                         app_copyright:  app.copyright,
-                                                        app_email:      app.email,
                                                         app_link_title: app.link_title,
                                                         app_link_url:   app.link_url
                                                         }
