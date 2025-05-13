@@ -428,10 +428,7 @@ div.ray8 {
 	position:relative;
 	margin:20px;
 }
-#common_dialogue_info{
-	visibility: hidden;
-}
-#common_dialogue_apps, #common_dialogue_info{
+#common_dialogue_apps{
 	z-index: 1;
 }
 /*RESPONSIVE SETTINGS*/
@@ -675,6 +672,9 @@ body{
 }
 #common_dialogue_apps_list_title{
 	background: var(--app_theme_background_color);
+	color: var(--common_app_color_white1);
+}
+#common_dialogue_apps_list_title_col_info{
 	color: var(--common_app_color_white1);
 }
 #common_dialogue_apps_list, #common_dialogue_info_app_menu_content_apps_list{

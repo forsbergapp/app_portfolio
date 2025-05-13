@@ -240,14 +240,7 @@ const appAppsGet = () => {
     common.commonComponentRender({
         mountDiv:   'common_dialogue_apps',
         data:       {
-                    app_id:common.COMMON_GLOBAL.app_id,
-                    app_copyright:common.COMMON_GLOBAL.app_copyright,
-                    app_email:common.COMMON_GLOBAL.app_email,
-                    app_link_url:common.COMMON_GLOBAL.app_link_url,
-                    app_link_title:common.COMMON_GLOBAL.app_link_title,
-                    info_link_policy_name:common.COMMON_GLOBAL.info_link_policy_name,
-                    info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
-                    info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name
+                    app_id:common.COMMON_GLOBAL.app_id
                     },
         methods:    {
                     commonFFB:common.commonFFB,

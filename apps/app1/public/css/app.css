@@ -53,14 +53,6 @@
 #menu_users_list .list_title[data-column='password']::before{						content:var(--common_app_icon_user_password)}
 #menu_users_list .list_title[data-column='password_reminder']::before{				content:var(--common_app_icon_user_password) ' ' var(--common_app_icon_info)}
 #menu_users_list .list_title[data-column='verification_code']::before{				content:var(--common_app_icon_verification_code)}
-#menu_users_list .list_title[data-column='identity_provider_id']::before{			content:var(--common_app_icon_provider_id)}
-#menu_users_list .list_title[data-column='provider_name']::before{					content:var(--common_app_icon_provider)}
-#menu_users_list .list_title[data-column='provider_id']::before{					content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ID'}
-#menu_users_list .list_title[data-column='provider_first_name']::before{			content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_username) ' 1'}
-#menu_users_list .list_title[data-column='provider_last_name']::before{				content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_username) ' 2'}
-#menu_users_list .list_title[data-column='provider_image']::before{					content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_user_avatar)}
-#menu_users_list .list_title[data-column='provider_image_url']::before{				content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_user_avatar) ' URL'}
-#menu_users_list .list_title[data-column='provider_email']::before{					content:var(--common_app_icon_provider_id) ' ' var(--common_app_icon_user) ' ' var(--common_app_icon_email)}
 #menu_users_list .list_title[data-column='created']::before{					    content:var(--common_app_icon_user_account_created)}
 #menu_users_list .list_title[data-column='modified']::before{					    content:var(--common_app_icon_user_account_modified)}
 

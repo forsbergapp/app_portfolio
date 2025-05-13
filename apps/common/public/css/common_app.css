@@ -27,8 +27,12 @@
 #common_broadcast_info_title::before{									content:var(--common_app_icon_alert)}
 
 /*Icons dialogue apps*/
-#common_dialogue_info_contact_text::before{								content:var(--common_app_icon_email)}
+#common_dialogue_apps_list_title_col_info::before{					    content:var(--common_app_icon_info)}
 
+/*Icons dialogue info*/
+#common_dialogue_info_contact_message_title::before{					content:var(--common_app_icon_email)}
+#common_dialogue_info_close::before{									content:var(--common_app_icon_close)}
+#common_dialogue_info_contact_message_send::before{						content:var(--common_app_icon_send)}
 /*Icons dialogue lov*/
 .common_lov_button::before{												content:var(--common_app_icon_lov)}
 #common_lov_search_icon::before{										content:var(--common_app_icon_search)}
@@ -50,8 +54,8 @@
 #common_profile_stat_row1_1::before{									content:var(--common_app_icon_user_views)}
 #common_profile_stat_row1_2::before{									content:var(--common_app_icon_user_follows)}
 #common_profile_stat_row1_3::before{									content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_user_follows)}
-#common_dialogue_profile_home::before{											content:var(--common_app_icon_user_profile_stat)}
-#common_dialogue_profile_close::before{											content:var(--common_app_icon_close)}
+#common_dialogue_profile_home::before{									content:var(--common_app_icon_user_profile_stat)}
+#common_dialogue_profile_close::before{									content:var(--common_app_icon_close)}
 #common_profile_info_view_count_icon::before{							content:var(--common_app_icon_user_views)}
 #common_profile_main_btn_following::before{								content:var(--common_app_icon_user_follows)}
 #common_profile_main_btn_followed::before{								content:var(--common_app_icon_user_followed)}
@@ -59,37 +63,34 @@
 #common_profile_btn_top::before{										content:var(--common_app_icon_user_profile_stat)}
 
 /*Icons dialogue user edit*/
-#common_dialogue_iam_edit_btn_avatar_img::before{								content:var(--common_app_icon_user_avatar_edit)}
-#common_dialogue_iam_edit_private::before{										content:var(--common_app_icon_private)}
-#common_dialogue_iam_edit_close::before{										content:var(--common_app_icon_close)}
-#common_dialogue_iam_edit_label_provider::before{								content:var(--common_app_icon_provider)}
-#common_dialogue_iam_edit_label_provider_id::before{							content:var(--common_app_icon_provider_id)}
-#common_dialogue_iam_edit_label_provider_email::before{							content:var(--common_app_icon_email)}
-#common_dialogue_iam_edit_input_username_icon::before{							content:var(--common_app_icon_user)}
-#common_dialogue_iam_edit_input_bio_icon::before{								content:var(--common_app_icon_user_profile)}
-#common_dialogue_iam_edit_input_otp_icon::before{								content:var(--common_app_icon_otp)}
-#common_dialogue_iam_edit_input_password_icon::before{							content:var(--common_app_icon_user_password)}
-#common_dialogue_iam_edit_input_password_confirm_icon::before{					content:var(--common_app_icon_user_password_confirm)}
-#common_dialogue_iam_edit_input_password_new_icon::before{						content:var(--common_app_icon_user_password)}
-#common_dialogue_iam_edit_input_password_new_confirm_icon::before{				content:var(--common_app_icon_user_password_confirm)}
-#common_dialogue_iam_edit_input_password_reminder_icon::before{					content:var(--common_app_icon_user_password_reminder)}
+#common_dialogue_iam_edit_btn_avatar_img::before{						content:var(--common_app_icon_user_avatar_edit)}
+#common_dialogue_iam_edit_private::before{								content:var(--common_app_icon_private)}
+#common_dialogue_iam_edit_close::before{								content:var(--common_app_icon_close)}
+#common_dialogue_iam_edit_input_username_icon::before{					content:var(--common_app_icon_user)}
+#common_dialogue_iam_edit_input_bio_icon::before{						content:var(--common_app_icon_user_profile)}
+#common_dialogue_iam_edit_input_otp_icon::before{						content:var(--common_app_icon_otp)}
+#common_dialogue_iam_edit_input_password_icon::before{					content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_edit_input_password_confirm_icon::before{			content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_iam_edit_input_password_new_icon::before{				content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_edit_input_password_new_confirm_icon::before{		content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_iam_edit_input_password_reminder_icon::before{			content:var(--common_app_icon_user_password_reminder)}
 
-#common_dialogue_iam_edit_label_last_logintime::before{							content:var(--common_app_icon_user_last_logintime)}
-#common_dialogue_iam_edit_label_account_created::before{						content:var(--common_app_icon_user_account_created)}
-#common_dialogue_iam_edit_label_account_modified::before{						content:var(--common_app_icon_user_account_modified)}
+#common_dialogue_iam_edit_label_last_logintime::before{					content:var(--common_app_icon_user_last_logintime)}
+#common_dialogue_iam_edit_label_account_created::before{				content:var(--common_app_icon_user_account_created)}
+#common_dialogue_iam_edit_label_account_modified::before{				content:var(--common_app_icon_user_account_modified)}
 
-#common_dialogue_iam_edit_btn_user_delete_account::before{						content:var(--common_app_icon_delete)}	
-#common_dialogue_iam_edit_btn_user_update.spinner::before{						content: ''}
-#common_dialogue_iam_edit_btn_user_update::before{								content:var(--common_app_icon_update)}	
+#common_dialogue_iam_edit_btn_user_delete_account::before{				content:var(--common_app_icon_delete)}	
+#common_dialogue_iam_edit_btn_user_update.spinner::before{				content: ''}
+#common_dialogue_iam_edit_btn_user_update::before{						content:var(--common_app_icon_update)}	
 
-#common_dialogue_iam_edit_input_username:empty::before{							content:var(--common_app_icon_user)}
-#common_dialogue_iam_edit_input_bio:empty::before{								content:var(--common_app_icon_user_profile)}
-#common_dialogue_iam_edit_input_new_email:empty::before{						content:var(--common_app_icon_email)}
-#common_dialogue_iam_edit_input_password:empty::before{							content:var(--common_app_icon_user_password)}
-#common_dialogue_iam_edit_input_password_confirm:empty::before{					content:var(--common_app_icon_user_password_confirm)}
-#common_dialogue_iam_edit_input_password_new:empty::before{						content:var(--common_app_icon_user_password)}
-#common_dialogue_iam_edit_input_password_new_confirm:empty::before{				content:var(--common_app_icon_user_password_confirm)}
-#common_dialogue_iam_edit_input_password_reminder:empty::before{				content:var(--common_app_icon_user_password_reminder)}
+#common_dialogue_iam_edit_input_username:empty::before{					content:var(--common_app_icon_user)}
+#common_dialogue_iam_edit_input_bio:empty::before{						content:var(--common_app_icon_user_profile)}
+#common_dialogue_iam_edit_input_new_email:empty::before{				content:var(--common_app_icon_email)}
+#common_dialogue_iam_edit_input_password:empty::before{					content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_edit_input_password_confirm:empty::before{			content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_iam_edit_input_password_new:empty::before{				content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_edit_input_password_new_confirm:empty::before{		content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_iam_edit_input_password_reminder:empty::before{		content:var(--common_app_icon_user_password_reminder)}
 
 /*Icons dialogue user menu*/
 #common_dialogue_user_menu_edit::before{								content:var(--common_app_icon_edit)}
@@ -103,32 +104,32 @@
 #common_dialogue_user_menu_close::before{								content:var(--common_app_icon_close)}
 
 /*Icons dialogue user start*/
-#common_dialogue_iam_start_login::before{										content:var(--common_app_icon_user)}
-#common_dialogue_iam_start_login_button::before{								content:var(--common_app_icon_login)}
-#common_dialogue_iam_start_login_admin_button::before{							content:var(--common_app_icon_login)}
+#common_dialogue_iam_start_login::before{								content:var(--common_app_icon_user)}
+#common_dialogue_iam_start_login_button::before{						content:var(--common_app_icon_login)}
+#common_dialogue_iam_start_login_admin_button::before{					content:var(--common_app_icon_login)}
 
-#common_dialogue_iam_start_login_username:empty::before{						content:var(--common_app_icon_user)}
-#common_dialogue_iam_start_login_password:empty::before{						content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_start_login_username:empty::before{				content:var(--common_app_icon_user)}
+#common_dialogue_iam_start_login_password:empty::before{				content:var(--common_app_icon_user_password)}
 
-#common_dialogue_iam_start_login_admin_username:empty::before{					content:var(--common_app_icon_user);}
-#common_dialogue_iam_start_login_admin_password:empty::before{					content:var(--common_app_icon_user_password)}
-#common_dialogue_iam_start_login_admin_password_confirm:empty::before{			content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_iam_start_login_admin_username:empty::before{			content:var(--common_app_icon_user);}
+#common_dialogue_iam_start_login_admin_password:empty::before{			content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_start_login_admin_password_confirm:empty::before{	content:var(--common_app_icon_user_password_confirm)}
 
-#common_dialogue_iam_start_signup::before{										content:var(--common_app_icon_signup)}
-#common_dialogue_iam_start_signup_button::before{								content:var(--common_app_icon_signup)}
+#common_dialogue_iam_start_signup::before{								content:var(--common_app_icon_signup)}
+#common_dialogue_iam_start_signup_button::before{						content:var(--common_app_icon_signup)}
 
-#common_dialogue_iam_start_signup_username:empty::before{						content:var(--common_app_icon_user)}
-#common_dialogue_iam_start_signup_password:empty::before{						content:var(--common_app_icon_user_password)}
-#common_dialogue_iam_start_signup_password_confirm:empty::before{				content:var(--common_app_icon_user_password_confirm)}
-#common_dialogue_iam_start_signup_password_reminder:empty::before{				content:var(--common_app_icon_user_password) ' ' var(--common_app_icon_question)}
+#common_dialogue_iam_start_signup_username:empty::before{				content:var(--common_app_icon_user)}
+#common_dialogue_iam_start_signup_password:empty::before{				content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_start_signup_password_confirm:empty::before{		content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_iam_start_signup_password_reminder:empty::before{		content:var(--common_app_icon_user_password) ' ' var(--common_app_icon_question)}
 
-#common_dialogue_iam_start_close::before{										content:var(--common_app_icon_close)}
-#common_dialogue_iam_start_login_admin_first_time::before{						content:var(--common_app_icon_init)}
+#common_dialogue_iam_start_close::before{								content:var(--common_app_icon_close)}
+#common_dialogue_iam_start_login_admin_first_time::before{				content:var(--common_app_icon_init)}
 
 
 /*Icons dialogue user verify*/
-#common_dialogue_iam_verify_verification_code_icon::before{						content:var(--common_app_icon_verification_code)}
-#common_dialogue_iam_verify_cancel::before{										content:var(--common_app_icon_cancel)}
+#common_dialogue_iam_verify_verification_code_icon::before{				content:var(--common_app_icon_verification_code)}
+#common_dialogue_iam_verify_cancel::before{								content:var(--common_app_icon_cancel)}
 
 /*Icons module leaflet control*/
 #common_module_leaflet_control_search_button::before{					content:var(--common_app_icon_search)}
@@ -556,34 +557,27 @@ body.rtl{
     }
 }
 /*DIALOGUE APPS*/
+#common_dialogue_apps.common_dialogue_show0{
+	width: 350px;
+	height: calc(100% - 200px);
+}
 #common_dialogue_apps{
 	overflow: hidden;
 	padding: unset;
 }
-#common_dialogue_info_app_menu_content{
-	width: 100%;
-}
-#common_dialogue_apps_list.css_spinner, #common_dialogue_info_app_menu_content_apps_list.css_spinner{
-	height: 30px !important;
-	display: inline-block;
-}
-#common_dialogue_apps_list, #common_dialogue_info_app_menu_content_apps_list{
-	margin-top:10px;
-	height: 350px;
-    overflow-y: auto;
-    overflow-x: hidden;
-	text-align: center;
-    box-sizing: content-box;
-	padding: 0px;
-}
 #common_dialogue_apps_list{
 	font-size: 0.7em;
+    height:80%;
+    overflow-y: auto;
 }
 #common_dialogue_apps_list_title{
-	height: 50px;
+	height: 2em;
   	display: flex;
   	align-items: center;
-  	justify-content: center;
+  	justify-content: space-around;
+}
+#common_dialogue_apps_list_title_col_info {
+    font-size: 1.25em;
 }
 #common_dialogue_apps_list .common_dialogue_apps_app_link_row{
 	width: 45%;
@@ -630,52 +624,47 @@ body.rtl{
 .common_dialogue_apps_app_logo{
 	margin: 0 auto;
 }	
-/*DIALOGUE INFO*/
-#common_dialogue_apps #common_dialogue_info_contact_text, 
-#common_dialogue_apps #common_dialogue_info_app_email{
+/* DIALOGUE INFO */
+#common_dialogue_info.common_dialogue_show0{
+	max-height: 90%;
+	width: 300px;
+	height: 400px;
+}
+#common_dialogue_info_contact{
+    height: 150px;
+    margin-bottom: 100px;
+}
+#common_dialogue_info_contact_message_title{
+    font-size: 30px;
+}
+#common_dialogue_info_contact_message{
 	display: inline-block;
+    height: 100%;
 }
 
-#common_dialogue_apps #common_dialogue_info_title1, 
-#common_dialogue_apps #common_dialogue_info_title2{
+#common_dialogue_info_title1, 
+#common_dialogue_info_title2{
     height: 30px;
     margin: 0 auto;
 }
-#common_dialogue_apps #common_dialogue_info_start_links, 
-#common_dialogue_apps #common_dialogue_info_contact, 
-#common_dialogue_apps #common_dialogue_info_app_copyright{
+#common_dialogue_info_start_links, 
+#common_dialogue_info_contact, 
+#common_dialogue_info_app_copyright{
 	font-size: 11px;
 }
-#common_dialogue_apps #common_dialogue_info_start_links 
-#common_dialogue_apps #common_dialogue_info_app_link_row, 
-#common_dialogue_apps #common_dialogue_info_info_link_row{
+#common_dialogue_info_start_links 
+#common_dialogue_info_app_link_row, 
+#common_dialogue_info_info_link_row{
 	text-align: center;
 	width: 100%;
 }
-#common_dialogue_apps #common_dialogue_info_app_link_row div, 
-#common_dialogue_apps #common_dialogue_info_info_link_row div{
+#common_dialogue_info_close{
+    margin-top: 20px;
+}
+#common_dialogue_info_app_link_row div, 
+#common_dialogue_info_info_link_row div{
 	display: inline-block;
 	margin:5px;
-}
-#common_dialogue_apps #common_dialogue_info_info_diagram_img, 
-#common_dialogue_apps #common_dialogue_info_info_datamodel_img{
-	width: 113.77px;
-	height: 64px;
-}
-#common_dialogue_apps #common_dialogue_info_info_diagram, 
-#common_dialogue_apps #common_dialogue_info_info_datamodel{
-	cursor:pointer;
-}
-#common_dialogue_apps #common_dialogue_apps_info{
-	display: inline-block;
-	width: 100%;
-	position: fixed;
-	bottom: 1em;
-	inset-inline-start: 0px;
-}
-#common_dialogue_apps.common_dialogue_show0{
-	width: 350px;
-	height: calc(100% - 200px);
 }
 /* DIALOGUE MESSAGE*/
 #common_dialogue_message.common_dialogue_show3{
@@ -834,10 +823,6 @@ body.rtl{
 	margin-bottom:10px;
 	cursor:pointer;
 }
-#common_dialogue_iam_start .common_login_provider_id, 
-#common_dialogue_iam_start .common_login_provider_name{
-	display:inline-block;
-}
 #common_dialogue_iam_start_forgot_form{
 	width: 100%;
 }
@@ -851,10 +836,6 @@ body.rtl{
 }
 #common_dialogue_iam_start_login_button{
 	width: 100%;
-}
-#common_dialogue_iam_start_identity_provider_login >div,
-#common_dialogue_iam_start_identity_provider_login{
-	display: block !important;
 }
 /*Dialogue user edit*/
 #common_dialogue_iam_edit.common_dialogue_show1{

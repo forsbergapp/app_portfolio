@@ -2650,6 +2650,23 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         //Dialogue apps
+                        case 'common_dialogue_apps_list_title_col_info':{
+                            commonComponentRender({
+                            mountDiv:   'common_dialogue_info',
+                            data:       {
+                                        app_copyright:COMMON_GLOBAL.app_copyright,
+                                        app_link_url:COMMON_GLOBAL.app_link_url,
+                                        app_link_title:COMMON_GLOBAL.app_link_title,
+                                        info_link_policy_name:COMMON_GLOBAL.info_link_policy_name,
+                                        info_link_disclaimer_name:COMMON_GLOBAL.info_link_disclaimer_name,
+                                        info_link_terms_name:COMMON_GLOBAL.info_link_terms_name
+                                        },
+                            methods:    {
+                                        commonFFB:commonFFB
+                                        },
+                            path:       '/common/component/common_dialogue_info.js'});
+                            break;
+                        }            
                         case 'common_dialogue_apps_list':
                             if (event.target.classList.contains('common_dialogue_apps_app_logo')){
                                 const app_url = event.target.getAttribute('data-url');
@@ -2657,13 +2674,10 @@ const commonEvent = async (event_type,event=null) =>{
                                     COMMON_WINDOW.open(app_url);
                             }
                             break;
+                        //Dialogue info
                         case 'common_dialogue_info_app_link':{
                             if (COMMON_GLOBAL.app_link_url)
                                 COMMON_WINDOW.open(COMMON_GLOBAL.app_link_url,'_blank','');
-                            break;
-                        }
-                        case 'common_dialogue_info_app_email':{
-                            COMMON_WINDOW.open(`mailto:${COMMON_GLOBAL.app_email}`,'_blank','');
                             break;
                         }
                         case 'common_dialogue_info_info_link1':{
@@ -2703,6 +2717,10 @@ const commonEvent = async (event_type,event=null) =>{
                                             },
                                 methods:    {commonWindowSetTimeout:commonWindowSetTimeout},
                                 path:       '/common/component/common_window_info.js'});
+                            break;
+                        }
+                        case 'common_dialogue_info_close':{
+                            commonComponentRemove('common_dialogue_info', true);
                             break;
                         }
                         //dialogue app_data_display
