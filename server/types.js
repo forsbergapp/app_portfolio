@@ -200,7 +200,6 @@
  *              favicon_192x192:string,
  *              text_edit:string,
  *              copyright:string,
- *              email:string,
  *              link_title:string,
  *              link_url:string,
  *              status:'ONLINE'|'OFFLINE'}} server_db_table_App

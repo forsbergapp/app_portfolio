@@ -14,7 +14,6 @@ const COMMON_GLOBAL = {
     admin_app_id:1,
     app_id:null,
     app_logo:null,
-    app_email:null,
     app_copyright:null,
     app_link_url:null,
     app_link_title:null,
@@ -3247,7 +3246,6 @@ const commonInitParametersAppSet = (app_parameters, common_parameters) => {
     COMMON_GLOBAL.image_avatar_width = parseInt(common_parameters.common_image_avatar_width.value);
     COMMON_GLOBAL.image_avatar_height = parseInt(common_parameters.common_image_avatar_height.value);
     
-    COMMON_GLOBAL.app_email = app_parameters.app_email;
     COMMON_GLOBAL.app_copyright = app_parameters.app_copyright;
     COMMON_GLOBAL.app_link_url = app_parameters.app_link_url;
     COMMON_GLOBAL.app_link_title = app_parameters.app_link_title;

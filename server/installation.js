@@ -3,8 +3,10 @@
  */
 
 /**
- * @import {server_server_response,
+ * @import {server_db_document_ConfigServer,
+ *          server_server_response,
  *          server_db_database_demo_data,
+ *          server_db_table_App,
  *          server_db_table_IamUser,
  *          server_db_table_IamUserAppDataPost,
  *          server_db_table_IamUserView,
@@ -413,8 +415,14 @@ const postDemo = async parameters=> {
                                return demo_user.id.toString();
                            default:{
                                //replace if containing HOST parameter
-                               if (key_name[1]!=null && typeof key_name[1]=='string' && key_name[1].indexOf('<HOST/>')>-1)
-                                   return key_name[1]?.replaceAll('<HOST/>', Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HOST'}}) ?? '');
+                               if (key_name[1]!=null && typeof key_name[1]=='string' && key_name[1].indexOf('<HOST/>')>-1){
+                                    /**@type{server_db_document_ConfigServer} */
+                                    const {SERVER:config_SERVER} = Config.get({app_id:0, data:{object:'ConfigServer'}});
+                                    //use HTTPS configuration as default
+                                    const HOST = config_SERVER.filter(row=>'HOST' in row)[0].HOST;
+                                    const HTTPS_PORT = serverUtilNumberValue(config_SERVER.filter(row=>'HTTPS_PORT' in row)[0].HTTPS_PORT);
+                                    return key_name[1]?.replaceAll('<HOST/>', HOST + ((HTTPS_PORT==443)?'':`:${HTTPS_PORT}`));
+                               }
                                else
                                    return key_name[1];
                            }        
