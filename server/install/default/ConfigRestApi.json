@@ -3647,7 +3647,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-iam/iamuser": {
+        "/bff/admin/v1/server-iam-admin/iamuser/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server.iam.iamUserGetAdmin",
@@ -3659,6 +3659,10 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"iam_user.id"
                         },
                         {
                             "name":"sort",
@@ -3702,6 +3706,88 @@
                                     "allOf":[
                                         {"$ref": "#/components/schema/SuccessReponsePagination/properties"},
                                         {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            },
+            "patch": {
+                "summary": "",
+                "operationId": "server_db.IamUser.updateAdmin",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"iam_user.id"
+                        }
+                ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "username":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password_new":{
+                                                "type":"string"
+                                            },
+                                            "bio":{
+                                                "type":"string"
+                                            },
+                                            "private":{
+                                                "type":"string"
+                                            },
+                                            "otp_key":{
+                                                "type":"string"
+                                            },
+                                            "avatar":{
+                                                "type":"string"
+                                            },
+                                            "type":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "user_level":{
+                                                "type":"string"
+                                            },
+                                            "status":{
+                                                "type":"string"
+                                            },
+                                            "active":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
                                     ]
                                 }
                             ]
