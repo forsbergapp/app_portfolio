@@ -1721,12 +1721,14 @@ const commonUserLogout = async () => {
  */
 const commonLogout = async () => {
     commonComponentRemove('common_dialogue_user_menu');
+    commonWindoInfoClose();
+    commonComponentRemove('common_dialogue_iam_verify');
+    commonComponentRemove('common_dialogue_iam_edit');
     if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.admin_app_id){
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= 'url()';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',null);
-        commonWindoInfoClose();
         commonComponentRemove('common_dialogue_iam_verify');
         commonComponentRemove('common_dialogue_iam_edit');
         commonComponentRemove('common_dialogue_iam_start');

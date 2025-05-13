@@ -3520,7 +3520,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-iam/iamuser/${resource_id_number}": {
+        "/bff/admin/v1/server-iam/iamuser/${IAM_iam_user_id}": {
             "get": {
                 "summary": "",
                 "operationId": "server.iam.iamUserGet",
@@ -3534,8 +3534,9 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"iam_user.id"
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "in":   "path",
+                            "required":true
                         }
                 ],
                 "responses": {
@@ -3566,7 +3567,7 @@
             },
             "patch": {
                 "summary": "",
-                "operationId": "server_db.IamUser.updateAdmin",
+                "operationId": "server.iam.iamAuthenticateUserUpdate",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3577,8 +3578,29 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"iam_user.id"
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "in":   "path",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_authorization",
+                            "required":true
                         }
                 ],
                 "requestBody":{
@@ -3606,24 +3628,11 @@
                                             "private":{
                                                 "type":"string"
                                             },
-                                            "otp_key":{
-                                                "type":"string"
-                                            },
                                             "avatar":{
                                                 "type":"string"
                                             },
-                                            "type":{
-                                                "required":true,
+                                            "totp":{
                                                 "type":"string"
-                                            },
-                                            "user_level":{
-                                                "type":"string"
-                                            },
-                                            "status":{
-                                                "type":"string"
-                                            },
-                                            "active":{
-                                                "type":"number"
                                             }
                                         }
                                     }
