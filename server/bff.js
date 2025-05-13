@@ -106,7 +106,7 @@ const bffInit = async (req, res) =>{
             //access control that stops request if not passing controls
             /**@type{server_iam_authenticate_request}*/
             const result = await iamAuthenticateRequest({ip:req.ip, 
-                                                        host:req.headers.host.split(':')[0] ?? '', 
+                                                        host:req.headers.host ?? '', 
                                                         method: req.method, 
                                                         'user-agent': req.headers['user-agent'], 
                                                         'accept-language':req.headers['accept-language'], 
@@ -188,7 +188,7 @@ const bffStart = async (req, res) =>{
     const config_SERVER_SERVER = config_SERVER.SERVER;
     
     //if first time, when no user exists, then redirect everything to admin
-    if (IamUser.get(app_common.commonAppHost(req.headers.host.split(':')[0] ?? '')??0, null).result.length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
+    if (IamUser.get(app_common.commonAppHost(req.headers.host ?? '')??0, null).result.length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
         return {reason:'REDIRECT', redirect:`http://admin.${config_SERVER_SERVER.filter(row=>'HOST' in row)[0].HOST + 
                                             (serverUtilNumberValue(config_SERVER_SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT)==80?
                                                 '':

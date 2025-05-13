@@ -152,7 +152,6 @@
  *              admin_app_id:number,
  *              app_id:number|null,
  *              app_logo:string|null,
- *              app_email:string|null,
  *              app_copyright:string|null,
  *              app_link_url:string|null,
  *              app_link_title:string|null,
@@ -305,7 +304,6 @@
  *              favicon_192x192:string,
  *              text_edit:string,
  *              copyright:string,
- *              email:string,
  *              link_title:string,
  *              link_url:string,
  *              status:'ONLINE'|'OFFLINE',
@@ -320,7 +318,6 @@
  *                      app_id:                             number,
  *                      app_text_edit:                      string,
  *                      app_copyright:                      string,
- *                      app_email:                          string,
  *                      app_link_title:                     string,
  *                      app_link_url:                       string
  *                      },

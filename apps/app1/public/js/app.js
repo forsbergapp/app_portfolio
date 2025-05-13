@@ -443,7 +443,6 @@ const appSecureCommonButtonSave = async (item) => {
                                                         favicon_192x192:record.querySelector('[data-column=\'favicon_192x192\']').textContent,
                                                         text_edit:      record.querySelector('[data-column=\'text_edit\']').textContent,
                                                         copyright:      record.querySelector('[data-column=\'copyright\']').textContent,
-                                                        email:          record.querySelector('[data-column=\'email\']').textContent,
                                                         link_title:     record.querySelector('[data-column=\'link_title\']').textContent,
                                                         link_url:       record.querySelector('[data-column=\'link_url\']').textContent,
                                                         status:         record.querySelector('[data-column=\'status\']').textContent

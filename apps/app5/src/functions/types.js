@@ -7,7 +7,6 @@
  *              merchant_id:            number,
  *              merchant_name:          string,
  *              merchant_url:           string,
- *              merchant_email:         string,
  *              merchant_longitude:     string,
  *              merchant_latitude:      string,
  *              merchant_logo:          string,

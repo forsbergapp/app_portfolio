@@ -34,7 +34,6 @@ const test = async t =>
                                 favicon_192x192:'/images/favicon-192x192.png',
                                 text_edit:'1',
                                 copyright:'©',
-                                email:'',
                                 link_title:'',
                                 link_url:'',
                                 status:'ONLINE'};
