@@ -573,7 +573,8 @@ const iamAuthenticateUserUpdate = async parameters => {
         const IamUserEvent = await import(`file://${process.cwd()}/server/db/IamUserEvent.js`);
 
         /**@type{server_db_table_IamUser} */
-        const data_update = {   bio:                parameters.data.bio,
+        const data_update = {   type:               IamUser.get(parameters.app_id, parameters.resource_id).result[0].type,
+                                bio:                parameters.data.bio,
                                 private:            parameters.data.private,
                                 username:           parameters.data.username,
                                 password:           parameters.data.password,
