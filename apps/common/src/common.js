@@ -925,7 +925,7 @@ const commonComponentCreate = async parameters =>{
  * @returns {number|null}
  */
 const commonAppHost = host =>{
-    switch (host.toString().split('.')[0]){
+    switch (host.split(':')[0].toString().split('.')[0]){
                         
         case Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HOST'}}):
         case 'www':{
@@ -936,7 +936,7 @@ const commonAppHost = host =>{
         default:{
             try {
                 return App.get({app_id:serverUtilNumberValue(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}))??0, 
-                                resource_id:null}).result.filter((/**@type{server_db_table_App}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
+                                resource_id:null}).result.filter((/**@type{server_db_table_App}*/app)=>host.split(':')[0].toString().split('.')[0] == app.subdomain)[0].id;
             } catch (error) {
                 return null;
             }
