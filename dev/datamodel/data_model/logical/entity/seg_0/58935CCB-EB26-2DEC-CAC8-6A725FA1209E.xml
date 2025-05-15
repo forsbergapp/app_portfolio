@@ -16,16 +16,6 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="id" id="A8E9F654-AE89-DD20-E813-3DF6D7B940E4">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:32:34 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="message" id="23CB1F61-FFFF-ABEF-67DA-73EB61FBCBAD">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:04:43 UTC</createdTime>
@@ -58,19 +48,17 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-</attributes>
-<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="6B4C1777-ACB1-BCA9-8DDD-555E78226E34" name="message_queue_error PK">
+<Attribute name="id1" id="F64B3D14-FCB6-D2EB-38F6-75BBFC520B25">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:32:38 UTC</createdTime>
+<createdTime>2025-05-15 16:31:42 UTC</createdTime>
+<generatorID>8A8AE96D-A959-C105-449E-273BC4AB5201</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<pk>true</pk>
-<usedAttributes>
-<attributeRef>A8E9F654-AE89-DD20-E813-3DF6D7B940E4</attributeRef>
-</usedAttributes>
-</identifier>
-</identifiers>
+<referedAttribute>640C252F-5A68-839C-2D2A-E360C00F2D1C</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
 </Entity>

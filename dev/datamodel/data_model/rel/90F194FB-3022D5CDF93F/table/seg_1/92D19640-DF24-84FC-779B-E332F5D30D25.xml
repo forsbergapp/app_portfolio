@@ -142,15 +142,6 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="email" id="934714F2-7201-5FEA-EE97-CFBFEDCC0D85">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-23 20:35:05 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 <Column name="link_title" id="D15D7762-CD0E-A0A0-D67B-F6A6797D9AA3">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-23 20:35:05 UTC</createdTime>
