@@ -4,7 +4,7 @@
  */
 
 /**@type{import('../registry.js')} */
-const {registryConfigServices} = await import(`file://${process.cwd()}/serviceregistry/microservice/registry.js`);
+const {registryConfigServices} = await import(`file://${process.cwd()}/serviceregistry/registry.js`);
 
 const fs = await import('node:fs');
 const http = await import('node:http');

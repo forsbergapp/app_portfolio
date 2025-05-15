@@ -5,7 +5,7 @@
  *          server_db_table_MessageQueuePublish, 
  *          server_db_table_MessageQueueConsume,
  *          server_db_table_MessageQueuePublishMessage,
- *          server_db_table_MessageQueuePublishMicroserviceLog} from '../../types.js'
+ *          server_db_table_MessageQueuePublishMicroserviceLog} from '../server/types.js'
  */
 
 /**
@@ -21,11 +21,11 @@
  */
 const messageQueue = async parameters => {
    
-    /**@type{import('../../db/MessageQueuePublish.js')} */
+    /**@type{import('../server/db/MessageQueuePublish.js')} */
     const MessageQueuePublish = await import(`file://${process.cwd()}/server/db/MessageQueuePublish.js`);
-    /**@type{import('../../db/MessageQueuePublish.js')} */
+    /**@type{import('../server/db/MessageQueueConsume.js')} */
     const MessageQueueConsume = await import(`file://${process.cwd()}/server/db/MessageQueueConsume.js`);
-    /**@type{import('../../db/MessageQueuePublish.js')} */
+    /**@type{import('../server/db/MessageQueueError.js')} */
     const MessageQueueError = await import(`file://${process.cwd()}/server/db/MessageQueueError.js`);
     switch (parameters.message_type) {
         case 'PUBLISH': {
@@ -73,7 +73,7 @@ const messageQueue = async parameters => {
             break;
         }
         default: {
-            /**@type{import('../../iam.js')} */
+            /**@type{import('../server/iam.js')} */
             const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
             throw {http:400,
                 code:'IAM',

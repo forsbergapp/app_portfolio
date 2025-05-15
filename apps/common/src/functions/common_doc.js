@@ -2,7 +2,10 @@
  * @module apps/common/src/functions/common_doc
 */
 /**
- * @import {server_server_response, serverDocumentType, serverDocumentMenu} from '../../../../server/types.js'
+ * @import {server_server_response, 
+ *          serverDocumentType, 
+ *          serverDocumentMenu,
+ *          server_db_table_App} from '../../../../server/types.js'
  */
 
 /**
@@ -80,7 +83,7 @@ const getFiles = async (directory, filePattern) =>{
  * @returns {Promise.<string>}
  */
 const getFileFunctions = async parameters =>{
-    //replace variables for MODULE_APPS, MODULE_MICRSOERVICE and MODULE_SERVER
+    //replace variables for MODULE_APPS, MODULE_SERVICEREGISTRY and MODULE_SERVER
 
     //search all JSDoc comments
     const regexp_module_function = /\/\*\*([\s\S]*?)\*\//g;
@@ -273,7 +276,7 @@ const markdownRender = async parameters =>{
             return markdown.replaceAll('@{SCREENSHOT_END}', app_translation?app_translation.json_data.screenshot_end.join('\n'):'');
         }
         case parameters.type.toUpperCase().startsWith('MODULE'):{
-            //replace variables for MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER            
+            //replace variables for MODULE_APPS, MODULE_SERVICEREGISTRY and MODULE_SERVER            
             const markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/8.module.md`)
                         .then(markdown=>
                                 markdown
@@ -342,7 +345,7 @@ const markdownRender = async parameters =>{
                 if (parameters.doc=='7.appRoutes')
                     return await renderRouteFuntions('ROUTE_APP', '/apps/common/src/common', ['apps'], parameters.doc);
                 else
-                    return await renderRouteFuntions('ROUTE_REST_API', '/server/server', ['apps', 'microservice','server'], parameters.doc);
+                    return await renderRouteFuntions('ROUTE_REST_API', '/server/server', ['apps', 'serviceregistry','server'], parameters.doc);
             }
         }
         case parameters.type.toUpperCase()=='GUIDE':{
@@ -400,7 +403,7 @@ const menuRender = async parameters =>{
                 break;
             }
             case menu.type.startsWith('MODULE'):{
-                //return all *.js files in /apps, /microservices and /server directories
+                //return all *.js files in /apps, /serviceregistry and /server directories
                 const filePattern = /\.js$/;
                 menu.menu_sub = (await getFiles(`${process.cwd()}/${menu.type.substring('MODULE'.length+1).toLowerCase()}`, filePattern))
                                 .map(row=>{return {id:row.id, menu:row.file, doc:row.file};});
@@ -416,7 +419,7 @@ const menuRender = async parameters =>{
  *              MODULE_CODE         JS   - javascript source file
  *				MENU                JSON - renders menu with scanned files and apps from configuration
  *              MODULE_APPS         HTML - markdown converted with documentation of a file in /apps
- *              MODULE_MICROSERVICE HTML - markdown converted with documentation of a file in /microservice
+ *              MODULE_SERVICEREGISTRY HTML - markdown converted with documentation of a file in /serviceregistry
  *              MODULE_SERVER       HTML - markdown converted with documentation of a file in /server
  *              MODULE_TEST         HTML - markdown converted with documentation of a file in /test
  *				GUIDE               HTML - markdown converted
@@ -462,14 +465,14 @@ const appFunction = async parameters =>{
                 return {result:await menuRender({app_id:parameters.app_id}), type:'JSON'};
             }
             case parameters.data.documentType=='MODULE_CODE' && 
-            (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/microservice')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
+            (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/serviceregistry')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
                 return {result:await getFile(`${process.cwd()}${parameters.data.doc}.js`, true), type:'JS'};
             }
             case parameters.data.documentType=='GUIDE':
             case parameters.data.documentType=='APP' && App.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.data.doc)}).result?.length==1:
             case parameters.data.documentType=='ROUTE':
             case parameters.data.documentType.startsWith('MODULE') &&
-                (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/microservice')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
+                (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/serviceregistry')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
                 const {default:ComponentMarkdown} = await import('../component/common_markdown.js');
                 const {default:ComponentOpenAPI} = await import('../component/common_openapi.js');
                 

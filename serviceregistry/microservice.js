@@ -1,7 +1,7 @@
 /** @module serviceregistry/microservice/microservice */
 
 /**
- * @import {server_server_response, server_bff_endpoint_type, server_server_req_id_number,server_req_method} from '../../types.js'
+ * @import {server_server_response, server_bff_endpoint_type, server_server_req_id_number,server_req_method} from '../server/types.js'
  * @import {microservice_res, microservice_registry_service} from './types.js'
  */
 
@@ -9,9 +9,9 @@ const http = await import('node:http');
 const https = await import('node:https');
 
 /**@type{import('./registry.js')} */
-const {registryConfigServices} = await import(`file://${process.cwd()}/serviceregistry/microservice/registry.js`);
+const {registryConfigServices} = await import(`file://${process.cwd()}/serviceregistry/registry.js`);
 
-/**@type{import('../../iam.js')} */
+/**@type{import('../server/iam.js')} */
 const { iamAuthenticateApp } = await import(`file://${process.cwd()}/server/iam.js`);
 
 const MICROSERVICE_MESSAGE_TIMEOUT = '🗺⛔?';
@@ -69,13 +69,13 @@ const microserviceRouteMatch = (route_path, route_method, request_path , request
  */
 const microserviceRequest = async parameters =>{
     /**@type{import('./circuitbreaker.js')} */
-    const {circuitBreaker} = await import(`file://${process.cwd()}/serviceregistry/microservice/circuitbreaker.js`);
-    /**@type{import('../../db/Config.js')} */
+    const {circuitBreaker} = await import(`file://${process.cwd()}/serviceregistry/circuitbreaker.js`);
+    /**@type{import('../server/db/Config.js')} */
     const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-    /**@type{import('../../db/AppSecret.js')} */
+    /**@type{import('../server/db/AppSecret.js')} */
     const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
     /**@type{import('./registry.js')} */
-    const {registryMicroserviceApiVersion}= await import(`file://${process.cwd()}/serviceregistry/microservice/registry.js`);
+    const {registryMicroserviceApiVersion}= await import(`file://${process.cwd()}/serviceregistry/registry.js`);
 
     /**@type{microservice_registry_service} */
     const microservice = parameters.path.split('/')[1].toUpperCase();
@@ -117,7 +117,7 @@ const microserviceRequest = async parameters =>{
                                                 });
         }
     else{
-        /**@type{import('../../iam.js')} */
+        /**@type{import('../server/iam.js')} */
         const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         return {
                 http:503, 

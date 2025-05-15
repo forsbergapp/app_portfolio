@@ -1,6 +1,6 @@
 /** @module serviceregistry/microservice/cirtcuitbreaker */
 
-/**@type{import('../../db/Config.js')} */
+/**@type{import('../server/db/Config.js')} */
 const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 /**
  * @name circuitBreakerClass

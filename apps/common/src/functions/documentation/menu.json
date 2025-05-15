@@ -117,8 +117,8 @@
     },
     {
         "id":9,
-        "menu":"9 Modules Microservice",
-        "type":"MODULE_MICROSERVICE",
+        "menu":"9 Modules Serviceregistry",
+        "type":"MODULE_SERVICEREGISTRY",
         "menu_sub":null
     },
     {
