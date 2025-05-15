@@ -68,6 +68,16 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="SERVICE_TEST" id="C37F17B5-5C3D-01F8-7F44-DB942D6C7EC7">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-15 16:34:29 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="METADATA" id="A78AC82D-C612-495D-67F9-C966BA4D9EB8">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:30:46 UTC</createdTime>

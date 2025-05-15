@@ -177,17 +177,6 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="email" id="47EBB70F-1BE4-2D48-CE65-BD2D53A4D2D8">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-23 20:33:50 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="link_title" id="DAB5A40B-DB57-4A36-4ED7-556EEC52B3DC">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-23 20:33:53 UTC</createdTime>
