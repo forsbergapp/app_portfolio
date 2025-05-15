@@ -4,7 +4,7 @@
  * @import {microservice_registry_service, server_db_document_config_microservice_services} from './types.js'
  */
 
-/**@type{import('../../db/ORM.js')} */
+/**@type{import('../server/db/ORM.js')} */
 const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 /**@type{server_db_document_config_microservice_services['SERVICES']} */

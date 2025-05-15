@@ -4261,7 +4261,7 @@
         "/bff/app_id/v1/geolocation/ip": {
             "get": {
                 "summary": "",
-                "operationId": "microservice.microservice.microserviceRequest",
+                "operationId": "serviceregistry.microservice.microserviceRequest",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -4469,7 +4469,7 @@
         "/bff/app_id/v1/geolocation/place": {
             "get": {
                 "summary": "",
-                "operationId": "microservice.microservice.microserviceRequest",
+                "operationId": "serviceregistry.microservice.microserviceRequest",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],

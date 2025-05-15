@@ -274,7 +274,7 @@
  */
 /**
  * @description Type commonDocumentType
- * @typedef {'APP'|'GUIDE'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_MICROSERVICE'|'MODULE_SERVER'} commonDocumentType
+ * @typedef {'APP'|'GUIDE'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_SERVICEREGISTRY'|'MODULE_SERVER'} commonDocumentType
  */
 /**
  * @description Type CommonRESTAPIMethod
