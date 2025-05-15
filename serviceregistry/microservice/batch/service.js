@@ -1,10 +1,10 @@
 /** 
  * Microservice batch service
- * @module microservice/batch/service 
+ * @module serviceregistry/microservice/batch/service 
  */
 
-/**@type{import('../../microservice/registry.js')} */
-const {registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
+/**@type{import('../registry.js')} */
+const {registryConfigServices} = await import(`file://${process.cwd()}/serviceregistry/microservice/registry.js`);
 /**@type{{  jobid:number,
             log_id: number, 
             filename: string, 

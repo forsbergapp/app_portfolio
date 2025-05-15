@@ -1,5 +1,5 @@
 /**
- * @module microservice/geolocation/types
+ * @module serviceregistry/microservice/geolocation/types
  */
 /** 
  * @description Type Microservice geolocation

@@ -1,5 +1,5 @@
 /**
- * @module microservice/types
+ * @module serviceregistry/microservice/types
  */
 /**
  * @description Microservice - Request

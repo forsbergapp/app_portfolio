@@ -1,6 +1,6 @@
 /** 
  * Microservice batch server
- * @module microservice/batch/server 
+ * @module serviceregistry/microservice/batch/server 
  */
 
 /**
@@ -9,10 +9,10 @@
 
 /**@type{import('./service.js')} */
 const service = await import('./service.js');
-/**@type{import('../../microservice/microservice.js')} */
-const { microserviceResultReturn } = await import(`file://${process.cwd()}/microservice/microservice.js`);
-/**@type{import('../../microservice/registry.js')} */
-const { registryMicroServiceServer } = await import(`file://${process.cwd()}/microservice/registry.js`);
+/**@type{import('../microservice.js')} */
+const { microserviceResultReturn } = await import(`file://${process.cwd()}/serviceregistry/microservice/microservice.js`);
+/**@type{import('../registry.js')} */
+const { registryMicroServiceServer } = await import(`file://${process.cwd()}/serviceregistry/microservice/registry.js`);
 
 
 /**

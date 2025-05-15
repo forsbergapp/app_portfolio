@@ -1179,7 +1179,7 @@ const serverStart = async () =>{
                 }
             });
     }
-    
+    console.log(import.meta);
 };
 export {serverResponse, serverUtilCompression,
         serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppLine , 

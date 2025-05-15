@@ -85,14 +85,14 @@ sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install nodejs
 sudo npm install -g pm2
 
-pm2 start $HOME/app_portfolio/server/init.js --cwd $HOME/app_portfolio --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".git .vscode .well-known data docs node_modules microservice .gitignore .eslintignore .eslintrc.js README.md tsconfig.json"
+pm2 start $HOME/app_portfolio/server/init.js --cwd $HOME/app_portfolio --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".git .vscode .well-known data docs node_modules .gitignore .eslintignore .eslintrc.js README.md tsconfig.json"
 
 ```
 	optional (batch and git are used for CI/CD solution):
 ```	
-pm2 start $HOME/app_portfolio/microservice/batch/server.js --cwd $HOME/app_portfolio --name batch --watch="microservice" --ignore-watch="microservice/geolocation" --watch-delay 10
+pm2 start $HOME/app_portfolio/serviceregistry/microservice/batch/server.js --cwd $HOME/app_portfolio --name batch --watch="serviceregistry/microservice/geolocation" --watch-delay 10
 
-pm2 start $HOME/app_portfolio/microservice/geolocation/server.js --cwd $HOME/app_portfolio --name geolocation --watch="microservice" --ignore-watch="microservice/batch"
+pm2 start $HOME/app_portfolio/serviceregistry/microservice/geolocation/server.js --cwd $HOME/app_portfolio --name geolocation --watch="serviceregistry/microservice/batch"
 
 ```
 

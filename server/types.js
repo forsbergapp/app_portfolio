@@ -997,7 +997,7 @@
 /**
  * @description DB server_db_table_MessageQueuePublishMicroserviceLog
  * 
- * @typedef {{  type:'ERROR'|'MICROSERVICE_LOG',
+ * @typedef {{  type:'MICROSERVICE_ERROR'|'MICROSERVICE_LOG',
  *              message:string}} server_db_table_MessageQueuePublishMicroserviceLog
  */
 
