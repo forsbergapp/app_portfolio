@@ -691,14 +691,13 @@
  * @memberof dbObjects
  * @typedef {{  id?:number,
 *               service:string,
-*               message:object|null,
+*               message:*,
 *               created?:string}} server_db_table_MessageQueuePublish
 */
 /**
 * @description DB TABLE MessageQueueConsume
 * @memberof dbObjects
-* @typedef {{  id?:number,
-*              service:string|null,
+* @typedef {{  message_queue_publish_id:number,
 *              message:*,
 *              start:string|null,
 *              finished:string|null,
@@ -709,7 +708,7 @@
 /**
 * @description DB TABLE MessageQueueError
 * @memberof dbObjects
-* @typedef {{  id:number,
+* @typedef {{  message_queue_publish_id:number,
 *              message:*,
 *              result:*,
 *              created:string}} server_db_table_MessageQueueError
@@ -982,6 +981,24 @@
  * @typedef {  'MessageQueuePublish'|
  *             'MessageQueueConsume'|
  *             'MessageQueueError'} server_db_db_name_message_queue
+ */
+
+/**
+ * @description DB server_db_table_MessageQueuePublishMessage
+ * 
+ * @typedef {{  sender:string,
+ *              host:string,
+ *              client_ip:string,
+ *              subject:string,
+ *              message:string,
+ *          }} server_db_table_MessageQueuePublishMessage
+*/
+
+/**
+ * @description DB server_db_table_MessageQueuePublishMicroserviceLog
+ * 
+ * @typedef {{  type:'ERROR'|'MICROSERVICE_LOG',
+ *              message:string}} server_db_table_MessageQueuePublishMicroserviceLog
  */
 
 /** 
