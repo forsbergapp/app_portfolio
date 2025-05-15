@@ -4,7 +4,9 @@
  */
 
 /**
- * @import {test_spec_result} from '../server/types.js'
+ * @import {test_spec_result, 
+ *          server_db_table_App,
+ *          server_bff_parameters} from '../server/types.js'
  */
 
 /**

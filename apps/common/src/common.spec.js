@@ -34,7 +34,7 @@ const test = async t =>
         const ORIGINAL_FILTER = Array.prototype.filter;
         /**
          * @name beforeAll
-         * @description helper beforeAll pattern that modifies Array.filter function cheking what object is used
+         * @description helper beforeAll pattern that modifies Array.filter function checking what object is used
          * @function
          * @returns  {void}
          */
