@@ -9,24 +9,6 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="id" id="9FC98765-35FA-45A3-23A9-E0B917C8EDBB">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:36:18 UTC</createdTime>
-<generatorID>43B7977B-4F83-9BEB-0B0D-71D3793EC313</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="service" id="4122D832-EFC6-6AE1-0874-C1E780471F7E">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:36:18 UTC</createdTime>
-<generatorID>73C1EB1D-D9A8-CB5D-1E66-67BFC70D0D78</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 <Column name="message" id="35BC36F8-5C55-5CFB-EC9B-E031662923A1">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:18 UTC</createdTime>
@@ -82,18 +64,29 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="message_queue_publish_id" id="50595AC2-8CA4-BA03-17DC-2BFC88F52502">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-15 16:44:21 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="A98B689C-C146-035F-3156-D0F6D8E161B9" referredColumn="64767DB5-1E95-243B-218E-1ECFFC96367E"/>
+</associations>
+</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="205F5A18-2AC5-3239-BADB-66DC6DB47A62" name="message_queue_consume_PK">
+<ind_PK_UK id="788ABD9B-93E5-6DDE-BB4B-00A5C30B5DCA" name="MessageQueueConsume_MessageQueuePublish_FK">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:36:18 UTC</createdTime>
-<generatorID>DC55ABE9-347F-5343-3692-8FC5F0DED457</generatorID>
+<createdTime>2025-05-15 16:44:21 UTC</createdTime>
+<generatorID>7250C717-4838-7F43-F2D4-9E9406385E03</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<pk>true</pk>
-<indexState>Primary Constraint</indexState>
+<indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="9FC98765-35FA-45A3-23A9-E0B917C8EDBB"/>
+<colUsage columnID="50595AC2-8CA4-BA03-17DC-2BFC88F52502"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

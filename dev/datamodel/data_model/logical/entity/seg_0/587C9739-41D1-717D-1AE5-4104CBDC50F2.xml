@@ -16,27 +16,6 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="id" id="43B7977B-4F83-9BEB-0B0D-71D3793EC313">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:32:20 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="service" id="73C1EB1D-D9A8-CB5D-1E66-67BFC70D0D78">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:04:06 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="message" id="4BC37847-9DE7-8696-C372-0A3BAD2D5F27">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:04:10 UTC</createdTime>
@@ -104,19 +83,17 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-</attributes>
-<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="DC55ABE9-347F-5343-3692-8FC5F0DED457" name="message_queue_consume PK">
+<Attribute name="id1" id="ED322C94-B106-9C58-F0E8-3E211E3749DF">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-19 19:32:25 UTC</createdTime>
+<createdTime>2025-05-15 16:30:11 UTC</createdTime>
+<generatorID>68D91D59-667E-6A34-6B5C-11F42A281C20</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<pk>true</pk>
-<usedAttributes>
-<attributeRef>43B7977B-4F83-9BEB-0B0D-71D3793EC313</attributeRef>
-</usedAttributes>
-</identifier>
-</identifiers>
+<referedAttribute>640C252F-5A68-839C-2D2A-E360C00F2D1C</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
 </Entity>
