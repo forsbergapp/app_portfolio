@@ -10,10 +10,10 @@
 
 /**@type{import('./service.js')} */
 const service = await import('./service.js');
-/**@type{import('../microservice.js')} */
-const { microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, iamAuthenticateApp } = await import(`file://${process.cwd()}/serviceregistry/microservice/microservice.js`);
-/**@type{import('../registry.js')} */
-const { registryMicroServiceServer } = await import(`file://${process.cwd()}/serviceregistry/microservice/registry.js`);
+/**@type{import('../../microservice.js')} */
+const { microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, iamAuthenticateApp } = await import(`file://${process.cwd()}/serviceregistry/microservice.js`);
+/**@type{import('../../registry.js')} */
+const { registryMicroServiceServer } = await import(`file://${process.cwd()}/serviceregistry/registry.js`);
 
 
 /**
