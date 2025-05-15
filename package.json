@@ -1,7 +1,7 @@
 {
   "name": "app_portfolio",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "server/init.js",
   "scripts": {},
   "keywords": [],
   "author": "",

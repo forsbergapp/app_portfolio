@@ -15,7 +15,7 @@
         },
         {
             "name": "Microservice Batch",
-            "program": "${workspaceFolder}/microservice/batch/server.js",
+            "program": "${workspaceFolder}/serviceregistry/microservice/batch/server.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
@@ -24,7 +24,7 @@
         },
         {
             "name": "Microservice Geolocation",
-            "program": "${workspaceFolder}/microservice/geolocation/server.js",
+            "program": "${workspaceFolder}/serviceregistry/microservice/geolocation/server.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
