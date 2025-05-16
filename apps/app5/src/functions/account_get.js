@@ -21,15 +21,13 @@
  * @returns {Promise.<server_server_response & {result?:server_db_table_AppDataResourceDetail[]}>}
  */
 const accountGet = async parameters =>{
-    /**@type{import('../../../../server/db/AppDataEntity.js')} */
-    const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
+    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
     /**@type{server_db_table_AppDataEntity} */
     const Entity            = AppDataEntity.get({  app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
-    /**@type{import('../../../../server/db/AppDataResourceDetail.js')} */
-    const AppDataResourceDetail = await import(`file://${process.cwd()}/server/db/AppDataResourceDetail.js`);
+    const AppDataResourceDetail = await import('../../../../server/db/AppDataResourceDetail.js');
     
     return AppDataResourceDetail.get({ app_id:parameters.app_id, 
                                                             resource_id:parameters.data.resource_id, 

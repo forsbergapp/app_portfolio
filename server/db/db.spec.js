@@ -19,8 +19,7 @@ const test = async t =>
     [await t.describe('Unit test, test ORM post, update, get and delete', async ()=> {
         return await new Promise(resolve=>
         t.it('should create a record, update the record, get correct value from updated record and delete the record', async () =>{            
-            /**@type{import('./App.js')} */
-            const App = await import(`file://${process.cwd()}/server/db/App.js`);
+            const App = await import('./App.js');
             
             const app_data = {  name:'ORM',
                                 subdomain:'orm',

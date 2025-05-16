@@ -1,6 +1,6 @@
 {
     "SERVICES":[
-    {"NAME":"BATCH",       "HOST": "localhost", "PORT":3001,"HTTPS_ENABLE":0,"HTTPS_KEY":"/data/microservice/ssl/privkey.pem","HTTPS_CERT":"/data/microservice/ssl/fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT": 4001,"STATUS":"ONLINE","PATH":"/microservice/batch","PATH_DATA":"/data/microservices/data",
+    {"NAME":"BATCH",       "HOST": "localhost", "PORT":3001,"HTTPS_ENABLE":0,"HTTPS_KEY":"/data/microservice/ssl/privkey.pem","HTTPS_CERT":"/data/microservice/ssl/fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT": 4001,"STATUS":"ONLINE","PATH":"/microservice/batch","PATH_DATA":"/data/microservice/data",
         "CONFIG":[
             {"APP_REST_API_VERSION":1,"COMMENT":"REST API version"},
             {"jobs":[
@@ -16,7 +16,7 @@
                 {"jobid":10 ,"name": "Pipeline 16.00 every friday", "command_type":"OS", "platform": "win32", "path": "%HOMEPATH%/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"0 16 * * 5", "enabled":false}    
             ]}            
             ] },
-    {"NAME":"GEOLOCATION",  "HOST":"localhost","PORT":3002,"HTTPS_ENABLE":0,"HTTPS_KEY":"/data/microservice/ssl/privkey.pem","HTTPS_CERT":"/data/microservice/ssl/fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT":4002,"STATUS":"ONLINE","PATH":"/microservice/geolocation","PATH_DATA":"/data/microservices/data",
+    {"NAME":"GEOLOCATION",  "HOST":"localhost","PORT":3002,"HTTPS_ENABLE":0,"HTTPS_KEY":"/data/microservice/ssl/privkey.pem","HTTPS_CERT":"/data/microservice/ssl/fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT":4002,"STATUS":"ONLINE","PATH":"/microservice/geolocation","PATH_DATA":"/data/microservice/data",
         "CONFIG":[
             {"APP_REST_API_VERSION":1,"COMMENT":"REST API version"},
             {"URL_IP":"http://www.geoplugin.net/json.gp?ip=<IP/>",   "COMMENT":"" },

@@ -4,7 +4,8 @@
  * @module apps/common/component/common_openapi
  */
 /**
- * @import {server_db_document_ConfigRestApi}  from '../../../../server/types.js'
+ * @import {server_db_document_ConfigRestApi,
+ *          server_db_table_App}  from '../../../../server/types.js'
  */
 
 /**

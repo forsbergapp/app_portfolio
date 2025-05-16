@@ -20,11 +20,8 @@
  * @returns {Promise.<server_server_response & {result?:server_db_table_AppDataResourceMaster[]}>}
  */
 const productMetadata = async parameters =>{
-    /**@type{import('../../../../server/db/AppDataEntity.js')} */
-    const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
-
-    /**@type{import('../../../../server/db/AppDataResourceMaster.js')} */
-    const AppDataResourceMaster = await import(`file://${process.cwd()}/server/db/AppDataResourceMaster.js`);
+    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
+    const AppDataResourceMaster = await import('../../../../server/db/AppDataResourceMaster.js');
 
     /**@type{server_db_table_AppDataEntity} */
     const Entity            = AppDataEntity.get({   app_id:parameters.app_id, 

@@ -19,8 +19,7 @@
 * @returns {Promise.<server_server_response & {result?:{totp_value?:string, expire?:number}|null[]}>}
 */
 const getTOTP = async parameters =>{
-   /**@type{import('../../../../server/security.js')} */
-   const Security = await import(`file://${process.cwd()}/server/security.js`);
+   const Security = await import('../../../../server/security.js');
 
    const result_totp = await Security.securityTOTPGenerate(parameters.data.otp_key);
    return {result: [{totp_value:result_totp?.totp_value,

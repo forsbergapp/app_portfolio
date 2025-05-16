@@ -18,26 +18,13 @@
  * 
  */
 
-/**@type{import('../../../server/db/App.js')} */
-const App = await import(`file://${process.cwd()}/server/db/App.js`);
-
-/**@type{import('../../../server/db/AppModule.js')} */
-const AppModule = await import(`file://${process.cwd()}/server/db/AppModule.js`);
-
-/**@type{import('../../../server/db/AppParameter.js')} */
-const AppParameter = await import(`file://${process.cwd()}/server/db/AppParameter.js`);
-
-/**@type{import('../../../server/db/Config.js')} */
-const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-
-/**@type{import('../../../server/db/IamUser.js')} */
-const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
-
-/**@type{import('../../../server/db/Log.js')} */
-const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
-
-/**@type{import('../../../server/server.js')} */
-const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const App = await import('../../../server/db/App.js');
+const AppModule = await import('../../../server/db/AppModule.js');
+const AppParameter = await import('../../../server/db/AppParameter.js');
+const Config = await import('../../../server/db/Config.js');
+const IamUser = await import('../../../server/db/IamUser.js');
+const Log = await import('../../../server/db/Log.js');
+const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import('../../../server/server.js');
 
 const fs = await import('node:fs');
 
@@ -109,8 +96,7 @@ const commonClientLocale = accept_language =>{
  * @returns {Promise.<*>}
  */
 const commonGeodata = async parameters =>{
-    /**@type{import('../../../server/bff.js')} */
-    const { bffServer } = await import(`file://${process.cwd()}/server/bff.js`);
+    const { bffServer } = await import('../../../server/bff.js');
     //get GPS from IP
     /**@type{server_bff_parameters}*/
     const parametersBFF = { endpoint:parameters.endpoint,
@@ -242,8 +228,7 @@ const commonBFE = async parameters =>{
         });
     }
     else{
-        /**@type{import('../../../server/iam.js')} */
-        const { iamUtilMessageNotAuthorized } = await import(`file://${process.cwd()}/server/iam.js`);
+        const { iamUtilMessageNotAuthorized } = await import('../../../server/iam.js');
         throw iamUtilMessageNotAuthorized();
     }
 };
@@ -460,8 +445,7 @@ const commonModuleAsset = async parameters => {
  * @returns {Promise.<server_server_response>}
  */
 const commonModuleRun = async parameters => {
-    /**@type{import('../../../server/iam.js')} */
-    const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const {iamUtilMessageNotAuthorized} = await import('../../../server/iam.js');
     const modules = AppModule.get({app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}});
@@ -473,7 +457,7 @@ const commonModuleRun = async parameters => {
                                                                                                 app.common_name==parameters.resource_id && 
                                                                                                 app.common_role == parameters.endpoint)[0];
             if (module){
-                const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
+                const {default:RunFunction} = await import('../../..' + module.common_path);
                 return await RunFunction({  app_id:parameters.app_id, 
                                             data:parameters.data, 
                                             ip:parameters.ip, 
@@ -537,10 +521,8 @@ const commonModuleRun = async parameters => {
 * @returns {Promise.<server_server_response>}
 */
 const commonAppReport = async parameters => {
-    /**@type{import('../../../server/iam.js')} */
-    const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-    /**@type{import('../../../server/db/AppModuleQueue.js')} */
-    const AppModuleQueue = await import(`file://${process.cwd()}/server/db/AppModuleQueue.js`);
+    const {iamUtilMessageNotAuthorized} = await import('../../../server/iam.js');
+    const AppModuleQueue = await import('../../../server/db/AppModuleQueue.js');
     if (parameters.data?.type =='REPORT'){
         const modules = AppModule.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id}})                                           ;
         if (modules.result){
@@ -550,13 +532,12 @@ const commonAppReport = async parameters => {
                                                                                             app.common_role == parameters.endpoint)[0];
             if (module){
                 //report
-                /**@type{import('../../../server/iam.js')} */
-                const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.js`);
+                const { iamAuthorizeIdToken } = await import('../../../server/iam.js');
                 //ID token is created but not used in report
                 await iamAuthorizeIdToken(parameters.app_id, parameters.ip, 'REPORT');
                 const {default:ComponentCreate} = await import('./component/common_report.js');
                 
-                const {default:RunReport} = await import(`file://${process.cwd()}${module.common_path}`);
+                const {default:RunReport} = await import('../../..' + module.common_path);
     
                 const pagesize = parameters.data.ps ?? new URLSearchParams(Buffer.from(parameters.data.reportid ?? '', 'base64').toString('utf-8')).get('ps');
                 /**@type{server_apps_report_create_parameters} */
@@ -663,16 +644,10 @@ const commonAppReport = async parameters => {
  * @returns {Promise.<server_server_response|void>}
  */
 const commonAppReportQueue = async parameters =>{
-    /**@type{import('../../../server/db/AppModuleQueue.js')} */
-    const AppModuleQueue = await import(`file://${process.cwd()}/server/db/AppModuleQueue.js`);
-
-    /**@type{import('../../../server/db/IamUser.js')} */
-    const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
-
-    /**@type{import('../../../server/iam.js')} */
-    const { iamUtilTokenGet } = await import(`file://${process.cwd()}/server/iam.js`);
-    /**@type{import('../../../server/iam.js')} */
-    const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const AppModuleQueue = await import('../../../server/db/AppModuleQueue.js');
+    const IamUser = await import('../../../server/db/IamUser.js');
+    const { iamUtilTokenGet } = await import('../../../server/iam.js');
+    const {iamUtilMessageNotAuthorized} = await import('../../../server/iam.js');
 
     const report = AppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{data_app_id:null}});
     if (report.result){
@@ -750,15 +725,14 @@ const commonAppReportQueue = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_apps_module_with_metadata[] }>}
  */
 const commonModuleMetaDataGet = async parameters =>{
-    /**@type{import('../../../server/iam.js')} */
-    const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const {iamUtilMessageNotAuthorized} = await import('../../../server/iam.js');
     if (parameters.data.type=='REPORT'||parameters.data.type=='MODULE'||parameters.data.type=='FUNCTION'){
         const modules = AppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id,data:{data_app_id:parameters.app_id}});
         if (modules.result){
             const module_reports = modules.result.filter((/**@type{server_db_table_AppModule}*/row)=>row.common_type==parameters.data.type);
             if (module_reports){
                 for (const row of module_reports){
-                    const module = await import(`file://${process.cwd()}${row.common_path}`);
+                    const module = await import('../../..' + row.common_path);
                     /**@type{server_apps_module_metadata[]}*/
                     const metadata = module.metadata;
                     row.common_metadata = metadata;
@@ -821,8 +795,7 @@ const commonModuleMetaDataGet = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:string }>}
  */
 const commonComponentCreate = async parameters =>{
-    /**@type{import('../../../server/iam.js')} */
-    const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.js`);
+    const { iamAuthorizeIdToken } = await import('../../../server/iam.js');
 
     const common_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}));
     const admin_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}));

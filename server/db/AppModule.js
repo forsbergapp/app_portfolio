@@ -3,10 +3,8 @@
 /**
  * @import {server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete, server_server_response,server_db_table_AppModule} from '../types.js'
  */
-/**@type{import('./ORM.js')} */
-const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
-/**@type{import('../server.js')} */
-const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const ORM = await import('./ORM.js');
+const {serverUtilNumberValue} = await import('../server.js');
 
 /**
  * @name get

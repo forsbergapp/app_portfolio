@@ -21,38 +21,17 @@
  *          server_server_res} from './types.js'
  */
 
-/**@type{import('./server.js')} */
-const {serverResponse, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-
-/**@type{import('../apps/common/src/common.js')} */
-const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
-
-/**@type{import('./db/Config.js')} */
-const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-
-/**@type{import('./db/AppSecret.js')} */
-const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
-
-/**@type{import('./db/IamControlIp.js')} */
-const IamControlIp = await import(`file://${process.cwd()}/server/db/IamControlIp.js`);
-
-/**@type{import('./db/IamControlUserAgent.js')} */
-const IamControlUserAgent = await import(`file://${process.cwd()}/server/db/IamControlUserAgent.js`);
-
-/**@type{import('./db/IamControlObserve.js')} */
-const IamControlObserve = await import(`file://${process.cwd()}/server/db/IamControlObserve.js`);
-
-/**@type{import('./db/IamUser.js')} */
-const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
-
-/**@type{import('./db/IamAppAccess.js')} */
-const IamAppAccess = await import(`file://${process.cwd()}/server/db/IamAppAccess.js`);
-
-/**@type{import('./db/IamAppIdToken.js')} */
-const IamAppToken = await import(`file://${process.cwd()}/server/db/IamAppIdToken.js`);
-
-/**@type{import('./security.js')} */
-const {jwt} = await import(`file://${process.cwd()}/server/security.js`);
+const {serverResponse, serverUtilNumberValue} = await import('./server.js');
+const {commonAppHost}= await import('../apps/common/src/common.js');
+const Config = await import('./db/Config.js');
+const AppSecret = await import('./db/AppSecret.js');
+const IamControlIp = await import('./db/IamControlIp.js');
+const IamControlUserAgent = await import('./db/IamControlUserAgent.js');
+const IamControlObserve = await import('./db/IamControlObserve.js');
+const IamUser = await import('./db/IamUser.js');
+const IamAppAccess = await import('./db/IamAppAccess.js');
+const IamAppToken = await import('./db/IamAppIdToken.js');
+const {jwt} = await import('./security.js');
 
 const {hostname} = await import('node:os');
 /**
@@ -195,8 +174,7 @@ const iamAuthenticateUser = async parameters =>{
     const username = userpass.split(':')[0];
     const password = userpass.split(':')[1];
 
-    /**@type{import('./socket.js')} */
-    const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
+    const {socketConnectedUpdate} = await import('./socket.js');
     /**
      * @param {1|0} result
      * @param {server_db_table_IamUser & {id:number, type:string}} user
@@ -272,8 +250,7 @@ const iamAuthenticateUser = async parameters =>{
                 return return_result();
             else{
                 //create IamUserApp record for current app if missing
-                /**@type{import('./db/IamUserApp.js')} */
-                const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
+                const IamUserApp = await import('./db/IamUserApp.js');
                 
                 const record = IamUserApp.get({ app_id:parameters.app_id, 
                                                             resource_id: null,
@@ -339,8 +316,7 @@ const iamAuthenticateUser = async parameters =>{
                                                                     active:     1
                                                                     }, 'ADMIN'));
         else{
-            /**@type{import('./security.js')} */
-            const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
+            const {securityPasswordCompare}= await import('./security.js');
 
             /**@type{server_db_table_IamUser}*/
             const user =  IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/user)=>user.username == username)[0];
@@ -408,9 +384,8 @@ const iamAuthenticateUser = async parameters =>{
  *                                              iam_user_id:number} }>}
  */
 const iamAuthenticateUserSignup = async parameters =>{
-    /**@type{import('./socket.js')} */
-    const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
-    const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
+    const {socketConnectedUpdate} = await import('./socket.js');
+    const IamUser = await import('./db/IamUser.js');
     const new_user = await IamUser.post(parameters.app_id, { username:parameters.data.username,
                                                             password:parameters.data.password,
                                                             password_reminder:parameters.data.password_reminder,
@@ -490,15 +465,13 @@ const iamAuthenticateUserSignup = async parameters =>{
  */
 const iamAuthenticateUserActivate = async parameters =>{
     if (parameters.data.verification_type=='1' || parameters.data.verification_type=='2'){
-        /**@type{import('./security.js')} */
-        const Security= await import(`file://${process.cwd()}/server/security.js`);    
+        const Security= await import('./security.js');    
         const result_activate =  await Security.securityTOTPValidate(parameters.data.verification_code, IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.otp_key);
         if (result_activate){
             //set user active = 1
             IamUser.updateAdmin({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{active:1}});
 
-            /**@type{import('./db/IamUserEvent.js')} */
-            const IamUserEvent = await import(`file://${process.cwd()}/server/db/IamUserEvent.js`);
+            const IamUserEvent = await import('./db/IamUserEvent.js');
             /**@type{server_db_table_IamUserEvent}*/
             const eventData = {
                 /**@ts-ignore */
@@ -565,12 +538,10 @@ const iamAuthenticateUserActivate = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:{updated: number} }>}
  */
 const iamAuthenticateUserUpdate = async parameters => {
-    /**@type{import('./security.js')} */
-    const Security= await import(`file://${process.cwd()}/server/security.js`);    
+    const Security= await import('./security.js');    
     const result_totp =  await Security.securityTOTPValidate(parameters.data.totp, IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.otp_key);
     if (result_totp){
-        /**@type{import('./db/IamUserEvent.js')} */
-        const IamUserEvent = await import(`file://${process.cwd()}/server/db/IamUserEvent.js`);
+        const IamUserEvent = await import('./db/IamUserEvent.js');
 
         /**@type{server_db_table_IamUser} */
         const data_update = {   type:               IamUser.get(parameters.app_id, parameters.resource_id).result[0].type,
@@ -669,12 +640,9 @@ const iamAuthenticateUserDelete = async parameters => IamUser.deleteRecord(param
 * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
 */
 const iamAuthenticateUserAppDelete = async parameters => {
-    /**@type{import('./db/IamUser.js')} */
-    const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
-    /**@type{import('./db/IamUserApp.js')} */
-    const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
-    /**@type{import('./security.js')} */
-    const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);    
+    const IamUser = await import('./db/IamUser.js');
+    const IamUserApp = await import('./db/IamUserApp.js');
+    const {securityPasswordCompare}= await import('./security.js');    
     if (parameters.resource_id!=null){
         const user = IamUser.get(parameters.app_id, parameters.data.iam_user_id);
         if (user.result)
@@ -1338,8 +1306,7 @@ const iamAppAccessGet = parameters => {const rows = IamAppAccess.get(parameters.
  * @returns {Promise.<server_server_response & {result?:server_db_table_IamUser }>}
  */
 const iamUserGet = async parameters =>{
-    /**@type{import('./db/IamUser.js')} */
-    const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
+    const IamUser = await import('./db/IamUser.js');
     
     const result = IamUser.get(parameters.app_id, parameters.resource_id);
     return result.http?
@@ -1375,10 +1342,8 @@ const iamUserGet = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_table_IamUser[]}>}
  */
 const iamUserGetAdmin = async parameters => {
-    /**@type{import('./db/IamUser.js')} */
-    const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
-    /**@type{import('../apps/common/src/common.js')} */
-    const {commonSearchMatch} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+    const IamUser = await import('./db/IamUser.js');
+    const {commonSearchMatch} = await import('../apps/common/src/common.js');
     const order_by_num = parameters.data.order_by =='asc'?1:-1;
     return {
             result:IamUser.get(parameters.app_id, parameters.resource_id).result
@@ -1452,8 +1417,7 @@ const iamUserGetLastLogin = (app_id, id) =>IamAppAccess.get(app_id, null).result
  */
 
 const iamUserLogout = async parameters =>{
-    /**@type{import('./socket.js')} */
-    const {socketConnectedUpdate, socketExpiredTokensUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
+    const {socketConnectedUpdate, socketExpiredTokensUpdate} = await import('./socket.js');
 
     //set token expired after user is logged out in app
     const result = await iamUtilTokenExpiredSet(parameters.app_id, parameters.authorization, parameters.ip);

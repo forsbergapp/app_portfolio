@@ -69,8 +69,7 @@ const test = async t =>
             //that is available in global scope in NodeJS since DB object uses Object.seal() so no getter can be added 
             //and module is using closure pattern.
             
-            /**@type{import('./common.js')} */
-            const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+            const app_common = await import('./common.js');
                  
             /**
              * @type{{  app_id:number,

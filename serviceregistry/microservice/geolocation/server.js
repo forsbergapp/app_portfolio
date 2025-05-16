@@ -5,15 +5,12 @@
 
 /**
  * @import {microservice_geolocation_data} from './types.js'
- * @import {microservice_req, microservice_res} from '../types.js'
+ * @import {microservice_req, microservice_res} from '../../types.js'
  */
 
-/**@type{import('./service.js')} */
 const service = await import('./service.js');
-/**@type{import('../../microservice.js')} */
-const { microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, iamAuthenticateApp } = await import(`file://${process.cwd()}/serviceregistry/microservice.js`);
-/**@type{import('../../registry.js')} */
-const { registryMicroServiceServer } = await import(`file://${process.cwd()}/serviceregistry/registry.js`);
+const { microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, iamAuthenticateApp } = await import('../../microservice.js');
+const { registryMicroServiceServer } = await import('../../registry.js');
 
 
 /**

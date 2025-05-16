@@ -21,12 +21,9 @@
  */
 const messageQueue = async parameters => {
    
-    /**@type{import('../server/db/MessageQueuePublish.js')} */
-    const MessageQueuePublish = await import(`file://${process.cwd()}/server/db/MessageQueuePublish.js`);
-    /**@type{import('../server/db/MessageQueueConsume.js')} */
-    const MessageQueueConsume = await import(`file://${process.cwd()}/server/db/MessageQueueConsume.js`);
-    /**@type{import('../server/db/MessageQueueError.js')} */
-    const MessageQueueError = await import(`file://${process.cwd()}/server/db/MessageQueueError.js`);
+    const MessageQueuePublish = await import('../server/db/MessageQueuePublish.js');
+    const MessageQueueConsume = await import('../server/db/MessageQueueConsume.js');
+    const MessageQueueError = await import('../server/db/MessageQueueError.js');
     switch (parameters.message_type) {
         case 'PUBLISH': {
             //message PUBLISH message in message_queue_publish.json
@@ -73,8 +70,7 @@ const messageQueue = async parameters => {
             break;
         }
         default: {
-            /**@type{import('../server/iam.js')} */
-            const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+            const  {iamUtilMessageNotAuthorized} = await import('../server/iam.js');
             throw {http:400,
                 code:'IAM',
                 text:iamUtilMessageNotAuthorized(),

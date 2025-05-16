@@ -9,8 +9,7 @@
 
 const ID_TOKEN_KEY ='id-token';
 
-/**@type{import('./iam.js')} */
-const iamService = await import(`file://${process.cwd()}/server/iam.js`);
+const iamService = await import('./iam.js');
 
 /**
  * @name iamCommon

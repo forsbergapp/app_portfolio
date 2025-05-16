@@ -4,6 +4,12 @@
  */
 
 /**@type(import('./server')) */
-const {serverStart} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverStart} = await import('./server.js');
+class ClassServerProcess {
+    cwd = () => process.cwd();
+}
+const serverProcess = new ClassServerProcess();
+
 serverStart();
-export{};
+
+export{serverProcess};

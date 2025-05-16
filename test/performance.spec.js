@@ -18,10 +18,8 @@ const test = async t =>
     [await t.describe('Performance test, calling main server url according to configured values', async ()=> {
         return await new Promise(resolve=>
         t.it('should handle 100 concurrent requests without any error within 10 seconds', async () =>{ 
-                /**@type{import('../server/server.js')} */
-                const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-                /**@type{import('../server/db/Config.js')} */
-                const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+                const {serverUtilNumberValue} = await import('../server/server.js');
+                const Config = await import('../server/db/Config.js');
 
                 /**@type{number} */
                 let status;
