@@ -11,7 +11,7 @@
 /**
  * @import {server_server_req, server_server_res} from './types.js'
  */
-/**@type{import('./bff.js')} */
+
 const bffService = await import('./bff.js');
 
 /**

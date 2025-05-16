@@ -8,14 +8,9 @@
  */
 
 
-/**@type{import('./server.js')} */
-const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-
-/**@type{import('./iam.js')} */
-const {iamUtilTokenExpired} = await import(`file://${process.cwd()}/server/iam.js`);
-
-/**@type{import('./db/Config.js')} */
-const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+const {serverUtilNumberValue} = await import('./server.js');
+const {iamUtilTokenExpired} = await import('./iam.js');
+const Config = await import('./db/Config.js');
 
 /**@type{server_socket_connected_list[]} */
 let SOCKET_CONNECTED_CLIENTS = [];
@@ -34,8 +29,7 @@ let SOCKET_CONNECTED_CLIENTS = [];
  *               timezone:string}>}
  */
 const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, headers_accept_language) =>{
-    /**@type{import('./bff.js')} */
-    const { bffServer } = await import(`file://${process.cwd()}/server/bff.js`);
+    const { bffServer } = await import('./bff.js');
     //get GPS from IP
     /**@type{server_bff_parameters}*/
     const parameters = {endpoint:'SERVER',
@@ -143,8 +137,7 @@ const socketClientAdd = (newClient) => {
  * @returns {Promise.<server_server_response>}
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
-    /**@type{import('./iam.js')} */
-    const { iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const { iamUtilMessageNotAuthorized} = await import('./iam.js');
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == parameters.idToken).length==0){
         return {http:401,
                 code:'IAM',
@@ -372,10 +365,8 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
  * @returns {Promise.<void>}
  */
  const socketConnect = async parameters =>{
-    /**@type{import('./iam.js')} */
-    const { iamUtilTokenGet } = await import(`file://${process.cwd()}/server/iam.js`);
-    /**@type{import('./db/IamUser.js')} */
-    const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
+    const { iamUtilTokenGet } = await import('./iam.js');
+    const IamUser = await import('./db/IamUser.js');
 
     //get access token if any
     const access_token =    parameters.authorization?iamUtilTokenGet(   parameters.app_id,
@@ -388,8 +379,7 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
                                         null;
     //no authorization for repeated request using same id token or requesting from browser
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == parameters.idToken).length>0 ||parameters.data.res.req.headers['sec-fetch-mode']!='cors'){
-        /**@type{import('./iam.js')} */
-        const {iamUtilResponseNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+        const {iamUtilResponseNotAuthorized} = await import('./iam.js');
         throw iamUtilResponseNotAuthorized(parameters.data.res, 401, 'socketConnect, authorization', true);
     }
     else{

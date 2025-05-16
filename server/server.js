@@ -53,8 +53,7 @@ const zlib = await import('node:zlib');
  *  @returns {Promise.<void>}
  */
 const serverResponse = async parameters =>{
-    /**@type{import('./db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+    const Config = await import('./db/Config.js');
     const common_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id??0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}})) ?? 0;
     const admin_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id??0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'APP_ADMIN_APP_ID'}}));
     /**
@@ -120,8 +119,7 @@ const serverResponse = async parameters =>{
         }
     };
     if (parameters.result_request.http){
-        /**@type{import('../apps/common/src/common.js')} */
-        const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+        const app_common = await import('../apps/common/src/common.js');
         const app_id_host = app_common.commonAppHost(parameters.host ?? '');
     
         //ISO20022 error format
@@ -164,10 +162,8 @@ const serverResponse = async parameters =>{
                     parameters.res.statusCode =200;
                 if (parameters.result_request?.sendfile){
                     const fs = await import('node:fs');
-                    /**@type{import('./db/Log.js')} */
-                    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
-                    /**@type{import('./iam.js')} */
-                    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                    const Log = await import('./db/Log.js');
+                    const  {iamUtilMessageNotAuthorized} = await import('./iam.js');
                     await fs.promises.access(parameters.result_request.sendfile)
                     .then(()=>{
                         parameters.res.sendFile(parameters.result_request.sendfile);
@@ -282,8 +278,7 @@ const serverResponse = async parameters =>{
                             parameters.res.write(parameters.result_request.result, 'utf8');
                     }
                     else{
-                        /**@type{import('./iam.js')} */
-                        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                        const  {iamUtilMessageNotAuthorized} = await import('./iam.js');
                         parameters.res.statusCode =500;
                         parameters.res.write(iamUtilMessageNotAuthorized(), 'utf8');
                     }
@@ -605,18 +600,11 @@ const serverUtilAppLine = () =>{
  * @returns {Promise<*>}
  */
 const serverJs = async () => {
-    /**@type{import('./db/Log.js')} */
-    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
-    /**@type{import('./db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-    /**@type{import('./iam.js')} */
-    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-
-    /**@type{import('./iamMiddleware.js')} */
-    const iamMiddleware = await import(`file://${process.cwd()}/server/iamMiddleware.js`);
-
-    /**@type{import('./bffMiddleware.js')} */
-    const bff = await import(`file://${process.cwd()}/server/bffMiddleware.js`);
+    const Log = await import('./db/Log.js');
+    const Config = await import('./db/Config.js');
+    const {iamUtilMessageNotAuthorized} = await import('./iam.js');
+    const iamMiddleware = await import('./iamMiddleware.js');
+    const bff = await import('./bffMiddleware.js');
 
     /**
      * @param {server_server_req} req
@@ -809,7 +797,6 @@ const serverJs = async () => {
                                     res.end();
                                 };
             //Backend for frontend (BFF) start
-            /**@type{import('./bff.js')} */
             const bffService =      await import('./bff.js');
             const resultbffInit =   await bffService.bffInit(req, res);
             if (resultbffInit.reason == null){
@@ -849,10 +836,8 @@ const serverJs = async () => {
  * @returns {Promise.<server_server_response>}
  */
 const serverREST_API = async (routesparameters) =>{
-    /**@type{import('./iam.js')} */
-    const iam = await import(`file://${process.cwd()}/server/iam.js`);
-    /**@type{import('./db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+    const iam = await import('./iam.js');
+    const Config = await import('./db/Config.js');
     const URI_query = routesparameters.parameters;
     const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
     const app_query = URI_query?new URLSearchParams(URI_query):null;
@@ -1003,7 +988,7 @@ const serverREST_API = async (routesparameters) =>{
                 const filePath = '/' + methodObj.operationId.split('.')[0].replaceAll('_','/') + '/' +
                                         methodObj.operationId.split('.')[1] + '.js';
                 const functionRESTAPI = methodObj.operationId.split('.')[2];
-                const moduleRESTAPI = await import(`file://${process.cwd()}${filePath}`);
+                const moduleRESTAPI = await import('../' + filePath);
                 
                 /**
                  * @description Returns resource id if used
@@ -1108,12 +1093,9 @@ const serverREST_API = async (routesparameters) =>{
  */
 const serverStart = async () =>{
     
-    /**@type{import('./db/Log.js')} */
-    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
-    /**@type{import('./db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-    /**@type{import('./db/ORM.js')} */
-    const ORM = await  import(`file://${process.cwd()}/server/db/ORM.js`);
+    const Log = await import('./db/Log.js');
+    const Config = await import('./db/Config.js');
+    const ORM = await  import('./db/ORM.js');
 
     const fs = await import('node:fs');
     const http = await import('node:http');
@@ -1142,8 +1124,7 @@ const serverStart = async () =>{
             await Config.configDefault();
         await ORM.Init();
         
-        /**@type{import('./socket.js')} */
-        const {socketIntervalCheck} = await import(`file://${process.cwd()}/server/socket.js`);
+        const {socketIntervalCheck} = await import('./socket.js');
         socketIntervalCheck();
                                             
         const NETWORK_INTERFACE = Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'NETWORK_INTERFACE'}});
@@ -1179,7 +1160,6 @@ const serverStart = async () =>{
                 }
             });
     }
-    console.log(import.meta);
 };
 export {serverResponse, serverUtilCompression,
         serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppLine , 

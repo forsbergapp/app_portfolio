@@ -95,17 +95,10 @@ const IBAN_validate = iban => {
  *                                                          bank_account_balance:number}[]}>}
  */
 const getStatement = async parameters =>{
-    /**@type{import('../../../../server/db/AppDataEntity.js')} */
-    const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
-
-    /**@type{import('../../../../server/db/AppDataResourceMaster.js')} */
-    const AppDataResourceMaster = await import(`file://${process.cwd()}/server/db/AppDataResourceMaster.js`);
-
-    /**@type{import('../../../../server/db/AppDataResourceDetail.js')} */
-    const AppDataResourceDetail = await import(`file://${process.cwd()}/server/db/AppDataResourceDetail.js`);
-
-    /**@type{import('../../../../server/db/AppDataResourceDetailData.js')} */
-    const AppDataResourceDetailData = await import(`file://${process.cwd()}/server/db/AppDataResourceDetailData.js`);
+    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
+    const AppDataResourceMaster = await import('../../../../server/db/AppDataResourceMaster.js');
+    const AppDataResourceDetail = await import('../../../../server/db/AppDataResourceDetail.js');
+    const AppDataResourceDetailData = await import('../../../../server/db/AppDataResourceDetailData.js');
 
     /**@type{server_db_table_AppDataEntity} */
     const Entity            = AppDataEntity.get({   app_id:parameters.app_id, 

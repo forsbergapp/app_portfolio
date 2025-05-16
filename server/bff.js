@@ -11,25 +11,13 @@
  *          server_bff_parameters} from './types.js'
  */
 
-/**@type{import('./server.js')} */
-const {serverResponse, serverUtilResponseTime, serverUtilCompression, serverUtilNumberValue, serverREST_API} = await import(`file://${process.cwd()}/server/server.js`);
-
-/**@type{import('./db/Config.js')} */
-const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-
-/**@type{import('./db/IamUser.js')} */
-const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
-
-/**@type{import('./db/Log.js')} */
-const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
-/**@type{import('./iam.js')} */
-const {iamAuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.js`);
-/**@type{import('./security.js')} */
-const {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate}= await import(`file://${process.cwd()}/server/security.js`);
-
-/**@type{import('../apps/common/src/common.js')} */
-const app_common= await import(`file://${process.cwd()}/apps/common/src/common.js`);
-
+const {serverResponse, serverUtilResponseTime, serverUtilCompression, serverUtilNumberValue, serverREST_API} = await import('./server.js');
+const Config = await import('./db/Config.js');
+const IamUser = await import('./db/IamUser.js');
+const Log = await import('./db/Log.js');
+const {iamAuthenticateRequest} = await import('./iam.js');
+const {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate}= await import('./security.js');
+const app_common= await import('../apps/common/src/common.js');
 
 const fs = await import('node:fs');
 
@@ -317,8 +305,7 @@ const bffStart = async (req, res) =>{
  * @returns {Promise<(*)>}
  */
  const bffServer = async (app_id, bff_parameters) => {
-    /**@type{import('./iam.js')} */
-    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const  {iamUtilMessageNotAuthorized} = await import('./iam.js');
     return new Promise((resolve, reject) => {
         const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
         if (app_id !=null && bff_parameters.endpoint){

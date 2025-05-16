@@ -51,50 +51,25 @@ const DB_DEMO_FILE              = 'demo_data.json';
 * @returns {Promise.<server_server_response & {result?:{info: {}[]} }>}
 */
 const postDemo = async parameters=> {
-   /**@type{import('./socket.js')} */
-   const {socketClientGet, socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
-   /**@type{import('./db/Log.js')} */
-   const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
-   /**@type{import('./db/ORM.js')} */
-   const {getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
-   /**@type{import('./db/IamUser.js')} */
-   const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
-   /**@type{import('./db/IamUserApp.js')} */
-   const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
-   /**@type{import('./db/IamUserLike.js')} */
-   const IamUserLike = await import(`file://${process.cwd()}/server/db/IamUserLike.js`);
-   /**@type{import('./db/IamUserView.js')} */
-   const IamUserView = await import(`file://${process.cwd()}/server/db/IamUserView.js`);
-   /**@type{import('./db/IamUserFollow.js')} */
-   const IamUserFollow = await import(`file://${process.cwd()}/server/db/IamUserFollow.js`);
-   /**@type{import('./db/IamUserAppDataPost.js')} */
-   const IamUserAppDataPost = await import(`file://${process.cwd()}/server/db/IamUserAppDataPost.js`);
-   /**@type{import('./db/IamUserAppDataPostLike.js')} */
-   const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
-   /**@type{import('./db/IamUserAppDataPostView.js')} */
-   const IamUserAppDataPostView = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostView.js`);
-
-   /**@type{import('./db/App.js')} */
-   const App = await import(`file://${process.cwd()}/server/db/App.js`);
-
-   /**@type{import('./db/AppDataEntity.js')} */
-   const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
-
-   /**@type{import('./db/AppDataResourceMaster.js')} */
-   const AppDataResourceMaster = await import(`file://${process.cwd()}/server/db/AppDataResourceMaster.js`);
-   /**@type{import('./db/AppDataResourceDetail.js')} */
-   const AppDataResourceDetail = await import(`file://${process.cwd()}/server/db/AppDataResourceDetail.js`);
-   /**@type{import('./db/AppDataResourceDetailData.js')} */
-   const AppDataResourceDetailData = await import(`file://${process.cwd()}/server/db/AppDataResourceDetailData.js`);
-
-   /**@type{import('./db/Config.js')} */
-   const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
- 
-   /**@type{import('./server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-
-   /**@type{import('./security.js')} */
-   const Security = await import(`file://${process.cwd()}/server/security.js`);
+   const {socketClientGet, socketAdminSend} = await import('./socket.js');
+   const Log = await import('./db/Log.js');
+   const {getError} = await import('./db/ORM.js');
+   const IamUser = await import('./db/IamUser.js');
+   const IamUserApp = await import('./db/IamUserApp.js');
+   const IamUserLike = await import('./db/IamUserLike.js');
+   const IamUserView = await import('./db/IamUserView.js');
+   const IamUserFollow = await import('./db/IamUserFollow.js');
+   const IamUserAppDataPost = await import('./db/IamUserAppDataPost.js');
+   const IamUserAppDataPostLike = await import('./db/IamUserAppDataPostLike.js');
+   const IamUserAppDataPostView = await import('./db/IamUserAppDataPostView.js');
+   const App = await import('./db/App.js');
+   const AppDataEntity = await import('./db/AppDataEntity.js');
+   const AppDataResourceMaster = await import('./db/AppDataResourceMaster.js');
+   const AppDataResourceDetail = await import('./db/AppDataResourceDetail.js');
+   const AppDataResourceDetailData = await import('./db/AppDataResourceDetailData.js');
+   const Config = await import('./db/Config.js');
+   const {serverUtilNumberValue} = await import('./server.js');
+   const Security = await import('./security.js');
 
    const fs = await import('node:fs');
    /**@type{{[key:string]: string|number}[]} */
@@ -761,14 +736,10 @@ const postDemo = async parameters=> {
 * @returns {Promise.<server_server_response & {result?:{info: {}[]} }>}
 */
 const deleteDemo = async parameters => {
-   /**@type{import('./socket.js')} */
-   const {socketClientGet, socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
-   /**@type{import('./db/Log.js')} */
-   const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
-   /**@type{import('./db/IamUser.js')} */
-   const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
-   /**@type{import('./db/ORM.js')} */
-   const {getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+   const {socketClientGet, socketAdminSend} = await import('./socket.js');
+   const Log = await import('./db/Log.js');
+   const IamUser = await import('./db/IamUser.js');
+   const {getError} = await import('./db/ORM.js');
    
    const result_demo_users = IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/row)=>row.user_level==2);
    if (result_demo_users){
@@ -799,8 +770,7 @@ const deleteDemo = async parameters => {
                    throw getError(parameters.app_id, 500, error);
            });
            //set demo key values to null
-           /**@type{import('./db/AppDataEntity.js')} */
-           const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
+           const AppDataEntity = await import('./db/AppDataEntity.js');
            const result_get = AppDataEntity.get({ app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}});
            if(result_get.result){
                for (const row of result_get.result){

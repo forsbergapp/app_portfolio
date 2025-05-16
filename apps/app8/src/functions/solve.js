@@ -38,8 +38,7 @@ const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 
  * @returns {Promise.<server_server_response & {result?:APP_FUNCTION_cube_solve_return[]}>}
  */
 const cubeSolve = async parameters =>{
-	/**@type{import('../../../../server/iam.js')} */
-	const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+	const  {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
 	if ((parameters.data.model ==0 || parameters.data.model ==1) && parameters.data.preamble == 0 && (parameters.data.temperature == 0 || parameters.data.temperature == 1) && 
 		parameters.data.cube_currentstate !=''){
 		//Algorithm information:
@@ -53,13 +52,11 @@ const cubeSolve = async parameters =>{
 		//solver 2
 		//Source:https://github.com/stringham/rubiks-solver
 		//algorithm: Thistlewaite
-		/**@type{import('./solver2/index.js')} */
 		const cuberSolver2 = await import('./solver2/index.js');
 
 		//solver 3
 		//Source:https://github.com/slammayjammay/rubiks-cube-solver
 		//algorithm: CFOP / Fridrich method  (Cross – F2L – OLL – PLL)
-		/**@type{import('./solver3/index.js')} */
 		const {default:cuberSolver3} = await import('./solver3/index.js');
 		//Only robot can solve to given goal state at the moment
 		if (parameters.data.cube_goalstate)
@@ -69,8 +66,7 @@ const cubeSolve = async parameters =>{
 		switch (parameters.data.model){
 			case 0:{
 				//Model robot can be slow, send PROGRESS using server side event				
-				/**@type{import('../../../../server/socket.js')} */
-				const {socketAppServerFunctionSend} = await import(`file://${process.cwd()}/server/socket.js`);
+				const {socketAppServerFunctionSend} = await import('../../../../server/socket.js');
 
 				const timer1 = Date.now();
 				const solver2 = new cuberSolver2.RubiksCubeSolver();	

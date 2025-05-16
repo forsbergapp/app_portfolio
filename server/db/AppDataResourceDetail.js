@@ -6,14 +6,10 @@
  *          server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
 
-/**@type{import('./ORM.js')} */
-const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
-/**@type{import('./AppDataEntity.js')} */
-const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
-/**@type{import('./AppDataEntityResource.js')} */
-const AppDataEntityResource = await import(`file://${process.cwd()}/server/db/AppDataEntityResource.js`);
-/**@type{import('./AppDataResourceMaster.js')} */
-const AppDataResourceMaster = await import(`file://${process.cwd()}/server/db/AppDataResourceMaster.js`);
+const ORM = await import('./ORM.js');
+const AppDataEntity = await import('./AppDataEntity.js');
+const AppDataEntityResource = await import('./AppDataEntityResource.js');
+const AppDataResourceMaster = await import('./AppDataResourceMaster.js');
 
 /**
  * @name get

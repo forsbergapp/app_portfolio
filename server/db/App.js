@@ -6,8 +6,7 @@
  *          server_config_apps_with_db_columns} from '../types.js'
  */
 
-/**@type{import('./ORM.js')} */
-const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import('./ORM.js');
 
 /**
  * @name get
@@ -37,13 +36,9 @@ const get = parameters =>{
 * @returns {Promise.<server_server_response & {result?:server_config_apps_with_db_columns[] }>}
 */
 const getViewInfo = async parameters =>{
-    /**@type{import('./AppTranslation.js')} */
-    const AppTranslation = await import(`file://${process.cwd()}/server/db/AppTranslation.js`);
-    /**@type{import('./Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-
-    /**@type{import('../server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    const AppTranslation = await import('./AppTranslation.js');
+    const Config = await import('./Config.js');
+    const {serverUtilNumberValue} = await import('../server.js');
     
     const fs = await import('node:fs');
 

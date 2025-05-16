@@ -2,7 +2,6 @@
  * @module apps/app8/src/functions/solver3/utils
  */
 
-/**@type{import('../module/gl-vec3/index.js')} */
 const {cross} = await import('../module/gl-vec3/index.js');
 
 import { Face } from '../models/Face.js';

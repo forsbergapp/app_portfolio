@@ -7,11 +7,8 @@
  *          server_db_common_result_delete,
  *          server_db_common_result_insert} from '../types.js'
  */
-/**@type{import('./ORM.js')} */
-const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
-
-/**@type{import('./IamUserApp.js')} */
-const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
+const ORM = await import('./ORM.js');
+const IamUserApp = await import('./IamUserApp.js');
 /**
  * @name get
  * @description Get user account app

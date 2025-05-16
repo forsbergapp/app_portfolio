@@ -5,8 +5,8 @@
  *          server_db_table_MessageQueueError} from '../types.js'
  */
 
-/**@type{import('./ORM.js')} */
-const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
+
+const ORM = await import('./ORM.js');
 
 /**
  * @name get

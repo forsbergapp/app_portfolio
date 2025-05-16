@@ -5,10 +5,8 @@
  *          server_db_table_AppParameter} from '../types.js'
  */
 
-/**@type{import('./ORM.js')} */
-const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
-/**@type{import('../server.js')} */
-const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const ORM = await import('./ORM.js');
+const {serverUtilNumberValue} = await import('../server.js');
 
 /**
  * @name get

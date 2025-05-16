@@ -5,13 +5,10 @@
  *          server_db_table_IamUserAppDataPost,server_db_table_IamUser, server_db_table_IamUserApp, server_db_table_IamUserAppDataPostLike,
  *          server_db_common_result_insert,server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
-/**@type{import('./ORM.js')} */
-const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
-/**@type{import('../server.js')} */
-const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('./IamUserApp.js')} */
-const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
+const ORM = await import('./ORM.js');
+const {serverUtilNumberValue} = await import('../server.js');
+const IamUserApp = await import('./IamUserApp.js');
 /**
  * @name get
  * @description Get record
@@ -57,12 +54,9 @@ const get = parameters =>{
  *                                                       liked:number}[] }>}
  */
 const getViewProfileUserPosts = async parameters =>{
-    /**@type{import('./IamUserApp.js')} */
-    const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
-    /**@type{import('./IamUserAppDataPostLike.js')} */
-    const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
-    /**@type{import('./IamUserAppDataPostView.js')} */
-    const IamUserAppDataPostView = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostView.js`);
+    const IamUserApp = await import('./IamUserApp.js');
+    const IamUserAppDataPostLike = await import('./IamUserAppDataPostLike.js');
+    const IamUserAppDataPostView = await import('./IamUserAppDataPostView.js');
     /**@type{server_server_response & {result?:server_db_table_IamUserAppDataPost[]}} */
     const result = get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id, iam_user_id:parameters.resource_id}});
     if (result.result)
@@ -118,8 +112,7 @@ const getViewProfileUserPosts = async parameters =>{
                                 data:{  iam_user_id:parameters.resource_id, 
                                         data_app_id:parameters.app_id}}).result;
 
-                            /**@type{import('./IamUserAppDataPostLike.js')} */
-    const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
+    const IamUserAppDataPostLike = await import('./IamUserAppDataPostLike.js');
     return {result:{
                     count_user_post_likes:IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
                                                                         resource_id:null, 
@@ -164,15 +157,12 @@ const getViewProfileUserPosts = async parameters =>{
  *                                                      count:number}[] }>}
  */
 const getViewProfileStatPost = async parameters =>{
-    /**@type{import('./IamUserAppDataPostLike.js')} */
-    const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
-    /**@type{import('./IamUserAppDataPostView.js')} */
-    const IamUserAppDataPostView = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostView.js`);
+    const IamUserAppDataPostLike = await import('./IamUserAppDataPostLike.js');
+    const IamUserAppDataPostView = await import('./IamUserAppDataPostView.js');
     if (parameters.data.statchoice==null)
         return ORM.getError(parameters.app_id, 400);
     else{
-        /**@type{import('./IamUser.js')} */
-        const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
+        const IamUser = await import('./IamUser.js');
         return {result:IamUser.get(parameters.app_id, null).result
                         .map((/**@type{server_db_table_IamUser}*/row)=>{
                             return {
@@ -217,13 +207,11 @@ const getViewProfileStatPost = async parameters =>{
  *                                                      username:server_db_table_IamUser['username']}[] }>}
  */
 const getViewProfileUserPostDetail = async parameters =>{
-    /**@type{import('./IamUserAppDataPostLike.js')} */
-    const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
+    const IamUserAppDataPostLike = await import('./IamUserAppDataPostLike.js');
     if (parameters.data.detailchoice==null)
         return ORM.getError(parameters.app_id, 400);
     else{
-        /**@type{import('./IamUser.js')} */
-        const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
+        const IamUser = await import('./IamUser.js');
         const result_IamUserAppDataPost = serverUtilNumberValue(parameters.data.detailchoice)==6?
                                             null:
                                                 get({   app_id:parameters.app_id, 

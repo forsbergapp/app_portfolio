@@ -38,6 +38,7 @@ const it = async (itDescription, fn, timeout=null) =>{
                                     new Promise((resolve, reject)=>
                                         setTimeout(()=>reject('TIMEOUT'), timeout||5000))
                                 ])
+                    .catch(error=>[expect('Error', error).toBe(null)])
                                 
    };
    

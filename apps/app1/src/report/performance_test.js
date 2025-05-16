@@ -86,14 +86,10 @@ const template = props => ` <div id='report'>
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    /**@type{import('../../../../server/server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-    /**@type{import('../../../common/src/common.js')} */
-    const {commonRegistryAppModule} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-    /**@type{import('../../../../server/db/AppModuleQueue.js')} */
-    const AppModuleQueue = await import(`file://${process.cwd()}/server/db/AppModuleQueue.js`);
-    /**@type{import('../../../../server/db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+    const {serverUtilNumberValue} = await import('../../../../server/server.js');
+    const {commonRegistryAppModule} = await import('../../../common/src/common.js');
+    const AppModuleQueue = await import('../../../../server/db/AppModuleQueue.js');
+    const Config = await import('../../../../server/db/Config.js');
 
     const HTTPS_ENABLE = Config.get({app_id:props.app_id,data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_ENABLE'}});
     const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';

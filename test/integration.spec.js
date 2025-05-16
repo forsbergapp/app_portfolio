@@ -20,10 +20,8 @@ const test = async t =>
     [await t.describe('Integration test, setting DB cache', async ()=> {
         return await new Promise(resolve=>
         t.it('should return values when using ORM pattern for Config', async () =>{
-            /**@type{import('../server/server.js')} */
-            const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-            /**@type{import('../server/db/Config.js')} */
-            const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+            const {serverUtilNumberValue} = await import('../server/server.js');
+            const Config = await import('../server/db/Config.js');
         
             const HTTPS_ENABLE = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_ENABLE'}});
             const HOST = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER', parameter:'HOST'}});
@@ -44,15 +42,13 @@ const test = async t =>
     await t.describe('Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps', async ()=> {
         return await new Promise(resolve=>
         t.it('should return values', async () =>{
-            /**@type{import('../server/db/App.js')} */
-            const App = await import(`file://${process.cwd()}/server/db/App.js`);
+            const App = await import('../server/db/App.js');
 
             /**@type{server_db_table_App[]}*/
             const apps = App.get({app_id:0, resource_id:null}).result;
 
             for (const app of apps){
-                /**@type{import('../server/bff.js')} */
-                const bff = await import(`file://${process.cwd()}/server/bff.js`);
+                const bff = await import('../server/bff.js');
                 /**@type{server_bff_parameters}*/
                 const parametersBFF = { endpoint:'SERVER',
                     host:null,
@@ -77,13 +73,13 @@ const test = async t =>
                 else
                     return [
                         /**@ts-ignore */
-                        t.expect('Latitude',    result.result.latitude)['not.toBe'](null),
+                        t.expect('Latitude',    result.result?.latitude)['not.toBe'](null),
                         /**@ts-ignore */
-                        t.expect('Longitude',   result.result.longitude)['not.toBe'](null),
+                        t.expect('Longitude',   result.result?.longitude)['not.toBe'](null),
                         /**@ts-ignore */
-                        t.expect('Latitude',    result.result.latitude)['not.toBeUndefined'](),
+                        t.expect('Latitude',    result.result?.latitude)['not.toBeUndefined'](),
                         /**@ts-ignore */
-                        t.expect('Longitude',   result.result.longitude)['not.toBeUndefined']()
+                        t.expect('Longitude',   result.result?.longitude)['not.toBeUndefined']()
                     ];
             }
         }).then(result=>resolve(result)));
@@ -91,17 +87,15 @@ const test = async t =>
     await t.describe('Integration test, server function worldcities random city called from BFF and from all apps', async ()=> {    
         return await new Promise(resolve=>
         t.it('should return values ', async () =>{
-            /**@type{import('../server/db/App.js')} */
-            const App = await import(`file://${process.cwd()}/server/db/App.js`);
-            /**@type{import('../server/db/Config.js')} */
-            const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+            const App = await import('../server/db/App.js');
+            const Config = await import('../server/db/Config.js');
+            const {serverUtilNumberValue} = await import('../server/server.js');
+            const bff = await import('../server/bff.js');
+
             /**@type{server_db_table_App[]}*/
             const apps = App.get({app_id:0, resource_id:null}).result;
-            /**@type{import('../server/server.js')} */
-            const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-            for (const app of apps){
-                /**@type{import('../server/bff.js')} */
-                const bff = await import(`file://${process.cwd()}/server/bff.js`);
+            
+            for (const app of apps){    
                 /**@type{server_bff_parameters}*/
                 const parametersBFF = { endpoint:'APP_ID',
                     host:null,

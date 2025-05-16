@@ -6,8 +6,7 @@
  *          server_db_table_AppModuleQueue} from '../types.js'
  */
 
-/**@type{import('./ORM.js')} */
-const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import('./ORM.js');
 
 /**
  * @name get
@@ -37,8 +36,7 @@ const get = parameters =>{
  * @returns {Promise.<server_server_response & {result?:{sendfile:String} }>}
  */
 const getResult = async parameters => {
-    /**@type{import('./Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+    const Config = await import('./Config.js');
     return {sendfile:process.cwd() + `/data/${Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'PATH_JOBS'}})}/${parameters.resource_id}.html`, type:'HTML'};
 };
 /**
@@ -94,8 +92,7 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postResult = async (app_id, id, result) =>{
-    /**@type{import('./Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+    const Config = await import('./Config.js');
     const fs = await import('node:fs');
     await fs.promises.writeFile(process.cwd() + `/data/${Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'PATH_JOBS'}})}/${id}.html`, result,  'utf8');
     return {result:{affectedRows:1}, type:'JSON'};

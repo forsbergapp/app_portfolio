@@ -221,8 +221,7 @@ const securityTOTPValidate = async (totp_value, otp_key) =>totp_value == (await 
  * @returns {Promise.<string>}
  */
 const securityPasswordCreate = async (app_id, password) => {
-    /**@type{import('./db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+    const Config = await import('./db/Config.js');
     const AppPasswordEncryptionKey = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ADMIN_PASSWORD_ENCRYPTION_KEY'}});
     const AppPasswordInitializationVector = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ADMIN_PASSWORD_INIT_VECTOR'}});
     const cipher = Crypto.createCipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
@@ -248,8 +247,7 @@ const securityPasswordCreate = async (app_id, password) => {
  * @returns {Promise.<boolean>}
  */
 const securityPasswordCompare = async (app_id, password, compare_password) =>{
-    /**@type{import('./db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+    const Config = await import('./db/Config.js');
     //admin uses different parameters than apps
     const AppPasswordEncryptionKey = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ADMIN_PASSWORD_ENCRYPTION_KEY'}});
     const AppPasswordInitializationVector = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ADMIN_PASSWORD_INIT_VECTOR'}});

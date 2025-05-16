@@ -27,26 +27,13 @@
  */
 const paymentRequestUpdate = async parameters =>{
 
-    /**@type{import('../../../../server/iam.js')} */
-    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-
-    /**@type{import('./payment_request_create.js')} */
+    const {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
     const {getToken} = await import('./payment_request_create.js');
-    
-    /**@type{import('../../../../server/server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-
-    /**@type{import('../../../../server/db/AppDataEntity.js')} */
-    const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
-
-    /**@type{import('../../../../server/db/AppDataResourceMaster.js')} */
-    const AppDataResourceMaster = await import(`file://${process.cwd()}/server/db/AppDataResourceMaster.js`);
-
-    /**@type{import('../../../../server/db/AppDataResourceDetail.js')} */
-    const AppDataResourceDetail = await import(`file://${process.cwd()}/server/db/AppDataResourceDetail.js`);
-
-    /**@type{import('../../../../server/db/AppDataResourceDetailData.js')} */
-    const AppDataResourceDetailData = await import(`file://${process.cwd()}/server/db/AppDataResourceDetailData.js`);
+    const {serverUtilNumberValue} = await import('../../../../server/server.js');
+    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
+    const AppDataResourceMaster = await import('../../../../server/db/AppDataResourceMaster.js');
+    const AppDataResourceDetail = await import('../../../../server/db/AppDataResourceDetail.js');
+    const AppDataResourceDetailData = await import('../../../../server/db/AppDataResourceDetailData.js');
 
     /**@type{server_db_table_AppDataEntity} */
     const Entity    = AppDataEntity.get({   app_id:parameters.app_id, 

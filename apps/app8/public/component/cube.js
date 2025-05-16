@@ -144,7 +144,6 @@ const component = async props => {
         solution:'💡',
         solution_list:'∞'
     };
-    /**@type {import('./cube_lib.js')}*/
     const cube_lib = await import('./cube_lib.js');
    
     /**
