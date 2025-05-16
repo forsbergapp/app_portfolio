@@ -104,8 +104,9 @@ const component = async props => {
     let finished = 0;
     /**@type{test_spec_result[]} */
     const specs = [];
+    const {serverProcess} = await import('../../../../server/server.js');
     /**@type {test_specrunner} */
-    const specrunner = await fs.promises.readFile(`${process.cwd()}/test/specrunner.json`, 'utf8')
+    const specrunner = await fs.promises.readFile(`${serverProcess.cwd()}/test/specrunner.json`, 'utf8')
                         .then((/**@type{string}*/result)=>JSON.parse(result));
     //run in random order if RANDOM parameter = '1'
     if (params.filter(row=>'RANDOM' in row)[0].RANDOM=='1')

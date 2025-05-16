@@ -18,7 +18,7 @@ const Log = await import('./db/Log.js');
 const {iamAuthenticateRequest} = await import('./iam.js');
 const {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate}= await import('./security.js');
 const app_common= await import('../apps/common/src/common.js');
-
+const {serverProcess} = await import('./server.js');
 const fs = await import('node:fs');
 
 
@@ -112,7 +112,7 @@ const bffInit = async (req, res) =>{
             else{
 
                 //set headers
-                res.setHeader('x-response-time', process.hrtime());
+                res.setHeader('x-response-time', serverProcess.hrtime());
                 req.headers['x-request-id'] =  securityUUIDCreate().replaceAll('-','');
                 if (req.headers.authorization)
                     req.headers['x-correlation-id'] = securityRequestIdCreate();
@@ -174,6 +174,7 @@ const bffStart = async (req, res) =>{
     const config_SERVER = Config.get({app_id:0, data:{object:'ConfigServer'}});
     /**@type{server_db_config_server_server[]} */
     const config_SERVER_SERVER = config_SERVER.SERVER;
+    const {serverProcess} = await import('./server.js');
     
     //if first time, when no user exists, then redirect everything to admin
     if (IamUser.get(app_common.commonAppHost(req.headers.host ?? '')??0, null).result.length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
@@ -186,7 +187,7 @@ const bffStart = async (req, res) =>{
         if (config_SERVER_SERVER.filter(row=>'HTTPS_SSL_VERIFICATION' in row)[0].HTTPS_SSL_VERIFICATION=='1'){
             if (req.originalUrl.startsWith(config_SERVER_SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH ?? '')){
                 res.type('text/plain');
-                res.write(await fs.promises.readFile(`${process.cwd()}${req.originalUrl}`, 'utf8'));
+                res.write(await fs.promises.readFile(`${serverProcess.cwd()}${req.originalUrl}`, 'utf8'));
                 return {reason:'SEND', redirect:null};
             }
             else

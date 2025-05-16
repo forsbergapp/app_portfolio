@@ -39,7 +39,7 @@ const getViewInfo = async parameters =>{
     const AppTranslation = await import('./AppTranslation.js');
     const Config = await import('./Config.js');
     const {serverUtilNumberValue} = await import('../server.js');
-    
+    const {serverProcess} = await import('../server.js');
     const fs = await import('node:fs');
 
     /**@type{server_db_table_App[]}*/
@@ -47,7 +47,7 @@ const getViewInfo = async parameters =>{
                     //do not show common app id
                     .filter((/**@type{server_db_table_App}*/app)=>app.id != serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}})));
     for (const app of apps){
-        const image = await fs.promises.readFile(`${process.cwd()}${app.path + app.logo}`);
+        const image = await fs.promises.readFile(`${serverProcess.cwd()}${app.path + app.logo}`);
         /**@ts-ignore */
         app.logo        = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
        }

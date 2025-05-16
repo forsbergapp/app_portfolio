@@ -70,12 +70,13 @@ const postDemo = async parameters=> {
    const Config = await import('./db/Config.js');
    const {serverUtilNumberValue} = await import('./server.js');
    const Security = await import('./security.js');
+   const {serverProcess} = await import('./server.js');
 
    const fs = await import('node:fs');
    /**@type{{[key:string]: string|number}[]} */
    const install_result = [];
    install_result.push({'start': new Date().toISOString()});
-   const fileBuffer = await fs.promises.readFile(`${process.cwd()}${DB_DEMO_PATH}${DB_DEMO_FILE}`, 'utf8');
+   const fileBuffer = await fs.promises.readFile(`${serverProcess.cwd()}${DB_DEMO_PATH}${DB_DEMO_FILE}`, 'utf8');
    /**@type{[server_db_database_demo_data]}*/
    const demo_users = JSON.parse(fileBuffer.toString()).demo_users;
    //create social records
@@ -341,7 +342,7 @@ const postDemo = async parameters=> {
                else
                    settings_header_image = `${demo_user.username}.webp`;
                /**@type{Buffer} */
-               const image = await fs.promises.readFile(`${process.cwd()}${DB_DEMO_PATH}${settings_header_image}`);
+               const image = await fs.promises.readFile(`${serverProcess.cwd()}${DB_DEMO_PATH}${settings_header_image}`);
                /**@ts-ignore */
                const image_string = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
                //update settings with loaded image into BASE64 format

@@ -25,6 +25,7 @@ const Config = await import('../../../server/db/Config.js');
 const IamUser = await import('../../../server/db/IamUser.js');
 const Log = await import('../../../server/db/Log.js');
 const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import('../../../server/server.js');
+const {serverProcess} = await import('../../../server/server.js');
 
 const fs = await import('node:fs');
 
@@ -266,20 +267,22 @@ const commonBFE = async parameters =>{
  * @returns {Promise.<server_server_response>}
  */
 const commonAssetfile = parameters =>{
+    
     return new Promise((resolve)=>{
                                                             
         const common_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}));
+        
         if (common_app_id!=null){
             switch (parameters.url.toLowerCase().substring(parameters.url.lastIndexOf('.'))){
                 case '.css':{
-                    resolve({type:'CSS', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'CSS', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.js':{
                     switch (parameters.url){
                         case '/modules/react/react-dom.development.js':
                         case '/modules/react/react.development.js':{
-                            fs.promises.readFile(`${process.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
+                            fs.promises.readFile(`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
                                 if (parameters.url == '/modules/react/react-dom.development.js'){
                                     modulefile = 'let ReactDOM;\r\n' + modulefile;                                
                                     modulefile = modulefile.replace(  'exports.version = ReactVersion;',
@@ -298,14 +301,14 @@ const commonAssetfile = parameters =>{
                             break;
                         }
                         case '/modules/leaflet/leaflet-src.esm.js':{
-                            fs.promises.readFile(`${process.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
+                            fs.promises.readFile(`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
                                 modulefile = modulefile.replace(  '//# sourceMappingURL=','//');
                                 resolve({type:'JS', result:modulefile});
                             });
                             break;
                         }
                         case '/modules/easy.qrcode/easy.qrcode.js':{
-                            fs.promises.readFile(`${process.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
+                            fs.promises.readFile(`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
                                 modulefile = modulefile.replace(  'var QRCode;','');
     
                                 modulefile =    'let {ctx} = await import("./canvas2svg.js");\r\n' +
@@ -323,7 +326,7 @@ const commonAssetfile = parameters =>{
                             break;
                         }
                         case '/modules/easy.qrcode/canvas2svg.js':{
-                            fs.promises.readFile(`${process.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
+                            fs.promises.readFile(`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
                                 modulefile =  'let ctx;\r\n' + modulefile;
                                 modulefile = modulefile.replace('var STYLES, ctx, CanvasGradient, CanvasPattern, namedEntities;',
                                                                 'var STYLES, CanvasGradient, CanvasPattern, namedEntities;');
@@ -336,36 +339,36 @@ const commonAssetfile = parameters =>{
                         }
                         case '/apps/common_types.js':{
                             //in development another path is used, return correct path in app
-                            resolve({type:'JS', sendfile:`${process.cwd()}/apps/common_types.js`});
+                            resolve({type:'JS', sendfile:`${serverProcess.cwd()}/apps/common_types.js`});
                             break;
                         }
                         default:
-                            resolve({type:'JS', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                            resolve({type:'JS', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
                     }
                     break;
                 }
                 case '.html':{
-                    resolve({type:'HTML', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'HTML', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.webp':{
-                    resolve({type:'WEBP', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'WEBP', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.png':{
-                    resolve({type:'PNG', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'PNG', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.woff2':{
-                    resolve({type:'WOFF', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'WOFF', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.ttf':{
-                    resolve({type:'TTF', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'TTF', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.json':{
-                    resolve({type:'JSON', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'JSON', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 default:{

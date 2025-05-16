@@ -5,6 +5,7 @@
 /**
  * @import {server_req_method, server_REST_API_parameters, server_server_response, server_server_response_type, server_server_error, server_server_req, server_server_res, server_server_req_id_number} from './types.js'
  */
+
 const zlib = await import('node:zlib');
 
 /**
@@ -564,7 +565,7 @@ const serverResponse = async parameters =>{
  * @returns {number}
  */
 const serverUtilResponseTime = (res) => {
-    const diff = process.hrtime(res.getHeader('x-response-time'));
+    const diff = serverProcess.hrtime(res.getHeader('x-response-time'));
     return diff[0] * 1e3 + diff[1] * 1e-6;
 };    
 
@@ -576,7 +577,8 @@ const serverUtilResponseTime = (res) => {
  * @returns {string}
  */
 const serverUtilAppFilename = module =>{
-    const from_app_root = ('file:///' + process.cwd().replace(/\\/g, '/')).length;
+    
+    const from_app_root = ('file:///' + serverProcess.cwd()).length;
     return module.substring(from_app_root);
 };
 /**
@@ -1101,8 +1103,8 @@ const serverStart = async () =>{
     const http = await import('node:http');
     const https = await import('node:https');
 
-    process.env.TZ = 'UTC';
-    process.on('uncaughtException', err =>{
+    serverProcess.env.TZ = 'UTC';
+    serverProcess.on('uncaughtException', err =>{
         console.log(err);
         Log.post({   app_id:0, 
             data:{  object:'LogServerError', 
@@ -1110,7 +1112,7 @@ const serverStart = async () =>{
                 }
             });
     });
-    process.on('unhandledRejection', (/**@type{*}*/reason) =>{
+    serverProcess.on('unhandledRejection', (/**@type{*}*/reason) =>{
         console.log(reason.stack ?? reason.message ?? reason);
         Log.post({   app_id:0, 
             data:{  object:'LogServerError', 
@@ -1139,8 +1141,8 @@ const serverStart = async () =>{
         if (Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_ENABLE'}})=='1'){
             //START HTTPS SERVER
             //SSL files for HTTPS
-            const HTTPS_KEY = await fs.promises.readFile(process.cwd() + '/data' + Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_KEY'}}), 'utf8');
-            const HTTPS_CERT = await fs.promises.readFile(process.cwd() + '/data' + Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_CERT'}}), 'utf8');
+            const HTTPS_KEY = await fs.promises.readFile(serverProcess.cwd() + '/data' + Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_KEY'}}), 'utf8');
+            const HTTPS_CERT = await fs.promises.readFile(serverProcess.cwd() + '/data' + Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_CERT'}}), 'utf8');
             const options = {
                 key: HTTPS_KEY.toString(),
                 cert: HTTPS_CERT.toString()
@@ -1160,7 +1162,38 @@ const serverStart = async () =>{
                 }
             });
     }
+    
 };
+class ClassServerProcess {
+    cwd = () => import.meta.dirname
+                .replaceAll('\\','/')
+                .replaceAll('/server','');
+
+    uptime = () => process.uptime();
+    memoryUsage = () => {
+        return {rss:process.memoryUsage().rss,
+                heapTotal:process.memoryUsage().heapTotal,
+                heapUsed:process.memoryUsage().heapUsed,
+                external:process.memoryUsage().external,
+                arrayBuffers:process.memoryUsage().arrayBuffers
+        };
+    };
+    /**
+     * @param {*} [value]
+     */
+    hrtime = value => process.hrtime(value);
+    /**
+     * @param {string|symbol} event
+     * @param {(...args: any[]) => void} listener
+     */
+    on = (event, listener) => process.on(event, listener);
+
+    argv = process.argv;
+    env = process.env;
+    version = process.version;
+}
+const serverProcess = new ClassServerProcess();
 export {serverResponse, serverUtilCompression,
         serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppLine , 
-        serverREST_API, serverStart };
+        serverREST_API, serverStart,
+        serverProcess};
