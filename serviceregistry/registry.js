@@ -34,6 +34,7 @@ const registryConfigServices = servicename =>{
  *                      options?:object}>}
  */
 const registryMicroServiceServer = async (service) =>{
+    const {serverProcess} = await import('../server/server.js');
     const http = await import('node:http');
     const https = await import('node:https');
     const fs = await import('node:fs');
@@ -46,8 +47,8 @@ const registryMicroServiceServer = async (service) =>{
             server  : https,
             port	: registryConfigServices(service).HTTPS_PORT,
             options : {
-                key: env_key_path?await fs.promises.readFile(process.cwd() + env_key_path, 'utf8'):null,
-                cert: env_key_path?await fs.promises.readFile(process.cwd() + env_cert_path, 'utf8'):null
+                key: env_key_path?await fs.promises.readFile(serverProcess.cwd() + env_key_path, 'utf8'):null,
+                cert: env_key_path?await fs.promises.readFile(serverProcess.cwd() + env_cert_path, 'utf8'):null
             }
         };
     else

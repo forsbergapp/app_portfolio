@@ -145,6 +145,7 @@ const template = props =>`
 * @returns {Promise.<string>}
 */
 const component = async props => {
+    const {serverProcess} = await import('../../../../server/server.js');
     const fs = await import('node:fs');
     /**
      * Return description tag for given operationId
@@ -157,7 +158,7 @@ const component = async props => {
             const filePath = '/' + operationId.split('.')[0].replaceAll('_','/') + '/' +
                                    operationId.split('.')[1] + '.js';
             const functionRESTAPI = operationId.split('.')[2];
-            const file = await fs.promises.readFile(`${process.cwd()}${filePath}`, 'utf8').then(file=>file.toString().replaceAll('\r\n','\n'))
+            const file = await fs.promises.readFile(`${serverProcess.cwd()}${filePath}`, 'utf8').then(file=>file.toString().replaceAll('\r\n','\n'))
                                 .catch(()=>null);
             const regexp_module_function = /\/\*\*([\s\S]*?)\*\//g;
             let match;

@@ -57,8 +57,8 @@ const get = parameters => {
  */
 const configDefault = async () => {
     const {securitySecretCreate}= await import('../security.js');
+    const {serverProcess} = await import('../server.js');
     const fs = await import('node:fs');
-    const serverProcessCWD = process.cwd();
     //read all default files
     /**
      * @type{[  [server_DbObject, server_db_document_ConfigServer],
@@ -81,7 +81,7 @@ const configDefault = async () => {
      *       ]}
      */
     const config_obj = [
-                            ['ConfigServer',                    await fs.promises.readFile(serverProcessCWD + '/server/install/default/ConfigServer.json')
+                            ['ConfigServer',                    await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ConfigServer.json')
                                                                         .then(filebuffer=>{
                                                                             const config_server = JSON.parse(filebuffer.toString());
                                                                             //generate secrets
@@ -104,19 +104,19 @@ const configDefault = async () => {
                                                                             config_server.METADATA.MODIFIED      = '';
                                                                             return config_server;
                                                                         })],
-                            ['ConfigRestApi',                   await fs.promises.readFile(serverProcessCWD + '/server/install/default/ConfigRestApi.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['ConfigIamPolicy',                 await fs.promises.readFile(serverProcessCWD + '/server/install/default/ConfigIamPolicy.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['ConfigMicroserviceServices',      await fs.promises.readFile(serverProcessCWD + '/server/install/default/ConfigMicroserviceServices.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['IamUser',                         await fs.promises.readFile(serverProcessCWD + '/server/install/default/IamUser.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['App',                             await fs.promises.readFile(serverProcessCWD + '/server/install/default/App.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppDataEntityResource',           await fs.promises.readFile(serverProcessCWD + '/server/install/default/AppDataEntityResource.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppDataEntity',                   await fs.promises.readFile(serverProcessCWD + '/server/install/default/AppDataEntity.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppDataResourceDetailData',       await fs.promises.readFile(serverProcessCWD + '/server/install/default/AppDataResourceDetailData.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppDataResourceDetail',           await fs.promises.readFile(serverProcessCWD + '/server/install/default/AppDataResourceDetail.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppDataResourceMaster',           await fs.promises.readFile(serverProcessCWD + '/server/install/default/AppDataResourceMaster.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppModule',                       await fs.promises.readFile(serverProcessCWD + '/server/install/default/AppModule.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppParameter',                    await fs.promises.readFile(serverProcessCWD + '/server/install/default/AppParameter.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppSecret',                       await fs.promises.readFile(serverProcessCWD + '/server/install/default/AppSecret.json')
+                            ['ConfigRestApi',                   await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ConfigRestApi.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['ConfigIamPolicy',                 await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ConfigIamPolicy.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['ConfigMicroserviceServices',      await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ConfigMicroserviceServices.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['IamUser',                         await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/IamUser.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['App',                             await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/App.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppDataEntityResource',           await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppDataEntityResource.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppDataEntity',                   await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppDataEntity.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppDataResourceDetailData',       await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppDataResourceDetailData.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppDataResourceDetail',           await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppDataResourceDetail.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppDataResourceMaster',           await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppDataResourceMaster.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppModule',                       await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppModule.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppParameter',                    await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppParameter.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppSecret',                       await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppSecret.json')
                                                                         .then(filebuffer=>
                                                                         //generate secrets
                                                                         JSON.parse(filebuffer.toString())
@@ -129,9 +129,9 @@ const configDefault = async () => {
                                                                             row.common_app_access_verification_secret = securitySecretCreate();
                                                                             return row;
                                                                         }))],
-                            ['AppData',                         await fs.promises.readFile(serverProcessCWD + '/server/install/default/AppData.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppTranslation',                  await fs.promises.readFile(serverProcessCWD + '/server/install/default/AppTranslation.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['DbObjects',                       await fs.promises.readFile(serverProcessCWD + '/server/install/default/DbObjects.json')
+                            ['AppData',                         await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppData.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppTranslation',                  await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppTranslation.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['DbObjects',                       await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/DbObjects.json')
                                                                         .then(filebuffer=>
                                                                             JSON.parse(filebuffer.toString())
                                                                         )]

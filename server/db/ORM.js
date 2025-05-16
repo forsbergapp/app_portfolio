@@ -41,6 +41,7 @@
  * @import {Dirent} from 'node:fs'
  */
 
+const {serverProcess} = await import('../server.js');
 const fs = await import('node:fs');
 
 /**
@@ -201,7 +202,7 @@ const rollback = (file, transaction_id)=>{
  * @function
  * @returns {Promise.<Dirent[]>}
  */
-const getFsDir = async () => await fs.promises.readdir(`${process.cwd()}${DB_DIR.db}`,{ withFileTypes: true });
+const getFsDir = async () => await fs.promises.readdir(`${serverProcess.cwd()}${DB_DIR.db}`,{ withFileTypes: true });
 
 /**
  * @name getFsFile
@@ -210,7 +211,7 @@ const getFsDir = async () => await fs.promises.readdir(`${process.cwd()}${DB_DIR
  * @param {boolean} table
  * @returns {Promise.<*>}
  */
-const getFsFile = async (filepath, table=false) => fs.promises.readFile(process.cwd() + filepath, 'utf8')
+const getFsFile = async (filepath, table=false) => fs.promises.readFile(serverProcess.cwd() + filepath, 'utf8')
                                                     .then(result=>
                                                         JSON.parse(result==''?(table?'[]':'{}'):result)
                                                     )
@@ -225,7 +226,7 @@ const getFsFile = async (filepath, table=false) => fs.promises.readFile(process.
 const getFsDataExists = async () => {
     
     try {
-        await fs.promises.access(process.cwd() + '/data');
+        await fs.promises.access(serverProcess.cwd() + '/data');
         return true;
     } catch (error) {
         return false;
@@ -276,7 +277,7 @@ const updateFsFile = async (object, transaction_id, file_content, filepath=null)
  * @param {boolean} table
  * @returns{Promise.<void>}
  */
-const postFsFile = async (path, content, table) => await fs.promises.writeFile(process.cwd() + path, 
+const postFsFile = async (path, content, table) => await fs.promises.writeFile(serverProcess.cwd() + path, 
                                                     table?
                                                         //table, save records in new row and compact format
                                                         '[\n' + content.map((/**@type{*}*/row)=>JSON.stringify(row)).join(',\n') + '\n]':
@@ -292,13 +293,13 @@ const postFsFile = async (path, content, table) => await fs.promises.writeFile(p
  */
 const postFsDir = async paths => {
     const mkdir = async (/**@type{string} */dir) =>{
-        await fs.promises.mkdir(process.cwd() + dir)
+        await fs.promises.mkdir(serverProcess.cwd() + dir)
         .catch((error)=>{
             throw error;
         });
     };
     for (const dir of paths){
-        await fs.promises.access(process.cwd() + dir)
+        await fs.promises.access(serverProcess.cwd() + dir)
         .catch(()=>{
             mkdir(dir);  
         });
@@ -873,7 +874,7 @@ const getViewInfo = async parameters =>{
                         version:        1,
                         hostname:       getObject(parameters.app_id,'ConfigServer')['SERVER'].filter((/**@type{server_db_config_server_server}*/row)=>row.HOST)[0].HOST,
                         connections:    socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
-                        started:        process.uptime()
+                        started:        serverProcess.uptime()
                     }],
             type:'JSON'};
 };
