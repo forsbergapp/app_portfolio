@@ -12,6 +12,7 @@
  * @returns {Promise.<server_server_response & {result?:server_info_result_Info }>}
  */
  const info = async () => {
+    const {serverProcess} = await import('./server.js');
     const os = await import('node:os');
     const os_json = {
                     hostname: os.hostname(),
@@ -29,16 +30,16 @@
                     version: os.version()
                     };
     const process_json = { 
-                            memoryusage_rss : process.memoryUsage().rss,
-                            memoryusage_heaptotal : process.memoryUsage().heapTotal,
-                            memoryusage_heapused : process.memoryUsage().heapUsed,
-                            memoryusage_external : process.memoryUsage().external,
-                            memoryusage_arraybuffers : process.memoryUsage().arrayBuffers,
-                            uptime : process.uptime(),
-                            version : process.version,
-                            path : process.cwd(),
-                            start_arg_0 : process.argv[0],
-                            start_arg_1 : process.argv[1]
+                            memoryusage_rss : serverProcess.memoryUsage().rss,
+                            memoryusage_heaptotal : serverProcess.memoryUsage().heapTotal,
+                            memoryusage_heapused : serverProcess.memoryUsage().heapUsed,
+                            memoryusage_external : serverProcess.memoryUsage().external,
+                            memoryusage_arraybuffers : serverProcess.memoryUsage().arrayBuffers,
+                            uptime : serverProcess.uptime(),
+                            version : serverProcess.version,
+                            path : serverProcess.cwd(),
+                            start_arg_0 : serverProcess.argv[0],
+                            start_arg_1 : serverProcess.argv[1]
                         };
     return {result:{os: os_json,process: process_json}, type:'JSON'};
 };

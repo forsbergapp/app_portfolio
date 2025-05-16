@@ -12,6 +12,16 @@ const service = await import('./service.js');
 const { microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, iamAuthenticateApp } = await import('../../microservice.js');
 const { registryMicroServiceServer } = await import('../../registry.js');
 
+class ClassServerProcess {
+    cwd = () => process.cwd();
+    /**
+     * @param {string|symbol} event
+     * @param {(...args: any[]) => void} listener
+     */
+    on = (event, listener) => process.on(event, listener);
+}
+const serverProcess = new ClassServerProcess();
+
 
 /**
  * @name serverStart
@@ -66,9 +76,9 @@ const serverStart = async () =>{
 		console.log(`MICROSERVICE GEOLOCATION PORT ${request.port} `);
 	});
 
-	process.on('uncaughtException', (err) =>{
+	serverProcess.on('uncaughtException', (err) =>{
 		console.log(err);
 	});
 };
 serverStart();
-export {serverStart};
+export {serverStart, serverProcess};

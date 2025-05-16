@@ -4,6 +4,7 @@
  */
 
 const {registryConfigServices} = await import('../../registry.js');
+
 /**@type{{  jobid:number,
             log_id: number, 
             filename: string, 
@@ -111,6 +112,7 @@ const getBatchLogFilename = () => {
  * @returns {Promise.<{log_id:number, filename:string}>}
  */
 const jobLogAdd = async (joblog)=>{
+    const {serverProcess} = await import('./server.js');
     const fs = await import('node:fs');
     //add 10ms wait so log_id will be guaranteed unique on a fast server
     await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 10);});
@@ -123,7 +125,7 @@ const jobLogAdd = async (joblog)=>{
                                 status:joblog.status, 
                                 result:joblog.result});
     const filename = getBatchLogFilename();
-    await fs.promises.appendFile(`${process.cwd()}${filename}`, log + '\r\n', 'utf8');
+    await fs.promises.appendFile(`${serverProcess.cwd()}${filename}`, log + '\r\n', 'utf8');
     //return log_id and the filename where the joblog.log_id is found
     return {log_id: joblog.log_id, filename: filename};
 };
@@ -254,6 +256,7 @@ const scheduleMilliseconds = (cron_expression) =>{
  * @returns {Promise.<void>}
  */
 const scheduleJob = async (jobid, command_type, path, command, argument, cron_expression) =>{
+    const {serverProcess} = await import('./server.js');
     const {exec} = await import('node:child_process');
     switch (command_type){
         case 'OS':{
@@ -282,11 +285,11 @@ const scheduleJob = async (jobid, command_type, path, command, argument, cron_ex
                         let command_path;
                         if (path.includes('%HOMEPATH%')){
                             /**@ts-ignore */
-                            command_path = path.replace('%HOMEPATH%', process.env.HOMEPATH);
+                            command_path = path.replace('%HOMEPATH%', serverProcess.env.HOMEPATH);
                         }
                         if (path.includes('$HOME')){
                             /**@ts-ignore */
-                            command_path = path.replace('$HOME', process.env.HOME);
+                            command_path = path.replace('$HOME', serverProcess.env.HOME);
                         }
                         exec(`${command} ${argument}`, {cwd: command_path}, (err, stdout, stderr) => {
                             jobLogAdd({log_id: batchlog.log_id,
