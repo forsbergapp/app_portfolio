@@ -2,7 +2,6 @@
  * @module apps/app8/src/functions/solver3/models/vector
  */
 
-/**@type{import('../module/gl-vec3/index.js')} */
 const {angle, cross, rotateX, rotateY, rotateZ} = await import('../module/gl-vec3/index.js');
 
 const rotate = {

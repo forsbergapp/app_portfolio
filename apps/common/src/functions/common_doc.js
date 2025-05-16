@@ -20,8 +20,7 @@
  * @returns {Promise.<string>}
  */
 const getFile = async (path, fileRequest=false) =>{
-    /**@type{import('../../../../server/iam.js')} */
-    const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
     const fs = await import('node:fs');
     return fs.promises.readFile(path, 'utf8')
             .then(file=>file.toString())
@@ -222,18 +221,14 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
  * @returns {Promise.<string>}
  */
 const markdownRender = async parameters =>{
-    /**@type{import('../../../../server/server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-    /**@type{import('../../../../server/db/App.js')} */
-    const App = await import(`file://${process.cwd()}/server/db/App.js`);
-    /**@type{import('../../../../server/db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);    
+    const {serverUtilNumberValue} = await import('../../../../server/server.js');
+    const App = await import('../../../../server/db/App.js');
+    const Config = await import('../../../../server/db/Config.js');    
 
     switch (true){
         case parameters.type.toUpperCase()=='APP':{
             //replace variables for APP template
-            /**@type{import('../../../../server/db/AppTranslation.js')} */
-            const AppTranslation = await import(`file://${process.cwd()}/server/db/AppTranslation.js`);
+            const AppTranslation = await import('../../../../server/db/AppTranslation.js');
             
             const app_translation = AppTranslation.get(parameters.app_id,null, parameters.locale, 
                                                                 /**@ts-ignore */
@@ -365,8 +360,7 @@ const markdownRender = async parameters =>{
  * @returns {Promise.<string>}
  */
 const menuRender = async parameters =>{
-    /**@type{import('../../../../server/db/App.js')} */
-    const App = await import(`file://${process.cwd()}/server/db/App.js`);
+    const App = await import('../../../../server/db/App.js');
 
     /**@type{serverDocumentMenu[]} */
     const markdown_menu_docs = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/menu.json`).then((/**@type{string}*/result)=>JSON.parse(result));
@@ -440,12 +434,9 @@ const menuRender = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:string}>}
  */
 const appFunction = async parameters =>{
-    /**@type{import('../../../../server/iam.js')} */
-    const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-    /**@type{import('../../../../server/db/App.js')} */
-    const App = await import(`file://${process.cwd()}/server/db/App.js`);
-    /**@type{import('../../../../server/server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    const {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
+    const App = await import('../../../../server/db/App.js');
+    const {serverUtilNumberValue} = await import('../../../../server/server.js');
 
     //check if valid document request
     if (
@@ -475,9 +466,7 @@ const appFunction = async parameters =>{
                 (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/serviceregistry')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
                 const {default:ComponentMarkdown} = await import('../component/common_markdown.js');
                 const {default:ComponentOpenAPI} = await import('../component/common_openapi.js');
-                
-                /**@type{import('../../../../server/db/Config.js')} */
-                const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+                const Config = await import('../../../../server/db/Config.js');
                 //guide documents in separate files, app and modules use templates
                 return {result:(await ComponentMarkdown({   data:{  markdown:await markdownRender({ app_id:parameters.app_id,
                                                                     type:parameters.data.documentType,

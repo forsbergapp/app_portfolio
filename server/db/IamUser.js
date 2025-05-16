@@ -4,11 +4,8 @@
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
  *          server_db_table_IamUser, server_db_table_IamUserLike, server_db_table_IamUserFollow, server_db_table_IamAppAccess, server_db_table_IamUserEvent,server_db_iam_user_admin} from '../types.js'
  */
-/**@type{import('./ORM.js')} */
-const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
-
-/**@type{import('../server.js')} */
-const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const ORM = await import('./ORM.js');
+const {serverUtilNumberValue} = await import('../server.js');
 /**
  * @name get
  * @description Get user 
@@ -47,14 +44,10 @@ const get = (app_id, resource_id) =>{
 *                                                                                   liked_id:       number}[]}>}
 */
 const getViewProfile = async parameters =>{
-  /**@type{import('./IamUserFollow.js')} */
-  const IamUserFollow = await import(`file://${process.cwd()}/server/db/IamUserFollow.js`);
-  /**@type{import('./IamUserLike.js')} */
-  const IamUserLike = await import(`file://${process.cwd()}/server/db/IamUserLike.js`);
-  /**@type{import('./IamUserView.js')} */
-  const IamUserView = await import(`file://${process.cwd()}/server/db/IamUserView.js`);
-  /**@type{import('../../apps/common/src/common.js')} */
-  const {commonSearchMatch} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+  const IamUserFollow = await import('./IamUserFollow.js');
+  const IamUserLike = await import('./IamUserLike.js');
+  const IamUserView = await import('./IamUserView.js');
+  const {commonSearchMatch} = await import('../../apps/common/src/common.js');
   
   const result_getProfileUser = get(parameters.app_id, parameters.resource_id).result
                                 .filter((/**@type{server_db_table_IamUser}*/row)=>   
@@ -151,14 +144,10 @@ const getViewProfile = async parameters =>{
  *                                                          count:number}[] }>}
  */
 const getViewProfileStat = async parameters =>{
-    /**@type{import('./IamUserApp.js')} */
-    const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
-    /**@type{import('./IamUserFollow.js')} */
-    const IamUserFollow = await import(`file://${process.cwd()}/server/db/IamUserFollow.js`);
-    /**@type{import('./IamUserLike.js')} */
-    const IamUserLike = await import(`file://${process.cwd()}/server/db/IamUserLike.js`);
-    /**@type{import('./IamUserView.js')} */
-    const IamUserView = await import(`file://${process.cwd()}/server/db/IamUserView.js`);
+    const IamUserApp = await import('./IamUserApp.js');
+    const IamUserFollow = await import('./IamUserFollow.js');
+    const IamUserLike = await import('./IamUserLike.js');
+    const IamUserView = await import('./IamUserView.js');
     
     return {result:get(parameters.app_id, null).result
                             .filter((/**@type{server_db_table_IamUser}*/row)=>
@@ -217,10 +206,8 @@ const getViewProfileStat = async parameters =>{
  *                                                      }[] }>}
  */
 const getViewProfileDetail = async parameters =>{
-   /**@type{import('./IamUserFollow.js')} */
-   const IamUserFollow = await import(`file://${process.cwd()}/server/db/IamUserFollow.js`);
-   /**@type{import('./IamUserLike.js')} */
-   const IamUserLike = await import(`file://${process.cwd()}/server/db/IamUserLike.js`);
+   const IamUserFollow = await import('./IamUserFollow.js');
+   const IamUserLike = await import('./IamUserLike.js');
 
    return {result:( //following
                     serverUtilNumberValue(parameters.data?.detailchoice)==1?
@@ -321,8 +308,7 @@ const validationData = data =>{
  */
 const post = async (app_id, data) => {
     if (validationData(data)){
-        /**@type{import('../security.js')} */
-        const Security= await import(`file://${process.cwd()}/server/security.js`);
+        const Security= await import('../security.js');
         /**@type{server_db_iam_user_admin} */
         const data_new =     {
                                 id:                 Date.now(),
@@ -362,10 +348,8 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postAdmin = async (app_id, data) => {
-    /**@type{import('../security.js')} */
-    const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
-    /**@type{import('../security.js')} */
-    const Security= await import(`file://${process.cwd()}/server/security.js`);
+    const {securityPasswordCreate}= await import('../security.js');
+    const Security= await import('../security.js');
     /**@type{server_db_iam_user_admin} */
     const data_new =     {
                             id:Date.now(),
@@ -404,8 +388,7 @@ const postAdmin = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async (app_id, resource_id, data) => {
-    /**@type{import('../security.js')} */
-    const {securityPasswordCompare, securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);    
+    const {securityPasswordCompare, securityPasswordCreate}= await import('../security.js');    
     /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
@@ -454,8 +437,7 @@ const update = async (app_id, resource_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const updateAdmin = async parameters => {
-    /**@type{import('../security.js')} */
-    const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);    
+    const {securityPasswordCreate}= await import('../security.js');    
     /**@type{server_db_table_IamUser}*/
     const user = get(parameters.app_id, parameters.resource_id).result[0];
     if (user){
@@ -514,8 +496,7 @@ const updateAdmin = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id, data) => {
-    /**@type{import('../security.js')} */
-    const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);    
+    const {securityPasswordCompare}= await import('../security.js');    
     /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){

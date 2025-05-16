@@ -4,8 +4,7 @@
  * @import {server_server_response,server_db_common_result_insert, server_db_iam_app_id_token_insert, server_db_table_IamAppIdToken} from '../types.js'
  */
 
-/**@type{import('./ORM.js')} */
-const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import('./ORM.js');
 
 /**
  * @name get

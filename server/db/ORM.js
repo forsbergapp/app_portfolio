@@ -61,8 +61,7 @@ Object.seal(DB);
 const DB_DIR = {db:'/data/db/', journal:'/data/db/journal/'};
 Object.seal(DB_DIR);
 
-/**@type{import('./Log.js')}*/
-const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
+const Log = await import('./Log.js');
 
 /**
  * @name getObjectRecord
@@ -255,8 +254,7 @@ const getFsDbObject = async () => getFsFile(DB_DIR.db + 'DbObjects.json');
 const updateFsFile = async (object, transaction_id, file_content, filepath=null) =>{  
     const record = getObjectRecord(object);
     if (!transaction_id || record.transaction_id != transaction_id){
-        /**@type{import('../iam.js')} */
-        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+        const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
         throw iamUtilMessageNotAuthorized();
     }
     else{
@@ -532,8 +530,7 @@ const postObject = async (app_id, object, data) =>{
                                                 object_type=='TABLE'?(DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data):null))
                         return {affectedRows:1};
                     else{
-                        /**@type{import('../iam.js')} */
-                        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                        const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
                         throw (iamUtilMessageNotAuthorized());
                     }
             }
@@ -604,8 +601,7 @@ const updateObject = async (app_id, object, resource_id, data_app_id, data) =>{
                                     file.file_content))
                             return {affectedRows:count};
                         else{
-                            /**@type{import('../iam.js')} */
-                            const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                            const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
                             throw (iamUtilMessageNotAuthorized());
                         }
                     }
@@ -632,8 +628,7 @@ const updateObject = async (app_id, object, resource_id, data_app_id, data) =>{
                                             data))
                     return {affectedRows:1};
                 else{
-                    /**@type{import('../iam.js')} */
-                    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                    const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
                     throw (iamUtilMessageNotAuthorized());
                 }
             }
@@ -701,8 +696,7 @@ const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
                                             new_content))
                     return {affectedRows:   file.file_content.length - new_content.length};
                 else{
-                    /**@type{import('../iam.js')} */
-                    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                    const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
                     throw (iamUtilMessageNotAuthorized());
                 }
             }
@@ -735,8 +729,7 @@ const deleteObject = async (app_id, table, resource_id, data_app_id) =>{
                                             new_content))
                     return {affectedRows:   file.file_content.length - new_content.length};
                 else{
-                    /**@type{import('../iam.js')} */
-                    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                    const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
                     throw (iamUtilMessageNotAuthorized());
                 }
     }
@@ -763,8 +756,7 @@ const Execute = async parameters =>{
     try{
         if (parameters.dml!='GET' && parameters.dml!='UPDATE' && parameters.dml!='POST' && parameters.dml!='DELETE')
         {
-            /**@type{import('../iam.js')} */
-            const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+            const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
             throw iamUtilMessageNotAuthorized();
         }
         else{
@@ -875,8 +867,7 @@ const getError = (app_id, statusCode, error=null) =>{
  *                                                          started:number}[]}>}
  */
 const getViewInfo = async parameters =>{
-    /**@type{import('../socket.js')} */
-    const {socketConnectedCount} = await import(`file://${process.cwd()}/server/socket.js`);
+    const {socketConnectedCount} = await import('../socket.js');
     return {result: [{
                         database_name:  getObject(parameters.app_id,'ConfigServer')['METADATA'].CONFIGURATION,
                         version:        1,

@@ -93,14 +93,11 @@ const template = props => ` <div id='report'>
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    /**@type{import('../../../../server/db/AppModuleQueue.js')} */
-    const AppModuleQueue = await import(`file://${process.cwd()}/server/db/AppModuleQueue.js`);
-    /**@type{import('../../../common/src/common.js')} */
-    const {commonRegistryAppModule} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-    /**@type{import('../../../../server/db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     
-    const test_lib = await import(`file://${process.cwd()}/test/test.js`);
+    const AppModuleQueue = await import('../../../../server/db/AppModuleQueue.js');
+    const {commonRegistryAppModule} = await import('../../../common/src/common.js');
+    const Config = await import('../../../../server/db/Config.js');
+    const test_lib = await import('../../../../test/test.js');
     /**@type{server_db_config_server_service_test[]} */
     const params = Config.get({app_id:props.app_id,data:{object:'ConfigServer',config_group:'SERVICE_TEST'}});
     const fs = await import('node:fs');
@@ -115,7 +112,7 @@ const component = async props => {
         specrunner.specFiles = specrunner.specFiles.sort(()=>Math.random() - 0.5);
     for (const spec of specrunner.specFiles){
         try {
-            const {default:testResult} = await import(`file://${process.cwd()}${spec.path}`);
+            const {default:testResult} = await import('../../../..' + spec.path);
             /**@type{test_spec_result['detail']}*/
             const detail_result = await testResult(test_lib);
             //check if any test inside spec file has empty expect length

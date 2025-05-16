@@ -28,7 +28,6 @@
  * @returns {Promise.<server_server_response & {result?:{data:string}[]}>}
  */
 const appFunction = async parameters =>{
-    /**@type{import('./common_locale.js')} */
     const {formatLocale} = await import('./common_locale.js');
 
     /**

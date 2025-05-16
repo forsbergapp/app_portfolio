@@ -30,14 +30,9 @@
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
 const customerCreate = async parameters =>{
-    /**@type{import('../../../../server/db/AppDataEntity.js')} */
-    const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
-                                            
-    /**@type{import('../../../../server/db/AppDataEntityResource.js')} */
-    const AppDataEntityResource = await import(`file://${process.cwd()}/server/db/AppDataEntityResource.js`);
-    /**@type{import('../../../../server/db/AppDataResourceMaster.js')} */
-    const AppDataResourceMaster = await import(`file://${process.cwd()}/server/db/AppDataResourceMaster.js`);
-    /**@type{import('./account_create.js')} */
+    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
+    const AppDataEntityResource = await import('../../../../server/db/AppDataEntityResource.js');
+    const AppDataResourceMaster = await import('../../../../server/db/AppDataResourceMaster.js');
     const {default:createBankAccount} = await import('./account_create.js');
 
     /**@type{server_db_table_AppDataEntity} */

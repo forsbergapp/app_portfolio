@@ -22,17 +22,10 @@
  * @returns {Promise.<server_server_response & {result?:{ status:string}[]}>}
  */
 const paymentRequestGetStatus = async parameters =>{
-    /**@type{import('../../../../server/server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-
-    /**@type{import('../../../../server/db/AppDataEntity.js')} */
-    const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
-
-    /**@type{import('../../../../apps/common/src/common.js')} */
-    const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-    
-    /**@type{import('../../../../server/security.js')} */
-    const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
+    const {serverUtilNumberValue} = await import('../../../../server/server.js');
+    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
+    const {commonBFE} = await import('../../../../apps/common/src/common.js');
+    const {securityPrivateDecrypt, securityPublicEncrypt} = await import('../../../../server/security.js'); 
     
     /**@type{server_db_table_AppDataEntity & 
      *       {json_data:{   description:string, 

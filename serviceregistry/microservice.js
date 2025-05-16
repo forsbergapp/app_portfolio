@@ -8,11 +8,8 @@
 const http = await import('node:http');
 const https = await import('node:https');
 
-/**@type{import('./registry.js')} */
-const {registryConfigServices} = await import(`file://${process.cwd()}/serviceregistry/registry.js`);
-
-/**@type{import('../server/iam.js')} */
-const { iamAuthenticateApp } = await import(`file://${process.cwd()}/server/iam.js`);
+const {registryConfigServices} = await import('./registry.js');
+const { iamAuthenticateApp } = await import('../server/iam.js');
 
 const MICROSERVICE_MESSAGE_TIMEOUT = '🗺⛔?';
 const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
@@ -68,14 +65,10 @@ const microserviceRouteMatch = (route_path, route_method, request_path , request
  * @returns {Promise.<server_server_response>}
  */
 const microserviceRequest = async parameters =>{
-    /**@type{import('./circuitbreaker.js')} */
-    const {circuitBreaker} = await import(`file://${process.cwd()}/serviceregistry/circuitbreaker.js`);
-    /**@type{import('../server/db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-    /**@type{import('../server/db/AppSecret.js')} */
-    const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
-    /**@type{import('./registry.js')} */
-    const {registryMicroserviceApiVersion}= await import(`file://${process.cwd()}/serviceregistry/registry.js`);
+    const {circuitBreaker} = await import('./circuitbreaker.js');
+    const Config = await import('../server/db/Config.js');
+    const AppSecret = await import('../server/db/AppSecret.js');
+    const {registryMicroserviceApiVersion}= await import('./registry.js');
 
     /**@type{microservice_registry_service} */
     const microservice = parameters.path.split('/')[1].toUpperCase();
@@ -117,8 +110,7 @@ const microserviceRequest = async parameters =>{
                                                 });
         }
     else{
-        /**@type{import('../server/iam.js')} */
-        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+        const  {iamUtilMessageNotAuthorized} = await import('../server/iam.js');
         return {
                 http:503, 
                 code:'MICROSERVICE', 

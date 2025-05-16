@@ -4,16 +4,12 @@
  */
 
 /**
- * @import {microservice_req, microservice_res} from '../types.js'
+ * @import {microservice_req, microservice_res} from '../../types.js'
  */
 
-/**@type{import('./service.js')} */
 const service = await import('./service.js');
-/**@type{import('../../microservice.js')} */
-const { microserviceResultReturn } = await import(`file://${process.cwd()}/serviceregistry/microservice.js`);
-/**@type{import('../../registry.js')} */
-const { registryMicroServiceServer } = await import(`file://${process.cwd()}/serviceregistry/registry.js`);
-
+const { microserviceResultReturn } = await import('../../microservice.js');
+const { registryMicroServiceServer } = await import('../../registry.js');
 
 /**
  * @name serverStart

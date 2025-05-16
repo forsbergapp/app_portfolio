@@ -32,11 +32,8 @@
 * @returns{Promise.<server_server_response & {result?:[]}>}
 */
 const get = async parameters => {
-    /**@type{import('./ORM.js')} */
-    const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
-
-    /**@type{import('../server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    const ORM = await import('./ORM.js');
+    const {serverUtilNumberValue} = await import('../server.js');
 
     /**@type{server_log_data_parameter_logGet} */
     const data = {  app_id:			parameters.app_id,
@@ -186,14 +183,9 @@ const getStatusCodes = async () =>{
 * @returns{Promise.<server_server_response & {result?:string|[]}>}
 */
 const getStat = async parameters => {
-    /**@type{import('../server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-
-    /**@type{import('./Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-
-    /**@type{import('./ORM.js')} */
-    const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
+    const {serverUtilNumberValue} = await import('../server.js');
+    const Config = await import('./Config.js');
+    const ORM = await import('./ORM.js');
 
     /**@type{server_log_data_parameter_getLogStats} */
     const data = {	app_id:			serverUtilNumberValue(parameters.data.data_app_id),
@@ -209,8 +201,7 @@ const getStat = async parameters => {
    /**@type{server_log_result_logStatGet[]|[]} */
    const logstat = [];
 
-   /**@type{import('../../apps/common/src/common.js')} */
-   const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
+   const {commonAppHost}= await import('../../apps/common/src/common.js');
    
    const files = await ORM.getFsDir().then(files=>files.filter(file=>file.isDirectory()==false));
    /**@type{string} */
@@ -327,8 +318,7 @@ const getStat = async parameters => {
 * @returns{Promise.<server_server_response & {result?:{id:number, filename:string}[]|[]}>}
 */
 const getFiles = async () => {
-    /**@type{import('./ORM.js')} */
-    const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
+    const ORM = await import('./ORM.js');
 
     return {result:await ORM.getFsDir()
                    .then(result=>
@@ -366,10 +356,8 @@ const getFiles = async () => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async parameters => {
-    /**@type{import('./ORM.js')} */
-    const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
-    /**@type{import('./Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+    const ORM = await import('./ORM.js');
+    const Config = await import('./Config.js');
 
     let log;
     /**@type{server_db_tables_log|null}*/

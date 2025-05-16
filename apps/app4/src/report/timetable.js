@@ -3,16 +3,12 @@
 /**
  * @import {server_apps_report_create_parameters,
  * 			server_db_table_IamUserAppDataPostView,
- *          server_server_response,
- *          server_db_table_IamUserAppDataPost,
  * 			server_server_error} from './../../../../server/types.js'
  * @import {APP_user_setting_record} from '../types.js'
  */
 
-/**@type{import('../../../../server/server.js')} */
-const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('../../../../server/db/IamUserAppDataPostView.js')} */
-const IamUserAppDataPostView = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostView.js`);
+const {serverUtilNumberValue} = await import('../../../../server/server.js');
+const IamUserAppDataPostView = await import('../../../../server/db/IamUserAppDataPostView.js');
 
 const {APP_REPORT_GLOBAL, component} = await import('./lib_timetable.js');
 
@@ -25,8 +21,7 @@ const {APP_REPORT_GLOBAL, component} = await import('./lib_timetable.js');
  * @returns {Promise.<import('../types.js').APP_REPORT_settings>}
  */
 const timetable_user_account_app_data_post_get = async (app_id, user_account_app_data_post_id) => {
-	/**@type{import('../../../../server/db/IamUserAppDataPost.js')} */
-    const IamUserAppDataPost = await import(`file://${process.cwd()}/server/db/IamUserAppDataPost.js`);
+    const IamUserAppDataPost = await import('../../../../server/db/IamUserAppDataPost.js');
 	
 	const result_user_account_app_data_post =  IamUserAppDataPost.get({app_id:app_id, resource_id:user_account_app_data_post_id, data:{data_app_id:null, iam_user_id:null}});
     if (result_user_account_app_data_post.result){
@@ -119,8 +114,7 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
 const timetable_day_user_account_app_data_posts_get = async (app_id, iam_user_id) => {
 	/**@type{import('../types.js').APP_REPORT_day_user_account_app_data_posts[]} */
 	const user_account_app_data_posts = [];
-	/**@type{import('../../../../server/db/IamUserAppDataPost.js')} */
-    const IamUserAppDataPost = await import(`file://${process.cwd()}/server/db/IamUserAppDataPost.js`);
+    const IamUserAppDataPost = await import('../../../../server/db/IamUserAppDataPost.js');
 	const result_user_account_app_data_posts = IamUserAppDataPost.get({	app_id:app_id, 
 												resource_id:null,
 												data:{data_app_id:app_id, iam_user_id:iam_user_id}
@@ -162,10 +156,8 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, iam_user_id
  * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
-	/**@type{import('../../../../server/db/App.js')} */
-	const App = await import(`file://${process.cwd()}/server/db/App.js`);
-    /**@type{import('../../../../server/db/AppParameter.js')} */
-    const AppParameter = await import(`file://${process.cwd()}/server/db/AppParameter.js`);
+	const App = await import('../../../../server/db/App.js');
+    const AppParameter = await import('../../../../server/db/AppParameter.js');
 
 	/**@ts-ignore */
 	const decodedReportparameters = Buffer.from(timetable_parameters.reportid, 'base64').toString('utf-8');

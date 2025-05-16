@@ -36,23 +36,12 @@
  *                                                      countdown:string}[]}>}
  */
 const paymentRequestCreate = async parameters =>{
-    /**@type{import('../../../../server/server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-
-    /**@type{import('../../../../apps/common/src/common.js')} */
-    const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-
-    /**@type{import('../../../../server/iam.js')} */
-    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-
-    /**@type{import('../../../../server/security.js')} */
-    const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
-
-    /**@type{import('../../../../server/db/AppDataEntity.js')} */
-    const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
-
-     /**@type{import('../../../../server/db/AppDataResourceMaster.js')} */
-    const AppDataResourceMaster = await import(`file://${process.cwd()}/server/db/AppDataResourceMaster.js`);
+    const {serverUtilNumberValue} = await import('../../../../server/server.js');
+    const {commonBFE} = await import('../../../../apps/common/src/common.js');
+    const  {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
+    const {securityPrivateDecrypt, securityPublicEncrypt} = await import('../../../../server/security.js'); 
+    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
+    const AppDataResourceMaster = await import('../../../../server/db/AppDataResourceMaster.js');
     
     /**@type{server_db_table_AppDataEntity & 
      *       {json_data:{   description:string, 
