@@ -304,5 +304,59 @@
         "common_role": "APP_ID",
         "common_path": "/apps/app9/src/functions/totp.js",
         "common_description": "Get TOTP"
+    },
+    {
+        "id":35,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_CONTACT",
+        "common_role": "APP_ID",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message contact"
+    },
+    {
+        "id":36,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_COUNT",
+        "common_role": "APP_ID",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message count"
+    },
+    {
+        "id":37,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_GET",
+        "common_role": "APP_ID",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message get"
+    },
+    {
+        "id":38,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_READ",
+        "common_role": "APP_ID",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message read and send consume"
+    },
+    {
+        "id":39,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_DELETE",
+        "common_role": "APP_ID",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message delete"
+    },
+    {
+        "id":40,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_SEND",
+        "common_role": "APP_ID",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message send"
     }
 ]
