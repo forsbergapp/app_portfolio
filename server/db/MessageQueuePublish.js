@@ -2,7 +2,9 @@
 
 /**
  * @import {server_server_response, server_db_common_result_insert, 
- *          server_db_table_MessageQueuePublish
+ *          server_db_table_MessageQueuePublish,
+ *          server_db_table_MessageQueuePublishMessage,
+ *          server_db_table_MessageQueuePublishMicroserviceLog
 } from '../types.js'
  */
 
@@ -32,29 +34,62 @@ const get = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async parameters => {
-    if (parameters.data.message_queue_publish_id &&
-        //message
-        ((  parameters.data.sender && 
-            parameters.data.host && 
-            parameters.data.client_ip && 
-            parameters.data.subject && 
-            parameters.data.message) ||
-        //microservice log or microservice error
-        (  (parameters.data.type=='MICROSERVICE_LOG' || parameters.data.type=='MICROSERVICE_ERROR') &&
-            parameters.data.message))
-    )
+
+    if (  parameters.data.service == 'MESSAGE' && 
+          parameters.data.sender && 
+          parameters.data.host && 
+          parameters.data.client_ip && 
+          parameters.data.subject && 
+          parameters.data.message && 
+          //no other keys
+          Object.keys(parameters.data).length==6){
+        /**@type{server_db_table_MessageQueuePublishMessage}*/    
+        const message = {sender:parameters.data.sender,
+                         host:parameters.data.host,
+                         client_ip:parameters.data.client_ip,
+                         subject:parameters.data.subject,
+                         message:parameters.data.message
+        };
+        /**@type{server_db_table_MessageQueuePublish}*/
+        const data_new = {
+            id:Date.now(),
+            service:parameters.data.service,
+            message:message, 
+            created: new Date().toISOString()
+        };
         return {
             result:await ORM.Execute({ app_id:parameters.app_id, 
             dml:'POST',
             object:'MessageQueuePublish', 
-            post:{data:{...{id:Date.now()}, 
-                        ...parameters.data, 
-                        ...{created:new Date().toISOString()}
-                        }
-                }
-            }), type:'JSON'};
+            post:{data:data_new}}), type:'JSON'};
+    }
     else
-        return ORM.getError(null, 400);
+        if( (parameters.data.service == 'BATCH' || parameters.data.service == 'GEOLOCATION') &&
+            (parameters.data.type=='MICROSERVICE_LOG' || parameters.data.type=='MICROSERVICE_ERROR') &&
+            parameters.data.message &&
+            //no other keys
+            Object.keys(parameters.data).length==3){
+            /**@type{server_db_table_MessageQueuePublishMicroserviceLog}*/
+            const message = {type:parameters.data.type,
+                             message:parameters.data.message
+            };
+            /**@type{server_db_table_MessageQueuePublish}*/
+            const data_new = {
+                id:Date.now(),
+                service:parameters.data.service,
+                message:message, 
+                created: new Date().toISOString()
+            };
+            return {
+                result:await ORM.Execute({ app_id:parameters.app_id, 
+                dml:'POST',
+                object:'MessageQueuePublish', 
+                post:{data:data_new}}), type:'JSON'};
+        }
+        else
+            return ORM.getError(null, 400);
+            
+    
 };
 
 export {get, post};

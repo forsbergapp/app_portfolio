@@ -32,17 +32,29 @@ const get = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async parameters => {
-    if (parameters.data.message_queue_publish_id)
-        return {
-            result:await ORM.Execute({ app_id:parameters.app_id, 
-            dml:'POST',
-            object:'MessageQueueError', 
-            post:{data:{...{id:Date.now()}, 
-                        ...parameters.data, 
-                        ...{created:new Date().toISOString()}
-                        }
-                }
-            }), type:'JSON'};
+    if (parameters.data.message_queue_publish_id && 
+        parameters.data.message &&
+        parameters.data.result){
+        /**@type{server_db_table_MessageQueueError}*/
+        const data_new = {
+                            id:Date.now(),
+                            message_queue_publish_id:parameters.data.message_queue_publish_id,
+                            message:parameters.data.message, 
+                            result:parameters.data.result,
+                            created: new Date().toISOString()
+                        };
+        return ORM.Execute({app_id:parameters.app_id, 
+                            dml:'POST', 
+                            object:'MessageQueueError', 
+                            post:{data:data_new}}).then((result)=>{
+            if (result.affectedRows>0){
+                result.insertId=data_new.id;
+                return {result:result, type:'JSON'};
+            }
+            else
+                return ORM.getError(parameters.app_id, 404);
+        });
+    }
     else
         return ORM.getError(null, 400);
 };

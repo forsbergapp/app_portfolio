@@ -16,6 +16,16 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="D37B0D73-F02A-19CB-B33B-2D3F1C83A6E1">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-17 11:03:14 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="message" id="4BC37847-9DE7-8696-C372-0A3BAD2D5F27">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:04:10 UTC</createdTime>
@@ -96,4 +106,18 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="8533717D-2BDB-5ACA-EA2A-0D32F95B8E1A" name="MessaegQueueConsume PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-17 11:03:18 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>D37B0D73-F02A-19CB-B33B-2D3F1C83A6E1</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>

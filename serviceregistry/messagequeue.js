@@ -26,12 +26,8 @@ const messageQueue = async parameters => {
     const MessageQueueError = await import('../server/db/MessageQueueError.js');
     switch (parameters.message_type) {
         case 'PUBLISH': {
-            //message PUBLISH message in message_queue_publish.json
-            const new_message_id = Date.now();
             /**@type{server_db_table_MessageQueuePublish} */
-            const message_queue = { id: new_message_id, 
-                                    created: new Date().toISOString(), 
-                                    service: parameters.service, 
+            const message_queue = { service: parameters.service, 
                                     message:   parameters.message};
             MessageQueuePublish.post({app_id:parameters.app_id, data:message_queue});
             break;
@@ -60,8 +56,7 @@ const messageQueue = async parameters => {
                     MessageQueueError.post({app_id:parameters.app_id, 
                                             data:{  message_queue_publish_id: parameters.message_id, 
                                                     message:   parameters.message, 
-                                                    result:error, 
-                                                    created:new Date().toISOString()}}).then(()=>{
+                                                    result:error}}).then(()=>{
                         throw error;
                     });
                 });
