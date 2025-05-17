@@ -16,6 +16,16 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="64606CD7-DBB4-6D6E-6C71-D2A4ECA34C76">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-17 11:03:26 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="message" id="23CB1F61-FFFF-ABEF-67DA-73EB61FBCBAD">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:04:43 UTC</createdTime>
@@ -61,4 +71,18 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="1690DDBB-064C-973F-BF1D-468F8CCA2665" name="MessaegQueueError PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-17 11:03:29 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>64606CD7-DBB4-6D6E-6C71-D2A4ECA34C76</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>

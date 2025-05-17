@@ -697,7 +697,8 @@
 /**
 * @description DB TABLE MessageQueueConsume
 * @memberof dbObjects
-* @typedef {{  message_queue_publish_id:number,
+* @typedef {{  id:number,
+*              message_queue_publish_id:number,
 *              message:*,
 *              start:string|null,
 *              finished:string|null,
@@ -708,7 +709,8 @@
 /**
 * @description DB TABLE MessageQueueError
 * @memberof dbObjects
-* @typedef {{  message_queue_publish_id:number,
+* @typedef {{  id:number,
+*              message_queue_publish_id:number,
 *              message:*,
 *              result:*,
 *              created:string}} server_db_table_MessageQueueError

@@ -46,6 +46,6 @@
     {"name":"LogServiceError",              "type":"TABLE_LOG_DATE",  "lock":0, "transaction_id":0,   "transaction_content": null,                       "pk":"id",     "uk":null,                                            "fk":null},
     {"name":"LogServiceVerbose",            "type":"TABLE_LOG_DATE",  "lock":0, "transaction_id":0,   "transaction_content": null,                       "pk":"id",     "uk":null,                                            "fk":null},
     {"name":"MessageQueuePublish",          "type":"TABLE_LOG",       "lock":0, "transaction_id":0,   "transaction_content": null,                       "pk":"id",     "uk":null,                                            "fk":null},
-    {"name":"MessageQueueConsume",          "type":"TABLE_LOG",       "lock":0, "transaction_id":0,   "transaction_content": null,                       "pk":"id",     "uk":null,                                            "fk":null},
-    {"name":"MessageQueueError",            "type":"TABLE_LOG",       "lock":0, "transaction_id":0,   "transaction_content": null,                       "pk":"id",     "uk":null,                                            "fk":null}
+    {"name":"MessageQueueConsume",          "type":"TABLE_LOG",       "lock":0, "transaction_id":0,   "transaction_content": null,                       "pk":"id",     "uk":null,                                            "fk":[["message_queue_publish_id", "id", "MessageQueuePublish"]]},
+    {"name":"MessageQueueError",            "type":"TABLE_LOG",       "lock":0, "transaction_id":0,   "transaction_content": null,                       "pk":"id",     "uk":null,                                            "fk":[["message_queue_publish_id", "id", "MessageQueuePublish"]]}
 ]
