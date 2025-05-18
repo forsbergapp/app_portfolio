@@ -65,6 +65,21 @@ Object.seal(DB_DIR);
 const Log = await import('./Log.js');
 
 /**
+ * @name formatContent
+ * @description Formats content
+ * @function
+ * @param {boolean} table
+ * @param {*} content
+ * @returns {string}
+ */
+const formatContent = (table, content) =>
+    table?
+        //table, save records in new row and compact format
+                    '[\n' + content.map((/**@type{*}*/row)=>JSON.stringify(row)).join(',\n') + '\n]':
+                        //not a table, convert to string
+                            JSON.stringify(content, undefined, 2);
+
+/**
  * @name getObjectRecord
  * @description Get file record from file db
  * @function
@@ -81,16 +96,18 @@ const getObjectRecord = filename =>JSON.parse(JSON.stringify(DB.data.filter(file
  *              Reads and sets `transaction_id`, `transaction_content` and `lock` key in DB 
  *              `transaction_content` is used to rollback info if something goes wrong and can also be used for debugging purpose
  * @function
- * @param {server_DbObject} file 
+ * @param {server_DbObject} object 
  * @param {string} filepath
  * @returns {Promise.<number>}
  */
-const fileTransactionStart = async (file, filepath)=>{
-    const record = DB.data.filter(file_db=>file_db.name == file)[0];
+const fileTransactionStart = async (object, filepath)=>{
+    const record = DB.data.filter(file_db=>file_db.name == object)[0];
     const transaction = async ()=>{
         const transaction_id = Date.now();
         record.transaction_id = transaction_id;
-        record.transaction_content = await getFsFile(filepath,record.type.startsWith('TABLE'));
+        record.transaction_content = record.in_memory?
+                                            JSON.parse(record.content?? (record.type.startsWith('TABLE')?'[]':'{}')):
+                                            await getFsFile(filepath,record.type.startsWith('TABLE'));
         return transaction_id;
     };
     return new Promise((resolve, reject)=>{
@@ -254,18 +271,21 @@ const getFsDbObject = async () => getFsFile(DB_DIR.db + 'DbObjects.json');
 
 const updateFsFile = async (object, transaction_id, file_content, filepath=null) =>{  
     const record = getObjectRecord(object);
-    if (!transaction_id || record.transaction_id != transaction_id){
-        const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
-        throw iamUtilMessageNotAuthorized();
-    }
-    else{
-        if (record.type=='TABLE' && getObject(0,'ConfigServer').SERVICE_DB.filter((/**@type{*}*/key)=>'JOURNAL' in key)[0]?.JOURNAL=='1'){
-            //write to journal using format [Date.now()].[ISO Date string].[object].json
-            await postFsFile(`${DB_DIR.journal}${Date.now()}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}.${object}.json`, file_content, record.type=='TABLE');
+    if (record.in_memory==true)
+        DB.data.filter(file_db=>file_db.name == object)[0].content = formatContent(record.type.startsWith('TABLE'), file_content);
+    else
+        if (!transaction_id || record.transaction_id != transaction_id){
+            const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
+            throw iamUtilMessageNotAuthorized();
         }
-        //write new file content
-        await postFsFile(filepath ?? (DB_DIR.db + object + '.json'), file_content, record.type.startsWith('TABLE'));
-    }
+        else{
+            if (record.type=='TABLE' && getObject(0,'ConfigServer').SERVICE_DB.filter((/**@type{*}*/key)=>'JOURNAL' in key)[0]?.JOURNAL=='1'){
+                //write to journal using format [Date.now()].[ISO Date string].[object].json
+                await postFsFile(`${DB_DIR.journal}${Date.now()}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}.${object}.json`, file_content, record.type=='TABLE');
+            }
+            //write new file content
+            await postFsFile(filepath ?? (DB_DIR.db + object + '.json'), file_content, record.type.startsWith('TABLE'));
+        }
 };
 
 /**
@@ -278,12 +298,7 @@ const updateFsFile = async (object, transaction_id, file_content, filepath=null)
  * @returns{Promise.<void>}
  */
 const postFsFile = async (path, content, table) => await fs.promises.writeFile(serverProcess.cwd() + path, 
-                                                    table?
-                                                        //table, save records in new row and compact format
-                                                        '[\n' + content.map((/**@type{*}*/row)=>JSON.stringify(row)).join(',\n') + '\n]':
-                                                            //not a table, convert to string
-                                                            JSON.stringify(content, undefined, 2),
-                                                    'utf8');                                            
+                                                    formatContent(table, content),'utf8');                                            
 /**
  * @name postFsDir
  * @description Created directories and should be used only when server is started first time
@@ -410,19 +425,25 @@ const getObject = (app_id, object, resource_id, data_app_id) =>{
  */
 const getObjectFile = async (app_id, object, resource_id, partition) =>{
     const record = (await getFsDbObject()).filter(row=>row.name==object)[0];
-    if (record.type.startsWith('TABLE')){
-        const filepath = record.type.startsWith('TABLE_LOG')?
-                            DB_DIR.db + `${object}_${fileNamePartition(partition)}.json`:
-                                DB_DIR.db + `${object}.json`;
-        /**@type{*[]} */
-        const file = await getFsFile(filepath, record.type.startsWith('TABLE'));
-        if (record.type=='TABLE_KEY_VALUE')
-            return {rows:file.filter(row=>row.app_id == (resource_id??row.app_id))};    
+    if (record.in_memory==true)
+        if (record.type.startsWith('TABLE'))
+            return getObject(app_id, object, resource_id, null);
         else
-            return {rows:file.filter(row=>row.id == (resource_id??row.id))};    
-    }
+            return getObject(app_id, object, null, null);
     else
-        return await getFsFile(DB_DIR.db + object + '.json', record.type.startsWith('TABLE'));
+        if (record.type.startsWith('TABLE')){
+            const filepath = record.type.startsWith('TABLE_LOG')?
+                                DB_DIR.db + `${object}_${fileNamePartition(partition)}.json`:
+                                    DB_DIR.db + `${object}.json`;
+            /**@type{*[]} */
+            const file = await getFsFile(filepath, record.type.startsWith('TABLE'));
+            if (record.type=='TABLE_KEY_VALUE')
+                return {rows:file.filter(row=>row.app_id == (resource_id??row.app_id))};    
+            else
+                return {rows:file.filter(row=>row.id == (resource_id??row.id))};    
+        }
+        else
+            return await getFsFile(DB_DIR.db + object + '.json', record.type.startsWith('TABLE'));
 };
 
 /**
@@ -512,10 +533,11 @@ const postObject = async (app_id, object, data) =>{
                 /**@ts-ignore */
                 file.file_content, 
                 data, 'POST')) ||object_type !='TABLE' ){
+                    /**@ts-ignore */
+                    const update_data = (DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data);
                     await updateFsFile( object, 
                         file.transaction_id, 
-                        /**@ts-ignore */
-                        (DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data),
+                        update_data,
                         object_type=='TABLE'?null:filepath)
                     .catch(()=>{
                         rollback(object, 
@@ -528,7 +550,7 @@ const postObject = async (app_id, object, data) =>{
                                                 /*@ts-ignore*/
                                                 file.transaction_id,
                                                 /*@ts-ignore*/
-                                                object_type=='TABLE'?(DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data):null))
+                                                object_type=='TABLE'?update_data:null))
                         return {affectedRows:1};
                     else{
                         const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
@@ -569,13 +591,13 @@ const updateObject = async (app_id, object, resource_id, data_app_id, data) =>{
     
     if (app_id!=null){
         const object_type = getObjectRecord(object).type;
-        /**@type{server_db_result_fileFsRead} */
-        const file = await lockObject(app_id, object);
         if (object_type == 'TABLE_LOG' || object_type == 'TABLE_LOG_DATE'){
             //no update of log tables
             return {affectedRows:0};
         }
-        else
+        else{
+            /**@type{server_db_result_fileFsRead} */
+            const file = await lockObject(app_id, object);
             if (object_type == 'TABLE'){
                 if (constraintsValidate(object, file.file_content, data, 'UPDATE', resource_id)){
                     let update = false;
@@ -633,6 +655,7 @@ const updateObject = async (app_id, object, resource_id, data_app_id, data) =>{
                     throw (iamUtilMessageNotAuthorized());
                 }
             }
+        }
     }
     else
         return {affectedRows:0};
@@ -848,7 +871,9 @@ const getError = (app_id, statusCode, error=null) =>{
     
     if (default_db == null)
         for (const file_db_record of DB.data){
-            if ('cache_content' in file_db_record){
+            if ('cache_content' in file_db_record &&
+                file_db_record.in_memory==false
+            ){
                 const file = await getFsFile(DB_DIR.db + file_db_record.name + '.json', file_db_record.type.startsWith('TABLE'));
                 file_db_record.cache_content = file?file:null;
             }

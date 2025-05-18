@@ -1009,6 +1009,8 @@
  * @namespace dbObjects
  * @typedef {{  name:server_DbObject, 
  *              type:'DOCUMENT'|'TABLE'|'TABLE_KEY_VALUE'|'TABLE_LOG'|'TABLE_LOG_DATE',
+ *              in_memory:boolean,
+ *              content:*,
  *              lock:number, 
  *              transaction_id:number|null, 
  *              transaction_content: object|[]|null, 

@@ -30,7 +30,7 @@ const IamControlUserAgent = await import('./db/IamControlUserAgent.js');
 const IamControlObserve = await import('./db/IamControlObserve.js');
 const IamUser = await import('./db/IamUser.js');
 const IamAppAccess = await import('./db/IamAppAccess.js');
-const IamAppToken = await import('./db/IamAppIdToken.js');
+const IamAppIdToken = await import('./db/IamAppIdToken.js');
 const {jwt} = await import('./security.js');
 
 const {hostname} = await import('node:os');
@@ -700,7 +700,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
             //authenticate id token
             const id_token_decoded = (parameters.endpoint=='APP_EXTERNAL' || parameters.endpoint=='APP_ACCESS_EXTERNAL')?null:iamUtilTokenGet(app_id_host, parameters.idToken, 'APP_ID');
             /**@type{server_db_table_IamAppIdToken}*/
-            const log_id_token = (parameters.endpoint=='APP_EXTERNAL' || parameters.endpoint=='APP_ACCESS_EXTERNAL')?null:IamAppToken.get({app_id:app_id_host, resource_id:null}).result.filter((/**@type{server_db_table_IamAppIdToken}*/row)=> 
+            const log_id_token = (parameters.endpoint=='APP_EXTERNAL' || parameters.endpoint=='APP_ACCESS_EXTERNAL')?null:IamAppIdToken.get({app_id:app_id_host, resource_id:null}).result.filter((/**@type{server_db_table_IamAppIdToken}*/row)=> 
                                                                                     row.app_id == app_id_host && row.ip == parameters.ip && row.token == parameters.idToken
                                                                                     )[0];
             if (parameters.endpoint=='APP_EXTERNAL' || parameters.endpoint=='APP_ACCESS_EXTERNAL' || (id_token_decoded?.app_id == app_id_host && 
@@ -1200,7 +1200,7 @@ const iamAuthenticateResource = parameters =>  {
                             token:   	jwt_data.token,
                             ip:         ip ?? '',
                             ua:         null};
-    return await IamAppToken.post(app_id, file_content).then(()=>jwt_data.token);
+    return await IamAppIdToken.post(app_id, file_content).then(()=>jwt_data.token);
  };
 /**
  * @name iamAuthorizeToken
