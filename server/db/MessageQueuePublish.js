@@ -37,6 +37,7 @@ const post = async parameters => {
 
     if (  parameters.data.service == 'MESSAGE' && 
           parameters.data.sender && 
+          parameters.data.receiver_id && 
           parameters.data.host && 
           parameters.data.client_ip && 
           parameters.data.subject && 
@@ -45,6 +46,7 @@ const post = async parameters => {
           Object.keys(parameters.data).length==6){
         /**@type{server_db_table_MessageQueuePublishMessage}*/    
         const message = {sender:parameters.data.sender,
+                         receiver_id:parameters.data.receiver_id,
                          host:parameters.data.host,
                          client_ip:parameters.data.client_ip,
                          subject:parameters.data.subject,
