@@ -989,6 +989,7 @@
  * @description DB server_db_table_MessageQueuePublishMessage
  * 
  * @typedef {{  sender:string,
+ *              receiver_id:number|null,
  *              host:string,
  *              client_ip:string,
  *              subject:string,

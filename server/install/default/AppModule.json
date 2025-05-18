@@ -319,7 +319,7 @@
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_COUNT",
-        "common_role": "APP_ID",
+        "common_role": "APP_ACCESS",
         "common_path": "/apps/common/src/functions/common_message.js",
         "common_description": "Message count"
     },
@@ -328,7 +328,7 @@
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_GET",
-        "common_role": "APP_ID",
+        "common_role": "APP_ACCESS",
         "common_path": "/apps/common/src/functions/common_message.js",
         "common_description": "Message get"
     },
@@ -337,7 +337,7 @@
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_READ",
-        "common_role": "APP_ID",
+        "common_role": "APP_ACCESS",
         "common_path": "/apps/common/src/functions/common_message.js",
         "common_description": "Message read and send consume"
     },
@@ -346,7 +346,7 @@
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_DELETE",
-        "common_role": "APP_ID",
+        "common_role": "APP_ACCESS",
         "common_path": "/apps/common/src/functions/common_message.js",
         "common_description": "Message delete"
     },
@@ -355,7 +355,52 @@
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_SEND",
-        "common_role": "APP_ID",
+        "common_role": "APP_ACCESS",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message send"
+    },
+    {
+        "id":41,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_COUNT",
+        "common_role": "ADMIN",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message count"
+    },
+    {
+        "id":42,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_GET",
+        "common_role": "ADMIN",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message get"
+    },
+    {
+        "id":43,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_READ",
+        "common_role": "ADMIN",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message read and send consume"
+    },
+    {
+        "id":44,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_DELETE",
+        "common_role": "ADMIN",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message delete"
+    },
+    {
+        "id":45,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_SEND",
+        "common_role": "ADMIN",
         "common_path": "/apps/common/src/functions/common_message.js",
         "common_description": "Message send"
     }
