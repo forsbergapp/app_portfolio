@@ -539,6 +539,90 @@
                 }
             }
         },
+        "/bff/admin/v1/app-common-module/${resource_id_string}": {
+            "post": {
+                "summary": "",
+                "operationId": "apps_common_src.common.commonModuleRun",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "description":"AppModule.common_name",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_authorization",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_host",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_endpoint",
+                            "required":true
+                        }
+                ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "IAM_iam_user_app_id":{
+                                                "required":false
+                                            },
+                                            "IAM_iam_user_id":{
+                                                "required":false
+                                            }
+                                        },
+                                        "additionalProperties":true
+                                    }
+                                }
+                            }
+			            },
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
         "/bff/admin/v1/app-common-module-metadata/${resource_id_number}": {
             "get": {
                 "summary": "",
