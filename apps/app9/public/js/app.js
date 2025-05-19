@@ -20,8 +20,8 @@ const common = await import(commonPath);
  * @param {Error} error 
  * @returns {void}
  */
- const appException = (error) => {
-    common.commonMessageShow('EXCEPTION', null, null, null, error);
+ const appException = error => {
+    common.commonMessageShow('EXCEPTION', null, null, error);
 };
 
 /**

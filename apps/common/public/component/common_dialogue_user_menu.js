@@ -18,42 +18,44 @@
  *          countdown:0|1}} props 
  * @returns {string}
  */
-const template = props =>`  ${props.app_id == props.admin_app_id?
-                               `<div id='common_dialogue_user_menu_admin'>${props.iam_user_username ?? ''}</div>`:
-                               `${props.iam_user_username?
-                                   `<div id='common_dialogue_user_menu_username'>${props.iam_user_username}</div>`:
-                                   ''
-                               }`
-                            }
-                            ${props.countdown==1?
-                                `<div id='common_dialogue_user_menu_token_countdown'>
-                                    <div id='common_dialogue_user_menu_token_countdown_time'></div>
-                                </div>`:''
-                            }
-                            ${props.iam_user_id?
-                                `<div id='common_dialogue_user_menu_nav'>
-                                    <div id='common_dialogue_user_menu_nav_messages' class='common_nav_selected common_icon'></div>
-                                    <div id='common_dialogue_user_menu_nav_iam_user_app' class='common_icon'></div>
-                                    <div id='common_dialogue_user_menu_nav_iam_user' class='common_icon'></div>
-                                </div>`:''
-                            }
-                            <div id='common_dialogue_user_menu_content'>
-                            </div>
-                            ${(props.app_id == props.admin_app_id) || props.iam_user_username ?
-                                `<div id='common_dialogue_user_menu_logged_in'>
-                                    ${props.app_id == props.admin_app_id?
-                                        '':
-                                        '<div id=\'common_dialogue_user_menu_log_out\' class=\'common_icon\'></div>'
-                                    }
-                                </div>`:
-                                `${props.app_id == props.admin_app_id?'':
-                                    `<div id='common_dialogue_user_menu_logged_out'>
-                                        <div id='common_dialogue_user_menu_signup' class='common_icon'></div>
-                                        <div id='common_dialogue_user_menu_log_in' class='common_icon'></div>
-                                    </div>`
+const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.iam_user_id==null?'':'class=\'common_dialogue_user_menu_connected\''}>
+                                ${props.app_id == props.admin_app_id?
+                                `<div id='common_dialogue_user_menu_admin'>${props.iam_user_username ?? ''}</div>`:
+                                `${props.iam_user_username?
+                                    `<div id='common_dialogue_user_menu_username'>${props.iam_user_username}</div>`:
+                                    ''
                                 }`
-                            }
-                            <div id='common_dialogue_user_menu_close' class='common_dialogue_button common_icon' ></div>`;
+                                }
+                                ${props.countdown==1?
+                                    `<div id='common_dialogue_user_menu_token_countdown'>
+                                        <div id='common_dialogue_user_menu_token_countdown_time'></div>
+                                    </div>`:''
+                                }
+                                ${props.iam_user_id?
+                                    `<div id='common_dialogue_user_menu_nav'>
+                                        <div id='common_dialogue_user_menu_nav_messages' class='common_nav_selected common_icon'></div>
+                                        <div id='common_dialogue_user_menu_nav_iam_user_app' class='common_icon'></div>
+                                        <div id='common_dialogue_user_menu_nav_iam_user' class='common_icon'></div>
+                                    </div>`:''
+                                }
+                                <div id='common_dialogue_user_menu_detail'>
+                                </div>
+                                ${(props.app_id == props.admin_app_id) || props.iam_user_username ?
+                                    `<div id='common_dialogue_user_menu_logged_in'>
+                                        ${props.app_id == props.admin_app_id?
+                                            '':
+                                            '<div id=\'common_dialogue_user_menu_log_out\' class=\'common_icon\'></div>'
+                                        }
+                                    </div>`:
+                                    `${props.app_id == props.admin_app_id?'':
+                                        `<div id='common_dialogue_user_menu_logged_out'>
+                                            <div id='common_dialogue_user_menu_signup' class='common_icon'></div>
+                                            <div id='common_dialogue_user_menu_log_in' class='common_icon'></div>
+                                        </div>`
+                                    }`
+                                }
+                                <div id='common_dialogue_user_menu_close' class='common_dialogue_button common_icon' ></div>
+                            </div>`;
 /**
 * @name component
 * @description Component
@@ -100,14 +102,17 @@ const component = async props => {
      */
     const eventClickMessages = async ()=>{
         await props.methods.commonComponentRender({
-            mountDiv:   'common_dialogue_user_menu_content', 
+            mountDiv:   'common_dialogue_user_menu_detail', 
             data:       {
                             app_id:props.data.app_id,
                             iam_user_id:props.data.iam_user_id,
                             common_app_id:props.data.common_app_id,
                             admin_app_id:props.data.admin_app_id
                         },
-            methods:    {commonFFB:props.methods.commonFFB},
+            methods:    {
+                        commonFFB:props.methods.commonFFB,
+                        commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate
+                        },
             path:       '/common/component/common_dialogue_user_menu_messages.js'});
     };
     /**
@@ -115,11 +120,10 @@ const component = async props => {
      */
     const eventClickIamUser = async () =>{
         await props.methods.commonComponentRender({
-            mountDiv:   'common_dialogue_user_menu_content',
+            mountDiv:   'common_dialogue_user_menu_detail',
             data:       {
                             app_id:props.data.app_id,
                             iam_user_id:props.data.iam_user_id,
-                            common_app_id:props.data.common_app_id,
                             admin_app_id:props.data.admin_app_id
                         },
             methods:    {
@@ -135,7 +139,7 @@ const component = async props => {
      */
     const eventClickIamUserApp = async () =>{
         await props.methods.commonComponentRender({
-            mountDiv:   'common_dialogue_user_menu_content',
+            mountDiv:   'common_dialogue_user_menu_detail',
             data:       {
                             app_id:props.data.app_id,
                             iam_user_id:props.data.iam_user_id,
@@ -158,11 +162,11 @@ const component = async props => {
     const onMounted = async () =>{
         if (props.data.iam_user_id){
             //mount messages
-            eventClickMessages();
+            await eventClickMessages();
         }
         else{
             //mount iam_user_app
-            eventClickIamUserApp();
+            await eventClickIamUserApp();
         }
         
         if (props.data.token_exp && props.data.token_iat){

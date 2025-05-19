@@ -23,8 +23,8 @@ const APP_GLOBAL = {token:null};
  * @param {Error} error 
  * @returns {void}
  */
-const appException = (error) => {
-    common.commonMessageShow('EXCEPTION', null, null, null, error);
+const appException = error => {
+    common.commonMessageShow('EXCEPTION', null, null, error);
 };
 /**
  * @name appEventClick
@@ -185,6 +185,24 @@ const appEventClick = event => {
                     break;
                 }
                 //dialogue user menu
+                case 'common_iam_avatar':
+                case 'common_iam_avatar_logged_in':
+                case 'common_iam_avatar_avatar':
+                case 'common_iam_avatar_avatar_img':
+                case 'common_iam_avatar_logged_out':
+                case 'common_iam_avatar_default_avatar':{
+                    if (common.COMMON_GLOBAL.iam_user_id==null)
+                        common.commonComponentRender({
+                            mountDiv:   'common_dialogue_user_menu_app_theme',
+                            data:       null,
+                            methods:    {
+                                        commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
+                                        commonComponentRender:common.commonComponentRender, 
+                                        app_theme_update:common.commonMiscPreferencesPostMount
+                                        },
+                            path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+                    break;
+                }
                 case 'common_dialogue_user_menu_nav_iam_user_app':{
                     common.commonComponentRender({
                             mountDiv:   'common_dialogue_user_menu_app_theme', 
@@ -343,7 +361,7 @@ const appPaymentRequestUpdate = async status => {
                             token:              APP_GLOBAL.token,
                             status:             status
                         }})
-    .then((result)=>status==1?common.commonMessageShow('INFO', null, null, null,JSON.parse(result).rows[0].status, common.COMMON_GLOBAL.common_app_id):null)
+    .then((result)=>status==1?common.commonMessageShow('INFO', null, null,JSON.parse(result).rows[0].status):null)
     .finally(()=>{
         //remove the token since user answered the request
         APP_GLOBAL.token=null;

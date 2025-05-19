@@ -13,24 +13,24 @@
  * @function
 */
 const template = () =>` <div id='common_dialogue_user_menu_app_theme'></div>
-                           <div id='common_dialogue_user_menu_iam_user_app'>
-                               <div id='common_dialogue_user_menu_iam_user_app_locale' class='common_dialogue_user_menu_iam_user_app_col1 common_icon'></div>
-                               <div class='common_dialogue_user_menu_iam_user_app_col2'>
-                                   <div id='common_dialogue_user_menu_iam_user_app_locale_select'></div>
-                               </div>
-                               <div id='common_dialogue_user_menu_iam_user_app_timezone' class='common_dialogue_user_menu_iam_user_app_col1 common_icon'></div>
-                               <div class='common_dialogue_user_menu_iam_user_app_col2'>
-                                   <div id='common_dialogue_user_menu_iam_user_app_timezone_select'></div>
-                               </div>
-                               <div id='common_dialogue_user_menu_iam_user_app_direction' class='common_dialogue_user_menu_iam_user_app_col1 common_icon'></div>
-                               <div class='common_dialogue_user_menu_iam_user_app_col2'>
-                                   <div id='common_dialogue_user_menu_iam_user_app_direction_select'></div>
-                               </div>
-                               <div id='common_dialogue_user_menu_iam_user_app_arabic_script' class='common_dialogue_user_menu_iam_user_app_col1 common_icon'></div>
-                               <div class='common_dialogue_user_menu_iam_user_app_col2'>
-                                   <div id='common_dialogue_user_menu_iam_user_app_arabic_script_select'></div>
-                               </div>
-                           </div>`;
+                        <div id='common_dialogue_user_menu_iam_user_app'>
+                            <div id='common_dialogue_user_menu_iam_user_app_locale' class='common_dialogue_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div class='common_dialogue_user_menu_iam_user_app_col2'>
+                                <div id='common_dialogue_user_menu_iam_user_app_locale_select'></div>
+                            </div>
+                            <div id='common_dialogue_user_menu_iam_user_app_timezone' class='common_dialogue_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div class='common_dialogue_user_menu_iam_user_app_col2'>
+                                <div id='common_dialogue_user_menu_iam_user_app_timezone_select'></div>
+                            </div>
+                            <div id='common_dialogue_user_menu_iam_user_app_direction' class='common_dialogue_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div class='common_dialogue_user_menu_iam_user_app_col2'>
+                                <div id='common_dialogue_user_menu_iam_user_app_direction_select'></div>
+                            </div>
+                            <div id='common_dialogue_user_menu_iam_user_app_arabic_script' class='common_dialogue_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div class='common_dialogue_user_menu_iam_user_app_col2'>
+                                <div id='common_dialogue_user_menu_iam_user_app_arabic_script_select'></div>
+                            </div>
+                        </div>`;
 /**
 * @name component
 * @description Component

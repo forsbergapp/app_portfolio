@@ -3,7 +3,7 @@
  * @module apps/common/component/common_dialogue_user_menu_messages
  */
 /**
- * @import {CommonMessageType,
+ * @import {MessageQueuePublishMessage,
  *          CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
 
@@ -11,24 +11,26 @@
  * @name template
  * @description Template
  * @function
- * @param {{messages:CommonMessageType[],
+ * @param {{messages:MessageQueuePublishMessage[],
  *          commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate']}} props
  * @returns {string}
  */
 const template = props => ` <div id='common_dialogue_user_menu_messages'>
-                               <div class='common_dialogue_user_menu_messages_row_title'>
-                                   <div class='common_dialogue_user_menu_messages_col_date' class='common_icon'>DATE</div>
-                                   <div class='common_dialogue_user_menu_messages_col_sender' class='common_icon'>SENDER</div>
-                                   <div class='common_dialogue_user_menu_messages_col_subject' class='common_icon'>ABC</div>
-                               </div>
-                               ${props.messages.map(row=>
-                                `<div class='common_dialogue_user_menu_messages_row common_row' data-client_ip=${row.client_ip} data-host=${row.host} data-id=${row.id} data-message=${row.message}'>
-                                    <div class='common_dialogue_user_menu_messages_col_date' class='common_icon'>${row.created}</div>
-                                    <div class='common_dialogue_user_menu_messages_col_sender' class='common_icon'>${row.sender}</div>
-                                    <div class='common_dialogue_user_menu_messages_col_subject' class='common_icon'>${row.subject}</div>
-                                </div>`).join('')
-                               }
-                               <div id='common_dialogue_user_menu_message_content'></div>
+                                <div id='common_dialogue_user_menu_messages_list'>
+                                    <div class='common_dialogue_user_menu_messages_row_title common_dialogue_user_menu_messages_row'>
+                                    <div class='common_dialogue_user_menu_messages_col' class='common_icon'>DATE</div>
+                                    <div class='common_dialogue_user_menu_messages_col' class='common_icon'>SENDER</div>
+                                    <div class='common_dialogue_user_menu_messages_col' class='common_icon'>ABC</div>
+                                    </div>
+                                    ${props.messages.map(row=>
+                                    `<div class='common_dialogue_user_menu_messages_row common_row' data-client_ip=${row.message.client_ip} data-host=${row.message.host} data-id=${row.id} data-message=${row.message.message}'>
+                                        <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${props.commonMiscFormatJsonDate(row.created??'')}</div>
+                                        <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${row.message.sender ?? ''}</div>
+                                        <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${row.message.subject}</div>
+                                    </div>`).join('')
+                                    }
+                                </div>
+                                <div id='common_dialogue_user_menu_message_content'></div>
                            </div>`;
 /**
 * @name component
@@ -44,8 +46,6 @@ const template = props => ` <div id='common_dialogue_user_menu_messages'>
 *          methods:    {
 *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
 *                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate'],
-*                      commonMessageShow:CommonModuleCommon['commonMessageShow'],
-*                      commonMesssageNotAuthorized:CommonModuleCommon['commonMesssageNotAuthorized'],
 *                      commonFFB:CommonModuleCommon['commonFFB']
 *                      }}} props
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -55,11 +55,19 @@ const template = props => ` <div id='common_dialogue_user_menu_messages'>
 */
 const component = async props => {
    
-   /**@type{CommonMessageType[]} */    
+   /**@type{MessageQueuePublishMessage[]} */    
    const messages = await props.methods.commonFFB({ path:'/app-common-module/COMMON_MESSAGE_GET', 
                                                     method:'POST', 
+                                                    body:{  type:'FUNCTION', 
+                                                            IAM_iam_user_id:props.data.iam_user_id,
+                                                            IAM_data_app_id:props.data.common_app_id},
                                                     authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
-                       .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
+                       .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result))
+                       //sort message.id descending order
+                       .then(result=>result.sort((/**@type{MessageQueuePublishMessage}*/a,
+                                                  /**@type{MessageQueuePublishMessage}*/b)=>
+                                        /**@ts-ignore */
+                                        a.id>b.id?0:1));
    /**
     * @returns {Promise.<void>}
     */

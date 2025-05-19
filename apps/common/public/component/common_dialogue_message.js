@@ -62,8 +62,6 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  *                      commonMountdiv:string,
  *                      text_class:string,
  *                      message_type:'ERROR_BFF'|'INFO'|'EXCEPTION'|'LOG'|'CONFIRM'|'PROGRESS',
- *                      data_app_id:number,
- *                      code:string,
  *                      message:*},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,

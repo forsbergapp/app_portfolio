@@ -106,7 +106,7 @@ const component = async props => {
                     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').classList.add('common_input_error');
                     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').classList.add('common_input_error');
                     //code not valid
-                    props.methods.commonMessageShow('INFO', null, null, 'message_text',props.methods.commonMesssageNotAuthorized(), props.data.common_app_id);
+                    props.methods.commonMessageShow('INFO', null, 'message_text',props.methods.commonMesssageNotAuthorized());
                 }                
             } 
             else{

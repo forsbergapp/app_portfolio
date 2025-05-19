@@ -1209,20 +1209,20 @@ body.rtl{
     width: 300px;
 	text-align: center;
 }
+#common_dialogue_user_menu_content.common_dialogue_user_menu_connected{
+    height:31em;
+}
 #common_dialogue_user_menu .common_select .common_select_options{
 	display: none;
 	width: calc(85% - 60px);
 }
 #common_dialogue_user_menu .common_select{
 	width: 100%;
+    margin-bottom: 1em;
+    vertical-align: inherit;
 }
 #common_dialogue_user_menu_token_countdown > div {
 	display: inline-block;
-}
-#common_dialogue_user_menu_app_theme{
-	width: unset !important;
-	margin: 10px;
-	white-space: nowrap;
 }
 #common_dialogue_user_menu_nav>div{
     cursor: pointer;
@@ -1246,7 +1246,36 @@ body.rtl{
 #common_dialogue_user_menu_logged_out div{
 	cursor:pointer;
 }
+/* Dialogue user menu - messages */
+#common_dialogue_user_menu_messages{
+    border-radius: var(--common_app_css_border_radius);
+}
+#common_dialogue_user_menu_messages_list{
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 10em;
+    cursor: pointer;
+}
+.common_dialogue_user_menu_messages_row_title{
+    font-weight: bold;
+}
+.common_dialogue_user_menu_messages_row > div{
+    display: inline-block;
+}
+.common_dialogue_user_menu_messages_row{
+    display: grid;
+    text-align: start;
+    grid-template-columns: 10em 10em 10em;
+}
+#common_dialogue_user_menu_message_content{
+    height: 10em;
+}
 /* Dialogue user menu - iam user app*/
+#common_dialogue_user_menu_app_theme{
+	width: unset !important;
+	margin: 10px;
+	white-space: nowrap;
+}
 #common_dialogue_user_menu_iam_user_app div{
 	display: inline-block;
 }
@@ -1261,6 +1290,7 @@ body.rtl{
 	height: 1.5em;
 	width: 100%;
 	border: 0.5px solid;
+    
 }
 #common_dialogue_user_menu_iam_user_input_avatar_img{
 	display:none;

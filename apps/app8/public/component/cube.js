@@ -194,7 +194,7 @@ const component = async props => {
         }
         else
             if (button_id=='button_solve_cubestate' || button_id=='button_solved_step_cubestate')
-                props.methods.commonMessageShow('INFO', null, null, 'message_text','!', props.data.common_app_id);
+                props.methods.commonMessageShow('INFO', null, 'message_text','!');
     };
     /**
      * Solve the cube state using server function CUBE_SOLVE that uses generative AI pattern

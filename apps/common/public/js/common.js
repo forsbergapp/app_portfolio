@@ -70,6 +70,11 @@ const COMMON_GLOBAL = {
                 commonUserVerifyCheckInput:()=>null
             }
         },
+        common_dialogue_info:{
+            methods:{
+                eventClickSend:()=>null
+            }
+        },
         common_dialogue_user_menu:{
             methods:{
                 eventClickMessages:()=>null,
@@ -136,10 +141,10 @@ const commonMiscElementListTitle = element => element.classList.contains('list_t
  * @description Format JSON date with user timezone
  * @function
  * @param {string} db_date 
- * @param {boolean|null} short 
+ * @param {'SHORT'|'NORMAL'|'LONG'|null} format 
  * @returns {string|null}
  */
-const commonMiscFormatJsonDate = (db_date, short) => {
+const commonMiscFormatJsonDate = (db_date, format=null) => {
     if (db_date == null)
         return null;
     else {
@@ -149,24 +154,43 @@ const commonMiscFormatJsonDate = (db_date, short) => {
         //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
         /**@type{import('../../../common_types.js').COMMON_WINDOW['Intl']['DateTimeFormatOptions']} */ 
         let options;
-        if (short)
-            options = {
-                timeZone: COMMON_GLOBAL.user_timezone,
-                year: 'numeric',
-                month: 'long'
-            };
-        else
-            options = {
-                timeZone: COMMON_GLOBAL.user_timezone,
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                timeZoneName: 'long'
-            };
+        switch (format){
+            case 'SHORT':{
+                options = {
+                    timeZone: COMMON_GLOBAL.user_timezone,
+                    year: 'numeric',
+                    month: 'long'
+                };
+                break;
+            }
+            case 'LONG':{
+                options = {
+                    timeZone: COMMON_GLOBAL.user_timezone,
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    timeZoneName: 'long'
+                };
+                break;
+            }
+            default:
+            case 'NORMAL':{
+                options = {
+                    timeZone: COMMON_GLOBAL.user_timezone,
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                break;
+            }
+        }
+            
         const utc_date = new Date(Date.UTC(
             Number(db_date.substring(0, 4)), //year
             Number(db_date.substring(5, 7)) - 1, //month
@@ -235,7 +259,7 @@ const commonMiscImageShow = async (item_img, item_input, image_width, image_heig
         const fileExtension = fileName.split('.').pop();
         if (!allowedExtensions.includes(fileExtension)){
             //File type not allowed
-            commonMessageShow('INFO', null, null, null,commonMesssageNotAuthorized(), COMMON_GLOBAL.common_app_id);
+            commonMessageShow('INFO', null, null,commonMesssageNotAuthorized());
             resolve(null);
         }
         else
@@ -402,7 +426,7 @@ const commonMiscInputControl = (dialogue, validate_items) =>{
         set_error(validate_items.password_new, validate_items.password_new_confirm);
     }
     if (result==false){
-        commonMessageShow('INFO', null, null, 'message_text','!', COMMON_GLOBAL.common_app_id);
+        commonMessageShow('INFO', null, 'message_text','!');
         return false;
     }
     else
@@ -1138,26 +1162,22 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
  * @description Show message dialogue
  * @function
  * @param {'ERROR'|'ERROR_BFF'|'INFO'|'EXCEPTION'|'CONFIRM'|'LOG'|'PROGRESS'} message_type 
- * @param {string|null} code
  * @param {function|null} function_event 
  * @param {string|null} text_class
  * @param {*} message 
- * @param {number|null} data_app_id 
  * @returns {Promise.<void>}
  */
-const commonMessageShow = async (message_type, code, function_event, text_class=null, message=null, data_app_id=null) => {
+const commonMessageShow = async (message_type, function_event, text_class=null, message=null) => {
     commonComponentRender({
         mountDiv:       'common_dialogue_message',
         data:           {
                         message_type:message_type,
-                        data_app_id:data_app_id,
-                        code:code,
                         text_class:text_class,
                         message:message
                         },
         methods:        {
                         commonComponentRemove:commonComponentRemove,
-                       commonFFB:commonFFB, 
+                        commonFFB:commonFFB, 
                         function_event:function_event
                         },
         path:           '/common/component/common_dialogue_message.js'});
@@ -1833,7 +1853,7 @@ const commonUserSignup = () => {
             COMMON_GLOBAL.token_exp =       JSON.parse(result).exp;
             COMMON_GLOBAL.token_iat =       JSON.parse(result).iat;
             COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
-            commonMessageShow('INFO', null, null, null,JSON.parse(result).otp_key, COMMON_GLOBAL.common_app_id);
+            commonMessageShow('INFO', null, null,JSON.parse(result).otp_key);
             
             commonDialogueShow('VERIFY', 'SIGNUP');
         });
@@ -1909,7 +1929,7 @@ const commonIamUserAppDelete = (choice=null, function_delete_event=null) => {
                                     })==false)
                     resolve(null);
                 else{
-                    commonMessageShow('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
+                    commonMessageShow('CONFIRM',function_delete_event, null, null);
                     resolve(null);
                 }
                 break;
@@ -2214,22 +2234,22 @@ const commonFFB = async parameter => {
                         }
                         case 400:{
                             //Bad request
-                            commonMessageShow('ERROR_BFF', null, null, 'message_text', '!', COMMON_GLOBAL.app_id);
+                            commonMessageShow('ERROR_BFF', null, 'message_text', '!');
                             throw result;
                         }
                         case 404:{
                             //Not found
-                            commonMessageShow('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
+                            commonMessageShow('ERROR_BFF', null, null, result);
                             throw result;
                         }
                         case 401:{
                             //Unauthorized, token expired
-                            commonMessageShow('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
+                            commonMessageShow('ERROR_BFF', null, null, result);
                             throw result;
                         }
                         case 403:{
                             //Forbidden, not allowed to login or register new user
-                            commonMessageShow('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
+                            commonMessageShow('ERROR_BFF', null, null, result);
                             throw result;
                         }
                         case 500:{
@@ -2239,7 +2259,7 @@ const commonFFB = async parameter => {
                         }
                         case 503:{
                             //Service unavailable or other error in microservice
-                            commonMessageShow('ERROR_BFF', null, null, null, result, COMMON_GLOBAL.app_id);
+                            commonMessageShow('ERROR_BFF', null, null, result);
                             throw result;
                         }
                     }
@@ -2303,7 +2323,7 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
             break;
         }
 		case 'PROGRESS':{
-			commonMessageShow('PROGRESS', null, null, null, JSON.parse(commonWindowFromBase64(message)));
+			commonMessageShow('PROGRESS', null, null, JSON.parse(commonWindowFromBase64(message)));
             break;
         }
         case 'APP_FUNCTION':{
@@ -2645,9 +2665,11 @@ const commonEvent = async (event_type,event=null) =>{
                                         info_link_terms_name:COMMON_GLOBAL.info_link_terms_name
                                         },
                             methods:    {
-                                        commonFFB:commonFFB
+                                        commonFFB:commonFFB,
+                                        commonMessageShow:commonMessageShow
                                         },
-                            path:       '/common/component/common_dialogue_info.js'});
+                            path:       '/common/component/common_dialogue_info.js'})
+                            .then(component=>COMMON_GLOBAL.component.common_dialogue_info.methods = component.methods);
                             break;
                         }            
                         case 'common_dialogue_apps_list':
@@ -2658,6 +2680,10 @@ const commonEvent = async (event_type,event=null) =>{
                             }
                             break;
                         //Dialogue info
+                        case 'common_dialogue_info_contact_message_send':{
+                            COMMON_GLOBAL.component.common_dialogue_info.methods.eventClickSend();
+                            break;
+                        }
                         case 'common_dialogue_info_app_link':{
                             if (COMMON_GLOBAL.app_link_url)
                                 COMMON_WINDOW.open(COMMON_GLOBAL.app_link_url,'_blank','');
@@ -2800,19 +2826,19 @@ const commonEvent = async (event_type,event=null) =>{
                         case 'common_dialogue_user_menu_nav_messages':{
                             COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                            COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickMessages();
+                            await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickMessages();
                             break;
                         }
                         case 'common_dialogue_user_menu_nav_iam_user_app':{
                             COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                            COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickIamUserApp();
+                            await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickIamUserApp();
                             break;
                         }
                         case 'common_dialogue_user_menu_nav_iam_user':{
                             COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                            COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickIamUser();
+                            await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickIamUser();
                             break;
                         }
                         case 'common_dialogue_user_menu_close':{

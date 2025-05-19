@@ -685,47 +685,47 @@
  * @typedef {{'content-security-policy':string}} server_db_document_ConfigIamPolicy
  */
 
-
 /**
  * @description DB TABLE MessageQueuePublish
  * @memberof dbObjects
  * @typedef {{  id?:number,
-*               service:string,
-*               message:*,
-*               created?:string}} server_db_table_MessageQueuePublish
-*/
+ *              service:'MESSAGE'|'BATCH'|'GEOLOCATION',
+ *              message:*,
+ *              created?:string}} server_db_table_MessageQueuePublish
+ */
+
 /**
-* @description DB TABLE MessageQueueConsume
-* @memberof dbObjects
-* @typedef {{  id:number,
-*              message_queue_publish_id:number,
-*              message:*,
-*              start:string|null,
-*              finished:string|null,
-*              result:*,
-*              created?:string,
-*              modified?:string}} server_db_table_MessageQueueConsume
-*/
+ * @description DB TABLE MessageQueueConsume
+ * @memberof dbObjects
+ * @typedef {{  id:number,
+ *              message_queue_publish_id:number,
+ *              message:*,
+ *              start:string|null,
+ *              finished:string|null,
+ *              result:*,
+ *              created?:string,
+ *              modified?:string}} server_db_table_MessageQueueConsume
+ */
+
 /**
-* @description DB TABLE MessageQueueError
-* @memberof dbObjects
-* @typedef {{  id:number,
-*              message_queue_publish_id:number,
-*              message:*,
-*              result:*,
-*              created:string}} server_db_table_MessageQueueError
-*/
+ * @description DB TABLE MessageQueueError
+ * @memberof dbObjects
+ * @typedef {{  id:number,
+ *              message_queue_publish_id:number,
+ *              message:*,
+ *              result:*,
+ *              created:string}} server_db_table_MessageQueueError
+ */
 
 /**
  * @description DB common result
  * @typedef {server_db_common_result_select|server_db_common_result_insert|server_db_common_result_delete|server_db_common_result_update}  server_db_common_result
-*/
-
+ */
 
 /**
  * @description DB common result SELECT
  * @typedef {{  rows:*[]}}  server_db_common_result_select
-*/
+ */
 
 /**
  * @description DB common result INSERT
@@ -988,14 +988,14 @@
 /**
  * @description DB server_db_table_MessageQueuePublishMessage
  * 
- * @typedef {{  id:number,
- *              sender:string,
+ * @typedef {{  id?:number,
+ *              sender:string|null,
  *              receiver_id:number|null,
  *              host:string,
  *              client_ip:string,
  *              subject:string,
  *              message:string,
- *              created:string
+ *              created?:string
  *          }} server_db_table_MessageQueuePublishMessage
  */
 

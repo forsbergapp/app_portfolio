@@ -21,8 +21,8 @@ const common = await import(commonPath);
  * @param {*} error 
  * @returns {void}
  */
-const appException = (error) => {
-    common.commonMessageShow('EXCEPTION', null, null, null, error);
+const appException = error => {
+    common.commonMessageShow('EXCEPTION', null, null, error);
 };
 /**
  * @name appEventClick
@@ -55,6 +55,24 @@ const appEventClick = event =>{
                     break;
                 }
                 //dialogue user menu
+                case 'common_iam_avatar':
+                case 'common_iam_avatar_logged_in':
+                case 'common_iam_avatar_avatar':
+                case 'common_iam_avatar_avatar_img':
+                case 'common_iam_avatar_logged_out':
+                case 'common_iam_avatar_default_avatar':{
+                    if (common.COMMON_GLOBAL.iam_user_id==null)
+                        common.commonComponentRender({
+                            mountDiv:   'common_dialogue_user_menu_app_theme',
+                            data:       null,
+                            methods:    {
+                                        commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
+                                        commonComponentRender:common.commonComponentRender, 
+                                        app_theme_update:common.commonMiscPreferencesPostMount
+                                        },
+                            path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+                    break;
+                }
                 case 'common_dialogue_user_menu_nav_iam_user_app':{
                     common.commonComponentRender({
                             mountDiv:   'common_dialogue_user_menu_app_theme',
