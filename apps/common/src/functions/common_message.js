@@ -3,7 +3,9 @@
 */
 
 /**
- * @import {server_server_response,server_db_table_MessageQueuePublishMessage} from '../../../../server/types.js'
+ * @import {server_server_response,
+ *          server_db_table_MessageQueuePublish,
+ *          server_db_table_MessageQueuePublishMessage} from '../../../../server/types.js'
  */
 
 /**
@@ -27,60 +29,86 @@
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:*[]}>}
+ * @returns {Promise.<server_server_response & {result?:Object.<string,*>[]}>}
  */
 const appFunction = async parameters =>{
-const {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
-const MessageQueuePublish = await import('../../../../server/db/MessageQueuePublish.js');
-const MessageQueueConsume = await import('../../../../server/db/MessageQueueConsume.js');
-const MessageQueueError = await import('../../../../server/db/MessageQueueError.js');
-/**
- * @returns {server_server_response}
- */
-const messageError = () =>{
-    return {http:400,
-            code:'DOC',
-            text:iamUtilMessageNotAuthorized(),
-            developerText:null,
-            moreInfo:null,
-            type:'JSON'
-        };
-};
-switch (parameters.resource_id){
-    case 'COMMON_MESSAGE_CONTACT':{
-        if (parameters.data.message){
-            /**@type{server_db_table_MessageQueuePublishMessage}*/
-            const message = {
-                    sender: 'CONTACT',
-                    receiver_id:null,
-                    host: parameters.host,
-                    client_ip:parameters.ip,
-                    subject:parameters.data.subject,
-                    message: parameters.data.message
+    const {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
+    const MessageQueuePublish = await import('../../../../server/db/MessageQueuePublish.js');
+    const MessageQueueConsume = await import('../../../../server/db/MessageQueueConsume.js');
+    const MessageQueueError = await import('../../../../server/db/MessageQueueError.js');
+    /**
+     * @returns {server_server_response}
+     */
+    const messageError = () =>{
+        return {http:400,
+                code:'DOC',
+                text:iamUtilMessageNotAuthorized(),
+                developerText:null,
+                moreInfo:null,
+                type:'JSON'
             };
-            return MessageQueuePublish.post({app_id:parameters.app_id, data:message});
+    };
+    switch (parameters.resource_id){
+        case 'COMMON_MESSAGE_CONTACT':{
+            if (parameters.data.message){
+                /**@type{server_db_table_MessageQueuePublishMessage}*/
+                const message = {
+                        sender: null,
+                        receiver_id:null,
+                        host: parameters.host,
+                        client_ip:parameters.ip,
+                        subject:'CONTACT',
+                        message: parameters.data.message
+                };
+                /**@type{server_db_table_MessageQueuePublish} */
+                const message_queue_message = {service:'MESSAGE', message:message};
+                return {result:[await MessageQueuePublish.post({app_id:parameters.app_id, 
+                                                                data:message_queue_message})
+                                .then(result=>{
+                                    if(result.result?.affectedRows)
+                                        return {sent:result.result.affectedRows};
+                                    else
+                                        return {sent:0};
+                                })], type:'JSON'};
+            }
+            else
+                return messageError();
         }
-        else
+        case 'COMMON_MESSAGE_COUNT':{
             return messageError();
-    }
-    case 'COMMON_MESSAGE_COUNT':{
-        return messageError();
-    }
-    case 'COMMON_MESSAGE_GET':{
-        return messageError();
-    }
-    case 'COMMON_MESSAGE_READ':{
-        return messageError();
-    }
-    case 'COMMON_MESSAGE_DELETE':{
-        return messageError();
-    }
-    case 'COMMON_MESSAGE_SEND':{
-        return messageError();
-    }
-    default:{
-        return messageError();
-    }
-}    
+        }
+        case 'COMMON_MESSAGE_GET':{
+            const IamUser = (await import('../../../../server/db/IamUser.js')).get(parameters.app_id, 
+                                                                                   parameters.data.iam_user_id).result[0];
+            
+            const result = MessageQueuePublish.get({app_id:parameters.app_id, resource_id:null});
+            if (result.http)
+                return result;
+            else  
+                return {result:result.result.filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>
+                                message.service=='MESSAGE' &&
+                                (
+                                    //admin can read messages without receiver and its own messages
+                                    (IamUser.type == 'ADMIN' && 
+                                    (message.message.receiver_id == null ||message.message.receiver_id ==parameters.data.iam_user_id))||
+                                    //user can only read its own messages
+                                message.message.receiver_id ==parameters.data.iam_user_id
+                                )
+                                ),
+                        type:'JSON'};
+        }
+        case 'COMMON_MESSAGE_READ':{
+            return messageError();
+        }
+        case 'COMMON_MESSAGE_DELETE':{
+            return messageError();
+        }
+        case 'COMMON_MESSAGE_SEND':{
+            return messageError();
+        }
+        default:{
+            return messageError();
+        }
+    }    
 };
 export default appFunction;

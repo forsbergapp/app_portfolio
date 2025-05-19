@@ -212,6 +212,11 @@
  *                                  commonUserVerifyCheckInput:function
  *                              }
  *                          },
+ *                          common_dialogue_info:{
+ *                              methods:{
+ *                                  eventClickSend:function
+ *                              }
+ *                          }
  *                          common_dialogue_user_menu:{
  *                              methods:{
  *                                  eventClickMessages:function,
@@ -470,6 +475,21 @@
  *              message:string,
  *              created:string
  *          }} CommonMessageType
+ */
+/**
+ * @description Type
+ * @typedef {{  id?:number,
+ *              service:'MESSAGE'|'BATCH'|'GEOLOCATION',
+ *              message:CommonMessageType,
+ *              created?:string}} MessageQueuePublishMessage
+ */
+/**
+ * @description Type
+ * @typedef {{  id?:number,
+ *              service:'BATCH'|'GEOLOCATION',
+ *              message:{type:'MICROSERVICE_LOG'|'MICROSERVICE_ERROR',
+ *                       message:*},
+ *              created?:string}} MessageQueuePublishMicroserviceLog
  */
 
 /**

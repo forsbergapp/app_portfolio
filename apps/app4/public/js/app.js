@@ -1348,7 +1348,7 @@ const appUserSettingDelete = (choice=null) => {
     
     switch (choice){
         case null:{
-            common.commonMessageShow('CONFIRM',null,function_delete_user_setting, null, null, common.COMMON_GLOBAL.app_id);
+            common.commonMessageShow('CONFIRM',function_delete_user_setting, null, null);
             break;
         }
         case 1:{
@@ -2047,6 +2047,24 @@ const appEventClick = event => {
                     break;
                 }
                 //dialogue user menu
+                case 'common_iam_avatar':
+                case 'common_iam_avatar_logged_in':
+                case 'common_iam_avatar_avatar':
+                case 'common_iam_avatar_avatar_img':
+                case 'common_iam_avatar_logged_out':
+                case 'common_iam_avatar_default_avatar':{
+                    if (common.COMMON_GLOBAL.iam_user_id==null)
+                        common.commonComponentRender({
+                            mountDiv:   'common_dialogue_user_menu_app_theme',
+                            data:       null,
+                            methods:    {
+                                        commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
+                                        commonComponentRender:common.commonComponentRender, 
+                                        app_theme_update:common.commonMiscPreferencesPostMount
+                                        },
+                            path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+                    break;
+                }
                 case 'common_dialogue_user_menu_nav_iam_user_app':{
                     common.commonComponentRender({
                         mountDiv:   'common_dialogue_user_menu_app_theme',
@@ -2298,7 +2316,7 @@ const appModuleLeafletMapUpdate = async (parameters) => {
  * @returns {void}
  */
 const appException = error => {
-    common.commonMessageShow('EXCEPTION', null, null, null, error);
+    common.commonMessageShow('EXCEPTION', null, null, error);
 };
 /**
  * @name appFrameworkSet

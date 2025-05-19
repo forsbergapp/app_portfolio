@@ -15,11 +15,11 @@ const ORM = await import('./ORM.js');
  * @description Get user 
  * @function
  * @param {{app_id:number,
- *          resource_id:number}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_table_MessageQueuePublish[]}>}
+ *          resource_id:number|null}} parameters
+ * @returns {server_server_response & {result?:server_db_table_MessageQueuePublish[]}}
  */
-const get = async parameters =>{
-    const result = await ORM.Execute({app_id:0, dml:'GET', object:'MessageQueuePublish', get:{resource_id:parameters.resource_id, partition:null}});
+const get = parameters =>{
+    const result = ORM.getObject(parameters.app_id, 'MessageQueuePublish',null, null);    
     if (result.rows.length>0)
         return {result:result.rows, type:'JSON'};
     else
@@ -36,28 +36,28 @@ const get = async parameters =>{
 const post = async parameters => {
 
     if (  parameters.data.service == 'MESSAGE' && 
-          parameters.data.sender && 
-          parameters.data.receiver_id && 
-          parameters.data.host && 
-          parameters.data.client_ip && 
-          parameters.data.subject && 
-          parameters.data.message && 
+          'sender' in parameters.data.message && 
+          'receiver_id' in parameters.data.message && 
+          parameters.data.message?.host && 
+          parameters.data.message?.client_ip && 
+          parameters.data.message?.subject && 
+          parameters.data.message?.message && 
           //no other keys
-          Object.keys(parameters.data).length==6){
+          Object.keys(parameters.data.message).length==6){
         /**@type{server_db_table_MessageQueuePublishMessage}*/    
-        const message = {sender:parameters.data.sender,
-                         receiver_id:parameters.data.receiver_id,
-                         host:parameters.data.host,
-                         client_ip:parameters.data.client_ip,
-                         subject:parameters.data.subject,
-                         message:parameters.data.message
+        const message = {sender:        parameters.data.message.sender,
+                         receiver_id:   parameters.data.message.receiver_id,
+                         host:          parameters.data.message.host,
+                         client_ip:     parameters.data.message.client_ip,
+                         subject:       parameters.data.message.subject,
+                         message:       parameters.data.message.message
         };
         /**@type{server_db_table_MessageQueuePublish}*/
         const data_new = {
-            id:Date.now(),
+            id:     Date.now(),
             service:parameters.data.service,
             message:message, 
-            created: new Date().toISOString()
+            created:new Date().toISOString()
         };
         return {
             result:await ORM.Execute({ app_id:parameters.app_id, 
@@ -67,13 +67,12 @@ const post = async parameters => {
     }
     else
         if( (parameters.data.service == 'BATCH' || parameters.data.service == 'GEOLOCATION') &&
-            (parameters.data.type=='MICROSERVICE_LOG' || parameters.data.type=='MICROSERVICE_ERROR') &&
-            parameters.data.message &&
+            (parameters.data.message?.type=='MICROSERVICE_LOG' || parameters.data.message?.type=='MICROSERVICE_ERROR') &&
             //no other keys
-            Object.keys(parameters.data).length==3){
+            Object.keys(parameters.data.message).length==2){
             /**@type{server_db_table_MessageQueuePublishMicroserviceLog}*/
-            const message = {type:parameters.data.type,
-                             message:parameters.data.message
+            const message = {type:parameters.data.message.type,
+                             message:parameters.data.message.message
             };
             /**@type{server_db_table_MessageQueuePublish}*/
             const data_new = {

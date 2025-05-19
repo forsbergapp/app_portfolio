@@ -37,7 +37,7 @@ const APP_GLOBAL = {
  * @returns {void}
  */
 const appException = error => {
-    common.commonMessageShow('EXCEPTION', null, null, null, error);
+    common.commonMessageShow('EXCEPTION', null, null, error);
 };
 /**
  * @name appEventClick
@@ -90,11 +90,11 @@ const appEventClick = (event=null) => {
                         APP_GLOBAL.cube_solve(APP_GLOBAL.cube, APP_GLOBAL.cube_controls, event.target.id, cubestate.split(' '));
                     else
                         if (cubestate)
-                            common.commonMessageShow('INFO', null, null, 'message_text','!', common.COMMON_GLOBAL.common_app_id);
+                            common.commonMessageShow('INFO', null, 'message_text','!');
                     break;
                 }
                 case 'button_info':{
-                    common.commonMessageShow('INFO', null, null, null,APP_GLOBAL.cube.getState(), common.COMMON_GLOBAL.common_app_id);
+                    common.commonMessageShow('INFO', null, null,APP_GLOBAL.cube.getState());
                     break;
                 }
                 case event.target.id.startsWith('button_solve_speed')?event_target_id:null:{

@@ -69,15 +69,15 @@ const template = props => ` <div id='common_dialogue_user_menu_iam_user'>
                                </div>
                                <div class='common_dialogue_user_menu_iam_user_row'>
                                    <div id='common_dialogue_user_menu_iam_user_label_last_logintime' class='common_icon'></div>
-                                   <div id='common_dialogue_user_menu_iam_user_label_data_last_logintime'>${props.commonMiscFormatJsonDate(props.user.last_logintime ??'', null)}</div>
+                                   <div id='common_dialogue_user_menu_iam_user_label_data_last_logintime'>${props.commonMiscFormatJsonDate(props.user.last_logintime ??'', 'LONG')}</div>
                                </div>
                                <div class='common_dialogue_user_menu_iam_user_row'>
                                    <div id='common_dialogue_user_menu_iam_user_label_account_created' class='common_icon'></div>
-                                   <div id='common_dialogue_user_menu_iam_user_label_data_account_created'>${props.commonMiscFormatJsonDate(props.user.created, null)}</div>
+                                   <div id='common_dialogue_user_menu_iam_user_label_data_account_created'>${props.commonMiscFormatJsonDate(props.user.created, 'LONG')}</div>
                                </div>
                                <div class='common_dialogue_user_menu_iam_user_row'>
                                    <div id='common_dialogue_user_menu_iam_user_label_account_modified' class='common_icon'></div>
-                                   <div id='common_dialogue_user_menu_iam_user_label_data_account_modified'>${props.commonMiscFormatJsonDate(props.user.modified ??'', null)}</div>
+                                   <div id='common_dialogue_user_menu_iam_user_label_data_account_modified'>${props.commonMiscFormatJsonDate(props.user.modified ??'', 'LONG')}</div>
                                </div>
                            </div>
                            <div id='common_dialogue_user_menu_iam_user_buttons'>
@@ -92,7 +92,6 @@ const template = props => ` <div id='common_dialogue_user_menu_iam_user'>
 *                      commonMountdiv:string,
 *                      app_id:number,
 *                      iam_user_id:number,
-*                      common_app_id:number,
 *                      admin_app_id:number,
 *                      },
 *          methods:    {
@@ -128,7 +127,7 @@ const component = async props => {
                                                                                                            'url()';
        } else {
            //User not found
-           props.methods.commonMessageShow('INFO', null, null, 'message_text',props.methods.commonMesssageNotAuthorized(), props.data.common_app_id);
+           props.methods.commonMessageShow('INFO', null, 'message_text',props.methods.commonMesssageNotAuthorized());
        }
    };
    return {

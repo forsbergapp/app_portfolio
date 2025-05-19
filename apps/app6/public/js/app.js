@@ -20,8 +20,8 @@ const common = await import(commonPath);
  * @param {Error} error 
  * @returns {void}
  */
-const appException = (error) => {
-    common.commonMessageShow('EXCEPTION', null, null, null, error);
+const appException = error => {
+    common.commonMessageShow('EXCEPTION', null, null, error);
 };
 /**
  * @name appEventClick
@@ -185,7 +185,7 @@ const appPaymentRequestStatus = ()=>{
             if (status != 'PENDING'){
                 common.COMMON_GLOBAL.token_at = null;
                 common.commonComponentRemove('common_dialogue_app_data_display', true);
-                common.commonMessageShow('INFO', null, null, null,status, common.COMMON_GLOBAL.common_app_id);
+                common.commonMessageShow('INFO', null, null,status);
             }
         })
         .catch(()=>{
@@ -263,7 +263,7 @@ const appPaymentRequest = async () =>{
             .catch(()=>common.commonComponentRemove('common_dialogue_app_data_display', true));
     }
     else
-        common.commonMessageShow('INFO', null, null, 'message_text','!', common.COMMON_GLOBAL.common_app_id);
+        common.commonMessageShow('INFO', null, 'message_text','!');
 };
 /**
  * @name appPayCancel
@@ -273,7 +273,7 @@ const appPaymentRequest = async () =>{
  */
 const appPayCancel = async () =>{
     common.COMMON_GLOBAL.token_at = null;
-    common.commonMessageShow('INFO',null,null,null, 'Payment cancel');
+    common.commonMessageShow('INFO',null,null, 'Payment cancel');
     common.commonComponentRemove('common_dialogue_app_data_display', true);
 };
 /**
