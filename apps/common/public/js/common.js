@@ -69,6 +69,13 @@ const COMMON_GLOBAL = {
             methods:{
                 commonUserVerifyCheckInput:()=>null
             }
+        },
+        common_dialogue_user_menu:{
+            methods:{
+                eventClickMessages:()=>null,
+                eventClickIamUser:()=>null,
+                eventClickIamUserApp:()=>null
+            }
         }
     },
     moduleLeaflet:{methods:{eventClickCountry:          ()=>null, 
@@ -1722,14 +1729,12 @@ const commonLogout = async () => {
     commonComponentRemove('common_dialogue_user_menu');
     commonWindoInfoClose();
     commonComponentRemove('common_dialogue_iam_verify');
-    commonComponentRemove('common_dialogue_iam_edit');
     if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.admin_app_id){
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= 'url()';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',null);
         commonComponentRemove('common_dialogue_iam_verify');
-        commonComponentRemove('common_dialogue_iam_edit');
         commonComponentRemove('common_dialogue_iam_start');
         commonComponentRemove('common_dialogue_profile', true);
     }
@@ -1750,15 +1755,15 @@ const commonLogout = async () => {
  * @returns {Promise.<boolean>}
  */
 const commonUserUpdate = async (totp=null) => {
-    if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
+    if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user'),
                             {
-                            username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_username'),
-                            password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password'),
-                            password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_confirm'),
-                            password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_reminder'),
-                            password_new: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new'),
-                            password_new_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new_confirm'),
-                            bio: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_bio')
+                            username: COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_username'),
+                            password: COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_password'),
+                            password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_password_confirm'),
+                            password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_password_reminder'),
+                            password_new: COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_password_new'),
+                            password_new_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_password_new_confirm'),
+                            bio: COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_bio')
                             })==false)
                 return false;
     if (totp==null){
@@ -1767,14 +1772,14 @@ const commonUserUpdate = async (totp=null) => {
     }
     else
         return new Promise(resolve=>{
-            const username =            COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_username').textContent;
-            const bio =                 COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_bio').textContent;
-            const avatar =              COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar').getAttribute('data-image').replace('null','')==''?
+            const username =            COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_username').textContent;
+            const bio =                 COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_bio').textContent;
+            const avatar =              COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_avatar').getAttribute('data-image').replace('null','')==''?
                                             null:
-                                                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar').getAttribute('data-image').replace('null','');
-            const password =            COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password').textContent;
-            const password_new =        COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new').textContent;
-            const password_reminder =   COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_reminder').textContent;
+                                                COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_avatar').getAttribute('data-image').replace('null','');
+            const password =            COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_password').textContent;
+            const password_new =        COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_password_new').textContent;
+            const password_reminder =   COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_password_reminder').textContent;
 
             commonFFB({ path:`/server-iam/iamuser/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
                         method:'PATCH', 
@@ -1783,12 +1788,12 @@ const commonUserUpdate = async (totp=null) => {
                                 password:           password,
                                 password_new:       password_new==''?null:password_new,
                                 bio:                bio,
-                                private:            Number(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_checkbox_profile_private').classList.contains('checked')),
+                                private:            Number(COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_checkbox_profile_private').classList.contains('checked')),
                                 password_reminder:  password_reminder,
                                 avatar:             avatar,
                                 totp:               totp
                             }, 
-                        spinner_id:'common_dialogue_iam_edit_btn_user_update'})
+                        spinner_id:'common_dialogue_user_menu_iam_user_btn_user_update'})
             .then((result)=>{
                 if (JSON.parse(result).updated==1){
                     commonUserSessionClear();
@@ -1895,12 +1900,12 @@ const commonUserFunction = function_name => {
  */
 const commonIamUserAppDelete = (choice=null, function_delete_event=null) => {
     return new Promise((resolve, reject)=>{
-        const password = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password').textContent;
+        const password = COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_password').textContent;
         switch (choice){
             case null:{
-                if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
+                if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user'),
                                     {
-                                        password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password')
+                                        password: COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_password')
                                     })==false)
                     resolve(null);
                 else{
@@ -1918,7 +1923,7 @@ const commonIamUserAppDelete = (choice=null, function_delete_event=null) => {
                                     IAM_iam_user_id:COMMON_GLOBAL.iam_user_id}, 
                             method:'DELETE', 
                             authorization_type:'APP_ACCESS',
-                            spinner_id:'common_dialogue_iam_edit_btn_user_delete_account'})
+                            spinner_id:'common_dialogue_user_menu_iam_user_btn_user_delete_account'})
                 .then(()=>  resolve({deleted: 1}))
                 .catch(err=>reject(err));
                 break;
@@ -1975,13 +1980,13 @@ const commonUserPreferenceSave = async () => {
                         IAM_data_app_id: COMMON_GLOBAL.app_id,
                         json_data: 
                         {  
-                            preference_locale:       COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_locale_select .common_select_dropdown_value')
+                            preference_locale:       COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_app_locale_select .common_select_dropdown_value')
                                                                         .getAttribute('data-value'),
-                            preference_timezone:     COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_timezone_select .common_select_dropdown_value')
+                            preference_timezone:     COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_app_timezone_select .common_select_dropdown_value')
                                                                         .getAttribute('data-value'),
-                            preference_direction:    COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_direction_select .common_select_dropdown_value')
+                            preference_direction:    COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_app_direction_select .common_select_dropdown_value')
                                                                         .getAttribute('data-value'),
-                            preference_arabic_script:COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_arabic_script_select .common_select_dropdown_value')
+                            preference_arabic_script:COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_app_arabic_script_select .common_select_dropdown_value')
                                                                         .getAttribute('data-value'),
                         }
                     };
@@ -2485,7 +2490,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
        COMMON_DOCUMENT.body.className = 'app_theme' + COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
        commonMiscPreferencesUpdateBodyClassFromPreferences();
    }
-   if (event_target_id == 'common_dialogue_user_menu_user_locale_select'){
+   if (event_target_id == 'common_dialogue_user_menu_iam_user_app_locale_select'){
        COMMON_GLOBAL.user_locale = target?.getAttribute('data-value') ?? '';
        /**
         * @todo change COMMON_WINDOW.navigator.language, however when logging out default COMMON_WINDOW.navigator.language will be set
@@ -2494,7 +2499,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
         */
        await commonUserPreferenceSave();
        await commonComponentRender({
-        mountDiv:   'common_dialogue_user_menu_user_locale_select', 
+        mountDiv:   'common_dialogue_user_menu_iam_user_app_locale_select', 
         data:       {
                     default_data_value:COMMON_GLOBAL.user_locale,
                     default_value:'',
@@ -2514,34 +2519,13 @@ const commonEventSelectAction = async (event_target_id, target) =>{
                     },
         methods:    {commonFFB:commonFFB},
         path:       '/common/component/common_select.js'});
-        commonMiscSelectCurrentValueSet('common_dialogue_user_menu_user_locale_select', COMMON_GLOBAL.user_locale);
+        commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_locale_select', COMMON_GLOBAL.user_locale);
    }
-   if (event_target_id == 'common_dialogue_user_menu_user_timezone_select'){
+   if (event_target_id == 'common_dialogue_user_menu_iam_user_app_timezone_select'){
        COMMON_GLOBAL.user_timezone = target?.getAttribute('data-value') ?? '';
-       await commonUserPreferenceSave().then(()=>{
-           if (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit').textContent !='') {
-               commonComponentRender({
-                   mountDiv:   'common_dialogue_iam_edit',
-                   data:       {
-                                app_id:COMMON_GLOBAL.app_id,
-                                iam_user_id:COMMON_GLOBAL.iam_user_id,
-                                common_app_id:COMMON_GLOBAL.common_app_id,
-                                admin_app_id:COMMON_GLOBAL.admin_app_id
-                               },
-                   methods:    {
-                              commonFFB:commonFFB,
-                               commonMessageShow:commonMessageShow,
-                               commonMesssageNotAuthorized:commonMesssageNotAuthorized,
-                               commonMiscFormatJsonDate:commonMiscFormatJsonDate
-                               },
-                   path:       '/common/component/common_dialogue_iam_edit.js'})
-               .then(()=>{
-                   commonComponentRemove('common_dialogue_user_menu');
-               });
-           }
-       });
+       await commonUserPreferenceSave();
    }
-   if(event_target_id =='common_dialogue_user_menu_user_direction_select'){
+   if(event_target_id =='common_dialogue_user_menu_iam_user_app_direction_select'){
        if(target?.getAttribute('data-value')=='rtl')
            COMMON_DOCUMENT.body.classList.add('rtl');
        else
@@ -2549,7 +2533,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
        COMMON_GLOBAL.user_direction = target?.getAttribute('data-value') ?? '';
        await commonUserPreferenceSave();
    }
-   if(event_target_id == 'common_dialogue_user_menu_user_arabic_script_select'){
+   if(event_target_id == 'common_dialogue_user_menu_iam_user_app_arabic_script_select'){
        COMMON_GLOBAL.user_arabic_script = target?.getAttribute('data-value') ?? '';
        //check if app theme div is using default theme with common select div
        if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme').className?
@@ -2782,6 +2766,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 mountDiv:   'common_dialogue_user_menu',
                                 data:       {
                                             app_id:COMMON_GLOBAL.app_id,
+                                            iam_user_id:COMMON_GLOBAL.iam_user_id,
                                             iam_user_username:COMMON_GLOBAL.iam_user_username,
                                             common_app_id:COMMON_GLOBAL.common_app_id,
                                             admin_app_id:COMMON_GLOBAL.admin_app_id,
@@ -2794,6 +2779,7 @@ const commonEvent = async (event_type,event=null) =>{
                                             user_arabic_script:COMMON_GLOBAL.user_arabic_script
                                             },
                                 methods:    {
+                                            commonMiscFormatJsonDate:commonMiscFormatJsonDate,
                                             commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
                                             commonWindowFromBase64:commonWindowFromBase64,
                                             commonFFB:commonFFB,
@@ -2802,14 +2788,33 @@ const commonEvent = async (event_type,event=null) =>{
                                             commonMessageShow:commonMessageShow,
                                             commonMesssageNotAuthorized:commonMesssageNotAuthorized
                                             },
-                                path:       '/common/component/common_dialogue_user_menu.js'});
+                                path:       '/common/component/common_dialogue_user_menu.js'})
+                                .then(component=>COMMON_GLOBAL.component.common_dialogue_user_menu.methods = component.methods);
                             break;
                         }
                         case 'common_dialogue_user_menu_username':{
                             commonComponentRemove('common_dialogue_user_menu');
                             await commonProfileShow();
                             break;
-                        }        
+                        }
+                        case 'common_dialogue_user_menu_nav_messages':{
+                            COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
+                            COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickMessages();
+                            break;
+                        }
+                        case 'common_dialogue_user_menu_nav_iam_user_app':{
+                            COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
+                            COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickIamUserApp();
+                            break;
+                        }
+                        case 'common_dialogue_user_menu_nav_iam_user':{
+                            COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
+                            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
+                            COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickIamUser();
+                            break;
+                        }
                         case 'common_dialogue_user_menu_close':{
                             commonComponentRemove('common_dialogue_user_menu', true);
                             break;
@@ -2818,52 +2823,26 @@ const commonEvent = async (event_type,event=null) =>{
                             commonComponentRemove('common_dialogue_user_menu');
                             commonDialogueShow('LOGIN');
                             break;
-                        }
-                        case 'common_dialogue_user_menu_edit':{
-                            commonComponentRender({
-                                mountDiv:   'common_dialogue_iam_edit',
-                                data:       {
-                                            app_id:COMMON_GLOBAL.app_id,
-                                            iam_user_id:COMMON_GLOBAL.iam_user_id,
-                                            common_app_id:COMMON_GLOBAL.common_app_id,
-                                            admin_app_id:COMMON_GLOBAL.admin_app_id
-                                            },
-                                methods:    {
-                                           commonFFB:commonFFB,
-                                            commonMessageShow:commonMessageShow,
-                                            commonMesssageNotAuthorized:commonMesssageNotAuthorized,
-                                            commonMiscFormatJsonDate:commonMiscFormatJsonDate
-                                            },
-                                path:       '/common/component/common_dialogue_iam_edit.js'})
-                            .then(()=>{
-                                commonComponentRemove('common_dialogue_user_menu');
-                            });
-                            break;
-                        }
-      
+                        }      
                         case 'common_dialogue_user_menu_signup':{
                             commonComponentRemove('common_dialogue_user_menu');
                             commonDialogueShow('SIGNUP');
                             break;
                         }
                         //dialogue user edit
-                        case 'common_dialogue_iam_edit_close':{
-                            commonComponentRemove('common_dialogue_iam_edit', true);
+                        case 'common_dialogue_user_menu_iam_user_btn_avatar_img':{
+                            COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_avatar_img').click();
                             break;
                         }
-                        case 'common_dialogue_iam_edit_btn_avatar_img':{
-                            COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_avatar_img').click();
+                        case 'common_dialogue_user_menu_iam_user_input_avatar_img':{
+                            commonMiscImageShow(COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_avatar'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
                             break;
                         }
-                        case 'common_dialogue_iam_edit_input_avatar_img':{
-                            commonMiscImageShow(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
-                            break;
-                        }
-                        case 'common_dialogue_iam_edit_btn_user_update':{
+                        case 'common_dialogue_user_menu_iam_user_btn_user_update':{
                             await commonUserUpdate();
                             break;
                         }
-                        case 'common_dialogue_iam_edit_btn_user_delete_account':{
+                        case 'common_dialogue_user_menu_iam_user_btn_user_delete_account':{
                             const function_delete_user_account = () => { 
                                 commonIamUserAppDelete(1, null);
                             };
@@ -2873,7 +2852,7 @@ const commonEvent = async (event_type,event=null) =>{
                         }        
                         //dialogue verify
                         case 'common_dialogue_iam_verify_cancel':{
-                            if (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_iamuser')==null)
+                            if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_iamuser')==null)
                                 commonUserSessionClear();
                             commonComponentRemove('common_dialogue_iam_verify', true);
                             break;

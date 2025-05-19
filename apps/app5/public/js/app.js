@@ -185,12 +185,7 @@ const appEventClick = event => {
                     break;
                 }
                 //dialogue user menu
-                case 'common_iam_avatar':
-                case 'common_iam_avatar_logged_in':
-                case 'common_iam_avatar_avatar':
-                case 'common_iam_avatar_avatar_img':
-                case 'common_iam_avatar_logged_out':
-                case 'common_iam_avatar_default_avatar':{
+                case 'common_dialogue_user_menu_nav_iam_user_app':{
                     common.commonComponentRender({
                             mountDiv:   'common_dialogue_user_menu_app_theme', 
                             data:       null,

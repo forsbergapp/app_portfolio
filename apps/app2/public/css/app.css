@@ -736,7 +736,7 @@ border-left: 12px solid var(--app_theme_sun_color);
     background-color: var(--app_theme_main_branding_color3);
     box-shadow: 0px -3px 3px var(--app_theme_dialogue_boxshadow_color1);
 }
-#common_dialogue_iam_edit_btn_avatar_img{
+#common_dialogue_user_menu_iam_user_btn_avatar_img{
 	background-color: var(--app_theme_dialogue_background_color);
 }
 .common_link{
@@ -786,6 +786,8 @@ border-left: 12px solid var(--app_theme_sun_color);
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
+#common_dialogue_user_menu_nav>div:hover,
+#common_dialogue_user_menu_nav>div:active,
 #common_dialogue_user_menu_username:hover,
 #common_dialogue_user_menu_username:active,
 #common_profile_btn_top:hover,

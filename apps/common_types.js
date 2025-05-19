@@ -33,6 +33,7 @@
  *  CommonProfileStatRecord
  *  CommonProfileSearchRecord
  *  CommonMasterObjectType
+ *  CommonMessageType
  * 
  * Common module types
  *  CommonModuleLeafletEvent
@@ -209,6 +210,13 @@
  *                          common_dialogue_iam_verify:{
  *                              methods:{
  *                                  commonUserVerifyCheckInput:function
+ *                              }
+ *                          },
+ *                          common_dialogue_user_menu:{
+ *                              methods:{
+ *                                  eventClickMessages:function,
+ *                                  eventClickIamUser:function,
+ *                                  eventClickIamUserApp:function,
  *                              }
  *                          }
  *              },
@@ -449,6 +457,19 @@
 /** 
  * @description Type 
  * @typedef {*} CommonMasterObjectType
+ */
+
+/**
+ * @description Type
+ * @typedef {{  id:number,
+ *              sender:string,
+ *              receiver_id:number|null,
+ *              host:string,
+ *              client_ip:string,
+ *              subject:string,
+ *              message:string,
+ *              created:string
+ *          }} CommonMessageType
  */
 
 /**
