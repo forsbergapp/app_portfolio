@@ -51,9 +51,9 @@ const appEventClick = event => {
             switch (event_target_id){
                 case event.target.classList.contains('common_select_option')?event_target_id:'':
                 case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
-                    if (event_target_id == 'common_dialogue_user_menu_user_locale_select')
+                    if (event_target_id == 'common_dialogue_user_menu_iam_user_app_locale_select')
                         appAppsGet();
-                    if (event_target_id == 'common_dialogue_user_menu_user_arabic_script_select')
+                    if (event_target_id == 'common_dialogue_user_menu_iam_user_app_arabic_script_select')
                         appThemeUpdate();
                     break;
                 }
@@ -80,12 +80,7 @@ const appEventClick = event => {
                     break;
                 }
                 //dialogue user menu
-                case 'common_iam_avatar':
-                case 'common_iam_avatar_logged_in':
-                case 'common_iam_avatar_avatar':
-                case 'common_iam_avatar_avatar_img':
-                case 'common_iam_avatar_logged_out':
-                case 'common_iam_avatar_default_avatar':{
+                case 'common_dialogue_user_menu_nav_iam_user_app':{
                     common.commonComponentRender({
                             mountDiv:   'common_dialogue_user_menu_app_theme',
                             data:       null,

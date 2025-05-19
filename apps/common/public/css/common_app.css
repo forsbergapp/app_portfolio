@@ -62,45 +62,49 @@
 #common_profile_main_btn_liked_users::before{							content:var(--common_app_icon_user_followed)}
 #common_profile_btn_top::before{										content:var(--common_app_icon_user_profile_stat)}
 
-/*Icons dialogue user edit*/
-#common_dialogue_iam_edit_btn_avatar_img::before{						content:var(--common_app_icon_user_avatar_edit)}
-#common_dialogue_iam_edit_private::before{								content:var(--common_app_icon_private)}
-#common_dialogue_iam_edit_close::before{								content:var(--common_app_icon_close)}
-#common_dialogue_iam_edit_input_username_icon::before{					content:var(--common_app_icon_user)}
-#common_dialogue_iam_edit_input_bio_icon::before{						content:var(--common_app_icon_user_profile)}
-#common_dialogue_iam_edit_input_otp_icon::before{						content:var(--common_app_icon_otp)}
-#common_dialogue_iam_edit_input_password_icon::before{					content:var(--common_app_icon_user_password)}
-#common_dialogue_iam_edit_input_password_confirm_icon::before{			content:var(--common_app_icon_user_password_confirm)}
-#common_dialogue_iam_edit_input_password_new_icon::before{				content:var(--common_app_icon_user_password)}
-#common_dialogue_iam_edit_input_password_new_confirm_icon::before{		content:var(--common_app_icon_user_password_confirm)}
-#common_dialogue_iam_edit_input_password_reminder_icon::before{			content:var(--common_app_icon_user_password_reminder)}
-
-#common_dialogue_iam_edit_label_last_logintime::before{					content:var(--common_app_icon_user_last_logintime)}
-#common_dialogue_iam_edit_label_account_created::before{				content:var(--common_app_icon_user_account_created)}
-#common_dialogue_iam_edit_label_account_modified::before{				content:var(--common_app_icon_user_account_modified)}
-
-#common_dialogue_iam_edit_btn_user_delete_account::before{				content:var(--common_app_icon_delete)}	
-#common_dialogue_iam_edit_btn_user_update.spinner::before{				content: ''}
-#common_dialogue_iam_edit_btn_user_update::before{						content:var(--common_app_icon_update)}	
-
-#common_dialogue_iam_edit_input_username:empty::before{					content:var(--common_app_icon_user)}
-#common_dialogue_iam_edit_input_bio:empty::before{						content:var(--common_app_icon_user_profile)}
-#common_dialogue_iam_edit_input_password:empty::before{					content:var(--common_app_icon_user_password)}
-#common_dialogue_iam_edit_input_password_confirm:empty::before{			content:var(--common_app_icon_user_password_confirm)}
-#common_dialogue_iam_edit_input_password_new:empty::before{				content:var(--common_app_icon_user_password)}
-#common_dialogue_iam_edit_input_password_new_confirm:empty::before{		content:var(--common_app_icon_user_password_confirm)}
-#common_dialogue_iam_edit_input_password_reminder:empty::before{		content:var(--common_app_icon_user_password_reminder)}
-
 /*Icons dialogue user menu*/
-#common_dialogue_user_menu_edit::before{								content:var(--common_app_icon_edit)}
-#common_dialogue_user_menu_signup::before{								content:var(--common_app_icon_signup)}
-#common_dialogue_user_menu_log_in::before{								content:var(--common_app_icon_login)}
-#common_dialogue_user_menu_log_out::before{								content:var(--common_app_icon_logout)}
-#common_dialogue_user_menu_preference_locale::before{					content:var(--common_app_icon_regional_locale)}
-#common_dialogue_user_menu_preference_timezone::before{					content:var(--common_app_icon_regional_timezone)}
-#common_dialogue_user_menu_preference_direction::before{				content:var(--common_app_icon_regional_direction)}
-#common_dialogue_user_menu_preference_arabic_script::before{			content:var(--common_app_icon_regional_script)}
-#common_dialogue_user_menu_close::before{								content:var(--common_app_icon_close)}
+#common_dialogue_user_menu_nav_messages::before{								content:var(--common_app_icon_email)}
+#common_dialogue_user_menu_nav_iam_user_app::before{							content:var(--common_app_icon_settings)}
+#common_dialogue_user_menu_nav_iam_user::before{								content:var(--common_app_icon_user)}
+#common_dialogue_user_menu_signup::before{								        content:var(--common_app_icon_signup)}
+#common_dialogue_user_menu_log_in::before{								        content:var(--common_app_icon_login)}
+#common_dialogue_user_menu_log_out::before{								        content:var(--common_app_icon_logout)}
+#common_dialogue_user_menu_close::before{								        content:var(--common_app_icon_close)}
+
+/*Icons dialogue user menu iam user*/
+#common_dialogue_user_menu_iam_user_btn_avatar_img::before{						content:var(--common_app_icon_user_avatar_edit)}
+#common_dialogue_user_menu_iam_user_private::before{							content:var(--common_app_icon_private)}
+#common_dialogue_user_menu_iam_user_input_username_icon::before{				content:var(--common_app_icon_user)}
+#common_dialogue_user_menu_iam_user_input_bio_icon::before{						content:var(--common_app_icon_user_profile)}
+#common_dialogue_user_menu_iam_user_input_otp_icon::before{						content:var(--common_app_icon_otp)}
+#common_dialogue_user_menu_iam_user_input_password_icon::before{				content:var(--common_app_icon_user_password)}
+#common_dialogue_user_menu_iam_user_input_password_confirm_icon::before{		content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_user_menu_iam_user_input_password_new_icon::before{			content:var(--common_app_icon_user_password)}
+#common_dialogue_user_menu_iam_user_input_password_new_confirm_icon::before{	content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_user_menu_iam_user_input_password_reminder_icon::before{		content:var(--common_app_icon_user_password_reminder)}
+
+#common_dialogue_user_menu_iam_user_label_last_logintime::before{				content:var(--common_app_icon_user_last_logintime)}
+#common_dialogue_user_menu_iam_user_label_account_created::before{				content:var(--common_app_icon_user_account_created)}
+#common_dialogue_user_menu_iam_user_label_account_modified::before{				content:var(--common_app_icon_user_account_modified)}
+
+#common_dialogue_user_menu_iam_user_btn_user_delete_account::before{			content:var(--common_app_icon_delete)}	
+#common_dialogue_user_menu_iam_user_btn_user_update.spinner::before{			content: ''}
+#common_dialogue_user_menu_iam_user_btn_user_update::before{					content:var(--common_app_icon_update)}	
+
+#common_dialogue_user_menu_iam_user_input_username:empty::before{				content:var(--common_app_icon_user)}
+#common_dialogue_user_menu_iam_user_input_bio:empty::before{					content:var(--common_app_icon_user_profile)}
+#common_dialogue_user_menu_iam_user_input_password:empty::before{				content:var(--common_app_icon_user_password)}
+#common_dialogue_user_menu_iam_user_input_password_confirm:empty::before{		content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_user_menu_iam_user_input_password_new:empty::before{			content:var(--common_app_icon_user_password)}
+#common_dialogue_user_menu_iam_user_input_password_new_confirm:empty::before{	content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_user_menu_iam_user_input_password_reminder:empty::before{		content:var(--common_app_icon_user_password_reminder)}
+
+/*Icons dialogue user menu iam user app*/
+#common_dialogue_user_menu_iam_user_app_locale::before{					        content:var(--common_app_icon_regional_locale)}
+#common_dialogue_user_menu_iam_user_app_timezone::before{				        content:var(--common_app_icon_regional_timezone)}
+#common_dialogue_user_menu_iam_user_app_direction::before{				        content:var(--common_app_icon_regional_direction)}
+#common_dialogue_user_menu_iam_user_app_arabic_script::before{			        content:var(--common_app_icon_regional_script)}
+
 
 /*Icons dialogue user start*/
 #common_dialogue_iam_start_login::before{								content:var(--common_app_icon_user)}
@@ -836,57 +840,6 @@ body.rtl{
 #common_dialogue_iam_start_login_button{
 	width: 100%;
 }
-/*Dialogue user edit*/
-#common_dialogue_iam_edit.common_dialogue_show1{
-	width: 360px;
-	height: auto;
-	padding-bottom: 0px;
-}
-#common_dialogue_iam_edit .common_input{
-	height: 1.5em;
-	width: 100%;
-	border: 0.5px solid;
-}
-#common_dialogue_iam_edit_input_avatar_img{
-	display:none;
-}
-#common_dialogue_iam_edit_btn_avatar_img{
-    width: 50%;
-    border-radius:var(--common_app_css_border_radius);
-    margin-top: 25%;
-}
-#common_dialogue_iam_edit_avatar{
-	border: 0.5px solid;
-	border-radius: 50%;
-    width: 48px;
-	cursor: pointer;
-	display: inline-block;
-}
-#common_dialogue_iam_edit .common_dialogue_iam_edit_iamuser_row_title{
-    display: block;
-    text-align:center;
-}
-#common_dialogue_iam_edit #common_dialogue_iam_edit_private{
-    display: block;
-    margin-top: 1em;
-}
-#common_dialogue_iam_edit #common_dialogue_iam_edit_checkbox_profile_private{
-    margin-bottom: 1em;;
-}
-#common_dialogue_iam_edit .common_dialogue_iam_edit_iamuser_row{
-	display: grid;
-    text-align: start;
-    grid-template-columns: 10% 90%;
-}
-#common_dialogue_iam_edit_label_data_last_logintime,
-#common_dialogue_iam_edit_label_data_account_created,
-#common_dialogue_iam_edit_label_data_account_modified {
-	font-size: 0.5em;
-}
-#common_dialogue_iam_edit #common_dialogue_iam_edit_buttons,
-#common_dialogue_iam_edit #common_dialogue_iam_edit_close{
-    margin-bottom:1em;
-}
 /*Dialogue lov*/
 #common_dialogue_lov.common_dialogue_show2{
 	height:auto;
@@ -1234,9 +1187,6 @@ body.rtl{
 	position:fixed;
 	margin-top:10px;
 }
-#common_dialogue_user_menu_token_countdown > div {
-	display: inline-block;
-}
 #common_iam_avatar_logged_in, #common_dialogue_user_menu_logged_in{
 	display: none;
 }
@@ -1254,29 +1204,35 @@ body.rtl{
 	display: inline-block;
 }
 
-/* Dialogue user menu */
+/* Dialogue user menu*/
+#common_dialogue_user_menu.common_dialogue_show1{
+    width: 300px;
+	text-align: center;
+}
 #common_dialogue_user_menu .common_select .common_select_options{
 	display: none;
-	max-height: 200px;
 	width: calc(85% - 60px);
 }
 #common_dialogue_user_menu .common_select{
 	width: 100%;
 }
-#common_dialogue_user_menu.common_dialogue_show1{
-	text-align: center;
+#common_dialogue_user_menu_token_countdown > div {
+	display: inline-block;
 }
 #common_dialogue_user_menu_app_theme{
 	width: unset !important;
 	margin: 10px;
 	white-space: nowrap;
 }
+#common_dialogue_user_menu_nav>div{
+    cursor: pointer;
+    margin: 10px;
+    width: 10%;
+}
 #common_dialogue_user_menu_username{
 	cursor:pointer;
-	padding: 10px;
 }
-#common_dialogue_user_menu_signup,
-#common_dialogue_user_menu_edit
+#common_dialogue_user_menu_signup
 {
 	display: block;
 }
@@ -1290,15 +1246,59 @@ body.rtl{
 #common_dialogue_user_menu_logged_out div{
 	cursor:pointer;
 }
-#common_dialogue_user_menu_preferences div{
+/* Dialogue user menu - iam user app*/
+#common_dialogue_user_menu_iam_user_app div{
 	display: inline-block;
 }
-#common_dialogue_user_menu_preferences .common_dialogue_user_menu_preference_col1{
+#common_dialogue_user_menu_iam_user_app .common_dialogue_user_menu_iam_user_app_col1{
 	width: 10%;
 }
-#common_dialogue_user_menu_preferences .common_dialogue_user_menu_preference_col2{
+#common_dialogue_user_menu_iam_user_app .common_dialogue_user_menu_iam_user_app_col2{
 	width: 85%;
 }
+/*Dialogue user menu - iam user*/
+#common_dialogue_user_menu_iam_user .common_input{
+	height: 1.5em;
+	width: 100%;
+	border: 0.5px solid;
+}
+#common_dialogue_user_menu_iam_user_input_avatar_img{
+	display:none;
+}
+#common_dialogue_user_menu_iam_user_btn_avatar_img{
+    width: 50%;
+    border-radius:var(--common_app_css_border_radius);
+    margin-top: 25%;
+}
+#common_dialogue_user_menu_iam_user_avatar{
+	border: 0.5px solid;
+	border-radius: 50%;
+    width: 48px;
+	cursor: pointer;
+	display: inline-block;
+}
+#common_dialogue_user_menu_iam_user .common_dialogue_user_menu_iam_user_row_title{
+    display: block;
+    text-align:center;
+}
+#common_dialogue_user_menu_iam_user .common_dialogue_user_menu_iam_user_row_title>div{
+    margin:0.5em;
+}
+#common_dialogue_user_menu_iam_user .common_dialogue_user_menu_iam_user_row{
+	display: grid;
+    text-align: start;
+    grid-template-columns: 10% 90%;
+}
+#common_dialogue_user_menu_iam_user_label_data_last_logintime,
+#common_dialogue_user_menu_iam_user_label_data_account_created,
+#common_dialogue_user_menu_iam_user_label_data_account_modified {
+	font-size: 0.5em;
+}
+#common_dialogue_user_menu_iam_user #common_dialogue_user_menu_iam_user_buttons,
+#common_dialogue_user_menu_iam_user #common_dialogue_user_menu_iam_user_close{
+    margin-bottom:1em;
+}
+
 /* SPINNER */
 @keyframes spin{
 	from {transform:rotate(0deg);}

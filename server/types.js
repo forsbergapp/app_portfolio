@@ -988,14 +988,16 @@
 /**
  * @description DB server_db_table_MessageQueuePublishMessage
  * 
- * @typedef {{  sender:string,
+ * @typedef {{  id:number,
+ *              sender:string,
  *              receiver_id:number|null,
  *              host:string,
  *              client_ip:string,
  *              subject:string,
  *              message:string,
+ *              created:string
  *          }} server_db_table_MessageQueuePublishMessage
-*/
+ */
 
 /**
  * @description DB server_db_table_MessageQueuePublishMicroserviceLog
