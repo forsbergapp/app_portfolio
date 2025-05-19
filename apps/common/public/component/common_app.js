@@ -25,7 +25,6 @@ const template = props =>`  <div id='common_toolbar_framework' ${props.framework
                                 <div id='common_dialogue_iam_start' class='common_dialogue_content'></div>
                                 <div id='common_dialogue_user_menu' class='common_dialogue_content'></div>
                                 <div id='common_dialogue_iam_verify' class='common_dialogue_content'></div>
-                                <div id='common_dialogue_iam_edit' class='common_dialogue_content'></div>  
                                 <div id='common_dialogue_message' class='common_dialogue_content'></div>
                                 <div id='common_dialogue_profile' class='common_dialogue_content'></div>
                                 <div id='common_dialogue_lov' class='common_dialogue_content'></div>
