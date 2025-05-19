@@ -22,7 +22,7 @@
 const template = props => `
                             <div id='common_dialogue_info_contact'>
                                 <div id='common_dialogue_info_contact_message_title' class='common_icon'></div>
-                                <div id='common_dialogue_info_contact_message' class='common_input common_icon' contentEditable='true'></div>
+                                <div id='common_dialogue_info_contact_message' class='common_input' contentEditable='true'></div>
                                 <div id='common_dialogue_info_contact_message_send' class='common_dialogue_button common_icon' ></div>
                             </div>
                             <div id='common_dialogue_info_start_links'>
@@ -55,20 +55,37 @@ const template = props => `
 *          methods:    {
 *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
 *                      commonFFB:CommonModuleCommon['commonFFB'],
-*                      commonMiscShowDateUpdate:CommonModuleCommon['commonMiscShowDateUpdate'],
+*                      commonMessageShow:CommonModuleCommon['commonMessageShow']
 *                      }}} props
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:null, 
-*                      methods:null,
+*                      methods:{eventClickSend:Function},
 *                      template:string}>}
 */
 const component = async props => {
-   props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
   
-   return {
+    const eventClickSend = async ()=>{
+        await props.methods.commonFFB(
+                    {
+                        path:   '/app-common-module/COMMON_MESSAGE_CONTACT', 
+                        method: 'POST', 
+                        body:   {   type:'FUNCTION',
+                                    message:props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_info_contact_message').textContent},
+                        authorization_type:'APP_ID'
+                    })
+        .then((/**@type{string}*/result)=>{
+            if (Number(JSON.parse(result).rows[0].sent) > 0)
+                props.methods.commonMessageShow('INFO', null, 'message_success', `(${Number(JSON.parse(result).rows[0].sent)})`);
+            else
+                props.methods.commonMessageShow('INFO', null, 'message_fail', `(${Number(JSON.parse(result).rows[0].sent)})`);
+        });
+    };
+        
+    return {
        lifecycle:  null,
        data:       null,
-       methods:    null,
+       methods:    {eventClickSend:eventClickSend},
        template:   template({    
                            app_copyright:props.data.app_copyright,
                            app_link_url:props.data.app_link_url,
@@ -77,6 +94,6 @@ const component = async props => {
                            info_link_disclaimer_name:props.data.info_link_disclaimer_name,
                            info_link_terms_name:props.data.info_link_terms_name
                            })
-   };
+    };
 };
 export default component;

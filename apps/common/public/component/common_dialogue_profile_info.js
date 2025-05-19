@@ -36,7 +36,7 @@ const template = props =>`  <div id='common_profile_main'>
                                     <div class='common_profile_main_col'>
                                         <div id='common_profile_joined'>
                                             <div id='common_profile_joined_date_icon' class='common_icon'></div>
-                                            <div id='common_profile_joined_date'>${props.function_commonMiscFormatJsonDate(props.profile.created ?? '', true)}</div>
+                                            <div id='common_profile_joined_date'>${props.function_commonMiscFormatJsonDate(props.profile.created ?? '', 'SHORT')}</div>
                                         </div>
                                     </div>    
                                     <div class='common_profile_main_col'>

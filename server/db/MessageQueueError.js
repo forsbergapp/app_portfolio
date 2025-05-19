@@ -14,10 +14,10 @@ const ORM = await import('./ORM.js');
  * @function
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_table_MessageQueueError[] }>}
+ * @returns {server_server_response & {result?:server_db_table_MessageQueueError[] }}
  */
-const get = async parameters =>{
-    const result = await ORM.Execute({app_id:0, dml:'GET', object:'MessageQueueError', get:{resource_id:parameters.resource_id, partition:null}});
+const get = parameters =>{
+    const result = ORM.getObject(parameters.app_id, 'MessageQueueError',null, null);
     if (result.rows.length>0)
         return {result:result.rows, type:'JSON'};
     else

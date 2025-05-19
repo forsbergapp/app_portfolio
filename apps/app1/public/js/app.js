@@ -253,7 +253,7 @@ const appSecureDialogueSendBroadcastSend = () => {
     const broadcast_message = COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_message').textContent;
 
     if (broadcast_message==''){
-        common.commonMessageShow('INFO', null, null, 'message_text', '!', common.COMMON_GLOBAL.app_id);
+        common.commonMessageShow('INFO', null, 'message_text', '!');
     }
     else{
         if (COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').textContent==''){
@@ -275,9 +275,9 @@ const appSecureDialogueSendBroadcastSend = () => {
         common.commonFFB({path:'/server-socket/message', method:'POST', authorization_type:'ADMIN', body:json_data})
         .then((/**@type{string}*/result)=>{
             if (Number(JSON.parse(result).sent) > 0)
-                common.commonMessageShow('INFO', null, null, 'message_success', `(${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
+                common.commonMessageShow('INFO', null, 'message_success', `(${Number(JSON.parse(result).sent)})`);
             else
-                common.commonMessageShow('INFO', null, null, 'message_fail', `(${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
+                common.commonMessageShow('INFO', null, 'message_fail', `(${Number(JSON.parse(result).sent)})`);
         })
         .catch(()=>null);
     }
@@ -624,7 +624,7 @@ const appSecureMenuInstallationDbInstallationFunction = (id, db_icon, path, meth
                 COMMON_DOCUMENT.querySelector('#menu_installation_db_icon').classList.remove('installed');
             }
                 
-        common.commonMessageShow('LOG', null, null, null, JSON.parse(result).info, common.COMMON_GLOBAL.common_app_id);
+        common.commonMessageShow('LOG', null, null, JSON.parse(result).info);
     });
 };
 /**
@@ -1196,8 +1196,8 @@ const appEventFocus = event => {
  * @param {Error} error
  * @returns {void}
  */
-const appException = (error) => {
-    common.commonMessageShow('EXCEPTION', null, null, null, error);
+const appException = error => {
+    common.commonMessageShow('EXCEPTION', null, null, error);
 };
 /**
  * @name appFrameworkSet

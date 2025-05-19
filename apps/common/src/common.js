@@ -462,6 +462,7 @@ const commonModuleRun = async parameters => {
             if (module){
                 const {default:RunFunction} = await import('../../..' + module.common_path);
                 return await RunFunction({  app_id:parameters.app_id, 
+                                            resource_id: parameters.resource_id,
                                             data:parameters.data, 
                                             ip:parameters.ip, 
                                             host:parameters.host, 

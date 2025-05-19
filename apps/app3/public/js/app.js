@@ -46,8 +46,8 @@ const show = async (href, title, documentType) =>{
  * @param {Error} error 
  * @returns {void}
  */
-const appException = (error) => {
-    common.commonMessageShow('EXCEPTION', null, null, null, error);
+const appException = error => {
+    common.commonMessageShow('EXCEPTION', null, null, error);
 };
  
 /**
