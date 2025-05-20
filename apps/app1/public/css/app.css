@@ -1379,8 +1379,14 @@ body{
 .secure_menuitem_selected{
 	background-color: var(--app_theme_secure_menuitem_selected_background_color) !important;
 }
-.common_dialogue_user_menu_messages_row:hover,
-.common_dialogue_user_menu_messages_row:active,
+#common_dialogue_user_menu_messages_col_date:hover,
+#common_dialogue_user_menu_messages_col_date:active,
+#common_dialogue_user_menu_messages_col_sender:hover,
+#common_dialogue_user_menu_messages_col_sender:active,
+#common_dialogue_user_menu_messages_col_subject:hover,
+#common_dialogue_user_menu_messages_col_subject:active,
+.common_dialogue_user_menu_messages_row:not(.common_dialogue_user_menu_messages_row_title):hover,
+.common_dialogue_user_menu_messages_row:not(.common_dialogue_user_menu_messages_row_title):active,
 .secure_menuitem:hover,            .secure_menuitem:active, 
 .chat_click:hover,                 .chat_click:active,
 .gps_click:hover,                  .gps_click:active,
