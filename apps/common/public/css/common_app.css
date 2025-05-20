@@ -1251,8 +1251,7 @@ body.rtl{
     border-radius: var(--common_app_css_border_radius);
 }
 #common_dialogue_user_menu_messages_list{
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: auto;
     height: 10em;
     cursor: pointer;
 }
@@ -1263,9 +1262,9 @@ body.rtl{
     display: inline-block;
 }
 .common_dialogue_user_menu_messages_row{
-    display: grid;
+    display: inline-grid;
     text-align: start;
-    grid-template-columns: 10em 10em 10em;
+    grid-template-columns: 12em 10em 10em;
 }
 #common_dialogue_user_menu_message_content{
     height: 10em;
