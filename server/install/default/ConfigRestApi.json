@@ -3059,6 +3059,121 @@
                 }
             }
         },
+        "/bff/admin/v1/server-db/iamuserapp/${IAM_iam_user_app_id}": {
+            "get": {
+                "summary": "",
+                "operationId": "server_db.IamUserApp.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_iam_user_app_id",
+                            "in":"path",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "in":"query",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_data_app_id",
+                            "in":"query",
+                            "required":true
+                        }
+                ],
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            },
+            "patch": {
+                "summary": "",
+                "operationId": "server_db.IamUserApp.update",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_iam_user_app_id",
+                            "in":"path",
+                            "required":true
+                        }
+                ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "IAM_data_app_id": {
+                                                "$ref": "#/components/parameters/IAM_data_app_id",
+                                                "required":true
+                                            },
+                                            "IAM_iam_user_id": {
+                                                "$ref": "#/components/parameters/IAM_iam_user_id",
+                                                "required":true
+                                            },
+                                            "json_data":{
+                                                "required":true,
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
         "/bff/admin/v1/server-db/config/${resource_id_string}": {
             "get": {
                 "summary": "",
