@@ -12,7 +12,7 @@ const ORM = await import('./ORM.js');
  * @description Get user 
  * @function
  * @param {{app_id:number,
- *          resource_id:number}} parameters
+ *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_MessageQueueConsume[]}}
  */
 const get = parameters =>{

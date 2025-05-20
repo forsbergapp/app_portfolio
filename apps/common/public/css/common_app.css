@@ -1272,6 +1272,12 @@ body.rtl{
     text-align: start;
     grid-template-columns: 12em 10em 10em;
 }
+.common_dialogue_user_menu_messages_row_read{
+    font-weight: inherit;
+}
+.common_dialogue_user_menu_messages_row_unread{
+    font-weight: bold;
+}
 .common_dialogue_user_menu_messages_col{
     font-size: 0.8em;
 }
