@@ -5,6 +5,7 @@
 /**
  * @import {server_server_response,
  *          server_db_table_MessageQueuePublish,
+ *          server_db_table_MessageQueueConsume,
  *          server_db_table_MessageQueuePublishMessage} from '../../../../server/types.js'
  */
 
@@ -48,6 +49,31 @@ const appFunction = async parameters =>{
                 type:'JSON'
             };
     };
+    /**
+     * @description get MessageQueuPublish record and authenticate message and user
+     * @returns {server_server_response}
+     */
+    const messagePublishGet = () =>{
+        const result = MessageQueuePublish.get({app_id:parameters.app_id, resource_id:null});
+        if (result.http)
+            return result;
+        else{
+            return {result:(result.result??[])
+                            .filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>
+                            message.service=='MESSAGE' &&
+                            (
+                                //admin can read messages without receiver and its own messages
+                                (IamUser.type == 'ADMIN' && 
+                                (message.message.receiver_id == null ||message.message.receiver_id ==parameters.data.iam_user_id))||
+                                //user can only read its own messages
+                            message.message.receiver_id ==parameters.data.iam_user_id
+                            )),
+                            type:'JSON'};
+        }
+    };
+    const IamUser = (await import('../../../../server/db/IamUser.js')).get(parameters.app_id, 
+                                                                                   parameters.data.iam_user_id).result[0];
+            
     switch (parameters.resource_id){
         case 'COMMON_MESSAGE_CONTACT':{
             if (parameters.data.message){
@@ -78,24 +104,11 @@ const appFunction = async parameters =>{
             return messageError();
         }
         case 'COMMON_MESSAGE_GET':{
-            const IamUser = (await import('../../../../server/db/IamUser.js')).get(parameters.app_id, 
-                                                                                   parameters.data.iam_user_id).result[0];
-            
-            const result = MessageQueuePublish.get({app_id:parameters.app_id, resource_id:null});
+            const result = messagePublishGet();
             if (result.http)
                 return result;
             else  
                 return {result:result.result
-                                .filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>
-                                message.service=='MESSAGE' &&
-                                (
-                                    //admin can read messages without receiver and its own messages
-                                    (IamUser.type == 'ADMIN' && 
-                                    (message.message.receiver_id == null ||message.message.receiver_id ==parameters.data.iam_user_id))||
-                                    //user can only read its own messages
-                                message.message.receiver_id ==parameters.data.iam_user_id
-                                )
-                                )
                                 // add message read info
                                 .map((/**@type{server_db_table_MessageQueuePublish}*/message)=>{
                                     return (MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
@@ -111,7 +124,36 @@ const appFunction = async parameters =>{
                         type:'JSON'};
         }
         case 'COMMON_MESSAGE_READ':{
-            return messageError();
+            if (parameters.data.message_id){
+                const result = messagePublishGet();
+                if (result.http)
+                    return result;
+                else
+                    //authenticate message id
+                    if (result.result
+                            .filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>message.id == parameters.data.message_id).length==1){
+                        /**@type{server_db_table_MessageQueueConsume}*/
+                        const message_queue_message = {
+                            message_queue_publish_id:parameters.data.message_id,
+                            message:    parameters.data.message,
+                            start:      new Date().toISOString(),
+                            finished:   new Date().toISOString(),
+                            result:     1};
+                        //send MessageQueueConsume message
+                        return {result:[await MessageQueueConsume.post({app_id:parameters.app_id, 
+                                                                        data:message_queue_message})
+                                        .then(result=>{
+                                            if(result.result?.affectedRows)
+                                                return {sent:result.result.affectedRows};
+                                            else
+                                                return {sent:0};
+                                        })], type:'JSON'};
+                    }
+                    else
+                        return messageError();
+            }
+            else
+                return messageError();
         }
         case 'COMMON_MESSAGE_DELETE':{
             return messageError();
