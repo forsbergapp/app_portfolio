@@ -219,6 +219,7 @@
  *                          }
  *                          common_dialogue_user_menu:{
  *                              methods:{
+ *                                  eventClickMessage: function,
  *                                  eventClickMessages:function,
  *                                  eventClickIamUser:function,
  *                                  eventClickIamUserApp:function,

@@ -33,8 +33,8 @@ const get = parameters =>{
  */
 const post = async parameters => {
     if (parameters.data.message_queue_publish_id && 
-        parameters.data.message &&
-        parameters.data.result){
+        'message' in parameters.data &&
+        'result' in parameters.data){
         /**@type{server_db_table_MessageQueueError}*/
         const data_new = {
                             id:Date.now(),
