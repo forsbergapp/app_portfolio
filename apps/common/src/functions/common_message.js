@@ -85,7 +85,8 @@ const appFunction = async parameters =>{
             if (result.http)
                 return result;
             else  
-                return {result:result.result.filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>
+                return {result:result.result
+                                .filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>
                                 message.service=='MESSAGE' &&
                                 (
                                     //admin can read messages without receiver and its own messages
@@ -94,7 +95,19 @@ const appFunction = async parameters =>{
                                     //user can only read its own messages
                                 message.message.receiver_id ==parameters.data.iam_user_id
                                 )
-                                ),
+                                )
+                                // add message read info
+                                .map((/**@type{server_db_table_MessageQueuePublish}*/message)=>{
+                                    return (MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
+                                            .filter((/**@type{*}*/messageConsume)=>message.id == messageConsume.message_queue_publish_id).length>0?
+                                                {...message,
+                                                        read:true
+                                                }:
+                                                {...message,
+                                                    read:false
+                                                };
+                                    
+                                }),
                         type:'JSON'};
         }
         case 'COMMON_MESSAGE_READ':{

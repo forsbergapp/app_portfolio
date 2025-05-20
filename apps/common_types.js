@@ -481,7 +481,8 @@
  * @typedef {{  id?:number,
  *              service:'MESSAGE'|'BATCH'|'GEOLOCATION',
  *              message:CommonMessageType,
- *              created?:string}} MessageQueuePublishMessage
+ *              created?:string,
+ *              read?:boolean}} MessageQueuePublishMessage
  */
 /**
  * @description Type
