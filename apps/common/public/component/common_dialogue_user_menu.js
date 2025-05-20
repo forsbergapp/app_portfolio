@@ -88,7 +88,8 @@ const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.
 *                      }}} props
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:   null,
-*                      methods:{eventClickMessages:     Function, 
+*                      methods:{eventClickMessage:      Function,
+*                               eventClickMessages:     Function, 
 *                               eventClickIamUser:      Function,
 *                               eventClickIamUserApp:   Function},
 *                      template:string}>}
@@ -98,6 +99,26 @@ const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
     /**
+     * @description read a message
+     * @param {HTMLElement} element
+     * @returns {Promise.<void>}
+     */
+    const eventClickMessage = async (element) =>{
+        const message_id = element.getAttribute('data-id');
+        const message = element.getAttribute('data-message');
+        element.classList.remove('common_dialogue_user_menu_messages_row_unread');
+        element.classList.add('common_dialogue_user_menu_messages_row_read');
+        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_message_content').textContent = message;
+        await props.methods.commonFFB({ path:'/app-common-module/COMMON_MESSAGE_READ', 
+                method:'POST', 
+                body:{  type:'FUNCTION', 
+                        IAM_iam_user_id:props.data.iam_user_id,
+                        IAM_data_app_id:props.data.common_app_id,
+                        message_id:message_id},
+                authorization_type:'APP_ACCESS'});
+    };
+    /**
+     * @description show messages
      * @returns {Promise.<void>}
      */
     const eventClickMessages = async ()=>{
@@ -116,6 +137,7 @@ const component = async props => {
             path:       '/common/component/common_dialogue_user_menu_messages.js'});
     };
     /**
+     * @description show iam user
      * @returns {Promise.<void>}
      */
     const eventClickIamUser = async () =>{
@@ -135,6 +157,7 @@ const component = async props => {
             path:       '/common/component/common_dialogue_user_menu_iam_user.js'});
     };
     /**
+     * @description show iam user app
      * @returns {Promise.<void>}
      */
     const eventClickIamUserApp = async () =>{
@@ -178,6 +201,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    {
+                    eventClickMessage:      eventClickMessage,
                     eventClickMessages:     eventClickMessages, 
                     eventClickIamUser:      eventClickIamUser,
                     eventClickIamUserApp:   eventClickIamUserApp
