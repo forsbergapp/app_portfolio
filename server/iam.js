@@ -190,10 +190,10 @@ const iamAuthenticateUser = async parameters =>{
     const check_user = async (result, user, token_type) => {     
         if (result == 1){
             /**
-             * @param {server_db_table_IamUserApp['id']|null} iam_user_app_id
+             * @param {server_db_table_IamUserApp['id']} iam_user_app_id
              * @returns {Promise.<server_server_response>}
              */
-            const return_result = async (iam_user_app_id=null) =>{
+            const return_result = async (iam_user_app_id) =>{
                 //authorize access token ADMIN or APP_ACCESS for active account or APP_ACCESS_VERFICATION
                 const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                                     user.active==1?token_type:'APP_ACCESS_VERIFICATION', 
@@ -209,7 +209,7 @@ const iamAuthenticateUser = async parameters =>{
                 const file_content = {	
                         type:                   user.active==1?token_type:'APP_ACCESS_VERIFICATION',
                         app_custom_id:          null,
-                        iam_user_app_id:        iam_user_app_id,
+                        iam_user_app_id:        iam_user_app_id??null,
                         iam_user_id:            user.id,
                         iam_user_username:      user.username,
                         app_id:                 parameters.app_id,
@@ -245,25 +245,20 @@ const iamAuthenticateUser = async parameters =>{
                 });
             };
             //user authorized access
-            //return result without iam user id for admin
-            if (parameters.app_id==serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}})))
-                return return_result();
-            else{
-                //create IamUserApp record for current app if missing
-                const IamUserApp = await import('./db/IamUserApp.js');
-                
-                const record = IamUserApp.get({ app_id:parameters.app_id, 
-                                                            resource_id: null,
-                                                            data:{iam_user_id:user.id, data_app_id:parameters.app_id}});
-                if (record.result){
-                    const iam_user_app_id = record.result.length==0?
-                                                (await IamUserApp.post(parameters.app_id, {app_id:parameters.app_id, iam_user_id:user.id, json_data:null})).result.insertId:
-                                                    record.result[0].id;
-                    return return_result(iam_user_app_id);
-                }
-                else
-                    return record;
+            //create IamUserApp record for current app if missing
+            const IamUserApp = await import('./db/IamUserApp.js');
+            
+            const record = IamUserApp.get({ app_id:parameters.app_id, 
+                                                        resource_id: null,
+                                                        data:{iam_user_id:user.id, data_app_id:parameters.app_id}});
+            if (record.result){
+                const iam_user_app_id = record.result.length==0?
+                                            (await IamUserApp.post(parameters.app_id, {app_id:parameters.app_id, iam_user_id:user.id, json_data:null})).result.insertId:
+                                                record.result[0].id;
+                return return_result(iam_user_app_id);
             }
+            else
+                return record;
         }
         else{
             //save log for all login attempts  

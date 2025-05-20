@@ -1633,7 +1633,6 @@ const commonUserLogin = async () => {
             COMMON_GLOBAL.token_admin_at= JSON.parse(result_iam).token_at;
             COMMON_GLOBAL.token_at	    = null;
             commonComponentRemove(current_dialogue, true);
-            return {avatar: JSON.parse(result_iam).avatar};
         }
         else{
             COMMON_GLOBAL.token_admin_at= null;
@@ -1645,32 +1644,34 @@ const commonUserLogin = async () => {
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',JSON.parse(result_iam).avatar);
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
-    
-            const result = await commonFFB({path:`/server-db/iamuserapp/${COMMON_GLOBAL.iam_user_app_id ?? ''}`, 
-                                            query:`IAM_data_app_id=${COMMON_GLOBAL.app_id}&IAM_iam_user_id=${COMMON_GLOBAL.iam_user_id}`,
-                                            method:'GET', authorization_type:'APP_ACCESS', spinner_id:spinner_item});
-            const IamUserApp = JSON.parse(result)[0];
-             //get preferences saved in json_data column
-            //locale
-            if (IamUserApp.json_data?.preference_locale==null)
-                commonUserPreferencesGlobalSetDefault('LOCALE');
-            else
-                COMMON_GLOBAL.user_locale = IamUserApp.json_data.preference_locale;
-            //timezone
-            if (IamUserApp.json_data?.preference_timezone==null)
-                commonUserPreferencesGlobalSetDefault('TIMEZONE');
-            else
-                COMMON_GLOBAL.user_timezone = IamUserApp.json_data.preference_timezone;
-            //direction
-            COMMON_GLOBAL.user_direction = IamUserApp.json_data?.preference_direction;
-            //arabic script
-            COMMON_GLOBAL.user_arabic_script = IamUserApp.json_data?.preference_arabic_script;
-            //update body class with app theme, direction and arabic script usage classes
-            commonMiscPreferencesUpdateBodyClassFromPreferences();
+
             commonComponentRemove(current_dialogue, true);
             commonComponentRemove('common_dialogue_profile', true);
-            return {avatar: JSON.parse(result_iam).avatar};
         }
+        const IamUserApp = await commonFFB({path:`/server-db/iamuserapp/${COMMON_GLOBAL.iam_user_app_id ?? ''}`, 
+                                        query:`IAM_data_app_id=${COMMON_GLOBAL.app_id}&IAM_iam_user_id=${COMMON_GLOBAL.iam_user_id}`,
+                                        method:'GET', authorization_type:'APP_ACCESS', spinner_id:spinner_item})
+                                .then(result=>JSON.parse(result)[0])
+                                .catch(()=>null);
+
+        //get preferences saved in json_data column
+        //locale
+        if (IamUserApp.json_data?.preference_locale==null)
+            commonUserPreferencesGlobalSetDefault('LOCALE');
+        else
+            COMMON_GLOBAL.user_locale = IamUserApp.json_data.preference_locale;
+        //timezone
+        if (IamUserApp.json_data?.preference_timezone==null)
+            commonUserPreferencesGlobalSetDefault('TIMEZONE');
+        else
+            COMMON_GLOBAL.user_timezone = IamUserApp.json_data.preference_timezone;
+        //direction
+        COMMON_GLOBAL.user_direction = IamUserApp.json_data?.preference_direction;
+        //arabic script
+        COMMON_GLOBAL.user_arabic_script = IamUserApp.json_data?.preference_arabic_script;
+        //update body class with app theme, direction and arabic script usage classes
+        commonMiscPreferencesUpdateBodyClassFromPreferences();
+        return {avatar: JSON.parse(result_iam).avatar};
     }
     else{
         COMMON_GLOBAL.iam_user_app_id =         JSON.parse(result_iam).iam_user_app_id;
@@ -1995,9 +1996,10 @@ const commonUserAuthenticateCode = async (verification_code, verification_type) 
  * @returns {Promise.<void>}
  */
 const commonUserPreferenceSave = async () => {
-    if (COMMON_GLOBAL.iam_user_id != null){
+    if (COMMON_GLOBAL.iam_user_app_id != null){
         const body = {
                         IAM_data_app_id: COMMON_GLOBAL.app_id,
+                        IAM_iam_user_id: COMMON_GLOBAL.iam_user_id,
                         json_data: 
                         {  
                             preference_locale:       COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_app_locale_select .common_select_dropdown_value')
@@ -2010,7 +2012,7 @@ const commonUserPreferenceSave = async () => {
                                                                         .getAttribute('data-value'),
                         }
                     };
-        await commonFFB({path:`/server-db/iamuserapp/${COMMON_GLOBAL.iam_user_id ?? ''}`, method:'PATCH', authorization_type:'APP_ACCESS', body:body});
+        await commonFFB({path:`/server-db/iamuserapp/${COMMON_GLOBAL.iam_user_app_id}`, method:'PATCH', authorization_type:'APP_ACCESS', body:body});
     }
 };
 /**
@@ -2150,27 +2152,30 @@ const commonFFB = async parameter => {
     let service_path;
     parameter.query = parameter.query==null?'':parameter.query;
     parameter.body = parameter.body?parameter.body:null;
-    switch (parameter.authorization_type){
+    //admin uses ADMIN instead of APP_ACCESS so all ADMIN requests use separate admin token
+    const ROLE = (COMMON_GLOBAL.app_id == COMMON_GLOBAL.admin_app_id && parameter.authorization_type =='APP_ACCESS')?
+                    'ADMIN':parameter.authorization_type;
+    switch (ROLE){
         case 'APP_ID':
         case 'IAM_SIGNUP':{
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${parameter.authorization_type.toLowerCase()}`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${ROLE.toLowerCase()}`;
             break;
         }
         case 'APP_ACCESS':
         case 'APP_ACCESS_VERIFICATION':
         case 'APP_ACCESS_EXTERNAL':{
             authorization = `Bearer ${COMMON_GLOBAL.token_at}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${parameter.authorization_type.toLowerCase()}`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${ROLE.toLowerCase()}`;
             break;
         }
         case 'ADMIN':{
             authorization = `Bearer ${COMMON_GLOBAL.token_admin_at}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${parameter.authorization_type.toLowerCase()}`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${ROLE.toLowerCase()}`;
             break;
         }
         case 'IAM':{
             authorization = `Basic ${commonWindowToBase64(parameter.username + ':' + parameter.password)}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${parameter.authorization_type.toLowerCase()}`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${ROLE.toLowerCase()}`;
             break;
         }
     }
