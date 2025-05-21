@@ -18,9 +18,9 @@
 const template = props => ` <div id='common_dialogue_user_menu_messages'>
                                 <div id='common_dialogue_user_menu_messages_list'>
                                     <div class='common_dialogue_user_menu_messages_row_title common_dialogue_user_menu_messages_row'>
-                                    <div id='common_dialogue_user_menu_messages_col_date' class='common_dialogue_user_menu_messages_col common_icon'></div>
-                                    <div id='common_dialogue_user_menu_messages_col_sender' class='common_dialogue_user_menu_messages_col common_icon'></div>
-                                    <div id='common_dialogue_user_menu_messages_col_subject' class='common_dialogue_user_menu_messages_col common_icon'></div>
+                                        <div id='common_dialogue_user_menu_messages_col_date' class='common_dialogue_user_menu_messages_col common_icon'></div>
+                                        <div id='common_dialogue_user_menu_messages_col_subject' class='common_dialogue_user_menu_messages_col common_icon'></div>
+                                        <div id='common_dialogue_user_menu_messages_col_sender' class='common_dialogue_user_menu_messages_col common_icon'></div>
                                     </div>
                                     ${props.messages.map(row=>
                                     `<div class='common_dialogue_user_menu_messages_row common_row ${row.read?'common_dialogue_user_menu_messages_row_read':'common_dialogue_user_menu_messages_row_unread'}' 
@@ -29,8 +29,8 @@ const template = props => ` <div id='common_dialogue_user_menu_messages'>
                                         data-id=${row.id} 
                                         data-message='${row.message.message}'>
                                         <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${props.commonMiscFormatJsonDate(row.created??'')}</div>
-                                        <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${row.message.sender ?? ''}</div>
                                         <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${row.message.subject}</div>
+                                        <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${row.message.sender ?? ''}</div>
                                     </div>`).join('')
                                     }
                                 </div>
