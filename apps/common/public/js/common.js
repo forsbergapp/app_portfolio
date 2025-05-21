@@ -1989,6 +1989,21 @@ const commonUserAuthenticateCode = async (verification_code, verification_type) 
         return false;
     });
 };
+const commonUserMessageShowStat = async () =>{
+    if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count')){
+        /**@type{{unread:number, 
+             *           read:number}}
+             */    
+        const messageStat = await commonFFB({path:'/app-common-module/COMMON_MESSAGE_COUNT', 
+            method:'POST', 
+            body:{  type:'FUNCTION', 
+                    IAM_iam_user_id:COMMON_GLOBAL.iam_user_id,
+                    IAM_data_app_id:COMMON_GLOBAL.common_app_id},
+            authorization_type:COMMON_GLOBAL.app_id == COMMON_GLOBAL.admin_app_id?'ADMIN':'APP_ACCESS'})
+            .then((/**@type{*}*/result)=>JSON.parse(result).rows[0]);
+        COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count').textContent = `${messageStat.unread}(${messageStat.unread+messageStat.read})`;
+    }    
+};
 
 /**
  * @name commonUserPreferenceSave
@@ -2818,7 +2833,8 @@ const commonEvent = async (event_type,event=null) =>{
                                             commonComponentRender:commonComponentRender,
                                             commonUserSessionCountdown:commonUserSessionCountdown,
                                             commonMessageShow:commonMessageShow,
-                                            commonMesssageNotAuthorized:commonMesssageNotAuthorized
+                                            commonMesssageNotAuthorized:commonMesssageNotAuthorized,
+                                            commonUserMessageShowStat:commonUserMessageShowStat
                                             },
                                 path:       '/common/component/common_dialogue_user_menu.js'})
                                 .then(component=>COMMON_GLOBAL.component.common_dialogue_user_menu.methods = component.methods);
@@ -2829,6 +2845,7 @@ const commonEvent = async (event_type,event=null) =>{
                             await commonProfileShow();
                             break;
                         }
+                        case 'common_dialogue_user_menu_nav_messages_count':
                         case 'common_dialogue_user_menu_nav_messages':{
                             COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
@@ -3717,6 +3734,7 @@ export{/* GLOBALS*/
        commonUserSignup, 
        commonUserUpdate, 
        commonUserAuthenticateCode,
+       commonUserMessageShowStat,
        /* MODULE LEAFLET  */
        commonModuleLeafletInit, 
        /* MODULE EASY.QRCODE */

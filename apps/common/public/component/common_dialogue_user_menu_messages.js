@@ -11,7 +11,9 @@
  * @name template
  * @description Template
  * @function
- * @param {{messages:MessageQueuePublishMessage[],
+ * @param {{messages:{  messages:MessageQueuePublishMessage[],
+ *                      unread:number, 
+ *                      read:number},
  *          commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate']}} props
  * @returns {string}
  */
@@ -22,7 +24,7 @@ const template = props => ` <div id='common_dialogue_user_menu_messages'>
                                         <div id='common_dialogue_user_menu_messages_col_subject' class='common_dialogue_user_menu_messages_col common_icon'></div>
                                         <div id='common_dialogue_user_menu_messages_col_sender' class='common_dialogue_user_menu_messages_col common_icon'></div>
                                     </div>
-                                    ${props.messages.map(row=>
+                                    ${props.messages.messages.map(row=>
                                     `<div class='common_dialogue_user_menu_messages_row common_row ${row.read?'common_dialogue_user_menu_messages_row_read':'common_dialogue_user_menu_messages_row_unread'}' 
                                         data-client_ip='${row.message.client_ip}'
                                         data-host='${row.message.host}' 
@@ -59,25 +61,28 @@ const template = props => ` <div id='common_dialogue_user_menu_messages'>
 */
 const component = async props => {
    
-   /**@type{MessageQueuePublishMessage[]} */    
-   const messages = await props.methods.commonFFB({ path:'/app-common-module/COMMON_MESSAGE_GET', 
+    /**@type{{   messages:MessageQueuePublishMessage[],
+     *           unread:number, 
+     *           read:number}}
+     */    
+    const messages = await props.methods.commonFFB({path:'/app-common-module/COMMON_MESSAGE_GET', 
                                                     method:'POST', 
                                                     body:{  type:'FUNCTION', 
                                                             IAM_iam_user_id:props.data.iam_user_id,
                                                             IAM_data_app_id:props.data.common_app_id},
                                                     authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
-                       .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result))
-                       //sort message.id descending order
-                       .then(result=>result.sort((/**@type{MessageQueuePublishMessage}*/a,
-                                                  /**@type{MessageQueuePublishMessage}*/b)=>
-                                        /**@ts-ignore */
-                                        a.id>b.id?-1:1))
+                       .then((/**@type{*}*/result)=>JSON.parse(result).rows[0])
                         .catch(()=>[]);
+    messages.messages = //sort message.id descending order
+                        messages.messages.sort((/**@type{MessageQueuePublishMessage}*/a,
+                                 /**@type{MessageQueuePublishMessage}*/b)=>
+                                 /**@ts-ignore */
+                                 a.id>b.id?-1:1);
    /**
     * @returns {Promise.<void>}
     */
    const onMounted = async () => {
-       null;
+        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count').textContent = `${messages.unread}(${messages.unread+messages.read})`;
    };
    return {
        lifecycle:  {onMounted:onMounted},

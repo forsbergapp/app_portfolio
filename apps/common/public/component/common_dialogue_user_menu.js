@@ -33,7 +33,7 @@ const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.
                                 }
                                 ${props.iam_user_id?
                                     `<div id='common_dialogue_user_menu_nav'>
-                                        <div id='common_dialogue_user_menu_nav_messages' class='common_nav_selected common_icon'></div>
+                                        <div id='common_dialogue_user_menu_nav_messages' class='common_nav_selected common_icon'><div id='common_dialogue_user_menu_nav_messages_count'></div></div>
                                         <div id='common_dialogue_user_menu_nav_iam_user_app' class='common_icon'></div>
                                         <div id='common_dialogue_user_menu_nav_iam_user' class='common_icon'></div>
                                     </div>`:''
@@ -84,7 +84,8 @@ const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.
 *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
 *                      commonUserSessionCountdown:CommonModuleCommon['commonUserSessionCountdown'],
 *                      commonMessageShow:CommonModuleCommon['commonMessageShow'],
-*                      commonMesssageNotAuthorized:CommonModuleCommon['commonMesssageNotAuthorized']
+*                      commonMesssageNotAuthorized:CommonModuleCommon['commonMesssageNotAuthorized'],
+*                      commonUserMessageShowStat:CommonModuleCommon['commonUserMessageShowStat']
 *                      }}} props
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:   null,
@@ -116,6 +117,7 @@ const component = async props => {
                         IAM_data_app_id:props.data.common_app_id,
                         message_id:message_id},
                 authorization_type:'APP_ACCESS'});
+        props.methods.commonUserMessageShowStat();
     };
     /**
      * @description show messages
