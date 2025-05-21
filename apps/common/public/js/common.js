@@ -78,9 +78,9 @@ const COMMON_GLOBAL = {
         common_dialogue_user_menu:{
             methods:{
                 eventClickMessage:()=>null,
-                eventClickMessages:()=>null,
-                eventClickIamUser:()=>null,
-                eventClickIamUserApp:()=>null
+                eventClickNavMessages:()=>null,
+                eventClickNavIamUser:()=>null,
+                eventClickNavIamUserApp:()=>null
             }
         }
     },
@@ -2832,19 +2832,22 @@ const commonEvent = async (event_type,event=null) =>{
                         case 'common_dialogue_user_menu_nav_messages':{
                             COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                            await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickMessages();
+                            await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickNavMessages();
                             break;
                         }
                         case 'common_dialogue_user_menu_nav_iam_user_app':{
                             COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                            await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickIamUserApp();
+                            await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickNavIamUserApp(COMMON_GLOBAL.user_locale,
+                                                                                                                    COMMON_GLOBAL.user_timezone,
+                                                                                                                    COMMON_GLOBAL.user_direction,
+                                                                                                                    COMMON_GLOBAL.user_arabic_script);
                             break;
                         }
                         case 'common_dialogue_user_menu_nav_iam_user':{
                             COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                            await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickIamUser();
+                            await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickNavIamUser();
                             break;
                         }
                         case 'common_dialogue_user_menu_messages_list':{

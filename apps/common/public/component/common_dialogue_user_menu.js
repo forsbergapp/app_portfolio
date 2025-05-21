@@ -88,10 +88,10 @@ const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.
 *                      }}} props
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:   null,
-*                      methods:{eventClickMessage:      Function,
-*                               eventClickMessages:     Function, 
-*                               eventClickIamUser:      Function,
-*                               eventClickIamUserApp:   Function},
+*                      methods:{eventClickMessage:          Function,
+*                               eventClickNavMessages:      Function, 
+*                               eventClickNavIamUser:       Function,
+*                               eventClickNavIamUserApp:    Function},
 *                      template:string}>}
 */
 const component = async props => {
@@ -121,7 +121,7 @@ const component = async props => {
      * @description show messages
      * @returns {Promise.<void>}
      */
-    const eventClickMessages = async ()=>{
+    const eventClickNavMessages = async ()=>{
         await props.methods.commonComponentRender({
             mountDiv:   'common_dialogue_user_menu_detail', 
             data:       {
@@ -140,7 +140,7 @@ const component = async props => {
      * @description show iam user
      * @returns {Promise.<void>}
      */
-    const eventClickIamUser = async () =>{
+    const eventClickNavIamUser = async () =>{
         await props.methods.commonComponentRender({
             mountDiv:   'common_dialogue_user_menu_detail',
             data:       {
@@ -158,9 +158,16 @@ const component = async props => {
     };
     /**
      * @description show iam user app
+     * @param {string} user_locale,
+     * @param {string} user_timezone,
+     * @param {string} user_direction,
+     * @param {string} user_arabic_script
      * @returns {Promise.<void>}
      */
-    const eventClickIamUserApp = async () =>{
+    const eventClickNavIamUserApp = async (user_locale,
+                                        user_timezone,
+                                        user_direction,
+                                        user_arabic_script) =>{
         await props.methods.commonComponentRender({
             mountDiv:   'common_dialogue_user_menu_detail',
             data:       {
@@ -169,10 +176,10 @@ const component = async props => {
                             common_app_id:props.data.common_app_id,
                             admin_app_id:props.data.admin_app_id,
                             admin_only:props.data.admin_only,
-                            user_locale:props.data.user_locale,
-                            user_timezone:props.data.user_timezone,
-                            user_direction:props.data.user_direction,
-                            user_arabic_script:props.data.user_arabic_script
+                            user_locale:user_locale,
+                            user_timezone:user_timezone,
+                            user_direction:user_direction,
+                            user_arabic_script:user_arabic_script
                         },
             methods:    {
                         commonMiscSelectCurrentValueSet:props.methods.commonMiscSelectCurrentValueSet,
@@ -185,11 +192,14 @@ const component = async props => {
     const onMounted = async () =>{
         if (props.data.iam_user_id){
             //mount messages
-            await eventClickMessages();
+            await eventClickNavMessages();
         }
         else{
             //mount iam_user_app
-            await eventClickIamUserApp();
+            await eventClickNavIamUserApp( props.data.user_locale,
+                                        props.data.user_timezone,
+                                        props.data.user_direction,
+                                        props.data.user_arabic_script);
         }
         
         if (props.data.token_exp && props.data.token_iat){
@@ -201,10 +211,10 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    {
-                    eventClickMessage:      eventClickMessage,
-                    eventClickMessages:     eventClickMessages, 
-                    eventClickIamUser:      eventClickIamUser,
-                    eventClickIamUserApp:   eventClickIamUserApp
+                    eventClickMessage:          eventClickMessage,
+                    eventClickNavMessages:      eventClickNavMessages, 
+                    eventClickNavIamUser:       eventClickNavIamUser,
+                    eventClickNavIamUserApp:    eventClickNavIamUserApp
                     },
         template:   template({  app_id:props.data.app_id,
                                 admin_app_id:props.data.admin_app_id,
