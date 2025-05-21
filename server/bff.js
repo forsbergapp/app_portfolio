@@ -12,7 +12,7 @@
  */
 
 const {serverResponse, serverUtilResponseTime, serverUtilCompression, serverUtilNumberValue, serverREST_API} = await import('./server.js');
-const Config = await import('./db/Config.js');
+const ConfigServer = await import('./db/ConfigServer.js');
 const IamUser = await import('./db/IamUser.js');
 const Log = await import('./db/Log.js');
 const {iamAuthenticateRequest} = await import('./iam.js');
@@ -74,21 +74,17 @@ const bffInit = async (req, res) =>{
         });
     });
     /**@type{server_db_document_ConfigServer} */
-    const config_SERVER = Config.get({app_id:0, data:{object:'ConfigServer'}});
-    /**@type{server_db_config_server_server[]} */
-    const config_SERVER_SERVER = config_SERVER.SERVER;
-    /**@type{server_db_config_server_service_iam[]} */
-    const config_SERVICE_IAM = config_SERVER.SERVICE_IAM;
-    const HTTPS_PORT = serverUtilNumberValue(config_SERVER_SERVER.filter(row=>'HTTPS_PORT' in row)[0].HTTPS_PORT);
+    const config_SERVER = ConfigServer.get({app_id:0}).result;
+    const HTTPS_PORT = serverUtilNumberValue(config_SERVER.SERVER.filter(row=>'HTTPS_PORT' in row)[0].HTTPS_PORT);
     //redirect naked domain to www except for localhost
-    if (req.headers.host.startsWith(config_SERVER_SERVER.filter(row=>'HOST' in row)[0].HOST ?? '') && req.headers.host.indexOf('localhost')==-1)
-        if (config_SERVER_SERVER.filter(row=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE=='1')
+    if (req.headers.host.startsWith(config_SERVER.SERVER.filter(row=>'HOST' in row)[0].HOST ?? '') && req.headers.host.indexOf('localhost')==-1)
+        if (config_SERVER.SERVER.filter(row=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE=='1')
             return {reason:'REDIRECT', redirect:`https://www.${req.headers.host.split(':')[0] + (HTTPS_PORT==443?'':':' + HTTPS_PORT)}${req.originalUrl}`};
         else
             return {reason:'REDIRECT', redirect:`http://www.${req.headers.host}${req.originalUrl}`};
     else{
         //redirect from http to https if https is enabled
-        if (req.protocol=='http' && config_SERVER_SERVER.filter(row=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE=='1')
+        if (req.protocol=='http' && config_SERVER.SERVER.filter(row=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE=='1')
             return {reason:'REDIRECT', redirect:`https://${req.headers.host.split(':')[0] + (HTTPS_PORT==443?'':':' + HTTPS_PORT)}${req.originalUrl}`};
         else{
             //access control that stops request if not passing controls
@@ -122,8 +118,8 @@ const bffInit = async (req, res) =>{
                 res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
                 res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
                 
-                if (config_SERVICE_IAM.filter(row=>'ENABLE_CONTENT_SECURITY_POLICY' in row)[0].ENABLE_CONTENT_SECURITY_POLICY == '1'){
-                    res.setHeader('content-security-policy', Config.get({app_id:0, data:{object:'ConfigIamPolicy',config_group:'content-security-policy'}}));
+                if (config_SERVER.SERVICE_IAM.filter(row=>'ENABLE_CONTENT_SECURITY_POLICY' in row)[0].ENABLE_CONTENT_SECURITY_POLICY == '1'){
+                    res.setHeader('content-security-policy', config_SERVER.SERVICE_IAM.filter(row=>'CONTENT_SECURITY_POLICY' in row)[0].CONTENT_SECURITY_POLICY);
                 }
                 res.setHeader('cross-origin-opener-policy','same-origin');
                 res.setHeader('cross-origin-resource-policy',	'same-origin');
@@ -171,21 +167,19 @@ const bffInit = async (req, res) =>{
  */
 const bffStart = async (req, res) =>{
     /**@type{server_db_document_ConfigServer} */
-    const config_SERVER = Config.get({app_id:0, data:{object:'ConfigServer'}});
-    /**@type{server_db_config_server_server[]} */
-    const config_SERVER_SERVER = config_SERVER.SERVER;
+    const configServer = ConfigServer.get({app_id:0}).result;
     const {serverProcess} = await import('./server.js');
     
     //if first time, when no user exists, then redirect everything to admin
     if (IamUser.get(app_common.commonAppHost(req.headers.host ?? '')??0, null).result.length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
-        return {reason:'REDIRECT', redirect:`http://admin.${config_SERVER_SERVER.filter(row=>'HOST' in row)[0].HOST + 
-                                            (serverUtilNumberValue(config_SERVER_SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT)==80?
+        return {reason:'REDIRECT', redirect:`http://admin.${configServer.SERVER.filter(row=>'HOST' in row)[0].HOST + 
+                                            (serverUtilNumberValue(configServer.SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT)==80?
                                                 '':
-                                                    ':' + config_SERVER_SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT)}`};
+                                                    ':' + configServer.SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT)}`};
     else{
         //check if SSL verification using letsencrypt is enabled when validating domains
-        if (config_SERVER_SERVER.filter(row=>'HTTPS_SSL_VERIFICATION' in row)[0].HTTPS_SSL_VERIFICATION=='1'){
-            if (req.originalUrl.startsWith(config_SERVER_SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH ?? '')){
+        if (configServer.SERVER.filter(row=>'HTTPS_SSL_VERIFICATION' in row)[0].HTTPS_SSL_VERIFICATION=='1'){
+            if (req.originalUrl.startsWith(configServer.SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH ?? '')){
                 res.type('text/plain');
                 res.write(await fs.promises.readFile(`${serverProcess.cwd()}${req.originalUrl}`, 'utf8'));
                 return {reason:'SEND', redirect:null};
@@ -263,7 +257,7 @@ const bffStart = async (req, res) =>{
                                                                     body:decodedbody,
                                                                     res:bff_parameters.res})
                                                     .then((/**@type{*}*/result_service) => {
-                                                        const log_result = serverUtilNumberValue(Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}))==2?result_service:'✅';
+                                                        const log_result = serverUtilNumberValue(ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}).result)==2?result_service:'✅';
                                                         return Log.post({  app_id:app_id, 
                                                             data:{  object:'LogServiceInfo', 
                                                                     service:{   service:service,
@@ -294,7 +288,9 @@ const bffStart = async (req, res) =>{
     }
     else{
         //unknown appid, domain or subdomain, redirect to hostname
-        bff_parameters.res?bff_parameters.res.redirect(`${bff_parameters.res.req.protocol}://${Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER', parameter:'HOST'}})}`):null;
+        bff_parameters.res?
+            bff_parameters.res.redirect(`${bff_parameters.res.req.protocol}://${ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'HOST'}})}`).result:
+                null;
     }
 };
 /**

@@ -20,16 +20,16 @@ const test = async t =>
         t.it('should handle 100 concurrent requests without any error within 10 seconds', async () =>{ 
                 const {serverUtilNumberValue} = await import('../server/server.js');
                 const {serverProcess} = await import('../server/server.js');
-                const Config = await import('../server/db/Config.js');
+                const ConfigServer = await import('../server/db/ConfigServer.js');
 
                 /**@type{number} */
                 let status;
-                const HTTPS_ENABLE = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_ENABLE'}});
+                const HTTPS_ENABLE = ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTPS_ENABLE'}}).result;
                 const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
-                const HOST = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER', parameter:'HOST'}});
+                const HOST = ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'HOST'}}).result;
                 const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                                Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_PORT'}}):
-                                    Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTP_PORT'}}));
+                                ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTPS_PORT'}}).result:
+                                    ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
                 const requests = [];
                 const totalRequests = 100;
                 //set parameter to avoid certificate errors

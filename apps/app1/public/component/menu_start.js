@@ -71,8 +71,11 @@ const component = async props => {
         })
     ];
     /**@type{0|1|null} */
-    const maintenance = await props.methods.commonFFB({path:'/server-db/config/ConfigServer', query:'config_group=METADATA&parameter=MAINTENANCE', method:'GET', authorization_type:'ADMIN'})
-                                .then((/**@type{string}*/result)=>JSON.parse(result));
+    const maintenance = await props.methods.commonFFB({ path:'/server-db/configserver', 
+                                                        query:'config_group=METADATA&parameter=MAINTENANCE', 
+                                                        method:'GET', 
+                                                        authorization_type:'ADMIN'})
+                                .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
    const onMounted = async () =>{
         //mount select

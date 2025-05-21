@@ -1,9 +1,10 @@
-/** @module server/config */
+/** @module server/db/ConfigServer */
 
 /**
  * @import {server_server_response,server_db_common_result_update,
- *          server_DbObject, server_DbObject_record, server_db_db_name_config, server_server_error, 
- *          server_db_document_ConfigServer,server_db_document_ConfigRestApi, server_db_document_ConfigIamPolicy,
+ *          server_DbObject, server_DbObject_record, server_server_error, 
+ *          server_db_document_ConfigServer,server_db_document_ConfigRestApi,
+ *          server_db_config_server_metadata,
  *          server_db_config_server_service_iam,
  *          server_db_table_IamUser, server_db_table_App, server_db_table_AppModule, server_db_table_AppParameter, server_db_table_AppSecret,server_db_table_AppData,
  *          server_db_table_AppDataEntityResource, server_db_table_AppDataEntity,server_db_table_AppDataResourceDetailData,
@@ -20,33 +21,48 @@ const APP_PORTFOLIO_TITLE = 'App Portfolio';
  * @name get
  * @description Config get
  * @function
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id?:number|null,
- *          data:{  object:server_db_db_name_config,
- *                  config_group?:string|null,
+ *          data?:{ config_group?:string|null,
  *                  parameter?:string|null}}} parameters
- * @returns {*}
+ * @returns {server_server_response & {result?:* }}
  */
 const get = parameters => {
     try {
-        if (parameters.data.config_group && parameters.data.parameter){
-            if (ORM.getObject(parameters.app_id,'ConfigServer')[parameters.data.config_group].length>0){
+        const ConfigServer = ORM.getObject(parameters.app_id,'ConfigServer');
+        if (parameters.data?.config_group && parameters.data?.parameter){
+            if (ConfigServer[parameters.data?.config_group].length>0){
                 //return parameter in array
-                return ORM.getObject(parameters.app_id,parameters.data.object)[parameters.data.config_group]
-                        .filter((/**@type{*}*/row)=>parameters.data.parameter && parameters.data.parameter in row)[0][parameters.data.parameter];
+                return {result:ConfigServer[parameters.data?.config_group]
+                        .filter((/**@type{*}*/row)=>parameters.data?.parameter && parameters.data?.parameter in row)[0][parameters.data?.parameter],
+                        type:'JSON'};
             }
             else{
                 //return key
-                return ORM.getObject(parameters.app_id,parameters.data.object)[parameters.data.config_group][parameters.data.parameter];
+                return {result:ConfigServer[parameters.data?.config_group][parameters.data?.parameter],
+                        type:'JSON'};
             }
         }
         else
-            if (parameters.data.config_group)
-                return ORM.getObject(parameters.app_id,parameters.data.object)[parameters.data.config_group];
+            if (parameters.data?.config_group){
+                if (parameters.data?.config_group =='METADATA')
+                    //return object
+                    return {result:parameters.data?.parameter?
+                        ConfigServer[parameters.data?.config_group][parameters.data?.parameter]:
+                        ConfigServer[parameters.data?.config_group], type:'JSON'};
+                else
+                    //return array
+                    return {result:parameters.data?.parameter?
+                                    ConfigServer[parameters.data?.config_group]
+                                    /**@ts-ignore */
+                                    .filter((/**@type{*}*/row)=>row[parameters.data?.parameter])[0][parameters.data?.parameter]:
+                                    ConfigServer[parameters.data?.config_group], type:'JSON'};
+            }
             else
-                return ORM.getObject(parameters.app_id,parameters.data.object);    
+                return {result:ConfigServer, type:'JSON'};
     } catch (error) {
-        return null;
+        return {result:null, type:'JSON'};
     }
 };
 /**
@@ -63,7 +79,6 @@ const configDefault = async () => {
     /**
      * @type{[  [server_DbObject, server_db_document_ConfigServer],
      *           [server_DbObject, server_db_document_ConfigRestApi],
-     *           [server_DbObject, server_db_document_ConfigIamPolicy],
      *           [server_DbObject, server_db_document_config_microservice_services],
      *           [server_DbObject, server_db_table_IamUser[]],
      *           [server_DbObject, server_db_table_App[]],
@@ -105,7 +120,6 @@ const configDefault = async () => {
                                                                             return config_server;
                                                                         })],
                             ['ConfigRestApi',                   await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ConfigRestApi.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['ConfigIamPolicy',                 await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ConfigIamPolicy.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['ConfigMicroserviceServices',      await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ConfigMicroserviceServices.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['IamUser',                         await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/IamUser.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['App',                             await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/App.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
@@ -150,42 +164,9 @@ const configDefault = async () => {
         throw err;
     }); 
     //load default db
-    await ORM.Init(config_obj[16][1]);
+    await ORM.Init(config_obj[15][1]);
     for (const config_row of config_obj){
         await ORM.postFsAdmin(config_row[0], config_row[1]);
-    }
-};
-/**
- * @name getFile
- * @description Config get saved
- * @function
- * @memberof ROUTE_REST_API
- * @param {{app_id:number,
- *          resource_id:server_db_db_name_config,
- *          data:{  config_group?:string|null,
- *                  parameter?:string|null,
- *                  saved?:string|null}|null}} parameters
- * @returns {Promise.<server_server_response & {result?:* }>}
- */
-const getFile = async parameters => {
-    const {serverUtilNumberValue} = await import('../server.js');
-    
-    const config_group = parameters.data?.config_group?parameters.data.config_group:null;
-    const parameter = parameters.data?.parameter?parameters.data.parameter:null;
-
-    const config = serverUtilNumberValue(parameters.data?.saved)?await ORM.Execute({app_id:parameters.app_id, 
-                                                                                    dml:'GET', 
-                                                                                    object:parameters.resource_id, 
-                                                                                    get:{resource_id:null, partition:null}}):
-                                                                        ORM.getObject(parameters.app_id, parameters.resource_id);
-    if (config_group)
-        if (config_group =='METADATA')
-            return {result:parameter?config[config_group][parameter]:config[config_group], type:'JSON'};
-        else
-            return {result:parameter?config[config_group].filter((/**@type{*}*/row)=>row[parameter])[0][parameter]:config[config_group], type:'JSON'};
-    else{
-        //no filters, return whole config
-        return {result:config, type:'JSON'};
     }
 };
 /**
@@ -194,29 +175,41 @@ const getFile = async parameters => {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          resource_id:server_db_db_name_config,
- *          data:{  config: server_db_document_ConfigServer|
- *                          server_db_document_ConfigIamPolicy|
- *                          server_db_document_config_microservice_services|null,
+ *          data:{  config: server_db_document_ConfigServer|null,
  *                  maintenance:string,
  *                  comment:string,
  *                  configuration:string}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters => {
-    const old_config = get({app_id:parameters.app_id, data:{object:parameters.resource_id}});
-
-    if (parameters.resource_id=='ConfigServer' && parameters.data.config){
-        /**@ts-ignore */
-        parameters.data.config.METADATA = old_config.METADATA;
-        /**@ts-ignore */
-        parameters.data.config.METADATA.MODIFIED = new Date().toISOString();
+    const {serverUtilNumberValue} = await import('../server.js');
+    //can only use config or a config key
+    if (parameters.data.config && 
+        (parameters.data.maintenance ||parameters.data.comment||parameters.data.configuration))
+        return ORM.getError(parameters.app_id, 400);
+    else{
+        /**@type{server_db_document_ConfigServer} */
+        const old_config = get({app_id:parameters.app_id}).result;
+        /**@type{server_db_config_server_metadata} */
+        const metadata = {
+                            MAINTENANCE:serverUtilNumberValue(parameters.data.maintenance ?? old_config.METADATA.MAINTENANCE) ?? old_config.METADATA.MAINTENANCE,
+                            CONFIGURATION:parameters.data.configuration ?? old_config.METADATA.CONFIGURATION,
+                            COMMENT:parameters.data.comment ?? old_config.METADATA.COMMENT,
+                            MODIFIED:new Date().toISOString(),
+                            CREATED:old_config.METADATA.CREATED
+         };
+        const new_config ={
+            ...(parameters.data.config ?? old_config),
+            ...{METADATA:metadata}
+        };
+        return {result:await ORM.Execute({app_id:parameters.app_id, 
+                                        object:'ConfigServer',
+                                        dml:'UPDATE',                  
+                                        update:{resource_id:null, 
+                                                data_app_id:null, 
+                                                data:new_config}}),
+                type:'JSON'};    
     }
-    return {result:await ORM.Execute({app_id:parameters.app_id, 
-                        dml:'UPDATE', 
-                        object:'ConfigServer', 
-                        update:{resource_id:null, data_app_id:null, data:parameters.data.config}}),
-            type:'JSON'};
-
+    
 };
-export{ getFile, update, get, configDefault};
+export{ get, update, configDefault};

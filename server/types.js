@@ -680,12 +680,6 @@
  */
 
 /**
- * @description DB DOCUMENT ConfigIamPolicy
- * @memberof dbObjects
- * @typedef {{'content-security-policy':string}} server_db_document_ConfigIamPolicy
- */
-
-/**
  * @description DB TABLE MessageQueuePublish
  * @memberof dbObjects
  * @typedef {{  id?:number,
@@ -824,6 +818,7 @@
  *              ENABLE_GEOLOCATION:string,
  *              ENABLE_USER_REGISTRATION:string,
  *              ENABLE_USER_LOGIN:string,
+ *              CONTENT_SECURITY_POLICY:string,
  *              RATE_LIMIT_WINDOW_MS:number,
  *              RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS:number,
  *              RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER:number,
@@ -973,7 +968,6 @@
  * 
  * @typedef {   'ConfigServer'|
  *              'ConfigRestApi'|
- *              'ConfigIamPolicy'|
  *              'ConfigMicroserviceServices'} server_db_db_name_config
  */
 
