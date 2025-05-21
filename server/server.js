@@ -1097,6 +1097,7 @@ const serverStart = async () =>{
     
     const Log = await import('./db/Log.js');
     const ConfigServer = await import('./db/ConfigServer.js');
+    const Installation = await import('./installation.js');
     const ORM = await  import('./db/ORM.js');
 
     const fs = await import('node:fs');
@@ -1123,7 +1124,7 @@ const serverStart = async () =>{
     try {
         const result_data = await ORM.getFsDataExists();
         if (result_data==false)
-            await ConfigServer.configDefault();
+            await Installation.configDefault();
         await ORM.Init();
         
         const {socketIntervalCheck} = await import('./socket.js');
