@@ -72,6 +72,7 @@
 #common_dialogue_user_menu_close::before{								        content:var(--common_app_icon_close)}
 
 /*Icons dialogue user menu messages*/
+.common_dialogue_user_menu_messages_col_delete::before{					        content:var(--common_app_icon_delete)}
 #common_dialogue_user_menu_messages_col_date::before{					        content:var(--common_app_icon_regional_calendar)}
 #common_dialogue_user_menu_messages_col_sender::before{					        content:var(--common_app_icon_user)}
 #common_dialogue_user_menu_messages_col_subject::before{					    content:var(--common_app_icon_message_text)}
@@ -1285,7 +1286,7 @@ body.rtl{
 .common_dialogue_user_menu_messages_row{
     display: inline-grid;
     text-align: start;
-    grid-template-columns: 12em 10em 10em;
+    grid-template-columns: 2em 12em 10em 10em;
 }
 .common_dialogue_user_menu_messages_row_read{
     font-weight: inherit;

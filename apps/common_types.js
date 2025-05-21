@@ -220,6 +220,7 @@
  *                          common_dialogue_user_menu:{
  *                              methods:{
  *                                  eventClickMessage: function,
+ *                                  eventClickMessageDelete: function,
  *                                  eventClickNavMessages:function,
  *                                  eventClickNavIamUser:function,
  *                                  eventClickNavIamUserApp:function,

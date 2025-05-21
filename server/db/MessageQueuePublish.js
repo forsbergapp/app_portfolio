@@ -4,7 +4,8 @@
  * @import {server_server_response, server_db_common_result_insert, 
  *          server_db_table_MessageQueuePublish,
  *          server_db_table_MessageQueuePublishMessage,
- *          server_db_table_MessageQueuePublishMicroserviceLog
+ *          server_db_table_MessageQueuePublishMicroserviceLog,
+ *          server_db_common_result_delete
 } from '../types.js'
  */
 
@@ -19,8 +20,8 @@ const ORM = await import('./ORM.js');
  * @returns {server_server_response & {result?:server_db_table_MessageQueuePublish[]}}
  */
 const get = parameters =>{
-    const result = ORM.getObject(parameters.app_id, 'MessageQueuePublish',null, null);    
-    if (result.rows.length>0)
+    const result = ORM.getObject(parameters.app_id, 'MessageQueuePublish',null, null);
+    if (result.rows.length>0 || parameters.resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
         return ORM.getError(null, 404);
@@ -92,5 +93,20 @@ const post = async parameters => {
             
     
 };
-
-export {get, post};
+/**
+ * @name deleteRecord
+ * @description Delete record
+ * @function
+ * @param {{app_id:number,
+*          resource_id:number}} parameters
+* @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
+*/
+const deleteRecord = async parameters =>{
+   return ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'MessageQueuePublish', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+       if (result.affectedRows>0)
+           return {result:result, type:'JSON'};
+       else
+           return ORM.getError(parameters.app_id, 404);
+   });
+};
+export {get, post, deleteRecord};

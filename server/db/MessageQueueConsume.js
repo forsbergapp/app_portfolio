@@ -17,7 +17,7 @@ const ORM = await import('./ORM.js');
  */
 const get = parameters =>{
     const result = ORM.getObject(parameters.app_id, 'MessageQueueConsume',null, null);
-    if (result.rows.length>0)
+    if (result.rows.length>0 || parameters.resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
         return ORM.getError(null, 404);

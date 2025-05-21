@@ -150,7 +150,7 @@ const appFunction = async parameters =>{
             if (result.http)
                 return result;
             else  
-                return {result:[{messages:result.result
+                return {result:[{messages:result.result 
                                             // add message read info
                                             .map((/**@type{server_db_table_MessageQueuePublish}*/message)=>{
                                                 return (MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
@@ -205,7 +205,10 @@ const appFunction = async parameters =>{
                 return messageError();
         }
         case 'COMMON_MESSAGE_DELETE':{
-            return messageError();
+            if (parameters.data.message_id)
+                return MessageQueuePublish.deleteRecord({app_id:parameters.app_id, resource_id:parameters.data.message_id});
+            else
+                return messageError();
         }
         case 'COMMON_MESSAGE_SEND':{
             return messageError();
