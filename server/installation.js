@@ -67,7 +67,7 @@ const postDemo = async parameters=> {
    const AppDataResourceMaster = await import('./db/AppDataResourceMaster.js');
    const AppDataResourceDetail = await import('./db/AppDataResourceDetail.js');
    const AppDataResourceDetailData = await import('./db/AppDataResourceDetailData.js');
-   const Config = await import('./db/Config.js');
+   const ConfigServer = await import('./db/ConfigServer.js');
    const {serverUtilNumberValue} = await import('./server.js');
    const Security = await import('./security.js');
    const {serverProcess} = await import('./server.js');
@@ -90,8 +90,8 @@ const postDemo = async parameters=> {
    let install_count=0;
    const install_total_count = demo_users.length + social_types.length;
    install_count++;
-   const common_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}})) ?? 0;
-   const admin_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_ADMIN_APP_ID'}}));
+   const common_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
+   const admin_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER', parameter:'APP_ADMIN_APP_ID'}}).result);
 
    try {
        /**
@@ -393,7 +393,7 @@ const postDemo = async parameters=> {
                                //replace if containing HOST parameter
                                if (key_name[1]!=null && typeof key_name[1]=='string' && key_name[1].indexOf('<HOST/>')>-1){
                                     /**@type{server_db_document_ConfigServer} */
-                                    const {SERVER:config_SERVER} = Config.get({app_id:0, data:{object:'ConfigServer'}});
+                                    const {SERVER:config_SERVER} = ConfigServer.get({app_id:0}).result;
                                     //use HTTPS configuration as default
                                     const HOST = config_SERVER.filter(row=>'HOST' in row)[0].HOST;
                                     const HTTPS_PORT = serverUtilNumberValue(config_SERVER.filter(row=>'HTTPS_PORT' in row)[0].HTTPS_PORT);

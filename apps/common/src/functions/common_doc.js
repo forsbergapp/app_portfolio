@@ -223,7 +223,7 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
 const markdownRender = async parameters =>{
     const {serverUtilNumberValue} = await import('../../../../server/server.js');
     const App = await import('../../../../server/db/App.js');
-    const Config = await import('../../../../server/db/Config.js');
+    const ConfigServer = await import('../../../../server/db/ConfigServer.js');
     const {serverProcess} = await import('../../../../server/server.js');
 
     switch (true){
@@ -280,8 +280,8 @@ const markdownRender = async parameters =>{
                                 .replaceAll('@{MODULE}',            parameters.module ??'')
                                 .replaceAll('@{SOURCE_LINK}',       parameters.module ??'')
                                 //metadata tags                            
-                                .replaceAll('@{SERVER_HOST}',       Config.get({app_id:parameters.app_id, data:{object:'ConfigServer', config_group:'SERVER', parameter:'HOST'}})??'')
-                                .replaceAll('@{APP_CONFIGURATION}', Config.get({app_id:parameters.app_id, data:{object:'ConfigServer', config_group:'METADATA', parameter:'CONFIGURATION'}})??'')
+                                .replaceAll('@{SERVER_HOST}',       ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'HOST'}}).result??'')
+                                .replaceAll('@{APP_CONFIGURATION}', ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'METADATA', parameter:'CONFIGURATION'}}).result??'')
                                 .replaceAll('@{APP_COPYRIGHT}',     App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].copyright)
                         );
             
@@ -346,7 +346,7 @@ const markdownRender = async parameters =>{
         }
         case parameters.type.toUpperCase()=='GUIDE':{
             return await getFile(`${serverProcess.cwd()}/apps/common/src/functions/documentation/${parameters.doc}.md`, true)
-                        .then(markdown=>markdown.replaceAll('@{GIT_REPOSITORY_URL}',Config.get({app_id:parameters.app_id, data:{object:'ConfigServer', config_group:'SERVER', parameter:'GIT_REPOSITORY_URL'}})));
+                        .then(markdown=>markdown.replaceAll('@{GIT_REPOSITORY_URL}',ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'GIT_REPOSITORY_URL'}}).result));
         }
         default:{
             return '';
@@ -469,7 +469,8 @@ const appFunction = async parameters =>{
                 (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/serviceregistry')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
                 const {default:ComponentMarkdown} = await import('../component/common_markdown.js');
                 const {default:ComponentOpenAPI} = await import('../component/common_openapi.js');
-                const Config = await import('../../../../server/db/Config.js');
+                const ConfigServer = await import('../../../../server/db/ConfigServer.js');
+                const ConfigRestApi = await import('../../../../server/db/ConfigRestApi.js');
                 //guide documents in separate files, app and modules use templates
                 return {result:(await ComponentMarkdown({   data:{  markdown:await markdownRender({ app_id:parameters.app_id,
                                                                     type:parameters.data.documentType,
@@ -483,7 +484,8 @@ const appFunction = async parameters =>{
                                                                                 },
                                                                         methods:{
                                                                                 App:App,
-                                                                                Config:Config,
+                                                                                ConfigServer:ConfigServer,
+                                                                                ConfigRestApi:ConfigRestApi,
                                                                                 serverUtilNumberValue:serverUtilNumberValue
                                                                                 }
                                                                         }):''),

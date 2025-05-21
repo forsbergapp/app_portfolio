@@ -139,7 +139,8 @@ const template = props =>`
 * @param {{data:        {app_id:number},
 *          methods:     {
 *                       App:import('../../../../server/db/App.js'),
-*                       Config:import('../../../../server/db/Config.js'),
+*                       ConfigServer:import('../../../../server/db/ConfigServer.js'),
+*                       ConfigRestApi:import('../../../../server/db/ConfigRestApi.js'),
 *                       serverUtilNumberValue:import('../../../../server/server.js')['serverUtilNumberValue']
 *                       }}} props
 * @returns {Promise.<string>}
@@ -205,11 +206,11 @@ const component = async props => {
     };
 
                                             
-    const HTTPS_ENABLE = props.methods.Config.get({app_id:props.data.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_ENABLE'}});
-    const HOST = props.methods.Config.get({app_id:props.data.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HOST'}});
+    const HTTPS_ENABLE = props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVER',parameter:'HTTPS_ENABLE'}}).result;
+    const HOST = props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVER',parameter:'HOST'}}).result;
     const PORT = props.methods.serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                    props.methods.Config.get({app_id:props.data.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_PORT'}}):
-                        props.methods.Config.get({app_id:props.data.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTP_PORT'}}));
+                    props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVER',parameter:'HTTPS_PORT'}}).result:
+                        props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
 
     const roleOrder = ['app_id', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'app_access_external', 'iam', 'iam_signup', 'socket'];
     /**
@@ -219,9 +220,9 @@ const component = async props => {
      */
     const sortByRole = paths => paths.sort((a,b) => roleOrder.indexOf(a[0].split('/')[2]) - roleOrder.indexOf(b[0].split('/')[2]));
                                                     
-    const CONFIG_REST_API = props.methods.Config.get({app_id:props.data.app_id, data:{object:'ConfigRestApi'}});
+    const CONFIG_REST_API = props.methods.ConfigRestApi.get({app_id:props.data.app_id}).result;
     //return object with 'servers key modified with list from configuration
-    CONFIG_REST_API.servers = props.methods.App.get({app_id:props.data.app_id, resource_id:null}).result
+    CONFIG_REST_API.result.servers = props.methods.App.get({app_id:props.data.app_id, resource_id:null}).result
                         .map((/**@type{server_db_table_App}*/row)=>{
                             return {url:(HTTPS_ENABLE? 'https://':'http://') + 
                                                                         row.subdomain + '.' +

@@ -3174,10 +3174,10 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/config/${resource_id_string}": {
+        "/bff/admin/v1/server-db/configserver": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.Config.getFile",
+                "operationId": "server_db.ConfigServer.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3186,11 +3186,6 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/resource_id_string",
-                            "description":"config file name, ConfigServer, ConfigRestApi, ConfigIamPolicy or ConfigMicroserviceServices",
-                            "required":true
                         },
                         {
                             "name":"config_group",
@@ -3202,14 +3197,6 @@
                         },
                         {
                             "name":"parameter",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "string"
-                            }    
-                        },
-                        {
-                            "name":"saved",
                             "in":"query",
                             "required":false,
                             "schema":{
@@ -3245,7 +3232,7 @@
             },
             "put": {
                 "summary": "",
-                "operationId": "server_db.Config.update",
+                "operationId": "server_db.ConfigServer.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3254,11 +3241,6 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/resource_id_string",
-                            "description":"config file name, ConfigServer, ConfigRestApi, ConfigIamPolicy or ConfigMicroserviceServices",
-                            "required":true
                         }
                 ],
                 "requestBody":{

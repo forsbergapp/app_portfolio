@@ -96,10 +96,10 @@ const component = async props => {
     
     const AppModuleQueue = await import('../../../../server/db/AppModuleQueue.js');
     const {commonRegistryAppModule} = await import('../../../common/src/common.js');
-    const Config = await import('../../../../server/db/Config.js');
+    const ConfigServer = await import('../../../../server/db/ConfigServer.js');
     const test_lib = await import('../../../../test/test.js');
     /**@type{server_db_config_server_service_test[]} */
-    const params = Config.get({app_id:props.app_id,data:{object:'ConfigServer',config_group:'SERVICE_TEST'}});
+    const params = ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVICE_TEST'}}).result;
     const fs = await import('node:fs');
     let finished = 0;
     /**@type{test_spec_result[]} */
