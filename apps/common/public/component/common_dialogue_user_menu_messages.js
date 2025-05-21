@@ -71,7 +71,8 @@ const component = async props => {
                        .then(result=>result.sort((/**@type{MessageQueuePublishMessage}*/a,
                                                   /**@type{MessageQueuePublishMessage}*/b)=>
                                         /**@ts-ignore */
-                                        a.id>b.id?0:1));
+                                        a.id>b.id?0:1))
+                        .catch(()=>[]);
    /**
     * @returns {Promise.<void>}
     */
