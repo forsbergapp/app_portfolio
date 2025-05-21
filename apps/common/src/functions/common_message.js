@@ -4,6 +4,7 @@
 
 /**
  * @import {server_server_response,
+ *          server_db_table_IamUser,
  *          server_db_table_MessageQueuePublish,
  *          server_db_table_MessageQueueConsume,
  *          server_db_table_MessageQueuePublishMessage} from '../../../../server/types.js'
@@ -72,6 +73,35 @@ const appFunction = async parameters =>{
         }
     };
     /**
+     * @description posts MessageQueuPublish record and sends SSE to the reciever
+     * @param {*} message
+     * @returns {Promise.<server_server_response>}
+     */
+    const messagePublishPost = async message =>{
+        const socket = await import('../../../../server/socket.js');
+        const IamUser = await import('../../../../server/db/IamUser.js');
+        /**@type{server_db_table_MessageQueuePublish} */
+        const message_queue_message = {service:'MESSAGE', message:message};
+        return {result:[await MessageQueuePublish.post({app_id:parameters.app_id, 
+                                                        data:message_queue_message})
+                        .then(result=>{
+                            if(result.result?.affectedRows){
+                                /**@type{server_db_table_IamUser[]} */
+                                const users = IamUser.get(parameters.app_id, message.receiver_id).result;                               
+                                for (const user of users.filter(user=>  user.type == (( message.receiver_id && 
+                                                                                        users.length == 1)?users[0].type:'ADMIN') &&
+                                                                        user.id == (message.receiver_id ?? user.id))){
+                                    /**@ts-ignore */
+                                    for (const connection of socket.socketConnectedGet(user.id))
+                                        socket.socketClientSend(connection.response, '', 'MESSAGE');
+                                }
+                                return {sent:result.result.affectedRows};
+                            }
+                            else
+                                return {sent:0};
+                        })], type:'JSON'};
+    };
+    /**
      * @description get MessageQueuPublish stat
      * @param {server_db_table_MessageQueuePublish[]} messages
      * @returns {{unread:Number, read:number}}
@@ -102,16 +132,7 @@ const appFunction = async parameters =>{
                         subject:'CONTACT',
                         message: parameters.data.message
                 };
-                /**@type{server_db_table_MessageQueuePublish} */
-                const message_queue_message = {service:'MESSAGE', message:message};
-                return {result:[await MessageQueuePublish.post({app_id:parameters.app_id, 
-                                                                data:message_queue_message})
-                                .then(result=>{
-                                    if(result.result?.affectedRows)
-                                        return {sent:result.result.affectedRows};
-                                    else
-                                        return {sent:0};
-                                })], type:'JSON'};
+                return messagePublishPost(message);
             }
             else
                 return messageError();
@@ -170,7 +191,12 @@ const appFunction = async parameters =>{
                                                 return {sent:result.result.affectedRows};
                                             else
                                                 return {sent:0};
-                                        })], type:'JSON'};
+                                        })
+                                        .catch(error=>MessageQueueError.post({  app_id:parameters.app_id,
+                                                                                data:{message_queue_publish_id:parameters.data.message_queue_publish_id,
+                                                                                message:error, 
+                                                                                result:0}}).then(()=>{return {sent:0};}))
+                                        ], type:'JSON'};
                     }
                     else
                         return messageError();

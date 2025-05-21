@@ -1479,7 +1479,7 @@
 
 /** 
  * @description SOCKET server_socket_broadcast_type_all
- * @typedef {'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'} server_socket_broadcast_type_all
+ * @typedef {'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'|'MESSAGE'} server_socket_broadcast_type_all
  */
 
 /**
