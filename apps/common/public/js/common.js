@@ -78,6 +78,7 @@ const COMMON_GLOBAL = {
         common_dialogue_user_menu:{
             methods:{
                 eventClickMessage:()=>null,
+                eventClickMessageDelete:()=>null,
                 eventClickNavMessages:()=>null,
                 eventClickNavIamUser:()=>null,
                 eventClickNavIamUserApp:()=>null
@@ -2861,6 +2862,13 @@ const commonEvent = async (event_type,event=null) =>{
                             COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
                             await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickNavMessages();
+                            break;
+                        }
+                        case (event.target.classList.contains('common_dialogue_user_menu_messages_col_delete') && event_target_id != 'common_dialogue_user_menu_messages_col_delete')?
+                                event_target_id:
+                                    '':{
+                            //clicked on delete on row, not the title
+                            COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickMessageDelete( commonMiscElementRow(event.target));
                             break;
                         }
                         case 'common_dialogue_user_menu_nav_iam_user_app':{

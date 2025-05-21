@@ -20,6 +20,7 @@
 const template = props => ` <div id='common_dialogue_user_menu_messages'>
                                 <div id='common_dialogue_user_menu_messages_list'>
                                     <div class='common_dialogue_user_menu_messages_row_title common_dialogue_user_menu_messages_row'>
+                                        <div id='common_dialogue_user_menu_messages_col_delete' class='common_dialogue_user_menu_messages_col common_dialogue_user_menu_messages_col_delete common_icon'></div>
                                         <div id='common_dialogue_user_menu_messages_col_date' class='common_dialogue_user_menu_messages_col common_icon'></div>
                                         <div id='common_dialogue_user_menu_messages_col_subject' class='common_dialogue_user_menu_messages_col common_icon'></div>
                                         <div id='common_dialogue_user_menu_messages_col_sender' class='common_dialogue_user_menu_messages_col common_icon'></div>
@@ -30,6 +31,7 @@ const template = props => ` <div id='common_dialogue_user_menu_messages'>
                                         data-host='${row.message.host}' 
                                         data-id=${row.id} 
                                         data-message='${row.message.message}'>
+                                        <div class='common_dialogue_user_menu_messages_col common_dialogue_user_menu_messages_col_delete common_icon'></div>
                                         <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${props.commonMiscFormatJsonDate(row.created??'')}</div>
                                         <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${row.message.subject}</div>
                                         <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${row.message.sender ?? ''}</div>
@@ -72,7 +74,7 @@ const component = async props => {
                                                             IAM_data_app_id:props.data.common_app_id},
                                                     authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
                        .then((/**@type{*}*/result)=>JSON.parse(result).rows[0])
-                        .catch(()=>[]);
+                        .catch(()=>{return {messages:[], unread:0, read:0};});
     messages.messages = //sort message.id descending order
                         messages.messages.sort((/**@type{MessageQueuePublishMessage}*/a,
                                  /**@type{MessageQueuePublishMessage}*/b)=>

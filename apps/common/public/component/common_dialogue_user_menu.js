@@ -90,6 +90,7 @@ const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:   null,
 *                      methods:{eventClickMessage:          Function,
+*                               eventClickMessageDelete:    Function,
 *                               eventClickNavMessages:      Function, 
 *                               eventClickNavIamUser:       Function,
 *                               eventClickNavIamUserApp:    Function},
@@ -104,7 +105,7 @@ const component = async props => {
      * @param {HTMLElement} element
      * @returns {Promise.<void>}
      */
-    const eventClickMessage = async (element) =>{
+    const eventClickMessage = async element =>{
         const message_id = element.getAttribute('data-id');
         const message = element.getAttribute('data-message');
         element.classList.remove('common_dialogue_user_menu_messages_row_unread');
@@ -119,6 +120,23 @@ const component = async props => {
                 authorization_type:'APP_ACCESS'});
         props.methods.commonUserMessageShowStat();
     };
+    /**
+     * @description read a message
+     * @param {HTMLElement} element
+     * @returns {Promise.<void>}
+     */
+    const eventClickMessageDelete = async element =>{
+        await props.methods.commonFFB({ path:'/app-common-module/COMMON_MESSAGE_DELETE', 
+                method:'POST', 
+                body:{  type:'FUNCTION', 
+                        IAM_iam_user_id:props.data.iam_user_id,
+                        IAM_data_app_id:props.data.common_app_id,
+                        message_id:element.getAttribute('data-id')},
+                authorization_type:'APP_ACCESS'});
+        await eventClickNavMessages();
+        props.methods.commonUserMessageShowStat();
+    };
+        
     /**
      * @description show messages
      * @returns {Promise.<void>}
@@ -214,6 +232,7 @@ const component = async props => {
         data:       null,
         methods:    {
                     eventClickMessage:          eventClickMessage,
+                    eventClickMessageDelete:    eventClickMessageDelete,
                     eventClickNavMessages:      eventClickNavMessages, 
                     eventClickNavIamUser:       eventClickNavIamUser,
                     eventClickNavIamUserApp:    eventClickNavIamUserApp
