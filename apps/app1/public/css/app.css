@@ -828,58 +828,32 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	display: flex;
 	flex-direction: column;
 }
-#menu_config_detail_container{
-	height: calc(100% - 50px);
-	overflow-x: auto;
-	overflow-y: auto;
-}
-#menu_config_detail{
+#menu_config{
 	display: flex;
 	flex-direction: column;
 	height: calc(100% - 50px);
 	overflow-x:auto;
 	overflow-y:auto;
 }
-#menu_config_detail_edit{
-	white-space: pre;
-	display: flex;
-	flex-direction: column;
-	height: calc(100% - 50px);
-	overflow-x:auto;
-	overflow-y:auto;
-	text-align: start;
+#menu_config_row_title{
+    margin-bottom: 1em;
 }
-#menu_config_detail_edit.css_spinner{
-	height:30px !important;
-	inset-inline-start: calc(50% - 40px);
-}
-#menu_config_detail_edit.css_spinner::before{
-	opacity:unset;
-}
-#menu_config_detail_row_title{
-	margin-inline-start: 4px;
-}
-.menu_config_detail_row{
+.menu_config_row{
+    display:grid;
 	height: auto;
 	padding-top:4px;
-	padding-inline-start: 5px;
+	padding-inline-start: 1em;
 	text-align: start;
+    grid-template-columns: 250px 200px 700px;
 }   
-.menu_config_detail_group_title{
+.menu_config_group_title{
 	text-transform: uppercase;
 	font-weight: bold;
+    text-align: start;
+    padding-inline-start: 0.5em;
 }
-.menu_config_detail_col{
-	display:inline-block;
-}
-.menu_config_detail_col:nth-child(1){
-	width:250px;
-}
-.menu_config_detail_col:nth-child(2){
-	width:200px;
-}
-.menu_config_detail_col:nth-child(3){
-	width:700px;
+.menu_config_col{
+    margin-inline-end: 1em;
 }
 /* MENU INSTALLATION*/
 #menu_installation_content_widget1{
@@ -1455,7 +1429,7 @@ body{
 .menu_monitor_detail_app_data_stat_row,
 .menu_monitor_detail_connected_row,
 .menu_monitor_detail_server_log_row,
-.menu_config_detail_row{
+.menu_config_row{
 	font-size: 9px;
 }
 .menu_users_list_row .common_input,
@@ -1469,15 +1443,14 @@ body{
 #menu_users_iam_app_access,
 #menu_apps,
 #menu_apps_detail,
-#menu_config_detail{
+#menu_config{
 	background-color: var(--app_theme_list_background_color);
 }
 #menu_db_info_detail,
 #lov_list,
 #menu_monitor_detail_app_data_stat,
 #menu_monitor_detail_connected,
-#menu_monitor_detail_server_log,
-#menu_config_detail_edit{
+#menu_monitor_detail_server_log{
 	border: var(--app_theme_list_border_color) solid 0.5px;
 }
 #menu_monitor_pagination div{

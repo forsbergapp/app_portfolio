@@ -167,7 +167,7 @@ const appSecureMenuShow = menu => {
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
-                methods:    null,
+                methods:    {commonFFB:common.commonFFB},
                 path:       '/component/menu_config.js'});
             break;
         }
@@ -230,7 +230,7 @@ const appSecureMenuShow = menu => {
  * @returns{Promise.<void>}
  */
 const appSecureMenuStartChartShow = async () => {
-    common.commonComponentRender({
+    await common.commonComponentRender({
         mountDiv:   'menu_start_graphBox',
         data:       null,
         methods:    {
@@ -381,13 +381,14 @@ const appSecureDialogueSendBroadcastBroadcastTypeSet = () => {
  * @returns{void}
  */
 const appSecureDialogueSendBroadcastMaintenanceSet = () => {
-    let check_value;
-    if (COMMON_DOCUMENT.querySelector('#menu_start_checkbox_maintenance').classList.contains('checked'))
-        check_value = 1;
-    else
-        check_value = 0;
-    const json_data = {maintenance:check_value};
-    common.commonFFB({path:'/server-db/config/ConfigServer', method:'PUT', authorization_type:'ADMIN', body:json_data}).catch(()=>null);
+    common.commonFFB({  path:'/server-db/configserver', 
+                        method:'PUT', 
+                        authorization_type:'ADMIN', 
+                        body:{maintenance:COMMON_DOCUMENT.querySelector('#menu_start_checkbox_maintenance')
+                                            .classList.contains('checked')?
+                                                1:
+                                                    0}})
+    .catch(()=>null);
 };
 /**
  * @name appSecureMenuUsers
@@ -520,16 +521,16 @@ const appSecureCommonButtonSave = async (item) => {
             const config_server = () => {
                 /**@type{object} */
                 let config_server = {};
-                COMMON_DOCUMENT.querySelectorAll('#menu_config_detail .menu_config_detail_group').forEach((/**@type{HTMLElement}*/config_group_element) => 
+                COMMON_DOCUMENT.querySelectorAll('#menu_config .menu_config_group').forEach((/**@type{HTMLElement}*/config_group_element) => 
                     {
                         const config_group  = {
-                                                [config_group_element.querySelector('.menu_config_detail_group_title div')?.textContent ?? '']:
-                                                        Array.from(config_group_element.querySelectorAll('.menu_config_detail_row')).map(config_group_row => 
+                                                [config_group_element.querySelector('.menu_config_group_title div')?.textContent ?? '']:
+                                                        Array.from(config_group_element.querySelectorAll('.menu_config_row')).map(config_group_row => 
                                                             {
                                                                 return {
-                                                                    [config_group_row.querySelectorAll('.menu_config_detail_col div')[0].textContent ?? '']:
-                                                                                config_group_row.querySelectorAll('.menu_config_detail_col div')[1].textContent,
-                                                                    COMMENT:    config_group_row.querySelectorAll('.menu_config_detail_col div')[2].textContent ?? ''
+                                                                    [config_group_row.querySelectorAll('.menu_config_col div')[0].textContent ?? '']:
+                                                                                config_group_row.querySelectorAll('.menu_config_col div')[1].textContent,
+                                                                    COMMENT:    config_group_row.querySelectorAll('.menu_config_col div')[2].textContent ?? ''
                                                                 };
                                                             }
                                                         )
@@ -539,12 +540,11 @@ const appSecureCommonButtonSave = async (item) => {
                 );
                 return config_server;
             };
-            const file = COMMON_DOCUMENT.querySelectorAll('#secure_menu_content .list_nav .list_nav_selected_tab')[0].getAttribute('data-table');
-            const json_data = { config:    file=='ConfigServer'?
-                                                config_server():
-                                                    JSON.parse(COMMON_DOCUMENT.querySelector('#menu_config_detail_edit').textContent)};
-
-            common.commonFFB({path:`/server-db/config/${file}`, method: 'PUT', authorization_type:'ADMIN', body:json_data, spinner_id:item});
+            common.commonFFB({  path:'/server-db/configserver', 
+                                method: 'PUT', 
+                                authorization_type:'ADMIN', 
+                                body:{ config:config_server()}, 
+                                spinner_id:item});
             break;
         }
     }
@@ -776,17 +776,6 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                 }
                 case 'menu_config_save':{
                     appSecureCommonButtonSave('menu_config_save');
-                    break;
-                }
-                case 'menu_config_config_server' :
-                case 'menu_config_config_iam_policy':{
-                    COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
-                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('list_nav_selected_tab');
-                    common.commonComponentRender({
-                        mountDiv:       'menu_config_detail_container',
-                        data:           {file:COMMON_DOCUMENT.querySelector(`#${event_target_id}`).getAttribute('data-table')},
-                        methods:        {commonFFB:common.commonFFB},
-                        path:           '/component/menu_config_detail.js'});
                     break;
                 }
                 case 'menu_installation_demo_button_install':{

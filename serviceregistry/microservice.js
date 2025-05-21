@@ -66,13 +66,13 @@ const microserviceRouteMatch = (route_path, route_method, request_path , request
  */
 const microserviceRequest = async parameters =>{
     const {circuitBreaker} = await import('./circuitbreaker.js');
-    const Config = await import('../server/db/Config.js');
+    const ConfigServer = await import('../server/db/ConfigServer.js');
     const AppSecret = await import('../server/db/AppSecret.js');
     const {registryMicroserviceApiVersion}= await import('./registry.js');
 
     /**@type{microservice_registry_service} */
     const microservice = parameters.path.split('/')[1].toUpperCase();
-    if ((microservice == 'GEOLOCATION' && microserviceUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer', config_group:'SERVICE_IAM', parameter:'ENABLE_GEOLOCATION'}}))==1)||
+    if ((microservice == 'GEOLOCATION' && microserviceUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVICE_IAM', parameter:'ENABLE_GEOLOCATION'}}).result)==1)||
         microservice != 'GEOLOCATION'){
         //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
         const authorization = `Basic ${Buffer.from(     AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_id + ':' + 
@@ -85,7 +85,7 @@ const microserviceRequest = async parameters =>{
         return await circuitBreaker.MicroServiceCall( microserviceHttpRequest, 
                                                 microservice, 
                                                 
-                                                parameters.app_id == microserviceUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer', config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}})), //if appid = APP_COMMON_APP_ID then admin, 
+                                                parameters.app_id == microserviceUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result), //if appid = APP_COMMON_APP_ID then admin, 
                                                 `/api/v${registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
                                                 query, 
                                                 parameters.data, 

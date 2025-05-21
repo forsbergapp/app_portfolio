@@ -23,7 +23,7 @@
 
 const {serverResponse, serverUtilNumberValue} = await import('./server.js');
 const {commonAppHost}= await import('../apps/common/src/common.js');
-const Config = await import('./db/Config.js');
+const ConfigServer = await import('./db/ConfigServer.js');
 const AppSecret = await import('./db/AppSecret.js');
 const IamControlIp = await import('./db/IamControlIp.js');
 const IamControlUserAgent = await import('./db/IamControlUserAgent.js');
@@ -61,7 +61,7 @@ const iamUtilMessageNotAuthorized = () => '⛔';
 const iamUtilTokenGet = (app_id, token, token_type) =>{
     /**@type{*} */
     const verify = jwt.verify(token.replace('Bearer ','').replace('Basic ',''), token_type=='ADMIN'?
-                                        Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ADMIN_TOKEN_SECRET'}}):
+                                        ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'ADMIN_TOKEN_SECRET'}}).result:
                                             AppSecret.get({app_id:app_id, resource_id:app_id}).result[0][  token_type=='APP_ACCESS'?'common_app_access_secret':
                                                                                                                     token_type=='APP_ACCESS_EXTERNAL'?'common_app_access_verification_secret':
                                                                                                                     token_type=='APP_ACCESS_VERIFICATION'?'common_app_access_verification_secret':
@@ -264,7 +264,7 @@ const iamAuthenticateUser = async parameters =>{
             //save log for all login attempts  
             /**@type{server_db_table_IamAppAccess} */
             const file_content = {	
-                        type:                   parameters.app_id==serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}))?
+                        type:                   parameters.app_id==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}).result)?
                                                     'ADMIN':
                                                         'APP_ACCESS',
                         app_custom_id:          null,
@@ -289,7 +289,7 @@ const iamAuthenticateUser = async parameters =>{
     };
     if(parameters.authorization){       
         //if admin app create user if first time
-        if (parameters.app_id == serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}})) && IamUser.get(parameters.app_id, null).result.length==0)
+        if (parameters.app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}).result) && IamUser.get(parameters.app_id, null).result.length==0)
             return IamUser.post(parameters.app_id,{
                             username:           username, 
                             password:           password, 
@@ -316,7 +316,7 @@ const iamAuthenticateUser = async parameters =>{
             /**@type{server_db_table_IamUser}*/
             const user =  IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/user)=>user.username == username)[0];
             if (user && await securityPasswordCompare(parameters.app_id, password, user.password)){
-                if (parameters.app_id == serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}))){
+                if (parameters.app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}).result)){
                     //admin allowed to login to admin app only
                     if (user.type=='ADMIN'){
                         /**@ts-ignore */
@@ -690,7 +690,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
     const app_id_host = commonAppHost(parameters.host);
     //APP_EXTERNAL and APP_ACCESS_EXTERNALK do not use idToken
     if ((parameters.idToken ||parameters.endpoint=='APP_EXTERNAL' ||parameters.endpoint=='APP_ACCESS_EXTERNAL') && parameters.endpoint && app_id_host !=null){
-        const app_id_admin = serverUtilNumberValue(Config.get({app_id:app_id_host, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}));
+        const app_id_admin = serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}).result);
         try {
             //authenticate id token
             const id_token_decoded = (parameters.endpoint=='APP_EXTERNAL' || parameters.endpoint=='APP_ACCESS_EXTERNAL')?null:iamUtilTokenGet(app_id_host, parameters.idToken, 'APP_ID');
@@ -712,7 +712,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                             if (app_id_host=== app_id_admin)
                                 parameters.next();
                             else
-                                if (serverUtilNumberValue(Config.get({app_id:app_id_host, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ENABLE_USER_LOGIN'}}))==1)
+                                if (serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVICE_IAM', parameter:'ENABLE_USER_LOGIN'}}).result)==1)
                                     parameters.next();
                                 else
                                     iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
@@ -720,7 +720,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                         }
                         case parameters.endpoint=='ADMIN' && app_id_host== app_id_admin && parameters.authorization.toUpperCase().startsWith('BEARER'):
                         case parameters.endpoint=='APP_ACCESS_VERIFICATION' && parameters.authorization.toUpperCase().startsWith('BEARER'):
-                        case parameters.endpoint=='APP_ACCESS' && serverUtilNumberValue(Config.get({app_id:app_id_host, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ENABLE_USER_LOGIN'}}))==1 && parameters.authorization.toUpperCase().startsWith('BEARER'):{
+                        case parameters.endpoint=='APP_ACCESS' && serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVICE_IAM', parameter:'ENABLE_USER_LOGIN'}}).result)==1 && parameters.authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
                             const access_token = parameters.authorization?.split(' ')[1] ?? '';
                             const access_token_decoded = iamUtilTokenGet(app_id_host, access_token, parameters.endpoint);
@@ -754,7 +754,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                 iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
-                        case parameters.endpoint=='IAM_SIGNUP' && serverUtilNumberValue(Config.get({app_id:app_id_host, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ENABLE_USER_REGISTRATION'}}))==1 && app_id_host!= app_id_admin:{
+                        case parameters.endpoint=='IAM_SIGNUP' && serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVICE_IAM', parameter:'ENABLE_USER_REGISTRATION'}}).result)==1 && app_id_host!= app_id_admin:{
                             parameters.next();
                             break;
                         }
@@ -810,10 +810,10 @@ const iamAuthenticateUserAppDelete = async parameters => {
  const iamAuthenticateRequest = async parameters => {
     const app_id = commonAppHost(parameters.host);
     //set calling app_id using app_id or common app_id if app_id is unknown
-    const calling_app_id = app_id ?? serverUtilNumberValue(Config.get({app_id:app_id??0, data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}})) ?? 0;
+    const calling_app_id = app_id ?? serverUtilNumberValue(ConfigServer.get({app_id:app_id??0, data:{config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
 
     /**@type{server_db_document_ConfigServer} */
-    const config_SERVER = Config.get({app_id:calling_app_id, data:{object:'ConfigServer'}});
+    const config_SERVER = ConfigServer.get({app_id:calling_app_id}).result;
     /**@type{server_db_config_server_server[]} */
     const config_SERVER_SERVER = config_SERVER.SERVER;
     /**@type{server_db_config_server_service_iam[]} */
@@ -1158,7 +1158,7 @@ const iamAuthenticateResource = parameters =>  {
                     authenticate_token.iam_user_id == (parameters.claim_iam_user_id ?? authenticate_token.iam_user_id) &&
                     
                     //authenticate iam data app id if used, users can only have access to current app id or common app id for data app id claim
-                    (parameters.claim_iam_data_app_id == serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}})) ||
+                    (parameters.claim_iam_data_app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result) ||
                      authenticate_token.app_id == (parameters.claim_iam_data_app_id ?? authenticate_token.app_id)) &&
                     //authenticate app id dervied from subdomain, user must be using current app id only
                     authenticate_token.app_id == parameters.app_id &&
@@ -1235,8 +1235,8 @@ const iamAuthenticateResource = parameters =>  {
         }
         //Admin Access token
         case 'ADMIN':{
-            secret = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ADMIN_TOKEN_SECRET'}}) ?? '';
-            expiresin = Config.get({app_id:app_id, data:{object:'ConfigServer',config_group:'SERVICE_IAM', parameter:'ADMIN_TOKEN_EXPIRE_ACCESS'}}) ?? '';
+            secret = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'ADMIN_TOKEN_SECRET'}}).result ?? '';
+            expiresin = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'ADMIN_TOKEN_EXPIRE_ACCESS'}}).result ?? '';
             break;
         }
         //APP Access external token

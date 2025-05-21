@@ -21,13 +21,13 @@ const test = async t =>
         return await new Promise(resolve=>
         t.it('should return values when using ORM pattern for Config', async () =>{
             const {serverUtilNumberValue} = await import('../server/server.js');
-            const Config = await import('../server/db/Config.js');
+            const ConfigServer = await import('../server/db/ConfigServer.js');
         
-            const HTTPS_ENABLE = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_ENABLE'}});
-            const HOST = Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER', parameter:'HOST'}});
+            const HTTPS_ENABLE = ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTPS_ENABLE'}}).result;
+            const HOST = ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'HOST'}}).result;
             const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                            Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_PORT'}}):
-                                Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTP_PORT'}}));
+                            ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTPS_PORT'}}).result:
+                                ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
 
             return [
                 /**@ts-ignore */
@@ -88,7 +88,7 @@ const test = async t =>
         return await new Promise(resolve=>
         t.it('should return values ', async () =>{
             const App = await import('../server/db/App.js');
-            const Config = await import('../server/db/Config.js');
+            const ConfigServer = await import('../server/db/ConfigServer.js');
             const {serverUtilNumberValue} = await import('../server/server.js');
             const bff = await import('../server/bff.js');
 
@@ -103,7 +103,7 @@ const test = async t =>
                     route_path:'/app-common-module/COMMON_WORLDCITIES_CITY_RANDOM',
                     method:'POST', 
                     query:'',
-                    body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}))},
+                    body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}).result)},
                     authorization:null,
                     ip:':1', 
                     user_agent:'*', 

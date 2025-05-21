@@ -21,7 +21,7 @@
 const App = await import('../../../server/db/App.js');
 const AppModule = await import('../../../server/db/AppModule.js');
 const AppParameter = await import('../../../server/db/AppParameter.js');
-const Config = await import('../../../server/db/Config.js');
+const ConfigServer = await import('../../../server/db/ConfigServer.js');
 const IamUser = await import('../../../server/db/IamUser.js');
 const Log = await import('../../../server/db/Log.js');
 const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import('../../../server/server.js');
@@ -50,8 +50,8 @@ const commonSearchMatch = (col, search) =>{
  * @returns {Promise.<boolean>}
  */
 const commonAppStart = async (app_id) =>{
-    if (serverUtilNumberValue(Config.get({app_id:app_id,data:{object:'ConfigServer',config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}))!=null &&
-        Config.get({app_id:app_id??0,data:{object:'ConfigServer',config_group:'METADATA',parameter:'MAINTENANCE'}})==0 &&
+    if (serverUtilNumberValue(ConfigServer.get({app_id:app_id,data:{config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result)!=null &&
+        ConfigServer.get({app_id:app_id??0,data:{config_group:'METADATA',parameter:'MAINTENANCE'}}).result==0 &&
         App.get({app_id:app_id, resource_id:app_id}).result[0].status =='ONLINE')
             return true;
     else
@@ -133,7 +133,7 @@ const commonGeodata = async parameters =>{
                                 route_path:'/app-common-module/COMMON_WORLDCITIES_CITY_RANDOM',
                                 method:'POST', 
                                 query:'',
-                                body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}))},
+                                body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}).result)},
                                 authorization:null,
                                 ip:parameters.ip, 
                                 user_agent:parameters.user_agent, 
@@ -270,7 +270,7 @@ const commonAssetfile = parameters =>{
     
     return new Promise((resolve)=>{
                                                             
-        const common_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}));
+        const common_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}).result);
         
         if (common_app_id!=null){
             switch (parameters.url.toLowerCase().substring(parameters.url.lastIndexOf('.'))){
@@ -659,7 +659,7 @@ const commonAppReportQueue = async parameters =>{
         const user = IamUser.get(  parameters.app_id, 
                                             serverUtilNumberValue(iamUtilTokenGet(  parameters.app_id, 
                                                                                     parameters.authorization, 
-                                                                                    parameters.app_id==serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}))?
+                                                                                    parameters.app_id==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}).result)?
                                                                                                                                                     'ADMIN':
                                                                                                                                                         'APP_ACCESS').iam_user_id)).result[0];
         const result_post = await AppModuleQueue.post(parameters.app_id, 
@@ -801,8 +801,8 @@ const commonModuleMetaDataGet = async parameters =>{
 const commonComponentCreate = async parameters =>{
     const { iamAuthorizeIdToken } = await import('../../../server/iam.js');
 
-    const common_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}));
-    const admin_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}));
+    const common_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}).result);
+    const admin_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}).result);
     //id token for APP and MAINTENANCE
     const idtoken = (parameters.type=='APP' ||parameters.type=='MAINTENANCE')?
                         await iamAuthorizeIdToken(parameters.app_id, parameters.componentParameters.ip, parameters.type):
@@ -833,10 +833,10 @@ const commonComponentCreate = async parameters =>{
                 client_timezone:        result_geodata?.timezone,
                 common_app_id:          common_app_id,
                 admin_app_id:           admin_app_id,
-                framework:              Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVICE_APP',   parameter:'FRAMEWORK'}}),
-                framework_messages:     Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVICE_APP',   parameter:'FRAMEWORK_MESSAGES'}}),
-                rest_resource_bff:      Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',        parameter:'REST_RESOURCE_BFF'}}),
-                rest_api_version:       Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',        parameter:'REST_API_VERSION'}}),
+                framework:              ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',   parameter:'FRAMEWORK'}}).result,
+                framework_messages:     ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',   parameter:'FRAMEWORK_MESSAGES'}}).result,
+                rest_resource_bff:      ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',        parameter:'REST_RESOURCE_BFF'}}).result,
+                rest_api_version:       ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',        parameter:'REST_API_VERSION'}}).result,
                 first_time:             count_user==0?1:0
             };
             /**@type{server_db_app_parameter_common} */
@@ -870,7 +870,7 @@ const commonComponentCreate = async parameters =>{
                 common_app_id:  common_app_id,
                 admin_app_id:   admin_app_id,
                 app_idtoken:    idtoken,
-                rest_resource_bff: Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVER',parameter:'REST_RESOURCE_BFF'}})
+                rest_resource_bff: ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'REST_RESOURCE_BFF'}}).result
             });
 
             const {default:ComponentCreate} = await import('./component/common_maintenance.js');
@@ -904,15 +904,15 @@ const commonComponentCreate = async parameters =>{
 const commonAppHost = host =>{
     switch (host.split(':')[0].toString().split('.')[0]){
                         
-        case Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'HOST'}}):
+        case ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HOST'}}).result:
         case 'www':{
             //localhost
-            return App.get({app_id:serverUtilNumberValue(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}))??0, 
+            return App.get({app_id:serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}).result)??0, 
                             resource_id:null}).result.filter((/**@type{server_db_table_App}*/app)=>app.subdomain == 'www')[0].id;
         }
         default:{
             try {
-                return App.get({app_id:serverUtilNumberValue(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}))??0, 
+                return App.get({app_id:serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}).result)??0, 
                                 resource_id:null}).result.filter((/**@type{server_db_table_App}*/app)=>host.split(':')[0].toString().split('.')[0] == app.subdomain)[0].id;
             } catch (error) {
                 return null;
@@ -950,7 +950,7 @@ const commonApp = async parameters =>{
             case (parameters.url.toLowerCase().startsWith('/maintenance')):{
                 return await commonAssetfile({app_id:parameters.app_id, url: parameters.url.substring('/maintenance'.length), basepath:'/apps/common/public'});
             } 
-            case (  parameters.app_id != serverUtilNumberValue(Config.get({app_id:0, data:{object:'ConfigServer',config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}})) && 
+            case (  parameters.app_id != serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}).result) && 
                     await commonAppStart(parameters.app_id) ==false):{
                 return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
             }

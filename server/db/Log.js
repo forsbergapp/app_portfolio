@@ -184,7 +184,7 @@ const getStatusCodes = async () =>{
 */
 const getStat = async parameters => {
     const {serverUtilNumberValue} = await import('../server.js');
-    const Config = await import('./Config.js');
+    const ConfigServer = await import('./ConfigServer.js');
     const ORM = await import('./ORM.js');
 
     /**@type{server_log_data_parameter_getLogStats} */
@@ -220,7 +220,7 @@ const getStat = async parameters => {
            (file.name.startsWith(`LogRequestVerbose_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
            (regexp_verbose_day.exec(file.name)!=null||regexp_verbose_month.exec(file.name)!=null))){
            //filename format: log_request_info_YYYMMDD.json
-           if (Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'FILE_INTERVAL'}})=='1D'){
+           if (ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'FILE_INTERVAL'}}).result=='1D'){
                //return DD
                day = file.name.slice(-7).substring(0,2);
                sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;
@@ -357,7 +357,7 @@ const getFiles = async () => {
  */
 const post = async parameters => {
     const ORM = await import('./ORM.js');
-    const Config = await import('./Config.js');
+    const ConfigServer = await import('./ConfigServer.js');
 
     let log;
     /**@type{server_db_tables_log|null}*/
@@ -372,7 +372,7 @@ const post = async parameters => {
         }
         case 'LogServiceError':
         case 'LogServiceInfo':{
-            const service_level = Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'SERVICE_LEVEL'}});
+            const service_level = ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'SERVICE_LEVEL'}}).result;
             /**@type{server_db_table_LogServiceInfo}*/
             log = (service_level=='1' ||service_level=='2')?
                     {app_id:    parameters.app_id,
@@ -385,7 +385,7 @@ const post = async parameters => {
         }
         case 'LogAppError':
         case 'LogAppInfo':{
-            const app_level = Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'APP_LEVEL'}});
+            const app_level = ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'APP_LEVEL'}}).result;
             if (app_level=='1'||app_level=='2'){
                 /**@type{server_db_table_LogAppInfo} */
                 log ={
@@ -403,7 +403,7 @@ const post = async parameters => {
         }
         case 'LogDbError':
         case 'LogDbInfo':{
-            const db_level = Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'DB_LEVEL'}});            
+            const db_level = ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'DB_LEVEL'}}).result;
             if (db_level=='1'||db_level=='2'){
                 log_object = (db_level=='2' && parameters.data.object=='LogDbInfo')?'LogDbVerbose':parameters.data.object;
                 /**@type{server_db_table_LogDbError} */
@@ -436,7 +436,7 @@ const post = async parameters => {
                     return value;
                 };
             };
-            const request_level = Config.get({app_id:parameters.app_id, data:{object:'ConfigServer',config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}); 
+            const request_level = ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}).result; 
             if (request_level=='1'||request_level=='2'){
                 log = { host:               parameters.data.request?.req.headers.host,
                         ip:                 parameters.data.request?.req.ip,

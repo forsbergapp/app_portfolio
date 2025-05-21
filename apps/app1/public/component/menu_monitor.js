@@ -127,15 +127,16 @@ const component = async props => {
      *                      logObjects:{VALUE:string, TEXT:string}[]}>}
      */
     const get_log_parameters = async () => {
-        const result_parameters = await props.methods.commonFFB({path:'/server-db/config/ConfigServer', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'ADMIN'});
+        const result_parameters = await props.methods.commonFFB({path:'/server-db/configserver', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'ADMIN'})
+                                    .then((/**@type{string}*/result)=>JSON.parse(result).rows);
         const result_log_objects = await props.methods.commonFFB({path:'/server-db/ORM-objects', method:'GET', authorization_type:'ADMIN'});
         
         const log_parameters = {
-            REQUEST_LEVEL : JSON.parse(result_parameters).filter((/**@type{*}*/row)=>'REQUEST_LEVEL' in row)[0]['REQUEST_LEVEL'],
-            SERVICE_LEVEL : JSON.parse(result_parameters).filter((/**@type{*}*/row)=>'SERVICE_LEVEL' in row)[0]['SERVICE_LEVEL'],
-            DB_LEVEL :      JSON.parse(result_parameters).filter((/**@type{*}*/row)=>'DB_LEVEL' in row)[0]['DB_LEVEL'],
-            APP_LEVEL :     JSON.parse(result_parameters).filter((/**@type{*}*/row)=>'APP_LEVEL' in row)[0]['APP_LEVEL'],
-            FILE_INTERVAL : JSON.parse(result_parameters).filter((/**@type{*}*/row)=>'FILE_INTERVAL' in row)[0]['FILE_INTERVAL']
+            REQUEST_LEVEL : result_parameters.filter((/**@type{*}*/row)=>'REQUEST_LEVEL' in row)[0]['REQUEST_LEVEL'],
+            SERVICE_LEVEL : result_parameters.filter((/**@type{*}*/row)=>'SERVICE_LEVEL' in row)[0]['SERVICE_LEVEL'],
+            DB_LEVEL :      result_parameters.filter((/**@type{*}*/row)=>'DB_LEVEL' in row)[0]['DB_LEVEL'],
+            APP_LEVEL :     result_parameters.filter((/**@type{*}*/row)=>'APP_LEVEL' in row)[0]['APP_LEVEL'],
+            FILE_INTERVAL : result_parameters.filter((/**@type{*}*/row)=>'FILE_INTERVAL' in row)[0]['FILE_INTERVAL']
             };
         
         return {parameters:log_parameters,

@@ -89,15 +89,15 @@ const component = async props => {
     const {serverUtilNumberValue} = await import('../../../../server/server.js');
     const {commonRegistryAppModule} = await import('../../../common/src/common.js');
     const AppModuleQueue = await import('../../../../server/db/AppModuleQueue.js');
-    const Config = await import('../../../../server/db/Config.js');
+    const ConfigServer = await import('../../../../server/db/ConfigServer.js');
     const {serverProcess} = await import('../../../../server/server.js');
 
-    const HTTPS_ENABLE = Config.get({app_id:props.app_id,data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_ENABLE'}});
+    const HTTPS_ENABLE = ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTPS_ENABLE'}}).result;
     const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
-    const HOST = Config.get({app_id:props.app_id,data:{object:'ConfigServer',config_group:'SERVER', parameter:'HOST'}});
+    const HOST = ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER', parameter:'HOST'}}).result;
     const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                    Config.get({app_id:props.app_id,data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTPS_PORT'}}):
-                        Config.get({app_id:props.app_id,data:{object:'ConfigServer',config_group:'SERVER',parameter:'HTTP_PORT'}}));
+                    ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTPS_PORT'}}).result:
+                        ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
 
     class Benchmark {
         /**

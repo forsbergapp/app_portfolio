@@ -54,17 +54,17 @@ const zlib = await import('node:zlib');
  *  @returns {Promise.<void>}
  */
 const serverResponse = async parameters =>{
-    const Config = await import('./db/Config.js');
-    const common_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id??0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}})) ?? 0;
-    const admin_app_id = serverUtilNumberValue(Config.get({app_id:parameters.app_id??0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'APP_ADMIN_APP_ID'}}));
+    const ConfigServer = await import('./db/ConfigServer.js');
+    const common_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
+    const admin_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVER', parameter:'APP_ADMIN_APP_ID'}}).result);
     /**
      * Sets response type
      * @param {server_server_response_type} type
      */
     const setType = type => {
         
-        const app_cache_control =       Config.get({app_id:parameters.app_id??0,data:{object:'ConfigServer', config_group:'SERVICE_APP', parameter:'CACHE_CONTROL'}});
-        const app_cache_control_font =  Config.get({app_id:parameters.app_id??0,data:{object:'ConfigServer', config_group:'SERVICE_APP', parameter:'CACHE_CONTROL_FONT'}});
+        const app_cache_control =       ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP', parameter:'CACHE_CONTROL'}}).result;
+        const app_cache_control_font =  ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP', parameter:'CACHE_CONTROL_FONT'}}).result;
         switch (type){
             case 'JSON':{
                 if (app_cache_control !='')
@@ -219,7 +219,7 @@ const serverResponse = async parameters =>{
                             }
                             //records limit in controlled by server, apps can not set limits
                                                                           
-                            const limit = serverUtilNumberValue(Config.get({app_id:parameters.app_id??0,data:{object:'ConfigServer', config_group:'SERVICE_APP', parameter:'LIMIT_RECORDS'}})??0);
+                            const limit = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP', parameter:'LIMIT_RECORDS'}}).result??0);
                             if (parameters.result_request.singleResource)
                                 //limit rows if single resource response contains rows
                                 parameters.res.write(JSON.stringify((typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
@@ -603,7 +603,7 @@ const serverUtilAppLine = () =>{
  */
 const serverJs = async () => {
     const Log = await import('./db/Log.js');
-    const Config = await import('./db/Config.js');
+    const ConfigServer = await import('./db/ConfigServer.js');
     const {iamUtilMessageNotAuthorized} = await import('./iam.js');
     const iamMiddleware = await import('./iamMiddleware.js');
     const bff = await import('./bffMiddleware.js');
@@ -734,7 +734,7 @@ const serverJs = async () => {
         await read_body();
         // check JSON maximum size, parameter uses megabytes (MB)
         if (req.body && JSON.stringify(req.body).length/1024/1024 > 
-                (serverUtilNumberValue((Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'JSON_LIMIT'}}) ?? '0').replace('MB',''))??0)){
+                (serverUtilNumberValue((ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'JSON_LIMIT'}}).result ?? '0').replace('MB',''))??0)){
             //log error
             Log.post({  app_id:0, 
                         data:{  object:'LogRequestError', 
@@ -839,7 +839,7 @@ const serverJs = async () => {
  */
 const serverREST_API = async (routesparameters) =>{
     const iam = await import('./iam.js');
-    const Config = await import('./db/Config.js');
+    const ConfigRestApi = await import('./db/ConfigRestApi.js');
     const URI_query = routesparameters.parameters;
     const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
     const app_query = URI_query?new URLSearchParams(URI_query):null;
@@ -878,7 +878,7 @@ const serverREST_API = async (routesparameters) =>{
             return false;
     };
         
-    const configPath = Object.entries(Config.get({app_id:routesparameters.app_id,data:{object:'ConfigRestApi'}}).paths)
+    const configPath = Object.entries(ConfigRestApi.get({app_id:routesparameters.app_id}).result.paths)
                         .filter(path=>
                             path[0].replace('/${IAM_iam_user_app_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
                             path[0].replace('/${IAM_iam_user_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
@@ -1096,7 +1096,7 @@ const serverREST_API = async (routesparameters) =>{
 const serverStart = async () =>{
     
     const Log = await import('./db/Log.js');
-    const Config = await import('./db/Config.js');
+    const ConfigServer = await import('./db/ConfigServer.js');
     const ORM = await  import('./db/ORM.js');
 
     const fs = await import('node:fs');
@@ -1123,34 +1123,34 @@ const serverStart = async () =>{
     try {
         const result_data = await ORM.getFsDataExists();
         if (result_data==false)
-            await Config.configDefault();
+            await ConfigServer.configDefault();
         await ORM.Init();
         
         const {socketIntervalCheck} = await import('./socket.js');
         socketIntervalCheck();
                                             
-        const NETWORK_INTERFACE = Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'NETWORK_INTERFACE'}});
+        const NETWORK_INTERFACE = ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'NETWORK_INTERFACE'}}).result;
         //START HTTP SERVER                                                     
-        http.createServer(await serverJs()).listen(Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTP_PORT'}}), NETWORK_INTERFACE, () => {
+        http.createServer(await serverJs()).listen(ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTP_PORT'}}).result, NETWORK_INTERFACE, () => {
             Log.post({   app_id:0, 
                 data:{  object:'LogServerInfo', 
-                        log:'HTTP Server up and running on PORT: ' + Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTP_PORT'}})
+                        log:'HTTP Server up and running on PORT: ' + ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTP_PORT'}}).result
                     }
                 });
         });
-        if (Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_ENABLE'}})=='1'){
+        if (ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_ENABLE'}}).result=='1'){
             //START HTTPS SERVER
             //SSL files for HTTPS
-            const HTTPS_KEY = await fs.promises.readFile(serverProcess.cwd() + '/data' + Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_KEY'}}), 'utf8');
-            const HTTPS_CERT = await fs.promises.readFile(serverProcess.cwd() + '/data' + Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_CERT'}}), 'utf8');
+            const HTTPS_KEY = await fs.promises.readFile(serverProcess.cwd() + '/data' + ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_KEY'}}).result, 'utf8');
+            const HTTPS_CERT = await fs.promises.readFile(serverProcess.cwd() + '/data' + ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_CERT'}}).result, 'utf8');
             const options = {
                 key: HTTPS_KEY.toString(),
                 cert: HTTPS_CERT.toString()
             };
-            https.createServer(options,  await serverJs()).listen(Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_PORT'}}),NETWORK_INTERFACE, () => {
+            https.createServer(options,  await serverJs()).listen(ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_PORT'}}).result,NETWORK_INTERFACE, () => {
                 Log.post({   app_id:0, 
                     data:{  object:'LogServerInfo', 
-                            log:'HTTPS Server up and running on PORT: ' + Config.get({app_id:0,data:{object:'ConfigServer', config_group:'SERVER', parameter:'HTTPS_PORT'}})
+                            log:'HTTPS Server up and running on PORT: ' + ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_PORT'}}).result
                         }
                     });
             });            
