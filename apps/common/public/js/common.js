@@ -2350,6 +2350,10 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
         case 'APP_FUNCTION':{
             if (COMMON_GLOBAL.app_function_sse)
                 COMMON_GLOBAL.app_function_sse(commonWindowFromBase64(message));
+            break;
+        }
+        case 'MESSAGE':{
+            commonUserMessageShowStat();
         }
     }
 };

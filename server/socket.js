@@ -61,7 +61,6 @@ const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, header
 /**
  * @name socketClientSend
  * @description Socket client send
- *              Used by SSE and closes connection
  * @function
  * @param {server_server_res} res
  * @param {string} message
@@ -439,6 +438,7 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
     //set default interval to 5 seconds if no parameter is set
     }, serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_SOCKET', parameter:'CHECK_INTERVAL'}}).result)??5000);
 };
+
 /**
  * @name socketExpiredTokensUpdate
  * @description Sends SESSION_EXPIRED message to clients with expired token
