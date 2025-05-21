@@ -71,6 +71,22 @@ const appFunction = async parameters =>{
                             type:'JSON'};
         }
     };
+    /**
+     * @description get MessageQueuPublish stat
+     * @param {server_db_table_MessageQueuePublish[]} messages
+     * @returns {{unread:Number, read:number}}
+     */
+    const messagesStat = messages =>{
+        return {unread:messages.filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>
+                    (MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
+                            .filter((/**@type{*}*/messageConsume)=>
+                                message.id == messageConsume.message_queue_publish_id).length==0).length,
+                read:messages.filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>
+                    (MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
+                            .filter((/**@type{*}*/messageConsume)=>
+                                message.id == messageConsume.message_queue_publish_id).length>0).length,
+                };
+    };
     const IamUser = (await import('../../../../server/db/IamUser.js')).get(parameters.app_id, 
                                                                                    parameters.data.iam_user_id).result[0];
             
@@ -101,26 +117,33 @@ const appFunction = async parameters =>{
                 return messageError();
         }
         case 'COMMON_MESSAGE_COUNT':{
-            return messageError();
+            const result = messagePublishGet();
+            if (result.http)
+                return result;
+            else  
+                return {result: [messagesStat(result.result)],
+                        type:'JSON'};
         }
         case 'COMMON_MESSAGE_GET':{
             const result = messagePublishGet();
             if (result.http)
                 return result;
             else  
-                return {result:result.result
-                                // add message read info
-                                .map((/**@type{server_db_table_MessageQueuePublish}*/message)=>{
-                                    return (MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
-                                            .filter((/**@type{*}*/messageConsume)=>message.id == messageConsume.message_queue_publish_id).length>0?
-                                                {...message,
-                                                        read:true
-                                                }:
-                                                {...message,
-                                                    read:false
-                                                };
-                                    
-                                }),
+                return {result:[{messages:result.result
+                                            // add message read info
+                                            .map((/**@type{server_db_table_MessageQueuePublish}*/message)=>{
+                                                return (MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
+                                                        .filter((/**@type{*}*/messageConsume)=>message.id == messageConsume.message_queue_publish_id).length>0?
+                                                            {...message,
+                                                                    read:true
+                                                            }:
+                                                            {...message,
+                                                                read:false
+                                                            };
+                                                
+                                            }),
+                                ...messagesStat(result.result)
+                                }],
                         type:'JSON'};
         }
         case 'COMMON_MESSAGE_READ':{
