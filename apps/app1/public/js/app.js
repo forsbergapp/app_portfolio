@@ -970,7 +970,7 @@ const appLogin = async () => {
                                                                                                     'url()';
                 COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
                 COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
-
+                common.commonUserMessageShowStat();
                 appSecureInit();
             });
         });

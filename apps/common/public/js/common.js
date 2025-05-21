@@ -1649,6 +1649,7 @@ const commonUserLogin = async () => {
             commonComponentRemove(current_dialogue, true);
             commonComponentRemove('common_dialogue_profile', true);
         }
+        commonUserMessageShowStat();
         const IamUserApp = await commonFFB({path:`/server-db/iamuserapp/${COMMON_GLOBAL.iam_user_app_id ?? ''}`, 
                                         query:`IAM_data_app_id=${COMMON_GLOBAL.app_id}&IAM_iam_user_id=${COMMON_GLOBAL.iam_user_id}`,
                                         method:'GET', authorization_type:'APP_ACCESS', spinner_id:spinner_item})
@@ -1756,6 +1757,7 @@ const commonLogout = async () => {
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= 'url()';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',null);
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_message_count_text').textContent = '';
         commonComponentRemove('common_dialogue_iam_verify');
         commonComponentRemove('common_dialogue_iam_start');
         commonComponentRemove('common_dialogue_profile', true);
@@ -1990,7 +1992,8 @@ const commonUserAuthenticateCode = async (verification_code, verification_type) 
     });
 };
 const commonUserMessageShowStat = async () =>{
-    if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count')){
+    if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count') ||
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_message_count_text')){
         /**@type{{unread:number, 
              *           read:number}}
              */    
@@ -2001,7 +2004,11 @@ const commonUserMessageShowStat = async () =>{
                     IAM_data_app_id:COMMON_GLOBAL.common_app_id},
             authorization_type:COMMON_GLOBAL.app_id == COMMON_GLOBAL.admin_app_id?'ADMIN':'APP_ACCESS'})
             .then((/**@type{*}*/result)=>JSON.parse(result).rows[0]);
-        COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count').textContent = `${messageStat.unread}(${messageStat.unread+messageStat.read})`;
+        if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count'))
+            COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count').textContent = `${messageStat.unread}(${messageStat.unread+messageStat.read})`;
+        if (COMMON_DOCUMENT.querySelector('#common_iam_avatar_message_count_text'))
+            COMMON_DOCUMENT.querySelector('#common_iam_avatar_message_count_text').textContent = `${messageStat.unread}(${messageStat.unread+messageStat.read})`;
+        
     }    
 };
 
