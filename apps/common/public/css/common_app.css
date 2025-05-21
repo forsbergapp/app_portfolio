@@ -1283,6 +1283,8 @@ body.rtl{
 }
 #common_dialogue_user_menu_message_content{
     height: 10em;
+    white-space: preserve;
+    text-align: start;
 }
 /* Dialogue user menu - iam user app*/
 #common_dialogue_user_menu_app_theme{
