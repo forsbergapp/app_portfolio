@@ -16,12 +16,14 @@ const template = () =>` <div id='common_iam_avatar'>
                             <div id='common_iam_avatar_logged_in'>
                                 <div id='common_iam_avatar_avatar'>
                                     <div id='common_iam_avatar_avatar_img' class='common_image common_image_avatar'></div>
+                                    <div id='common_iam_avatar_message_count' class='common_icon'><div id='common_iam_avatar_message_count_text'></div></div>
                                 </div>
                             </div>
                             <div id='common_iam_avatar_logged_out'>
                                 <div id='common_iam_avatar_default_avatar' class='common_icon'></div>
                             </div>
-                        </div>`;
+                        </div>
+                        `;
 /**
  * @name component
  * @description Component

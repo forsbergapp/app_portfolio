@@ -154,6 +154,7 @@
 
 /*Icons user account*/
 #common_iam_avatar_default_avatar::before{								        content:var(--common_app_icon_user_avatar)}
+#common_iam_avatar_message_count::after{								        content:var(--common_app_icon_email)}
 
 /*Icons window info*/
 #common_window_info_btn_close::before{									        content:var(--common_app_icon_close)}
@@ -1195,6 +1196,10 @@ body.rtl{
 }
 #common_iam_avatar_logged_in, #common_dialogue_user_menu_logged_in{
 	display: none;
+}
+#common_iam_avatar_message_count{
+    display: flex;
+    flex-direction: row;
 }
 #common_iam_avatar_logged_out{
 	display: inline-block;
