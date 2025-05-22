@@ -71,16 +71,6 @@
 
 .chat_click::before{																content:var(--common_app_icon_chat)}
 
-#menu_monitor_pagination_first::before{												content:var(--common_app_icon_first)}
-#menu_monitor_pagination_previous::before{											content:var(--common_app_icon_previous)}
-#menu_monitor_pagination_next::before{												content:var(--common_app_icon_next)}
-#menu_monitor_pagination_last::before{												content:var(--common_app_icon_last)}
-
-body.rtl #menu_monitor_pagination_first::before{									content:var(--common_app_icon_last)}
-body.rtl #menu_monitor_pagination_previous::before{									content:var(--common_app_icon_next)}
-body.rtl #menu_monitor_pagination_next::before{										content:var(--common_app_icon_previous)}
-body.rtl #menu_monitor_pagination_last::before{										content:var(--common_app_icon_first)}
-
 #menu_monitor_detail_parameters_row_col1::before{									content:var(--common_app_icon_server) ' REQUEST'}
 #menu_monitor_detail_parameters_row_col1_1::before{									content:var(--common_app_icon_checkbox_checked)}
 #menu_monitor_detail_parameters_row_col1_0::before{									content:var(--common_app_icon_checkbox_empty)}

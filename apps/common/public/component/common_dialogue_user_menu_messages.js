@@ -3,7 +3,7 @@
  * @module apps/common/component/common_dialogue_user_menu_messages
  */
 /**
- * @import {MessageQueuePublishMessage,
+ * @import {MessagesPagination,
  *          CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
 
@@ -11,36 +11,20 @@
  * @name template
  * @description Template
  * @function
- * @param {{messages:{  messages:MessageQueuePublishMessage[],
- *                      unread:number, 
- *                      read:number},
- *          commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate']}} props
  * @returns {string}
  */
-const template = props => ` <div id='common_dialogue_user_menu_messages'>
-                                <div id='common_dialogue_user_menu_messages_list'>
-                                    <div class='common_dialogue_user_menu_messages_row_title common_dialogue_user_menu_messages_row'>
-                                        <div id='common_dialogue_user_menu_messages_col_delete' class='common_dialogue_user_menu_messages_col common_dialogue_user_menu_messages_col_delete common_icon'></div>
-                                        <div id='common_dialogue_user_menu_messages_col_date' class='common_dialogue_user_menu_messages_col common_icon'></div>
-                                        <div id='common_dialogue_user_menu_messages_col_subject' class='common_dialogue_user_menu_messages_col common_icon'></div>
-                                        <div id='common_dialogue_user_menu_messages_col_sender' class='common_dialogue_user_menu_messages_col common_icon'></div>
-                                    </div>
-                                    ${props.messages.messages.map(row=>
-                                    `<div class='common_dialogue_user_menu_messages_row common_row ${row.read?'common_dialogue_user_menu_messages_row_read':'common_dialogue_user_menu_messages_row_unread'}' 
-                                        data-id=${row.id} 
-                                        data-created='${row.created}'
-                                        data-sender='${row.message.sender??''}'
-                                        data-receiver_id='${row.message.receiver_id??''}'
-                                        data-client_ip='${row.message.client_ip}'
-                                        data-host='${row.message.host}'
-                                        data-subject='${row.message.subject}'
-                                        data-message='${row.message.message}'>
-                                        <div class='common_dialogue_user_menu_messages_col common_dialogue_user_menu_messages_col_delete common_icon'></div>
-                                        <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${props.commonMiscFormatJsonDate(row.created??'')}</div>
-                                        <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${row.message.subject}</div>
-                                        <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${row.message.sender ?? ''}</div>
-                                    </div>`).join('')
-                                    }
+const template = () => ` <div id='common_dialogue_user_menu_messages'>
+                                <div id='common_dialogue_user_menu_messages_list'></div>
+                                <div id='common_dialogue_user_menu_messages_pagination'>
+                                    <div></div>
+                                    <div></div>
+                                    <div id='common_dialogue_user_menu_messages_pagination_first'       class='common_pagination_first common_icon'></div>
+                                    <div id='common_dialogue_user_menu_messages_pagination_previous'    class='common_pagination_previous common_icon'></div>
+                                    <div id='common_dialogue_user_menu_messages_pagination_next'        class='common_pagination_next common_icon'></div>
+                                    <div id='common_dialogue_user_menu_messages_pagination_last'        class='common_pagination_last common_icon'></div>
+                                    <div id='common_dialogue_user_menu_messages_pagination_page'></div>
+                                    <div id='common_dialogue_user_menu_messages_pagination_page_last'></div>
+                                    <div id='common_dialogue_user_menu_messages_pagination_page_total_count'></div>
                                 </div>
                                 <div id='common_dialogue_user_menu_message_content'></div>
                            </div>`;
@@ -57,44 +41,115 @@ const template = props => ` <div id='common_dialogue_user_menu_messages'>
 *                      },
 *          methods:    {
 *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate'],
-*                      commonFFB:CommonModuleCommon['commonFFB']
+*                      commonFFB:CommonModuleCommon['commonFFB'],
+*                      commonUserMessageShowStat:CommonModuleCommon['commonUserMessageShowStat'],
+*                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
+*                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate']
 *                      }}} props
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:   null,
-*                      methods:null,
+*                      methods:{eventClickPagination:Function},
 *                      template:string}>}
 */
 const component = async props => {
+
+    //page navigation values
+    let page =      1;
+    let page_last=  1;
+    let page_limit= 0;
+    const offset = 0;
+    /**@type{MessagesPagination}*/    
+    let messages; 
+
+    /**
+     * @description page navigation for messages
+     * @param {string} element
+     * @returns {Promise.<void>}
+     */
+    const eventClickPagination = async element =>{
+        switch (element){
+            case 'common_dialogue_user_menu_messages_pagination_first':{
+                page = 1;
+                break;
+            }
+            case 'common_dialogue_user_menu_messages_pagination_previous':{
+                if (page - 1 < 1)
+                    page = 1;
+                else
+                    page = page - 1;
+                break;
+            }
+            case 'common_dialogue_user_menu_messages_pagination_next':{
+                if (page + 1 > page_last)
+                    page = page_last;
+                else
+                    page = page + 1;
+                break;
+            }
+            case 'common_dialogue_user_menu_messages_pagination_last':{
+                page = page_last;
+                break;
+            }
+        }
+        await messagesShow((page==1?0:page-1) * page_limit);
+        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page').textContent = page; 
+        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page_last').textContent = page_last;
+    };
    
-    /**@type{{   messages:MessageQueuePublishMessage[],
-     *           unread:number, 
-     *           read:number}}
-     */    
-    const messages = await props.methods.commonFFB({path:'/app-common-module/COMMON_MESSAGE_GET', 
-                                                    method:'POST', 
-                                                    body:{  type:'FUNCTION', 
-                                                            IAM_iam_user_id:props.data.iam_user_id,
-                                                            IAM_data_app_id:props.data.common_app_id},
-                                                    authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
-                       .then((/**@type{*}*/result)=>JSON.parse(result).rows[0])
-                        .catch(()=>{return {messages:[], unread:0, read:0};});
-    messages.messages = //sort message.id descending order
-                        messages.messages.sort((/**@type{MessageQueuePublishMessage}*/a,
-                                 /**@type{MessageQueuePublishMessage}*/b)=>
-                                 /**@ts-ignore */
-                                 a.id>b.id?-1:1);
-   /**
-    * @returns {Promise.<void>}
-    */
-   const onMounted = async () => {
-        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count').textContent = `${messages.unread}(${messages.unread+messages.read})`;
+    /**
+     * @param {number} offset
+     * @returns {Promise.<void>}
+     */
+    const messagesShow = async (offset) =>{
+        /**@type{MessagesPagination}*/    
+        messages = await messagesGet(offset);
+        await props.methods.commonComponentRender({
+            mountDiv:'common_dialogue_user_menu_messages_list',
+            data:{
+                messages:   messages
+            },
+            methods:{commonFFB:props.methods.commonFFB,
+                    commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate
+            },
+            path:'/common/component/common_dialogue_user_menu_message_list.js'});
+        //cant check stats on pagination records, call server function that fetches stats for all messages
+        props.methods.commonUserMessageShowStat();
+    };
+    
+    /**
+     * @param {number} offset
+     * @returns {Promise.<MessagesPagination>}
+     */
+    const messagesGet = async offset =>{
+        /**@type{MessagesPagination}*/    
+        const messages = await props.methods.commonFFB({path:'/app-common-module/COMMON_MESSAGE_GET', 
+            method:'POST', 
+            query:`offset=${offset}`,
+            body:{  type:'FUNCTION', 
+                    IAM_iam_user_id:props.data.iam_user_id,
+                    IAM_data_app_id:props.data.common_app_id},
+            authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
+        .then((/**@type{*}*/result)=>JSON.parse(result))
+        .catch(()=>[]);
+        return messages;
+    };
+
+    /**
+     * @returns {Promise.<void>}
+     */
+    const onMounted = async () => {
+        await messagesShow(offset);
+        page_last = messages.rows.length>0?(Math.ceil(messages.page_header.total_count/messages.page_header.count)):0;
+        page_limit = messages.page_header.count;
+        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page').textContent = page; 
+        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page_last').textContent = page_last;
+        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page_total_count').textContent = messages.page_header.total_count;
    };
    return {
        lifecycle:  {onMounted:onMounted},
        data:   null,
-       methods:null,
-       template: template({messages:messages, commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate})
+       methods:{eventClickPagination:eventClickPagination},
+       template: template()
    };
 };
 export default component;

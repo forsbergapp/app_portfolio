@@ -9,6 +9,17 @@
 .common_reload::before{													        content:var(--common_app_icon_reload)}
 .common_user_session_expired::before{									        content:var(--common_app_icon_user_session_expired)}
 
+.common_pagination_first::before{												content:var(--common_app_icon_first)}
+.common_pagination_previous::before{											content:var(--common_app_icon_previous)}
+.common_pagination_next::before{												content:var(--common_app_icon_next)}
+.common_pagination_last::before{												content:var(--common_app_icon_last)}
+
+body.rtl .common_pagination_first::before{									    content:var(--common_app_icon_last)}
+body.rtl .common_pagination_previous::before{									content:var(--common_app_icon_next)}
+body.rtl .common_pagination_next::before{										content:var(--common_app_icon_previous)}
+body.rtl .common_pagination_last::before{										content:var(--common_app_icon_first)}
+
+
 /*Icons app data display*/
 .common_app_data_display_button_update::before{							        content:var(--common_app_icon_update)}
 .common_app_data_display_button_post::before{							        content:var(--common_app_icon_add)}
@@ -1247,8 +1258,8 @@ body.rtl{
 }
 #common_dialogue_user_menu_nav>div{
     cursor: pointer;
-    margin-left: 2em;
-    margin-right: 2em;
+    margin-left: 1.5em;
+    margin-right: 1.5em;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
 }
@@ -1306,8 +1317,19 @@ body.rtl{
 .common_dialogue_user_menu_messages_col{
     font-size: 0.8em;
 }
+#common_dialogue_user_menu_messages_pagination{
+	display: block;
+	height: 40px;
+}
+#common_dialogue_user_menu_messages_pagination div{
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+	cursor:pointer;
+}
+
 #common_dialogue_user_menu_message_content{
-    height: 10em;
+    height: 12em;
     text-align: start;
     font-size: 0.8em;
     overflow: auto;

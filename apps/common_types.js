@@ -219,6 +219,7 @@
  *                          }
  *                          common_dialogue_user_menu:{
  *                              methods:{
+ *                                  eventClickPagination: function,
  *                                  eventClickMessage: function,
  *                                  eventClickMessageDelete: function,
  *                                  eventClickNavMessages:function,
@@ -484,6 +485,14 @@
  *              created?:string,
  *              read?:boolean}} MessageQueuePublishMessage
  */
+/**
+ * @description Type
+ * @typedef{{   page_header:{	total_count:number,
+ *                              offset: 	number,
+ *                              count:		number}
+ *              rows:       MessageQueuePublishMessage[]}} MessagesPagination
+ */    
+
 /**
  * @description Type
  * @typedef {{  id?:number,
