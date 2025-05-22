@@ -4,7 +4,8 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonIAMUser, CommonMessageType, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle,
+ *          MessageQueuePublishMessage, }  from '../../../common_types.js'
  */
 
 /**
@@ -107,10 +108,32 @@ const component = async props => {
      */
     const eventClickMessage = async element =>{
         const message_id = element.getAttribute('data-id');
-        const message = element.getAttribute('data-message');
         element.classList.remove('common_dialogue_user_menu_messages_row_unread');
         element.classList.add('common_dialogue_user_menu_messages_row_read');
-        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_message_content').textContent = message;
+
+        /**@type{CommonMessageType & {created:MessageQueuePublishMessage['created'], username:CommonIAMUser['username']}} */
+        const message = {sender:element.getAttribute('data-sender')==''?null:element.getAttribute('data-sender'),
+                         receiver_id:Number(element.getAttribute('data-receiver_id')),
+                         username:props.data.iam_user_username ??'',
+                         host:element.getAttribute('data-host')??'',
+                         client_ip:element.getAttribute('data-client_ip')??'',
+                         subject:element.getAttribute('data-subject')??'',
+                         message:element.getAttribute('data-message')??'',
+                         created:element.getAttribute('data-created')??''
+                        };
+        
+        //show message detail
+        await props.methods.commonComponentRender({
+            mountDiv:   'common_dialogue_user_menu_message_content',
+            data:       {
+                            app_id:props.data.app_id,
+                            message:message
+                        },
+            methods:    {
+                        commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate
+                        },
+            path:       '/common/component/common_dialogue_user_menu_message.js'});
+
         await props.methods.commonFFB({ path:'/app-common-module/COMMON_MESSAGE_READ', 
                 method:'POST', 
                 body:{  type:'FUNCTION', 

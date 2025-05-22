@@ -77,6 +77,15 @@
 #common_dialogue_user_menu_messages_col_sender::before{					        content:var(--common_app_icon_user)}
 #common_dialogue_user_menu_messages_col_subject::before{					    content:var(--common_app_icon_message_text)}
 
+#common_dialogue_user_menu_messages_message_col_date::before{					content:var(--common_app_icon_regional_calendar)}
+#common_dialogue_user_menu_messages_message_col_sender::before{					content:var(--common_app_icon_user) var(--common_app_icon_logout)}
+#common_dialogue_user_menu_messages_message_col_receiver::before{				content:var(--common_app_icon_user) var(--common_app_icon_login)}
+#common_dialogue_user_menu_messages_message_col_ip::before{					    content:var(--common_app_icon_internet)}
+#common_dialogue_user_menu_messages_message_col_host::before{					content:var(--common_app_icon_server)}
+#common_dialogue_user_menu_messages_message_col_subject::before{				content:var(--common_app_icon_info)}
+#common_dialogue_user_menu_messages_message_col_message::before{				content:var(--common_app_icon_email)}
+
+
 /*Icons dialogue user menu iam user*/
 #common_dialogue_user_menu_iam_user_btn_avatar_img::before{						content:var(--common_app_icon_user_avatar_edit)}
 #common_dialogue_user_menu_iam_user_private::before{							content:var(--common_app_icon_private)}
@@ -1299,8 +1308,24 @@ body.rtl{
 }
 #common_dialogue_user_menu_message_content{
     height: 10em;
-    white-space: preserve;
     text-align: start;
+    font-size: 0.8em;
+    overflow: auto;
+}
+#common_dialogue_user_menu_message_content{
+    margin-top: 0.5em;
+}
+.common_dialogue_user_menu_messages_message_row{
+    display: grid;
+    grid-template-columns: 3em auto;
+    margin-bottom: 0.5em;
+}
+#common_dialogue_user_menu_messages_message_col_message{
+    width: 100%;
+}
+#common_dialogue_user_menu_messages_message_col_message_text{
+    white-space: preserve;
+    margin: 0.5em;
 }
 /* Dialogue user menu - iam user app*/
 #common_dialogue_user_menu_app_theme{
