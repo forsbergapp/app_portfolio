@@ -150,7 +150,7 @@ const appFunction = async parameters =>{
             if (result.http)
                 return result;
             else  
-                return {result:[{messages:result.result 
+                return {result:result.result 
                                             // add message read info
                                             .map((/**@type{server_db_table_MessageQueuePublish}*/message)=>{
                                                 return (MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
@@ -162,9 +162,12 @@ const appFunction = async parameters =>{
                                                                 read:false
                                                             };
                                                 
-                                            }),
-                                ...messagesStat(result.result)
-                                }],
+                                            })
+                                            //sort message.id descending order
+                                            .sort(( /**@type{server_db_table_MessageQueuePublish}*/a,
+                                                    /**@type{server_db_table_MessageQueuePublish}*/b)=>
+                                                        /**@ts-ignore */
+                                                        a.id>b.id?-1:1),
                         type:'JSON'};
         }
         case 'COMMON_MESSAGE_READ':{
