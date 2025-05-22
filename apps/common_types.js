@@ -468,14 +468,12 @@
 
 /**
  * @description Type
- * @typedef {{  id:number,
- *              sender:string,
+ * @typedef {{  sender:string|null,
  *              receiver_id:number|null,
  *              host:string,
  *              client_ip:string,
  *              subject:string,
- *              message:string,
- *              created:string
+ *              message:string
  *          }} CommonMessageType
  */
 /**

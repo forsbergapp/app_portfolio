@@ -73,7 +73,7 @@ const appFunction = async parameters =>{
         }
     };
     /**
-     * @description posts MessageQueuPublish record and sends SSE to the reciever
+     * @description posts MessageQueuPublish record and sends SSE to the receiver
      * @param {*} message
      * @returns {Promise.<server_server_response>}
      */

@@ -27,9 +27,13 @@ const template = props => ` <div id='common_dialogue_user_menu_messages'>
                                     </div>
                                     ${props.messages.messages.map(row=>
                                     `<div class='common_dialogue_user_menu_messages_row common_row ${row.read?'common_dialogue_user_menu_messages_row_read':'common_dialogue_user_menu_messages_row_unread'}' 
-                                        data-client_ip='${row.message.client_ip}'
-                                        data-host='${row.message.host}' 
                                         data-id=${row.id} 
+                                        data-created='${row.created}'
+                                        data-sender='${row.message.sender??''}'
+                                        data-receiver_id='${row.message.receiver_id??''}'
+                                        data-client_ip='${row.message.client_ip}'
+                                        data-host='${row.message.host}'
+                                        data-subject='${row.message.subject}'
                                         data-message='${row.message.message}'>
                                         <div class='common_dialogue_user_menu_messages_col common_dialogue_user_menu_messages_col_delete common_icon'></div>
                                         <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${props.commonMiscFormatJsonDate(row.created??'')}</div>
