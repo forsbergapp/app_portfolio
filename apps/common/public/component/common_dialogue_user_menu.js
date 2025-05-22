@@ -90,7 +90,8 @@ const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.
 *                      }}} props
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:   null,
-*                      methods:{eventClickMessage:          Function,
+*                      methods:{eventClickPagination:       Function,
+*                               eventClickMessage:          Function,
 *                               eventClickMessageDelete:    Function,
 *                               eventClickNavMessages:      Function, 
 *                               eventClickNavIamUser:       Function,
@@ -100,6 +101,20 @@ const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.
 const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+
+    /**
+     * @description page navigation for messages
+     * @param {HTMLElement} element
+     * @returns {Promise.<void>}
+     */
+    let eventClickPaginationMessages = async element =>{element;};
+
+    /**
+     * @description page navigation for messages
+     * @param {HTMLElement} element
+     * @returns {Promise.<void>}
+     */
+    const eventClickPagination = async element => eventClickPaginationMessages(element);
 
     /**
      * @description read a message
@@ -175,9 +190,12 @@ const component = async props => {
                         },
             methods:    {
                         commonFFB:props.methods.commonFFB,
+                        commonUserMessageShowStat:props.methods.commonUserMessageShowStat,
+                        commonComponentRender:props.methods.commonComponentRender,
                         commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate
                         },
-            path:       '/common/component/common_dialogue_user_menu_messages.js'});
+            path:       '/common/component/common_dialogue_user_menu_messages.js'})
+            .then(result=>eventClickPaginationMessages = result.methods.eventClickPagination);
     };
     /**
      * @description show iam user
@@ -254,6 +272,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    {
+                    eventClickPagination:       eventClickPagination,
                     eventClickMessage:          eventClickMessage,
                     eventClickMessageDelete:    eventClickMessageDelete,
                     eventClickNavMessages:      eventClickNavMessages, 

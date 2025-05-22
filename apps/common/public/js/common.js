@@ -77,6 +77,7 @@ const COMMON_GLOBAL = {
         },
         common_dialogue_user_menu:{
             methods:{
+                eventClickPagination:()=>null,
                 eventClickMessage:()=>null,
                 eventClickMessageDelete:()=>null,
                 eventClickNavMessages:()=>null,
@@ -2855,6 +2856,13 @@ const commonEvent = async (event_type,event=null) =>{
                         case 'common_dialogue_user_menu_username':{
                             commonComponentRemove('common_dialogue_user_menu');
                             await commonProfileShow();
+                            break;
+                        }
+                        case 'common_dialogue_user_menu_messages_pagination_first':
+                        case 'common_dialogue_user_menu_messages_pagination_previous':
+                        case 'common_dialogue_user_menu_messages_pagination_next':
+                        case 'common_dialogue_user_menu_messages_pagination_last':{
+                            COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickPagination(event_target_id);
                             break;
                         }
                         case 'common_dialogue_user_menu_nav_messages_count':
