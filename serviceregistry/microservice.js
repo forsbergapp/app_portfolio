@@ -127,9 +127,9 @@ const microserviceRequest = async parameters =>{
  * @returns {Promise.<string>}
  */                    
 const microserviceHttpRequest = async (service, path, query, body, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language) =>{
-
-    const request_protocol = registryConfigServices(service).HTTPS_ENABLE ==1?https:http;
-    const port = registryConfigServices(service).HTTPS_ENABLE ==1?registryConfigServices(service).HTTPS_PORT:registryConfigServices(service).PORT;
+    const ServiceRegistry = await registryConfigServices(service);
+    const request_protocol = ServiceRegistry.https_enable ==1?https:http;
+    const port = ServiceRegistry.https_enable ==1?ServiceRegistry.https_port:ServiceRegistry.port;
     
     return new Promise ((resolve, reject)=>{
         const headers = method=='GET'? {
@@ -149,7 +149,7 @@ const microserviceHttpRequest = async (service, path, query, body, method, timeo
             method: method,
             timeout: timeout,
             headers : headers,
-            host: registryConfigServices(service).HOST,
+            host: ServiceRegistry.host,
             port: port,
             path: `${path}?${query}`,
             rejectUnauthorized: false
@@ -180,4 +180,4 @@ const microserviceHttpRequest = async (service, path, query, body, method, timeo
 };
 
 
-export {MICROSERVICE_RESOURCE_ID_STRING, microserviceUtilResourceIdNumberGet, microserviceUtilResourceIdStringGet, registryConfigServices, microserviceRequest, iamAuthenticateApp};
+export {MICROSERVICE_RESOURCE_ID_STRING, microserviceUtilResourceIdNumberGet, microserviceUtilResourceIdStringGet, microserviceRequest, iamAuthenticateApp};
