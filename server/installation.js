@@ -917,9 +917,6 @@ const configDefault = async () => {
     await ORM.postFsDir(['/data',
                             '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_JOBS' in key)[0].PATH_JOBS,
                             '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_SSL' in key)[0].PATH_SSL,
-                            '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH' in key)[0].PATH,
-                            '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH_DATA' in key)[0].PATH_DATA,
-                            '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH_SSL' in key)[0].PATH_SSL,
                             '/data/db',
                             '/data/db/journal'
                             ])

@@ -26,9 +26,6 @@
         {"LIMIT_RECORDS":"100", "COMMENT": ""}
     ],
     "SERVICE_MICROSERVICE":[
-        {"PATH":"/microservice", "COMMENT": "Microservice path"},
-        {"PATH_DATA": "/microservice/data/","COMMENT":"Microservice path data"},
-        {"PATH_SSL":"/microservice/ssl", "COMMENT": "Microservice path SSL"},
         {"CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS": 5, "COMMENT":""},
         {"CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS": 10,"COMMENT":""},
         {"CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS": 5,"COMMENT":""},
