@@ -1,7 +1,8 @@
 /** @module serviceregistry/microservice/registry */
 
 /**
- * @import {microservice_registry_service, server_db_document_config_microservice_services} from './types.js'
+ * @import {microservice_registry_service, 
+ *          server_db_document_ConfigMicroserviceServices} from '../server/types.js'
  */
 
 const ORM = await import('../server/db/ORM.js');
@@ -11,14 +12,14 @@ const REGISTRY_CONFIG_SERVICES = await ORM.Execute({app_id:0,
                                                     dml:'GET',
                                                     object:'ConfigMicroserviceServices', 
                                                     get:{resource_id:null, partition:null}})
-                                        .then((/**@type{server_db_document_config_microservice_services}*/file)=>file.SERVICES);
+                                        .then((/**@type{server_db_document_ConfigMicroserviceServices}*/file)=>file.SERVICES);
 
 /**
  * @name registryConfigServices
  * @description Reads config services
  * @function
  * @param {microservice_registry_service} servicename
- * @returns {server_db_document_config_microservice_services['SERVICES'][0]}
+ * @returns {server_db_document_ConfigMicroserviceServices['SERVICES'][0]}
  */
 const registryConfigServices = servicename =>{
     return REGISTRY_CONFIG_SERVICES?.filter(service=>service.NAME == servicename)[0];        
