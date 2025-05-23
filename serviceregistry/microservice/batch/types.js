@@ -1,13 +1,7 @@
 /**
- * @module serviceregistry/microservice/geolocation/types
+ * @module serviceregistry/microservice/batch/types
  */
-/** 
- * @description Type geolocation
- * @typedef  {object}       geolocation_data
- * @property {string}       latitude
- * @property {string}       longitude
- * @property {string|null}  ip
- */
+
 /**
  * @description Type request
  * @typedef {object}        request

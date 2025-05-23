@@ -17,8 +17,8 @@
  *          server_db_table_AppModule, server_db_table_AppParameter, server_db_table_AppSecret,server_db_table_AppData,
  *          server_db_table_AppDataEntityResource, server_db_table_AppDataEntity,
  *          server_db_table_AppTranslation,
- *          server_db_document_ConfigRestApi} from './types.js'
- * @import {server_db_document_config_microservice_services} from '../serviceregistry/types.js'
+ *          server_db_document_ConfigRestApi,
+ *          server_db_document_ConfigMicroserviceServices} from './types.js'
  */
 
 const DB_DEMO_PATH              = '/server/install/db/demo/';
@@ -842,7 +842,7 @@ const configDefault = async () => {
     /**
      * @type{[  [server_DbObject, server_db_document_ConfigServer],
      *           [server_DbObject, server_db_document_ConfigRestApi],
-     *           [server_DbObject, server_db_document_config_microservice_services],
+     *           [server_DbObject, server_db_document_ConfigMicroserviceServices],
      *           [server_DbObject, server_db_table_IamUser[]],
      *           [server_DbObject, server_db_table_App[]],
      *           [server_DbObject, server_db_table_AppDataEntityResource[]],
