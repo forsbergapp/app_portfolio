@@ -73,12 +73,12 @@ const getGeodataEmpty = (geotype) => {
  */
 const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
     const {serverProcess} = await import('./server.js');
-    const config_service = registryConfigServices('GEOLOCATION');
+    const ServiceRegistry = await registryConfigServices('GEOLOCATION');
     let geodata_cache;
     try {
         switch (cachetype){
             case 'IP':{
-                geodata_cache = await fs.promises.readFile(`${serverProcess.cwd()}${config_service.PATH_DATA}/${config_service.NAME}_geodata_cache_ip.log`, 'utf8');
+                geodata_cache = await fs.promises.readFile(`${serverProcess.cwd()}${ServiceRegistry.path_data}/${ServiceRegistry.name}_geodata_cache_ip.log`, 'utf8');
                 geodata_cache = geodata_cache.split('\r\n');
                 for (const row of geodata_cache){
                     const row_obj = JSON.parse(row);
@@ -88,7 +88,7 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
                 return null;
             }
             case 'PLACE':{
-                geodata_cache = await fs.promises.readFile(`${serverProcess.cwd()}${config_service.PATH_DATA}/${config_service.NAME}_geodata_cache_place.log`, 'utf8');
+                geodata_cache = await fs.promises.readFile(`${serverProcess.cwd()}${ServiceRegistry.path_data}/${ServiceRegistry.name}_geodata_cache_place.log`, 'utf8');
                 geodata_cache =  geodata_cache.split('\r\n');
                 /**
                  * 
@@ -143,16 +143,16 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
  */
 const writeCacheGeodata = async (cachetype, geodata) =>{
     const {serverProcess} = await import('./server.js');
-    const config_service = registryConfigServices('GEOLOCATION');
+    const ServiceRegistry = await registryConfigServices('GEOLOCATION');
     
     switch (cachetype){
         case 'IP':{
-            await fs.promises.appendFile(`${serverProcess.cwd()}${config_service.PATH_DATA}/${config_service.NAME}_geodata_cache_ip.log`, 
+            await fs.promises.appendFile(`${serverProcess.cwd()}${ServiceRegistry.path_data}/${ServiceRegistry.name}_geodata_cache_ip.log`, 
                                                           JSON.stringify(JSON.parse(geodata)) +'\r\n', 'utf8');
             break;
         }
         case 'PLACE':{
-            await fs.promises.appendFile(`${serverProcess.cwd()}${config_service.PATH_DATA}/${config_service.NAME}_geodata_cache_place.log`, 
+            await fs.promises.appendFile(`${serverProcess.cwd()}${ServiceRegistry.path_data}/${ServiceRegistry.name}_geodata_cache_place.log`, 
                                                              JSON.stringify(JSON.parse(geodata)) +'\r\n', 'utf8');
             break;
         }
@@ -205,7 +205,7 @@ const getGeodata = async (url, language) => {
 	if (geodata != null)
         return geodata;
 	else{
-        const url = registryConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_PLACE')[0].URL_PLACE
+        const url = (await registryConfigServices('GEOLOCATION')).config.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_PLACE')[0].URL_PLACE
                     .replace('<LATITUDE/>', latitude)
                     .replace('<LONGITUDE/>', longitude);
         //return result without prefix
@@ -233,11 +233,11 @@ const getIp = async (ip, accept_language) => {
 		if (ip == '::1' || ip == '::ffff:127.0.0.1' || ip == '127.0.0.1'){
 			//create empty record with ip ::1 first time
 			writeCacheGeodata('IP', getGeodataEmpty('IP'));
-            url =   registryConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
+            url =   (await registryConfigServices('GEOLOCATION')).config.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
                     .replace('<IP/>', '');
 		}
 		else
-            url =   registryConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
+            url =   (await registryConfigServices('GEOLOCATION')).config.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
                     .replace('<IP/>', ip);
         //return result without prefix
 		geodata = await getGeodata(url, accept_language).then(result=>result.replaceAll('geoplugin_',''));

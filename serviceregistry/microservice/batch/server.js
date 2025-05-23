@@ -8,7 +8,7 @@
  */
 
 const service = await import('./service.js');
-const { registryMicroServiceServer } = await import('../../registry.js');
+const { registryConfigServices } = await import('../../registry.js');
 
 /**
  * @name ClassServerProcess
@@ -63,8 +63,26 @@ const serverReturn = (code, error, result, res)=>{
  * @returns {Promise.<void>}
  */
 const serverStart = async () =>{
-	
-	const request = await registryMicroServiceServer('BATCH');
+    const fs = await import('node:fs');
+    const ServiceRegistry = await registryConfigServices('BATCH');
+   
+    const request = ServiceRegistry?.https_enable==1?
+                        {
+                            server  : await import('node:https'),
+                            port	: ServiceRegistry.https_port,
+                            options : {
+                                key: ServiceRegistry.https_key?
+                                        await fs.promises.readFile(serverProcess.cwd() + ServiceRegistry.https_key, 'utf8'):
+                                            null,
+                                cert: ServiceRegistry.https_key?
+                                        await fs.promises.readFile(serverProcess.cwd() + ServiceRegistry.https_cert, 'utf8'):
+                                            null
+                            }
+                        }:
+                        {
+                            server  : await import('node:http'),
+                            port 	: ServiceRegistry.port
+                        };
 		
 	request.server.createServer(request.options, (/**@type{request}*/req, /**@type{response}*/res) => {
 		serverReturn(401, '⛔', null, res);

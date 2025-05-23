@@ -87,15 +87,15 @@ const validateCronExpression = (expression) =>{
  * @name getBatchLogFilename
  * @description Get batchlog filename
  * @function
- * @returns {string}
+ * @returns {Promise.<string>}
  */
-const getBatchLogFilename = () => {
-    const configservice = registryConfigServices('BATCH');
+const getBatchLogFilename = async () => {
+    const ServiceRegistry = await registryConfigServices('BATCH');
     //new log every day, format YYYY-MM-DD_[file_batchlog]
     const logdate = new Date();
     const month   = logdate.toLocaleString('en-US', { month: '2-digit'});
     const day     = logdate.toLocaleString('en-US', { day: '2-digit'});
-    return `${configservice.PATH_DATA}/${configservice.NAME}_${new Date().getFullYear()}${month}${day}.log`; 
+    return `${ServiceRegistry.path_data}/${ServiceRegistry.name}_${new Date().getFullYear()}${month}${day}.log`; 
 };
 /**
  * @name jobLogAdd
@@ -124,7 +124,7 @@ const jobLogAdd = async (joblog)=>{
                                 end:joblog.end, 
                                 status:joblog.status, 
                                 result:joblog.result});
-    const filename = getBatchLogFilename();
+    const filename = await getBatchLogFilename();
     await fs.promises.appendFile(`${serverProcess.cwd()}${filename}`, log + '\r\n', 'utf8');
     //return log_id and the filename where the joblog.log_id is found
     return {log_id: joblog.log_id, filename: filename};
@@ -359,7 +359,7 @@ const startJobs = async () =>{
      *          cron_expression:string,
      *          enabled:boolean}[]} 
      */
-    const jobs = registryConfigServices('BATCH').CONFIG.filter(row=>'jobs' in row)[0].jobs;
+    const jobs = await registryConfigServices('BATCH').config.filter(row=>'jobs' in row)[0].jobs;
     for (const job of jobs){
         //schedule enabled jobs and for current platform
         //use cron expression syntax

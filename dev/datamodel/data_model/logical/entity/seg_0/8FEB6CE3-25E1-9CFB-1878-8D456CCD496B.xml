@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="8FEB6CE3-25E1-9CFB-1878-8D456CCD496B" name="ConfigMicroserviceServices">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="8FEB6CE3-25E1-9CFB-1878-8D456CCD496B" name="ServiceRegistry">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:53:24 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -16,7 +16,17 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="NAME" id="5E175B14-2D45-245A-E10D-4EF5E32259B7">
+<Attribute name="id" id="670E7C75-5456-4A6F-53B7-E6AD0B9F9278">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-23 20:04:49 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="name" id="5E175B14-2D45-245A-E10D-4EF5E32259B7">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:56:08 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -26,7 +36,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="HOST" id="9D12C0F8-BE48-D4C5-3108-774ED9DC50F6">
+<Attribute name="host" id="9D12C0F8-BE48-D4C5-3108-774ED9DC50F6">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:56:12 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -36,7 +46,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="PORT" id="253C2630-0BF3-D74F-3166-F080ADB17298">
+<Attribute name="port" id="253C2630-0BF3-D74F-3166-F080ADB17298">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:56:16 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -46,7 +56,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="HTTPS_ENABLE" id="E9E462B3-0F64-DBA1-AC3F-A4B8D4CA71E4">
+<Attribute name="https_enable" id="E9E462B3-0F64-DBA1-AC3F-A4B8D4CA71E4">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:56:20 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -57,7 +67,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="HTTPS_KEYS" id="249A8ACD-C147-1B91-0616-85D0BD3B0F84">
+<Attribute name="https_keys" id="249A8ACD-C147-1B91-0616-85D0BD3B0F84">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:56:25 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -68,7 +78,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="HTTPS_CERT" id="BB55EF9F-05A3-BA41-F6A4-2A5B0997AE69">
+<Attribute name="https_cert" id="BB55EF9F-05A3-BA41-F6A4-2A5B0997AE69">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:56:30 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -79,7 +89,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="HTTPS_SSL_VERFICATION" id="8A31297D-79F4-D1EF-54D3-5FBF9A0347D1">
+<Attribute name="https_ssl_verification" id="8A31297D-79F4-D1EF-54D3-5FBF9A0347D1">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:56:34 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -90,7 +100,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="HTTPS_SSL_VERFICATION_PATH" id="84ED46BF-6A01-333A-BE03-5E931E23BB0E">
+<Attribute name="https_ssl_verification_path" id="84ED46BF-6A01-333A-BE03-5E931E23BB0E">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:56:51 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -101,7 +111,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="HTTPS_PORT" id="65B03E0A-0B6F-79C9-F1A6-54EE53E68BF9">
+<Attribute name="https_port" id="65B03E0A-0B6F-79C9-F1A6-54EE53E68BF9">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:56:55 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -112,17 +122,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="STATUS" id="6FEFF988-2E13-A112-BF28-52E5989F86A5">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:57:01 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="PATH" id="04CD9FDC-C3F2-5BCB-5303-0D6E3218ABB9">
+<Attribute name="path" id="04CD9FDC-C3F2-5BCB-5303-0D6E3218ABB9">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:57:06 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -132,7 +132,17 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="CONFIG" id="B2CB77DB-E1A2-0182-6717-643E7923D4D2">
+<Attribute name="path_data" id="585639CC-8DF9-9481-6AEA-7019BC0D676E">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-23 20:13:52 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="config" id="B2CB77DB-E1A2-0182-6717-643E7923D4D2">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:57:09 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -143,9 +153,40 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="status" id="6FEFF988-2E13-A112-BF28-52E5989F86A5">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 10:57:01 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="created" id="DD0C3F54-B70F-FC77-EB97-E70C3CD9A8B1">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-23 20:06:38 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="modified" id="2B33BA92-6128-9877-CCA2-BE6A69DEAEE6">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-23 20:06:42 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="6280ECF2-10F4-594D-677F-3A669702131A" name="CONFIG_MICROSERVICE_SERVICES PK">
+<identifier id="6280ECF2-10F4-594D-677F-3A669702131A" name="ServiceRegistry PK">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:57:36 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -153,6 +194,19 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <pk>true</pk>
+<newElementsIDs>670E7C75-5456-4A6F-53B7-E6AD0B9F9278</newElementsIDs>
+<usedAttributes>
+<attributeRef>670E7C75-5456-4A6F-53B7-E6AD0B9F9278</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="AFC0E518-064E-AA22-6D61-04A73DFED769" name="ServiceRegistru_name_un">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-23 20:05:42 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>5E175B14-2D45-245A-E10D-4EF5E32259B7</newElementsIDs>
 <usedAttributes>
 <attributeRef>5E175B14-2D45-245A-E10D-4EF5E32259B7</attributeRef>
 </usedAttributes>

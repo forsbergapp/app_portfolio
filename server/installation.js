@@ -18,7 +18,7 @@
  *          server_db_table_AppDataEntityResource, server_db_table_AppDataEntity,
  *          server_db_table_AppTranslation,
  *          server_db_document_ConfigRestApi,
- *          server_db_document_ConfigMicroserviceServices} from './types.js'
+ *          server_db_table_ServiceRegistry} from './types.js'
  */
 
 const DB_DEMO_PATH              = '/server/install/db/demo/';
@@ -842,7 +842,7 @@ const configDefault = async () => {
     /**
      * @type{[  [server_DbObject, server_db_document_ConfigServer],
      *           [server_DbObject, server_db_document_ConfigRestApi],
-     *           [server_DbObject, server_db_document_ConfigMicroserviceServices],
+     *           [server_DbObject, server_db_table_ServiceRegistry],
      *           [server_DbObject, server_db_table_IamUser[]],
      *           [server_DbObject, server_db_table_App[]],
      *           [server_DbObject, server_db_table_AppDataEntityResource[]],
@@ -883,7 +883,7 @@ const configDefault = async () => {
                                                                             return config_server;
                                                                         })],
                             ['ConfigRestApi',                   await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ConfigRestApi.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['ConfigMicroserviceServices',      await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ConfigMicroserviceServices.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['ServiceRegistry',                 await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ServiceRegistry.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['IamUser',                         await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/IamUser.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['App',                             await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/App.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['AppDataEntityResource',           await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppDataEntityResource.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],

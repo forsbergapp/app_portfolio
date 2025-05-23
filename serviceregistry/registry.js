@@ -2,61 +2,27 @@
 
 /**
  * @import {microservice_registry_service, 
- *          server_db_document_ConfigMicroserviceServices} from '../server/types.js'
+ *          server_db_table_ServiceRegistry} from '../server/types.js'
  */
-
-const ORM = await import('../server/db/ORM.js');
-
-/**@type{server_db_document_config_microservice_services['SERVICES']} */
-const REGISTRY_CONFIG_SERVICES = await ORM.Execute({app_id:0, 
-                                                    dml:'GET',
-                                                    object:'ConfigMicroserviceServices', 
-                                                    get:{resource_id:null, partition:null}})
-                                        .then((/**@type{server_db_document_ConfigMicroserviceServices}*/file)=>file.SERVICES);
 
 /**
  * @name registryConfigServices
  * @description Reads config services
  * @function
  * @param {microservice_registry_service} servicename
- * @returns {server_db_document_ConfigMicroserviceServices['SERVICES'][0]}
+ * @returns {Promise.<server_db_table_ServiceRegistry>}
  */
-const registryConfigServices = servicename =>{
-    return REGISTRY_CONFIG_SERVICES?.filter(service=>service.NAME == servicename)[0];        
-};
+const registryConfigServices = async servicename =>{
+    const ORM = await import('../server/db/ORM.js');
 
-/**
- * @name registryMicroServiceServer
- * @description Get microservice server port and http or https for given microservice
- * @function
- * @param {microservice_registry_service} service 
- * @returns {Promise.<{ server:{createServer:function},
- *                      port:number,
- *                      options?:object}>}
- */
-const registryMicroServiceServer = async (service) =>{
-    const {serverProcess} = await import('../server/server.js');
-    const http = await import('node:http');
-    const https = await import('node:https');
-    const fs = await import('node:fs');
-
-    const env_key_path = registryConfigServices(service)?.HTTPS_KEY;
-    const env_cert_path = registryConfigServices(service)?.HTTPS_CERT;
-   
-    if (registryConfigServices(service)?.HTTPS_ENABLE==1)
-        return {
-            server  : https,
-            port	: registryConfigServices(service).HTTPS_PORT,
-            options : {
-                key: env_key_path?await fs.promises.readFile(serverProcess.cwd() + env_key_path, 'utf8'):null,
-                cert: env_key_path?await fs.promises.readFile(serverProcess.cwd() + env_cert_path, 'utf8'):null
-            }
-        };
-    else
-        return {
-            server  : http,
-            port 	: registryConfigServices(service).PORT
-        };
+    return await new Promise(resolve=>{
+        ORM.Execute({app_id:0, 
+            dml:'GET',
+            object:'ServiceRegistry', 
+            get:{resource_id:null, partition:null}})
+        .then((/**@type{{rows:server_db_table_ServiceRegistry}}*/service)=>
+                resolve(service.rows.filter(service=>service.name == servicename)[0]));
+    });
 };
 
 /**
@@ -66,7 +32,7 @@ const registryMicroServiceServer = async (service) =>{
  * @param {microservice_registry_service} service 
  * @returns {number}
  */
-const registryMicroserviceApiVersion = service =>registryConfigServices(service).CONFIG.filter((/**@type{*}*/row)=>'APP_REST_API_VERSION' in row)[0].APP_REST_API_VERSION;
+const registryMicroserviceApiVersion = async service =>(await registryConfigServices(service)).config.filter((/**@type{*}*/row)=>'APP_REST_API_VERSION' in row)[0].APP_REST_API_VERSION;
 
 
-export {registryConfigServices, registryMicroServiceServer, registryMicroserviceApiVersion};
+export {registryConfigServices, registryMicroserviceApiVersion};

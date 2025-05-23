@@ -623,21 +623,24 @@
  */
 
 /** 
- * @description DB DOCUMENT ConfigMicroserviceServices
+ * @description DB DOCUMENT ServiceRegistry
  * @memberof dbObjects
- * @typedef {{['SERVICES']:{NAME:string, 
- *                          HOST:number, 
- *                          PORT:number,
- *                          HTTPS_ENABLE:number,
- *                          HTTPS_KEY:string,
- *                          HTTPS_CERT:string,
- *                          HTTPS_SSL_VERIFICATION:number,
- *                          HTTPS_SSL_VERIFICATION_PATH:string,
- *                          HTTPS_PORT:number,
- *                          STATUS: string,
- *                          PATH:string,
- *                          PATH_DATA:string,
- *                          CONFIG:[*]}[]}} server_db_document_ConfigMicroserviceServices
+ * @typedef {{  id?:number,
+ *              name:string, 
+ *              host:number, 
+ *              port:number,
+ *              https_enable:number,
+ *              https_key:string,
+ *              https_cert:string,
+ *              https_ssl_verification:number,
+ *              https_ssl_verification_path:string,
+ *              https_port:number,
+ *              path:string,
+ *              path_data:string,
+ *              config:[*],
+ *              status: string,
+ *              created?:string,
+ *              modified?:string}} server_db_table_ServiceRegistry
  */
 
 /**
@@ -974,6 +977,7 @@
  *              'IamUserLike'|
  *              'IamUserView'|
  *              'IamUserEvent'|
+ *              'ServiceRegistry'|
  *              server_db_tables_log|
  *              server_db_db_name_config| 
  *              server_db_db_name_message_queue} server_DbObject
@@ -983,8 +987,7 @@
  * @description DB server_db_db_name_config
  * 
  * @typedef {   'ConfigServer'|
- *              'ConfigRestApi'|
- *              'ConfigMicroserviceServices'} server_db_db_name_config
+ *              'ConfigRestApi'} server_db_db_name_config
  */
 
 /**
