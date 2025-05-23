@@ -1,8 +1,8 @@
-/** @module serviceregistry/microservice/microservice */
+/** @module serviceregistry/microservice */
 
 /**
- * @import {server_server_response, server_bff_endpoint_type, server_server_req_id_number,server_req_method} from '../server/types.js'
- * @import {microservice_res, microservice_registry_service} from './types.js'
+ * @import {microservice_registry_service, 
+ *          server_server_response, server_bff_endpoint_type, server_req_method} from '../server/types.js'
  */
 
 const http = await import('node:http');
@@ -10,6 +10,7 @@ const https = await import('node:https');
 
 const {registryConfigServices} = await import('./registry.js');
 const { iamAuthenticateApp } = await import('../server/iam.js');
+const {serverUtilNumberValue} = await import('../server/server.js');
 
 const MICROSERVICE_MESSAGE_TIMEOUT = '🗺⛔?';
 const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
@@ -21,7 +22,7 @@ const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
  * @param {string} uri_path
  * @returns {number|null}
  */
- const microserviceUtilResourceIdNumberGet = uri_path => microserviceUtilNumberValue(uri_path.substring(uri_path.lastIndexOf('/') + 1));
+ const microserviceUtilResourceIdNumberGet = uri_path => serverUtilNumberValue(uri_path.substring(uri_path.lastIndexOf('/') + 1));
 /**
  * @name microserviceUtilResourceIdStringGet
  * @description Returns resource id string from URI path
@@ -31,19 +32,6 @@ const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
  * @returns {string|null}
  */
  const microserviceUtilResourceIdStringGet = uri_path => uri_path.substring(uri_path.lastIndexOf('/') + 1);
-/**
- * @name microserviceRouteMatch
- * @description Route match
- * @function
- * @param {string} route_path
- * @param {string} route_method
- * @param {string} request_path
- * @param {string} request_method 
- * @returns {boolean}
- */
-const microserviceRouteMatch = (route_path, route_method, request_path , request_method) => 
- (route_path.indexOf('/:RESOURCE_ID')>-1?route_path. replace('/:RESOURCE_ID', request_path.substring(request_path.lastIndexOf('/'))):route_path) == request_path && 
-  route_method == request_method;
 
 /**
  * @name microserviceRequest
@@ -72,7 +60,7 @@ const microserviceRequest = async parameters =>{
 
     /**@type{microservice_registry_service} */
     const microservice = parameters.path.split('/')[1].toUpperCase();
-    if ((microservice == 'GEOLOCATION' && microserviceUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVICE_IAM', parameter:'ENABLE_GEOLOCATION'}}).result)==1)||
+    if ((microservice == 'GEOLOCATION' && serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVICE_IAM', parameter:'ENABLE_GEOLOCATION'}}).result)==1)||
         microservice != 'GEOLOCATION'){
         //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
         const authorization = `Basic ${Buffer.from(     AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_id + ':' + 
@@ -85,7 +73,7 @@ const microserviceRequest = async parameters =>{
         return await circuitBreaker.MicroServiceCall( microserviceHttpRequest, 
                                                 microservice, 
                                                 
-                                                parameters.app_id == microserviceUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result), //if appid = APP_COMMON_APP_ID then admin, 
+                                                parameters.app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result), //if appid = APP_COMMON_APP_ID then admin, 
                                                 `/api/v${registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
                                                 query, 
                                                 parameters.data, 
@@ -120,47 +108,6 @@ const microserviceRequest = async parameters =>{
                 type:'JSON'};
     }
 }; 
-
-/**
- * @name microserviceUtilNumberValue
- * @description Get number value from request key
- *              returns number or null for numbers
- *              so undefined and '' are avoided sending arguement to service functions
- * @function
- * @param {server_server_req_id_number} param
- * @returns {number|null}
- */
- const microserviceUtilNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
-
-/**
- * @name microserviceResultReturn
- * @description Return result from microservice
- * @function
- * @param {number} code 
- * @param {string|null} error 
- * @param {*} result 
- * @param {microservice_res} res
- * @returns {void}
- */
- const microserviceResultReturn = (code, error, result, res)=>{
-    res.statusCode = code;
-    if (error){
-        console.log(error);
-        //ISO20022 error format
-        const message = JSON.stringify({error:{
-                                        http:code, 
-                                        code:'MICROSERVICE',
-                                        text:error, 
-                                        developer_text:null, 
-                                        more_info:null}});
-        res.write(message, 'utf8');
-    }
-    else{
-        res.setHeader('Content-Type',  'application/json; charset=utf-8');
-        res.write(JSON.stringify(result), 'utf8');
-    }
-    res.end();
-};
 
 /**
  * @name microserviceHttpRequest
@@ -223,7 +170,7 @@ const microserviceHttpRequest = async (service, path, query, body, method, timeo
         if (method !='GET')
             request.write(JSON.stringify(body));
         request.on('error', error => {
-            reject('MICROSERVICE ERROR: ' + error);
+            reject(error);
         });
         request.on('timeout', () => {
             reject(MICROSERVICE_MESSAGE_TIMEOUT);
@@ -233,4 +180,4 @@ const microserviceHttpRequest = async (service, path, query, body, method, timeo
 };
 
 
-export {MICROSERVICE_RESOURCE_ID_STRING, microserviceUtilResourceIdNumberGet, microserviceUtilResourceIdStringGet, microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, registryConfigServices, microserviceRequest, iamAuthenticateApp};
+export {MICROSERVICE_RESOURCE_ID_STRING, microserviceUtilResourceIdNumberGet, microserviceUtilResourceIdStringGet, registryConfigServices, microserviceRequest, iamAuthenticateApp};

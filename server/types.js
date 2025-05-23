@@ -1,15 +1,16 @@
 /** 
  * @description Declaration of all types used in server
  *              Type groups
- *              APP     App types
- *              BFF     Backend for frontend (BFF) types
- *              DB      objects in data model 
- *              IAM     IAM types
- *              INFO    Info types
- *              SERVER  Server types
- *              SECURITY Security types
- *              SOCKET  Socket types
- *              TEST    test types
+ *              APP             App types
+ *              BFF             Backend for frontend (BFF) types
+ *              DB              Objects in data model 
+ *              IAM             IAM types
+ *              INFO            Info types
+ *              SERVER          Server types
+ *              SECURITY        Security types
+ *              SOCKET          Socket types
+ *              TEST            Test types
+ *              SERVICEREGISTRY Service registry types
  * @module server/types 
  */
 
@@ -619,6 +620,24 @@
  *              ['SERVICE_LOG']:[server_db_config_server_service_log],
  *              ['SERVICE_TEST']:[server_db_config_server_service_test],
  *              ['METADATA']:server_db_config_server_metadata}} server_db_document_ConfigServer
+ */
+
+/** 
+ * @description DB DOCUMENT ConfigMicroserviceServices
+ * @memberof dbObjects
+ * @typedef {{['SERVICES']:{NAME:string, 
+ *                          HOST:number, 
+ *                          PORT:number,
+ *                          HTTPS_ENABLE:number,
+ *                          HTTPS_KEY:string,
+ *                          HTTPS_CERT:string,
+ *                          HTTPS_SSL_VERIFICATION:number,
+ *                          HTTPS_SSL_VERIFICATION_PATH:string,
+ *                          HTTPS_PORT:number,
+ *                          STATUS: string,
+ *                          PATH:string,
+ *                          PATH_DATA:string,
+ *                          CONFIG:[*]}[]}} server_db_document_ConfigMicroserviceServices
  */
 
 /**
@@ -1533,6 +1552,12 @@
  *              specFiles:{ type:test_type, 
  *                          path:string}[]}} test_specrunner
  */
+
+/**
+ * @description SERVICEREGISTRY microservice_registry_service
+ * @typedef {'GEOLOCATION'|'MAIL'|string} microservice_registry_service
+ */
+
 /**
  * @description PROCESS process
  * @typedef {*} process
