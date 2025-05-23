@@ -792,10 +792,7 @@
 /** 
  * @description DB server_db_config_server_service_microservice
  * @memberof dbObjects
- * @typedef {{PATH                                        : string,
- *            PATH_DATA                                   : string,
- *            PATH_SSL                                    : string,
- *            CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
+ * @typedef {{CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
  *            CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS       : number
  *            CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS       : number
  *            CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}} server_db_config_server_service_microservice

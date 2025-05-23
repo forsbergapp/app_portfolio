@@ -185,54 +185,28 @@ const microserviceHttpRequest = async (service, path, query, body, method, timeo
     const port = registryConfigServices(service).HTTPS_ENABLE ==1?registryConfigServices(service).HTTPS_PORT:registryConfigServices(service).PORT;
     
     return new Promise ((resolve, reject)=>{
-        let headers;
-        let options;
-        const hostname = 'localhost';
-        if (client_ip == null && headers_user_agent == null && headers_accept_language == null){    
-            headers = {
-                'User-Agent': 'server',
-                'Accept-Language': '*',
+        const headers = method=='GET'? {
+                'User-Agent': headers_user_agent,
+                'Accept-Language': headers_accept_language,
+                'Authorization': authorization,
+                'x-forwarded-for': client_ip
+            }: {
+                'User-Agent': headers_user_agent,
+                'Accept-Language': headers_accept_language,
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(JSON.stringify(body)),
-                'Authorization': authorization
+                'Authorization': authorization,
+                'x-forwarded-for': client_ip
             };
-            //host: 'localhost',
-            options = {
-                method: method,
-                timeout: timeout,
-                headers : headers,
-                port: port,
-                path: `${path}?${query}`,
-                rejectUnauthorized: false
-            };
-        }
-        else{
-            if (method == 'GET')
-                headers = {
-                    'User-Agent': headers_user_agent,
-                    'Accept-Language': headers_accept_language,
-                    'Authorization': authorization,
-                    'x-forwarded-for': client_ip
-                };
-            else
-                headers = {
-                    'User-Agent': headers_user_agent,
-                    'Accept-Language': headers_accept_language,
-                    'Content-Type': 'application/json',
-                    'Content-Length': Buffer.byteLength(JSON.stringify(body)),
-                    'Authorization': authorization,
-                    'x-forwarded-for': client_ip
-                };
-            options = {
-                method: method,
-                timeout: timeout,
-                headers : headers,
-                host: hostname,
-                port: port,
-                path: `${path}?${query}`,
-                rejectUnauthorized: false
-            };
-        }
+        const options = {
+            method: method,
+            timeout: timeout,
+            headers : headers,
+            host: registryConfigServices(service).HOST,
+            port: port,
+            path: `${path}?${query}`,
+            rejectUnauthorized: false
+        };
         const request = request_protocol.request(options, res =>{
             let responseBody = '';
             res.setEncoding('utf8');
