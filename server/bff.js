@@ -3,8 +3,6 @@
 /**
  * @import {server_iam_authenticate_request, 
  *          server_db_document_ConfigServer,
- *          server_db_config_server_service_iam,
- *          server_db_config_server_server,
  *          server_server_req, 
  *          server_server_res, 
  *          server_server_error, 
@@ -201,7 +199,6 @@ const bffStart = async (req, res) =>{
  * @returns {Promise<*>}
  */
  const bff = async (bff_parameters) =>{
-    const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
     const app_id = app_common.commonAppHost((bff_parameters.host??'').substring(0,(bff_parameters.host??'').indexOf(':')==-1?
                                                 (bff_parameters.host??'').length:
                                                     (bff_parameters.host??'').indexOf(':')));
@@ -224,7 +221,7 @@ const bffStart = async (req, res) =>{
             .catch((error)=>
                 Log.post({  app_id:app_id, 
                     data:{  object:'LogServiceError', 
-                            service:{   service:service,
+                            service:{   service:bff_parameters.endpoint,
                                         parameters:bff_parameters.query
                                     },
                             log:error
@@ -248,7 +245,6 @@ const bffStart = async (req, res) =>{
                                                                     ip:bff_parameters.ip, 
                                                                     host:bff_parameters.host ?? '', 
                                                                     url:bff_parameters.url ?? '',
-                                                                    route_path:bff_parameters.route_path,
                                                                     user_agent:bff_parameters.user_agent, 
                                                                     accept_language:bff_parameters.accept_language, 
                                                                     idToken:bff_parameters.idToken, 
@@ -260,7 +256,7 @@ const bffStart = async (req, res) =>{
                                                         const log_result = serverUtilNumberValue(ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}).result)==2?result_service:'✅';
                                                         return Log.post({  app_id:app_id, 
                                                             data:{  object:'LogServiceInfo', 
-                                                                    service:{   service:service,
+                                                                    service:{   service:bff_parameters.endpoint,
                                                                                 parameters:bff_parameters.query
                                                                             },
                                                                     log:log_result
@@ -270,7 +266,7 @@ const bffStart = async (req, res) =>{
                                                     .catch((/**@type{server_server_error}*/error) => {
                                                         return Log.post({  app_id:app_id, 
                                                             data:{  object:'LogServiceError', 
-                                                                    service:{   service:service,
+                                                                    service:{   service:bff_parameters.endpoint,
                                                                                 parameters:bff_parameters.query
                                                                             },
                                                                     log:error
@@ -304,7 +300,6 @@ const bffStart = async (req, res) =>{
  const bffServer = async (app_id, bff_parameters) => {
     const  {iamUtilMessageNotAuthorized} = await import('./iam.js');
     return new Promise((resolve, reject) => {
-        const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
         if (app_id !=null && bff_parameters.endpoint){
             serverREST_API({  app_id:app_id, 
                             endpoint:bff_parameters.endpoint,
@@ -312,7 +307,6 @@ const bffStart = async (req, res) =>{
                             ip:bff_parameters.ip, 
                             host:bff_parameters.host ?? '', 
                             url:bff_parameters.url ?? '',
-                            route_path:bff_parameters.route_path,
                             user_agent:bff_parameters.user_agent, 
                             accept_language:bff_parameters.accept_language, 
                             idToken:bff_parameters.idToken, 
@@ -324,7 +318,7 @@ const bffStart = async (req, res) =>{
             .catch((/**@type{server_server_error}*/error)=>{
                 Log.post({  app_id:app_id, 
                     data:{  object:'LogServiceError', 
-                            service:{   service:service,
+                            service:{   service:bff_parameters.endpoint,
                                         parameters:bff_parameters.query
                                     },
                             log:error

@@ -3,7 +3,9 @@
  */
 
 /**
- * @import {server_req_method, server_REST_API_parameters, server_server_response, server_server_response_type, server_server_error, server_server_req, server_server_res, server_server_req_id_number} from './types.js'
+ * @import {server_req_method, server_REST_API_parameters, server_server_response, server_server_response_type, 
+ *          server_server_error, server_server_req, server_server_res, 
+ *          server_bff_parameters, server_server_req_id_number} from './types.js'
  */
 
 const zlib = await import('node:zlib');
@@ -605,8 +607,6 @@ const serverJs = async () => {
     const Log = await import('./db/Log.js');
     const ConfigServer = await import('./db/ConfigServer.js');
     const {iamUtilMessageNotAuthorized} = await import('./iam.js');
-    const iamMiddleware = await import('./iamMiddleware.js');
-    const bff = await import('./bffMiddleware.js');
 
     /**
      * @param {server_server_req} req
@@ -615,77 +615,102 @@ const serverJs = async () => {
      */
     const app = async (req, res)=>{
         /**
+         * @description Identifies endpoint role and authenticate and 
+         *              authorize requests using IAM, except APP endpoint role, before calling BFF
+         * @param {string|null} role 
+         * @returns {Promise.<void>}
+         */
+        const bffRoute = async (role=null) =>{
+            const {bff} = await import('./bff.js');
+            const {iamAuthenticateUserCommon} = await import('./iam.js');
+            const ID_TOKEN_KEY ='id-token';
+            const idToken =role == 'APP'?
+                            '':
+                                req.url.split('/')[2]?.toUpperCase().indexOf('EXTERNAL')>-1?
+                                    '':
+                                        /**@ts-ignore */
+                                        req.headers[ID_TOKEN_KEY].replace('Bearer ',''); 
+            const endpoint_role = role=='APP'?'APP':req.url.split('/')[2]?.toUpperCase();
+            /**@type{server_bff_parameters} */
+            const bff_parameters = {
+                                    //request
+                                    host: req.headers.host ?? '', 
+                                    url:req.originalUrl,
+                                    method: req.method,
+                                    query: req.query?.parameters ?? '',
+                                    body: req.body,
+                                    idToken:  idToken, 
+                                    authorization:  req.headers.authorization, 
+                                    //metadata
+                                    ip: req.headers['x-forwarded-for'] || req.ip, 
+                                    user_agent: req.headers['user-agent'], 
+                                    accept_language: req.headers['accept-language'], 
+                                    //response
+                                    res: res,
+                                    /**@ts-ignore */
+                                    endpoint:endpoint_role
+                                };
+            if (endpoint_role == 'APP')
+                await bff(bff_parameters);
+            else
+                await iamAuthenticateUserCommon({
+                        idToken: idToken, 
+                        /**@ts-ignore */
+                        endpoint:endpoint_role,
+                        authorization: req.headers.authorization, 
+                        host: req.headers.host ?? '', 
+                        ip: req.ip, 
+                        res:res, next:()=>
+                            bff(bff_parameters)
+                        });
+        };
+        /**
          * @description Routes request
          * @param {server_server_req} req
          * @param {server_server_res} res
          * @returns {Promise.<*>}
          */
-        const bffRoute= async (req, res) =>{
+        const serverRoute = async (req, res) =>{
             //REST API 
             //URI syntax implemented:
             //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
             //URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
             switch (true){
                 case req.path.startsWith('/bff/app_id/v1'):{
-                    req.route.path = '/bff/app_id/v1*';
-                    await iamMiddleware.iamAuthenticateIdToken(req, res, () =>
-                        bff.bffAppId(req, res)
-                    );
+                    await bffRoute();
                     break;
                 }
                 case req.path.startsWith('/bff/app_access/v1') :{
-                    req.route.path = '/bff/app_access/v1*';
-                    await iamMiddleware.iamAuthenticateAccessToken(req, res, () =>
-                        bff.bffAppAccess(req, res)
-                    );
+                    await bffRoute();
                     break;
                 }
                 case req.path.startsWith('/bff/app_access_verification/v1') :{
-                    req.route.path = '/bff/app_access_verification/v1*';
-                    await iamMiddleware.iamAuthenticateAccessVerificationToken(req, res, () =>
-                        bff.bffAppAccessVerification(req, res)
-                    );
+                    await bffRoute();
                     break;
                 }
                 case req.path.startsWith('/bff/app_external/v1') && req.method=='POST':{
-                    req.route.path = '/bff/app_external/v1*';
-                    iamMiddleware.iamAuthenticateExternal(req, res, () =>
-                        bff.bffAppExternal(req, res)
-                    );
+                    await bffRoute();
                     break;
                 }
                 case req.path.startsWith('/bff/app_access_external/v1') && req.method=='POST':{
-                    req.route.path = '/bff/app_access_external/v1*';
-                    iamMiddleware.iamAuthenticateAccessExternal(req, res, () =>
-                        bff.bffAppAccessExternal(req, res)
-                    );
+                    await bffRoute();
                     break;
                 }
                 case req.path.startsWith('/bff/admin/v1') :{
-                    req.route.path = '/bff/admin/v1*';
-                    await iamMiddleware.iamAuthenticateAccessTokenAdmin(req, res, () =>
-                        bff.bffAdmin(req, res)
-                    );
+                    await bffRoute();
                     break;
                 }
                 case req.path.startsWith('/bff/iam/v1') && req.method=='POST':{
-                    req.route.path = '/bff/iam/v1*';
-                    await iamMiddleware.iamAuthenticateIAM(req, res, () =>
-                        bff.bffIAM(req, res)
-                    );
+                    await bffRoute();
                     break;
                 }
                 case req.path.startsWith('/bff/iam_signup/v1') &&req.method=='POST':{
-                    req.route.path = '/bff/iam_signup/v1*';
-                    await iamMiddleware.iamAuthenticateIAMSignup(req, res, () =>
-                            bff.bffIamSignup(req, res)
-                    );
+                    await bffRoute();
                     break;
                 }
                 case req.method=='GET':{
-                    req.route.path = '*';
                     //app asset, common asset, info page, report and app
-                    bff.bffApp(req,res);
+                    await bffRoute('APP');
                     break;
                 }
                 default:{
@@ -764,7 +789,6 @@ const serverJs = async () => {
             req.hostname =      req.headers.host;
             req.path =          req.url;
             req.originalUrl =   req.url;
-            req.route =         {path:''};
 
             /**@ts-ignore */
             req.query =         req.path.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
@@ -814,7 +838,7 @@ const serverJs = async () => {
                     }
                     default:{
                         //Route request
-                        return bffRoute(req, res);
+                        return serverRoute(req, res);
                     }
                 }
             }
@@ -1039,14 +1063,15 @@ const serverREST_API = async (routesparameters) =>{
                 //send only parameters to the function if declared true
                 const result = await  moduleRESTAPI[functionRESTAPI]({
                                 ...(getParameter('server_app_id')                  && {app_id:         routesparameters.app_id}),
-                                ...(getParameter('server_idtoken')               && {idToken:        routesparameters.idToken}),
+                                ...(getParameter('server_idtoken')                 && {idToken:        routesparameters.idToken}),
                                 ...(getParameter('server_authorization')           && {authorization:  routesparameters.authorization}),
                                 ...(getParameter('server_user_agent')              && {user_agent:     routesparameters.user_agent}),
                                 ...(getParameter('server_accept_language')         && {accept_language:routesparameters.accept_language}),
                                 ...(getParameter('server_host')                    && {host:           routesparameters.host}),
                                 ...(getParameter('locale')                         && {locale:         app_query?.get('locale') ??'en'}),
                                 ...(getParameter('server_ip')                      && {ip:             routesparameters.ip}),
-                                ...(getParameter('server_resource_path')           && {path:           routesparameters.route_path}),
+                                ...(getParameter('server_microservice')            && {microservice:   getParameter('server_microservice').default}),
+                                ...(getParameter('server_microservice_service')    && {service:        getParameter('server_microservice_service').default}),
                                 ...(getParameter('server_method')                  && {method:         routesparameters.method}),
                                 ...(Object.keys(parametersData)?.length>0          && {data:           {...parametersData}}),
                                 ...(getParameter('server_endpoint')                && {endpoint:       routesparameters.endpoint}),
