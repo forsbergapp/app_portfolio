@@ -389,6 +389,20 @@
  *              user_agent:string}} server_db_table_IamControlUserAgent
  */
 
+/** 
+ * @description DB TABLE IamMicroserviceToken
+ * @memberof dbObjects
+ * @typedef {{id:     number,
+ *            service_registry_id: number,
+ *            service_registry_name: string,
+ *		      res:	  0|1,
+ *   	      token:  string,
+ *		      ip:     string,
+ *		      ua:     string|null,
+ *            host:   string|null,
+ *		      created:string}} server_db_table_IamMicroserviceToken
+ */
+
 /**
  * @description DB TABLE IamUser
  * @memberof dbObjects
@@ -967,6 +981,7 @@
  *              'IamControlIp'|
  *              'IamControlUserAgent'|
  *              'IamControlObserve'|
+ *              'IamMicroserviceToken'|
  *              'IamUser'|
  *              'IamUserApp'|
  *              'IamUserAppDataPost'|

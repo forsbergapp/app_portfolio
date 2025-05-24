@@ -1273,7 +1273,7 @@ const iamAuthenticateResource = parameters =>  {
 
 /**
  * @name iamAppAccessGet
- * @description Get user login records
+ * @description Get records
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
