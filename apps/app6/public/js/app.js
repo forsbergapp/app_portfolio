@@ -138,6 +138,7 @@ const appProductUpdate = async () =>{
         mountDiv:   COMMON_DOCUMENT.querySelectorAll('.common_app_data_display_master_row[id]')[1].id, 
         data:       {
                     app_id:common.COMMON_GLOBAL.app_id,
+                    common_app_id:common.COMMON_GLOBAL.common_app_id,
                     display_type:'VERTICAL_KEY_VALUE',
                     master_path:'/app-common-module/PRODUCT_LOCATION_GET',
                     master_query:'fields=stock',
@@ -217,6 +218,7 @@ const appPaymentRequest = async () =>{
             mountDiv:   'common_dialogue_app_data_display', 
             data:       {
                         app_id:common.COMMON_GLOBAL.app_id,
+                        common_app_id:common.COMMON_GLOBAL.common_app_id,
                         display_type:'VERTICAL_KEY_VALUE',
                         dialogue:true,
                         master_path:'/app-common-module/PAYMENT_REQUEST_CREATE',
@@ -287,11 +289,15 @@ const appPay = async () =>{
         mountDiv:   'common_dialogue_app_data_display', 
         data:       {
                     app_id:common.COMMON_GLOBAL.app_id,
+                    common_app_id:common.COMMON_GLOBAL.common_app_id,
                     display_type:'VERTICAL_KEY_VALUE',
                     dialogue:true,
-                    master_path:'/app-common-module/PAYMENT_METADATA',
+                    master_path:'/app-common-module/COMMON_APP_DATA_METADATA',
                     master_query:'fields=json_data',
-                    master_body:{type:'FUNCTION',IAM_data_app_id:common.COMMON_GLOBAL.app_id},
+                    master_body:{   type:'FUNCTION',
+                                    IAM_module_app_id:common.COMMON_GLOBAL.common_app_id,
+                                    IAM_data_app_id:common.COMMON_GLOBAL.app_id, 
+                                    resource_name:'PAYMENT_METADATA'},
                     master_method:'POST',
                     master_token_type:'APP_ID',
                     master_resource:'PAYMENT_METADATA',
@@ -364,6 +370,7 @@ const appInit = async () => {
         mountDiv:   'app_main_page', 
         data:       {
                     app_id:common.COMMON_GLOBAL.app_id,
+                    common_app_id:common.COMMON_GLOBAL.common_app_id,
                     timezone:common.COMMON_GLOBAL.user_timezone,
                     locale:common.COMMON_GLOBAL.user_locale
                     },

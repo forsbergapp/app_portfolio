@@ -1109,6 +1109,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *           authorization:string|null,
  *           claim_iam_user_app_id:number|null,
  *           claim_iam_user_id:number|null,
+ *           claim_iam_module_app_id:number|null
  *           claim_iam_data_app_id:number|null}} parameters
  * @returns {boolean}
  */
@@ -1150,6 +1151,7 @@ const iamAuthenticateResource = parameters =>  {
             //function should authenticate at least one of iam user id or data app_id
             return  (parameters.claim_iam_user_app_id !=null || 
                      parameters.claim_iam_user_id !=null || 
+                     parameters.claim_iam_module_app_id !=null ||
                      parameters.claim_iam_data_app_id !=null) &&
 
                     //authenticate iam user app id if used
@@ -1157,6 +1159,9 @@ const iamAuthenticateResource = parameters =>  {
                     //authenticate iam user id if used
                     authenticate_token.iam_user_id == (parameters.claim_iam_user_id ?? authenticate_token.iam_user_id) &&
                     
+                    //authenticate iam module app id if used, users can only have access to current app id or common app id for data app id claim
+                    (parameters.claim_iam_module_app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result) ||
+                     authenticate_token.app_id == (parameters.claim_iam_module_app_id ?? authenticate_token.app_id)) &&
                     //authenticate iam data app id if used, users can only have access to current app id or common app id for data app id claim
                     (parameters.claim_iam_data_app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result) ||
                      authenticate_token.app_id == (parameters.claim_iam_data_app_id ?? authenticate_token.app_id)) &&

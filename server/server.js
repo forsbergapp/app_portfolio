@@ -852,6 +852,7 @@ const serverREST_API = async (routesparameters) =>{
      * Authenticates using IAM token claims if path requires
      * @param {{IAM_iam_user_app_id:number|null,
      *          IAM_iam_user_id:number|null,
+     *          IAM_module_app_id:number|null,
      *          IAM_data_app_id:number|null,
      *          resource_id_required?: boolean}} params
      * @returns {boolean}
@@ -861,7 +862,7 @@ const serverREST_API = async (routesparameters) =>{
             //match required resource id
             ((params.resource_id_required ?? false) && URI_path.substring(URI_path.lastIndexOf('/') + 1) == '')==false){
             //Authencate IAM keys in the tokens if one of them used
-            if (params.IAM_iam_user_app_id || params.IAM_iam_user_id || params.IAM_data_app_id){
+            if (params.IAM_iam_user_app_id || params.IAM_iam_user_id || params.IAM_module_app_id || params.IAM_data_app_id){
                 if (iam.iamAuthenticateResource({   app_id:                     routesparameters.app_id, 
                                                     ip:                         routesparameters.ip, 
                                                     idToken:                    routesparameters.idToken,
@@ -869,6 +870,7 @@ const serverREST_API = async (routesparameters) =>{
                                                     authorization:              routesparameters.authorization, 
                                                     claim_iam_user_app_id:      serverUtilNumberValue(params.IAM_iam_user_app_id),
                                                     claim_iam_user_id:          serverUtilNumberValue(params.IAM_iam_user_id),
+                                                    claim_iam_module_app_id:    serverUtilNumberValue(params.IAM_module_app_id),
                                                     claim_iam_data_app_id:      serverUtilNumberValue(params.IAM_data_app_id)}))
                     return true;
                 else
@@ -944,10 +946,24 @@ const serverREST_API = async (routesparameters) =>{
                                                         .filter((/**@type{*}*/parameter)=>parameter.in =='query')
                                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
                                                             if ('$ref' in key  && key.in =='query')
-                                                                return {...keys, ...{[key['$ref'].split('#/components/parameters/')[1]]:
-                                                                                        app_query?.get(key['$ref'].split('#/components/parameters/')[1])}};
+                                                                return {...keys, ...{   
+                                                                                    [key['$ref'].split('#/components/parameters/')[1]]:
+                                                                                    {
+                                                                                        data:       app_query?.get(key['$ref'].split('#/components/parameters/')[1]),
+                                                                                        //IAM parameters are required by default
+                                                                                        required:   (key?.required ?? (key['$ref'].split('#/components/parameters/')[1].startsWith('IAM')?true:false))
+                                                                                    }
+                                                                                }
+                                                                        };
                                                             else
-                                                                return {...keys, ...{[key.name]:app_query?.get(key.name)}};
+                                                                return {...keys, ...{   
+                                                                                    [key.name]:{
+                                                                                        data:       app_query?.get(key.name),
+                                                                                        //IAM parameters are required by default
+                                                                                        required:   (key?.required ?? (key.name.startsWith('IAM')?true:false))
+                                                                                    }
+                                                                                }
+                                                                    };
                                                         },{})
                                         }:
                                         //all other methods use body to send data
@@ -955,35 +971,75 @@ const serverREST_API = async (routesparameters) =>{
                                         (methodObj.requestBody?.content && methodObj.requestBody?.content['application/json']?.schema?.additionalProperties)?
                                             {...routesparameters.body,...Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
                                                                             .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
-                                                                                return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};
+                                                                                return {...keys, ...{   [key[0]]:{  
+                                                                                                                    data:       routesparameters.body[key[0]],
+                                                                                                                    //IAM parameters are required by default
+                                                                                                                    required:   key[1]?.required ?? (key[0].startsWith('IAM')?true:false)
+                                                                                                                }
+                                                                                                    }
+                                                                                        };
                                                                             },{})}:
                                                         ((methodObj?.requestBody?.content && Object.keys(methodObj?.requestBody?.content).length>0)?Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
                                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
-                                                            return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};
+                                                            return {...keys, ...{  [key[0]]:{
+                                                                                                data:       routesparameters.body[key[0]],
+                                                                                                //IAM parameters are required by default
+                                                                                                required:   key[1]?.required ?? (key[0].startsWith('IAM')?true:false)
+                                                                                            }
+                                                                                }
+                                                                    };
                                                         },{}):{});
-            if (Authenticate({  IAM_iam_user_app_id:    parametersData['IAM_iam_user_app_id'],
-                                IAM_iam_user_id:        parametersData['IAM_iam_user_id'],
-                                IAM_data_app_id:        parametersData['IAM_data_app_id'],
+            if (Authenticate({  IAM_iam_user_app_id:    parametersData.IAM_iam_user_app_id?.data,
+                                IAM_iam_user_id:        parametersData.IAM_iam_user_id?.data,
+                                IAM_module_app_id:      parametersData.IAM_module_app_id?.data,
+                                IAM_data_app_id:        parametersData.IAM_data_app_id?.data,
                                 resource_id_required:   (   getParameter('IAM_iam_user_app_id', true) ??        //check if used as resource id
                                                             getParameter('IAM_iam_user_id', true) ??            //check if used as resource id
+                                                            getParameter('IAM_iam_module_app_id', true) ??      //check if used as resource id
                                                             getParameter('IAM_iam_data_app_id', true) ??        //check if used as resource id
                                                             getParameter('resource_id_string') ?? getParameter('resource_id_number'))?.required ?? false,
-                            })){
-                if (parametersData.IAM_data_app_id !=null ||routesparameters.endpoint=='APP_ACCESS_EXTERNAL'){
+                            }) &&
+                            //check required parameters that required parameters have values
+                            ((parametersData.IAM_module_app_id?.required && parametersData.IAM_module_app_id?.data !=undefined)  ||(parametersData.IAM_module_app_id?.required ?? false) == false) &&
+                            ((parametersData.IAM_data_app_id?.required   && parametersData.IAM_data_app_id?.data !=undefined)    ||(parametersData.IAM_data_app_id?.required ?? false) == false)&&
+                            ((parametersData.IAM_user_app_id?.required   && parametersData.IAM_user_app_id?.data !=undefined)    ||(parametersData.IAM_user_app_id?.required ?? false) == false)&&
+                            ((parametersData.IAM_user_id?.required       && parametersData.IAM_user_id?.data !=undefined)        ||(parametersData.IAM_user_id?.required ?? false) == false)){
+                //replace data and required keys used for authentication with a value
+                Object.keys(parametersData).forEach(key=>
+                    parametersData[key]= typeof parametersData[key] == 'object'?parametersData[key].data:parametersData[key]
+                );
+                if ('IAM_module_app_id' in parametersData ||routesparameters.endpoint=='APP_ACCESS_EXTERNAL'){
+                    //APP_ACCESS_EXTERNAL can only run function using same appid used by host and access data for same app id
+                    parametersData.module_app_id = routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?
+                                                    routesparameters.app_id:
+                                                    parametersData.IAM_module_app_id!=null?
+                                                        serverUtilNumberValue(parametersData.IAM_module_app_id):
+                                                            null;
+                    delete parametersData.IAM_module_app_id;
+                }
+                if ('IAM_data_app_id' in parametersData ||routesparameters.endpoint=='APP_ACCESS_EXTERNAL'){
                     //APP_ACCESS_EXTERNAL can only run function using same appid used by host and access data for same app id
                     parametersData.data_app_id = routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?
                                                     routesparameters.app_id:
-                                                    serverUtilNumberValue(parametersData.IAM_data_app_id);
+                                                    parametersData.IAM_data_app_id!=null?
+                                                        serverUtilNumberValue(parametersData.IAM_data_app_id):
+                                                            null;
                     delete parametersData.IAM_data_app_id;
                 }
-                if (parametersData.IAM_iam_user_app_id != null){
-                    parametersData.iam_user_app_id = serverUtilNumberValue(parametersData.IAM_iam_user_app_id);
+                if ('IAM_iam_user_app_id' in parametersData){
+                    parametersData.iam_user_app_id = parametersData.IAM_iam_user_app_id!=null?
+                                                        serverUtilNumberValue(parametersData.IAM_iam_user_app_id):
+                                                            null;
                     delete parametersData.IAM_iam_user_app_id;
                 }
-                if (parametersData.IAM_iam_user_id != null){
-                    parametersData.iam_user_id = serverUtilNumberValue(parametersData.IAM_iam_user_id);
+                if ('IAM_iam_user_id' in parametersData){
+                    parametersData.iam_user_id = parametersData.IAM_iam_user_id!=null?
+                                                    serverUtilNumberValue(parametersData.IAM_iam_user_id):
+                                                        null;
                     delete parametersData.IAM_iam_user_id;
                 }
+                
+
                 //if SSE then add res
                 if (methodObj.responses?.[201]?.content?.['text/event-stream'])
                     parametersData.res = routesparameters.res;
@@ -1020,6 +1076,8 @@ const serverREST_API = async (routesparameters) =>{
                                 resource_id_get_number('IAM_iam_user_id',path):
                             getParameter('IAM_iam_user_app_id', true)?
                                 resource_id_get_number('IAM_iam_user_app_id',path):
+                            getParameter('IAM_module_app_id', true)?
+                                resource_id_get_number('IAM_module_app_id',path):
                             getParameter('IAM_data_app_id', true)?
                                 resource_id_get_number('IAM_data_app_id',path):
                             getParameter('resource_id_number')?
@@ -1056,6 +1114,7 @@ const serverREST_API = async (routesparameters) =>{
                                 ...(getParameter('server_endpoint')                && {endpoint:       routesparameters.endpoint}),
                                 ...((getParameter('IAM_iam_user_app_id', true)||
                                      getParameter('IAM_iam_user_id', true)||
+                                     getParameter('IAM_module_app_id', true)||
                                      getParameter('IAM_data_app_id', true)||
                                      getParameter('resource_id_string')||
                                      getParameter('resource_id_number'))           && {resource_id:    resourceId(configPath[0])})});
