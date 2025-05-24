@@ -8,7 +8,7 @@ const ORM = await import('./ORM.js');
 const {serverUtilNumberValue} = await import('../server.js');
 /**
  * @name get
- * @description Get user 
+ * @description Get 
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id

@@ -9,7 +9,7 @@ const ORM = await import('./ORM.js');
 
 /**
  * @name get
- * @description Get user 
+ * @description Get 
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id

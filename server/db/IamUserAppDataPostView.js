@@ -11,7 +11,7 @@ const ORM = await import('./ORM.js');
 const IamUserApp = await import('./IamUserApp.js');
 /**
  * @name get
- * @description Get user account app
+ * @description Get
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null,
