@@ -35,7 +35,6 @@ const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, header
     const parameters = {endpoint:'SERVER',
                         host:null,
                         url:'/bff/app_id/v1/geolocation/ip',
-                        route_path:'/geolocation/ip',
                         method:'GET', 
                         query:`ip=${ip}`,
                         body:{},

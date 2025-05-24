@@ -26,19 +26,6 @@ class ClassServerProcess {
 }
 const serverProcess = new ClassServerProcess();
 
-/**
- * @name serverRoute
- * @description Route match
- * @function
- * @param {string} route_path
- * @param {string} route_method
- * @param {string} request_path
- * @param {string} request_method 
- * @returns {boolean}
- */
-const serverRoute = (route_path, route_method, request_path , request_method) => 
-    (route_path.indexOf('/:RESOURCE_ID')>-1?route_path. replace('/:RESOURCE_ID', request_path.substring(request_path.lastIndexOf('/'))):route_path) == request_path && 
-     route_method == request_method;
   
 /**
  * @name serverReturn
@@ -107,14 +94,15 @@ const serverStart = async () =>{
 		const data = {	latitude:	app_query.get('latitude') ?? '',
 						longitude:	app_query.get('longitude') ?? '',
 						ip: 		app_query.get('ip')};
-		req.query = {	app_id:	    (app_query.get('app_id')==null||app_query.get('app_id')===undefined||app_query.get('app_id')==='')?
+		req.query = {	service:    app_query.get('service'),
+                        app_id:	    (app_query.get('app_id')==null||app_query.get('app_id')===undefined||app_query.get('app_id')==='')?
                                         null:
                                             Number(app_query.get('app_id')),
 						data:	data};
 		iamAuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 			if (authenticate){
 				switch (true){
-					case serverRoute('/api/v1/geolocation/place' , 'GET', URI_path, req.method):{
+					case URI_path == '/api/v1' && req.query.service == 'PLACE' && req.method =='GET':{
 						if(	(req.query.data.latitude !=null && req.query.data.latitude!='') ||
 							(req.query.data.longitude !=null && req.query.data.longitude!='')){
 							service.getPlace(req.query.data.latitude, req.query.data.longitude, req.headers['accept-language'])
@@ -125,7 +113,7 @@ const serverStart = async () =>{
 							serverReturn(400, '⛔', null, res);
 						break;
 					}
-					case serverRoute('/api/v1/geolocation/ip' , 'GET', URI_path, req.method):{
+                    case URI_path == '/api/v1' && req.query.service == 'IP' && req.method =='GET':{
 						//no v6 support
 						service.getIp(req.query.data.ip.replace('::ffff:',''), req.headers['accept-language'])
 						.then((result)=>serverReturn(200, null, JSON.parse(result), res))
