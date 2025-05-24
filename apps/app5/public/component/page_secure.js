@@ -39,6 +39,7 @@ const template = props => ` <div id='app_page_secure'>
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,
+ *                      common_app_id:number,
  *                      iam_user_id:number,
  *                      timezone:string,
  *                      locale:string},
@@ -54,7 +55,12 @@ const template = props => ` <div id='app_page_secure'>
  *                      template:string}>}
  */
 const component = async props => {
-    const customer = await props.methods.commonFFB({path:'/app-common-module/CUSTOMER_GET', method:'POST', authorization_type:'APP_ACCESS', body:{type:'FUNCTION',IAM_iam_user_id:props.data.iam_user_id,IAM_data_app_id:props.data.app_id}})
+    const customer = await props.methods.commonFFB({path:'/app-common-module/CUSTOMER_GET', 
+                                                    method:'POST', 
+                                                    authorization_type:'APP_ACCESS', 
+                                                    body:{  type:'FUNCTION',
+                                                            IAM_iam_user_id:props.data.iam_user_id,
+                                                            IAM_data_app_id:props.data.app_id}})
                         .then((/**@type{string}*/result)=>JSON.parse(result));
 
     const onMounted = async () =>{
@@ -66,13 +72,17 @@ const component = async props => {
                 mountDiv:   'app_page_secure_tab_content',
                 data:       {
                             app_id:props.data.app_id,
+                            common_app_id:props.data.common_app_id,
                             display_type:'VERTICAL_KEY_VALUE',
-                            master_path:'/app-common-module/CUSTOMER_METADATA',
+                            master_path:'/app-common-module/COMMON_APP_DATA_METADATA',
                             master_query:'fields=json_data',
-                            master_body:{type:'FUNCTION',data_app_id:props.data.app_id},
+                            master_body:{   type:'FUNCTION',
+                                            IAM_module_app_id:props.data.common_app_id,
+                                            IAM_data_app_id:props.data.app_id, 
+                                            resource_name:'CUSTOMER'},
                             master_method:'POST',
                             master_token_type:'APP_ID',
-                            master_resource:'CUSTOMER_METADATA',
+                            master_resource:'CUSTOMER',
                             detail_path:null,
                             detail_query:null,
                             detail_method:null,

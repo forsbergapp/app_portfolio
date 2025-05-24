@@ -412,6 +412,7 @@ const commonModuleAsset = async parameters => {
                             resource_id:    parameters.resource_id,
                             data:           {
                                                 type:'ASSET', 
+                                                module_app_id:parameters.app_id,
                                                 data_app_id:parameters.app_id
                                             },
                             user_agent:     parameters.user_agent,
@@ -435,6 +436,7 @@ const commonModuleAsset = async parameters => {
  * @param {{app_id:number,
  *          resource_id:string,
  *          data: { type?:APP_server_apps_module_common_type,
+ *                  module_app_id?:number|null,
  *                  data_app_id?:number|null},   //can accept more parameters if defined
  *          user_agent:string,
  *          ip:string,
@@ -447,9 +449,10 @@ const commonModuleAsset = async parameters => {
  */
 const commonModuleRun = async parameters => {
     const {iamUtilMessageNotAuthorized} = await import('../../../server/iam.js');
+    //Module can be defined in module_app_id and can run data in data_app_id or be defined and run in same data_app_id
     const modules = AppModule.get({app_id:parameters.app_id, 
                                             resource_id:null, 
-                                            data:{data_app_id:parameters.data.data_app_id}});
+                                            data:{data_app_id:parameters.data.module_app_id ?? parameters.data.data_app_id}});
     if (modules.result){
         if (parameters.data?.type =='ASSET'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_EXTERNAL'||parameters.endpoint=='APP_ACCESS_EXTERNAL'){
             const module = modules.result.filter((/**@type{server_db_table_AppModule}*/app)=>

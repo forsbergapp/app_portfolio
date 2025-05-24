@@ -20,6 +20,7 @@ const template = () => `<div id='app_page_start_shop' class='app_page_start_shop
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,
+ *                      common_app_id:number,
  *                      timezone:string,
  *                      locale:string},
  *          methods:    {
@@ -40,6 +41,7 @@ const component = async props => {
             mountDiv:   'app_page_start_shop', 
             data:       {
                         app_id:props.data.app_id,
+                        common_app_id:props.data.common_app_id,
                         display_type:'MASTER_DETAIL_VERTICAL',
                         master_path:'/app-common-module/PRODUCT_GET',
                         master_query:'fields=name,image,description,sku,stock',
