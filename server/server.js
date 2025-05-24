@@ -676,34 +676,13 @@ const serverJs = async () => {
             //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
             //URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
             switch (true){
-                case req.path.startsWith('/bff/app_id/v1'):{
-                    await bffRoute();
-                    break;
-                }
-                case req.path.startsWith('/bff/app_access/v1') :{
-                    await bffRoute();
-                    break;
-                }
-                case req.path.startsWith('/bff/app_access_verification/v1') :{
-                    await bffRoute();
-                    break;
-                }
-                case req.path.startsWith('/bff/app_external/v1') && req.method=='POST':{
-                    await bffRoute();
-                    break;
-                }
-                case req.path.startsWith('/bff/app_access_external/v1') && req.method=='POST':{
-                    await bffRoute();
-                    break;
-                }
-                case req.path.startsWith('/bff/admin/v1') :{
-                    await bffRoute();
-                    break;
-                }
-                case req.path.startsWith('/bff/iam/v1') && req.method=='POST':{
-                    await bffRoute();
-                    break;
-                }
+                case req.path.startsWith('/bff/app_id/v1'):
+                case req.path.startsWith('/bff/app_access/v1') :
+                case req.path.startsWith('/bff/app_access_verification/v1') :
+                case req.path.startsWith('/bff/app_external/v1') && req.method=='POST':
+                case req.path.startsWith('/bff/app_access_external/v1') && req.method=='POST':
+                case req.path.startsWith('/bff/admin/v1') :
+                case req.path.startsWith('/bff/iam/v1') && req.method=='POST':
                 case req.path.startsWith('/bff/iam_signup/v1') &&req.method=='POST':{
                     await bffRoute();
                     break;
