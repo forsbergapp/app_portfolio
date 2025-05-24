@@ -74,7 +74,7 @@ const microserviceRequest = async parameters =>{
                                                 microservice, 
                                                 
                                                 parameters.app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result), //if appid = APP_COMMON_APP_ID then admin, 
-                                                `/api/v${registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
+                                                `/api/v${await registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
                                                 query, 
                                                 parameters.data, 
                                                 parameters.method,
