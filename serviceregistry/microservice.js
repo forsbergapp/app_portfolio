@@ -42,7 +42,8 @@ const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          path:string, 
+ *          microservice:string, 
+ *          service:string, 
  *          method:server_req_method,
  *          data:*,
  *          ip:string,
@@ -59,22 +60,21 @@ const microserviceRequest = async parameters =>{
     const {registryMicroserviceApiVersion}= await import('./registry.js');
 
     /**@type{microservice_registry_service} */
-    const microservice = parameters.path.split('/')[1].toUpperCase();
-    if ((microservice == 'GEOLOCATION' && serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVICE_IAM', parameter:'ENABLE_GEOLOCATION'}}).result)==1)||
-        microservice != 'GEOLOCATION'){
+    if ((parameters.microservice == 'GEOLOCATION' && serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVICE_IAM', parameter:'ENABLE_GEOLOCATION'}}).result)==1)||
+        parameters.microservice != 'GEOLOCATION'){
         //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
         const authorization = `Basic ${Buffer.from(     AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_id + ':' + 
                                                         AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_secret,'utf-8').toString('base64')}`;
         //convert data object to string if method=GET, add always app_id parameter for authentication and send as base64 encoded
-        const query = Buffer.from((parameters.method=='GET'?Object.entries(parameters.data).reduce((query, param)=>query += `${param[0]}=${param[1]}&`, ''):'')
+        const query = Buffer.from((parameters.method=='GET'?Object.entries({...parameters.data, ...{service:parameters.service}}).reduce((query, param)=>query += `${param[0]}=${param[1]}&`, ''):'')
                                     + `app_id=${parameters.app_id}`
                                 ).toString('base64');
         /**@ts-ignore */
         return await circuitBreaker.MicroServiceCall( microserviceHttpRequest, 
-                                                microservice, 
+                                                parameters.microservice, 
                                                 
                                                 parameters.app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result), //if appid = APP_COMMON_APP_ID then admin, 
-                                                `/api/v${await registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
+                                                `/api/v${await registryMicroserviceApiVersion(parameters.microservice)}`, 
                                                 query, 
                                                 parameters.data, 
                                                 parameters.method,

@@ -4476,8 +4476,14 @@
                             "required":true
                         },
 			            {
-                            "$ref": "#/components/parameters/server_resource_path",
-                            "required":true
+                            "$ref": "#/components/parameters/server_microservice",
+                            "required":true,
+                            "default":"GEOLOCATION"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_microservice_service",
+                            "required":true,
+                            "default":"IP"
                         },
                         {
                             "$ref": "#/components/parameters/server_method",
@@ -4692,8 +4698,14 @@
                             "required":true
                         },
 			            {
-                            "$ref": "#/components/parameters/server_resource_path",
-                            "required":true
+                            "$ref": "#/components/parameters/server_microservice",
+                            "required":true,
+                            "default":"GEOLOCATION"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_microservice_service",
+                            "required":true,
+                            "default":"PLACE"
                         },
 			            {
                             "$ref": "#/components/parameters/server_method",
@@ -5007,9 +5019,18 @@
                     "type": "string"
                 }
             },
-            "server_resource_path":{
-                "description":"Used to send resource path to microservice from server",
-                "name":	"route_path",
+            "server_microservice":{
+                "description":"Used to identify microservice",
+                "name":	"microservice",
+                "in":"path",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "server_microservice_service":{
+                "description":"Used to identify microservice service",
+                "name":	"service",
                 "in":"path",
                 "required":false,
                 "schema":{
@@ -5018,7 +5039,7 @@
             },
             "server_method":{
                 "description":"Used to send method to microservice from server",
-                "name":	"route_path",
+                "name":	"method",
                 "in":"path",
                 "required":false,
                 "schema":{

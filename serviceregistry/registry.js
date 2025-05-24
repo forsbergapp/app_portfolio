@@ -30,7 +30,7 @@ const registryConfigServices = async servicename =>{
  * @description Get microservice API version
  * @function
  * @param {microservice_registry_service} service 
- * @returns {number}
+ * @returns {Promise.<number>}
  */
 const registryMicroserviceApiVersion = async service =>(await registryConfigServices(service)).config.filter((/**@type{*}*/row)=>'APP_REST_API_VERSION' in row)[0].APP_REST_API_VERSION;
 
