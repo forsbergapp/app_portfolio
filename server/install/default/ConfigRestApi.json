@@ -129,8 +129,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_id",
-                            "in":"path",
-                            "required":true
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/server_authorization",
@@ -337,8 +336,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_data_app_id",
-                            "in":"query",
-                            "required":true
+                            "in":"query"
                         }
                 ],
                 "responses": {
@@ -595,10 +593,16 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_app_id":{
+                                                "$ref": "#/components/parameters/IAM_iam_user_app_id",
                                                 "required":false
                                             },
                                             "IAM_iam_user_id":{
+                                                "$ref": "#/components/parameters/IAM_iam_user_id",
                                                 "required":false
+                                            },
+                                            "type":{
+                                                "type":"string",
+                                                "required":true
                                             }
                                         },
                                         "additionalProperties":true
@@ -1079,11 +1083,16 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
+                                            "IAM_module_app_id": {
+                                                "$ref": "#/components/parameters/IAM_module_app_id",
+                                                "required":false
+                                            },
                                             "IAM_data_app_id": {
                                                 "$ref": "#/components/parameters/IAM_data_app_id"
                                             },
                                             "type":{
-                                                "type":"string"
+                                                "type":"string",
+                                                "required":true
                                             }
                                         },
                                         "additionalProperties":true
@@ -1338,14 +1347,23 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_app_id":{
+                                                "$ref": "#/components/parameters/IAM_iam_user_app_id",
                                                 "required":false
                                             },
                                             "IAM_iam_user_id":{
+                                                "$ref": "#/components/parameters/IAM_iam_user_id",
+                                                "required":false
+                                            },
+                                            "IAM_module_app_id": {
+                                                "$ref": "#/components/parameters/IAM_module_app_id",
                                                 "required":false
                                             },
                                             "IAM_data_app_id": {
-                                                "$ref": "#/components/parameters/IAM_data_app_id",
-                                                "required":false
+                                                "$ref": "#/components/parameters/IAM_data_app_id"
+                                            },
+                                            "type":{
+                                                "type":"string",
+                                                "required":true
                                             }
                                         },
                                         "additionalProperties":true
@@ -1385,8 +1403,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_id",
-                            "in":"path",
-                            "required":true
+                            "in":"path"
                         },
                         {
                             "name":"detailchoice",
@@ -1437,8 +1454,7 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_id":{
-                                                "required":true,
-                                                "type":"number"
+                                                "$ref":"#/components/parameters/IAM_iam_user_id"
                                             },
                                             "iam_user_id_follow":{
                                                 "required":true,
@@ -1494,8 +1510,7 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_id":{
-                                                "required":true,
-                                                "type":"number"
+                                                "$ref":"#/components/parameters/IAM_iam_user_id"
                                             }
                                         }
                                     }
@@ -1542,8 +1557,7 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_id":{
-                                                "required":true,
-                                                "type":"number"
+                                                "$ref":"#/components/parameters/IAM_iam_user_id"
                                             },
                                             "iam_user_id_like":{
                                                 "required":true,
@@ -1599,8 +1613,7 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_id":{
-                                                "required":true,
-                                                "type":"number"
+                                                "$ref":"#/components/parameters/IAM_iam_user_id"
                                             }
                                         }
                                     }
@@ -1639,18 +1652,15 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_app_id",
-                            "in":"path",
-                            "required":true
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_id",
-                            "in":"query",
-                            "required":true
+                            "in":"query"
                         },
                         {
                             "$ref": "#/components/parameters/IAM_data_app_id",
-                            "in":"query",
-                            "required":true
+                            "in":"query"
                         }
                 ],
                 "responses": {
@@ -1693,8 +1703,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_app_id",
-                            "in":"path",
-                            "required":true
+                            "in":"path"
                         }
                 ],
                 "requestBody":{
@@ -1706,12 +1715,10 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_data_app_id": {
-                                                "$ref": "#/components/parameters/IAM_data_app_id",
-                                                "required":true
+                                                "$ref": "#/components/parameters/IAM_data_app_id"
                                             },
                                             "IAM_iam_user_id": {
-                                                "$ref": "#/components/parameters/IAM_iam_user_id",
-                                                "required":true
+                                                "$ref": "#/components/parameters/IAM_iam_user_id"
                                             },
                                             "json_data":{
                                                 "required":true,
@@ -1825,8 +1832,7 @@
                                                 "type":"string"
                                             },
                                             "IAM_iam_user_app_id":{
-                                                "required":true,
-                                                "type":"number"
+                                                "$ref": "#/components/parameters/IAM_iam_user_app_id"
                                             }
                                         }
                                     }
@@ -1884,8 +1890,7 @@
                                                 "type":"string"
                                             },
                                             "IAM_iam_user_app_id":{
-                                                "required":true,
-                                                "type":"number"
+                                                "$ref": "#/components/parameters/IAM_iam_user_app_id"
                                             }
                                         }
                                     }
@@ -1935,8 +1940,7 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_app_id":{
-                                                "required":true,
-                                                "type":"number"
+                                                "$ref": "#/components/parameters/IAM_iam_user_app_id"
                                             }
                                         }
                                     }
@@ -2087,8 +2091,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_app_id",
-                            "in":"path",
-                            "required":true
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/server_ip",
@@ -2124,12 +2127,10 @@
                                                 "type":"string"
                                             },
                                             "IAM_iam_user_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_id",
-                                                "required":true
+                                                "$ref": "#/components/parameters/IAM_iam_user_id"
                                             },
                                             "IAM_data_app_id":{
-                                                "$ref": "#/components/parameters/IAM_data_app_id",
-                                                "required":true
+                                                "$ref": "#/components/parameters/IAM_data_app_id"
                                             }
                                         }
                                     }
@@ -2168,8 +2169,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_id",
-                            "in":   "path",
-                            "required":true
+                            "in":   "path"
                         }
                 ],
                 "responses": {
@@ -2212,8 +2212,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_id",
-                            "in":   "path",
-                            "required":true
+                            "in":   "path"
                         },
                         {
                             "$ref": "#/components/parameters/server_ip",
@@ -3074,18 +3073,15 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_app_id",
-                            "in":"path",
-                            "required":true
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_id",
-                            "in":"query",
-                            "required":true
+                            "in":"query"
                         },
                         {
                             "$ref": "#/components/parameters/IAM_data_app_id",
-                            "in":"query",
-                            "required":true
+                            "in":"query"
                         }
                 ],
                 "responses": {
@@ -3141,12 +3137,10 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_data_app_id": {
-                                                "$ref": "#/components/parameters/IAM_data_app_id",
-                                                "required":true
+                                                "$ref": "#/components/parameters/IAM_data_app_id"
                                             },
                                             "IAM_iam_user_id": {
-                                                "$ref": "#/components/parameters/IAM_iam_user_id",
-                                                "required":true
+                                                "$ref": "#/components/parameters/IAM_iam_user_id"
                                             },
                                             "json_data":{
                                                 "required":true,
@@ -3713,8 +3707,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_id",
-                            "in":   "path",
-                            "required":true
+                            "in":   "path"
                         }
                 ],
                 "responses": {
@@ -3757,8 +3750,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_id",
-                            "in":   "path",
-                            "required":true
+                            "in":   "path"
                         },
                         {
                             "$ref": "#/components/parameters/server_ip",
@@ -3950,8 +3942,8 @@
                                                 "type":"string"
                                             },
                                             "type":{
-                                                "required":true,
-                                                "type":"string"
+                                                "type":"string",
+                                                "required":true                                                
                                             },
                                             "user_level":{
                                                 "type":"string"
@@ -4939,9 +4931,25 @@
                     "type": "number"
                 }
             },
+            "IAM_iam_user_app_id":{
+                "description":"iam_user_app.id to be authenticated in IAM can be in path or in body, admin does not use IAM authentication",
+                "name":	"iam_user_app_id",
+                "required":true,
+                "schema":{
+                    "type": "number"
+                }
+            },
+            "IAM_module_app_id":{
+                "description":"App id for an App Module to be authenticated in IAM that user has access to, can be in query or in body, admin does not use IAM authentication",
+                "name":	"module_app_id",
+                "required":true,
+                "schema":{
+                    "type": "number"
+                }
+            },
             "IAM_data_app_id":{
-                "description":"App id to be authenticated in IAM that user has access to, can be in query or in body, admin does not use IAM authentication",
-                "name":	"IAM_data_app_id",
+                "description":"App id for data to be authenticated in IAM that user has access to, can be in query or in body, admin does not use IAM authentication",
+                "name":	"data_app_id",
                 "required":true,
                 "schema":{
                     "type": "number"
