@@ -289,51 +289,5 @@ const bffStart = async (req, res) =>{
                 null;
     }
 };
-/**
- * @name bffServer
- * @description BFF called from server
- * @function
- * @param {number|null} app_id
- * @param {server_bff_parameters} bff_parameters
- * @returns {Promise<(*)>}
- */
- const bffServer = async (app_id, bff_parameters) => {
-    const  {iamUtilMessageNotAuthorized} = await import('./iam.js');
-    return new Promise((resolve, reject) => {
-        if (app_id !=null && bff_parameters.endpoint){
-            serverREST_API({  app_id:app_id, 
-                            endpoint:bff_parameters.endpoint,
-                            method:bff_parameters.method.toUpperCase(), 
-                            ip:bff_parameters.ip, 
-                            host:bff_parameters.host ?? '', 
-                            url:bff_parameters.url ?? '',
-                            user_agent:bff_parameters.user_agent, 
-                            accept_language:bff_parameters.accept_language, 
-                            idToken:bff_parameters.idToken, 
-                            authorization:bff_parameters.authorization ?? '', 
-                            parameters:bff_parameters.query, 
-                            body:bff_parameters.body,
-                            res:bff_parameters.res})
-            .then(result=>resolve(result))
-            .catch((/**@type{server_server_error}*/error)=>{
-                Log.post({  app_id:app_id, 
-                    data:{  object:'LogServiceError', 
-                            service:{   service:bff_parameters.endpoint,
-                                        parameters:bff_parameters.query
-                                    },
-                            log:error
-                        }
-                    }).then(() => {
-                        reject(error);
-                });
-            });
-        }
-        else{
-            //required parameters not provided
-            reject({
-                message: iamUtilMessageNotAuthorized()
-            });
-        }
-    });
-};
-export{bffInit, bffStart, bff, bffServer};
+
+export{bffInit, bffStart, bff};
