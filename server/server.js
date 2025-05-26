@@ -626,7 +626,9 @@ const serverJs = async () => {
             const ID_TOKEN_KEY ='id-token';
             const idToken =role == 'APP'?
                             '':
-                                req.url.split('/')[2]?.toUpperCase().indexOf('EXTERNAL')>-1?
+                                //All external roles and microservice do not use AppId Token
+                                (req.url.split('/')[2]?.toUpperCase().indexOf('EXTERNAL')>-1 ||
+                                 req.url.split('/')[2]?.toUpperCase().indexOf('MICROSERVICE')>-1)?
                                     '':
                                         /**@ts-ignore */
                                         req.headers[ID_TOKEN_KEY].replace('Bearer ',''); 
@@ -682,6 +684,8 @@ const serverJs = async () => {
                 case req.path.startsWith('/bff/app_external/v1') && req.method=='POST':
                 case req.path.startsWith('/bff/app_access_external/v1') && req.method=='POST':
                 case req.path.startsWith('/bff/admin/v1') :
+                case req.path.startsWith('/bff/microservice/v1'):
+                case req.path.startsWith('/bff/microservice_auth/v1'):
                 case req.path.startsWith('/bff/iam/v1') && req.method=='POST':
                 case req.path.startsWith('/bff/iam_signup/v1') &&req.method=='POST':{
                     await bffRoute();

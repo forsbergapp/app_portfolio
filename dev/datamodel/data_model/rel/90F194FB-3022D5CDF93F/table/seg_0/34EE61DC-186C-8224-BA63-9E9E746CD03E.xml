@@ -16,6 +16,18 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="app_id" id="D97B3DBA-2136-D05B-CAC7-4554A601B6DB">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-26 06:59:25 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="10108766-DA76-1DCA-4FA0-177853F6AF9D" referredColumn="B012AC67-F394-59D1-D892-D9E6735C213C"/>
+</associations>
+</Column>
 <Column name="service_registry_id" id="9EA3246D-6329-9661-3301-68049A4479C3">
 <createdBy>admin</createdBy>
 <createdTime>2025-05-24 18:15:32 UTC</createdTime>
@@ -106,6 +118,17 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="9EA3246D-6329-9661-3301-68049A4479C3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="6A651F60-2CB3-6C1A-6418-E18A6A283CE1" name="IamMicroserviceToken_App_FK">
+<createdBy>admin</createdBy>
+<createdTime>2025-05-26 06:59:25 UTC</createdTime>
+<generatorID>F4558357-8BC9-776A-C982-D5C267FC4420</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D97B3DBA-2136-D05B-CAC7-4554A601B6DB"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

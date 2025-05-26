@@ -27,6 +27,7 @@ const get = parameters => {return {result:ORM.getObject(parameters.app_id, 'IamM
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null &&
+        data.app_id != null &&
         data.service_registry_id != null &&
         data.service_registry_name != null &&
         data.res != null &&
@@ -39,6 +40,7 @@ const post = async (app_id, data) => {
             const data_new = {};
             data_new.id = Date.now();
             //required
+            data_new.app_id =data.app_id; 
             data_new.service_registry_id = data.service_registry_id;
             data_new.service_registry_name = data.service_registry_name;
             data_new.res = data.res;
