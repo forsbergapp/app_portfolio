@@ -1386,6 +1386,7 @@
  *              'content-type': string, 
  *              host:string, 
  *              'sec-fetch-mode':string,
+ *              'sec-fetch-dest':string,
  *              accept:string, 
  *              referer:string,
  *              'x-request-id':string,

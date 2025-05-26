@@ -598,12 +598,12 @@ const serverUtilAppLine = () =>{
 };
 
 /**
- * @name serverJs
+ * @name server
  * @description Server app using Express pattern
  * @function
  * @returns {Promise<*>}
  */
-const serverJs = async () => {
+const server = async () => {
     const Log = await import('./db/Log.js');
     const ConfigServer = await import('./db/ConfigServer.js');
     const {iamUtilMessageNotAuthorized} = await import('./iam.js');
@@ -613,103 +613,7 @@ const serverJs = async () => {
      * @param {server_server_res} res
      * @returns {Promise.<*>}
      */
-    const app = async (req, res)=>{
-        /**
-         * @description Identifies endpoint role and authenticate and 
-         *              authorize requests using IAM, except APP endpoint role, before calling BFF
-         * @param {string|null} role 
-         * @returns {Promise.<void>}
-         */
-        const bffRoute = async (role=null) =>{
-            const {bff} = await import('./bff.js');
-            const {iamAuthenticateUserCommon} = await import('./iam.js');
-            const ID_TOKEN_KEY ='id-token';
-            const idToken =role == 'APP'?
-                            '':
-                                //All external roles and microservice do not use AppId Token
-                                (req.url.split('/')[2]?.toUpperCase().indexOf('EXTERNAL')>-1 ||
-                                 req.url.split('/')[2]?.toUpperCase().indexOf('MICROSERVICE')>-1)?
-                                    '':
-                                        /**@ts-ignore */
-                                        req.headers[ID_TOKEN_KEY].replace('Bearer ',''); 
-            const endpoint_role = role=='APP'?'APP':req.url.split('/')[2]?.toUpperCase();
-            /**@type{server_bff_parameters} */
-            const bff_parameters = {
-                                    //request
-                                    host: req.headers.host ?? '', 
-                                    url:req.originalUrl,
-                                    method: req.method,
-                                    query: req.query?.parameters ?? '',
-                                    body: req.body,
-                                    idToken:  idToken, 
-                                    authorization:  req.headers.authorization, 
-                                    //metadata
-                                    ip: req.headers['x-forwarded-for'] || req.ip, 
-                                    user_agent: req.headers['user-agent'], 
-                                    accept_language: req.headers['accept-language'], 
-                                    //response
-                                    res: res,
-                                    /**@ts-ignore */
-                                    endpoint:endpoint_role
-                                };
-            if (endpoint_role == 'APP')
-                await bff(bff_parameters);
-            else
-                await iamAuthenticateUserCommon({
-                        idToken: idToken, 
-                        /**@ts-ignore */
-                        endpoint:endpoint_role,
-                        authorization: req.headers.authorization, 
-                        host: req.headers.host ?? '', 
-                        ip: req.ip, 
-                        res:res, next:()=>
-                            bff(bff_parameters)
-                        });
-        };
-        /**
-         * @description Routes request
-         * @param {server_server_req} req
-         * @param {server_server_res} res
-         * @returns {Promise.<*>}
-         */
-        const serverRoute = async (req, res) =>{
-            //REST API 
-            //URI syntax implemented:
-            //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
-            //URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-            switch (true){
-                case req.path.startsWith('/bff/app_id/v1'):
-                case req.path.startsWith('/bff/app_access/v1') :
-                case req.path.startsWith('/bff/app_access_verification/v1') :
-                case req.path.startsWith('/bff/app_external/v1') && req.method=='POST':
-                case req.path.startsWith('/bff/app_access_external/v1') && req.method=='POST':
-                case req.path.startsWith('/bff/admin/v1') :
-                case req.path.startsWith('/bff/microservice/v1'):
-                case req.path.startsWith('/bff/microservice_auth/v1'):
-                case req.path.startsWith('/bff/iam/v1') && req.method=='POST':
-                case req.path.startsWith('/bff/iam_signup/v1') &&req.method=='POST':{
-                    await bffRoute();
-                    break;
-                }
-                case req.method=='GET':{
-                    //app asset, common asset, info page, report and app
-                    await bffRoute('APP');
-                    break;
-                }
-                default:{
-                    serverResponse({result_request:{http:400, 
-                                                    code:null, 
-                                                    text:iamUtilMessageNotAuthorized(), 
-                                                    developerText:'',
-                                                    moreInfo:'',
-                                                    type:'HTML'},
-                                    host:req.headers.host,
-                                    route:null,
-                                    res:res});
-                }
-            }
-        };
-        //set used functionality as in Express
+    const app = async (req, res)=>{       
         const read_body = async () =>{
             return new Promise((resolve,reject)=>{
                 if (req.headers['content-type'] =='application/json'){
@@ -806,10 +710,10 @@ const serverJs = async () => {
                                     res.end();
                                 };
             //Backend for frontend (BFF) start
-            const bffService =      await import('./bff.js');
-            const resultbffInit =   await bffService.bffInit(req, res);
+            const bff =             await import('./bff.js');
+            const resultbffInit =   await bff.bffInit(req, res);
             if (resultbffInit.reason == null){
-                const resultbffStart = req.method=='GET'?await bffService.bffStart(req, res):{reason:null};
+                const resultbffStart = req.method=='GET'?await bff.bffStart(req, res):{reason:null};
                 switch (resultbffStart.reason){
                     case 'REDIRECT':{
                         res.redirect(resultbffStart.redirect);
@@ -820,8 +724,59 @@ const serverJs = async () => {
                         break;
                     }
                     default:{
-                        //Route request
-                        return serverRoute(req, res);
+                        const endpoint_role = req.headers['sec-fetch-mode']=='navigate'||
+                                                [   'document', // or req.headers['sec-fetch-mode']=='navigate'
+                                                    'servieworker',
+                                                    'image', 
+                                                    'script', 
+                                                    'style', 
+                                                    'font'].includes(req.headers['sec-fetch-dest'])?
+                                                    'APP':
+                                                        //req.headers['sec-fetch-dest'] = 'empty'
+                                                        req.url.split('/')[2]?.toUpperCase();
+                        const ID_TOKEN_KEY ='id-token';
+                        const idToken =endpoint_role == 'APP'?
+                                        '':
+                                            //All external roles and microservice do not use AppId Token
+                                            (req.url.split('/')[2]?.toUpperCase().indexOf('EXTERNAL')>-1 ||
+                                                req.url.split('/')[2]?.toUpperCase().indexOf('MICROSERVICE')>-1)?
+                                                '':
+                                                    /**@ts-ignore */
+                                                    req.headers[ID_TOKEN_KEY]?.replace('Bearer ',''); 
+                        
+                        /**@type{server_bff_parameters} */
+                        const bff_parameters = {
+                                                //request
+                                                host: req.headers.host ?? '', 
+                                                url:req.originalUrl,
+                                                method: req.method,
+                                                query: req.query?.parameters ?? '',
+                                                body: req.body,
+                                                idToken:  idToken, 
+                                                authorization:  req.headers.authorization, 
+                                                //metadata
+                                                ip: req.headers['x-forwarded-for'] || req.ip, 
+                                                user_agent: req.headers['user-agent'], 
+                                                accept_language: req.headers['accept-language'], 
+                                                //response
+                                                res: res,
+                                                /**@ts-ignore */
+                                                endpoint:endpoint_role
+                                            };
+                        if (endpoint_role == 'APP')
+                            return await bff.bff(bff_parameters);
+                        else
+                            //use middleware to authenticate access before bff
+                            return (await import('./iam.js')).iamAuthenticateUserCommon({
+                                    idToken: idToken, 
+                                    /**@ts-ignore */
+                                    endpoint:endpoint_role,
+                                    authorization: req.headers.authorization, 
+                                    host: req.headers.host ?? '', 
+                                    ip: req.ip, 
+                                    res:res, next:()=>
+                                        bff.bff(bff_parameters)
+                                    });
                     }
                 }
             }
@@ -1201,7 +1156,7 @@ const serverStart = async () =>{
                                             
         const NETWORK_INTERFACE = ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'NETWORK_INTERFACE'}}).result;
         //START HTTP SERVER                                                     
-        http.createServer(await serverJs()).listen(ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTP_PORT'}}).result, NETWORK_INTERFACE, () => {
+        http.createServer(await server()).listen(ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTP_PORT'}}).result, NETWORK_INTERFACE, () => {
             Log.post({   app_id:0, 
                 data:{  object:'LogServerInfo', 
                         log:'HTTP Server up and running on PORT: ' + ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTP_PORT'}}).result
@@ -1217,7 +1172,7 @@ const serverStart = async () =>{
                 key: HTTPS_KEY.toString(),
                 cert: HTTPS_CERT.toString()
             };
-            https.createServer(options,  await serverJs()).listen(ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_PORT'}}).result,NETWORK_INTERFACE, () => {
+            https.createServer(options,  await server()).listen(ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_PORT'}}).result,NETWORK_INTERFACE, () => {
                 Log.post({   app_id:0, 
                     data:{  object:'LogServerInfo', 
                             log:'HTTPS Server up and running on PORT: ' + ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_PORT'}}).result
