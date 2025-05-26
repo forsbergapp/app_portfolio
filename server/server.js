@@ -976,7 +976,7 @@ const serverREST_API = async (routesparameters) =>{
                                         parametersData[parameter].required && 
                                         (routesparameters.method=='GET'?
                                             ((app_query?.has(parameter)??false)==false):
-                                                parameter in routesparameters.body)
+                                                (parameter in routesparameters.body)==false)
                                         )).length==0){ 
                 Object.keys(parametersData).forEach(key=>
                     parametersData[key]= (typeof parametersData[key] == 'object' && parametersData[key]!=null)?
