@@ -865,6 +865,9 @@ const configDefault = async () => {
                                                                             //generate secrets
                                                                             config_server.SERVICE_IAM.map((/**@type{server_db_config_server_service_iam}*/row)=>{
                                                                                 for (const key of Object.keys(row)){
+                                                                                    if (key== 'MICROSERVICE_TOKEN_SECRET'){
+                                                                                        row.MICROSERVICE_TOKEN_SECRET = securitySecretCreate();
+                                                                                    }
                                                                                     if (key== 'ADMIN_TOKEN_SECRET'){
                                                                                         row.ADMIN_TOKEN_SECRET = securitySecretCreate();
                                                                                     }

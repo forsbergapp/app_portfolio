@@ -161,7 +161,7 @@
 
 /** 
  * @description BFF server_bff_endpoint_type
- * @typedef {'APP'|'APP_ID'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_EXTERNAL'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM'|'IAM_SIGNUP'|'SERVER'} server_bff_endpoint_type
+ * @typedef {'APP'|'APP_ID'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_EXTERNAL'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM'|'IAM_SIGNUP'|'SERVER'|'MICROSERVICE'|'MICROSERVICE_AUTH'} server_bff_endpoint_type
  */
 
 /**
@@ -392,15 +392,16 @@
 /** 
  * @description DB TABLE IamMicroserviceToken
  * @memberof dbObjects
- * @typedef {{id:     number,
- *            service_registry_id: number,
- *            service_registry_name: string,
- *		      res:	  0|1,
- *   	      token:  string,
- *		      ip:     string,
- *		      ua:     string|null,
- *            host:   string|null,
- *		      created:string}} server_db_table_IamMicroserviceToken
+ * @typedef {{id?:                  number,
+ *            app_id:               number,
+ *            service_registry_id:  number,
+ *            service_registry_name:string,
+ *		      res:	                0|1,
+ *   	      token:                string,
+ *		      ip:                   string,
+ *		      ua:                   string|null,
+ *            host:                 string|null,
+ *		      created?:string}} server_db_table_IamMicroserviceToken
  */
 
 /**
@@ -842,6 +843,8 @@
  * @typedef {{  AUTHENTICATE_REQUEST_ENABLE:string,
  *              AUTHENTICATE_REQUEST_OBSERVE_LIMIT:string,
  *              AUTHENTICATE_REQUEST_IP:string,
+ *              MICROSERVICE_TOKEN_EXPIRE_ACCESS:string,
+ *              MICROSERVICE_TOKEN_SECRET:string,
  *              ADMIN_TOKEN_EXPIRE_ACCESS:string,
  *              ADMIN_TOKEN_SECRET:string,
  *              ADMIN_PASSWORD_ENCRYPTION_KEY:string,
@@ -1260,7 +1263,7 @@
 
 /**
  * @description IAM server_iam_access_token_claim_scope_type
- * @typedef{'USER'|'APP'|'REPORT'|'MAINTENANCE'|'APP_EXTERNAL'} server_iam_access_token_claim_scope_type
+ * @typedef{'USER'|'APP'|'MICROSERVICE'|'REPORT'|'MAINTENANCE'|'APP_EXTERNAL'} server_iam_access_token_claim_scope_type
  */
 /**
  * @description IAM server_iam_access_token_claim
