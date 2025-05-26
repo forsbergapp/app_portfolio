@@ -222,9 +222,9 @@ const component = async props => {
                                                     
     const CONFIG_REST_API = props.methods.ConfigRestApi.get({app_id:props.data.app_id}).result;
     //return object with 'servers key modified with list from configuration
-    CONFIG_REST_API.result.servers = props.methods.App.get({app_id:props.data.app_id, resource_id:null}).result
+    CONFIG_REST_API.servers = props.methods.App.get({app_id:props.data.app_id, resource_id:null}).result
                         .map((/**@type{server_db_table_App}*/row)=>{
-                            return {url:(HTTPS_ENABLE? 'https://':'http://') + 
+                            return {url:(HTTPS_ENABLE=='1'? 'https://':'http://') + 
                                                                         row.subdomain + '.' +
                                                                         HOST +
                                                                         ((PORT==80||PORT==443)?'':`/:${PORT}`)
