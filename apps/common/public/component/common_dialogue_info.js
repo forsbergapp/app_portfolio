@@ -45,6 +45,7 @@ const template = props => `
 * @function
 * @param {{data:       {
 *                      commonMountdiv:string,
+*                      common_app_id:number,
 *                      app_copyright:string,
 *                      app_link_url:string,
 *                      app_link_title:string,
@@ -71,7 +72,8 @@ const component = async props => {
                         path:   '/app-common-module/COMMON_MESSAGE_CONTACT', 
                         method: 'POST', 
                         body:   {   type:'FUNCTION',
-                                    message:props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_info_contact_message').textContent},
+                                    message:props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_info_contact_message').textContent,
+                                    IAM_data_app_id:props.data.common_app_id},
                         authorization_type:'APP_ID'
                     })
         .then((/**@type{string}*/result)=>{

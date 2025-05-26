@@ -2691,6 +2691,7 @@ const commonEvent = async (event_type,event=null) =>{
                             commonComponentRender({
                             mountDiv:   'common_dialogue_info',
                             data:       {
+                                        common_app_id:COMMON_GLOBAL.common_app_id,
                                         app_copyright:COMMON_GLOBAL.app_copyright,
                                         app_link_url:COMMON_GLOBAL.app_link_url,
                                         app_link_title:COMMON_GLOBAL.app_link_title,
