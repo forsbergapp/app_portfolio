@@ -39,31 +39,31 @@ const test = async t =>
         ];
         }).then(result=>resolve(result)));
     }),
-    await t.describe('Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps', async ()=> {
+    await t.describe('Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps except common app id', async ()=> {
         return await new Promise(resolve=>
         t.it('should return values', async () =>{
             const App = await import('../server/db/App.js');
-
+            const ConfigServer = await import('../server/db/ConfigServer.js');
+            const {serverUtilNumberValue} = await import('../server/server.js');
             /**@type{server_db_table_App[]}*/
-            const apps = App.get({app_id:0, resource_id:null}).result;
-
-            for (const app of apps){
-                const bff = await import('../server/bff.js');
-                /**@type{server_bff_parameters}*/
-                const parametersBFF = { endpoint:'SERVER',
-                    host:null,
-                    url:'/bff/app_id/v1/geolocation/ip',
-                    method:'GET', 
-                    query:'ip=127.0.0.1',
-                    body:{},
-                    authorization:null,
-                    ip:'127.0.0.1', 
-                    user_agent:'*', 
-                    accept_language:'',
-                    /**@ts-ignore */
-                    res:null};
-                const result = await bff.bffServer(app.id, parametersBFF)
-                                    .catch(()=>{return {};});
+            const apps = App.get({app_id:0, resource_id:null})
+                        .result.filter((/**@type{server_db_table_App}*/app)=>
+                            app.id !=serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0);
+            const {microserviceRequest} = await import('../serviceregistry/microservice.js');
+            //
+            for (const app of apps) {
+                //get GPS from IP
+                const result = await microserviceRequest({  app_id:app.id,
+                                                                microservice:'GEOLOCATION',
+                                                                service:'IP', 
+                                                                method:'GET',
+                                                                data:{ip:'127.0.0.1'},
+                                                                ip:'127.0.0.1',
+                                                                user_agent:'*',
+                                                                accept_language:'',
+                                                                endpoint:'SERVER'
+                                                            })
+                                    .catch(error=>{return {http:error.http};});         
                 if (result.http)
                     return [
                         /**@ts-ignore */
@@ -87,28 +87,20 @@ const test = async t =>
         return await new Promise(resolve=>
         t.it('should return values ', async () =>{
             const App = await import('../server/db/App.js');
-            const ConfigServer = await import('../server/db/ConfigServer.js');
-            const {serverUtilNumberValue} = await import('../server/server.js');
-            const bff = await import('../server/bff.js');
+            const {default:worldcities} = await import('../apps/common/src/functions/common_worldcities_city_random.js');
 
             /**@type{server_db_table_App[]}*/
             const apps = App.get({app_id:0, resource_id:null}).result;
             
-            for (const app of apps){    
-                /**@type{server_bff_parameters}*/
-                const parametersBFF = { endpoint:'APP_ID',
-                    host:null,
-                    url:'/bff/app_id/v1/app-common-module/COMMON_WORLDCITIES_CITY_RANDOM',
-                    method:'POST', 
-                    query:'',
-                    body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}).result)},
-                    authorization:null,
-                    ip:':1', 
-                    user_agent:'*', 
-                    accept_language:'',
-                    /**@ts-ignore */
-                    res:null};
-                const result = await bff.bffServer(app.id, parametersBFF)
+            for (const app of apps){ 
+                const result = await worldcities({ app_id:app.id,
+                                                        data:null,
+                                                        user_agent:'*',
+                                                        ip:'127.0.0.1',
+                                                        host:'',
+                                                        idToken:'', 
+                                                        authorization:'',
+                                                        locale:''})
                                     .then(result=>result.result)
                                     .catch(()=>{return {};});
                 return [

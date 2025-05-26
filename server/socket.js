@@ -29,25 +29,22 @@ let SOCKET_CONNECTED_CLIENTS = [];
  *               timezone:string}>}
  */
 const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, headers_accept_language) =>{
-    const { bffServer } = await import('./bff.js');
+    const {microserviceRequest} = await import('../serviceregistry/microservice.js');
+
     //get GPS from IP
-    /**@type{server_bff_parameters}*/
-    const parameters = {endpoint:'SERVER',
-                        host:null,
-                        url:'/bff/app_id/v1/geolocation/ip',
-                        method:'GET', 
-                        query:`ip=${ip}`,
-                        body:{},
-                        authorization:null,
-                        ip:ip, 
-                        user_agent:headers_user_agent, 
-                        accept_language:headers_accept_language,
-                        /**@ts-ignore */
-                        res:null};
+    const result_geodata = await microserviceRequest({  app_id:app_id,
+                                                    microservice:'GEOLOCATION',
+                                                    service:'IP', 
+                                                    method:'GET',
+                                                    data:{ip:ip},
+                                                    ip:ip,
+                                                    user_agent:headers_user_agent,
+                                                    accept_language:headers_accept_language,
+                                                    endpoint:'SERVER'
+                                                })
+                                                .then((/**@type{*}*/result_gps)=>result_gps.http?null:result_gps.result)
+                                                .catch(()=>null);
     
-    const result_geodata = await bffServer(app_id, parameters)
-                                    .then((/**@type{*}*/result_gps)=>result_gps.http?null:result_gps.result)
-                                    .catch(()=>null);
     const place = result_geodata?
                     (result_geodata.city + ', ' +
                     result_geodata.regionName + ', ' +
