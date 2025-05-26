@@ -1006,7 +1006,9 @@ const serverREST_API = async (routesparameters) =>{
                             ((parametersData.IAM_user_id?.required       && parametersData.IAM_user_id?.data !=undefined)        ||(parametersData.IAM_user_id?.required ?? false) == false)){
                 //replace data and required keys used for authentication with a value
                 Object.keys(parametersData).forEach(key=>
-                    parametersData[key]= typeof parametersData[key] == 'object'?parametersData[key].data:parametersData[key]
+                    parametersData[key]= (typeof parametersData[key] == 'object' && parametersData[key]!=null)?
+                                            parametersData[key].data:
+                                                parametersData[key]
                 );
                 if ('IAM_module_app_id' in parametersData ||routesparameters.endpoint=='APP_ACCESS_EXTERNAL'){
                     //APP_ACCESS_EXTERNAL can only run function using same appid used by host and access data for same app id
