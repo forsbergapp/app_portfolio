@@ -973,7 +973,7 @@ const serverREST_API = async (routesparameters) =>{
                                 parameter=='server_response'?
                                     false:
                                         ((typeof parametersData[parameter] == 'object') &&
-                                        parametersData[parameter].required && 
+                                        parametersData[parameter]?.required && 
                                         (routesparameters.method=='GET'?
                                             ((app_query?.has(parameter)??false)==false):
                                                 (parameter in routesparameters.body)==false)
