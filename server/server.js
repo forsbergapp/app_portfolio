@@ -726,7 +726,7 @@ const server = async () => {
                     default:{
                         const endpoint_role = req.headers['sec-fetch-mode']=='navigate'||
                                                 [   'document', // or req.headers['sec-fetch-mode']=='navigate'
-                                                    'servieworker',
+                                                    'serviceworker',
                                                     'image', 
                                                     'script', 
                                                     'style', 
@@ -841,15 +841,20 @@ const serverREST_API = async (routesparameters) =>{
         else
             return false;
     };
-        
-    const configPath = Object.entries(ConfigRestApi.get({app_id:routesparameters.app_id}).result.paths)
-                        .filter(path=>
-                            path[0].replace('/${IAM_iam_user_app_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
-                            path[0].replace('/${IAM_iam_user_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
-                            path[0].replace('/${IAM_data_app_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
-                            path[0].replace('/${resource_id_number}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
-                            path[0].replace('/${resource_id_string}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path)[0];
-    if (configPath){
+    
+    //get paths and components keys in ConfigRestApi
+    const configPath = (() => { 
+        const { paths, components } = ConfigRestApi.get({app_id:routesparameters.app_id}).result; 
+        return {paths:Object.entries(paths).filter(path=>
+                    path[0].replace('/${IAM_iam_user_app_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
+                    path[0].replace('/${IAM_iam_user_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
+                    path[0].replace('/${IAM_data_app_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
+                    path[0].replace('/${resource_id_number}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
+                    path[0].replace('/${resource_id_string}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path)[0], 
+                    components};
+    })();
+    
+    if (configPath.paths){
         /**
          * Get resource id that all should use '$ref' and match components path
          * All paths should specify required key if this is used for the path
@@ -894,17 +899,38 @@ const serverREST_API = async (routesparameters) =>{
                                                                     Object.values(parameter)[0]=='#/components/parameters/' + key):
                                                                         Object.keys(parameter)[0]=='$ref' && Object.values(parameter)[0]=='#/components/parameters/' + key)[0];
         
-        const methodObj = configPath[1][routesparameters.method.toLowerCase()];
+        const methodObj = configPath.paths[1][routesparameters.method.toLowerCase()];
         if (methodObj){
+            /**
+             * @param {{}} keys
+             * @param {[string,*]} key
+             */
+            const addBodyKey = (keys, key )=>{
+                return {...keys, ...{   [key[0]]:{  
+                                                    data:       key[0]=='server_response'?
+                                                                    routesparameters.res:
+                                                                        routesparameters.body[key[0]],
+                                                    //IAM parameters are required by default
+                                                    required:   key[1]?.required ?? (key[0].startsWith('IAM')?true:false)
+                                                }
+                                    }
+                                };
+            };
             //add parameters using tree shaking pattern
             //so only defined parameters defined using openAPI pattern are sent to functions
             const parametersData = 
                                     routesparameters.method=='GET'?
                                         {...methodObj.parameters
                                                         //include all parameters.in=query
-                                                        .filter((/**@type{*}*/parameter)=>parameter.in =='query')
+                                                        .filter((/**@type{*}*/parameter)=>
+                                                            parameter.in =='query'|| 
+                                                            //component parameter that has in=query
+                                                            (   '$ref' in parameter && 
+                                                                'required' in parameter && 
+                                                                configPath.components.parameters[parameter['$ref'].split('#/components/parameters/')[1]].in == 'query')
+                                                        )
                                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
-                                                            if ('$ref' in key  && key.in =='query')
+                                                            if ('$ref' in key )
                                                                 return {...keys, ...{   
                                                                                     [key['$ref'].split('#/components/parameters/')[1]]:
                                                                                     {
@@ -926,28 +952,12 @@ const serverREST_API = async (routesparameters) =>{
                                                         },{})
                                         }:
                                         //all other methods use body to send data
-                                        //if addtional properties allowed then add to defined parameters or only parameters matching defined parameters
+                                        //if additional properties allowed then add to defined parameters or only parameters matching defined parameters
                                         (methodObj.requestBody?.content && methodObj.requestBody?.content['application/json']?.schema?.additionalProperties)?
                                             {...routesparameters.body,...Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
-                                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
-                                                                                return {...keys, ...{   [key[0]]:{  
-                                                                                                                    data:       routesparameters.body[key[0]],
-                                                                                                                    //IAM parameters are required by default
-                                                                                                                    required:   key[1]?.required ?? (key[0].startsWith('IAM')?true:false)
-                                                                                                                }
-                                                                                                    }
-                                                                                        };
-                                                                            },{})}:
+                                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{})}:
                                                         ((methodObj?.requestBody?.content && Object.keys(methodObj?.requestBody?.content).length>0)?Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
-                                                        .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
-                                                            return {...keys, ...{  [key[0]]:{
-                                                                                                data:       routesparameters.body[key[0]],
-                                                                                                //IAM parameters are required by default
-                                                                                                required:   key[1]?.required ?? (key[0].startsWith('IAM')?true:false)
-                                                                                            }
-                                                                                }
-                                                                    };
-                                                        },{}):{});
+                                                        .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{}):{});
             if (Authenticate({  IAM_iam_user_app_id:    parametersData.IAM_iam_user_app_id?.data,
                                 IAM_iam_user_id:        parametersData.IAM_iam_user_id?.data,
                                 IAM_module_app_id:      parametersData.IAM_module_app_id?.data,
@@ -958,12 +968,16 @@ const serverREST_API = async (routesparameters) =>{
                                                             getParameter('IAM_iam_data_app_id', true) ??        //check if used as resource id
                                                             getParameter('resource_id_string') ?? getParameter('resource_id_number'))?.required ?? false,
                             }) &&
-                            //check required parameters that required parameters have values
-                            ((parametersData.IAM_module_app_id?.required && parametersData.IAM_module_app_id?.data !=undefined)  ||(parametersData.IAM_module_app_id?.required ?? false) == false) &&
-                            ((parametersData.IAM_data_app_id?.required   && parametersData.IAM_data_app_id?.data !=undefined)    ||(parametersData.IAM_data_app_id?.required ?? false) == false)&&
-                            ((parametersData.IAM_user_app_id?.required   && parametersData.IAM_user_app_id?.data !=undefined)    ||(parametersData.IAM_user_app_id?.required ?? false) == false)&&
-                            ((parametersData.IAM_user_id?.required       && parametersData.IAM_user_id?.data !=undefined)        ||(parametersData.IAM_user_id?.required ?? false) == false)){
-                //replace data and required keys used for authentication with a value
+                            //there is no missing required parameter in the request
+                            Object.keys(parametersData).filter(parameter=> 
+                                parameter=='server_response'?
+                                    false:
+                                        ((typeof parametersData[parameter] == 'object') &&
+                                        parametersData[parameter].required && 
+                                        (routesparameters.method=='GET'?
+                                            ((app_query?.has(parameter)??false)==false):
+                                                parameter in routesparameters.body)
+                                        )).length==0){ 
                 Object.keys(parametersData).forEach(key=>
                     parametersData[key]= (typeof parametersData[key] == 'object' && parametersData[key]!=null)?
                                             parametersData[key].data:
@@ -1000,11 +1014,6 @@ const serverREST_API = async (routesparameters) =>{
                     delete parametersData.IAM_iam_user_id;
                 }
                 
-
-                //if SSE then add res
-                if (methodObj.responses?.[201]?.content?.['text/event-stream'])
-                    parametersData.res = routesparameters.res;
-
                 //read operationId what file to import and what function to execute
                 //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
                 const filePath = '/' + methodObj.operationId.split('.')[0].replaceAll('_','/') + '/' +
@@ -1056,7 +1065,7 @@ const serverREST_API = async (routesparameters) =>{
                 const singleResource = () => functionRESTAPI=='commonModuleRun'?
                                                 false:
                                                     (routesparameters.method!='GET' ||functionRESTAPI=='microserviceRequest')?
-                                                        true: resourceId(configPath[0])!=null;
+                                                        true: resourceId(configPath.paths[0])!=null;
                 //return result using ISO20022 format
                 //send only parameters to the function if declared true
                 const result = await  moduleRESTAPI[functionRESTAPI]({
@@ -1066,7 +1075,7 @@ const serverREST_API = async (routesparameters) =>{
                                 ...(getParameter('server_user_agent')              && {user_agent:     routesparameters.user_agent}),
                                 ...(getParameter('server_accept_language')         && {accept_language:routesparameters.accept_language}),
                                 ...(getParameter('server_host')                    && {host:           routesparameters.host}),
-                                ...(getParameter('locale')                         && {locale:         app_query?.get('locale') ??'en'}),
+                                ...(getParameter('locale')                         && {locale:         parametersData.locale ??'en'}),
                                 ...(getParameter('server_ip')                      && {ip:             routesparameters.ip}),
                                 ...(getParameter('server_microservice')            && {microservice:   getParameter('server_microservice').default}),
                                 ...(getParameter('server_microservice_service')    && {service:        getParameter('server_microservice_service').default}),
@@ -1078,7 +1087,7 @@ const serverREST_API = async (routesparameters) =>{
                                      getParameter('IAM_module_app_id', true)||
                                      getParameter('IAM_data_app_id', true)||
                                      getParameter('resource_id_string')||
-                                     getParameter('resource_id_number'))           && {resource_id:    resourceId(configPath[0])})});
+                                     getParameter('resource_id_number'))           && {resource_id:    resourceId(configPath.paths[0])})});
                 return { ...result,
                             ...{singleResource:singleResource()
                                 }

@@ -26,7 +26,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/locale",
-                            "required":true
+                            "required":false
                         }
                 ],
                 "responses": {
@@ -94,7 +94,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/locale",
-                            "required":true
+                            "required":false
                         }
                 ],
                 "responses": {
@@ -132,24 +132,19 @@
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -158,7 +153,7 @@
                             "content":{
                                 "application/json":{
                                     "schema":{
-                                        "type":"object" ,
+                                        "type":"object",
                                         "properties":{
                                             "verification_type":{
                                                 "type":"string"
@@ -275,16 +270,13 @@
                             }    
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         }
                 ],
                 "responses": {
@@ -557,31 +549,25 @@
                         },
                         {
                             "$ref": "#/components/parameters/locale",
-                            "required":true
+                            "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_host",
-                            "required":true
+                            "$ref": "#/components/parameters/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint",
-                            "required":true
+                            "$ref": "#/components/parameters/server_endpoint"
                         }
                 ],
                 "requestBody":{
@@ -716,19 +702,16 @@
                         },
                         {
                             "$ref": "#/components/parameters/locale",
-                            "required":true
+                            "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint",
-                            "required":true
+                            "$ref": "#/components/parameters/server_endpoint"
                         }
                 ],
                 "responses": {
@@ -783,19 +766,16 @@
                         },
                         {
                             "$ref": "#/components/parameters/locale",
-                            "required":true
+                            "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint",
-                            "required":true
+                            "$ref": "#/components/parameters/server_endpoint"
                         }
                 ],
                 "responses": {
@@ -877,16 +857,13 @@
                             "required":true
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint",
-                            "required":true
+                            "$ref": "#/components/parameters/server_endpoint"
                         }
                 ],
                 "requestBody":{
@@ -988,32 +965,20 @@
                             "required":true
                         },
                         {
-                            "name":"type",
-                            "in":"query",
-                            "required":true,
-                            "schema":{
-                                "type": "string"
-                            }
-                        },
-                        {
                             "$ref": "#/components/parameters/locale",
-                            "required":true
+                            "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint",
-                            "required":true
+                            "$ref": "#/components/parameters/server_endpoint"
                         }
                 ],
                 "responses": {
@@ -1052,27 +1017,22 @@
                         },
                         {
                             "$ref": "#/components/parameters/locale",
-                            "required":true
+                            "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_host",
-                            "required":true
+                            "$ref": "#/components/parameters/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint",
-                            "required":true
+                            "$ref": "#/components/parameters/server_endpoint"
                         }
                 ],
                 "requestBody":{
@@ -1134,7 +1094,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/server_app_id",
+                            "description":"APP EXTERNAL can only run a module that belongs to the app id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
@@ -1143,28 +1104,19 @@
                         },
                         {
                             "$ref": "#/components/parameters/locale",
-                            "required":true
+                            "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "description":"APP EXTERNAL can only run a module that belongs to the app id",
-                            "required":true
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_host",
-                            "required":true
+                            "$ref": "#/components/parameters/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint",
-                            "required":true
+                            "$ref": "#/components/parameters/server_endpoint"
                         }
                 ],
                 "requestBody":{
@@ -1213,7 +1165,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/server_app_id",
+                            "description":"APP EXTERNAL can only run a module that belongs to the app id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
@@ -1222,36 +1175,25 @@
                         },
                         {
                             "$ref": "#/components/parameters/locale",
-                            "required":true
+                            "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "description":"APP EXTERNAL can only run a module that belongs to the app id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_host",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_endpoint",
-                            "required":true
+                            "$ref": "#/components/parameters/server_endpoint"
                         }
                 ],
                 "requestBody":{
@@ -1311,31 +1253,25 @@
                         },
                         {
                             "$ref": "#/components/parameters/locale",
-                            "required":true
+                            "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_host",
-                            "required":true
+                            "$ref": "#/components/parameters/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint",
-                            "required":true
+                            "$ref": "#/components/parameters/server_endpoint"
                         }
                 ],
                 "requestBody":{
@@ -2094,24 +2030,19 @@
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         }
                 ],
                 "requestBody":{
@@ -2215,24 +2146,19 @@
                             "in":   "path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
                         {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         }
                 ],
                 "requestBody":{
@@ -2302,8 +2228,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         }
                 ],
                 "requestBody":{
@@ -2493,24 +2418,19 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -2543,9 +2463,8 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "res":{
-                                                "required":true,
-                                                "type":"string"
+                                            "server_response":{
+                                                "$ref": "#/components/parameters/server_response"
                                             }
                                         }
                                     }
@@ -3321,8 +3240,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         }
                 ],
                 "requestBody":{
@@ -3371,8 +3289,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         }
                 ],
                 "responses": {
@@ -3753,24 +3670,19 @@
                             "in":   "path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
                         {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         }
                 ],
                 "requestBody":{
@@ -4039,20 +3951,16 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -4085,9 +3993,8 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "res":{
-                                                "required":true,
-                                                "type":"string"
+                                            "server_response":{
+                                                "$ref": "#/components/parameters/server_response"
                                             }
                                         }
                                     }
@@ -4126,24 +4033,19 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -4176,9 +4078,8 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "res":{
-                                                "required":true,
-                                                "type":"string"
+                                            "server_response":{
+                                                "$ref": "#/components/parameters/server_response"
                                             }
                                         }
                                     }
@@ -4217,20 +4118,16 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -4288,24 +4185,19 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -4343,24 +4235,19 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         }
                 ],
                 "responses": {
@@ -4394,24 +4281,19 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization",
-                            "required":true
+                            "$ref": "#/components/parameters/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
+                            "$ref": "#/components/parameters/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         }
                 ],
                 "responses": {
@@ -4442,16 +4324,13 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
                         {
-                            "$ref": "#/components/parameters/server_host",
-                            "required":true
+                            "$ref": "#/components/parameters/server_host"
                         },
                         {
                             "$ref": "#/components/parameters/IAM_service",
@@ -4505,34 +4384,27 @@
                             }    
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint",
-                            "required":true
+                            "$ref": "#/components/parameters/server_endpoint"
                         },
 			            {
                             "$ref": "#/components/parameters/server_microservice",
-                            "required":true,
                             "default":"GEOLOCATION"
                         },
                         {
                             "$ref": "#/components/parameters/server_microservice_service",
-                            "required":true,
                             "default":"IP"
                         },
                         {
-                            "$ref": "#/components/parameters/server_method",
-                            "required":true
+                            "$ref": "#/components/parameters/server_method"
                         }
                 ],
                 "responses": {
@@ -4727,34 +4599,27 @@
                             }    
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
+                            "$ref": "#/components/parameters/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
+                            "$ref": "#/components/parameters/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
+                            "$ref": "#/components/parameters/server_accept_language"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint",
-                            "required":true
+                            "$ref": "#/components/parameters/server_endpoint"
                         },
 			            {
                             "$ref": "#/components/parameters/server_microservice",
-                            "required":true,
                             "default":"GEOLOCATION"
                         },
                         {
                             "$ref": "#/components/parameters/server_microservice_service",
-                            "required":true,
                             "default":"PLACE"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_method",
-                            "required":true
+                            "$ref": "#/components/parameters/server_method"
                         }
                 ],
                 "responses": {
@@ -4968,17 +4833,17 @@
                 }
             },
             "locale":{
-                "description":"Used here for regional result that overrides accept_language, contains string either ISO 639-1, ISO 639-1 + '_' + ISO 3166-1 or ISO 639-1 + '_' + ISO 15924 + '_' + ISO 3166-1 using BCP 47 format. Scripts arab, cyrl, guru, hans, hant and latn part of ISO15924 are supported. All characters that Noto Sans font offers are supported and configured. Browsers can have some limited support with known issues of hanidec numbers and hijri transliteration of arabic on some mobile devices or apps.",
+                "description":"Used here for regional result that overrides accept_language, contains string either ISO 639-1, ISO 639-1 + '_' + ISO 3166-1 or ISO 639-1 + '_' + ISO 15924 + '_' + ISO 3166-1 using BCP 47 format. Scripts arab, cyrl, guru, hans, hant and latn part of ISO15924 are supported. All characters that Noto Sans font offers are supported and configured. Browsers can have some limited support with known issues of hanidec numbers and hijri transliteration of arabic on some mobile devices or apps. Parameter is required since server will set value if not used in request",
                 "name":	"locale",
                 "in":"query",
-                "required":false,
+                "required":true,
                 "schema":{
                     "type": "string"
                 }
             },
             "IAM_iam_user_id":{
                 "description":"iam_user.id to be authenticated in IAM can be in query or in body, admin does not use IAM authentication",
-                "name":	"IAM_iam_user_id",
+                "name":	"iam_user_id",
                 "required":true,
                 "schema":{
                     "type": "number"
@@ -5021,7 +4886,7 @@
                 "description":"Used here to send as parameter to a function on the server for security reasons",
                 "name":	"authorization",
                 "in":"header",
-                "required":false,
+                "required":true,
                 "schema":{
                     "type": "string"
                 }
@@ -5030,7 +4895,7 @@
                 "description":"Used here for regional result or security reasons",
                 "name":	"ip",
                 "in":"header",
-                "required":false,
+                "required":true,
                 "schema":{
                     "type": "string"
                 }
@@ -5039,7 +4904,7 @@
                 "description": "Used here to send as parameter to a function on the server and update socket connection or send SSE",
                 "name":	"iam",
                 "in":"query",
-                "required":false,
+                "required":true,
                 "schema":{
                     "type": "string"
                 }
@@ -5048,7 +4913,7 @@
                 "description":"Used in a function for responsive result, statistic or security reasons",
                 "name":	"user_agent",
                 "in":"header",
-                "required":false,
+                "required":true,
                 "schema":{
                     "type": "string"
                 }
@@ -5057,7 +4922,7 @@
                 "description":"Used in a function for regional result, statistic or security reasons",
                 "name":	"accept_language",
                 "in":"header",
-                "required":false,
+                "required":true,
                 "schema":{
                     "type": "string"
                 }
@@ -5066,7 +4931,7 @@
                 "description":"req.headers.host, used in a function for security reasons",
                 "name":	"host",
                 "in":"header",
-                "required":false,
+                "required":true,
                 "schema":{
                     "type": "string"
                 }
@@ -5075,7 +4940,7 @@
                 "description":"Used to prioritize requests for admin, authenticating app modules or for control of APP_EXTERNAL requests",
                 "name":	"endpoint",
                 "in":"path",
-                "required":false,
+                "required":true,
                 "schema":{
                     "type": "string"
                 }
@@ -5084,7 +4949,7 @@
                 "description":"Used to identify microservice",
                 "name":	"microservice",
                 "in":"path",
-                "required":false,
+                "required":true,
                 "schema":{
                     "type": "string"
                 }
@@ -5093,7 +4958,7 @@
                 "description":"Used to identify microservice service",
                 "name":	"service",
                 "in":"path",
-                "required":false,
+                "required":true,
                 "schema":{
                     "type": "string"
                 }
@@ -5102,9 +4967,17 @@
                 "description":"Used to send method to microservice from server",
                 "name":	"method",
                 "in":"path",
-                "required":false,
+                "required":true,
                 "schema":{
                     "type": "string"
+                }
+            },
+            "server_response":{
+                "description":"Use this parameter to set reponse in the body as parameter if response is text/event-stream",
+                "name":	"server_response",
+                "required":true,
+                "schema":{
+                    "type":"object"
                 }
             }
         },
