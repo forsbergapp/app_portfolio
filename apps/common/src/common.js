@@ -97,23 +97,20 @@ const commonClientLocale = accept_language =>{
  * @returns {Promise.<*>}
  */
 const commonGeodata = async parameters =>{
-    const { bffServer } = await import('../../../server/bff.js');
+    
+    const {microserviceRequest} = await import('../../../serviceregistry/microservice.js');
+
     //get GPS from IP
-    /**@type{server_bff_parameters}*/
-    const parametersBFF = { endpoint:parameters.endpoint,
-                            host:null,
-                            url:'/bff/app_id/v1/geolocation/ip',
-                            method:'GET', 
-                            query:`ip=${parameters.ip}`,
-                            body:{},
-                            authorization:null,
-                            ip:parameters.ip, 
-                            user_agent:parameters.user_agent, 
-                            accept_language:parameters.accept_language,
-                            /**@ts-ignore */
-                            res:null};
-    //ignore error in this case and fetch random geolocation using WORLDCITIES service instead if GEOLOCATION is not available
-    const result_gps = await bffServer(parameters.app_id, parametersBFF)
+    const result_gps = await microserviceRequest({  app_id:parameters.app_id,
+                                                    microservice:'GEOLOCATION',
+                                                    service:'IP', 
+                                                    method:'GET',
+                                                    data:{ip:parameters.ip},
+                                                    ip:parameters.ip,
+                                                    user_agent:parameters.user_agent,
+                                                    accept_language:parameters.user_agent,
+                                                    endpoint:'SERVER'
+                                                })
     .catch(()=>null);
     const result_geodata = {};
     if (result_gps?.result){
@@ -125,20 +122,16 @@ const commonGeodata = async parameters =>{
         result_geodata.timezone =   result_gps.result.timezone;
     }
     else{
-        /**@type{server_bff_parameters}*/
-        const parametersBFF = { endpoint:'APP_ID',
-                                host:null,
-                                url:'/bff/app_id/v1/app-common-module/COMMON_WORLDCITIES_CITY_RANDOM',
-                                method:'POST', 
-                                query:'',
-                                body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'APP_COMMON_APP_ID'}}).result)},
-                                authorization:null,
-                                ip:parameters.ip, 
-                                user_agent:parameters.user_agent, 
-                                accept_language:parameters.accept_language,
-                                /**@ts-ignore */
-                                res:{}};
-        const result_city = await bffServer(parameters.app_id, parametersBFF)
+        const {default:worldcities} = await import('./functions/common_worldcities_city_random.js');
+        
+        const result_city = await worldcities({ app_id:parameters.app_id,
+                                                data:null,
+                                                user_agent:parameters.user_agent,
+                                                ip:parameters.ip,
+                                                host:'',
+                                                idToken:'', 
+                                                authorization:'',
+                                                locale:parameters.accept_language})
                                     .then(result=>{if (result.http) throw result; else return result.result;})
                                     .catch((/**@type{server_server_error}*/error)=>{throw error;});
         result_geodata.latitude =   result_city.lat;
