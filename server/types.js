@@ -806,8 +806,6 @@
  *              HTTPS_SSL_VERIFICATION:string,
  *              HTTPS_SSL_VERIFICATION_PATH:string,
  *              JSON_LIMIT:string,
- *              APP_COMMON_APP_ID:string,
- *              APP_ADMIN_APP_ID:string,
  *              REST_RESOURCE_BFF:string,
  *              REST_API_VERSION:number,
  *              GIT_REPOSITORY_URL:string,
@@ -818,11 +816,13 @@
 /** 
  * @description DB server_db_config_server_service_app
  * @memberof dbObjects
- * @typedef {{CACHE_CONTROL                               : string,
- *            CACHE_CONTROL_FONNT                         : string,
- *            FRAMEWORK                                   : string,
- *            FRAMEWORK_MESSAGES                          : number,
- *            LIMIT_RECORDS                               : number}} server_db_config_server_service_app
+ * @typedef {{APP_COMMON_APP_ID         :string,
+ *            APP_ADMIN_APP_ID          :string,
+ *            CACHE_CONTROL             :string,
+ *            CACHE_CONTROL_FONNT       :string,
+ *            FRAMEWORK                 :string,
+ *            FRAMEWORK_MESSAGES        :number,
+ *            LIMIT_RECORDS             :number}} server_db_config_server_service_app
  */
 
 /** 

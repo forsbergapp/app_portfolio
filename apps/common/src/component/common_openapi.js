@@ -205,7 +205,6 @@ const component = async props => {
             
     };
 
-                                            
     const HTTPS_ENABLE = props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVER',parameter:'HTTPS_ENABLE'}}).result;
     const HOST = props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVER',parameter:'HOST'}}).result;
     const PORT = props.methods.serverUtilNumberValue(HTTPS_ENABLE=='1'?
@@ -223,13 +222,14 @@ const component = async props => {
     const CONFIG_REST_API = props.methods.ConfigRestApi.get({app_id:props.data.app_id}).result;
     //return object with 'servers key modified with list from configuration
     CONFIG_REST_API.servers = props.methods.App.get({app_id:props.data.app_id, resource_id:null}).result
-                        .map((/**@type{server_db_table_App}*/row)=>{
-                            return {url:(HTTPS_ENABLE=='1'? 'https://':'http://') + 
-                                                                        row.subdomain + '.' +
-                                                                        HOST +
-                                                                        ((PORT==80||PORT==443)?'':`/:${PORT}`)
-                                    };
-                        });
+                                .filter((/**@type{server_db_table_App}*/app)=>app.id !=props.methods.serverUtilNumberValue(props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_COMMON_APP_ID'}}).result))
+                                .map((/**@type{server_db_table_App}*/row)=>{
+                                    return {url:(HTTPS_ENABLE=='1'? 'https://':'http://') + 
+                                                                                row.subdomain + '.' +
+                                                                                HOST +
+                                                                                ((PORT==80||PORT==443)?'':`/:${PORT}`)
+                                            };
+                                });
     for (const path of Object.entries(CONFIG_REST_API.paths))
         for (const method of Object.entries(path[1])){
             const JSDocResult = await getJsDocMetadata(method[1].operationId);

@@ -57,8 +57,8 @@ const zlib = await import('node:zlib');
  */
 const serverResponse = async parameters =>{
     const ConfigServer = await import('./db/ConfigServer.js');
-    const common_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
-    const admin_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVER', parameter:'APP_ADMIN_APP_ID'}}).result);
+    const common_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
+    const admin_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result);
     /**
      * Sets response type
      * @param {server_server_response_type} type
