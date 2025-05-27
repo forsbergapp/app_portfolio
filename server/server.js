@@ -853,52 +853,25 @@ const serverREST_API = async (routesparameters) =>{
                     path[0].replace('/${resource_id_string}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path)[0], 
                     components};
     })();
-    
+
     if (configPath.paths){
         /**
-         * Get resource id that all should use '$ref' and match components path
-         * All paths should specify required key if this is used for the path
-         * resource_id_number uses /#components/parameters/resource_id_number/in = path
-         * resource_id_string uses /#components/parameters/resource_id_string/in = path
-         * all other IAM keys can be in query, path or in body and will be authenticated in IAM
-         * admin uses resource_id_string or resource_id_number without authentication in IAM
-         * 
-         * Example 1: optional resource id in path and only used in path
-         * @example  {
-         *               "$ref": "#/components/parameters/resource_id_number",
-         *               "required":false
-         *           }
-         * Example 2: required resource id in path and only used in path
-         * @example  {
-         *               "$ref": "#/components/parameters/resource_id_number",
-         *               "required":true
-         *           }
-         * Example 3: using IAM parameter in query, must specify "in" key since IAM parameters can be used as query or path
-         * @example  {
-         *               "$ref": "#/components/parameters/IAM_data_app_id",
-         *               "in":   "query"
-         *           }
-         * Example 4: using IAM parameter in path, must specify "in" key since IAM parameters can be used as query or path
-         * @example  {
-         *               "$ref": "#/components/parameters/IAM_data_app_id",
-         *               "in":   "path"
-         *           }
-         * Example 5: using IAM parameter in body, not necessary to use "in" key since the parameter is inside the requestBody object
-         * @example  {
-         *               "$ref": "#/components/parameters/IAM_data_app_id"
-         *           }
+         * @description get parameter in path
          * @param{string} key
-         * @param{boolean} [resource_id]      //if parameter is used as resource_id
          * @returns {*}
          */
-        const getParameter = (key, resource_id = false) => methodObj.parameters.filter((/**@type{*}*/parameter)=>
-                                                                resource_id?
-                                                                    (Object.keys(parameter)[0]=='$ref' && 
-                                                                    Object.keys(parameter)[1]=='in' && 
-                                                                    Object.values(parameter)[1]=='path' && 
-                                                                    Object.values(parameter)[0]=='#/components/parameters/' + key):
+        const getParameter = key => methodObj.parameters.filter((/**@type{*}*/parameter)=>
                                                                         Object.keys(parameter)[0]=='$ref' && Object.values(parameter)[0]=='#/components/parameters/' + key)[0];
-        
+        /**
+         * @description returns if resource id is required, all path parameters should be defined in #/components/parameters
+         */
+        const resourceIdRequired = () =>
+            configPath.paths[1][Object.keys(configPath.paths[1])[0]].parameters
+            .filter((/**@type{*}*/parameter)=>
+                (parameter.in=='path' || configPath.components.parameters[parameter['$ref']?.split('#/components/parameters/')[1]]?.in == 'path') &&
+                 (parameter['$ref']?.split('#/components/parameters/')[1].startsWith('IAM')?true:(parameter.required ?? false))
+            )[0]?true:false;
+
         const methodObj = configPath.paths[1][routesparameters.method.toLowerCase()];
         if (methodObj){
             /**
@@ -962,11 +935,7 @@ const serverREST_API = async (routesparameters) =>{
                                 IAM_iam_user_id:        parametersData.IAM_iam_user_id?.data,
                                 IAM_module_app_id:      parametersData.IAM_module_app_id?.data,
                                 IAM_data_app_id:        parametersData.IAM_data_app_id?.data,
-                                resource_id_required:   (   getParameter('IAM_iam_user_app_id', true) ??        //check if used as resource id
-                                                            getParameter('IAM_iam_user_id', true) ??            //check if used as resource id
-                                                            getParameter('IAM_iam_module_app_id', true) ??      //check if used as resource id
-                                                            getParameter('IAM_iam_data_app_id', true) ??        //check if used as resource id
-                                                            getParameter('resource_id_string') ?? getParameter('resource_id_number'))?.required ?? false,
+                                resource_id_required:   resourceIdRequired(),
                             }) &&
                             //there is no missing required parameter in the request
                             Object.keys(parametersData).filter(parameter=> 
@@ -1021,39 +990,23 @@ const serverREST_API = async (routesparameters) =>{
                 const functionRESTAPI = methodObj.operationId.split('.')[2];
                 const moduleRESTAPI = await import('../' + filePath);
                 
+                
                 /**
-                 * @description Returns resource id if used
-                 *              resource id string can be IAM_iam_user_id, IAM_data_app_id, resource_id_number or resource_id_string
-                 * @param {string} path
+                 * @description returns resource id name and value if used using ConfigRestApi and URI path
+                 * @returns {Object.<string, string|number|null>|null}
                  */
-                const resourceId = path =>{
-                    /**
-                     * Returns resource id number from URI path or null for give id string
-                     * @param {string} id_string
-                     * @param {string} path
-                     * @returns {number|null}
-                     */
-                    const resource_id_get_number = (id_string, path) => path.endsWith('/${' + id_string + '}')?serverUtilNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1)):null;
-                    /**
-                     * Returns resource id string from URI path or null
-                     * @param {string} path
-                     * @returns {string|null}
-                     */
-                    const resource_id_get_string = path => path.endsWith('/${resource_id_string}')?
-                                                                (URI_path.substring(URI_path.lastIndexOf('/') + 1)==''?null:URI_path.substring(URI_path.lastIndexOf('/') + 1)):
-                                                                    null;
-                    return  getParameter('IAM_iam_user_id', true)?
-                                resource_id_get_number('IAM_iam_user_id',path):
-                            getParameter('IAM_iam_user_app_id', true)?
-                                resource_id_get_number('IAM_iam_user_app_id',path):
-                            getParameter('IAM_module_app_id', true)?
-                                resource_id_get_number('IAM_module_app_id',path):
-                            getParameter('IAM_data_app_id', true)?
-                                resource_id_get_number('IAM_data_app_id',path):
-                            getParameter('resource_id_number')?
-                                        resource_id_get_number('resource_id_number',path):
-                                        resource_id_get_string(path);
-                };
+                const resourceId =() =>
+                    configPath.paths[1][Object.keys(configPath.paths[1])[0]].parameters
+                    .filter((/**@type{*}*/parameter)=>
+                        (parameter.in=='path' || configPath.components.parameters[parameter['$ref']?.split('#/components/parameters/')[1]]?.in == 'path')
+                    )[0]==null?null:
+                    {[configPath.paths[0].substring(configPath.paths[0].indexOf('${')+'${'.length).replace('}','')]:
+                        (configPath.components.parameters[configPath.paths[0].substring(configPath.paths[0].indexOf('${')+'${'.length).replace('}','')].schema.type == 'number'?
+                                serverUtilNumberValue(URI_path.substring(URI_path.lastIndexOf('/')+1)):
+                                    URI_path.substring(URI_path.lastIndexOf('/')+1))
+                    };
+                    
+
                 /**
                  *  Return single resource in result object or multiple resource in rows keys
                  *  Rules: 
@@ -1065,7 +1018,7 @@ const serverREST_API = async (routesparameters) =>{
                 const singleResource = () => functionRESTAPI=='commonModuleRun'?
                                                 false:
                                                     (routesparameters.method!='GET' ||functionRESTAPI=='microserviceRequest')?
-                                                        true: resourceId(configPath.paths[0])!=null;
+                                                        true: (Object.keys(resourceId()??{}).length==1 && Object.values(resourceId()??{})[0]!=null);
                 //return result using ISO20022 format
                 //send only parameters to the function if declared true
                 const result = await  moduleRESTAPI[functionRESTAPI]({
@@ -1082,12 +1035,7 @@ const serverREST_API = async (routesparameters) =>{
                                 ...(getParameter('server_method')                  && {method:         routesparameters.method}),
                                 ...(Object.keys(parametersData)?.length>0          && {data:           {...parametersData}}),
                                 ...(getParameter('server_endpoint')                && {endpoint:       routesparameters.endpoint}),
-                                ...((getParameter('IAM_iam_user_app_id', true)||
-                                     getParameter('IAM_iam_user_id', true)||
-                                     getParameter('IAM_module_app_id', true)||
-                                     getParameter('IAM_data_app_id', true)||
-                                     getParameter('resource_id_string')||
-                                     getParameter('resource_id_number'))           && {resource_id:    resourceId(configPath.paths[0])})});
+                                ...(resourceId()                                   && {resource_id:    Object.values(resourceId()??{})[0]})});
                 return { ...result,
                             ...{singleResource:singleResource()
                                 }
