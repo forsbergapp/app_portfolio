@@ -15,6 +15,7 @@
  *          server_db_table_IamControlObserve,server_db_table_IamControlUserAgent,
  *          server_db_table_IamControlIp,
  *          server_iam_access_token_claim,server_iam_access_token_claim_scope_type,
+ *          server_iam_microservice_token_claim,
  *          server_bff_endpoint_type,
  *          server_db_iam_app_id_token_insert, 
  *          server_db_common_result_delete,
@@ -58,28 +59,44 @@ const iamUtilMessageNotAuthorized = () => '⛔';
  * @param {number} app_id
  * @param {string} token
  * @param {token_type} token_type 
- * @returns {server_iam_access_token_claim & {exp:number, iat:number}}
+ * @returns {server_iam_access_token_claim|server_iam_microservice_token_claim & {exp:number, iat:number}}
  */
 const iamUtilTokenGet = (app_id, token, token_type) =>{
     /**@type{*} */
-    const verify = jwt.verify(token.replace('Bearer ','').replace('Basic ',''), token_type=='ADMIN'?
-                                        ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'ADMIN_TOKEN_SECRET'}}).result:
-                                            AppSecret.get({app_id:app_id, resource_id:app_id}).result[0][  token_type=='APP_ACCESS'?'common_app_access_secret':
-                                                                                                                    token_type=='APP_ACCESS_EXTERNAL'?'common_app_access_verification_secret':
-                                                                                                                    token_type=='APP_ACCESS_VERIFICATION'?'common_app_access_verification_secret':
-                                                                                                                    'common_app_id_secret']);
-    /**@type{server_iam_access_token_claim & {exp:number, iat:number}} */
-    return {
+    const verify = jwt.verify(  token.replace('Bearer ','').replace('Basic ',''), 
+                                token_type=='MICROSERVICE'?
+                                ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'MICROSERVICE_TOKEN_SECRET'}}).result:
+                                token_type=='ADMIN'?
+                                    ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'ADMIN_TOKEN_SECRET'}}).result:
+                                        AppSecret.get({app_id:app_id, resource_id:app_id}).result[0][  token_type=='APP_ACCESS'?'common_app_access_secret':
+                                                                                                                token_type=='APP_ACCESS_EXTERNAL'?'common_app_access_verification_secret':
+                                                                                                                token_type=='APP_ACCESS_VERIFICATION'?'common_app_access_verification_secret':
+                                                                                                                'common_app_id_secret']);
+    if (token_type=='MICROSERVICE')
+        /**@type{server_iam_microservice_token_claim & {exp:number, iat:number}} */
+        return {
             app_id:                 verify.app_id,
-            app_custom_id:          verify.app_custom_id,
-            iam_user_app_id:        verify.iam_user_app_id,
-            iam_user_id:            verify.iam_user_id,
-            iam_user_username:      verify.iam_user_username,
+            service_registry_id:    verify.service_registry_id,
+            service_registry_name:  verify.service_registry_name,
             ip:                     verify.ip,
+            host:                   verify.host,
             scope:                  verify.scope,
             tokentimestamp:         verify.tokentimestamp,
             exp:                    verify.exp,
             iat:                    verify.iat};
+    else
+        /**@type{server_iam_access_token_claim & {exp:number, iat:number}} */
+        return {
+                app_id:                 verify.app_id,
+                app_custom_id:          verify.app_custom_id,
+                iam_user_app_id:        verify.iam_user_app_id,
+                iam_user_id:            verify.iam_user_id,
+                iam_user_username:      verify.iam_user_username,
+                ip:                     verify.ip,
+                scope:                  verify.scope,
+                tokentimestamp:         verify.tokentimestamp,
+                exp:                    verify.exp,
+                iat:                    verify.iat};
 };
 
 /**
@@ -1172,7 +1189,8 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *           claim_iam_user_app_id:number|null,
  *           claim_iam_user_id:number|null,
  *           claim_iam_module_app_id:number|null
- *           claim_iam_data_app_id:number|null}} parameters
+ *           claim_iam_data_app_id:number|null,
+ *           claim_iam_service:string|null}} parameters
  * @returns {boolean}
  */
 const iamAuthenticateResource = parameters =>  {
@@ -1189,20 +1207,33 @@ const iamAuthenticateResource = parameters =>  {
                                                         parameters.authorization, 
                                                         parameters.endpoint=='ADMIN'?
                                                             'ADMIN':
-                                                                parameters.endpoint=='APP_ACCESS'?
-                                                                    'APP_ACCESS':
-                                                                        'APP_ACCESS_VERIFICATION');
-                /**@type{{app_id:number, iam_user_app_id:number|null, iam_user_id:number|null, ip:string}} */
-                authenticate_token = {
-                                    app_id:         verify_decoded.app_id,
-                                    iam_user_app_id:verify_decoded.iam_user_app_id,
-                                    iam_user_id:    verify_decoded.iam_user_id,
-                                    ip:             verify_decoded.ip};
+                                                            parameters.endpoint=='MICROSERVICE'?
+                                                                'MICROSERVICE':
+                                                                    parameters.endpoint=='APP_ACCESS'?
+                                                                        'APP_ACCESS':
+                                                                            'APP_ACCESS_VERIFICATION');
+                if (parameters.endpoint=='MICROSERVICE')
+                    authenticate_token = {
+                        app_id:                 verify_decoded.app_id,
+                        /**@ts-ignore */
+                        service_registry_id:    verify_decoded.service_registry_id,
+                        /**@ts-ignore */
+                        service_registry_name:  verify_decoded.service_registry_name,
+                        ip:                     verify_decoded.ip,
+                        /**@ts-ignore */
+                        host:                   verify_decoded.host};
+                else
+                    authenticate_token = {
+                        app_id:         verify_decoded.app_id,
+                        /**@ts-ignore */
+                        iam_user_app_id:verify_decoded.iam_user_app_id,
+                        /**@ts-ignore */
+                        iam_user_id:    verify_decoded.iam_user_id,
+                        ip:             verify_decoded.ip};
             }
             else{
                 //Id token, without user info
                 const verify_decoded = iamUtilTokenGet(parameters.app_id, parameters.idToken, 'APP_ID');
-                /**@type{{app_id:number, iam_user_app_id:null, iam_user_id:null, ip:string}} */
                 authenticate_token = {
                                     app_id:         verify_decoded.app_id,
                                     iam_user_app_id:null,
@@ -1214,7 +1245,8 @@ const iamAuthenticateResource = parameters =>  {
             return  (parameters.claim_iam_user_app_id !=null || 
                      parameters.claim_iam_user_id !=null || 
                      parameters.claim_iam_module_app_id !=null ||
-                     parameters.claim_iam_data_app_id !=null) &&
+                     parameters.claim_iam_data_app_id !=null ||
+                     parameters.claim_iam_service !=null) &&
 
                     //authenticate iam user app id if used
                     authenticate_token.iam_user_app_id == (parameters.claim_iam_user_app_id ?? authenticate_token.iam_user_app_id) &&
@@ -1230,7 +1262,11 @@ const iamAuthenticateResource = parameters =>  {
                     //authenticate app id dervied from subdomain, user must be using current app id only
                     authenticate_token.app_id == parameters.app_id &&
                     //authenticate IP address
-                    authenticate_token.ip == parameters.ip;
+                    authenticate_token.ip == parameters.ip &&
+                    //authenticate iam service if microservice and if used (only name is authenticated, not service_registry_id)
+                    authenticate_token.service_registry_name == (parameters.claim_iam_service ?? authenticate_token.service_registry_name) &&
+                    //authenticate host if microservice
+                    authenticate_token.host == (parameters.claim_iam_service?authenticate_token.host:authenticate_token.host);
         }
     } catch (error) {
         //Expired or token error

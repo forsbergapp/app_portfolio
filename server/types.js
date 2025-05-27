@@ -1061,7 +1061,7 @@
 
 /**
  * @description token_type
- * @typedef {'APP_ID'|server_db_iam_app_access_type} token_type
+ * @typedef {'APP_ID'|server_db_iam_app_access_type|'MICROSERVICE'} token_type
 
  
 /**
@@ -1276,6 +1276,17 @@
  *              ip:                     string,
  *              scope:                  server_iam_access_token_claim_scope_type,
  *              tokentimestamp?:        number}} server_iam_access_token_claim
+ */
+/**
+ * @description IAM server_iam_microservice_token_claim
+ * @typedef {{  
+ *              app_id:                 number,
+ *              service_registry_id:    number,
+ *              service_registry_name:  string,
+ *              ip:                     string,
+ *              host:                   string,
+ *              scope:                  'MICROSERVICE',
+ *              tokentimestamp?:        number}} server_iam_microservice_token_claim
  */
 
 /**
