@@ -283,7 +283,7 @@ const iamAuthenticateUser = async parameters =>{
             //save log for all login attempts  
             /**@type{server_db_table_IamAppAccess} */
             const file_content = {	
-                        type:                   parameters.app_id==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}).result)?
+                        type:                   parameters.app_id==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result)?
                                                     'ADMIN':
                                                         'APP_ACCESS',
                         app_custom_id:          null,
@@ -308,7 +308,7 @@ const iamAuthenticateUser = async parameters =>{
     };
     if(parameters.authorization){       
         //if admin app create user if first time
-        if (parameters.app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}).result) && IamUser.get(parameters.app_id, null).result.length==0)
+        if (parameters.app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result) && IamUser.get(parameters.app_id, null).result.length==0)
             return IamUser.post(parameters.app_id,{
                             username:           username, 
                             password:           password, 
@@ -335,7 +335,7 @@ const iamAuthenticateUser = async parameters =>{
             /**@type{server_db_table_IamUser}*/
             const user =  IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/user)=>user.username == username)[0];
             if (user && await securityPasswordCompare(parameters.app_id, password, user.password)){
-                if (parameters.app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}).result)){
+                if (parameters.app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result)){
                     //admin allowed to login to admin app only
                     if (user.type=='ADMIN'){
                         /**@ts-ignore */
@@ -713,7 +713,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
             parameters.endpoint=='APP_ACCESS_EXTERNAL' ||
             parameters.endpoint=='MICROSERVICE' ||
             parameters.endpoint=='MICROSERVICE_AUTH') && parameters.endpoint && app_id_host !=null){
-        const app_id_admin = serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVER',parameter:'APP_ADMIN_APP_ID'}}).result);
+        const app_id_admin = serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result);
         try {
             //authenticate id token
             const id_token_decoded = (parameters.endpoint=='APP_EXTERNAL' || parameters.endpoint=='APP_ACCESS_EXTERNAL')?null:iamUtilTokenGet(app_id_host, parameters.idToken, 'APP_ID');
@@ -889,7 +889,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
  const iamAuthenticateRequest = async parameters => {
     const app_id = commonAppHost(parameters.host);
     //set calling app_id using app_id or common app_id if app_id is unknown
-    const calling_app_id = app_id ?? serverUtilNumberValue(ConfigServer.get({app_id:app_id??0, data:{config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
+    const calling_app_id = app_id ?? serverUtilNumberValue(ConfigServer.get({app_id:app_id??0, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
 
     /**@type{server_db_document_ConfigServer} */
     const config_SERVER = ConfigServer.get({app_id:calling_app_id}).result;
@@ -1254,10 +1254,10 @@ const iamAuthenticateResource = parameters =>  {
                     authenticate_token.iam_user_id == (parameters.claim_iam_user_id ?? authenticate_token.iam_user_id) &&
                     
                     //authenticate iam module app id if used, users can only have access to current app id or common app id for data app id claim
-                    (parameters.claim_iam_module_app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result) ||
+                    (parameters.claim_iam_module_app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ||
                      authenticate_token.app_id == (parameters.claim_iam_module_app_id ?? authenticate_token.app_id)) &&
                     //authenticate iam data app id if used, users can only have access to current app id or common app id for data app id claim
-                    (parameters.claim_iam_data_app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result) ||
+                    (parameters.claim_iam_data_app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ||
                      authenticate_token.app_id == (parameters.claim_iam_data_app_id ?? authenticate_token.app_id)) &&
                     //authenticate app id dervied from subdomain, user must be using current app id only
                     authenticate_token.app_id == parameters.app_id &&

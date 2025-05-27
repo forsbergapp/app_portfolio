@@ -73,7 +73,7 @@ const microserviceRequest = async parameters =>{
         return await circuitBreaker.MicroServiceCall( microserviceHttpRequest, 
                                                 parameters.microservice, 
                                                 
-                                                parameters.app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result), //if appid = APP_COMMON_APP_ID then admin, 
+                                                parameters.app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result), //if appid = APP_COMMON_APP_ID then admin, 
                                                 `/api/v${await registryMicroserviceApiVersion(parameters.microservice)}`, 
                                                 query, 
                                                 parameters.data, 

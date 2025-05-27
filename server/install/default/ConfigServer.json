@@ -7,8 +7,6 @@
         {"HTTPS_SSL_VERIFICATION": "1", "COMMENT": "1=YES, check if enable temporary path for Letsencrypt using certbot"},
         {"HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/", "COMMENT": "the temporary path for Letsencrypt using certbot"},
         {"JSON_LIMIT": "10MB", "COMMENT": ""},
-        {"APP_COMMON_APP_ID": "0", "COMMENT": "common app id"},
-        {"APP_ADMIN_APP_ID": "1", "COMMENT": "admin app id"},
         {"REST_RESOURCE_BFF": "/bff","COMMENT": "rest resource path for apps backend for frontend (BFF)"},
         {"REST_API_VERSION":"1", "COMMENT": "REST API Version"},
         {"GIT_REPOSITORY_URL":"","COMMENT": "url to GIT repository syntax https://[server]/[path]/[file].git"},
@@ -19,6 +17,8 @@
         {"HTTPS_CERT": "/ssl/fullchain.pem", "COMMENT": ""}
     ],
     "SERVICE_APP":[
+        {"APP_COMMON_APP_ID": "0", "COMMENT": "common app id"},
+        {"APP_ADMIN_APP_ID": "1", "COMMENT": "admin app id"},
         {"CACHE_CONTROL":"no-store", "COMMENT": "Cache control for assets except fonts, max-age value in milliseconds ex 1 hour = max-age=3600 or use any valid Cache-Control setting, default is to not cache anything"},
         {"CACHE_CONTROL_FONT":"no-store", "COMMENT": "Cache control for fonts, max-age value in milliseconds ex 1 hour max-age=3600 or use any valid Cache-Control setting, default is to not cache anything"},
         {"FRAMEWORK":"0", "COMMENT": "0=choosable, 1=Javascript (default if choosable), 2=Vue, 3=React"},
