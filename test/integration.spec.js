@@ -48,7 +48,7 @@ const test = async t =>
             /**@type{server_db_table_App[]}*/
             const apps = App.get({app_id:0, resource_id:null})
                         .result.filter((/**@type{server_db_table_App}*/app)=>
-                            app.id !=serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0);
+                            app.id !=serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0);
             const {microserviceRequest} = await import('../serviceregistry/microservice.js');
             //
             for (const app of apps) {

@@ -45,7 +45,7 @@ const getViewInfo = async parameters =>{
     /**@type{server_db_table_App[]}*/
     const apps = get({app_id:parameters.app_id, resource_id:null}).result
                     //do not show common app id
-                    .filter((/**@type{server_db_table_App}*/app)=>app.id != serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER', parameter:'APP_COMMON_APP_ID'}}).result));
+                    .filter((/**@type{server_db_table_App}*/app)=>app.id != serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result));
     for (const app of apps){
         const image = await fs.promises.readFile(`${serverProcess.cwd()}${app.path + app.logo}`);
         /**@ts-ignore */
