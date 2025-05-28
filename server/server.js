@@ -5,6 +5,7 @@
 /**
  * @import {server_req_method, server_REST_API_parameters, server_server_response, server_server_response_type, 
  *          server_server_error, server_server_req, server_server_res,
+ *          server_db_document_ConfigServer,
  *          server_bff_parameters, server_server_req_id_number} from './types.js'
  */
 
@@ -57,16 +58,19 @@ const zlib = await import('node:zlib');
  */
 const serverResponse = async parameters =>{
     const ConfigServer = await import('./db/ConfigServer.js');
-    const common_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
-    const admin_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result);
+    /**@type{server_db_document_ConfigServer['SERVICE_APP']} */
+    const CONFIG_SERVICE_APP = ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;
+
+    const common_app_id = serverUtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_COMMON_APP_ID)[0].APP_COMMON_APP_ID) ?? 0;
+    const admin_app_id = serverUtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_ADMIN_APP_ID)[0].APP_ADMIN_APP_ID);
     /**
      * Sets response type
      * @param {server_server_response_type} type
      */
     const setType = type => {
         
-        const app_cache_control =       ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP', parameter:'CACHE_CONTROL'}}).result;
-        const app_cache_control_font =  ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP', parameter:'CACHE_CONTROL_FONT'}}).result;
+        const app_cache_control =       CONFIG_SERVICE_APP.filter(parameter=>parameter.CACHE_CONTROL)[0].CACHE_CONTROL;
+        const app_cache_control_font =  CONFIG_SERVICE_APP.filter(parameter=>parameter.CACHE_CONTROL_FONT)[0].CACHE_CONTROL_FONT;
         switch (type){
             case 'JSON':{
                 if (app_cache_control !='')
@@ -221,7 +225,7 @@ const serverResponse = async parameters =>{
                             }
                             //records limit in controlled by server, apps can not set limits
                                                                           
-                            const limit = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP', parameter:'LIMIT_RECORDS'}}).result??0);
+                            const limit = serverUtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.LIMIT_RECORDS)[0].LIMIT_RECORDS??0);
                             if (parameters.result_request.singleResource)
                                 //limit rows if single resource response contains rows
                                 parameters.res.write(JSON.stringify((typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
@@ -613,7 +617,10 @@ const server = async () => {
      * @param {server_server_res} res
      * @returns {Promise.<*>}
      */
-    const app = async (req, res)=>{       
+    const app = async (req, res)=>{    
+        /**@type{server_db_document_ConfigServer['SERVER']} */
+        const CONFIG_SERVER = ConfigServer.get({app_id:0,data:{ config_group:'SERVER'}}).result;
+        
         const read_body = async () =>{
             return new Promise((resolve,reject)=>{
                 if (req.headers['content-type'] =='application/json'){
@@ -646,8 +653,9 @@ const server = async () => {
         await read_body();
         // check JSON maximum size, parameter uses megabytes (MB)
         if (req.body && JSON.stringify(req.body).length/1024/1024 > 
-                (serverUtilNumberValue((ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'JSON_LIMIT'}}).result ?? '0').replace('MB',''))??0)){
+                (serverUtilNumberValue((CONFIG_SERVER.filter(parameter=>parameter.JSON_LIMIT)[0].JSON_LIMIT ?? '0').replace('MB',''))??0)){
             //log error
+                                        
             Log.post({  app_id:0, 
                         data:{  object:'LogRequestError', 
                                 request:{   req:req,
@@ -724,16 +732,10 @@ const server = async () => {
                         break;
                     }
                     default:{
-                        const endpoint_role = req.headers['sec-fetch-mode']=='navigate'||
-                                                [   'document', // or req.headers['sec-fetch-mode']=='navigate'
-                                                    'serviceworker',
-                                                    'image', 
-                                                    'script', 
-                                                    'style', 
-                                                    'font'].includes(req.headers['sec-fetch-dest'])?
-                                                    'APP':
-                                                        //req.headers['sec-fetch-dest'] = 'empty'
-                                                        req.url.split('/')[2]?.toUpperCase();
+                        //all rest api starts with REST_RESOURCE_BFF parameter value, add '/'
+                        const endpoint_role = req.url.startsWith(CONFIG_SERVER.filter(parameter=>parameter.REST_RESOURCE_BFF)[0].REST_RESOURCE_BFF + '/')?
+                                                    req.url.split('/')[2]?.toUpperCase():
+                                                        'APP';
                         const ID_TOKEN_KEY ='id-token';
                         const idToken =endpoint_role == 'APP'?
                                         '':
