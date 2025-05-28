@@ -1,12 +1,9 @@
 /** @module serviceregistry/microservice */
 
 /**
- * @import {microservice_registry_service, 
+ * @import {microservice_registry_service, server_server_res,
  *          server_server_response, server_bff_endpoint_type, server_req_method} from '../server/types.js'
  */
-
-const http = await import('node:http');
-const https = await import('node:https');
 
 const {registryConfigServices} = await import('./registry.js');
 const { iamAuthenticateApp } = await import('../server/iam.js');
@@ -128,8 +125,9 @@ const microserviceRequest = async parameters =>{
  */                    
 const microserviceHttpRequest = async (service, path, query, body, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language) =>{
     const ServiceRegistry = await registryConfigServices(service);
-    const request_protocol = ServiceRegistry.https_enable ==1?https:http;
-    const port = ServiceRegistry.https_enable ==1?ServiceRegistry.https_port:ServiceRegistry.port;
+    
+    /**@type {import('node:http')} */
+    const request_protocol = await import(`node:${ServiceRegistry.server_protocol}`);
     
     return new Promise ((resolve, reject)=>{
         const headers = method=='GET'? {
@@ -149,8 +147,8 @@ const microserviceHttpRequest = async (service, path, query, body, method, timeo
             method: method,
             timeout: timeout,
             headers : headers,
-            host: ServiceRegistry.host,
-            port: port,
+            host: ServiceRegistry.server_host,
+            port: ServiceRegistry.server_port,
             path: `${path}?${query}`,
             rejectUnauthorized: false
         };

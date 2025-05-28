@@ -4,12 +4,8 @@
  */
 
 /**
- * @import {request, response, geolocation_data} from './types.js'
+ * @import {config, request, response, geolocation_data} from './types.js'
  */
-
-const service = await import('./service.js');
-const {iamAuthenticateApp } = await import('../../microservice.js');
-const { registryConfigServices } = await import('../../registry.js');
 
 /**
  * @name ClassServerProcess
@@ -65,25 +61,42 @@ const serverReturn = (code, error, result, res)=>{
  */
 const serverStart = async () =>{
     const fs = await import('node:fs');
-    const ServiceRegistry = await registryConfigServices('GEOLOCATION');
-   
-    const request = ServiceRegistry?.https_enable==1?
-                        {
-                            server  : await import('node:https'),
-                            port	: ServiceRegistry.https_port,
-                            options : {
-                                key: ServiceRegistry.https_key?
-                                        await fs.promises.readFile(serverProcess.cwd() + ServiceRegistry.https_key, 'utf8'):
-                                            null,
-                                cert: ServiceRegistry.https_key?
-                                        await fs.promises.readFile(serverProcess.cwd() + ServiceRegistry.https_cert, 'utf8'):
-                                            null
-                            }
-                        }:
-                        {
-                            server  : await import('node:http'),
-                            port 	: ServiceRegistry.port
+    const service = await import('./service.js');
+    const {iamAuthenticateApp } = await import('../../microservice.js');
+    const Crypto = await import('node:crypto');
+
+    //get config
+    /**@type{config} */
+    const Config = JSON.parse(await fs.promises.readFile(serverProcess.cwd() + '/data/microservice/GEOLOCATION.json', 'utf8'));
+
+    //request token from service registry
+    /**
+     * @type{{  token:string,
+     *           exp:number,
+     *           iat:number}}
+     */
+    const result = await service.requestUrl({   url:Config.service_registry_auth_url, 
+                                                method:Config.service_registry_auth_method, 
+                                                body:{data:Buffer.from(JSON.stringify(
+                                                                            {
+                                                                            id:null,
+                                                                            message:Crypto.publicEncrypt(  Config.public_key,
+                                                                                    Buffer.from(JSON.stringify({message:null}))).toString('base64')
+                                                                            })).toString('base64')
+                                                    },
+                                                language:'en'})
+                                                .catch(error=>
+                                                    {throw error;}
+                                                );
+    const request =     {
+                            server  : await import(`node:${Config.server_protocol}`),
+                            port	: Config.server_protocol,
+                            options : Config.server_protocol=='https'?{
+                                            key: await fs.promises.readFile(serverProcess.cwd() + Config.server_https_key, 'utf8'),
+                                            cert: await fs.promises.readFile(serverProcess.cwd() + Config.server_https_cert, 'utf8')
+                                        }:{}
                         };
+
 	request.server.createServer(request.options, (/**@type{request}*/req, /**@type{response}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'GET');
 		res.setHeader('Access-Control-Allow-Origin', '*');
@@ -105,7 +118,7 @@ const serverStart = async () =>{
 					case URI_path == '/api/v1' && req.query.service == 'PLACE' && req.method =='GET':{
 						if(	(req.query.data.latitude !=null && req.query.data.latitude!='') ||
 							(req.query.data.longitude !=null && req.query.data.longitude!='')){
-							service.getPlace(req.query.data.latitude, req.query.data.longitude, req.headers['accept-language'])
+							service.getPlace(Config, req.query.data.latitude, req.query.data.longitude, req.headers['accept-language'])
 							.then((result)=>result?.length>0?serverReturn(200, null, JSON.parse(result), res):'')
 							.catch((error) =>serverReturn(500, error, null, res));
 						}
@@ -115,7 +128,7 @@ const serverStart = async () =>{
 					}
                     case URI_path == '/api/v1' && req.query.service == 'IP' && req.method =='GET':{
 						//no v6 support
-						service.getIp(req.query.data.ip.replace('::ffff:',''), req.headers['accept-language'])
+						service.getIp(Config, req.query.data.ip.replace('::ffff:',''), req.headers['accept-language'])
 						.then((result)=>serverReturn(200, null, JSON.parse(result), res))
 						.catch((error) =>serverReturn(500, error, null, res));
 						break;

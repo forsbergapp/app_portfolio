@@ -4342,7 +4342,17 @@
                             "required":true,
                             "content":{
                                 "application/json":{
-                                    "schema":{}
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "id":{
+                                                "type":"number"
+                                            },
+                                            "message":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
                                 }
                             }
 			            },

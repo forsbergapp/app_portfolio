@@ -16,6 +16,69 @@ const {registryConfigServices} = await import('../../registry.js');
 const JOBS = [];
 
 /**
+ * @name requestUrl
+ * @description Returns result from given url
+ * @function
+ * @param { url:string, 
+ *          method:'GET'|'POST',
+ *          authorizsation:string|null,
+ *          body:{},
+ *          language:string} parameters
+ * @returns {Promise.<string>}
+ */
+const requestUrl = async parameters => {
+   const protocol = (await import(`node:${parameters.url.split('://')[0]}`));
+   const zlib = await import('node:zlib');
+   return new Promise((resolve, reject) =>{
+       //geolocation service using http 
+
+       const headers = parameters.method=='GET'? {
+           'User-Agent': 'Server',
+           'Accept-Language': parameters.language,
+           ...(parameters.authorization && {Authorization: parameters.authorization})
+       }: {
+           'User-Agent': 'Server',
+           'Accept-Language': parameters.language,
+           'Content-Type': 'application/json',
+           'Content-Length': Buffer.byteLength(JSON.stringify(parameters.body)),
+           ...(parameters.authorization && {Authorization: parameters.authorization})
+       };
+       const options = {
+           method: parameters.method,
+           rejectUnauthorized: false,
+           headers : headers
+       };
+       
+       const request = protocol.request(parameters.url, options, res =>{
+           let responseBody = '';
+           if (res.headers['content-encoding'] == 'gzip'){
+               const gunzip = zlib.createGunzip();
+               res.pipe(gunzip);
+               gunzip.on('data', (chunk) =>responseBody += chunk);
+               gunzip.on('end', () => resolve ({result:JSON.parse(responseBody), type:'JSON'}));
+           }
+           else{
+               res.setEncoding('utf8');
+               res.on('data', (chunk) =>{
+                   responseBody += chunk;
+               });
+               res.on('end', ()=>{
+                   if (res.statusCode == 200 ||res.statusCode == 201)
+                       resolve (JSON.parse(responseBody));
+                   else
+                       reject(JSON.parse(responseBody));
+               });
+           }
+       });
+       request.on('error', error => {
+           reject(error);
+       });
+       if (parameters.method !='GET')
+           request.write(JSON.stringify(parameters.body));
+       request.end();        
+   });
+};
+/**
  * @name getMonth
  * @description Get month string from number
  * @function
@@ -371,5 +434,5 @@ const startJobs = async () =>{
         }
     }
 };
-export {startJobs};
+export {startJobs, requestUrl};
 	

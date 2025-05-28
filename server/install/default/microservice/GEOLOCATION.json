@@ -1,0 +1,25 @@
+{
+    "name":                             "GEOLOCATION",
+    "server_protocol":	                "http",
+    "server_host":		                "localhost",
+    "server_port":                      "3000",
+    "server_https_key":                 "/data/microservice/ssl/privkey.pem",
+    "server_https_cert":                "/data/microservice/ssl/fullchain.pem",
+    "server_https_ssl_verification":    0,
+    "server_https_ssl_verification_path":"/.well-known/acme-challenge/",
+    "path_data":                        "/data/microservice/data",
+    "service_registry_auth_url":		"http://localhost:3000/bff/microservice_auth/v1/server-iam-microservice/GEOLOCATION",
+    "service_registry_auth_method":     "POST",
+    "service_registry_url":	            "http://localhost:3000/bff/microservice/v1/serviceregistry/GEOLOCATION",
+    "service_registry_method":	        "GET",
+    "message_qeue_url":	                "http://localhost:3000//bff/microservice/v1/messagequeue",
+    "message_qeue_method":	            "POST",
+    "iam_auth_app_url":	                "http://localhost:3000//bff/microservice/v1/server-iam-authenticateapp",
+    "iam_auth_app_method":	            "POST",
+    "public_key":                       "",
+    "private_key":                      "",
+    "config":[
+            {"url_ip":                  "http://www.geoplugin.net/json.gp?ip=<IP/>"},
+            {"url_place":               "http://www.geoplugin.net/extras/location.gp?format=json&lat=<LATITUDE/>&long=<LONGITUDE/>"}
+        ]
+}

@@ -20,7 +20,7 @@ const registryConfigServices = async servicename =>{
             dml:'GET',
             object:'ServiceRegistry', 
             get:{resource_id:null, partition:null}})
-        .then((/**@type{{rows:server_db_table_ServiceRegistry}}*/service)=>
+        .then((/**@type{{rows:server_db_table_ServiceRegistry[]}}*/service)=>
                 resolve(service.rows.filter(service=>service.name == servicename)[0]));
     });
 };
@@ -32,7 +32,7 @@ const registryConfigServices = async servicename =>{
  * @param {microservice_registry_service} service 
  * @returns {Promise.<number>}
  */
-const registryMicroserviceApiVersion = async service =>(await registryConfigServices(service)).config.filter((/**@type{*}*/row)=>'APP_REST_API_VERSION' in row)[0].APP_REST_API_VERSION;
+const registryMicroserviceApiVersion = async service =>(await registryConfigServices(service)).rest_api_version;
 
 
 export {registryConfigServices, registryMicroserviceApiVersion};

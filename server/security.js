@@ -261,18 +261,19 @@ const securityPasswordCompare = async (app_id, password, compare_password) =>{
 };
 /**
  * @name securityKeyPairCreate
- * @description Creates key pair using 8192 bits giving 8192/8 - 11 = 1013 max characters length
+ * @description Creates key pair using default 8192 bits giving 8192/8 - 11 = 1013 max characters length
  *              to be used for external server communication when longer encrypted message must be used
  *              function can take several seconds to execute
  *              public : spki and pem format
  *              private: pkcs8 and pem format
  * @function
+ * @param{number} bits
  * @returns {Promise.<{ publicKey:string, privateKey:string }>}
  */
-const securityKeyPairCreate = async () => {
+const securityKeyPairCreate = async (bits=8192) => {
     return new Promise((resolve, reject)=>{
         Crypto.generateKeyPair('rsa', {
-            modulusLength: 8192,
+            modulusLength: bits,
             publicKeyEncoding: {
                     type: 'spki',
                     format: 'pem'

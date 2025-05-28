@@ -27,4 +27,42 @@
  * @property {string}   headers.location
  */
 
+/**
+ * @description config
+ * @typedef {{
+ *   name:                              string,
+ *   server_protocol:	                string,
+ *   server_host:		                string,
+ *   server_port:                       number,
+ *   server_https_key:                  string,
+ *   server_https_cert:                 string,
+ *   server_https_ssl_verification:     0|1,
+ *   server_https_ssl_verification_path:string,
+ *   path_data:                         string,
+ *   service_registry_auth_url:		    string,
+ *   service_registry_auth_method:      'POST',
+ *   service_registry_url:	            string,
+ *   service_registry_method:	        'GET',
+ *   message_qeue_url:	                string,
+ *   message_qeue_method:	            'POST',
+ *   iam_auth_app_url:	                string,
+ *   iam_auth_app_method:	            'POST',
+ *   public_key:                        string,
+ *   private_key:                       string,
+ *   config:{
+ *          jobs:   { 
+ *                  jobid:number, 
+ *                  name:string, 
+ *                  command_type:'OS', 
+ *                  platform: string, 
+ *                  path: string, 
+ *                  command: string, 
+ *                  argument: string, 
+ *                  cron_expression:string, 
+ *                  enabled:boolean}[]
+ *                  }
+ *          }
+ *  } config
+ */
+
 export{};
