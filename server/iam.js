@@ -34,7 +34,7 @@ const IamControlObserve = await import('./db/IamControlObserve.js');
 const IamUser = await import('./db/IamUser.js');
 const IamAppAccess = await import('./db/IamAppAccess.js');
 const IamAppIdToken = await import('./db/IamAppIdToken.js');
-const {jwt} = await import('./security.js');
+const Security = await import('./security.js');
 
 const {hostname} = await import('node:os');
 /**
@@ -63,7 +63,7 @@ const iamUtilMessageNotAuthorized = () => '⛔';
  */
 const iamUtilTokenGet = (app_id, token, token_type) =>{
     /**@type{*} */
-    const verify = jwt.verify(  token.replace('Bearer ','').replace('Basic ',''), 
+    const verify = Security.jwt.verify(  token.replace('Bearer ','').replace('Basic ',''), 
                                 token_type=='MICROSERVICE'?
                                 ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'MICROSERVICE_TOKEN_SECRET'}}).result:
                                 token_type=='ADMIN'?
@@ -552,7 +552,7 @@ const iamAuthenticateUserActivate = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:{updated: number} }>}
  */
 const iamAuthenticateUserUpdate = async parameters => {
-    const Security= await import('./security.js');    
+    
     const result_totp =  await Security.securityTOTPValidate(parameters.data.totp, IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.otp_key);
     if (result_totp){
         const IamUserEvent = await import('./db/IamUserEvent.js');
@@ -706,7 +706,10 @@ const iamAuthenticateUserAppDelete = async parameters => {
  * @returns {Promise.<void>}
  */
  const iamAuthenticateUserCommon = async parameters  =>{
-    const app_id_host = commonAppHost(parameters.host);
+    const app_id_host = parameters.endpoint?.startsWith('MICROSERVICE')?
+                                //use app id 0 for microservice
+                                0
+                                :commonAppHost(parameters.host);
     //APP_EXTERNAL, APP_ACCESS_EXTERNALK, MICROSERVICE and MICROSERVICE_AUTH do not use idToken
     if ((   parameters.idToken ||
             parameters.endpoint=='APP_EXTERNAL' ||
@@ -716,7 +719,10 @@ const iamAuthenticateUserAppDelete = async parameters => {
         const app_id_admin = serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result);
         try {
             //authenticate id token
-            const id_token_decoded = (parameters.endpoint=='APP_EXTERNAL' || parameters.endpoint=='APP_ACCESS_EXTERNAL')?null:iamUtilTokenGet(app_id_host, parameters.idToken, 'APP_ID');
+            const id_token_decoded = (  parameters.endpoint=='APP_EXTERNAL' || 
+                                        parameters.endpoint=='APP_ACCESS_EXTERNAL'||
+                                        parameters.endpoint=='MICROSERVICE' ||
+                                        parameters.endpoint=='MICROSERVICE_AUTH')?null:iamUtilTokenGet(app_id_host, parameters.idToken, 'APP_ID');
             /**@type{server_db_table_IamAppIdToken}*/
             const log_id_token = (  parameters.endpoint=='APP_EXTERNAL' || 
                                     parameters.endpoint=='APP_ACCESS_EXTERNAL'||
@@ -798,7 +804,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                             //authenticate access token
                             const microservice_token = parameters.authorization?.split(' ')[1] ?? '';
                             /**@type{*} */
-                            const microservice_token_decoded = jwt.verify(  microservice_token.replace('Bearer ','').replace('Basic ',''),
+                            const microservice_token_decoded = Security.jwt.verify(  microservice_token.replace('Bearer ','').replace('Basic ',''),
                                                                             ConfigServer.get({  app_id:app_id_host, 
                                                                                                 data:{  config_group:'SERVICE_IAM', 
                                                                                                         parameter:'MICROSERVICE_TOKEN_SECRET'}}).result);
@@ -1279,51 +1285,58 @@ const iamAuthenticateResource = parameters =>  {
  *              and saves ip, user agent and app id to be authenticated
  * @function
  * @param { {app_id:number,
+ *           resource_id:string,
  *           ip:string,
  *           host:string,
  *           user_agent:string,
- *           data:{service:string}}} parameters
+ *           data:{ id:*,
+ *                  message:string}}} parameters
  * @returns {Promise.<server_server_response>}
  */
 const iamAuthenticateMicroservice = async parameters =>{
     const ServiceRegistry = await import('./db/ServiceRegistry.js');
-    const service = ServiceRegistry.get({app_id:parameters.app_id, resource_id:null, data:{name:parameters.data.service}}).result;
-    //service name and calling host without port should be registered in service registry
-    if (service.length==1 && service.host == parameters.host.split(':')[0]){
+    /**@type{server_db_table_ServiceRegistry[]} */
+    const service = ServiceRegistry.get({app_id:parameters.app_id, resource_id:null, data:{name:parameters.resource_id}}).result;
+    const decypted = (()=>{ try {
+        return Security.securityPrivateDecrypt(service[0].private_key, parameters.data.message);
+    } catch (error) {
+        return null;
+    }})();
+    //service name and calling host without port should be registered in service registry and message should be decrypted
+    if (decypted && service.length==1 && service[0].server_host == parameters.host.split(':')[0]){
         const IamMicroserviceToken = await import('./db/IamMicroserviceToken.js');
-        const token = jwt.sign ({
+        const token = Security.jwt.sign ({
                                     app_id: parameters.app_id, 
-                                    service_registry_id:service.id,
-                                    service_registry_name: service.name,
+                                    service_registry_id:service[0].id,
+                                    service_registry_name: service[0].name,
                                     ip:parameters.ip ?? '', 
                                     ua:parameters.user_agent,
                                     host:parameters.host,
                                     scope:'MICROSERVICE'}, 
                                     ConfigServer.get({  app_id:parameters.app_id, 
                                                         data:{
-                                                            config_group:'SERVICE_MICROSERVICE',
-                                                            parameter:'TOKEN_SECRET'
+                                                            config_group:'SERVICE_IAM',
+                                                            parameter:'MICROSERVICE_TOKEN_SECRET'
                                                         }
                                                     }).result, 
                                     {expiresIn: ConfigServer.get({  app_id:parameters.app_id, 
                                         data:{
-                                            config_group:'SERVICE_MICROSERVICE',
-                                            parameter:'TOKEN_EXPIRE_ACCESS'
+                                            config_group:'SERVICE_IAM',
+                                            parameter:'MICROSERVICE_TOKEN_EXPIRE_ACCESS'
                                         }
                                     }).result});
             const jwt_data = {token:token,
                     /**@ts-ignore */
-                    exp:jwt.decode(token, { complete: true }).payload.exp,
+                    exp:Security.jwt.decode(token, { complete: true }).payload.exp,
                     /**@ts-ignore */
-                    iat:jwt.decode(token, { complete: true }).payload.iat,
-                    /**@ts-ignore */
-                    tokentimestamp:jwt.decode(token, { complete: true }).payload.tokentimestamp};
+                    iat:Security.jwt.decode(token, { complete: true }).payload.iat};
         
             return IamMicroserviceToken.post(
                     parameters.app_id, 
                     {	app_id:     parameters.app_id,
-                        service_registry_id:service.id,
-                        service_registry_name: service.name,
+                        /**@ts-ignore */
+                        service_registry_id:service[0].id,
+                        service_registry_name: service[0].name,
                         res:		1,
                         token:   	jwt_data.token,
                         ip:         parameters.ip ?? '',
@@ -1426,14 +1439,14 @@ const iamAuthenticateMicroservice = async parameters =>{
                                 ip:                     claim.ip,
                                 scope:                  claim.scope,
                                 tokentimestamp:         Date.now()}; //this key is provided here, not from calling function
-    const token = jwt.sign (access_token_claim, secret, {expiresIn: expiresin});
+    const token = Security.jwt.sign (access_token_claim, secret, {expiresIn: expiresin});
     return {token:token,
             /**@ts-ignore */
-            exp:jwt.decode(token, { complete: true }).payload.exp,
+            exp:Security.jwt.decode(token, { complete: true }).payload.exp,
             /**@ts-ignore */
-            iat:jwt.decode(token, { complete: true }).payload.iat,
+            iat:Security.jwt.decode(token, { complete: true }).payload.iat,
             /**@ts-ignore */
-            tokentimestamp:jwt.decode(token, { complete: true }).payload.tokentimestamp};
+            tokentimestamp:Security.jwt.decode(token, { complete: true }).payload.tokentimestamp};
 };
 
 /**

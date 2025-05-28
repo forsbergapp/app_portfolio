@@ -369,7 +369,9 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
                                             parameters.app_id==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result)?'ADMIN':'APP_ACCESS'):null;
 
     const iam_user =        parameters.authorization?
+                                /**@ts-ignore */
                                 (serverUtilNumberValue(access_token?.iam_user_id)?
+                                    /*@ts-ignore*/
                                     IamUser.get(parameters.app_id, serverUtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
                                         null;
     //no authorization for repeated request using same id token or requesting from browser

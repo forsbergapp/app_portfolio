@@ -4,11 +4,10 @@
  */
 
 /**
- * @import {request, response} from './types.js'
+ * @import {config, request, response} from './types.js'
  */
 
 const service = await import('./service.js');
-const { registryConfigServices } = await import('../../registry.js');
 
 /**
  * @name ClassServerProcess
@@ -64,26 +63,36 @@ const serverReturn = (code, error, result, res)=>{
  */
 const serverStart = async () =>{
     const fs = await import('node:fs');
-    const ServiceRegistry = await registryConfigServices('BATCH');
-   
-    const request = ServiceRegistry?.https_enable==1?
-                        {
-                            server  : await import('node:https'),
-                            port	: ServiceRegistry.https_port,
-                            options : {
-                                key: ServiceRegistry.https_key?
-                                        await fs.promises.readFile(serverProcess.cwd() + ServiceRegistry.https_key, 'utf8'):
-                                            null,
-                                cert: ServiceRegistry.https_key?
-                                        await fs.promises.readFile(serverProcess.cwd() + ServiceRegistry.https_cert, 'utf8'):
-                                            null
-                            }
-                        }:
-                        {
-                            server  : await import('node:http'),
-                            port 	: ServiceRegistry.port
-                        };
-		
+    /**@type{config} */
+    const Config = JSON.parse(await fs.promises.readFile(serverProcess.cwd() + '/data/microservice/GEOLOCATION.json', 'utf8'));
+   //request token from service registry
+    /**
+     * @type{{  token:string,
+     *           exp:number,
+     *           iat:number}}
+     */
+    const result = await service.requestUrl({   url:Config.service_registry_auth_url, 
+        method:Config.service_registry_auth_method, 
+        body:{data:Buffer.from(JSON.stringify(
+                                    {
+                                    id:null,
+                                    message:Crypto.publicEncrypt(  Config.public_key,
+                                            Buffer.from(JSON.stringify({message:null}))).toString('base64')
+                                    })).toString('base64')
+            },
+        language:'en'})
+        .catch(error=>
+            {throw error;}
+        );
+    const request =     {
+        server  : await import(`node:${Config.server_protocol}`),
+        port	: Config.server_protocol,
+        options : Config.server_protocol=='https'?{
+                        key: await fs.promises.readFile(serverProcess.cwd() + Config.server_https_key, 'utf8'),
+                        cert: await fs.promises.readFile(serverProcess.cwd() + Config.server_https_cert, 'utf8')
+                    }:{}
+    };
+
 	request.server.createServer(request.options, (/**@type{request}*/req, /**@type{response}*/res) => {
 		serverReturn(401, '⛔', null, res);
 	}).listen(request.port, ()=>{
