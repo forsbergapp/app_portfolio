@@ -816,7 +816,7 @@
  * @typedef {{APP_COMMON_APP_ID         :string,
  *            APP_ADMIN_APP_ID          :string,
  *            CACHE_CONTROL             :string,
- *            CACHE_CONTROL_FONNT       :string,
+ *            CACHE_CONTROL_FONT        :string,
  *            FRAMEWORK                 :string,
  *            FRAMEWORK_MESSAGES        :number,
  *            LIMIT_RECORDS             :number}} server_db_config_server_service_app

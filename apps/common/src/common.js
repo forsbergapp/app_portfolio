@@ -669,24 +669,26 @@ const commonAppReportQueue = async parameters =>{
                                                             user:user.username
                                                             });
         if (result_post.result){
-            await AppModuleQueue.update(parameters.app_id, result_post.result.insertId, { start:new Date().toISOString(),
+            AppModuleQueue.update(parameters.app_id, result_post.result.insertId, { start:new Date().toISOString(),
                                                                     progress:0, 
-                                                                    status:'RUNNING'});
-            //report can update progress and only progress if necessary
-            //add queue id and parameters from parameter from origin
-            commonAppReport({   app_id:             parameters.app_id,
-                                resource_id:        report.result[0].common_name,
-                                data:               {type:'REPORT', 
-                                                        ...{ps:parameters.data.ps}, 
-                                                        ...{queue_parameters:{appModuleQueueId:result_post.result.insertId,
-                                                                                ...Object.fromEntries(Array.from(new URLSearchParams(parameters.data.report_parameters)).map(param=>[param[0],param[1]]))}
-                                                            }
-                                                    },
-                                user_agent:         parameters.user_agent,
-                                ip:                 parameters.ip,
-                                locale:             parameters.locale,
-                                endpoint:           parameters.endpoint});
-            //do not wait for submitted report
+                                                                    status:'RUNNING'})
+            .then(()=>{
+                //report can update progress and only progress if necessary
+                //add queue id and parameters from parameter from origin
+                //do not wait for submitted report
+                commonAppReport({   app_id:             parameters.app_id,
+                                    resource_id:        report.result[0].common_name,
+                                    data:               {type:'REPORT', 
+                                                            ...{ps:parameters.data.ps}, 
+                                                            ...{queue_parameters:{appModuleQueueId:result_post.result.insertId,
+                                                                                    ...Object.fromEntries(Array.from(new URLSearchParams(parameters.data.report_parameters)).map(param=>[param[0],param[1]]))}
+                                                                }
+                                                        },
+                                    user_agent:         parameters.user_agent,
+                                    ip:                 parameters.ip,
+                                    locale:             parameters.locale,
+                                    endpoint:           parameters.endpoint});
+            });
             return {result:null, type:'JSON'};
         }
         else
