@@ -18,7 +18,8 @@
  *          server_db_table_AppDataEntityResource, server_db_table_AppDataEntity,
  *          server_db_table_AppTranslation,
  *          server_db_document_ConfigRestApi,
- *          server_db_table_ServiceRegistry} from './types.js'
+ *          server_db_table_ServiceRegistry,
+ *          microservice_local_config} from './types.js'
  */
 
 const DB_DEMO_PATH              = '/server/install/db/demo/';
@@ -830,11 +831,11 @@ const deleteDemo = async parameters => {
  * @returns {Promise<void>}
  */
 const configDefault = async () => {
-    const {securitySecretCreate}= await import('./security.js');
     const {serverProcess} = await import('./server.js');
-    const fs = await import('node:fs');
-
+    const Security = await import('./security.js');
     const ORM = await import('./db/ORM.js');
+
+    const fs = await import('node:fs');
 
     const APP_PORTFOLIO_TITLE = 'App Portfolio';
 
@@ -842,7 +843,7 @@ const configDefault = async () => {
     /**
      * @type{[  [server_DbObject, server_db_document_ConfigServer],
      *           [server_DbObject, server_db_document_ConfigRestApi],
-     *           [server_DbObject, server_db_table_ServiceRegistry],
+     *           [server_DbObject, server_db_table_ServiceRegistry[]],
      *           [server_DbObject, server_db_table_IamUser[]],
      *           [server_DbObject, server_db_table_App[]],
      *           [server_DbObject, server_db_table_AppDataEntityResource[]],
@@ -866,16 +867,16 @@ const configDefault = async () => {
                                                                             config_server.SERVICE_IAM.map((/**@type{server_db_config_server_service_iam}*/row)=>{
                                                                                 for (const key of Object.keys(row)){
                                                                                     if (key== 'MICROSERVICE_TOKEN_SECRET'){
-                                                                                        row.MICROSERVICE_TOKEN_SECRET = securitySecretCreate();
+                                                                                        row.MICROSERVICE_TOKEN_SECRET = Security.securitySecretCreate();
                                                                                     }
                                                                                     if (key== 'ADMIN_TOKEN_SECRET'){
-                                                                                        row.ADMIN_TOKEN_SECRET = securitySecretCreate();
+                                                                                        row.ADMIN_TOKEN_SECRET = Security.securitySecretCreate();
                                                                                     }
                                                                                     if (key== 'ADMIN_PASSWORD_ENCRYPTION_KEY'){
-                                                                                        row.ADMIN_PASSWORD_ENCRYPTION_KEY = securitySecretCreate(false, 32);
+                                                                                        row.ADMIN_PASSWORD_ENCRYPTION_KEY = Security.securitySecretCreate(false, 32);
                                                                                     }
                                                                                     if (key== 'ADMIN_PASSWORD_INIT_VECTOR'){
-                                                                                        row.ADMIN_PASSWORD_INIT_VECTOR = securitySecretCreate(false, 16);
+                                                                                        row.ADMIN_PASSWORD_INIT_VECTOR = Security.securitySecretCreate(false, 16);
                                                                                     }
                                                                                 }
                                                                             });
@@ -886,7 +887,21 @@ const configDefault = async () => {
                                                                             return config_server;
                                                                         })],
                             ['ConfigRestApi',                   await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ConfigRestApi.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['ServiceRegistry',                 await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ServiceRegistry.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                                                                
+                                                                
+                            ['ServiceRegistry',                 await new Promise(resolve=>{(async () =>{ 
+                                                                        /**@type{server_db_table_ServiceRegistry[]}*/
+                                                                        const content = await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ServiceRegistry.json')
+                                                                                            .then(file=>JSON.parse(file.toString()));
+                                                                        //update public key and private for each microservice, use 1024 bits
+                                                                        for (const row of content){
+                                                                            const {publicKey, privateKey} = await Security.securityKeyPairCreate(1024);
+                                                                            row.public_key = publicKey;
+                                                                            row.private_key = privateKey;
+                                                                        }
+                                                                        resolve(content);
+                                                                    })();})
+                                                                ],
                             ['IamUser',                         await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/IamUser.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['App',                             await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/App.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['AppDataEntityResource',           await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppDataEntityResource.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
@@ -902,11 +917,11 @@ const configDefault = async () => {
                                                                         JSON.parse(filebuffer.toString())
                                                                             .filter((/**@type{server_db_table_AppSecret}*/row)=>row.app_id!=0)
                                                                             .map((/**@type{server_db_table_AppSecret}*/row)=>{
-                                                                            row.common_client_id = securitySecretCreate();
-                                                                            row.common_client_secret = securitySecretCreate();
-                                                                            row.common_app_id_secret = securitySecretCreate();
-                                                                            row.common_app_access_secret = securitySecretCreate();
-                                                                            row.common_app_access_verification_secret = securitySecretCreate();
+                                                                            row.common_client_id = Security.securitySecretCreate();
+                                                                            row.common_client_secret = Security.securitySecretCreate();
+                                                                            row.common_app_id_secret = Security.securitySecretCreate();
+                                                                            row.common_app_access_secret = Security.securitySecretCreate();
+                                                                            row.common_app_access_verification_secret = Security.securitySecretCreate();
                                                                             return row;
                                                                         }))],
                             ['AppData',                         await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppData.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
@@ -921,11 +936,24 @@ const configDefault = async () => {
                             '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_JOBS' in key)[0].PATH_JOBS,
                             '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_SSL' in key)[0].PATH_SSL,
                             '/data/db',
-                            '/data/db/journal'
+                            '/data/db/journal',
+                            '/data/microservice',
+                            '/data/microservice/data'
                             ])
     .catch((/**@type{server_server_error}*/err) => {
         throw err;
     }); 
+
+    //default microservice 
+    for (const file of ['BATCH', 'GEOLOCATION']){
+        /**@type{microservice_local_config} */
+        const content = await fs.promises.readFile(serverProcess.cwd() + `/server/install/default/microservice/${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
+        content.public_key = config_obj[2][1].filter(microservice=>microservice.name==content.name)[0].public_key;
+        content.private_key = config_obj[2][1].filter(microservice=>microservice.name==content.name)[0].private_key;
+        await fs.promises.writeFile(serverProcess.cwd() + `/data/microservice/${file}.json`, 
+                                                            JSON.stringify(content, undefined, 2),'utf8');
+    }
+
     //load default db
     await ORM.Init(config_obj[15][1]);
     for (const config_row of config_obj){

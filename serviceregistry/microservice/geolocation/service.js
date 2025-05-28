@@ -3,10 +3,12 @@
  * @module serviceregistry/microservice/geolocation/service 
  */
 
-const {registryConfigServices} = await import('../../registry.js');
+
+/**
+ * @import {config} from './types.js'
+ */
 
 const fs = await import('node:fs');
-const http = await import('node:http');
 
 /**
  * @name getGeodataEmpty
@@ -65,20 +67,20 @@ const getGeodataEmpty = (geotype) => {
  * @name getCacheGeodata
  * @description Returns cached geodata
  * @function
+ * @param {config} config
  * @param {'IP'|'PLACE'} cachetype 
  * @param {string|null} ip 
  * @param {string} latitude 
  * @param {string} longitude 
  * @returns {Promise.<*>}
  */
-const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
+const getCacheGeodata = async (config, cachetype, ip, latitude, longitude) =>{
     const {serverProcess} = await import('./server.js');
-    const ServiceRegistry = await registryConfigServices('GEOLOCATION');
     let geodata_cache;
     try {
         switch (cachetype){
             case 'IP':{
-                geodata_cache = await fs.promises.readFile(`${serverProcess.cwd()}${ServiceRegistry.path_data}/${ServiceRegistry.name}_geodata_cache_ip.log`, 'utf8');
+                geodata_cache = await fs.promises.readFile(`${serverProcess.cwd()}${config.path_data}/${config.name}_geodata_cache_ip.log`, 'utf8');
                 geodata_cache = geodata_cache.split('\r\n');
                 for (const row of geodata_cache){
                     const row_obj = JSON.parse(row);
@@ -88,7 +90,7 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
                 return null;
             }
             case 'PLACE':{
-                geodata_cache = await fs.promises.readFile(`${serverProcess.cwd()}${ServiceRegistry.path_data}/${ServiceRegistry.name}_geodata_cache_place.log`, 'utf8');
+                geodata_cache = await fs.promises.readFile(`${serverProcess.cwd()}${config.path_data}/${config.name}_geodata_cache_place.log`, 'utf8');
                 geodata_cache =  geodata_cache.split('\r\n');
                 /**
                  * 
@@ -138,21 +140,21 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
  * @name writeCacheGeodata
  * @description Writes geodata cache
  * @function
+ * @param {config} config
  * @param {'IP'|'PLACE'} cachetype 
  * @param {*} geodata 
  */
-const writeCacheGeodata = async (cachetype, geodata) =>{
+const writeCacheGeodata = async (config, cachetype, geodata) =>{
     const {serverProcess} = await import('./server.js');
-    const ServiceRegistry = await registryConfigServices('GEOLOCATION');
     
     switch (cachetype){
         case 'IP':{
-            await fs.promises.appendFile(`${serverProcess.cwd()}${ServiceRegistry.path_data}/${ServiceRegistry.name}_geodata_cache_ip.log`, 
+            await fs.promises.appendFile(`${serverProcess.cwd()}${config.path_data}/${config.name}_geodata_cache_ip.log`, 
                                                           JSON.stringify(JSON.parse(geodata)) +'\r\n', 'utf8');
             break;
         }
         case 'PLACE':{
-            await fs.promises.appendFile(`${serverProcess.cwd()}${ServiceRegistry.path_data}/${ServiceRegistry.name}_geodata_cache_place.log`, 
+            await fs.promises.appendFile(`${serverProcess.cwd()}${config.path_data}/${config.name}_geodata_cache_place.log`, 
                                                              JSON.stringify(JSON.parse(geodata)) +'\r\n', 'utf8');
             break;
         }
@@ -162,31 +164,65 @@ const writeCacheGeodata = async (cachetype, geodata) =>{
     }
 };
 /**
- * @name getGeodata
- * @description Returns geodata from http.request
+ * @name requestUrl
+ * @description Returns result from given url
  * @function
- * @param {string} url 
- * @param {string} language 
+ * @param { url:string, 
+ *          method:'GET'|'POST',
+ *          authorizsation:string|null,
+ *          body:{},
+ *          language:string} parameters
  * @returns {Promise.<string>}
  */
-const getGeodata = async (url, language) => {
-    return new Promise((resolve) =>{
+const requestUrl = async parameters => {
+    const protocol = (await import(`node:${parameters.url.split('://')[0]}`));
+    const zlib = await import('node:zlib');
+    return new Promise((resolve, reject) =>{
         //geolocation service using http 
 
+        const headers = parameters.method=='GET'? {
+            'User-Agent': 'Server',
+            'Accept-Language': parameters.language,
+            ...(parameters.authorization && {Authorization: parameters.authorization})
+        }: {
+            'User-Agent': 'Server',
+            'Accept-Language': parameters.language,
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(JSON.stringify(parameters.body)),
+            ...(parameters.authorization && {Authorization: parameters.authorization})
+        };
         const options = {
-            method: 'GET',
-            headers : {
-                'User-Agent': 'Server',
-                'Accept-Language': language
-            }
+            method: parameters.method,
+            rejectUnauthorized: false,
+            headers : headers
         };
         
-        const request = http.request(url, options, res =>{
+        const request = protocol.request(parameters.url, options, res =>{
             let responseBody = '';
-            res.setEncoding('utf8');
-            res.on('data', (chunk) =>responseBody += chunk);
-            res.on('end', ()=>resolve (responseBody));
+            if (res.headers['content-encoding'] == 'gzip'){
+                const gunzip = zlib.createGunzip();
+                res.pipe(gunzip);
+                gunzip.on('data', (chunk) =>responseBody += chunk);
+                gunzip.on('end', () => resolve ({result:JSON.parse(responseBody), type:'JSON'}));
+            }
+            else{
+                res.setEncoding('utf8');
+                res.on('data', (chunk) =>{
+                    responseBody += chunk;
+                });
+                res.on('end', ()=>{
+                    if (res.statusCode == 200 ||res.statusCode == 201)
+                        resolve (JSON.parse(responseBody));
+                    else
+                        reject(JSON.parse(responseBody));
+                });
+            }
         });
+        request.on('error', error => {
+            reject(error);
+        });
+        if (parameters.method !='GET')
+            request.write(JSON.stringify(parameters.body));
         request.end();        
     });
 };
@@ -194,24 +230,25 @@ const getGeodata = async (url, language) => {
  * @name getPlace
  * @description Get place
  * @function
+ * @param {config['config']} config
  * @param {string} latitude
  * @param {string} longitude
  * @param {string} accept_language
  * @returns {Promise<string>}
  */
- const getPlace = async (latitude, longitude, accept_language) => {
+ const getPlace = async (config, latitude, longitude, accept_language) => {
 	let geodata;
-	geodata = await getCacheGeodata('PLACE', null, latitude, longitude);
+	geodata = await getCacheGeodata(config, 'PLACE', null, latitude, longitude);
 	if (geodata != null)
         return geodata;
 	else{
-        const url = (await registryConfigServices('GEOLOCATION')).config.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_PLACE')[0].URL_PLACE
+        const url = config.config.url_place
                     .replace('<LATITUDE/>', latitude)
                     .replace('<LONGITUDE/>', longitude);
         //return result without prefix
-		geodata = await getGeodata(url, accept_language).then(result=>result.replaceAll('geoplugin_',''));
+		geodata = await requestUrl({url:url, method:'GET', language:accept_language}).then(result=>result.replaceAll('geoplugin_',''));
 		if (geodata != '[[]]')
-			writeCacheGeodata('PLACE', geodata);
+			writeCacheGeodata(config, 'PLACE', geodata);
 		return geodata;
 	}
 };
@@ -219,30 +256,29 @@ const getGeodata = async (url, language) => {
  * @name getIp
  * @description Get geodata for ip
  * @function
+ * @param {config} config
  * @param {string} ip
  * @param {string} accept_language
  * @returns {Promise.<string>}
  */
-const getIp = async (ip, accept_language) => {
+const getIp = async (config, ip, accept_language) => {
 	let geodata;
 	let url;
-	geodata = await getCacheGeodata('IP', ip, '', '');
+	geodata = await getCacheGeodata(config, 'IP', ip, '', '');
 	if (geodata != null)
 		return geodata;
 	else{
 		if (ip == '::1' || ip == '::ffff:127.0.0.1' || ip == '127.0.0.1'){
 			//create empty record with ip ::1 first time
-			writeCacheGeodata('IP', getGeodataEmpty('IP'));
-            url =   (await registryConfigServices('GEOLOCATION')).config.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
-                    .replace('<IP/>', '');
+			writeCacheGeodata(config, 'IP', getGeodataEmpty('IP'));
+            url =   config.config.url_ip.replace('<IP/>', '');
 		}
 		else
-            url =   (await registryConfigServices('GEOLOCATION')).config.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
-                    .replace('<IP/>', ip);
+            url =   config.config.url_ip.replace('<IP/>', ip);
         //return result without prefix
-		geodata = await getGeodata(url, accept_language).then(result=>result.replaceAll('geoplugin_',''));
-		writeCacheGeodata('IP', geodata);
+		geodata = await requestUrl({url:url, method:'GET', language:accept_language}).then(result=>result.replaceAll('geoplugin_',''));
+		writeCacheGeodata(config, 'IP', geodata);
         return geodata;
 	}
 };
-export {getGeodataEmpty, getCacheGeodata, writeCacheGeodata, getGeodata, getIp, getPlace};
+export {getGeodataEmpty, getCacheGeodata, writeCacheGeodata, requestUrl, getIp, getPlace};

@@ -639,22 +639,19 @@
 /** 
  * @description DB DOCUMENT ServiceRegistry
  * @memberof dbObjects
- * @typedef {{  id?:number,
- *              name:string, 
- *              host:number, 
- *              port:number,
- *              https_enable:number,
- *              https_key:string,
- *              https_cert:string,
- *              https_ssl_verification:number,
- *              https_ssl_verification_path:string,
- *              https_port:number,
- *              path:string,
- *              path_data:string,
- *              config:[*],
- *              status: string,
- *              created?:string,
- *              modified?:string}} server_db_table_ServiceRegistry
+ * @typedef {{  id?:                number,
+ *              name:               string,
+ *              server_protocol:    'http'|'https',
+ *              server_host:        string,
+ *              server_port:        number,
+ *              metrics_url:        string, 
+ *              health_url:         string, 
+ *              rest_api_version:   number,
+ *              public_key:         string,
+ *              private_key:        string,
+ *              status:             string,
+ *              created?:           string,
+ *              modified?:          string}} server_db_table_ServiceRegistry
  */
 
 /**
@@ -1587,6 +1584,32 @@
 /**
  * @description SERVICEREGISTRY microservice_registry_service
  * @typedef {'GEOLOCATION'|'MAIL'|string} microservice_registry_service
+ */
+
+
+/**
+ * @description SERVICE_REGISTRY microservice_local_config
+ * @typedef {{
+ *   name:                              string,
+ *   server_protocol:	                string,
+ *   server_host:		                string,
+ *   server_port:                       number,
+ *   server_https_key:                  string,
+ *   server_https_cert:                 string,
+ *   server_https_ssl_verification:     0|1,
+ *   server_https_ssl_verification_path:string,
+ *   path_data:                         string,
+ *   service_registry_auth_path:		string,
+ *   service_registry_auth_method:      'POST',
+ *   service_registry_path:	            string,
+ *   service_registry_method:	        'GET',
+ *   message_qeue_path:	                string,
+ *   message_qeue_method:	            'POST',
+ *   iam_auth_app_path:	                string,
+ *   iam_auth_app_method:	            'POST',
+ *   public_key:                        string,
+ *   private_key:                       string,
+ *   config:{url_ip:string, url_place:string}}} microservice_local_config
  */
 
 /**

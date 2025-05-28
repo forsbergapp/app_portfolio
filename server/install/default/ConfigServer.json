@@ -40,7 +40,7 @@
         {"AUTHENTICATE_REQUEST_IP": "0", "COMMENT": "0=NO, 1=YES, check IP v4 range to block. Could be integrated with iptables on Linux."},
         {"ADMIN_TOKEN_EXPIRE_ACCESS": "1d", "COMMENT": "setting jsonwebtoken"},
         {"ADMIN_TOKEN_SECRET": "", "COMMENT": "setting jsonwebtoken"},
-        {"MICROSERVICE_EXPIRE_ACCESS": "365d", "COMMENT": "setting jsonwebtoken"},
+        {"MICROSERVICE_TOKEN_EXPIRE_ACCESS": "365d", "COMMENT": "setting jsonwebtoken"},
         {"MICROSERVICE_TOKEN_SECRET": "", "COMMENT": "setting jsonwebtoken"},
         {"ADMIN_PASSWORD_ENCRYPTION_KEY": "", "COMMENT": "32 characters"},
         {"ADMIN_PASSWORD_INIT_VECTOR": "", "COMMENT": "16 characters"},
