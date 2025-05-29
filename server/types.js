@@ -47,7 +47,7 @@
  * @property {number}       framework
  * @property {number}       framework_messages
  * @property {string}       rest_resource_bff
- * @property {string}       rest_api_version
+ * @property {number}       rest_api_version
  * @property {number}       first_time
  */
 
@@ -817,7 +817,7 @@
  *            APP_ADMIN_APP_ID          :string,
  *            CACHE_CONTROL             :string,
  *            CACHE_CONTROL_FONT        :string,
- *            FRAMEWORK                 :string,
+ *            FRAMEWORK                 :number,
  *            FRAMEWORK_MESSAGES        :number,
  *            LIMIT_RECORDS             :number}} server_db_config_server_service_app
  */
