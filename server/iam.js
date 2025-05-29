@@ -37,7 +37,6 @@ const IamAppAccess = await import('./db/IamAppAccess.js');
 const IamAppIdToken = await import('./db/IamAppIdToken.js');
 const Security = await import('./security.js');
 
-const {hostname} = await import('node:os');
 /**
  * @name iamRequestRateLimiterCount
  * @description Rate limiter 
@@ -874,10 +873,8 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *                          add IamControlObserve with status = 1 and type=BLOCK_IP
  *                      return status 429
  *                  else
- *                      if subdomain is known
- *                      if requested route is valid
- *                      if host does not exist
- *                      if request not accessed from domain or from os hostname
+ *                      if subdomain is unknown
+ *                      if requested route is invalid
  *                      if user agent is blocked
  *                      if decodeURIComponent() has error 
  *                      if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'
@@ -1076,17 +1073,6 @@ const iamAuthenticateUserAppDelete = async parameters => {
                     fail ++;
                 }
                 
-                //check if not accessed from domain or from os hostname
-                if (parameters.host.toUpperCase()==hostname().toUpperCase() ||
-                    parameters.host.toUpperCase().indexOf(config_SERVER.SERVER.filter(row=>'HOST' in row)[0].HOST.toUpperCase())<0){
-                    //stop always
-                    fail_block = true;
-                    await IamControlObserve.post(calling_app_id, 
-                                                            {   ...record,
-                                                                status:1,
-                                                                type:'HOST_IP'});
-                    fail ++;
-                }
                 //check if user-agent is blocked
                 if(IamControlUserAgent.get(calling_app_id, null).result.filter((/**@type{server_db_table_IamControlUserAgent}*/row)=>row.user_agent== parameters['user-agent']).length>0){
                     //stop always

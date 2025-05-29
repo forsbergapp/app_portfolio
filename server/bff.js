@@ -202,10 +202,7 @@ const bffStart = async (req, res) =>{
     /**@type{server_db_document_ConfigServer} */
     const configServer = ConfigServer.get({app_id:0}).result;
 
-    const app_id = bff_parameters.endpoint?.startsWith('MICROSERVICE')?
-                                //use app id 0 for microservice
-                                0
-                                :app_common.commonAppHost((bff_parameters.host??'').substring(0,(bff_parameters.host??'').indexOf(':')==-1?
+    const app_id = app_common.commonAppHost((bff_parameters.host??'').substring(0,(bff_parameters.host??'').indexOf(':')==-1?
                                                 (bff_parameters.host??'').length:
                                                     (bff_parameters.host??'').indexOf(':')));
     
