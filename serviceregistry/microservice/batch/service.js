@@ -66,7 +66,7 @@ const requestUrl = async parameters => {
                    if (res.statusCode == 200 ||res.statusCode == 201)
                        resolve (JSON.parse(responseBody));
                    else
-                       reject(JSON.parse(responseBody));
+                       reject(res.statusCode);
                });
            }
        });

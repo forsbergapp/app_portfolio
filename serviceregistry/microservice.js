@@ -162,7 +162,7 @@ const microserviceHttpRequest = async (service, path, query, body, method, timeo
                 if (res.statusCode == 200)
                     resolve (JSON.parse(responseBody));
                 else
-                    reject(JSON.parse(responseBody));
+                    reject(res.statusMessage);
             });
         });
         if (method !='GET')

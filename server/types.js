@@ -864,10 +864,10 @@
 
 /**
  * @description DB server_db_config_server_service_log
- * @typedef {{  ENABLE_REQUEST_INFO:string,
- *              ENABLE_REQUEST_VERBOSE:string,
- *              ENABLE_DB:string,
- *              ENABLE_SERVICE:string
+ * @typedef {{  REQUEST_LEVEL:string,
+ *              APP_LEVEL:string,
+ *              DB_LEVEL:string,
+ *              SERVICE_LEVEL:string
  *              FILE_INTERVAL:string}} server_db_config_server_service_log
  */
 

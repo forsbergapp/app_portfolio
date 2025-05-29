@@ -214,7 +214,7 @@ const requestUrl = async parameters => {
                     if (res.statusCode == 200 ||res.statusCode == 201)
                         resolve (JSON.parse(responseBody));
                     else
-                        reject(JSON.parse(responseBody));
+                        reject(res.statusCode);
                 });
             }
         });
@@ -242,11 +242,13 @@ const requestUrl = async parameters => {
 	if (geodata != null)
         return geodata;
 	else{
-        const url = config.config.url_place
+        const url = config.config.filter(parameter=>'url_place' in parameter)[0].url_place
                     .replace('<LATITUDE/>', latitude)
                     .replace('<LONGITUDE/>', longitude);
         //return result without prefix
-		geodata = await requestUrl({url:url, method:'GET', language:accept_language}).then(result=>result.replaceAll('geoplugin_',''));
+
+		geodata = await requestUrl({url:url, method:'GET', language:accept_language})
+                            .then(result=>JSON.stringify(result).replaceAll('geoplugin_',''));
 		if (geodata != '[[]]')
 			writeCacheGeodata(config, 'PLACE', geodata);
 		return geodata;
@@ -271,12 +273,13 @@ const getIp = async (config, ip, accept_language) => {
 		if (ip == '::1' || ip == '::ffff:127.0.0.1' || ip == '127.0.0.1'){
 			//create empty record with ip ::1 first time
 			writeCacheGeodata(config, 'IP', getGeodataEmpty('IP'));
-            url =   config.config.url_ip.replace('<IP/>', '');
+            url =   config.config.filter(parameter=>'url_ip' in parameter)[0].url_ip.replace('<IP/>', '');
 		}
 		else
-            url =   config.config.url_ip.replace('<IP/>', ip);
+            url =   config.config.filter(parameter=>'url_ip' in parameter)[0].url_ip.replace('<IP/>', ip);
         //return result without prefix
-		geodata = await requestUrl({url:url, method:'GET', language:accept_language}).then(result=>result.replaceAll('geoplugin_',''));
+		geodata = await requestUrl({url:url, method:'GET', language:accept_language})
+                        .then(result=>JSON.stringify(result).replaceAll('geoplugin_',''));
 		writeCacheGeodata(config, 'IP', geodata);
         return geodata;
 	}

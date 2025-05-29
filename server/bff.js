@@ -169,7 +169,7 @@ const bffStart = async (req, res) =>{
     const {serverProcess} = await import('./server.js');
     
     //if first time, when no user exists, then redirect everything to admin
-    if (IamUser.get(app_common.commonAppHost(req.headers.host ?? '')??0, null).result.length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
+    if (IamUser.get(app_common.commonAppHost(req.headers.host ?? '')??0, null).result.length==0 && req.headers.host.startsWith('admin') == false)
         return {reason:'REDIRECT', redirect:`http://admin.${configServer.SERVER.filter(row=>'HOST' in row)[0].HOST + 
                                             (serverUtilNumberValue(configServer.SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT)==80?
                                                 '':
@@ -199,6 +199,9 @@ const bffStart = async (req, res) =>{
  * @returns {Promise<*>}
  */
  const bff = async (bff_parameters) =>{
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:0}).result;
+
     const app_id = bff_parameters.endpoint?.startsWith('MICROSERVICE')?
                                 //use app id 0 for microservice
                                 0
@@ -208,7 +211,9 @@ const bffStart = async (req, res) =>{
     
     if (app_id !=null){
         serverUtilCompression(bff_parameters.res.req,bff_parameters.res);
-        if (bff_parameters.endpoint == 'APP' && bff_parameters.method.toUpperCase() == 'GET' && !bff_parameters.url?.startsWith('/bff')){
+        if (bff_parameters.endpoint == 'APP' && 
+            bff_parameters.method.toUpperCase() == 'GET' && 
+            !bff_parameters.url?.startsWith(configServer.SERVER.filter(row=>'REST_RESOURCE_BFF' in row)[0].REST_RESOURCE_BFF + '/')){
             //App route for app asset, common asset, app info page and app
             serverResponse({app_id:app_id,
                             result_request:await app_common.commonApp({  app_id:app_id,
@@ -256,7 +261,7 @@ const bffStart = async (req, res) =>{
                                                                     body:decodedbody,
                                                                     res:bff_parameters.res})
                                                     .then((/**@type{*}*/result_service) => {
-                                                        const log_result = serverUtilNumberValue(ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}).result)==2?result_service:'✅';
+                                                        const log_result = serverUtilNumberValue(configServer.SERVICE_LOG.filter(row=>'REQUEST_LEVEL' in row)[0].REQUEST_LEVEL)==2?result_service:'✅';
                                                         return Log.post({  app_id:app_id, 
                                                             data:{  object:'LogServiceInfo', 
                                                                     service:{   service:bff_parameters.endpoint,
@@ -288,7 +293,7 @@ const bffStart = async (req, res) =>{
     else{
         //unknown appid, domain or subdomain, redirect to hostname
         bff_parameters.res?
-            bff_parameters.res.redirect(`${bff_parameters.res.req.protocol}://${ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'HOST'}})}`).result:
+            bff_parameters.res.redirect(`http://${configServer.SERVER.filter(row=>'HOST' in row)[0].HOST}:${configServer.SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT}`):
                 null;
     }
 };

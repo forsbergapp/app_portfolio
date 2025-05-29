@@ -4346,12 +4346,75 @@
                                         "type":"object" ,
                                         "properties":{
                                             "id":{
-                                                "type":"number"
+                                                "type":"number",
+                                                "required":true
                                             },
                                             "message":{
-                                                "type":"string"
+                                                "description":"Encrypted message",
+                                                "type":"string",
+                                                "required":true
                                             }
                                         }
+                                    }
+                                }
+                            }
+			            },
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
+        "/bff/microservice/v1/server-iam-authenticateapp/${IAM_service}":{
+            "post": {
+                "summary": "",
+                "operationId": "server.iam.iamAuthenticateApp",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_authorization"
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_service",
+                            "in":"path"
+                        }
+                ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "id":{
+                                                "type":"number",
+                                                "required":true
+                                            },
+                                            "message":{
+                                                "description":"Encrypted message",
+                                                "type":"string",
+                                                "required":true
+                                            }
+                                        },
+                                        "additionalProperties":true
                                     }
                                 }
                             }

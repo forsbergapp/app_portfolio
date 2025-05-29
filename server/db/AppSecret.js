@@ -25,21 +25,6 @@ const get = parameters => {
 };
 
 /**
- * @name getFile
- * @description Get record from file
- * @function
- * @param {number} app_id
- * @returns {Promise.<server_server_response & {result?:server_db_table_AppSecret }>}
- */
-const getFile = async app_id => {
-    return {result:await ORM.Execute({  app_id:app_id, 
-                                        dml:'GET', 
-                                        object:'AppSecret', 
-                                        get:{resource_id:null, partition:null}})
-                            .then(result=>result.rows.filter((/**@type{server_db_table_AppSecret}*/row)=> row.app_id == app_id)[0]),
-            type:'JSON'};};
-
-/**
  * @name post
  * @description Create record
  *              Object saves key values for given app id and adds one parameter to the same record
@@ -95,4 +80,4 @@ const deleteRecord = async (app_id, resource_id) => {
     });
 };
                    
-export {get, getFile, post, update, deleteRecord};
+export {get, post, update, deleteRecord};
