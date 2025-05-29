@@ -62,41 +62,75 @@ const serverReturn = (code, error, result, res)=>{
 const serverStart = async () =>{
     const fs = await import('node:fs');
     const service = await import('./service.js');
-    const {iamAuthenticateApp } = await import('../../microservice.js');
     const Crypto = await import('node:crypto');
 
     //get config
     /**@type{config} */
     const Config = JSON.parse(await fs.promises.readFile(serverProcess.cwd() + '/data/microservice/GEOLOCATION.json', 'utf8'));
 
-    //request token from service registry
+    /**
+     * @param 
+     * @param {{id:number|null,
+     *          message:{}}} message
+     * @returns {string}
+     */
+    const encryptMessage = message => 
+        Buffer.from(JSON.stringify(
+            {
+            id:message.id,
+            message:Crypto.publicEncrypt(  Config.public_key,
+                    Buffer.from(JSON.stringify(message.message))).toString('base64')
+            })).toString('base64');
+            
     /**
      * @type{{  token:string,
      *           exp:number,
      *           iat:number}}
      */
-    const result = await service.requestUrl({   url:Config.service_registry_auth_url, 
+    const jwt_data = (await service.requestUrl({url:Config.service_registry_auth_url, 
                                                 method:Config.service_registry_auth_method, 
-                                                body:{data:Buffer.from(JSON.stringify(
-                                                                            {
-                                                                            id:null,
-                                                                            message:Crypto.publicEncrypt(  Config.public_key,
-                                                                                    Buffer.from(JSON.stringify({message:null}))).toString('base64')
-                                                                            })).toString('base64')
+                                                body:{data:encryptMessage({id:null, message: {message:null}})
                                                     },
-                                                language:'en'})
-                                                .catch(error=>
-                                                    {throw error;}
-                                                );
+                                                language:'en'})).result;
+    /**
+     * @type{{  server: import('node:http') ,
+     *          port:   number,
+     *          options:{key?:string, cert?:string}}}
+     */
     const request =     {
-                            server  : await import(`node:${Config.server_protocol}`),
-                            port	: Config.server_protocol,
+                            server  :   await import(`node:${Config.server_protocol}`),
+                            port	: Config.server_port,
                             options : Config.server_protocol=='https'?{
                                             key: await fs.promises.readFile(serverProcess.cwd() + Config.server_https_key, 'utf8'),
                                             cert: await fs.promises.readFile(serverProcess.cwd() + Config.server_https_cert, 'utf8')
                                         }:{}
                         };
-
+    /**
+     * @description Authenticates app using IAM and sends query encoded with base64
+     * @param {number} app_id
+     * @param {string} authorization
+     * @returns {Promise.<boolean>}
+     */
+    const iamAuthenticateApp = async (app_id, authorization) =>{
+        const [auth_client_id, auth_client_secret] = Buffer.from((authorization.replace('Basic ','') || ''), 'base64').toString().split(':');
+        return await service.requestUrl({   url:Config.iam_auth_app_url, 
+                                            method:Config.iam_auth_app_method, 
+                                            body:{data:encryptMessage({ id:null, 
+                                                                        message: {
+                                                                                    app_id:app_id, 
+                                                                                    client_id:auth_client_id,
+                                                                                    client_secret:auth_client_secret
+                                                                                }})
+                                                },
+                                            authorization:'Bearer ' + jwt_data.token,
+                                            language:'en'})
+                    .then(result=>
+                        result.result.error?false:true
+                    )
+                    .catch(()=>
+                        false
+                    );
+    };
 	request.server.createServer(request.options, (/**@type{request}*/req, /**@type{response}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'GET');
 		res.setHeader('Access-Control-Allow-Origin', '*');

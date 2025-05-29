@@ -893,9 +893,9 @@ const configDefault = async () => {
                                                                         /**@type{server_db_table_ServiceRegistry[]}*/
                                                                         const content = await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ServiceRegistry.json')
                                                                                             .then(file=>JSON.parse(file.toString()));
-                                                                        //update public key and private for each microservice, use 1024 bits
+                                                                        //update public key and private for each microservice, use 4096 bits
                                                                         for (const row of content){
-                                                                            const {publicKey, privateKey} = await Security.securityKeyPairCreate(1024);
+                                                                            const {publicKey, privateKey} = await Security.securityKeyPairCreate(4096);
                                                                             row.public_key = publicKey;
                                                                             row.private_key = privateKey;
                                                                         }
