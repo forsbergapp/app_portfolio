@@ -2,7 +2,7 @@
     "name":                             "BATCH",
     "server_protocol":	                "http",
     "server_host":		                "localhost",
-    "server_port":                      "3000",
+    "server_port":                      "3001",
     "server_https_key":                 "/data/microservice/ssl/privkey.pem",
     "server_https_cert":                "/data/microservice/ssl/fullchain.pem",
     "server_https_ssl_verification":    0,
