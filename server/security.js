@@ -385,12 +385,16 @@ class Jwt {
      */
     sign (claim, secret, options) {
         //calculate expire time
+        const multiplier = Number((options?.expiresIn ?? '1').toLowerCase()
+                                    .replace('d','')
+                                    .replace('h','')
+                                    .replace('m',''));
         const exp = Math.floor(options?.expiresIn.toLowerCase().indexOf('d')>-1?
-                        ((Date.now()/1000) + (60*60*24)):
+                        ((Date.now()/1000) + (60*60*24*multiplier)):
                     options?.expiresIn.toLowerCase().indexOf('h')>-1?
-                        ((Date.now()/1000) + (60*60)):
+                        ((Date.now()/1000) + (60*60*multiplier)):
                     options?.expiresIn.toLowerCase().indexOf('m')>-1?
-                        ((Date.now()/1000) + (60)):
+                        ((Date.now()/1000) + (60*multiplier)):
                     //default 1 hour
                     (Date.now()/1000) + (60*60));
 
