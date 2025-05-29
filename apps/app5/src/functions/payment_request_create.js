@@ -20,7 +20,6 @@ const getToken = async parameters => {
     const IamAppAccess = await import('../../../../server/db/IamAppAccess.js');
     const {iamUtilTokenGet} = await import('../../../../server/iam.js');
     
-    /**@type{server_iam_access_token_claim & {exp:number, iat:number}} */
     const token_verify = iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_EXTERNAL');
     if (token_verify.app_id         == parameters.app_id && 
         token_verify.ip             == parameters.ip && 
@@ -207,7 +206,6 @@ const paymentRequestCreate = async parameters =>{
                 * @type {{ token:string,
                 *          exp:number,
                 *          iat:number,
-                *          tokentimestamp:number,
                 *          payment_request_id:string,
                 *          status:string,
                 *          merchant_name:string
@@ -219,8 +217,6 @@ const paymentRequestCreate = async parameters =>{
                                         exp:                    jwt_data.exp,
                                         /**@ts-ignore */
                                         iat:                    jwt_data.iat,
-                                        /**@ts-ignore */
-                                        tokentimestamp:         jwt_data.tokentimestamp,
                                         payment_request_id:     payment_request_id,
                                         status:                 data_payment_request.status,
                                         merchant_name:          merchant.merchant_name,
