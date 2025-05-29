@@ -5,6 +5,7 @@
  *          server_db_document_ConfigServer,
  *          server_db_config_server_service_iam,
  *          server_db_config_server_server,
+ *          server_db_table_AppSecret,
  *          server_db_table_IamAppIdToken,
  *          server_db_table_IamAppAccess,
  *          server_db_table_IamMicroserviceToken,
@@ -811,14 +812,15 @@ const iamAuthenticateUserAppDelete = async parameters => {
                             /**@type{server_db_table_ServiceRegistry}*/
                             const service = ServiceRegistry.get({   app_id:app_id_host,
                                                                     resource_id:null, 
-                                                                    data:{name:microservice_token_decoded.service_registry_name}}).result;
+                                                                    data:{name:microservice_token_decoded.service_registry_name}}).result[0];
                             /**@type{server_db_table_IamMicroserviceToken[]}*/
                             if (microservice_token_decoded.app_id == app_id_host && 
                                 microservice_token_decoded.service_registry_id == service.id &&
                                 microservice_token_decoded.service_registry_name == service.name &&
                                 microservice_token_decoded.scope == 'MICROSERVICE' && 
                                 microservice_token_decoded.ip == parameters.ip &&
-                                microservice_token_decoded.host == parameters.host.split(':')[0]){
+                                //authenticate host with port, since microservice can use same host and different ports
+                                microservice_token_decoded.host == parameters.host){
                                 if (IamMicroserviceToken.get({app_id:app_id_host, resource_id:null}).result
                                     .filter((/**@type{server_db_table_IamMicroserviceToken}*/row)=>
                                                                             //Authenticate service registry same id and name as in record
@@ -831,7 +833,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                                             //Authenticate IP address
                                                                             row.ip                      == parameters.ip &&
                                                                             //Authenticate host
-                                                                            row.host                    == parameters.host.split(':')[0] &&
+                                                                            row.host                    == parameters.host &&
                                                                             //Authenticate the token string
                                                                             row.token                   == microservice_token
                                                                         )[0])
@@ -899,10 +901,6 @@ const iamAuthenticateUserAppDelete = async parameters => {
 
     /**@type{server_db_document_ConfigServer} */
     const config_SERVER = ConfigServer.get({app_id:calling_app_id}).result;
-    /**@type{server_db_config_server_server[]} */
-    const config_SERVER_SERVER = config_SERVER.SERVER;
-    /**@type{server_db_config_server_service_iam[]} */
-    const config_SERVICE_IAM = config_SERVER.SERVICE_IAM;
 
     /**
      * IP to number
@@ -926,7 +924,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
      * @returns {boolean}
      */
     const block_ip_control = (app_id, data_app_id, ip_v4) => {
-        if (config_SERVICE_IAM.filter(row=>'AUTHENTICATE_REQUEST_IP' in row)[0].AUTHENTICATE_REQUEST_IP == '1'){
+        if (config_SERVER.SERVICE_IAM.filter(row=>'AUTHENTICATE_REQUEST_IP' in row)[0].AUTHENTICATE_REQUEST_IP == '1'){
             /**@type{server_db_table_IamControlIp[]} */
             const ranges = IamControlIp.get(
                                                     app_id, 
@@ -968,10 +966,10 @@ const iamAuthenticateUserAppDelete = async parameters => {
      */
     const rateLimiter = (app_id, ip) =>{	
         
-        const RATE_LIMIT_WINDOW_MS =                            config_SERVICE_IAM.filter(row=>'RATE_LIMIT_WINDOW_MS' in row)[0].RATE_LIMIT_WINDOW_MS;
-        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS =    config_SERVICE_IAM.filter(row=>'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS' in row)[0].RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS;
-        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER =         config_SERVICE_IAM.filter(row=>'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER' in row)[0].RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER; 
-        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN =        config_SERVICE_IAM.filter(row=>'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN' in row)[0].RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN;
+        const RATE_LIMIT_WINDOW_MS =                            config_SERVER.SERVICE_IAM.filter(row=>'RATE_LIMIT_WINDOW_MS' in row)[0].RATE_LIMIT_WINDOW_MS;
+        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS =    config_SERVER.SERVICE_IAM.filter(row=>'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS' in row)[0].RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS;
+        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER =         config_SERVER.SERVICE_IAM.filter(row=>'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER' in row)[0].RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER; 
+        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN =        config_SERVER.SERVICE_IAM.filter(row=>'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN' in row)[0].RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN;
   
         const currentTime = Date.now();
         if (!iamRequestRateLimiterCount[ip])
@@ -998,7 +996,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                 return true;
     };
 
-    if (config_SERVICE_IAM.filter(row=>'AUTHENTICATE_REQUEST_ENABLE' in row)[0].AUTHENTICATE_REQUEST_ENABLE=='1'){
+    if (config_SERVER.SERVICE_IAM.filter(row=>'AUTHENTICATE_REQUEST_ENABLE' in row)[0].AUTHENTICATE_REQUEST_ENABLE=='1'){
         let fail = 0;
         let fail_block = false;
         const ip_v4 = parameters.ip.replace('::ffff:','');
@@ -1047,15 +1045,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                     return  (path =='/favicon.ico' ||
                             path == '/robots.txt' ||
                             //REST API paths
-                            path.startsWith('/bff/app/v1') ||
-                            path.startsWith('/bff/app_id/v1') ||
-                            path.startsWith('/bff/app_access/v1') ||
-                            path.startsWith('/bff/app_access_verification/v1') ||
-                            path.startsWith('/bff/app_external/v1') ||
-                            path.startsWith('/bff/app_access_external/v1') ||
-                            path.startsWith('/bff/admin/v1') ||
-                            path.startsWith('/bff/iam/v1') ||
-                            path.startsWith('/bff/iam_signup/v1') ||
+                            path.startsWith(config_SERVER.SERVER.filter(row=>'REST_RESOURCE_BFF' in row)[0].REST_RESOURCE_BFF + '/') ||
                             //APP paths
                             path == '/' ||
                             path.startsWith('/js/') ||
@@ -1070,14 +1060,14 @@ const iamAuthenticateUserAppDelete = async parameters => {
                             //account names should start with /profile/ and not contain any more '/'
                             (path.startsWith('/profile/') && path.split('/').length==3)||
                             //SSL verification path
-                            (   path.startsWith(config_SERVER_SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH) &&
-                                serverUtilNumberValue(config_SERVER_SERVER.filter(row=>'HTTPS_SSL_VERIFICATION' in row)[0].HTTPS_SSL_VERIFICATION)==1
+                            (   path.startsWith(config_SERVER.SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH) &&
+                                serverUtilNumberValue(config_SERVER.SERVER.filter(row=>'HTTPS_SSL_VERIFICATION' in row)[0].HTTPS_SSL_VERIFICATION)==1
                             )
                         )==false;
                 };
                 if (invalid_path(parameters.path)){
                     //stop if trying to access any SSL path not enabled
-                    if (parameters.path.startsWith(config_SERVER_SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH))
+                    if (parameters.path.startsWith(config_SERVER.SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH))
                         fail_block = true;
                     await IamControlObserve.post(calling_app_id, 
                         {   ...record,
@@ -1088,7 +1078,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                 
                 //check if not accessed from domain or from os hostname
                 if (parameters.host.toUpperCase()==hostname().toUpperCase() ||
-                    parameters.host.toUpperCase().indexOf(config_SERVER_SERVER.filter(row=>'HOST' in row)[0].HOST.toUpperCase())<0){
+                    parameters.host.toUpperCase().indexOf(config_SERVER.SERVER.filter(row=>'HOST' in row)[0].HOST.toUpperCase())<0){
                     //stop always
                     fail_block = true;
                     await IamControlObserve.post(calling_app_id, 
@@ -1140,7 +1130,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                         .filter((/**@type{server_db_table_IamControlObserve}*/row)=>
                                 row.ip==ip_v4 && 
                                 row.app_id == app_id).length>
-                                                    config_SERVICE_IAM
+                                                    config_SERVER.SERVICE_IAM
                                                     .filter(row=>'AUTHENTICATE_REQUEST_OBSERVE_LIMIT' in row)[0].AUTHENTICATE_REQUEST_OBSERVE_LIMIT){
                         await IamControlObserve.post(calling_app_id,
                                                             {   ...record,
@@ -1160,26 +1150,68 @@ const iamAuthenticateUserAppDelete = async parameters => {
 
 /**
  * @name iamAuthenticateApp
- * @description Authenticate app in microservice
- *              file must be read from file, not file cache as main server
- *              since microservices run in separate processes and servers
+ * @description Authenticate app in microservice using encrypted message
  * @function
- * @param {number|null} app_id 
- * @param {string} authorization 
- * @returns {Promise.<boolean>}
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param { {app_id:number,
+ *           resource_id:string,
+ *           ip:string,
+ *           host:string,
+ *           user_agent:string,
+ *           data:{ id:*,
+ *                  message:string}}} parameters
+ * @returns {Promise.<server_server_response>}
  */
- const iamAuthenticateApp = async (app_id, authorization) =>{
-    if (app_id == null)
-        return false;
+ const iamAuthenticateApp = async parameters =>{
+    if (parameters.app_id == null)
+        return {http:401,
+            code:'IAM',
+            text:iamUtilMessageNotAuthorized(),
+            developerText:null,
+            moreInfo:null,
+            type:'JSON'
+        };
     else{
-        const app_secret = await AppSecret.getFile(app_id);
-        const CLIENT_ID = app_secret.result.common_client_id;
-        const CLIENT_SECRET = app_secret.result.common_client_secret;
-        const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
-        if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
-            return true;
+        const ServiceRegistry = await import('./db/ServiceRegistry.js');
+        /**@type{server_db_table_ServiceRegistry[]} */
+        const service = ServiceRegistry.get({app_id:parameters.app_id, resource_id:null, data:{name:parameters.resource_id}}).result;
+        const decrypted = (()=>{ try {
+            const decrypted_message = JSON.parse(Security.securityPrivateDecrypt(service[0].private_key, parameters.data.message));
+            //message should have a message key with app_id, client_id and client_secret
+            //id key not used here but all endpoints using encrypted messages should use id and message keys
+            return ('app_id' in decrypted_message &&
+                    'client_id' in decrypted_message &&
+                    'client_secret' in decrypted_message)?decrypted_message:null;
+        } catch (error) {
+            //code:ERR_OSSL_RSA_OAEP_DECODING_ERROR
+            return null;
+        }})();
+        if (decrypted){
+            const app_secret = AppSecret.get({app_id:parameters.app_id, resource_id:decrypted.app_id}).result
+                            .filter((/**@type{server_db_table_AppSecret}*/app)=>
+                                app.common_client_id == decrypted.client_id &&
+                                app.common_client_secret == decrypted.client_secret)[0];
+            if (app_secret)
+                return {result:{}, 
+                        type:'JSON'};
+            else
+                return {http:401,
+                    code:'IAM',
+                    text:iamUtilMessageNotAuthorized(),
+                    developerText:null,
+                    moreInfo:null,
+                    type:'JSON'
+                };        
+        }
         else
-            return false;
+            return {http:401,
+                code:'IAM',
+                text:iamUtilMessageNotAuthorized(),
+                developerText:null,
+                moreInfo:null,
+                type:'JSON'
+            };        
     }    
 };
 /**
@@ -1281,9 +1313,9 @@ const iamAuthenticateResource = parameters =>  {
 };
 /**
  * @name iamAuthenticateMicroservice
- * @description Authenticate microservice that should use a host in ServiceRegistry
- *              and saves ip, user agent and app id to be authenticated
+ * @description Authenticate microservice using encrypted message
  * @function
+ * @memberof ROUTE_REST_API
  * @param { {app_id:number,
  *           resource_id:string,
  *           ip:string,
@@ -1297,13 +1329,14 @@ const iamAuthenticateMicroservice = async parameters =>{
     const ServiceRegistry = await import('./db/ServiceRegistry.js');
     /**@type{server_db_table_ServiceRegistry[]} */
     const service = ServiceRegistry.get({app_id:parameters.app_id, resource_id:null, data:{name:parameters.resource_id}}).result;
-    const decypted = (()=>{ try {
+    const decrypted = (()=>{ try {
+        //authenticate private key is correct, the content of the message not needed here
         return Security.securityPrivateDecrypt(service[0].private_key, parameters.data.message);
     } catch (error) {
         return null;
     }})();
     //service name and calling host without port should be registered in service registry and message should be decrypted
-    if (decypted && service.length==1 && service[0].server_host == parameters.host.split(':')[0]){
+    if (decrypted && service.length==1 && service[0].server_host == parameters.host.split(':')[0]){
         const IamMicroserviceToken = await import('./db/IamMicroserviceToken.js');
         const token = Security.jwt.sign ({
                                     app_id: parameters.app_id, 
