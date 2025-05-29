@@ -706,10 +706,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
  * @returns {Promise.<void>}
  */
  const iamAuthenticateUserCommon = async parameters  =>{
-    const app_id_host = parameters.endpoint?.startsWith('MICROSERVICE')?
-                                //use app id 0 for microservice
-                                0
-                                :commonAppHost(parameters.host);
+    const app_id_host = commonAppHost(parameters.host);
     //APP_EXTERNAL, APP_ACCESS_EXTERNALK, MICROSERVICE and MICROSERVICE_AUTH do not use idToken
     if ((   parameters.idToken ||
             parameters.endpoint=='APP_EXTERNAL' ||
