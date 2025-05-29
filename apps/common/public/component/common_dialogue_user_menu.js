@@ -70,7 +70,6 @@ const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.
 *                      admin_app_id:number,
 *                      token_exp:number|null,
 *                      token_iat:number|null,
-*                      token_timestamp:number|null,
 *                      admin_only:number,
 *                      user_locale:string,
 *                      user_timezone:string,

@@ -4877,12 +4877,12 @@
                 "scheme":"basic"
             },
             "AuthorizationBearer":{
-                "description":"Syntax: Bearer [app access, app_access_verification or admin token using base64], claims: app_id:[APP_ID], app_custom_id[ex payment request id], iam_user_app_id: [IamUserApp.ID], iam_user_id:[IamUser.ID], iam_user_username:[USERNAME], ip:[IP], scope:[APP_ACCESS_VERIFICATION|APP_ACCESS|APP_ACCESS_EXTERNAL|ADMIN], tokentimestamp: [TIMESTAMP]",
+                "description":"Syntax: Bearer [app access, app_access_verification or admin token using base64]",
                 "type":"http",
                 "schema":"bearer"
             },
             "id-token":{
-                "description":"Created when app starts. Should be in all requests to protect all paths. Syntax Bearer [app id token using base64], claims: app_id:[APP_ID], app_custom_id:null, iam_user_app_id:null, iam_user_id:null, iam_user_username:null, ip:[IP], scope:[APP|REPORT|MAINTENANCE], tokentimestamp: [TIMESTAMP]",
+                "description":"Created when app starts. Should be in all requests to protect all paths except for external and microservice requests. Syntax Bearer [app id token using base64]",
                 "type":"string"
             }
         },

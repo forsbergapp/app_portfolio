@@ -59,7 +59,7 @@ const iamUtilMessageNotAuthorized = () => '⛔';
  * @param {number} app_id
  * @param {string} token
  * @param {token_type} token_type 
- * @returns {server_iam_access_token_claim|server_iam_microservice_token_claim & {exp:number, iat:number}}
+ * @returns {server_iam_access_token_claim & {exp:number, iat:number}|server_iam_microservice_token_claim & {exp:number, iat:number}}
  */
 const iamUtilTokenGet = (app_id, token, token_type) =>{
     /**@type{*} */
@@ -81,7 +81,6 @@ const iamUtilTokenGet = (app_id, token, token_type) =>{
             ip:                     verify.ip,
             host:                   verify.host,
             scope:                  verify.scope,
-            tokentimestamp:         verify.tokentimestamp,
             exp:                    verify.exp,
             iat:                    verify.iat};
     else
@@ -94,7 +93,6 @@ const iamUtilTokenGet = (app_id, token, token_type) =>{
                 iam_user_username:      verify.iam_user_username,
                 ip:                     verify.ip,
                 scope:                  verify.scope,
-                tokentimestamp:         verify.tokentimestamp,
                 exp:                    verify.exp,
                 iat:                    verify.iat};
 };
@@ -185,8 +183,7 @@ const iamUtilResponseNotAuthorized = (res, status, reason, bff=false) => {
  *                                              avatar?:            string | null,
  *                                              token_at:           string,
  *                                              exp:                number,
- *                                              iat:                number,
- *                                              tokentimestamp:     number} }>}
+ *                                              iat:                number} }>}
  */
 const iamAuthenticateUser = async parameters =>{
     const userpass =  decodeURIComponent(Buffer.from((parameters.authorization || '').split(' ')[1] || '', 'base64').toString('utf-8'));
@@ -203,8 +200,7 @@ const iamAuthenticateUser = async parameters =>{
      *                                              iam_user_username:string,
      *                                              token_at:string,
      *                                              exp:number,
-     *                                              iat:number,
-     *                                              tokentimestamp:number} }>}
+     *                                              iat:number} }>}
      */
     const check_user = async (result, user, token_type) => {     
         if (result == 1){
@@ -258,7 +254,6 @@ const iamAuthenticateUser = async parameters =>{
                                                                         token_at:       jwt_data?jwt_data.token:null,
                                                                         exp:            jwt_data?jwt_data.exp:null,
                                                                         iat:            jwt_data?jwt_data.iat:null,
-                                                                        tokentimestamp: jwt_data?jwt_data.tokentimestamp:null,
                                                                         active:         user.active}, 
                                                                     type:'JSON'};
                 });
@@ -393,7 +388,6 @@ const iamAuthenticateUser = async parameters =>{
  *                                              token_at:string|null,
  *                                              exp:number,
  *                                              iat:number,
- *                                              tokentimestamp:number,
  *                                              iam_user_app_id: number|null,
  *                                              iam_user_id:number} }>}
  */
@@ -448,7 +442,6 @@ const iamAuthenticateUserSignup = async parameters =>{
                                                 token_at:       jwt_data.token,
                                                 exp:            jwt_data.exp,
                                                 iat:            jwt_data.iat,
-                                                tokentimestamp: jwt_data.tokentimestamp,
                                                 iam_user_app_id: null,
                                                 iam_user_id:    new_user.result.insertId},
                                         type:'JSON'});
@@ -1407,7 +1400,7 @@ const iamAuthenticateMicroservice = async parameters =>{
  *              token:string, 
  *              exp:number,             //expires at
  *              iat:number,             //issued at
- *              tokentimestamp:number}}
+ * }}
  */
  const iamAuthorizeToken = (app_id, endpoint, claim)=>{
 
@@ -1453,16 +1446,13 @@ const iamAuthenticateMicroservice = async parameters =>{
                                 iam_user_id:            claim.iam_user_id,
                                 iam_user_username:      claim.iam_user_username,
                                 ip:                     claim.ip,
-                                scope:                  claim.scope,
-                                tokentimestamp:         Date.now()}; //this key is provided here, not from calling function
+                                scope:                  claim.scope};
     const token = Security.jwt.sign (access_token_claim, secret, {expiresIn: expiresin});
     return {token:token,
             /**@ts-ignore */
             exp:Security.jwt.decode(token, { complete: true }).payload.exp,
             /**@ts-ignore */
-            iat:Security.jwt.decode(token, { complete: true }).payload.iat,
-            /**@ts-ignore */
-            tokentimestamp:Security.jwt.decode(token, { complete: true }).payload.tokentimestamp};
+            iat:Security.jwt.decode(token, { complete: true }).payload.iat};
 };
 
 /**

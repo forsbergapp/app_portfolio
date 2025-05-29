@@ -26,7 +26,6 @@
  * @returns {Promise.<server_server_response & {result?:{token:string,
  *                                                      exp:number,
  *                                                      iat:number,
- *                                                      tokentimestamp:number,
  *                                                      payment_request_id:string,
  *                                                      payment_request_message:string,
  *                                                      status:string,
@@ -119,7 +118,6 @@ const paymentRequestCreate = async parameters =>{
             * @type {{ token:string,
             *          exp:number,
             *          iat:number,
-            *          tokentimestamp:number,
             *          payment_request_id:string,
             *          status:string,
             *          merchant_name:string
@@ -133,7 +131,6 @@ const paymentRequestCreate = async parameters =>{
             return {result:[{token:                 body_decrypted.token,
                             exp:                    body_decrypted.exp,
                             iat:                    body_decrypted.iat,
-                            tokentimestamp:         body_decrypted.tokentimestamp,
                             payment_request_id:     body_decrypted.payment_request_id,
                             payment_request_message:'Check your bank app to authorize this payment',
                             status:                 body_decrypted.status,

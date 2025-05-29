@@ -192,7 +192,6 @@
  *              token_admin_at:string|null,
  *              token_exp:number|null,
  *              token_iat:number|null,
- *              token_timestamp:number|null,
  *              rest_resource_bff:string|null,
  *              image_file_allowed_type1:string|null,
  *              image_file_allowed_type2:string|null,

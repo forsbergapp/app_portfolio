@@ -1271,8 +1271,7 @@
  *              iam_user_id:            number|null,
  *              iam_user_username:      string|null,
  *              ip:                     string,
- *              scope:                  server_iam_access_token_claim_scope_type,
- *              tokentimestamp?:        number}} server_iam_access_token_claim
+ *              scope:                  server_iam_access_token_claim_scope_type}} server_iam_access_token_claim
  */
 /**
  * @description IAM server_iam_microservice_token_claim
@@ -1282,8 +1281,7 @@
  *              service_registry_name:  string,
  *              ip:                     string,
  *              host:                   string,
- *              scope:                  'MICROSERVICE',
- *              tokentimestamp?:        number}} server_iam_microservice_token_claim
+ *              scope:                  'MICROSERVICE'}} server_iam_microservice_token_claim
  */
 
 /**

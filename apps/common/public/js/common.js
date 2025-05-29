@@ -50,7 +50,6 @@ const COMMON_GLOBAL = {
     token_admin_at:null,
     token_exp:null,
     token_iat:null,
-    token_timestamp:null,
     rest_resource_bff:null,
     image_file_allowed_type1:null,
     image_file_allowed_type2:null,
@@ -1210,7 +1209,6 @@ const commonUserSessionClear = () => {
     COMMON_GLOBAL.token_at	=               null;
     COMMON_GLOBAL.token_exp =               null;
     COMMON_GLOBAL.token_iat =               null;
-    COMMON_GLOBAL.token_timestamp =         null;
 };
 /**
  * @name commonLovEvent
@@ -1630,7 +1628,6 @@ const commonUserLogin = async () => {
         COMMON_GLOBAL.iam_user_username =       JSON.parse(result_iam).iam_user_username;
         COMMON_GLOBAL.token_exp =               JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat =               JSON.parse(result_iam).iat;
-        COMMON_GLOBAL.token_timestamp =         JSON.parse(result_iam).tokentimestamp;
 
         if (COMMON_GLOBAL.admin_app_id == COMMON_GLOBAL.app_id){
             COMMON_GLOBAL.token_admin_at= JSON.parse(result_iam).token_at;
@@ -1684,7 +1681,6 @@ const commonUserLogin = async () => {
         COMMON_GLOBAL.token_at	=               JSON.parse(result_iam).token_at;
         COMMON_GLOBAL.token_exp =               JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat =               JSON.parse(result_iam).iat;
-        COMMON_GLOBAL.token_timestamp =         JSON.parse(result_iam).tokentimestamp;
         commonDialogueShow('VERIFY', 'LOGIN');
         throw 'ERROR';
     }
@@ -1858,7 +1854,6 @@ const commonUserSignup = () => {
             COMMON_GLOBAL.token_at =        JSON.parse(result).token_at;
             COMMON_GLOBAL.token_exp =       JSON.parse(result).exp;
             COMMON_GLOBAL.token_iat =       JSON.parse(result).iat;
-            COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
             commonMessageShow('INFO', null, null,JSON.parse(result).otp_key);
             
             commonDialogueShow('VERIFY', 'SIGNUP');
@@ -2833,7 +2828,6 @@ const commonEvent = async (event_type,event=null) =>{
                                             admin_app_id:COMMON_GLOBAL.admin_app_id,
                                             token_exp:COMMON_GLOBAL.token_exp,
                                             token_iat:COMMON_GLOBAL.token_iat,
-                                            token_timestamp: COMMON_GLOBAL.token_timestamp,
                                             user_locale:COMMON_GLOBAL.user_locale,
                                             user_timezone:COMMON_GLOBAL.user_timezone,
                                             user_direction:COMMON_GLOBAL.user_direction,

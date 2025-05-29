@@ -409,7 +409,7 @@ class Jwt {
                             //expire timestamp in seconds    
                             exp: exp,
                             //issued at timestamp in seconds
-                            iat:(Date.now()/1000), //replace tokentimestamp with iat usage in apps
+                            iat:(Date.now()/1000),
                             //not before timestamp in seconds
                             nbf:(Date.now()/1000)
                             }
