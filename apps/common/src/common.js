@@ -901,11 +901,10 @@ const commonComponentCreate = async parameters =>{
 const commonAppHost = host =>{
     /**@type{server_db_document_ConfigServer} */
     const configServer = ConfigServer.get({app_id:0}).result;
-    //replace localhost used by microservice with HOST variable
-    switch (host.replace('localhost',configServer.SERVER.filter(parameter=>'HOST' in parameter)[0].HOST).split(':')[0].toString().split('.')[0]){
+    switch (host.split(':')[0].toString().split('.')[0]){
         case configServer.SERVER.filter(parameter=>'HOST' in parameter)[0].HOST:
+        case 'localhost':
         case 'www':{
-            //localhost
             return App.get({app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0, 
                             resource_id:null}).result.filter((/**@type{server_db_table_App}*/app)=>app.subdomain == 'www')[0].id;
         }
