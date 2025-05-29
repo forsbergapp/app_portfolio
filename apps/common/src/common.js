@@ -50,8 +50,10 @@ const commonSearchMatch = (col, search) =>{
  * @returns {Promise.<boolean>}
  */
 const commonAppStart = async (app_id) =>{
-    if (serverUtilNumberValue(ConfigServer.get({app_id:app_id,data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result)!=null &&
-        ConfigServer.get({app_id:app_id??0,data:{config_group:'METADATA',parameter:'MAINTENANCE'}}).result==0 &&
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:app_id}).result;
+    if (serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)!=null &&
+        configServer.METADATA.MAINTENANCE==0 &&
         App.get({app_id:app_id, resource_id:app_id}).result[0].status =='ONLINE')
             return true;
     else
@@ -798,8 +800,10 @@ const commonModuleMetaDataGet = async parameters =>{
 const commonComponentCreate = async parameters =>{
     const { iamAuthorizeIdToken } = await import('../../../server/iam.js');
 
-    const common_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_COMMON_APP_ID'}}).result);
-    const admin_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result);
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
+    const common_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID);
+    const admin_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID);
     //id token for APP and MAINTENANCE
     const idtoken = (parameters.type=='APP' ||parameters.type=='MAINTENANCE')?
                         await iamAuthorizeIdToken(parameters.app_id, parameters.componentParameters.ip, parameters.type):
@@ -830,10 +834,11 @@ const commonComponentCreate = async parameters =>{
                 client_timezone:        result_geodata?.timezone,
                 common_app_id:          common_app_id,
                 admin_app_id:           admin_app_id,
-                framework:              ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',   parameter:'FRAMEWORK'}}).result,
-                framework_messages:     ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',   parameter:'FRAMEWORK_MESSAGES'}}).result,
-                rest_resource_bff:      ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',        parameter:'REST_RESOURCE_BFF'}}).result,
-                rest_api_version:       ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',        parameter:'REST_API_VERSION'}}).result,
+                framework:              configServer.SERVICE_APP.filter(parameter=>'FRAMEWORK' in parameter)[0].FRAMEWORK,
+                framework_messages:     configServer.SERVICE_APP.filter(parameter=>'FRAMEWORK_MESSAGES' in parameter)[0].FRAMEWORK_MESSAGES,
+                                        
+                rest_resource_bff:      configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF,
+                rest_api_version:       configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION,
                 first_time:             count_user==0?1:0
             };
             /**@type{server_db_app_parameter_common} */
@@ -867,7 +872,7 @@ const commonComponentCreate = async parameters =>{
                 common_app_id:  common_app_id,
                 admin_app_id:   admin_app_id,
                 app_idtoken:    idtoken,
-                rest_resource_bff: ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'REST_RESOURCE_BFF'}}).result
+                rest_resource_bff: configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF
             });
 
             const {default:ComponentCreate} = await import('./component/common_maintenance.js');
