@@ -12,7 +12,7 @@
  *          APP_server_apps_module_common_type,
  *          server_server_res,
  *          server_bff_endpoint_type,
- *          server_bff_parameters,
+ *          server_db_document_ConfigServer,
  *          server_server_error,
  *          server_server_response} from '../../../server/types.js'
  * 
@@ -899,17 +899,19 @@ const commonComponentCreate = async parameters =>{
  * @returns {number|null}
  */
 const commonAppHost = host =>{
-    switch (host.split(':')[0].toString().split('.')[0]){
-                        
-        case ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HOST'}}).result:
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:0}).result;
+    //replace localhost used by microservice with HOST variable
+    switch (host.replace('localhost',configServer.SERVER.filter(parameter=>'HOST' in parameter)[0].HOST).split(':')[0].toString().split('.')[0]){
+        case configServer.SERVER.filter(parameter=>'HOST' in parameter)[0].HOST:
         case 'www':{
             //localhost
-            return App.get({app_id:serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_APP',parameter:'APP_COMMON_APP_ID'}}).result)??0, 
+            return App.get({app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0, 
                             resource_id:null}).result.filter((/**@type{server_db_table_App}*/app)=>app.subdomain == 'www')[0].id;
         }
         default:{
             try {
-                return App.get({app_id:serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_APP',parameter:'APP_COMMON_APP_ID'}}).result)??0, 
+                return App.get({app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0, 
                                 resource_id:null}).result.filter((/**@type{server_db_table_App}*/app)=>host.split(':')[0].toString().split('.')[0] == app.subdomain)[0].id;
             } catch (error) {
                 return null;
