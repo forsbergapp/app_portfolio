@@ -211,7 +211,7 @@ const component = async props => {
                     props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVER',parameter:'HTTPS_PORT'}}).result:
                         props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
 
-    const roleOrder = ['app_id', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'app_access_external', 'iam', 'iam_signup', 'socket'];
+    const roleOrder = ['app_id', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'app_access_external', 'iam', 'iam_signup', 'microservice', 'microservice_auth'];
     /**
      * Sort paths by defined role order
      * @param {*[]} paths
