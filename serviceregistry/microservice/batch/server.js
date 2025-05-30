@@ -7,8 +7,6 @@
  * @import {config, request, response} from './types.js'
  */
 
-const service = await import('./service.js');
-
 /**
  * @name ClassServerProcess
  * @description process methods
@@ -26,52 +24,75 @@ class ClassServerProcess {
 const serverProcess = new ClassServerProcess();
 
 /**
- * @name serverReturn
- * @description Return result
- * @function
- * @param {number} code 
- * @param {string|null} error 
- * @param {*} result 
- * @param {response} res
- * @returns {void}
- */
-const serverReturn = (code, error, result, res)=>{
-    res.statusCode = code;
-    if (error){
-        console.log(error);
-        //ISO20022 error format
-        const message = JSON.stringify({error:{
-                                        http:code, 
-                                        code:'MICROSERVICE',
-                                        text:error, 
-                                        developer_text:null, 
-                                        more_info:null}});
-        res.write(message, 'utf8');
-    }
-    else{
-        res.setHeader('Content-Type',  'application/json; charset=utf-8');
-        res.write(JSON.stringify(result), 'utf8');
-    }
-    res.end();
-};
-
-/**
  * @name serverStart
  * @description Starts the server
  * @function
  * @returns {Promise.<void>}
  */
 const serverStart = async () =>{
+    const service = await import('./service.js');
     const fs = await import('node:fs');
+    const Crypto = await import('node:crypto');
+
+    /**
+     * @name serverReturn
+     * @description Return result
+     * @function
+     * @param {number} code 
+     * @param {string|null} error 
+     * @param {*} result 
+     * @param {response} res
+     * @returns {void}
+     */
+    const serverReturn = (code, error, result, res)=>{
+        res.statusCode = code;
+        if (error){
+            log('MICROSERVICE_ERROR', error);
+            //ISO20022 error format
+            const message = JSON.stringify({error:{
+                                            http:code, 
+                                            code:'MICROSERVICE',
+                                            text:error, 
+                                            developer_text:null, 
+                                            more_info:null}});
+            res.write(message, 'utf8');
+        }
+        else{
+            res.setHeader('Content-Type',  'application/json; charset=utf-8');
+            res.write(JSON.stringify(result), 'utf8');
+        }
+        res.end();
+    };
+
     /**@type{config} */
-    const Config = JSON.parse(await fs.promises.readFile(serverProcess.cwd() + '/data/microservice/GEOLOCATION.json', 'utf8'));
+    const Config = JSON.parse(await fs.promises.readFile(serverProcess.cwd() + '/data/microservice/BATCH.json', 'utf8'));
     
+    /**
+     * @description log
+     * @param {'MICROSERVICE_LOG'|'MICROSERVICE_ERROR'} type
+     * @param {string} message
+     */
+    const log = (type, message) =>{
+        service.requestUrl({url:Config.message_queue_url, 
+            method:Config.message_queue_method, 
+            body:{data:Buffer.from(
+                            JSON.stringify({IAM_service:'BATCH', 
+                                            type: type, 
+                                            message:message})).toString('base64')
+                },
+            authorization:'Bearer ' + jwt_data.token,
+            language:'en'})
+        .catch(error=>
+            console.log(`MICROSERVICE ERROR ${error}`)
+        );
+    };
+
     /**
      * @param 
      * @param {{id:number|null,
-    *          message:{}}} message
-    * @returns {string}
-    */
+     *          message:{}}} message
+     * @returns {string}
+     */
    const encryptMessage = message => 
        Buffer.from(JSON.stringify(
            {
@@ -85,11 +106,11 @@ const serverStart = async () =>{
      *           exp:number,
      *           iat:number}}
      */
-    const jwt_data = (await service.requestUrl({url:Config.service_registry_auth_url, 
+    const jwt_data = await service.requestUrl({url:Config.service_registry_auth_url, 
                                                 method:Config.service_registry_auth_method, 
                                                 body:{data:encryptMessage({id:null, message: {message:null}})
                                                     },
-                                                language:'en'})).result;
+                                                language:'en'});
     /**
      * @type{{  server: import('node:http') ,
      *          port:   number,
@@ -107,11 +128,11 @@ const serverStart = async () =>{
 	request.server.createServer(request.options, (/**@type{request}*/req, /**@type{response}*/res) => {
 		serverReturn(401, '⛔', null, res);
 	}).listen(request.port, ()=>{
-		console.log(`MICROSERVICE BATCH PORT ${request.port} `);
+		log('MICROSERVICE_LOG', `MICROSERVICE START PORT ${request.port}`);
 	});
-	service.startJobs();
+	service.startJobs(Config, log);
 	serverProcess.on('uncaughtException', (err) =>{
-		console.log(err);
+		log('MICROSERVICE_ERROR', err.stack ?? err.message ?? err);
 	});
 };
 serverStart();

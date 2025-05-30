@@ -203,7 +203,12 @@ const requestUrl = async parameters => {
                 const gunzip = zlib.createGunzip();
                 res.pipe(gunzip);
                 gunzip.on('data', (chunk) =>responseBody += chunk);
-                gunzip.on('end', () => resolve ({result:JSON.parse(responseBody), type:'JSON'}));
+                gunzip.on('end', () => {
+                    if (res.statusCode == 200 ||res.statusCode == 201)
+                        resolve (JSON.parse(responseBody));
+                    else
+                        reject(res.statusCode);
+                });
             }
             else{
                 res.setEncoding('utf8');
