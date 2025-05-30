@@ -25,7 +25,7 @@ Implemented with many examples of implementation patterns
 - ISO20022
 - openAPI
 - CI/CD
-- microservice architecture
+- microservice architecture using service registry, message queue and IAM pattern
 - object relational mapping (ORM) database with PK, UK and FK table constraints including cascade delete for tables and support for non tables like key value and documents
 - circuitbreaker
 - message queue
