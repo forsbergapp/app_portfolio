@@ -22,37 +22,6 @@ class ClassServerProcess {
 }
 const serverProcess = new ClassServerProcess();
 
-  
-/**
- * @name serverReturn
- * @description Return result
- * @function
- * @param {number} code 
- * @param {string|null} error 
- * @param {*} result 
- * @param {response} res
- * @returns {void}
- */
-const serverReturn = (code, error, result, res)=>{
-    res.statusCode = code;
-    if (error){
-        console.log(error);
-        //ISO20022 error format
-        const message = JSON.stringify({error:{
-                                        http:code, 
-                                        code:'MICROSERVICE',
-                                        text:error, 
-                                        developer_text:null, 
-                                        more_info:null}});
-        res.write(message, 'utf8');
-    }
-    else{
-        res.setHeader('Content-Type',  'application/json; charset=utf-8');
-        res.write(JSON.stringify(result), 'utf8');
-    }
-    res.end();
-};
-
 /**
  * @name serverStart
  * @description Starts the server
@@ -60,14 +29,64 @@ const serverReturn = (code, error, result, res)=>{
  * @returns {Promise.<void>}
  */
 const serverStart = async () =>{
-    const fs = await import('node:fs');
     const service = await import('./service.js');
+    const fs = await import('node:fs');
     const Crypto = await import('node:crypto');
+
+    /**
+     * @name serverReturn
+     * @description Return result
+     * @function
+     * @param {number} code 
+     * @param {string|null} error 
+     * @param {*} result 
+     * @param {response} res
+     * @returns {void}
+     */
+    const serverReturn = (code, error, result, res)=>{
+        res.statusCode = code;
+        if (error){
+            log('MICROSERVICE_ERROR', error);
+            //ISO20022 error format
+            const message = JSON.stringify({error:{
+                                            http:code, 
+                                            code:'MICROSERVICE',
+                                            text:error, 
+                                            developer_text:null, 
+                                            more_info:null}});
+            res.write(message, 'utf8');
+        }
+        else{
+            res.setHeader('Content-Type',  'application/json; charset=utf-8');
+            res.write(JSON.stringify(result), 'utf8');
+        }
+        res.end();
+    };
 
     //get config
     /**@type{config} */
     const Config = JSON.parse(await fs.promises.readFile(serverProcess.cwd() + '/data/microservice/GEOLOCATION.json', 'utf8'));
 
+    /**
+     * @description log
+     * @param {'MICROSERVICE_LOG'|'MICROSERVICE_ERROR'} type
+     * @param {string} message
+     */
+    const log = (type, message) =>{
+        service.requestUrl({url:Config.message_queue_url, 
+            method:Config.message_queue_method, 
+            body:{data:Buffer.from(
+                            JSON.stringify({IAM_service:'GEOLOCATION', 
+                                            type: type, 
+                                            message:message})).toString('base64')
+                },
+            authorization:'Bearer ' + jwt_data.token,
+            language:'en'})
+        .catch(error=>
+            console.log(`MICROSERVICE ERROR ${error}`)
+        );
+    };
+    
     /**
      * @param 
      * @param {{id:number|null,
@@ -91,7 +110,7 @@ const serverStart = async () =>{
                                                 method:Config.service_registry_auth_method, 
                                                 body:{data:encryptMessage({id:null, message: {message:null}})
                                                     },
-                                                language:'en'})).result;
+                                                language:'en'}));
     /**
      * @type{{  server: import('node:http') ,
      *          port:   number,
@@ -125,7 +144,7 @@ const serverStart = async () =>{
                                             authorization:'Bearer ' + jwt_data.token,
                                             language:'en'})
                     .then(result=>
-                        result.result.error?false:true
+                        result.error?false:true
                     )
                     .catch(()=>
                         false
@@ -145,7 +164,7 @@ const serverStart = async () =>{
                         app_id:	    (app_query.get('app_id')==null||app_query.get('app_id')===undefined||app_query.get('app_id')==='')?
                                         null:
                                             Number(app_query.get('app_id')),
-						data:	data};
+						data:	    data};
 		iamAuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 			if (authenticate){
 				switch (true){
@@ -153,8 +172,8 @@ const serverStart = async () =>{
 						if(	(req.query.data.latitude !=null && req.query.data.latitude!='') ||
 							(req.query.data.longitude !=null && req.query.data.longitude!='')){
 							service.getPlace(Config, req.query.data.latitude, req.query.data.longitude, req.headers['accept-language'])
-							.then((result)=>result?.length>0?serverReturn(200, null, JSON.parse(result), res):'')
-							.catch((error) =>serverReturn(500, error, null, res));
+							.then(result=>result?.length>0?serverReturn(200, null, JSON.parse(result), res):'')
+							.catch(error =>serverReturn(500, error, null, res));
 						}
 						else
 							serverReturn(400, '⛔', null, res);
@@ -163,8 +182,8 @@ const serverStart = async () =>{
                     case URI_path == '/api/v1' && req.query.service == 'IP' && req.method =='GET':{
 						//no v6 support
 						service.getIp(Config, req.query.data.ip.replace('::ffff:',''), req.headers['accept-language'])
-						.then((result)=>serverReturn(200, null, JSON.parse(result), res))
-						.catch((error) =>serverReturn(500, error, null, res));
+						.then(result=>serverReturn(200, null, JSON.parse(result), res))
+						.catch(error =>serverReturn(500, error, null, res));
 						break;
 					}
 					default:{
@@ -176,11 +195,11 @@ const serverStart = async () =>{
 				serverReturn(401, '⛔', null, res);
 		});
 	}).listen(request.port, ()=>{
-		console.log(`MICROSERVICE GEOLOCATION PORT ${request.port} `);
+        log('MICROSERVICE_LOG', `MICROSERVICE START PORT ${request.port}`);
 	});
 
 	serverProcess.on('uncaughtException', (err) =>{
-		console.log(err);
+        log('MICROSERVICE_ERROR', err);
 	});
 };
 serverStart();

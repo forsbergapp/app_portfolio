@@ -4413,8 +4413,69 @@
                                                 "type":"string",
                                                 "required":true
                                             }
-                                        },
-                                        "additionalProperties":true
+                                        }
+                                    }
+                                }
+                            }
+			            },
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
+        "/bff/microservice/v1/serviceregistry-messagequeue":{
+            "post": {
+                "summary": "",
+                "operationId": "serviceregistry.messagequeue.messageQueue",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_authorization"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_message_queue_type",
+                            "default":"PUBLISH"
+                        }
+                        
+                ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "IAM_service":{
+                                                "$ref":"#/components/parameters/IAM_service"
+                                            },
+                                            "type":{
+                                                "type":"string",
+                                                "required":true
+                                            },
+                                            "message":{
+                                                "type":"string",
+                                                "required":true
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -5030,6 +5091,15 @@
             "server_microservice_service":{
                 "description":"Used to identify microservice service",
                 "name":	"service",
+                "in":"path",
+                "required":true,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "server_message_queue_type":{
+                "description":"Used to identify message queue type PUBLISH or CONSUME. Message queue type ERROR is created in server if CONSUME fails",
+                "name":	"message_queue_type",
                 "in":"path",
                 "required":true,
                 "schema":{

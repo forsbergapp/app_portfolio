@@ -3,16 +3,11 @@
  * @module serviceregistry/microservice/batch/service 
  */
 
-const {registryConfigServices} = await import('../../registry.js');
 
-/**@type{{  jobid:number,
-            log_id: number, 
-            filename: string, 
-            timeId:NodeJS.Timeout, 
-            command:string, 
-            cron_expression:string, 
-            milliseconds: number,
-            scheduled_start: Date}[]} */
+/**
+ * @import {config, jobs} from './types.js'
+ */
+/**@type{jobs} */
 const JOBS = [];
 
 /**
@@ -27,56 +22,61 @@ const JOBS = [];
  * @returns {Promise.<string>}
  */
 const requestUrl = async parameters => {
-   const protocol = (await import(`node:${parameters.url.split('://')[0]}`));
-   const zlib = await import('node:zlib');
-   return new Promise((resolve, reject) =>{
-       //geolocation service using http 
+    const protocol = (await import(`node:${parameters.url.split('://')[0]}`));
+    const zlib = await import('node:zlib');
+    return new Promise((resolve, reject) =>{
+        //geolocation service using http 
 
-       const headers = parameters.method=='GET'? {
-           'User-Agent': 'Server',
-           'Accept-Language': parameters.language,
-           ...(parameters.authorization && {Authorization: parameters.authorization})
-       }: {
-           'User-Agent': 'Server',
-           'Accept-Language': parameters.language,
-           'Content-Type': 'application/json',
-           'Content-Length': Buffer.byteLength(JSON.stringify(parameters.body)),
-           ...(parameters.authorization && {Authorization: parameters.authorization})
-       };
-       const options = {
-           method: parameters.method,
-           rejectUnauthorized: false,
-           headers : headers
-       };
-       
-       const request = protocol.request(parameters.url, options, res =>{
-           let responseBody = '';
-           if (res.headers['content-encoding'] == 'gzip'){
-               const gunzip = zlib.createGunzip();
-               res.pipe(gunzip);
-               gunzip.on('data', (chunk) =>responseBody += chunk);
-               gunzip.on('end', () => resolve ({result:JSON.parse(responseBody), type:'JSON'}));
-           }
-           else{
-               res.setEncoding('utf8');
-               res.on('data', (chunk) =>{
-                   responseBody += chunk;
-               });
-               res.on('end', ()=>{
-                   if (res.statusCode == 200 ||res.statusCode == 201)
-                       resolve (JSON.parse(responseBody));
-                   else
-                       reject(res.statusCode);
-               });
-           }
-       });
-       request.on('error', error => {
-           reject(error);
-       });
-       if (parameters.method !='GET')
-           request.write(JSON.stringify(parameters.body));
-       request.end();        
-   });
+        const headers = parameters.method=='GET'? {
+            'User-Agent': 'Server',
+            'Accept-Language': parameters.language,
+            ...(parameters.authorization && {Authorization: parameters.authorization})
+        }: {
+            'User-Agent': 'Server',
+            'Accept-Language': parameters.language,
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(JSON.stringify(parameters.body)),
+            ...(parameters.authorization && {Authorization: parameters.authorization})
+        };
+        const options = {
+            method: parameters.method,
+            rejectUnauthorized: false,
+            headers : headers
+        };
+        
+        const request = protocol.request(parameters.url, options, res =>{
+            let responseBody = '';
+            if (res.headers['content-encoding'] == 'gzip'){
+                const gunzip = zlib.createGunzip();
+                res.pipe(gunzip);
+                gunzip.on('data', (chunk) =>responseBody += chunk);
+                gunzip.on('end', () => {
+                    if (res.statusCode == 200 ||res.statusCode == 201)
+                        resolve (JSON.parse(responseBody));
+                    else
+                        reject(res.statusCode);
+                });
+            }
+            else{
+                res.setEncoding('utf8');
+                res.on('data', (chunk) =>{
+                    responseBody += chunk;
+                });
+                res.on('end', ()=>{
+                    if (res.statusCode == 200 ||res.statusCode == 201)
+                        resolve (JSON.parse(responseBody));
+                    else
+                        reject(res.statusCode);
+                });
+            }
+        });
+        request.on('error', error => {
+            reject(error);
+        });
+        if (parameters.method !='GET')
+            request.write(JSON.stringify(parameters.body));
+        request.end();        
+    });
 };
 /**
  * @name getMonth
@@ -146,52 +146,6 @@ const validateCronExpression = (expression) =>{
         return false;
     }
 };	
-/**
- * @name getBatchLogFilename
- * @description Get batchlog filename
- * @function
- * @returns {Promise.<string>}
- */
-const getBatchLogFilename = async () => {
-    const ServiceRegistry = await registryConfigServices('BATCH');
-    //new log every day, format YYYY-MM-DD_[file_batchlog]
-    const logdate = new Date();
-    const month   = logdate.toLocaleString('en-US', { month: '2-digit'});
-    const day     = logdate.toLocaleString('en-US', { day: '2-digit'});
-    return `${ServiceRegistry.path_data}/${ServiceRegistry.name}_${new Date().getFullYear()}${month}${day}.log`; 
-};
-/**
- * @name jobLogAdd
- * @description Add job log
- * @function
- * @param {{log_id: number|null,
- *          jobid: number|null,
- *          scheduled_start: Date|null,
- *          start:string|null,
- *          end:string|null,
- *          status:'PENDING'|'RUNNING'|'CANCELED'|'FAILED'|'FINISHED',
- *          result:*
- *          }} joblog
- * @returns {Promise.<{log_id:number, filename:string}>}
- */
-const jobLogAdd = async (joblog)=>{
-    const {serverProcess} = await import('./server.js');
-    const fs = await import('node:fs');
-    //add 10ms wait so log_id will be guaranteed unique on a fast server
-    await new Promise ((resolve)=>{setTimeout(()=> resolve(null), 10);});
-    joblog.log_id = joblog.log_id ?? Date.now();
-    const log = JSON.stringify({log_id: joblog.log_id, 
-                                jobid: joblog.jobid, 
-                                scheduled_start: joblog.scheduled_start, 
-                                start:joblog.start, 
-                                end:joblog.end, 
-                                status:joblog.status, 
-                                result:joblog.result});
-    const filename = await getBatchLogFilename();
-    await fs.promises.appendFile(`${serverProcess.cwd()}${filename}`, log + '\r\n', 'utf8');
-    //return log_id and the filename where the joblog.log_id is found
-    return {log_id: joblog.log_id, filename: filename};
-};
 /**
  * @name scheduleMilliseconds
  * @description Calculates scheduled time in milliseconds
@@ -310,15 +264,16 @@ const scheduleMilliseconds = (cron_expression) =>{
  * @name scheduleJob
  * @description Schedule job
  * @function
- * @param {number} jobid 
- * @param {'OS'} command_type 
- * @param {string} path 
- * @param {string} command 
- * @param {string} argument 
- * @param {string} cron_expression 
+ * @param {function}    logFunction
+ * @param {number}      jobid 
+ * @param {'OS'}        command_type 
+ * @param {string}      path 
+ * @param {string}      command 
+ * @param {string}      argument 
+ * @param {string}      cron_expression 
  * @returns {Promise.<void>}
  */
-const scheduleJob = async (jobid, command_type, path, command, argument, cron_expression) =>{
+const scheduleJob = async (logFunction, jobid, command_type, path, command, argument, cron_expression) =>{
     const {serverProcess} = await import('./server.js');
     const {exec} = await import('node:child_process');
     switch (command_type){
@@ -327,23 +282,24 @@ const scheduleJob = async (jobid, command_type, path, command, argument, cron_ex
             const scheduled_start = new Date(new Date().getTime() + milliseconds);
             //first log for jobid will get correlation log id
             //so all logs for this jobid can be traced
-            const batchlog = await jobLogAdd({ log_id: null,
-                                                jobid: jobid, 
-                                                scheduled_start: scheduled_start, 
-                                                start:null, 
-                                                end:null, 
-                                                status:'PENDING', 
-                                                result:null});
+            const log_id = Date.now();
+            await logFunction('MICROSERVICE_LOG', { log_id: log_id,
+                                                    jobid: jobid, 
+                                                    scheduled_start: scheduled_start, 
+                                                    start:null, 
+                                                    end:null, 
+                                                    status:'PENDING', 
+                                                    result:null});
             /**@type{NodeJS.Timeout} */
             let timeId = setTimeout(async () =>{
                     const start = new Date().toISOString();
-                    await jobLogAdd({  log_id: batchlog.log_id,
-                                        jobid: jobid, 
-                                        scheduled_start: null, 
-                                        start:start, 
-                                        end:null, 
-                                        status:'RUNNING', 
-                                        result:null});
+                    await logFunction('MICROSERVICE_LOG', { log_id: log_id,
+                                                            jobid: jobid, 
+                                                            scheduled_start: null, 
+                                                            start:start, 
+                                                            end:null, 
+                                                            status:'RUNNING', 
+                                                            result:null});
                     try{
                         let command_path;
                         if (path.includes('%HOMEPATH%')){
@@ -355,13 +311,16 @@ const scheduleJob = async (jobid, command_type, path, command, argument, cron_ex
                             command_path = path.replace('$HOME', serverProcess.env.HOME);
                         }
                         exec(`${command} ${argument}`, {cwd: command_path}, (err, stdout, stderr) => {
-                            jobLogAdd({log_id: batchlog.log_id,
-                                        jobid: jobid, 
-                                        scheduled_start: null, 
-                                        start:start, 
-                                        end:new Date().toISOString(), 
-                                        status:err?'FAILED':'FINISHED', 
-                                        result:err?err:`stdout: ${stdout}, stderr: ${stderr}`}).then(()=>{
+                            logFunction('MICROSERVICE_LOG', 
+                                        {
+                                            log_id: log_id,
+                                            jobid: jobid, 
+                                            scheduled_start: null, 
+                                            start:start, 
+                                            end:new Date().toISOString(), 
+                                            status:err?'FAILED':'FINISHED', 
+                                            result:err?err:`stdout: ${stdout}, stderr: ${stderr}`
+                                        }).then(()=>{
                                 //remove job
                                 JOBS.forEach((job,index)=>{
                                     if (job.timeId == timeId)
@@ -376,23 +335,32 @@ const scheduleJob = async (jobid, command_type, path, command, argument, cron_ex
                         });
                     }
                     catch(error){
-                        await jobLogAdd({  log_id: batchlog.log_id,
-                                            jobid: jobid, 
-                                            scheduled_start: null, 
-                                            start:start, 
-                                            end:new Date().toISOString(), 
-                                            status:'FAILED', 
-                                            result:error});
+                        await logFunction('MICROSERVICE_ERROR', 
+                                            {
+                                                log_id: log_id,
+                                                jobid: jobid, 
+                                                scheduled_start: null, 
+                                                start:start, 
+                                                end:new Date().toISOString(), 
+                                                status:'FAILED', 
+                                                result:error
+                                            });
                     }
                 }, milliseconds);
             JOBS.push({ jobid:jobid, 
-                        log_id: batchlog.log_id, 
-                        filename: batchlog.filename, 
+                        log_id: log_id, 
                         timeId:timeId, 
                         command:command, 
                         cron_expression:cron_expression, 
                         milliseconds: milliseconds,
                         scheduled_start: scheduled_start});
+            break;
+        }
+        default:{
+            logFunction('MICROSERVICE_ERROR', 
+                {
+                    error:'Command type:' + command_type
+                });
         }
     }		
 };
@@ -400,18 +368,22 @@ const scheduleJob = async (jobid, command_type, path, command, argument, cron_ex
  * @name startJobs
  * @description Start jobs
  * @function
+ * @param {config} config
+ * @param {function} logFunction
  * @returns {Promise.<void>}
  */
-const startJobs = async () =>{
+const startJobs = async (config, logFunction) =>{
     const os = await import('node:os');
-    //add server start in log, meaning all jobs were terminated
-    await jobLogAdd({  log_id: null,
-                        jobid: null, 
-                        scheduled_start: null, 
-                        start:new Date().toISOString(), 
-                        end:null, 
-                        status:'CANCELED', 
-                        result:'SERVER RESTART'});
+    await logFunction('MICROSERVICE_LOG', 
+                                    { 
+                                        log_id: null,
+                                        jobid: null, 
+                                        scheduled_start: null, 
+                                        start:new Date().toISOString(), 
+                                        end:null, 
+                                        status:'CANCELED', 
+                                        result:'SERVER RESTART'
+                                    });
     /**@type{{  jobid:number,
      *          name:string,
      *          command_type:'OS',
@@ -422,15 +394,21 @@ const startJobs = async () =>{
      *          cron_expression:string,
      *          enabled:boolean}[]} 
      */
-    const jobs = await registryConfigServices('BATCH').config.filter(row=>'jobs' in row)[0].jobs;
+    const jobs = config.config.filter(row=>'jobs' in row)[0].jobs;
     for (const job of jobs){
         //schedule enabled jobs and for current platform
         //use cron expression syntax
         if (job.enabled == true && job.platform == os.platform()){
             if (validateCronExpression(job.cron_expression))
-                await scheduleJob(job.jobid, job.command_type, job.path, job.command, job.argument, job.cron_expression);
+                await scheduleJob(  logFunction, 
+                                    job.jobid, 
+                                    job.command_type, 
+                                    job.path, 
+                                    job.command, 
+                                    job.argument, 
+                                    job.cron_expression);
             else
-                console.log('Not supported cron expression'); 
+                logFunction('MICROSERVICE_ERROR', 'Not supported cron expression'); 
         }
     }
 };

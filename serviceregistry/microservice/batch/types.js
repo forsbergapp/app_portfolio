@@ -43,8 +43,8 @@
  *   service_registry_auth_method:      'POST',
  *   service_registry_url:	            string,
  *   service_registry_method:	        'GET',
- *   message_qeue_url:	                string,
- *   message_qeue_method:	            'POST',
+ *   message_queue_url:	                string,
+ *   message_queue_method:	            'POST',
  *   iam_auth_app_url:	                string,
  *   iam_auth_app_method:	            'POST',
  *   public_key:                        string,
@@ -63,6 +63,16 @@
  *                  }
  *          }
  *  } config
+ */
+/**
+ * @description jobs
+ * @typedef {{  jobid:number,
+ *           log_id: number, 
+ *           timeId:NodeJS.Timeout, 
+ *           command:string, 
+ *           cron_expression:string, 
+ *           milliseconds: number,
+ *           scheduled_start: Date}[]}  jobs
  */
 
 export{};
