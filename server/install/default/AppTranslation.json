@@ -13,14 +13,14 @@
                     "security":"OWASP",
                     "comparison":[  
                                     [   ["Jasmine/Jest Behaviour Driven Development (BDD) test framework",  "App Portfolio"], 
-                                        ["Jasmine 0.5 Mb + dependencies code, Jest 1 Mb + dependencies code","0.01 Mb code including type declarations and without any dependences"],
+                                        ["Jasmine 0.5 Mb + dependencies code, Jest 1 Mb + dependencies code","0.01 Mb code including type declarations and without any dependencies"],
                                         ["runs out of server process",                                      "runs in server process"],
                                         ["simulating env using helpers",                                    "no helpers, running in server process"],
                                         ["can not debug out of process",                                    "debug in VSCode in running server"],
                                         ["specrunner in Javascript file",                                   "specrunner in JSON read by BDD report"],
                                         ["data analysis in terminal",                                       "data analysis pattern using print queue in admin app"],
                                         ["describe, it, expect with dependencies",                          "describe, it, expect without dependencies"],
-                                        ["spec files run using global scope",                               "spec files run using executing default function and passing test functions without global scope"],
+                                        ["spec files run using global scope",                               "spec files run using default function in JS modules and passing test functions without global scope"],
                                         ["31 matchers + not property",                                      "6 most common matchers, complex structure can be parsed and use expect on each element in spec files"],
                                         ["suggest scanning spec files for test",                            "using blackbox and whitebox tests in running server process or specrunner"],
                                         ["not following OWASP", 				                            "following OWASP"]
