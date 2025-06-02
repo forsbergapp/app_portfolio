@@ -49,8 +49,14 @@ const component = async props => {
             props.methods.commonWindowSetTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);
         }
     };    
+    const onMounted = async () =>{
+        maintenance_countdown();
+        const logo_maintenance = await fetch('/common/images/logo_maintenance.png').then(image=>image.blob());
+        const url_logo_maintenance = URL.createObjectURL(new Blob ([logo_maintenance], {type: 'image/png'}));
+        props.methods.COMMON_DOCUMENT.querySelector('#common_maintenance_logo').style.backgroundImage = `url('${url_logo_maintenance}')`;
+    };
     return {
-        lifecycle:  {onMounted:maintenance_countdown},
+        lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
         template:   template()

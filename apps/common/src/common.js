@@ -950,13 +950,6 @@ const commonApp = async parameters =>{
                 type:'JSON'};
     else
         switch (true){
-            case (parameters.url.toLowerCase().startsWith('/maintenance')):{
-                return await commonAssetfile({app_id:parameters.app_id, url: parameters.url.substring('/maintenance'.length), basepath:'/apps/common/public'});
-            } 
-            case (  parameters.app_id != serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result) && 
-                    await commonAppStart(parameters.app_id) ==false):{
-                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
-            }
             case (parameters.url.toLowerCase().startsWith('/common')):{
                 return await commonAssetfile({app_id:parameters.app_id, url:parameters.url.substring('/common'.length), basepath:'/apps/common/public'});
             }
@@ -984,33 +977,37 @@ const commonApp = async parameters =>{
             }
             case (parameters.url == '/'):
             case ((App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].showparam == 1 && parameters.url.split('/profile/')[1]?.length>1)):{
-                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{param: parameters.url.split('/profile/')[1]?.length>1?parameters.url.split('/profile/')[1]:null,
-                                                    ip:             parameters.ip, 
-                                                    user_agent:     parameters.user_agent,
-                                                    locale:         commonClientLocale(parameters.accept_language),
-                                                    host:           parameters.host},type:'APP'})
-                                    .then(app=>{
-                                        /**@type{server_server_response} */
-                                        const redirect = {http:301, type:'HTML'};
-                                        return app.result==null?redirect:app;})
-                                    .catch((error)=>{
-                                                            /**@ts-ignore */
-                                        return Log.post({   app_id:parameters.app_id, 
-                                            data:{  object:'LogAppError', 
-                                                    app:{   app_filename:serverUtilAppFilename(import.meta.url),
-                                                            app_function_name:'commonApp()',
-                                                            app_line:serverUtilAppLine()
-                                                    },
-                                                    log:error
-                                                }
-                                            })
-                                        .then(()=>{
-                                            return import('./component/common_server_error.js')
-                                                .then(({default:serverError})=>{
-                                                    return {result:serverError({data:null, methods:null}), type:'HTML'};
-                                                });
+                if  (parameters.app_id != serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result) && 
+                        await commonAppStart(parameters.app_id) ==false)
+                    return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
+                else
+                    return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{param: parameters.url.split('/profile/')[1]?.length>1?parameters.url.split('/profile/')[1]:null,
+                                                        ip:             parameters.ip, 
+                                                        user_agent:     parameters.user_agent,
+                                                        locale:         commonClientLocale(parameters.accept_language),
+                                                        host:           parameters.host},type:'APP'})
+                                        .then(app=>{
+                                            /**@type{server_server_response} */
+                                            const redirect = {http:301, type:'HTML'};
+                                            return app.result==null?redirect:app;})
+                                        .catch((error)=>{
+                                                                /**@ts-ignore */
+                                            return Log.post({   app_id:parameters.app_id, 
+                                                data:{  object:'LogAppError', 
+                                                        app:{   app_filename:serverUtilAppFilename(import.meta.url),
+                                                                app_function_name:'commonApp()',
+                                                                app_line:serverUtilAppLine()
+                                                        },
+                                                        log:error
+                                                    }
+                                                })
+                                            .then(()=>{
+                                                return import('./component/common_server_error.js')
+                                                    .then(({default:serverError})=>{
+                                                        return {result:serverError({data:null, methods:null}), type:'HTML'};
+                                                    });
+                                            });
                                         });
-                                    });
             }
             default:{
                 return {http:301, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'JSON'};

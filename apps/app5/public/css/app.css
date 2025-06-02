@@ -20,7 +20,6 @@ body {
 	width: 100%;
 }
 #app_top_logo{
-	background-image: url('/images/logo.png');
 	background-size: contain;
 	width: 60px;
 	height: 60px;
