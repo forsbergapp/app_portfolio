@@ -825,7 +825,7 @@ body.rtl{
 #common_dialogue_iam_start.common_dialogue_show1{
 	max-height: 90%;
 	width: 300px;
-	height: 430px;
+	height: 20em;
 }
 .common_dialogue_iam_start_form{
 	width: 100%;
@@ -834,10 +834,6 @@ body.rtl{
 	margin:10px;
 	cursor: pointer;
 	width: 20%;
-}
-#common_dialogue_iam_start_logo{
-	background-image: url('/common/images/logo.png');
-	margin: 0 auto;
 }
 #common_dialogue_iam_start .common_input, .common_login_input{
 	height: 2em;

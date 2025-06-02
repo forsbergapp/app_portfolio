@@ -10,7 +10,9 @@
  * @name template
  * @description Template
  * @function
- * @param {{maintenance:0|1|null}} props
+ * @param {{maintenance:0|1|null,
+ *          user_stat:{count_users:number, count_connected:number}[],
+ *          count_not_connected:number}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_start_content_widget1' class='widget'>
@@ -21,6 +23,14 @@ const template = props => ` <div id='menu_start_content_widget1' class='widget'>
                                     <div id='menu_start_select_month'></div>
                                 </div>
                                 <div id='menu_start_graphBox'></div>
+                                <div id='menu_start_user_stat'>
+                                    <div id="menu_start_user_stat_count_users" class='menu_start_user_stat_col common_icon'></div>
+                                    <div class='menu_start_user_stat_col'>${props.user_stat[0].count_users}</div>
+                                    <div id="menu_start_user_stat_count_connected" class='menu_start_user_stat_col common_icon'></div>
+                                    <div class='menu_start_user_stat_col'>${props.user_stat[0].count_connected}</div>
+                                    <div id="menu_start_user_stat_count_notconnected" class='menu_start_user_stat_col common_icon'></div>
+                                    <div class='menu_start_user_stat_col'>${props.count_not_connected}</div>
+                                </div>
                             </div>
                             <div id='menu_start_content_widget2' class='widget'>
                                 <div id='menu_start_maintenance'>
@@ -51,6 +61,24 @@ const template = props => ` <div id='menu_start_content_widget1' class='widget'>
  *                      template:string}>}
  */
 const component = async props => {
+    /**
+     * Count users if logged in or not
+     * @param {number} logged_in 
+     * @returns{Promise.<{count_connected:number}>}
+     */
+    const get_count = async (logged_in) => {
+        return props.methods.commonFFB({path:'/server-socket/socket-stat', query:`logged_in=${logged_in}`, method:'GET', authorization_type:'ADMIN'})
+                .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    };
+    /**@type{{count_users:number, count_connected:number}[]} */
+    const user_stat = await props.methods.commonFFB({path:'/server-db/iamuser-stat', method:'GET', authorization_type:'ADMIN'})
+                            .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    //add count stat
+    for (const row of user_stat)
+        row.count_connected = await get_count(1).then(result=>result.count_connected);
+
+    const count_not_connected = await get_count(0).then(result=>result.count_connected);
+
     /**@type{{status_codes:[number, string][]}} */
     const result_obj = await props.methods.commonFFB({path:'/server-info-statuscode', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
@@ -142,12 +170,17 @@ const component = async props => {
                    },
                 methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
+
+
    };
     return {
         lifecycle:  {onMounted:onMounted},
         data:   null,
         methods:null,
-        template: template({maintenance:maintenance})
+        template: template({maintenance:maintenance,
+                            user_stat:user_stat,
+                            count_not_connected:count_not_connected     
+        })
     };
 };
 export default component;
