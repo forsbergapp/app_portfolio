@@ -33,9 +33,14 @@ const template = () =>` <div id='app_top'>
  *                      template:string}>}
  */
 const component = async props => {
-    props;
+
+    const onMounted = async () =>{
+        const logo = await fetch('/images/logo.png').then(image=>image.blob());
+        const url_logo = URL.createObjectURL(new Blob ([logo], {type: 'image/png'}));
+        props.methods.COMMON_DOCUMENT.querySelector('#app_top_logo').style.backgroundImage = `url('${url_logo}')`;
+    };
     return {
-        lifecycle:  null,
+        lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
         template:   template()

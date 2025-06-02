@@ -1041,7 +1041,6 @@ const iamAuthenticateUserAppDelete = async parameters => {
                             path.startsWith('/common/') ||
                             path.startsWith('/component/') ||
                             path.startsWith('/info/') ||
-                            path.startsWith('/maintenance/') ||
                             path == '/apps/common_types.js' ||
                             path == '/sw.js' ||
                             //account names should start with /profile/ and not contain any more '/'

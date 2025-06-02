@@ -349,29 +349,6 @@ body.font_arabic_nastaliq .common_input{
 	font-display: block;
 	src: url(/common/modules/fontawesome/webfonts/fa-brands-400.woff2) format("woff2")
 }
-/*Fontawesome icons*/
-@font-face {
-	font-family: "Font Awesome 6 Free MAINTENANCE";
-	font-style: normal;
-	font-weight: 400;
-	font-display: block;
-	src: url(/maintenance/modules/fontawesome/webfonts/fa-regular-400.woff2) format("woff2")
-}
-@font-face {
-	font-family: "Font Awesome 6 Free MAINTENANCE";
-	font-style: normal;
-	font-weight: 900;
-	font-display: block;
-	src: url(/maintenance/modules/fontawesome/webfonts/fa-solid-900.woff2) format("woff2")
-}
-@font-face {
-	font-family: "Font Awesome 6 Brands MAINTENANCE";
-	font-style: normal;
-	font-weight: 900;
-	font-display: block;
-	src: url(/maintenance/modules/fontawesome/webfonts/fa-brands-400.woff2) format("woff2")
-}
-
 /* BROADCAST */
 #common_broadcast_info {
 	width:calc(100% - 20px);
@@ -436,7 +413,6 @@ body.font_arabic_nastaliq .common_input{
 	background-color:var(--common_app_color_blue1);
 }
 #common_broadcast_info_logo {
-	background-image: url('/common/images/logo_broadcast.png');
 	background-color: var(--common_app_color_white);
 }
 #common_broadcast_info_title {

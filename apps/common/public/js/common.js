@@ -2344,7 +2344,7 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
                 mountDiv:   'common_broadcast',
                 data:       {message:commonWindowFromBase64(message)},
                 methods:    null,
-                path:       COMMON_DOCUMENT.querySelector('#common_dialogue_maintenance')?'/maintenance/component/broadcast.js':'/common/component/common_broadcast.js'});
+                path:       '/common/component/common_broadcast.js'});
             break;
         }
 		case 'PROGRESS':{
@@ -2376,7 +2376,7 @@ const commonSocketMaintenanceShow = (message, init=null) => {
             mountDiv:   'common_dialogue_maintenance',
             data:       null,
             methods:    {commonWindowSetTimeout:commonWindowSetTimeout, commonWindowLocationReload:commonWindowLocationReload},
-            path:       '/maintenance/component/common_dialogue_maintenance.js'});
+            path:       '/common/component/common_dialogue_maintenance.js'});
     }
     else
         COMMON_DOCUMENT.querySelector('#common_maintenance_footer').textContent = message ?? '';
