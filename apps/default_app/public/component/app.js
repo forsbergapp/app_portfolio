@@ -26,9 +26,13 @@ const template = () =>` <div id='dialogue_documents' class='dialogue'>
  *                      template:   string}>}
  */
 const component = async props => {
-    props;
+    const onMounted = async () =>{
+        const logo = await fetch('/images/logo.png').then(image=>image.blob());
+        const url_logo = URL.createObjectURL(new Blob ([logo], {type: 'image/png'}));
+        props.methods.COMMON_DOCUMENT.querySelector('#app_logo').style.backgroundImage = `url('${url_logo}')`;
+    };
     return {
-        lifecycle:  {onMounted:null},
+        lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
         template:   template()

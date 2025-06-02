@@ -8,13 +8,6 @@ html, body, #app {
 body {
 	text-align: center;
 }
-#app_logo{
-	background-image: url('/images/logo.png');
-	background-size: contain;
-	width: 192px;
-	height: 192px;
-	margin: 0 auto;
-}
 #app_root{
     height: 100%;
 }
