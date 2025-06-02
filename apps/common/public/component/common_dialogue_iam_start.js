@@ -15,8 +15,7 @@
  *          first_time: boolean}} props 
  * @returns {string}
  */
-const template = props =>`  <div id='common_dialogue_iam_start_logo' class='common_image common_image_logo_start'></div>
-                            ${props.admin_app?'':
+const template = props =>`  ${props.admin_app?'':
                                `<div id='common_dialogue_iam_start_nav'>
                                     <div id='common_dialogue_iam_start_login'  class='common_icon ${props.type=='LOGIN'?'common_dialogue_iam_start_selected':''}'></div>
                                     <div id='common_dialogue_iam_start_signup' class='common_icon ${props.type=='SIGNUP'?'common_dialogue_iam_start_selected':''}'></div>

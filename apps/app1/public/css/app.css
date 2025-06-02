@@ -2,16 +2,15 @@
 #secure_menu_open::before{															content: var(--common_app_icon_menu_open)}
 #secure_menu_close::before{															content: var(--common_app_icon_menu_close)}
 #secure_menu_1::before{																content: var(--common_app_icon_chart)}
-#secure_menu_2::before{																content: var(--common_app_icon_users) ' ' var(--common_app_icon_log)}
-#secure_menu_3::before{																content: var(--common_app_icon_users)}
-#secure_menu_4::before{																content: var(--common_app_icon_apps) ' ' var(--common_app_icon_settings)}
-#secure_menu_5::before{																content: var(--common_app_icon_log)}
-#secure_menu_6::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_settings)}
-#secure_menu_7::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_install)}
-#secure_menu_8::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_database)}
-#secure_menu_9::before{																content: var(--common_app_icon_print)}
-#secure_menu_10::before{															content: var(--common_app_icon_server)}
-#secure_menu_11::before{															content: var(--common_app_icon_logout)}
+#secure_menu_2::before{																content: var(--common_app_icon_users)}
+#secure_menu_3::before{																content: var(--common_app_icon_apps) ' ' var(--common_app_icon_settings)}
+#secure_menu_4::before{																content: var(--common_app_icon_log)}
+#secure_menu_5::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_settings)}
+#secure_menu_6::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_install)}
+#secure_menu_7::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_database)}
+#secure_menu_8::before{																content: var(--common_app_icon_print)}
+#secure_menu_9::before{															    content: var(--common_app_icon_server)}
+#secure_menu_10::before{															content: var(--common_app_icon_logout)}
 
 #dialogue_send_broadcast_select_broadcast_type .common_select_dropdown_value[data-value='ALERT']::before{			content:var(--common_app_icon_alert)}
 #dialogue_send_broadcast_select_broadcast_type .common_select_dropdown_value[data-value='MAINTENANCE']::before{		content:var(--common_app_icon_maintenance)}
@@ -31,11 +30,9 @@
 #menu_start_broadcast_title::before{												content:var(--common_app_icon_broadcast)}
 #menu_start_broadcast_button::before{												content:var(--common_app_icon_chat)}
 
-#menu_user_stat_not_connected_icon::before{											content:var(--common_app_icon_logout)}
-#menu_user_stat_col_title1::before{													content:var(--common_app_icon_provider_id)}
-#menu_user_stat_col_title2::before{													content:var(--common_app_icon_provider)}
-#menu_user_stat_col_title3::before{													content:var(--common_app_icon_sum)}
-#menu_user_stat_col_title4::before{													content:var(--common_app_icon_user_connections)}
+#menu_start_user_stat_count_users::before{											content:var(--common_app_icon_user_connections) ' ' var(--common_app_icon_sum)}
+#menu_start_user_stat_count_connected::before{										content:var(--common_app_icon_user_connections) ' ' var(--common_app_icon_login)}
+#menu_start_user_stat_count_notconnected::before{									content:var(--common_app_icon_user_connections) ' ' var(--common_app_icon_logout)}
 
 #menu_users_list_title::before{														content:var(--common_app_icon_users)}
 #menu_users_search_icon::before{													content:var(--common_app_icon_reload)}
@@ -111,10 +108,6 @@
 #menu_server_os_title::before{														content:var(--common_app_icon_server)}
 #menu_server_process_title::before{													content:var(--common_app_icon_server) ' ' var(--common_app_icon_apps)}
 
-
-#common_dialogue_iam_start_logo{
-	background-image: url('/images/logo.png') !important;
-}
 
 /* Dialogue send broadcast*/
 #dialogue_send_broadcast.common_dialogue_show0{
@@ -282,7 +275,7 @@
 	opacity: 0.5;
 	font-weight: bold;
 }
-/*MENU 1 DASHBOARD*/
+/*MENU DASHBOARD*/
 #menu_start_content_widget1{
 	height:calc(80% - 10px);
 }
@@ -331,10 +324,8 @@
 }
 #menu_start_chart_box1{
 	width: 100%;
-	height: calc(50% - 20px);
 	display:inline-block;
-	vertical-align: top;
-	
+	vertical-align: top;	
 }
 #menu_start_chart_box1_chart{
 	width: 49%;
@@ -378,7 +369,6 @@
 }
 #menu_start_chart_box2{
 	width: 100%;
-	height: calc(50% - 20px);
 	display:inline-block;
 	vertical-align: top;
 	
@@ -387,7 +377,7 @@
 	display: flex;
 	align-items: flex-end;
 	width: 100%;
-	height: 70%;
+	height: 100px;
 	margin-bottom: 20px;
 	font-size: 0.7em;
 }
@@ -423,50 +413,13 @@
 	width: 100%;
 	margin-inline-start: 15px;
 	text-align: start;
+    height: 2em !important;
 }
-/*MENU 2 USER STAT*/
-#menu_user_stat_content_widget1{
-	height:calc(100% + 10px);
+#menu_start_user_stat{
+    display: flex;
+    justify-content: space-evenly;
 }
-#menu_user_stat_content_widget1 select{
-	display:inline-block;
-}
-#menu_user_stat_content_widget2{
-	height:calc(30% - 10px);
-	display: block;
-	text-align: center;
-}
-#menu_user_stat{
-	overflow-y: auto;
-	height:90px;
-}
-.menu_user_stat_row{
-	display: block;
-	text-align: start;
-}
-.menu_user_stat_row .menu_user_stat_common_logo{
-	background-image: url('/common/images/logo.png');
-	background-size: contain;
-	background-repeat: no-repeat;
-	width: 1em;
-    height: 1em;
-	margin-bottom: -2px;
-}
-
-.menu_user_stat_col{
-	display: inline-block;
-}
-.menu_user_stat_col:nth-child(1){
-	width:30px;
-}
-.menu_user_stat_col:nth-child(2){
-	width:160px;
-}
-.menu_user_stat_col:nth-child(3){
-	width: 110px;
-	text-align: end;
-}
-/* MENU 3 USERS */
+/* MENU USERS */
 #menu_users_content_widget1{
 	height: calc(50% - 10px);
 	display: flex;
@@ -518,7 +471,7 @@
 .menu_users_iam_app_access_col:nth-child(1){
 	display: none;
 }
-/* MENU 4 APP ADMIN*/
+/* MENU APP ADMIN*/
 #menu_apps_content_widget1{
 	height: calc(30% - 10px);
 	display: flex;
@@ -1376,12 +1329,8 @@ body{
 	background-color: var(--app_theme_widget_background_color) !important;
 	box-shadow: 0 4px 8px 0 var(--app_theme_widget_boxshadow_color1), 0 6px 20px 0 var(--app_theme_widget_boxshadow_color2);
 }
-#menu_user_stat_row_title{
-	font-weight: bold;
-}
 .common_dialogue_user_menu_messages_row:nth-child(odd),
 .menu_db_info_detail_row:nth-child(odd),
-.menu_user_stat_row:nth-child(odd),
 .list_lov_row:nth-child(odd),
 .menu_monitor_detail_app_data_stat_row:nth-child(odd),
 .menu_monitor_detail_connected_row:nth-child(odd),
@@ -1393,7 +1342,6 @@ body{
 .common_dialogue_user_menu_messages_row:nth-child(even),
 .menu_db_info_detail_row:last-child,
 .menu_db_info_detail_row:nth-child(even),
-.menu_user_stat_row:nth-child(even),
 .list_lov_row:nth-child(even),
 .menu_monitor_detail_app_data_stat_row:nth-child(even),
 .menu_monitor_detail_connected_row:nth-child(even),
@@ -1401,10 +1349,6 @@ body{
 .menu_report_queue_row:nth-of-type(even){
 	color: var(--app_theme_list_even_color);
 	background-color: var(--app_theme_list_even_background_color);
-}
-#menu_user_stat_row_title{
-	color:var(--app_theme_list_rowtitle_color);
-	background-color: var(--app_theme_list_rowtitle_background_color);
 }
 .list_title{
 	display: inline-block;
