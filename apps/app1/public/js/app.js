@@ -96,17 +96,8 @@ const appSecureMenuShow = menu => {
             
             break;
         }
-        //USER STAT
-        case 2:{
-            common.commonComponentRender({
-                mountDiv:   'secure_menu_content',
-                data:       null,
-                methods:    {commonFFB:common.commonFFB},
-                path:       '/component/menu_user_stat.js'});
-            break;    
-        }
         //USERS
-        case 3:{
+        case 2:{
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
@@ -116,7 +107,7 @@ const appSecureMenuShow = menu => {
             break;
         }
         //APP ADMIN
-        case 4:{
+        case 3:{
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
@@ -125,7 +116,7 @@ const appSecureMenuShow = menu => {
             break;    
         }
         //MONITOR
-        case 5:{
+        case 4:{
             /**
              * @param {*} parameters
              */
@@ -163,7 +154,7 @@ const appSecureMenuShow = menu => {
             break;
         }
         //SERVER CONFIG
-        case 6:{
+        case 5:{
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
@@ -172,7 +163,7 @@ const appSecureMenuShow = menu => {
             break;
         }
         //INSTALLATION
-        case 7:{
+        case 6:{
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
@@ -181,7 +172,7 @@ const appSecureMenuShow = menu => {
             break;
         }
         //DATABASE
-        case 8:{
+        case 7:{
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
@@ -194,7 +185,7 @@ const appSecureMenuShow = menu => {
             break;
         }
         //REPORT
-        case 9:{
+        case 8:{
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
@@ -210,7 +201,7 @@ const appSecureMenuShow = menu => {
             break;
         }
         //SERVER
-        case 10:{
+        case 9:{
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
@@ -1012,12 +1003,11 @@ const appEventClick = event => {
                 case 'secure_menu_6':
                 case 'secure_menu_7':
                 case 'secure_menu_8':
-                case 'secure_menu_9':
-                case 'secure_menu_10':{
+                case 'secure_menu_9':{
                     appSecureMenuShow(parseInt(event_target_id.substring('secure_menu_'.length)));
                     break;
                 }
-                case 'secure_menu_11': {
+                case 'secure_menu_10': {
                     common.commonUserLogout().then(() => {
                         appLogout();
                     });

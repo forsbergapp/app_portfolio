@@ -30,7 +30,6 @@ const template = () =>` <div id='secure'>
                                     <div id='secure_menu_8' class='secure_menuitem common_icon'></div>
                                     <div id='secure_menu_9' class='secure_menuitem common_icon'></div>
                                     <div id='secure_menu_10' class='secure_menuitem common_icon'></div>
-                                    <div id='secure_menu_11' class='secure_menuitem common_icon'></div>
                                 </div>
                             </div>
                             <div id='secure_main'>
