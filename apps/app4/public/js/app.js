@@ -814,24 +814,6 @@ const appPaperZoom = (zoomvalue = null) => {
 };
 
 /**
- * @name appDialogueShow
- * @description Show dialogue
- * @function
- * @param {*} dialogue 
- * @returns {void}
- */
-const appDialogueShow = dialogue => {
-    if (dialogue == 'SCAN' && common.commonMiscMobile()==false){
-        common.commonComponentRender({mountDiv:   'dialogue_scan_open_mobile',
-                                data:       null,
-                                methods:    {
-                                            commonModuleEasyQRCODECreate:common.commonModuleEasyQRCODECreate,
-                                            commonWindowHostname:common.commonWindowHostname
-                                            },
-                                path:       '/component/dialogue_scan_open_mobile.js'});
-    }
-};
-/**
  * @name appComponentSettingUpdate
  * @description Update component
  * @function
@@ -1885,10 +1867,6 @@ const appEventClick = event => {
                     SettingShow(7);
                     break;
                 }
-                case 'scan_open_mobile_close':{
-                    common.commonComponentRemove('dialogue_scan_open_mobile', true);
-                    break;
-                }
                 //settings
                 case 'settings_close':{
                     common.commonComponentRemove('settings');
@@ -2463,8 +2441,6 @@ const appInit = async parameters => {
         appLibTimetable.APP_REPORT_GLOBAL.session_currentDate.getMonth(),
         appLibTimetable.APP_REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
 
-    //show dialogue about using mobile and scan QR code after 5 seconds
-    common.commonWindowSetTimeout(() => {appDialogueShow('SCAN');}, 5000);
     await appUserSettingDefaultSet();
     //show default startup
     await appToolbarButton(APP_GLOBAL.app_default_startup_page);

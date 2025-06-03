@@ -241,10 +241,6 @@ const commonBFE = async parameters =>{
  *                      makes ECMAScript module adding export
  *                  /modules/leaflet/leaflet-src.esm.js
  *                      removes sourceMappingURL
- *                  /modules/easy.qrcode/easy.qrcode.js
- *                      makes ECMAScript module adding variables, canvas2svg, minimal modifications and export
- *                  /modules/easy.qrcode/canvas2svg.js
- *                      makes ECMAScript module adding minimal modifications and export
  *                  /apps/common_types.js
  *                      used to display common_types.js since developer path is different
  *              .html files
@@ -296,36 +292,6 @@ const commonAssetfile = parameters =>{
                         case '/modules/leaflet/leaflet-src.esm.js':{
                             fs.promises.readFile(`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
                                 modulefile = modulefile.replace(  '//# sourceMappingURL=','//');
-                                resolve({type:'JS', result:modulefile});
-                            });
-                            break;
-                        }
-                        case '/modules/easy.qrcode/easy.qrcode.js':{
-                            fs.promises.readFile(`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
-                                modulefile = modulefile.replace(  'var QRCode;','');
-    
-                                modulefile =    'let {ctx} = await import("./canvas2svg.js");\r\n' +
-                                                'let C2S = ctx;\r\n' + 
-                                                'var QRCode;\r\n' +
-                                                modulefile;
-                                modulefile = modulefile.replace(  'if (typeof define == \'function\' && (define.amd || define.cmd))','if (1==2)');
-                                modulefile = modulefile.replace(  'else if (freeModule)','else if (1==2)');
-                                modulefile = modulefile.replace(  'root.QRCode = QRCode;','null;');
-                                
-    
-                                modulefile = modulefile + 'export{QRCode}';
-                                resolve({type:'JS', result:modulefile});
-                            });
-                            break;
-                        }
-                        case '/modules/easy.qrcode/canvas2svg.js':{
-                            fs.promises.readFile(`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
-                                modulefile =  'let ctx;\r\n' + modulefile;
-                                modulefile = modulefile.replace('var STYLES, ctx, CanvasGradient, CanvasPattern, namedEntities;',
-                                                                'var STYLES, CanvasGradient, CanvasPattern, namedEntities;');
-                                modulefile = modulefile.replace(  'if (typeof window === "object")','if (1==2)');
-                                modulefile = modulefile.replace(  'if (typeof module === "object" && typeof module.exports === "object")','if (1==2)');
-                                modulefile = modulefile + 'export{ctx}';
                                 resolve({type:'JS', result:modulefile});
                             });
                             break;

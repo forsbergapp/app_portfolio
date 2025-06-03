@@ -2057,9 +2057,14 @@ var canvas$1 = (function () {
 var svg$1 = !!(document.createElementNS && svgCreate('svg').createSVGRect);
 
 var inlineSvg = !!svg$1 && (function () {
-	var div = document.createElement('div');
-	div.innerHTML = '<svg/>';
-	return (div.firstChild && div.firstChild.namespaceURI) === 'http://www.w3.org/2000/svg';
+    try {
+        var div = document.createElement('div');
+        div.innerHTML = '<svg/>';
+        return (div.firstChild && div.firstChild.namespaceURI) === 'http://www.w3.org/2000/svg';    
+    } catch (error) {
+        console.log(error)
+    }
+	
 })();
 
 // @property vml: Boolean

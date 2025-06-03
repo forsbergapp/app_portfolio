@@ -28,9 +28,6 @@ const template = props =>`  <div id='common_profile_main'>
                                         <div id='common_profile_username'>${props.profile.username}</div>
                                         <div id='common_profile_bio'>${props.profile.bio ?? ''}</div>
                                     </div>
-                                    <div class='common_profile_main_col'>
-                                        <div id='common_profile_qr' class='common_module_easy.qrcode'></div>
-                                    </div>
                                 </div>
                                 <div id='common_profile_main_row2' class='common_profile_main_row'>
                                     <div class='common_profile_main_col'>
@@ -100,8 +97,6 @@ const template = props =>`  <div id='common_profile_main'>
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate'],
- *                      commonModuleEasyQRCODECreate:CommonModuleCommon['commonModuleEasyQRCODECreate'],
- *                      commonWindowHostname:CommonModuleCommon['commonWindowHostname'],
  *                      commonDialogueShow:CommonModuleCommon['commonDialogueShow'],
  *                      commonSocketConnectOnlineCheck:CommonModuleCommon['commonSocketConnectOnlineCheck'],
  *                      commonWindowSetTimeout:CommonModuleCommon['commonWindowSetTimeout'],
@@ -134,7 +129,6 @@ const component = async props => {
    
     const onMounted = async () => {
         
-        props.methods.commonModuleEasyQRCODECreate('common_profile_qr', props.methods.commonWindowHostname() + '/' + profile.username);
         //User account followed and liked
         if (profile.followed_id!=null) {
             //followed

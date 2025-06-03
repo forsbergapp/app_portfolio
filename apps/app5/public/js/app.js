@@ -508,7 +508,7 @@ const appInit = async () => {
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div, 
         data:       null,
-        methods:    null,
+        methods:    {commonMiscImageFetch:common.commonMiscImageFetch},
         path:       '/component/app.js'})
     .then(()=> 
         common.commonComponentRender({
