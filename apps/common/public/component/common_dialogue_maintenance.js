@@ -52,7 +52,9 @@ const component = async props => {
     };    
     const onMounted = async () =>{
         maintenance_countdown();
-        props.methods.commonMiscAssetFetch('/common/images/logo_maintenance.png', 'common_maintenance_logo', 'image/png');
+        props.methods.commonMiscAssetFetch( '/common/images/logo_maintenance.png', 
+                                            props.methods.COMMON_DOCUMENT.querySelector('#common_maintenance_logo'), 
+                                            'image/png');
 
     };
     return {

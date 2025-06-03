@@ -1688,7 +1688,9 @@ body.rtl{
 #common_module_leaflet_control_search .common_select_option{
 	display: inline-block;;
 }
-.common_module_leaflet_control_button {
+.common_module_leaflet_control_button,
+.leaflet-control-zoom-in, 
+.leaflet-control-zoom-out {
 	text-align: center;
 	height: 30px;
 	width: 30px;

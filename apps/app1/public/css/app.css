@@ -1506,7 +1506,9 @@ body{
 .common_input_error{
 	border: 2px solid var(--app_theme_input_error_color) !important;
 }
-.common_module_leaflet_control_button{
+.common_module_leaflet_control_button,
+.leaflet-control-zoom-in, 
+.leaflet-control-zoom-out{
 	background-color: var(--app_theme_main_branding_color2);
 }
 .common_module_leaflet_control_expand{
