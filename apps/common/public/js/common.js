@@ -209,16 +209,16 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
  * @name commonMiscAssetFetch
  * @description fetches images and sets as background or return result if no element found
  * @param {string} url
- * @param {string|null} div_id
+ * @param {HTMLImageElement|HTMLAnchorElement|null} element
  * @param { 'image/png'|'image/webp'|
  *          'text/css'|'text/javascript'|
  *          'font/woff'|'font/ttf'} content_type
  * @returns {Promise.<string|void>}
  */
-const commonMiscAssetFetch = async (url,div_id, content_type )=>{
-    const element = COMMON_DOCUMENT.querySelector(`#${div_id}`);
+const commonMiscAssetFetch = async (url,element, content_type )=>{
     if (element && content_type.startsWith('image')){
-        element.alt='.'; 
+        /**@ts-ignore */
+        element.alt=' '; 
         element.removeAttribute('src');
     }    
     const url_element = await fetch(url).then(element=>element.blob());
@@ -231,10 +231,12 @@ const commonMiscAssetFetch = async (url,div_id, content_type )=>{
     }
     else
         if (element && content_type.startsWith('text'))
+            /**@ts-ignore */
             element.href=url_elementBlob;
         else{
             if (element)
                 //font
+                /**@ts-ignore */
                 element.style.src = url_element?
                                                 `url('${url_elementBlob}')`:
                                                     'url()';
@@ -3577,12 +3579,75 @@ const commonFrameworkSet = async (framework, events) => {
  };
 /**
  * @name custom_framework
- * @description Set custom framework functionality overriding console messages and save info about events created
+ * @description Set custom framework functionality:
+ *              replace image src and alt attributes
+ *              replace createElement with temporary element
+ *              block debugger calling createElement
+ *              block Leaflet request to create canvas not used
+ *              show only console messages if app_framework_messages == 1
+ *              save info about events created
  * @function
  * @returns {void}
  */
 const custom_framework = () => {
-    
+    Object.defineProperty(HTMLImageElement.prototype,'src',{set:()=>{null;}});
+    //Replace image src request path and remove replace alt text with ' '
+    const originalSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+
+    //Replace Leaflet img src replaced with div and CSS url with external request
+    Object.defineProperties(HTMLDivElement.prototype, {
+        src: {
+            set: function(value) {    
+                    this.style.backgroundImage = value?
+                                            `url('${value}')`:
+                                                'url()';
+                    this.style.backgroundSize = 'cover';
+                    this.style.visibility = 'inherit';
+                    return;
+                  }
+          }
+    });
+    //Replace Leaflet innerHTML 
+    const originalinnerHTMLDescriptor = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+    Object.defineProperties(Element.prototype, {
+        innerHTML: {
+            set: function(value) {    
+                if (module(Error()?.stack)=='LEAFLET')
+                    originalinnerHTMLDescriptor?.set?.call(this, value
+                                                                .replaceAll((value.indexOf('<a href')>-1 &&
+                                                                             value.indexOf('Leaflet')>-1)?
+                                                                                value:
+                                                                                    null,'<div>Leaflet</div>')
+                                                                .replaceAll('<span','<div')
+                                                                .replaceAll('/span','/div'));
+                else
+                    originalinnerHTMLDescriptor?.set?.call(this, value);
+                }
+          }
+    });
+    //Replace Leaflet src with CSS and custom request syntax
+    Object.defineProperties(HTMLImageElement.prototype, {
+        src: {
+          get: function() {
+            return originalSrcDescriptor?.get;
+          },
+          set: function(value) {    
+                    if (value.indexOf('marker-')>-1 && module(Error()?.stack)=='LEAFLET'){
+                        if (!this.id)
+                            this.id = 'Leaflet_img_' + Date.now();
+                        commonMiscAssetFetch(value, this, 'image/png');
+                    }
+                    else
+                        originalSrcDescriptor?.set?.call(this, value);
+                    return;
+                }
+        },
+        alt: {
+            //replace all value with ' '
+            set: function() { this.setAttribute('alt', ' '); },
+        }
+      });
+
     /**
      * @description replaces createElement with temporary element
      *              so debugger does not create any element
@@ -3598,32 +3663,17 @@ const custom_framework = () => {
             }
             else{
                 const id = 'temp_' + Date.now().toString();
-                //replace a with div
-                COMMON_DOCUMENT.querySelector('#common_app').innerHTML += `<${(element=='a')?'div':element} id='${id}'></${element}>`;
+                //replace a, span and img with div
+                COMMON_DOCUMENT.querySelector('#common_app').innerHTML += `<${(element=='a' ||element=='img' ||element=='span')?'div':element} id='${id}'></${element}>`;
                 const new_element = COMMON_DOCUMENT.querySelector(`#common_app #${id}`);
                 COMMON_DOCUMENT.querySelector(`#common_app #${id}`).remove();
                 new_element.removeAttribute('id');
-                if (element?.toLowerCase()== 'img' && module(Error()?.stack)=='LEAFLET'){
-                    const adjustValue = () =>{
-                        if (!new_element || new_element.textContent==''){
-                                ComponentHook.disconnect();
-                                if (new_element.src.indexOf('marker-')>-1){
-                                    if (!new_element.id)
-                                        new_element.id = 'Leaflet_img_' + Date.now();
-                                    commonMiscAssetFetch(new_element.src, new_element.id, 'image/png');
-                                } 
-                            }
-                        };
-                    const ComponentHook = new MutationObserver(adjustValue);
-                    ComponentHook.observe(COMMON_DOCUMENT.querySelector('#mapid'), {attributes:true, subtree:true});
-                }
-
                 return new_element;
             }
         }
     };
     /**@ts-ignore */
-        COMMON_DOCUMENT.createElement = customCreateElement;
+    COMMON_DOCUMENT.createElement = customCreateElement;
 
     COMMON_GLOBAL.app_eventListeners.original = COMMON_DOCUMENT.addEventListener;
     /**

@@ -1088,7 +1088,9 @@ body,
 .common_unlike{
 	color: var(--common_app_color_blue1) !important;
 }
-.common_module_leaflet_control_button{
+.common_module_leaflet_control_button,
+.leaflet-control-zoom-in, 
+.leaflet-control-zoom-out{
 	background-color: var(--app_theme_main_color2);
 }
 .common_module_leaflet_control_expand{
