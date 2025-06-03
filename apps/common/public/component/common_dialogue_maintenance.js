@@ -30,7 +30,7 @@ const template = () =>` <div id='common_dialogue_maintenance_content' class='com
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      commonWindowSetTimeout:CommonModuleCommon['commonWindowSetTimeout'],
  *                      commonWindowLocationReload:CommonModuleCommon['commonWindowLocationReload'],
-*                       commonMiscImageFetch:CommonModuleCommon['commonMiscImageFetch']
+*                       commonMiscAssetFetch:CommonModuleCommon['commonMiscAssetFetch']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
@@ -52,7 +52,7 @@ const component = async props => {
     };    
     const onMounted = async () =>{
         maintenance_countdown();
-        props.methods.commonMiscImageFetch('/common/images/logo_maintenance.png', 'common_maintenance_logo');
+        props.methods.commonMiscAssetFetch('/common/images/logo_maintenance.png', 'common_maintenance_logo', 'image/png');
 
     };
     return {
