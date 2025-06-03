@@ -17,11 +17,11 @@ const template = props =>`  <!DOCTYPE html>
                                 <script type='module'>
                                     import('${props.APP.js}').then((app) => app.appCommonInit('${props.APP_PARAMETERS}'));
                                 </script>
-                                <link rel='stylesheet'  type='text/css'     href='${props.APP.css}'/>
-                                <link rel='stylesheet'  type='text/css'     href='${props.APP.css_report}'/>
-                                <link rel='icon'        type='image/png'    href='${props.APP.favicon_32x32}' sizes='32x32'/>
-                                <link rel='icon'        type='image/png'    href='${props.APP.favicon_192x192}' sizes='192x192'/>
-                                <link rel='manifest'    href='${props.APP.manifest}'/>
+                                <link id="app_link_app_css"         rel='stylesheet'  type='text/css'     href='${props.APP.css}'/>
+                                <link id="app_link_app_report_css"  rel='stylesheet'  type='text/css'     href='${props.APP.css_report}'/>
+                                <link id="app_link_favicon_32x32"   rel='icon'        type='image/png'    href='${props.APP.favicon_32x32}' sizes='32x32'/>
+                                <link id="app_link_favicon_192x192" rel='icon'        type='image/png'    href='${props.APP.favicon_192x192}' sizes='192x192'/>
+                                <link id="app_link_manifest"        rel='manifest'    href='${props.APP.manifest}'/>
                                 <meta name="HandheldFriendly" content="true"/>
                                 <meta name='mobile-web-app-capable' content='yes'>
                                 <meta name='viewport' content='width=device-width, minimum-scale=1.0, maximum-scale = 1'>

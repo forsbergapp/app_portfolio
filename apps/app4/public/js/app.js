@@ -159,15 +159,18 @@ Object.seal(APP_GLOBAL);
  * @returns {Promise.<void>}
  */
 const appReportTimetablePrint = async () => {
-    //use app component to get HTML
-    const component_print = '/component/print.js';
-    const {default:component} = await import(component_print);
     /**@type{CommonComponentResult}*/
-    const {template} = await component({ data:  {   
-                                                commonMountdiv:null, 
-                                                appHtml:COMMON_DOCUMENT.querySelector('#paper').outerHTML
-                                                },
-                                        methods:{COMMON_DOCUMENT:COMMON_DOCUMENT}});
+    const {template} = await common.commonComponentRender({ mountDiv:   null,
+                                                            data:  {   
+                                                            commonMountdiv:null, 
+                                                            appHtml:COMMON_DOCUMENT.querySelector('#paper').outerHTML
+                                                            },
+                                                    methods:{
+                                                            COMMON_DOCUMENT:COMMON_DOCUMENT,
+                                                            commonMiscAssetFetch:common.commonMiscAssetFetch
+                                                            },
+                                                    path: '/component/print.js'});
+
     await common.commonComponentRender({  mountDiv:   'common_window_info',
                                     data:       {
                                                 info:3,

@@ -20,7 +20,7 @@ const template = () =>` <div id='dialogue_documents' class='dialogue'>
  * 
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonMiscImageFetch:CommonModuleCommon['commonMiscImageFetch']}}} props 
+*                       commonMiscAssetFetch:CommonModuleCommon['commonMiscAssetFetch']}}} props 
  * @returns {Promise.<{ lifecycle:  CommonComponentLifecycle, 
  *                      data:       null, 
  *                      methods:    null,
@@ -28,7 +28,7 @@ const template = () =>` <div id='dialogue_documents' class='dialogue'>
  */
 const component = async props => {
     const onMounted = async () =>{
-        props.methods.commonMiscImageFetch('/images/logo.png', 'app_logo');
+        props.methods.commonMiscAssetFetch('/images/logo.png', 'app_logo', 'image/png');
     };
     return {
         lifecycle:  {onMounted:onMounted},
