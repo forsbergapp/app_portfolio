@@ -29,7 +29,8 @@ const template = () =>` <div id='common_dialogue_maintenance_content' class='com
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      commonWindowSetTimeout:CommonModuleCommon['commonWindowSetTimeout'],
- *                      commonWindowLocationReload:CommonModuleCommon['commonWindowLocationReload']
+ *                      commonWindowLocationReload:CommonModuleCommon['commonWindowLocationReload'],
+*                       commonMiscImageFetch:CommonModuleCommon['commonMiscImageFetch']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
@@ -51,9 +52,8 @@ const component = async props => {
     };    
     const onMounted = async () =>{
         maintenance_countdown();
-        const logo_maintenance = await fetch('/common/images/logo_maintenance.png').then(image=>image.blob());
-        const url_logo_maintenance = URL.createObjectURL(new Blob ([logo_maintenance], {type: 'image/png'}));
-        props.methods.COMMON_DOCUMENT.querySelector('#common_maintenance_logo').style.backgroundImage = `url('${url_logo_maintenance}')`;
+        props.methods.commonMiscImageFetch('/common/images/logo_maintenance.png', 'common_maintenance_logo');
+
     };
     return {
         lifecycle:  {onMounted:onMounted},

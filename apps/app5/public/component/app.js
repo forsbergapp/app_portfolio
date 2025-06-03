@@ -3,7 +3,7 @@
  * @module apps/app5/component/app
  */
 /**
- * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  */
 /**
  * @name template
@@ -26,7 +26,8 @@ const template = () =>` <div id='app_top'>
  * @description Component
  * @function
  * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonMiscImageFetch:CommonModuleCommon['commonMiscImageFetch']}}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
@@ -35,9 +36,7 @@ const template = () =>` <div id='app_top'>
 const component = async props => {
 
     const onMounted = async () =>{
-        const logo = await fetch('/images/logo.png').then(image=>image.blob());
-        const url_logo = URL.createObjectURL(new Blob ([logo], {type: 'image/png'}));
-        props.methods.COMMON_DOCUMENT.querySelector('#app_top_logo').style.backgroundImage = `url('${url_logo}')`;
+        props.methods.commonMiscImageFetch('/images/logo.png','app_top_logo' );
     };
     return {
         lifecycle:  {onMounted:onMounted},

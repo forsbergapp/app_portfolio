@@ -1,8 +1,6 @@
 /*APP */
 
 #info_close::before{										content:var(--common_app_icon_close)}
-#scan_open_mobile_close::before{							content:var(--common_app_icon_close)}
-#scan_open_mobile_title1::before{							content:var(--common_app_icon_mobile)}
 #profile_main_btn_user_settings::before{					content:var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year)}
 #profile_main_btn_user_setting_likes_user_setting::before{	content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year) ' ' var(--common_app_icon_user_follows)}
 #profile_main_btn_user_setting_liked_user_setting::before{	content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year) ' ' var(--common_app_icon_user_followed)}
@@ -187,21 +185,6 @@
 	width: 48px;
 	height: 48px;
 	margin: 0 auto;
-}
-/* Dialogue scan_open_mobile*/
-#dialogue_scan_open_mobile.common_dialogue_show0{
-	width: 300px;
-	height:340px;
-}
-#scan_open_mobile_qrcode{
-	margin-top: 42px;
-}
-
-#scan_open_mobile_title1{
-	margin-top:10px;
-	margin-bottom:20px;
-	font-size: 48px;
-	display: block;
 }
 /* SETTINGS*/
 #settings {
@@ -895,9 +878,6 @@ body,
 }
 .setting_design_thumbnail {
   	box-shadow: 3px 3px 10px var(--app_theme_thumbnail_shadow);
-}
-#scan_open_mobile_qrcode svg{
-    background-color: var(--app_theme_qr_code_background);
 }
 .setting_paper_preview{
 	background-color: var(--app_theme_paper_preview_background_color);

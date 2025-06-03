@@ -997,7 +997,7 @@ body.rtl{
 }
 .common_profile_main_col:nth-child(1){
 	display:inline-block;
-	width: 50%;
+	width: 100%;
 	text-align:start;
 	vertical-align: top;
 }
@@ -1662,17 +1662,6 @@ body.rtl{
 	border-top: 0.5px solid;
 }
 
-/*Module easy qrcode*/
-.common_module_easy\.qrcode rect[fill='DARK']{
-	fill: var(--common_app_color_dark);
-}
-.common_module_easy\.qrcode rect[fill='LIGHT']{
-	fill: var(--common_app_color_light);
-}
-.common_module_easy\.qrcode svg{
-	padding: 3px;
-	vertical-align: middle;
-}
 /*Module leaflet, dynamically created popup*/
 .common_module_leaflet_popup_title,
 .common_module_leaflet_popup_sub_title,
@@ -1684,6 +1673,17 @@ body.rtl{
 }
 .leaflet-popup-content{
 	width:200px !important;
+}
+.leaflet-popup-close-button{
+    position: absolute;
+    top: 0;
+    text-align: end;
+    border: none;
+    width: calc(100% - 0.25em);
+    height: 24px;
+    text-decoration: none;
+    font-size: 2em;
+    cursor:pointer;
 }
 #common_module_leaflet_control_search .common_select_option{
 	display: inline-block;;
