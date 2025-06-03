@@ -46,7 +46,9 @@ const template = props =>` <div id='common_broadcast_info'>
 const component = async props => {
     
     const onMounted =()=>{
-        props.methods.commonMiscAssetFetch('/common/images/logo_broadcast.png','common_broadcast_info_logo', 'image/png');
+        props.methods.commonMiscAssetFetch( '/common/images/logo_broadcast.png',
+                                            props.methods.COMMON_DOCUMENT.querySelector('#common_broadcast_info_logo'), 
+                                            'image/png');
 
     };
     return {

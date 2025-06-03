@@ -36,7 +36,9 @@ const template = () =>` <div id='app_top'>
 const component = async props => {
 
     const onMounted = async () =>{
-        props.methods.commonMiscAssetFetch('/images/logo.png','app_top_logo', 'image/png');
+        props.methods.commonMiscAssetFetch( '/images/logo.png',
+                                            props.methods.COMMON_DOCUMENT.querySelector('#app_top_logo'), 
+                                            'image/png');
     };
     return {
         lifecycle:  {onMounted:onMounted},
