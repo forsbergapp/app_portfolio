@@ -26,7 +26,6 @@ const template = ()=>`  <div id='toolbar_top'>
                         <div id='dialogues'>
                             <div id='dialogue_loading'></div>
                             <div id='dialogue_info' class='common_dialogue_content'></div>
-                            <div id='dialogue_scan_open_mobile' class='common_dialogue_content'></div>
                         </div>
                         <div id='toolbar_bottom'>
                             <div id='toolbar_btn_about' class='common_toolbar_button common_icon' ></div>

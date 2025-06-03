@@ -206,6 +206,24 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
     }
 };
 /**
+ * @name commonMiscImageFetch
+ * @description fetches images and sets as background
+ * @param {string} url
+ * @param {string} div_id
+ */
+const commonMiscImageFetch = async (url,div_id )=>{
+    const element = COMMON_DOCUMENT.querySelector(`#${div_id}`);
+    element.alt='.'; 
+    element.removeAttribute('src');
+    const url_image = await fetch(url).then(image=>image.blob());
+    const url_imageBlob = URL.createObjectURL(new Blob ([url_image], {type: 'image/png'}));
+    element.style.backgroundImage = url_image?
+                                        `url('${url_imageBlob}')`:
+                                            'url()';
+    element.style.backgroundSize = 'cover';
+    
+};
+/**
  * @name commonMiscImageConvert
  * @description Converts image
  * @function
@@ -439,12 +457,11 @@ const commonMiscInputControl = (dialogue, validate_items) =>{
  * @description Importmap that return file path for given file
  *              to solve importmap not working for some browsers
  * @function
- * @param {'easy.qrcode'|'leaflet'|'React'|'ReactDOM'|'regional'|'Vue'} file
+ * @param {'leaflet'|'React'|'ReactDOM'|'regional'|'Vue'} file
  * @returns {string}
  */
 const commonMiscImportmap = file =>{
     return {
-        'easy.qrcode'   : '/common/modules/easy.qrcode/easy.qrcode.js',
         leaflet	        : '/common/modules/leaflet/leaflet-src.esm.js',
         React 		    : '/common/modules/react/react.development.js',
         ReactDOM 	    : '/common/modules/react/react-dom.development.js',
@@ -1544,9 +1561,7 @@ const commonProfileShow = async (iam_user_id_other = null, username = null) => {
                     },
         methods:    {
                     commonWindowSetTimeout:commonWindowSetTimeout,
-                   commonFFB:commonFFB,
-                    commonModuleEasyQRCODECreate:commonModuleEasyQRCODECreate,
-                    commonWindowHostname:commonWindowHostname,
+                    commonFFB:commonFFB,
                     commonMiscFormatJsonDate:commonMiscFormatJsonDate,
                     commonDialogueShow:commonDialogueShow,
                     commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck
@@ -2064,29 +2079,6 @@ const commonUserPreferencesGlobalSetDefault = (preference) => {
 };
 
 /**
- * @name commonModuleEasyQRCODECreate
- * @description Create QR code
- * @function
- * @param {string} div 
- * @param {string} url 
- * @returns {Promise.<void>}
- */
-const commonModuleEasyQRCODECreate = async (div, url) => {
-    /**@type {import('../../../common_types.js').CommonModuleEasyQRCode} */
-    const {QRCode} = await import(commonMiscImportmap('easy.qrcode'));
-    COMMON_DOCUMENT.querySelector('#' + div).textContent='';
-    new QRCode(COMMON_DOCUMENT.querySelector('#' + div), {
-        text: url,
-        width: 128,
-        height: 128,
-        colorDark: 'DARK',
-        colorLight: 'LIGHT',
-        drawer: 'svg'
-    });
-    //executing await promise 1 ms results in QRCode rendered
-    commonWindowWait(1);
-};
-/**
  * @name commonModuleLeafletInit
  * @description Module Leaflet init
  * @function
@@ -2343,7 +2335,7 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
             commonComponentRender({
                 mountDiv:   'common_broadcast',
                 data:       {message:commonWindowFromBase64(message)},
-                methods:    null,
+                methods:    {commonMiscImageFetch:commonMiscImageFetch},
                 path:       '/common/component/common_broadcast.js'});
             break;
         }
@@ -2375,7 +2367,11 @@ const commonSocketMaintenanceShow = (message, init=null) => {
         commonComponentRender({
             mountDiv:   'common_dialogue_maintenance',
             data:       null,
-            methods:    {commonWindowSetTimeout:commonWindowSetTimeout, commonWindowLocationReload:commonWindowLocationReload},
+            methods:    {
+                            commonWindowSetTimeout:commonWindowSetTimeout, 
+                            commonWindowLocationReload:commonWindowLocationReload,
+                            commonMiscImageFetch:commonMiscImageFetch
+            },
             path:       '/common/component/common_dialogue_maintenance.js'});
     }
     else
@@ -3566,6 +3562,49 @@ const commonFrameworkSet = async (framework, events) => {
  * @returns {void}
  */
 const custom_framework = () => {
+    
+    /**
+     * @description replaces createElement with temporary element
+     *              so debugger does not create any element
+     * @param {string} element
+     */
+    const customCreateElement = element => {
+        if (element.toLowerCase() == 'canvas' && module(Error()?.stack)=='LEAFLET')
+            return {getContext:true};
+        else{
+            /**@ts-ignore */
+            if (new Error().stack?.split('\n')[1].indexOf('debugger')>-1 ){
+                null;
+            }
+            else{
+                const id = 'temp_' + Date.now().toString();
+                //replace a with div
+                COMMON_DOCUMENT.querySelector('#common_app').innerHTML += `<${(element=='a')?'div':element} id='${id}'></${element}>`;
+                const new_element = COMMON_DOCUMENT.querySelector(`#common_app #${id}`);
+                COMMON_DOCUMENT.querySelector(`#common_app #${id}`).remove();
+                new_element.removeAttribute('id');
+                if (element?.toLowerCase()== 'img' && module(Error()?.stack)=='LEAFLET'){
+                    const adjustValue = () =>{
+                        if (!new_element || new_element.textContent==''){
+                                ComponentHook.disconnect();
+                                if (new_element.src.indexOf('marker-')>-1){
+                                    if (!new_element.id)
+                                        new_element.id = 'Leaflet_img_' + Date.now();
+                                    commonMiscImageFetch(new_element.src, new_element.id);
+                                } 
+                            }
+                        };
+                    const ComponentHook = new MutationObserver(adjustValue);
+                    ComponentHook.observe(COMMON_DOCUMENT.querySelector('#mapid'), {attributes:true, subtree:true});
+                }
+
+                return new_element;
+            }
+        }
+    };
+    /**@ts-ignore */
+        COMMON_DOCUMENT.createElement = customCreateElement;
+
     COMMON_GLOBAL.app_eventListeners.original = COMMON_DOCUMENT.addEventListener;
     /**
      * 
@@ -3697,6 +3736,7 @@ export{/* GLOBALS*/
        commonMiscElementListTitle, 
        commonMiscFormatJsonDate,
        commonMiscImageConvert,
+       commonMiscImageFetch,
        commonMiscImageShow, 
        commonMiscInputControl,
        commonMiscImportmap,
@@ -3759,8 +3799,6 @@ export{/* GLOBALS*/
        commonUserMessageShowStat,
        /* MODULE LEAFLET  */
        commonModuleLeafletInit, 
-       /* MODULE EASY.QRCODE */
-       commonModuleEasyQRCODECreate,
        /*FFB */
        commonFFB,
        /* SERVICE SOCKET */
