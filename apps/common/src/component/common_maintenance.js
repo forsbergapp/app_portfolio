@@ -14,7 +14,7 @@ const template = props =>`  <!DOCTYPE html>
                             <head>
                                 <meta charset='UTF-8'>
                                 <title></title>
-                                <link rel='stylesheet' type='text/css' href='/common/css/common.css' />
+                                <link id="common_link_common_css" rel='stylesheet' type='text/css' href='/common/css/common.css' />
                                 <style>
                                     #common_broadcast_close::before{		content:var(--common_app_icon_broadcast_close)}
                                     #common_broadcast_info_title::before{	content:var(--common_app_icon_alert)}

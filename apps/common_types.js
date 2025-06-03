@@ -263,7 +263,7 @@
 
 /**
  * @description Type CommonComponentResult
- * @typedef  {{ lifecycle:CommonComponentLifecycle,
+ * @typedef  {{ lifecycle?:CommonComponentLifecycle,
  *              data:*,
  *              methods:*,
  *              template:string|null}} CommonComponentResult

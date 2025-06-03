@@ -117,7 +117,7 @@ const serverResponse = async parameters =>{
             case 'TTF':{
                 if (app_cache_control_font !='')
                     parameters.res.setHeader('Cache-Control', app_cache_control_font);
-                parameters.res.type('text/font/ttf; charset=utf-8');
+                parameters.res.type('font/ttf; charset=utf-8');
                 break;
             }
             default:{

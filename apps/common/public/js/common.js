@@ -206,22 +206,42 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
     }
 };
 /**
- * @name commonMiscImageFetch
- * @description fetches images and sets as background
+ * @name commonMiscAssetFetch
+ * @description fetches images and sets as background or return result if no element found
  * @param {string} url
- * @param {string} div_id
+ * @param {string|null} div_id
+ * @param { 'image/png'|'image/webp'|
+ *          'text/css'|'text/javascript'|
+ *          'font/woff'|'font/ttf'} content_type
+ * @returns {Promise.<string|void>}
  */
-const commonMiscImageFetch = async (url,div_id )=>{
+const commonMiscAssetFetch = async (url,div_id, content_type )=>{
     const element = COMMON_DOCUMENT.querySelector(`#${div_id}`);
-    element.alt='.'; 
-    element.removeAttribute('src');
-    const url_image = await fetch(url).then(image=>image.blob());
-    const url_imageBlob = URL.createObjectURL(new Blob ([url_image], {type: 'image/png'}));
-    element.style.backgroundImage = url_image?
-                                        `url('${url_imageBlob}')`:
+    if (element && content_type.startsWith('image')){
+        element.alt='.'; 
+        element.removeAttribute('src');
+    }    
+    const url_element = await fetch(url).then(element=>element.blob());
+    const url_elementBlob = URL.createObjectURL(new Blob ([url_element], {type: content_type}));
+    if (element && content_type.startsWith('image')){
+        element.style.backgroundImage = url_element?
+                                        `url('${url_elementBlob}')`:
                                             'url()';
-    element.style.backgroundSize = 'cover';
-    
+        element.style.backgroundSize = 'cover';
+    }
+    else
+        if (element && content_type.startsWith('text'))
+            element.href=url_elementBlob;
+        else{
+            if (element)
+                //font
+                element.style.src = url_element?
+                                                `url('${url_elementBlob}')`:
+                                                    'url()';
+            else
+                return url_elementBlob;
+        }
+
 };
 /**
  * @name commonMiscImageConvert
@@ -1019,7 +1039,7 @@ const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
  *          data:{}|null,
  *          methods:{}|null,
  *          path:string}} commonComponentRender
- * @returns {Promise.<{data:*, methods:*}>}
+ * @returns {Promise.<{data:*, methods:*, template:string|null}>}
  */
 const commonComponentRender = async commonComponentRender => {
     const {default:ComponentCreate} = await import(commonComponentRender.path);
@@ -1078,7 +1098,7 @@ const commonComponentRender = async commonComponentRender => {
         }
     }
     //return data and methods from component to be used in apps
-    return {data:component?component.data:null, methods:component?component.methods:null};
+    return {data:component?component.data:null, methods:component?component.methods:null, template:component.template};
 };
 /**
  * @name commonComponentRemove
@@ -2335,7 +2355,7 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
             commonComponentRender({
                 mountDiv:   'common_broadcast',
                 data:       {message:commonWindowFromBase64(message)},
-                methods:    {commonMiscImageFetch:commonMiscImageFetch},
+                methods:    {commonMiscAssetFetch:commonMiscAssetFetch},
                 path:       '/common/component/common_broadcast.js'});
             break;
         }
@@ -2370,7 +2390,7 @@ const commonSocketMaintenanceShow = (message, init=null) => {
             methods:    {
                             commonWindowSetTimeout:commonWindowSetTimeout, 
                             commonWindowLocationReload:commonWindowLocationReload,
-                            commonMiscImageFetch:commonMiscImageFetch
+                            commonMiscAssetFetch:commonMiscAssetFetch
             },
             path:       '/common/component/common_dialogue_maintenance.js'});
     }
@@ -3590,7 +3610,7 @@ const custom_framework = () => {
                                 if (new_element.src.indexOf('marker-')>-1){
                                     if (!new_element.id)
                                         new_element.id = 'Leaflet_img_' + Date.now();
-                                    commonMiscImageFetch(new_element.src, new_element.id);
+                                    commonMiscAssetFetch(new_element.src, new_element.id, 'image/png');
                                 } 
                             }
                         };
@@ -3736,7 +3756,7 @@ export{/* GLOBALS*/
        commonMiscElementListTitle, 
        commonMiscFormatJsonDate,
        commonMiscImageConvert,
-       commonMiscImageFetch,
+       commonMiscAssetFetch,
        commonMiscImageShow, 
        commonMiscInputControl,
        commonMiscImportmap,

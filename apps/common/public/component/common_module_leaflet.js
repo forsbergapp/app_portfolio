@@ -14,7 +14,7 @@
  *          leaflet_container:string}} props
  * @returns {string}
  */
-const template = props => ` <link media="all" rel="stylesheet" href='${props.css_url}' type="text/css"/>
+const template = props => ` <link id="common_link_common_module_leaflet_css" media="all" rel="stylesheet" href='${props.css_url}' type="text/css"/>
                             <div id='${props.leaflet_container}'></div>`;
 
 /**

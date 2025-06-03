@@ -13,8 +13,8 @@ const template = props =>`  <!DOCTYPE html>
                             <html>
                             <head>
                                 <meta charset='UTF-8'>
-                                <link href="/common/css/font/font1.css" rel="stylesheet">
-                                <link rel='stylesheet' type='text/css' href='/common/css/common_info.css' />
+                                <link id="common_link_font1_css" href="/common/css/font/font1.css" rel="stylesheet">
+                                <link id="common_link_common_info_css" rel='stylesheet' type='text/css' href='/common/css/common_info.css' />
                             </head>	
                             <body>
                                 <div class='info_content'>
