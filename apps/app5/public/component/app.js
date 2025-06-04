@@ -27,7 +27,7 @@ const template = () =>` <div id='app_top'>
  * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonMiscAssetFetch:CommonModuleCommon['commonMiscAssetFetch']}}} props 
+ *                       commonMiscResourceFetch:CommonModuleCommon['commonMiscResourceFetch']}}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
@@ -36,7 +36,7 @@ const template = () =>` <div id='app_top'>
 const component = async props => {
 
     const onMounted = async () =>{
-        props.methods.commonMiscAssetFetch( '/images/logo.png',
+        props.methods.commonMiscResourceFetch( '/images/logo.png',
                                             props.methods.COMMON_DOCUMENT.querySelector('#app_top_logo'), 
                                             'image/png');
     };

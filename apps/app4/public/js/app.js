@@ -11,12 +11,8 @@
 /**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-const commonPath ='/common/js/common.js';
 /**@type {CommonModuleCommon} */
-const common = await import(commonPath);
-
-/**@type {CommonModuleRegional} */
-const {getTimezone} = await import(common.commonMiscImportmap('regional'));
+let common;
 
 /**@type {CommonModuleLibTimetable} */
 let appLibTimetable;
@@ -167,7 +163,7 @@ const appReportTimetablePrint = async () => {
                                                             },
                                                     methods:{
                                                             COMMON_DOCUMENT:COMMON_DOCUMENT,
-                                                            commonMiscAssetFetch:common.commonMiscAssetFetch
+                                                            commonMiscResourceFetch:common.commonMiscResourceFetch
                                                             },
                                                     path: '/component/print.js'});
 
@@ -694,7 +690,7 @@ const SettingShow = async (tab_selected) => {
                 methods:    {
                             lib_timetable_APP_REPORT_GLOBAL:appLibTimetable.APP_REPORT_GLOBAL,
                             appComponentSettingUpdate:appComponentSettingUpdate,
-                            getTimezone:getTimezone,
+                            getTimezone:(await common.commonMiscImport(common.commonMiscImportmap('regional'))).getTimezone,
                             commonComponentRender:common.commonComponentRender,
                             commonFFB:common.commonFFB,
                             commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
@@ -1389,7 +1385,8 @@ const appUserSettingDefaultSet = async () => {
         description:                        common.COMMON_GLOBAL.client_place,
         regional_language_locale:           common.COMMON_GLOBAL.user_locale,
         regional_timezone:                  (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?
-                                                getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude):
+                                                (await common.commonMiscImport(common.commonMiscImportmap('regional')))
+                                                    .getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude):
                                                     (APP_GLOBAL.places?APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data4:
                                                         Intl.DateTimeFormat().resolvedOptions().timeZone),
         regional_number_system:             Intl.NumberFormat().resolvedOptions().numberingSystem,
@@ -2133,11 +2130,15 @@ const appEventClick = event => {
                     COMMON_DOCUMENT.querySelector('#setting_input_long').textContent = common.COMMON_GLOBAL.client_longitude;
                     COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent = common.COMMON_GLOBAL.client_latitude;
                     //update timezone
-                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
-                    //set qibbla
-                    appModuleLeafletMapQibblaShow();
-                    appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
-                    appUserSettingUpdate('GPS');
+                    common.commonMiscImport(common.commonMiscImportmap('regional'))
+                        .then(({getTimezone})=>{
+                            APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone =
+                                getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
+                            //set qibbla
+                            appModuleLeafletMapQibblaShow();
+                            appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
+                            appUserSettingUpdate('GPS');
+                        });
                     break;
                 }       
             }
@@ -2328,7 +2329,7 @@ const appFrameworkSet = async (framework=null) => {
 const appInit = async parameters => {
     const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-common-module-asset/MODULE_LIB_TIMETABLE`;
     /**@type {CommonModuleLibTimetable} */
-    appLibTimetable = await import(appLibTimetable_path);
+    appLibTimetable = await common.commonMiscImport(appLibTimetable_path);
     await appFrameworkSet();
     //common app component
     await common.commonComponentRender({mountDiv:   'common_app',
@@ -2468,10 +2469,12 @@ const appInit = async parameters => {
  * @name appCommonInit
  * @description Init common
  * @function
+ * @param {CommonModuleCommon} commonLib
  * @param {string} parameters 
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const appCommonInit = parameters => {
+const appCommonInit = async (commonLib, parameters) => {
+    common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;

@@ -29,6 +29,7 @@ const template = props => ` <link id="common_link_common_module_leaflet_css" med
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonMiscImport:CommonModuleCommon['commonMiscImport'],
  *                      commonMiscImportmap:CommonModuleCommon['commonMiscImportmap']
  *                       }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -38,7 +39,7 @@ const template = props => ` <link id="common_link_common_module_leaflet_css" med
  */
 const component = async props => {
     /**@type {CommonModuleLeaflet} */
-    const LEAFLET = await import(props.methods.commonMiscImportmap('leaflet'));
+    const LEAFLET = await props.methods.commonMiscImport(props.methods.commonMiscImportmap('leaflet'));
     const LEAFLET_CONTAINER_DIV = 'leaflet';
     /**@type{CommonModuleLeafletMapData} */
     let LEAFLET_CONTAINER;

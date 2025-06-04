@@ -61,6 +61,7 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      function_event_doubleclick:function,
+ *                      commonMiscImport:CommonModuleCommon['commonMiscImport'],
  *                      commonMiscImportmap:CommonModuleCommon['commonMiscImportmap'],
  *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
  *                      commonMicroserviceGeolocationPlace:CommonModuleCommon['commonMicroserviceGeolocationPlace'],
@@ -492,7 +493,7 @@ const component = async props => {
      */
     const map_update = async (parameters) => {
         /**@type {CommonModuleRegional} */
-        const {getTimezone} = await import(props.methods.commonMiscImportmap('regional'));
+        const {getTimezone} = await props.methods.commonMiscImport(props.methods.commonMiscImportmap('regional'));
         return new Promise((resolve)=> {
             /**
              * Map update GPS
