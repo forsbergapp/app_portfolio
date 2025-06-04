@@ -36,8 +36,8 @@ const template = props =>`  <div id='common_toolbar_framework' ${props.framework
                             <div id='common_user_account'></div>
                             <div id='common_profile_toolbar'></div>
                             <div id='common_style'>
-                                <link id='common_link_common_css' rel='stylesheet' type='text/css' href='/common/css/common.css' />
-                                <link id='common_link_common_app_css' rel='stylesheet' type='text/css' href='/common/css/common_app.css' />
+                                <link id='common_link_common_css' rel='stylesheet' type='text/css' data-href='/common/css/common.css' />
+                                <link id='common_link_common_app_css' rel='stylesheet' type='text/css' data-href='/common/css/common_app.css' />
                             </div>
                             <div id='common_fonts'></di>
                             `;

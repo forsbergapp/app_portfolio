@@ -138,10 +138,10 @@ const component = async props => {
                                                     query:`IAM_data_app_id=${props.data.common_app_id}&name=PAPER_SIZE`,
                                                     method:'GET', 
                                                     authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
-    //fetch HIGHLIGHT_ROW for current app id
+    //fetch HIGHLIGHT_ROW and REPORT_THEME for current app id
     /**@type{CommonAppDataRecord[]} */
     const settings_app = await props.methods.commonFFB({ path:'/server-db/appdata/',
-                                                            query:`IAM_data_app_id=${props.data.app_id}&name=HIGHLIGHT_ROW`,
+                                                            query:`IAM_data_app_id=${props.data.app_id}`,
                                                             method:'GET', 
                                                             authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     //update APP_GLOBAL with themes
