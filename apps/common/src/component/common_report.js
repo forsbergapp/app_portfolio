@@ -17,19 +17,21 @@ const template = async props =>`  <!DOCTYPE html>
                             <html>
                             <head>
                                 <meta charset='UTF-8'>
-                                <link id="app_link_app_report_css" rel='stylesheet' type='text/css' href='${props.config.css_report}'/>
-                                <link id="common_link_common_css" rel='stylesheet' type='text/css' href='/common/css/common.css' />
+                                <link rel='stylesheet' type='text/css' href='${props.config.css_report}'/>
+                                <link rel='stylesheet' type='text/css' href='/common/css/common.css' />
+                                <link media='all' href='/common/css/font/font_extra.css' rel='stylesheet'>
                                 <!--Default font
+                                Fontawesome icons
                                 Noto Sans + Noto Sans Mono
                                 -->
-                                <link id="common_link_common_font1_css" media="all" href="/common/css/font/font1.css" rel="stylesheet">
+                                <link media='all' href='/common/css/font/font1.css' rel='stylesheet'>
                                 <!--Arabic fonts
                                 Noto Sans Arabic
                                 Noto Kufi Arabic
                                 Noto Naskh Arabic
                                 Noto Nastaliq Urdu
                                 -->
-                                <link id="common_link_common_font2_css" media="all" href="/common/css/font/font2.css" rel="stylesheet">
+                                <link media='all' href='/common/css/font/font2.css' rel='stylesheet'>
                                 <!--Asian fonts
                                 Noto Sans JP
                                 Noto Sans KR
@@ -37,7 +39,7 @@ const template = async props =>`  <!DOCTYPE html>
                                 Noto Sans SC
                                 Noto Sans TC
                                 -->
-                                <link id="common_link_common_font3_css" media="all" href="/common/css/font/font3.css" rel="stylesheet">
+                                <link media='all' href='/common/css/font/font3.css' rel='stylesheet'>
                                 <!--Prio 1 fonts
                                 Noto Sans Bengali
                                 Noto Sans Gujarati
@@ -53,7 +55,7 @@ const template = async props =>`  <!DOCTYPE html>
                                 Noto Sans Telugu
                                 Noto Sans Thai
                                 -->
-                                <link id="common_link_common_font4_css" media="all" href="/common/css/font/font4.css" rel="stylesheet">
+                                <link media='all' href='/common/css/font/font4.css' rel='stylesheet'>
                                 <!--Prio 2 fonts
                                 Noto Emoji
                                 Noto Sans Anatolian Hieroglyphs
@@ -64,7 +66,7 @@ const template = async props =>`  <!DOCTYPE html>
                                 Noto Sans Symbols 2
                                 Noto Sans Symbols
                                 -->
-                                <link id="common_link_common_font5_css" media="all" href="/common/css/font/font5.css" rel="stylesheet">
+                                <link media='all' href='/common/css/font/font5.css' rel='stylesheet'>
                                 <!--Prio 3 fonts
                                 Noto Sans Adlam Unjoined
                                 Noto Sans Adlam
@@ -189,8 +191,8 @@ const template = async props =>`  <!DOCTYPE html>
                                 m-
                                 font7
                                 -->
-                                <link id="common_link_common_font6_css" media="all" href="/common/css/font/font6.css" rel="stylesheet">
-                                <link id="common_link_common_font7_css" media="all" href="/common/css/font/font7.css" rel="stylesheet">
+                                <link media='all' href='/common/css/font/font6.css' rel='stylesheet'>
+                                <link media='all' href='/common/css/font/font7.css' rel='stylesheet'>
                             </head>	
                             <body id='printbody'>
                                 <div id='paper' class='${props.papersize}'>

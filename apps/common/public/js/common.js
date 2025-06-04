@@ -638,7 +638,7 @@ const commonMiscPreferencesPostMount = () => {
  * @name commonMiscResourceFetch
  * @description fetches resources and updates attributes on element or return result if no element found
  * @param {string} url
- * @param {HTMLImageElement|HTMLAnchorElement|null} element
+ * @param {HTMLElement|null} element
  * @param { 'image/png'|'image/webp'|
 *          'text/html'|
 *          'text/css'|'text/javascript'|
@@ -654,40 +654,39 @@ const commonMiscResourceFetch = async (url,element, content_type )=>{
     /**
     * @returns{Promise.<*>}
     */
-    const get = async ()=>{
+    const getUrl = async ()=>{
         const resource = COMMON_GLOBAL.resource_import.filter(resource=>resource.url==url)[0]?.content;
         if (resource) 
             return resource;
         else{
             COMMON_GLOBAL.resource_import.push(
                     /*@ts-ignore*/
-                    {url:url,
-                    content:await fetch(url).then(element=>element.blob())
-                                    .then(module=>URL.createObjectURL(  new Blob ([module], 
-                                                                        {type: content_type}))),
-                    content_type:content_type
+                    {
+                        url:url,
+                        content:url.startsWith('/common/css/font/font')?url:await fetch(url).then(element=>element.blob())
+                                        .then(module=>URL.createObjectURL(  new Blob ([module], 
+                                                            {type: content_type}))),
+                        content_type:content_type
                     }); 
             return COMMON_GLOBAL.resource_import[COMMON_GLOBAL.resource_import.length-1].content;
         }
     }; 
-   
-   const url_elementBlob = await get();
 
    if (element && content_type.startsWith('image')){
-       element.style.backgroundImage = `url('${url_elementBlob}')`;
+       element.style.backgroundImage = `url('${await getUrl()}')`;
        element.style.backgroundSize = 'cover';
    }
    else
        if (element && content_type.startsWith('text'))
            /**@ts-ignore */
-           element.href=url_elementBlob;
+           element.href=await getUrl();
        else{
            if (element)
                //font
                /**@ts-ignore */
-               element.style.src = `url('${url_elementBlob}')`;
+               element.style.src = `url('${await getUrl()}')`;
            else
-               return url_elementBlob;
+               return await getUrl();
        }
 
 };
@@ -1120,6 +1119,11 @@ const commonComponentRender = async commonComponentRender => {
                     COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`).innerHTML = component.template;
                 }
             }
+        COMMON_DOCUMENT.querySelectorAll(`#${commonComponentRender.mountDiv} link`).forEach((/**@type{HTMLElement}*/link) =>
+            (link.getAttribute('data-href')==''||link.getAttribute('data-href')==null)?
+                null:
+                    commonMiscResourceFetch(link.getAttribute('data-href')??'', link,'text/css'));
+        
         if (component.lifecycle?.onUnmounted){
             const Unmounted = () =>{
                                     if (!COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`) || 
@@ -3640,10 +3644,12 @@ const custom_framework = () => {
     Object.defineProperties(HTMLDivElement.prototype, {
         src: {
             set: function(value) {    
-                    this.style.backgroundImage = value?
-                                            `url('${value}')`:
-                                                'url()';
-                    this.style.backgroundSize = 'cover';
+                    if (value.indexOf('marker-')>-1)
+                        commonMiscResourceFetch('/common/modules/leaflet/images/' + value, this, 'image/png');
+                    else{
+                        this.style.backgroundImage = `url('${value}')`;
+                        this.style.backgroundSize = 'cover';
+                    }
                     this.style.visibility = 'inherit';
                     return;
                   }
