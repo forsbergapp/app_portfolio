@@ -11,7 +11,8 @@
  * @name template
  * @description Template
  * @function
- * @param {{app_link_app_report_css:string|void,
+ * @param {{app_link_extra_fonts_css:string|void,
+ *          app_link_app_report_css:string|void,
  *          common_link_common_css:string|void,
  *          html:string}} props
  * @returns {string}
@@ -21,8 +22,9 @@ const template = props =>`  <!DOCTYPE html>
                            <head>
                                <meta charset='UTF-8'>
                                <title></title>
-                               <link id="app_link_app_report_preview_css" rel='stylesheet' type='text/css' href='${props.app_link_app_report_css}' />
-                               <link id="common_link_common_preview_css" rel='stylesheet' type='text/css' href='${props.common_link_common_css}' />
+                               <link rel='stylesheet' type='text/css' href='${props.app_link_extra_fonts_css}' />
+                               <link rel='stylesheet' type='text/css' href='${props.app_link_app_report_css}' />
+                               <link rel='stylesheet' type='text/css' href='${props.common_link_common_css}' />
                             </head>
                             <body id="printbody">
                                 ${props.html}
@@ -52,10 +54,9 @@ const component = async props => {
         lifecycle:  null,
         data:       null,
         methods:    null,
-        template:   template({  app_link_app_report_css:await props.methods.commonMiscResourceFetch(   props.methods.COMMON_DOCUMENT.querySelector('#app_link_app_report_css').attributes['href'].textContent, 
-                                                                                                    null, 'text/css'),
-                                common_link_common_css:await props.methods.commonMiscResourceFetch(    props.methods.COMMON_DOCUMENT.querySelector('#common_link_common_css').attributes['href'].textContent, 
-                                                                                                    null, 'text/css'),
+        template:   template({  app_link_extra_fonts_css:props.methods.COMMON_DOCUMENT.querySelector('#app_link_extra_fonts_css').attributes['href'].textContent,
+                                app_link_app_report_css:props.methods.COMMON_DOCUMENT.querySelector('#app_link_app_report_css').attributes['href'].textContent,
+                                common_link_common_css:props.methods.COMMON_DOCUMENT.querySelector('#common_link_common_css').attributes['href'].textContent,
                                 html: props.data.appHtml})
     };
 };
