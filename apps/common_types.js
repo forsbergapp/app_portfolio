@@ -205,6 +205,8 @@
  *              user_timezone:string,
  *              user_direction:string,
  *              user_arabic_script:string,
+ *              resource_import:{url:string,content:*, content_type:string}[]|[],
+ *              component_import:{url:string,component:*}[]|[],
  *              component:{
  *                          common_dialogue_iam_verify:{
  *                              methods:{

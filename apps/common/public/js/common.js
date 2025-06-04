@@ -63,6 +63,8 @@ const COMMON_GLOBAL = {
     user_timezone:'',
     user_direction:'',
     user_arabic_script:'',
+    resource_import:[],
+    component_import:[],
     component:{
         common_dialogue_iam_verify:{
             methods:{
@@ -206,46 +208,6 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
     }
 };
 /**
- * @name commonMiscAssetFetch
- * @description fetches images and sets as background or return result if no element found
- * @param {string} url
- * @param {HTMLImageElement|HTMLAnchorElement|null} element
- * @param { 'image/png'|'image/webp'|
- *          'text/css'|'text/javascript'|
- *          'font/woff'|'font/ttf'} content_type
- * @returns {Promise.<string|void>}
- */
-const commonMiscAssetFetch = async (url,element, content_type )=>{
-    if (element && content_type.startsWith('image')){
-        /**@ts-ignore */
-        element.alt=' '; 
-        element.removeAttribute('src');
-    }    
-    const url_element = await fetch(url).then(element=>element.blob());
-    const url_elementBlob = URL.createObjectURL(new Blob ([url_element], {type: content_type}));
-    if (element && content_type.startsWith('image')){
-        element.style.backgroundImage = url_element?
-                                        `url('${url_elementBlob}')`:
-                                            'url()';
-        element.style.backgroundSize = 'cover';
-    }
-    else
-        if (element && content_type.startsWith('text'))
-            /**@ts-ignore */
-            element.href=url_elementBlob;
-        else{
-            if (element)
-                //font
-                /**@ts-ignore */
-                element.style.src = url_element?
-                                                `url('${url_elementBlob}')`:
-                                                    'url()';
-            else
-                return url_elementBlob;
-        }
-
-};
-/**
  * @name commonMiscImageConvert
  * @description Converts image
  * @function
@@ -324,155 +286,25 @@ const commonMiscImageShow = async (item_img, item_input, image_width, image_heig
     
 };
 /**
- * @name commonMiscInputControl
- * @description Controls input
- * @function
- * @param {HTMLElement|null} dialogue 
- * @param {{
- *			check_valid_list_elements?:[HTMLElement,number|null][],
- *			check_valid_list_values?:[string,number|null][],
- *			username?:HTMLElement,
- *			password?:*,
- *          password_confirm?:HTMLElement,
- *          password_confirm_reminder?:HTMLElement,
- *			password_reminder?:HTMLElement,
- *			password_new?:HTMLElement,
- *			password_new_confirm?:*,
- *			bio?:HTMLElement
- *		}} validate_items 
- * @returns {boolean}
+ * @name commonMiscImport
+ * @description fetches javascript module to use in import statement
+ * @param {string} url
+ * @returns {Promise.<*>}
  */
-const commonMiscInputControl = (dialogue, validate_items) =>{
-    let result = true;
-    /**
-     * Valid text element or value
-     * @param {HTMLElement|string} validate
-     * @returns {boolean}
-     */
-    const valid_text = validate =>{
-        let div;
-        if (typeof validate=='object')
-            div = validate;
-        else{
-            div = COMMON_DOCUMENT.createElement('div');
-            div.textContent = validate;
-        }
-        if (div.textContent.indexOf(':') > -1 || div.textContent.includes('"') || div.textContent.includes('\\') )
-            return false;
-        else
-            try {
-                JSON.parse(JSON.stringify(div.textContent));
-                return true;
-                
-            } catch (error) {
-                return false;
-            }
-    };
-    /**
-     * Set error
-     * @param {HTMLElement} element 
-     * @param {HTMLElement|null} element2 
-     */
-    const set_error = (element, element2=null) => {
-        element.classList.add('common_input_error');
-        element2?element.classList.add('common_input_error'):null;
-        result = false;
-    };
-    if (dialogue)
-        dialogue.querySelectorAll('.common_input_error')
-            .forEach(element=>element.classList.remove('common_input_error'));
-
-    if (validate_items.check_valid_list_elements)
-        for (const element of validate_items.check_valid_list_elements){
-            element[0].classList.remove('common_input_error');
-        }
-        
-    //validate text content
-    if (validate_items.username && valid_text(validate_items.username) == false){
-        set_error(validate_items.username);
+const commonMiscImport = async url =>{
+    const module = COMMON_GLOBAL.component_import.filter(module=>module.url==url)[0]?.component;
+    if (module) 
+        return import(module);
+    else{
+        COMMON_GLOBAL.component_import.push(
+                /*@ts-ignore*/
+                {url:url,
+                 component:await fetch(url).then(element=>element.blob())
+                                .then(module=>URL.createObjectURL(  new Blob ([module], 
+                                                                    {type: 'text/javascript'})))
+                }); 
+        return import(COMMON_GLOBAL.component_import[COMMON_GLOBAL.component_import.length-1].component);
     }
-    if (validate_items.password && valid_text(validate_items.password)== false){
-        set_error(validate_items.password);
-    }
-    if (validate_items.password_reminder && valid_text(validate_items.password_reminder)== false){
-        set_error(validate_items.password);
-    }
-    if (validate_items.password_new && valid_text(validate_items.password_new)== false){
-        set_error(validate_items.password);
-    }
-    if (validate_items.password_new_confirm && valid_text(validate_items.password_new_confirm)== false){
-        set_error(validate_items.password);
-    }
-    if (validate_items.bio && valid_text(validate_items.bio)== false){
-        set_error(validate_items.bio);
-    }
-    if (validate_items.check_valid_list_elements){
-        for (const element of validate_items.check_valid_list_elements){
-            if (valid_text(element[0])==false)
-                set_error(element[0]);
-        }
-    }
-    if (validate_items.check_valid_list_values){
-        for (const element of validate_items.check_valid_list_values){
-            if (valid_text(element[0])==false){
-                result = false;
-                break;
-            }
-        }
-    }
-    //validate text length
-    if (validate_items.username && validate_items.username.textContent && validate_items.username.textContent.length > 100){
-        set_error(validate_items.username);
-    }
-    if (validate_items.password && validate_items.password.textContent.length > 100){
-        set_error(validate_items.password);
-    }
-    if (validate_items.password_reminder && validate_items.password_reminder.textContent && validate_items.password_reminder.textContent.length > 100){
-        set_error(validate_items.password_reminder);
-    }
-    if (validate_items.password_new && validate_items.password_new.textContent && validate_items.password_new.textContent.length > 100){
-        set_error(validate_items.password_new);
-    }
-    if (validate_items.bio && validate_items.bio.textContent && validate_items.bio.textContent.length > 150){
-        set_error(validate_items.bio);
-    }
-    if (validate_items.check_valid_list_elements){
-        for (const element of validate_items.check_valid_list_elements){
-            if (element[0] && element[1] && element[0].textContent && element[0].textContent.length > element[1])
-                set_error(element[0]);
-        }
-    }
-    if (validate_items.check_valid_list_values){
-        for (const element of validate_items.check_valid_list_values){
-            if (element[0] && element[1] && element[0].length > element[1]){
-                result = false;
-                break;
-            }
-        }
-    }
-    //validate not empty
-    if (validate_items.username && validate_items.username.textContent == '') {
-        set_error(validate_items.username);
-    }
-    if (validate_items.password && validate_items.password.textContent == '') {
-        set_error(validate_items.password);
-    }
-    if (validate_items.password && validate_items.password_confirm && validate_items.password_confirm.textContent ==''){
-        set_error(validate_items.password_confirm);
-    }
-    //validate same password
-    if (validate_items.password && validate_items.password_confirm && (validate_items.password.textContent != validate_items.password_confirm.textContent)){
-        set_error(validate_items.password, validate_items.password_confirm);
-    }
-    if (validate_items.password_new && validate_items.password_new.textContent && validate_items.password_new.textContent.length > 0 && (validate_items.password_new.textContent != validate_items.password_new_confirm.textContent)){
-        set_error(validate_items.password_new, validate_items.password_new_confirm);
-    }
-    if (result==false){
-        commonMessageShow('INFO', null, 'message_text','!');
-        return false;
-    }
-    else
-        return true;
 };
 /**
  * @name commonMiscImportmap
@@ -490,6 +322,157 @@ const commonMiscImportmap = file =>{
         regional  	    : '/common/modules/regional/regional.js',
         Vue 	        : '/common/modules/vue/vue.esm-browser.js'
     }[file] ??'';
+};
+/**
+ * @name commonMiscInputControl
+ * @description Controls input
+ * @function
+ * @param {HTMLElement|null} dialogue 
+ * @param {{
+*			check_valid_list_elements?:[HTMLElement,number|null][],
+*			check_valid_list_values?:[string,number|null][],
+*			username?:HTMLElement,
+*			password?:*,
+*          password_confirm?:HTMLElement,
+*          password_confirm_reminder?:HTMLElement,
+*			password_reminder?:HTMLElement,
+*			password_new?:HTMLElement,
+*			password_new_confirm?:*,
+*			bio?:HTMLElement
+*		}} validate_items 
+* @returns {boolean}
+*/
+const commonMiscInputControl = (dialogue, validate_items) =>{
+   let result = true;
+   /**
+    * Valid text element or value
+    * @param {HTMLElement|string} validate
+    * @returns {boolean}
+    */
+   const valid_text = validate =>{
+       let div;
+       if (typeof validate=='object')
+           div = validate;
+       else{
+           div = COMMON_DOCUMENT.createElement('div');
+           div.textContent = validate;
+       }
+       if (div.textContent.indexOf(':') > -1 || div.textContent.includes('"') || div.textContent.includes('\\') )
+           return false;
+       else
+           try {
+               JSON.parse(JSON.stringify(div.textContent));
+               return true;
+               
+           } catch (error) {
+               return false;
+           }
+   };
+   /**
+    * Set error
+    * @param {HTMLElement} element 
+    * @param {HTMLElement|null} element2 
+    */
+   const set_error = (element, element2=null) => {
+       element.classList.add('common_input_error');
+       element2?element.classList.add('common_input_error'):null;
+       result = false;
+   };
+   if (dialogue)
+       dialogue.querySelectorAll('.common_input_error')
+           .forEach(element=>element.classList.remove('common_input_error'));
+
+   if (validate_items.check_valid_list_elements)
+       for (const element of validate_items.check_valid_list_elements){
+           element[0].classList.remove('common_input_error');
+       }
+       
+   //validate text content
+   if (validate_items.username && valid_text(validate_items.username) == false){
+       set_error(validate_items.username);
+   }
+   if (validate_items.password && valid_text(validate_items.password)== false){
+       set_error(validate_items.password);
+   }
+   if (validate_items.password_reminder && valid_text(validate_items.password_reminder)== false){
+       set_error(validate_items.password);
+   }
+   if (validate_items.password_new && valid_text(validate_items.password_new)== false){
+       set_error(validate_items.password);
+   }
+   if (validate_items.password_new_confirm && valid_text(validate_items.password_new_confirm)== false){
+       set_error(validate_items.password);
+   }
+   if (validate_items.bio && valid_text(validate_items.bio)== false){
+       set_error(validate_items.bio);
+   }
+   if (validate_items.check_valid_list_elements){
+       for (const element of validate_items.check_valid_list_elements){
+           if (valid_text(element[0])==false)
+               set_error(element[0]);
+       }
+   }
+   if (validate_items.check_valid_list_values){
+       for (const element of validate_items.check_valid_list_values){
+           if (valid_text(element[0])==false){
+               result = false;
+               break;
+           }
+       }
+   }
+   //validate text length
+   if (validate_items.username && validate_items.username.textContent && validate_items.username.textContent.length > 100){
+       set_error(validate_items.username);
+   }
+   if (validate_items.password && validate_items.password.textContent.length > 100){
+       set_error(validate_items.password);
+   }
+   if (validate_items.password_reminder && validate_items.password_reminder.textContent && validate_items.password_reminder.textContent.length > 100){
+       set_error(validate_items.password_reminder);
+   }
+   if (validate_items.password_new && validate_items.password_new.textContent && validate_items.password_new.textContent.length > 100){
+       set_error(validate_items.password_new);
+   }
+   if (validate_items.bio && validate_items.bio.textContent && validate_items.bio.textContent.length > 150){
+       set_error(validate_items.bio);
+   }
+   if (validate_items.check_valid_list_elements){
+       for (const element of validate_items.check_valid_list_elements){
+           if (element[0] && element[1] && element[0].textContent && element[0].textContent.length > element[1])
+               set_error(element[0]);
+       }
+   }
+   if (validate_items.check_valid_list_values){
+       for (const element of validate_items.check_valid_list_values){
+           if (element[0] && element[1] && element[0].length > element[1]){
+               result = false;
+               break;
+           }
+       }
+   }
+   //validate not empty
+   if (validate_items.username && validate_items.username.textContent == '') {
+       set_error(validate_items.username);
+   }
+   if (validate_items.password && validate_items.password.textContent == '') {
+       set_error(validate_items.password);
+   }
+   if (validate_items.password && validate_items.password_confirm && validate_items.password_confirm.textContent ==''){
+       set_error(validate_items.password_confirm);
+   }
+   //validate same password
+   if (validate_items.password && validate_items.password_confirm && (validate_items.password.textContent != validate_items.password_confirm.textContent)){
+       set_error(validate_items.password, validate_items.password_confirm);
+   }
+   if (validate_items.password_new && validate_items.password_new.textContent && validate_items.password_new.textContent.length > 0 && (validate_items.password_new.textContent != validate_items.password_new_confirm.textContent)){
+       set_error(validate_items.password_new, validate_items.password_new_confirm);
+   }
+   if (result==false){
+       commonMessageShow('INFO', null, 'message_text','!');
+       return false;
+   }
+   else
+       return true;
 };
 /**
  * @name commonMiscListKeyEvent
@@ -650,6 +633,63 @@ const commonMiscPreferencesUpdateBodyClassFromPreferences = () => {
 const commonMiscPreferencesPostMount = () => {
     commonMiscPreferencesUpdateBodyClassFromPreferences();
     commonMiscThemeUpdateFromBody();
+};
+/**
+ * @name commonMiscResourceFetch
+ * @description fetches resources and updates attributes on element or return result if no element found
+ * @param {string} url
+ * @param {HTMLImageElement|HTMLAnchorElement|null} element
+ * @param { 'image/png'|'image/webp'|
+*          'text/html'|
+*          'text/css'|'text/javascript'|
+*          'font/woff'|'font/ttf'} content_type
+* @returns {Promise.<string|void>}
+*/
+const commonMiscResourceFetch = async (url,element, content_type )=>{
+    if (element && content_type.startsWith('image')){
+        /**@ts-ignore */
+        element.alt=' '; 
+        element.removeAttribute('src');
+    }   
+    /**
+    * @returns{Promise.<*>}
+    */
+    const get = async ()=>{
+        const resource = COMMON_GLOBAL.resource_import.filter(resource=>resource.url==url)[0]?.content;
+        if (resource) 
+            return resource;
+        else{
+            COMMON_GLOBAL.resource_import.push(
+                    /*@ts-ignore*/
+                    {url:url,
+                    content:await fetch(url).then(element=>element.blob())
+                                    .then(module=>URL.createObjectURL(  new Blob ([module], 
+                                                                        {type: content_type}))),
+                    content_type:content_type
+                    }); 
+            return COMMON_GLOBAL.resource_import[COMMON_GLOBAL.resource_import.length-1].content;
+        }
+    }; 
+   
+   const url_elementBlob = await get();
+
+   if (element && content_type.startsWith('image')){
+       element.style.backgroundImage = `url('${url_elementBlob}')`;
+       element.style.backgroundSize = 'cover';
+   }
+   else
+       if (element && content_type.startsWith('text'))
+           /**@ts-ignore */
+           element.href=url_elementBlob;
+       else{
+           if (element)
+               //font
+               /**@ts-ignore */
+               element.style.src = `url('${url_elementBlob}')`;
+           else
+               return url_elementBlob;
+       }
+
 };
 /**
  * @name commonMiscRoundOff
@@ -1043,8 +1083,8 @@ const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
  *          path:string}} commonComponentRender
  * @returns {Promise.<{data:*, methods:*, template:string|null}>}
  */
-const commonComponentRender = async commonComponentRender => {
-    const {default:ComponentCreate} = await import(commonComponentRender.path);
+const commonComponentRender = async commonComponentRender => {    
+    const {default:ComponentCreate} = await commonMiscImport(commonComponentRender.path);
     if (commonComponentRender.mountDiv)
         COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`).innerHTML = '<div class=\'css_spinner\'></div>';
 
@@ -1100,7 +1140,7 @@ const commonComponentRender = async commonComponentRender => {
         }
     }
     //return data and methods from component to be used in apps
-    return {data:component?component.data:null, methods:component?component.methods:null, template:component.template};
+    return {data:component?component.data:null, methods:component?component.methods:null, template:component?.template??null};
 };
 /**
  * @name commonComponentRemove
@@ -2127,6 +2167,7 @@ const commonModuleLeafletInit = async parameters => {
                                         app_eventListeners:COMMON_GLOBAL.app_eventListeners
                                         },
                             methods:    {
+                                        commonMiscImport:commonMiscImport,
                                         commonMiscImportmap:commonMiscImportmap
                                         },
                             path:       '/common/component/common_module_leaflet.js'})
@@ -2143,6 +2184,7 @@ const commonModuleLeafletInit = async parameters => {
                     },
         methods:    {
                     function_event_doubleclick: parameters.doubleclick_event,
+                    commonMiscImport:commonMiscImport,
                     commonMiscImportmap:commonMiscImportmap,
                     commonComponentRender:commonComponentRender,
                     commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
@@ -2357,7 +2399,7 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
             commonComponentRender({
                 mountDiv:   'common_broadcast',
                 data:       {message:commonWindowFromBase64(message)},
-                methods:    {commonMiscAssetFetch:commonMiscAssetFetch},
+                methods:    {commonMiscResourceFetch:commonMiscResourceFetch},
                 path:       '/common/component/common_broadcast.js'});
             break;
         }
@@ -2392,7 +2434,7 @@ const commonSocketMaintenanceShow = (message, init=null) => {
             methods:    {
                             commonWindowSetTimeout:commonWindowSetTimeout, 
                             commonWindowLocationReload:commonWindowLocationReload,
-                            commonMiscAssetFetch:commonMiscAssetFetch
+                            commonMiscResourceFetch:commonMiscResourceFetch
             },
             path:       '/common/component/common_dialogue_maintenance.js'});
     }
@@ -3635,7 +3677,7 @@ const custom_framework = () => {
                     if (value.indexOf('marker-')>-1 && module(Error()?.stack)=='LEAFLET'){
                         if (!this.id)
                             this.id = 'Leaflet_img_' + Date.now();
-                        commonMiscAssetFetch(value, this, 'image/png');
+                        commonMiscResourceFetch(value, this, 'image/png');
                     }
                     else
                         originalSrcDescriptor?.set?.call(this, value);
@@ -3806,14 +3848,15 @@ export{/* GLOBALS*/
        commonMiscElementListTitle, 
        commonMiscFormatJsonDate,
        commonMiscImageConvert,
-       commonMiscAssetFetch,
        commonMiscImageShow, 
-       commonMiscInputControl,
+       commonMiscImport,
        commonMiscImportmap,
+       commonMiscInputControl,
        commonMiscListKeyEvent,
        commonMiscMobile,
        commonMiscPreferencesUpdateBodyClassFromPreferences,
        commonMiscPreferencesPostMount,
+       commonMiscResourceFetch,
        commonMiscRoundOff, 
        commonMiscSelectCurrentValueSet,
        commonMiscThemeDefaultList, 

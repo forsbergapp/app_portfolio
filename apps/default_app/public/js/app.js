@@ -93,7 +93,7 @@ const appInit = async () => {
                                         path:       '/common/component/common_app.js'});
     await common.commonComponentRender({mountDiv:common.COMMON_GLOBAL.app_div,
         data:null,
-        methods:    {commonMiscAssetFetch:common.commonMiscAssetFetch},
+        methods:    {commonMiscResourceFetch:common.commonMiscResourceFetch},
         path:'/component/app.js'});
     await common.commonComponentRender({  mountDiv:'app_construction',
                                         data:null,

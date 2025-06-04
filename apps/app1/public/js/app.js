@@ -9,10 +9,8 @@
 /**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-const commonPath ='/common/js/common.js';
-/**@type {CommonModuleCommon} */
-const common = await import(commonPath);
-
+/**@type{CommonModuleCommon}*/
+let common;
 /**
  * App globals
  * @type{{  component: {MENU_MONITOR:{ monitorShow:                function,
@@ -1228,10 +1226,12 @@ const appInit = async (parameters) => {
  * @name appCommonInit
  * @description Init common
  * @function
+ * @param {CommonModuleCommon} commonLib
  * @param {string} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async parameters => {        
+const appCommonInit = async (commonLib, parameters) => {        
+    common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appLogout;
@@ -1240,4 +1240,4 @@ const appCommonInit = async parameters => {
         appInit(decodedparameters);
     });
 };
-export { appCommonInit, appSecureDialogueSendBroadcastShow };
+export { appCommonInit, appSecureDialogueSendBroadcastShow }; 

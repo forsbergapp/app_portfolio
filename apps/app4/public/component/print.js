@@ -38,7 +38,7 @@ const template = props =>`  <!DOCTYPE html>
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscAssetFetch:CommonModuleCommon['commonMiscAssetFetch']
+ *                      commonMiscResourceFetch:CommonModuleCommon['commonMiscResourceFetch']
  *                      }}} props
  * 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -52,9 +52,9 @@ const component = async props => {
         lifecycle:  null,
         data:       null,
         methods:    null,
-        template:   template({  app_link_app_report_css:await props.methods.commonMiscAssetFetch(   props.methods.COMMON_DOCUMENT.querySelector('#app_link_app_report_css').attributes['href'].textContent, 
+        template:   template({  app_link_app_report_css:await props.methods.commonMiscResourceFetch(   props.methods.COMMON_DOCUMENT.querySelector('#app_link_app_report_css').attributes['href'].textContent, 
                                                                                                     null, 'text/css'),
-                                common_link_common_css:await props.methods.commonMiscAssetFetch(    props.methods.COMMON_DOCUMENT.querySelector('#common_link_common_css').attributes['href'].textContent, 
+                                common_link_common_css:await props.methods.commonMiscResourceFetch(    props.methods.COMMON_DOCUMENT.querySelector('#common_link_common_css').attributes['href'].textContent, 
                                                                                                     null, 'text/css'),
                                 html: props.data.appHtml})
     };
