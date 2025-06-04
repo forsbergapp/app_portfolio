@@ -10,9 +10,8 @@
 /**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-const commonPath ='/common/js/common.js';
 /**@type {CommonModuleCommon} */
-const common = await import(commonPath);
+let common;
 
 const APP_GLOBAL = {token:null};
 
@@ -508,7 +507,7 @@ const appInit = async () => {
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div, 
         data:       null,
-        methods:    {commonMiscAssetFetch:common.commonMiscAssetFetch},
+        methods:    {commonMiscResourceFetch:common.commonMiscResourceFetch},
         path:       '/component/app.js'})
     .then(()=> 
         common.commonComponentRender({
@@ -538,10 +537,12 @@ const appInit = async () => {
  * @name appCommonInit
  * @description Init common
  * @function
+ * @param {CommonModuleCommon} commonLib
  * @param {string} parameters 
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const appCommonInit = parameters => {
+const appCommonInit = async (commonLib, parameters) => {
+    common = commonLib;
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
     common.COMMON_GLOBAL.app_function_sse = appPaymentRequestShow;

@@ -15,7 +15,23 @@ const template = props =>`  <!DOCTYPE html>
                                 <meta charset='UTF-8'>
                                 <title>${props.APP.name}</title>
                                 <script type='module'>
-                                    import('${props.APP.js}').then((app) => app.appCommonInit('${props.APP_PARAMETERS}'));
+                                	const commonFetch = async url =>
+                                            import(await fetch(  url, 
+                                                                {
+                                                                cache: 'no-store',
+                                                                method: 'GET',
+                                                                headers: {
+                                                                        'Connection': 'close',
+                                                                        'App-id': ${props.APP.id},
+                                                                        'App-Signature': 'App Signature',
+                                                                        'id-token': 'Bearer ${JSON.parse(Buffer.from(props.APP_PARAMETERS, 'base64').toString('utf-8')).INFO.app_idtoken}'
+                                                                    }
+                                                                })
+                                                        .then(module=>module.blob())
+                                                        .then(module=>URL.createObjectURL(  new Blob ([module],
+                                                                                            {type: 'text/javascript'}))));
+                                    (await commonFetch('${props.APP.js}'))
+                                        .appCommonInit(await commonFetch('/common/js/common.js'), '${props.APP_PARAMETERS}');
                                 </script>
                                 <link id="app_link_app_css"         rel='stylesheet'  type='text/css'     href='${props.APP.css}'/>
                                 <link id="app_link_app_report_css"  rel='stylesheet'  type='text/css'     href='${props.APP.css_report}'/>
@@ -41,5 +57,6 @@ const template = props =>`  <!DOCTYPE html>
  *        methods:    null}} props 
  * @returns {Promise.<string>}
  */
-const component = async props => template({APP:props.data.APP, APP_PARAMETERS:props.data.APP_PARAMETERS});
+const component = async props => 
+    template({APP:props.data.APP, APP_PARAMETERS:props.data.APP_PARAMETERS});
 export default component;

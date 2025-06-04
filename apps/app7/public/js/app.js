@@ -10,9 +10,8 @@
 /**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-const commonPath ='/common/js/common.js';
 /**@type {CommonModuleCommon} */
-const common = await import(commonPath);
+let common;
 
 /**
  * @name appException
@@ -163,10 +162,12 @@ const appInit = async () =>{
  * @name appCommonInit
  * @description Init common
  * @function
+ * @param {CommonModuleCommon} commonLib
  * @param {string} parameters 
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const appCommonInit = parameters => {
+const appCommonInit = async (commonLib, parameters) => {
+    common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = null;
