@@ -1037,7 +1037,6 @@ const commonComponentRender = async commonComponentRender => {
             (link.getAttribute('data-href')==''||link.getAttribute('data-href')==null)?
                 null:
                     commonMiscResourceFetch(link.getAttribute('data-href')??'', link,'text/css'));
-        
         if (component.lifecycle?.onUnmounted){
             const Unmounted = () =>{
                                     if (!COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`) || 
@@ -3034,13 +3033,13 @@ const commonEvent = async (event_type,event=null) =>{
                         }
                         //markdown document tags
                         case event.target.classList.contains('common_markdown_image')?event_target_id:'':{
-                            if (event.target.getAttribute('data-url'))
+                            if (event.target.getAttribute('data-url_link'))
                                 commonComponentRender({
                                     mountDiv:   'common_window_info',
                                     data:       {
                                                 //show IMAGE type 0 
                                                 info:0,
-                                                url:event.target.getAttribute('data-url'),
+                                                url:event.target.getAttribute('data-url_link'),
                                                 content_type:null, 
                                                 iframe_content:null
                                                 },

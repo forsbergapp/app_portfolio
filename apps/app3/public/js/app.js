@@ -35,7 +35,10 @@ const show = async (href, title, documentType) =>{
                         title:title,
                         documentType:documentType
                     },
-        methods:    {commonFFB:common.commonFFB},
+        methods:    {
+                        commonMiscResourceFetch:common.commonMiscResourceFetch,
+                        commonFFB:common.commonFFB
+                    },
         path:       '/common/component/common_document.js'});
 };
 /**
