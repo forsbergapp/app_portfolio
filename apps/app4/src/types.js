@@ -227,8 +227,6 @@
  *          app_design_default_show_timezone:                 {value:boolean, comment:string}
  *          app_image_default_report_header_src:              {value:string, comment:string}
  *          app_image_default_report_footer_src:              {value:string, comment:string}
- *          app_image_header_footer_width:                    {value:number, comment:string}
- *          app_image_header_footer_height:                   {value:number, comment:string}
  *          app_text_default_reporttitle1:                    {value:string, comment:string}
  *          app_text_default_reporttitle2:                    {value:string, comment:string}
  *          app_text_default_reporttitle3:                    {value:string, comment:string}

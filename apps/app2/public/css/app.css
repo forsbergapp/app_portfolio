@@ -739,9 +739,6 @@ border-left: 12px solid var(--app_theme_sun_color);
     background-color: var(--app_theme_main_branding_color3);
     box-shadow: 0px -3px 3px var(--app_theme_dialogue_boxshadow_color1);
 }
-#common_dialogue_user_menu_iam_user_btn_avatar_img{
-	background-color: var(--app_theme_dialogue_background_color);
-}
 .common_link{
 	color:var(--app_theme_a_color);
 }

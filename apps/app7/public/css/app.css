@@ -92,9 +92,6 @@ body{
 	background-color: var(--app_theme_main_branding_color1);
     border-radius: 50%;
 }
-#common_dialogue_user_menu_iam_user_btn_avatar_img{
-	background-color: var(--app_theme_main_branding_color1);
-}
 .common_list_row_selected{
 	background-color: var(--app_theme_selected_background_color);
 }

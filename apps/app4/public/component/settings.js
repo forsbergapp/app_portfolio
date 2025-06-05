@@ -21,9 +21,8 @@ const template = props =>`
                             <div id='settings_tab_nav_3' class='settings_tab_nav common_icon'></div>
                             <div id='settings_tab_nav_4' class='settings_tab_nav common_icon'></div>
                             <div id='settings_tab_nav_5' class='settings_tab_nav common_icon'></div>
-                            <div id='settings_tab_nav_6' class='settings_tab_nav common_icon'></div>
                             ${props.iam_user_id!=null?
-                                `<div id='settings_tab_nav_7' class='settings_tab_nav common_icon'>
+                                `<div id='settings_tab_nav_6' class='settings_tab_nav common_icon'>
                                     <div id='user_setting_avatar_img' class='common_image' style='${props.avatar==null?'':`background-image:url(${props.avatar});`}'></div>
                                 </div>`:
                                 ''

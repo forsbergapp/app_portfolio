@@ -300,15 +300,7 @@
  *              common_info_link_terms_name:        {value:string},
  *              common_info_link_terms_url:         {value:string},
  *              common_info_link_about_name:        {value:string},
- *              common_info_link_about_url:         {value:string},
- *              common_image_file_allowed_type1:    {value:string},
- *              common_image_file_allowed_type2:    {value:string},
- *              common_image_file_allowed_type3:    {value:string},
- *              common_image_file_allowed_type4:    {value:string},
- *              common_image_file_allowed_type5:    {value:string},
- *              common_image_file_mime_type:        {value:string, comment:string},
- *              common_image_avatar_height:         {value:string, comment:string},
- *              common_image_avatar_width:          {value:string, comment:string}}} server_db_table_AppParameter
+ *              common_info_link_about_url:         {value:string}}} server_db_table_AppParameter
  */
 /**
  * @description DB TABLE AppTranslation
@@ -1077,15 +1069,7 @@
  *             common_info_link_terms_name:         {value:string},
  *             common_info_link_terms_url:          {value:string},
  *             common_info_link_about_name:         {value:string},
- *             common_info_link_about_url:          {value:string},
- *             common_image_file_allowed_type1:     {value:string},
- *             common_image_file_allowed_type2:     {value:string},
- *             common_image_file_allowed_type3:     {value:string},
- *             common_image_file_allowed_type4:     {value:string},
- *             common_image_file_allowed_type5:     {value:string},
- *             common_image_file_mime_type:         {value:string, comment:string},
- *             common_image_avatar_height:          {value:string, comment:string},
- *             common_image_avatar_width:           {value:string, comment:string}}} server_db_app_parameter_common
+ *             common_info_link_about_url:          {value:string}}} server_db_app_parameter_common
  */
 
 /**

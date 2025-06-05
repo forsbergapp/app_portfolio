@@ -98,7 +98,6 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 
 
 /*Icons dialogue user menu iam user*/
-#common_dialogue_user_menu_iam_user_btn_avatar_img::before{						content:var(--common_app_icon_user_avatar_edit)}
 #common_dialogue_user_menu_iam_user_private::before{							content:var(--common_app_icon_private)}
 #common_dialogue_user_menu_iam_user_input_username_icon::before{				content:var(--common_app_icon_user)}
 #common_dialogue_user_menu_iam_user_input_bio_icon::before{						content:var(--common_app_icon_user_profile)}
@@ -1365,21 +1364,11 @@ body.rtl{
 	height: 1.5em;
 	width: 100%;
 	border: 0.5px solid;
-    
-}
-#common_dialogue_user_menu_iam_user_input_avatar_img{
-	display:none;
-}
-#common_dialogue_user_menu_iam_user_btn_avatar_img{
-    width: 50%;
-    border-radius:var(--common_app_css_border_radius);
-    margin-top: 25%;
 }
 #common_dialogue_user_menu_iam_user_avatar{
 	border: 0.5px solid;
 	border-radius: 50%;
     width: 48px;
-	cursor: pointer;
 	display: inline-block;
 }
 #common_dialogue_user_menu_iam_user .common_dialogue_user_menu_iam_user_row_title{

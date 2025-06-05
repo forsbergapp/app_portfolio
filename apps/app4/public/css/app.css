@@ -18,9 +18,8 @@
 #settings_tab_nav_1::before{								content:var(--common_app_icon_regional)}
 #settings_tab_nav_2::before{								content:var(--common_app_icon_gps)}
 #settings_tab_nav_3::before{								content:var(--common_app_icon_misc_design)}
-#settings_tab_nav_4::before{								content:var(--common_app_icon_misc_image)}
-#settings_tab_nav_5::before{								content:var(--common_app_icon_misc_text)}
-#settings_tab_nav_6::before{								content:var(--common_app_icon_misc_prayer)}
+#settings_tab_nav_4::before{								content:var(--common_app_icon_misc_text)}
+#settings_tab_nav_5::before{								content:var(--common_app_icon_misc_prayer)}
 #settings_close::before{									content:var(--common_app_icon_close)}
 #setting_icon_regional_locale::before{						content:var(--common_app_icon_regional_locale)}
 #setting_icon_regional_timezone_current::before{			content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_gps_position)}
@@ -48,12 +47,6 @@
 
 .setting_design_prev::before{								content:var(--common_app_icon_slider_left)}
 .setting_design_next::before{								content:var(--common_app_icon_slider_right)}
-
-
-#setting_icon_image_header_clear::before{					content:var(--common_app_icon_remove)}
-#setting_icon_image_footer_clear::before{					content:var(--common_app_icon_remove)}
-#setting_icon_image_header_img::before{						content:var(--common_app_icon_search)}
-#setting_icon_image_footer_img::before{						content:var(--common_app_icon_search)}    
 
 #setting_icon_text_theme_day::before{						content:var(--common_app_icon_regional_day)}
 #setting_icon_text_theme_month::before{						content:var(--common_app_icon_regional_month)}
@@ -413,14 +406,7 @@
 		bottom: -908px;
 	}
 }
-/*SETTINGS IMAGE*/
-#settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
-#settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
-	width:5%;
-}
-#settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(2){
-	width:90%;
-}
+/*SETTINGS Text*/
 .setting_paper_preview{
 	width: 84mm;
 	height: 114mm;
@@ -430,91 +416,69 @@
 	justify-content:space-between;
 	border: 1px solid;
 }
-#setting_paper_preview_header_image, #setting_paper_preview_footer_image{
-	height:63px;
-}
 .setting_paper_preview_space{
 	height: 240px;
 }
 .setting_paper_preview_header,
-.setting_paper_preview_footer,
-#setting_paper_preview_header_buttons,
-#setting_paper_preview_footer_buttons{
+.setting_paper_preview_footer{
 	text-align: center;
 }
-#setting_btn_reportheader_img,
-#setting_btn_reportfooter_img{
-	width: 100px !important;
-}
 
-#setting_input_reportheader_img,
-#setting_input_reportfooter_img{
-	display:none;
-}
-#setting_reportheader_img, #setting_reportfooter_img{
-	width: 100%;
-	min-width: 100%;
-	height: 63px;
-	background-position: center;
-	background-size: 100% 100%;
-  	background-repeat: no-repeat;
-}
-/*SETTINGS Text*/
-#settings .settings_tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
-#settings .settings_tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
+#settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
+#settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
 	width:5%;
 }
-#settings .settings_tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(2){
+#settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(2){
 	width:90%;
 	text-align: center;
 	display: block;
 }
-#settings .settings_tab5 #setting_icon_text_theme_col{
+#settings .settings_tab4 #setting_icon_text_theme_col{
 	display: inline-block;
 	width: 60px;
 	vertical-align: top;
 }
-#settings .settings_tab5 #setting_icon_text_theme_col > div{
+#settings .settings_tab4 #setting_icon_text_theme_col > div{
     height: 2em;
 	width: 2em;
 }
-#settings .settings_tab5 #setting_icon_text_theme_col .common_icon{
+#settings .settings_tab4 #setting_icon_text_theme_col .common_icon{
 	cursor: pointer;
 }
-#settings .settings_tab5 #setting_paper_preview_text{
+#settings .settings_tab4 #setting_paper_preview_text{
 	transform: scale(0.95) translate(0%, -7%);
 	display: inline-block;
 }
-#settings .settings_tab5 #setting_paper_preview_text.font_arabic_sans .display_font{
+#settings .settings_tab4 #setting_paper_preview_text.font_arabic_sans .display_font{
 	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_sans) !important;
 	line-height: initial;
 }
-#settings .settings_tab5 #setting_paper_preview_text.font_arabic_kufi .display_font{
+#settings .settings_tab4 #setting_paper_preview_text.font_arabic_kufi .display_font{
 	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_kufi) !important;
 	line-height: initial;
 }
-#settings .settings_tab5 #setting_paper_preview_text.font_arabic_nashk .display_font{
+#settings .settings_tab4 #setting_paper_preview_text.font_arabic_nashk .display_font{
 	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_nashk) !important;
 	line-height: initial;
 }
-#settings .settings_tab5 #setting_paper_preview_text.font_arabic_nastaliq .display_font{
+#settings .settings_tab4 #setting_paper_preview_text.font_arabic_nastaliq .display_font{
 	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_nastaliq) !important;
 	line-height: initial;
 }
-#settings .settings_tab5 #setting_paper_preview_header_text .common_input,
-#settings .settings_tab5 #setting_paper_preview_footer_text .common_input{
+#settings .settings_tab4 #setting_paper_preview_header_text .common_input,
+#settings .settings_tab4 #setting_paper_preview_footer_text .common_input{
 	font-size: 0.4em;
 }
-#settings .settings_tab5 .setting_report_title{
+#settings .settings_tab4 .setting_report_title{
 	min-width: 99%;
 	margin: -2px;
 	text-align: center;
 	font-size: 0.7em;
 }
-#settings .settings_tab5 #setting_input_reportheader3{
+#settings .settings_tab4 #setting_input_reportheader3{
 	margin-bottom: 4px;
 }
-#settings .settings_tab5 #setting_input_reportfooter1{
+#settings .settings_tab4 #setting_input_reportfooter1{
 	margin-top: 4px;
 }
 
@@ -530,14 +494,14 @@
 	display:inline-block;
 }
 /* SETTINGS USER SETTINGS*/
-#settings .settings_tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(1),
-#settings .settings_tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(4){
+#settings .settings_tab6 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(1),
+#settings .settings_tab6 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(4){
 	width: 10%;
 }
-#settings .settings_tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(2){
+#settings .settings_tab6 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(2){
 	width: 0%;
 }
-#settings .settings_tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(3){
+#settings .settings_tab6 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(3){
 	width: 80%;
 	text-align: center;
 }
@@ -706,7 +670,7 @@
 	.profile_user_settings_row div:nth-child(1){
 		width:200px;
 	}
-	#settings .settings_tab5 #setting_paper_preview_footer_text{
+	#settings .settings_tab4 #setting_paper_preview_footer_text{
 		font-size: 0.8em;
 	}
 }
@@ -882,7 +846,7 @@ body,
 .setting_paper_preview{
 	background-color: var(--app_theme_paper_preview_background_color);
 }
-#settings .settings_tab5 .setting_report_title{
+#settings .settings_tab4 .setting_report_title{
     border: 0.5px solid var(--common_app_color_gold);
 }
 .common_dialogue_button:hover,
@@ -913,29 +877,29 @@ body,
 #settings .settings_tab3 .setting_design_thumbnail #timetable_year{
 	background-color:var(--app_theme_paper_preview_background_color);
 }
-#settings .settings_tab5 #setting_icon_text_theme_day,
-#settings .settings_tab5 #setting_icon_text_theme_month,
-#settings .settings_tab5 #setting_icon_text_theme_year{
+#settings .settings_tab4 #setting_icon_text_theme_day,
+#settings .settings_tab4 #setting_icon_text_theme_month,
+#settings .settings_tab4 #setting_icon_text_theme_year{
 	color: var(--app_theme_button_color);
 }
-#settings .settings_tab5 #setting_icon_text_theme_day:hover,
-#settings .settings_tab5 #setting_icon_text_theme_day:active,
-#settings .settings_tab5 #setting_icon_text_theme_month:hover,
-#settings .settings_tab5 #setting_icon_text_theme_month:active,
-#settings .settings_tab5 #setting_icon_text_theme_year:hover,
-#settings .settings_tab5 #setting_icon_text_theme_year:active{
+#settings .settings_tab4 #setting_icon_text_theme_day:hover,
+#settings .settings_tab4 #setting_icon_text_theme_day:active,
+#settings .settings_tab4 #setting_icon_text_theme_month:hover,
+#settings .settings_tab4 #setting_icon_text_theme_month:active,
+#settings .settings_tab4 #setting_icon_text_theme_year:hover,
+#settings .settings_tab4 #setting_icon_text_theme_year:active{
 	color: var(--app_theme_hover);
 }
 
-#settings .settings_tab5 #setting_input_header,
-#settings .settings_tab5 #setting_input_footer{
+#settings .settings_tab4 #setting_input_header,
+#settings .settings_tab4 #setting_input_footer{
 	background-color: var(--report_theme_footer_background_color);
 }
-#settings .settings_tab5 #setting_paper_preview_header_text .common_input{
+#settings .settings_tab4 #setting_paper_preview_header_text .common_input{
 	color : var(--report_theme_header_color) !important;
 	background-color:var(--report_theme_header_background_color);
 }	
-#settings .settings_tab5 #setting_paper_preview_footer_text .common_input{
+#settings .settings_tab4 #setting_paper_preview_footer_text .common_input{
 	color : var(--report_theme_footer_color) !important;
 	background-color:var(--report_theme_footer_background_color);
 }
@@ -947,9 +911,6 @@ body,
 	color: var(--app_theme_main_color3);
 	background-color: var(--app_theme_main_color2);
 	box-shadow: 0px -3px 3px var(--app_theme_dialogue_shadow_color1);
-}
-#common_dialogue_user_menu_iam_user_btn_avatar_img{
-	background-color: var(--app_theme_main_color2);
 }
 .common_dialogue{
 	background-color: var(--common_app_color_shadow3);
