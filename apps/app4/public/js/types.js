@@ -137,8 +137,6 @@
 *          design_default_show_timezone:boolean,
 *          image_default_report_header_src:string,
 *          image_default_report_footer_src:string,
-*          image_header_footer_width:number,
-*          image_header_footer_height:number,
 *          text_default_reporttitle1:string,
 *          text_default_reporttitle2:string,
 *          text_default_reporttitle3:string,

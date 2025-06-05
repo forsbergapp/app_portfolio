@@ -16,10 +16,7 @@
 */
 const template = props => ` <div id='common_dialogue_user_menu_iam_user'>
                                <div class='common_dialogue_user_menu_iam_user_row_title'>
-                                   <div id='common_dialogue_user_menu_iam_user_avatar' data-image=${props.user.avatar} class='common_image common_image_avatar' style='${props.user.avatar==null?'':`background-image:url(${props.user.avatar});`}'>
-                                       <div id='common_dialogue_user_menu_iam_user_btn_avatar_img' class='common_icon'></div>
-                                       <input id='common_dialogue_user_menu_iam_user_input_avatar_img' type='file'>
-                                   </div>
+                                   <div id='common_dialogue_user_menu_iam_user_avatar' data-image=${props.user.avatar} class='common_image common_image_avatar' style='${props.user.avatar==null?'':`background-image:url(${props.user.avatar});`}'></div>
                                    <div id='common_dialogue_user_menu_iam_user_private' class='common_icon'></div>
                                    <div id='common_dialogue_user_menu_iam_user_checkbox_profile_private' class='common_switch'></div>
                                </div>

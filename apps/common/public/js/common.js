@@ -51,14 +51,6 @@ const COMMON_GLOBAL = {
     token_exp:null,
     token_iat:null,
     rest_resource_bff:null,
-    image_file_allowed_type1:null,
-    image_file_allowed_type2:null,
-    image_file_allowed_type3:null,
-    image_file_allowed_type4:null,
-    image_file_allowed_type5:null,
-    image_file_mime_type:null,
-    image_avatar_width:0,
-    image_avatar_height:0,
     user_locale:'',
     user_timezone:'',
     user_direction:'',
@@ -206,84 +198,6 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
         const format_date = utc_date.toLocaleDateString(COMMON_GLOBAL.user_locale, options);
         return format_date;
     }
-};
-/**
- * @name commonMiscImageConvert
- * @description Converts image
- * @function
- * @param {string} image_url 
- * @param {number} image_width 
- * @param {number} image_height 
- * @returns {Promise.<string>}
- */
-const commonMiscImageConvert = async (image_url, image_width, image_height) => {
-    //function to convert images to specified size and mime type according to parameters
-    return new Promise((resolve) => {
-        if (image_url=='')
-            resolve('');
-        else{
-            const img = new Image();
-            img.src = image_url;
-            //update Content Security Policy with allowed domain
-            //to allow any image url source, uncomment:
-            //img.crossOrigin = 'Anonymous';
-            img.onload = (el) => {
-                const elem = COMMON_DOCUMENT.createElement('canvas');
-                elem.width = image_width;
-                elem.height = image_height;
-                const ctx = elem.getContext('2d');
-                ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
-                resolve(ctx.canvas.toDataURL(COMMON_GLOBAL.image_file_mime_type));
-            };
-        }
-    });
-};
-/**
- * @name commonMiscImageShow
- * @description Show image
- * @function
- * @param {HTMLImageElement} item_img 
- * @param {string|null} item_input 
- * @param {number} image_width 
- * @param {number} image_height 
- * @returns {Promise.<null>}
- */
-const commonMiscImageShow = async (item_img, item_input, image_width, image_height) => {
-    return new Promise((resolve)=>{
-        const file = COMMON_DOCUMENT.querySelector('#' + item_input).files[0];
-        const reader = new FileReader();
-    
-        const allowedExtensions = [COMMON_GLOBAL.image_file_allowed_type1,
-                                   COMMON_GLOBAL.image_file_allowed_type2,
-                                   COMMON_GLOBAL.image_file_allowed_type3,
-                                   COMMON_GLOBAL.image_file_allowed_type4,
-                                   COMMON_GLOBAL.image_file_allowed_type5
-                                  ];
-        const { name: fileName} = file;
-        const fileExtension = fileName.split('.').pop();
-        if (!allowedExtensions.includes(fileExtension)){
-            //File type not allowed
-            commonMessageShow('INFO', null, null,commonMesssageNotAuthorized());
-            resolve(null);
-        }
-        else
-            reader.onloadend = /**@type{import('../../../common_types.js').CommonAppEvent}*/event => {
-                if (event.target)
-                    commonMiscImageConvert(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
-                        item_img.style.backgroundImage= srcEncoded?`url('${srcEncoded}')`:'url()';
-                        item_img.setAttribute('data-image', srcEncoded);
-                        resolve(null);
-                    });
-            };
-        if (file)
-            reader.readAsDataURL(file); //reads the data as a URL
-        else{
-            item_img.style.backgroundImage= 'url()';
-            item_img.setAttribute('data-image', '');
-        }
-            
-    });
-    
 };
 /**
  * @name commonMiscImport
@@ -2972,14 +2886,6 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         //dialogue user edit
-                        case 'common_dialogue_user_menu_iam_user_btn_avatar_img':{
-                            COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_input_avatar_img').click();
-                            break;
-                        }
-                        case 'common_dialogue_user_menu_iam_user_input_avatar_img':{
-                            commonMiscImageShow(COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_avatar'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
-                            break;
-                        }
                         case 'common_dialogue_user_menu_iam_user_btn_user_update':{
                             await commonUserUpdate();
                             break;
@@ -3357,16 +3263,7 @@ const commonInitParametersAppSet = (app_parameters, common_parameters) => {
     COMMON_GLOBAL.info_link_terms_url = common_parameters.common_info_link_terms_url.value;
     COMMON_GLOBAL.info_link_about_name = common_parameters.common_info_link_about_name.value;
     COMMON_GLOBAL.info_link_about_url = common_parameters.common_info_link_about_url.value;
-
-    COMMON_GLOBAL.image_file_allowed_type1 = common_parameters.common_image_file_allowed_type1.value;
-    COMMON_GLOBAL.image_file_allowed_type2 = common_parameters.common_image_file_allowed_type2.value;
-    COMMON_GLOBAL.image_file_allowed_type3 = common_parameters.common_image_file_allowed_type3.value;
-    COMMON_GLOBAL.image_file_allowed_type4 = common_parameters.common_image_file_allowed_type4.value;
-    COMMON_GLOBAL.image_file_allowed_type5 = common_parameters.common_image_file_allowed_type5.value;
-    COMMON_GLOBAL.image_file_mime_type = common_parameters.common_image_file_mime_type.value;
-    COMMON_GLOBAL.image_avatar_width = parseInt(common_parameters.common_image_avatar_width.value);
-    COMMON_GLOBAL.image_avatar_height = parseInt(common_parameters.common_image_avatar_height.value);
-    
+   
     COMMON_GLOBAL.app_copyright = app_parameters.app_copyright;
     COMMON_GLOBAL.app_link_url = app_parameters.app_link_url;
     COMMON_GLOBAL.app_link_title = app_parameters.app_link_title;
@@ -3853,8 +3750,6 @@ export{/* GLOBALS*/
        commonMiscElementRow, 
        commonMiscElementListTitle, 
        commonMiscFormatJsonDate,
-       commonMiscImageConvert,
-       commonMiscImageShow, 
        commonMiscImport,
        commonMiscImportmap,
        commonMiscInputControl,

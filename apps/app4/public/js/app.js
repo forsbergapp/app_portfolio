@@ -113,8 +113,6 @@ const APP_GLOBAL = {
 
     image_default_report_header_src:'',
     image_default_report_footer_src:'',
-    image_header_footer_width:0,
-    image_header_footer_height:0,
 
     text_default_reporttitle1:'',
     text_default_reporttitle2:'',
@@ -726,22 +724,11 @@ const SettingShow = async (tab_selected) => {
                             app_id:common.COMMON_GLOBAL.app_id,
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
                             },
-                methods:    null,
-                path:       `/component/settings_tab${tab_selected}.js`});
-            break;
-        }
-        case 5:{
-            common.commonComponentRender({  
-                mountDiv:   'settings_content',
-                data:       {
-                            app_id:common.COMMON_GLOBAL.app_id,
-                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
-                            },
                 methods:    {appComponentSettingUpdate:appComponentSettingUpdate},
                 path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
-        case 6:{
+        case 5:{
             common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
@@ -759,7 +746,7 @@ const SettingShow = async (tab_selected) => {
                 path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
-        case 7:{
+        case 6:{
             common.commonComponentRender({
                 mountDiv:   'settings_content',
                 data:       {user_settings:APP_GLOBAL.user_settings},
@@ -954,24 +941,7 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
                 }
                 break;
             }
-        case 'IMAGE_HEADER_LOAD':
-        case 'IMAGE_FOOTER_LOAD':
-            {
-                await common.commonMiscImageShow( COMMON_DOCUMENT.querySelector(`#setting_report${setting_type=='HEADER_LOAD'?'header':'footer'}_img`), 
-                                        item_id, 
-                                        APP_GLOBAL.image_header_footer_width, 
-                                        APP_GLOBAL.image_header_footer_height);
-                break;
-            }
-        case 'IMAGE_HEADER_CLEAR':
-        case 'IMAGE_FOOTER_CLEAR':
-            {
-                const preview_item  = COMMON_DOCUMENT.querySelector(`#setting_report${setting_type=='HEADER_CLEAR'?'header':'footer'}_img`);
-                const preview_input = COMMON_DOCUMENT.querySelector(`#setting_input_report${setting_type=='HEADER_CLEAR'?'header':'footer'}_img`);
-                preview_item.style.backgroundImage='url()';
-                preview_input.value = '';
-                break;
-            }
+        
         case 'TEXT_HEADER_ALIGN':
         case 'TEXT_FOOTER_ALIGN':
             {
@@ -1067,7 +1037,7 @@ const appUserFunction = async (function_name) => {
  * @returns {void}
  */
 const appUserLogout = () => {
-    common.commonComponentRemove('settings_tab_nav_7');
+    common.commonComponentRemove('settings_tab_nav_6');
     common.commonComponentRemove('common_dialogue_profile', true);
     //set default settings
     appUserSettingDefaultSet().then(() => {
@@ -1857,14 +1827,13 @@ const appEventClick = event => {
                 case 'settings_tab_nav_2':
                 case 'settings_tab_nav_3':
                 case 'settings_tab_nav_4':
-                case 'settings_tab_nav_5':
-                case 'settings_tab_nav_6':{
+                case 'settings_tab_nav_5':{
                     SettingShow(Number(event_target_id.substring(event_target_id.length-1)));
                     break;
                 }
-                case 'settings_tab_nav_7':
+                case 'settings_tab_nav_6':
                 case 'user_setting_avatar_img':{
-                    SettingShow(7);
+                    SettingShow(6);
                     break;
                 }
                 //settings
@@ -1901,25 +1870,6 @@ const appEventClick = event => {
                     appUserSettingUpdate('DESIGN');
                     break;
                 }    
-                //settings image
-                case 'setting_icon_image_header_img':{
-                    COMMON_DOCUMENT.querySelector('#setting_input_reportheader_img').click();
-                    break;
-                }
-                case 'setting_icon_image_header_clear':{
-                    appComponentSettingUpdate('IMAGE', 'HEADER_CLEAR');
-                    appUserSettingUpdate('IMAGE');
-                    break;
-                }
-                case 'setting_icon_image_footer_img':{
-                    COMMON_DOCUMENT.querySelector('#setting_input_reportfooter_img').click();
-                    break;
-                }
-                case 'setting_icon_image_footer_clear':{
-                    appComponentSettingUpdate('IMAGE', 'FOOTER_CLEAR');
-                    appUserSettingUpdate('IMAGE');
-                    break;
-                }
                 //settings text
                 case 'setting_icon_text_theme_day':
                 case 'setting_icon_text_theme_month':
@@ -2146,39 +2096,6 @@ const appEventClick = event => {
     }
 };
 /**
- * @name appEventChange
- * @description App event change
- * @function
- * @param {CommonAppEvent} event 
- * @returns {void}
- */
-const appEventChange = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{CommonAppEvent}*/event) => {
-            appEventChange(event);
-        }, true);
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('change',event)
-        .then(()=>{
-            switch (event_target_id){
-                //settings image
-                case 'setting_input_reportheader_img':{
-                    appComponentSettingUpdate('IMAGE', 'HEADER_LOAD',  event_target_id)
-                    .then(()=> appUserSettingUpdate('IMAGE'));
-                    break;
-                }
-                case 'setting_input_reportfooter_img':{
-                    appComponentSettingUpdate('IMAGE', 'FOOTER_LOAD', event_target_id)
-                    .then(()=> appUserSettingUpdate('IMAGE'));
-                    break;
-                }
-            }
-        });
-    }
-};
-/**
  * @name appEventKeyUp
  * @description App event keyup
  * @function
@@ -2310,7 +2227,7 @@ const appException = error => {
 const appFrameworkSet = async (framework=null) => {
     await common.commonFrameworkSet(framework,
         {   Click: appEventClick,
-            Change: appEventChange,
+            Change: null,
             KeyDown: null,
             KeyUp: appEventKeyUp,
             Focus: null,
@@ -2411,8 +2328,6 @@ const appInit = async parameters => {
     APP_GLOBAL.text_default_reportfooter1 = parameters.APP.app_text_default_reportfooter1.value;
     APP_GLOBAL.text_default_reportfooter2 = parameters.APP.app_text_default_reportfooter2.value;
     APP_GLOBAL.text_default_reportfooter3 = parameters.APP.app_text_default_reportfooter3.value;
-    APP_GLOBAL.image_header_footer_width = parameters.APP.app_image_header_footer_width.value;
-    APP_GLOBAL.image_header_footer_height = parameters.APP.app_image_header_footer_height.value;
     APP_GLOBAL.image_default_report_header_src = parameters.APP.app_image_default_report_header_src.value;
     APP_GLOBAL.image_default_report_footer_src = parameters.APP.app_image_default_report_footer_src.value;
     APP_GLOBAL.prayer_default_method = parameters.APP.app_prayer_default_method.value;
