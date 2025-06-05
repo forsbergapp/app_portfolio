@@ -49,6 +49,7 @@ const template = props =>`  <div class='common_document_header' style='${props.a
  *                      },
  *          methods:    {
  *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonMiscResourceFetch:CommonModuleCommon['commonMiscResourceFetch'],
  *                       commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -58,12 +59,23 @@ const template = props =>`  <div class='common_document_header' style='${props.a
  */
 const component = async props => {
     
-    const onMounted = () =>{
+    const onMounted = async () =>{
         if (props.data.href.split('#')[1]){
             //set focus on highlighted row
             Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`))[0].setAttribute('tabindex',0);
             Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`))[0].focus();
         }
+        for (const image_div of props.methods.COMMON_DOCUMENT.querySelectorAll(`#${props.data.commonMountdiv} .common_markdown_image`)){
+            (image_div.getAttribute('data-url_small')==''||image_div.getAttribute('data-url_small')==null)?
+                null:
+                    props.methods.commonMiscResourceFetch(image_div.getAttribute('data-url_small')??'', image_div,'image/webp');
+            (image_div.getAttribute('data-url')==''||image_div.getAttribute('data-url')==null)?
+                null:
+                    //set attribute that is read by iamge click event
+                    image_div.setAttribute('data-url_link', 
+                                            await props.methods.commonMiscResourceFetch(image_div.getAttribute('data-url')??'', null,'image/webp')) ;
+        }
+
     };
     return {
         lifecycle:  {onMounted:onMounted},

@@ -1514,7 +1514,7 @@ body.rtl{
     height:528px;
     max-width:100%;
     margin:auto;
-    background-size: contain;
+    background-size: contain !important;
     background-repeat: no-repeat;
 	background-position: center;
 	cursor: pointer;
