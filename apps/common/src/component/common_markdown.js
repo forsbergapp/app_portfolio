@@ -157,8 +157,7 @@ const component = async props => {
         let match;
         while ((match = regexp.exec(markdown)) !==null){
             markdown = markdown.replace(match[0], 
-                                        `<div 	class='common_markdown_image' 
-                                                style='${match[2]==null?'':`background-image:url(${match[2]});`}' 
+                                        `<div 	class='common_markdown_image' data-url_small='${match[2]==null?'':match[2]}'
                                                 data-url='${match[3]}'></div><div class='common_markdown_image_text'>${match[1]}</div>`);
         }
         //7.links
