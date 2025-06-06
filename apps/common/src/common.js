@@ -916,11 +916,11 @@ const commonApp = async parameters =>{
                 type:'JSON'};
     else
         switch (true){
+            case (parameters.url == '/common_sw.js'):{
+                return await commonResourceFile({app_id:parameters.app_id, url:parameters.url, basepath:'/apps/common/public/js'});
+            }
             case (parameters.url.toLowerCase().startsWith('/common')):{
                 return await commonResourceFile({app_id:parameters.app_id, url:parameters.url.substring('/common'.length), basepath:'/apps/common/public'});
-            }
-            case (parameters.url == '/sw.js'):{
-                return await commonResourceFile({app_id:parameters.app_id, url:parameters.url, basepath:'/apps/common/public'});
             }
             case (parameters.url.toLowerCase().startsWith('/css')):
             case (parameters.url.toLowerCase().startsWith('/component')):

@@ -731,7 +731,7 @@
                 }
             }
         },
-        "/bff/app/v1/app-common-module-report/${resource_id_string}": {
+        "/bff/app_id/v1/app-common-module-report/${resource_id_string}": {
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonAppReport",
