@@ -302,7 +302,6 @@
  *              subdomain: string,
  *              path: string,
  *              logo:string,
- *              showparam:number,
  *              manifest: string,
  *              js:string,
  *              css: string,

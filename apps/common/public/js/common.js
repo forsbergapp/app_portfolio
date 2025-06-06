@@ -871,15 +871,6 @@ const commonWindowNavigatorLocale = () => COMMON_WINDOW.navigator.language.toLow
 const commonWindowDocumentFrame = () => COMMON_WINDOW.frames.document;
 
 /**
- * @name commonWindowLocationPathname
- * @description Returns info about location pathname for given argument number
- * @function
- * @param {number} argumentNumber
- * @returns {string}
- */
-const commonWindowLocationPathname = argumentNumber => COMMON_WINDOW.location.pathname.substring(argumentNumber);
-
-/**
  * @name commonWindowLocationReload
  * @description Reloads window
  * @function
@@ -3771,7 +3762,6 @@ export{/* GLOBALS*/
        /**WINDOW OBJECT */
        commonWindowDocumentFrame,
        commonWindowFromBase64, 
-       commonWindowLocationPathname,
        commonWindowLocationReload,
        commonWindowNavigatorLocale,
        commonWindowOpen,

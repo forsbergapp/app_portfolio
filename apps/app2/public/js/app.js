@@ -335,14 +335,7 @@ const appInit = async (parameters) => {
                     font_prio3:     true
                     },
         methods:    null,
-        path:       '/common/component/common_fonts.js'});
-
-    const user = common.commonWindowLocationPathname(0).split('/profile/')[1];
-    if (user && user !='') {
-        //show profile for user entered in url
-        common.commonProfileShow(null, user);
-    }
-   
+        path:       '/common/component/common_fonts.js'});    
 };
 /**
  * @name appCommonInit

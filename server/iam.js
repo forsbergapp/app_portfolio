@@ -864,7 +864,6 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *                      return status 429
  *                  else
  *                      if subdomain is unknown
- *                      if requested route is invalid
  *                      if user agent is blocked
  *                      if decodeURIComponent() has error 
  *                      if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'
@@ -1024,43 +1023,6 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                                 type:'SUBDOMAIN'});
                     fail ++;
                 }
-                /**
-                 * @param {string} path
-                 */
-                const invalid_path = path =>{
-                            //browser and search engine paths
-                    return  (path =='/favicon.ico' ||
-                            path == '/robots.txt' ||
-                            //REST API paths
-                            path.startsWith(config_SERVER.SERVER.filter(row=>'REST_RESOURCE_BFF' in row)[0].REST_RESOURCE_BFF + '/') ||
-                            //APP paths
-                            path == '/' ||
-                            path.startsWith('/js/') ||
-                            path.startsWith('/css/') ||
-                            path.startsWith('/images/') ||
-                            path.startsWith('/common/') ||
-                            path.startsWith('/component/') ||
-                            path.startsWith('/info/') ||
-                            path == '/common_sw.js' ||
-                            //account names should start with /profile/ and not contain any more '/'
-                            (path.startsWith('/profile/') && path.split('/').length==3)||
-                            //SSL verification path
-                            (   path.startsWith(config_SERVER.SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH) &&
-                                serverUtilNumberValue(config_SERVER.SERVER.filter(row=>'HTTPS_SSL_VERIFICATION' in row)[0].HTTPS_SSL_VERIFICATION)==1
-                            )
-                        )==false;
-                };
-                if (invalid_path(parameters.path)){
-                    //stop if trying to access any SSL path not enabled
-                    if (parameters.path.startsWith(config_SERVER.SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH))
-                        fail_block = true;
-                    await IamControlObserve.post(calling_app_id, 
-                        {   ...record,
-                            status:fail_block==true?1:0, 
-                            type:'ROUTE'});
-                    fail ++;
-                }
-                
                 //check if user-agent is blocked
                 if(IamControlUserAgent.get(calling_app_id, null).result.filter((/**@type{server_db_table_IamControlUserAgent}*/row)=>row.user_agent== parameters['user-agent']).length>0){
                     //stop always
