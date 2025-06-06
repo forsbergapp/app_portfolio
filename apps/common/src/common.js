@@ -228,7 +228,7 @@ const commonBFE = async parameters =>{
 };
 
 /**
- * @name commonAssetfile
+ * @name commonResourceFile
  * @memberof ROUTE_APP
  * @description Get asset file
  *              Supported
@@ -255,7 +255,7 @@ const commonBFE = async parameters =>{
  *          basepath:string}} parameters
  * @returns {Promise.<server_server_response>}
  */
-const commonAssetfile = parameters =>{
+const commonResourceFile = parameters =>{
     
     return new Promise((resolve)=>{
                                                             
@@ -334,7 +334,7 @@ const commonAssetfile = parameters =>{
                     Log.post({  app_id:parameters.app_id, 
                         data:{  object:'LogAppError', 
                                 app:{   app_filename:serverUtilAppFilename(import.meta.url),
-                                        app_function_name:'commonAssetfile()',
+                                        app_function_name:'commonResourceFile()',
                                         app_line:serverUtilAppLine()
                                 },
                                 log:`Invalid file type ${parameters.url}`
@@ -516,38 +516,37 @@ const commonAppReport = async parameters => {
                                 };
                 if (parameters.data.queue_parameters){
                     //do not wait for the report result when using report queue and the result is saved and not returned here
-                    ComponentCreate({data:   {
-                                                    CONFIG_APP: {...App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0]},
-                                                    data:       data,
-                                                    /**@ts-ignore */
-                                                    papersize:  (pagesize=='' ||pagesize==null)?'A4':pagesize
-                                                    },
-                                            methods:{function_report:RunReport}})
-                                            .then(result_queue=>{
-                                                //update report result
-                                                AppModuleQueue.postResult( parameters.app_id, 
-                                                                                    parameters.data.queue_parameters?.appModuleQueueId??0, 
-                                                                                    result_queue)
-                                                .then((result_AppModuleQueue)=>
-                                                    result_AppModuleQueue.http?
-                                                        result_AppModuleQueue:
-                                                            AppModuleQueue.update( parameters.app_id, 
-                                                                                            parameters.data.queue_parameters?.appModuleQueueId??0, 
-                                                                                            {   end:new Date().toISOString(), 
-                                                                                                progress:1, 
-                                                                                                status:'SUCCESS'}));
-                                                    
-                                            })
-                                            .catch(error=>{
-                                                //update report fail
-                                                AppModuleQueue.update( parameters.app_id, 
+                    ComponentCreate({   data:  {
+                                                data:       data,
+                                                /**@ts-ignore */
+                                                papersize:  (pagesize=='' ||pagesize==null)?'A4':pagesize
+                                                },
+                                        methods:{function_report:RunReport}})
+                                        .then(result_queue=>{
+                                            //update report result
+                                            AppModuleQueue.postResult( parameters.app_id, 
                                                                                 parameters.data.queue_parameters?.appModuleQueueId??0, 
-                                                                                {   end:new Date().toISOString(), 
-                                                                                    progress:1, 
-                                                                                    status:'FAIL',
-                                                                                    message:typeof error == 'string'?
-                                                                                                error:JSON.stringify(error.message ?? error)});
-                                            });
+                                                                                result_queue)
+                                            .then((result_AppModuleQueue)=>
+                                                result_AppModuleQueue.http?
+                                                    result_AppModuleQueue:
+                                                        AppModuleQueue.update( parameters.app_id, 
+                                                                                        parameters.data.queue_parameters?.appModuleQueueId??0, 
+                                                                                        {   end:new Date().toISOString(), 
+                                                                                            progress:1, 
+                                                                                            status:'SUCCESS'}));
+                                                
+                                        })
+                                        .catch(error=>{
+                                            //update report fail
+                                            AppModuleQueue.update( parameters.app_id, 
+                                                                            parameters.data.queue_parameters?.appModuleQueueId??0, 
+                                                                            {   end:new Date().toISOString(), 
+                                                                                progress:1, 
+                                                                                status:'FAIL',
+                                                                                message:typeof error == 'string'?
+                                                                                            error:JSON.stringify(error.message ?? error)});
+                                        });
                     return {result:'', type:'HTML'};
                 }
                 else
@@ -889,7 +888,8 @@ const commonAppHost = host =>{
         }
     }
  };
-/**
+ 
+ /**
  * @name commonApp
  * @namespace ROUTE_APP
  * @description Get app asset, common asset, app info page, app report, app module or app
@@ -917,17 +917,17 @@ const commonApp = async parameters =>{
     else
         switch (true){
             case (parameters.url.toLowerCase().startsWith('/common')):{
-                return await commonAssetfile({app_id:parameters.app_id, url:parameters.url.substring('/common'.length), basepath:'/apps/common/public'});
+                return await commonResourceFile({app_id:parameters.app_id, url:parameters.url.substring('/common'.length), basepath:'/apps/common/public'});
             }
             case (parameters.url == '/sw.js'):{
-                return await commonAssetfile({app_id:parameters.app_id, url:parameters.url, basepath:'/apps/common/public'});
+                return await commonResourceFile({app_id:parameters.app_id, url:parameters.url, basepath:'/apps/common/public'});
             }
             case (parameters.url.toLowerCase().startsWith('/css')):
             case (parameters.url.toLowerCase().startsWith('/component')):
             case (parameters.url.toLowerCase().startsWith('/images')):
             case (parameters.url.toLowerCase().startsWith('/js')):
             case (parameters.url == '/apps/common_types.js'): {
-                return await commonAssetfile({app_id:parameters.app_id, url:parameters.url, basepath:App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].path});
+                return await commonResourceFile({app_id:parameters.app_id, url:parameters.url, basepath:App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].path});
             }
             case (parameters.url.toLowerCase().startsWith('/info/about')):{
                 return {result:'', type:'HTML'};
@@ -982,6 +982,189 @@ const commonApp = async parameters =>{
 };
 
 /**
+ * @name commonAppResource
+ * @memberof ROUTE_REST_API
+ * @description Get app resources
+ *              resource id:            
+ *                  privacy_policy
+ *                  disclaimer
+ *                  terms
+ *                  about
+ *		            filename in /apps/app[app_id]|common/public/component
+ *		            filename in /apps/app[app_id]|common/public/css
+ *		            filename in /apps/app[app_id]|common/public/images
+ *		            filename in /apps/app[app_id]|common/public/js
+ *                  filename in /apps/app[app_id]|common/public/modules/react
+ *                  filename in /apps/app[app_id]|common/public/modules/leaflet
+ *                  filename in /apps/app[app_id]|common/public/modules/vue
+ * @function
+ * @param {{app_id:number|null,
+ *          resource_id:string,
+ *          path:string,
+ *          ip:string,
+ *          host:string,
+ *          user_agent:string,
+ *          accept_language:string,
+ *          data:{data_app_id:number,
+ *                type: 'INFO'|'COMPONENT'|'CSS'|'IMAGE'|'JS'|'FONT'|'JSON'|
+ *                      'MODULE_REACT'|'MODULE_LEAFLET'|'MODULE_LEAFLET_IMAGE'|'MODULE_LEAFLET_CSS'|'MODULE_VUE'}
+ *          }} parameters
+ * @returns {Promise.<server_server_response>}
+ */
+const commonAppResource = async parameters =>{
+    /**
+     * @name commonResourceFile
+     * @memberof ROUTE_APP
+     * @description Get resource
+     *              Supported
+     *              .css files
+     *              .js files       
+     *                  modifies at request:
+     *                  /modules/react/react-dom.development.js
+     *                      makes ECMAScript module adding export
+     *                  /modules/react/react.development.js
+     *                      makes ECMAScript module adding export
+     *                  /modules/leaflet/leaflet-src.esm.js
+     *                      removes sourceMappingURL
+     *                  /apps/common_types.js
+     *                      used to display common_types.js since developer path is different
+     *              .html files
+     *              .webp files
+     *              .png files
+     *              .woff2 files
+     *              .ttf files
+     *              .json
+     * @function
+     * @param {{app_id:number,
+     *          resource_id:string, 
+     *          path:   string,
+     *          type:   'INFO'|'COMPONENT'|'CSS'|'IMAGE'|'JS'|'FONT'|'JSON'|
+     *                  'MODULE_REACT'|'MODULE_LEAFLET'|'MODULE_LEAFLET_IMAGE'|'MODULE_LEAFLET_CSS'|'MODULE_VUE',
+     *          data_app_id:number}} parameters
+     * @returns {Promise.<server_server_response>}
+     */
+    const commonResourceFile = parameters =>{
+        
+        const resource_directory = App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].path;
+
+        return new Promise((resolve)=>{
+            switch (true){
+                case parameters.type=='JS':
+                case parameters.type=='CSS':
+                case parameters.type=='JSON':{
+                    resolve({type:parameters.type, sendfile:`${serverProcess.cwd()}${resource_directory}/${parameters.type.toLowerCase()}/${parameters.resource_id}`});
+                    break;
+                }
+                case parameters.type=='MODULE_REACT' && 
+                    (parameters.resource_id=='react-dom.development.js' || parameters.resource_id=='react.development.js'):{
+                    fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}/modules/react/${parameters.resource_id}`, 'utf8').then((modulefile)=>{
+                        if (parameters.resource_id.substring('common_'.length) == 'react-dom.development.js'){
+                            modulefile = 'let ReactDOM;\r\n' + modulefile;                                
+                            modulefile = modulefile.replace(  'exports.version = ReactVersion;',
+                                                            'exports.version = ReactVersion;\r\n  ReactDOM=exports;');
+                            modulefile = modulefile + 'export {ReactDOM}';
+                        }
+                        else{
+                            modulefile = 'let React;\r\n' + modulefile;
+                            modulefile = modulefile.replace(  'exports.version = ReactVersion;',
+                                                            'exports.version = ReactVersion;\r\n  React=exports;');
+                            modulefile = modulefile + 'export {React}';
+                        }
+                        
+                        resolve({type:'JS', result:modulefile});
+                    });
+                    break;
+                }
+                //add leaflet css and images
+                case parameters.type=='MODULE_LEAFLET_IMAGE' && parameters.resource_id=='marker-icon-2x.png':
+                case parameters.type=='MODULE_LEAFLET_IMAGE' && parameters.resource_id=='marker-icon.png':
+                case parameters.type=='MODULE_LEAFLET_IMAGE' && parameters.resource_id=='marker-shadow.png':
+                case parameters.type=='MODULE_LEAFLET_CSS' && parameters.resource_id=='leaflet.css':
+                case parameters.type=='MODULE_LEAFLET' && parameters.resource_id=='leaflet-src.esm.js':{
+                    fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}/modules/leaflet/${ (parameters.type=='MODULE_LEAFLET_IMAGE'?'images/':'') + parameters.resource_id}`, 'utf8').then((modulefile)=>{
+                        modulefile = modulefile.replace(  '//# sourceMappingresource_id=','//');
+                        resolve({type:'JS', result:modulefile});
+                    });
+                    break;
+                }
+                case parameters.type=='MODULE_VUE' && parameters.resource_id=='vue.esm-browser.js':{
+                    resolve({type:'JS', sendfile:`${serverProcess.cwd()}${resource_directory}/modules/vue/${parameters.resource_id}`});
+                    break;
+                }
+                case parameters.type=='IMAGE':{
+                    /**@type {'WEBP'|'PNG'|*} */
+                    const type = parameters.resource_id.toUpperCase().substring(parameters.resource_id.lastIndexOf('.'));
+                    resolve({   type:type, 
+                                sendfile:`${serverProcess.cwd()}${resource_directory}/images/${parameters.resource_id}`});
+                    break;
+                }
+                case ['WOFF2','TTF'].includes(parameters.path.toUpperCase().substring(parameters.path.lastIndexOf('.'))):{
+                    //fonts loaded in css, replace 'common' in path
+                    /**@type {'WOFF2'|'TTF'|*} */
+                    const type = parameters.resource_id.toUpperCase().substring(parameters.resource_id.lastIndexOf('.'));
+                    resolve({type:type.replace('WOFF2','WOFF'), sendfile:`${serverProcess.cwd()}${resource_directory}${parameters.path.replace('common','')}`});
+                    break;
+                }
+                default:{
+                    Log.post({  app_id:parameters.app_id, 
+                        data:{  object:'LogAppError', 
+                                app:{   app_filename:serverUtilAppFilename(import.meta.url),
+                                        app_function_name:'commonResourceFile()',
+                                        app_line:serverUtilAppLine()
+                                },
+                                log:`Invalid resource ${parameters.resource_id}`
+                            }
+                        })
+                    .then(()=>{
+                        resolve({http:404, code:'APP', text:null, developerText:null, moreInfo:null, type:'JSON'});
+
+                    });
+                }
+            }
+        });
+    };
+   
+    if (parameters.app_id==null)
+        return {http:404,
+                code:null,
+                text:null,
+                developerText:'commonApp',
+                moreInfo:null,
+                result:null,
+                sendfile:null,
+                type:'JSON'};
+    else
+        switch (true){
+            case (parameters.data.type == 'INFO' && parameters.resource_id.toLowerCase() == 'disclaimer'):
+            case (parameters.data.type == 'INFO' && parameters.resource_id.toLowerCase() == 'privacy_policy'):
+            case (parameters.data.type == 'INFO' && parameters.resource_id.toLowerCase() == 'terms'):{
+                return await commonComponentCreate({app_id:parameters.app_id, 
+                                                    componentParameters:{ip:parameters.ip},
+                                                    /**@ts-ignore */
+                                                    type:'INFO_' + parameters.resource_id.toUpperCase()});
+            }
+            case parameters.data.type == 'CSS':
+            case parameters.data.type == 'COMPONENT':
+            case parameters.data.type == 'IMAGE':
+            case parameters.data.type == 'JS':
+            case ['WOFF2','TTF'].includes(parameters.path.toUpperCase().substring(parameters.path.lastIndexOf('.'))):
+            case parameters.data.type == 'JSON':
+            case parameters.data.type == 'MODULE_REACT':
+            case parameters.data.type == 'MODULE_LEAFLET':
+            case parameters.data.type == 'MODULE_VUE':{
+                return await commonResourceFile({   app_id:parameters.app_id, 
+                                                    resource_id:parameters.resource_id, 
+                                                    path:parameters.path,
+                                                    data_app_id: parameters.data.data_app_id,
+                                                    type:parameters.data.type});
+            }
+            default:{
+                return {http:401, code:null, text:null, developerText:'commonAppResource', moreInfo:null, type:'JSON'};
+            }
+        }
+};
+
+/**
  * @name commonRegistryAppModule
  * @description App registry APP MODULE
  *              Modules that are shared by apps and server
@@ -999,7 +1182,9 @@ const commonRegistryAppModule = (app_id, parameters) => AppModule.get({app_id:ap
                                                                app.common_role == parameters.role)[0];
 
 export {commonSearchMatch,
-        commonAppStart, commonAppHost, commonAssetfile,
+        commonAppStart, commonAppHost, commonResourceFile,
         commonModuleAsset,commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
-        commonApp, commonBFE,
+        commonApp,
+        commonAppResource,
+        commonBFE,
         commonRegistryAppModule};

@@ -164,18 +164,7 @@ const appReportTimetablePrint = async () => {
                                                             commonMiscResourceFetch:common.commonMiscResourceFetch
                                                             },
                                                     path: '/component/print.js'});
-
-    await common.commonComponentRender({  mountDiv:   'common_window_info',
-                                    data:       {
-                                                info:3,
-                                                url:null, 
-                                                content_type:null, 
-                                                frame:common.commonWindowDocumentFrame, 
-                                                iframe_content:template
-                                                },
-                                    methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
-                                    path:       '/common/component/common_window_info.js'});
-    
+    template?common.commonMiscPrint(template):null;
 };
 /**
  * @name appReportTimetableSettings
@@ -1188,13 +1177,13 @@ const appUserSettingLink = (item) => {
             common.commonComponentRender({
                     mountDiv:   'common_window_info',
                     data:       {
-                                info:2,
-                                url:null,
-                                content_type:'HTML', 
-                                iframe_content:url,
-                                iframe_class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size
+                                info:'URL',
+                                path:url,
+                                method:'GET',
+                                authorization:'APP_ID',
+                                class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size
                                 },
-                    methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
+                    methods:    {commonFFB:common.commonFFB},
                     path:       '/common/component/common_window_info.js'});
             break;
         }
@@ -1547,13 +1536,14 @@ const appUserSettingProfileLink = item => {
             common.commonComponentRender({
                     mountDiv:   'common_window_info',
                     data:       {
-                                info:2,
-                                url:null,
-                                content_type:'HTML', 
-                                iframe_content:url,
-                                iframe_class:paper_size
+                                info:'URL',
+                                class:paper_size,
+                                path:url,
+                                method:'GET',
+                                body:null,
+                                authorization:'APP_ID'
                                 },
-                    methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
+                    methods:    {commonFFB:common.commonFFB},
                     path:       '/common/component/common_window_info.js'});
             break;
         }
@@ -1699,12 +1689,13 @@ const appEventClick = event => {
                     common.commonComponentRender({
                         mountDiv:   'common_window_info',
                         data:       {
-                                    info:1,
-                                    url:common.COMMON_GLOBAL.info_link_policy_url,
-                                    content_type:null, 
-                                    iframe_content:null
+                                    info:'URL',
+                                    path:'/app-resource/' + common.COMMON_GLOBAL.info_link_policy_url,
+                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.common_app_id}`,
+                                    method:'GET',
+                                    authorization:'APP_ID'
                                     },
-                        methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
+                        methods:    {commonFFB:common.commonFFB},
                         path:       '/common/component/common_window_info.js'});
                     break;
                 }
@@ -1712,11 +1703,13 @@ const appEventClick = event => {
                     common.commonComponentRender({
                         mountDiv:   'common_window_info',
                         data:       {
-                                    info:1,
-                                    url:common.COMMON_GLOBAL.info_link_disclaimer_url,
-                                    content_type:null, 
-                                    iframe_content:null},
-                        methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
+                                    info:'URL',
+                                    path:'/app-resource/' + common.COMMON_GLOBAL.info_link_disclaimer_url,
+                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.common_app_id}`,
+                                    method:'GET',
+                                    authorization:'APP_ID'
+                                    },
+                        methods:    {commonFFB:common.commonFFB},
                         path:       '/common/component/common_window_info.js'});
                     break;
                 }
@@ -1724,24 +1717,13 @@ const appEventClick = event => {
                     common.commonComponentRender({
                         mountDiv:   'common_window_info',
                         data:       {
-                                    info:1,
-                                    url:common.COMMON_GLOBAL.info_link_terms_url,
-                                    content_type:null, 
-                                    iframe_content:null},
-                        methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
-                        path:       '/common/component/common_window_info.js'});
-                    break;
-                }
-                case 'info_link4':{
-                    common.commonComponentRender({
-                        mountDiv:   'common_window_info',
-                        data:       {
-                                    info:1,
-                                    url:common.COMMON_GLOBAL.info_link_about_url,
-                                    content_type:null, 
-                                    iframe_content:null
+                                    info:'URL',
+                                    path:'/app-resource/' + common.COMMON_GLOBAL.info_link_terms_url,
+                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.common_app_id}`,
+                                    method:'GET',
+                                    authorization:'APP_ID'
                                     },
-                        methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
+                        methods:    {commonFFB:common.commonFFB},
                         path:       '/common/component/common_window_info.js'});
                     break;
                 }
@@ -1795,8 +1777,7 @@ const appEventClick = event => {
                                     app_link_title: common.COMMON_GLOBAL.app_link_title,
                                     info_link_policy_name:common.COMMON_GLOBAL.info_link_policy_name,
                                     info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
-                                    info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name,
-                                    info_link_about_name:common.COMMON_GLOBAL.info_link_about_name
+                                    info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name
                                     },
                         methods:    null,
                         path:       '/component/dialogue_info.js'});

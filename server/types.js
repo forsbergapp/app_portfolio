@@ -298,9 +298,7 @@
  *              common_info_link_disclaimer_name:   {value:string},
  *              common_info_link_disclaimer_url:    {value:string},
  *              common_info_link_terms_name:        {value:string},
- *              common_info_link_terms_url:         {value:string},
- *              common_info_link_about_name:        {value:string},
- *              common_info_link_about_url:         {value:string}}} server_db_table_AppParameter
+ *              common_info_link_terms_url:         {value:string}}} server_db_table_AppParameter
  */
 /**
  * @description DB TABLE AppTranslation
@@ -1067,9 +1065,7 @@
  *             common_info_link_disclaimer_name:    {value:string},
  *             common_info_link_disclaimer_url:     {value:string},
  *             common_info_link_terms_name:         {value:string},
- *             common_info_link_terms_url:          {value:string},
- *             common_info_link_about_name:         {value:string},
- *             common_info_link_about_url:          {value:string}}} server_db_app_parameter_common
+ *             common_info_link_terms_url:          {value:string}}} server_db_app_parameter_common
  */
 
 /**

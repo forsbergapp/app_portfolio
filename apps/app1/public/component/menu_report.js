@@ -93,14 +93,12 @@ const component = async props => {
         props.methods.commonComponentRender({
             mountDiv:   'common_window_info',
             data:       {
-                        info:4,
-                        url:null,
-                        content_type:'HTML', 
+                        info:'URL',
+                        class:'A4',
                         path:`/app-common-module-report-queue-result/${id}`,
                         method:'GET',
                         body:null,
-                        authorization_type:'ADMIN',
-                        class:'A4'
+                        authorization_type:'ADMIN'
                         },
             methods:    {commonFFB:props.methods.commonFFB},
             path:       '/common/component/common_window_info.js'});

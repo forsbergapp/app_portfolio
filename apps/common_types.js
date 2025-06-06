@@ -173,11 +173,9 @@
  *              info_link_policy_name:string|null,
  *              info_link_disclaimer_name:string|null,
  *              info_link_terms_name:string|null,
- *              info_link_about_name:string|null,
  *              info_link_policy_url:string|null,
  *              info_link_disclaimer_url:string|null,
  *              info_link_terms_url:string|null,
- *              info_link_about_url:string|null,
  *              iam_user_app_id:number|null,
  *              iam_user_id:number|null,
  *              iam_user_username:string|null,
@@ -337,9 +335,7 @@
  *                      common_info_link_disclaimer_name:    {value:string},
  *                      common_info_link_disclaimer_url:     {value:string},
  *                      common_info_link_terms_name:         {value:string},
- *                      common_info_link_terms_url:          {value:string},
- *                      common_info_link_about_name:         {value:string},
- *                      common_info_link_about_url:          {value:string}
+ *                      common_info_link_terms_url:          {value:string}
  *                      },
  *              INFO:   {
  *                      app_id:                 number,
