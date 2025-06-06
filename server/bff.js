@@ -219,7 +219,8 @@ const bffStart = async (req, res) =>{
                                                         user_agent:bff_parameters.user_agent, 
                                                         accept_language:bff_parameters.accept_language, 
                                                         url:bff_parameters.url ?? '', 
-                                                        query:null}),
+                                                        query:null})
+                                                    .then(result=>result?.http == 301?bff_parameters.res.redirect('/'):result),
                             host:bff_parameters.host,
                             route : 'APP',
                             res:bff_parameters.res})

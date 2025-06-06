@@ -24,7 +24,6 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                         <div data-column='subdomain' class='menu_apps_col list_title'>SUBDOMAIN</div>
                                         <div data-column='path' class='menu_apps_col list_title'>PATH</div>
                                         <div data-column='logo' class='menu_apps_col list_title'>LOGO</div>
-                                        <div data-column='showparam' class='menu_apps_col list_title'>SHOWPARAM</div>
                                         <div data-column='manifest' class='menu_apps_col list_title'>MANIFEST</div>
                                         <div data-column='js' class='menu_apps_col list_title'>JS</div>
                                         <div data-column='css' class='menu_apps_col list_title'>CSS</div>
@@ -44,7 +43,6 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                             <div class='menu_apps_col common_input list_edit' data-column='subdomain' contentEditable='true' >${app.subdomain}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='path' contentEditable='true' >${app.path}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='logo' contentEditable='true' >${app.logo}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='showparam' contentEditable='true' >${app.showparam}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='manifest' contentEditable='true' >${app.manifest}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='js' contentEditable='true' >${app.js}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='css' contentEditable='true' >${app.css}</div>

@@ -2343,11 +2343,6 @@ const appInit = async parameters => {
     await appUserSettingDefaultSet();
     //show default startup
     await appToolbarButton(APP_GLOBAL.app_default_startup_page);
-    const user = common.commonWindowLocationPathname(0).split('/profile/')[1];
-    if (user && user !='') {
-        //show profile for user entered in url
-        common.commonProfileShow(null, user);
-    }
     common.commonComponentRender({mountDiv:   'common_fonts',
         data:       {
                     font_default:   true,
