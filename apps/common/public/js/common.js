@@ -31,11 +31,9 @@ const COMMON_GLOBAL = {
     info_link_policy_name:null,
     info_link_disclaimer_name:null,
     info_link_terms_name:null,
-    info_link_about_name:null,
     info_link_policy_url:null,
     info_link_disclaimer_url:null,
     info_link_terms_url:null,
-    info_link_about_url:null,
     iam_user_app_id:null,
     iam_user_id:null,
     iam_user_username:null,
@@ -547,6 +545,21 @@ const commonMiscPreferencesUpdateBodyClassFromPreferences = () => {
 const commonMiscPreferencesPostMount = () => {
     commonMiscPreferencesUpdateBodyClassFromPreferences();
     commonMiscThemeUpdateFromBody();
+};
+/**
+ * @param {string} html
+ * @returns {Promise.<void>}
+ */
+const commonMiscPrint = async html => {
+    const id = 'PRINT_' + Date.now();
+    COMMON_DOCUMENT.querySelector('#common_app').innerHTML += `<iframe id='${id}'></iframe>>`;
+    const printelement = COMMON_DOCUMENT.querySelector(`#${id}`);
+    printelement.contentWindow.document.open();
+    printelement.contentWindow.document.write(html);
+    printelement.focus();
+    //await delay to avoid browser render error
+    await new Promise (resolve=>commonWindowSetTimeout(()=> {printelement.contentWindow.print();resolve(null);}, 100));
+    COMMON_DOCUMENT.querySelector(`#common_app #${printelement.id}`).remove();
 };
 /**
  * @name commonMiscResourceFetch
@@ -2700,12 +2713,13 @@ const commonEvent = async (event_type,event=null) =>{
                             commonComponentRender({
                                 mountDiv:   'common_window_info',
                                 data:       {
-                                            info:1,
-                                            url:COMMON_GLOBAL.info_link_policy_url,
-                                            content_type:null, 
-                                            iframe_content:null
+                                            info:'URL',
+                                            path:'/app-resource/' + COMMON_GLOBAL.info_link_policy_url,
+                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.common_app_id}`,
+                                            method:'GET',
+                                            authorization:'APP_ID'
                                             },
-                                methods:    {commonWindowSetTimeout:commonWindowSetTimeout},
+                                methods:    {commonFFB:commonFFB},
                                 path:       '/common/component/common_window_info.js'});
                             break;
                         }
@@ -2713,12 +2727,13 @@ const commonEvent = async (event_type,event=null) =>{
                             commonComponentRender({
                                 mountDiv:   'common_window_info',
                                 data:       {
-                                            info:1,
-                                            url:COMMON_GLOBAL.info_link_disclaimer_url,
-                                            content_type:null, 
-                                            iframe_content:null
+                                            info:'URL',
+                                            path:'/app-resource/' + COMMON_GLOBAL.info_link_disclaimer_url,
+                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.common_app_id}`,
+                                            method:'GET',
+                                            authorization:'APP_ID'
                                             },
-                                methods:    {commonWindowSetTimeout:commonWindowSetTimeout},
+                                methods:    {commonFFB:commonFFB},
                                 path:       '/common/component/common_window_info.js'});
                             break;
                         }
@@ -2726,12 +2741,13 @@ const commonEvent = async (event_type,event=null) =>{
                             commonComponentRender({
                                 mountDiv:   'common_window_info',
                                 data:       {
-                                            info:1,
-                                            url:COMMON_GLOBAL.info_link_terms_url,
-                                            content_type:null, 
-                                            iframe_content:null
+                                            info:'URL',
+                                            path:'/app-resource/' + COMMON_GLOBAL.info_link_terms_url,
+                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.common_app_id}`,
+                                            method:'GET',
+                                            authorization:'APP_ID'
                                             },
-                                methods:    {commonWindowSetTimeout:commonWindowSetTimeout},
+                                methods:    {commonFFB:commonFFB},
                                 path:       '/common/component/common_window_info.js'});
                             break;
                         }
@@ -3037,13 +3053,10 @@ const commonEvent = async (event_type,event=null) =>{
                                 commonComponentRender({
                                     mountDiv:   'common_window_info',
                                     data:       {
-                                                //show IMAGE type 0 
-                                                info:0,
+                                                info:'IMAGE',
                                                 url:event.target.getAttribute('data-url_link'),
-                                                content_type:null, 
-                                                iframe_content:null
                                                 },
-                                    methods:    {commonWindowSetTimeout:commonWindowSetTimeout},
+                                    methods:    {commonFFB:commonFFB},
                                     path:       '/common/component/common_window_info.js'});
                             break;
                         }        
@@ -3260,8 +3273,6 @@ const commonInitParametersAppSet = (app_parameters, common_parameters) => {
     COMMON_GLOBAL.info_link_disclaimer_url = common_parameters.common_info_link_disclaimer_url.value;
     COMMON_GLOBAL.info_link_terms_name = common_parameters.common_info_link_terms_name.value;
     COMMON_GLOBAL.info_link_terms_url = common_parameters.common_info_link_terms_url.value;
-    COMMON_GLOBAL.info_link_about_name = common_parameters.common_info_link_about_name.value;
-    COMMON_GLOBAL.info_link_about_url = common_parameters.common_info_link_about_url.value;
    
     COMMON_GLOBAL.app_copyright = app_parameters.app_copyright;
     COMMON_GLOBAL.app_link_url = app_parameters.app_link_url;
@@ -3756,6 +3767,7 @@ export{/* GLOBALS*/
        commonMiscMobile,
        commonMiscPreferencesUpdateBodyClassFromPreferences,
        commonMiscPreferencesPostMount,
+       commonMiscPrint,
        commonMiscResourceFetch,
        commonMiscRoundOff, 
        commonMiscSelectCurrentValueSet,

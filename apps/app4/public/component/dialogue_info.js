@@ -15,8 +15,7 @@
  *          app_link_title:string,
  *          info_link1:string,
  *          info_link2:string,
- *          info_link3:string,
- *          info_link4:string,
+ *          info_link3:string
  * }} props
  * @returns {string}
  */
@@ -26,7 +25,6 @@ const template = props => ` <div id='about_logo' style='${props.about_logo==null
                             <div id='info_link1' class='common_link'>${props.info_link1}</div>
                             <div id='info_link2' class='common_link'>${props.info_link2}</div>
                             <div id='info_link3' class='common_link'>${props.info_link3}</div>
-                            <div id='info_link4' class='common_link'>${props.info_link4}</div>
                             <div id='info_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * @name component
@@ -40,8 +38,7 @@ const template = props => ` <div id='about_logo' style='${props.about_logo==null
  *                      app_link_title: string,
  *                      info_link_policy_name:string,
  *                      info_link_disclaimer_name:string,
- *                      info_link_terms_name:string,
- *                      info_link_about_name:string
+ *                      info_link_terms_name:string
  *                      },
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -61,8 +58,7 @@ const component = async props => {
                                 app_link_title:props.data.app_link_title,
                                 info_link1:props.data.info_link_policy_name,
                                 info_link2:props.data.info_link_disclaimer_name,
-                                info_link3:props.data.info_link_terms_name,
-                                info_link4:props.data.info_link_about_name
+                                info_link3:props.data.info_link_terms_name
         })
     };
 };
