@@ -2,13 +2,12 @@
     {   
         "app_id": 0, 
         "common_info_link_policy_name":     {"value":"Privacy Policy"},
-        "common_info_link_policy_url":      {"value":"/info/privacy_policy"},
+        "common_info_link_policy_url":      {"value":"privacy_policy"},
         "common_info_link_disclaimer_name": {"value":"Disclaimer"},
-        "common_info_link_disclaimer_url":  {"value":"/info/disclaimer"},
+        "common_info_link_disclaimer_url":  {"value":"disclaimer"},
         "common_info_link_terms_name":      {"value":"Terms"},
-        "common_info_link_terms_url":       {"value":"/info/terms"},
-        "common_info_link_about_name":      {"value":"About"},
-        "common_info_link_about_url":       {"value":"/info/about"}
+        "common_info_link_terms_url":       {"value":"terms"},
+        "common_info_link_about_name":      {"value":"About"}
     },
     {
         "app_id": 4,

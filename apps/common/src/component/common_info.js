@@ -13,7 +13,6 @@ const template = props =>`  <!DOCTYPE html>
                             <html>
                             <head>
                                 <meta charset='UTF-8'>
-                                <link rel='stylesheet' data-href='/common/css/font/font1.css' >
                                 <link rel='stylesheet' type='text/css' data-href='/common/css/common_info.css' />
                             </head>	
                             <body>
