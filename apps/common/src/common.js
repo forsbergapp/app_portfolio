@@ -753,8 +753,7 @@ const commonModuleMetaDataGet = async parameters =>{
  *              server error
  * @function
  * @param {{app_id:number, 
- *          componentParameters:{   param?:             string|null,
- *                                  ip:                 string, 
+ *          componentParameters:{   ip:                 string, 
  *                                  user_agent?:        string,
  *                                  locale?:            string,
  *                                  reportid?:          string,
@@ -941,22 +940,18 @@ const commonApp = async parameters =>{
             case (parameters.url.toLowerCase().startsWith('/info/terms')):{
                 return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_TERMS'});
             }
-            case (parameters.url == '/'):
-            case ((App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].showparam == 1 && parameters.url.split('/profile/')[1]?.length>1)):{
+            case (parameters.url == '/'):{
                 if  (parameters.app_id != serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result) && 
                         await commonAppStart(parameters.app_id) ==false)
                     return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
                 else
-                    return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{param: parameters.url.split('/profile/')[1]?.length>1?parameters.url.split('/profile/')[1]:null,
+                    return await commonComponentCreate({app_id:parameters.app_id, 
+                                                        componentParameters:{
                                                         ip:             parameters.ip, 
                                                         user_agent:     parameters.user_agent,
                                                         locale:         commonClientLocale(parameters.accept_language),
                                                         host:           parameters.host},type:'APP'})
-                                        .then(app=>{
-                                            /**@type{server_server_response} */
-                                            const redirect = {http:301, type:'HTML'};
-                                            return app.result==null?redirect:app;})
-                                        .catch((error)=>{
+                                        .catch(error=>{
                                                                 /**@ts-ignore */
                                             return Log.post({   app_id:parameters.app_id, 
                                                 data:{  object:'LogAppError', 

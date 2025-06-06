@@ -424,7 +424,6 @@ const appSecureCommonButtonSave = async (item) => {
                                                         subdomain:      record.querySelector('[data-column=\'subdomain\']').textContent,
                                                         path:           record.querySelector('[data-column=\'path\']').textContent,
                                                         logo:           record.querySelector('[data-column=\'logo\']').textContent,
-                                                        showparam:      record.querySelector('[data-column=\'showparam\']').textContent,
                                                         manifest:       record.querySelector('[data-column=\'manifest\']').textContent,
                                                         js:             record.querySelector('[data-column=\'js\']').textContent,
                                                         css:            record.querySelector('[data-column=\'css\']').textContent,

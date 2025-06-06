@@ -89,7 +89,6 @@ const post = async (app_id, data) => {
             subdomain: data.subdomain,
             path: data.path,
             logo: data.logo,
-            showparam: data.showparam,
             manifest: data.manifest,
             js: data.js,
             css: data.css,
@@ -125,7 +124,6 @@ const post = async (app_id, data) => {
  *                  subdomain:string,
  *                  path:string,
  *                  logo:string,
- *                  showparam:number,
  *                  manifest:string,
  *                  js:string,
  *                  css:string,
@@ -152,8 +150,6 @@ const update = async parameters => {
             data_update.path = parameters.data.path;
         if (parameters.data.logo!=null)
             data_update.logo = parameters.data.logo;
-        if (parameters.data.showparam!=null)
-            data_update.showparam = parameters.data.showparam;
         if (parameters.data.manifest!=null)
             data_update.manifest = parameters.data.manifest;
         if (parameters.data.js!=null)

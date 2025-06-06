@@ -191,7 +191,6 @@
  *              subdomain: string,
  *              path: string,
  *              logo:string,
- *              showparam:number,
  *              manifest: string,
  *              js:string,
  *              css: string,
@@ -890,7 +889,7 @@
 
 /**
  * @description DB server_db_iam_control_observe_type
- * @typedef {'SUBDOMAIN'|'ROUTE'|'HOST'|'HOST_IP'|'USER_AGENT'|'URI_DECODE'|'METHOD'|'BLOCK_IP'} server_db_iam_control_observe_type
+ * @typedef {'SUBDOMAIN'|'HOST'|'HOST_IP'|'USER_AGENT'|'URI_DECODE'|'METHOD'|'BLOCK_IP'} server_db_iam_control_observe_type
  */
 
 /**
