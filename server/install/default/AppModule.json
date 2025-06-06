@@ -184,7 +184,7 @@
         "app_id": 4,
         "common_type": "REPORT",
         "common_name": "TIMETABLE",
-        "common_role": "APP",
+        "common_role": "APP_ID",
         "common_path": "/apps/app4/src/report/timetable.js",
         "common_description": "Timetable day, month and year"
     },
