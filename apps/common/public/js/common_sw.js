@@ -1,5 +1,5 @@
 /**
- * @module apps/common/sw
+ * @module apps/common/common_sw
  */
 
 self.addEventListener('install', () => {

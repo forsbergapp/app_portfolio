@@ -777,15 +777,6 @@ const commonMiscTimezoneOffset = (local_timezone) =>{
     return (local-utc) / 1000 / 60 / 60;
 };
 /**
- * @name commonWindowHostname
- * @description Get hostname with protocol and port
- * @function
- * @returns {string}
- */
-const commonWindowHostname = () =>{
-    return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`;
-};
-/**
  * @name commonWindowServiceWorker
  * @description Serviceworker
  * @function
@@ -796,7 +787,7 @@ const commonWindowServiceWorker = () => {
         COMMON_WINDOW.Promise = Promise;
     }
     if('serviceWorker' in COMMON_WINDOW.navigator) {
-        COMMON_WINDOW.navigator.serviceWorker.register('/sw.js', {scope: '/'});
+        COMMON_WINDOW.navigator.serviceWorker.register('/common_sw.js', {scope: '/'});
     }
 };
 /**
@@ -3780,7 +3771,6 @@ export{/* GLOBALS*/
        /**WINDOW OBJECT */
        commonWindowDocumentFrame,
        commonWindowFromBase64, 
-       commonWindowHostname,
        commonWindowLocationPathname,
        commonWindowLocationReload,
        commonWindowNavigatorLocale,
@@ -3824,7 +3814,7 @@ export{/* GLOBALS*/
        commonUserMessageShowStat,
        /* MODULE LEAFLET  */
        commonModuleLeafletInit, 
-       /*FFB */
+       /* FFB */
        commonFFB,
        /* SERVICE SOCKET */
        commonSocketBroadcastShow, 
