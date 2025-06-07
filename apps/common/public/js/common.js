@@ -2,6 +2,8 @@
  * @module apps/common/common
  */
 
+/** @import {commonMetadata, CommonModuleCommon} from '../../../common_types.js' */
+
 /**@type{import('../../../common_types.js').COMMON_WINDOW} */
 const COMMON_WINDOW = window;
 
@@ -24,6 +26,7 @@ const COMMON_GLOBAL = {
     app_root:'app_root',
     app_div:'app',
     app_console:{warn:COMMON_WINDOW.console.warn, info:COMMON_WINDOW.console.info, error:COMMON_WINDOW.console.error},
+    app_createElement:{original:COMMON_DOCUMENT.createElement,custom:()=>null},
     app_eventListeners:{original: HTMLElement.prototype.addEventListener, LEAFLET:[], REACT:[], VUE:[], OTHER:[]},
     app_function_exception:null,
     app_function_session_expired:null,
@@ -201,9 +204,10 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
  * @name commonMiscImport
  * @description fetches javascript module to use in import statement
  * @param {string} url
+ * @param {boolean} [appModule]
  * @returns {Promise.<*>}
  */
-const commonMiscImport = async url =>{
+const commonMiscImport = async (url, appModule=false) =>{
     const module = COMMON_GLOBAL.component_import.filter(module=>module.url==url)[0]?.component;
     if (module) 
         return import(module);
@@ -211,9 +215,15 @@ const commonMiscImport = async url =>{
         COMMON_GLOBAL.component_import.push(
                 /*@ts-ignore*/
                 {url:url,
-                 component:await fetch(url).then(element=>element.blob())
-                                .then(module=>URL.createObjectURL(  new Blob ([module], 
-                                                                    {type: 'text/javascript'})))
+                 component:await commonFFB({    path: appModule?url:('/app-resource/' + url.replaceAll('/','~')), 
+                                                query:appModule?'':`content_type=${'text/javascript'}&IAM_data_app_id=${url.startsWith('/common')?
+                                                                                COMMON_GLOBAL.common_app_id:
+                                                                                    COMMON_GLOBAL.app_id}`, 
+                                                method:'GET', 
+                                                response_type:'BLOB',
+                                                authorization_type:'APP_ID'})
+                                    .then(module=>URL.createObjectURL(  new Blob ([module], 
+                                                    {type: 'text/javascript'})))
                 }); 
         return import(COMMON_GLOBAL.component_import[COMMON_GLOBAL.component_import.length-1].component);
     }
@@ -564,14 +574,15 @@ const commonMiscPrint = async html => {
 /**
  * @name commonMiscResourceFetch
  * @description fetches resources and updates attributes on element or return result if no element found
+ *              'text/javascript' is used here for a link, not import()
  * @param {string} url
  * @param {HTMLElement|null} element
  * @param { 'image/png'|'image/webp'|
-*          'text/html'|
-*          'text/css'|'text/javascript'|
-*          'font/woff'|'font/ttf'} content_type
-* @returns {Promise.<string|void>}
-*/
+ *          'application/json'|
+ *          'text/javascript'|
+ *          'text/css'} content_type
+ * @returns {Promise.<string|void>}
+ */
 const commonMiscResourceFetch = async (url,element, content_type )=>{
     if (element && content_type.startsWith('image')){
         /**@ts-ignore */
@@ -590,31 +601,44 @@ const commonMiscResourceFetch = async (url,element, content_type )=>{
                     /*@ts-ignore*/
                     {
                         url:url,
-                        content:url.startsWith('/common/css/font/font')?url:await fetch(url).then(element=>element.blob())
-                                        .then(module=>URL.createObjectURL(  new Blob ([module], 
-                                                            {type: content_type}))),
+                        //font css can contain src() with external reference, fetch font css using default link
+                        content:url.startsWith('/common/css/font')?
+                                    url:
+                                        await commonFFB({   path:'/app-resource/' + url.replaceAll('/','~'), 
+                                                            query:`content_type=${content_type}&IAM_data_app_id=${url.startsWith('/common')?
+                                                                                            COMMON_GLOBAL.common_app_id:
+                                                                                                COMMON_GLOBAL.app_id}`, 
+                                                            method:'GET', 
+                                                            //images use base64 strings
+                                                            response_type:content_type.startsWith('image')?'TEXT':'BLOB',
+                                                            authorization_type:'APP_ID'})
+                                                .then(module=>
+                                                    content_type.startsWith('image')?
+                                                        JSON.parse(module).resource:
+                                                            URL.createObjectURL(  new Blob ([module], 
+                                                                {type: content_type}))),
                         content_type:content_type
                     }); 
             return COMMON_GLOBAL.resource_import[COMMON_GLOBAL.resource_import.length-1].content;
         }
     }; 
 
-   if (element && content_type.startsWith('image')){
-       element.style.backgroundImage = `url('${await getUrl()}')`;
-       element.style.backgroundSize = 'cover';
-   }
-   else
-       if (element && content_type.startsWith('text'))
-           /**@ts-ignore */
-           element.href=await getUrl();
-       else{
-           if (element)
-               //font
-               /**@ts-ignore */
-               element.style.src = `url('${await getUrl()}')`;
-           else
-               return await getUrl();
-       }
+    if (element && content_type.startsWith('image')){
+        element.style.backgroundImage = `url('${await getUrl()}')`;
+        element.style.backgroundSize = 'cover';
+    }
+    else
+        if (element && content_type.startsWith('text'))
+            /**@ts-ignore */
+            element.href=await getUrl();
+        else{
+            if (element)
+                //font
+                /**@ts-ignore */
+                element.style.src = `url('${await getUrl()}')`;
+            else
+                return await getUrl();
+        }
 
 };
 /**
@@ -775,20 +799,6 @@ const commonMiscTimezoneOffset = (local_timezone) =>{
                             Number(new Date().toLocaleString('en', {timeZone: local_timezone, hour:'numeric', hour12:false})),
                             Number(new Date().toLocaleString('en', {timeZone: local_timezone, minute:'numeric'}))).valueOf();
     return (local-utc) / 1000 / 60 / 60;
-};
-/**
- * @name commonWindowServiceWorker
- * @description Serviceworker
- * @function
- * @returns {void}
- */
-const commonWindowServiceWorker = () => {
-    if (!COMMON_WINDOW.Promise) {
-        COMMON_WINDOW.Promise = Promise;
-    }
-    if('serviceWorker' in COMMON_WINDOW.navigator) {
-        COMMON_WINDOW.navigator.serviceWorker.register('/common_sw.js', {scope: '/'});
-    }
 };
 /**
  * @name commonWindowUserAgentPlatform
@@ -2130,6 +2140,7 @@ const commonModuleLeafletInit = async parameters => {
  *          username?:string,
  *          password?:string,
  *          body?:*,
+ *          response_type?:'TEXT'|'BLOB'
  *          spinner_id?:string|null}} parameter
  * @returns {Promise.<*>} 
  */
@@ -2214,16 +2225,23 @@ const commonFFB = async parameter => {
         if (parameter.spinner_id && COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`))
             COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`).classList.add('css_spinner');
         return await fetch(url, options)
+                /**@ts-ignore */
                 .then((response) => {
                     status = response.status;
-                    return response.text();
+                   
+                    const clonedResponse = response.clone(); // Create a clone
+                        return Promise.all([
+                        clonedResponse.text(),
+                        parameter.response_type=='BLOB'?response.blob():null
+                    ]);
                 })
-                .then((result) => {
+                .then(([result, result_blob]) => {
                     switch (status){
                         case 200:
                         case 201:{
                             //OK
-                            return result;
+                            /**@ts-ignore */
+                            return parameter.response_type=='BLOB'?result_blob:result;
                         }
                         case 400:{
                             //Bad request
@@ -3279,61 +3297,70 @@ const commonInitParametersAppSet = (app_parameters, common_parameters) => {
  * @returns {Promise.<void>}
  */
 const commonFrameworkMount = async (framework, template, methods,mount_div, component) =>{
+    COMMON_DOCUMENT.createElement = COMMON_GLOBAL.app_createElement.original;
     switch (framework){
         case 2:{
             //Vue
             /**@type {import('../../../common_types.js').CommonModuleVue} */
-            const Vue = await import(commonMiscImportmap('Vue'));
+            const Vue = await commonMiscImport(commonMiscImportmap('Vue'));
 
             //Use tempmount div to be able to return pure HTML without extra events
             //since event delegation is used
             COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
+            try {
+                //mount the app or component
+                Vue.createApp({
+                    data(){return {};},
+                    template: template,
+                    methods:methods,
+                    compilerOptions: {
+                        whitespace: 'preserve'
+                    }
+                }).mount('#tempmount');
 
-            //mount the app or component
-            Vue.createApp({
-                data(){return {};},
-                template: template,
-                methods:methods,
-                compilerOptions: {
-                    whitespace: 'preserve'
+                if (component){
+                    //replace mount div with tempmount div without events
+                    COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = COMMON_DOCUMENT.querySelector('#tempmount').innerHTML;
                 }
-            }).mount('#tempmount');
-
-            if (component){
-                //replace mount div with tempmount div without events
-                COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = COMMON_DOCUMENT.querySelector('#tempmount').innerHTML;
+                else{
+                    //replace mount div with tempmount element with events
+                    COMMON_DOCUMENT.querySelector(`#${mount_div}`).replaceWith(COMMON_DOCUMENT.querySelector('#tempmount >div'));
+                }    
+            } catch (error) {
+                COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = template;
             }
-            else{
-                //replace mount div with tempmount element with events
-                COMMON_DOCUMENT.querySelector(`#${mount_div}`).replaceWith(COMMON_DOCUMENT.querySelector('#tempmount >div'));
-            }
+            
             break;
         }
         case 3:{
             //React
             /**@type {import('../../../common_types.js').CommonModuleReact} */
-            const React = await import(commonMiscImportmap('React')).then(module=>module.React);
+            const React = await commonMiscImport(commonMiscImportmap('React')).then(module=>module.React);
             /**@type {import('../../../common_types.js').CommonModuleReactDOM} */
-            const ReactDOM = await import(commonMiscImportmap('ReactDOM')).then(module=>module.ReactDOM);
+            const ReactDOM = await commonMiscImport(commonMiscImportmap('ReactDOM')).then(module=>module.ReactDOM);
 
-            //convert HTML template to React component
-            const div_template = COMMON_DOCUMENT.createElement('div');
-            div_template.innerHTML = template;
-            const component = React.createElement(div_template.nodeName.toLowerCase(), 
-                                                { id: div_template.id, className: div_template.className}, 
-                                                commonFrameworkHtml2ReactComponent(React.createElement, div_template.children));
+            try {
+                //convert HTML template to React component
+                const div_template = COMMON_DOCUMENT.createElement('div');
+                div_template.innerHTML = template;
+                const component = React.createElement(div_template.nodeName.toLowerCase(), 
+                                                    { id: div_template.id, className: div_template.className}, 
+                                                    commonFrameworkHtml2ReactComponent(React.createElement, div_template.children));
 
-            COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
-            const application = ReactDOM.createRoot(COMMON_DOCUMENT.querySelector(`#${mount_div} #tempmount`));
-            application.render( component);
-            await new Promise ((resolve)=>{commonWindowSetTimeout(()=> resolve(null), 200);});
-            //React is only used as a parser of HTML and all Reacts events are removed by removing tempmount div
-            //Mount template HTML
-            COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = template;
-
+                COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
+                const application = ReactDOM.createRoot(COMMON_DOCUMENT.querySelector(`#${mount_div} #tempmount`));
+                application.render( component);
+                await new Promise ((resolve)=>{commonWindowSetTimeout(()=> resolve(null), 200);});
+                //React is only used as a parser of HTML and all Reacts events are removed by removing tempmount div
+                //Mount template HTML
+                COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = template;    
+            } catch (error) {
+                COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = template;
+            }            
             break;
         }
     }
+    COMMON_DOCUMENT.createElement = COMMON_GLOBAL.app_createElement.custom;
 };
 /**
  * @name commonFrameworkClean
@@ -3609,6 +3636,7 @@ const custom_framework = () => {
             }
         }
     };
+    COMMON_GLOBAL.app_createElement.custom = COMMON_DOCUMENT.createElement;
     /**@ts-ignore */
     COMMON_DOCUMENT.createElement = customCreateElement;
 
@@ -3711,13 +3739,155 @@ const custom_framework = () => {
     COMMON_WINDOW.console.error = console_error;
 };
 /**
+ * @name commonMountApp
+ * @description Mount app
+ * @param {CommonModuleCommon} commonLib
+ * @param {number} app_id
+ * @param {import('../../../common_types.js').commonInitAppParameters} parameters
+ * @returns {Promise.<void>}
+ */
+const commonMountApp = async (app_id, commonLib, parameters) =>{   
+    const app = await commonFFB({   path:`/app-init/${app_id}`, 
+                                    method:'GET', 
+                                    authorization_type:'APP_ID'})
+                    .then(app=>JSON.parse(app));
+    
+    app.css==''?null:COMMON_DOCUMENT.querySelector('#app_link_app_css').href = await commonMiscResourceFetch(app.css, null, 'text/css');
+    app.css_report==''?null:COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(app.css_report, null, 'text/css');
+    app.favicon_32x32==''?null:COMMON_DOCUMENT.querySelector('#app_link_favicon_32x32').href = await commonMiscResourceFetch(app.favicon_32x32, null, 'image/png');
+    app.favicon_192x192==''?null:COMMON_DOCUMENT.querySelector('#app_link_favicon_192x192').href = await commonMiscResourceFetch(app.favicon_192x192, null, 'image/png');
+
+    const {appMetadata, default:AppInit} = await commonMiscImport(app.js);
+    /**@type{commonMetadata} */
+    const appdata = appMetadata();
+    const start = async () =>{
+        await commonFrameworkSet(null,
+            {   Click: appdata.events.Click,
+                Change: appdata.events.Change,
+                KeyDown: appdata.events.KeyDown,
+                KeyUp: appdata.events.KeyUp,
+                Focus: appdata.events.Focus,
+                Input:appdata.events.Input});
+        //common app component
+        await commonComponentRender({   mountDiv:   'common_app',
+                                        data:       {
+                                                    framework:      COMMON_GLOBAL.app_framework
+                                                    },
+                                        methods:    null,
+                                        path:       '/common/component/common_app.js'});
+        
+        commonComponentRender({ mountDiv:   'common_fonts',
+                                data:       {
+                                            font_default:   appdata.fonts.font_default,
+                                            font_arabic:    appdata.fonts.font_arabic,
+                                            font_asian:     appdata.fonts.font_asian,
+                                            font_prio1:     appdata.fonts.font_prio1,
+                                            font_prio2:     appdata.fonts.font_prio2,
+                                            font_prio3:     appdata.fonts.font_prio3
+                                            },
+                                methods:    null,
+                                path:       '/common/component/common_fonts.js'});
+    };
+    AppInit(commonLib, start, parameters);
+};
+/**
+ * @returns {CommonModuleCommon}
+ */
+const commonGet = () =>{
+    return {
+        COMMON_GLOBAL:COMMON_GLOBAL, 
+        COMMON_ICONS:COMMON_ICONS,
+        /* MISC */
+        commonMiscElementId:commonMiscElementId, 
+        commonMiscElementRow:commonMiscElementRow, 
+        commonMiscElementListTitle:commonMiscElementListTitle, 
+        commonMiscFormatJsonDate:commonMiscFormatJsonDate,
+        commonMiscImport:commonMiscImport,
+        commonMiscImportmap:commonMiscImportmap,
+        commonMiscInputControl:commonMiscInputControl,
+        commonMiscListKeyEvent:commonMiscListKeyEvent,
+        commonMiscMobile:commonMiscMobile,
+        commonMiscPreferencesUpdateBodyClassFromPreferences:commonMiscPreferencesUpdateBodyClassFromPreferences,
+        commonMiscPreferencesPostMount:commonMiscPreferencesPostMount,
+        commonMiscPrint:commonMiscPrint,
+        commonMiscResourceFetch:commonMiscResourceFetch,
+        commonMiscRoundOff:commonMiscRoundOff,
+        commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
+        commonMiscThemeDefaultList:commonMiscThemeDefaultList,
+        commonMiscThemeUpdateFromBody:commonMiscThemeUpdateFromBody,
+        commonMiscTimezoneDate:commonMiscTimezoneDate,
+        commonMiscTypewatch:commonMiscTypewatch,
+        commonMiscShowDateUpdate:commonMiscShowDateUpdate,
+        commonMiscSecondsToTime:commonMiscSecondsToTime,
+        /**WINDOW OBJECT */
+        commonWindowDocumentFrame:commonWindowDocumentFrame,
+        commonWindowFromBase64:commonWindowFromBase64, 
+        commonWindowLocationReload:commonWindowLocationReload,
+        commonWindowNavigatorLocale:commonWindowNavigatorLocale,
+        commonWindowOpen:commonWindowOpen,
+        commonWindowPrompt:commonWindowPrompt,
+        commonWindowSetTimeout:commonWindowSetTimeout,
+        commonWindowToBase64:commonWindowToBase64, 
+        commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
+        commonWindowWait:commonWindowWait,
+        /* COMPONENTS */
+        commonComponentRemove:commonComponentRemove,
+        commonComponentRender:commonComponentRender,
+        /* FRAMEWORK */
+        commonFrameworkSet:commonFrameworkSet,
+        /* DIALOGUE */
+        commonDialogueShow:commonDialogueShow, 
+        /* LOV */
+        commonLovAction:commonLovAction,
+        commonLovEvent:commonLovEvent, 
+        commonLovClose:commonLovClose, 
+        commonLovShow:commonLovShow,
+        /* MESSAGE*/
+        commonMessageShow:commonMessageShow,
+        commonMesssageNotAuthorized:commonMesssageNotAuthorized,
+        /* PROFILE */
+        commonProfileDetail:commonProfileDetail, 
+        commonProfileFollowLike:commonProfileFollowLike,
+        commonProfileShow:commonProfileShow,
+        commonProfileStat:commonProfileStat, 
+        commonProfileUpdateStat:commonProfileUpdateStat, 
+        /* USER  */
+        commonUserFunction:commonUserFunction,
+        commonIamUserAppDelete:commonIamUserAppDelete,
+        commonUserLogin:commonUserLogin, 
+        commonUserLogout:commonUserLogout,
+        commonUserSessionCountdown:commonUserSessionCountdown, 
+        commonUserSignup:commonUserSignup, 
+        commonUserUpdate:commonUserUpdate, 
+        commonUserAuthenticateCode:commonUserAuthenticateCode,
+        commonUserMessageShowStat:commonUserMessageShowStat,
+        /* MODULE LEAFLET  */
+        commonModuleLeafletInit:commonModuleLeafletInit, 
+        /* FFB */
+        commonFFB:commonFFB,
+        /* SERVICE SOCKET */
+        commonSocketBroadcastShow:commonSocketBroadcastShow, 
+        commonSocketConnectOnline:commonSocketConnectOnline,
+        commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck,
+        commonSocketMaintenanceShow:commonSocketMaintenanceShow, 
+        /* MICROSERVICE GEOLOCATION */
+        commonMicroserviceGeolocationIp:commonMicroserviceGeolocationIp,
+        commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
+        /* EVENT */
+        commonEvent:commonEvent,
+        /* INIT */
+        commonMountApp:commonMountApp,
+        commonInit:commonInit};
+};
+/**
  * @name commonInit
  * @description Init common
  * @function
+ * @param {number} start_app_id
  * @param {string} parameters 
- * @returns {Promise.<import('../../../common_types.js').commonInitAppParameters>}
+ * @returns {Promise.<void>}
  */
-const commonInit = async (parameters) => {
+const commonInit = async (start_app_id, parameters) => {
     /**
      * Encoded parameters
      * @type {import('../../../common_types.js').commonInitAppParameters}
@@ -3731,8 +3901,8 @@ const commonInit = async (parameters) => {
         commonEventCommonAdd();
     }
     await commonSocketConnectOnline();
-    commonWindowServiceWorker();
-    return decoded_parameters;
+    const commonLib = commonGet();
+    commonMountApp(start_app_id, commonLib, decoded_parameters);
 };
 export{/* GLOBALS*/
        COMMON_GLOBAL, 
@@ -3766,7 +3936,6 @@ export{/* GLOBALS*/
        commonWindowNavigatorLocale,
        commonWindowOpen,
        commonWindowPrompt,
-       commonWindowServiceWorker,
        commonWindowSetTimeout,
        commonWindowToBase64, 
        commonWindowUserAgentPlatform,
@@ -3817,4 +3986,5 @@ export{/* GLOBALS*/
        /* EVENT */
        commonEvent,
        /* INIT */
+       commonMountApp,
        commonInit};

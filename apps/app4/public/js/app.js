@@ -3,7 +3,7 @@
  * @module apps/app4/app
  */
 /**
- * @import {commonInitAppParameters, CommonAppEvent, CommonRESTAPIMethod, CommonComponentResult, CommonModuleRegional, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {commonMetadata, commonInitAppParameters, CommonAppEvent, CommonRESTAPIMethod, CommonComponentResult, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
  * @import {APP_PARAMETERS, APP_user_setting_data, APP_user_setting_record, APP_REPORT_day_user_account_app_data_posts, APP_REPORT_settings, APP_GLOBAL, 
  *          CommonModuleLibTimetable, APP_user_setting} from './types.js'
  */
@@ -1778,7 +1778,7 @@ const appEventClick = event => {
                                     info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
                                     info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name
                                     },
-                        methods:    null,
+                        methods:    {commonMiscResourceFetch:common.commonMiscResourceFetch},
                         path:       '/component/dialogue_info.js'});
                     break;
                 }
@@ -2204,37 +2204,20 @@ const appException = error => {
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
-const appFrameworkSet = async (framework=null) => {
-    await common.commonFrameworkSet(framework,
-        {   Click: appEventClick,
-            Change: null,
-            KeyDown: null,
-            KeyUp: appEventKeyUp,
-            Focus: null,
-            Input:null});
-};
+const appFrameworkSet = async (framework=null) =>
+    await common.commonFrameworkSet(framework, appMetadata().events);
 
 /**
  * @name appInit
  * @description Init app
  * @function
- * @param {{APP:APP_PARAMETERS,
- *          COMMON:commonInitAppParameters['COMMON'],
- *          INFO:commonInitAppParameters['INFO']}} parameters 
+ * @param {commonInitAppParameters & {APP:APP_PARAMETERS}} parameters 
  * @returns {Promise.<void>}
  */
 const appInit = async parameters => {
-    const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-common-module-asset/MODULE_LIB_TIMETABLE`;
+    const appLibTimetable_path = '/app-common-module-asset/MODULE_LIB_TIMETABLE';
     /**@type {CommonModuleLibTimetable} */
-    appLibTimetable = await common.commonMiscImport(appLibTimetable_path);
-    await appFrameworkSet();
-    //common app component
-    await common.commonComponentRender({mountDiv:   'common_app',
-                                        data:       {
-                                                    framework:      common.COMMON_GLOBAL.app_framework
-                                                    },
-                                        methods:    null,
-                                        path:       '/common/component/common_app.js'});
+    appLibTimetable = await common.commonMiscImport(appLibTimetable_path, true);
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
@@ -2343,34 +2326,45 @@ const appInit = async parameters => {
     await appUserSettingDefaultSet();
     //show default startup
     await appToolbarButton(APP_GLOBAL.app_default_startup_page);
-    common.commonComponentRender({mountDiv:   'common_fonts',
-        data:       {
-                    font_default:   true,
-                    font_arabic:    true,
-                    font_asian:     true,
-                    font_prio1:     true,
-                    font_prio2:     true,
-                    font_prio3:     true
-                    },
-        methods:    null,
-        path:       '/common/component/common_fonts.js'});
 };
 /**
  * @name appCommonInit
  * @description Init common
  * @function
  * @param {CommonModuleCommon} commonLib
- * @param {string} parameters 
+ * @param {function} start
+ * @param {commonInitAppParameters & {APP:APP_PARAMETERS}} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, parameters) => {
+const appCommonInit = async (commonLib, start, parameters) => {
     common = commonLib;
+    await start();
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
-    common.commonInit(parameters).then(decodedparameters=>{
-        /**@ts-ignore */
-        appInit(decodedparameters);
-    });
+    appInit(parameters);
 };
-export{ appCommonInit, appComponentSettingUpdate, appSettingThemeThumbnailsUpdate};
+/**
+ * @returns {commonMetadata}
+ */
+const appMetadata = () =>{
+    return { 
+        events:{  
+            Click:   appEventClick,
+            Change:  null,
+            KeyDown: null,
+            KeyUp:   appEventKeyUp,
+            Focus:   null,
+            Input:   null},
+        fonts:{
+            font_default:   true,
+            font_arabic:    true,
+            font_asian:     true,
+            font_prio1:     true,
+            font_prio2:     true,
+            font_prio3:     true
+        }
+    };
+};
+export{ appCommonInit, appComponentSettingUpdate, appSettingThemeThumbnailsUpdate, appMetadata};
+export default appCommonInit;

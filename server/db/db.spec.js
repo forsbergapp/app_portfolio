@@ -25,7 +25,6 @@ const test = async t =>
                                 subdomain:'orm',
                                 path:'/apps/orm/public',
                                 logo:'/images/logo.png',
-                                manifest:'/common/json/manifest.json',
                                 js:'/js/app.js',
                                 css:'/css/app.css',css_report:'',
                                 favicon_32x32:'/images/favicon-32x32.png',

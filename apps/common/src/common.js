@@ -230,7 +230,7 @@ const commonBFE = async parameters =>{
 /**
  * @name commonResourceFile
  * @memberof ROUTE_APP
- * @description Get asset file
+ * @description Get resource
  *              Supported
  *              .css files
  *              .js files       
@@ -241,8 +241,6 @@ const commonBFE = async parameters =>{
  *                      makes ECMAScript module adding export
  *                  /modules/leaflet/leaflet-src.esm.js
  *                      removes sourceMappingURL
- *                  /apps/common_types.js
- *                      used to display common_types.js since developer path is different
  *              .html files
  *              .webp files
  *              .png files
@@ -250,109 +248,112 @@ const commonBFE = async parameters =>{
  *              .ttf files
  *              .json
  * @function
- * @param {{app_id:Number,
- *          url:String,
- *          basepath:string}} parameters
+ * @param {{app_id:number,
+ *          resource_id:string, 
+ *          content_type:   string,
+ *          data_app_id:number}} parameters
  * @returns {Promise.<server_server_response>}
  */
 const commonResourceFile = parameters =>{
+
+    /**
+     * @param {string} content_type
+     * @param {string} path
+     * @returns {Promise.<server_server_response>}
+     */
+    const convertBinary = async (content_type, path) =>
+        fs.promises.readFile(`${serverProcess.cwd()}${path}`)
+                .then(image=> {
+                    return {type:'JSON', 
+                            result:{resource:
+                                    /**@ts-ignore */                
+                                    `data:${content_type};base64,${Buffer.from(image, 'binary').toString('base64')}`}};
+                });
     
-    return new Promise((resolve)=>{
-                                                            
-        const common_app_id = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_COMMON_APP_ID'}}).result);
-        
-        if (common_app_id!=null){
-            switch (parameters.url.toLowerCase().substring(parameters.url.lastIndexOf('.'))){
-                case '.css':{
-                    resolve({type:'CSS', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
-                    break;
-                }
-                case '.js':{
-                    switch (parameters.url){
-                        case '/modules/react/react-dom.development.js':
-                        case '/modules/react/react.development.js':{
-                            fs.promises.readFile(`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
-                                if (parameters.url == '/modules/react/react-dom.development.js'){
-                                    modulefile = 'let ReactDOM;\r\n' + modulefile;                                
-                                    modulefile = modulefile.replace(  'exports.version = ReactVersion;',
-                                                                    'exports.version = ReactVersion;\r\n  ReactDOM=exports;');
-                                    modulefile = modulefile + 'export {ReactDOM}';
-                                }
-                                else{
-                                    modulefile = 'let React;\r\n' + modulefile;
-                                    modulefile = modulefile.replace(  'exports.version = ReactVersion;',
-                                                                    'exports.version = ReactVersion;\r\n  React=exports;');
-                                    modulefile = modulefile + 'export {React}';
-                                }
-                                
-                                resolve({type:'JS', result:modulefile});
-                            });
-                            break;
-                        }
-                        case '/modules/leaflet/leaflet-src.esm.js':{
-                            fs.promises.readFile(`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
-                                modulefile = modulefile.replace(  '//# sourceMappingURL=','//');
-                                resolve({type:'JS', result:modulefile});
-                            });
-                            break;
-                        }
-                        case '/apps/common_types.js':{
-                            //in development another path is used, return correct path in app
-                            resolve({type:'JS', sendfile:`${serverProcess.cwd()}/apps/common_types.js`});
-                            break;
-                        }
-                        default:
-                            resolve({type:'JS', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
-                    }
-                    break;
-                }
-                case '.html':{
-                    resolve({type:'HTML', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
-                    break;
-                }
-                case '.webp':{
-                    resolve({type:'WEBP', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
-                    break;
-                }
-                case '.png':{
-                    resolve({type:'PNG', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
-                    break;
-                }
-                case '.woff2':{
-                    resolve({type:'WOFF', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
-                    break;
-                }
-                case '.ttf':{
-                    resolve({type:'TTF', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
-                    break;
-                }
-                case '.json':{
-                    resolve({type:'JSON', sendfile:`${serverProcess.cwd()}${parameters.basepath}${parameters.url}`});
-                    break;
-                }
-                default:{
-                    Log.post({  app_id:parameters.app_id, 
-                        data:{  object:'LogAppError', 
-                                app:{   app_filename:serverUtilAppFilename(import.meta.url),
-                                        app_function_name:'commonResourceFile()',
-                                        app_line:serverUtilAppLine()
-                                },
-                                log:`Invalid file type ${parameters.url}`
-                            }
-                        })
-                    .then(()=>{
-                        resolve({http:404, code:'APP', text:null, developerText:null, moreInfo:null, type:'JSON'});
+   
+   const resource_directory = App.get({app_id:parameters.app_id, resource_id:parameters.data_app_id}).result[0].path;
+   const resource_path = parameters.data_app_id==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id,data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result)?
+                           parameters.resource_id.replace('/common', ''):
+                               parameters.resource_id;
+   return new Promise((resolve)=>{
+       switch (true){
+           case parameters.content_type == 'text/css':{
+               resolve({type:'CSS', sendfile:`${serverProcess.cwd()}${resource_directory}${resource_path}`});
+               break;
+           }
+           case parameters.content_type == 'application/json':{
+               resolve({type:'JSON', sendfile:`${serverProcess.cwd()}${resource_directory}${resource_path}`});
+               break;
+           }
+           case parameters.content_type == 'text/javascript':{
+               switch (resource_path){
+                   case '/modules/react/react-dom.development.js':
+                   case '/modules/react/react.development.js':{
+                       fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`, 'utf8').then((modulefile)=>{
+                           if (resource_path == '/modules/react/react-dom.development.js'){
+                               modulefile = 'let ReactDOM;\r\n' + modulefile;                                
+                               modulefile = modulefile.replace(  'exports.version = ReactVersion;',
+                                                               'exports.version = ReactVersion;\r\n  ReactDOM=exports;');
+                               modulefile = modulefile + 'export {ReactDOM}';
+                           }
+                           else{
+                               modulefile = 'let React;\r\n' + modulefile;
+                               modulefile = modulefile.replace(  'exports.version = ReactVersion;',
+                                                               'exports.version = ReactVersion;\r\n  React=exports;');
+                               modulefile = modulefile + 'export {React}';
+                           }
+                           
+                           resolve({type:'JS', result:modulefile});
+                       });
+                       break;
+                   }
+                   //case '/modules/vue/vue.esm-browser.js':{
+                   //     resolve({type:'JS', sendfile:`${serverProcess.cwd()}${resource_directory}/modules/vue/${parameters.resource_id}`});
+                   //     break;
+                   // }
+                   case '/modules/leaflet/leaflet-src.esm.js':{
+                       fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`, 'utf8').then((modulefile)=>{
+                           modulefile = modulefile.replace(  '//# sourceMappingURL=','//');
+                           resolve({type:'JS', result:modulefile});
+                       });
+                       break;
+                   }
+                   default:
+                       resolve({type:'JS', sendfile:`${serverProcess.cwd()}${resource_directory}${resource_path}`});
+               }
+               
+               break;
+           }
+           case parameters.content_type == 'image/webp':
+           case parameters.content_type == 'image/png':{
+               resolve(convertBinary(parameters.content_type, `${resource_directory}/${resource_path}`));
+               break;
+           }
+           case ['WOFF2','TTF'].includes(resource_path.toUpperCase().substring(resource_path.lastIndexOf('.')+1)):{
+               //fonts loaded in css, replace 'common' in path
+               /**@type {'WOFF2'|'TTF'|*} */
+               const type = resource_path.toUpperCase().substring(resource_path.lastIndexOf('.')+1);
+               resolve({type:type.replace('WOFF2','WOFF'), sendfile:`${serverProcess.cwd()}${resource_directory}${resource_path}`});
+               break;
+           }
+           default:{
+               Log.post({  app_id:parameters.app_id, 
+                   data:{  object:'LogAppError', 
+                           app:{   app_filename:serverUtilAppFilename(import.meta.url),
+                                   app_function_name:'commonResourceFile()',
+                                   app_line:serverUtilAppLine()
+                           },
+                           log:`Invalid resource ${parameters.resource_id}`
+                       }
+                   })
+               .then(()=>{
+                   resolve({http:404, code:'APP', text:null, developerText:null, moreInfo:null, type:'JSON'});
 
-                    });
-                }
-            }
-        }
-        else{
-            resolve({http:500, code:'APP', text:null, developerText:null, moreInfo:null, type:'JSON'});
-        }
-    });
+               });
+           }
+       }
+   });
 };
-
 /**
  * @name commonModuleAsset
  * @description Get asset using commonModuleRun since assets are not using idToken or authorization
@@ -796,6 +797,7 @@ const commonComponentCreate = async parameters =>{
                 client_longitude:       result_geodata?.longitude,
                 client_place:           result_geodata?.place ?? '',
                 client_timezone:        result_geodata?.timezone,
+                start_app_id:           serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID),
                 common_app_id:          common_app_id,
                 admin_app_id:           admin_app_id,
                 framework:              configServer.SERVICE_APP.filter(parameter=>'FRAMEWORK' in parameter)[0].FRAMEWORK,
@@ -887,11 +889,46 @@ const commonAppHost = host =>{
         }
     }
  };
- 
  /**
  * @name commonApp
  * @namespace ROUTE_APP
- * @description Get app asset, common asset, app info page, app report, app module or app
+ * @description Get app 
+ * @function
+ * @param {{app_id:number,
+ *          resource_id:number,
+ *          ip:string,
+ *          host:string,
+ *          user_agent:string,
+ *          accept_language:string,
+ *          data:{locale:string}}} parameters
+ * @returns {Promise.<server_server_response>}
+ */
+const commonAppInit = async parameters =>{
+    /**@type{server_db_table_App} */
+    const app = App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
+    if (app)
+        return {result:{name:app.name,
+                        js:app.js,
+                        css:app.css,
+                        css_report:app.css_report,
+                        favicon_32x32:app.favicon_32x32,
+                        favicon_192x192:app.favicon_192x192}, 
+                type:'JSON'};
+    else
+        return {http:404,
+            code:null,
+            text:null,
+            developerText:'commonAppInit',
+            moreInfo:null,
+            result:null,
+            sendfile:null,
+            type:'JSON'};
+};
+
+ /**
+ * @name commonApp
+ * @namespace ROUTE_APP
+ * @description Get app 
  * @function
  * @param {{app_id:number|null,
  *          ip:string,
@@ -915,30 +952,27 @@ const commonApp = async parameters =>{
                 type:'JSON'};
     else
         switch (true){
+            //service worker
             case (parameters.url == '/common_sw.js'):{
-                return await commonResourceFile({app_id:parameters.app_id, url:parameters.url, basepath:'/apps/common/public/js'});
+                return await commonResourceFile({   app_id:parameters.app_id, 
+                                                    content_type:'text/javascript', 
+                                                    data_app_id:serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result[0].APP_COMMON_APP_ID) ??0,
+                                                    resource_id:'/common/js/common_sw.js'});
             }
-            case (parameters.url.toLowerCase().startsWith('/common')):{
-                return await commonResourceFile({app_id:parameters.app_id, url:parameters.url.substring('/common'.length), basepath:'/apps/common/public'});
+            //font css that can contain font source links
+            case (parameters.url.startsWith('/common/css/font/font')):{
+                return await commonResourceFile({   app_id:parameters.app_id, 
+                    resource_id:parameters.url.replaceAll('~','/'), 
+                    content_type:'text/css',
+                    data_app_id: serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result[0].APP_COMMON_APP_ID) ??0});
             }
-            case (parameters.url.toLowerCase().startsWith('/css')):
-            case (parameters.url.toLowerCase().startsWith('/component')):
-            case (parameters.url.toLowerCase().startsWith('/images')):
-            case (parameters.url.toLowerCase().startsWith('/js')):
-            case (parameters.url == '/apps/common_types.js'): {
-                return await commonResourceFile({app_id:parameters.app_id, url:parameters.url, basepath:App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].path});
-            }
-            case (parameters.url.toLowerCase().startsWith('/info/about')):{
-                return {result:'', type:'HTML'};
-            }
-            case (parameters.url.toLowerCase().startsWith('/info/disclaimer')):{
-                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_DISCLAIMER'});
-            }
-            case (parameters.url.toLowerCase().startsWith('/info/privacy_policy')):{
-                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_PRIVACY_POLICY'});
-            }
-            case (parameters.url.toLowerCase().startsWith('/info/terms')):{
-                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_TERMS'});
+            //font src used in a font css
+            case (parameters.url.startsWith('/common/modules/fontawesome/webfonts/')):
+            case (parameters.url.startsWith('/common/css/font/')):{
+                return await commonResourceFile({   app_id:parameters.app_id, 
+                                                    resource_id:parameters.url.replaceAll('~','/'), 
+                                                    content_type:'',
+                                                    data_app_id: serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result[0].APP_COMMON_APP_ID) ??0});
             }
             case (parameters.url == '/'):{
                 if  (parameters.app_id != serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result) && 
@@ -995,129 +1029,17 @@ const commonApp = async parameters =>{
  * @function
  * @param {{app_id:number|null,
  *          resource_id:string,
- *          path:string,
  *          ip:string,
  *          host:string,
  *          user_agent:string,
  *          accept_language:string,
  *          data:{data_app_id:number,
- *                type: 'INFO'|'COMPONENT'|'CSS'|'IMAGE'|'JS'|'FONT'|'JSON'|
- *                      'MODULE_REACT'|'MODULE_LEAFLET'|'MODULE_LEAFLET_IMAGE'|'MODULE_LEAFLET_CSS'|'MODULE_VUE'}
+ *                type: 'INFO'|'RESOURCE',
+ *                content_type: string}
  *          }} parameters
  * @returns {Promise.<server_server_response>}
  */
 const commonAppResource = async parameters =>{
-    /**
-     * @name commonResourceFile
-     * @memberof ROUTE_APP
-     * @description Get resource
-     *              Supported
-     *              .css files
-     *              .js files       
-     *                  modifies at request:
-     *                  /modules/react/react-dom.development.js
-     *                      makes ECMAScript module adding export
-     *                  /modules/react/react.development.js
-     *                      makes ECMAScript module adding export
-     *                  /modules/leaflet/leaflet-src.esm.js
-     *                      removes sourceMappingURL
-     *                  /apps/common_types.js
-     *                      used to display common_types.js since developer path is different
-     *              .html files
-     *              .webp files
-     *              .png files
-     *              .woff2 files
-     *              .ttf files
-     *              .json
-     * @function
-     * @param {{app_id:number,
-     *          resource_id:string, 
-     *          path:   string,
-     *          type:   'INFO'|'COMPONENT'|'CSS'|'IMAGE'|'JS'|'FONT'|'JSON'|
-     *                  'MODULE_REACT'|'MODULE_LEAFLET'|'MODULE_LEAFLET_IMAGE'|'MODULE_LEAFLET_CSS'|'MODULE_VUE',
-     *          data_app_id:number}} parameters
-     * @returns {Promise.<server_server_response>}
-     */
-    const commonResourceFile = parameters =>{
-        
-        const resource_directory = App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].path;
-
-        return new Promise((resolve)=>{
-            switch (true){
-                case parameters.type=='JS':
-                case parameters.type=='CSS':
-                case parameters.type=='JSON':{
-                    resolve({type:parameters.type, sendfile:`${serverProcess.cwd()}${resource_directory}/${parameters.type.toLowerCase()}/${parameters.resource_id}`});
-                    break;
-                }
-                case parameters.type=='MODULE_REACT' && 
-                    (parameters.resource_id=='react-dom.development.js' || parameters.resource_id=='react.development.js'):{
-                    fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}/modules/react/${parameters.resource_id}`, 'utf8').then((modulefile)=>{
-                        if (parameters.resource_id.substring('common_'.length) == 'react-dom.development.js'){
-                            modulefile = 'let ReactDOM;\r\n' + modulefile;                                
-                            modulefile = modulefile.replace(  'exports.version = ReactVersion;',
-                                                            'exports.version = ReactVersion;\r\n  ReactDOM=exports;');
-                            modulefile = modulefile + 'export {ReactDOM}';
-                        }
-                        else{
-                            modulefile = 'let React;\r\n' + modulefile;
-                            modulefile = modulefile.replace(  'exports.version = ReactVersion;',
-                                                            'exports.version = ReactVersion;\r\n  React=exports;');
-                            modulefile = modulefile + 'export {React}';
-                        }
-                        
-                        resolve({type:'JS', result:modulefile});
-                    });
-                    break;
-                }
-                //add leaflet css and images
-                case parameters.type=='MODULE_LEAFLET_IMAGE' && parameters.resource_id=='marker-icon-2x.png':
-                case parameters.type=='MODULE_LEAFLET_IMAGE' && parameters.resource_id=='marker-icon.png':
-                case parameters.type=='MODULE_LEAFLET_IMAGE' && parameters.resource_id=='marker-shadow.png':
-                case parameters.type=='MODULE_LEAFLET_CSS' && parameters.resource_id=='leaflet.css':
-                case parameters.type=='MODULE_LEAFLET' && parameters.resource_id=='leaflet-src.esm.js':{
-                    fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}/modules/leaflet/${ (parameters.type=='MODULE_LEAFLET_IMAGE'?'images/':'') + parameters.resource_id}`, 'utf8').then((modulefile)=>{
-                        modulefile = modulefile.replace(  '//# sourceMappingresource_id=','//');
-                        resolve({type:'JS', result:modulefile});
-                    });
-                    break;
-                }
-                case parameters.type=='MODULE_VUE' && parameters.resource_id=='vue.esm-browser.js':{
-                    resolve({type:'JS', sendfile:`${serverProcess.cwd()}${resource_directory}/modules/vue/${parameters.resource_id}`});
-                    break;
-                }
-                case parameters.type=='IMAGE':{
-                    /**@type {'WEBP'|'PNG'|*} */
-                    const type = parameters.resource_id.toUpperCase().substring(parameters.resource_id.lastIndexOf('.'));
-                    resolve({   type:type, 
-                                sendfile:`${serverProcess.cwd()}${resource_directory}/images/${parameters.resource_id}`});
-                    break;
-                }
-                case ['WOFF2','TTF'].includes(parameters.path.toUpperCase().substring(parameters.path.lastIndexOf('.'))):{
-                    //fonts loaded in css, replace 'common' in path
-                    /**@type {'WOFF2'|'TTF'|*} */
-                    const type = parameters.resource_id.toUpperCase().substring(parameters.resource_id.lastIndexOf('.'));
-                    resolve({type:type.replace('WOFF2','WOFF'), sendfile:`${serverProcess.cwd()}${resource_directory}${parameters.path.replace('common','')}`});
-                    break;
-                }
-                default:{
-                    Log.post({  app_id:parameters.app_id, 
-                        data:{  object:'LogAppError', 
-                                app:{   app_filename:serverUtilAppFilename(import.meta.url),
-                                        app_function_name:'commonResourceFile()',
-                                        app_line:serverUtilAppLine()
-                                },
-                                log:`Invalid resource ${parameters.resource_id}`
-                            }
-                        })
-                    .then(()=>{
-                        resolve({http:404, code:'APP', text:null, developerText:null, moreInfo:null, type:'JSON'});
-
-                    });
-                }
-            }
-        });
-    };
    
     if (parameters.app_id==null)
         return {http:404,
@@ -1138,20 +1060,15 @@ const commonAppResource = async parameters =>{
                                                     /**@ts-ignore */
                                                     type:'INFO_' + parameters.resource_id.toUpperCase()});
             }
-            case parameters.data.type == 'CSS':
-            case parameters.data.type == 'COMPONENT':
-            case parameters.data.type == 'IMAGE':
-            case parameters.data.type == 'JS':
-            case ['WOFF2','TTF'].includes(parameters.path.toUpperCase().substring(parameters.path.lastIndexOf('.'))):
-            case parameters.data.type == 'JSON':
-            case parameters.data.type == 'MODULE_REACT':
-            case parameters.data.type == 'MODULE_LEAFLET':
-            case parameters.data.type == 'MODULE_VUE':{
+            case parameters.data.content_type == 'text/css':
+            case parameters.data.content_type == 'text/javascript':
+            case parameters.data.content_type == 'image/webp':
+            case parameters.data.content_type == 'image/png':
+            case parameters.data.content_type == 'application/json':{
                 return await commonResourceFile({   app_id:parameters.app_id, 
-                                                    resource_id:parameters.resource_id, 
-                                                    path:parameters.path,
-                                                    data_app_id: parameters.data.data_app_id,
-                                                    type:parameters.data.type});
+                                                    resource_id:parameters.resource_id.replaceAll('~','/'), 
+                                                    content_type:parameters.data.content_type,
+                                                    data_app_id: parameters.data.data_app_id});
             }
             default:{
                 return {http:401, code:null, text:null, developerText:'commonAppResource', moreInfo:null, type:'JSON'};
@@ -1179,6 +1096,7 @@ const commonRegistryAppModule = (app_id, parameters) => AppModule.get({app_id:ap
 export {commonSearchMatch,
         commonAppStart, commonAppHost, commonResourceFile,
         commonModuleAsset,commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
+        commonAppInit,
         commonApp,
         commonAppResource,
         commonBFE,

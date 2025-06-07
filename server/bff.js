@@ -122,7 +122,7 @@ const bffInit = async (req, res) =>{
                 res.setHeader('cross-origin-opener-policy','same-origin');
                 res.setHeader('cross-origin-resource-policy',	'same-origin');
                 res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
-                res.setHeader('x-content-type-options', 'nosniff');
+                //res.setHeader('x-content-type-options', 'nosniff');
                 res.setHeader('x-dns-prefetch-control', 'off');
                 res.setHeader('x-download-options', 'noopen');
                 res.setHeader('x-frame-options', 'SAMEORIGIN');

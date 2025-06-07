@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {commonMetadata, commonInitAppParameters, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
  * @import {APP_GLOBAL} from './types.js'
  */
 
@@ -109,7 +109,7 @@ const appEventClick = (event=null) => {
                     break;
                 }
                 case 'button_scramble':{
-                    APP_GLOBAL.cube_controls.cube.scramble();
+                    APP_GLOBAL.cube_controls.cube.scramble(null, common.commonWindowSetTimeout);
                     break;
                 }
                 case 'common_toolbar_framework_js':{
@@ -203,16 +203,8 @@ const appEvenOther = () => {
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
- const appFrameworkSet = async (framework=null) => {
-    await common.commonFrameworkSet(framework,
-        {   Click: appEventClick,
-            Change: null,
-            KeyDown: null,
-            KeyUp: null,
-            Focus: null,
-            Input:null,
-            Other:appEvenOther});
-};
+ const appFrameworkSet = async (framework=null) =>
+    await common.commonFrameworkSet(framework, appMetadata().events);
 
 /**
  * @name appInit
@@ -222,14 +214,6 @@ const appEvenOther = () => {
  */
 const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
-    await appFrameworkSet();
-    //common app component
-    await common.commonComponentRender({mountDiv:   'common_app',
-                                        data:       {
-                                                    framework:      common.COMMON_GLOBAL.app_framework
-                                                    },
-                                        methods:    null,
-                                        path:       '/common/component/common_app.js'});
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div, 
         data:       null,
@@ -243,6 +227,8 @@ const appInit = async () => {
                     common_app_id:common.COMMON_GLOBAL.common_app_id
                     },
         methods:    {
+                    commonWindowSetTimeout:common.commonWindowSetTimeout,
+                    commonMiscImport:common.commonMiscImport,
                     commonMiscElementRow:common.commonMiscElementRow,
                     commonLovShow:common.commonLovShow,
                     commonLovClose:common.commonLovClose,
@@ -271,32 +257,46 @@ const appInit = async () => {
         APP_GLOBAL.cube = init_cube.cube;
         APP_GLOBAL.cube_controls = init_cube.controls;
     });
-    common.commonComponentRender({mountDiv:   'common_fonts',
-        data:       {
-                    font_default:   true,
-                    font_arabic:    false,
-                    font_asian:     false,
-                    font_prio1:     false,
-                    font_prio2:     true,
-                    font_prio3:     false
-                    },
-        methods:    null,
-        path:       '/common/component/common_fonts.js'});
 };
-/**
+/**RubiksCube
  * @name appCommonInit
  * @description Init common
  * @function
  * @param {CommonModuleCommon} commonLib
- * @param {string} parameters 
+ * @param {function} start
+ * @param {commonInitAppParameters} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, parameters) => {
+const appCommonInit = async (commonLib, start, parameters) => {
+    parameters;
     common = commonLib;
+    await start();
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = null;
-    common.commonInit(parameters).then(()=>{
-        appInit();
-    });
+    appInit();
 };
-export{appCommonInit};
+/**
+ * @returns {commonMetadata}
+ */
+const appMetadata = () =>{
+    return { 
+        events:{  
+            Click:   appEventClick,
+            Change:  null,
+            KeyDown: null,
+            KeyUp:   null,
+            Focus:   null,
+            Input:   null,
+            Other:   appEvenOther},
+        fonts:{
+            font_default:   true,
+            font_arabic:    false,
+            font_asian:     false,
+            font_prio1:     false,
+            font_prio2:     true,
+            font_prio3:     false
+        }
+    };
+};
+export{appCommonInit, appMetadata};
+export default appCommonInit;

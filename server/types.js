@@ -42,6 +42,7 @@
  * @property {string|null}  client_longitude
  * @property {string|null}  client_place
  * @property {string|null}  client_timezone
+ * @property {number|null}  start_app_id
  * @property {number|null}  common_app_id
  * @property {number|null}  admin_app_id
  * @property {number}       framework
@@ -191,7 +192,6 @@
  *              subdomain: string,
  *              path: string,
  *              logo:string,
- *              manifest: string,
  *              js:string,
  *              css: string,
  *              css_report: string,
@@ -802,7 +802,8 @@
 /** 
  * @description DB server_db_config_server_service_app
  * @memberof dbObjects
- * @typedef {{APP_COMMON_APP_ID         :string,
+ * @typedef {{APP_START_APP_ID          :string,
+ *            APP_COMMON_APP_ID         :string,
  *            APP_ADMIN_APP_ID          :string,
  *            CACHE_CONTROL             :string,
  *            CACHE_CONTROL_FONT        :string,

@@ -24,7 +24,7 @@ const template = props =>`     ${props.font_default==false?'':`
                                        Fontawesome icons
                                        Noto Sans + Noto Sans Mono
                                    -->
-                                   <link media='all' data-href='/common/css/font/font1.css' rel='stylesheet'>`
+                                   <link media='all' data-href='/common/css/font/font1.css' type='text/css' rel='stylesheet'>`
                                }
                                ${props.font_arabic==false?'':`
                                    <!--Arabic fonts
@@ -33,7 +33,7 @@ const template = props =>`     ${props.font_default==false?'':`
                                    Noto Naskh Arabic
                                    Noto Nastaliq Urdu
                                    -->
-                                   <link media='all' data-href='/common/css/font/font2.css' rel='stylesheet'>`
+                                   <link media='all' data-href='/common/css/font/font2.css' type='text/css' rel='stylesheet'>`
                                }
                                ${props.font_asian==false?'':`
                                    <!--Asian fonts
@@ -43,7 +43,7 @@ const template = props =>`     ${props.font_default==false?'':`
                                    Noto Sans SC
                                    Noto Sans TC
                                    -->
-                                   <link media='all' data-href='/common/css/font/font3.css' rel='stylesheet'>`
+                                   <link media='all' data-href='/common/css/font/font3.css' type='text/css' rel='stylesheet'>`
                                }
                                ${props.font_prio1==false?'':`
                                    <!--Prio 1 fonts
@@ -61,7 +61,7 @@ const template = props =>`     ${props.font_default==false?'':`
                                    Noto Sans Telugu
                                    Noto Sans Thai
                                    -->
-                                   <link media='all' data-href='/common/css/font/font4.css' rel='stylesheet'>`
+                                   <link media='all' data-href='/common/css/font/font4.css' type='text/css' rel='stylesheet'>`
                                }
                                ${props.font_prio2==false?'':`
                                    <!--Prio 2 fonts
@@ -74,7 +74,7 @@ const template = props =>`     ${props.font_default==false?'':`
                                    Noto Sans Symbols 2
                                    Noto Sans Symbols
                                    -->
-                                   <link media='all' data-href='/common/css/font/font5.css' rel='stylesheet'>`
+                                   <link media='all' data-href='/common/css/font/font5.css' type='text/css' rel='stylesheet'>`
                                }
                                ${props.font_prio3==false?'':`
                                    <!--Prio 3 fonts
@@ -201,8 +201,8 @@ const template = props =>`     ${props.font_default==false?'':`
                                    m-
                                    font7
                                    -->
-                                   <link media='all' data-href='/common/css/font/font6.css' rel='stylesheet'>
-                                   <link media='all' data-href='/common/css/font/font7.css' rel='stylesheet'>`
+                                   <link media='all' data-href='/common/css/font/font6.css' type='text/css'rel='stylesheet'>
+                                   <link media='all' data-href='/common/css/font/font7.css' type='text/css' rel='stylesheet'>`
                                }`;
 /**
 * @name component

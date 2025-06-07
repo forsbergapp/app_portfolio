@@ -15,6 +15,7 @@
  *  CommonErrorMessageISO20022
  *  CommonAppMenu
  *  CommonDocumentType
+ *  CommonMetadata
  * 
  * Common REST API types
  *  CommonRESTAPIMethod
@@ -163,6 +164,7 @@
  *              app_root:string,
  *              app_div:string,
  *              app_console:{warn:function, info:function, error:function},
+ *              app_createElement:{original:function,custom:function},
  *              app_eventListeners:{original:function, LEAFLET:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[], 
  *                                                     REACT:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[], 
  *                                                     VUE:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[], 
@@ -284,6 +286,25 @@
  * @typedef {'APP'|'GUIDE'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_SERVICEREGISTRY'|'MODULE_SERVER'} commonDocumentType
  */
 /**
+ * @description commonMetadata
+ * @typedef {{  events:{
+ *                  Click:function|null,
+ *                  Change:function|null,
+ *                  KeyDown:function|null,
+ *                  KeyUp:function|null,
+ *                  Focus:function|null,
+ *                  Input:function|null,
+ *                  Other?:function|null}
+ *              fonts:{
+ *                  font_default:boolean,
+ *                  font_arabic:boolean,
+ *                  font_asian:boolean,
+ *                  font_prio1:boolean,
+ *                  font_prio2:boolean,
+ *                  font_prio3:boolean,
+ *              }}} commonMetadata
+ */
+/**
  * @description Type CommonRESTAPIMethod
  * @typedef{'GET'|'POST'|'PUT'|'PATCH'|'DELETE'} CommonRESTAPIMethod
  */
@@ -302,7 +323,6 @@
  *              subdomain: string,
  *              path: string,
  *              logo:string,
- *              manifest: string,
  *              js:string,
  *              css: string,
  *              css_report: string,
