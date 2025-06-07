@@ -3,7 +3,7 @@
  * @module apps/app1/app
  */
 /**
- * @import {commonInitAppParameters, CommonAppEvent, CommonRESTAPIMethod, CommonModuleCommon, COMMON_DOCUMENT}  from '../../../common_types.js'
+ * @import {commonMetadata, commonInitAppParameters, CommonAppEvent, CommonRESTAPIMethod, CommonModuleCommon, COMMON_DOCUMENT}  from '../../../common_types.js'
  */
 
 /**@type{COMMON_DOCUMENT} */
@@ -424,7 +424,6 @@ const appSecureCommonButtonSave = async (item) => {
                                                         subdomain:      record.querySelector('[data-column=\'subdomain\']').textContent,
                                                         path:           record.querySelector('[data-column=\'path\']').textContent,
                                                         logo:           record.querySelector('[data-column=\'logo\']').textContent,
-                                                        manifest:       record.querySelector('[data-column=\'manifest\']').textContent,
                                                         js:             record.querySelector('[data-column=\'js\']').textContent,
                                                         css:            record.querySelector('[data-column=\'css\']').textContent,
                                                         css_report:     record.querySelector('[data-column=\'css_report\']').textContent,
@@ -1182,15 +1181,8 @@ const appException = error => {
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
-const appFrameworkSet = async (framework=null) => {
-    common.commonFrameworkSet(framework,
-                    {   Click: appEventClick,
-                        Change: appEventChange,
-                        KeyDown: appEventKeyDown,
-                        KeyUp: appEventKeyUp,
-                        Focus: appEventFocus,
-                        Input:appEventInput});
-};
+const appFrameworkSet = async (framework=null) =>
+    await common.commonFrameworkSet(framework,appMetadata().events);
 /**
  * @name appInit
  * @description App init
@@ -1200,43 +1192,47 @@ const appFrameworkSet = async (framework=null) => {
  */
 const appInit = async (parameters) => {
     parameters;
-    await appFrameworkSet();
-    //common app component
-    await common.commonComponentRender({mountDiv:   'common_app',
-                                        data:       {
-                                                    framework:      common.COMMON_GLOBAL.app_framework
-                                                    },
-                                        methods:    null,
-                                        path:       '/common/component/common_app.js'});
     await common.commonDialogueShow('LOGIN_ADMIN');
-    common.commonComponentRender({mountDiv:   'common_fonts',
-        data:       {
-                    font_default:   true,
-                    font_arabic:    true,
-                    font_asian:     true,
-                    font_prio1:     true,
-                    font_prio2:     true,
-                    font_prio3:     true
-                    },
-        methods:    null,
-        path:       '/common/component/common_fonts.js'});
 };    
 /**
  * @name appCommonInit
  * @description Init common
  * @function
  * @param {CommonModuleCommon} commonLib
- * @param {string} parameters 
+ * @param {function} start
+ * @param {commonInitAppParameters} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, parameters) => {        
+const appCommonInit = async (commonLib, start, parameters) => {        
     common = commonLib;
+    await start();
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appLogout;
+    appInit(parameters);
     
-    common.commonInit(parameters).then(decodedparameters=>{
-        appInit(decodedparameters);
-    });
 };
-export { appCommonInit, appSecureDialogueSendBroadcastShow }; 
+/**
+ * @returns {commonMetadata}
+ */
+const appMetadata = () =>{
+    return { 
+        events:{  
+            Click:   appEventClick,
+            Change:  appEventChange,
+            KeyDown: appEventKeyDown,
+            KeyUp:   appEventKeyUp,
+            Focus:   appEventFocus,
+            Input:   appEventInput},
+        fonts:{
+            font_default:   true,
+            font_arabic:    true,
+            font_asian:     true,
+            font_prio1:     true,
+            font_prio2:     true,
+            font_prio3:     true
+        }
+    };
+};
+export { appCommonInit, appSecureDialogueSendBroadcastShow, appMetadata }; 
+export default appCommonInit;

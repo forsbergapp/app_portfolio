@@ -947,7 +947,7 @@
                 }
             }
         },
-        "/bff/app/v1/app-common-module-asset/${resource_id_string}": {
+        "/bff/app_id/v1/app-common-module-asset/${resource_id_string}": {
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleAsset",
@@ -1016,9 +1016,6 @@
                         {
                             "$ref": "#/components/parameters/server_host"
                         },
-                        {
-                            "$ref": "#/components/parameters/server_path"
-                        },
 			            {
                             "$ref": "#/components/parameters/server_user_agent"
                         },
@@ -1026,8 +1023,7 @@
                             "$ref": "#/components/parameters/server_accept_language"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
-                            "description":"info page"
+                            "$ref": "#/components/parameters/resource_id_string"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
@@ -1040,10 +1036,78 @@
                         {
                             "name":"type",
                             "in":"query",
-                            "required":true,
+                            "required":false,
                             "schema":{
                                 "type": "string"
                             }    
+                        },
+                        {
+                            "name":"content_type",
+                            "in":"query",
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }
+                ],
+                "responses": {
+                   	"oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
+        "/bff/app_id/v1/app-init/${IAM_data_app_id}": {
+            "get": {
+                "summary": "",
+                "operationId": "apps_common_src.common.commonAppInit",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_ip"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_host"
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_accept_language"
+                        },
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":false
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_data_app_id",
+                            "in":"path"
                         }
                 ],
                 "responses": {
@@ -5184,15 +5248,6 @@
             "server_method":{
                 "description":"Used to send method to microservice from server",
                 "name":	"method",
-                "in":"path",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "server_path":{
-                "description":"Used to send path",
-                "name":	"path",
                 "in":"path",
                 "required":true,
                 "schema":{
