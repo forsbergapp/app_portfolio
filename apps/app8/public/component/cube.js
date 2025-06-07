@@ -115,6 +115,8 @@ const template = props =>`  <div id='cube'>
  *                      common_app_id:number},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonWindowSetTimeout:CommonModuleCommon['commonWindowSetTimeout'],
+ *                      commonMiscImport:CommonModuleCommon['commonMiscImport'],
  *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
  *                      commonLovShow:CommonModuleCommon['commonLovShow'],
  *                      commonLovClose:CommonModuleCommon['commonLovClose'],
@@ -144,13 +146,13 @@ const component = async props => {
         solution:'💡',
         solution_list:'∞'
     };
-    const cube_lib = await import('./cube_lib.js');
+    const cube_lib = await props.methods.commonMiscImport('/component/cube_lib.js');
    
     /**
      * @returns {{cube:*, controls:*}}
      */
     const cube_init = () => {
-        const cube = new cube_lib.RubiksCube( props.data.cube_width);
+        const cube = new cube_lib.RubiksCube( props.data.cube_width, props.methods.commonWindowSetTimeout);
         cube.render();
         return {cube:cube, controls:new cube_lib.RubiksCubeControls('button_controls', cube)};
     };

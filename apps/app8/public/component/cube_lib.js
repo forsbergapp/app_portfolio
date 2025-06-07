@@ -19,15 +19,11 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT}  from '../../../common_types.js'
+ * @import {COMMON_DOCUMENT}  from '../../../common_types.js'
  */
 
 /**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
-
-const commonPath ='/common/js/common.js';
-/**@type{CommonModuleCommon} */
-const {commonWindowSetTimeout} = await import(commonPath);
 
 const WHITE='#ffffff', YELLOW='#ffff00' , GREEN='#009900' , BLUE='#006dbf', RED='#cc0000', ORANGE='#ff8000', CLEAR = '#000000';
 
@@ -666,8 +662,10 @@ class Cube  {
 class RubiksCube {
 	/**
 	 * @param {*} width
+     * @param {function} commonWindowSetTimeout
 	 */
-	constructor(width) {
+	constructor(width, commonWindowSetTimeout) {
+        this.commonWindowSetTimeout = commonWindowSetTimeout;
 		this.faceNames = ['L', 'U', 'D', 'B', 'F', 'R'];	
 		this.opposites = {
 			'F':'B',
@@ -738,9 +736,10 @@ class RubiksCube {
 	 * @description scramble
 	 * @method
 	 * @param {*} num
+     * @param {function} commonWindowSetTimeout
 	 * @returns {void}
 	 */
-	scramble = (num) => {
+	scramble = (num, commonWindowSetTimeout) => {
 		if(this.isSolvable()){
 			const moves = 'u d f b l r'.split(' ');
 			const me = this;
@@ -850,7 +849,7 @@ class RubiksCube {
 				me.makeNextMove();
 			}
 			else
-				commonWindowSetTimeout(() => {rotate();me.render()}, 10);
+                this.commonWindowSetTimeout(() => {rotate();me.render()}, 10);
 		};
 		rotate();
 	};

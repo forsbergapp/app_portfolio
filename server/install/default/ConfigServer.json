@@ -17,6 +17,7 @@
         {"HTTPS_CERT": "/ssl/fullchain.pem", "COMMENT": ""}
     ],
     "SERVICE_APP":[
+        {"APP_START_APP_ID": "2", "COMMENT": "start app id"},
         {"APP_COMMON_APP_ID": "0", "COMMENT": "common app id"},
         {"APP_ADMIN_APP_ID": "1", "COMMENT": "admin app id"},
         {"CACHE_CONTROL":"no-store", "COMMENT": "Cache control for assets except fonts, max-age value in milliseconds ex 1 hour = max-age=3600 or use any valid Cache-Control setting, default is to not cache anything"},
@@ -48,7 +49,7 @@
         {"ENABLE_GEOLOCATION": "0", "COMMENT": "0=NO, 1=YES, get geodata from clients and from chosen places in apps, client geodata is saved if enabled"},
         {"ENABLE_USER_REGISTRATION": "0", "COMMENT": "0=NO, 1=YES"},
         {"ENABLE_USER_LOGIN": "1", "COMMENT": "0=NO, 1=YES"},
-        {"CONTENT_SECURITY_POLICY": "default-src 'self';script-src 'self' 'unsafe-inline' blob:;script-src-attr 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline' blob:;font-src 'self';img-src * data: blob:;connect-src *;child-src 'self' blob:;object-src 'self' data:;frame-src 'self' data: ;base-uri 'self';form-action 'self';frame-ancestors 'self';upgrade-insecure-requests","COMMENT": "Content security policy"},
+        {"CONTENT_SECURITY_POLICY": "default-src 'self';script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:;script-src-attr 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline' blob:;font-src 'self';img-src * data: blob:;connect-src *;child-src 'self' blob:;object-src 'self' data:;frame-src 'self' data: ;base-uri 'self';form-action 'self';frame-ancestors 'self';upgrade-insecure-requests","COMMENT": "Content security policy"},
         {"RATE_LIMIT_WINDOW_MS": 60000, "COMMENT": "Milliseconds" },
         {"RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS":500, "COMMENT": "" },
         {"RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER":500, "COMMENT": "" },

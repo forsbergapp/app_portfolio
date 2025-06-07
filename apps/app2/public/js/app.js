@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {commonInitAppParameters, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {commonMetadata,commonInitAppParameters, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
  */
 
 /**@type{COMMON_DOCUMENT} */
@@ -273,15 +273,8 @@ const appException = error => {
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
-const appFrameworkSet = async (framework=null) => {
-    await common.commonFrameworkSet(framework,
-        {   Click: appEventClick,
-            Change: appEventChange,
-            KeyDown: null,
-            KeyUp: appEventKeyUp,
-            Focus: null,
-            Input:null});
-};
+const appFrameworkSet = async (framework=null) =>
+    await common.commonFrameworkSet(framework,appMetadata().events);
 /**
  * @name appInit
  * @description Init app
@@ -291,14 +284,6 @@ const appFrameworkSet = async (framework=null) => {
  */
 const appInit = async (parameters) => {
     parameters;
-    await appFrameworkSet();
-    //common app component
-    await common.commonComponentRender({mountDiv:   'common_app',
-                                        data:       {
-                                                    framework:      common.COMMON_GLOBAL.app_framework
-                                                    },
-                                        methods:    null,
-                                        path:       '/common/component/common_app.js'});
     appAppsGet();
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
@@ -323,35 +308,46 @@ const appInit = async (parameters) => {
             data:       null,
             methods:    null,
             path:       '/common/component/common_iam_avatar.js'}));
-    
-    
-    common.commonComponentRender({mountDiv:   'common_fonts',
-        data:       {
-                    font_default:   true,
-                    font_arabic:    true,
-                    font_asian:     true,
-                    font_prio1:     true,
-                    font_prio2:     true,
-                    font_prio3:     true
-                    },
-        methods:    null,
-        path:       '/common/component/common_fonts.js'});    
 };
 /**
  * @name appCommonInit
  * @description Init common
  * @function
  * @param {CommonModuleCommon} commonLib
- * @param {string} parameters 
+ * @param {function} start
+ * @param {commonInitAppParameters} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, parameters) => {        
+const appCommonInit = async (commonLib, start, parameters) => {        
     common = commonLib;
+    await start();
     COMMON_DOCUMENT.body.className = 'app_theme_sun';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
-    common.commonInit(parameters).then(decodedparameters=>{
-        appInit(decodedparameters);
-    });
+    appInit(parameters);
 };
-export{appCommonInit, appPreferencesPostMount};
+/**
+ * @returns {commonMetadata}
+ */
+const appMetadata = () =>{
+    return { 
+        events:{  
+            Click:   appEventClick,
+            Change:  appEventChange,
+            KeyDown: null,
+            KeyUp:   appEventKeyUp,
+            Focus:   null,
+            Input:   null},
+        fonts:{
+            font_default:   true,
+            font_arabic:    true,
+            font_asian:     true,
+            font_prio1:     true,
+            font_prio2:     true,
+            font_prio3:     true
+        }
+    };
+};
+
+export{appCommonInit, appPreferencesPostMount, appMetadata};
+export default appCommonInit;

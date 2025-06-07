@@ -3,7 +3,7 @@
  * @module apps/app4/component/dialogue_info
  */
 /**
- * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  */
 
 /**
@@ -19,7 +19,7 @@
  * }} props
  * @returns {string}
  */
-const template = props => ` <div id='about_logo' style='${props.about_logo==null?'':`background-image:url(${props.about_logo});`}'></div>
+const template = props => ` <div id='about_logo'></div>
                             <div id='app_copyright'>${props.app_copyright}</div>
                             <div id='app_link' class='common_link'>${props.app_link_title}</div>
                             <div id='info_link1' class='common_link'>${props.info_link1}</div>
@@ -40,7 +40,9 @@ const template = props => ` <div id='about_logo' style='${props.about_logo==null
  *                      info_link_disclaimer_name:string,
  *                      info_link_terms_name:string
  *                      },
- *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props 
+ *          methods:    {
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonMiscResourceFetch:CommonModuleCommon['commonMiscResourceFetch']}}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null,
  *                      methods:null, 
@@ -49,8 +51,14 @@ const template = props => ` <div id='about_logo' style='${props.about_logo==null
 const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
     props.methods.COMMON_DOCUMENT.querySelector('#dialogues').classList.add('common_dialogues_modal');
+    
+    const onMounted = ()=>{
+        props.methods.commonMiscResourceFetch( props.data.about_logo,
+                                                props.methods.COMMON_DOCUMENT.querySelector('#about_logo'), 
+                                                'image/png');
+    };
     return {
-        lifecycle:  null,
+        lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
         template:   template({  about_logo:props.data.about_logo,
