@@ -76,18 +76,14 @@ const test = async t =>
              *          ip:string,
              *          host:string,
              *          user_agent:string,
-             *          accept_language:string,
-             *          url:string,
-             *          query:*}}
+             *          accept_language:string,}}
              */
             const parameters = {
                 app_id:app_common.commonAppHost('localhost') ?? 0,
                 ip:'::1',
                 host:'localhost',
                 user_agent:'BDD test',
-                accept_language:'*',
-                url:'/',
-                query:null};
+                accept_language:'*'};
             await app_common.commonApp(parameters);
             
             test_running = false;

@@ -927,16 +927,14 @@ const commonAppInit = async parameters =>{
 
  /**
  * @name commonApp
- * @namespace ROUTE_APP
+ * @memberof ROUTE_APP
  * @description Get app 
  * @function
- * @param {{app_id:number|null,
+ * @param {{app_id:number,
  *          ip:string,
  *          host:string,
  *          user_agent:string,
- *          accept_language:string,
- *          url:string,
- *          query:*}} parameters
+ *          accept_language:string}} parameters
  * @returns {Promise.<server_server_response>}
  */
 const commonApp = async parameters =>{
@@ -951,63 +949,34 @@ const commonApp = async parameters =>{
                 sendfile:null,
                 type:'JSON'};
     else
-        switch (true){
-            //service worker
-            case (parameters.url == '/common_sw.js'):{
-                return await commonResourceFile({   app_id:parameters.app_id, 
-                                                    content_type:'text/javascript', 
-                                                    data_app_id:serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result[0].APP_COMMON_APP_ID) ??0,
-                                                    resource_id:'/common/js/common_sw.js'});
-            }
-            //font css that can contain font source links
-            case (parameters.url.startsWith('/common/css/font/font')):{
-                return await commonResourceFile({   app_id:parameters.app_id, 
-                    resource_id:parameters.url.replaceAll('~','/'), 
-                    content_type:'text/css',
-                    data_app_id: serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result[0].APP_COMMON_APP_ID) ??0});
-            }
-            //font src used in a font css
-            case (parameters.url.startsWith('/common/modules/fontawesome/webfonts/')):
-            case (parameters.url.startsWith('/common/css/font/')):{
-                return await commonResourceFile({   app_id:parameters.app_id, 
-                                                    resource_id:parameters.url.replaceAll('~','/'), 
-                                                    content_type:'',
-                                                    data_app_id: serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result[0].APP_COMMON_APP_ID) ??0});
-            }
-            case (parameters.url == '/'):{
-                if  (parameters.app_id != serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result) && 
-                        await commonAppStart(parameters.app_id) ==false)
-                    return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
-                else
-                    return await commonComponentCreate({app_id:parameters.app_id, 
-                                                        componentParameters:{
-                                                        ip:             parameters.ip, 
-                                                        user_agent:     parameters.user_agent,
-                                                        locale:         commonClientLocale(parameters.accept_language),
-                                                        host:           parameters.host},type:'APP'})
-                                        .catch(error=>{
-                                                                /**@ts-ignore */
-                                            return Log.post({   app_id:parameters.app_id, 
-                                                data:{  object:'LogAppError', 
-                                                        app:{   app_filename:serverUtilAppFilename(import.meta.url),
-                                                                app_function_name:'commonApp()',
-                                                                app_line:serverUtilAppLine()
-                                                        },
-                                                        log:error
-                                                    }
-                                                })
-                                            .then(()=>{
-                                                return import('./component/common_server_error.js')
-                                                    .then(({default:serverError})=>{
-                                                        return {result:serverError({data:null, methods:null}), type:'HTML'};
-                                                    });
+        if  (parameters.app_id != serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result) && 
+                await commonAppStart(parameters.app_id) ==false)
+            return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
+        else
+            return await commonComponentCreate({app_id:parameters.app_id, 
+                                                componentParameters:{
+                                                ip:             parameters.ip, 
+                                                user_agent:     parameters.user_agent,
+                                                locale:         commonClientLocale(parameters.accept_language),
+                                                host:           parameters.host},type:'APP'})
+                                .catch(error=>{
+                                                        /**@ts-ignore */
+                                    return Log.post({   app_id:parameters.app_id, 
+                                        data:{  object:'LogAppError', 
+                                                app:{   app_filename:serverUtilAppFilename(import.meta.url),
+                                                        app_function_name:'commonApp()',
+                                                        app_line:serverUtilAppLine()
+                                                },
+                                                log:error
+                                            }
+                                        })
+                                    .then(()=>{
+                                        return import('./component/common_server_error.js')
+                                            .then(({default:serverError})=>{
+                                                return {result:serverError({data:null, methods:null}), type:'HTML'};
                                             });
-                                        });
-            }
-            default:{
-                return {http:301, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'JSON'};
-            }
-        }
+                                    });
+                                });
 };
 
 /**

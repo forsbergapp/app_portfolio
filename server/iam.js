@@ -694,9 +694,8 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *          authorization: string,
  *          host: string,
  *          ip: string,
- *          res: server_server_res,
- *          next: function}} parameters 
- * @returns {Promise.<void>}
+ *          res: server_server_res}} parameters 
+ * @returns {Promise.<boolean>}
  */
  const iamAuthenticateUserCommon = async parameters  =>{
     const app_id_host = commonAppHost(parameters.host);
@@ -736,19 +735,20 @@ const iamAuthenticateUserAppDelete = async parameters => {
                     parameters.endpoint=='APP_EXTERNAL' ||
                     parameters.endpoint=='APP_ACCESS_EXTERNAL'||
                     parameters.endpoint=='MICROSERVICE_AUTH')
-                    parameters.next();
+                    return true;
                 else{
                     //validate parameters.endpoint, app_id and authorization
                     switch (true){
                         case parameters.endpoint=='IAM' && parameters.authorization.toUpperCase().startsWith('BASIC'):{
                             if (app_id_host=== app_id_admin)
-                                parameters.next();
+                                return true;
                             else
                                 if (serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVICE_IAM', parameter:'ENABLE_USER_LOGIN'}}).result)==1)
-                                    parameters.next();
-                                else
+                                    return true;
+                                else{
                                     iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-                            break;
+                                    return false;
+                                }
                         }
                         case parameters.endpoint=='ADMIN' && app_id_host== app_id_admin && parameters.authorization.toUpperCase().startsWith('BEARER'):
                         case parameters.endpoint=='APP_ACCESS_VERIFICATION' && parameters.authorization.toUpperCase().startsWith('BEARER'):
@@ -776,17 +776,20 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                                             //Authenticate the token string
                                                                             row.token                   == access_token
                                                                         )[0])
-                                    parameters.next();
-                                else
+                                    return true;
+                                else{
                                     iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
+                                    return false;
+                                }
+                                    
                             }
-                            else
+                            else{
                                 iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-                            break;
+                                return false;
+                            }
                         }
                         case parameters.endpoint=='IAM_SIGNUP' && serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVICE_IAM', parameter:'ENABLE_USER_REGISTRATION'}}).result)==1 && app_id_host!= app_id_admin:{
-                            parameters.next();
-                            break;
+                            return true;
                         }
                         case parameters.endpoint=='MICROSERVICE':{
                             const ServiceRegistry = await import('./db/ServiceRegistry.js');
@@ -826,29 +829,38 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                                             //Authenticate the token string
                                                                             row.token                   == microservice_token
                                                                         )[0])
-                                    parameters.next();
-                                else
+                                    return true;
+                                else{
                                     iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
+                                    return false;
+                                }
+                                    
                             }
-                            else
+                            else{
                                 iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-                            break;
+                                return false;
+                            }
                         }
                         default:{
                             iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-                            break;
+                            return false;
                         }
                     }
                 }
             }
-            else
+            else{
                 iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
+                return false;
+            }
         } catch (error) {
             iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
+            return false;
         }
     }
-    else
+    else{
         iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
+        return false;
+    }
 };
 
 /**

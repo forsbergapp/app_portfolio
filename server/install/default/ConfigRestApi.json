@@ -5081,6 +5081,14 @@
                 "type":"http",
                 "schema":"bearer"
             },
+            "AppId":{
+                "description":"Should be in all requests to identify app",
+                "type":"string"
+            },
+            "AppSignature":{
+                "description":"Should be in all requests to authenticate app",
+                "type":"string"
+            },
             "id-token":{
                 "description":"Created when app starts. Should be in all requests to protect all paths except for external and microservice requests. Syntax Bearer [app id token using base64]",
                 "type":"string"

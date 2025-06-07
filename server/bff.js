@@ -3,6 +3,7 @@
 /**
  * @import {server_iam_authenticate_request, 
  *          server_db_document_ConfigServer,
+ *          server_bff_endpoint_type,
  *          server_server_req, 
  *          server_server_res, 
  *          server_server_error, 
@@ -191,6 +192,7 @@ const bffStart = async (req, res) =>{
 };
 /**
  * @name bff
+ * @namespace ROUTE_APP
  * @description Backend for frontend (BFF) called from client
  *              Calls app including assets and info pages or REST API
  *              APP can request server shared modules or reports using REST API
@@ -199,100 +201,166 @@ const bffStart = async (req, res) =>{
  * @returns {Promise<*>}
  */
  const bff = async (bff_parameters) =>{
+    const iam = await import('./iam.js');
     /**@type{server_db_document_ConfigServer} */
     const configServer = ConfigServer.get({app_id:0}).result;
-
-    const app_id = app_common.commonAppHost((bff_parameters.host??'').substring(0,(bff_parameters.host??'').indexOf(':')==-1?
-                                                (bff_parameters.host??'').length:
-                                                    (bff_parameters.host??'').indexOf(':')));
     
-    if (app_id !=null){
-        serverUtilCompression(bff_parameters.res.req,bff_parameters.res);
-        if (bff_parameters.endpoint == 'APP' && 
-            bff_parameters.method.toUpperCase() == 'GET' && 
-            !bff_parameters.url?.startsWith(configServer.SERVER.filter(row=>'REST_RESOURCE_BFF' in row)[0].REST_RESOURCE_BFF + '/')){
-            //App route for app asset, common asset, app info page and app
-            serverResponse({app_id:app_id,
-                            result_request:await app_common.commonApp({  app_id:app_id,
-                                                        ip:bff_parameters.ip, 
-                                                        host:bff_parameters.host ?? '', 
-                                                        user_agent:bff_parameters.user_agent, 
-                                                        accept_language:bff_parameters.accept_language, 
-                                                        url:bff_parameters.url ?? '', 
-                                                        query:null})
-                                                    .then(result=>result?.http == 301?bff_parameters.res.redirect('/'):result),
-                            host:bff_parameters.host,
-                            route : 'APP',
-                            res:bff_parameters.res})
-            .catch((error)=>
-                Log.post({  app_id:app_id, 
-                    data:{  object:'LogServiceError', 
-                            service:{   service:bff_parameters.endpoint,
-                                        parameters:bff_parameters.query
-                                    },
-                            log:error
-                        }
-                    }).then(() =>
-                    import('../apps/common/src/component/common_server_error.js')
-                        .then(({default:serverError})=>{
-                            return {result:serverError({data:null, methods:null}), type:'HTML'};
-                        })));
-        }
-        else{
-            //REST API route
-            //REST API requests from client are encoded using base64
-            const decodedquery = bff_parameters.query?decodeURIComponent(Buffer.from(bff_parameters.query, 'base64').toString('utf-8')):'';   
-            const decodedbody = bff_parameters.body?.data?JSON.parse(decodeURIComponent(Buffer.from(bff_parameters.body.data, 'base64').toString('utf-8'))):'';   
-            
-            serverResponse({app_id:app_id,
-                            result_request:await serverREST_API({   app_id:app_id, 
-                                                                    endpoint:bff_parameters.endpoint,
-                                                                    method:bff_parameters.method.toUpperCase(), 
+    //all rest api starts with REST_RESOURCE_BFF parameter value (add '/')
+    const endpoint_role = bff_parameters.url.startsWith(configServer.SERVER.filter(parameter=>parameter.REST_RESOURCE_BFF)[0].REST_RESOURCE_BFF + '/')?
+                            (bff_parameters.url.split('/')[2]?.toUpperCase()):
+                                'APP';
+    const idToken = endpoint_role == 'APP'?
+                        '':
+                        //All external roles and microservice do not use AppId Token
+                        (bff_parameters.url.split('/')[2]?.toUpperCase().indexOf('EXTERNAL')>-1 ||
+                        bff_parameters.url.split('/')[2]?.toUpperCase().indexOf('MICROSERVICE')>-1)?
+                            '':
+                                bff_parameters.idToken?.replace('Bearer ',''); 
+
+    //use middleware to authenticate access before bff if not APP endpoint
+    if (endpoint_role == 'APP' || await iam.iamAuthenticateUserCommon({
+            idToken: idToken, 
+            /**@ts-ignore */
+            endpoint:endpoint_role,
+            authorization: bff_parameters.authorization??'', 
+            host: bff_parameters.host??'', 
+            ip: bff_parameters.ip
+            })){
+        const app_id = app_common.commonAppHost((bff_parameters.host??'').substring(0,(bff_parameters.host??'').indexOf(':')==-1?
+                                                        (bff_parameters.host??'').length:
+                                                            (bff_parameters.host??'').indexOf(':')));   
+        if (app_id !=null){
+            serverUtilCompression(bff_parameters.res.req,bff_parameters.res);
+            if (endpoint_role == 'APP' && 
+                bff_parameters.method.toUpperCase() == 'GET' && 
+                !bff_parameters.url?.startsWith(configServer.SERVER.filter(row=>'REST_RESOURCE_BFF' in row)[0].REST_RESOURCE_BFF + '/')){
+
+                switch (true){
+                    //font css that can contain font source links
+                    case (bff_parameters.url.startsWith('/common/css/font/font')):{
+                        const {commonResourceFile} = await import('../apps/common/src/common.js');
+                        serverResponse({app_id:app_id,
+                                        result_request: await commonResourceFile({   app_id:app_id, 
+                                                        resource_id:bff_parameters.url, 
+                                                        content_type:'text/css',
+                                                        data_app_id: serverUtilNumberValue(ConfigServer.get({app_id:app_id, 
+                                                                                                            data:{config_group:'SERVICE_APP', 
+                                                                                                                parameter:'APP_COMMON_APP_ID'}})
+                                                                                                                .result[0].APP_COMMON_APP_ID) ??0}),
+                                        host:bff_parameters.host,
+                                        route : 'APP',
+                                        res:bff_parameters.res});
+                        break;
+                    }
+                    //font src used in a font css
+                    case (bff_parameters.url.startsWith('/common/modules/fontawesome/webfonts/')):
+                    case (bff_parameters.url.startsWith('/common/css/font/')):{
+                        const {commonResourceFile} = await import('../apps/common/src/common.js');
+                        serverResponse({app_id:app_id,
+                                        result_request: await commonResourceFile({   app_id:app_id, 
+                                                                resource_id:bff_parameters.url, 
+                                                                content_type:'',
+                                                                data_app_id: serverUtilNumberValue(ConfigServer.get({app_id:app_id, 
+                                                                                                                    data:{config_group:'SERVICE_APP', 
+                                                                                                                    parameter:'APP_COMMON_APP_ID'}})
+                                                                                                                    .result[0].APP_COMMON_APP_ID) ??0}),
+                                                                host:bff_parameters.host,
+                                                                route : 'APP',
+                                                                res:bff_parameters.res});
+                        break;
+                    }
+                    case bff_parameters.url == '/':{
+                        //App route for app asset, common asset, app info page and app
+                        serverResponse({app_id:app_id,
+                                        result_request:await app_common.commonApp({  app_id:app_id,
                                                                     ip:bff_parameters.ip, 
                                                                     host:bff_parameters.host ?? '', 
-                                                                    url:bff_parameters.url ?? '',
                                                                     user_agent:bff_parameters.user_agent, 
-                                                                    accept_language:bff_parameters.accept_language, 
-                                                                    idToken:bff_parameters.idToken, 
-                                                                    authorization:bff_parameters.authorization ?? '', 
-                                                                    parameters:decodedquery, 
-                                                                    body:decodedbody,
-                                                                    res:bff_parameters.res})
-                                                    .then((/**@type{*}*/result_service) => {
-                                                        const log_result = serverUtilNumberValue(configServer.SERVICE_LOG.filter(row=>'REQUEST_LEVEL' in row)[0].REQUEST_LEVEL)==2?result_service:'✅';
-                                                        return Log.post({  app_id:app_id, 
-                                                            data:{  object:'LogServiceInfo', 
-                                                                    service:{   service:bff_parameters.endpoint,
-                                                                                parameters:bff_parameters.query
-                                                                            },
-                                                                    log:log_result
-                                                                }
-                                                            }).then(result_log=>result_log.http?result_log:result_service);
-                                                    })
-                                                    .catch((/**@type{server_server_error}*/error) => {
-                                                        return Log.post({  app_id:app_id, 
-                                                            data:{  object:'LogServiceError', 
-                                                                    service:{   service:bff_parameters.endpoint,
-                                                                                parameters:bff_parameters.query
-                                                                            },
-                                                                    log:error
-                                                                }
-                                                            }).then(() => {
-                                                            return {http:500, code:null, text:error, developerText:'bff', moreInfo:null, type:'JSON'};
-                                                        });
-                                                    }), 
-                            host:bff_parameters.host,
-                            route:'REST_API',
-                            method:bff_parameters.method, 
-                            decodedquery:decodedquery, 
-                            res:bff_parameters.res});
+                                                                    accept_language:bff_parameters.accept_language})
+                                                                .then(result=>result?.http == 301?bff_parameters.res.redirect('/'):result),
+                                        host:bff_parameters.host,
+                                        route : 'APP',
+                                        res:bff_parameters.res})
+                        .catch((error)=>
+                            Log.post({  app_id:app_id, 
+                                data:{  object:'LogServiceError', 
+                                        service:{   service:endpoint_role,
+                                                    parameters:bff_parameters.query
+                                                },
+                                        log:error
+                                    }
+                                }).then(() =>
+                                import('../apps/common/src/component/common_server_error.js')
+                                    .then(({default:serverError})=>{
+                                        return {result:serverError({data:null, methods:null}), type:'HTML'};
+                                    })));
+                        break;
+                    } 
+                    default:{
+                        //unknown appid, domain or subdomain, redirect to hostname
+                        bff_parameters.res?
+                        bff_parameters.res.redirect(`http://${configServer.SERVER.filter(row=>'HOST' in row)[0].HOST}:${configServer.SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT}`):
+                            null;
+                    }
+                }
+            }
+            else{
+                //REST API route
+                //REST API requests from client are encoded using base64
+                const decodedquery = bff_parameters.query?decodeURIComponent(Buffer.from(bff_parameters.query, 'base64').toString('utf-8')):'';   
+                const decodedbody = bff_parameters.body?.data?JSON.parse(decodeURIComponent(Buffer.from(bff_parameters.body.data, 'base64').toString('utf-8'))):'';   
+                
+                serverResponse({app_id:app_id,
+                                result_request:await serverREST_API({   app_id:app_id, 
+                                                                        /**@ts-ignore */
+                                                                        endpoint:endpoint_role,
+                                                                        method:bff_parameters.method.toUpperCase(), 
+                                                                        ip:bff_parameters.ip, 
+                                                                        host:bff_parameters.host ?? '', 
+                                                                        url:bff_parameters.url ?? '',
+                                                                        user_agent:bff_parameters.user_agent, 
+                                                                        accept_language:bff_parameters.accept_language, 
+                                                                        idToken:bff_parameters.idToken, 
+                                                                        authorization:bff_parameters.authorization ?? '', 
+                                                                        parameters:decodedquery, 
+                                                                        body:decodedbody,
+                                                                        res:bff_parameters.res})
+                                                        .then((/**@type{*}*/result_service) => {
+                                                            const log_result = serverUtilNumberValue(configServer.SERVICE_LOG.filter(row=>'REQUEST_LEVEL' in row)[0].REQUEST_LEVEL)==2?result_service:'✅';
+                                                            return Log.post({  app_id:app_id, 
+                                                                data:{  object:'LogServiceInfo', 
+                                                                        service:{   service:endpoint_role,
+                                                                                    parameters:bff_parameters.query
+                                                                                },
+                                                                        log:log_result
+                                                                    }
+                                                                }).then(result_log=>result_log.http?result_log:result_service);
+                                                        })
+                                                        .catch((/**@type{server_server_error}*/error) => {
+                                                            return Log.post({  app_id:app_id, 
+                                                                data:{  object:'LogServiceError', 
+                                                                        service:{   service:endpoint_role,
+                                                                                    parameters:bff_parameters.query
+                                                                                },
+                                                                        log:error
+                                                                    }
+                                                                }).then(() => {
+                                                                return {http:500, code:null, text:error, developerText:'bff', moreInfo:null, type:'JSON'};
+                                                            });
+                                                        }), 
+                                host:bff_parameters.host,
+                                route:'REST_API',
+                                method:bff_parameters.method, 
+                                decodedquery:decodedquery, 
+                                res:bff_parameters.res});
+            }
         }
-    }
-    else{
-        //unknown appid, domain or subdomain, redirect to hostname
-        bff_parameters.res?
-            bff_parameters.res.redirect(`http://${configServer.SERVER.filter(row=>'HOST' in row)[0].HOST}:${configServer.SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT}`):
-                null;
+        else{
+            //unknown appid, domain or subdomain, redirect to hostname
+            bff_parameters.res?
+                bff_parameters.res.redirect(`http://${configServer.SERVER.filter(row=>'HOST' in row)[0].HOST}:${configServer.SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT}`):
+                    null;
+        }
     }
 };
 
