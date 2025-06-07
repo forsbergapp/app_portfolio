@@ -731,20 +731,6 @@ const server = async () => {
                         break;
                     }
                     default:{
-                        //all rest api starts with REST_RESOURCE_BFF parameter value, add '/'
-                        const endpoint_role = req.url.startsWith(CONFIG_SERVER.filter(parameter=>parameter.REST_RESOURCE_BFF)[0].REST_RESOURCE_BFF + '/')?
-                                                    req.url.split('/')[2]?.toUpperCase():
-                                                        'APP';
-                        const ID_TOKEN_KEY ='id-token';
-                        const idToken =endpoint_role == 'APP'?
-                                        '':
-                                            //All external roles and microservice do not use AppId Token
-                                            (req.url.split('/')[2]?.toUpperCase().indexOf('EXTERNAL')>-1 ||
-                                                req.url.split('/')[2]?.toUpperCase().indexOf('MICROSERVICE')>-1)?
-                                                '':
-                                                    /**@ts-ignore */
-                                                    req.headers[ID_TOKEN_KEY]?.replace('Bearer ',''); 
-                        
                         /**@type{server_bff_parameters} */
                         const bff_parameters = {
                                                 //request
@@ -753,31 +739,18 @@ const server = async () => {
                                                 method: req.method,
                                                 query: req.query?.parameters ?? '',
                                                 body: req.body,
-                                                idToken:  idToken, 
+                                                AppId: req.headers['AppId'],
+                                                AppSignature: req.headers['AppSignature'],
+                                                idToken: req.headers['id-token'],
                                                 authorization:  req.headers.authorization, 
                                                 //metadata
                                                 ip: req.headers['x-forwarded-for'] || req.ip, 
                                                 user_agent: req.headers['user-agent'], 
                                                 accept_language: req.headers['accept-language'], 
                                                 //response
-                                                res: res,
-                                                /**@ts-ignore */
-                                                endpoint:endpoint_role
+                                                res: res
                                             };
-                        if (endpoint_role == 'APP')
-                            return await bff.bff(bff_parameters);
-                        else
-                            //use middleware to authenticate access before bff
-                            return (await import('./iam.js')).iamAuthenticateUserCommon({
-                                    idToken: idToken, 
-                                    /**@ts-ignore */
-                                    endpoint:endpoint_role,
-                                    authorization: req.headers.authorization, 
-                                    host: req.headers.host ?? '', 
-                                    ip: req.ip, 
-                                    res:res, next:()=>
-                                        bff.bff(bff_parameters)
-                                    });
+                        return bff.bff(bff_parameters);
                     }
                 }
             }

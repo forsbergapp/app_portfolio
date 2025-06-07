@@ -168,13 +168,14 @@
 /**
  * @description BFF server_bff_parameters
  * @typedef {{
- *          endpoint: server_bff_endpoint_type,
  *          host:string|null,
- *          url:string|null,
+ *          url:string,
  *          method: string,
  *          query: string,
  *          body:server_server_req['body'] & {type?:string, IAM_data_app_id?:number|null, data?:string},
  *          idToken:  server_server_req['headers']['id-token'], 
+ *          AppId:  server_server_req['headers']['AppId'], 
+ *          AppSignature:  server_server_req['headers']['AppSignature'], 
  *          authorization:string|null,
  *          ip: string,
  *          user_agent:string,
@@ -1365,6 +1366,8 @@
  * @property {string} query.parameters
  
  * @property {{ 'id-token':string,
+ *              AppId: number,
+ *              AppSignature:string,
  *              authorization: string, 
  *              connection:string,
  *              'user-agent': string, 
