@@ -26,8 +26,8 @@ const template = props =>`  <!DOCTYPE html>
                                                                 method: 'GET',
                                                                 headers: {
                                                                         'Connection': 'close',
-                                                                        'App-id': ${props.APP.id},
-                                                                        'App-Signature': 'App Signature',
+                                                                        'AppId': ${props.APP.id},
+                                                                        'AppSignature': 'App Signature',
                                                                         'id-token': 'Bearer ${props.app_idtoken}'
                                                                     }
                                                                 })
