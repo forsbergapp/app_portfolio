@@ -3751,7 +3751,7 @@ const commonMountApp = async (app_id, commonLib, parameters) =>{
                                     method:'GET', 
                                     authorization_type:'APP_ID'})
                             .then(app=>JSON.parse(app));
-
+    app.css==''?null:commonMiscResourceFetch(app.css, null, 'text/css').then(href=>COMMON_DOCUMENT.querySelector('#app_link_app_css').href =href);
     const {appMetadata, default:AppInit} = await commonMiscImport(app.js);
     /**@type{commonMetadata} */
     const appdata = appMetadata();
@@ -3785,7 +3785,7 @@ const commonMountApp = async (app_id, commonLib, parameters) =>{
     };
     AppInit(commonLib, start, parameters);
 
-    app.css==''?null:COMMON_DOCUMENT.querySelector('#app_link_app_css').href = await commonMiscResourceFetch(app.css, null, 'text/css');
+    
     app.css_report==''?null:COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(app.css_report, null, 'text/css');
 
     app.favicon_32x32==''?null:COMMON_DOCUMENT.querySelector('#app_link_favicon_32x32').href = await commonMiscResourceFetch(app.favicon_32x32, null, 'image/png');
