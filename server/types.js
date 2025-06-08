@@ -37,19 +37,21 @@
  * @property {string}       app_logo
  * @property {string}       app_idtoken
  * @property {string}       locale
- * @property {number}       admin_only
  * @property {string|null}  client_latitude
  * @property {string|null}  client_longitude
  * @property {string|null}  client_place
  * @property {string|null}  client_timezone
- * @property {number|null}  start_app_id
- * @property {number|null}  common_app_id
- * @property {number|null}  admin_app_id
- * @property {number}       framework
- * @property {number}       framework_messages
+ * @property {number|null}  app_start_app_id
+ * @property {number|null}  app_common_app_id
+ * @property {number|null}  app_admin_app_id
+ * @property {number}       app_toolbar_button_start
+ * @property {number}       app_toolbar_button_framework
+ * @property {number}       app_framework
+ * @property {number}       app_framework_messages
  * @property {string}       rest_resource_bff
  * @property {number}       rest_api_version
  * @property {number}       first_time
+ * @property {number}       admin_only
  */
 
 /**
@@ -803,14 +805,16 @@
 /** 
  * @description DB server_db_config_server_service_app
  * @memberof dbObjects
- * @typedef {{APP_START_APP_ID          :string,
- *            APP_COMMON_APP_ID         :string,
- *            APP_ADMIN_APP_ID          :string,
- *            CACHE_CONTROL             :string,
- *            CACHE_CONTROL_FONT        :string,
- *            FRAMEWORK                 :number,
- *            FRAMEWORK_MESSAGES        :number,
- *            LIMIT_RECORDS             :number}} server_db_config_server_service_app
+ * @typedef {{APP_START_APP_ID              :string,
+ *            APP_COMMON_APP_ID             :string,
+ *            APP_ADMIN_APP_ID              :string,
+ *            APP_TOOLBAR_BUTTON_START      :string,
+ *            APP_TOOLBAR_BUTTON_FRAMEWORK  :string,
+ *            APP_CACHE_CONTROL             :string,
+ *            APP_CACHE_CONTROL_FONT        :string,
+ *            APP_FRAMEWORK                 :number,
+ *            APP_FRAMEWORK_MESSAGES        :number,
+ *            APP_LIMIT_RECORDS             :number}} server_db_config_server_service_app
  */
 
 /** 

@@ -69,8 +69,8 @@ const serverResponse = async parameters =>{
      */
     const setType = type => {
         
-        const app_cache_control =       CONFIG_SERVICE_APP.filter(parameter=>parameter.CACHE_CONTROL)[0].CACHE_CONTROL;
-        const app_cache_control_font =  CONFIG_SERVICE_APP.filter(parameter=>parameter.CACHE_CONTROL_FONT)[0].CACHE_CONTROL_FONT;
+        const app_cache_control =       CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_CACHE_CONTROL)[0].APP_CACHE_CONTROL;
+        const app_cache_control_font =  CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_CACHE_CONTROL_FONT)[0].APP_CACHE_CONTROL_FONT;
         switch (type){
             case 'JSON':{
                 if (app_cache_control !='')
@@ -224,7 +224,7 @@ const serverResponse = async parameters =>{
                             }
                             //records limit in controlled by server, apps can not set limits
                                                                           
-                            const limit = serverUtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.LIMIT_RECORDS)[0].LIMIT_RECORDS??0);
+                            const limit = serverUtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS??0);
                             if (parameters.result_request.singleResource)
                                 //limit rows if single resource response contains rows
                                 parameters.res.write(JSON.stringify((typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?

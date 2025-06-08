@@ -54,7 +54,7 @@ const appEventClick = event => {
                                 mountDiv:   'app_page_secure_tab_content', 
                                 data:       {
                                             app_id:common.COMMON_GLOBAL.app_id,
-                                            common_app_id:common.COMMON_GLOBAL.common_app_id,
+                                            common_app_id:common.COMMON_GLOBAL.app_common_app_id,
                                             display_type:'MASTER_DETAIL_HORIZONTAL',
                                             master_path:'/app-common-module/ACCOUNT_STATEMENT',
                                             master_query:'fields=title,bank_account_balance,bank_account_number,bank_account_iban,currency,currency_name',
@@ -98,7 +98,7 @@ const appEventClick = event => {
                                 mountDiv:   'app_page_secure_tab_content', 
                                 data:       {
                                             app_id:common.COMMON_GLOBAL.app_id,
-                                            common_app_id:common.COMMON_GLOBAL.common_app_id,
+                                            common_app_id:common.COMMON_GLOBAL.app_common_app_id,
                                             display_type:'VERTICAL_KEY_VALUE',
                                             master_path:'/app-common-module/CUSTOMER_GET',
                                             master_query: 'fields=name,customer_type,address,city,country',
@@ -138,7 +138,7 @@ const appEventClick = event => {
                                 mountDiv:   'app_page_secure_tab_content', 
                                 data:       {
                                             app_id:common.COMMON_GLOBAL.app_id,
-                                            common_app_id:common.COMMON_GLOBAL.common_app_id,
+                                            common_app_id:common.COMMON_GLOBAL.app_common_app_id,
                                             display_type:'VERTICAL_KEY_VALUE',
                                             master_path:'/app-common-module/ACCOUNT_GET',
                                             master_query: 'fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa',
@@ -184,15 +184,15 @@ const appEventClick = event => {
                     break;
                 }
                 /* COMMON */
-                case 'common_toolbar_framework_js':{
+                case 'common_app_toolbar_framework_js':{
                    appFrameworkSet(1);
                     break;
                 }
-                case 'common_toolbar_framework_vue':{
+                case 'common_app_toolbar_framework_vue':{
                    appFrameworkSet(2);
                     break;
                 }
-                case 'common_toolbar_framework_react':{
+                case 'common_app_toolbar_framework_react':{
                    appFrameworkSet(3);
                     break;
                 }
@@ -400,7 +400,7 @@ const appPaymentRequestShow = async message =>{
                 mountDiv:   'common_dialogue_app_data_display', 
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id,
-                            common_app_id:common.COMMON_GLOBAL.common_app_id,
+                            common_app_id:common.COMMON_GLOBAL.app_common_app_id,
                             display_type:'VERTICAL_KEY_VALUE',
                             dialogue:true,
                             master_path:'/app-common-module/PAYMENT_REQUEST_GET',
@@ -460,7 +460,7 @@ const appSecureInit = () => {
         mountDiv:   'app_main_page', 
         data:       {
                     app_id:common.COMMON_GLOBAL.app_id,
-                    common_app_id:common.COMMON_GLOBAL.common_app_id,
+                    common_app_id:common.COMMON_GLOBAL.app_common_app_id,
                     iam_user_id:common.COMMON_GLOBAL.iam_user_id,
                     timezone:common.COMMON_GLOBAL.user_timezone,
                     locale:common.COMMON_GLOBAL.user_locale

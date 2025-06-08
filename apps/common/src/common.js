@@ -788,24 +788,25 @@ const commonComponentCreate = async parameters =>{
         case 'APP':{
             /**@type{server_apps_app_service_parameters} */
             const app_service_parameters = {   
-                app_id:                 parameters.app_id,
-                app_logo:               App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].logo,
-                app_idtoken:            idtoken ?? '',
-                locale:                 parameters.componentParameters.locale ?? '',
-                admin_only:             admin_only?1:0,
-                client_latitude:        result_geodata?.latitude,
-                client_longitude:       result_geodata?.longitude,
-                client_place:           result_geodata?.place ?? '',
-                client_timezone:        result_geodata?.timezone,
-                start_app_id:           serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID),
-                common_app_id:          common_app_id,
-                admin_app_id:           admin_app_id,
-                framework:              configServer.SERVICE_APP.filter(parameter=>'FRAMEWORK' in parameter)[0].FRAMEWORK,
-                framework_messages:     configServer.SERVICE_APP.filter(parameter=>'FRAMEWORK_MESSAGES' in parameter)[0].FRAMEWORK_MESSAGES,
-                                        
-                rest_resource_bff:      configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF,
-                rest_api_version:       configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION,
-                first_time:             count_user==0?1:0
+                app_id:                         parameters.app_id,
+                app_logo:                       App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].logo,
+                app_idtoken:                    idtoken ?? '',
+                locale:                         parameters.componentParameters.locale ?? '',
+                client_latitude:                result_geodata?.latitude,
+                client_longitude:               result_geodata?.longitude,
+                client_place:                   result_geodata?.place ?? '',
+                client_timezone:                result_geodata?.timezone,
+                app_start_app_id:               serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID),
+                app_common_app_id:              common_app_id,
+                app_admin_app_id:               admin_app_id,
+                app_toolbar_button_start:       serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START)??1,
+                app_toolbar_button_framework:   serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK)??1,
+                app_framework:                  serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK)??1,
+                app_framework_messages:         serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES)??1,
+                rest_resource_bff:              configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF,
+                rest_api_version:               configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION,
+                first_time:                     count_user==0?1:0,
+                admin_only:                     admin_only?1:0
             };
             /**@type{server_db_app_parameter_common} */
             const common_parameter = AppParameter.get({app_id:parameters.app_id, resource_id:common_app_id}).result[0];

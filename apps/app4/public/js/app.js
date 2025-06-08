@@ -651,7 +651,7 @@ const SettingShow = async (tab_selected) => {
                 mountDiv:   'settings_content',
                 data:       {
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
-                            common_app_id:common.COMMON_GLOBAL.common_app_id,
+                            common_app_id:common.COMMON_GLOBAL.app_common_app_id,
                             app_id:common.COMMON_GLOBAL.app_id,
                             user_locale:common.COMMON_GLOBAL.user_locale,
                             user_timezone:common.COMMON_GLOBAL.user_timezone},
@@ -691,7 +691,7 @@ const SettingShow = async (tab_selected) => {
             common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
-                            common_app_id:common.COMMON_GLOBAL.common_app_id,
+                            common_app_id:common.COMMON_GLOBAL.app_common_app_id,
                             app_id:common.COMMON_GLOBAL.app_id,
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
                             themes:APP_GLOBAL.themes},
@@ -1690,7 +1690,7 @@ const appEventClick = event => {
                         data:       {
                                     info:'URL',
                                     path:'/app-resource/' + common.COMMON_GLOBAL.info_link_policy_url,
-                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.common_app_id}`,
+                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
                                     method:'GET',
                                     authorization:'APP_ID'
                                     },
@@ -1704,7 +1704,7 @@ const appEventClick = event => {
                         data:       {
                                     info:'URL',
                                     path:'/app-resource/' + common.COMMON_GLOBAL.info_link_disclaimer_url,
-                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.common_app_id}`,
+                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
                                     method:'GET',
                                     authorization:'APP_ID'
                                     },
@@ -1718,7 +1718,7 @@ const appEventClick = event => {
                         data:       {
                                     info:'URL',
                                     path:'/app-resource/' + common.COMMON_GLOBAL.info_link_terms_url,
-                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.common_app_id}`,
+                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
                                     method:'GET',
                                     authorization:'APP_ID'
                                     },
@@ -1942,15 +1942,15 @@ const appEventClick = event => {
                     break;
                 }
                 //common
-                case 'common_toolbar_framework_js':{
+                case 'common_app_toolbar_framework_js':{
                    appFrameworkSet(1);
                     break;
                 }
-                case 'common_toolbar_framework_vue':{
+                case 'common_app_toolbar_framework_vue':{
                    appFrameworkSet(2);
                     break;
                 }
-                case 'common_toolbar_framework_react':{
+                case 'common_app_toolbar_framework_react':{
                    appFrameworkSet(3);
                     break;
                 }

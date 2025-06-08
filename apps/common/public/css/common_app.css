@@ -29,9 +29,10 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 .common_data_display_icon_ok::before{									        content:var(--common_app_icon_close) !important}
 
 /*Icons app*/
-#common_toolbar_framework_js::before{									        content:var(--common_app_icon_javascript)}
-#common_toolbar_framework_vue::before{									        content:var(--common_app_icon_vue)}
-#common_toolbar_framework_react::before{								        content:var(--common_app_icon_react)}
+#common_app_toolbar_start::before{									            content:var(--common_app_icon_start)}
+#common_app_toolbar_framework_js::before{									    content:var(--common_app_icon_javascript)}
+#common_app_toolbar_framework_vue::before{									    content:var(--common_app_icon_vue)}
+#common_app_toolbar_framework_react::before{								    content:var(--common_app_icon_react)}
 
 /*Icons broadcast*/
 #common_broadcast_close::before{										        content:var(--common_app_icon_broadcast_close)}
@@ -447,10 +448,15 @@ body.rtl{
 	inset-inline-start: calc(50% - 40px);
 }
 /*framework*/
-#common_toolbar_framework.show{
+#common_app_toolbar.show, 
+#common_app_toolbar .show{
 	display: flex;
+    justify-content: space-around;
 }
-#common_toolbar_framework{	
+#common_app_toolbar div{	
+	display: none;
+}
+#common_app_toolbar{	
 	display: none;
 	z-index: 100;
 	flex-direction: row;
@@ -461,7 +467,7 @@ body.rtl{
 	font-size: 1.5em;
 	margin-inline-start: calc(50% - calc(1.5em * 3/2));
 }
-#common_toolbar_framework .common_icon{
+#common_app_toolbar .common_icon{
 	cursor:pointer;
 	width: 1.25em;
 	text-align: center;
