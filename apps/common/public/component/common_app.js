@@ -11,13 +11,17 @@
  * @name template
  * @description Template
  * @function
- * @param {{framework:number}} props 
+ * @param {{    app_toolbar_button_start: number,
+ *              app_toolbar_button_framework: number,
+ *              app_framework:number}} props 
  * @returns {string}
  */
-const template = props =>`  <div id='common_toolbar_framework' ${props.framework==0?'class=\'show\'':''}>
-                                <div id='common_toolbar_framework_js' class='common_icon common_toolbar_button ${props.framework==0?'common_toolbar_selected':''}'></div>
-                                <div id='common_toolbar_framework_vue' class='common_icon common_toolbar_button'></div>
-                                <div id='common_toolbar_framework_react' class='common_icon common_toolbar_button'></div>
+const template = props =>`  <div id='common_app_toolbar' ${(props.app_toolbar_button_start==1 ||
+                                                            props.app_toolbar_button_framework==1)?'class=\'show\'':''}>
+                                <div id='common_app_toolbar_start' class='common_icon common_toolbar_button ${props.app_toolbar_button_start==1?'show':''}'></div>
+                                <div id='common_app_toolbar_framework_js' class='common_icon common_toolbar_button ${props.app_toolbar_button_framework==1?'show':''} ${props.app_framework==1?'common_toolbar_selected':''}'></div>
+                                <div id='common_app_toolbar_framework_vue' class='common_icon common_toolbar_button ${props.app_toolbar_button_framework==1?'show':''}'></div>
+                                <div id='common_app_toolbar_framework_react' class='common_icon common_toolbar_button ${props.app_toolbar_button_framework==1?'show':''}'></div>
                             </div>
                             <div id='common_dialogues'>
                                 <div id='common_dialogue_apps' class='common_dialogue_content'></div>
@@ -47,7 +51,9 @@ const template = props =>`  <div id='common_toolbar_framework' ${props.framework
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      framework: number},
+ *                      app_toolbar_button_start: number
+ *                      app_toolbar_button_framework: number
+ *                      app_framework: number},
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
@@ -61,7 +67,9 @@ const component = async props => {
         data:       null,
         methods:    null,
         template:   template({
-                        framework:      props.data.framework
+                        app_toolbar_button_start:       props.data.app_toolbar_button_start,
+                        app_toolbar_button_framework:   props.data.app_toolbar_button_framework,
+                        app_framework:                  props.data.app_framework
                     })
     };
 };

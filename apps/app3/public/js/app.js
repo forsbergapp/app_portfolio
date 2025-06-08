@@ -27,7 +27,7 @@ const show = async (href, title, documentType) =>{
     //common app component
     await common.commonComponentRender({mountDiv:   'content',
         data:       {
-                        common_app_id:common.COMMON_GLOBAL.common_app_id,
+                        common_app_id:common.COMMON_GLOBAL.app_common_app_id,
                         app_logo:common.COMMON_GLOBAL.app_logo,
                         app_copyright:common.COMMON_GLOBAL.app_copyright,
                         app_name:COMMON_DOCUMENT.title,
@@ -98,15 +98,15 @@ const appEventClick = event => {
                                 event_target_id=='title'?'GUIDE':event_target_id=='content'?'MODULE_CODE':common.commonMiscElementRow(event.target, 'app_menu_data').getAttribute('data-type'));
                     break;
                 }
-                case 'common_toolbar_framework_js':{
+                case 'common_app_toolbar_framework_js':{
                    appFrameworkSet(1);
                     break;
                 }
-                case 'common_toolbar_framework_vue':{
+                case 'common_app_toolbar_framework_vue':{
                    appFrameworkSet(2);
                     break;
                 }
-                case 'common_toolbar_framework_react':{
+                case 'common_app_toolbar_framework_react':{
                    appFrameworkSet(3);
                     break;
                 }
@@ -132,7 +132,7 @@ const appFrameworkSet = async (framework=null) =>
 const appInit = async () => {
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
-        data:       {app_id:common.COMMON_GLOBAL.common_app_id},
+        data:       {app_id:common.COMMON_GLOBAL.app_common_app_id},
         methods:    {commonFFB:common.commonFFB},
         path:       '/component/app.js'});
     //show first menu at start

@@ -91,15 +91,15 @@ const appEventClick = event => {
                     COMMON_DOCUMENT.querySelector('#totp_countdown_time').textContent=null;
                     break;
                 }
-                case 'common_toolbar_framework_js':{
+                case 'common_app_toolbar_framework_js':{
                    appFrameworkSet(1);
                     break;
                 }
-                case 'common_toolbar_framework_vue':{
+                case 'common_app_toolbar_framework_vue':{
                    appFrameworkSet(2);
                     break;
                 }
-                case 'common_toolbar_framework_react':{
+                case 'common_app_toolbar_framework_react':{
                    appFrameworkSet(3);
                     break;
                 }

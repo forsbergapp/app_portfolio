@@ -405,7 +405,7 @@ div.ray8 {
 	}
   }
 /*COMMON*/
-#common_toolbar_framework{
+#common_app_toolbar{
 	margin-inline-start: 0px !important;
 	bottom:0px !important;
 	top: unset !important;
@@ -734,7 +734,7 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_toolbar_selected{
 	background-color: var(--app_theme_list_selected_background_color) !important;
 }
-#common_toolbar_framework {
+#common_app_toolbar {
     color: var(--app_theme_main_branding_color1);
     background-color: var(--app_theme_main_branding_color3);
     box-shadow: 0px -3px 3px var(--app_theme_dialogue_boxshadow_color1);

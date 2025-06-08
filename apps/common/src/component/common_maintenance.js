@@ -149,7 +149,7 @@ const template = props =>`  <!DOCTYPE html>
                                                 common.commonComponentRemove('common_broadcast');
                                         });
                                         const decoded_parameters = JSON.parse(common.commonWindowFromBase64(parameters));
-                                        common.COMMON_GLOBAL.common_app_id= decoded_parameters.common_app_id;
+                                        common.COMMON_GLOBAL.app_common_app_id= decoded_parameters.app_common_app_id;
                                         common.COMMON_GLOBAL.app_id = decoded_parameters.app_id;
                                         common.COMMON_GLOBAL.app_function_exception = appException; 
                                         common.COMMON_GLOBAL.rest_resource_bff = decoded_parameters.rest_resource_bff;

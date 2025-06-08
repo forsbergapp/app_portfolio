@@ -151,7 +151,7 @@
 	}
 }
 /*COMMON*/
-#common_toolbar_framework{
+#common_app_toolbar{
     margin-inline-start: 230px !important;
 }
 #common_profile_input_row,
@@ -270,7 +270,7 @@ td, th{
 .common_toolbar_selected{
 	background-color: var(--common_app_color_blue1) !important;
 }
-#common_toolbar_framework {
+#common_app_toolbar {
     color: var(--common_app_color_black);
     background-color: var(--common_app_color_white1);
     box-shadow: 0px 0px 10px var(--common_app_color_shadow1);
