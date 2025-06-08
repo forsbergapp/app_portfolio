@@ -3750,12 +3750,7 @@ const commonMountApp = async (app_id, commonLib, parameters) =>{
     const app = await commonFFB({   path:`/app-init/${app_id}`, 
                                     method:'GET', 
                                     authorization_type:'APP_ID'})
-                    .then(app=>JSON.parse(app));
-    
-    app.css==''?null:COMMON_DOCUMENT.querySelector('#app_link_app_css').href = await commonMiscResourceFetch(app.css, null, 'text/css');
-    app.css_report==''?null:COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(app.css_report, null, 'text/css');
-    app.favicon_32x32==''?null:COMMON_DOCUMENT.querySelector('#app_link_favicon_32x32').href = await commonMiscResourceFetch(app.favicon_32x32, null, 'image/png');
-    app.favicon_192x192==''?null:COMMON_DOCUMENT.querySelector('#app_link_favicon_192x192').href = await commonMiscResourceFetch(app.favicon_192x192, null, 'image/png');
+                            .then(app=>JSON.parse(app));
 
     const {appMetadata, default:AppInit} = await commonMiscImport(app.js);
     /**@type{commonMetadata} */
@@ -3789,6 +3784,12 @@ const commonMountApp = async (app_id, commonLib, parameters) =>{
                                 path:       '/common/component/common_fonts.js'});
     };
     AppInit(commonLib, start, parameters);
+
+    app.css==''?null:COMMON_DOCUMENT.querySelector('#app_link_app_css').href = await commonMiscResourceFetch(app.css, null, 'text/css');
+    app.css_report==''?null:COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(app.css_report, null, 'text/css');
+
+    app.favicon_32x32==''?null:COMMON_DOCUMENT.querySelector('#app_link_favicon_32x32').href = await commonMiscResourceFetch(app.favicon_32x32, null, 'image/png');
+    app.favicon_192x192==''?null:COMMON_DOCUMENT.querySelector('#app_link_favicon_192x192').href = await commonMiscResourceFetch(app.favicon_192x192, null, 'image/png');
 };
 /**
  * @returns {CommonModuleCommon}
