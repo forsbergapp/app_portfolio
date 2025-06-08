@@ -3,6 +3,11 @@
  */
 
 /**
+ * @import {server_db_table_App, server_db_table_AppParameter, 
+ *          server_apps_info_parameters}  from '../../../../server/types.js'
+ */
+   
+/**
  * @name template
  * @description Template
  * @function
@@ -58,20 +63,21 @@ const template = props =>`  <!DOCTYPE html>
  * @name component
  * @description Component
  * @function
- * @param {{data:       {APP:import('../../../../server/types.js').server_db_table_App, APP_PARAMETERS:string},
+ * @param {{data:       {   App:            server_db_table_App, 
+ *                          AppParameters:  server_db_table_AppParameter,
+ *                          Info:           server_apps_info_parameters},
  *        methods:    null}} props 
  * @returns {Promise.<string>}
  */
 const component = async props =>{
-    const INFO = JSON.parse(Buffer.from(props.data.APP_PARAMETERS, 'base64').toString('utf-8')).INFO;
-    const rest_resource_bff = INFO.rest_resource_bff;
-    const rest_api_version = INFO.rest_api_version;
     const base64= Buffer.from ('content_type=text/javascript&IAM_data_app_id=0').toString('base64');
-    const commonFetch = `${rest_resource_bff}/app_id/v${rest_api_version}/app-resource/~common~js~common.js?parameters=${base64}`;
-    return template({   commonFetch: commonFetch, 
-                        app_idtoken: INFO.app_idtoken,
-                        app_start_app_id:props.data.APP.id, //INFO.app_start_app_id,
-                        APP:props.data.APP, 
-                        APP_PARAMETERS:props.data.APP_PARAMETERS});
+    return template({   app_idtoken: props.data.Info.app_idtoken,
+                        app_start_app_id:props.data.App.id, //INFO.app_start_app_id,
+                        commonFetch: `${props.data.Info.rest_resource_bff}/app_id/v${props.data.Info.rest_api_version}/app-resource/~common~js~common.js?parameters=${base64}`,
+                        APP:props.data.App, 
+                        APP_PARAMETERS:Buffer.from(JSON.stringify({ 
+                            AppParametersCommon:props.data.AppParameters,
+                            Info:props.data.Info
+                        })).toString('base64')});
 };
 export default component;

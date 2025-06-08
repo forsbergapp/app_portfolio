@@ -2,7 +2,7 @@
  * @module apps/common/common
  */
 
-/** @import {commonInitAppParameters, commonMetadata, CommonModuleCommon} from '../../../common_types.js' */
+/** @import {commonAppInit, commonInitAppParameters, commonMetadata, CommonModuleCommon} from '../../../common_types.js' */
 
 /**@type{import('../../../common_types.js').COMMON_WINDOW} */
 const COMMON_WINDOW = window;
@@ -3210,82 +3210,7 @@ const commonEventCommonRemove = () => {
     COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('touchstart', commonEventInputDisable);
 
 };
-/**
- * @name 
- * 
- * @description Set app service parameters
- * @function
- * @param {commonInitAppParameters['INFO']} parameters 
- * @returns {void}
- */
-const commonInitParametersInfoSet = parameters => {
-    //app info
-    COMMON_GLOBAL.app_id = parameters.app_id;
-    COMMON_GLOBAL.app_logo = parameters.app_logo;
 
-    //app parameters
-    COMMON_GLOBAL.app_common_app_id= parameters.app_common_app_id;
-    COMMON_GLOBAL.app_admin_app_id= parameters.app_admin_app_id;
-    COMMON_GLOBAL.app_toolbar_button_start = parameters.app_toolbar_button_start;
-    COMMON_GLOBAL.app_toolbar_button_framework = parameters.app_toolbar_button_framework;
-    COMMON_GLOBAL.app_framework = parameters.app_framework;
-    COMMON_GLOBAL.app_framework = parameters.app_framework;
-    COMMON_GLOBAL.app_framework_messages = parameters.app_framework_messages;
-
-    //server parameters
-    COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
-    COMMON_GLOBAL.app_rest_api_version = parameters.rest_api_version;
-    
-    //client credentials
-    COMMON_GLOBAL.token_dt = parameters.app_idtoken;
-
-    //user info
-    COMMON_GLOBAL.iam_user_app_id = null;
-    COMMON_GLOBAL.iam_user_id = null;
-    COMMON_GLOBAL.iam_user_username = null;
-    COMMON_GLOBAL.admin_only = parameters.admin_only;
-    COMMON_GLOBAL.admin_first_time = parameters.first_time;
-
-    //client info
-    COMMON_GLOBAL.client_latitude  = parameters.client_latitude;
-    COMMON_GLOBAL.client_longitude = parameters.client_longitude;
-    COMMON_GLOBAL.client_place     = parameters.client_place;
-    COMMON_GLOBAL.client_timezone  = parameters.client_timezone==''?null:parameters.client_timezone;
-    
-    if (COMMON_GLOBAL.admin_only==0){
-        commonUserPreferencesGlobalSetDefault('LOCALE');
-        commonUserPreferencesGlobalSetDefault('TIMEZONE');
-        commonUserPreferencesGlobalSetDefault('DIRECTION');
-        commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
-    }
-
-    COMMON_GLOBAL.user_locale                = parameters.locale;
-    COMMON_GLOBAL.user_timezone              = parameters.client_timezone ?? COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone;
-    COMMON_GLOBAL.user_direction             = '';
-    COMMON_GLOBAL.user_arabic_script         = '';  
-};
-/**
- * @name commonInitParametersAppSet
- * @description Set app parameters
- *              Set common parameters and common app parameters 
- * @function
- * @param {import('../../../common_types.js').commonInitAppParameters['APP']} app_parameters 
- * @param {import('../../../common_types.js').commonInitAppParameters['COMMON']} common_parameters 
- * @returns {void}
- */
-const commonInitParametersAppSet = (app_parameters, common_parameters) => {
-    COMMON_GLOBAL.info_link_policy_name = common_parameters.common_info_link_policy_name.value;
-    COMMON_GLOBAL.info_link_policy_url = common_parameters.common_info_link_policy_url.value;
-    COMMON_GLOBAL.info_link_disclaimer_name = common_parameters.common_info_link_disclaimer_name.value;
-    COMMON_GLOBAL.info_link_disclaimer_url = common_parameters.common_info_link_disclaimer_url.value;
-    COMMON_GLOBAL.info_link_terms_name = common_parameters.common_info_link_terms_name.value;
-    COMMON_GLOBAL.info_link_terms_url = common_parameters.common_info_link_terms_url.value;
-   
-    COMMON_GLOBAL.app_copyright = app_parameters.app_copyright;
-    COMMON_GLOBAL.app_link_url = app_parameters.app_link_url;
-    COMMON_GLOBAL.app_link_title = app_parameters.app_link_title;
-    COMMON_GLOBAL.app_text_edit = app_parameters.app_text_edit;
-};
 /**
  * @name commonFrameworkMount
  * @description Mount app using Vue or React framework
@@ -3748,18 +3673,26 @@ const custom_framework = () => {
 /**
  * @name commonMountApp
  * @description Mount app
- * @param {CommonModuleCommon} commonLib
  * @param {number} app_id
- * @param {import('../../../common_types.js').commonInitAppParameters} parameters
  * @returns {Promise.<void>}
  */
-const commonMountApp = async (app_id, commonLib, parameters) =>{   
-    const app = await commonFFB({   path:`/app-init/${app_id}`, 
+const commonMountApp = async (app_id) =>{   
+    /**@type{commonAppInit} */
+    const CommonAppInit = await commonFFB({   path:`/app-init/${app_id}`, 
                                     method:'GET', 
                                     authorization_type:'APP_ID'})
                             .then(app=>JSON.parse(app));
-    app.css==''?null:commonMiscResourceFetch(app.css, null, 'text/css').then(href=>COMMON_DOCUMENT.querySelector('#app_link_app_css').href =href);
-    const {appMetadata, default:AppInit} = await commonMiscImport(app.js);
+    COMMON_GLOBAL.app_id =          CommonAppInit.App.id;
+    COMMON_GLOBAL.app_logo =        CommonAppInit.App.logo;
+    COMMON_GLOBAL.app_copyright =   CommonAppInit.App.copyright;
+    COMMON_GLOBAL.app_link_url =    CommonAppInit.App.link_url;
+    COMMON_GLOBAL.app_link_title =  CommonAppInit.App.link_title;
+    COMMON_GLOBAL.app_text_edit =   CommonAppInit.App.text_edit;
+
+    CommonAppInit.App.css==''?
+        null:
+            commonMiscResourceFetch(CommonAppInit.App.css, null, 'text/css').then(href=>COMMON_DOCUMENT.querySelector('#app_link_app_css').href =href);
+    const {appMetadata, default:AppInit} = await commonMiscImport(CommonAppInit.App.js);
     /**@type{commonMetadata} */
     const appdata = appMetadata();
     const start = async () =>{
@@ -3769,36 +3702,20 @@ const commonMountApp = async (app_id, commonLib, parameters) =>{
                 KeyDown: appdata.events.KeyDown,
                 KeyUp: appdata.events.KeyUp,
                 Focus: appdata.events.Focus,
-                Input:appdata.events.Input});
-        //common app component
-        await commonComponentRender({   mountDiv:   'common_app',
-                                        data:       {
-                                                    app_toolbar_button_start:       COMMON_GLOBAL.app_toolbar_button_start,
-                                                    app_toolbar_button_framework:   COMMON_GLOBAL.app_toolbar_button_framework,
-                                                    app_framework:                  COMMON_GLOBAL.app_framework
-                                                    },
-                                        methods:    null,
-                                        path:       '/common/component/common_app.js'});
-        
-        commonComponentRender({ mountDiv:   'common_fonts',
-                                data:       {
-                                            font_default:   appdata.fonts.font_default,
-                                            font_arabic:    appdata.fonts.font_arabic,
-                                            font_asian:     appdata.fonts.font_asian,
-                                            font_prio1:     appdata.fonts.font_prio1,
-                                            font_prio2:     appdata.fonts.font_prio2,
-                                            font_prio3:     appdata.fonts.font_prio3
-                                            },
-                                methods:    null,
-                                path:       '/common/component/common_fonts.js'});
+                Input:appdata.events.Input,
+                Other:appdata.events.Other});    
     };
-    AppInit(commonLib, start, parameters);
+    AppInit(commonGet(), start, CommonAppInit.AppParameter);
 
-    
-    app.css_report==''?null:COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(app.css_report, null, 'text/css');
-
-    app.favicon_32x32==''?null:COMMON_DOCUMENT.querySelector('#app_link_favicon_32x32').href = await commonMiscResourceFetch(app.favicon_32x32, null, 'image/png');
-    app.favicon_192x192==''?null:COMMON_DOCUMENT.querySelector('#app_link_favicon_192x192').href = await commonMiscResourceFetch(app.favicon_192x192, null, 'image/png');
+    CommonAppInit.App.css_report==''?
+        null:
+            COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(CommonAppInit.App.css_report, null, 'text/css');
+    CommonAppInit.App.favicon_32x32==''?
+        null:
+            COMMON_DOCUMENT.querySelector('#app_link_favicon_32x32').href = await commonMiscResourceFetch(CommonAppInit.App.favicon_32x32, null, 'image/png');
+    CommonAppInit.App.favicon_192x192==''?
+        null:
+            COMMON_DOCUMENT.querySelector('#app_link_favicon_192x192').href = await commonMiscResourceFetch(CommonAppInit.App.favicon_192x192, null, 'image/png');
 };
 /**
  * @returns {CommonModuleCommon}
@@ -3900,19 +3817,57 @@ const commonGet = () =>{
 const commonInit = async (start_app_id, parameters) => {
     /**
      * Encoded parameters
-     * @type {import('../../../common_types.js').commonInitAppParameters}
+     * @type {commonInitAppParameters}
      */
     const decoded_parameters = JSON.parse(commonWindowFromBase64(parameters));
+    
+    //Config Server	
+    COMMON_GLOBAL.rest_resource_bff =               decoded_parameters.Info.rest_resource_bff;
+    COMMON_GLOBAL.app_rest_api_version =            decoded_parameters.Info.rest_api_version;
+
+    //Config ServiceApp
+    COMMON_GLOBAL.app_common_app_id=                decoded_parameters.Info.app_common_app_id;
+    COMMON_GLOBAL.app_admin_app_id=                 decoded_parameters.Info.app_admin_app_id;
+    COMMON_GLOBAL.app_toolbar_button_start =        decoded_parameters.Info.app_toolbar_button_start;
+    COMMON_GLOBAL.app_toolbar_button_framework =    decoded_parameters.Info.app_toolbar_button_framework;
+    COMMON_GLOBAL.app_framework =                   decoded_parameters.Info.app_framework;
+    COMMON_GLOBAL.app_framework_messages =          decoded_parameters.Info.app_framework_messages;
+    COMMON_GLOBAL.admin_only =                      decoded_parameters.Info.admin_only;
+    COMMON_GLOBAL.admin_first_time =                decoded_parameters.Info.first_time;
+    //AppParameter common
+    COMMON_GLOBAL.info_link_policy_name =           decoded_parameters.AppParametersCommon.common_info_link_policy_name.value;
+    COMMON_GLOBAL.info_link_policy_url =            decoded_parameters.AppParametersCommon.common_info_link_policy_url.value;
+    COMMON_GLOBAL.info_link_disclaimer_name =       decoded_parameters.AppParametersCommon.common_info_link_disclaimer_name.value;
+    COMMON_GLOBAL.info_link_disclaimer_url =        decoded_parameters.AppParametersCommon.common_info_link_disclaimer_url.value;
+    COMMON_GLOBAL.info_link_terms_name =            decoded_parameters.AppParametersCommon.common_info_link_terms_name.value;
+    COMMON_GLOBAL.info_link_terms_url =             decoded_parameters.AppParametersCommon.common_info_link_terms_url.value;
+    //User
+    COMMON_GLOBAL.token_dt =                        decoded_parameters.Info.app_idtoken;
+    COMMON_GLOBAL.client_latitude  =                decoded_parameters.Info.client_latitude;
+    COMMON_GLOBAL.client_longitude =                decoded_parameters.Info.client_longitude;
+    COMMON_GLOBAL.client_place     =                decoded_parameters.Info.client_place;
+    COMMON_GLOBAL.client_timezone  =                decoded_parameters.Info.client_timezone==''?
+                                                        null:
+                                                            decoded_parameters.Info.client_timezone;
+
+    commonUserPreferencesGlobalSetDefault('LOCALE');
+    commonUserPreferencesGlobalSetDefault('TIMEZONE');
+    commonUserPreferencesGlobalSetDefault('DIRECTION');
+    commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
+
     setUserAgentAttributes();
     custom_framework();
-    if (COMMON_GLOBAL.app_id ==null){
-        commonInitParametersInfoSet(decoded_parameters.INFO);
-        commonInitParametersAppSet(decoded_parameters.APP, decoded_parameters.COMMON);
-        commonEventCommonAdd();
-    }
-    await commonSocketConnectOnline();
-    const commonLib = commonGet();
-    commonMountApp(start_app_id, commonLib, decoded_parameters);
+    commonSocketConnectOnline();
+    await commonComponentRender({   mountDiv:   'common_app',
+        data:       {
+                    app_toolbar_button_start:       COMMON_GLOBAL.app_toolbar_button_start,
+                    app_toolbar_button_framework:   COMMON_GLOBAL.app_toolbar_button_framework,
+                    app_framework:                  COMMON_GLOBAL.app_framework
+                    },
+        methods:    null,
+        path:       '/common/component/common_app.js'});
+
+    commonMountApp(start_app_id);
 };
 export{/* GLOBALS*/
        COMMON_GLOBAL, 

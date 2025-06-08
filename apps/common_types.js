@@ -22,7 +22,6 @@
  *  CommonRESTAPIAuthorizationType
  *  CommonAppRecord
  *  commonInitAppParameters
- *  CommonAppParametersRecord
  *  CommonAppDataRecord
  *  CommonAppModulesRecord
  *  CommonAppModuleMetadata
@@ -296,15 +295,7 @@
  *                  KeyUp:function|null,
  *                  Focus:function|null,
  *                  Input:function|null,
- *                  Other?:function|null}
- *              fonts:{
- *                  font_default:boolean,
- *                  font_arabic:boolean,
- *                  font_asian:boolean,
- *                  font_prio1:boolean,
- *                  font_prio2:boolean,
- *                  font_prio3:boolean,
- *              }}} commonMetadata
+ *                  Other?:function|null}}} commonMetadata
  */
 /**
  * @description Type CommonRESTAPIMethod
@@ -342,14 +333,7 @@
  */
 /**
  * @description Type commonInitAppParameters
- * @typedef {{  APP:    {
- *                      app_id:                             number,
- *                      app_text_edit:                      string,
- *                      app_copyright:                      string,
- *                      app_link_title:                     string,
- *                      app_link_url:                       string
- *                      },
- *              COMMON: {
+ * @typedef {{  AppParametersCommon: {
  *                      app_id?:                             number,
  *                      common_info_link_policy_name:        {value:string},
  *                      common_info_link_policy_url:         {value:string},
@@ -358,11 +342,9 @@
  *                      common_info_link_terms_name:         {value:string},
  *                      common_info_link_terms_url:          {value:string}
  *                      },
- *              INFO:   {
+ *              Info:   {
  *                      app_id:                         number,
- *                      app_logo:                       string,
  *                      app_idtoken:                    string,
- *                      locale:                         string,
  *                      client_latitude:                string,
  *                      client_longitude:               string,
  *                      client_place:                   string,
@@ -380,6 +362,24 @@
  *                      admin_only:                     1|0
  *                      }
  *          }} commonInitAppParameters
+ */
+/**
+ * @description Type commonAppInit
+ * @typedef {{App:{
+ *                  id:CommonAppRecord['id'],
+ *                  name:CommonAppRecord['name'],
+ *                  js:CommonAppRecord['js'],
+ *                  css:CommonAppRecord['css'],
+ *                  css_report:CommonAppRecord['css_report'],
+ *                  favicon_32x32:CommonAppRecord['favicon_32x32'],
+ *                  favicon_192x192:CommonAppRecord['favicon_192x192'],
+ *                  logo:CommonAppRecord['logo'],
+ *                  copyright:CommonAppRecord['copyright'],
+ *                  link_url:CommonAppRecord['link_url'],
+ *                  link_title:CommonAppRecord['link_title'],
+ *                  text_edit:CommonAppRecord['text_edit']
+ *                  },
+ *          AppParameter:Object.<string,*>}} commonAppInit
  */
 /**
  * @description Type CommonAppDataRecord

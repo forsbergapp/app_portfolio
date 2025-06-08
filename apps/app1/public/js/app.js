@@ -3,7 +3,7 @@
  * @module apps/app1/app
  */
 /**
- * @import {commonMetadata, commonInitAppParameters, CommonAppEvent, CommonRESTAPIMethod, CommonModuleCommon, COMMON_DOCUMENT}  from '../../../common_types.js'
+ * @import {commonMetadata, CommonAppEvent, CommonRESTAPIMethod, CommonModuleCommon, COMMON_DOCUMENT}  from '../../../common_types.js'
  */
 
 /**@type{COMMON_DOCUMENT} */
@@ -1187,11 +1187,9 @@ const appFrameworkSet = async (framework=null) =>
  * @name appInit
  * @description App init
  * @function
- * @param {commonInitAppParameters} parameters 
  * @returns {Promise.<void>}
  */
-const appInit = async (parameters) => {
-    parameters;
+const appInit = async () => {
     await common.commonDialogueShow('LOGIN_ADMIN');
 };    
 /**
@@ -1200,17 +1198,17 @@ const appInit = async (parameters) => {
  * @function
  * @param {CommonModuleCommon} commonLib
  * @param {function} start
- * @param {commonInitAppParameters} parameters 
+ * @param {Object.<string,*>} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, start, parameters) => {        
+const appCommonInit = async (commonLib, start, parameters) => {
+    parameters;
     common = commonLib;
     await start();
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appLogout;
-    appInit(parameters);
-    
+    appInit();
 };
 /**
  * @returns {commonMetadata}
@@ -1223,15 +1221,7 @@ const appMetadata = () =>{
             KeyDown: appEventKeyDown,
             KeyUp:   appEventKeyUp,
             Focus:   appEventFocus,
-            Input:   appEventInput},
-        fonts:{
-            font_default:   true,
-            font_arabic:    true,
-            font_asian:     true,
-            font_prio1:     true,
-            font_prio2:     true,
-            font_prio3:     true
-        }
+            Input:   appEventInput}
     };
 };
 export { appCommonInit, appSecureDialogueSendBroadcastShow, appMetadata }; 
