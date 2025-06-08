@@ -7,7 +7,7 @@
  * @description Template
  * @function
  * @param {{app_idtoken:string,
- *          start_app_id: number,
+ *          app_start_app_id: number,
  *          commonFetch:string,
  *          APP:import('../../../../server/types.js').server_db_table_App, 
  *          APP_PARAMETERS:string}} props
@@ -36,7 +36,7 @@ const template = props =>`  <!DOCTYPE html>
                                                                                             {type: 'text/javascript'}))))
                                                         .catch(error=>document.write(error));
                                     (await commonFetch('${props.commonFetch}'))
-                                        .commonInit(${props.start_app_id} ,
+                                        .commonInit(${props.app_start_app_id} ,
                                                     '${props.APP_PARAMETERS}');
                                 </script>
                                 <link id="app_link_app_css"         rel='stylesheet'  type='text/css'     href=''/>
@@ -70,8 +70,7 @@ const component = async props =>{
     const commonFetch = `${rest_resource_bff}/app_id/v${rest_api_version}/app-resource/~common~js~common.js?parameters=${base64}`;
     return template({   commonFetch: commonFetch, 
                         app_idtoken: INFO.app_idtoken,
-                        start_app_id:props.data.APP.id, //INFO.start_app_id,
-                        
+                        app_start_app_id:props.data.APP.id, //INFO.app_start_app_id,
                         APP:props.data.APP, 
                         APP_PARAMETERS:props.data.APP_PARAMETERS});
 };

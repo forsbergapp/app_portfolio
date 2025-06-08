@@ -112,15 +112,15 @@ const appEventClick = (event=null) => {
                     APP_GLOBAL.cube_controls.cube.scramble(null, common.commonWindowSetTimeout);
                     break;
                 }
-                case 'common_toolbar_framework_js':{
+                case 'common_app_toolbar_framework_js':{
                    appFrameworkSet(1);
                     break;
                 }
-                case 'common_toolbar_framework_vue':{
+                case 'common_app_toolbar_framework_vue':{
                    appFrameworkSet(2);
                     break;
                 }
-                case 'common_toolbar_framework_react':{
+                case 'common_app_toolbar_framework_react':{
                    appFrameworkSet(3);
                     break;
                 }
@@ -224,7 +224,7 @@ const appInit = async () => {
         data:       {
                     cube_width:APP_GLOBAL.width,
                     app_id:common.COMMON_GLOBAL.app_id,
-                    common_app_id:common.COMMON_GLOBAL.common_app_id
+                    common_app_id:common.COMMON_GLOBAL.app_common_app_id
                     },
         methods:    {
                     commonWindowSetTimeout:common.commonWindowSetTimeout,

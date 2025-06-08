@@ -2,7 +2,7 @@
  * @module apps/common/common
  */
 
-/** @import {commonMetadata, CommonModuleCommon} from '../../../common_types.js' */
+/** @import {commonInitAppParameters, commonMetadata, CommonModuleCommon} from '../../../common_types.js' */
 
 /**@type{import('../../../common_types.js').COMMON_WINDOW} */
 const COMMON_WINDOW = window;
@@ -12,16 +12,18 @@ const COMMON_DOCUMENT = document;
 
 /**@type{import('../../../common_types.js').CommonGlobal} */
 const COMMON_GLOBAL = {
-    common_app_id:0,
-    admin_app_id:1,
     app_id:null,
     app_logo:null,
     app_copyright:null,
     app_link_url:null,
     app_link_title:null,
     app_text_edit:null,
-    app_framework:null,
-    app_framework_messages:null,
+    app_common_app_id:0,
+    app_admin_app_id:1,
+    app_toolbar_button_start:1,
+    app_toolbar_button_framework:1,
+    app_framework:1,
+    app_framework_messages:1,
     app_rest_api_version:null,
     app_root:'app_root',
     app_div:'app',
@@ -217,7 +219,7 @@ const commonMiscImport = async (url, appModule=false) =>{
                 {url:url,
                  component:await commonFFB({    path: appModule?url:('/app-resource/' + url.replaceAll('/','~')), 
                                                 query:appModule?'':`content_type=${'text/javascript'}&IAM_data_app_id=${url.startsWith('/common')?
-                                                                                COMMON_GLOBAL.common_app_id:
+                                                                                COMMON_GLOBAL.app_common_app_id:
                                                                                     COMMON_GLOBAL.app_id}`, 
                                                 method:'GET', 
                                                 response_type:'BLOB',
@@ -606,7 +608,7 @@ const commonMiscResourceFetch = async (url,element, content_type )=>{
                                     url:
                                         await commonFFB({   path:'/app-resource/' + url.replaceAll('/','~'), 
                                                             query:`content_type=${content_type}&IAM_data_app_id=${url.startsWith('/common')?
-                                                                                            COMMON_GLOBAL.common_app_id:
+                                                                                            COMMON_GLOBAL.app_common_app_id:
                                                                                                 COMMON_GLOBAL.app_id}`, 
                                                             method:'GET', 
                                                             //images use base64 strings
@@ -1106,7 +1108,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                 commonComponentRender({
                     mountDiv:   'common_dialogue_iam_verify',
                     data:       {
-                                    common_app_id:              COMMON_GLOBAL.common_app_id,
+                                    common_app_id:              COMMON_GLOBAL.app_common_app_id,
                                     iam_user_id:                COMMON_GLOBAL.iam_user_id,
                                     user_verification_type:     user_verification_type
                                 },
@@ -1135,7 +1137,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                 data:           {
                                 type:               null,
                                 app_id:             COMMON_GLOBAL.app_id,
-                                admin_app_id:       COMMON_GLOBAL.admin_app_id,
+                                admin_app_id:       COMMON_GLOBAL.app_admin_app_id,
                                 admin_only: 		COMMON_GLOBAL.admin_only,
                                 admin_first_time:   COMMON_GLOBAL.admin_first_time
                                 },
@@ -1150,7 +1152,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                 data:           {
                                 type:               dialogue,
                                 app_id:             COMMON_GLOBAL.app_id,
-                                admin_app_id:       COMMON_GLOBAL.admin_app_id,
+                                admin_app_id:       COMMON_GLOBAL.app_admin_app_id,
                                 admin_only: 		COMMON_GLOBAL.admin_only,
                                 admin_first_time:   COMMON_GLOBAL.admin_first_time
                                 },
@@ -1323,7 +1325,7 @@ const commonLovShow = parameters => {
     commonComponentRender({
         mountDiv:   'common_dialogue_lov',
         data:       {
-                    common_app_id:COMMON_GLOBAL.common_app_id,  
+                    common_app_id:COMMON_GLOBAL.app_common_app_id,  
                     app_id:COMMON_GLOBAL.app_id,  
                     user_locale:COMMON_GLOBAL.user_locale,
                     lov:parameters.lov,
@@ -1588,7 +1590,7 @@ const commonProfileUpdateStat = async () => {
 const commonUserLogin = async () => {
     let spinner_item = '';
     let current_dialogue = '';
-    if (COMMON_GLOBAL.admin_app_id == COMMON_GLOBAL.app_id) {
+    if (COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id) {
         spinner_item = 'common_dialogue_iam_start_login_admin_button';
         current_dialogue = 'common_dialogue_iam_start';
         if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
@@ -1614,10 +1616,10 @@ const commonUserLogin = async () => {
     const result_iam = await commonFFB({path:'/server-iam-login', 
                                         method:'POST', 
                                         authorization_type:'IAM', 
-                                        username:encodeURI(COMMON_GLOBAL.admin_app_id == COMMON_GLOBAL.app_id?
+                                        username:encodeURI(COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id?
                                                             COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_username').textContent:
                                                                 COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_username').textContent),
-                                        password:encodeURI(COMMON_GLOBAL.admin_app_id == COMMON_GLOBAL.app_id?
+                                        password:encodeURI(COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id?
                                                             COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password').textContent:
                                                                 COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password').textContent),
                                         spinner_id:spinner_item});
@@ -1628,7 +1630,7 @@ const commonUserLogin = async () => {
         COMMON_GLOBAL.token_exp =               JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat =               JSON.parse(result_iam).iat;
 
-        if (COMMON_GLOBAL.admin_app_id == COMMON_GLOBAL.app_id){
+        if (COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id){
             COMMON_GLOBAL.token_admin_at= JSON.parse(result_iam).token_at;
             COMMON_GLOBAL.token_at	    = null;
             commonComponentRemove(current_dialogue, true);
@@ -1731,7 +1733,7 @@ const commonUserLogin = async () => {
 const commonUserLogout = async () => {
     await commonFFB({path:'/server-iam-logout', 
                     method:'DELETE', 
-                    authorization_type:(COMMON_GLOBAL.app_id == COMMON_GLOBAL.admin_app_id)?'ADMIN':'APP_ACCESS'})
+                    authorization_type:(COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id)?'ADMIN':'APP_ACCESS'})
             .catch(()=>{
                 //ignore error since token can be expired
                 null;
@@ -1749,7 +1751,7 @@ const commonLogout = async () => {
     commonComponentRemove('common_dialogue_user_menu');
     commonWindoInfoClose();
     commonComponentRemove('common_dialogue_iam_verify');
-    if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.admin_app_id){
+    if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.app_admin_app_id){
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= 'url()';
@@ -1804,7 +1806,7 @@ const commonUserUpdate = async (totp=null) => {
 
             commonFFB({ path:`/server-iam/iamuser/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
                         method:'PATCH', 
-                        authorization_type:COMMON_GLOBAL.app_id==COMMON_GLOBAL.admin_app_id?'ADMIN':'APP_ACCESS', 
+                        authorization_type:COMMON_GLOBAL.app_id==COMMON_GLOBAL.app_admin_app_id?'ADMIN':'APP_ACCESS', 
                         body:{  username:           username,
                                 password:           password,
                                 password_new:       password_new==''?null:password_new,
@@ -1997,8 +1999,8 @@ const commonUserMessageShowStat = async () =>{
             method:'POST', 
             body:{  type:'FUNCTION', 
                     IAM_iam_user_id:COMMON_GLOBAL.iam_user_id,
-                    IAM_data_app_id:COMMON_GLOBAL.common_app_id},
-            authorization_type:COMMON_GLOBAL.app_id == COMMON_GLOBAL.admin_app_id?'ADMIN':'APP_ACCESS'})
+                    IAM_data_app_id:COMMON_GLOBAL.app_common_app_id},
+            authorization_type:COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id?'ADMIN':'APP_ACCESS'})
             .then((/**@type{*}*/result)=>JSON.parse(result).rows[0]);
         if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count'))
             COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count').textContent = `${messageStat.unread}(${messageStat.unread+messageStat.read})`;
@@ -2098,7 +2100,7 @@ const commonModuleLeafletInit = async parameters => {
     const module_leaflet_control = await commonComponentRender({
         mountDiv:   null, 
         data:       {   
-                    data_app_id:COMMON_GLOBAL.common_app_id,
+                    data_app_id:COMMON_GLOBAL.app_common_app_id,
                     user_locale:COMMON_GLOBAL.user_locale,
                     locale:COMMON_GLOBAL.user_locale,
                     longitude:parameters.longitude,
@@ -2152,7 +2154,7 @@ const commonFFB = async parameter => {
     parameter.query = parameter.query==null?'':parameter.query;
     parameter.body = parameter.body?parameter.body:null;
     //admin uses ADMIN instead of APP_ACCESS so all ADMIN requests use separate admin token
-    const ROLE = (COMMON_GLOBAL.app_id == COMMON_GLOBAL.admin_app_id && parameter.authorization_type =='APP_ACCESS')?
+    const ROLE = (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id && parameter.authorization_type =='APP_ACCESS')?
                     'ADMIN':parameter.authorization_type;
     switch (ROLE){
         case 'APP_ID':
@@ -2387,7 +2389,7 @@ const socketReconnect = () => {
  * @returns {Promise.<void>}
  */
 const commonSocketConnectOnline = async () => {
-    const  authorization_type= (COMMON_GLOBAL.token_at && COMMON_GLOBAL.admin_app_id == COMMON_GLOBAL.app_id)?
+    const  authorization_type= (COMMON_GLOBAL.token_at && COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id)?
                                     'ADMIN':
                                         COMMON_GLOBAL.token_at?'APP_ACCESS':'APP_ID';
    commonFFB({path:'/server-socket/socket', method:'POST', authorization_type:authorization_type})
@@ -2477,7 +2479,7 @@ const commonMicroserviceWorldcitiesSearch = async (event_function) =>{
     commonComponentRender({
         mountDiv:   'common_module_leaflet_search_list_wrap',
         data:       {
-                    data_app_id:COMMON_GLOBAL.common_app_id,
+                    data_app_id:COMMON_GLOBAL.app_common_app_id,
                     search:COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').textContent
                     },
         methods:    {
@@ -2546,7 +2548,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
                                                 path:'/app-common-module/COMMON_LOCALE', 
                                                 query:`locale=${COMMON_GLOBAL.user_locale}`, 
                                                 method:'POST', authorization_type:'APP_ID',
-                                                body:{type:'FUNCTION',IAM_data_app_id : COMMON_GLOBAL.common_app_id}
+                                                body:{type:'FUNCTION',IAM_data_app_id : COMMON_GLOBAL.app_common_app_id}
                                             })
                                             .then((/**@type{string}*/result)=>JSON.parse(commonWindowFromBase64(JSON.parse(result).rows[0].data))),
                     path:null,
@@ -2676,7 +2678,7 @@ const commonEvent = async (event_type,event=null) =>{
                             commonComponentRender({
                             mountDiv:   'common_dialogue_info',
                             data:       {
-                                        common_app_id:COMMON_GLOBAL.common_app_id,
+                                        common_app_id:COMMON_GLOBAL.app_common_app_id,
                                         app_copyright:COMMON_GLOBAL.app_copyright,
                                         app_link_url:COMMON_GLOBAL.app_link_url,
                                         app_link_title:COMMON_GLOBAL.app_link_title,
@@ -2715,7 +2717,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 data:       {
                                             info:'URL',
                                             path:'/app-resource/' + COMMON_GLOBAL.info_link_policy_url,
-                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.common_app_id}`,
+                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
                                             method:'GET',
                                             authorization:'APP_ID'
                                             },
@@ -2729,7 +2731,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 data:       {
                                             info:'URL',
                                             path:'/app-resource/' + COMMON_GLOBAL.info_link_disclaimer_url,
-                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.common_app_id}`,
+                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
                                             method:'GET',
                                             authorization:'APP_ID'
                                             },
@@ -2743,7 +2745,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 data:       {
                                             info:'URL',
                                             path:'/app-resource/' + COMMON_GLOBAL.info_link_terms_url,
-                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.common_app_id}`,
+                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
                                             method:'GET',
                                             authorization:'APP_ID'
                                             },
@@ -2817,8 +2819,8 @@ const commonEvent = async (event_type,event=null) =>{
                                             app_id:COMMON_GLOBAL.app_id,
                                             iam_user_id:COMMON_GLOBAL.iam_user_id,
                                             iam_user_username:COMMON_GLOBAL.iam_user_username,
-                                            common_app_id:COMMON_GLOBAL.common_app_id,
-                                            admin_app_id:COMMON_GLOBAL.admin_app_id,
+                                            common_app_id:COMMON_GLOBAL.app_common_app_id,
+                                            admin_app_id:COMMON_GLOBAL.app_admin_app_id,
                                             token_exp:COMMON_GLOBAL.token_exp,
                                             token_iat:COMMON_GLOBAL.token_iat,
                                             user_locale:COMMON_GLOBAL.user_locale,
@@ -3023,10 +3025,14 @@ const commonEvent = async (event_type,event=null) =>{
                             await COMMON_GLOBAL.moduleLeaflet.methods.eventClickSearchList(event.target);
                             break;
                         }
-                        case 'common_toolbar_framework_js':
-                        case 'common_toolbar_framework_vue':
-                        case 'common_toolbar_framework_react':{
-                            COMMON_DOCUMENT.querySelectorAll('#common_toolbar_framework .common_toolbar_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_toolbar_selected'));
+                        // common app toolbar
+                        case 'common_app_toolbar_start':{
+                             break;
+                         }
+                        case 'common_app_toolbar_framework_js':
+                        case 'common_app_toolbar_framework_vue':
+                        case 'common_app_toolbar_framework_react':{
+                            COMMON_DOCUMENT.querySelectorAll('#common_app_toolbar .common_toolbar_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_toolbar_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
                             break;
                         }    
@@ -3209,25 +3215,27 @@ const commonEventCommonRemove = () => {
  * 
  * @description Set app service parameters
  * @function
- * @param {*} parameters 
+ * @param {commonInitAppParameters['INFO']} parameters 
  * @returns {void}
  */
 const commonInitParametersInfoSet = parameters => {
     //app info
-    COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
-    COMMON_GLOBAL.admin_app_id= parseInt(parameters.admin_app_id);
     COMMON_GLOBAL.app_id = parameters.app_id;
     COMMON_GLOBAL.app_logo = parameters.app_logo;
-   
-    //rest 
-    COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
-    COMMON_GLOBAL.app_rest_api_version = parseInt(parameters.rest_api_version);
-    
-    //framework
-    COMMON_GLOBAL.app_framework = parseInt(parameters.framework);
-    COMMON_GLOBAL.app_framework_messages = parseInt(parameters.framework_messages);
-    
 
+    //app parameters
+    COMMON_GLOBAL.app_common_app_id= parameters.app_common_app_id;
+    COMMON_GLOBAL.app_admin_app_id= parameters.app_admin_app_id;
+    COMMON_GLOBAL.app_toolbar_button_start = parameters.app_toolbar_button_start;
+    COMMON_GLOBAL.app_toolbar_button_framework = parameters.app_toolbar_button_framework;
+    COMMON_GLOBAL.app_framework = parameters.app_framework;
+    COMMON_GLOBAL.app_framework = parameters.app_framework;
+    COMMON_GLOBAL.app_framework_messages = parameters.app_framework_messages;
+
+    //server parameters
+    COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
+    COMMON_GLOBAL.app_rest_api_version = parameters.rest_api_version;
+    
     //client credentials
     COMMON_GLOBAL.token_dt = parameters.app_idtoken;
 
@@ -3238,7 +3246,6 @@ const commonInitParametersInfoSet = parameters => {
     COMMON_GLOBAL.admin_only = parameters.admin_only;
     COMMON_GLOBAL.admin_first_time = parameters.first_time;
 
-   
     //client info
     COMMON_GLOBAL.client_latitude  = parameters.client_latitude;
     COMMON_GLOBAL.client_longitude = parameters.client_longitude;
@@ -3451,7 +3458,7 @@ const commonFrameworkSet = async (framework, events) => {
 
     //app can override framework or use default javascript if Vue or React is not set
     if (framework ?? COMMON_GLOBAL.app_framework !=COMMON_GLOBAL.app_framework)
-        COMMON_GLOBAL.app_framework = framework;
+        COMMON_GLOBAL.app_framework = framework ??1;
     switch (framework ?? COMMON_GLOBAL.app_framework){
         case 2:{
             //Vue
@@ -3766,7 +3773,9 @@ const commonMountApp = async (app_id, commonLib, parameters) =>{
         //common app component
         await commonComponentRender({   mountDiv:   'common_app',
                                         data:       {
-                                                    framework:      COMMON_GLOBAL.app_framework
+                                                    app_toolbar_button_start:       COMMON_GLOBAL.app_toolbar_button_start,
+                                                    app_toolbar_button_framework:   COMMON_GLOBAL.app_toolbar_button_framework,
+                                                    app_framework:                  COMMON_GLOBAL.app_framework
                                                     },
                                         methods:    null,
                                         path:       '/common/component/common_app.js'});
