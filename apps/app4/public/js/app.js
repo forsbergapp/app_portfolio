@@ -3,7 +3,7 @@
  * @module apps/app4/app
  */
 /**
- * @import {commonMetadata, commonInitAppParameters, CommonAppEvent, CommonRESTAPIMethod, CommonComponentResult, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {commonMetadata, CommonAppEvent, CommonRESTAPIMethod, CommonComponentResult, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
  * @import {APP_PARAMETERS, APP_user_setting_data, APP_user_setting_record, APP_REPORT_day_user_account_app_data_posts, APP_REPORT_settings, APP_GLOBAL, 
  *          CommonModuleLibTimetable, APP_user_setting} from './types.js'
  */
@@ -75,6 +75,7 @@ const APP_USER_SETTINGS_EMPTY = {current_id:0,
 
 /**@type{APP_GLOBAL} */
 const APP_GLOBAL = {
+    description:null,
     app_default_startup_page:0,
     app_report_timetable:'',
 
@@ -184,7 +185,7 @@ const appReportTimetableSettings = () => {
                 calendartype        	: setting_global.regional_calendar_type,
                 calendar_hijri_type 	: setting_global.regional_calendar_hijri_type,
 
-                place               	: place?place.text:setting_global.description,
+                place               	: place?place.text:setting_global.description ??'',
                 gps_lat             	: setting_global.gps_lat_text,
                 gps_long            	: setting_global.gps_long_text,
 
@@ -254,7 +255,7 @@ const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, sett
             for (const setting of APP_GLOBAL.user_settings.data){
                 current_user_settings.push(
                 {
-                description : setting.json_data.description,
+                description : setting.json_data.description??'',
                 regional_language_locale : setting.json_data.regional_language_locale,
                 regional_timezone : setting.json_data.regional_timezone,
                 regional_number_system : setting.json_data.regional_number_system,
@@ -357,7 +358,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
     if (theme?.type =='day' || theme==null){
         const current_user_settings = APP_GLOBAL.user_settings.data.map(setting=>{
             return {
-                description : setting.json_data.description,
+                description : setting.json_data.description??'',
                 regional_language_locale : setting.json_data.regional_language_locale,
                 regional_timezone : setting.json_data.regional_timezone,
                 regional_number_system : setting.json_data.regional_number_system,
@@ -1200,7 +1201,7 @@ const appUserSettingFunction = async (function_name, add_settings=true) => {
    
     if (common.commonMiscInputControl(null,{
                                     check_valid_list_values:[
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description??'',null],
                                                 [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text?.toString()??'',null],
                                                 [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text?.toString()??'',null],
                                                 [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_1_text,null],
@@ -2211,7 +2212,7 @@ const appFrameworkSet = async (framework=null) =>
  * @name appInit
  * @description Init app
  * @function
- * @param {commonInitAppParameters & {APP:APP_PARAMETERS}} parameters 
+ * @param {APP_PARAMETERS} parameters 
  * @returns {Promise.<void>}
  */
 const appInit = async parameters => {
@@ -2245,68 +2246,68 @@ const appInit = async parameters => {
     appPaperZoom();
     //set app and report globals
     appLibTimetable.APP_REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright ?? '';
-    APP_GLOBAL.app_default_startup_page = parseInt(parameters.APP.app_default_startup_page.value);
-    APP_GLOBAL.app_report_timetable = parameters.APP.app_report_timetable.value;
+    APP_GLOBAL.app_default_startup_page = parseInt(parameters.app_default_startup_page.value);
+    APP_GLOBAL.app_report_timetable = parameters.app_report_timetable.value;
 
-    appLibTimetable.APP_REPORT_GLOBAL.regional_def_calendar_lang = parameters.APP.app_regional_default_calendar_lang.value;
-    appLibTimetable.APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parameters.APP.app_regional_default_locale_ext_prefix.value;
-    appLibTimetable.APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parameters.APP.app_regional_default_locale_ext_number_system.value;
-    appLibTimetable.APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parameters.APP.app_regional_default_locale_ext_calendar.value;
-    appLibTimetable.APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parameters.APP.app_regional_default_calendar_type_greg.value;
-    appLibTimetable.APP_REPORT_GLOBAL.regional_def_calendar_number_system = parameters.APP.app_regional_default_calendar_number_system.value;
+    appLibTimetable.APP_REPORT_GLOBAL.regional_def_calendar_lang = parameters.app_regional_default_calendar_lang.value;
+    appLibTimetable.APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parameters.app_regional_default_locale_ext_prefix.value;
+    appLibTimetable.APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parameters.app_regional_default_locale_ext_number_system.value;
+    appLibTimetable.APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parameters.app_regional_default_locale_ext_calendar.value;
+    appLibTimetable.APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parameters.app_regional_default_calendar_type_greg.value;
+    appLibTimetable.APP_REPORT_GLOBAL.regional_def_calendar_number_system = parameters.app_regional_default_calendar_number_system.value;
 
-    APP_GLOBAL.regional_default_direction = parameters.APP.app_regional_default_direction.value;
-    APP_GLOBAL.regional_default_locale_second = parameters.APP.app_regional_default_locale_second.value;
-    APP_GLOBAL.regional_default_arabic_script = parameters.APP.app_regional_default_arabic_script.value;
-    APP_GLOBAL.regional_default_calendartype = parameters.APP.app_regional_default_calendartype.value;
-    APP_GLOBAL.regional_default_calendar_hijri_type = parameters.APP.app_regional_default_calendar_hijri_type.value;
-    APP_GLOBAL.gps_default_place_id = parseInt(parameters.APP.app_gps_default_place_id.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_title = parameters.APP.app_gps_module_leaflet_qibbla_title.value;
-    APP_GLOBAL.gps_module_leaflet_qibbla_text_size = parseFloat(parameters.APP.app_gps_module_leaflet_qibbla_text_size.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_lat = parseFloat(parameters.APP.app_gps_module_leaflet_qibbla_lat.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_long = parseFloat(parameters.APP.app_gps_module_leaflet_qibbla_long.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_color = parameters.APP.app_gps_module_leaflet_qibbla_color.value;
-    APP_GLOBAL.gps_module_leaflet_qibbla_width = parseFloat(parameters.APP.app_gps_module_leaflet_qibbla_width.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_opacity = parseFloat(parameters.APP.app_gps_module_leaflet_qibbla_opacity.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_title = parameters.APP.app_gps_module_leaflet_qibbla_old_title.value;
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size = parseFloat(parameters.APP.app_gps_module_leaflet_qibbla_old_text_size.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_lat = parseFloat(parameters.APP.app_gps_module_leaflet_qibbla_old_lat.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_long = parseFloat(parameters.APP.app_gps_module_leaflet_qibbla_old_long.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_color = parameters.APP.app_gps_module_leaflet_qibbla_old_color.value;
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_width = parseFloat(parameters.APP.app_gps_module_leaflet_qibbla_old_width.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity = parseFloat(parameters.APP.app_gps_module_leaflet_qibbla_old_opacity.value);
-    APP_GLOBAL.design_default_theme_day = parameters.APP.app_design_default_theme_day.value;
-    APP_GLOBAL.design_default_theme_month = parameters.APP.app_design_default_theme_month.value;
-    APP_GLOBAL.design_default_theme_year = parameters.APP.app_design_default_theme_year.value;
-    APP_GLOBAL.design_default_papersize = parameters.APP.app_design_default_papersize.value;
-    APP_GLOBAL.design_default_highlight_row = parameters.APP.app_design_default_highlight_row.value;
-    APP_GLOBAL.design_default_show_weekday = (parameters.APP.app_design_default_show_weekday.value=== true);
-    APP_GLOBAL.design_default_show_calendartype = (parameters.APP.app_design_default_show_calendartype.value=== true);
-    APP_GLOBAL.design_default_show_notes = (parameters.APP.app_design_default_show_notes.value=== true);
-    APP_GLOBAL.design_default_show_gps = (parameters.APP.app_design_default_show_gps.value=== true);
-    APP_GLOBAL.design_default_show_timezone = (parameters.APP.app_design_default_show_timezone.value=== true);
-    APP_GLOBAL.text_default_reporttitle1 = parameters.APP.app_text_default_reporttitle1.value;
-    APP_GLOBAL.text_default_reporttitle2 = parameters.APP.app_text_default_reporttitle2.value;
-    APP_GLOBAL.text_default_reporttitle3 = parameters.APP.app_text_default_reporttitle3.value;
-    APP_GLOBAL.text_default_reportfooter1 = parameters.APP.app_text_default_reportfooter1.value;
-    APP_GLOBAL.text_default_reportfooter2 = parameters.APP.app_text_default_reportfooter2.value;
-    APP_GLOBAL.text_default_reportfooter3 = parameters.APP.app_text_default_reportfooter3.value;
-    APP_GLOBAL.image_default_report_header_src = parameters.APP.app_image_default_report_header_src.value;
-    APP_GLOBAL.image_default_report_footer_src = parameters.APP.app_image_default_report_footer_src.value;
-    APP_GLOBAL.prayer_default_method = parameters.APP.app_prayer_default_method.value;
-    APP_GLOBAL.prayer_default_asr = parameters.APP.app_prayer_default_asr.value;
-    APP_GLOBAL.prayer_default_highlatitude = parameters.APP.app_prayer_default_highlatitude.value;
-    APP_GLOBAL.prayer_default_timeformat = parameters.APP.app_prayer_default_timeformat.value;
-    APP_GLOBAL.prayer_default_hijri_adjustment = parameters.APP.app_prayer_default_hijri_adjustment.value;
-    APP_GLOBAL.prayer_default_iqamat_title_fajr = parameters.APP.app_prayer_default_iqamat_title_fajr.value;
-    APP_GLOBAL.prayer_default_iqamat_title_dhuhr = parameters.APP.app_prayer_default_iqamat_title_dhuhr.value;
-    APP_GLOBAL.prayer_default_iqamat_title_asr = parameters.APP.app_prayer_default_iqamat_title_asr.value;
-    APP_GLOBAL.prayer_default_iqamat_title_maghrib = parameters.APP.app_prayer_default_iqamat_title_maghrib.value;
-    APP_GLOBAL.prayer_default_iqamat_title_isha = parameters.APP.app_prayer_default_iqamat_title_isha.value;
-    APP_GLOBAL.prayer_default_show_imsak = (parameters.APP.app_prayer_default_show_imsak.value=== true);
-    APP_GLOBAL.prayer_default_show_sunset = (parameters.APP.app_prayer_default_show_sunset.value=== true);
-    APP_GLOBAL.prayer_default_show_midnight = (parameters.APP.app_prayer_default_show_midnight.value=== true);
-    APP_GLOBAL.prayer_default_show_fast_start_end = parseInt(parameters.APP.app_prayer_default_show_fast_start_end.value);
+    APP_GLOBAL.regional_default_direction = parameters.app_regional_default_direction.value;
+    APP_GLOBAL.regional_default_locale_second = parameters.app_regional_default_locale_second.value;
+    APP_GLOBAL.regional_default_arabic_script = parameters.app_regional_default_arabic_script.value;
+    APP_GLOBAL.regional_default_calendartype = parameters.app_regional_default_calendartype.value;
+    APP_GLOBAL.regional_default_calendar_hijri_type = parameters.app_regional_default_calendar_hijri_type.value;
+    APP_GLOBAL.gps_default_place_id = parseInt(parameters.app_gps_default_place_id.value);
+    APP_GLOBAL.gps_module_leaflet_qibbla_title = parameters.app_gps_module_leaflet_qibbla_title.value;
+    APP_GLOBAL.gps_module_leaflet_qibbla_text_size = parseFloat(parameters.app_gps_module_leaflet_qibbla_text_size.value);
+    APP_GLOBAL.gps_module_leaflet_qibbla_lat = parseFloat(parameters.app_gps_module_leaflet_qibbla_lat.value);
+    APP_GLOBAL.gps_module_leaflet_qibbla_long = parseFloat(parameters.app_gps_module_leaflet_qibbla_long.value);
+    APP_GLOBAL.gps_module_leaflet_qibbla_color = parameters.app_gps_module_leaflet_qibbla_color.value;
+    APP_GLOBAL.gps_module_leaflet_qibbla_width = parseFloat(parameters.app_gps_module_leaflet_qibbla_width.value);
+    APP_GLOBAL.gps_module_leaflet_qibbla_opacity = parseFloat(parameters.app_gps_module_leaflet_qibbla_opacity.value);
+    APP_GLOBAL.gps_module_leaflet_qibbla_old_title = parameters.app_gps_module_leaflet_qibbla_old_title.value;
+    APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size = parseFloat(parameters.app_gps_module_leaflet_qibbla_old_text_size.value);
+    APP_GLOBAL.gps_module_leaflet_qibbla_old_lat = parseFloat(parameters.app_gps_module_leaflet_qibbla_old_lat.value);
+    APP_GLOBAL.gps_module_leaflet_qibbla_old_long = parseFloat(parameters.app_gps_module_leaflet_qibbla_old_long.value);
+    APP_GLOBAL.gps_module_leaflet_qibbla_old_color = parameters.app_gps_module_leaflet_qibbla_old_color.value;
+    APP_GLOBAL.gps_module_leaflet_qibbla_old_width = parseFloat(parameters.app_gps_module_leaflet_qibbla_old_width.value);
+    APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity = parseFloat(parameters.app_gps_module_leaflet_qibbla_old_opacity.value);
+    APP_GLOBAL.design_default_theme_day = parameters.app_design_default_theme_day.value;
+    APP_GLOBAL.design_default_theme_month = parameters.app_design_default_theme_month.value;
+    APP_GLOBAL.design_default_theme_year = parameters.app_design_default_theme_year.value;
+    APP_GLOBAL.design_default_papersize = parameters.app_design_default_papersize.value;
+    APP_GLOBAL.design_default_highlight_row = parameters.app_design_default_highlight_row.value;
+    APP_GLOBAL.design_default_show_weekday = (parameters.app_design_default_show_weekday.value=== true);
+    APP_GLOBAL.design_default_show_calendartype = (parameters.app_design_default_show_calendartype.value=== true);
+    APP_GLOBAL.design_default_show_notes = (parameters.app_design_default_show_notes.value=== true);
+    APP_GLOBAL.design_default_show_gps = (parameters.app_design_default_show_gps.value=== true);
+    APP_GLOBAL.design_default_show_timezone = (parameters.app_design_default_show_timezone.value=== true);
+    APP_GLOBAL.text_default_reporttitle1 = parameters.app_text_default_reporttitle1.value;
+    APP_GLOBAL.text_default_reporttitle2 = parameters.app_text_default_reporttitle2.value;
+    APP_GLOBAL.text_default_reporttitle3 = parameters.app_text_default_reporttitle3.value;
+    APP_GLOBAL.text_default_reportfooter1 = parameters.app_text_default_reportfooter1.value;
+    APP_GLOBAL.text_default_reportfooter2 = parameters.app_text_default_reportfooter2.value;
+    APP_GLOBAL.text_default_reportfooter3 = parameters.app_text_default_reportfooter3.value;
+    APP_GLOBAL.image_default_report_header_src = parameters.app_image_default_report_header_src.value;
+    APP_GLOBAL.image_default_report_footer_src = parameters.app_image_default_report_footer_src.value;
+    APP_GLOBAL.prayer_default_method = parameters.app_prayer_default_method.value;
+    APP_GLOBAL.prayer_default_asr = parameters.app_prayer_default_asr.value;
+    APP_GLOBAL.prayer_default_highlatitude = parameters.app_prayer_default_highlatitude.value;
+    APP_GLOBAL.prayer_default_timeformat = parameters.app_prayer_default_timeformat.value;
+    APP_GLOBAL.prayer_default_hijri_adjustment = parameters.app_prayer_default_hijri_adjustment.value;
+    APP_GLOBAL.prayer_default_iqamat_title_fajr = parameters.app_prayer_default_iqamat_title_fajr.value;
+    APP_GLOBAL.prayer_default_iqamat_title_dhuhr = parameters.app_prayer_default_iqamat_title_dhuhr.value;
+    APP_GLOBAL.prayer_default_iqamat_title_asr = parameters.app_prayer_default_iqamat_title_asr.value;
+    APP_GLOBAL.prayer_default_iqamat_title_maghrib = parameters.app_prayer_default_iqamat_title_maghrib.value;
+    APP_GLOBAL.prayer_default_iqamat_title_isha = parameters.app_prayer_default_iqamat_title_isha.value;
+    APP_GLOBAL.prayer_default_show_imsak = (parameters.app_prayer_default_show_imsak.value=== true);
+    APP_GLOBAL.prayer_default_show_sunset = (parameters.app_prayer_default_show_sunset.value=== true);
+    APP_GLOBAL.prayer_default_show_midnight = (parameters.app_prayer_default_show_midnight.value=== true);
+    APP_GLOBAL.prayer_default_show_fast_start_end = parseInt(parameters.app_prayer_default_show_fast_start_end.value);
 
     //set current date for report month
     //if client_timezone is set, set Date with client_timezone
@@ -2333,7 +2334,7 @@ const appInit = async parameters => {
  * @function
  * @param {CommonModuleCommon} commonLib
  * @param {function} start
- * @param {commonInitAppParameters & {APP:APP_PARAMETERS}} parameters 
+ * @param {APP_PARAMETERS} parameters 
  * @returns {Promise.<void>}
  */
 const appCommonInit = async (commonLib, start, parameters) => {
@@ -2355,15 +2356,7 @@ const appMetadata = () =>{
             KeyDown: null,
             KeyUp:   appEventKeyUp,
             Focus:   null,
-            Input:   null},
-        fonts:{
-            font_default:   true,
-            font_arabic:    true,
-            font_asian:     true,
-            font_prio1:     true,
-            font_prio2:     true,
-            font_prio3:     true
-        }
+            Input:   null}
     };
 };
 export{ appCommonInit, appComponentSettingUpdate, appSettingThemeThumbnailsUpdate, appMetadata};

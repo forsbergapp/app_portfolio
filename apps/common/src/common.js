@@ -3,10 +3,10 @@
 /**
  * @import {server_db_table_App,
  *          server_db_table_AppModule,
- *          server_db_app_parameter_common,
+ *          server_db_table_AppParameter,
  *          server_db_table_IamUser,
  *          server_apps_report_create_parameters,
- *          server_apps_app_service_parameters,
+ *          server_apps_info_parameters,
  *          server_apps_module_with_metadata,
  *          server_apps_module_metadata,
  *          APP_server_apps_module_common_type,
@@ -786,12 +786,10 @@ const commonComponentCreate = async parameters =>{
     
     switch (parameters.type){
         case 'APP':{
-            /**@type{server_apps_app_service_parameters} */
-            const app_service_parameters = {   
+            /**@type{server_apps_info_parameters} */
+            const server_apps_info_parameters = {   
                 app_id:                         parameters.app_id,
-                app_logo:                       App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].logo,
                 app_idtoken:                    idtoken ?? '',
-                locale:                         parameters.componentParameters.locale ?? '',
                 client_latitude:                result_geodata?.latitude,
                 client_longitude:               result_geodata?.longitude,
                 client_place:                   result_geodata?.place ?? '',
@@ -808,24 +806,16 @@ const commonComponentCreate = async parameters =>{
                 first_time:                     count_user==0?1:0,
                 admin_only:                     admin_only?1:0
             };
-            /**@type{server_db_app_parameter_common} */
-            const common_parameter = AppParameter.get({app_id:parameters.app_id, resource_id:common_app_id}).result[0];
 
-            /**@type{server_db_table_App} */
-            const app = App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0];
-            const APP_PARAMETERS  = {   APP:        {...AppParameter.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result?.[0]??{},
-                                                     ...{
-                                                        app_text_edit:  app.text_edit,
-                                                        app_copyright:  app.copyright,
-                                                        app_link_title: app.link_title,
-                                                        app_link_url:   app.link_url
-                                                        }
-                                                     }, 
-                                        COMMON:     common_parameter,
-                                        INFO:       app_service_parameters};
+            /**@type{{data:{App:            server_db_table_App, 
+             *              AppParameters:  server_db_table_AppParameter,
+             *              Info:           server_apps_info_parameters},
+             *        methods:null}}} */
             const componentParameter = {data:   {
-                                                    APP:            app,
-                                                    APP_PARAMETERS: Buffer.from(JSON.stringify(APP_PARAMETERS)).toString('base64')
+                                                    App:            App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0],
+                                                    AppParameters:  AppParameter.get({  app_id:parameters.app_id,
+                                                                                            resource_id:common_app_id}).result[0]??{}, 
+                                                    Info:           server_apps_info_parameters
                                                 },
                                         methods:null};
 
@@ -902,18 +892,39 @@ const commonAppHost = host =>{
  *          user_agent:string,
  *          accept_language:string,
  *          data:{locale:string}}} parameters
- * @returns {Promise.<server_server_response>}
+ * @returns {Promise.<server_server_response & {result?:{App:{id:server_db_table_App['id'],
+ *                                                            name:server_db_table_App['name'],
+ *                                                            js:server_db_table_App['js'],
+ *                                                            css:server_db_table_App['css'],
+ *                                                            css_report:server_db_table_App['css_report'],
+ *                                                            favicon_32x32:server_db_table_App['favicon_32x32'],
+ *                                                            favicon_192x192:server_db_table_App['favicon_192x192'],
+ *                                                            logo:server_db_table_App['logo'],
+ *                                                            copyright:server_db_table_App['copyright'],
+ *                                                            link_url:server_db_table_App['link_url'],
+ *                                                            link_title:server_db_table_App['link_title'],
+ *                                                            text_edit:server_db_table_App['text_edit']},
+ *                                                       AppParameter:server_db_table_AppParameter|{}} }>}
  */
 const commonAppInit = async parameters =>{
     /**@type{server_db_table_App} */
     const app = App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
     if (app)
-        return {result:{name:app.name,
-                        js:app.js,
-                        css:app.css,
-                        css_report:app.css_report,
-                        favicon_32x32:app.favicon_32x32,
-                        favicon_192x192:app.favicon_192x192}, 
+        return {result:{App:{   id:             app.id,
+                                name:           app.name,
+                                js:             app.js,
+                                css:            app.css,
+                                css_report:     app.css_report,
+                                favicon_32x32:  app.favicon_32x32,
+                                favicon_192x192:app.favicon_192x192,
+                                logo:           app.logo,
+                                copyright:      app.copyright,
+                                link_url:       app.link_url,
+                                link_title:     app.link_title,
+                                text_edit:      app.text_edit
+                            },
+                        AppParameter:AppParameter.get({  app_id:parameters.app_id, resource_id:parameters.resource_id}).result?.[0]??{}
+                        }, 
                 type:'JSON'};
     else
         return {http:404,
@@ -921,7 +932,6 @@ const commonAppInit = async parameters =>{
             text:null,
             developerText:'commonAppInit',
             moreInfo:null,
-            result:null,
             sendfile:null,
             type:'JSON'};
 };
@@ -946,7 +956,6 @@ const commonApp = async parameters =>{
                 text:null,
                 developerText:'commonApp',
                 moreInfo:null,
-                result:null,
                 sendfile:null,
                 type:'JSON'};
     else
@@ -1017,7 +1026,6 @@ const commonAppResource = async parameters =>{
                 text:null,
                 developerText:'commonApp',
                 moreInfo:null,
-                result:null,
                 sendfile:null,
                 type:'JSON'};
     else

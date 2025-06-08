@@ -31,12 +31,10 @@
 
 
 /**
- * @description APP server_apps_app_service_parameters
- * @typedef {object}        server_apps_app_service_parameters
+ * @description APP server_apps_info_parameters
+ * @typedef {object}        server_apps_info_parameters
  * @property {number}       app_id
- * @property {string}       app_logo
  * @property {string}       app_idtoken
- * @property {string}       locale
  * @property {string|null}  client_latitude
  * @property {string|null}  client_longitude
  * @property {string|null}  client_place

@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {commonMetadata, commonInitAppParameters, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {commonMetadata, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
  */
 
 /**@type{COMMON_DOCUMENT} */
@@ -373,7 +373,7 @@ const appInit = async () => {
  * @function
  * @param {CommonModuleCommon} commonLib
  * @param {function} start
- * @param {commonInitAppParameters} parameters 
+ * @param {Object.<String,*>} parameters 
  * @returns {Promise.<void>}
  */
 const appCommonInit = async (commonLib, start, parameters) => {
@@ -395,15 +395,7 @@ const appMetadata = () =>{
             KeyDown: null,
             KeyUp:   appEventKeyUp,
             Focus:   null,
-            Input:   null},
-        fonts:{
-            font_default:   true,
-            font_arabic:    false,
-            font_asian:     false,
-            font_prio1:     false,
-            font_prio2:     false,
-            font_prio3:     false
-        }
+            Input:   null}
     };
 };
 export{appCommonInit, appMetadata};

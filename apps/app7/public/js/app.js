@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {commonMetadata, commonInitAppParameters, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {commonMetadata, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
  */
 
 /**@type{COMMON_DOCUMENT} */
@@ -125,9 +125,9 @@ const appInit = async () =>{
         methods:    null,
         path:       '/common/component/common_iam_avatar.js'});
     common.commonModuleLeafletInit({mount_div:'mapid',
-                                    latitude:common.COMMON_GLOBAL.client_latitude,
-                                    longitude:common.COMMON_GLOBAL.client_longitude,
-                                    place:common.COMMON_GLOBAL.client_place,
+                                    latitude:common.COMMON_GLOBAL.client_latitude??'',
+                                    longitude:common.COMMON_GLOBAL.client_longitude??'',
+                                    place:common.COMMON_GLOBAL.client_place??'',
                                     doubleclick_event:null, 
                                     update_map:true});
 };
@@ -137,7 +137,7 @@ const appInit = async () =>{
  * @function
  * @param {CommonModuleCommon} commonLib
  * @param {function} start
- * @param {commonInitAppParameters} parameters 
+ * @param {Object.<String,*>} parameters 
  * @returns {Promise.<void>}
  */
 const appCommonInit = async (commonLib, start, parameters) => {
@@ -160,15 +160,7 @@ const appMetadata = () =>{
             KeyDown: null,
             KeyUp:   null,
             Focus:   null,
-            Input:   null},
-        fonts:{
-            font_default:   true,
-            font_arabic:    true,
-            font_asian:     true,
-            font_prio1:     true,
-            font_prio2:     true,
-            font_prio3:     true
-        }
+            Input:   null}
     };
 };
 export{appCommonInit, appMetadata};
