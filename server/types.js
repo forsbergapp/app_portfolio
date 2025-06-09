@@ -47,7 +47,7 @@
  * @property {number}       app_framework
  * @property {number}       app_framework_messages
  * @property {string}       rest_resource_bff
- * @property {number}       rest_api_version
+ * @property {string}       rest_api_version
  * @property {number}       first_time
  * @property {number}       admin_only
  */
@@ -794,7 +794,7 @@
  *              HTTPS_SSL_VERIFICATION_PATH:string,
  *              JSON_LIMIT:string,
  *              REST_RESOURCE_BFF:string,
- *              REST_API_VERSION:number,
+ *              REST_API_VERSION:string,
  *              GIT_REPOSITORY_URL:string,
  *              NETWORK_INTERFACE:string,
  *              PATH_JOBS:string}} server_db_config_server_server

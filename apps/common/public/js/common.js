@@ -210,14 +210,16 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
  * @returns {Promise.<*>}
  */
 const commonMiscImport = async (url, appModule=false) =>{
-    const module = COMMON_GLOBAL.component_import.filter(module=>module.url==url)[0]?.component;
+    const module = COMMON_GLOBAL.component_import.filter(module=>module.url==url && module.app_id == COMMON_GLOBAL.app_id)[0]?.component;
     if (module) 
         return import(module);
     else{
         COMMON_GLOBAL.component_import.push(
                 /*@ts-ignore*/
-                {url:url,
-                 component:await commonFFB({    path: appModule?url:('/app-resource/' + url.replaceAll('/','~')), 
+                {
+                    app_id:COMMON_GLOBAL.app_id,
+                    url:url,
+                    component:await commonFFB({ path: appModule?url:('/app-resource/' + url.replaceAll('/','~')), 
                                                 query:appModule?'':`content_type=${'text/javascript'}&IAM_data_app_id=${url.startsWith('/common')?
                                                                                 COMMON_GLOBAL.app_common_app_id:
                                                                                     COMMON_GLOBAL.app_id}`, 
@@ -595,13 +597,14 @@ const commonMiscResourceFetch = async (url,element, content_type )=>{
     * @returns{Promise.<*>}
     */
     const getUrl = async ()=>{
-        const resource = COMMON_GLOBAL.resource_import.filter(resource=>resource.url==url)[0]?.content;
+        const resource = COMMON_GLOBAL.resource_import.filter(resource=>resource.url==url && resource.app_id == COMMON_GLOBAL.app_id)[0]?.content;
         if (resource) 
             return resource;
         else{
             COMMON_GLOBAL.resource_import.push(
                     /*@ts-ignore*/
                     {
+                        app_id:COMMON_GLOBAL.app_id,
                         url:url,
                         //font css can contain src() with external reference, fetch font css using default link
                         content:url.startsWith('/common/css/font')?

@@ -427,6 +427,7 @@ div.ray8 {
 #common_window_info_info{
 	position:relative;
 	margin:20px;
+    height: 100%;
 }
 #common_dialogue_apps{
 	z-index: 1;
@@ -667,7 +668,7 @@ div.ray8 {
 /*app colors*/
 body{
 	color: var(--app_theme_text_color);
-	background: var(--app_theme_background_color);
+	background: var(--app_theme_background_color) !important;
 	caret-color: var(--app_theme_text_color);
 }
 #common_dialogue_apps_list_title{
@@ -860,4 +861,7 @@ border-left: 12px solid var(--app_theme_sun_color);
 }
 #common_window_info_btn_close .common_icon{
 	background: var(--app_theme_dialogue_background_color);
+}
+#common_dialogue_info_contact_message_title{
+    color: var(--app_theme_dialogue_button_color) !important;
 }
