@@ -1,3 +1,6 @@
+body{
+    background: inherit !important;
+}
 /*APP*/
 #app{
     display: block;
