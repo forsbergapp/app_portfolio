@@ -823,21 +823,19 @@ const commonComponentCreate = async parameters =>{
             return {result:await ComponentCreate(componentParameter), type:'HTML'};
         }
         case 'MAINTENANCE':{
-            //maintenance can be used from all app_id
-            const data = JSON.stringify({   
-                app_id:         parameters.app_id,
-                common_app_id:  common_app_id,
-                admin_app_id:   admin_app_id,
-                app_idtoken:    idtoken,
-                rest_resource_bff: configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF
-            });
-
             const {default:ComponentCreate} = await import('./component/common_maintenance.js');
-            return {result:await ComponentCreate({data:   {
-                                            CONFIG_APP:             {...App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0]},
-                                            ITEM_COMMON_PARAMETERS: Buffer.from(data).toString('base64')},
-                                    methods:null
-                                    }), type:'HTML'};
+            return {result:await ComponentCreate({  data:   {
+                                                            app_id: common_app_id ??0,
+                                                            Info:   {
+                                                                    app_id:             parameters.app_id,
+                                                                    app_common_app_id:  common_app_id ??0,
+                                                                    app_idtoken:        idtoken,
+                                                                    rest_api_version:   configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION,
+                                                                    rest_resource_bff:  configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF
+                                                                }
+                                                            },
+                                                    methods:null
+                                                }), type:'HTML'};
         }
         case 'INFO_DISCLAIMER':
         case 'INFO_PRIVACY_POLICY':

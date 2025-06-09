@@ -1,3 +1,6 @@
+body{
+    background: inherit !important;
+}
 /*APP*/
 #tab1::before{content:var(--common_app_icon_chart)}
 #tab2::before{content:var(--common_app_icon_user)}

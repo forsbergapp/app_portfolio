@@ -243,10 +243,7 @@ const bffStart = async (req, res) =>{
                                         result_request: await commonResourceFile({   app_id:app_id, 
                                                         resource_id:bff_parameters.url, 
                                                         content_type:'text/css',
-                                                        data_app_id: serverUtilNumberValue(ConfigServer.get({app_id:app_id, 
-                                                                                                            data:{config_group:'SERVICE_APP', 
-                                                                                                                parameter:'APP_COMMON_APP_ID'}})
-                                                                                                                .result[0].APP_COMMON_APP_ID) ??0}),
+                                                        data_app_id: serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0}),
                                         host:bff_parameters.host,
                                         route : 'APP',
                                         res:bff_parameters.res});
@@ -260,10 +257,7 @@ const bffStart = async (req, res) =>{
                                         result_request: await commonResourceFile({   app_id:app_id, 
                                                                 resource_id:bff_parameters.url, 
                                                                 content_type:'',
-                                                                data_app_id: serverUtilNumberValue(ConfigServer.get({app_id:app_id, 
-                                                                                                                    data:{config_group:'SERVICE_APP', 
-                                                                                                                    parameter:'APP_COMMON_APP_ID'}})
-                                                                                                                    .result[0].APP_COMMON_APP_ID) ??0}),
+                                                                data_app_id: serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0}),
                                                                 host:bff_parameters.host,
                                                                 route : 'APP',
                                                                 res:bff_parameters.res});

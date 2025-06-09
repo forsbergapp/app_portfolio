@@ -6,7 +6,14 @@
  * @name template
  * @description Template
  * @function
- * @param {{CONFIG_APP:*, ITEM_COMMON_PARAMETERS:string}} props
+ * @param {{commonFetch:string,
+ *          app_id:number, 
+ *          Info:{
+ *                app_id:           number,
+ *                app_common_app_id:number,
+ *                app_idtoken:      string|null,
+ *                rest_resource_bff: string
+ *                }}} props
  * @returns {string}
  */
 const template = props =>`  <!DOCTYPE html>
@@ -14,117 +21,8 @@ const template = props =>`  <!DOCTYPE html>
                             <head>
                                 <meta charset='UTF-8'>
                                 <title></title>
-                                <link rel='stylesheet' type='text/css' data-href='/common/css/common.css' />
-                                <style>
-                                    #common_broadcast_close::before{		content:var(--common_app_icon_broadcast_close)}
-                                    #common_broadcast_info_title::before{	content:var(--common_app_icon_alert)}
-                                    #common_maintenance_message::before{	content:var(--common_app_icon_maintenance)}
-
-                                    .common_image{
-                                        border-radius: 50%;
-                                        background-size: contain;
-                                        background-position: center;
-                                        background-repeat: no-repeat;
-                                    }
-
-                                    .common_image_alert{
-                                        width: 50px;
-                                        height: 50px;
-                                    }
-                                    .common_image_broadcast{
-                                        width: 34px;
-                                        height: 34px;
-                                    }
-
-                                    /*DIALOGUE MAINTENANCE */
-                                    #common_maintenance_header{
-                                        width: 100%;
-                                        height: 50px;
-                                    }
-                                    #common_dialogue_maintenance{
-                                        display: block;
-                                    }
-                                    #common_dialogue_maintenance_content{
-                                        height:250px;
-                                        width:300px;
-                                    }
-                                    #common_maintenance_logo {
-                                        margin: 0 auto;
-                                    }
-                                    #common_maintenance_message{
-                                        padding-top:20px;
-                                        padding-bottom:20px;
-                                        font-weight: bold;
-                                        color: var(--common_app_color_blue1);
-                                        font-size: 2em;
-                                    }
-                                    #common_maintenance_countdown{
-                                        font-size: 30px;
-                                        padding-bottom:20px;
-                                    }
-                                    #common_maintenance_footer{
-                                        padding-bottom:5px;
-                                    }
-
-                                    body{
-                                        font-size: 16px;
-                                        margin: 0;
-                                        height: 100%;
-                                        padding: 0px;
-                                        color: var(--common_app_color_black);
-                                        background: var(--common_app_color_blue1);
-                                    }
-
-                                    .common_icon {
-                                        font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands";
-                                        font-weight: 900;
-                                        font-style: normal;
-                                        display: inline-block;
-                                    }  
-                                    /*dialogue*/
-                                    .common_dialogue{
-                                        visibility:hidden;
-                                        position: fixed;
-                                        z-index: 50;
-                                        padding-top: 10px;
-                                        left: 0;
-                                        top: 0;
-                                        width: 100%;
-                                        height: 100%;
-                                        overflow: auto;
-                                    }
-                                    .common_dialogue_content{
-                                        text-align:center;
-                                        top: 50%;
-                                        left: 50%;
-                                        position: fixed;
-                                        transform: translate(-50%, -50%);
-                                        width: auto;
-                                        height: auto;
-                                        word-break: break-word;
-                                        border-radius: var(--common_app_css_border_radius);
-                                    }
-
-                                    @keyframes common_pulsate {
-                                        0% { 
-                                            opacity: 0.5;
-                                        }
-                                        50% { 
-                                            opacity: 1.0;
-                                        }
-                                        100% { 
-                                            opacity: 0.5;
-                                        }
-                                    }
-                                    .common_toolbar_button:hover{
-                                        color: var(--common_app_color_green);
-                                    }
-                                    #common_maintenance_header{
-                                        background-color: var(--common_app_color_blue1);
-                                    }
-                                    #common_maintenance_logo{
-                                        background-color: var(--common_app_color_light);
-                                    }
+                                <link id='common_css' rel='stylesheet' type='text/css' data-href='/common/css/common.css' />
+                                <style>    
                                     .common_dialogue_content{
                                         background-color: var(--common_app_color_light);
                                         box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
@@ -136,31 +34,43 @@ const template = props =>`  <!DOCTYPE html>
                                     }
                                 </style>
                                 <script type='module' >
+                                    const commonFetch = async url =>
+                                                import(await fetch(  url, 
+                                                                    {
+                                                                    cache: 'no-store',
+                                                                    method: 'GET',
+                                                                    headers: {
+                                                                            'Connection': 'close',
+                                                                            'AppId': ${props.app_id},
+                                                                            'AppSignature': 'App Signature',
+                                                                            'id-token': 'Bearer ${props.Info.app_idtoken}'
+                                                                        }
+                                                                    })
+                                                            .then(module=>module.blob())
+                                                            .then(module=>URL.createObjectURL(  new Blob ([module],
+                                                                                                {type: 'text/javascript'}))))
+                                                            .catch(error=>document.write(error));
+                                    const common = await commonFetch('${props.commonFetch}')
                                     const COMMON_DOCUMENT = document;
-                                    const common = await import('/common/js/common.js');
                                     const appException = () => {
                                         null;
                                     };
-                                    const appCommonInit = async parameters => {
-                                        COMMON_DOCUMENT.title = '⚒';
-                                        COMMON_DOCUMENT.querySelector('#common_broadcast').addEventListener('click', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-                                            const event_target_id = common.commonMiscElementId(event.target);
-                                            if (event_target_id=='common_broadcast_close')
-                                                common.commonComponentRemove('common_broadcast');
-                                        });
-                                        const decoded_parameters = JSON.parse(common.commonWindowFromBase64(parameters));
-                                        common.COMMON_GLOBAL.app_common_app_id= decoded_parameters.app_common_app_id;
-                                        common.COMMON_GLOBAL.app_id = decoded_parameters.app_id;
-                                        common.COMMON_GLOBAL.app_function_exception = appException; 
-                                        common.COMMON_GLOBAL.rest_resource_bff = decoded_parameters.rest_resource_bff;
-                                        common.COMMON_GLOBAL.iam_user_app_id = null;
-                                        common.COMMON_GLOBAL.iam_user_id = null;
-                                        common.COMMON_GLOBAL.iam_user_username = null;
-                                        common.COMMON_GLOBAL.token_dt = decoded_parameters.app_idtoken;
-                                        common.commonSocketConnectOnline();    
-                                        common.commonSocketMaintenanceShow(null,1);
-                                    };
-                                    appCommonInit('${props.ITEM_COMMON_PARAMETERS}');
+                                    COMMON_DOCUMENT.title = '⚒';
+                                    COMMON_DOCUMENT.querySelector('#common_broadcast').addEventListener('click', event => {
+                                        if (event.target.id=='common_broadcast_close')
+                                            common.commonComponentRemove('common_broadcast');
+                                    });
+                                    common.COMMON_GLOBAL.app_common_app_id= '${props.Info.app_common_app_id}';
+                                    common.COMMON_GLOBAL.app_id = ${props.app_id};
+                                    common.COMMON_GLOBAL.app_function_exception = appException; 
+                                    common.COMMON_GLOBAL.rest_resource_bff = '${props.Info.rest_resource_bff}';
+                                    common.COMMON_GLOBAL.iam_user_app_id = null;
+                                    common.COMMON_GLOBAL.iam_user_id = null;
+                                    common.COMMON_GLOBAL.iam_user_username = null;
+                                    common.COMMON_GLOBAL.token_dt = '${props.Info.app_idtoken}';
+                                    common.commonMiscResourceFetch('/common/css/common.css', COMMON_DOCUMENT.querySelector('#common_css'), 'text/css')
+                                    common.commonSocketConnectOnline();    
+                                    common.commonSocketMaintenanceShow(null,1);
                                 </script>
                                 <meta name="HandheldFriendly" content="true"/>
                                 <meta name='mobile-web-app-capable' content='yes'>
@@ -174,9 +84,21 @@ const template = props =>`  <!DOCTYPE html>
  * @name component
  * @description Component
  * @function
- * @param {{data:       {CONFIG_APP:*, ITEM_COMMON_PARAMETERS:string},
+ * @param {{data:       {   app_id:     number, 
+ *                          Info:       {
+ *                                      app_id:            number,
+ *                                      app_common_app_id: number,
+ *                                      app_idtoken:       string|null,
+ *                                      rest_api_version:  string,
+ *                                      rest_resource_bff: string
+ *                                      }},
  *          methods:    null}} props 
  * @returns {Promise.<string>}
  */
-const component = async props => template({CONFIG_APP:props.data.CONFIG_APP, ITEM_COMMON_PARAMETERS:props.data.ITEM_COMMON_PARAMETERS});
+const component = async props =>{
+    const base64= Buffer.from ('content_type=text/javascript&IAM_data_app_id=0').toString('base64');
+    return template({   commonFetch: `${props.data.Info.rest_resource_bff}/app_id/v${props.data.Info.rest_api_version}/app-resource/~common~js~common.js?parameters=${base64}`,
+                        app_id:props.data.app_id, 
+                        Info:props.data.Info});
+};
 export default component;

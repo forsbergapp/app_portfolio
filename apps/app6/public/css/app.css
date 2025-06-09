@@ -1,3 +1,6 @@
+body{
+    background: inherit !important;
+}
 /*APP*/
 html, body, #app {
 	height:100%;
