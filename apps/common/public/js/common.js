@@ -210,19 +210,18 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
  * @returns {Promise.<*>}
  */
 const commonMiscImport = async (url, appModule=false) =>{
-    const module = COMMON_GLOBAL.component_import.filter(module=>module.url==url && module.app_id == COMMON_GLOBAL.app_id)[0]?.component;
+    const app_id = url.startsWith('/common')?COMMON_GLOBAL.app_common_app_id:COMMON_GLOBAL.app_id;
+    const module = COMMON_GLOBAL.component_import.filter(module=>module.url==url && module.app_id == app_id)[0]?.component;
     if (module) 
         return import(module);
     else{
         COMMON_GLOBAL.component_import.push(
                 /*@ts-ignore*/
                 {
-                    app_id:COMMON_GLOBAL.app_id,
+                    app_id:app_id,
                     url:url,
                     component:await commonFFB({ path: appModule?url:('/app-resource/' + url.replaceAll('/','~')), 
-                                                query:appModule?'':`content_type=${'text/javascript'}&IAM_data_app_id=${url.startsWith('/common')?
-                                                                                COMMON_GLOBAL.app_common_app_id:
-                                                                                    COMMON_GLOBAL.app_id}`, 
+                                                query:appModule?'':`content_type=${'text/javascript'}&IAM_data_app_id=${app_id}`, 
                                                 method:'GET', 
                                                 response_type:'BLOB',
                                                 authorization_type:'APP_ID'})
@@ -588,6 +587,7 @@ const commonMiscPrint = async html => {
  * @returns {Promise.<string|void>}
  */
 const commonMiscResourceFetch = async (url,element, content_type )=>{
+    const app_id = url.startsWith('/common')?COMMON_GLOBAL.app_common_app_id:COMMON_GLOBAL.app_id;
     if (element && content_type.startsWith('image')){
         /**@ts-ignore */
         element.alt=' '; 
@@ -597,22 +597,20 @@ const commonMiscResourceFetch = async (url,element, content_type )=>{
     * @returns{Promise.<*>}
     */
     const getUrl = async ()=>{
-        const resource = COMMON_GLOBAL.resource_import.filter(resource=>resource.url==url && resource.app_id == COMMON_GLOBAL.app_id)[0]?.content;
+        const resource = COMMON_GLOBAL.resource_import.filter(resource=>resource.url==url && resource.app_id == app_id)[0]?.content;
         if (resource) 
             return resource;
         else{
             COMMON_GLOBAL.resource_import.push(
                     /*@ts-ignore*/
                     {
-                        app_id:COMMON_GLOBAL.app_id,
+                        app_id:app_id,
                         url:url,
                         //font css can contain src() with external reference, fetch font css using default link
                         content:url.startsWith('/common/css/font')?
                                     url:
                                         await commonFFB({   path:'/app-resource/' + url.replaceAll('/','~'), 
-                                                            query:`content_type=${content_type}&IAM_data_app_id=${url.startsWith('/common')?
-                                                                                            COMMON_GLOBAL.app_common_app_id:
-                                                                                                COMMON_GLOBAL.app_id}`, 
+                                                            query:`content_type=${content_type}&IAM_data_app_id=${app_id}`, 
                                                             method:'GET', 
                                                             //images use base64 strings
                                                             response_type:content_type.startsWith('image')?'TEXT':'BLOB',
