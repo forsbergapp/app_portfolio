@@ -148,9 +148,7 @@ const component = async props => {
             props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'block';
             props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'none';
         } 
-        if (props.data.iam_user_id ==null)
-            props.methods.commonWindowSetTimeout(()=> {props.methods.commonDialogueShow('LOGIN');}, 2000);
-        else
+        if (props.data.iam_user_id !=null)
             props.methods.commonSocketConnectOnlineCheck('common_profile_avatar_online_status', profile.id);
     };
 
