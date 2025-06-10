@@ -279,9 +279,9 @@ const updateFsFile = async (object, transaction_id, file_content, filepath=null)
             throw iamUtilMessageNotAuthorized();
         }
         else{
-            if (record.type=='TABLE' && getObject(0,'ConfigServer').SERVICE_DB.filter((/**@type{*}*/key)=>'JOURNAL' in key)[0]?.JOURNAL=='1'){
+            if (['TABLE', 'TABLE_KEY_VALUE', 'DOCUMENT'].includes(record.type) && getObject(0,'ConfigServer').SERVICE_DB.filter((/**@type{*}*/key)=>'JOURNAL' in key)[0]?.JOURNAL=='1'){
                 //write to journal using format [Date.now()].[ISO Date string].[object].json
-                await postFsFile(`${DB_DIR.journal}${Date.now()}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}.${object}.json`, file_content, record.type=='TABLE');
+                await postFsFile(`${DB_DIR.journal}${Date.now()}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}.${object}.json`, file_content, record.type.startsWith('TABLE'));
             }
             //write new file content
             await postFsFile(filepath ?? (DB_DIR.db + object + '.json'), file_content, record.type.startsWith('TABLE'));

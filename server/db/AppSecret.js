@@ -54,12 +54,18 @@ const update = async parameters => {
         return ORM.getError(parameters.app_id, 400);
     else{
         //updates only one key in the record
-        return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppSecret', update:{resource_id:null, data_app_id:parameters.resource_id, data:{[parameters.data.parameter_name]:parameters.data.parameter_value}}}).then((result)=>{
-            if (result.affectedRows>0)
-                return {result:result, type:'JSON'};
-            else
-                return ORM.getError(parameters.app_id, 404);
-        });
+        return ORM.Execute({app_id:parameters.app_id, 
+                            dml:'UPDATE', 
+                            object:'AppSecret', 
+                            update:{    resource_id:null, 
+                                        data_app_id:parameters.resource_id, 
+                                        data:{[parameters.data.parameter_name]:parameters.data.parameter_value}}})
+                .then((result)=>{
+                    if (result.affectedRows>0)
+                        return {result:result, type:'JSON'};
+                    else
+                        return ORM.getError(parameters.app_id, 404);
+                });
     }
 };
 

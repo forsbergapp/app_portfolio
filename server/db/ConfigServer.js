@@ -64,9 +64,9 @@ const get = parameters => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{  config: server_db_document_ConfigServer|null,
- *                  maintenance:string,
- *                  comment:string,
- *                  configuration:string}}} parameters
+ *                  maintenance?:string,
+ *                  comment?:string,
+ *                  configuration?:string}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters => {
