@@ -1,9 +1,11 @@
 { 
     "SERVER":[
-        {"HOST": "localhost", "COMMENT": "localhost or domain where server is installed, apps use subdomain in app registry + this parameter + HTTP/HTTPS_PORT"},
+        {"HOST": "localhost", "COMMENT": "localhost or domain where server is installed"},
         {"HTTP_PORT": "3000", "COMMENT": ""},
+        {"HTTP_PORT_ADMIN": "3333", "COMMENT": ""},
         {"HTTPS_ENABLE": "0", "COMMENT": ""},
         {"HTTPS_PORT": "4000", "COMMENT": ""},
+        {"HTTPS_PORT_ADMIN": "4444", "COMMENT": ""},
         {"HTTPS_SSL_VERIFICATION": "1", "COMMENT": "1=YES, check if enable temporary path for Letsencrypt using certbot"},
         {"HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/", "COMMENT": "the temporary path for Letsencrypt using certbot"},
         {"JSON_LIMIT": "10MB", "COMMENT": ""},

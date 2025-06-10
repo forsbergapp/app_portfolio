@@ -29,7 +29,7 @@ const getToken = async parameters => {
                         .filter((/**@type{server_db_table_IamAppAccess}*/row)=>
                                                                 //Authenticate the token type
                                                                 row.type                    == 'APP_ACCESS_EXTERNAL' &&
-                                                                //Authenticate app id corresponds to current subdomain
+                                                                //Authenticate app id
                                                                 row.app_id                  == token_verify.app_id &&
                                                                 //Authenticate IP address, the server should use 'x-forwarded-for' to authenticate client ip
                                                                 row.ip                      == token_verify.ip &&

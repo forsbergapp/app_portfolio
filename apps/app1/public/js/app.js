@@ -421,7 +421,6 @@ const appSecureCommonButtonSave = async (item) => {
                                                     {
                                                         id:             record.querySelector('[data-column=\'id\']').textContent,
                                                         name:           record.querySelector('[data-column=\'name\']').textContent,
-                                                        subdomain:      record.querySelector('[data-column=\'subdomain\']').textContent,
                                                         path:           record.querySelector('[data-column=\'path\']').textContent,
                                                         logo:           record.querySelector('[data-column=\'logo\']').textContent,
                                                         js:             record.querySelector('[data-column=\'js\']').textContent,

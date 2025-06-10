@@ -4,7 +4,7 @@
  * @module apps/common/component/common_openapi
  */
 /**
- * @import {server_db_document_ConfigRestApi,
+ * @import {server_db_document_ConfigRestApi,server_db_document_ConfigServer,
  *          server_db_table_App}  from '../../../../server/types.js'
  */
 
@@ -205,12 +205,17 @@ const component = async props => {
             
     };
 
-    const HTTPS_ENABLE = props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVER',parameter:'HTTPS_ENABLE'}}).result;
-    const HOST = props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVER',parameter:'HOST'}}).result;
-    const PORT = props.methods.serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                    props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVER',parameter:'HTTPS_PORT'}}).result:
-                        props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
+    /**@type{server_db_document_ConfigServer['SERVER']} */
+    const configServer = props.methods.ConfigServer.get({app_id:props.data.app_id,data:{ config_group:'SERVER'}}).result;
 
+    const HTTPS_ENABLE = configServer.filter(parameter=> 'HTTPS_ENABLE' in parameter)[0].HTTPS_ENABLE;
+    const HOST = configServer.filter(parameter=> 'HOST' in parameter)[0].HOST;
+    const PORT = props.methods.serverUtilNumberValue(HTTPS_ENABLE=='1'?
+                        configServer.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT:
+                            configServer.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT);
+    const PORT_ADMIN = props.methods.serverUtilNumberValue(HTTPS_ENABLE=='1'?
+                                configServer.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN:
+                                    configServer.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN);
     const roleOrder = ['app_id', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'app_access_external', 'iam', 'iam_signup', 'microservice', 'microservice_auth'];
     /**
      * Sort paths by defined role order
@@ -221,15 +226,15 @@ const component = async props => {
                                                     
     const CONFIG_REST_API = props.methods.ConfigRestApi.get({app_id:props.data.app_id}).result;
     //return object with 'servers key modified with list from configuration
-    CONFIG_REST_API.servers = props.methods.App.get({app_id:props.data.app_id, resource_id:null}).result
-                                .filter((/**@type{server_db_table_App}*/app)=>app.id !=props.methods.serverUtilNumberValue(props.methods.ConfigServer.get({app_id:props.data.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_COMMON_APP_ID'}}).result))
-                                .map((/**@type{server_db_table_App}*/row)=>{
-                                    return {url:(HTTPS_ENABLE=='1'? 'https://':'http://') + 
-                                                                                row.subdomain + '.' +
-                                                                                HOST +
-                                                                                ((PORT==80||PORT==443)?'':`/:${PORT}`)
-                                            };
-                                });
+                                
+    CONFIG_REST_API.servers = [
+                                {
+                                url:(HTTPS_ENABLE=='1'? 'https://':'http://') + HOST + ((PORT==80||PORT==443)?'':`/:${PORT}`)
+                                },
+                                {
+                                    url:(HTTPS_ENABLE=='1'? 'https://':'http://') + HOST + ((PORT_ADMIN==80||PORT_ADMIN==443)?'':`/:${PORT_ADMIN}`)
+                                },
+                                ];
     for (const path of Object.entries(CONFIG_REST_API.paths))
         for (const method of Object.entries(path[1])){
             const JSDocResult = await getJsDocMetadata(method[1].operationId);

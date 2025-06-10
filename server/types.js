@@ -39,9 +39,9 @@
  * @property {string|null}  client_longitude
  * @property {string|null}  client_place
  * @property {string|null}  client_timezone
- * @property {number|null}  app_start_app_id
  * @property {number|null}  app_common_app_id
  * @property {number|null}  app_admin_app_id
+ * @property {number|null}  app_start_app_id
  * @property {number}       app_toolbar_button_start
  * @property {number}       app_toolbar_button_framework
  * @property {number}       app_framework
@@ -99,14 +99,10 @@
 /**
  * @description APP server_config_apps_with_db_columns
  * @typedef  {object} server_config_apps_with_db_columns
- * @property {number} app_id
+ * @property {number} id
  * @property {string} name
  * @property {string} app_name_translation
- * @property {string} subdomain
  * @property {string} logo
- * @property {string} protocol
- * @property {string|null} host
- * @property {number|null} port
  */
 
 /**
@@ -173,9 +169,11 @@
  *          method: string,
  *          query: string,
  *          body:server_server_req['body'] & {type?:string, IAM_data_app_id?:number|null, data?:string},
- *          idToken:  server_server_req['headers']['id-token'], 
- *          AppId:  server_server_req['headers']['AppId'], 
- *          AppSignature:  server_server_req['headers']['AppSignature'], 
+ *          security_app:{
+ *              AppId:  server_server_req['headers']['app-id'], 
+ *              AppSignature:  server_server_req['headers']['app-signature'], 
+ *              AppIdToken:  server_server_req['headers']['app-id-token']
+ *          },
  *          authorization:string|null,
  *          ip: string,
  *          user_agent:string,
@@ -190,7 +188,6 @@
  * @typedef {{
  *              id: number,
  *              name: string,
- *              subdomain: string,
  *              path: string,
  *              logo:string,
  *              js:string,
@@ -786,8 +783,10 @@
  * @typedef {{  HOST:string,
  *              PATH_DATA:string,
  *              HTTP_PORT:string,
+ *              HTTP_PORT_ADMIN:string,
  *              HTTPS_ENABLE:string,
  *              HTTPS_PORT:string,
+ *              HTTPS_PORT_ADMIN:string,
  *              HTTPS_KEY:string,
  *              HTTPS_CERT:string,
  *              HTTPS_SSL_VERIFICATION:string,
@@ -893,7 +892,7 @@
 
 /**
  * @description DB server_db_iam_control_observe_type
- * @typedef {'SUBDOMAIN'|'HOST'|'HOST_IP'|'USER_AGENT'|'URI_DECODE'|'METHOD'|'BLOCK_IP'} server_db_iam_control_observe_type
+ * @typedef {'APP_ID'|'HOST'|'HOST_IP'|'USER_AGENT'|'URI_DECODE'|'METHOD'|'BLOCK_IP'} server_db_iam_control_observe_type
  */
 
 /**
@@ -1318,14 +1317,15 @@
 
 /**
  * @description SERVER server_REST_API_parameters
- * @typedef {{  app_id: number,
- *              endpoint: server_bff_endpoint_type,
+ * @typedef {{  endpoint: server_bff_endpoint_type,
  *              host:string,
  *              url:string,
  *              method: server_req_method,
  *              parameters: string,
  *              body:*,
  *              idToken:string,
+ *              AppId:number,
+ *              AppSignature:string,
  *              authorization:string,
  *              ip: string,
  *              user_agent:string,
@@ -1367,9 +1367,9 @@
  * @property {object} query
  * @property {string} query.parameters
  
- * @property {{ 'id-token':string,
- *              AppId: number,
- *              AppSignature:string,
+ * @property {{ 'app-id-token':string,
+ *              'app-id': number,
+ *              'app-signature':string,
  *              authorization: string, 
  *              connection:string,
  *              'user-agent': string, 

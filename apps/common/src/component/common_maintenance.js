@@ -41,9 +41,9 @@ const template = props =>`  <!DOCTYPE html>
                                                                     method: 'GET',
                                                                     headers: {
                                                                             'Connection': 'close',
-                                                                            'AppId': ${props.app_id},
-                                                                            'AppSignature': 'App Signature',
-                                                                            'id-token': 'Bearer ${props.Info.app_idtoken}'
+                                                                            'app-id': ${props.app_id},
+                                                                            'app-signature': 'App Signature',
+                                                                            'app-id-token': 'Bearer ${props.Info.app_idtoken}'
                                                                         }
                                                                     })
                                                             .then(module=>module.blob())
@@ -96,7 +96,7 @@ const template = props =>`  <!DOCTYPE html>
  * @returns {Promise.<string>}
  */
 const component = async props =>{
-    const base64= Buffer.from ('content_type=text/javascript&IAM_data_app_id=0').toString('base64');
+    const base64= Buffer.from ('content_type=text/javascript&data_app_id=0').toString('base64');
     return template({   commonFetch: `${props.data.Info.rest_resource_bff}/app_id/v${props.data.Info.rest_api_version}/app-resource/~common~js~common.js?parameters=${base64}`,
                         app_id:props.data.app_id, 
                         Info:props.data.Info});

@@ -68,10 +68,12 @@ optional:
 Microservice Geolocation
 Microservice Batch
 
-enter http://localhost 
+enter http://localhost:3333 
 set admin name and password first time in admin app
 install db and optional demo users so apps will start
 		
+enter main server        
+http://localhost:3000
 	
 ## UBUNTU SERVER
 
@@ -94,9 +96,12 @@ pm2 start $HOME/app_portfolio/serviceregistry/microservice/geolocation/server.js
 
 ```
 
-enter http://[domain]
+enter http://[domain]:3333
 set admin name and password first time in admin app
 install db and optional demo users so apps will start
 set SSL, DNS settings etc if necessary
 
 all data and configuration files are in /data directory that is created when starting the first time
+
+enter main server        
+http://localhost:3000
