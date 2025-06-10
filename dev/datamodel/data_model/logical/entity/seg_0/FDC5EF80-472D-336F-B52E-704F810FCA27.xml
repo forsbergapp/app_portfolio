@@ -37,17 +37,6 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="subdomain" id="3E1417BB-4BA0-51F0-2124-5571B7E97FF4">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 08:59:06 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="path" id="A814D37E-4A38-9858-5637-D7ABB7107267">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 08:59:12 UTC</createdTime>
@@ -62,30 +51,6 @@
 <Attribute name="logo" id="ED1B8FFB-BD98-1C37-B06F-6CEAAAB8C922">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 08:59:18 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="showparam" id="DCF87098-300B-8968-C504-EDDCF4A831D4">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 08:59:23 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="manifest" id="5DC9C608-E691-8575-4C61-9868863EEB51">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 08:59:32 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <shouldEngineer>false</shouldEngineer>
 <engineerTo>

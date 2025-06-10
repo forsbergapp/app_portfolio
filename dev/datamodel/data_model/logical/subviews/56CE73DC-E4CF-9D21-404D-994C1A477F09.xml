@@ -1020,7 +1020,7 @@
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="CFD436D7-9838-B88F-3FEF-8D66A5BB60B1" otype="Entity" vid="3D4274F0-4A5F-A514-6CD5-8C577F4DB627">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="1363" y="494" width="230" height="282"/>
+<bounds x="1363" y="494" width="230" height="161"/>
 <useCustomFormat>true</useCustomFormat>
 <useDefaultColor>false</useDefaultColor>
 <backgroundColor>-11424769</backgroundColor>
