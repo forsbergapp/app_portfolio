@@ -146,9 +146,9 @@ body {
 body {
 	--common_app_color_spinner:var(--common_app_color_gold);
 	--common_app_color_background_spinner:var(--common_app_color_white);
-	color: var(--common_app_color_gold);
-	background: var(--common_app_color_white);
-	caret-color: var(--common_app_color_gold);
+	color: var(--common_app_color_gold) !important;
+	background: var(--common_app_color_white) !important;
+	caret-color: var(--common_app_color_gold) !important;
 }
 .app_bank_div{
 	background-color: var(--common_app_color_blue3);
