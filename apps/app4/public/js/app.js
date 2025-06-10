@@ -987,23 +987,35 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
  * @returns {Promise.<void>}
  */
 const appUserLogin = async () => {
-    await common.commonUserLogin();
-    //if user has not any posts saved then create default
-    const result = await common.commonFFB({ path:'/server-db/iamuserappdatapost/', 
-                                            query:`IAM_data_app_id=${common.COMMON_GLOBAL.app_id}&iam_user_id=${common.COMMON_GLOBAL.iam_user_id??''}`, 
-                                            method:'GET', authorization_type:'APP_ID'});
-    if (JSON.parse(result).rows.length==0){
-        await appUserSettingFunction('ADD_LOGIN', true);
+    await common.commonUserLogin();   
+    await appUserLoginPost();
+};
+/**
+ * @name appUserLoginPost
+ * @description User login post
+ * @function
+ * @returns {Promise.<void>}
+ */
+const appUserLoginPost = async () =>{
+    if (common.COMMON_GLOBAL.iam_user_id !=null){
+        //if user has not any posts saved then create default
+        const result = await common.commonFFB({ path:'/server-db/iamuserappdatapost/', 
+                                                query:`IAM_data_app_id=${common.COMMON_GLOBAL.app_id}&iam_user_id=${common.COMMON_GLOBAL.iam_user_id??''}`, 
+                                                method:'GET', authorization_type:'APP_ID'});
+        if (JSON.parse(result).rows.length==0){
+            await appUserSettingFunction('ADD_LOGIN', true);
+        }
+        //Hide settings
+        COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
+        common.commonComponentRemove('common_dialogue_profile');
+        
+        COMMON_DOCUMENT.querySelector('#paper').textContent='';
+        appUserSettingsGet().then(() => {
+            //show default startup
+            appToolbarButton(APP_GLOBAL.app_default_startup_page);
+        });
     }
-    //Hide settings
-    COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
-    common.commonComponentRemove('common_dialogue_profile');
     
-    COMMON_DOCUMENT.querySelector('#paper').textContent='';
-    appUserSettingsGet().then(() => {
-        //show default startup
-        appToolbarButton(APP_GLOBAL.app_default_startup_page);
-    });
 };
 
 /**
@@ -1766,23 +1778,6 @@ const appEventClick = event => {
                     COMMON_DOCUMENT.querySelector('#common_profile_search_input').focus();
                     break;
                 }
-                //toolbar bottom
-                case 'toolbar_btn_about':{
-                    common.commonComponentRender({
-                        mountDiv:   'dialogue_info',
-                        data:       {   
-                                    about_logo:common.COMMON_GLOBAL.app_logo,
-                                    app_copyright:common.COMMON_GLOBAL.app_copyright,
-                                    app_link_url:common.COMMON_GLOBAL.app_link_url,
-                                    app_link_title: common.COMMON_GLOBAL.app_link_title,
-                                    info_link_policy_name:common.COMMON_GLOBAL.info_link_policy_name,
-                                    info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
-                                    info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name
-                                    },
-                        methods:    {commonMiscResourceFetch:common.commonMiscResourceFetch},
-                        path:       '/component/dialogue_info.js'});
-                    break;
-                }
                 case 'toolbar_btn_print':{
                     appToolbarButton(1);
                     break;
@@ -2235,13 +2230,7 @@ const appInit = async parameters => {
             mountDiv:   'app_profile_toolbar',
             data:       null,
             methods:    null,
-            path:       '/common/component/common_profile_toolbar.js'}))
-    .then(()=>
-        common.commonComponentRender({
-            mountDiv:   'app_user_account',
-            data:       null,
-            methods:    null,
-            path:       '/common/component/common_iam_avatar.js'}));
+            path:       '/common/component/common_profile_toolbar.js'}));
     //set papersize
     appPaperZoom();
     //set app and report globals
@@ -2333,17 +2322,15 @@ const appInit = async parameters => {
  * @description Init common
  * @function
  * @param {CommonModuleCommon} commonLib
- * @param {function} start
  * @param {APP_PARAMETERS} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, start, parameters) => {
+const appCommonInit = async (commonLib, parameters) => {
     common = commonLib;
-    await start();
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
-    appInit(parameters);
+    await appInit(parameters);
 };
 /**
  * @returns {commonMetadata}
@@ -2356,7 +2343,8 @@ const appMetadata = () =>{
             KeyDown: null,
             KeyUp:   appEventKeyUp,
             Focus:   null,
-            Input:   null}
+            Input:   null},
+        lifeCycle:{onMounted:appUserLoginPost}
     };
 };
 export{ appCommonInit, appComponentSettingUpdate, appSettingThemeThumbnailsUpdate, appMetadata};

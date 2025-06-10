@@ -17,7 +17,6 @@ const template = () =>` <div id='secure'>
                             </div>
                             <div id='secure_menu_open' class='common_dialogue_button common_icon'></div>
                             <div id='secure_menu'>
-                                <div id='secure_app_user_account' class='secure_menuitem'></div>
                                 <div id='secure_menu_menus'>
                                     <div id='secure_menu_close' class='common_dialogue_button common_icon'></div>
                                     <div id='secure_menu_1' class='secure_menuitem common_icon'></div>
