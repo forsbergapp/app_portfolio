@@ -3699,6 +3699,7 @@ const custom_framework = () => {
 /**
  * @name commonMountApp
  * @description Mount app
+ * @function
  * @param {number} app_id
  * @returns {Promise.<void>}
  */
@@ -3753,6 +3754,9 @@ const commonMountApp = async (app_id) =>{
             COMMON_DOCUMENT.querySelector('#app_link_favicon_192x192').href = await commonMiscResourceFetch(CommonAppInit.App.favicon_192x192, null, 'image/png');
 };
 /**
+ * @name commonGet
+ * @description Returns all functions and globals
+ * @function
  * @returns {CommonModuleCommon}
  */
 const commonGet = () =>{

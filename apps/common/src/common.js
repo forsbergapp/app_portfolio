@@ -881,31 +881,31 @@ const commonAppHost = (host, AppId=null, AppSignature=null) =>{
         };
  };
  /**
- * @name commonApp
- * @namespace ROUTE_APP
- * @description Get app 
- * @function
- * @param {{app_id:number,
- *          resource_id:number,
- *          ip:string,
- *          host:string,
- *          user_agent:string,
- *          accept_language:string,
- *          data:{locale:string}}} parameters
- * @returns {Promise.<server_server_response & {result?:{App:{id:server_db_table_App['id'],
- *                                                            name:server_db_table_App['name'],
- *                                                            js:server_db_table_App['js'],
- *                                                            css:server_db_table_App['css'],
- *                                                            css_report:server_db_table_App['css_report'],
- *                                                            favicon_32x32:server_db_table_App['favicon_32x32'],
- *                                                            favicon_192x192:server_db_table_App['favicon_192x192'],
- *                                                            logo:server_db_table_App['logo'],
- *                                                            copyright:server_db_table_App['copyright'],
- *                                                            link_url:server_db_table_App['link_url'],
- *                                                            link_title:server_db_table_App['link_title'],
- *                                                            text_edit:server_db_table_App['text_edit']},
- *                                                       AppParameter:server_db_table_AppParameter|{}} }>}
- */
+  * @name commonAppInit
+  * @memberof ROUTE_REST_API
+  * @description Get app 
+  * @function
+  * @param {{app_id:number,
+  *          resource_id:number,
+  *          ip:string,
+  *          host:string,
+  *          user_agent:string,
+  *          accept_language:string,
+  *          data:{ locale:string } } } parameters
+  * @returns {Promise.<server_server_response & {result?:{App:{id:server_db_table_App['id'],
+  *                                                            name:server_db_table_App['name'],
+  *                                                            js:server_db_table_App['js'],
+  *                                                            css:server_db_table_App['css'],
+  *                                                            css_report:server_db_table_App['css_report'],
+  *                                                            favicon_32x32:server_db_table_App['favicon_32x32'],
+  *                                                            favicon_192x192:server_db_table_App['favicon_192x192'],
+  *                                                            logo:server_db_table_App['logo'],
+  *                                                            copyright:server_db_table_App['copyright'],
+  *                                                            link_url:server_db_table_App['link_url'],
+  *                                                            link_title:server_db_table_App['link_title'],
+  *                                                            text_edit:server_db_table_App['text_edit']},
+  *                                                       AppParameter:server_db_table_AppParameter | {} } }>}
+  */
 const commonAppInit = async parameters =>{
     /**@type{server_db_table_App} */
     const app = App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
