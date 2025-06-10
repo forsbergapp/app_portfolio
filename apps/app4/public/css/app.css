@@ -86,8 +86,6 @@
 #setting_btn_user_add::before{								content:var(--common_app_icon_add)}
 #setting_btn_user_delete::before{							content:var(--common_app_icon_delete)}
 
-
-#toolbar_btn_about::before{									content:var(--common_app_icon_info)}
 #toolbar_btn_print::before{									content:var(--common_app_icon_print)}
 #toolbar_btn_day::before{									content:var(--common_app_icon_regional_day)}
 #toolbar_btn_month::before{									content:var(--common_app_icon_regional_month)}
@@ -103,19 +101,16 @@
 
 /* TOOLBAR TOP*/
 #toolbar_top {
-	top: 0;
 	text-align: center;
 	width: 100%;
-	display: grid;
-	grid-template-columns: 1fr repeat(5, auto) 1fr;
-	grid-column-gap: 5px;
+	display: flex;
+    justify-content: center;
 	z-index: 2;
+    position: fixed;
+
 }
 #toolbar_btn_zoomin,#toolbar_btn_zoomout,#toolbar_btn_left, #toolbar_btn_right, #toolbar_btn_search {
 	font-size: 48px;
-}
-#app_user_account{
-	width:60px;
 }
 /* TOOLBAR BOTTOM*/
 #app_profile_toolbar{
@@ -128,9 +123,10 @@
 	bottom: 0;
 	display:grid;
 	position:fixed;
-	grid-template-columns: 0.9fr repeat(5, auto) 1fr;
-	grid-column-gap: 5px;
-	z-index: 2;
+	grid-template-columns: 30px 30px 30px 30px 30px 30px;
+    grid-column-gap: 20px;
+	z-index: 1;
+    justify-content: center;
 }
 #toolbar_bottom .common_toolbar_button{
 	font-size: 48px !important;
@@ -578,6 +574,19 @@
 	width:60px !important;
 }
 /*COMMON*/
+#common_user_account{
+	display: unset !important;
+    flex-flow: unset !important;
+	width: unset !important;
+    position: unset !important;
+    top: unset !important;
+}
+
+#common_iam_avatar{
+	position: absolute;
+	bottom:0.1em;
+    z-index:2;
+}
 #common_app_toolbar{
 	margin-inline-start: 0px !important;
     bottom: 60px !important;
@@ -835,6 +844,7 @@ body,
 #settings,
 #settings select,
 #settings_tab_navigation,
+#common_iam_avatar,
 .common_dialogue_button,
 .common_toolbar_button
 {
@@ -853,6 +863,8 @@ body,
 .common_dialogue_button:active,
 .common_toolbar_button:hover,
 .common_toolbar_button:active,
+#common_iam_avatar:hover,
+#common_iam_avatar:active,
 #settings_tab_navigation :hover,
 #settings_tab_navigation :active {
 	color:var(--app_theme_hover) !important;

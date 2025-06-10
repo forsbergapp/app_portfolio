@@ -160,11 +160,6 @@
 	z-index: 10;
 	display: none;
 }
-#common_iam_avatar,
-#secure_app_user_account{
-	height: 2em !important;
-	width:  2em !important;
-}
 .secure_menuitem{
 	cursor: pointer;
 	text-align: start;
@@ -978,6 +973,11 @@
 	height:calc(100% - 320px);
 }
 /* COMMON */
+#common_iam_avatar,
+#common_user_account{
+	height: 2em !important;
+	width:  2em !important;
+}
 #common_window_info {
 	background: var(--common_app_color_white);
 }

@@ -43,6 +43,7 @@ const COMMON_GLOBAL = {
     iam_user_app_id:null,
     iam_user_id:null,
     iam_user_username:null,
+    iam_user_avatar:null,
     admin_first_time:null,
     admin_only:null,
     client_latitude:'',
@@ -1629,6 +1630,7 @@ const commonUserLogin = async () => {
         COMMON_GLOBAL.iam_user_app_id =         JSON.parse(result_iam).iam_user_app_id;
         COMMON_GLOBAL.iam_user_id =             JSON.parse(result_iam).iam_user_id;
         COMMON_GLOBAL.iam_user_username =       JSON.parse(result_iam).iam_user_username;
+        COMMON_GLOBAL.iam_user_avatar =         JSON.parse(result_iam).avatar;
         COMMON_GLOBAL.token_exp =               JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat =               JSON.parse(result_iam).iat;
 
@@ -1640,14 +1642,7 @@ const commonUserLogin = async () => {
         else{
             COMMON_GLOBAL.token_admin_at= null;
             COMMON_GLOBAL.token_at	    = JSON.parse(result_iam).token_at;
-            //set avatar or empty
-            COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= (JSON.parse(result_iam).avatar)?
-                                                                                                        `url('${JSON.parse(result_iam).avatar}')`:
-                                                                                                        'url()';
-            COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',JSON.parse(result_iam).avatar);
-            COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
-            COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
-
+            commonUserUpdateAvatar(true, COMMON_GLOBAL.iam_user_avatar);
             commonComponentRemove(current_dialogue, true);
             commonComponentRemove('common_dialogue_profile', true);
         }
@@ -1754,11 +1749,7 @@ const commonLogout = async () => {
     commonWindoInfoClose();
     commonComponentRemove('common_dialogue_iam_verify');
     if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.app_admin_app_id){
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= 'url()';
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',null);
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_message_count_text').textContent = '';
+        commonUserUpdateAvatar(false,null );
         commonComponentRemove('common_dialogue_iam_verify');
         commonComponentRemove('common_dialogue_iam_start');
         commonComponentRemove('common_dialogue_profile', true);
@@ -2011,6 +2002,33 @@ const commonUserMessageShowStat = async () =>{
         
     }    
 };
+
+/**
+ * @name commonUserUpdateAvatar
+ * @description Update avatar login/logout
+ * @function
+ * @param {boolean} login
+ * @param {string|null} avatar
+ * @returns {void}
+ */
+const commonUserUpdateAvatar = (login, avatar) =>{
+    if (login){
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= avatar?
+                                                                                                `url('${avatar}')`:
+                                                                                                    'url()';
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',avatar);
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
+    }
+    else{
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= 'url()';
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',null);
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_message_count_text').textContent = '';
+    }
+};
+
 
 /**
  * @name commonUserPreferenceSave
@@ -3692,6 +3710,7 @@ const commonMountApp = async (app_id) =>{
                                     method:'GET', 
                                     authorization_type:'APP_ID'})
                             .then(app=>JSON.parse(app));
+    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_div}`).innerHTML='';
     COMMON_GLOBAL.app_id =          CommonAppInit.App.id;
     COMMON_GLOBAL.app_logo =        CommonAppInit.App.logo;
     COMMON_GLOBAL.app_copyright =   CommonAppInit.App.copyright;
@@ -3700,22 +3719,29 @@ const commonMountApp = async (app_id) =>{
     COMMON_GLOBAL.app_text_edit =   CommonAppInit.App.text_edit;
     CommonAppInit.App.css==''?
         null:
-            commonMiscResourceFetch(CommonAppInit.App.css, null, 'text/css').then(href=>COMMON_DOCUMENT.querySelector('#app_link_app_css').href =href);
+            await commonMiscResourceFetch(CommonAppInit.App.css, null, 'text/css').then(href=>COMMON_DOCUMENT.querySelector('#app_link_app_css').href =href);
     const {appMetadata, default:AppInit} = await commonMiscImport(CommonAppInit.App.js);
     /**@type{commonMetadata} */
     const appdata = appMetadata();
-    const start = async () =>{
-        await commonFrameworkSet(null,
-            {   Click: appdata.events.Click,
-                Change: appdata.events.Change,
-                KeyDown: appdata.events.KeyDown,
-                KeyUp: appdata.events.KeyUp,
-                Focus: appdata.events.Focus,
-                Input:appdata.events.Input,
-                Other:appdata.events.Other});    
-    };
-    AppInit(commonGet(), start, CommonAppInit.AppParameter);
-
+    await AppInit(commonGet(), CommonAppInit.AppParameter)
+        .then(()=>{
+            appdata.lifeCycle?.onMounted?appdata.lifeCycle.onMounted():null;
+            commonFrameworkSet(null,
+                {   Click: appdata.events.Click,
+                    Change: appdata.events.Change,
+                    KeyDown: appdata.events.KeyDown,
+                    KeyUp: appdata.events.KeyUp,
+                    Focus: appdata.events.Focus,
+                    Input:appdata.events.Input,
+                    Other:appdata.events.Other});
+            if (COMMON_GLOBAL.iam_user_id){
+                commonUserUpdateAvatar(true, COMMON_GLOBAL.iam_user_avatar);
+                commonUserMessageShowStat();
+            }
+            else
+                commonUserUpdateAvatar(false, null);
+        });
+    
     CommonAppInit.App.css_report==''?
         null:
             COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(CommonAppInit.App.css_report, null, 'text/css');
@@ -3797,6 +3823,7 @@ const commonGet = () =>{
         commonUserUpdate:commonUserUpdate, 
         commonUserAuthenticateCode:commonUserAuthenticateCode,
         commonUserMessageShowStat:commonUserMessageShowStat,
+        commonUserUpdateAvatar:commonUserUpdateAvatar,
         /* MODULE LEAFLET  */
         commonModuleLeafletInit:commonModuleLeafletInit, 
         /* FFB */
@@ -3922,7 +3949,7 @@ export{/* GLOBALS*/
        /* FRAMEWORK */
        commonFrameworkSet,
        /* DIALOGUE */
-       commonDialogueShow, 
+       commonDialogueShow,
        /* LOV */
        commonLovAction,
        commonLovEvent, 
@@ -3947,6 +3974,7 @@ export{/* GLOBALS*/
        commonUserUpdate, 
        commonUserAuthenticateCode,
        commonUserMessageShowStat,
+       commonUserUpdateAvatar,
        /* MODULE LEAFLET  */
        commonModuleLeafletInit, 
        /* FFB */

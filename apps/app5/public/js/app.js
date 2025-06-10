@@ -291,14 +291,25 @@ const appEventKeyUp = event => {
  * @name appUserLogin
  * @description User login
  * @function
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const appUserLogin = () =>{
-    common.commonUserLogin()
-    .then(()=>common.commonComponentRemove('app_main_page'))
-    .then(()=>appSecureInit())
-    .catch(()=>null);
+const appUserLogin = async () =>{
+    await common.commonUserLogin();
+    await appUserLoginPost();
 };
+/**
+ * @name appUserLoginPost
+ * @description User login post
+ * @function
+ * @returns {Promise.<void>}
+ */
+const appUserLoginPost = async () =>{
+    if (common.COMMON_GLOBAL.iam_user_id != null){
+        common.commonComponentRemove('app_main_page');
+        appSecureInit();
+    }
+};
+
 /**
  * @name appUserLogout
  * @description User logout
@@ -495,12 +506,6 @@ const appInit = async () => {
         path:       '/component/app.js'})
     .then(()=> 
         common.commonComponentRender({
-            mountDiv:   'app_top_usermenu', 
-            data:       null,
-            methods:    null,
-            path:       '/common/component/common_iam_avatar.js'}))
-    .then(()=> 
-        common.commonComponentRender({
             mountDiv:   'app_main_page', 
             data:       null,
             methods:    null,
@@ -511,18 +516,16 @@ const appInit = async () => {
  * @description Init common
  * @function
  * @param {CommonModuleCommon} commonLib
- * @param {function} start
  * @param {Object.<String,*>} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, start, parameters) => {
+const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
-    await start();
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
     common.COMMON_GLOBAL.app_function_sse = appPaymentRequestShow;
-    appInit();
+    await appInit();
 };
 /**
  * @returns {commonMetadata}
@@ -535,7 +538,8 @@ const appMetadata = () =>{
             KeyDown: null,
             KeyUp:   appEventKeyUp,
             Focus:   null,
-            Input:   null}
+            Input:   null},
+        lifeCycle:{onMounted:appUserLoginPost}
     };
 };
 export{appCommonInit, appMetadata};

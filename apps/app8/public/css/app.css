@@ -138,9 +138,6 @@ body {
 #common_profile_search_list_wrap{
 	visibility: hidden;
 }
-#common_user_account{
-	visibility: hidden;
-}
 #common_window_info_content{
 	display: none;
 }
@@ -182,6 +179,10 @@ body {
 	background-color : rgba(0,0,0,.5);
 }
 /* APP THEME COMMON*/
+#common_iam_avatar{
+    background-color: var(--common_app_color_light);
+    box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
+}
 #common_message_progressbar_wrap{
 	border-color: var(--common_app_color_blue1) !important;
 }

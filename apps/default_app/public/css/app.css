@@ -22,9 +22,6 @@ body {
 #common_profile_search_list_wrap{
 	visibility: hidden;
 }
-#common_user_account{
-	visibility: hidden;
-}
 #common_window_info_content{
 	display: none;
 }

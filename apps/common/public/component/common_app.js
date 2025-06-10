@@ -37,7 +37,19 @@ const template = props =>`  <div id='common_app_toolbar' ${(props.app_toolbar_bu
                             <div id='common_window_info'></div>
                             <div id='common_broadcast'></div>
                             <div id='common_profile_search'></div>
-                            <div id='common_user_account'></div>
+                            <div id='common_user_account'>
+                                <div id='common_iam_avatar'>
+                                    <div id='common_iam_avatar_logged_in'>
+                                        <div id='common_iam_avatar_avatar'>
+                                            <div id='common_iam_avatar_avatar_img' class='common_image common_image_avatar'></div>
+                                            <div id='common_iam_avatar_message_count' class='common_icon'><div id='common_iam_avatar_message_count_text'></div></div>
+                                        </div>
+                                    </div>
+                                    <div id='common_iam_avatar_logged_out'>
+                                        <div id='common_iam_avatar_default_avatar' class='common_icon'></div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id='common_profile_toolbar'></div>
                             <div id='common_style'>
                                 <link id='common_link_common_css' rel='stylesheet' type='text/css' data-href='/common/css/common.css' />
@@ -234,7 +246,7 @@ const template = props =>`  <div id='common_app_toolbar' ${(props.app_toolbar_bu
  *                      template:string}>}
  */
 const component = async props => {
-    
+
     return {
         lifecycle:  null,
         data:       null,

@@ -29,12 +29,6 @@ body {
 	display: inline-block;
 	margin-inline-start: 5px;
 }
-#app_top_usermenu{
-	width: 48px;
-	height: 48px;
-	display: inline-block;
-	margin: 5px;
-}
 #app_main{
 	height: calc(100% - 120px);
 }
@@ -106,6 +100,10 @@ body {
 	}
 }
 /*COMMON*/
+#common_iam_avatar{
+	transition-duration: .3s;
+    transition-property: box-shadow;
+}
 .common_app_data_display_master{
 	font-size:unset !important;
 }
@@ -132,15 +130,6 @@ body {
     bottom: 0.5em !important;
     top: unset !important;
 	position: fixed !important;
-}
-#common_iam_avatar{
-	margin-inline-start: unset !important;
-	position: unset !important;
-	margin-top: unset !important;
-}
-#common_iam_avatar{
-	transition-duration: .3s;
-    transition-property: box-shadow;
 }
 /*APP THEME*/
 body {
@@ -175,6 +164,10 @@ body {
     box-shadow: 0 10px 10px -10px var(--common_app_color_dark);
 }
 /* APP THEME COMMON*/
+#common_iam_avatar{
+    background-color: var(--common_app_color_light);
+    box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
+}
 .common_app_data_display_master_col1[data-key=token],
 .common_app_data_display_master_col2.common_app_data_display_type_token,
 .common_app_data_display_master_col1[data-key=exp],

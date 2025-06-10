@@ -183,6 +183,7 @@
  *              iam_user_app_id:number|null,
  *              iam_user_id:number|null,
  *              iam_user_username:string|null,
+ *              iam_user_avatar:string|null,
  *              admin_first_time:number|null,
  *              admin_only:number|null,
  *              client_latitude:string|null,
@@ -296,7 +297,8 @@
  *                  KeyUp:function|null,
  *                  Focus:function|null,
  *                  Input:function|null,
- *                  Other?:function|null}}} commonMetadata
+ *                  Other?:function|null},
+ *              lifeCycle:{onMounted:function|null}}} commonMetadata
  */
 /**
  * @description Type CommonRESTAPIMethod
