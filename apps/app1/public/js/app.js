@@ -945,20 +945,9 @@ const appLogin = async () => {
             methods:    null,
             path:       '/component/secure.js'})
         .then(()=>{
-            common.commonComponentRender({
-                mountDiv:   'secure_app_user_account',
-                data:       null,
-                methods:    null,
-                path:       '/common/component/common_iam_avatar.js'})
-            .then(()=>{
-                COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= (result.avatar ?? null)?
-                                                                                                    `url('${result.avatar ?? null}')`:
-                                                                                                    'url()';
-                COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
-                COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
-                common.commonUserMessageShowStat();
-                appSecureInit();
-            });
+            common.commonUserUpdateAvatar(true, result.avatar);
+            common.commonUserMessageShowStat();
+            appSecureInit();
         });
     })
     .catch(()=>common.commonComponentRemove('secure'));
@@ -1196,14 +1185,12 @@ const appInit = async () => {
  * @description Init common
  * @function
  * @param {CommonModuleCommon} commonLib
- * @param {function} start
  * @param {Object.<string,*>} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, start, parameters) => {
+const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
-    await start();
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appLogout;
@@ -1220,7 +1207,8 @@ const appMetadata = () =>{
             KeyDown: appEventKeyDown,
             KeyUp:   appEventKeyUp,
             Focus:   appEventFocus,
-            Input:   appEventInput}
+            Input:   appEventInput},
+        lifeCycle:{onMounted:null}
     };
 };
 export { appCommonInit, appSecureDialogueSendBroadcastShow, appMetadata }; 

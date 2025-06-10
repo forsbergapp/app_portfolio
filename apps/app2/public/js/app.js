@@ -299,27 +299,20 @@ const appInit = async () => {
             mountDiv:   'app_profile_toolbar',
             data:       null,
             methods:    null,
-            path:       '/common/component/common_profile_toolbar.js'}))
-    .then(()=>
-        common.commonComponentRender({
-            mountDiv:   'common_user_account',
-            data:       null,
-            methods:    null,
-            path:       '/common/component/common_iam_avatar.js'}));
+            path:       '/common/component/common_profile_toolbar.js'}));
+        
 };
 /**
  * @name appCommonInit
  * @description Init common
  * @function
  * @param {CommonModuleCommon} commonLib
- * @param {function} start
  * @param {Object.<string,*>} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, start, parameters) => {
+const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
-    await start();
     COMMON_DOCUMENT.body.className = 'app_theme_sun';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
@@ -336,7 +329,8 @@ const appMetadata = () =>{
             KeyDown: null,
             KeyUp:   appEventKeyUp,
             Focus:   null,
-            Input:   null}
+            Input:   null},
+        lifeCycle:{onMounted:null}
     };
 };
 

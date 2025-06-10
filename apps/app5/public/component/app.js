@@ -13,7 +13,6 @@
  */
 const template = () =>` <div id='app_top'>
                             <div id='app_top_logo'></div>
-                            <div id='app_top_usermenu'></div>
                         </div>
                         <div id='app_main'>
                             <div id='app_main_page'></div>
@@ -36,7 +35,7 @@ const template = () =>` <div id='app_top'>
 const component = async props => {
 
     const onMounted = async () =>{
-        props.methods.commonMiscResourceFetch( '/images/logo.png',
+        await props.methods.commonMiscResourceFetch( '/images/logo.png',
                                             props.methods.COMMON_DOCUMENT.querySelector('#app_top_logo'), 
                                             'image/png');
     };

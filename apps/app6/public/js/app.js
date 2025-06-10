@@ -74,6 +74,11 @@ const appEventClick = event => {
                    appFrameworkSet(3);
                     break;
                 }
+                /*Dialogue user start */
+                case 'common_dialogue_iam_start_login_button':{
+                    common.commonUserLogin().catch(()=>null);
+                    break;
+                }                
             }
         });
     }
@@ -372,14 +377,12 @@ const appInit = async () => {
  * @description Init common
  * @function
  * @param {CommonModuleCommon} commonLib
- * @param {function} start
  * @param {Object.<String,*>} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, start, parameters) => {
+const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
-    await start();
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = null;
     appInit();
@@ -395,7 +398,8 @@ const appMetadata = () =>{
             KeyDown: null,
             KeyUp:   appEventKeyUp,
             Focus:   null,
-            Input:   null}
+            Input:   null},
+        lifeCycle:{onMounted:null}
     };
 };
 export{appCommonInit, appMetadata};

@@ -419,11 +419,6 @@ div.ray8 {
 #common_profile_btn_top{
 	bottom: 0px !important;
 }
-#common_user_account{
-	display: flex !important;
-    flex-flow: row-reverse !important;
-	width: calc(100% - 10px) !important;
-}
 #common_window_info_info{
 	position:relative;
 	margin:20px;

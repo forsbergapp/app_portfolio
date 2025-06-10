@@ -534,6 +534,7 @@ body{
 body.rtl{
 	direction:rtl;
 }
+
 /*images common*/
 .common_image{
 	border-radius: 50%;
@@ -1533,6 +1534,13 @@ body.rtl{
 }
 
 /*User account*/
+#common_user_account{
+	display: flex;
+    flex-flow: row-reverse;
+	width: calc(100% - 10px);
+    position: fixed;
+    top: 0;
+}
 #common_iam_avatar{
 	margin-inline-start: 10px;
 	width: 48px;
@@ -1541,7 +1549,7 @@ body.rtl{
 	border-radius: 50% !important;
 	cursor:pointer;
 	position:fixed;
-	margin-top:10px;
+	margin-top:1em;
 }
 #common_iam_avatar_logged_in, #common_dialogue_user_menu_logged_in{
 	display: none;

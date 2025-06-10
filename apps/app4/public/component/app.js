@@ -14,7 +14,6 @@
  */
 const template = ()=>`  <link id="app_link_extra_fonts_css" media='all' rel='stylesheet' type='text/css' data-href='/common/css/font/font_extra.css'/>
                         <div id='toolbar_top'>
-                            <div id='app_user_account'></div>
                             <div id='toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
                             <div id='toolbar_btn_zoomin' class='common_toolbar_button common_icon' ></div>
                             <div id='toolbar_btn_left' class='common_toolbar_button common_icon' ></div>
@@ -29,7 +28,6 @@ const template = ()=>`  <link id="app_link_extra_fonts_css" media='all' rel='sty
                             <div id='dialogue_info' class='common_dialogue_content'></div>
                         </div>
                         <div id='toolbar_bottom'>
-                            <div id='toolbar_btn_about' class='common_toolbar_button common_icon' ></div>
                             <div id='toolbar_btn_print' class='common_toolbar_button common_icon' ></div>
                             <div id='toolbar_btn_day' class='common_toolbar_button common_icon' ></div>
                             <div id='app_profile_toolbar'></div>

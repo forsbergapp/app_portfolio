@@ -161,9 +161,6 @@ body{
 #common_profile_search_list_wrap{
 	visibility: hidden;
 }
-#common_user_account{
-	visibility: hidden;
-}
 #common_window_info{
 	display:grid;
 }
@@ -235,6 +232,10 @@ td, th{
     color: var(--common_app_color_light);
 }
 /* APP THEME COMMON*/
+#common_iam_avatar{
+    background-color: var(--common_app_color_light);
+    box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
+}    
 .common_markdown_image {
     border-color: var(--common_app_color_light) !important;
 }
