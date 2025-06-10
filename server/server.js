@@ -879,12 +879,11 @@ const serverREST_API = async (routesparameters) =>{
         if (methodObj){   
                
             const idToken = //All external roles and microservice do not use AppId Token
-                            (routesparameters.url.split('/')[2]?.toUpperCase().indexOf('EXTERNAL')>-1 ||
-                            routesparameters.url.split('/')[2]?.toUpperCase().indexOf('MICROSERVICE')>-1)?
+                            (routesparameters.endpoint.indexOf('EXTERNAL')>-1 ||
+                            routesparameters.endpoint.indexOf('MICROSERVICE')>-1)?
                                     '':
                                     routesparameters.idToken?.replace('Bearer ',''); 
 
-            //use middleware to authenticate access before bff if not APP endpoint
             const authenticate = await iam.iamAuthenticateUserCommon({
                 idToken: idToken, 
                 endpoint:routesparameters.endpoint,

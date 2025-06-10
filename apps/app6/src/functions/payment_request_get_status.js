@@ -34,6 +34,7 @@ const paymentRequestGetStatus = async parameters =>{
      *                      store_type:string,
      *                      merchant_id:string|null,
      *                      merchant_name:string|null,
+     *                      merchant_api_url_payment_request_app_id:number, 
      *                      merchant_api_url_payment_request_create:string|null, 
      *                      merchant_api_url_payment_request_get_status:string|null,
      *                      merchant_api_secret:string|null, 
@@ -68,6 +69,10 @@ const paymentRequestGetStatus = async parameters =>{
                                                 body:{data:Buffer.from(JSON.stringify(body_encrypted)).toString('base64')},
                                                 user_agent:parameters.user_agent, 
                                                 ip:parameters.ip, 
+                                                appHeader:{
+                                                    'app-id':Entity.json_data.merchant_api_url_payment_request_app_id,
+                                                    'app-signature':'Shop'
+                                                },
                                                 authorization:parameters.authorization, 
                                                 locale:parameters.locale});
     if (result_commonBFE.result.error)
