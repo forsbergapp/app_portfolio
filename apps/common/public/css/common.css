@@ -937,8 +937,12 @@ body.rtl{
 }
 #common_dialogue_apps_list{
 	font-size: 0.7em;
-    height:80%;
     overflow-y: auto;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    justify-content: space-around;
+    margin: 2em;
+    height: calc(100% - 6em);
 }
 #common_dialogue_apps_list_title{
 	height: 2em;
@@ -949,20 +953,9 @@ body.rtl{
 #common_dialogue_apps_list_title_col_info {
     font-size: 1.25em;
 }
-#common_dialogue_apps_list .common_dialogue_apps_app_link_row{
-	width: 45%;
-    display: inline-block;
-	vertical-align: top;
-}
 #common_dialogue_apps_list .common_dialogue_apps_app_link_col{
 	width: 100%;
     display: block;
-	margin-left: unset;
-    margin-top: unset;
-}
-.common_dialogue_apps_app_link_row{
-	padding-top: 4px;
-    padding-bottom: 4px;
 }
 .common_dialogue_apps_app_link_col:nth-child(1),.common_dialogue_apps_app_link_col:nth-child(2){
 	display: none;

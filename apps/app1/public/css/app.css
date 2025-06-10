@@ -500,7 +500,7 @@
 }
 .menu_apps_row{
 	display: grid;
-	grid-template-columns:  3em 15em 10em 15em 15em 15em 15em 15em 16em 16em 7em 15em 15em 20em 7em !important
+	grid-template-columns:  3em 15em 15em 15em 15em 15em 15em 16em 16em 7em 15em 15em 20em 7em !important
 }
 .menu_apps_row, .menu_apps_detail_row{
 	height: auto;

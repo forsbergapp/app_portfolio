@@ -22,7 +22,6 @@ const test = async t =>
             const App = await import('./App.js');
             
             const app_data = {  name:'ORM',
-                                subdomain:'orm',
                                 path:'/apps/orm/public',
                                 logo:'/images/logo.png',
                                 js:'/js/app.js',

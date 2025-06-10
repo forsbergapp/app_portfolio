@@ -12,7 +12,6 @@
  * @description Template
  * @function
  * @param {{app_idtoken:string,
- *          app_start_app_id: number,
  *          commonFetch:string,
  *          APP:import('../../../../server/types.js').server_db_table_App, 
  *          APP_PARAMETERS:string}} props
@@ -31,9 +30,9 @@ const template = props =>`  <!DOCTYPE html>
                                                                 method: 'GET',
                                                                 headers: {
                                                                         'Connection': 'close',
-                                                                        'AppId': ${props.APP.id},
-                                                                        'AppSignature': 'App Signature',
-                                                                        'id-token': 'Bearer ${props.app_idtoken}'
+                                                                        'app-id': ${props.APP.id},
+                                                                        'app-signature': 'App Signature',
+                                                                        'app-id-token': 'Bearer ${props.app_idtoken}'
                                                                     }
                                                                 })
                                                         .then(module=>module.blob())
@@ -41,7 +40,7 @@ const template = props =>`  <!DOCTYPE html>
                                                                                             {type: 'text/javascript'}))))
                                                         .catch(error=>document.write(error));
                                     (await commonFetch('${props.commonFetch}'))
-                                        .commonInit(${props.app_start_app_id} ,
+                                        .commonInit(${props.APP.id} ,
                                                     '${props.APP_PARAMETERS}');
                                 </script>
                                 <link id="app_link_app_css"         rel='stylesheet'  type='text/css'     href=''/>
@@ -70,9 +69,8 @@ const template = props =>`  <!DOCTYPE html>
  * @returns {Promise.<string>}
  */
 const component = async props =>{
-    const base64= Buffer.from ('content_type=text/javascript&IAM_data_app_id=0').toString('base64');
+    const base64= Buffer.from ('content_type=text/javascript&data_app_id=0').toString('base64');
     return template({   app_idtoken: props.data.Info.app_idtoken,
-                        app_start_app_id:props.data.App.id, //INFO.app_start_app_id,
                         commonFetch: `${props.data.Info.rest_resource_bff}/app_id/v${props.data.Info.rest_api_version}/app-resource/~common~js~common.js?parameters=${base64}`,
                         APP:props.data.App, 
                         APP_PARAMETERS:Buffer.from(JSON.stringify({ 

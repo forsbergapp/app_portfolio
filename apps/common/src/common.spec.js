@@ -79,7 +79,7 @@ const test = async t =>
              *          accept_language:string,}}
              */
             const parameters = {
-                app_id:app_common.commonAppHost('localhost') ?? 0,
+                app_id:app_common.commonAppHost('localhost').app_id ?? 0,
                 ip:'::1',
                 host:'localhost',
                 user_agent:'BDD test',
