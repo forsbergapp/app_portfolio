@@ -88,6 +88,24 @@ resource "oci_core_security_list" "security-list" {
         max = 443
     }
     description = "Allow HTTPS"
+  } 
+  ingress_security_rules {
+    protocol = "6" #tcp protocol
+    source  = "0.0.0.0/0"
+    tcp_options {
+        min = 3333
+        max = 3333
+    }
+    description = "HTTP Admin"
+  }
+  ingress_security_rules {
+    protocol = "6" #tcp protocol
+    source  = "0.0.0.0/0"
+    tcp_options {
+        min = 4444
+        max = 4444
+    }
+    description = "HTTPS Admin"
   }  
   egress_security_rules {
     protocol = "all" #all protocols or -1
@@ -133,6 +151,8 @@ resource "oci_core_instance" "compute_instance_network" {
                               sudo ufw allow 22/tcp
                               sudo ufw allow 80/tcp
                               sudo ufw allow 443/tcp
+                              sudo ufw allow 3333/tcp
+                              sudo ufw allow 4444/tcp
                               sudo ufw --force enable
                               sudo -i -u ubuntu git clone ${var.git_repository_url} app_portfolio
                               sudo npm install -g pm2
@@ -140,9 +160,6 @@ resource "oci_core_instance" "compute_instance_network" {
                               sudo -i -u ubuntu pm2 start /home/ubuntu/app_portfolio/serviceregistry/microservice/batch/server.js --cwd /home/ubuntu/app_portfolio --name batch --watch="serviceregistry/microservice/batch" --watch-delay 10 --no-autorestart --silent
                               sudo -i -u ubuntu pm2 start /home/ubuntu/app_portfolio/serviceregistry/microservice/geolocation/server.js --cwd /home/ubuntu/app_portfolio --name geolocation --watch="serviceregistry/microservice/geolocation" --no-autorestart --silent
                               sudo -i -u ubuntu pm2 save
-                              sudo -i -u ubuntu pm2 stop batch
-                              sudo -i -u ubuntu pm2 stop geolocation
-                              sudo -i -u ubuntu pm2 stop mail
                               EOF
                               )
     ssh_authorized_keys     = tls_private_key.AppPortfolioKey.public_key_openssh
@@ -184,6 +201,8 @@ resource "oci_core_instance" "compute_instance_only" {
                               sudo ufw allow 22/tcp
                               sudo ufw allow 80/tcp
                               sudo ufw allow 443/tcp
+                              sudo ufw allow 3333/tcp
+                              sudo ufw allow 4444/tcp
                               sudo ufw --force enable
                               sudo -i -u ubuntu git clone ${var.git_repository_url} app_portfolio
                               sudo npm install -g pm2
@@ -191,9 +210,6 @@ resource "oci_core_instance" "compute_instance_only" {
                               sudo -i -u ubuntu pm2 start /home/ubuntu/app_portfolio/serviceregistry/microservice/batch/server.js --cwd /home/ubuntu/app_portfolio --name batch --watch="serviceregistry/microservice/batch" --watch-delay 10 --no-autorestart --silent
                               sudo -i -u ubuntu pm2 start /home/ubuntu/app_portfolio/serviceregistry/microservice/geolocation/server.js --cwd /home/ubuntu/app_portfolio --name geolocation --watch="serviceregistry/microservice/geolocation" --no-autorestart --silent
                               sudo -i -u ubuntu pm2 save
-                              sudo -i -u ubuntu pm2 stop batch
-                              sudo -i -u ubuntu pm2 stop geolocation
-                              sudo -i -u ubuntu pm2 stop mail
                               EOF
                               )
     ssh_authorized_keys     = tls_private_key.AppPortfolioKey.public_key_openssh
