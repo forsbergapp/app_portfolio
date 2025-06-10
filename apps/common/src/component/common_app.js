@@ -35,7 +35,7 @@ const template = props =>`  <!DOCTYPE html>
                                                                         'app-id-token': 'Bearer ${props.app_idtoken}'
                                                                     }
                                                                 })
-                                                        .then(module=>module.blob())
+                                                        .then(module=>{if (module.status==200)return module.blob();else throw module.statusText})
                                                         .then(module=>URL.createObjectURL(  new Blob ([module],
                                                                                             {type: 'text/javascript'}))))
                                                         .catch(error=>document.write(error));

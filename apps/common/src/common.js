@@ -154,6 +154,7 @@ const commonGeodata = async parameters =>{
  *          body:*,
  *          user_agent:string,
  *          ip:string,
+ *          appHeader: Object.<string,*>,
  *          authorization:string|null,
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response>}
@@ -174,6 +175,7 @@ const commonBFE = async parameters =>{
                     'Content-Type': 'application/json',
                     'Content-Length': Buffer.byteLength(JSON.stringify(parameters.body)),
                     'Authorization': parameters.authorization ?? '',
+                    ...parameters.appHeader,
                     'x-forwarded-for': parameters.ip
                 },
                 rejectUnauthorized: false
