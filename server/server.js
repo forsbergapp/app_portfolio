@@ -1104,6 +1104,8 @@ const serverStart = async () =>{
     
     const Log = await import('./db/Log.js');
     const ConfigServer = await import('./db/ConfigServer.js');
+    const ServiceRegistry = await import('./db/ServiceRegistry.js');
+    const AppSecret = await import('./db/AppSecret.js');
     const Installation = await import('./installation.js');
     const ORM = await  import('./db/ORM.js');
 
@@ -1130,9 +1132,37 @@ const serverStart = async () =>{
     });
     try {
         const result_data = await ORM.getFsDataExists();
-        if (result_data==false)
-            await Installation.configDefault();
-        await ORM.Init();
+        if (result_data==false){
+            await Installation.postConfigDefault();
+            await ORM.Init();
+        }
+        else{
+            await ORM.Init();
+            //update all secrets for every server restart
+            const updatedConfigSecurity = await Installation.getConfigSecurityUpdate({
+                                                    pathConfigServer:   null,
+                                                    pathServiceRegistry:null,
+                                                    pathAppSecret:      null
+                                                });
+            await ConfigServer.update({ app_id:0,
+                                        data:{  config: updatedConfigSecurity.ConfigServer}});
+            for(const record of updatedConfigSecurity.ServiceRegistry.rows??[])
+                await ServiceRegistry.update({app_id:0,
+                                        /**@ts-ignore */
+                                        resource_id:record.id,
+                                        data:record});
+            for(const record of updatedConfigSecurity.AppSecret.rows??[])
+                for (const key of Object.keys(record).filter(key=>key !='app_id'))
+                    AppSecret.update({  app_id:0,
+                                        resource_id:record.app_id,
+                                        data:{  parameter_name:key,
+                                                /**@ts-ignore */
+                                                parameter_value:record[key]}});
+
+            await Installation.updateMicroserviceSecurity({ serveRegistry:               updatedConfigSecurity.ServiceRegistry.rows??[],
+                                                            pathMicroserviceSource:     '/data/microservice/',
+                                                            pathMicroserviceDestination:'/data/microservice/'});
+        }
         /**@type{server_db_document_ConfigServer['SERVER']} */
         const configServer = ConfigServer.get({app_id:0,data:{ config_group:'SERVER'}}).result;
         const {socketIntervalCheck} = await import('./socket.js');

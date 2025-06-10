@@ -825,20 +825,25 @@ const deleteDemo = async parameters => {
        return result_demo_users;
 };
 /**
- * @name configDefault
+ * @name postConfigDefault
  * @description Default config
  * @function
  * @returns {Promise<void>}
  */
-const configDefault = async () => {
+const postConfigDefault = async () => {
     const {serverProcess} = await import('./server.js');
-    const Security = await import('./security.js');
     const ORM = await import('./db/ORM.js');
 
     const fs = await import('node:fs');
 
-    const APP_PORTFOLIO_TITLE = 'App Portfolio';
-
+    const updatedConfigSecurity = await getConfigSecurityUpdate({pathConfigServer:'/server/install/default/ConfigServer.json',
+                                                        pathServiceRegistry:'/server/install/default/ServiceRegistry.json',
+                                                        pathAppSecret:'/server/install/default/AppSecret.json'
+    });
+    /**
+     * @param {server_DbObject} object
+     */
+    const getObject = async object => await fs.promises.readFile(serverProcess.cwd() + `/server/install/default/${object}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
     //read all default files
     /**
      * @type{[  [server_DbObject, server_db_document_ConfigServer],
@@ -860,76 +865,22 @@ const configDefault = async () => {
      *       ]}
      */
     const config_obj = [
-                            ['ConfigServer',                    await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ConfigServer.json')
-                                                                        .then(filebuffer=>{
-                                                                            const config_server = JSON.parse(filebuffer.toString());
-                                                                            //generate secrets
-                                                                            config_server.SERVICE_IAM.map((/**@type{server_db_config_server_service_iam}*/row)=>{
-                                                                                for (const key of Object.keys(row)){
-                                                                                    if (key== 'MICROSERVICE_TOKEN_SECRET'){
-                                                                                        row.MICROSERVICE_TOKEN_SECRET = Security.securitySecretCreate();
-                                                                                    }
-                                                                                    if (key== 'ADMIN_TOKEN_SECRET'){
-                                                                                        row.ADMIN_TOKEN_SECRET = Security.securitySecretCreate();
-                                                                                    }
-                                                                                    if (key== 'USER_PASSWORD_ENCRYPTION_KEY'){
-                                                                                        row.USER_PASSWORD_ENCRYPTION_KEY = Security.securitySecretCreate(false, 32);
-                                                                                    }
-                                                                                    if (key== 'USER_PASSWORD_INIT_VECTOR'){
-                                                                                        row.USER_PASSWORD_INIT_VECTOR = Security.securitySecretCreate(false, 16);
-                                                                                    }
-                                                                                }
-                                                                            });
-                                                                            //set server metadata
-                                                                            config_server.METADATA.CONFIGURATION = APP_PORTFOLIO_TITLE;
-                                                                            config_server.METADATA.CREATED       = `${new Date().toISOString()}`;
-                                                                            config_server.METADATA.MODIFIED      = '';
-                                                                            return config_server;
-                                                                        })],
-                            ['ConfigRestApi',                   await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ConfigRestApi.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                                                                
-                                                                
-                            ['ServiceRegistry',                 await new Promise(resolve=>{(async () =>{ 
-                                                                        /**@type{server_db_table_ServiceRegistry[]}*/
-                                                                        const content = await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/ServiceRegistry.json')
-                                                                                            .then(file=>JSON.parse(file.toString()));
-                                                                        //update public key and private for each microservice, use 4096 bits
-                                                                        for (const row of content){
-                                                                            const {publicKey, privateKey} = await Security.securityKeyPairCreate(4096);
-                                                                            row.public_key = publicKey;
-                                                                            row.private_key = privateKey;
-                                                                        }
-                                                                        resolve(content);
-                                                                    })();})
-                                                                ],
-                            ['IamUser',                         await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/IamUser.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['App',                             await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/App.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppDataEntityResource',           await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppDataEntityResource.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppDataEntity',                   await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppDataEntity.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppDataResourceDetailData',       await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppDataResourceDetailData.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppDataResourceDetail',           await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppDataResourceDetail.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppDataResourceMaster',           await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppDataResourceMaster.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppModule',                       await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppModule.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppParameter',                    await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppParameter.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppSecret',                       await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppSecret.json')
-                                                                        .then(filebuffer=>
-                                                                        //generate secrets
-                                                                        JSON.parse(filebuffer.toString())
-                                                                            .filter((/**@type{server_db_table_AppSecret}*/row)=>row.app_id!=0)
-                                                                            .map((/**@type{server_db_table_AppSecret}*/row)=>{
-                                                                            row.common_client_id = Security.securitySecretCreate();
-                                                                            row.common_client_secret = Security.securitySecretCreate();
-                                                                            row.common_app_id_secret = Security.securitySecretCreate();
-                                                                            row.common_app_access_secret = Security.securitySecretCreate();
-                                                                            row.common_app_access_verification_secret = Security.securitySecretCreate();
-                                                                            return row;
-                                                                        }))],
-                            ['AppData',                         await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppData.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['AppTranslation',                  await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/AppTranslation.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['DbObjects',                       await fs.promises.readFile(serverProcess.cwd() + '/server/install/default/DbObjects.json')
-                                                                        .then(filebuffer=>
-                                                                            JSON.parse(filebuffer.toString())
-                                                                        )]
+                            ['ConfigServer',                    updatedConfigSecurity.ConfigServer],
+                            ['ConfigRestApi',                   await getObject('ConfigRestApi')],
+                            ['ServiceRegistry',                 updatedConfigSecurity.ServiceRegistry],
+                            ['IamUser',                         await getObject('IamUser')],
+                            ['App',                             await getObject('App')],
+                            ['AppDataEntityResource',           await getObject('AppDataEntityResource')],
+                            ['AppDataEntity',                   await getObject('AppDataEntity')],
+                            ['AppDataResourceDetailData',       await getObject('AppDataResourceDetailData')],
+                            ['AppDataResourceDetail',           await getObject('AppDataResourceDetail')],
+                            ['AppDataResourceMaster',           await getObject('AppDataResourceMaster')],
+                            ['AppModule',                       await getObject('AppModule')],
+                            ['AppParameter',                    await getObject('AppParameter')],
+                            ['AppSecret',                       updatedConfigSecurity.AppSecret],
+                            ['AppData',                         await getObject('AppData')],
+                            ['AppTranslation',                  await getObject('AppTranslation')],
+                            ['DbObjects',                       await getObject('DbObjects')]
                         ]; 
     //create directories
     await ORM.postFsDir(['/data',
@@ -943,16 +894,11 @@ const configDefault = async () => {
     .catch((/**@type{server_server_error}*/err) => {
         throw err;
     }); 
-
+    
     //default microservice 
-    for (const file of ['BATCH', 'GEOLOCATION']){
-        /**@type{microservice_local_config} */
-        const content = await fs.promises.readFile(serverProcess.cwd() + `/server/install/default/microservice/${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
-        content.public_key = config_obj[2][1].filter(microservice=>microservice.name==content.name)[0].public_key;
-        content.private_key = config_obj[2][1].filter(microservice=>microservice.name==content.name)[0].private_key;
-        await fs.promises.writeFile(serverProcess.cwd() + `/data/microservice/${file}.json`, 
-                                                            JSON.stringify(content, undefined, 2),'utf8');
-    }
+    updateMicroserviceSecurity({serveRegistry:              config_obj[2][1],
+                                pathMicroserviceSource:     '/server/install/default/microservice/',
+                                pathMicroserviceDestination:'/data/microservice/'});
 
     //load default db
     await ORM.Init(config_obj[15][1]);
@@ -960,5 +906,109 @@ const configDefault = async () => {
         await ORM.postFsAdmin(config_row[0], config_row[1]);
     }
 };
+/**
+ * @name updateMicroserviceSecurity
+ * @description Reads key pair in serviceregistry and updates them in microservice config files
+ * @function
+ * @param {{serveRegistry:server_db_table_ServiceRegistry[],
+ *          pathMicroserviceSource:      string,
+ *          pathMicroserviceDestination:   string}} parameters
+ * @returns {Promise.<void>}
+ */
+const updateMicroserviceSecurity = async parameters =>{
+    const {serverProcess} = await import('./server.js');
+    const fs = await import('node:fs');
+    for (const file of ['BATCH', 'GEOLOCATION']){
+        /**@type{microservice_local_config} */
+        const content = await fs.promises.readFile(serverProcess.cwd() + `${parameters.pathMicroserviceSource}${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
+        content.public_key = parameters.serveRegistry.filter(microservice=>microservice.name==content.name)[0].public_key;
+        content.private_key = parameters.serveRegistry.filter(microservice=>microservice.name==content.name)[0].private_key;
+        await fs.promises.writeFile(serverProcess.cwd() + `${parameters.pathMicroserviceDestination}${file}.json`, 
+                                                            JSON.stringify(content, undefined, 2),'utf8');
+    }
+};
+/**
+ * @name updateConfigSecurity
+ * @description Reads config files with security and return documents with updates security values
+ *              If path is empty then object is read from db
+ * @function
+ * @param {{pathConfigServer:      string|null,
+ *          pathServiceRegistry:   string|null,
+ *          pathAppSecret:         string|null}} parameters
+ * @returns {Promise.<{ ConfigServer:   server_db_document_ConfigServer,
+ *                      ServiceRegistry:server_db_table_ServiceRegistry[] & {rows?:server_db_table_ServiceRegistry[]},
+ *                      AppSecret:      server_db_table_AppSecret[] & {rows?:server_db_table_AppSecret[]}}>}
+ */
+const getConfigSecurityUpdate = async parameters =>{
+    const {serverProcess} = await import('./server.js');
+    const Security = await import('./security.js');
+    const ORM = await import('./db/ORM.js');
+    const fs = await import('node:fs');
+    const APP_PORTFOLIO_TITLE = 'App Portfolio';
+    
 
-export{postDemo, deleteDemo, configDefault};
+    return {
+        ConfigServer:await new Promise(resolve=>{(async () =>{ 
+                            /**@type{server_db_document_ConfigServer}*/
+                            const content = parameters.pathConfigServer?await fs.promises.readFile(serverProcess.cwd() + parameters.pathConfigServer)
+                                                .then(file=>JSON.parse(file.toString())):ORM.getObject(0,'ConfigServer');
+                            const {publicKey, privateKey} = await Security.securityKeyPairCreate(4096);
+                            //generate secrets
+                            content.SERVICE_IAM.map((/**@type{server_db_config_server_service_iam}*/row)=>{
+                                for (const key of Object.keys(row)){
+                                    if (key== 'SERVER_PUBLIC_KEY')
+                                        row.SERVER_PUBLIC_KEY = publicKey;
+                                    if (key== 'SERVER_PRIVATE_KEY')
+                                        row.SERVER_PRIVATE_KEY = privateKey;
+                                    if (key== 'MICROSERVICE_TOKEN_SECRET')
+                                        row.MICROSERVICE_TOKEN_SECRET = Security.securitySecretCreate();
+                                    if (key== 'ADMIN_TOKEN_SECRET')
+                                        row.ADMIN_TOKEN_SECRET = Security.securitySecretCreate();        
+                                    if (key== 'USER_TOKEN_APP_ACCESS_SECRET')
+                                        row.USER_TOKEN_APP_ACCESS_SECRET = Security.securitySecretCreate();
+                                    if (key== 'USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET')
+                                        row.USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET = Security.securitySecretCreate();
+                                    if (key== 'USER_TOKEN_APP_ID_SECRET')
+                                        row.USER_TOKEN_APP_ID_SECRET = Security.securitySecretCreate();
+                                    
+                                    
+                                    if (key== 'USER_PASSWORD_ENCRYPTION_KEY')
+                                        row.USER_PASSWORD_ENCRYPTION_KEY = Security.securitySecretCreate(false, 32);
+                                    if (key== 'USER_PASSWORD_INIT_VECTOR')
+                                        row.USER_PASSWORD_INIT_VECTOR = Security.securitySecretCreate(false, 16);
+                                }
+                            });
+                            //set server metadata
+                            content.METADATA.CONFIGURATION = content.METADATA.CONFIGURATION ?? APP_PORTFOLIO_TITLE;
+                            content.METADATA.MODIFIED      = content.METADATA.CREATED?`${new Date().toISOString()}`:'';
+                            content.METADATA.CREATED       = content.METADATA.CREATED ?? `${new Date().toISOString()}`;
+                            resolve(content);
+                        })();}),
+        ServiceRegistry:parameters.pathServiceRegistry?await new Promise(resolve=>{(async () =>{ 
+                                /**@type{server_db_table_ServiceRegistry[]}*/
+                                const content = await fs.promises.readFile(serverProcess.cwd() + parameters.pathServiceRegistry)
+                                                    .then(file=>JSON.parse(file.toString()));
+                                //update public key and private for each microservice, use 4096 bits
+                                for (const row of content){
+                                    const {publicKey, privateKey} = await Security.securityKeyPairCreate(4096);
+                                    row.public_key = publicKey;
+                                    row.private_key = privateKey;
+                                }
+                                resolve(content);
+                            })();}):ORM.getObject(0,'ServiceRegistry'),
+        AppSecret:parameters.pathAppSecret?await fs.promises.readFile(serverProcess.cwd() + parameters.pathAppSecret)
+                        .then(filebuffer=>
+                        //generate secrets
+                        JSON.parse(filebuffer.toString())
+                            .filter((/**@type{server_db_table_AppSecret}*/row)=>row.app_id!=0)
+                            .map((/**@type{server_db_table_AppSecret}*/row)=>{
+                            row.common_client_id = Security.securitySecretCreate();
+                            row.common_client_secret = Security.securitySecretCreate();
+                            row.common_app_id_secret = Security.securitySecretCreate();
+                            row.common_app_access_secret = Security.securitySecretCreate();
+                            row.common_app_access_verification_secret = Security.securitySecretCreate();
+                            return row;
+                        })):ORM.getObject(0,'AppSecret')
+    };
+};
+export{postDemo, deleteDemo, getConfigSecurityUpdate, postConfigDefault, updateMicroserviceSecurity};
