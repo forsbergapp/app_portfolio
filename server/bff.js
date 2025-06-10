@@ -23,12 +23,13 @@ const fs = await import('node:fs');
 
 /**
  * @name bffInit
- * @description Backend for frontend (BFF) init for all methods
+ * @description Backend for frontend (BFF) init
  *              Logs if the request is from SSE
  *              Logs when the response is closed
  *              Authenticates the request
  *              Sets header values on both on the response and on the request
  *              Checks robots.txt and favicon.ico
+ *              Redirects from http to https if https is enabled 
  *              Returns a reason if response should be closed
  * @function
  * @param {server_server_req} req
@@ -75,77 +76,69 @@ const bffInit = async (req, res) =>{
     /**@type{server_db_document_ConfigServer} */
     const config_SERVER = ConfigServer.get({app_id:0}).result;
     const HTTPS_PORT = serverUtilNumberValue(config_SERVER.SERVER.filter(row=>'HTTPS_PORT' in row)[0].HTTPS_PORT);
-    //redirect naked domain to www except for localhost
-    if (req.headers.host.startsWith(config_SERVER.SERVER.filter(row=>'HOST' in row)[0].HOST ?? '') && req.headers.host.indexOf('localhost')==-1)
-        if (config_SERVER.SERVER.filter(row=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE=='1')
-            return {reason:'REDIRECT', redirect:`https://www.${req.headers.host.split(':')[0] + (HTTPS_PORT==443?'':':' + HTTPS_PORT)}${req.originalUrl}`};
-        else
-            return {reason:'REDIRECT', redirect:`http://www.${req.headers.host}${req.originalUrl}`};
+    //redirect from http to https if https is enabled
+    if (req.protocol=='http' && config_SERVER.SERVER.filter(row=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE=='1')
+        return {reason:'REDIRECT', redirect:`https://${req.headers.host.split(':')[0] + (HTTPS_PORT==443?'':':' + HTTPS_PORT)}${req.originalUrl}`};
     else{
-        //redirect from http to https if https is enabled
-        if (req.protocol=='http' && config_SERVER.SERVER.filter(row=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE=='1')
-            return {reason:'REDIRECT', redirect:`https://${req.headers.host.split(':')[0] + (HTTPS_PORT==443?'':':' + HTTPS_PORT)}${req.originalUrl}`};
+        //access control that stops request if not passing controls
+        /**@type{server_iam_authenticate_request}*/
+        const result = await iamAuthenticateRequest({ip:req.ip, 
+                                                    host:req.headers.host ?? '', 
+                                                    method: req.method, 
+                                                    'user-agent': req.headers['user-agent'], 
+                                                    'accept-language':req.headers['accept-language'], 
+                                                    path:req.path})
+                            .catch((/**@type{server_server_error}*/error)=>{return { statusCode: 500, statusMessage: error};});
+        if (result != null){
+            res.statusCode = result.statusCode;
+            res.statusMessage = ' ';
+            res.writeHead(res.statusCode, {
+                'Content-Type': 'text/plain;charset=utf-8',
+                'Content-length':0
+            });
+            return {reason:'REQUEST'};
+        }
         else{
-            //access control that stops request if not passing controls
-            /**@type{server_iam_authenticate_request}*/
-            const result = await iamAuthenticateRequest({ip:req.ip, 
-                                                        host:req.headers.host ?? '', 
-                                                        method: req.method, 
-                                                        'user-agent': req.headers['user-agent'], 
-                                                        'accept-language':req.headers['accept-language'], 
-                                                        path:req.path})
-                                .catch((/**@type{server_server_error}*/error)=>{return { statusCode: 500, statusMessage: error};});
-            if (result != null){
-                res.statusCode = result.statusCode;
+
+            //set headers
+            res.setHeader('x-response-time', serverProcess.hrtime());
+            req.headers['x-request-id'] =  securityUUIDCreate().replaceAll('-','');
+            if (req.headers.authorization)
+                req.headers['x-correlation-id'] = securityRequestIdCreate();
+            else
+                req.headers['x-correlation-id'] = securityCorrelationIdCreate(req.hostname +  req.ip + req.method);
+            res.setHeader('Access-Control-Max-Age','5');
+            res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+            
+            if (config_SERVER.SERVICE_IAM.filter(row=>'ENABLE_CONTENT_SECURITY_POLICY' in row)[0].ENABLE_CONTENT_SECURITY_POLICY == '1'){
+                res.setHeader('content-security-policy', config_SERVER.SERVICE_IAM.filter(row=>'CONTENT_SECURITY_POLICY' in row)[0].CONTENT_SECURITY_POLICY);
+            }
+            res.setHeader('cross-origin-opener-policy','same-origin');
+            res.setHeader('cross-origin-resource-policy',	'same-origin');
+            res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
+            //res.setHeader('x-content-type-options', 'nosniff');
+            res.setHeader('x-dns-prefetch-control', 'off');
+            res.setHeader('x-download-options', 'noopen');
+            res.setHeader('x-frame-options', 'SAMEORIGIN');
+            res.setHeader('x-permitted-cross-domain-policies', 'none');
+            res.setHeader('x-xss-protection', '0');
+            //check robots.txt
+            if (req.originalUrl=='/robots.txt'){
                 res.statusMessage = ' ';
-                res.writeHead(res.statusCode, {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                    'Content-length':0
-                });
-                return {reason:'REQUEST'};
+                res.type('text/plain');
+                res.write('User-agent: *\nDisallow: /');
+                return {reason:'ROBOT'};
             }
             else{
-
-                //set headers
-                res.setHeader('x-response-time', serverProcess.hrtime());
-                req.headers['x-request-id'] =  securityUUIDCreate().replaceAll('-','');
-                if (req.headers.authorization)
-                    req.headers['x-correlation-id'] = securityRequestIdCreate();
-                else
-                    req.headers['x-correlation-id'] = securityCorrelationIdCreate(req.hostname +  req.ip + req.method);
-                res.setHeader('Access-Control-Max-Age','5');
-                res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
-                res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-                
-                if (config_SERVER.SERVICE_IAM.filter(row=>'ENABLE_CONTENT_SECURITY_POLICY' in row)[0].ENABLE_CONTENT_SECURITY_POLICY == '1'){
-                    res.setHeader('content-security-policy', config_SERVER.SERVICE_IAM.filter(row=>'CONTENT_SECURITY_POLICY' in row)[0].CONTENT_SECURITY_POLICY);
-                }
-                res.setHeader('cross-origin-opener-policy','same-origin');
-                res.setHeader('cross-origin-resource-policy',	'same-origin');
-                res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
-                //res.setHeader('x-content-type-options', 'nosniff');
-                res.setHeader('x-dns-prefetch-control', 'off');
-                res.setHeader('x-download-options', 'noopen');
-                res.setHeader('x-frame-options', 'SAMEORIGIN');
-                res.setHeader('x-permitted-cross-domain-policies', 'none');
-                res.setHeader('x-xss-protection', '0');
-                //check robots.txt
-                if (req.originalUrl=='/robots.txt'){
+                //browser favorite icon to ignore
+                if (req.originalUrl=='/favicon.ico'){
                     res.statusMessage = ' ';
-                    res.type('text/plain');
-                    res.write('User-agent: *\nDisallow: /');
-                    return {reason:'ROBOT'};
+                    res.write('');
+                    return {reason:'FAVICON'};
                 }
                 else{
-                    //browser favorite icon to ignore
-                    if (req.originalUrl=='/favicon.ico'){
-                        res.statusMessage = ' ';
-                        res.write('');
-                        return {reason:'FAVICON'};
-                    }
-                    else{
-                        return {reason:null};
-                    }
+                    return {reason:null};
                 }
             }
         }
@@ -153,12 +146,10 @@ const bffInit = async (req, res) =>{
 };
 /**
  * @name bffStart
- * @description Backend for frontend (BFF) start for get method
+ * @description Backend for frontend (BFF) start 
  *              If first time, when no admin exists, then redirect everything to admin
  *              Checks if SSL verification using Letsencrypt is enabled when validating domain
  *              and sends requested verifcation file
- *              Redirects naked domain to www except for localhost
- *              Redirects from http to https if https is enabled
  * @functions
  * @param {server_server_req} req
  * @param {server_server_res} res
