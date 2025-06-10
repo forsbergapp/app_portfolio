@@ -6,7 +6,7 @@
  * @import {server_req_method, server_REST_API_parameters, server_server_response, server_server_response_type, 
  *          server_server_error, server_server_req, server_server_res,
  *          server_db_document_ConfigServer,
- *          server_bff_parameters, server_server_req_id_number} from './types.js'
+ *          server_server_req_id_number} from './types.js'
  */
 
 const zlib = await import('node:zlib');
@@ -126,15 +126,14 @@ const serverResponse = async parameters =>{
         }
     };
     if (parameters.result_request.http){
-        const app_common = await import('../apps/common/src/common.js');
-        const app_id_host = app_common.commonAppHost(parameters.host ?? '');
+        
     
         //ISO20022 error format
         const message = {error:{
                                 http:parameters.result_request.http, 
                                 code:parameters.result_request.code, 
                                 //return SERVER ERROR if status code starts with 5
-                                text:(admin_app_id!=app_id_host && parameters.result_request.http.toString().startsWith('5'))?
+                                text:(admin_app_id!=parameters.app_id && parameters.result_request.http.toString().startsWith('5'))?
                                         'SERVER ERROR':
                                             parameters.result_request.text?.code=='DB'?
                                                 parameters.result_request.text.text:
@@ -583,7 +582,7 @@ const serverUtilResponseTime = (res) => {
  */
 const serverUtilAppFilename = module =>{
     
-    const from_app_root = ('file:///' + serverProcess.cwd()).length;
+    const from_app_root = ('file://' + serverProcess.cwd()).length;
     return module.substring(from_app_root);
 };
 /**
@@ -720,39 +719,36 @@ const server = async () => {
             const bff =             await import('./bff.js');
             const resultbffInit =   await bff.bffInit(req, res);
             if (resultbffInit.reason == null){
-                const resultbffStart = req.method=='GET'?await bff.bffStart(req, res):{reason:null};
-                switch (resultbffStart.reason){
-                    case 'REDIRECT':{
-                        res.redirect(resultbffStart.redirect);
-                        break;
-                    }
-                    case 'SEND':{
-                        res.end();
-                        break;
-                    }
-                    default:{
-                        /**@type{server_bff_parameters} */
-                        const bff_parameters = {
-                                                //request
-                                                host: req.headers.host ?? '', 
-                                                url:req.originalUrl,
-                                                method: req.method,
-                                                query: req.query?.parameters ?? '',
-                                                body: req.body,
-                                                AppId: req.headers['AppId'],
-                                                AppSignature: req.headers['AppSignature'],
-                                                idToken: req.headers['id-token'],
-                                                authorization:  req.headers.authorization, 
-                                                //metadata
-                                                ip: req.headers['x-forwarded-for'] || req.ip, 
-                                                user_agent: req.headers['user-agent'], 
-                                                accept_language: req.headers['accept-language'], 
-                                                //response
-                                                res: res
-                                            };
-                        return bff.bff(bff_parameters);
-                    }
-                }
+                return bff.bffStart(req, res)
+                        .then(result=>{
+                            result?
+                                serverResponse({
+                                    result_request:result,
+                                    host:req.headers.host,
+                                    route:null,
+                                    res:res}):
+                                bff.bff({
+                                    //request
+                                    host: req.headers.host ?? '', 
+                                    url:req.originalUrl,
+                                    method: req.method,
+                                    query: req.query?.parameters ?? '',
+                                    body: req.body,
+                                    security_app: { AppId: req.headers['content-type'] =='text/event-stream'?
+                                                        0:
+                                                            req.headers['app-id']??null,
+                                                    AppSignature: req.headers['app-signature']??null,
+                                                    AppIdToken: req.headers['app-id-token']??null
+                                    },
+                                    authorization:  req.headers.authorization, 
+                                    //metadata
+                                    ip: req.headers['x-forwarded-for'] || req.ip, 
+                                    user_agent: req.headers['user-agent'], 
+                                    accept_language: req.headers['accept-language'], 
+                                    //response
+                                    res: res
+                                });
+                        });
             }
             else
                 if (resultbffInit.redirect)
@@ -773,17 +769,22 @@ const server = async () => {
  * @param {server_REST_API_parameters} routesparameters
  * @returns {Promise.<server_server_response>}
  */
-const serverREST_API = async (routesparameters) =>{
+const serverREST_API = async (routesparameters) =>{        
     const iam = await import('./iam.js');
     const ConfigRestApi = await import('./db/ConfigRestApi.js');
+    const ConfigServer = await import('./db/ConfigServer.js');
     const URI_query = routesparameters.parameters;
     const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
     const app_query = URI_query?new URLSearchParams(URI_query):null;
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:0}).result;
+
     
     /**
      * Authenticates if user has access to given resource
      * Authenticates using IAM token claims if path requires
-     * @param {{IAM_iam_user_app_id:number|null,
+     * @param {{app_id_authenticated:number,
+     *          IAM_iam_user_app_id:number|null,
      *          IAM_iam_user_id:number|null,
      *          IAM_module_app_id:number|null,
      *          IAM_data_app_id:number|null,
@@ -801,7 +802,7 @@ const serverREST_API = async (routesparameters) =>{
                 params.IAM_module_app_id || 
                 params.IAM_data_app_id ||
                 params.IAM_service){
-                if (iam.iamAuthenticateResource({   app_id:                     routesparameters.app_id, 
+                if (iam.iamAuthenticateResource({   app_id:                     params.app_id_authenticated, 
                                                     ip:                         routesparameters.ip, 
                                                     idToken:                    routesparameters.idToken,
                                                     endpoint:                   routesparameters.endpoint,
@@ -854,7 +855,7 @@ const serverREST_API = async (routesparameters) =>{
         
     //get paths and components keys in ConfigRestApi
     const configPath = (() => { 
-        const { paths, components } = ConfigRestApi.get({app_id:routesparameters.app_id}).result; 
+        const { paths, components } = ConfigRestApi.get({app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>parameter.APP_COMMON_APP_ID)[0].APP_COMMON_APP_ID) ?? 0}).result; 
             return {paths:Object.entries(paths).filter(path=>   
                 //match with resource id string             
                 (path[0].indexOf('${')>-1 && path[0].substring(0,path[0].lastIndexOf('${')) == URI_path.substring(0,URI_path.lastIndexOf('/')+1)) ||
@@ -875,172 +876,205 @@ const serverREST_API = async (routesparameters) =>{
                                                                         Object.keys(parameter)[0]=='$ref' && Object.values(parameter)[0]=='#/components/parameters/' + key)[0];
 
         const methodObj = configPath.paths[1][routesparameters.method.toLowerCase()];
-        if (methodObj){
-            /**
-             * @param {{}} keys
-             * @param {[string,*]} key
-             */
-            const addBodyKey = (keys, key )=>{
-                return {...keys, ...{   [key[0]]:{  
-                                                    data:       key[0]=='server_response'?
-                                                                    routesparameters.res:
-                                                                        routesparameters.body[key[0]],
-                                                    //IAM parameters are required by default
-                                                    required:   key[1]?.required ?? (key[0].startsWith('IAM')?true:false)
-                                                }
-                                    }
-                                };
-            };
-            //add parameters using tree shaking pattern
-            //so only defined parameters defined using openAPI pattern are sent to functions
-            const parametersData = 
-                                    routesparameters.method=='GET'?
-                                        {...methodObj.parameters
-                                                        //include all parameters.in=query
-                                                        .filter((/**@type{*}*/parameter)=>
-                                                            parameter.in =='query'|| 
-                                                            //component parameter that has in=query
-                                                            (   '$ref' in parameter && 
-                                                                'required' in parameter && 
-                                                                configPath.components.parameters[parameter['$ref'].split('#/components/parameters/')[1]].in == 'query')
-                                                        )
-                                                        .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
-                                                            if ('$ref' in key )
-                                                                return {...keys, ...{   
-                                                                                    [key['$ref'].split('#/components/parameters/')[1]]:
-                                                                                    {
-                                                                                        data:       app_query?.get(key['$ref'].split('#/components/parameters/')[1]),
-                                                                                        //IAM parameters are required by default
-                                                                                        required:   (key?.required ?? (key['$ref'].split('#/components/parameters/')[1].startsWith('IAM')?true:false))
-                                                                                    }
-                                                                                }
-                                                                        };
-                                                            else
-                                                                return {...keys, ...{   
-                                                                                    [key.name]:{
-                                                                                        data:       app_query?.get(key.name),
-                                                                                        //IAM parameters are required by default
-                                                                                        required:   (key?.required ?? (key.name.startsWith('IAM')?true:false))
-                                                                                    }
-                                                                                }
-                                                                    };
-                                                        },{})
-                                        }:
-                                        //all other methods use body to send data
-                                        //if additional properties allowed then add to defined parameters or only parameters matching defined parameters
-                                        (methodObj.requestBody?.content && methodObj.requestBody?.content['application/json']?.schema?.additionalProperties)?
-                                            {...routesparameters.body,...Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
-                                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{})}:
-                                                        ((methodObj?.requestBody?.content && Object.keys(methodObj?.requestBody?.content).length>0)?Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
-                                                        .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{}):{});
-            if (Authenticate({  IAM_iam_user_app_id:    parametersData.IAM_iam_user_app_id?.data,
-                                IAM_iam_user_id:        parametersData.IAM_iam_user_id?.data,
-                                IAM_module_app_id:      parametersData.IAM_module_app_id?.data,
-                                IAM_data_app_id:        parametersData.IAM_data_app_id?.data,
-                                IAM_service:            parametersData.IAM_service?.data,
-                                resource_id_required:   resourceIdRequired(),
-                            }) &&
-                            //there is no missing required parameter in the request
-                            Object.keys(parametersData).filter(parameter=> 
-                                parameter=='server_response'?
-                                    false:
-                                        ((typeof parametersData[parameter] == 'object') &&
-                                        parametersData[parameter]?.required && 
-                                        (routesparameters.method=='GET'?
-                                            ((app_query?.has(parameter)??false)==false):
-                                                (parameter in routesparameters.body)==false)
-                                        )).length==0){ 
-                Object.keys(parametersData).forEach(key=>
-                    parametersData[key]= (typeof parametersData[key] == 'object' && parametersData[key]!=null)?
-                                            parametersData[key].data:
-                                                parametersData[key]
-                );
-                if ('IAM_module_app_id' in parametersData ||routesparameters.endpoint=='APP_ACCESS_EXTERNAL'){
-                    //APP_ACCESS_EXTERNAL can only run function using same appid used by host and access data for same app id
-                    parametersData.module_app_id = routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?
-                                                    routesparameters.app_id:
-                                                    parametersData.IAM_module_app_id!=null?
-                                                        serverUtilNumberValue(parametersData.IAM_module_app_id):
-                                                            null;
-                    delete parametersData.IAM_module_app_id;
-                }
-                if ('IAM_data_app_id' in parametersData ||routesparameters.endpoint=='APP_ACCESS_EXTERNAL'){
-                    //APP_ACCESS_EXTERNAL can only run function using same appid used by host and access data for same app id
-                    parametersData.data_app_id = routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?
-                                                    routesparameters.app_id:
-                                                    parametersData.IAM_data_app_id!=null?
-                                                        serverUtilNumberValue(parametersData.IAM_data_app_id):
-                                                            null;
-                    delete parametersData.IAM_data_app_id;
-                }
-                if ('IAM_iam_user_app_id' in parametersData){
-                    parametersData.iam_user_app_id = parametersData.IAM_iam_user_app_id!=null?
-                                                        serverUtilNumberValue(parametersData.IAM_iam_user_app_id):
-                                                            null;
-                    delete parametersData.IAM_iam_user_app_id;
-                }
-                if ('IAM_iam_user_id' in parametersData){
-                    parametersData.iam_user_id = parametersData.IAM_iam_user_id!=null?
-                                                    serverUtilNumberValue(parametersData.IAM_iam_user_id):
-                                                        null;
-                    delete parametersData.IAM_iam_user_id;
-                }
-                if ('IAM_service' in parametersData){
-                    parametersData.service = parametersData.IAM_service;
-                    delete parametersData.IAM_service;
-                }
-                
-                //read operationId what file to import and what function to execute
-                //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
-                const filePath = '/' + methodObj.operationId.split('.')[0].replaceAll('_','/') + '/' +
-                                        methodObj.operationId.split('.')[1] + '.js';
-                const functionRESTAPI = methodObj.operationId.split('.')[2];
-                const moduleRESTAPI = await import('../' + filePath);
+        if (methodObj){   
+               
+            const idToken = //All external roles and microservice do not use AppId Token
+                            (routesparameters.url.split('/')[2]?.toUpperCase().indexOf('EXTERNAL')>-1 ||
+                            routesparameters.url.split('/')[2]?.toUpperCase().indexOf('MICROSERVICE')>-1)?
+                                    '':
+                                    routesparameters.idToken?.replace('Bearer ',''); 
 
+            //use middleware to authenticate access before bff if not APP endpoint
+            const authenticate = await iam.iamAuthenticateUserCommon({
+                idToken: idToken, 
+                endpoint:routesparameters.endpoint,
+                authorization: routesparameters.authorization??'', 
+                host: routesparameters.host??'', 
+                AppId:routesparameters.AppId, 
+                AppSignature: routesparameters.AppSignature,
+                ip: routesparameters.ip,
+                res:routesparameters.res
+                });
+
+            if (authenticate.app_id !=null){
                 /**
-                 *  Return single resource in result object or multiple resource in rows keys
-                 *  Rules: 
-                 *  server functions: return false
-                 *  method not GET or microservice request: true
-                 *  method GET: if resource id (string or number) is empty return false else true
-                 * @returns {boolean}
+                 * @param {{}} keys
+                 * @param {[string,*]} key
                  */
-                const singleResource = () => functionRESTAPI=='commonModuleRun'?
-                                                false:
-                                                    (routesparameters.method!='GET' ||functionRESTAPI=='microserviceRequest')?
-                                                        true: (Object.keys(resourceId(configPath.paths, configPath.components)??{}).length==1 && Object.values(resourceId(configPath.paths, configPath.components)??{})[0]!=null);
-                //return result using ISO20022 format
-                //send only parameters to the function if declared true
-                const result = await  moduleRESTAPI[functionRESTAPI]({
-                                ...(getParameter('server_app_id')               && {app_id:             routesparameters.app_id}),
-                                ...(getParameter('server_idtoken')              && {idToken:            routesparameters.idToken}),
-                                ...(getParameter('server_authorization')        && {authorization:      routesparameters.authorization}),
-                                ...(getParameter('server_user_agent')           && {user_agent:         routesparameters.user_agent}),
-                                ...(getParameter('server_accept_language')      && {accept_language:    routesparameters.accept_language}),
-                                ...(getParameter('server_host')                 && {host:               routesparameters.host}),
-                                ...(getParameter('locale')                      && {locale:             parametersData.locale ??'en'}),
-                                ...(getParameter('server_ip')                   && {ip:                 routesparameters.ip}),
-                                ...(getParameter('server_microservice')         && {microservice:       getParameter('server_microservice').default}),
-                                ...(getParameter('server_microservice_service') && {service:            getParameter('server_microservice_service').default}),
-                                ...(getParameter('server_message_queue_type')   && {message_queue_type: getParameter('server_message_queue_type').default}),
-                                ...(getParameter('server_method')               && {method:             routesparameters.method}),
-                                ...(Object.keys(parametersData)?.length>0       && {data:               {...parametersData}}),
-                                ...(getParameter('server_endpoint')             && {endpoint:           routesparameters.endpoint}),
-                                ...(resourceId( configPath.paths, 
-                                                configPath.components)          && {resource_id:        Object.values(resourceId(configPath.paths, 
-                                                                                                                                configPath.components)??{})[0]})});
-                return { ...result,
-                            ...{singleResource:singleResource()
-                                }
-                        };
+                const addBodyKey = (keys, key )=>{
+                    return {...keys, ...{   [key[0]]:{  
+                                                        data:       key[0]=='server_response'?
+                                                                        routesparameters.res:
+                                                                            routesparameters.body[key[0]],
+                                                        //IAM parameters are required by default
+                                                        required:   key[1]?.required ?? (key[0].startsWith('IAM')?true:false)
+                                                    }
+                                        }
+                                    };
+                };
+                //add parameters using tree shaking pattern
+                //so only defined parameters defined using openAPI pattern are sent to functions
+                const parametersData = 
+                                        routesparameters.method=='GET'?
+                                            {...methodObj.parameters
+                                                            //include all parameters.in=query
+                                                            .filter((/**@type{*}*/parameter)=>
+                                                                parameter.in =='query'|| 
+                                                                //component parameter that has in=query
+                                                                (   '$ref' in parameter && 
+                                                                    'required' in parameter && 
+                                                                    configPath.components.parameters[parameter['$ref'].split('#/components/parameters/')[1]].in == 'query')
+                                                            )
+                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
+                                                                if ('$ref' in key )
+                                                                    return {...keys, ...{   
+                                                                                        [key['$ref'].split('#/components/parameters/')[1]]:
+                                                                                        {
+                                                                                            data:       app_query?.get(key['$ref'].split('#/components/parameters/')[1]),
+                                                                                            //IAM parameters are required by default
+                                                                                            required:   (key?.required ?? (key['$ref'].split('#/components/parameters/')[1].startsWith('IAM')?true:false))
+                                                                                        }
+                                                                                    }
+                                                                            };
+                                                                else
+                                                                    return {...keys, ...{   
+                                                                                        [key.name]:{
+                                                                                            data:       app_query?.get(key.name),
+                                                                                            //IAM parameters are required by default
+                                                                                            required:   (key?.required ?? (key.name.startsWith('IAM')?true:false))
+                                                                                        }
+                                                                                    }
+                                                                        };
+                                                            },{})
+                                            }:
+                                            //all other methods use body to send data
+                                            //if additional properties allowed then add to defined parameters or only parameters matching defined parameters
+                                            (methodObj.requestBody?.content && methodObj.requestBody?.content['application/json']?.schema?.additionalProperties)?
+                                                {...routesparameters.body,...Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
+                                                                                .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{})}:
+                                                            ((methodObj?.requestBody?.content && Object.keys(methodObj?.requestBody?.content).length>0)?Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
+                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{}):{});
+                if (Authenticate({ app_id_authenticated:  authenticate.app_id,
+                                    IAM_iam_user_app_id:    parametersData.IAM_iam_user_app_id?.data,
+                                    IAM_iam_user_id:        parametersData.IAM_iam_user_id?.data,
+                                    IAM_module_app_id:      parametersData.IAM_module_app_id?.data,
+                                    IAM_data_app_id:        parametersData.IAM_data_app_id?.data,
+                                    IAM_service:            parametersData.IAM_service?.data,
+                                    resource_id_required:   resourceIdRequired(),
+                                }) &&
+                                //there is no missing required parameter in the request
+                                Object.keys(parametersData).filter(parameter=> 
+                                    parameter=='server_response'?
+                                        false:
+                                            ((typeof parametersData[parameter] == 'object') &&
+                                            parametersData[parameter]?.required && 
+                                            (routesparameters.method=='GET'?
+                                                ((app_query?.has(parameter)??false)==false):
+                                                    (parameter in routesparameters.body)==false)
+                                            )).length==0){ 
+                    Object.keys(parametersData).forEach(key=>
+                        parametersData[key]= (typeof parametersData[key] == 'object' && parametersData[key]!=null)?
+                                                parametersData[key].data:
+                                                    parametersData[key]
+                    );
+                    if ('IAM_module_app_id' in parametersData ||routesparameters.endpoint=='APP_ACCESS_EXTERNAL'){
+                        //APP_ACCESS_EXTERNAL can only run function using same appid used by host and access data for same app id
+                        parametersData.module_app_id = routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?
+                                                        authenticate.app_id:
+                                                        parametersData.IAM_module_app_id!=null?
+                                                            serverUtilNumberValue(parametersData.IAM_module_app_id):
+                                                                null;
+                        delete parametersData.IAM_module_app_id;
+                    }
+                    if ('IAM_data_app_id' in parametersData ||routesparameters.endpoint=='APP_ACCESS_EXTERNAL'){
+                        //APP_ACCESS_EXTERNAL can only run function using same appid used by host and access data for same app id
+                        parametersData.data_app_id = routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?
+                                                        authenticate.app_id:
+                                                        parametersData.IAM_data_app_id!=null?
+                                                            serverUtilNumberValue(parametersData.IAM_data_app_id):
+                                                                null;
+                        delete parametersData.IAM_data_app_id;
+                    }
+                    if ('IAM_iam_user_app_id' in parametersData){
+                        parametersData.iam_user_app_id = parametersData.IAM_iam_user_app_id!=null?
+                                                            serverUtilNumberValue(parametersData.IAM_iam_user_app_id):
+                                                                null;
+                        delete parametersData.IAM_iam_user_app_id;
+                    }
+                    if ('IAM_iam_user_id' in parametersData){
+                        parametersData.iam_user_id = parametersData.IAM_iam_user_id!=null?
+                                                        serverUtilNumberValue(parametersData.IAM_iam_user_id):
+                                                            null;
+                        delete parametersData.IAM_iam_user_id;
+                    }
+                    if ('IAM_service' in parametersData){
+                        parametersData.service = parametersData.IAM_service;
+                        delete parametersData.IAM_service;
+                    }
+                    
+                    //read operationId what file to import and what function to execute
+                    //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
+                    const filePath = '/' + methodObj.operationId.split('.')[0].replaceAll('_','/') + '/' +
+                                            methodObj.operationId.split('.')[1] + '.js';
+                    const functionRESTAPI = methodObj.operationId.split('.')[2];
+                    const moduleRESTAPI = await import('../' + filePath);
+    
+                    /**
+                     *  Return single resource in result object or multiple resource in rows keys
+                     *  Rules: 
+                     *  server functions: return false
+                     *  method not GET or microservice request: true
+                     *  method GET: if resource id (string or number) is empty return false else true
+                     * @returns {boolean}
+                     */
+                    const singleResource = () => functionRESTAPI=='commonModuleRun'?
+                                                    false:
+                                                        (routesparameters.method!='GET' ||functionRESTAPI=='microserviceRequest')?
+                                                            true: (Object.keys(resourceId(configPath.paths, configPath.components)??{}).length==1 && Object.values(resourceId(configPath.paths, configPath.components)??{})[0]!=null);
+                    //return result using ISO20022 format
+                    //send only parameters to the function if declared true
+                    const result = await  moduleRESTAPI[functionRESTAPI]({
+                                    ...(getParameter('server_app_id')               && {app_id:             authenticate.app_id}),
+                                    ...(getParameter('server_idtoken')              && {idToken:            routesparameters.idToken}),
+                                    ...(getParameter('server_authorization')        && {authorization:      routesparameters.authorization}),
+                                    ...(getParameter('server_user_agent')           && {user_agent:         routesparameters.user_agent}),
+                                    ...(getParameter('server_accept_language')      && {accept_language:    routesparameters.accept_language}),
+                                    ...(getParameter('server_host')                 && {host:               routesparameters.host}),
+                                    ...(getParameter('locale')                      && {locale:             parametersData.locale ??'en'}),
+                                    ...(getParameter('server_ip')                   && {ip:                 routesparameters.ip}),
+                                    ...(getParameter('server_microservice')         && {microservice:       getParameter('server_microservice').default}),
+                                    ...(getParameter('server_microservice_service') && {service:            getParameter('server_microservice_service').default}),
+                                    ...(getParameter('server_message_queue_type')   && {message_queue_type: getParameter('server_message_queue_type').default}),
+                                    ...(getParameter('server_method')               && {method:             routesparameters.method}),
+                                    ...(Object.keys(parametersData)?.length>0       && {data:               {...parametersData}}),
+                                    ...(getParameter('server_endpoint')             && {endpoint:           routesparameters.endpoint}),
+                                    ...(resourceId( configPath.paths, 
+                                                    configPath.components)          && {resource_id:        Object.values(resourceId(configPath.paths, 
+                                                                                                                                    configPath.components)??{})[0]})});
+                    return { ...result,
+                                ...{singleResource:singleResource()
+                                    }
+                            };
+                }
+                else
+                    return 	{http:401,
+                            code:'SERVER',
+                            text:iam.iamUtilMessageNotAuthorized(),
+                            developerText:'serverREST_API',
+                            moreInfo:null,
+                            type:'JSON'};
             }
-            else
+            else{
+                //unknown appid
                 return 	{http:401,
-                        code:'SERVER',
-                        text:iam.iamUtilMessageNotAuthorized(),
-                        developerText:'serverREST_API',
-                        moreInfo:null,
-                        type:'JSON'};
+                    code:'SERVER',
+                    text:iam.iamUtilMessageNotAuthorized(),
+                    developerText:'serverREST_API',
+                    moreInfo:null,
+                    type:'JSON'};
+            }
+
+            
         }
         else                
             return 	{http:404,
@@ -1100,35 +1134,50 @@ const serverStart = async () =>{
         if (result_data==false)
             await Installation.configDefault();
         await ORM.Init();
-        
+        /**@type{server_db_document_ConfigServer['SERVER']} */
+        const configServer = ConfigServer.get({app_id:0,data:{ config_group:'SERVER'}}).result;
         const {socketIntervalCheck} = await import('./socket.js');
         socketIntervalCheck();
                                             
-        const NETWORK_INTERFACE = ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'NETWORK_INTERFACE'}}).result;
+        const NETWORK_INTERFACE = configServer.filter(parameter=> 'NETWORK_INTERFACE' in parameter)[0].NETWORK_INTERFACE;
         //START HTTP SERVER                                                     
-        http.createServer(await server()).listen(ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTP_PORT'}}).result, NETWORK_INTERFACE, () => {
+        http.createServer(await server()).listen(serverUtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80, NETWORK_INTERFACE, () => {
             Log.post({   app_id:0, 
                 data:{  object:'LogServerInfo', 
-                        log:'HTTP Server up and running on PORT: ' + ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTP_PORT'}}).result
+                        log:'HTTP Server PORT: ' + serverUtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80
                     }
                 });
         });
-        if (ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_ENABLE'}}).result=='1'){
+        http.createServer(await server()).listen(serverUtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
+            Log.post({   app_id:0, 
+                data:{  object:'LogServerInfo', 
+                        log:'HTTP Server Admin  PORT: ' + serverUtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000
+                    }
+                });
+        });
+        if (configServer.filter(parameter=> 'HTTPS_ENABLE' in parameter)[0].HTTPS_ENABLE=='1'){
             //START HTTPS SERVER
             //SSL files for HTTPS
-            const HTTPS_KEY = await fs.promises.readFile(serverProcess.cwd() + '/data' + ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_KEY'}}).result, 'utf8');
-            const HTTPS_CERT = await fs.promises.readFile(serverProcess.cwd() + '/data' + ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_CERT'}}).result, 'utf8');
+            const HTTPS_KEY = await fs.promises.readFile(serverProcess.cwd() + '/data' + configServer.filter(parameter=> 'HTTPS_KEY' in parameter)[0].HTTPS_KEY, 'utf8');
+            const HTTPS_CERT = await fs.promises.readFile(serverProcess.cwd() + '/data' + configServer.filter(parameter=> 'HTTPS_CERT' in parameter)[0].HTTPS_CERT, 'utf8');
             const options = {
                 key: HTTPS_KEY.toString(),
                 cert: HTTPS_CERT.toString()
             };
-            https.createServer(options,  await server()).listen(ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_PORT'}}).result,NETWORK_INTERFACE, () => {
+            https.createServer(options,  await server()).listen(serverUtilNumberValue(configServer.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443,NETWORK_INTERFACE, () => {
                 Log.post({   app_id:0, 
                     data:{  object:'LogServerInfo', 
-                            log:'HTTPS Server up and running on PORT: ' + ConfigServer.get({app_id:0,data:{ config_group:'SERVER', parameter:'HTTPS_PORT'}}).result
+                            log:'HTTPS Server PORT: ' + serverUtilNumberValue(configServer.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443
                         }
                     });
-            });            
+            });
+            https.createServer(options,  await server()).listen(serverUtilNumberValue(configServer.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000,NETWORK_INTERFACE, () => {
+                Log.post({   app_id:0, 
+                    data:{  object:'LogServerInfo', 
+                            log:'HTTPS Server admin PORT: ' + serverUtilNumberValue(configServer.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000
+                        }
+                    });
+            });
         }
     } catch (/**@type{server_server_error}*/error) {
         Log.post({   app_id:0, 

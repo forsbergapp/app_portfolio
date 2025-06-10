@@ -157,6 +157,7 @@
  *              app_text_edit:string|null,
  *              app_common_app_id:number,
  *              app_admin_app_id:number,
+ *              app_start_app_id:number,
  *              app_toolbar_button_start:number,
  *              app_toolbar_button_framework:number,
  *              app_framework:number,
@@ -313,7 +314,6 @@
  * @typedef {{
  *              id: number,
  *              name: string,
- *              subdomain: string,
  *              path: string,
  *              logo:string,
  *              js:string,

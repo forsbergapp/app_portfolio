@@ -1,8 +1,12 @@
 /** @module server/db/App */
 
 /**
- * @import {server_server_response,server_db_common_result_update, server_db_common_result_delete, 
- *          server_db_table_App, server_db_table_AppTranslation,
+ * @import {server_server_response,
+ *          server_db_common_result_update, 
+ *          server_db_common_result_delete, 
+ *          server_db_table_App, 
+ *          server_db_table_AppTranslation,
+ *          server_db_document_ConfigServer,
  *          server_config_apps_with_db_columns} from '../types.js'
  */
 
@@ -42,29 +46,28 @@ const getViewInfo = async parameters =>{
     const {serverProcess} = await import('../server.js');
     const fs = await import('node:fs');
 
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
     /**@type{server_db_table_App[]}*/
     const apps = get({app_id:parameters.app_id, resource_id:null}).result
-                    //do not show common app id
-                    .filter((/**@type{server_db_table_App}*/app)=>app.id != serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result));
+                    //do not show common app id, admin app id or start app id
+                    .filter((/**@type{server_db_table_App}*/app)=>
+                        app.id != (serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)) &&
+                        app.id != (serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)) &&
+                        app.id != (serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)));
     for (const app of apps){
         const image = await fs.promises.readFile(`${serverProcess.cwd()}${app.path + app.logo}`);
         /**@ts-ignore */
         app.logo        = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
        }
-    const HTTPS_ENABLE = ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'HTTPS_ENABLE'}}).result;
     return {result:apps
             .filter(app=>app.id == (parameters.resource_id ?? app.id))
             .map(app=>{
                 return {
-                            app_id:app.id,
+                            id:app.id,
                             name:app.name,
-                            subdomain:app.subdomain,
-                            protocol : HTTPS_ENABLE =='1'?'https://':'http://',
-                            host : ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'HOST'}}).result,
-                            port : serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                                                ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'HTTPS_PORT'}}).result:
-                                                    ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result),
-                            app_name_translation : AppTranslation.get(parameters.app_id,null,parameters.locale, app.id).result.filter((/**@type{server_db_table_AppTranslation}*/appTranslation)=>appTranslation.app_id==app.id)[0].json_data.name,
+                            app_name_translation : AppTranslation.get(parameters.app_id,null,parameters.locale, app.id).result
+                                                    .filter((/**@type{server_db_table_AppTranslation}*/appTranslation)=>appTranslation.app_id==app.id)[0].json_data.name,
                             logo:app.logo
                         };
             }), type:'JSON'};
@@ -86,7 +89,6 @@ const post = async (app_id, data) => {
             //fetch max app id + 1
             id:Math.max(...ORM.getObject(app_id, 'App',null, null).rows.map((/**@type{server_db_table_App}*/app)=>app.id)) +1,
             name: data.name,
-            subdomain: data.subdomain,
             path: data.path,
             logo: data.logo,
             js: data.js,
@@ -120,7 +122,6 @@ const post = async (app_id, data) => {
  * @param {{app_id:Number,
  *          resource_id:number,
  *          data:{  name:string,
- *                  subdomain:string,
  *                  path:string,
  *                  logo:string,
  *                  js:string,
@@ -142,8 +143,6 @@ const update = async parameters => {
         //allowed parameters to update:
         if (parameters.data.name!=null)
             data_update.name = parameters.data.name;
-        if (parameters.data.subdomain!=null)
-            data_update.subdomain = parameters.data.subdomain;
         if (parameters.data.path!=null)
             data_update.path = parameters.data.path;
         if (parameters.data.logo!=null)

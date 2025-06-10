@@ -62,13 +62,16 @@ const iamUtilMessageNotAuthorized = () => '⛔';
  * @returns {server_iam_access_token_claim & {exp:number, iat:number}|server_iam_microservice_token_claim & {exp:number, iat:number}}
  */
 const iamUtilTokenGet = (app_id, token, token_type) =>{
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:app_id}).result;
+    const app_id_token = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=> 'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID);
     /**@type{*} */
     const verify = Security.jwt.verify(  token.replace('Bearer ','').replace('Basic ',''), 
                                 token_type=='MICROSERVICE'?
-                                ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'MICROSERVICE_TOKEN_SECRET'}}).result:
+                                configServer.SERVICE_IAM.filter(parameter=> 'MICROSERVICE_TOKEN_SECRET' in parameter)[0].MICROSERVICE_TOKEN_SECRET:
                                 token_type=='ADMIN'?
-                                    ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'ADMIN_TOKEN_SECRET'}}).result:
-                                        AppSecret.get({app_id:app_id, resource_id:app_id}).result[0][  token_type=='APP_ACCESS'?'common_app_access_secret':
+                                configServer.SERVICE_IAM.filter(parameter=> 'ADMIN_TOKEN_SECRET' in parameter)[0].ADMIN_TOKEN_SECRET:
+                                        AppSecret.get({app_id:app_id, resource_id:app_id_token}).result[0][  token_type=='APP_ACCESS'?'common_app_access_secret':
                                                                                                                 token_type=='APP_ACCESS_EXTERNAL'?'common_app_access_verification_secret':
                                                                                                                 token_type=='APP_ACCESS_VERIFICATION'?'common_app_access_verification_secret':
                                                                                                                 'common_app_id_secret']);
@@ -693,21 +696,27 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *          endpoint: server_bff_endpoint_type,
  *          authorization: string,
  *          host: string,
+ *          AppId:number,
+ *          AppSignature:string,
  *          ip: string,
- *          res: server_server_res}} parameters 
- * @returns {Promise.<boolean>}
+ *          res: server_server_res}} parameters
+ * @returns {Promise.<{app_id:number|null}>}
  */
  const iamAuthenticateUserCommon = async parameters  =>{
-    const app_id_host = commonAppHost(parameters.host);
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:0}).result;
+    const app_id_host = commonAppHost(parameters.host, parameters.AppId, parameters.AppSignature).app_id;
+    const app_id_token = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=> 'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??0;
     //APP_EXTERNAL, APP_ACCESS_EXTERNALK, MICROSERVICE and MICROSERVICE_AUTH do not use idToken
-    if ((   parameters.idToken ||
+    if (parameters.AppId !=null && parameters.AppSignature !=null && app_id_host !=null &&
+        (   parameters.idToken ||
             parameters.endpoint=='APP_EXTERNAL' ||
             parameters.endpoint=='APP_ACCESS_EXTERNAL' ||
             parameters.endpoint=='MICROSERVICE' ||
-            parameters.endpoint=='MICROSERVICE_AUTH') && parameters.endpoint && app_id_host !=null){
-        const app_id_admin = serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result);
+            parameters.endpoint=='MICROSERVICE_AUTH') && parameters.endpoint){
+        const app_id_admin = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=> 'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID);
         try {
-            //authenticate id token
+            //authenticate id token created by start app id
             const id_token_decoded = (  parameters.endpoint=='APP_EXTERNAL' || 
                                         parameters.endpoint=='APP_ACCESS_EXTERNAL'||
                                         parameters.endpoint=='MICROSERVICE' ||
@@ -718,15 +727,17 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                     parameters.endpoint=='MICROSERVICE'||
                                     parameters.endpoint=='MICROSERVICE_AUTH')?
                                         null:
-                                            IamAppIdToken.get({ app_id:app_id_host, 
-                                                                resource_id:null})
+                                            IamAppIdToken.get({
+                                                                app_id:app_id_host, 
+                                                                resource_id:null,
+                                                                data:{data_app_id:app_id_token}})
                                             .result.filter((/**@type{server_db_table_IamAppIdToken}*/row)=> 
-                                                row.app_id == app_id_host && row.ip == parameters.ip && row.token == parameters.idToken)[0];
+                                                row.app_id == app_id_token && row.ip == parameters.ip && row.token == parameters.idToken)[0];
             if (parameters.endpoint=='APP_EXTERNAL' || 
                 parameters.endpoint=='APP_ACCESS_EXTERNAL' || 
                 parameters.endpoint=='MICROSERVICE' || 
                 parameters.endpoint=='MICROSERVICE_AUTH' || 
-                (id_token_decoded?.app_id == app_id_host && 
+                (id_token_decoded?.app_id == app_id_token && 
                 (id_token_decoded.scope == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
                 id_token_decoded.ip == parameters.ip &&
                 log_id_token)){
@@ -735,24 +746,22 @@ const iamAuthenticateUserAppDelete = async parameters => {
                     parameters.endpoint=='APP_EXTERNAL' ||
                     parameters.endpoint=='APP_ACCESS_EXTERNAL'||
                     parameters.endpoint=='MICROSERVICE_AUTH')
-                    return true;
+                    return {app_id:app_id_host};
                 else{
                     //validate parameters.endpoint, app_id and authorization
                     switch (true){
                         case parameters.endpoint=='IAM' && parameters.authorization.toUpperCase().startsWith('BASIC'):{
                             if (app_id_host=== app_id_admin)
-                                return true;
+                                return {app_id:app_id_host};
                             else
-                                if (serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVICE_IAM', parameter:'ENABLE_USER_LOGIN'}}).result)==1)
-                                    return true;
-                                else{
-                                    iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-                                    return false;
-                                }
+                                if (serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'ENABLE_USER_LOGIN' in parameter)[0].ENABLE_USER_LOGIN)==1)
+                                    return {app_id:app_id_host};
+                                else
+                                    return {app_id:null};
                         }
                         case parameters.endpoint=='ADMIN' && app_id_host== app_id_admin && parameters.authorization.toUpperCase().startsWith('BEARER'):
                         case parameters.endpoint=='APP_ACCESS_VERIFICATION' && parameters.authorization.toUpperCase().startsWith('BEARER'):
-                        case parameters.endpoint=='APP_ACCESS' && serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVICE_IAM', parameter:'ENABLE_USER_LOGIN'}}).result)==1 && parameters.authorization.toUpperCase().startsWith('BEARER'):{
+                        case parameters.endpoint=='APP_ACCESS' && serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'ENABLE_USER_LOGIN' in parameter)[0].ENABLE_USER_LOGIN)==1 && parameters.authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
                             const access_token = parameters.authorization?.split(' ')[1] ?? '';
                             const access_token_decoded = iamUtilTokenGet(app_id_host, access_token, parameters.endpoint);
@@ -767,7 +776,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                                             row.iam_user_app_id         == access_token_decoded.iam_user_app_id && 
                                                                             row.iam_user_id             == access_token_decoded.iam_user_id && 
                                                                             row.iam_user_username       == access_token_decoded.iam_user_username && 
-                                                                            //Authenticate app id corresponds to current subdomain
+                                                                            //Authenticate app id
                                                                             row.app_id                  == app_id_host &&
                                                                             //Authenticate token is valid
                                                                             row.res                     == 1 &&
@@ -776,20 +785,15 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                                             //Authenticate the token string
                                                                             row.token                   == access_token
                                                                         )[0])
-                                    return true;
-                                else{
-                                    iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-                                    return false;
-                                }
-                                    
+                                    return {app_id:app_id_host};
+                                else
+                                    return {app_id:null};
                             }
-                            else{
-                                iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-                                return false;
-                            }
+                            else
+                                return {app_id:null};
                         }
-                        case parameters.endpoint=='IAM_SIGNUP' && serverUtilNumberValue(ConfigServer.get({app_id:app_id_host, data:{config_group:'SERVICE_IAM', parameter:'ENABLE_USER_REGISTRATION'}}).result)==1 && app_id_host!= app_id_admin:{
-                            return true;
+                        case parameters.endpoint=='IAM_SIGNUP' && serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'ENABLE_USER_REGISTRATION' in parameter)[0].ENABLE_USER_REGISTRATION)==1 && app_id_host!= app_id_admin:{
+                            return {app_id:app_id_host};
                         }
                         case parameters.endpoint=='MICROSERVICE':{
                             const ServiceRegistry = await import('./db/ServiceRegistry.js');
@@ -797,10 +801,9 @@ const iamAuthenticateUserAppDelete = async parameters => {
                             //authenticate access token
                             const microservice_token = parameters.authorization?.split(' ')[1] ?? '';
                             /**@type{*} */
-                            const microservice_token_decoded = Security.jwt.verify(  microservice_token.replace('Bearer ','').replace('Basic ',''),
-                                                                            ConfigServer.get({  app_id:app_id_host, 
-                                                                                                data:{  config_group:'SERVICE_IAM', 
-                                                                                                        parameter:'MICROSERVICE_TOKEN_SECRET'}}).result);
+                            const microservice_token_decoded = Security.jwt.verify(
+                                                                    microservice_token.replace('Bearer ','').replace('Basic ',''),
+                                                                    configServer.SERVICE_IAM.filter(parameter=> 'MICROSERVICE_TOKEN_SECRET' in parameter)[0].MICROSERVICE_TOKEN_SECRET);
                             /**@type{server_db_table_ServiceRegistry}*/
                             const service = ServiceRegistry.get({   app_id:app_id_host,
                                                                     resource_id:null, 
@@ -818,7 +821,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                                             //Authenticate service registry same id and name as in record
                                                                             row.service_registry_id     == service.id &&
                                                                             row.service_registry_name   == service.name &&
-                                                                            //Authenticate app id corresponds to current subdomain
+                                                                            //Authenticate app id
                                                                             row.app_id                  == app_id_host &&
                                                                             //Authenticate token is valid
                                                                             row.res                     == 1 &&
@@ -829,38 +832,26 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                                             //Authenticate the token string
                                                                             row.token                   == microservice_token
                                                                         )[0])
-                                    return true;
-                                else{
-                                    iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-                                    return false;
-                                }
-                                    
+                                    return {app_id:app_id_host};
+                                else
+                                    return {app_id:null};
                             }
-                            else{
-                                iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-                                return false;
-                            }
+                            else
+                                return {app_id:null};
                         }
-                        default:{
-                            iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-                            return false;
-                        }
+                        default:
+                            return {app_id:null};
                     }
                 }
             }
-            else{
-                iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-                return false;
-            }
+            else
+                return {app_id:null};
         } catch (error) {
-            iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-            return false;
+            return {app_id:null};
         }
     }
-    else{
-        iamUtilResponseNotAuthorized(parameters.res, 401, 'iamAuthenticateUserCommon');
-        return false;
-    }
+    else
+        return {app_id:null};
 };
 
 /**
@@ -875,7 +866,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *                          add IamControlObserve with status = 1 and type=BLOCK_IP
  *                      return status 429
  *                  else
- *                      if subdomain is unknown
+ *                      if app_id is unknown
  *                      if user agent is blocked
  *                      if decodeURIComponent() has error 
  *                      if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'
@@ -893,7 +884,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *                          statusMessage: string}>}
  */
  const iamAuthenticateRequest = async parameters => {
-    const app_id = commonAppHost(parameters.host);
+    const app_id = commonAppHost(parameters.host).app_id;
     //set calling app_id using app_id or common app_id if app_id is unknown
     const calling_app_id = app_id ?? serverUtilNumberValue(ConfigServer.get({app_id:app_id??0, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
 
@@ -1032,7 +1023,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                     await IamControlObserve.post(calling_app_id, 
                                                             {   ...record,
                                                                 status:0, 
-                                                                type:'SUBDOMAIN'});
+                                                                type:'APP_ID'});
                     fail ++;
                 }
                 //check if user-agent is blocked
@@ -1167,7 +1158,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
  * @description Authenticate resource used as REST API parameter
  *              Authenticates using access token if provided or else the idToken
  * @function
- * @param { {app_id:number|null,
+ * @param { {app_id:number,
  *           ip:string,
  *           idToken:string,
  *           endpoint:server_bff_endpoint_type,
@@ -1180,6 +1171,10 @@ const iamAuthenticateUserAppDelete = async parameters => {
  * @returns {boolean}
  */
 const iamAuthenticateResource = parameters =>  {
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
+    const app_id_token = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=> 'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??0;
+    const app_id_common = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=> 'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
     //authenticate access token
     try {
         if (parameters.app_id == null)
@@ -1189,7 +1184,7 @@ const iamAuthenticateResource = parameters =>  {
             //no authentication of external token
             if (parameters.authorization && parameters.endpoint != 'APP_ACCESS_EXTERNAL'){
                 //Access token, with user info
-                const verify_decoded = iamUtilTokenGet( parameters.app_id, 
+                const verify_decoded = iamUtilTokenGet( app_id_token, 
                                                         parameters.authorization, 
                                                         parameters.endpoint=='ADMIN'?
                                                             'ADMIN':
@@ -1226,7 +1221,7 @@ const iamAuthenticateResource = parameters =>  {
                                     iam_user_id:    null,
                                     ip:             verify_decoded.ip};
             }
-
+            
             //function should authenticate at least one of iam user id or data app_id
             return  (parameters.claim_iam_user_app_id !=null || 
                      parameters.claim_iam_user_id !=null || 
@@ -1240,13 +1235,9 @@ const iamAuthenticateResource = parameters =>  {
                     authenticate_token.iam_user_id == (parameters.claim_iam_user_id ?? authenticate_token.iam_user_id) &&
                     
                     //authenticate iam module app id if used, users can only have access to current app id or common app id for data app id claim
-                    (parameters.claim_iam_module_app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ||
-                     authenticate_token.app_id == (parameters.claim_iam_module_app_id ?? authenticate_token.app_id)) &&
+                    ([app_id_common, parameters.app_id, parameters.claim_iam_module_app_id, null].includes(parameters.claim_iam_module_app_id)) &&
                     //authenticate iam data app id if used, users can only have access to current app id or common app id for data app id claim
-                    (parameters.claim_iam_data_app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ||
-                     authenticate_token.app_id == (parameters.claim_iam_data_app_id ?? authenticate_token.app_id)) &&
-                    //authenticate app id dervied from subdomain, user must be using current app id only
-                    authenticate_token.app_id == parameters.app_id &&
+                    ([app_id_common, parameters.app_id, parameters.claim_iam_data_app_id, null].includes(parameters.claim_iam_data_app_id)) &&
                     //authenticate IP address
                     authenticate_token.ip == parameters.ip &&
                     //authenticate iam service if microservice and if used (only name is authenticated, not service_registry_id)

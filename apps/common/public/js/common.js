@@ -20,6 +20,7 @@ const COMMON_GLOBAL = {
     app_text_edit:null,
     app_common_app_id:0,
     app_admin_app_id:1,
+    app_start_app_id:0,
     app_toolbar_button_start:1,
     app_toolbar_button_framework:1,
     app_framework:1,
@@ -221,7 +222,7 @@ const commonMiscImport = async (url, appModule=false) =>{
                     app_id:app_id,
                     url:url,
                     component:await commonFFB({ path: appModule?url:('/app-resource/' + url.replaceAll('/','~')), 
-                                                query:appModule?'':`content_type=${'text/javascript'}&IAM_data_app_id=${app_id}`, 
+                                                query:appModule?'':`content_type=${'text/javascript'}&data_app_id=${app_id}`, 
                                                 method:'GET', 
                                                 response_type:'BLOB',
                                                 authorization_type:'APP_ID'})
@@ -610,7 +611,7 @@ const commonMiscResourceFetch = async (url,element, content_type )=>{
                         content:url.startsWith('/common/css/font')?
                                     url:
                                         await commonFFB({   path:'/app-resource/' + url.replaceAll('/','~'), 
-                                                            query:`content_type=${content_type}&IAM_data_app_id=${app_id}`, 
+                                                            query:`content_type=${content_type}&data_app_id=${app_id}`, 
                                                             method:'GET', 
                                                             //images use base64 strings
                                                             response_type:content_type.startsWith('image')?'TEXT':'BLOB',
@@ -2194,10 +2195,13 @@ const commonFFB = async parameter => {
             headers: {  'Content-Type': 'text/event-stream', 
                         'Cache-control': 'no-cache', 
                         'Connection': 'keep-alive',
-                        'id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
+                        //'app-id': COMMON_GLOBAL.app_id,
+                        'app-signature': 'commonFFB',
+                        'app-id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
                         ...(authorization && {Authorization: authorization})}
         };
-        return fetch(url, options);
+        return fetch(url, 
+                    options);
     }
     else{
         //add options to fetch
@@ -2207,8 +2211,10 @@ const commonFFB = async parameter => {
                         cache: 'no-store',  //browser should never cache result from REST API
                         method: parameter.method,
                         headers: {
+                                    'app-id': COMMON_GLOBAL.app_id,
+                                    'app-signature': 'commonFFB',
+                                    'app-id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
                                     'Connection': 'close',
-                                    'id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
                                     ...(authorization && {Authorization: authorization})
                                 },
                         body: null
@@ -2218,9 +2224,11 @@ const commonFFB = async parameter => {
                     cache: 'no-store',      //browser should never cache result from from REST API
                     method: parameter.method,
                     headers: {
+                                'app-id': COMMON_GLOBAL.app_id,
+                                'app-signature': 'commonFFB',
+                                'app-id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
                                 'Content-Type': 'application/json',
                                 'Connection': 'close',
-                                'id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
                                 ...(authorization && {Authorization: authorization})
                             },
                     body: JSON.stringify({data:commonWindowToBase64(JSON.stringify(parameter.body))})
@@ -2697,9 +2705,7 @@ const commonEvent = async (event_type,event=null) =>{
                         }            
                         case 'common_dialogue_apps_list':
                             if (event.target.classList.contains('common_dialogue_apps_app_logo')){
-                                const app_url = event.target.getAttribute('data-url');
-                                if (app_url)
-                                    COMMON_WINDOW.open(app_url);
+                                commonMountApp(event.target.getAttribute('data-app_id'));
                             }
                             break;
                         //Dialogue info
@@ -2718,7 +2724,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 data:       {
                                             info:'URL',
                                             path:'/app-resource/' + COMMON_GLOBAL.info_link_policy_url,
-                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
+                                            query:`type=INFO&data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
                                             method:'GET',
                                             authorization:'APP_ID'
                                             },
@@ -2732,7 +2738,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 data:       {
                                             info:'URL',
                                             path:'/app-resource/' + COMMON_GLOBAL.info_link_disclaimer_url,
-                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
+                                            query:`type=INFO&data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
                                             method:'GET',
                                             authorization:'APP_ID'
                                             },
@@ -2746,7 +2752,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 data:       {
                                             info:'URL',
                                             path:'/app-resource/' + COMMON_GLOBAL.info_link_terms_url,
-                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
+                                            query:`type=INFO&data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
                                             method:'GET',
                                             authorization:'APP_ID'
                                             },
@@ -3028,6 +3034,7 @@ const commonEvent = async (event_type,event=null) =>{
                         }
                         // common app toolbar
                         case 'common_app_toolbar_start':{
+                            commonMountApp(COMMON_GLOBAL.app_start_app_id);
                              break;
                          }
                         case 'common_app_toolbar_framework_js':
@@ -3678,6 +3685,8 @@ const custom_framework = () => {
  * @returns {Promise.<void>}
  */
 const commonMountApp = async (app_id) =>{   
+    commonComponentRemove('common_dialogue_apps');
+    COMMON_GLOBAL.app_id =          app_id;
     /**@type{commonAppInit} */
     const CommonAppInit = await commonFFB({   path:`/app-init/${app_id}`, 
                                     method:'GET', 
@@ -3689,7 +3698,6 @@ const commonMountApp = async (app_id) =>{
     COMMON_GLOBAL.app_link_url =    CommonAppInit.App.link_url;
     COMMON_GLOBAL.app_link_title =  CommonAppInit.App.link_title;
     COMMON_GLOBAL.app_text_edit =   CommonAppInit.App.text_edit;
-
     CommonAppInit.App.css==''?
         null:
             commonMiscResourceFetch(CommonAppInit.App.css, null, 'text/css').then(href=>COMMON_DOCUMENT.querySelector('#app_link_app_css').href =href);
@@ -3829,6 +3837,7 @@ const commonInit = async (start_app_id, parameters) => {
     //Config ServiceApp
     COMMON_GLOBAL.app_common_app_id=                decoded_parameters.Info.app_common_app_id;
     COMMON_GLOBAL.app_admin_app_id=                 decoded_parameters.Info.app_admin_app_id;
+    COMMON_GLOBAL.app_start_app_id=                 decoded_parameters.Info.app_start_app_id;
     COMMON_GLOBAL.app_toolbar_button_start =        decoded_parameters.Info.app_toolbar_button_start;
     COMMON_GLOBAL.app_toolbar_button_framework =    decoded_parameters.Info.app_toolbar_button_framework;
     COMMON_GLOBAL.app_framework =                   decoded_parameters.Info.app_framework;
@@ -3858,7 +3867,8 @@ const commonInit = async (start_app_id, parameters) => {
 
     setUserAgentAttributes();
     custom_framework();
-    commonSocketConnectOnline();
+    await commonSocketConnectOnline();
+    COMMON_GLOBAL.app_id =                          COMMON_GLOBAL.app_start_app_id;
     await commonComponentRender({   mountDiv:   'common_app',
         data:       {
                     app_toolbar_button_start:       COMMON_GLOBAL.app_toolbar_button_start,

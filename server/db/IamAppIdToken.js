@@ -11,11 +11,17 @@ const ORM = await import('./ORM.js');
  * @description Get
  * @function
  * @param {{app_id:number,
- *          resource_id:number|null}} parameters
+ *          resource_id:number|null,
+ *          data:{data_app_id:number|null}}} parameters
  * @returns {server_server_response & {result?:server_db_table_IamAppIdToken[] }}
  */
-const get = parameters => {return {result:ORM.getObject(parameters.app_id, 'IamAppIdToken', parameters.resource_id, parameters.app_id).rows, type:'JSON'};};
-
+const get = parameters =>{
+    const result = ORM.getObject(parameters.app_id, 'IamAppIdToken',parameters.resource_id, parameters.data.data_app_id);
+    if (result.rows.length>0)
+        return {result:result.rows, type:'JSON'};
+    else
+        return ORM.getError(parameters.app_id, 404);
+};
 /**
  * @name post
  * @description Add record

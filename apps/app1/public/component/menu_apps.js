@@ -21,7 +21,6 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                     <div id='menu_apps_row_title' class='menu_apps_row'>
                                         <div data-column='id' class='menu_apps_col list_title'>ID</div>
                                         <div data-column='name' class='menu_apps_col list_title'>NAME</div>
-                                        <div data-column='subdomain' class='menu_apps_col list_title'>SUBDOMAIN</div>
                                         <div data-column='path' class='menu_apps_col list_title'>PATH</div>
                                         <div data-column='logo' class='menu_apps_col list_title'>LOGO</div>
                                         <div data-column='js' class='menu_apps_col list_title'>JS</div>
@@ -39,7 +38,6 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                         `<div data-changed-record='0' data-app_id = '${app.id}' class='menu_apps_row common_row' >
                                             <div class='menu_apps_col list_readonly' data-column='id' >${app.id}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='name' contentEditable='true' >${app.name}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='subdomain' contentEditable='true' >${app.subdomain}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='path' contentEditable='true' >${app.path}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='logo' contentEditable='true' >${app.logo}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='js' contentEditable='true' >${app.js}</div>
