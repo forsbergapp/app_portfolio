@@ -872,11 +872,11 @@ const configDefault = async () => {
                                                                                     if (key== 'ADMIN_TOKEN_SECRET'){
                                                                                         row.ADMIN_TOKEN_SECRET = Security.securitySecretCreate();
                                                                                     }
-                                                                                    if (key== 'ADMIN_PASSWORD_ENCRYPTION_KEY'){
-                                                                                        row.ADMIN_PASSWORD_ENCRYPTION_KEY = Security.securitySecretCreate(false, 32);
+                                                                                    if (key== 'USER_PASSWORD_ENCRYPTION_KEY'){
+                                                                                        row.USER_PASSWORD_ENCRYPTION_KEY = Security.securitySecretCreate(false, 32);
                                                                                     }
-                                                                                    if (key== 'ADMIN_PASSWORD_INIT_VECTOR'){
-                                                                                        row.ADMIN_PASSWORD_INIT_VECTOR = Security.securitySecretCreate(false, 16);
+                                                                                    if (key== 'USER_PASSWORD_INIT_VECTOR'){
+                                                                                        row.USER_PASSWORD_INIT_VECTOR = Security.securitySecretCreate(false, 16);
                                                                                     }
                                                                                 }
                                                                             });

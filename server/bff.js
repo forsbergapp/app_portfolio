@@ -111,7 +111,7 @@ const bffInit = async (req, res) =>{
             res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
             res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
             
-            if (config_SERVER.SERVICE_IAM.filter(row=>'ENABLE_CONTENT_SECURITY_POLICY' in row)[0].ENABLE_CONTENT_SECURITY_POLICY == '1'){
+            if (config_SERVER.SERVICE_IAM.filter(row=>'CONTENT_SECURITY_POLICY_ENABLE' in row)[0].CONTENT_SECURITY_POLICY_ENABLE == '1'){
                 res.setHeader('content-security-policy', config_SERVER.SERVICE_IAM.filter(row=>'CONTENT_SECURITY_POLICY' in row)[0].CONTENT_SECURITY_POLICY);
             }
             res.setHeader('cross-origin-opener-policy','same-origin');

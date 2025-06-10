@@ -767,14 +767,14 @@ const iamAuthenticateUserAppDelete = async parameters => {
                             if (apphost.admin)
                                 return {app_id:apphost.app_id};
                             else
-                                if (serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'ENABLE_USER_LOGIN' in parameter)[0].ENABLE_USER_LOGIN)==1)
+                                if (serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'USER_ENABLE_LOGIN' in parameter)[0].USER_ENABLE_LOGIN)==1)
                                     return {app_id:apphost.app_id};
                                 else
                                     return {app_id:null};
                         }
                         case parameters.endpoint=='ADMIN' && apphost.admin && parameters.authorization.toUpperCase().startsWith('BEARER'):
                         case parameters.endpoint=='APP_ACCESS_VERIFICATION' && parameters.authorization.toUpperCase().startsWith('BEARER'):
-                        case parameters.endpoint=='APP_ACCESS' && serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'ENABLE_USER_LOGIN' in parameter)[0].ENABLE_USER_LOGIN)==1 && parameters.authorization.toUpperCase().startsWith('BEARER'):{
+                        case parameters.endpoint=='APP_ACCESS' && serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'USER_ENABLE_LOGIN' in parameter)[0].USER_ENABLE_LOGIN)==1 && parameters.authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
                             const access_token = parameters.authorization?.split(' ')[1] ?? '';
                             const access_token_decoded = iamUtilTokenGet(apphost.admin?apphost.app_id:app_id_token, access_token, parameters.endpoint);
@@ -805,7 +805,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                             else
                                 return {app_id:null};
                         }
-                        case parameters.endpoint=='IAM_SIGNUP' && serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'ENABLE_USER_REGISTRATION' in parameter)[0].ENABLE_USER_REGISTRATION)==1 && apphost.admin==false:{
+                        case parameters.endpoint=='IAM_SIGNUP' && serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'USER_ENABLE_REGISTRATION' in parameter)[0].USER_ENABLE_REGISTRATION)==1 && apphost.admin==false:{
                             return {app_id:apphost.app_id};
                         }
                         case parameters.endpoint=='MICROSERVICE':{

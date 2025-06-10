@@ -211,10 +211,10 @@ const securityTOTPValidate = async (totp_value, otp_key) =>totp_value == (await 
  *              Uses parameters
  *              ConfigServer
  *                  SERVICE_IAM
- *                      ADMIN_PASSWORD_ENCRYPTION_KEY
+ *                      USER_PASSWORD_ENCRYPTION_KEY
  *              ConfigServer
  *                  SERVICE_IAM
- *                      ADMIN_PASSWORD_INIT_VECTOR
+ *                      USER_PASSWORD_INIT_VECTOR
  * @function
  * @param {number} app_id
  * @param {string} password 
@@ -222,8 +222,8 @@ const securityTOTPValidate = async (totp_value, otp_key) =>totp_value == (await 
  */
 const securityPasswordCreate = async (app_id, password) => {
     const ConfigServer = await import('./db/ConfigServer.js');
-    const AppPasswordEncryptionKey = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'ADMIN_PASSWORD_ENCRYPTION_KEY'}}).result;
-    const AppPasswordInitializationVector = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'ADMIN_PASSWORD_INIT_VECTOR'}}).result;
+    const AppPasswordEncryptionKey = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'USER_PASSWORD_ENCRYPTION_KEY'}}).result;
+    const AppPasswordInitializationVector = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'USER_PASSWORD_INIT_VECTOR'}}).result;
     const cipher = Crypto.createCipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
     let encrypted = cipher.update(password, 'utf8', 'base64');
     encrypted += cipher.final('base64');
@@ -236,10 +236,10 @@ const securityPasswordCreate = async (app_id, password) => {
  *              Uses parameters
  *              ConfigServer
  *                  SERVICE_IAM
- *                      ADMIN_PASSWORD_ENCRYPTION_KEY
+ *                      USER_PASSWORD_ENCRYPTION_KEY
  *              ConfigServer
  *                  SERVICE_IAM
- *                      ADMIN_PASSWORD_INIT_VECTOR
+ *                      USER_PASSWORD_INIT_VECTOR
  * @function
  * @param {number} app_id
  * @param {string} password 
@@ -249,8 +249,8 @@ const securityPasswordCreate = async (app_id, password) => {
 const securityPasswordCompare = async (app_id, password, compare_password) =>{
     const ConfigServer = await import('./db/ConfigServer.js');
     //admin uses different parameters than apps
-    const AppPasswordEncryptionKey = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'ADMIN_PASSWORD_ENCRYPTION_KEY'}}).result;
-    const AppPasswordInitializationVector = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'ADMIN_PASSWORD_INIT_VECTOR'}}).result;
+    const AppPasswordEncryptionKey = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'USER_PASSWORD_ENCRYPTION_KEY'}}).result;
+    const AppPasswordInitializationVector = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'USER_PASSWORD_INIT_VECTOR'}}).result;
     const decipher = Crypto.createDecipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
     const  decrypted = decipher.update(compare_password, 'base64', 'utf8'); //ERR_OSSL_WRONG_FINAL_BLOCK_LENGTH, Provider routines::wrong final block length
     try {
