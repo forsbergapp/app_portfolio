@@ -103,6 +103,9 @@ const appCommonInit = async (commonLib, start, parameters) => {
     appInit();
 };
 /**
+ * @name appMetadata
+ * @description App metadata for event delegataion and lifecycle events
+ * @function
  * @returns {commonMetadata}
  */
 const appMetadata = () =>{

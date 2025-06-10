@@ -2333,6 +2333,9 @@ const appCommonInit = async (commonLib, parameters) => {
     await appInit(parameters);
 };
 /**
+ * @name appMetadata
+ * @description App metadata for event delegataion and lifecycle events
+ * @function
  * @returns {commonMetadata}
  */
 const appMetadata = () =>{
