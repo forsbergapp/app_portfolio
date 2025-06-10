@@ -402,10 +402,10 @@ const postDemo = async parameters=> {
                                if (key_name[1]!=null && typeof key_name[1]=='string' && key_name[1].indexOf('<HOST/>')>-1){
                                     /**@type{server_db_document_ConfigServer} */
                                     const {SERVER:config_SERVER} = ConfigServer.get({app_id:0}).result;
-                                    //use HTTPS configuration as default
+                                    //use HTTP configuration as default
                                     const HOST = config_SERVER.filter(row=>'HOST' in row)[0].HOST;
-                                    const HTTPS_PORT = serverUtilNumberValue(config_SERVER.filter(row=>'HTTPS_PORT' in row)[0].HTTPS_PORT);
-                                    return key_name[1]?.replaceAll('<HOST/>', HOST + ((HTTPS_PORT==443)?'':`:${HTTPS_PORT}`));
+                                    const HTTP_PORT = serverUtilNumberValue(config_SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT);
+                                    return key_name[1]?.replaceAll('<HOST/>', HOST + ((HTTP_PORT==443)?'':`:${HTTP_PORT}`));
                                }
                                else
                                    return key_name[1];
