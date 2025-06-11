@@ -323,8 +323,7 @@ const postFsDir = async paths => {
 
 /**
  * @name postFsAdmin
- * @description Write to a file in database
- *              Should only be used by admin since no transaction is used
+ * @description Write to a file in database used in first time installation
  * @function
  * @param {server_DbObject} object
  * @param {{}} file_content 
@@ -332,8 +331,6 @@ const postFsDir = async paths => {
  */
 const postFsAdmin = async (object, file_content) =>{
     await postFsFile(DB_DIR.db + object + '.json', file_content, DB.data.filter(file_db=>file_db.name==object)[0]?.type.startsWith('TABLE'));
-    if (DB.data.filter(file_db=>file_db.name == object)[0]?.cache_content)
-        DB.data.filter(file_db=>file_db.name == object)[0].cache_content = file_content;
 };
 
 /**
@@ -598,7 +595,7 @@ const updateObject = async (app_id, object, resource_id, data_app_id, data) =>{
         else{
             /**@type{server_db_result_fileFsRead} */
             const file = await lockObject(app_id, object);
-            if (object_type == 'TABLE'){
+            if (['TABLE','TABLE_KEY_VALUE'].includes(object_type)){
                 if (constraintsValidate(object, file.file_content, data, 'UPDATE', resource_id)){
                     let update = false;
                     let count = 0;
