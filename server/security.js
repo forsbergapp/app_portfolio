@@ -1,7 +1,7 @@
 /** @module server/security */
 
 /**
- * @import {server_security_jwt_complete, server_security_jwt_payload} from './types.js'}
+ * @import {server_db_document_ConfigServer, server_security_jwt_complete, server_security_jwt_payload} from './types.js'}
  */
 const Crypto = await import('node:crypto');
 
@@ -208,23 +208,15 @@ const securityTOTPValidate = async (totp_value, otp_key) =>totp_value == (await 
 /**
  * @name securityPasswordCreate
  * @description Creates password for IAM using aes-256-cbc and base64, encryption key parameter and init vector parameter from server config
- *              Uses parameters
- *              ConfigServer
- *                  SERVICE_IAM
- *                      USER_PASSWORD_ENCRYPTION_KEY
- *              ConfigServer
- *                  SERVICE_IAM
- *                      USER_PASSWORD_INIT_VECTOR
  * @function
  * @param {number} app_id
  * @param {string} password 
  * @returns {Promise.<string>}
  */
 const securityPasswordCreate = async (app_id, password) => {
-    const ConfigServer = await import('./db/ConfigServer.js');
-    const AppPasswordEncryptionKey = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'USER_PASSWORD_ENCRYPTION_KEY'}}).result;
-    const AppPasswordInitializationVector = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'USER_PASSWORD_INIT_VECTOR'}}).result;
-    const cipher = Crypto.createCipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
+    const { user_password_encryption_key, 
+            user_password_init_vector} = await securityParametersGet({app_id:app_id});
+    const cipher = Crypto.createCipheriv('aes-256-cbc', user_password_encryption_key, user_password_init_vector);
     let encrypted = cipher.update(password, 'utf8', 'base64');
     encrypted += cipher.final('base64');
     return encrypted;
@@ -233,6 +225,23 @@ const securityPasswordCreate = async (app_id, password) => {
 /**
  * @name securityPasswordCompare
  * @description Compares password for IAM using aes-256-cbc and base64, encryption key parameter and init vector parameter from server config
+ * @function
+ * @param {number} app_id
+ * @param {string} password 
+ * @param {string} compare_password 
+ * @returns {Promise.<boolean>}
+ */
+const securityPasswordCompare = async (app_id, password, compare_password) =>{
+    try {
+        return await securityPasswordGet({app_id:app_id, password_encrypted:compare_password}) == password;    
+    } catch (error) {
+        return false;
+    }
+};
+
+/**
+ * @name securityParametersGet
+ * @description Returns parameters
  *              Uses parameters
  *              ConfigServer
  *                  SERVICE_IAM
@@ -241,22 +250,36 @@ const securityPasswordCreate = async (app_id, password) => {
  *                  SERVICE_IAM
  *                      USER_PASSWORD_INIT_VECTOR
  * @function
- * @param {number} app_id
- * @param {string} password 
- * @param {string} compare_password 
- * @returns {Promise.<boolean>}
+ * @param {{app_id:number}} parameters
+ * @returns {Promise.<{ user_password_encryption_key:string,
+ *                      user_password_init_vector:string}>} 
  */
-const securityPasswordCompare = async (app_id, password, compare_password) =>{
+const securityParametersGet = async parameters =>{
     const ConfigServer = await import('./db/ConfigServer.js');
-    //admin uses different parameters than apps
-    const AppPasswordEncryptionKey = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'USER_PASSWORD_ENCRYPTION_KEY'}}).result;
-    const AppPasswordInitializationVector = ConfigServer.get({app_id:app_id, data:{config_group:'SERVICE_IAM', parameter:'USER_PASSWORD_INIT_VECTOR'}}).result;
-    const decipher = Crypto.createDecipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
-    const  decrypted = decipher.update(compare_password, 'base64', 'utf8'); //ERR_OSSL_WRONG_FINAL_BLOCK_LENGTH, Provider routines::wrong final block length
+    /**@type{server_db_document_ConfigServer['SERVICE_IAM']} */
+    const configServer = ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_IAM'}}).result;
+    return {user_password_encryption_key: configServer.filter(parameter=> 'USER_PASSWORD_ENCRYPTION_KEY' in parameter)[0].USER_PASSWORD_ENCRYPTION_KEY,
+            user_password_init_vector : configServer.filter(parameter=> 'USER_PASSWORD_INIT_VECTOR' in parameter)[0].USER_PASSWORD_INIT_VECTOR
+        };    
+};
+
+/**
+ * @name securityPasswordGet
+ * @description Returns decrypted
+ * @function
+ * @param {{app_id:number,
+ *          password_encrypted:string}} parameters
+ * @returns {Promise.<string|null>}
+ */
+const securityPasswordGet = async parameters =>{
+    const { user_password_encryption_key, 
+            user_password_init_vector} = await securityParametersGet({app_id:parameters.app_id});
+    const decipher = Crypto.createDecipheriv('aes-256-cbc', user_password_encryption_key, user_password_init_vector);
+    const  decrypted = decipher.update(parameters.password_encrypted, 'base64', 'utf8');
     try {
-        return (decrypted + decipher.final('utf8')) == password;    
+        return (decrypted + decipher.final('utf8'));
     } catch (error) {
-        return false;
+        return null;
     }
 };
 /**
@@ -446,6 +469,6 @@ const jwt = new Jwt();
 
 export {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate, securitySecretCreate, 
         securityOTPKeyCreate,securityOTPKeyValidate, securityTOTPGenerate,securityTOTPValidate,
-        securityPasswordCreate, securityPasswordCompare, 
+        securityPasswordCreate, securityPasswordCompare, securityPasswordGet,
         securityKeyPairCreate, securityPublicEncrypt, securityPrivateDecrypt,
         jwt};

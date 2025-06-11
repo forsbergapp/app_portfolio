@@ -833,17 +833,19 @@ const deleteDemo = async parameters => {
 const postConfigDefault = async () => {
     const {serverProcess} = await import('./server.js');
     const ORM = await import('./db/ORM.js');
-
     const fs = await import('node:fs');
 
-    const updatedConfigSecurity = await getConfigSecurityUpdate({pathConfigServer:'/server/install/default/ConfigServer.json',
-                                                        pathServiceRegistry:'/server/install/default/ServiceRegistry.json',
-                                                        pathAppSecret:'/server/install/default/AppSecret.json'
+    const updatedConfigSecurity = await getConfigSecurityUpdate({   
+                                            pathConfigServer:'/server/install/default/ConfigServer.json',
+                                            pathServiceRegistry:'/server/install/default/ServiceRegistry.json',
+                                            pathAppSecret:'/server/install/default/AppSecret.json'
     });
     /**
      * @param {server_DbObject} object
      */
-    const getObject = async object => await fs.promises.readFile(serverProcess.cwd() + `/server/install/default/${object}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
+    const getObject = async object => 
+            await fs.promises.readFile(serverProcess.cwd() + `/server/install/default/${object}.json`)
+                    .then(filebuffer=>JSON.parse(filebuffer.toString()));
     //read all default files
     /**
      * @type{[  [server_DbObject, server_db_document_ConfigServer],
@@ -882,7 +884,7 @@ const postConfigDefault = async () => {
                             ['AppTranslation',                  await getObject('AppTranslation')],
                             ['DbObjects',                       await getObject('DbObjects')]
                         ]; 
-    //create directories
+    //create directories in ORM
     await ORM.postFsDir(['/data',
                             '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_JOBS' in key)[0].PATH_JOBS,
                             '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_SSL' in key)[0].PATH_SSL,
@@ -895,16 +897,74 @@ const postConfigDefault = async () => {
         throw err;
     }); 
     
-    //default microservice 
+    //install default microservice configuration
     updateMicroserviceSecurity({serveRegistry:              config_obj[2][1],
                                 pathMicroserviceSource:     '/server/install/default/microservice/',
                                 pathMicroserviceDestination:'/data/microservice/'});
 
-    //load default db
-    await ORM.Init(config_obj[15][1]);
+    //write files to ORM
     for (const config_row of config_obj){
         await ORM.postFsAdmin(config_row[0], config_row[1]);
     }
+};
+/**
+ * @name updateConfigSecrets
+ * @description Updates configuration secrets in ConfigServer, ServiceRegistry, AppSecret and IamUser
+ * @function
+ * @returns {Promise<void>}
+ */
+const updateConfigSecrets = async () =>{
+    const ConfigServer = await import('./db/ConfigServer.js');
+    const ServiceRegistry = await import('./db/ServiceRegistry.js');
+    const security = await import('./security.js');
+    const AppSecret = await import('./db/AppSecret.js');
+    const IamUser = await import('./db/IamUser.js');
+    
+    //get ConfigServer, ServiceRegistry and AppSecret with new secrets
+    const updatedConfigSecurity = await getConfigSecurityUpdate({
+                                            pathConfigServer:   null,
+                                            pathServiceRegistry:null,
+                                            pathAppSecret:      null
+                                        });
+    //get users and password
+    const users = await new Promise(resolve=>{(async () =>{ 
+        /**@type{server_db_table_IamUser[]} */
+        const users = IamUser.get(0, null).result??[];
+        for (const user of users){
+            /**@ts-ignore */
+            user.password =  await security.securityPasswordGet({app_id:0, password_encrypted:user.password});
+        }
+        resolve(users);
+    })();});                                                              
+    //update ConfigServer
+    await ConfigServer.update({ app_id:0,
+                                data:{  config: updatedConfigSecurity.ConfigServer}});
+    //update IamUser using new secrets
+    for (const user of users){
+        await IamUser.updateAdmin({ app_id:0, 
+                                    resource_id:user.id, 
+                                    /**@ts-ignore */
+                                    data:{password:user.password}
+                                });
+    }
+    //update ServiceRegistry with new secrets
+    for(const record of updatedConfigSecurity.ServiceRegistry.rows??[])
+        await ServiceRegistry.update({app_id:0,
+                                /**@ts-ignore */
+                                resource_id:record.id,
+                                data:record});
+    //update AppSecret with new secrets
+    for(const record of updatedConfigSecurity.AppSecret.rows??[])
+        for (const key of Object.keys(record).filter(key=>key !='app_id'))
+            await AppSecret.update({  app_id:0,
+                                 resource_id:record.app_id,
+                                 data:{  parameter_name:key,
+                                         /**@ts-ignore */
+                                         parameter_value:record[key]}});
+
+    await updateMicroserviceSecurity({  serveRegistry:               updatedConfigSecurity.ServiceRegistry.rows??[],
+                                        pathMicroserviceSource:     '/data/microservice/',
+                                        pathMicroserviceDestination:'/data/microservice/'});
 };
 /**
  * @name updateMicroserviceSecurity
@@ -1011,4 +1071,7 @@ const getConfigSecurityUpdate = async parameters =>{
                         })):ORM.getObject(0,'AppSecret')
     };
 };
-export{postDemo, deleteDemo, getConfigSecurityUpdate, postConfigDefault, updateMicroserviceSecurity};
+export{ postDemo, deleteDemo, 
+        postConfigDefault, 
+        updateConfigSecrets, 
+        updateMicroserviceSecurity};
