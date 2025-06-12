@@ -1128,57 +1128,56 @@ const serverStart = async () =>{
                 }
             });
     });
-    try {
+    try {       
         const result_data = await ORM.getFsDataExists();
-        if (result_data==false){
+        if (result_data==false)
             await Installation.postConfigDefault();
-            await ORM.Init();
-        }
-        else{
-            await ORM.Init();
+        await ORM.Init();
+        /**@type{server_db_document_ConfigServer} */
+        const configServer = ConfigServer.get({app_id:0}).result;
+
+        if (configServer.SERVICE_IAM.filter(parameter=> 'SERVER_UPDATE_SECRETS_START' in parameter)[0].SERVER_UPDATE_SECRETS_START=='1')
             await Installation.updateConfigSecrets();
-        }
-        /**@type{server_db_document_ConfigServer['SERVER']} */
-        const configServer = ConfigServer.get({app_id:0,data:{ config_group:'SERVER'}}).result;
+
         const {socketIntervalCheck} = await import('./socket.js');
         socketIntervalCheck();
                                             
-        const NETWORK_INTERFACE = configServer.filter(parameter=> 'NETWORK_INTERFACE' in parameter)[0].NETWORK_INTERFACE;
+        const NETWORK_INTERFACE = configServer.SERVER.filter(parameter=> 'NETWORK_INTERFACE' in parameter)[0].NETWORK_INTERFACE;
         //START HTTP SERVER                                                     
-        http.createServer(await server()).listen(serverUtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80, NETWORK_INTERFACE, () => {
+        http.createServer(await server()).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80, NETWORK_INTERFACE, () => {
             Log.post({   app_id:0, 
                 data:{  object:'LogServerInfo', 
-                        log:'HTTP Server PORT: ' + serverUtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80
+                        log:'HTTP Server PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80
                     }
                 });
         });
-        http.createServer(await server()).listen(serverUtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
+        http.createServer(await server()).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
             Log.post({   app_id:0, 
                 data:{  object:'LogServerInfo', 
-                        log:'HTTP Server Admin  PORT: ' + serverUtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000
+                        log:'HTTP Server Admin  PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000
                     }
                 });
         });
-        if (configServer.filter(parameter=> 'HTTPS_ENABLE' in parameter)[0].HTTPS_ENABLE=='1'){
+        if (configServer.SERVER.filter(parameter=> 'HTTPS_ENABLE' in parameter)[0].HTTPS_ENABLE=='1'){
             //START HTTPS SERVER
             //SSL files for HTTPS
-            const HTTPS_KEY = await fs.promises.readFile(serverProcess.cwd() + '/data' + configServer.filter(parameter=> 'HTTPS_KEY' in parameter)[0].HTTPS_KEY, 'utf8');
-            const HTTPS_CERT = await fs.promises.readFile(serverProcess.cwd() + '/data' + configServer.filter(parameter=> 'HTTPS_CERT' in parameter)[0].HTTPS_CERT, 'utf8');
+            const HTTPS_KEY = await fs.promises.readFile(serverProcess.cwd() + '/data' + configServer.SERVER.filter(parameter=> 'HTTPS_KEY' in parameter)[0].HTTPS_KEY, 'utf8');
+            const HTTPS_CERT = await fs.promises.readFile(serverProcess.cwd() + '/data' + configServer.SERVER.filter(parameter=> 'HTTPS_CERT' in parameter)[0].HTTPS_CERT, 'utf8');
             const options = {
                 key: HTTPS_KEY.toString(),
                 cert: HTTPS_CERT.toString()
             };
-            https.createServer(options,  await server()).listen(serverUtilNumberValue(configServer.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443,NETWORK_INTERFACE, () => {
+            https.createServer(options,  await server()).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443,NETWORK_INTERFACE, () => {
                 Log.post({   app_id:0, 
                     data:{  object:'LogServerInfo', 
-                            log:'HTTPS Server PORT: ' + serverUtilNumberValue(configServer.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443
+                            log:'HTTPS Server PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443
                         }
                     });
             });
-            https.createServer(options,  await server()).listen(serverUtilNumberValue(configServer.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000,NETWORK_INTERFACE, () => {
+            https.createServer(options,  await server()).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000,NETWORK_INTERFACE, () => {
                 Log.post({   app_id:0, 
                     data:{  object:'LogServerInfo', 
-                            log:'HTTPS Server admin PORT: ' + serverUtilNumberValue(configServer.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000
+                            log:'HTTPS Server admin PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000
                         }
                     });
             });
