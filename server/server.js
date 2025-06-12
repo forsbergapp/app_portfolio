@@ -884,7 +884,7 @@ const serverREST_API = async (routesparameters) =>{
                                     '':
                                     routesparameters.idToken?.replace('Bearer ',''); 
 
-            const authenticate = await iam.iamAuthenticateUserCommon({
+            const authenticate = await iam.iamAuthenticateCommon({
                 idToken: idToken, 
                 endpoint:routesparameters.endpoint,
                 authorization: routesparameters.authorization??'', 
