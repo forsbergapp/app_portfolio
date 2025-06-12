@@ -40,6 +40,7 @@
         {"JOURNAL":"1", "COMMENT": "1=on, 0=off"}
     ],
     "SERVICE_IAM":[
+        {"SERVER_UPDATE_SECRETS_START":"1", "COMMENT":"1=YES, 0=NO"},
         {"SERVER_PUBLIC_KEY":"", "COMMENT":"To encrypt requests and responses"},
         {"SERVER_PRIVATE_KEY":"", "COMMENT":"To encrypt requests and responses"},
         {"AUTHENTICATE_REQUEST_ENABLE": "0", "COMMENT": "0=NO, 1=YES"},
@@ -60,7 +61,7 @@
         {"USER_TOKEN_APP_ID_EXPIRE": "2d", "COMMENT": ""},
         {"USER_TOKEN_APP_ID_SECRET": "", "COMMENT": ""},
         {"CONTENT_SECURITY_POLICY_ENABLE": "1", "COMMENT": "0=NO, 1=YES"},        
-        {"CONTENT_SECURITY_POLICY": "default-src 'self';script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:;script-src-attr 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline' blob:;font-src 'self';img-src * data: blob:;connect-src *;child-src 'self' blob:;object-src 'self' data:;frame-src 'self' data: ;base-uri 'self';form-action 'self';frame-ancestors 'self';upgrade-insecure-requests","COMMENT": "Content security policy"},
+        {"CONTENT_SECURITY_POLICY": "default-src 'self';script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:;script-src-attr 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline' blob:;font-src 'self' data:;img-src * data: blob:;connect-src *;child-src 'self' blob:;object-src 'self' data:;frame-src 'self' data: ;base-uri 'self';form-action 'self';frame-ancestors 'self';upgrade-insecure-requests","COMMENT": "Content security policy"},
         {"ENABLE_GEOLOCATION": "0", "COMMENT": "0=NO, 1=YES, get geodata from clients and from chosen places in apps, client geodata is saved if enabled"},
         {"RATE_LIMIT_WINDOW_MS": 60000, "COMMENT": "Milliseconds" },
         {"RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS":500, "COMMENT": "" },

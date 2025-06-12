@@ -2174,37 +2174,6 @@ body.rtl{
 	transform: translateY(-65px);
     margin: 5px;
 }
-/*DIALOGUE MAINTENANCE */
-#common_maintenance_header{
-    width: 100%;
-    height: 50px;
-    background-color: var(--common_app_color_blue1);
-}
-#common_dialogue_maintenance{
-    display: block;
-}
-#common_dialogue_maintenance_content{
-    height:250px;
-    width:300px;
-}
-#common_maintenance_logo {
-    margin: 0 auto;
-    background-color: var(--common_app_color_light);
-}
-#common_maintenance_message{
-    padding-top:20px;
-    padding-bottom:20px;
-    font-weight: bold;
-    color: var(--common_app_color_blue1);
-    font-size: 2em;
-}
-#common_maintenance_countdown{
-    font-size: 30px;
-    padding-bottom:20px;
-}
-#common_maintenance_footer{
-    padding-bottom:5px;
-}
 /* info*/ 
 .common_info_content{
     width: 97%;
