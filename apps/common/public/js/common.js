@@ -104,14 +104,6 @@ const COMMON_GLOBAL = {
 };
 Object.seal(COMMON_GLOBAL);
 
-/**@type{import('../../../common_types.js').CommonIcons} */
-const COMMON_ICONS = {
-    app_maintenance:          '⚒',
-    app_alert:                '🚨',
-    infinite:                 '∞',
-};
-Object.seal(COMMON_ICONS);
-
 /**
  * @name commonMiscElementId
  * @description Finds recursive parent id. Use when current element can be an image or svg attached to an event element
@@ -2326,11 +2318,7 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
     const message = JSON.parse(broadcast_message).broadcast_message;
     switch (broadcast_type){
         case 'MAINTENANCE':{
-            if (COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`))
-                location.href = '/';
-            else
-                if (message)
-                    commonSocketMaintenanceShow(commonWindowFromBase64(message));
+            window.location.href = '/';
             break;
         }
         case 'SESSION_EXPIRED':{
@@ -2375,30 +2363,6 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
             commonUserMessageShowStat();
         }
     }
-};
-/**
- * @name commonSocketMaintenanceShow
- * @description Show maintenance
- * @function
- * @param {string|null} message 
- * @param {number|null} init 
- * @returns {void}
- */
-const commonSocketMaintenanceShow = (message, init=null) => {
-    
-    if (init==1){
-        commonComponentRender({
-            mountDiv:   'common_dialogue_maintenance',
-            data:       null,
-            methods:    {
-                            commonWindowSetTimeout:commonWindowSetTimeout, 
-                            commonWindowLocationReload:commonWindowLocationReload,
-                            commonMiscResourceFetch:commonMiscResourceFetch
-            },
-            path:       '/common/component/common_dialogue_maintenance.js'});
-    }
-    else
-        COMMON_DOCUMENT.querySelector('#common_maintenance_footer').textContent = message ?? '';
 };
 /**
  * @name socketReconnect
@@ -3762,7 +3726,6 @@ const commonMountApp = async (app_id) =>{
 const commonGet = () =>{
     return {
         COMMON_GLOBAL:COMMON_GLOBAL, 
-        COMMON_ICONS:COMMON_ICONS,
         /* MISC */
         commonMiscElementId:commonMiscElementId, 
         commonMiscElementRow:commonMiscElementRow, 
@@ -3836,7 +3799,6 @@ const commonGet = () =>{
         commonSocketBroadcastShow:commonSocketBroadcastShow, 
         commonSocketConnectOnline:commonSocketConnectOnline,
         commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck,
-        commonSocketMaintenanceShow:commonSocketMaintenanceShow, 
         /* MICROSERVICE GEOLOCATION */
         commonMicroserviceGeolocationIp:commonMicroserviceGeolocationIp,
         commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
@@ -3913,7 +3875,6 @@ const commonInit = async (start_app_id, parameters) => {
 };
 export{/* GLOBALS*/
        COMMON_GLOBAL, 
-       COMMON_ICONS,
        /* MISC */
        commonMiscElementId, 
        commonMiscElementRow, 
@@ -3987,7 +3948,6 @@ export{/* GLOBALS*/
        commonSocketBroadcastShow, 
        commonSocketConnectOnline,
        commonSocketConnectOnlineCheck,
-       commonSocketMaintenanceShow, 
        /* MICROSERVICE GEOLOCATION */
        commonMicroserviceGeolocationIp,
        commonMicroserviceGeolocationPlace,

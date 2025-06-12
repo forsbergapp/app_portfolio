@@ -9,7 +9,6 @@
  * 
  * Common app types
  *  CommonGlobal
- *  CommonIcons
  *  CommonComponentLifecycle
  *  CommonComponentResult
  *  CommonErrorMessageISO20022
@@ -242,13 +241,6 @@
  *                                          map_update:                 function
  *                                      }
  *                              }}} CommonGlobal
- */
-
- /**
- * @description Type CommonIcons
- *  @typedef {{ app_maintenance:          string,
- *              app_alert:                string,
- *              infinite:                 string}} CommonIcons
  */
 
 /**
