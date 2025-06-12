@@ -870,7 +870,7 @@ const commonAppHost = (host, endpoint, AppId=null, AppSignature=null) =>{
     if (endpoint==null)
         return {
             admin:false,
-            app_id:null
+            app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)
     };
     else
         if (['MICROSERVICE', 'MICROSERVICE_AUTH'].includes(endpoint))
