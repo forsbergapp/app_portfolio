@@ -973,11 +973,10 @@
 	height:calc(100% - 320px);
 }
 /* COMMON */
-#common_iam_avatar,
-#common_user_account{
-	height: 2em !important;
-	width:  2em !important;
-}
+#common_iam_avatar{
+    background-color: var(--common_app_color_light);
+    box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
+}    
 #common_window_info {
 	background: var(--common_app_color_white);
 }
@@ -997,18 +996,6 @@
 }
 #common_dialouge_user_menu_log_out{
 	display:none;
-}
-#common_iam_avatar{
-	margin-inline-start:unset !important;
-	margin-top: unset !important;
-}
-#common_iam_avatar_default_avatar{
-	font-size: inherit !important;
-	height: unset !important;
-}
-#common_iam_avatar_avatar_img{
-	width:2em !important;
-	height: 2em !important;
 }
 
 /*RESPONSIVE SECURE*/
@@ -1036,7 +1023,7 @@
 	}
 	#menu_monitor_pagination{
 		margin-top: unset;
-	}
+	}   
 }
 
 /*APP THEME*/
@@ -1262,9 +1249,9 @@
 body{
 	--common_app_color_spinner:var(--app_theme_text_color);
 	--common_app_color_background_spinner:var(--app_theme_dialogue_background_color);
-	color: var(--app_theme_text_color);
+	color: var(--app_theme_text_color) !important;
 	fill:var(--app_theme_text_color);
-	background: var(--app_theme_background_color);
+	background: var(--app_theme_background_color) !important;
 	caret-color: var(--app_theme_text_color);
 }
 .common_dialogue_button{

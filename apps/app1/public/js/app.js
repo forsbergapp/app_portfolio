@@ -915,7 +915,6 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
 const appSecureInit = () => {
     //SET GLOBALS
     APP_SECURE_GLOBAL.previous_row= {};
-
     appSecureMenuShow(1);
 };
 
@@ -926,6 +925,7 @@ const appSecureInit = () => {
  * @returns {void}
  */
 const appLogout = () => {
+    COMMON_DOCUMENT.querySelector('#common_user_account').style.display = 'none';
     appSecureGlobalDelete();
     common.commonComponentRemove('app');
     common.commonDialogueShow('LOGIN_ADMIN');
@@ -945,6 +945,7 @@ const appLogin = async () => {
             methods:    null,
             path:       '/component/secure.js'})
         .then(()=>{
+            COMMON_DOCUMENT.querySelector('#common_user_account').style.display = 'flex';
             common.commonUserUpdateAvatar(true, result.avatar);
             common.commonUserMessageShowStat();
             appSecureInit();
@@ -1192,6 +1193,7 @@ const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
+    COMMON_DOCUMENT.querySelector('#common_user_account').style.display = 'none';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appLogout;
     appInit();
