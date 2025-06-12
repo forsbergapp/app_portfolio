@@ -858,27 +858,37 @@ const commonComponentCreate = async parameters =>{
  * @name commonAppHost
  * @description Returns authenticated app id 
  * @param {string} host 
+ * @param {server_bff_endpoint_type|null} endpoint
  * @param {number|null} AppId
  * @param {string|null} AppSignature
  * @returns {{  admin:boolean,
  *              app_id:number|null}}
  */
-const commonAppHost = (host, AppId=null, AppSignature=null) =>{
+const commonAppHost = (host, endpoint, AppId=null, AppSignature=null) =>{
     /**@type{server_db_document_ConfigServer} */
     const configServer = ConfigServer.get({app_id:0}).result;
-    
-    if ([configServer.SERVER.filter(parameter=>'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN,
-        configServer.SERVER.filter(parameter=>'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN]
-                            .includes(host.split(':')[host.split(':').length-1]))
+    if (endpoint==null)
         return {
-                admin:true,
-                app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)
-        };
-    else                            
-        return {
-                admin:false,
-                app_id:serverUtilNumberValue(AppId)??0
-        };
+            admin:false,
+            app_id:null
+    };
+    else
+        if (['MICROSERVICE', 'MICROSERVICE_AUTH'].includes(endpoint))
+            return {admin:false, 
+                    app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)};
+        else
+            if ([configServer.SERVER.filter(parameter=>'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN,
+                configServer.SERVER.filter(parameter=>'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN]
+                                    .includes(host.split(':')[host.split(':').length-1]))
+                return {
+                        admin:true,
+                        app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)
+                };
+            else                            
+                return {
+                        admin:false,
+                        app_id:serverUtilNumberValue(AppId)??0
+                };
  };
  /**
   * @name commonAppInit
@@ -959,13 +969,13 @@ const commonApp = async parameters =>{
                 sendfile:null,
                 type:'JSON'};
     else
-        if  (commonAppHost(parameters.host).admin == false && 
+        if  (commonAppHost(parameters.host, 'APP').admin == false && 
                 await commonAppStart(parameters.app_id) ==false)
             return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
         else{
             /**@type{server_db_document_ConfigServer} */
             const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
-            const start_app_id = commonAppHost(parameters.host).admin?
+            const start_app_id = commonAppHost(parameters.host, 'APP').admin?
                                     serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??0:
                                         serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??0;
             return await commonComponentCreate({app_id:start_app_id, 
