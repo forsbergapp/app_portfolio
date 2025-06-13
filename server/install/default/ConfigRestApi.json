@@ -5122,7 +5122,7 @@
                 }
             },
             "locale":{
-                "description":"Used here for regional result that overrides accept_language, contains string either ISO 639-1, ISO 639-1 + '_' + ISO 3166-1 or ISO 639-1 + '_' + ISO 15924 + '_' + ISO 3166-1 using BCP 47 format. Scripts arab, cyrl, guru, hans, hant and latn part of ISO15924 are supported. All characters that Noto Sans font offers are supported and configured. Browsers can have some limited support with known issues of hanidec numbers and hijri transliteration of arabic on some mobile devices or apps. Parameter is required since server will set value if not used in request",
+                "description":"Used here for regional result that overrides accept_language, contains string either ISO 639-1, ISO 639-1 + '_' + ISO 3166-1 or ISO 639-1 + '_' + ISO 15924 + '_' + ISO 3166-1 using BCP 47 format. Scripts arab, cyrl, guru, hans, hant and latn part of ISO15924 are supported. All characters that Noto Sans font offers are supported and configured. Browsers can have some limited support with known issues of hanidec numbers and hijri transliteration of arabic on some mobile devices or apps. Parameter is required since server will set value if not used in request. FFB in the app sends locale for all GET requests",
                 "name":	"locale",
                 "in":"query",
                 "required":true,
