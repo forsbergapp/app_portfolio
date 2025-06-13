@@ -1419,8 +1419,6 @@
  * @property {function} write
  * @property {function} flush           - Used for SSE
  * @property {function} writeHead
- * @property {string}   _header         --user for response compression
- * @property {function} _implicitHeader --used for response compression
  * @property {server_server_req}   req
  */
 
