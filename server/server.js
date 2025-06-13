@@ -1039,7 +1039,7 @@ const serverREST_API = async (routesparameters) =>{
                                     ...(getParameter('server_user_agent')           && {user_agent:         routesparameters.user_agent}),
                                     ...(getParameter('server_accept_language')      && {accept_language:    routesparameters.accept_language}),
                                     ...(getParameter('server_host')                 && {host:               routesparameters.host}),
-                                    ...(getParameter('locale')                      && {locale:             parametersData.locale ??'en'}),
+                                    ...(getParameter('locale')                      && {locale:             app_query?.get('locale') ??'en'}),
                                     ...(getParameter('server_ip')                   && {ip:                 routesparameters.ip}),
                                     ...(getParameter('server_microservice')         && {microservice:       getParameter('server_microservice').default}),
                                     ...(getParameter('server_microservice_service') && {service:            getParameter('server_microservice_service').default}),
