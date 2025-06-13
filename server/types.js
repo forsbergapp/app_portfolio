@@ -811,7 +811,8 @@
  *            APP_CACHE_CONTROL_FONT        :string,
  *            APP_FRAMEWORK                 :number,
  *            APP_FRAMEWORK_MESSAGES        :number,
- *            APP_LIMIT_RECORDS             :number}} server_db_config_server_service_app
+ *            APP_LIMIT_RECORDS             :number,
+ *            APP_DEFAULT_RANDOM_COUNTRY    :string}} server_db_config_server_service_app
  */
 
 /** 
