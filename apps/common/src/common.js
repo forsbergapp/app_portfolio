@@ -164,7 +164,7 @@ const commonBFE = async parameters =>{
         const zlib = await import('node:zlib');
         const request_protocol = parameters.url.toLowerCase().startsWith('https')?await import('node:https'):await import('node:http');
         const timeout_message = '🗺⛔?';
-        const timeout = 500000;
+        const timeout = 5000;
         return new Promise((resolve)=>{           
             const options = {
                 method: parameters.method,

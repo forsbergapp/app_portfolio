@@ -3,7 +3,7 @@
 */
 
 /**
- * @import {server_server_response,commonWorldCitiesCity} from '../../../../server/types.js'
+ * @import {server_db_document_ConfigServer, server_server_response,commonWorldCitiesCity} from '../../../../server/types.js'
  */
 
 /**
@@ -22,6 +22,10 @@
  */
 const appFunction = async parameters =>{
     const fs = await import('node:fs');
+    const ConfigServer = await import('../../../../server/db/ConfigServer.js');
+    const APP_DEFAULT_RANDOM_COUNTRY = ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP'}}).result
+                                        .filter((/**@type{server_db_document_ConfigServer['SERVICE_APP']}*/parameter)=>
+                                            'APP_DEFAULT_RANDOM_COUNTRY' in parameter)[0].APP_DEFAULT_RANDOM_COUNTRY;
     /**
      *  Get file
      * @returns {Promise.<commonWorldCitiesCity[]>}
@@ -30,9 +34,12 @@ const appFunction = async parameters =>{
         /**@ts-ignore */
         const PATH = `${import.meta.dirname.replaceAll('\\', '/')}/worldcities`;
         const FILE = 'worldcities.json';
-        return fs.promises.readFile(`${PATH}/${FILE}`, 'utf8').then(file=>JSON.parse(file.toString()).filter((/**@type{commonWorldCitiesCity}*/row)=>row.iso2 !='US'));
+        return await fs.promises.readFile(`${PATH}/${FILE}`, 'utf8').then(file=>JSON.parse(file.toString())
+                .filter((/**@type{commonWorldCitiesCity}*/row)=> 
+                    row.iso2 == (APP_DEFAULT_RANDOM_COUNTRY==''?row.iso2:APP_DEFAULT_RANDOM_COUNTRY)
+                ));
     };
-    return {result:await getFile().then(cities=>cities[Math.floor(Math.random() * cities.length - 1)]), type:'JSON'};
+    return {result:await getFile().then(cities=>cities[Math.floor(Math.random() * (cities.length - 1))]), type:'JSON'};
     
 };
 export default appFunction;
