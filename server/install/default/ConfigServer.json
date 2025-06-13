@@ -28,7 +28,8 @@
         {"APP_CACHE_CONTROL_FONT":"no-store", "COMMENT": "Cache control for fonts, max-age value in milliseconds ex 1 hour max-age=3600 or use any valid Cache-Control setting, default is to not cache anything"},
         {"APP_FRAMEWORK": "1","COMMENT": "1=Javascript (default), 2=Vue, 3=React"},  
         {"APP_FRAMEWORK_MESSAGES":"1", "COMMENT": "0=NO, 1=YES"},
-        {"APP_LIMIT_RECORDS":"100", "COMMENT": ""}
+        {"APP_LIMIT_RECORDS":"100", "COMMENT": ""},
+        {"APP_DEFAULT_RANDOM_COUNTRY":"", "COMMENT": "Used by worldcities random function" }
     ],
     "SERVICE_MICROSERVICE":[
         {"CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS": 5, "COMMENT":""},
