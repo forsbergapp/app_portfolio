@@ -9,8 +9,6 @@
  *          server_server_req_id_number} from './types.js'
  */
 
-const zlib = await import('node:zlib');
-
 /**
  *  Returns response to client
  *  Uses host parameter for errors in requests or unknown route paths
@@ -146,8 +144,7 @@ const serverResponse = async parameters =>{
         parameters.res.statusMessage = '';
         parameters.res.statusCode = parameters.result_request.http ?? 500;
         setType('JSON');
-        parameters.res.write(JSON.stringify(message), 'utf8');
-        parameters.res.end();
+        parameters.res.send(JSON.stringify(message), 'utf8');
     }
     else{
         if (parameters.res.getHeader('Content-Type')?.startsWith('text/event-stream')){
@@ -185,8 +182,7 @@ const serverResponse = async parameters =>{
                             })
                         .then(result=>{if (result.http)
                             parameters.res.statusCode =400;
-                            parameters.res.write(iamUtilMessageNotAuthorized(), 'utf8');
-                            parameters.res.end();
+                            parameters.res.send(iamUtilMessageNotAuthorized(), 'utf8');
                         });
                     });
                 }
@@ -226,7 +222,7 @@ const serverResponse = async parameters =>{
                             const limit = serverUtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS??0);
                             if (parameters.result_request.singleResource)
                                 //limit rows if single resource response contains rows
-                                parameters.res.write(JSON.stringify((typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
+                                parameters.res.send(JSON.stringify((typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
                                                                         parameters.result_request.result
                                                                         .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
                                                                         (index+1)<=(limit??0)
@@ -276,18 +272,17 @@ const serverResponse = async parameters =>{
                                                                             parameters.result_request.result
                                             };
                                 }
-                                parameters.res.write(JSON.stringify(result), 'utf8');    
+                                parameters.res.send(JSON.stringify(result), 'utf8');    
                             }    
                         }
                         else
-                            parameters.res.write(parameters.result_request.result, 'utf8');
+                            parameters.res.send(parameters.result_request.result, 'utf8');
                     }
                     else{
                         const  {iamUtilMessageNotAuthorized} = await import('./iam.js');
                         parameters.res.statusCode =500;
-                        parameters.res.write(iamUtilMessageNotAuthorized(), 'utf8');
+                        parameters.res.send(iamUtilMessageNotAuthorized(), 'utf8');
                     }
-                    parameters.res.end();
                 }        
             }    
         }   
@@ -303,263 +298,6 @@ const serverResponse = async parameters =>{
  * @returns {number|null}
  */
  const serverUtilNumberValue = param => (param==null||param===undefined||param==='undefined'||param==='')?null:Number(param);
-
- /**
-  * @name serverUtilCompression
-  * @description Compression of response for supported requests
-  * @function
-  * @param {server_server_req} req
-  * @param {server_server_res} res
-  */
- const serverUtilCompression = (req,res) =>{
-    
-    /**
-     * Execute a listener when a response is about to write headers.
-     * @param {server_server_res} res
-     * @param {function} listener
-     */
-    const onHeaders = (res, listener) => {
-        /**
-         * Create a replacement writeHead method.
-         *
-         * @param {function} prevWriteHead
-         * @param {function} listener
-         */
-        function createWriteHead (prevWriteHead, listener) {
-            let fired = false;
-        
-            // return function with core name and argument list
-            /**
-             * @param {number} statusCode
-             */
-            return function writeHead (statusCode) {
-                // set headers from arguments
-                /**@ts-ignore */
-                const args = setWriteHeadHeaders.apply(res, arguments);
-            
-                // fire listener
-                if (!fired) {
-                    fired = true;
-                    listener.call(res);
-            
-                    // pass-along an updated status code
-                    if (typeof args[0] === 'number' && statusCode !== args[0]) {
-                        args[0] = statusCode;
-                        args.length = 1;
-                    }
-                }
-                
-                return prevWriteHead.apply(res, args);
-            };
-        }
-        /**
-         * Set headers contained in array on the response object.
-         * @param {server_server_res} res
-         * @param {[]} headers
-         * @returns {void}
-         */
-        const setHeadersFromArray = (res, headers) => {
-            for (let i = 0; i < headers.length; i++) {
-                res.setHeader(headers[i][0], headers[i][1]);
-            }
-        };
-        
-        /**
-         * Set headers contained in object on the response object.
-         * @param {server_server_res} res
-         * @param {*} headers
-         * @returns {void}
-         */
-        const setHeadersFromObject = (res, headers) =>{
-            const keys = Object.keys(headers);
-            for (let i = 0; i < keys.length; i++) {
-                const k = keys[i];
-                if (k)
-                     res.setHeader(k, headers[k]);
-            }
-        };
-        
-        /**
-         * Set headers and other properties on the response object.
-         * @param {number} statusCode
-         * @returns {*}
-         */
-        function setWriteHeadHeaders (statusCode) {
-            const length = arguments.length;
-            const headerIndex = length > 1 && typeof arguments[1] === 'string'?2:1;
-        
-            /**@type{[]|{}} */
-            const headers = length >= headerIndex + 1?arguments[headerIndex]:undefined;
-        
-            res.statusCode = statusCode;
-        
-            if (headers?.constructor== Array) {
-                // handle array case
-                setHeadersFromArray(res, headers);
-            } else if (headers) {
-                // handle object case
-                setHeadersFromObject(res, headers);
-            }
-            // copy leading arguments
-            const args = new Array(Math.min(length, headerIndex));
-            for (let i = 0; i < args.length; i++) {
-                args[i] = arguments[i];
-            }
-            return args;
-        }
-        if (!res)
-            throw 'argument res is required';
-        if (typeof listener !== 'function')
-            throw 'argument listener must be a function';
-        res.writeHead = createWriteHead(res.writeHead, listener);
-    };
-
-    let ended = false;
-    /**@type{[]|null} */
-    let listeners = [];
-    /**@type{*} */
-    let stream;
-
-    const _end = res.end;
-    const _on = res.on;
-    const _write = res.write;
-
-    // flush
-    res.flush = function flush () {
-        if (stream)
-            stream.flush();
-    };
-
-    // proxy
-    /**
-     * @param {string} chunk
-     * @param {string} encoding
-     * @returns {*}
-     */
-    res.write = function write (chunk, encoding) {
-        if (ended)
-            return false;
-        else{
-            if (!res._header) {
-                //updates res._header
-                res._implicitHeader();
-            }
-            return stream
-                ? stream.write(toBuffer(chunk, encoding))
-                : _write.call(this, chunk, encoding);
-        }
-    };
-    /**
-     * @param {*} chunk
-     * @param {string} encoding 
-     * @returns {*}
-     */
-    res.end = function end (chunk, encoding) {
-        if (ended)
-            return false;
-        else{
-            if (!res._header) {
-                //updates res._header
-                res._implicitHeader();
-            }
-            if (stream) {
-                ended = true;
-                return chunk
-                    ? stream.end(toBuffer(chunk, encoding))
-                    : stream.end();
-            }
-            else{
-                // mark ended
-                return _end.call(this, chunk, encoding);
-            }
-        }
-    };
-    /**
-     * @param {*} type
-     * @param {*} event
-     * @returns {*}
-     */
-    res.on = function on (type, event) {
-        if (!listeners || type !== 'drain')
-            return _on.call(this, type, event);
-        else
-            if (stream)
-                return stream.on(type, event);
-            else{
-                // buffer listeners for future stream
-                /**@ts-ignore */
-                listeners.push([type, event]);
-                return this;
-            }
-    };
-
-
-    onHeaders(res, function onResponseHeaders () {
-        //compress for:
-        //not broadcast messages using socket
-        //text responses
-        if (!res.getHeader('Content-Type')?.startsWith('text/event-stream') &&
-            (res.getHeader('Content-Type')?.startsWith('text') ||
-            res.getHeader('Content-Type')?.startsWith('application/json'))){
-            const method = 'gzip';
-
-            // compression stream
-            stream = method === 'gzip'
-                ? zlib.createGzip()
-                : zlib.createDeflate();
-    
-            // add buffered listeners to stream
-            addListeners(stream, stream.on, listeners);
-    
-            // header fields
-            res.setHeader('Content-Encoding', 'gzip');
-            res.removeHeader('Content-Length');
-    
-            // compression
-            stream.on('data', function onStreamData (/**@type {string}*/chunk) {
-                if (_write.call(res, chunk) === false) {
-                    stream.pause();
-                }
-            });
-    
-            stream.on('end', function onStreamEnd () {
-                _end.call(res);
-            });
-    
-            _on.call(res, 'drain', function onResponseDrain () {
-                stream.resume();
-            });    
-        }
-        else{
-            addListeners(res, _on, listeners);
-            listeners = null;
-        }
-    });
-
-    /**
-     * Add bufferred listeners to stream
-     * @param {*} stream
-     * @param {function} on
-     * @param {*} listeners 
-     */
-
-    function addListeners (stream, on, listeners) {
-        for (let i = 0; i < listeners.length; i++) {
-            on.apply(stream, listeners[i]);
-        }
-    }
-
-    /**
-     * Coerce arguments to Buffer
-     * @param {*} chunk
-     * @param {*} encoding 
-     */
-    function toBuffer (chunk, encoding) {
-        return !Buffer.isBuffer(chunk)
-            ? Buffer.from(chunk, encoding)
-            : chunk;
-    }
-};
 
 /**
  * @name serverUtilResponseTime
@@ -682,7 +420,6 @@ const server = async () => {
             req.hostname =      req.headers.host;
             req.path =          req.url;
             req.originalUrl =   req.url;
-
             /**@ts-ignore */
             req.query =         req.path.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
                                 .substring(req.path.indexOf('?')+1)))
@@ -693,11 +430,33 @@ const server = async () => {
             res.type =          (/**@type{string}*/type)=>{
                                     res.setHeader('Content-Type', type);
                                 };
-            res.send =          (/**@type{*}*/result) =>{
-                                    //Content-Type should be set beforem sets default to text/html
+            res.send =          async (/**@type{*}*/result) =>{
                                     if (res.getHeader('Content-Type')==undefined)
                                         res.type('text/html; charset=utf-8');
-                                    res.write(result);
+                                    res.setHeader('Content-Encoding', 'gzip');
+                                    res.removeHeader('Content-Length');
+                                    /**
+                                     * @name compress
+                                     * @description compress all requests (SSE uses res.write)
+                                     * @param {*} data
+                                     */
+                                    const compress = async data =>{
+                                        const zlib = await import('node:zlib');
+                                        return new Promise(resolve=>{
+                                            try {
+                                                zlib.gzip(Buffer.from(data.toString(), 'utf8'), (err, compressed)=>{
+                                                    if (err)
+                                                        resolve(data);
+                                                    else
+                                                        resolve(compressed);
+                                                });    
+                                            } catch (error) {
+                                                resolve(data);
+                                            }
+                                        });
+                                    };
+                                    const compressed = await compress(result);
+                                    res.write(compressed, 'utf8');
                                     res.end();
                                 };
             res.sendFile =      async (/**@type{*}*/path) =>{
@@ -708,13 +467,25 @@ const server = async () => {
                                         res.writeHead(500);
                                         res.end(iamUtilMessageNotAuthorized());
                                     });
-                                    /**@ts-ignore */
-                                    readStream.pipe(res);
+                                    if (res.getHeader('Content-Type')?.startsWith('font')) 
+                                        /**@ts-ignore */
+                                        readStream.pipe(res);
+                                    else{
+                                        const zlib = await import('node:zlib');
+                                        const gzip = zlib.createGzip();
+                                        res.setHeader('Content-Encoding', 'gzip');
+                                        res.removeHeader('Content-Length');
+                                        
+                                        /**@ts-ignore */
+                                        readStream.pipe(gzip).pipe(res);
+                                    }
+                                    
                                 };
             res.redirect =      (/**@type{string}*/url) =>{
                                     res.writeHead(301, {'Location':url});
                                     res.end();
                                 };
+
             //Backend for frontend (BFF) start
             const bff =             await import('./bff.js');
             const resultbffInit =   await bff.bffInit(req, res);
@@ -1220,7 +991,7 @@ class ClassServerProcess {
     version = process.version;
 }
 const serverProcess = new ClassServerProcess();
-export {serverResponse, serverUtilCompression,
+export {serverResponse, 
         serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppLine , 
         serverREST_API, serverStart,
         serverProcess};
