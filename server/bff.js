@@ -10,7 +10,7 @@
  *          server_bff_parameters} from './types.js'
  */
 
-const {serverResponse, serverUtilResponseTime, serverUtilCompression, serverUtilNumberValue, serverREST_API} = await import('./server.js');
+const {serverResponse, serverUtilResponseTime, serverUtilNumberValue, serverREST_API} = await import('./server.js');
 const ConfigServer = await import('./db/ConfigServer.js');
 const IamUser = await import('./db/IamUser.js');
 const Log = await import('./db/Log.js');
@@ -200,7 +200,6 @@ const bffStart = async (req, res) =>{
                             (bff_parameters.url.split('/')[2]?.toUpperCase()):
                                 'APP';
 
-    serverUtilCompression(bff_parameters.res.req,bff_parameters.res);
     if (endpoint_role == 'APP' && 
         bff_parameters.method.toUpperCase() == 'GET' && 
         !bff_parameters.url?.startsWith(configServer.SERVER.filter(row=>'REST_RESOURCE_BFF' in row)[0].REST_RESOURCE_BFF + '/')){

@@ -65,7 +65,6 @@ const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, header
  */
  const socketClientSend = (res, message, message_type) => {
     res.write (`data: ${Buffer.from(JSON.stringify({broadcast_type : message_type, broadcast_message: message})).toString('base64')}\n\n`);
-    res.flush();
 };
 /**
  * @name socketClientGet
