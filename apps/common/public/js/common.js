@@ -3675,6 +3675,9 @@ const commonMountApp = async (app_id) =>{
                                     authorization_type:'APP_ID'})
                             .then(app=>JSON.parse(app));
     COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_div}`).innerHTML='';
+    if (COMMON_GLOBAL.app_id!=COMMON_GLOBAL.app_start_app_id)
+        commonComponentRemove('common_dialogue_apps');
+
     COMMON_GLOBAL.app_id =          CommonAppInit.App.id;
     COMMON_GLOBAL.app_logo =        CommonAppInit.App.logo;
     COMMON_GLOBAL.app_copyright =   CommonAppInit.App.copyright;
