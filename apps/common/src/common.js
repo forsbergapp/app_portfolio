@@ -890,15 +890,21 @@ const commonAppHost = (host, endpoint=null, AppId=null, AppSignature=null) =>{
   *          host:string,
   *          user_agent:string,
   *          accept_language:string,
-  *          data:{ locale:string } } } parameters
+  *          data:{ locale:string} } } parameters
   * @returns {Promise.<server_server_response & {result?:{App:{id:server_db_table_App['id'],
   *                                                            name:server_db_table_App['name'],
   *                                                            js:server_db_table_App['js'],
+  *                                                            js_content:string|null,
   *                                                            css:server_db_table_App['css'],
+  *                                                            css_content:string|null,
   *                                                            css_report:server_db_table_App['css_report'],
+  *                                                            css_report_content:string|null,
   *                                                            favicon_32x32:server_db_table_App['favicon_32x32'],
+  *                                                            favicon_32x32_content:string|null,
   *                                                            favicon_192x192:server_db_table_App['favicon_192x192'],
+  *                                                            favicon_192x192_content:string|null,
   *                                                            logo:server_db_table_App['logo'],
+  *                                                            logo_content:string|null,
   *                                                            copyright:server_db_table_App['copyright'],
   *                                                            link_url:server_db_table_App['link_url'],
   *                                                            link_title:server_db_table_App['link_title'],
@@ -920,19 +926,57 @@ const commonAppInit = async parameters =>{
     else{
         /**@type{server_db_table_App} */
         const app = App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
+        const fs = await import('node:fs');
+        /**
+         * @param {string} path
+         * @param {string} content_type
+         * @returns {Promise.<string|null>}
+         */
+        const fetchResource = async (path, content_type) =>{
+            const resource = await commonResourceFile({app_id:parameters.app_id, 
+                                    resource_id:path, 
+                                    content_type:content_type,
+                                    data_app_id: parameters.app_id});
+            if (content_type.startsWith('image'))
+                return resource.result.resource ?? null;
+            else{
+                /**@ts-ignore */
+                return resource?fs.promises.readFile(resource.sendfile, 'utf8'):null;
+            }
+                                    
+
+        };
         if (app)
-            return {result:{App:{   id:             app.id,
-                                    name:           app.name,
-                                    js:             app.js,
-                                    css:            app.css,
-                                    css_report:     app.css_report,
-                                    favicon_32x32:  app.favicon_32x32,
-                                    favicon_192x192:app.favicon_192x192,
-                                    logo:           app.logo,
-                                    copyright:      app.copyright,
-                                    link_url:       app.link_url,
-                                    link_title:     app.link_title,
-                                    text_edit:      app.text_edit
+            return {result:{App:{   id:                     app.id,
+                                    name:                   app.name,
+                                    js:                     app.js,
+                                    js_content:             app.js?
+                                                                await fetchResource(app.js, 'text/javascript'):
+                                                                    null,
+                                    css:                    app.css,
+                                    css_content:            app.css?
+                                                                await fetchResource(app.css, 'text/css'):
+                                                                    null,
+                                    css_report:             app.css_report,
+                                    css_report_content:     app.css_report?
+                                                                await fetchResource(app.css_report, 'text/css'):
+                                                                    null,
+                                    favicon_32x32:          app.favicon_32x32,
+                                    favicon_32x32_content:  app.favicon_32x32?
+                                                                await fetchResource(app.favicon_32x32, 'image/png'):
+                                                                    null,
+                                    favicon_192x192:        app.favicon_192x192,
+                                    favicon_192x192_content:app.favicon_192x192?
+                                                                await fetchResource(app.favicon_192x192, 'image/png'):
+                                                                    null,
+                                    logo:                   app.logo,
+                                    logo_content:           app.logo?
+                                                                await fetchResource(app.logo, 'image/png'):
+                                                                    null,
+                                    copyright:              app.copyright,
+                                    link_url:               app.link_url,
+                                    link_title:             app.link_title,
+                                    text_edit:              app.text_edit
                                 },
                             AppParameter:AppParameter.get({  app_id:parameters.app_id, resource_id:parameters.resource_id}).result?.[0]??{}
                             }, 
