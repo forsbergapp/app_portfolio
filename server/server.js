@@ -510,46 +510,9 @@ const server = async () => {
             });
         }
         else{
-            //Backend for frontend (BFF) start
             const bff =             await import('./bff.js');
-            const resultbffInit =   await bff.bffInit(req, res);
-            if (resultbffInit.reason == null){
-                return bff.bffStart(req, res)
-                        .then(result=>{
-                            result?
-                                serverResponse({
-                                    result_request:result,
-                                    host:req.headers.host,
-                                    route:null,
-                                    res:res}):
-                                bff.bff({
-                                    //request
-                                    host: req.headers.host ?? '', 
-                                    url:req.originalUrl,
-                                    method: req.method,
-                                    query: req.query?.parameters ?? '',
-                                    body: req.body,
-                                    security_app: { AppId: req.headers['content-type'] =='text/event-stream'?
-                                                        0:
-                                                            req.headers['app-id']??null,
-                                                    AppSignature: req.headers['app-signature']??null,
-                                                    AppIdToken: req.headers['app-id-token']??null
-                                    },
-                                    authorization:  req.headers.authorization, 
-                                    //metadata
-                                    ip: req.headers['x-forwarded-for'] || req.ip, 
-                                    user_agent: req.headers['user-agent'], 
-                                    accept_language: req.headers['accept-language'], 
-                                    //response
-                                    res: res
-                                });
-                        });
-            }
-            else
-                if (resultbffInit.redirect)
-                    res.redirect(resultbffInit.redirect);
-                else
-                    res.end();
+            //Backend for frontend (BFF) start
+            return bff.bff(req, res);
         }
     };
     return app;
