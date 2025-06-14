@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_table_IamUser, server_db_table_IamUserLike, server_db_table_IamUserFollow, server_db_table_IamAppAccess, server_db_table_IamUserEvent,server_db_iam_user_admin} from '../types.js'
+ *          server_db_table_IamUser, server_db_table_IamUserLike, server_db_table_IamUserFollow, server_db_iam_user_admin} from '../types.js'
  */
 const ORM = await import('./ORM.js');
 const {serverUtilNumberValue} = await import('../server.js');
