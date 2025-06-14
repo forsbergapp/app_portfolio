@@ -181,6 +181,24 @@
  *          res: server_server_res}} server_bff_parameters
  *
  */
+/**
+ * @description BFF server_bff_RestApi_parameters
+ * @typedef {{  endpoint: server_bff_endpoint_type,
+ *              host:string,
+ *              url:string,
+ *              method: server_req_method,
+ *              parameters: string,
+ *              body:*,
+ *              idToken:string,
+ *              AppId:number,
+ *              AppSignature:string,
+ *              authorization:string,
+ *               ip: string,
+ *              user_agent:string,
+ *              accept_language:string,
+ *              res:server_server_res}} server_bff_RestApi_parameters
+ */
+
 
 /**
  * @description DB TABLE App
@@ -1323,24 +1341,6 @@
  *                  }}} server_info_result_Info
  */
 
-
-/**
- * @description SERVER server_REST_API_parameters
- * @typedef {{  endpoint: server_bff_endpoint_type,
- *              host:string,
- *              url:string,
- *              method: server_req_method,
- *              parameters: string,
- *              body:*,
- *              idToken:string,
- *              AppId:number,
- *              AppSignature:string,
- *              authorization:string,
- *              ip: string,
- *              user_agent:string,
- *              accept_language:string,
- *              res:server_server_res}} server_REST_API_parameters
- */
 
 /**
  * @description SERVER server_server_req_verbose

@@ -3,8 +3,6 @@
 /**
  * @import {server_server_response,
  *          server_db_document_ConfigServer,
- *          server_db_config_server_service_iam,
- *          server_db_config_server_server,
  *          server_db_table_AppSecret,
  *          server_db_table_IamAppIdToken,
  *          server_db_table_IamAppAccess,

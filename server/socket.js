@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,
- *          server_socket_broadcast_type_all, server_server_res, server_bff_parameters, 
+ *          server_socket_broadcast_type_all, server_server_res,
  *          server_socket_broadcast_type_app_function,
  *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
  */
