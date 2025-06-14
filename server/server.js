@@ -752,6 +752,10 @@ const serverREST_API = async (routesparameters) =>{
                                                 ((app_query?.has(parameter)??false)==false):
                                                     (parameter in routesparameters.body)==false)
                                             )).length==0){ 
+                    //remove path parameter not used for data parameter
+                    for (const key of Object.entries(parametersIn))
+                        if (key[1].type == 'PATH')
+                            delete parametersIn[key[0]];
                     //replace metadata with value
                     Object.keys(parametersIn).forEach(key=>
                         parametersIn[key]= (typeof parametersIn[key] == 'object' && parametersIn[key]!=null)?
@@ -789,11 +793,10 @@ const serverREST_API = async (routesparameters) =>{
                     if ('IAM_service' in parametersIn){
                         parametersIn.service = parametersIn.IAM_service;
                     }
-                    const parameter_data  =         Object.entries(parametersIn).reduce((/**@type{*}*/parameters, /**@type{*}*/parameter)=>{
-                                                        //filter IAM parameters
-                                                        if (!parameter[0].startsWith('IAM_'))
-                                                            return {...parameters, ...{[parameter[0]] : parameter[1]}};
-                                                    }, {});
+                    for (const key of Object.keys(parametersIn))
+                        if (key.startsWith('IAM_'))
+                            delete parametersIn[key];
+                    
                     //read operationId what file to import and what function to execute
                     //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
                     const filePath = '/' + methodObj.operationId.split('.')[0].replaceAll('_','/') + '/' +
@@ -828,7 +831,7 @@ const serverREST_API = async (routesparameters) =>{
                                     ...(getParameter('server_microservice_service') && {service:            getParameter('server_microservice_service').default}),
                                     ...(getParameter('server_message_queue_type')   && {message_queue_type: getParameter('server_message_queue_type').default}),
                                     ...(getParameter('server_method')               && {method:             routesparameters.method}),
-                                    ...(Object.keys(parameter_data)?.length>0       && {data:               {...parameter_data}}),
+                                    ...(Object.keys(parametersIn)?.length>0       && {data:               {...parametersIn}}),
                                     ...(getParameter('server_endpoint')             && {endpoint:           routesparameters.endpoint}),
                                     ...(resourceId( configPath.paths, 
                                                     configPath.components)          && {resource_id:        Object.values(
