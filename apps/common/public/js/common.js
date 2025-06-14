@@ -201,9 +201,10 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
  * @description fetches javascript module to use in import statement
  * @param {string} url
  * @param {boolean} [appModule]
+ * @param {string|null} content
  * @returns {Promise.<*>}
  */
-const commonMiscImport = async (url, appModule=false) =>{
+const commonMiscImport = async (url, appModule=false, content=null) =>{
     const app_id = url.startsWith('/common')?COMMON_GLOBAL.app_common_app_id:COMMON_GLOBAL.app_id;
     const module = COMMON_GLOBAL.component_import.filter(module=>module.url==url && module.app_id == app_id)[0]?.component;
     if (module) 
@@ -214,7 +215,7 @@ const commonMiscImport = async (url, appModule=false) =>{
                 {
                     app_id:app_id,
                     url:url,
-                    component:await commonFFB({ path: appModule?url:('/app-resource/' + url.replaceAll('/','~')), 
+                    component:content?URL.createObjectURL(new Blob ([content], {type: 'text/javascript'})):await commonFFB({ path: appModule?url:('/app-resource/' + url.replaceAll('/','~')), 
                                                 query:appModule?'':`content_type=${'text/javascript'}&IAM_data_app_id=${app_id}`, 
                                                 method:'GET', 
                                                 response_type:'BLOB',
@@ -577,10 +578,11 @@ const commonMiscPrint = async html => {
  * @param { 'image/png'|'image/webp'|
  *          'application/json'|
  *          'text/javascript'|
- *          'text/css'} content_type
+ *          'text/css'} content_type,
+ * @param {string|null} content
  * @returns {Promise.<string|void>}
  */
-const commonMiscResourceFetch = async (url,element, content_type )=>{
+const commonMiscResourceFetch = async (url,element, content_type, content=null )=>{
     const app_id = url.startsWith('/common')?COMMON_GLOBAL.app_common_app_id:COMMON_GLOBAL.app_id;
     if (element && content_type.startsWith('image')){
         /**@ts-ignore */
@@ -601,7 +603,7 @@ const commonMiscResourceFetch = async (url,element, content_type )=>{
                         app_id:app_id,
                         url:url,
                         //font css can contain src() with external reference, fetch font css using default link
-                        content:url.startsWith('/common/css/font')?
+                        content:content?URL.createObjectURL(new Blob ([content], {type: content_type})):url.startsWith('/common/css/font')?
                                     url:
                                         await commonFFB({   path:'/app-resource/' + url.replaceAll('/','~'), 
                                                             query:`content_type=${content_type}&IAM_data_app_id=${app_id}`, 
@@ -3684,10 +3686,13 @@ const commonMountApp = async (app_id) =>{
     COMMON_GLOBAL.app_link_url =    CommonAppInit.App.link_url;
     COMMON_GLOBAL.app_link_title =  CommonAppInit.App.link_title;
     COMMON_GLOBAL.app_text_edit =   CommonAppInit.App.text_edit;
+    
     CommonAppInit.App.css==''?
         null:
-            await commonMiscResourceFetch(CommonAppInit.App.css, null, 'text/css').then(href=>COMMON_DOCUMENT.querySelector('#app_link_app_css').href =href);
-    const {appMetadata, default:AppInit} = await commonMiscImport(CommonAppInit.App.js);
+            COMMON_DOCUMENT.querySelector('#app_link_app_css').href = await commonMiscResourceFetch(CommonAppInit.App.css, null, 'text/css', CommonAppInit.App.css_content);
+
+    const {appMetadata, default:AppInit} = await commonMiscImport(CommonAppInit.App.js, false, CommonAppInit.App.js_content);
+
     /**@type{commonMetadata} */
     const appdata = appMetadata();
     await AppInit(commonGet(), CommonAppInit.AppParameter)
@@ -3708,16 +3713,16 @@ const commonMountApp = async (app_id) =>{
             else
                 commonUserUpdateAvatar(false, null);
         });
-    
+
     CommonAppInit.App.css_report==''?
         null:
-            COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(CommonAppInit.App.css_report, null, 'text/css');
+            COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(CommonAppInit.App.css_report, null, 'text/css', CommonAppInit.App.css_report_content);
     CommonAppInit.App.favicon_32x32==''?
         null:
-            COMMON_DOCUMENT.querySelector('#app_link_favicon_32x32').href = await commonMiscResourceFetch(CommonAppInit.App.favicon_32x32, null, 'image/png');
+            COMMON_DOCUMENT.querySelector('#app_link_favicon_32x32').href = await commonMiscResourceFetch(CommonAppInit.App.favicon_32x32, null, 'image/png', CommonAppInit.App.favicon_32x32_content);
     CommonAppInit.App.favicon_192x192==''?
         null:
-            COMMON_DOCUMENT.querySelector('#app_link_favicon_192x192').href = await commonMiscResourceFetch(CommonAppInit.App.favicon_192x192, null, 'image/png');
+            COMMON_DOCUMENT.querySelector('#app_link_favicon_192x192').href = await commonMiscResourceFetch(CommonAppInit.App.favicon_192x192, null, 'image/png',CommonAppInit.App.favicon_192x192_content);
 };
 /**
  * @name commonGet
