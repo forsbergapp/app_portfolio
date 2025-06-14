@@ -1231,9 +1231,9 @@ const iamAuthenticateResource = parameters =>  {
                     authenticate_token.iam_user_id == (parameters.claim_iam_user_id ?? authenticate_token.iam_user_id) &&
                     
                     //authenticate iam module app id if used, users can only have access to current app id or common app id for data app id claim
-                    ([app_id_common, parameters.app_id, parameters.claim_iam_module_app_id, null].includes(parameters.claim_iam_module_app_id)) &&
+                    ([app_id_common, parameters.app_id, null].includes(parameters.claim_iam_module_app_id)) &&
                     //authenticate iam data app id if used, users can only have access to current app id or common app id for data app id claim
-                    ([app_id_common, parameters.app_id, parameters.claim_iam_data_app_id, null].includes(parameters.claim_iam_data_app_id)) &&
+                    ([app_id_common, parameters.app_id, null].includes(parameters.claim_iam_data_app_id)) &&
                     //authenticate IP address
                     authenticate_token.ip == parameters.ip &&
                     //authenticate iam service if microservice and if used (only name is authenticated, not service_registry_id)

@@ -319,9 +319,12 @@ const bffStart = async (req, res) =>{
                                         },
                                 log:error
                             }
-                        }).then(() => {
-                                        return {http:500, code:null, text:error, developerText:'bff', moreInfo:null, type:'JSON'};
-                                    });
+                        }).then(() => 
+                            serverResponse({result_request:{http:500, code:null,text:error, developerText:'bff',moreInfo:null, type:'JSON'},
+                                            route:null,
+                                            res:bff_parameters.res}));
+                                        
+                                    
                 });
 
     }

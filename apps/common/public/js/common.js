@@ -215,7 +215,7 @@ const commonMiscImport = async (url, appModule=false) =>{
                     app_id:app_id,
                     url:url,
                     component:await commonFFB({ path: appModule?url:('/app-resource/' + url.replaceAll('/','~')), 
-                                                query:appModule?'':`content_type=${'text/javascript'}&data_app_id=${app_id}`, 
+                                                query:appModule?'':`content_type=${'text/javascript'}&IAM_data_app_id=${app_id}`, 
                                                 method:'GET', 
                                                 response_type:'BLOB',
                                                 authorization_type:'APP_ID'})
@@ -604,7 +604,7 @@ const commonMiscResourceFetch = async (url,element, content_type )=>{
                         content:url.startsWith('/common/css/font')?
                                     url:
                                         await commonFFB({   path:'/app-resource/' + url.replaceAll('/','~'), 
-                                                            query:`content_type=${content_type}&data_app_id=${app_id}`, 
+                                                            query:`content_type=${content_type}&IAM_data_app_id=${app_id}`, 
                                                             method:'GET', 
                                                             //images use base64 strings
                                                             response_type:content_type.startsWith('image')?'TEXT':'BLOB',
@@ -2705,7 +2705,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 data:       {
                                             info:'URL',
                                             path:'/app-resource/' + COMMON_GLOBAL.info_link_policy_url,
-                                            query:`type=INFO&data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
+                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
                                             method:'GET',
                                             authorization:'APP_ID'
                                             },
@@ -2719,7 +2719,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 data:       {
                                             info:'URL',
                                             path:'/app-resource/' + COMMON_GLOBAL.info_link_disclaimer_url,
-                                            query:`type=INFO&data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
+                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
                                             method:'GET',
                                             authorization:'APP_ID'
                                             },
@@ -2733,7 +2733,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 data:       {
                                             info:'URL',
                                             path:'/app-resource/' + COMMON_GLOBAL.info_link_terms_url,
-                                            query:`type=INFO&data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
+                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
                                             method:'GET',
                                             authorization:'APP_ID'
                                             },
@@ -3667,7 +3667,7 @@ const custom_framework = () => {
  * @returns {Promise.<void>}
  */
 const commonMountApp = async (app_id) =>{   
-    commonComponentRemove('common_dialogue_apps');
+    
     COMMON_GLOBAL.app_id =          app_id;
     /**@type{commonAppInit} */
     const CommonAppInit = await commonFFB({   path:`/app-init/${app_id}`, 
