@@ -1703,7 +1703,7 @@ const appEventClick = event => {
                         data:       {
                                     info:'URL',
                                     path:'/app-resource/' + common.COMMON_GLOBAL.info_link_policy_url,
-                                    query:`type=INFO&data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
+                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
                                     method:'GET',
                                     authorization:'APP_ID'
                                     },
@@ -1717,7 +1717,7 @@ const appEventClick = event => {
                         data:       {
                                     info:'URL',
                                     path:'/app-resource/' + common.COMMON_GLOBAL.info_link_disclaimer_url,
-                                    query:`type=INFO&data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
+                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
                                     method:'GET',
                                     authorization:'APP_ID'
                                     },
@@ -1731,7 +1731,7 @@ const appEventClick = event => {
                         data:       {
                                     info:'URL',
                                     path:'/app-resource/' + common.COMMON_GLOBAL.info_link_terms_url,
-                                    query:`type=INFO&data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
+                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
                                     method:'GET',
                                     authorization:'APP_ID'
                                     },

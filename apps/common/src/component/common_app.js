@@ -69,7 +69,7 @@ const template = props =>`  <!DOCTYPE html>
  * @returns {Promise.<string>}
  */
 const component = async props =>{
-    const base64= Buffer.from ('content_type=text/javascript&data_app_id=0').toString('base64');
+    const base64= Buffer.from ('content_type=text/javascript&IAM_data_app_id=0').toString('base64');
     return template({   app_idtoken: props.data.Info.app_idtoken,
                         commonFetch: `${props.data.Info.rest_resource_bff}/app_id/v${props.data.Info.rest_api_version}/app-resource/~common~js~common.js?parameters=${base64}`,
                         APP:props.data.App, 
