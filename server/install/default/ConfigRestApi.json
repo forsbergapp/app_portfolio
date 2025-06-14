@@ -22,7 +22,8 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"app.id"
+                            "description":"app.id",
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
@@ -70,7 +71,8 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"AppData.id"
+                            "description":"AppData.id",
+                            "in":"path"
                         },
                         {
                             "name":"name",
@@ -235,7 +237,8 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"IamUser.id"
+                            "description":"IamUser.id",
+                            "in":"path"
                         },
                         {
                             "name":"id",
@@ -319,7 +322,8 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/iam_user_id",
@@ -373,7 +377,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"IamUser.id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         }
                 ],
                 "responses": {
@@ -418,7 +423,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"IamUser.id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         },
                         {
                             "name":"id_current_user",
@@ -509,7 +515,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"IamUser.id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         }
                 ],
                 "responses": {
@@ -545,7 +552,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_string",
                             "description":"AppModule.common_name",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
@@ -628,7 +636,8 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"AppModule.id"
+                            "description":"AppModule.id",
+                            "in":"path"
                         },
                         {
                             "name":"type",
@@ -682,7 +691,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_string",
                             "description":"AppModule.common_name",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         },
                         {
                             "name":"type",
@@ -746,7 +756,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_string",
                             "description":"AppModule.common_name",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         },
                         {
                             "name":"type",
@@ -810,7 +821,8 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"AppModuleQueue.id"
+                            "description":"AppModuleQueue.id",
+                            "in":"path"
                         }
                 ],
                 "responses": {
@@ -854,7 +866,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"AppModule.id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/server_ip"
@@ -917,7 +930,8 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"AppModuleQueue.id"
+                            "description":"AppModuleQueue.id",
+                            "in":"path"
                         }
                 ],
                 "responses": {
@@ -962,7 +976,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_string",
                             "description":"AppModule.common_name",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
@@ -1023,14 +1038,15 @@
                             "$ref": "#/components/parameters/server_accept_language"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_string"
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/data_app_id",
+                            "$ref": "#/components/parameters/IAM_data_app_id",
                             "required":true,
                             "in":"query"
                         },
@@ -1078,7 +1094,7 @@
                 }
             }
         },
-        "/bff/app_id/v1/app-init/${data_app_id}": {
+        "/bff/app_id/v1/app-init/${IAM_data_app_id}": {
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonAppInit",
@@ -1107,7 +1123,7 @@
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/data_app_id",
+                            "$ref": "#/components/parameters/IAM_data_app_id",
                             "in":"path"
                         }
                 ],
@@ -1153,7 +1169,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_string",
                             "description":"AppModule.common_name",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
@@ -1240,7 +1257,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_string",
                             "description":"AppModule.common_name",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
@@ -1311,7 +1329,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_string",
                             "description":"AppModule.common_name",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
@@ -1389,7 +1408,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_string",
                             "description":"AppModule.common_name",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
@@ -1574,7 +1594,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"IamUserFollow.id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         }
                 ],
                 "requestBody":{
@@ -1677,7 +1698,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"IamUserLike.id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         }
                 ],
                 "requestBody":{
@@ -1838,7 +1860,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"IamUser.id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         },
                         {
                             "name":"detailchoice",
@@ -1948,7 +1971,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"IamUserAppDataPost.id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         }
                 ],
                 "requestBody":{
@@ -2004,7 +2028,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"IamUserAppDataPost.id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         }
                 ],
                 "requestBody":{
@@ -2055,7 +2080,8 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"IamUserAppDataPostLike.id"
+                            "description":"IamUserAppDataPostLike.id",
+                            "in":"path"
                         }
                 ],
                 "requestBody":{
@@ -2674,7 +2700,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"app.id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         }
                 ],
                 "requestBody":{
@@ -2767,7 +2794,8 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"AppModule.id"
+                            "description":"AppModule.id",
+                            "in":"path"
                         },
                         {
                             "name":"data_app_id",
@@ -2819,7 +2847,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"AppModule.id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         }
                 ],
                 "requestBody":{
@@ -2886,7 +2915,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"app_parameter.app_id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         }
                 ],
                 "responses": {
@@ -2920,7 +2950,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"app_parameter.app_id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         }
                 ],
                 "requestBody":{
@@ -2978,7 +3009,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"app_secret.app_id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         }
                 ],
                 "responses": {
@@ -3012,7 +3044,8 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"app_secret.app_id",
-                            "required":true
+                            "required":true,
+                            "in":"path"
                         }
                 ],
                 "requestBody":{
@@ -3094,7 +3127,8 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"iam_user.id"
+                            "description":"iam_user.id",
+                            "in":"path"
                         }
                 ],
                 "responses": {
@@ -3890,7 +3924,8 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"iam_user.id"
+                            "description":"iam_user.id",
+                            "in":"path"
                         },
                         {
                             "name":"sort",
@@ -3956,7 +3991,8 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"iam_user.id"
+                            "description":"iam_user.id",
+                            "in":"path"
                         }
                 ],
                 "requestBody":{

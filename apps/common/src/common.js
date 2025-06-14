@@ -906,33 +906,46 @@ const commonAppHost = (host, endpoint=null, AppId=null, AppSignature=null) =>{
   *                                                       AppParameter:server_db_table_AppParameter | {} } }>}
   */
 const commonAppInit = async parameters =>{
-    /**@type{server_db_table_App} */
-    const app = App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
-    if (app)
-        return {result:{App:{   id:             app.id,
-                                name:           app.name,
-                                js:             app.js,
-                                css:            app.css,
-                                css_report:     app.css_report,
-                                favicon_32x32:  app.favicon_32x32,
-                                favicon_192x192:app.favicon_192x192,
-                                logo:           app.logo,
-                                copyright:      app.copyright,
-                                link_url:       app.link_url,
-                                link_title:     app.link_title,
-                                text_edit:      app.text_edit
-                            },
-                        AppParameter:AppParameter.get({  app_id:parameters.app_id, resource_id:parameters.resource_id}).result?.[0]??{}
-                        }, 
-                type:'JSON'};
-    else
-        return {http:404,
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
+    if (parameters.resource_id == serverUtilNumberValue(configServer.SERVICE_APP
+                                                        .filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID))
+        return {http:400,
             code:null,
             text:null,
             developerText:'commonAppInit',
             moreInfo:null,
             sendfile:null,
             type:'JSON'};
+    else{
+        /**@type{server_db_table_App} */
+        const app = App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
+        if (app)
+            return {result:{App:{   id:             app.id,
+                                    name:           app.name,
+                                    js:             app.js,
+                                    css:            app.css,
+                                    css_report:     app.css_report,
+                                    favicon_32x32:  app.favicon_32x32,
+                                    favicon_192x192:app.favicon_192x192,
+                                    logo:           app.logo,
+                                    copyright:      app.copyright,
+                                    link_url:       app.link_url,
+                                    link_title:     app.link_title,
+                                    text_edit:      app.text_edit
+                                },
+                            AppParameter:AppParameter.get({  app_id:parameters.app_id, resource_id:parameters.resource_id}).result?.[0]??{}
+                            }, 
+                    type:'JSON'};
+        else
+            return {http:404,
+                code:null,
+                text:null,
+                developerText:'commonAppInit',
+                moreInfo:null,
+                sendfile:null,
+                type:'JSON'};
+    }
 };
 
  /**
