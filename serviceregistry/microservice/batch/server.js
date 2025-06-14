@@ -63,10 +63,7 @@ const serverStart = async () =>{
         }
         res.end();
     };
-
-    /**@type{config} */
-    const Config = JSON.parse(await fs.promises.readFile(serverProcess.cwd() + '/data/microservice/BATCH.json', 'utf8'));
-    
+ 
     /**
      * @description log
      * @param {'MICROSERVICE_LOG'|'MICROSERVICE_ERROR'} type
@@ -100,17 +97,34 @@ const serverStart = async () =>{
            message:Crypto.publicEncrypt(  Config.public_key,
                    Buffer.from(JSON.stringify(message.message))).toString('base64')
            })).toString('base64');
-            
-    /**
-     * @type{{  token:string,
-     *           exp:number,
-     *           iat:number}}
-     */
-    const jwt_data = await service.requestUrl({url:Config.service_registry_auth_url, 
-                                                method:Config.service_registry_auth_method, 
-                                                body:{data:encryptMessage({id:null, message: {message:null}})
-                                                    },
-                                                language:'en'});
+    
+    /**@type{config} */
+    const Config = JSON.parse(await fs.promises.readFile(serverProcess.cwd() + '/data/microservice/BATCH.json', 'utf8'));
+
+    const auth = async attempt =>{
+        const attempts = 10;
+        /**
+         * @type{{  token:string,
+         *           exp:number,
+         *           iat:number}}
+         */
+        const jwt_data = await service.requestUrl({url:Config.service_registry_auth_url, 
+                                method:Config.service_registry_auth_method, 
+                                body:{data:encryptMessage({id:null, message: {message:null}})
+                                    },
+                                language:'en'})
+                                .catch(()=>null);
+        if (jwt_data == null && ((attempt??1) <=attempts) )
+                await new Promise ((resolve)=>{setTimeout(()=>{auth((attempt??1) +1).then(()=>resolve(null));}, 5000);});
+        else
+            return jwt_data;
+    };
+    //wait 5 seconds to start server first time
+    await new Promise ((resolve)=>{setTimeout(()=>resolve(null), 5000);});
+    const jwt_data = await auth();
+    if (jwt_data == null)
+        throw '⛔';
+
     /**
      * @type{{  server: import('node:http') ,
      *          port:   number,
