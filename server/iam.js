@@ -1264,14 +1264,14 @@ const iamAuthenticateMicroservice = async parameters =>{
     const ServiceRegistry = await import('./db/ServiceRegistry.js');
     /**@type{server_db_table_ServiceRegistry[]} */
     const service = ServiceRegistry.get({app_id:parameters.app_id, resource_id:null, data:{name:parameters.resource_id}}).result;
-    const decrypted = (()=>{ try {
+    const decrypted = ()=>{ try {
         //authenticate private key is correct, the content of the message not needed here
         return Security.securityPrivateDecrypt(service[0].private_key, parameters.data.message);
     } catch (error) {
         return null;
-    }})();
+    }};
     //service name and calling host without port should be registered in service registry and message should be decrypted
-    if (decrypted && service.length==1 && service[0].server_host == parameters.host.split(':')[0]){
+    if (service.length==1 && decrypted() && service[0].server_host == parameters.host.split(':')[0]){
         const IamMicroserviceToken = await import('./db/IamMicroserviceToken.js');
         const token = Security.jwt.sign ({
                                     app_id: parameters.app_id, 
@@ -1293,24 +1293,24 @@ const iamAuthenticateMicroservice = async parameters =>{
                                             parameter:'MICROSERVICE_TOKEN_EXPIRE_ACCESS'
                                         }
                                     }).result});
-            const jwt_data = {token:token,
+        const jwt_data = {token:token,
+                /**@ts-ignore */
+                exp:Security.jwt.decode(token, { complete: true }).payload.exp,
+                /**@ts-ignore */
+                iat:Security.jwt.decode(token, { complete: true }).payload.iat};
+    
+        return IamMicroserviceToken.post(
+                parameters.app_id, 
+                {	app_id:     parameters.app_id,
                     /**@ts-ignore */
-                    exp:Security.jwt.decode(token, { complete: true }).payload.exp,
-                    /**@ts-ignore */
-                    iat:Security.jwt.decode(token, { complete: true }).payload.iat};
-        
-            return IamMicroserviceToken.post(
-                    parameters.app_id, 
-                    {	app_id:     parameters.app_id,
-                        /**@ts-ignore */
-                        service_registry_id:service[0].id,
-                        service_registry_name: service[0].name,
-                        res:		1,
-                        token:   	jwt_data.token,
-                        ip:         parameters.ip ?? '',
-                        ua:         parameters.user_agent,
-                        host:       parameters.host})
-                    .then(result=>{ return result.http?result:{result:jwt_data, type:'JSON'};});
+                    service_registry_id:service[0].id,
+                    service_registry_name: service[0].name,
+                    res:		1,
+                    token:   	jwt_data.token,
+                    ip:         parameters.ip ?? '',
+                    ua:         parameters.user_agent,
+                    host:       parameters.host})
+                .then(result=>{ return result.http?result:{result:jwt_data, type:'JSON'};});
     }
     else
         return {http:401,

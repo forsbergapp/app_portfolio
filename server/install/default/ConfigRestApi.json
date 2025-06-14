@@ -4486,7 +4486,7 @@
                 }
             }
         },
-        "/bff/microservice_auth/v1/server-iam-microservice/${IAM_service}":{
+        "/bff/microservice_auth/v1/server-iam-microservice/${service}":{
             "post": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateMicroservice",
@@ -4506,8 +4506,9 @@
                             "$ref": "#/components/parameters/server_host"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_service",
-                            "in":"path"
+                            "$ref": "#/components/parameters/service",
+                            "in":"path",
+                            "required":true
                         }
                 ],
                 "requestBody":{
