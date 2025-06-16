@@ -2936,7 +2936,7 @@ const commonEvent = async (event_type,event=null) =>{
                         }        
                         //dialogue verify
                         case 'common_dialogue_iam_verify_cancel':{
-                            if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_iamuser')==null)
+                            if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_btn_user_update')==null)
                                 commonUserSessionClear();
                             commonComponentRemove('common_dialogue_iam_verify', true);
                             break;
