@@ -4,8 +4,8 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>770DC498-ED48-0543-CC59-2B06F4879614</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<referredTableLongName>app</referredTableLongName>
-<deleteRule>NO ACTION</deleteRule>
+<referredTableLongName>App</referredTableLongName>
+<deleteRule>CASCADE</deleteRule>
 <referredTableID>92D19640-DF24-84FC-779B-E332F5D30D25</referredTableID>
 <keyObject>DF29A9DE-D7F4-E883-AF1B-ECD8DD61704B</keyObject>
 <referredKeyID>DF29A9DE-D7F4-E883-AF1B-ECD8DD61704B</referredKeyID>

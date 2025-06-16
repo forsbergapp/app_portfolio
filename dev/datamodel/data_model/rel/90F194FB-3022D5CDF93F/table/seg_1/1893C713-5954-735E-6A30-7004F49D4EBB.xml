@@ -22,7 +22,7 @@
 <colAssociation fkAssociation="7AEF81D5-29D3-AB56-4C9B-425B74028E6D" referredColumn="B012AC67-F394-59D1-D892-D9E6735C213C"/>
 </associations>
 </Column>
-<Column name="common_client_id" id="82C1191A-3278-DCE4-84E2-932B3BD98DA9">
+<Column name="client_id" id="82C1191A-3278-DCE4-84E2-932B3BD98DA9">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>3722FB05-8479-A7C8-B3EC-F15AD5BF54B6</generatorID>
@@ -32,50 +32,10 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="common_client_secret" id="CC661154-711F-251E-8DFE-C8E5874EFF58">
+<Column name="client_secret" id="CC661154-711F-251E-8DFE-C8E5874EFF58">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>90FDBE4F-B499-012D-82BD-0E00354698F8</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="common_app_id_secret" id="B98AEB85-7CB9-54C2-1908-8ED7E824217C">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>635CF8D7-42DD-2525-58FF-BBCA16441A9F</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="common_app_id_expire" id="AB248445-C5D9-2C91-A058-7689C0B022C3">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>5113385F-E50E-CAB9-EB5C-29EDA26B1527</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="common_app_access_secret" id="9DA7DBDA-3C5C-83E7-4811-58C7CE112C0C">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>88B67640-CA37-41F4-33EE-E657133EAEBE</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="common_app_access_expire" id="E1751A8C-6BA6-A0C2-B7DF-1C634759E1DD">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>B1F8CF00-C581-CC00-11F9-DF0D6F1A60D1</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>

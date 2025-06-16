@@ -27,7 +27,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="common_client_id" id="3722FB05-8479-A7C8-B3EC-F15AD5BF54B6">
+<Attribute name="client_id" id="3722FB05-8479-A7C8-B3EC-F15AD5BF54B6">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:25:54 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -38,53 +38,9 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="common_client_secret" id="90FDBE4F-B499-012D-82BD-0E00354698F8">
+<Attribute name="client_secret" id="90FDBE4F-B499-012D-82BD-0E00354698F8">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:26:19 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="common_app_id_secret" id="635CF8D7-42DD-2525-58FF-BBCA16441A9F">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:26:36 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="common_app_id_expire" id="5113385F-E50E-CAB9-EB5C-29EDA26B1527">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:26:42 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="common_app_access_secret" id="88B67640-CA37-41F4-33EE-E657133EAEBE">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:26:48 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="common_app_access_expire" id="B1F8CF00-C581-CC00-11F9-DF0D6F1A60D1">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 12:08:08 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>

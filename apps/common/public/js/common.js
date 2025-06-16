@@ -1641,29 +1641,7 @@ const commonUserLogin = async () => {
             commonComponentRemove('common_dialogue_profile', true);
         }
         commonUserMessageShowStat();
-        const IamUserApp = await commonFFB({path:`/server-db/iamuserapp/${COMMON_GLOBAL.iam_user_app_id ?? ''}`, 
-                                        query:`IAM_data_app_id=${COMMON_GLOBAL.app_id}&IAM_iam_user_id=${COMMON_GLOBAL.iam_user_id}`,
-                                        method:'GET', authorization_type:'APP_ACCESS', spinner_id:spinner_item})
-                                .then(result=>JSON.parse(result)[0])
-                                .catch(()=>null);
-
-        //get preferences saved in json_data column
-        //locale
-        if (IamUserApp.json_data?.preference_locale==null)
-            commonUserPreferencesGlobalSetDefault('LOCALE');
-        else
-            COMMON_GLOBAL.user_locale = IamUserApp.json_data.preference_locale;
-        //timezone
-        if (IamUserApp.json_data?.preference_timezone==null)
-            commonUserPreferencesGlobalSetDefault('TIMEZONE');
-        else
-            COMMON_GLOBAL.user_timezone = IamUserApp.json_data.preference_timezone;
-        //direction
-        COMMON_GLOBAL.user_direction = IamUserApp.json_data?.preference_direction;
-        //arabic script
-        COMMON_GLOBAL.user_arabic_script = IamUserApp.json_data?.preference_arabic_script;
-        //update body class with app theme, direction and arabic script usage classes
-        commonMiscPreferencesUpdateBodyClassFromPreferences();
+        await commonUserLoginApp(spinner_item);
         return {avatar: JSON.parse(result_iam).avatar};
     }
     else{
@@ -1676,6 +1654,39 @@ const commonUserLogin = async () => {
         commonDialogueShow('VERIFY', 'LOGIN');
         throw 'ERROR';
     }
+};
+/**
+ * @name commonUserLoginApp
+ * @description
+ * @function
+ * @param {string|null} spinner_item
+ * @returns {Promise.<void>}
+ */
+const commonUserLoginApp = async spinner_item =>{
+    const IamUserApp = await commonFFB({path:'/server-iam/iamuserapp', 
+                                        body:{  IAM_data_app_id: COMMON_GLOBAL.app_id, 
+                                                IAM_iam_user_id: COMMON_GLOBAL.iam_user_id},
+                                        method:'POST', authorization_type:'APP_ACCESS', spinner_id:spinner_item})
+                                .then(result=>JSON.parse(result)[0])
+                                .catch(()=>null);
+    COMMON_GLOBAL.iam_user_app_id = IamUserApp.id;
+    //get preferences saved in json_data column
+    //locale
+    if (IamUserApp.json_data?.preference_locale==null)
+        commonUserPreferencesGlobalSetDefault('LOCALE');
+    else
+        COMMON_GLOBAL.user_locale = IamUserApp.json_data.preference_locale;
+    //timezone
+    if (IamUserApp.json_data?.preference_timezone==null)
+        commonUserPreferencesGlobalSetDefault('TIMEZONE');
+    else
+        COMMON_GLOBAL.user_timezone = IamUserApp.json_data.preference_timezone;
+    //direction
+    COMMON_GLOBAL.user_direction = IamUserApp.json_data?.preference_direction;
+    //arabic script
+    COMMON_GLOBAL.user_arabic_script = IamUserApp.json_data?.preference_arabic_script;
+    //update body class with app theme, direction and arabic script usage classes
+    commonMiscPreferencesUpdateBodyClassFromPreferences();
 };
 /**
  * @name commonUserSessionCountdown
@@ -3672,10 +3683,13 @@ const commonMountApp = async (app_id) =>{
     
     COMMON_GLOBAL.app_id =          app_id;
     /**@type{commonAppInit} */
-    const CommonAppInit = await commonFFB({   path:`/app-init/${app_id}`, 
-                                    method:'GET', 
-                                    authorization_type:'APP_ID'})
+    const CommonAppInit = await commonFFB({ path:`/app-init/${app_id}`, 
+                                            method:'GET', 
+                                            authorization_type:'APP_ID'})
                             .then(app=>JSON.parse(app));
+    COMMON_GLOBAL.iam_user_app_id = null;
+    if (COMMON_GLOBAL.iam_user_id != null)
+        await commonUserLoginApp(COMMON_DOCUMENT.querySelector('#common_app_toolbar_start')?'common_app_toolbar_start':null);
     COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_div}`).innerHTML='';
     if (COMMON_GLOBAL.app_id!=COMMON_GLOBAL.app_start_app_id)
         commonComponentRemove('common_dialogue_apps');
@@ -3695,24 +3709,22 @@ const commonMountApp = async (app_id) =>{
 
     /**@type{commonMetadata} */
     const appdata = appMetadata();
-    await AppInit(commonGet(), CommonAppInit.AppParameter)
-        .then(()=>{
-            appdata.lifeCycle?.onMounted?appdata.lifeCycle.onMounted():null;
-            commonFrameworkSet(null,
-                {   Click: appdata.events.Click,
-                    Change: appdata.events.Change,
-                    KeyDown: appdata.events.KeyDown,
-                    KeyUp: appdata.events.KeyUp,
-                    Focus: appdata.events.Focus,
-                    Input:appdata.events.Input,
-                    Other:appdata.events.Other});
-            if (COMMON_GLOBAL.iam_user_id){
-                commonUserUpdateAvatar(true, COMMON_GLOBAL.iam_user_avatar);
-                commonUserMessageShowStat();
-            }
-            else
-                commonUserUpdateAvatar(false, null);
-        });
+    await AppInit(commonGet(), CommonAppInit.AppParameter);
+    appdata.lifeCycle?.onMounted?await appdata.lifeCycle.onMounted():null;
+    commonFrameworkSet(null,
+        {   Click: appdata.events.Click,
+            Change: appdata.events.Change,
+            KeyDown: appdata.events.KeyDown,
+            KeyUp: appdata.events.KeyUp,
+            Focus: appdata.events.Focus,
+            Input:appdata.events.Input,
+            Other:appdata.events.Other});
+    if (COMMON_GLOBAL.iam_user_id){
+        commonUserUpdateAvatar(true, COMMON_GLOBAL.iam_user_avatar);
+        commonUserMessageShowStat();
+    }
+    else
+        commonUserUpdateAvatar(false, null);
 
     CommonAppInit.App.css_report==''?
         null:

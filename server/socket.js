@@ -75,34 +75,7 @@ const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, header
  * @returns {server_socket_connected_list['id']}
  */
 const socketClientGet = idtoken => SOCKET_CONNECTED_CLIENTS.filter(client => client.authorization_bearer == idtoken)[0]?.id;
-/**
- * @name socketClientConnect
- * @description Socket client connect
- *              Used by SSE and leaves connection open
- * @function
- * @param {server_server_res} res
- * @returns {void}
- */
- const socketClientConnect = (res) => {
-    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
-    res.setHeader('Cache-control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-};
-/**
- * @name socketClientOnClose
- * @description Socket client close
- *              Used by SSE and closes connection
- * @function
- * @param {server_server_res} res
- * @param {number} client_id
- * @returns {void}
- */
-const socketClientOnClose = (res, client_id) => {
-    res.on('close', ()=>{
-        SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.id !== client_id);
-        res.end();
-    });
-};
+
 /**
  * @name socketClientAdd
  * @description Socket client add
@@ -380,8 +353,15 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
     }
     else{
         const client_id = Date.now();
-        socketClientConnect(parameters.data.server_response);
-        socketClientOnClose(parameters.data.server_response, client_id);
+        
+        parameters.data.server_response.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+        parameters.data.server_response.setHeader('Cache-control', 'no-cache');
+        parameters.data.server_response.setHeader('Connection', 'keep-alive');
+
+        parameters.data.server_response.on('close', ()=>{
+            SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.id !== client_id);
+            parameters.data.server_response.end();
+        });
     
         const connectUserData =  await socketConnectedUserDataGet(parameters.app_id, parameters.ip, parameters.user_agent, parameters.accept_language);
         /**@type{server_socket_connected_list} */
