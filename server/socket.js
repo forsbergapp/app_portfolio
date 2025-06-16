@@ -93,6 +93,7 @@ const socketClientAdd = (newClient) => {
  * @function
  * @param {number} app_id,
  * @param {{idToken:string,
+ *          app_only?:boolean|null,
  *          iam_user_id:number|null,
  *          iam_user_username:string|null,
  *          iam_user_type:'ADMIN'|'USER'|null,
@@ -117,25 +118,33 @@ const socketClientAdd = (newClient) => {
     else{
         for (const connected of SOCKET_CONNECTED_CLIENTS){
             if (connected.authorization_bearer == parameters.idToken){
-                const connectUserData =  await socketConnectedUserDataGet(app_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
-                connected.connection_date = new Date().toISOString();
-                connected.token_access = parameters.token_access;
-                connected.iam_user_id = parameters.iam_user_id;
-                connected.iam_user_username = parameters.iam_user_username;
-                connected.iam_user_type = parameters.iam_user_type;
-                connected.token_admin = parameters.token_admin;
-                connected.gps_latitude = connectUserData.latitude;
-                connected.gps_longitude = connectUserData.longitude;
-                connected.place = connectUserData.place;
-                connected.timezone = connectUserData.timezone;
-                //send message to client with updated data
-                socketClientSend( connected.response, 
-                                    Buffer.from(JSON.stringify({   client_id: connected.id, 
-                                        latitude: connectUserData.latitude,
-                                        longitude: connectUserData.longitude,
-                                        place: connectUserData.place,
-                                        timezone: connectUserData.timezone})).toString('base64')
-                                    , 'CONNECTINFO');
+                if (parameters.app_only == true){
+                    connected.app_id = app_id;
+                    connected.ip = parameters.ip;
+                    connected.user_agent = parameters.headers_user_agent;
+                }
+                else{
+                    const connectUserData =  await socketConnectedUserDataGet(app_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
+                    connected.app_id = app_id;
+                    connected.connection_date = new Date().toISOString();
+                    connected.token_access = parameters.token_access;
+                    connected.iam_user_id = parameters.iam_user_id;
+                    connected.iam_user_username = parameters.iam_user_username;
+                    connected.iam_user_type = parameters.iam_user_type;
+                    connected.token_admin = parameters.token_admin;
+                    connected.gps_latitude = connectUserData.latitude;
+                    connected.gps_longitude = connectUserData.longitude;
+                    connected.place = connectUserData.place;
+                    connected.timezone = connectUserData.timezone;
+                    //send message to client with updated data
+                    socketClientSend( connected.response, 
+                                        Buffer.from(JSON.stringify({   client_id: connected.id, 
+                                            latitude: connectUserData.latitude,
+                                            longitude: connectUserData.longitude,
+                                            place: connectUserData.place,
+                                            timezone: connectUserData.timezone})).toString('base64')
+                                        , 'CONNECTINFO');
+                }
             }
         }
         return {result:null, type:'JSON'};
@@ -450,4 +459,6 @@ const CheckOnline = parameters => { /**@ts-ignore */
                                                         {online:0}, 
                                             type:'JSON'};};
 
-export {socketClientSend, socketClientGet, socketConnectedUpdate, socketConnectedGet, socketConnectedList, socketAdminSend, socketAppServerFunctionSend, socketConnectedCount, socketConnect, socketIntervalCheck, CheckOnline, socketExpiredTokensUpdate};
+export {socketClientSend, socketClientGet, socketConnectedUpdate, socketConnectedGet, socketConnectedList, socketConnectedCount, socketConnect, 
+        socketAdminSend, socketAppServerFunctionSend, 
+        socketIntervalCheck, socketExpiredTokensUpdate, CheckOnline, };

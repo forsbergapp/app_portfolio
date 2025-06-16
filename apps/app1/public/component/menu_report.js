@@ -98,7 +98,7 @@ const component = async props => {
                         path:`/app-common-module-report-queue-result/${id}`,
                         method:'GET',
                         body:null,
-                        authorization_type:'ADMIN'
+                        authorization:'ADMIN'
                         },
             methods:    {commonFFB:props.methods.commonFFB},
             path:       '/common/component/common_window_info.js'});

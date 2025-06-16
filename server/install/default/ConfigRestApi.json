@@ -1119,6 +1119,9 @@
                             "$ref": "#/components/parameters/server_accept_language"
                         },
                         {
+                            "$ref": "#/components/parameters/server_idtoken"
+                        },
+                        {
                             "$ref": "#/components/parameters/locale",
                             "required":false
                         },

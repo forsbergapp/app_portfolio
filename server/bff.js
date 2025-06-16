@@ -566,7 +566,7 @@ const bffRestApi = async (routesparameters) =>{
                                             )).length==0){ 
                     //remove path parameter not used for data parameter
                     for (const key of Object.entries(parametersIn))
-                        if (key[1].type == 'PATH')
+                        if (key[1]?.type == 'PATH')
                             delete parametersIn[key[0]];
                     //replace metadata with value
                     Object.keys(parametersIn).forEach(key=>

@@ -225,7 +225,8 @@ const component = async props => {
                                         temperature:        Number(props.methods.COMMON_DOCUMENT.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
                                         cube_currentstate: 	cube.getState(),
                                         cube_goalstate: 	cube_goalstate}, 
-                                spinner_id:button_id})
+                                spinner_id:button_id,
+                                timeout:1000 * 60 * 5}) //5 minutes timeout
                     .then((/**@type{string}*/result)=>{
                         props.methods.commonComponentRemove('common_dialogue_message', true);
                         cube_show_solution(cube, cube_controls, result, button_id);
