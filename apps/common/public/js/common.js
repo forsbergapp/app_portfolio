@@ -2167,7 +2167,8 @@ const commonModuleLeafletInit = async parameters => {
  *          password?:string,
  *          body?:*,
  *          response_type?:'TEXT'|'BLOB'
- *          spinner_id?:string|null}} parameter
+ *          spinner_id?:string|null,
+ *          timeout?:number|null}} parameter
  * @returns {Promise.<*>} 
  */
 const commonFFB = async parameter => {
@@ -2267,7 +2268,9 @@ const commonFFB = async parameter => {
                                                 resolve('🗺⛔?');
                                                 throw ('TIMEOUT');
                                             }
-                                            }, 5000)),
+                                            }, COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id?
+                                                    (1000 * 60 * 60): //admin 1 hour
+                                                    parameter.timeout || 5000)), //custom timeout or 5 seconds
                                         await fetch(url, options)
                                             /**@ts-ignore */
                                             .then((response) => {

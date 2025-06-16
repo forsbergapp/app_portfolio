@@ -907,6 +907,7 @@ const commonAppIam = (host, endpoint=null, AppId=null, AppSignature=null) =>{
   *          host:string,
   *          user_agent:string,
   *          accept_language:string,
+  *          idToken:string, 
   *          data:{ locale:string } } } parameters
   * @returns {Promise.<server_server_response & {result?:{App:{id:server_db_table_App['id'],
   *                                                            name:server_db_table_App['name'],
@@ -943,7 +944,9 @@ const commonAppInit = async parameters =>{
     else{
         /**@type{server_db_table_App} */
         const app = App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
+        const {socketConnectedUpdate} = await import ('../../../server/socket.js');
         const fs = await import('node:fs');
+        
         /**
          * @param {string} path
          * @param {string} content_type
@@ -995,7 +998,18 @@ const commonAppInit = async parameters =>{
                                     link_title:             app.link_title,
                                     text_edit:              app.text_edit
                                 },
-                            AppParameter:AppParameter.get({  app_id:parameters.app_id, resource_id:parameters.resource_id}).result?.[0]??{}
+                            AppParameter:AppParameter.get({  app_id:parameters.app_id, resource_id:parameters.resource_id}).result?.[0]??{},
+                            ...(await socketConnectedUpdate(parameters.app_id, 
+                                                            {idToken:parameters.idToken, 
+                                                             app_only:true,
+                                                             iam_user_id:null,
+                                                             iam_user_username:null,
+                                                             iam_user_type:null,
+                                                             token_access:null,
+                                                             token_admin:null,
+                                                             ip:parameters.ip,
+                                                             headers_user_agent:parameters.user_agent,
+                                                             headers_accept_language:parameters.accept_language})).result
                             }, 
                     type:'JSON'};
         else
