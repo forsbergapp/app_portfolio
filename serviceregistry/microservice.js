@@ -60,8 +60,8 @@ const microserviceRequest = async parameters =>{
     if ((parameters.microservice == 'GEOLOCATION' && serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVICE_IAM', parameter:'ENABLE_GEOLOCATION'}}).result)==1)||
         parameters.microservice != 'GEOLOCATION'){
         //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-        const authorization = `Basic ${Buffer.from(     AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_id + ':' + 
-                                                        AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_secret,'utf-8').toString('base64')}`;
+        const authorization = `Basic ${Buffer.from(     AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].client_id + ':' + 
+                                                        AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].client_secret,'utf-8').toString('base64')}`;
         //convert data object to string if method=GET, add always app_id parameter for authentication and send as base64 encoded
         const query = Buffer.from((parameters.method=='GET'?Object.entries({...parameters.data, ...{service:parameters.service}}).reduce((query, param)=>query += `${param[0]}=${param[1]}&`, ''):'')
                                     + `app_id=${parameters.app_id}`

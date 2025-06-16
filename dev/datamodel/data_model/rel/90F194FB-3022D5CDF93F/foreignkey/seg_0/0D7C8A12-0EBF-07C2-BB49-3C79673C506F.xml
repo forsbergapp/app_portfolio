@@ -4,7 +4,7 @@
 <createdTime>2025-05-24 18:15:32 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <referredTableLongName>ServiceRegistry</referredTableLongName>
-<deleteRule>NO ACTION</deleteRule>
+<deleteRule>CASCADE</deleteRule>
 <referredTableID>FC245404-ACFF-4D8F-A462-B52D43121169</referredTableID>
 <keyObject>2724ABBC-C3A1-7394-B3E8-98880D98E67A</keyObject>
 <referredKeyID>2724ABBC-C3A1-7394-B3E8-98880D98E67A</referredKeyID>

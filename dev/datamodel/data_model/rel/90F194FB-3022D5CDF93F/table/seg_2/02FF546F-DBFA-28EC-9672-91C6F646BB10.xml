@@ -30,6 +30,19 @@
 <colAssociation fkAssociation="D1F85247-E307-E41C-B595-2FED97E638AC" referredColumn="B012AC67-F394-59D1-D892-D9E6735C213C"/>
 </associations>
 </Column>
+<Column name="app_id_token" id="B47F67CE-7811-3554-8027-D09C2A4A49EA">
+<createdBy>admin</createdBy>
+<createdTime>2025-06-15 16:32:33 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="BC4EC4DD-9728-C726-05BB-DFD511CF1DB3" referredColumn="B012AC67-F394-59D1-D892-D9E6735C213C"/>
+</associations>
+</Column>
 <Column name="res" id="8E37272F-5943-0F2F-B28A-2A48717C8940">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
@@ -109,6 +122,17 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="A233BB75-8F7B-BAF6-A5D9-57F1F7B19CCB"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="3F240496-145A-C1BE-57EE-0D2960817B65" name="IamAppIdToken_App_FK">
+<createdBy>admin</createdBy>
+<createdTime>2025-06-15 16:32:33 UTC</createdTime>
+<generatorID>F4558357-8BC9-776A-C982-D5C267FC4420</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B47F67CE-7811-3554-8027-D09C2A4A49EA"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

@@ -37,6 +37,19 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="app_id_token" id="CA0B5A7B-8524-ED39-4C80-C5784D894A0A">
+<createdBy>admin</createdBy>
+<createdTime>2025-06-15 16:21:57 UTC</createdTime>
+<generatorID>1C072523-B3E7-6EFE-D434-7CBF3ED74644</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="res" id="982CF8C3-A790-0D80-87A1-5A442E081ACF">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:34:55 UTC</createdTime>
