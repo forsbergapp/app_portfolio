@@ -1179,7 +1179,6 @@ const commonMessageShow = async (message_type, function_event, text_class=null, 
                         },
         methods:        {
                         commonComponentRemove:commonComponentRemove,
-                        commonFFB:commonFFB, 
                         function_event:function_event
                         },
         path:           '/common/component/common_dialogue_message.js'});
@@ -2258,64 +2257,77 @@ const commonFFB = async parameter => {
                 };
         if (parameter.spinner_id && COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`))
             COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`).classList.add('css_spinner');
-        return await fetch(url, options)
-                /**@ts-ignore */
-                .then((response) => {
-                    status = response.status;
-                   
-                    const clonedResponse = response.clone(); // Create a clone
-                        return Promise.all([
-                        clonedResponse.text(),
-                        parameter.response_type=='BLOB'?response.blob():null
-                    ]);
-                })
-                .then(([result, result_blob]) => {
-                    switch (status){
-                        case 200:
-                        case 201:{
-                            //OK
-                            /**@ts-ignore */
-                            return parameter.response_type=='BLOB'?result_blob:result;
-                        }
-                        case 400:{
-                            //Bad request
-                            commonMessageShow('ERROR_BFF', null, 'message_text', '!');
-                            throw result;
-                        }
-                        case 404:{
-                            //Not found
-                            commonMessageShow('ERROR_BFF', null, null, result);
-                            throw result;
-                        }
-                        case 401:{
-                            //Unauthorized, token expired
-                            commonMessageShow('ERROR_BFF', null, null, result);
-                            throw result;
-                        }
-                        case 403:{
-                            //Forbidden, not allowed to login or register new user
-                            commonMessageShow('ERROR_BFF', null, null, result);
-                            throw result;
-                        }
-                        case 500:{
-                            //Unknown error
-                            commonException(COMMON_GLOBAL.app_function_exception, result);
-                            throw result;
-                        }
-                        case 503:{
-                            //Service unavailable or other error in microservice
-                            commonMessageShow('ERROR_BFF', null, null, result);
-                            throw result;
-                        }
-                    }
-                })
-                .catch(error=>{
-                    throw error;
-                })
-                .finally(()=>{
-                    if (parameter.spinner_id && COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`))
-                        COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`).classList.remove('css_spinner');
-                });
+        
+        const resultFetch = {finished:false};
+        return await Promise.race([ new Promise((resolve)=>
+                                        //sets timeout after 5 seconds
+                                        setTimeout(()=>{
+                                            if (resultFetch.finished==false){
+                                                commonMessageShow('ERROR_BFF', null, null, '🗺⛔?');
+                                                resolve('🗺⛔?');
+                                                throw ('TIMEOUT');
+                                            }
+                                            }, 5000)),
+                                        await fetch(url, options)
+                                            /**@ts-ignore */
+                                            .then((response) => {
+                                                status = response.status;
+                                            
+                                                const clonedResponse = response.clone(); // Create a clone
+                                                    return Promise.all([
+                                                    clonedResponse.text(),
+                                                    parameter.response_type=='BLOB'?response.blob():null
+                                                ]);
+                                            })
+                                            .then(([result, result_blob]) => {
+                                                switch (status){
+                                                    case 200:
+                                                    case 201:{
+                                                        //OK
+                                                        /**@ts-ignore */
+                                                        return parameter.response_type=='BLOB'?result_blob:result;
+                                                    }
+                                                    case 400:{
+                                                        //Bad request
+                                                        commonMessageShow('ERROR_BFF', null, 'message_text', '!');
+                                                        throw result;
+                                                    }
+                                                    case 404:{
+                                                        //Not found
+                                                        commonMessageShow('ERROR_BFF', null, null, result);
+                                                        throw result;
+                                                    }
+                                                    case 401:{
+                                                        //Unauthorized, token expired
+                                                        commonMessageShow('ERROR_BFF', null, null, result);
+                                                        throw result;
+                                                    }
+                                                    case 403:{
+                                                        //Forbidden, not allowed to login or register new user
+                                                        commonMessageShow('ERROR_BFF', null, null, result);
+                                                        throw result;
+                                                    }
+                                                    case 500:{
+                                                        //Unknown error
+                                                        commonException(COMMON_GLOBAL.app_function_exception, result);
+                                                        throw result;
+                                                    }
+                                                    case 503:{
+                                                        //Service unavailable or other error in microservice
+                                                        commonMessageShow('ERROR_BFF', null, null, result);
+                                                        throw result;
+                                                    }
+                                                }
+                                            })
+                                            .catch(error=>{
+                                                throw error;
+                                            })
+                                            .finally(()=>{
+                                                resultFetch.finished=true;
+                                                if (parameter.spinner_id && COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`))
+                                                    COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`).classList.remove('css_spinner');
+                                            })
+                            ]);
     }        
 };
 /**
@@ -3889,7 +3901,11 @@ const commonInit = async (start_app_id, parameters) => {
                     },
         methods:    null,
         path:       '/common/component/common_app.js'});
-
+    commonComponentRender({
+        mountDiv:       null,
+        data:           null,
+        methods:        null,
+        path:           '/common/component/common_dialogue_message.js'});
     commonMountApp(start_app_id);
 };
 export{/* GLOBALS*/
