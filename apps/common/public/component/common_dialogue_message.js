@@ -65,7 +65,6 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  *                      message:*},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:CommonModuleCommon['commonFFB'],
  *                      function_event:function,
  *                      commonComponentRemove:CommonModuleCommon['commonComponentRemove']
  *                      }}} props
@@ -75,8 +74,10 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show3');
-    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');      
+    if (props.data.commonMountdiv){
+        props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show3');
+        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');      
+    }
 
     const function_close = () => { props.methods.commonComponentRemove('common_dialogue_message', true);};
     let display_message = null;
@@ -124,12 +125,13 @@ const component = async props => {
         }
     }
     const onMounted = async () =>{
-        if (props.data.message_type == 'PROGRESS')
-            props.methods.COMMON_DOCUMENT.querySelector('#common_message_progressbar').style.width = `${(props.data.message.part/props.data.message.total)*100}%`;
-        else{
-            props.methods.COMMON_DOCUMENT.querySelector('#common_message_close')['data-function'] = props.data.message_type == 'CONFIRM'?props.methods.function_event:function_close;
-            props.methods.COMMON_DOCUMENT.querySelector('#common_message_close').focus();
-        }
+        if (props.data.commonMountdiv)
+            if (props.data.message_type == 'PROGRESS')
+                props.methods.COMMON_DOCUMENT.querySelector('#common_message_progressbar').style.width = `${(props.data.message.part/props.data.message.total)*100}%`;
+            else{
+                props.methods.COMMON_DOCUMENT.querySelector('#common_message_close')['data-function'] = props.data.message_type == 'CONFIRM'?props.methods.function_event:function_close;
+                props.methods.COMMON_DOCUMENT.querySelector('#common_message_close').focus();
+            }
 
     };
 
