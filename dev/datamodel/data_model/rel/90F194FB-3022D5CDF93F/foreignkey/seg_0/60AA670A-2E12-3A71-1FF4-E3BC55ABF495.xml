@@ -1,15 +1,15 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_2" id="C73409B1-31FB-E701-8C0E-B0A75D87A775" containerWithKeyObject="E464CCCA-79AE-21F0-EEAB-AD6A88F40363" localFKIndex="2805E7F7-08A5-02DF-7CA8-D4A58245813C" name="app_module_app_FK">
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="60AA670A-2E12-3A71-1FF4-E3BC55ABF495" containerWithKeyObject="0F1077DC-57D5-A606-B42B-6892623F15B0" localFKIndex="7B485B30-5BDF-8B84-C079-8E4ACFFC627B" name="IamAppAccess_App_FK">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>C9CFC0C7-8B78-8A42-A43B-8636797484B2</generatorID>
+<createdTime>2025-06-15 16:31:37 UTC</createdTime>
+<generatorID>F4558357-8BC9-776A-C982-D5C267FC4420</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <referredTableLongName>App</referredTableLongName>
 <deleteRule>CASCADE</deleteRule>
 <referredTableID>92D19640-DF24-84FC-779B-E332F5D30D25</referredTableID>
 <keyObject>DF29A9DE-D7F4-E883-AF1B-ECD8DD61704B</keyObject>
 <referredKeyID>DF29A9DE-D7F4-E883-AF1B-ECD8DD61704B</referredKeyID>
-<mandatory>true</mandatory>
+<mandatory>false</mandatory>
 <refColNames>id</refColNames>
 <transferable>true</transferable>
 <rely>false</rely>

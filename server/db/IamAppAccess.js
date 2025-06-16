@@ -43,6 +43,7 @@ const post = async (app_id, data) =>{
             data_new.id =  Date.now();
             //required
             data_new.app_id =               data.app_id;
+            data_new.app_id_token =         data.app_id_token;
             data_new.res =                  data.res;
             data_new.ip =                   data.ip;
             data_new.type =                 data.type;

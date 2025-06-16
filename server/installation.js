@@ -1062,11 +1062,8 @@ const getConfigSecurityUpdate = async parameters =>{
                         JSON.parse(filebuffer.toString())
                             .filter((/**@type{server_db_table_AppSecret}*/row)=>row.app_id!=0)
                             .map((/**@type{server_db_table_AppSecret}*/row)=>{
-                            row.common_client_id = Security.securitySecretCreate();
-                            row.common_client_secret = Security.securitySecretCreate();
-                            row.common_app_id_secret = Security.securitySecretCreate();
-                            row.common_app_access_secret = Security.securitySecretCreate();
-                            row.common_app_access_verification_secret = Security.securitySecretCreate();
+                            row.client_id = Security.securitySecretCreate();
+                            row.client_secret = Security.securitySecretCreate();
                             return row;
                         })):ORM.getObject(0,'AppSecret')
     };

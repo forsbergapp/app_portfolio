@@ -135,9 +135,9 @@ const bffStart = async (req, res) =>{
     /**@type{server_db_document_ConfigServer} */
     const configServer = ConfigServer.get({app_id:0}).result;
     const {serverProcess} = await import('./server.js');
-    const {commonAppHost} = await import('../apps/common/src/common.js');
+    const {commonAppIam} = await import('../apps/common/src/common.js');
     //if first time, when no user exists, show maintenance in main server
-    if (IamUser.get(0, null).result.length==0 && commonAppHost(req.headers.host).admin == false){
+    if (IamUser.get(0, null).result.length==0 && commonAppIam(req.headers.host).admin == false){
         const {commonComponentCreate} = await import('../apps/common/src/common.js');
         return commonComponentCreate({app_id:0, componentParameters:{ip:req.ip},type:'MAINTENANCE'});
     }   
@@ -660,7 +660,7 @@ const bffRestApi = async (routesparameters) =>{
                     return 	{http:401,
                             code:'SERVER',
                             text:iam.iamUtilMessageNotAuthorized(),
-                            developerText:'serverREST_API',
+                            developerText:'bffRestApi',
                             moreInfo:null,
                             type:'JSON'};
             }
@@ -669,7 +669,7 @@ const bffRestApi = async (routesparameters) =>{
                 return 	{http:401,
                     code:'SERVER',
                     text:iam.iamUtilMessageNotAuthorized(),
-                    developerText:'serverREST_API',
+                    developerText:'bffRestApi',
                     moreInfo:null,
                     type:'JSON'};
             }
@@ -680,7 +680,7 @@ const bffRestApi = async (routesparameters) =>{
             return 	{http:404,
                     code:'SERVER',
                     text:iam.iamUtilMessageNotAuthorized(),
-                    developerText:'serverREST_API',
+                    developerText:'bffRestApi',
                     moreInfo:null,
                     type:'JSON'};
     }
@@ -688,7 +688,7 @@ const bffRestApi = async (routesparameters) =>{
         return 	{http:404,
                 code:'SERVER',
                 text:iam.iamUtilMessageNotAuthorized(),
-                developerText:'serverREST_API',
+                developerText:'bffRestApi',
                 moreInfo:null,
                 type:'JSON'};
 };

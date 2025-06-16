@@ -1,7 +1,7 @@
 /** @module server/db/IamAppIdToken */
 
 /**
- * @import {server_server_response,server_db_common_result_insert, server_db_iam_app_id_token_insert, server_db_table_IamAppIdToken} from '../types.js'
+ * @import {server_server_response,server_db_common_result_insert, server_db_table_IamAppIdToken} from '../types.js'
  */
 
 const ORM = await import('./ORM.js');
@@ -27,7 +27,7 @@ const get = parameters =>{
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server_db_iam_app_id_token_insert} data
+ * @param {server_db_table_IamAppIdToken} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
@@ -44,6 +44,7 @@ const post = async (app_id, data) => {
             data_new.id = Date.now();
             //required
             data_new.app_id = data.app_id;
+            data_new.app_id_token = data.app_id_token;
             data_new.res = data.res;
             data_new.token = data.token;
             data_new.ip = data.ip;

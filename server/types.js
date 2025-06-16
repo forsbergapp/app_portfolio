@@ -332,14 +332,8 @@
  *              SERVICE_MAIL* only used by common app
  * @memberof dbObjects
  * @typedef {{  app_id:number,
- *              common_client_id: string, 
- *              common_client_secret:string, 
- *              common_app_id_secret:string, 
- *              common_app_id_expire:string, 
- *              common_app_access_secret:string, 
- *              common_app_access_expire:string,
- *              common_app_access_verification_secret:string, 
- *              common_app_access_verification_expire:string}} server_db_table_AppSecret
+ *              client_id: string, 
+ *              client_secret:string}} server_db_table_AppSecret
  */
 
 /**
@@ -511,13 +505,14 @@
 /** 
  * @description DB TABLE IamAppIdToken
  * @memberof dbObjects
- * @typedef {{id:     number,
- *            app_id: number,
- *		        res:		0|1,
- *   	        token:  string,
- *		        ip:     string,
- *		        ua:     string|null,
- *		        created:string}} server_db_table_IamAppIdToken
+ * @typedef {{  id?:             number,
+ *              app_id:         number,
+ *              app_id_token:   number|null,
+ *		        res:		    0|1,
+ *   	        token:          string,
+ *		        ip:             string,
+ *		        ua:             string|null,
+ *		        created?:        string}} server_db_table_IamAppIdToken
  */
 
  /**
@@ -525,16 +520,17 @@
  * @memberof dbObjects
  * @typedef {{	id?:                number,
  *              app_id:             number,
+ *              app_id_token:       number|null,
  *              type:               server_db_iam_app_access_type,
- *              res:	              0|1|2,          //0=fail, 1=success, 2=invalidated
- *		          ip:                 string,
+ *              res:	            0|1|2,          //0=fail, 1=success, 2=invalidated
+ *		        ip:                 string,
  *              iam_user_app_id:    number|null,
  *              iam_user_id:        number|null,
  *              iam_user_username:  string|null,
  *              app_custom_id:      number|string|null,
  *              token:              string|null,
- *		          ua:                 string|null,
- *		          created?:           string,
+ *		        ua:                 string|null,
+ *		        created?:           string,
  *              modified?:          string|null}} server_db_table_IamAppAccess
  */
 
@@ -1100,14 +1096,6 @@
 /**
  * @description DB_FILE_server_db_app_data_name, with common names specified
  * @typedef {'ARABIC_SCRIPT'|'CALENDAR_HIJRI_TYPE'|'CALENDAR_TYPE'|'DIRECTION'|'NUMBER_SYSTEM'|'PAPER_SIZE'|'RESOURCE_TYPE'|'TIMEZONE'|[key:string, string]} DB_FILE_server_db_app_data_name
- */
-/** 
- * @description DB server_db_iam_app_id_token_insert
- * @typedef {{	app_id: 	number,
- *		        res:		0|1,
- *   	        token:   	string,
- *		        ip:         string,
- *		        ua:         string|null,}} server_db_iam_app_id_token_insert
  */
 
 /**

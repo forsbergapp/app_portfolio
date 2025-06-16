@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Relation_55" directorySegmentName="seg_0" id="B3856FA3-BEB7-4F4C-CECE-4EA24E689B2C">
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="AppIdToken" directorySegmentName="seg_0" id="1C072523-B3E7-6EFE-D434-7CBF3ED74644">
 <createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:37:09 UTC</createdTime>
+<createdTime>2025-06-15 16:21:57 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
@@ -9,11 +9,11 @@
 <sourcePk>F4558357-8BC9-776A-C982-D5C267FC4420</sourcePk>
 <identifying>false</identifying>
 <optionalSource>true</optionalSource>
-<optionalTarget>false</optionalTarget>
+<optionalTarget>true</optionalTarget>
 <sourceCardinality>1</sourceCardinality>
 <sourceEntity>FDC5EF80-472D-336F-B52E-704F810FCA27</sourceEntity>
 <targetCardinalityString>*</targetCardinalityString>
-<targetEntity>B4377C0C-0D0B-75A8-3553-35757C5C0C74</targetEntity>
+<targetEntity>278AAE9F-A468-4E43-AEFB-476D1AC25D1A</targetEntity>
 <transferable>true</transferable>
 <deleteRule>CASCADE</deleteRule>
 </Relation>
