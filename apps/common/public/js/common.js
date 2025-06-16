@@ -1915,7 +1915,7 @@ const commonUserFunction = function_name => {
  * @function
  * @param {number|null} choice 
  * @param {function|null} function_delete_event 
- * @returns {Promise.<null|{deleted:1}>}
+ * @returns {Promise.<null>}
  */
 const commonIamUserAppDelete = (choice=null, function_delete_event=null) => {
     return new Promise((resolve, reject)=>{
@@ -1943,7 +1943,10 @@ const commonIamUserAppDelete = (choice=null, function_delete_event=null) => {
                             method:'DELETE', 
                             authorization_type:'APP_ACCESS',
                             spinner_id:'common_dialogue_user_menu_iam_user_btn_user_delete_account'})
-                .then(()=>  resolve({deleted: 1}))
+                .then(()=>  resolve((()=>{
+                                        commonComponentRemove('common_dialogue_user_menu',true);
+                                        commonMountApp(COMMON_GLOBAL.app_start_app_id);return null;
+                                        })()))
                 .catch(err=>reject(err));
                 break;
             }

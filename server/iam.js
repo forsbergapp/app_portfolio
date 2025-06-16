@@ -651,7 +651,7 @@ const iamAuthenticateUserDelete = async parameters => IamUser.deleteRecord(param
 
 /**
  * @name iamAuthenticateUserDbDelete
- * @description IAM Authenticates user delete of database user and logs out
+ * @description IAM Authenticates delete of user app
  * @function 
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
@@ -674,16 +674,8 @@ const iamAuthenticateUserAppDelete = async parameters => {
         const user = IamUser.get(parameters.app_id, parameters.data.iam_user_id);
         if (user.result)
             if (await securityPasswordCompare(parameters.app_id, parameters.data.password, user.result[0]?.password))
-                return await iamUserLogout({app_id:parameters.app_id,
-                                            idToken:parameters.idToken,
-                                            ip:parameters.ip,
-                                            authorization:parameters.authorization,
-                                            user_agent:parameters.user_agent,
-                                            accept_language:parameters.accept_language})
-                            .then(result_logout=>result_logout.http?
-                                                        result_logout:
-                                                            IamUserApp.deleteRecord({   app_id:parameters.app_id, 
-                                                                                        resource_id:parameters.resource_id}));
+                return IamUserApp.deleteRecord({app_id:parameters.app_id, 
+                                                resource_id:parameters.resource_id});
             else
                 return {http:401,
                         code:'IAM',
