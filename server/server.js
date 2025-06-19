@@ -340,182 +340,174 @@ const serverUtilAppLine = () =>{
 /**
  * @name server
  * @description Server app using Express pattern
- * @function
- * @returns {Promise<*>}
+ * @param {server_server_req} req
+ * @param {server_server_res} res
+ * @returns {Promise.<*>}
  */
-const server = async () => {
+const server = async (req, res)=>{
     const Log = await import('./db/Log.js');
     const ConfigServer = await import('./db/ConfigServer.js');
     const {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate}= await import('./security.js');
     const {iamUtilMessageNotAuthorized} = await import('./iam.js');
-
-    /**
-     * @param {server_server_req} req
-     * @param {server_server_res} res
-     * @returns {Promise.<*>}
-     */
-    const app = async (req, res)=>{    
-        /**@type{server_db_document_ConfigServer} */
-        const CONFIG_SERVER = ConfigServer.get({app_id:0}).result;
+    /**@type{server_db_document_ConfigServer} */
+    const CONFIG_SERVER = ConfigServer.get({app_id:0}).result;
+    const read_body = async () =>{
+        return new Promise((resolve,reject)=>{
+            if (req.headers['content-type'] =='application/json'){
+                let body= '';
+                /**@ts-ignore */
+                req.on('data', chunk =>{
+                    body += chunk.toString();
+                });
+                /**@ts-ignore */
+                req.on('end', ()=>{
+                    try {
+                        req.body = JSON.parse(body);
+                        resolve(null);
+                    } catch (error) {
+                        /**@ts-ignore */
+                        req.body = {};
+                        reject(null);
+                    }
+                    
+                });
+            }
+            else{
+                /**@ts-ignore */
+                req.body = {};
+                resolve(null);
+            }
+        });
         
-        const read_body = async () =>{
-            return new Promise((resolve,reject)=>{
-                if (req.headers['content-type'] =='application/json'){
-                    let body= '';
-                    /**@ts-ignore */
-                    req.on('data', chunk =>{
-                        body += chunk.toString();
-                    });
-                    /**@ts-ignore */
-                    req.on('end', ()=>{
-                        try {
-                            req.body = JSON.parse(body);
-                            resolve(null);
-                        } catch (error) {
-                            /**@ts-ignore */
-                            req.body = {};
-                            reject(null);
-                        }
-                        
-                    });
-                }
-                else{
-                    /**@ts-ignore */
-                    req.body = {};
-                    resolve(null);
-                }
-            });
-            
-        };
-        await read_body();
-        req.protocol =      req.socket.encrypted?'https':'http';
-        req.ip =            req.socket.remoteAddress;
-        req.hostname =      req.headers.host;
-        req.path =          req.url;
-        req.originalUrl =   req.url;
-        /**@ts-ignore */
-        req.query =         req.path.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
-                            .substring(req.path.indexOf('?')+1)))
-                            .reduce((query, param)=>{
-                                const key = {[param[0]] : decodeURIComponent(param[1])};
-                                return {...query, ...key};
-                            }, {}):null;           
-        res.type =          (/**@type{string}*/type)=>{
-                                res.setHeader('Content-Type', type);
+    };
+    await read_body();
+    req.protocol =      req.socket.encrypted?'https':'http';
+    req.ip =            req.socket.remoteAddress;
+    req.hostname =      req.headers.host;
+    req.path =          req.url;
+    req.originalUrl =   req.url;
+    /**@ts-ignore */
+    req.query =         req.path.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
+                        .substring(req.path.indexOf('?')+1)))
+                        .reduce((query, param)=>{
+                            const key = {[param[0]] : decodeURIComponent(param[1])};
+                            return {...query, ...key};
+                        }, {}):null;           
+    res.type =          (/**@type{string}*/type)=>{
+                            res.setHeader('Content-Type', type);
+                        };
+    res.send =          async (/**@type{*}*/result) =>{
+                            if (res.getHeader('Content-Type')==undefined)
+                                res.type('text/html; charset=utf-8');
+                            res.setHeader('Content-Encoding', 'gzip');
+                            res.removeHeader('Content-Length');
+                            /**
+                             * @name compress
+                             * @description compress all requests (SSE uses res.write)
+                             * @param {*} data
+                             */
+                            const compress = async data =>{
+                                const zlib = await import('node:zlib');
+                                return new Promise(resolve=>{
+                                    try {
+                                        zlib.gzip(Buffer.from(data.toString(), 'utf8'), (err, compressed)=>{
+                                            if (err)
+                                                resolve(data);
+                                            else
+                                                resolve(compressed);
+                                        });    
+                                    } catch (error) {
+                                        resolve(data);
+                                    }
+                                });
                             };
-        res.send =          async (/**@type{*}*/result) =>{
-                                if (res.getHeader('Content-Type')==undefined)
-                                    res.type('text/html; charset=utf-8');
+                            const compressed = await compress(result);
+                            res.write(compressed, 'utf8');
+                            res.end();
+                        };
+    res.sendFile =      async (/**@type{*}*/path) =>{
+                            const fs = await import('node:fs');
+                            const readStream = fs.createReadStream(path);
+                            readStream.on ('error', streamErr =>{
+                                streamErr;
+                                res.writeHead(500);
+                                res.end(iamUtilMessageNotAuthorized());
+                            });
+                            if (res.getHeader('Content-Type')?.startsWith('font')) 
+                                /**@ts-ignore */
+                                readStream.pipe(res);
+                            else{
+                                const zlib = await import('node:zlib');
+                                const gzip = zlib.createGzip();
                                 res.setHeader('Content-Encoding', 'gzip');
                                 res.removeHeader('Content-Length');
-                                /**
-                                 * @name compress
-                                 * @description compress all requests (SSE uses res.write)
-                                 * @param {*} data
-                                 */
-                                const compress = async data =>{
-                                    const zlib = await import('node:zlib');
-                                    return new Promise(resolve=>{
-                                        try {
-                                            zlib.gzip(Buffer.from(data.toString(), 'utf8'), (err, compressed)=>{
-                                                if (err)
-                                                    resolve(data);
-                                                else
-                                                    resolve(compressed);
-                                            });    
-                                        } catch (error) {
-                                            resolve(data);
-                                        }
-                                    });
-                                };
-                                const compressed = await compress(result);
-                                res.write(compressed, 'utf8');
-                                res.end();
-                            };
-        res.sendFile =      async (/**@type{*}*/path) =>{
-                                const fs = await import('node:fs');
-                                const readStream = fs.createReadStream(path);
-                                readStream.on ('error', streamErr =>{
-                                    streamErr;
-                                    res.writeHead(500);
-                                    res.end(iamUtilMessageNotAuthorized());
-                                });
-                                if (res.getHeader('Content-Type')?.startsWith('font')) 
-                                    /**@ts-ignore */
-                                    readStream.pipe(res);
-                                else{
-                                    const zlib = await import('node:zlib');
-                                    const gzip = zlib.createGzip();
-                                    res.setHeader('Content-Encoding', 'gzip');
-                                    res.removeHeader('Content-Length');
-                                    
-                                    /**@ts-ignore */
-                                    readStream.pipe(gzip).pipe(res);
-                                }
                                 
-                            };
-        res.redirect =      (/**@type{string}*/url) =>{
-                                res.writeHead(301, {'Location':url});
-                                res.end();
-                            };
-
-        //set headers
-        res.setHeader('x-response-time', serverProcess.hrtime());
-        req.headers['x-request-id'] =  securityUUIDCreate().replaceAll('-','');
-        if (req.headers.authorization)
-            req.headers['x-correlation-id'] = securityRequestIdCreate();
-        else
-            req.headers['x-correlation-id'] = securityCorrelationIdCreate(req.hostname +  req.ip + req.method);
-        res.setHeader('Access-Control-Max-Age','5');
-        res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-        
-        if (CONFIG_SERVER.SERVICE_IAM.filter(row=>'CONTENT_SECURITY_POLICY_ENABLE' in row)[0].CONTENT_SECURITY_POLICY_ENABLE == '1'){
-            res.setHeader('content-security-policy', CONFIG_SERVER.SERVICE_IAM.filter(row=>'CONTENT_SECURITY_POLICY' in row)[0].CONTENT_SECURITY_POLICY);
-        }
-        res.setHeader('cross-origin-opener-policy','same-origin');
-        res.setHeader('cross-origin-resource-policy',	'same-origin');
-        res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
-        //res.setHeader('x-content-type-options', 'nosniff');
-        res.setHeader('x-dns-prefetch-control', 'off');
-        res.setHeader('x-download-options', 'noopen');
-        res.setHeader('x-frame-options', 'SAMEORIGIN');
-        res.setHeader('x-permitted-cross-domain-policies', 'none');
-        res.setHeader('x-xss-protection', '0');
-
-        // check JSON maximum size, parameter uses megabytes (MB)
-        if (req.body && JSON.stringify(req.body).length/1024/1024 > 
-                (serverUtilNumberValue((CONFIG_SERVER.SERVER.filter(parameter=>parameter.JSON_LIMIT)[0].JSON_LIMIT ?? '0').replace('MB',''))??0)){
-            //log error                                        
-            Log.post({  app_id:0, 
-                        data:{  object:'LogRequestError', 
-                                request:{   req:req,
-                                            responsetime:serverUtilResponseTime(res),
-                                            statusCode:res.statusCode,
-                                            statusMessage:res.statusMessage
-                                        },
-                                log:'PayloadTooLargeError'
+                                /**@ts-ignore */
+                                readStream.pipe(gzip).pipe(res);
                             }
-                        }).then(() => {
-                serverResponse({
-                                result_request:{http:400, 
-                                                code:null, 
-                                                text:iamUtilMessageNotAuthorized(), 
-                                                developerText:'',
-                                                moreInfo:'',
-                                                type:'HTML'},
-                                host:req.headers.host,
-                                route:null,
-                                res:res});
-            });
-        }
-        else{
-            const bff =             await import('./bff.js');
-            //Backend for frontend (BFF) start
-            return bff.bff(req, res);
-        }
-    };
-    return app;
+                            
+                        };
+    res.redirect =      (/**@type{string}*/url) =>{
+                            res.writeHead(301, {'Location':url});
+                            res.end();
+                        };
+
+    //set headers
+    res.setHeader('x-response-time', serverProcess.hrtime());
+    req.headers['x-request-id'] =  securityUUIDCreate().replaceAll('-','');
+    if (req.headers.authorization)
+        req.headers['x-correlation-id'] = securityRequestIdCreate();
+    else
+        req.headers['x-correlation-id'] = securityCorrelationIdCreate(req.hostname +  req.ip + req.method);
+    res.setHeader('Access-Control-Max-Age','5');
+    res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+    
+    if (CONFIG_SERVER.SERVICE_IAM.filter(row=>'CONTENT_SECURITY_POLICY_ENABLE' in row)[0].CONTENT_SECURITY_POLICY_ENABLE == '1'){
+        res.setHeader('content-security-policy', CONFIG_SERVER.SERVICE_IAM.filter(row=>'CONTENT_SECURITY_POLICY' in row)[0].CONTENT_SECURITY_POLICY);
+    }
+    res.setHeader('cross-origin-opener-policy','same-origin');
+    res.setHeader('cross-origin-resource-policy',	'same-origin');
+    res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
+    //res.setHeader('x-content-type-options', 'nosniff');
+    res.setHeader('x-dns-prefetch-control', 'off');
+    res.setHeader('x-download-options', 'noopen');
+    res.setHeader('x-frame-options', 'SAMEORIGIN');
+    res.setHeader('x-permitted-cross-domain-policies', 'none');
+    res.setHeader('x-xss-protection', '0');
+
+    // check JSON maximum size, parameter uses megabytes (MB)
+    if (req.body && JSON.stringify(req.body).length/1024/1024 > 
+            (serverUtilNumberValue((CONFIG_SERVER.SERVER.filter(parameter=>parameter.JSON_LIMIT)[0].JSON_LIMIT ?? '0').replace('MB',''))??0)){
+        //log error                                        
+        Log.post({  app_id:0, 
+                    data:{  object:'LogRequestError', 
+                            request:{   req:req,
+                                        responsetime:serverUtilResponseTime(res),
+                                        statusCode:res.statusCode,
+                                        statusMessage:res.statusMessage
+                                    },
+                            log:'PayloadTooLargeError'
+                        }
+                    }).then(() => {
+            serverResponse({
+                            result_request:{http:400, 
+                                            code:null, 
+                                            text:iamUtilMessageNotAuthorized(), 
+                                            developerText:'',
+                                            moreInfo:'',
+                                            type:'HTML'},
+                            host:req.headers.host,
+                            route:null,
+                            res:res});
+        });
+    }
+    else{
+        const bff = await import('./bff.js');
+        //Backend for frontend (BFF) start
+        return bff.bff(req, res);
+    }
+
 };
 
 /**
@@ -570,14 +562,15 @@ const serverStart = async () =>{
                                             
         const NETWORK_INTERFACE = configServer.SERVER.filter(parameter=> 'NETWORK_INTERFACE' in parameter)[0].NETWORK_INTERFACE;
         //START HTTP SERVER                                                     
-        http.createServer(await server()).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80, NETWORK_INTERFACE, () => {
+        http.createServer((req,res)=>server(req,res))
+            .listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80, NETWORK_INTERFACE, () => {
             Log.post({   app_id:0, 
                 data:{  object:'LogServerInfo', 
                         log:'HTTP Server PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80
                     }
                 });
         });
-        http.createServer(await server()).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
+        http.createServer((req,res)=>server(req,res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
             Log.post({   app_id:0, 
                 data:{  object:'LogServerInfo', 
                         log:'HTTP Server Admin  PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000
@@ -593,14 +586,14 @@ const serverStart = async () =>{
                 key: HTTPS_KEY.toString(),
                 cert: HTTPS_CERT.toString()
             };
-            https.createServer(options,  await server()).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443,NETWORK_INTERFACE, () => {
+            https.createServer(options, (req,res)=> server(req,res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443,NETWORK_INTERFACE, () => {
                 Log.post({   app_id:0, 
                     data:{  object:'LogServerInfo', 
                             log:'HTTPS Server PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443
                         }
                     });
             });
-            https.createServer(options,  await server()).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000,NETWORK_INTERFACE, () => {
+            https.createServer(options,  (req,res)=> server(req,res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000,NETWORK_INTERFACE, () => {
                 Log.post({   app_id:0, 
                     data:{  object:'LogServerInfo', 
                             log:'HTTPS Server admin PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000

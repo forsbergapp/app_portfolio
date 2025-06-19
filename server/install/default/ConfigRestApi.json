@@ -2599,6 +2599,9 @@
                         },
 			            {
                             "$ref": "#/components/parameters/server_accept_language"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_response"
                         }
                 ],
                 "requestBody":{
@@ -2624,17 +2627,6 @@
                                 "text/event-stream":{
                                     "schema":{
                                         "type":"string"
-                                    }
-                                },
-                                "application/json":{
-                                    "description":"BFF sets res in the body as parameter if response is text/event-stream",
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "server_response":{
-                                                "$ref": "#/components/parameters/server_response"
-                                            }
-                                        }
                                     }
                                 }
                             }
@@ -4135,6 +4127,9 @@
                         },
 			            {
                             "$ref": "#/components/parameters/server_accept_language"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_response"
                         }
                 ],
                 "requestBody":{
@@ -4160,17 +4155,6 @@
                                 "text/event-stream":{
                                     "schema":{
                                         "type":"string"
-                                    }
-                                },
-                                "application/json":{
-                                    "description":"BFF sets res in the body as parameter if response is text/event-stream",
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "server_response":{
-                                                "$ref": "#/components/parameters/server_response"
-                                            }
-                                        }
                                     }
                                 }
                             }
@@ -4220,6 +4204,9 @@
                         },
 			            {
                             "$ref": "#/components/parameters/server_accept_language"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_response"
                         }
                 ],
                 "requestBody":{
@@ -4245,17 +4232,6 @@
                                 "text/event-stream":{
                                     "schema":{
                                         "type":"string"
-                                    }
-                                },
-                                "application/json":{
-                                    "description":"BFF sets res in the body as parameter if response is text/event-stream",
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "server_response":{
-                                                "$ref": "#/components/parameters/server_response"
-                                            }
-                                        }
                                     }
                                 }
                             }
@@ -5309,13 +5285,14 @@
                 }
             },
             "server_response":{
-                "description":"Use this parameter to set reponse in the body as parameter if response is text/event-stream",
+                "description":"Use this parameter to send response as parameter if response is text/event-stream",
                 "name":	"server_response",
                 "required":true,
                 "schema":{
                     "type":"object"
                 }
             }
+            
         },
         "responses":{
             "200": {

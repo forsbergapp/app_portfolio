@@ -468,9 +468,7 @@ const bffRestApi = async (routesparameters) =>{
                  */
                 const addBodyKey = (keys, key )=>{
                     return {...keys, ...{   [key[0]]:{  
-                                                        data:       key[0]=='server_response'?
-                                                                        routesparameters.res:
-                                                                            routesparameters.body[key[0]],
+                                                        data:       routesparameters.body[key[0]],
                                                         //IAM parameters are required by default
                                                         required:   key[1]?.required ?? (key[0].startsWith('IAM')?true:false),
                                                         type:       'BODY',
@@ -522,8 +520,8 @@ const bffRestApi = async (routesparameters) =>{
                                             (methodObj.requestBody?.content && methodObj.requestBody?.content['application/json']?.schema?.additionalProperties)?
                                                 {...routesparameters.body,...Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
                                                                                 .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{})}:
-                                                            ((methodObj?.requestBody?.content && Object.keys(methodObj?.requestBody?.content).length>0)?Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
-                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{}):{}),
+                                                            Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties??[]
+                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{}))??{},
                                         ...methodObj.parameters
                                         //PATH
                                         //include parameters.in=path, one resource id in path supported
@@ -554,8 +552,6 @@ const bffRestApi = async (routesparameters) =>{
                                 //no authentication of value in a required query or body parameter
                                 //a required path parameter means a value must be provided
                                 Object.keys(parametersIn).filter(parameter=> 
-                                    parameter=='server_response'?
-                                        false:
                                             ((typeof parametersIn[parameter] == 'object') &&
                                             parametersIn[parameter]?.required && 
                                             (parametersIn[parameter].type == 'PATH'?
@@ -636,6 +632,7 @@ const bffRestApi = async (routesparameters) =>{
                                     ...(getParameter('server_authorization')        && {authorization:      routesparameters.authorization}),
                                     ...(getParameter('server_user_agent')           && {user_agent:         routesparameters.user_agent}),
                                     ...(getParameter('server_accept_language')      && {accept_language:    routesparameters.accept_language}),
+                                    ...(getParameter('server_response')             && {response:           routesparameters.res}),
                                     ...(getParameter('server_host')                 && {host:               routesparameters.host}),
                                     ...(getParameter('locale')                      && {locale:             app_query?.get('locale') ??'en'}),
                                     ...(getParameter('server_ip')                   && {ip:                 routesparameters.ip}),

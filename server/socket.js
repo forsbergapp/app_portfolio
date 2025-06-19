@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,
- *          server_socket_broadcast_type_all, server_server_res,
+ *          server_socket_broadcast_type_all, server_server_res,server_server_req,
  *          server_socket_broadcast_type_app_function,
  *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
  */
@@ -336,11 +336,12 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
  *          user_agent:string,
  *          accept_language:string,
  *          ip:string,
- *          data:{server_response:server_server_res},
+ *          response:server_server_res,
+ *          data:{},
  *          }} parameters
  * @returns {Promise.<void>}
  */
- const socketConnect = async parameters =>{
+ const socketConnect = async parameters =>{   
     const { iamUtilTokenGet } = await import('./iam.js');
     const IamUser = await import('./db/IamUser.js');
 
@@ -356,23 +357,27 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
                                     IamUser.get(parameters.app_id, serverUtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
                                         null;
     //no authorization for repeated request using same id token or requesting from browser
-    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == parameters.idToken).length>0 ||parameters.data.server_response.req.headers['sec-fetch-mode']!='cors'){
+    if (SOCKET_CONNECTED_CLIENTS
+            .filter(row=>row.authorization_bearer == parameters.idToken).length>0 ||parameters.response.req.headers['sec-fetch-mode']!='cors'){
         const {iamUtilResponseNotAuthorized} = await import('./iam.js');
-        throw iamUtilResponseNotAuthorized(parameters.data.server_response, 401, 'socketConnect, authorization', true);
+        throw iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
     }
     else{
         const client_id = Date.now();
         
-        parameters.data.server_response.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
-        parameters.data.server_response.setHeader('Cache-control', 'no-cache');
-        parameters.data.server_response.setHeader('Connection', 'keep-alive');
+        parameters.response.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+        parameters.response.setHeader('Cache-control', 'no-cache');
+        parameters.response.setHeader('Connection', 'keep-alive');
 
-        parameters.data.server_response.on('close', ()=>{
+        parameters.response.on('close', ()=>{
             SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.id !== client_id);
-            parameters.data.server_response.end();
+            parameters.response.end();
         });
     
-        const connectUserData =  await socketConnectedUserDataGet(parameters.app_id, parameters.ip, parameters.user_agent, parameters.accept_language);
+        const connectUserData =  await socketConnectedUserDataGet(  parameters.app_id, 
+                                                                    parameters.ip, 
+                                                                    parameters.user_agent, 
+                                                                    parameters.accept_language);
         /**@type{server_socket_connected_list} */
         const newClient = {
                             id:                     client_id,
@@ -390,12 +395,12 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
                             timezone:               connectUserData.timezone,
                             ip:                     parameters.ip,
                             user_agent:             parameters.user_agent,
-                            response:               parameters.data.server_response
+                            response:               parameters.response
                         };
     
         socketClientAdd(newClient);
         //send message to client with data
-        socketClientSend(parameters.data.server_response, Buffer.from(JSON.stringify({ latitude: connectUserData.latitude,
+        socketClientSend(parameters.response, Buffer.from(JSON.stringify({ latitude: connectUserData.latitude,
                                                                             longitude: connectUserData.longitude,
                                                                             place: connectUserData.place,
                                                                             timezone: connectUserData.timezone})).toString('base64'), 'CONNECTINFO');
