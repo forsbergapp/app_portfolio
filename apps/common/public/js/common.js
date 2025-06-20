@@ -3843,52 +3843,48 @@ const commonGet = () =>{
         commonEvent:commonEvent,
         /* INIT */
         commonMountApp:commonMountApp,
-        commonInit:commonInit};
+        commonInit:commonInit,
+        default:{commonInit}};
 };
 /**
  * @name commonInit
  * @description Init common
  * @function
  * @param {number} start_app_id
- * @param {string} parameters 
+ * @param {commonInitAppParameters} parameters 
  * @returns {Promise.<void>}
  */
-const commonInit = async (start_app_id, parameters) => {
-    /**
-     * Encoded parameters
-     * @type {commonInitAppParameters}
-     */
-    const decoded_parameters = JSON.parse(commonWindowFromBase64(parameters));
+const commonInit = async (start_app_id, parameters) => {  
     
     //Config Server	
-    COMMON_GLOBAL.rest_resource_bff =               decoded_parameters.Info.rest_resource_bff;
-    COMMON_GLOBAL.app_rest_api_version =            decoded_parameters.Info.rest_api_version;
+    COMMON_GLOBAL.rest_resource_bff =               parameters.Info.rest_resource_bff;
+    COMMON_GLOBAL.app_rest_api_version =            parameters.Info.rest_api_version;
 
     //Config ServiceApp
-    COMMON_GLOBAL.app_common_app_id=                decoded_parameters.Info.app_common_app_id;
-    COMMON_GLOBAL.app_admin_app_id=                 decoded_parameters.Info.app_admin_app_id;
-    COMMON_GLOBAL.app_start_app_id=                 decoded_parameters.Info.app_start_app_id;
-    COMMON_GLOBAL.app_toolbar_button_start =        decoded_parameters.Info.app_toolbar_button_start;
-    COMMON_GLOBAL.app_toolbar_button_framework =    decoded_parameters.Info.app_toolbar_button_framework;
-    COMMON_GLOBAL.app_framework =                   decoded_parameters.Info.app_framework;
-    COMMON_GLOBAL.app_framework_messages =          decoded_parameters.Info.app_framework_messages;
-    COMMON_GLOBAL.admin_only =                      decoded_parameters.Info.admin_only;
-    COMMON_GLOBAL.admin_first_time =                decoded_parameters.Info.first_time;
+    COMMON_GLOBAL.app_common_app_id=                parameters.Info.app_common_app_id;
+    COMMON_GLOBAL.app_admin_app_id=                 parameters.Info.app_admin_app_id;
+    COMMON_GLOBAL.app_start_app_id=                 parameters.Info.app_start_app_id;
+    COMMON_GLOBAL.app_toolbar_button_start =        parameters.Info.app_toolbar_button_start;
+    COMMON_GLOBAL.app_toolbar_button_framework =    parameters.Info.app_toolbar_button_framework;
+    COMMON_GLOBAL.app_framework =                   parameters.Info.app_framework;
+    COMMON_GLOBAL.app_framework_messages =          parameters.Info.app_framework_messages;
+    COMMON_GLOBAL.admin_only =                      parameters.Info.admin_only;
+    COMMON_GLOBAL.admin_first_time =                parameters.Info.first_time;
     //AppParameter common
-    COMMON_GLOBAL.info_link_policy_name =           decoded_parameters.AppParametersCommon.common_info_link_policy_name.value;
-    COMMON_GLOBAL.info_link_policy_url =            decoded_parameters.AppParametersCommon.common_info_link_policy_url.value;
-    COMMON_GLOBAL.info_link_disclaimer_name =       decoded_parameters.AppParametersCommon.common_info_link_disclaimer_name.value;
-    COMMON_GLOBAL.info_link_disclaimer_url =        decoded_parameters.AppParametersCommon.common_info_link_disclaimer_url.value;
-    COMMON_GLOBAL.info_link_terms_name =            decoded_parameters.AppParametersCommon.common_info_link_terms_name.value;
-    COMMON_GLOBAL.info_link_terms_url =             decoded_parameters.AppParametersCommon.common_info_link_terms_url.value;
+    COMMON_GLOBAL.info_link_policy_name =           parameters.AppParametersCommon.common_info_link_policy_name.value;
+    COMMON_GLOBAL.info_link_policy_url =            parameters.AppParametersCommon.common_info_link_policy_url.value;
+    COMMON_GLOBAL.info_link_disclaimer_name =       parameters.AppParametersCommon.common_info_link_disclaimer_name.value;
+    COMMON_GLOBAL.info_link_disclaimer_url =        parameters.AppParametersCommon.common_info_link_disclaimer_url.value;
+    COMMON_GLOBAL.info_link_terms_name =            parameters.AppParametersCommon.common_info_link_terms_name.value;
+    COMMON_GLOBAL.info_link_terms_url =             parameters.AppParametersCommon.common_info_link_terms_url.value;
     //User
-    COMMON_GLOBAL.token_dt =                        decoded_parameters.Info.app_idtoken;
-    COMMON_GLOBAL.client_latitude  =                decoded_parameters.Info.client_latitude;
-    COMMON_GLOBAL.client_longitude =                decoded_parameters.Info.client_longitude;
-    COMMON_GLOBAL.client_place     =                decoded_parameters.Info.client_place;
-    COMMON_GLOBAL.client_timezone  =                decoded_parameters.Info.client_timezone==''?
+    COMMON_GLOBAL.token_dt =                        parameters.Info.app_idtoken;
+    COMMON_GLOBAL.client_latitude  =                parameters.Info.client_latitude;
+    COMMON_GLOBAL.client_longitude =                parameters.Info.client_longitude;
+    COMMON_GLOBAL.client_place     =                parameters.Info.client_place;
+    COMMON_GLOBAL.client_timezone  =                parameters.Info.client_timezone==''?
                                                         null:
-                                                            decoded_parameters.Info.client_timezone;
+                                                            parameters.Info.client_timezone;
 
     commonUserPreferencesGlobalSetDefault('LOCALE');
     commonUserPreferencesGlobalSetDefault('TIMEZONE');
@@ -3897,7 +3893,6 @@ const commonInit = async (start_app_id, parameters) => {
 
     setUserAgentAttributes();
     custom_framework();
-    await commonSocketConnectOnline();
     COMMON_GLOBAL.app_id =                          COMMON_GLOBAL.app_start_app_id;
     await commonComponentRender({   mountDiv:   'common_app',
         data:       {
@@ -3913,6 +3908,7 @@ const commonInit = async (start_app_id, parameters) => {
         methods:        null,
         path:           '/common/component/common_dialogue_message.js'});
     commonMountApp(start_app_id);
+    
 };
 export{/* GLOBALS*/
        COMMON_GLOBAL, 
@@ -3997,3 +3993,4 @@ export{/* GLOBALS*/
        /* INIT */
        commonMountApp,
        commonInit};
+export default {commonInit};

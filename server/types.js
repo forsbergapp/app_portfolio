@@ -1263,6 +1263,7 @@
  * @description IAM server_iam_access_token_claim
  * @typedef {{  
  *              app_id:                 number,
+ *              app_id_token:           number,
  *              app_custom_id:          number|string|null,
  *              iam_user_app_id:        number|null,
  *              iam_user_id:            number|null,
@@ -1501,7 +1502,7 @@
 
 /** 
  * @description SOCKET server_socket_broadcast_type_all
- * @typedef {'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'|'MESSAGE'} server_socket_broadcast_type_all
+ * @typedef {'INIT'|'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'|'MESSAGE'} server_socket_broadcast_type_all
  */
 
 /**
@@ -1511,7 +1512,7 @@
 
 /** 
  * @description SOCKET server_socket_broadcast_type_app_function
- * @typedef {'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'APP_FUNCTION'} server_socket_broadcast_type_app_function
+ * @typedef {'INIT'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'APP_FUNCTION'} server_socket_broadcast_type_app_function
  */
 
 /**
