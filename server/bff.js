@@ -8,6 +8,7 @@
  *          server_server_res, 
  *          server_server_error, 
  *          server_server_response,
+ *          server_apps_info_parameters,
  *          server_bff_parameters} from './types.js'
  */
 
@@ -19,7 +20,93 @@ const {iamAuthenticateRequest} = await import('./iam.js');
 const app_common= await import('../apps/common/src/common.js');
 const fs = await import('node:fs');
 
+/**
+ * @name bffConnect
+ * @description Initial request from app, connects to socket, sends SSE message with common library and parameters
+ * @function 
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+ *          ip:string,
+ *          idToken:string,
+ *          user_agent:string,
+ *          accept_language:string,
+ *          response:server_server_res,
+ *          locale:string}} parameters
+ * @returns {Promise.<void>}
+ */
+const bffConnect = async parameters =>{
+    const AppParameter = await import('./db/AppParameter.js');
+    const ConfigServer = await import('./db/ConfigServer.js');
+    const socket = await import('./socket.js');
+    const common = await import('../apps/common/src/common.js');
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
 
+    const common_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID);
+    const admin_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID);
+    const count_user = IamUser.get(parameters.app_id, null).result.length;
+    const admin_only = (await common.commonAppStart(parameters.app_id)==true?false:true) && count_user==0;
+    const start_app_id = admin_app_id == parameters.app_id?
+                                            admin_app_id:
+                                                serverUtilNumberValue(configServer.SERVICE_APP
+                                                    .filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??0;
+    //geodata for APP
+    const result_geodata = await common.commonGeodata({   app_id:parameters.app_id, 
+                                                        endpoint:'SERVER', 
+                                                        ip:parameters.ip, 
+                                                        user_agent:parameters.user_agent ??'', 
+                                                        accept_language:parameters.locale??''});
+    /**@type{server_apps_info_parameters} */
+    const server_apps_info_parameters = {   
+        app_id:                         start_app_id,
+        app_idtoken:                    parameters.idToken,
+        client_latitude:                result_geodata?.latitude,
+        client_longitude:               result_geodata?.longitude,
+        client_place:                   result_geodata?.place ?? '',
+        client_timezone:                result_geodata?.timezone,
+        app_common_app_id:              common_app_id,
+        app_admin_app_id:               admin_app_id,
+        app_start_app_id:               start_app_id,
+        app_toolbar_button_start:       serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START)??1,
+        app_toolbar_button_framework:   serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK)??1,
+        app_framework:                  serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK)??1,
+        app_framework_messages:         serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES)??1,
+        rest_resource_bff:              configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF,
+        rest_api_version:               configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION,
+        first_time:                     count_user==0?1:0,
+        admin_only:                     admin_only?1:0
+    };
+    //connect socket
+    const connectUserData = await socket.socketPost({  app_id:start_app_id,
+                            idToken:parameters.idToken,
+                            authorization:'',
+                            user_agent:parameters.user_agent,
+                            accept_language:parameters.accept_language,
+                            ip:parameters.ip,
+                            response:parameters.response
+                            });
+    
+    //send SSE INIT
+    await socket.socketAppServerFunctionSend( start_app_id, 
+        parameters.idToken, 
+        'INIT', 
+        JSON.stringify({
+            APP:{id:start_app_id},
+            APP_PARAMETER:{ 
+                AppParametersCommon:AppParameter.get({app_id:parameters.app_id,
+                                                        resource_id:common_app_id}).result[0]??{},
+                Info:server_apps_info_parameters
+            }
+        })
+    );
+    //send SSE CONNECTINFO
+    socket.socketClientSend(parameters.response, 
+                            Buffer.from(JSON.stringify({ 
+                                latitude: connectUserData.latitude,
+                                longitude: connectUserData.longitude,
+                                place: connectUserData.place,
+                                timezone: connectUserData.timezone})).toString('base64'), 'CONNECTINFO');
+};
 /**
  * @name bffInit
  * @description Backend for frontend (BFF) init
@@ -129,7 +216,7 @@ const bffInit = async (req, res) =>{
  * @functions
  * @param {server_server_req} req
  * @param {server_server_res} res
- * @returns Promise.<{*}>
+ * @returns {Promise.<server_server_response>}
  */
 const bffStart = async (req, res) =>{
     /**@type{server_db_document_ConfigServer} */
@@ -138,8 +225,10 @@ const bffStart = async (req, res) =>{
     const {commonAppIam} = await import('../apps/common/src/common.js');
     //if first time, when no user exists, show maintenance in main server
     if (IamUser.get(0, null).result.length==0 && commonAppIam(req.headers.host).admin == false){
-        const {commonComponentCreate} = await import('../apps/common/src/common.js');
-        return commonComponentCreate({app_id:0, componentParameters:{ip:req.ip},type:'MAINTENANCE'});
+        const {default:ComponentCreate} = await import('../apps/common/src/component/common_maintenance.js');
+        return {result:await ComponentCreate({  data:   null,
+                                                methods:null
+                                            }), type:'HTML'};
     }   
     else{
         //check if SSL verification using letsencrypt is enabled when validating domains
@@ -147,13 +236,13 @@ const bffStart = async (req, res) =>{
             if (req.originalUrl.startsWith(configServer.SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH ?? '')){
                 res.type('text/plain');
                 res.write(await fs.promises.readFile(`${serverProcess.cwd()}${req.originalUrl}`, 'utf8'));
-                return null;
+                return {result:null, type:'HTML'};
             }
             else
-                return null;
+                return {result:null, type:'HTML'};
         }
         else
-            return null;
+            return {result:null, type:'HTML'};
     }
 };
 /**
@@ -168,8 +257,9 @@ const bffStart = async (req, res) =>{
  const bff = async (req, res) =>{
     const resultbffInit =   await bffInit(req, res);
     if (resultbffInit.reason == null){
+        /**@type{server_server_response} */
         const result = await bffStart(req, res);
-        if (result)
+        if (result.result)
             return serverResponse({
                                     result_request:result,
                                     host:req.headers.host,
@@ -188,7 +278,7 @@ const bffStart = async (req, res) =>{
                                                         0:
                                                             req.headers['app-id']??null,
                                                     AppSignature: req.headers['app-signature']??null,
-                                                    AppIdToken: req.headers['app-id-token']??null
+                                                    AppIdToken: req.headers['app-id-token']?.replace('Bearer ','')??null
                                     },
                                     authorization:  req.headers.authorization, 
                                     //metadata
@@ -202,7 +292,7 @@ const bffStart = async (req, res) =>{
             const configServer = ConfigServer.get({app_id:0}).result;
             
             //all rest api starts with REST_RESOURCE_BFF parameter value (add '/')
-            const endpoint_role = bff_parameters.url.startsWith(configServer.SERVER.filter(parameter=>parameter.REST_RESOURCE_BFF)[0].REST_RESOURCE_BFF + '/')?
+            const endpoint_role =  bff_parameters.url.startsWith(configServer.SERVER.filter(parameter=>parameter.REST_RESOURCE_BFF)[0].REST_RESOURCE_BFF + '/')?
                                     (bff_parameters.url.split('/')[2]?.toUpperCase()):
                                         'APP';
 
@@ -240,7 +330,10 @@ const bffStart = async (req, res) =>{
                     case bff_parameters.url == '/':{
                         //App route for app asset, common asset, app info page and app
                         return serverResponse({app_id:common_app_id,
-                                        result_request:await app_common.commonApp({  app_id:common_app_id,
+                                        result_request:await app_common.commonApp({  app_id:app_common.commonAppIam(bff_parameters.host??'', 
+                                                                                            endpoint_role, 
+                                                                                            bff_parameters.security_app.AppId, 
+                                                                                            bff_parameters.security_app.AppSignature).app_id??0,
                                                                     ip:bff_parameters.ip, 
                                                                     host:bff_parameters.host ?? '', 
                                                                     user_agent:bff_parameters.user_agent, 
@@ -520,8 +613,8 @@ const bffRestApi = async (routesparameters) =>{
                                             (methodObj.requestBody?.content && methodObj.requestBody?.content['application/json']?.schema?.additionalProperties)?
                                                 {...routesparameters.body,...Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
                                                                                 .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{})}:
-                                                            Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties??[]
-                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{}))??{},
+                                                            Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties??[])
+                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{})??{},
                                         ...methodObj.parameters
                                         //PATH
                                         //include parameters.in=path, one resource id in path supported
@@ -634,7 +727,7 @@ const bffRestApi = async (routesparameters) =>{
                                     ...(getParameter('server_accept_language')      && {accept_language:    routesparameters.accept_language}),
                                     ...(getParameter('server_response')             && {response:           routesparameters.res}),
                                     ...(getParameter('server_host')                 && {host:               routesparameters.host}),
-                                    ...(getParameter('locale')                      && {locale:             app_query?.get('locale') ??'en'}),
+                                    ...(getParameter('locale')                      && {locale:             app_query?.get('locale') ??app_common.commonClientLocale(routesparameters.accept_language)}),
                                     ...(getParameter('server_ip')                   && {ip:                 routesparameters.ip}),
                                     ...(getParameter('server_microservice')         && {microservice:       getParameter('server_microservice').default}),
                                     ...(getParameter('server_microservice_service') && {service:            getParameter('server_microservice_service').default}),
@@ -690,4 +783,4 @@ const bffRestApi = async (routesparameters) =>{
                 type:'JSON'};
 };
 
-export{bff};
+export{bffConnect, bff};

@@ -72,7 +72,7 @@ const iamUtilTokenAppId = app_id => {
  * @param {number} app_id
  * @param {string} token
  * @param {token_type} token_type 
- * @returns {server_iam_access_token_claim |server_iam_microservice_token_claim & {exp:number, iat:number}}
+ * @returns {server_iam_access_token_claim |server_iam_microservice_token_claim & {app_id_token?:number, exp:number, iat:number}}
  */
 const iamUtilTokenGet = (app_id, token, token_type) =>{
     /**@type{server_db_document_ConfigServer} */
@@ -107,6 +107,7 @@ const iamUtilTokenGet = (app_id, token, token_type) =>{
         /**@type{server_iam_access_token_claim & {exp:number, iat:number}} */
         return {
                 app_id:                 verify.app_id,
+                app_id_token:           verify.app_id_token,
                 app_custom_id:          verify.app_custom_id,
                 iam_user_app_id:        verify.iam_user_app_id,
                 iam_user_id:            verify.iam_user_id,
@@ -232,7 +233,8 @@ const iamAuthenticateUser = async parameters =>{
                 //authorize access token ADMIN or APP_ACCESS for active account or APP_ACCESS_VERFICATION
                 const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                                     user.active==1?token_type:'APP_ACCESS_VERIFICATION', 
-                                                    {   app_id:             iamUtilTokenAppId(parameters.app_id),
+                                                    {   app_id:             parameters.app_id,
+                                                        app_id_token:       iamUtilTokenAppId(parameters.app_id),
                                                         app_custom_id:      null,
                                                         iam_user_app_id:    iam_user_app_id??null,
                                                         iam_user_id:        user.id, 
@@ -422,7 +424,8 @@ const iamAuthenticateUserSignup = async parameters =>{
     if (new_user.result){
         const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                             'APP_ACCESS_VERIFICATION', 
-                                            {   app_id:                 iamUtilTokenAppId(parameters.app_id), 
+                                            {   app_id:                 parameters.app_id, 
+                                                app_id_token:           iamUtilTokenAppId(parameters.app_id), 
                                                 app_custom_id:          null,
                                                 iam_user_app_id:        null,
                                                 iam_user_id:            new_user.result.insertId, 
@@ -655,18 +658,18 @@ const iamAuthenticateUserDelete = async parameters => IamUser.deleteRecord(param
  * @function 
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
-*          resource_id:number,
-*          ip:string,
-*          idToken:string,
-*          authorization:string,
-*          user_agent:string,
-*          accept_language:string,
-*          data:{   data_app_id:number,
-*                   iam_user_id:number,
-*                   password:string},
-*          locale:string}} parameters
-* @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
-*/
+ *          resource_id:number,
+ *          ip:string,
+ *          idToken:string,
+ *          authorization:string,
+ *          user_agent:string,
+ *          accept_language:string,
+ *          data:{   data_app_id:number,
+ *                   iam_user_id:number,
+ *                   password:string},
+ *          locale:string}} parameters
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
+ */
 const iamAuthenticateUserAppDelete = async parameters => {
     const IamUser = await import('./db/IamUser.js');
     const {securityPasswordCompare}= await import('./security.js');    
@@ -776,7 +779,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                             data:{data_app_id:null}})
                                             .result.filter((/**@type{server_db_table_IamAppIdToken}*/row)=> 
                                                 row.ip == parameters.ip && row.token == parameters.idToken)[0];
-                    if (((  appIam.app_id_token     == id_token_decoded.app_id && 
+                    if (((  appIam.app_id_token     == id_token_decoded.app_id_token && 
                             id_token_decoded.scope  == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
                             id_token_decoded.ip     == parameters.ip &&
                             log_id_token)){
@@ -810,7 +813,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                                 .result??[]).map((/**@type{server_db_table_IamUserApp}*/record)=>record.id):
                                                             [];
                                     
-                                    if (access_token_decoded.app_id == appIam.app_id_token && 
+                                    if (access_token_decoded.app_id_token == appIam.app_id_token && 
                                         access_token_decoded.scope == 'USER' && 
                                         access_token_decoded.ip == parameters.ip ){
                                         if (IamAppAccess.get(appIam.app_id, null).result
@@ -1343,7 +1346,8 @@ const iamAuthenticateMicroservice = async parameters =>{
  */
  const iamAuthorizeIdToken = async (app_id, ip, scope)=>{
     const jwt_data = iamAuthorizeToken(app_id, 'APP_ID', {  app_custom_id:null,
-                                                            app_id: iamUtilTokenAppId(app_id), 
+                                                            app_id: app_id, 
+                                                            app_id_token:iamUtilTokenAppId(app_id), 
                                                             iam_user_app_id:null,
                                                             iam_user_id:null,
                                                             iam_user_username:null,
@@ -1400,9 +1404,10 @@ const iamAuthenticateMicroservice = async parameters =>{
         }
     }
     /**@type{server_iam_access_token_claim} */
-    const access_token_claim = {app_id:                 ['APP_ACCESS_EXTERNAL', 'MICROSERVICE'].includes(endpoint)?
+    const access_token_claim = {app_id:                 app_id,
+                                app_id_token:           ['APP_ACCESS_EXTERNAL', 'MICROSERVICE'].includes(endpoint)?
                                                             app_id:
-                                                                iamUtilTokenAppId(app_id),
+                                                                claim.app_id_token,
                                 app_custom_id:          claim.app_custom_id,
                                 iam_user_app_id:        claim.iam_user_app_id,
                                 iam_user_id:            claim.iam_user_id,

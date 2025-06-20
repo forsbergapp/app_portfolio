@@ -1,47 +1,92 @@
 /**
  * @module apps/common/src/component/common_app
- */
+ */  
 
-/**
- * @import {server_db_table_App, server_db_table_AppParameter, 
- *          server_apps_info_parameters}  from '../../../../server/types.js'
- */
-   
+
 /**
  * @name template
  * @description Template
  * @function
- * @param {{app_idtoken:string,
- *          commonFetch:string,
- *          APP:import('../../../../server/types.js').server_db_table_App, 
- *          APP_PARAMETERS:string}} props
+ * @param {{idToken:string}} props
  * @returns {string}
  */
 const template = props =>`  <!DOCTYPE html>
                             <html>
                             <head>
                                 <meta charset='UTF-8'>
-                                <title>${props.APP.name}</title>
+                                <title></title>
                                 <script type='module'>
-                                	const commonFetch = async url =>
-                                            import(await fetch(  url, 
-                                                                {
-                                                                cache: 'no-store',
-                                                                method: 'GET',
-                                                                headers: {
-                                                                        'Connection': 'close',
-                                                                        'app-id': ${props.APP.id},
-                                                                        'app-signature': 'App Signature',
-                                                                        'app-id-token': 'Bearer ${props.app_idtoken}'
-                                                                    }
-                                                                })
-                                                        .then(module=>{if (module.status==200)return module.blob();else throw module.statusText})
-                                                        .then(module=>URL.createObjectURL(  new Blob ([module],
-                                                                                            {type: 'text/javascript'}))))
-                                                        .catch(error=>document.write(error));
-                                    (await commonFetch('${props.commonFetch}'))
-                                        .commonInit(${props.APP.id} ,
-                                                    '${props.APP_PARAMETERS}');
+                                    let common = null;
+                                    await fetch('/bff/app_id/v1/server-bff', {
+                                            method: 'POST',
+                                            headers: {  'Content-Type': 'text/event-stream', 
+                                                        'Cache-control': 'no-cache', 
+                                                        'Connection': 'keep-alive',
+                                                        'app-id-token': 'Bearer ${props.idToken}'}
+                                        }).then(socket=>{
+                                            const commonWindowFromBase64 = str => {
+                                                const binary_string = atob(str);
+                                                const len = binary_string.length;
+                                                const bytes = new Uint8Array(len);
+                                                for (let i = 0; i < len; i++) {
+                                                    bytes[i] = binary_string.charCodeAt(i);
+                                                }
+                                                return new TextDecoder('utf-8').decode(bytes);
+                                            };
+                                            const getMessage = BFFmessage =>{
+                                                const messageDecoded = atob(BFFmessage);
+                                                return { broadcast_type:JSON.parse(messageDecoded).broadcast_type,
+                                                         broadcast_message:JSON.parse(messageDecoded).broadcast_message};
+                                            }
+                                            const BFFStream = new WritableStream({
+                                                write(data, controller){
+                                                    try {
+                                                        const BFFmessage = new TextDecoder('utf-8').decode(new Uint8Array(data)).split('\\n\\n')[0];
+                                                        if (BFFmessage.split('data: ')[1]){
+                                                            const message = getMessage(BFFmessage.split('data: ')[1]);
+                                                            switch (message.broadcast_type){
+                                                                case 'INIT':{
+                                                                    const INITmessage = JSON.parse(message.broadcast_message);
+                                                                    const commonFetch = async url =>
+                                                                            import(await fetch(url, 
+                                                                                                {
+                                                                                                cache: 'no-store',
+                                                                                                method: 'GET',
+                                                                                                headers: {
+                                                                                                        'Connection': 'close',
+                                                                                                        'app-id': INITmessage.APP.id,
+                                                                                                        'app-signature': 'App Signature',
+                                                                                                        'app-id-token': 'Bearer ${props.idToken}'
+                                                                                                    }
+                                                                                                })
+                                                                                        .then(module=>{if (module.status==200)return module.blob();else throw module.statusText})
+                                                                                        .then(module=>URL.createObjectURL(  new Blob ([module],
+                                                                                                                            {type: 'text/javascript'}))))
+                                                                                        .catch(error=>document.write(error));
+
+                                                                    commonFetch(INITmessage.APP_PARAMETER.Info.rest_resource_bff + 
+                                                                                '/app_id/v'+ INITmessage.APP_PARAMETER.Info.rest_api_version + 
+                                                                                '/app-resource/~common~js~common.js?parameters=' + 
+                                                                                btoa('content_type=text/javascript&IAM_data_app_id=0'))
+                                                                    .then(result=>{
+                                                                        common = result;
+                                                                        common[Object.keys(common.default)[0]](INITmessage.APP.id, INITmessage.APP_PARAMETER);
+                                                                    });
+                                                                    break;
+                                                                }
+                                                                default:{
+                                                                    common.commonSocketBroadcastShow(BFFmessage.split('data: ')[1]);
+                                                                    break
+                                                                }
+                                                            }
+                                                        }
+                                                    } catch (error) {
+                                                        console.log(error);
+                                                    }
+                                                }
+                                            }, new CountQueuingStrategy({ highWaterMark: 1 }));
+                                            const BFF = socket.body.pipeTo(BFFStream).catch(()=>common?setTimeout(()=>{common.commonSocketConnectOnline();}, 1000):null);
+                                        });
                                 </script>
                                 <link id="app_link_app_css"         rel='stylesheet'  type='text/css'     href=''/>
                                 <link id="app_link_app_report_css"  rel='stylesheet'  type='text/css'     href=''/>
@@ -62,20 +107,12 @@ const template = props =>`  <!DOCTYPE html>
  * @name component
  * @description Component
  * @function
- * @param {{data:       {   App:            server_db_table_App, 
- *                          AppParameters:  server_db_table_AppParameter,
- *                          Info:           server_apps_info_parameters},
+ * @param {{data:       {   idToken:string},
  *        methods:    null}} props 
  * @returns {Promise.<string>}
  */
 const component = async props =>{
-    const base64= Buffer.from ('content_type=text/javascript&IAM_data_app_id=0').toString('base64');
-    return template({   app_idtoken: props.data.Info.app_idtoken,
-                        commonFetch: `${props.data.Info.rest_resource_bff}/app_id/v${props.data.Info.rest_api_version}/app-resource/~common~js~common.js?parameters=${base64}`,
-                        APP:props.data.App, 
-                        APP_PARAMETERS:Buffer.from(JSON.stringify({ 
-                            AppParametersCommon:props.data.AppParameters,
-                            Info:props.data.Info
-                        })).toString('base64')});
+
+    return template({   idToken: props.data.idToken});
 };
 export default component;

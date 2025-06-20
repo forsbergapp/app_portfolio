@@ -325,23 +325,20 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
 };
 
 /**
- * @name socketConnect
- * @description Socket connect
- *              Used by SSE and leaves connection open
- * @function
- * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          idToken:string,
  *          authorization:string,
  *          user_agent:string,
  *          accept_language:string,
  *          ip:string,
- *          response:server_server_res,
- *          data:{},
+ *          response:server_server_res
  *          }} parameters
- * @returns {Promise.<void>}
+ * @returns {Promise.<{  latitude:string,
+ *              longitude: string,
+ *              place: string,
+ *              timezone: string}>}
  */
- const socketConnect = async parameters =>{   
+const socketPost = async parameters =>{
     const { iamUtilTokenGet } = await import('./iam.js');
     const IamUser = await import('./db/IamUser.js');
 
@@ -399,12 +396,35 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
                         };
     
         socketClientAdd(newClient);
-        //send message to client with data
-        socketClientSend(parameters.response, Buffer.from(JSON.stringify({ latitude: connectUserData.latitude,
-                                                                            longitude: connectUserData.longitude,
-                                                                            place: connectUserData.place,
-                                                                            timezone: connectUserData.timezone})).toString('base64'), 'CONNECTINFO');
+        return {latitude:connectUserData.latitude,
+                          longitude: connectUserData.longitude,
+                          place: connectUserData.place,
+                          timezone:connectUserData.timezone};
     }
+};
+/**
+ * @name socketConnect
+ * @description Socket connect
+ *              Used by SSE and leaves connection open
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+ *          idToken:string,
+ *          authorization:string,
+ *          user_agent:string,
+ *          accept_language:string,
+ *          ip:string,
+ *          response:server_server_res
+ *          }} parameters
+ * @returns {Promise.<void>}
+ */
+ const socketConnect = async parameters =>{   
+    const connectUserData = await socketPost(parameters);
+    //send message to client with data
+    socketClientSend(parameters.response, Buffer.from(JSON.stringify({ latitude: connectUserData.latitude,
+                                                                        longitude: connectUserData.longitude,
+                                                                        place: connectUserData.place,
+                                                                        timezone: connectUserData.timezone})).toString('base64'), 'CONNECTINFO');
 };
 
 /**
@@ -464,6 +484,6 @@ const CheckOnline = parameters => { /**@ts-ignore */
                                                         {online:0}, 
                                             type:'JSON'};};
 
-export {socketClientSend, socketClientGet, socketConnectedUpdate, socketConnectedGet, socketConnectedList, socketConnectedCount, socketConnect, 
+export {socketClientSend, socketClientGet, socketConnectedUpdate, socketConnectedGet, socketConnectedList, socketConnectedCount, socketPost, socketConnect, 
         socketAdminSend, socketAppServerFunctionSend, 
         socketIntervalCheck, socketExpiredTokensUpdate, CheckOnline, };

@@ -8,6 +8,84 @@
         {"url": ""}
     ],
     "paths": {
+        "/bff/app_id/v1/server-bff": {
+            "post": {
+                "summary": "",
+                "operationId": "server.bff.bffConnect",
+                "security":[
+                    {"$ref":"#/components/securitySchemes/app-id-token"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_ip"
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken"
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent"
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_response"
+                        },
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":false
+                        }
+                ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "headers":{
+                                "Cache-control":{
+                                    "description":"",
+                                    "schema":{
+                                        "type":"string",
+                                        "default":"no-cache"
+                                    }
+                                },
+                                "Connection":{
+                                    "description":"",
+                                    "schema":{
+                                        "type":"string",
+                                        "default":"keep-alive"
+                                    }
+                                }
+                            },
+                            "content":{
+                                "text/event-stream":{
+                                    "schema":{
+                                        "type":"string"
+                                    }
+                                }
+                            }
+                            
+			            },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "text/event-stream": {
+                                "type":"object",
+                                "properties":{
+                                    "data":{
+                                        "description":"Messages use base64",
+                                        "type":"string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/bff/app_id/v1/server-db/app-info/${resource_id_number}": {
             "get": {
                 "summary": "",
