@@ -22,7 +22,6 @@ const App = await import('../../../server/db/App.js');
 const AppModule = await import('../../../server/db/AppModule.js');
 const AppParameter = await import('../../../server/db/AppParameter.js');
 const ConfigServer = await import('../../../server/db/ConfigServer.js');
-const IamUser = await import('../../../server/db/IamUser.js');
 const Log = await import('../../../server/db/Log.js');
 const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import('../../../server/server.js');
 const {serverProcess} = await import('../../../server/server.js');
@@ -744,106 +743,6 @@ const commonModuleMetaDataGet = async parameters =>{
         };
     }
 }; 
-/**
- * @name commonComponentCreate
- * @memberof ROUTE_APP
- * @description Creates server component and returns to client
- *              app
- *              reports
- *              maintenance
- *              info disclaimer
- *              info privacy policy
- *              info terms
- *              server error
- * @function
- * @param {{app_id:number, 
- *          componentParameters:{   ip:                 string, 
- *                                  user_agent?:        string,
- *                                  locale?:            string,
- *                                  reportid?:          string,
- *                                  host?:              string},
- *          type:'APP'|'MAINTENANCE'|'INFO_DISCLAIMER'|'INFO_PRIVACY_POLICY'|'INFO_TERMS'}} parameters
- * @returns {Promise.<server_server_response & {result?:string }>}
- */
-const commonComponentCreate = async parameters =>{
-    const { iamAuthorizeIdToken } = await import('../../../server/iam.js');
-
-    /**@type{server_db_document_ConfigServer} */
-    const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
-    const common_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID);
-    const admin_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID);
-    
-    //geodata for APP
-    const result_geodata = parameters.type=='APP'?
-                                await commonGeodata({   app_id:parameters.app_id, 
-                                                        endpoint:'SERVER', 
-                                                        ip:parameters.componentParameters.ip, 
-                                                        user_agent:parameters.componentParameters.user_agent ??'', 
-                                                        accept_language:parameters.componentParameters.locale??''}):
-                                    null;
-    const count_user = IamUser.get(parameters.app_id, null).result.length;
-    const admin_only = (await commonAppStart(parameters.app_id)==true?false:true) && count_user==0;
-    
-    switch (parameters.type){
-        case 'APP':{
-            const idtoken =await iamAuthorizeIdToken(parameters.app_id,parameters.componentParameters.ip, parameters.type);
-            /**@type{server_apps_info_parameters} */
-            const server_apps_info_parameters = {   
-                app_id:                         parameters.app_id,
-                app_idtoken:                    idtoken ?? '',
-                client_latitude:                result_geodata?.latitude,
-                client_longitude:               result_geodata?.longitude,
-                client_place:                   result_geodata?.place ?? '',
-                client_timezone:                result_geodata?.timezone,
-                app_common_app_id:              common_app_id,
-                app_admin_app_id:               admin_app_id,
-                app_start_app_id:               admin_app_id == parameters.app_id?
-                                                    admin_app_id:
-                                                        serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??0,
-                app_toolbar_button_start:       serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START)??1,
-                app_toolbar_button_framework:   serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK)??1,
-                app_framework:                  serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK)??1,
-                app_framework_messages:         serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES)??1,
-                rest_resource_bff:              configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF,
-                rest_api_version:               configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION,
-                first_time:                     count_user==0?1:0,
-                admin_only:                     admin_only?1:0
-            };
-
-            /**@type{{data:{App:            server_db_table_App, 
-             *              AppParameters:  server_db_table_AppParameter,
-             *              Info:           server_apps_info_parameters},
-             *        methods:null}}} */
-            const componentParameter = {data:   {
-                                                    App:            App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0],
-                                                    AppParameters:  AppParameter.get({  app_id:parameters.app_id,
-                                                                                        resource_id:common_app_id}).result[0]??{}, 
-                                                    Info:           server_apps_info_parameters
-                                                },
-                                        methods:null};
-
-            const {default:ComponentCreate} = await import('./component/common_app.js');
-            return {result:await ComponentCreate(componentParameter), type:'HTML'};
-        }
-        case 'MAINTENANCE':{
-            const {default:ComponentCreate} = await import('./component/common_maintenance.js');
-            return {result:await ComponentCreate({  data:   null,
-                                                    methods:null
-                                                }), type:'HTML'};
-        }
-        case 'INFO_DISCLAIMER':
-        case 'INFO_PRIVACY_POLICY':
-        case 'INFO_TERMS':{
-            const {default:ComponentCreate} = await import('./component/common_info.js');
-            return {result:await ComponentCreate({data: {app_name:App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].name,
-                                                        type:parameters.type},
-                                    methods:null}), type:'HTML'};
-        }
-        default:{
-            return {result:'',type:'HTML'};
-        }
-    }
-};
 
 /**
  * @name commonAppIam
@@ -1049,22 +948,25 @@ const commonApp = async parameters =>{
                 type:'JSON'};
     else
         if  (commonAppIam(parameters.host, 'APP').admin == false && 
-                await commonAppStart(parameters.app_id) ==false)
-            return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
+                await commonAppStart(parameters.app_id) ==false){
+            const {default:ComponentCreate} = await import('./component/common_maintenance.js');
+            return {result:await ComponentCreate({  data:   null,
+                                                    methods:null
+                                                }), type:'HTML'};
+        }
         else{
             /**@type{server_db_document_ConfigServer} */
             const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
             const start_app_id = commonAppIam(parameters.host, 'APP').admin?
                                     serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??0:
                                         serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??0;
-            return await commonComponentCreate({app_id:start_app_id, 
-                                                componentParameters:{
-                                                ip:             parameters.ip, 
-                                                user_agent:     parameters.user_agent,
-                                                locale:         commonClientLocale(parameters.accept_language),
-                                                host:           parameters.host},type:'APP'})
+            const {default:ComponentCreate} = await import('./component/common_app.js');
+            const { iamAuthorizeIdToken } = await import('../../../server/iam.js');
+            return {result:await ComponentCreate({data:   {
+                                                        idToken:  await iamAuthorizeIdToken(parameters.app_id,parameters.ip, 'APP')
+                                                    },
+                                                methods:null})
                                 .catch(error=>{
-                                                        /**@ts-ignore */
                                     return Log.post({   app_id:start_app_id, 
                                         data:{  object:'LogAppError', 
                                                 app:{   app_filename:serverUtilAppFilename(import.meta.url),
@@ -1080,7 +982,9 @@ const commonApp = async parameters =>{
                                                 return {result:serverError({data:null, methods:null}), type:'HTML'};
                                             });
                                     });
-                                });
+                            }),
+                    type:'HTML'};
+                                
         }
             
 };
@@ -1129,10 +1033,13 @@ const commonAppResource = async parameters =>{
             case (parameters.data.type == 'INFO' && parameters.resource_id.toLowerCase() == 'disclaimer'):
             case (parameters.data.type == 'INFO' && parameters.resource_id.toLowerCase() == 'privacy_policy'):
             case (parameters.data.type == 'INFO' && parameters.resource_id.toLowerCase() == 'terms'):{
-                return await commonComponentCreate({app_id:parameters.app_id, 
-                                                    componentParameters:{ip:parameters.ip},
-                                                    /**@ts-ignore */
-                                                    type:'INFO_' + parameters.resource_id.toUpperCase()});
+                const {default:ComponentCreate} = await import('./component/common_info.js');
+                return {result:await ComponentCreate({  data: { app_name:   App.get({   app_id:parameters.app_id, 
+                                                                                        resource_id:parameters.app_id}).result[0].name,
+                                                                                        /**@ts-ignore */
+                                                                type:       'INFO_' + parameters.resource_id.toUpperCase()},
+                                                        methods:null}), 
+                        type:'HTML'};
             }
             case parameters.data.content_type == 'text/css':
             case parameters.data.content_type == 'text/javascript':
@@ -1168,10 +1075,12 @@ const commonRegistryAppModule = (app_id, parameters) => AppModule.get({app_id:ap
                                                                app.common_role == parameters.role)[0];
 
 export {commonSearchMatch,
-        commonAppStart, commonComponentCreate, commonAppIam, commonResourceFile,
+        commonAppStart, commonClientLocale,
+        commonAppIam, commonResourceFile,
         commonModuleAsset,commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
         commonAppInit,
         commonApp,
         commonAppResource,
+        commonGeodata,
         commonBFE,
         commonRegistryAppModule};
