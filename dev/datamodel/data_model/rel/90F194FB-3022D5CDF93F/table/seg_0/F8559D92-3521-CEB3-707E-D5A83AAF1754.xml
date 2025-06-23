@@ -28,6 +28,18 @@
 <colAssociation fkAssociation="F2A4966D-9DA1-857A-3F45-1EF6C3E3EBAF" referredColumn="B012AC67-F394-59D1-D892-D9E6735C213C"/>
 </associations>
 </Column>
+<Column name="iam_app_id_token_id" id="C6D6A406-499C-16B2-A22E-F0DD597047E3">
+<createdBy>admin</createdBy>
+<createdTime>2025-06-23 19:56:47 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="A0C57338-0118-A257-CD00-1FB0649E4471" referredColumn="AE090DF2-9577-484E-6E28-6861625499D9"/>
+</associations>
+</Column>
 <Column name="uuid" id="5D72EBD4-AB2F-A6C8-1CC4-1872AAACBB46">
 <createdBy>admin</createdBy>
 <createdTime>2025-06-23 05:57:46 UTC</createdTime>
@@ -84,6 +96,17 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="10C7BA98-C4F5-6E8E-FDDF-630CA4D56654"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="53C93C51-0A92-345B-2B1A-DDAEEAFD83B5" name="IamEncryption_IamAppIdToken_FK">
+<createdBy>admin</createdBy>
+<createdTime>2025-06-23 19:56:47 UTC</createdTime>
+<generatorID>54DCE980-6088-A10C-4C15-A4F3FA38362C</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C6D6A406-499C-16B2-A22E-F0DD597047E3"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

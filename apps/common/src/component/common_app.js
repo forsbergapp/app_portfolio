@@ -24,15 +24,6 @@ const template = props =>`  <!DOCTYPE html>
                                                         'Connection': 'keep-alive',
                                                         'app-id-token': 'Bearer ${props.idToken}'}
                                         }).then(socket=>{
-                                            const commonWindowFromBase64 = str => {
-                                                const binary_string = atob(str);
-                                                const len = binary_string.length;
-                                                const bytes = new Uint8Array(len);
-                                                for (let i = 0; i < len; i++) {
-                                                    bytes[i] = binary_string.charCodeAt(i);
-                                                }
-                                                return new TextDecoder('utf-8').decode(bytes);
-                                            };
                                             const getMessage = BFFmessage =>{
                                                 const messageDecoded = atob(BFFmessage);
                                                 return { broadcast_type:JSON.parse(messageDecoded).broadcast_type,
