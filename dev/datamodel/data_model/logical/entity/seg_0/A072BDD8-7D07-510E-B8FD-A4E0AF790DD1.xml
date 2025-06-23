@@ -37,6 +37,18 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="iam_app_id_token_id" id="C4B526BB-1E46-59B5-B288-7C7C94A02BAF">
+<createdBy>admin</createdBy>
+<createdTime>2025-06-23 19:44:57 UTC</createdTime>
+<generatorID>50F16974-8751-DD02-1880-88A74A3BD554</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>EB8B29F3-FF06-354E-E1FC-7855C828A886</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="uuid" id="4426B511-249C-0DED-099B-6298F5D18393">
 <createdBy>admin</createdBy>
 <createdTime>2025-06-23 05:51:32 UTC</createdTime>
