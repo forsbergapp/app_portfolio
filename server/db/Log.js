@@ -201,7 +201,7 @@ const getStat = async parameters => {
    /**@type{server_log_result_logStatGet[]|[]} */
    const logstat = [];
 
-   const {commonAppHost}= await import('../../apps/common/src/common.js');
+   const {commonAppIam}= await import('../../apps/common/src/common.js');
    
    const files = await ORM.getFsDir().then(files=>files.filter(file=>file.isDirectory()==false));
    /**@type{string} */
@@ -232,7 +232,7 @@ const getStat = async parameters => {
                logs.rows.forEach((/**@type{server_db_table_LogRequestInfo|''}*/record) => {
                    if (record != ''){
                        if (data.statGroup != null){
-                           const domain_app_id = record.host?commonAppHost(record.host).app_id:null;
+                           const domain_app_id = record.host?commonAppIam(record.host).app_id:null;
                            if (data.app_id == null || data.app_id == domain_app_id){
                                const statGroupvalue = (data.statGroup=='url' && record[data.statGroup].indexOf('?')>0)?record[data.statGroup].substring(0,record[data.statGroup].indexOf('?')):record[data.statGroup];
                                //add unique statGroup to a set
@@ -254,7 +254,7 @@ const getStat = async parameters => {
                            //add for given status code or all status codes if all should be returned
                            //save this as chart 2 with days
                            if (data.statValue == null || data.statValue == record.statusCode){
-                               const domain_app_id = record.host?commonAppHost(record.host).app_id:null;
+                               const domain_app_id = record.host?commonAppIam(record.host).app_id:null;
                                if (data.app_id == null || data.app_id == domain_app_id){
                                    //add unique status codes to a set
                                    log_stat_value.add(record.statusCode);

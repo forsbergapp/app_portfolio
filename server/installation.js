@@ -1012,14 +1012,9 @@ const getConfigSecurityUpdate = async parameters =>{
                             /**@type{server_db_document_ConfigServer}*/
                             const content = parameters.pathConfigServer?await fs.promises.readFile(serverProcess.cwd() + parameters.pathConfigServer)
                                                 .then(file=>JSON.parse(file.toString())):ORM.getObject(0,'ConfigServer');
-                            const {publicKey, privateKey} = await Security.securityKeyPairCreate(4096);
                             //generate secrets
                             content.SERVICE_IAM.map((/**@type{server_db_config_server_service_iam}*/row)=>{
                                 for (const key of Object.keys(row)){
-                                    if (key== 'SERVER_PUBLIC_KEY')
-                                        row.SERVER_PUBLIC_KEY = publicKey;
-                                    if (key== 'SERVER_PRIVATE_KEY')
-                                        row.SERVER_PRIVATE_KEY = privateKey;
                                     if (key== 'MICROSERVICE_TOKEN_SECRET')
                                         row.MICROSERVICE_TOKEN_SECRET = Security.securitySecretCreate();
                                     if (key== 'ADMIN_TOKEN_SECRET')
