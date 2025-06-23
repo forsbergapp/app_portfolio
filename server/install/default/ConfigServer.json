@@ -41,9 +41,8 @@
         {"JOURNAL":"1", "COMMENT": "1=on, 0=off"}
     ],
     "SERVICE_IAM":[
+        {"ENCRYPT_TRANSPORT":"0", "COMMENT":"1=YES, 0=NO"},
         {"SERVER_UPDATE_SECRETS_START":"1", "COMMENT":"1=YES, 0=NO"},
-        {"SERVER_PUBLIC_KEY":"", "COMMENT":"To encrypt requests and responses"},
-        {"SERVER_PRIVATE_KEY":"", "COMMENT":"To encrypt requests and responses"},
         {"AUTHENTICATE_REQUEST_ENABLE": "0", "COMMENT": "0=NO, 1=YES"},
         {"AUTHENTICATE_REQUEST_OBSERVE_LIMIT": "5", "COMMENT": "If observe limit reached then IP should be blocked"},
         {"AUTHENTICATE_REQUEST_IP": "0", "COMMENT": "0=NO, 1=YES, check IP v4 range to block. Could be integrated with iptables on Linux."},
