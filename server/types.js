@@ -387,6 +387,14 @@
  *              name:string, 
  *              user_agent:string}} server_db_table_IamControlUserAgent
  */
+/**
+ * @description DB TABLE IamEncryption
+ * @memberof dbObjects
+ * @typedef {{  id:number,
+ *              uuid:string, 
+ *              secret:string,
+ *              created:string}} server_db_table_IamEncryption
+ */
 
 /** 
  * @description DB TABLE IamMicroserviceToken
@@ -844,8 +852,7 @@
  */
 /**
  * @description DB server_db_config_server_service_iam
- * @typedef {{  SERVER_PUBLIC_KEY:string,
- *              SERVER_PRIVATE_KEY:string,
+ * @typedef {{  ENCRYPT_TRANSPORT:string,
  *              AUTHENTICATE_REQUEST_ENABLE:string,
  *              AUTHENTICATE_REQUEST_OBSERVE_LIMIT:string,
  *              AUTHENTICATE_REQUEST_IP:string,
@@ -991,11 +998,14 @@
  *              'AppParameter'|
  *              'AppSecret'|
  *              'AppTranslation'|
+ *              'ConfigServer'| 
+ *              'ConfigRestApi'|
  *              'IamAppIdToken'|
  *              'IamAppAccess'|
  *              'IamControlIp'|
  *              'IamControlUserAgent'|
  *              'IamControlObserve'|
+ *              'IamEncryption'|
  *              'IamMicroserviceToken'|
  *              'IamUser'|
  *              'IamUserApp'|
@@ -1006,25 +1016,12 @@
  *              'IamUserLike'|
  *              'IamUserView'|
  *              'IamUserEvent'|
+ *              'MessageQueuePublish'|
+ *              'MessageQueueConsume'|
+ *              'MessageQueueError'|
  *              'ServiceRegistry'|
- *              server_db_tables_log|
- *              server_db_db_name_config| 
- *              server_db_db_name_message_queue} server_DbObject
- */
-
-/**
- * @description DB server_db_db_name_config
- * 
- * @typedef {   'ConfigServer'|
- *              'ConfigRestApi'} server_db_db_name_config
- */
-
-/**
- * @description DB server_db_db_name_message_queue
- * 
- * @typedef {  'MessageQueuePublish'|
- *             'MessageQueueConsume'|
- *             'MessageQueueError'} server_db_db_name_message_queue
+ *              server_db_tables_log
+ *              } server_DbObject
  */
 
 /**
