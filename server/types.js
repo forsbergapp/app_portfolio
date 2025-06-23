@@ -391,6 +391,8 @@
  * @description DB TABLE IamEncryption
  * @memberof dbObjects
  * @typedef {{  id:number,
+ *              app_id:number,
+ *              iam_app_id_token_id:number,
  *              uuid:string, 
  *              secret:string,
  *              created:string}} server_db_table_IamEncryption
