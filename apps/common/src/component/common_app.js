@@ -148,7 +148,6 @@ const template = props =>`  <!DOCTYPE html>
                                                                                     '/app-resource/~common~js~common.js?parameters=' + 
                                                                                     btoa('content_type=text/javascript&IAM_data_app_id=0'))
                                                                         .then(result=>{
-                                                                            document.body.classList.remove('start');
                                                                             common = result;
                                                                             common[Object.keys(common.default)[0]]( INITmessage.APP.id, 
                                                                                                                     INITmessage.APP_PARAMETER,
