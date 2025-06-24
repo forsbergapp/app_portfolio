@@ -2,15 +2,16 @@
  * @module apps/common/common
  */
 
-/** @import {commonAppInit, commonInitAppParameters, commonMetadata, CommonModuleCommon} from '../../../common_types.js' */
+/** @import {   COMMON_WINDOW, COMMON_DOCUMENT, CommonGlobal,
+ *              commonAppInit, commonInitAppParameters, commonMetadata, CommonModuleCommon} from '../../../common_types.js' */
 
-/**@type{import('../../../common_types.js').COMMON_WINDOW} */
+/**@type{COMMON_WINDOW} */
 const COMMON_WINDOW = window;
 
-/**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
+/**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-/**@type{import('../../../common_types.js').CommonGlobal} */
+/**@type{CommonGlobal} */
 const COMMON_GLOBAL = {
     app_id:null,
     app_logo:null,
@@ -3855,10 +3856,7 @@ const commonGet = () =>{
  * @function
  * @param {number} start_app_id
  * @param {commonInitAppParameters} parameters 
- * @param {{encrypt:function,
- *          decrypt:function,
- *          uuid:string,
- *          secret:string}|null} x
+ * @param {CommonGlobal['x']} x
  * @returns {Promise.<void>}
  */
 const commonInit = async (start_app_id, parameters, x) => {  
