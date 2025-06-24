@@ -663,7 +663,7 @@ div.ray8 {
 /*app colors*/
 body{
 	color: var(--app_theme_text_color);
-	background: var(--app_theme_background_color) !important;
+	background: var(--app_theme_background_color);
 	caret-color: var(--app_theme_text_color);
 }
 #common_dialogue_apps_list_title{

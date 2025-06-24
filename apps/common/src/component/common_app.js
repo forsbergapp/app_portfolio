@@ -28,8 +28,10 @@ const template = props =>`  <!DOCTYPE html>
                             <body class='start'>
                                 <div id='app_root'>
                                     <style> 
-                                        .start {
+                                        body {
                                             background-color: rgb(81, 171, 255);
+                                        }
+                                        .start {    
                                             display:flex;
                                             justify-content:center;
                                             align-items:center;
