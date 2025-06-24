@@ -53,8 +53,10 @@ const post = async (app_id, data) => {
                 data_new.ua = data.ua;
             data_new.created = new Date().toISOString();
             return ORM.Execute({app_id:app_id, dml:'POST', object:'IamAppIdToken', post:{data:data_new}}).then((result)=>{
-                if (result.affectedRows>0)
+                if (result.affectedRows>0){
+                    result.insertId = data_new.id;
                     return {result:result, type:'JSON'};
+                }
                 else
                     return ORM.getError(app_id, 404);
             });
