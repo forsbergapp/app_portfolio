@@ -380,7 +380,7 @@ const server = async (req, res)=>{
         });
         
     };
-    await read_body();
+    await read_body().catch(()=>null);
     req.protocol =      req.socket.encrypted?'https':'http';
     req.ip =            req.socket.remoteAddress;
     req.hostname =      req.headers.host;
@@ -539,10 +539,10 @@ const serverStart = async () =>{
             });
     });
     serverProcess.on('unhandledRejection', (/**@type{*}*/reason) =>{
-        console.log(reason.stack ?? reason.message ?? reason);
+        console.log(reason?.stack ?? reason?.message ?? reason ?? new Error().stack);
         Log.post({   app_id:0, 
             data:{  object:'LogServerError', 
-                    log:'Process unhandledRejection: ' + reason.stack ?? reason.message ?? reason
+                    log:'Process unhandledRejection: ' + reason?.stack ?? reason?.message ?? reason ?? new Error().stack
                 }
             });
     });

@@ -13,7 +13,7 @@ const COMMON_DOCUMENT = document;
 
 /**@type{CommonGlobal} */
 const COMMON_GLOBAL = {
-    app_id:null,
+    app_id:0,
     app_logo:null,
     app_copyright:null,
     app_link_url:null,
@@ -47,7 +47,7 @@ const COMMON_GLOBAL = {
     iam_user_avatar:null,
     admin_first_time:null,
     admin_only:null,
-    x:null,
+    x:{FFB: async ()=>null},
     client_latitude:'',
     client_longitude:'',
     client_place:'',
@@ -217,13 +217,14 @@ const commonMiscImport = async (url, appModule=false, content=null) =>{
                 {
                     app_id:app_id,
                     url:url,
-                    component:content?URL.createObjectURL(new Blob ([content], {type: 'text/javascript'})):await commonFFB({ path: appModule?url:('/app-resource/' + url.replaceAll('/','~')), 
-                                                query:appModule?'':`content_type=${'text/javascript'}&IAM_data_app_id=${app_id}`, 
-                                                method:'GET', 
-                                                response_type:'BLOB',
-                                                authorization_type:'APP_ID'})
-                                    .then(module=>URL.createObjectURL(  new Blob ([module], 
-                                                    {type: 'text/javascript'})))
+                    component:content?
+                                URL.createObjectURL(new Blob ([content], {type: 'text/javascript'})):
+                                    await commonFFB({   path: appModule?url:('/app-resource/' + url.replaceAll('/','~')), 
+                                                        query:appModule?'':`content_type=${'text/javascript'}&IAM_data_app_id=${app_id}`, 
+                                                        method:'GET', 
+                                                        response_type:'BLOB',
+                                                        authorization_type:'APP_ID'})
+                                            .then(module=>URL.createObjectURL(  new Blob ([module], {type: 'text/javascript'})))
                 }); 
         return import(COMMON_GLOBAL.component_import[COMMON_GLOBAL.component_import.length-1].component);
     }
@@ -2173,173 +2174,36 @@ const commonModuleLeafletInit = async parameters => {
  *          username?:string,
  *          password?:string,
  *          body?:*,
- *          response_type?:'TEXT'|'BLOB'
+ *          response_type?:'SSE'|'TEXT'|'BLOB'
  *          spinner_id?:string|null,
  *          timeout?:number|null}} parameter
  * @returns {Promise.<*>} 
  */
-const commonFFB = async parameter => {
-    /**@type{number} */
-    let status;
-    let authorization = null;
-    let service_path;
-    parameter.query = parameter.query==null?'':parameter.query;
-    parameter.body = parameter.body?parameter.body:null;
-    //admin uses ADMIN instead of APP_ACCESS so all ADMIN requests use separate admin token
-    const ROLE = (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id && parameter.authorization_type =='APP_ACCESS')?
-                    'ADMIN':parameter.authorization_type;
-    switch (ROLE){
-        case 'APP_ID':
-        case 'IAM_SIGNUP':{
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${ROLE.toLowerCase()}`;
-            break;
-        }
-        case 'APP_ACCESS':
-        case 'APP_ACCESS_VERIFICATION':
-        case 'APP_ACCESS_EXTERNAL':{
-            authorization = `Bearer ${COMMON_GLOBAL.token_at}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${ROLE.toLowerCase()}`;
-            break;
-        }
-        case 'ADMIN':{
-            authorization = `Bearer ${COMMON_GLOBAL.token_admin_at}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${ROLE.toLowerCase()}`;
-            break;
-        }
-        case 'IAM':{
-            authorization = `Basic ${commonWindowToBase64(parameter.username + ':' + parameter.password)}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${ROLE.toLowerCase()}`;
-            break;
-        }
-    }
-    //add common query parameter
-    parameter.query += `&locale=${COMMON_GLOBAL.user_locale}`;
-
-    //encode query parameters
-    const encodedparameters = parameter.query?commonWindowToBase64(parameter.query):'';
-    const url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}${parameter.path}?parameters=${encodedparameters}`;
-
-    if (parameter.path=='/server-socket/socket' && parameter.method=='POST'){
-        const options = {
-            method: parameter.method,
-            headers: {  'Content-Type': 'text/event-stream', 
-                        'Cache-control': 'no-cache', 
-                        'Connection': 'keep-alive',
-                        //'app-id': COMMON_GLOBAL.app_id,
-                        'app-signature': 'commonFFB',
-                        'app-id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
-                        ...(authorization && {Authorization: authorization})}
-        };
-        return fetch(url, 
-                    options);
-    }
-    else{
-        //add options to fetch
-        let options = {};
-        if (parameter.body ==null)
-            options = {
-                        cache: 'no-store',  //browser should never cache result from REST API
-                        method: parameter.method,
-                        headers: {
-                                    'app-id': COMMON_GLOBAL.app_id,
-                                    'app-signature': 'commonFFB',
-                                    'app-id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
-                                    'Connection': 'close',
-                                    ...(authorization && {Authorization: authorization})
-                                },
-                        body: null
-                    };
-        else
-            options = {
-                    cache: 'no-store',      //browser should never cache result from from REST API
-                    method: parameter.method,
-                    headers: {
-                                'app-id': COMMON_GLOBAL.app_id,
-                                'app-signature': 'commonFFB',
-                                'app-id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
-                                'Content-Type': 'application/json',
-                                'Connection': 'close',
-                                ...(authorization && {Authorization: authorization})
-                            },
-                    body: JSON.stringify({data:commonWindowToBase64(JSON.stringify(parameter.body))})
-                };
-        if (parameter.spinner_id && COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`))
-            COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`).classList.add('css_spinner');
-        
-        const resultFetch = {finished:false};
-        return await Promise.race([ new Promise((resolve)=>
-                                        //sets timeout after 5 seconds
-                                        setTimeout(()=>{
-                                            if (resultFetch.finished==false){
-                                                commonMessageShow('ERROR_BFF', null, null, '🗺⛔?');
-                                                resolve('🗺⛔?');
-                                                throw ('TIMEOUT');
-                                            }
-                                            }, COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id?
-                                                    (1000 * 60 * 60): //admin 1 hour
-                                                    parameter.timeout || 5000)), //custom timeout or 5 seconds
-                                        await fetch(url, options)
-                                            /**@ts-ignore */
-                                            .then((response) => {
-                                                status = response.status;
-                                            
-                                                const clonedResponse = response.clone(); // Create a clone
-                                                    return Promise.all([
-                                                    clonedResponse.text(),
-                                                    parameter.response_type=='BLOB'?response.blob():null
-                                                ]);
-                                            })
-                                            .then(([result, result_blob]) => {
-                                                switch (status){
-                                                    case 200:
-                                                    case 201:{
-                                                        //OK
-                                                        /**@ts-ignore */
-                                                        return parameter.response_type=='BLOB'?result_blob:result;
-                                                    }
-                                                    case 400:{
-                                                        //Bad request
-                                                        commonMessageShow('ERROR_BFF', null, 'message_text', '!');
-                                                        throw result;
-                                                    }
-                                                    case 404:{
-                                                        //Not found
-                                                        commonMessageShow('ERROR_BFF', null, null, result);
-                                                        throw result;
-                                                    }
-                                                    case 401:{
-                                                        //Unauthorized, token expired
-                                                        commonMessageShow('ERROR_BFF', null, null, result);
-                                                        throw result;
-                                                    }
-                                                    case 403:{
-                                                        //Forbidden, not allowed to login or register new user
-                                                        commonMessageShow('ERROR_BFF', null, null, result);
-                                                        throw result;
-                                                    }
-                                                    case 500:{
-                                                        //Unknown error
-                                                        commonException(COMMON_GLOBAL.app_function_exception, result);
-                                                        throw result;
-                                                    }
-                                                    case 503:{
-                                                        //Service unavailable or other error in microservice
-                                                        commonMessageShow('ERROR_BFF', null, null, result);
-                                                        throw result;
-                                                    }
-                                                }
-                                            })
-                                            .catch(error=>{
-                                                throw error;
-                                            })
-                                            .finally(()=>{
-                                                resultFetch.finished=true;
-                                                if (parameter.spinner_id && COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`))
-                                                    COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`).classList.remove('css_spinner');
-                                            })
-                            ]);
-    }        
-};
+const commonFFB = async parameter =>
+    await COMMON_GLOBAL.x.FFB({
+                        app_id: COMMON_GLOBAL.app_id,
+                        uuid: COMMON_GLOBAL.x.apps?.filter(app=>app.app_id==COMMON_GLOBAL.app_id)[0].uuid??'',
+                        secret: COMMON_GLOBAL.x.apps?.filter(app=>app.app_id==COMMON_GLOBAL.app_id)[0].secret??'',
+                        response_type: parameter.response_type??'TEXT',
+                        spinner_id: parameter.spinner_id,
+                        timeout: parameter.timeout,
+                        app_admin_app_id:COMMON_GLOBAL.app_admin_app_id,
+                        rest_api_version: COMMON_GLOBAL.app_rest_api_version??'',
+                        rest_bff_path   : COMMON_GLOBAL.rest_resource_bff??'',
+                        data: {
+                            locale: COMMON_GLOBAL.user_locale,
+                            idToken: COMMON_GLOBAL.token_dt??'',
+                            accessToken: (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id)?
+                                            COMMON_GLOBAL.token_admin_at??'':
+                                                COMMON_GLOBAL.token_at??'',
+                            path:parameter.path,
+                            query: parameter.query,
+                            method: parameter.method,
+                            authorization_type: parameter.authorization_type,
+                            username: parameter.username??'',
+                            password: parameter.password??'',
+                            body: parameter.body ?? null
+                        }});
 /**
  * @name commonSocketBroadcastShow
  * @description Show broadcast message
@@ -2400,15 +2264,6 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
     }
 };
 /**
- * @name socketReconnect
- * @description Socket reconnect
- * @function
- * @returns {void}
- */
-const socketReconnect = () => {
-    commonWindowSetTimeout(()=>{commonSocketConnectOnline();}, 5000);
-};
-/**
  * @name commonSocketConnectOnline
  * @description Socket connect online, can use id-token or access token
  * @function
@@ -2418,23 +2273,7 @@ const commonSocketConnectOnline = async () => {
     const  authorization_type= (COMMON_GLOBAL.token_at && COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id)?
                                     'ADMIN':
                                         COMMON_GLOBAL.token_at?'APP_ACCESS':'APP_ID';
-   commonFFB({path:'/server-socket/socket', method:'POST', authorization_type:authorization_type})
-    .then((result_SSE)=>{
-        const SSEStream = new WritableStream({
-            write(data){
-                try {
-                    const message = new TextDecoder().decode(new Uint8Array(data),{stream:true}).split('\n\n')[0];
-                    if (message.split('data: ')[1])
-                        commonSocketBroadcastShow(message.split('data: ')[1]);
-                } catch (error) {
-                    null;
-                }
-            }
-        });
-        const SSE = result_SSE.body.pipeTo(SSEStream).catch(()=>socketReconnect());
-        SSE;
-    })
-    .catch(()=>socketReconnect());
+    commonFFB({path:'/server-socket/socket', response_type: 'SSE', method:'POST', authorization_type:authorization_type});
 };
 /**
  * @name commonSocketConnectOnlineCheck

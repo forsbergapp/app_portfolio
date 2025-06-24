@@ -145,10 +145,32 @@
  *            }}  target
  */
 
-
+/**
+ * @description  Type CommonFFB_parameters
+ * @typedef {{  app_id:number,
+ *              uuid:string,
+*               secret:string,
+*               response_type:'SSE'|'TEXT'|'BLOB',
+*               spinner_id?:string|null,
+*               timeout?:number|null,
+*               app_admin_app_id:number,
+*               rest_api_version: string,
+*               rest_bff_path   : string,
+*               data:{
+*                       locale:string,
+*                       idToken: string,
+*                       accessToken:string,
+*                       path:string,
+*                       query?:string|null,
+*                       method:string,
+*                       authorization_type:string,
+*                       username?:string,
+*                       password?:string,
+*                       body?:*}}} CommonFFB_parameters
+ */
 /**
  * @description Type CommonGlobal
- * @typedef {{  app_id:number|null,
+ * @typedef {{  app_id:number,
  *              app_logo:string|null,
  *              app_copyright:string|null,
  *              app_link_url:string|null,
@@ -186,11 +208,14 @@
  *              admin_first_time:number|null,
  *              admin_only:number|null,
  *              x:{ 
- *                  encrypt:function,
- *                  decrypt:function,
- *                  apps:{  app_id:number,
+ *                  FFB:    (arg0:CommonFFB_parameters) => Promise.<*>,
+ *                  encrypt?:function,
+ *                  decrypt?:function,
+ *                  apps?:  {
+ *                          app_id:number,
  *                          uuid:string,
- *                          secret:string}[]}|null,
+ *                          secret:string
+ *                          }[]},
  *              client_latitude:string|null,
  *              client_longitude:string|null,
  *              client_place:string|null,
