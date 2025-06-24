@@ -62,9 +62,11 @@ const template = props =>`  <!DOCTYPE html>
                                         
                                         /**
                                          * @description Receives server side event from BFF, decrypts message and delegates event
-                                         * @param {*} socket
+                                         * @param {{socket:*, 
+                                         *          uuid:string|null, 
+                                         *          secret:string|null}} parameters
                                          */
-                                        const FFB_SSE = async socket =>{
+                                        const FFB_SSE = async parameters =>{
                                             const getMessage = BFFmessage =>{
                                                     const messageDecoded = atob(BFFmessage);
                                                     return { broadcast_type:JSON.parse(messageDecoded).broadcast_type,
@@ -78,35 +80,30 @@ const template = props =>`  <!DOCTYPE html>
                                                         switch (message.broadcast_type){
                                                             case 'INIT':{
                                                                 const INITmessage = JSON.parse(message.broadcast_message);
-                                                                const commonFetch = async url =>
-                                                                        import(await fetch(url, 
-                                                                                            {
-                                                                                            cache: 'no-store',
-                                                                                            method: 'GET',
-                                                                                            headers: {
-                                                                                                    'Connection': 'close',
-                                                                                                    'app-id': INITmessage.APP.id,
-                                                                                                    'app-signature': 'App Signature',
-                                                                                                    'app-id-token': 'Bearer ${props.idToken}'
-                                                                                                }
-                                                                                            })
-                                                                                    .then(module=>{if (module.status==200)return module.blob();else throw module.statusText})
-                                                                                    .then(module=>URL.createObjectURL(  new Blob ([module],
-                                                                                                                        {type: 'text/javascript'}))))
-                                                                                    .catch(error=>document.write(error));
-
-                                                                commonFetch(INITmessage.APP_PARAMETER.Info.rest_resource_bff + 
-                                                                            '/app_id/v'+ INITmessage.APP_PARAMETER.Info.rest_api_version + 
-                                                                            '/app-resource/~common~js~common.js?parameters=' + 
-                                                                            btoa('content_type=text/javascript&IAM_data_app_id=0'))
+                                                                FFB({   app_id:             INITmessage.APP.id,
+                                                                        uuid:               parameters.uuid,
+                                                                        secret:             parameters.secret,
+                                                                        response_type:      'BLOB',
+                                                                        app_admin_app_id:   INITmessage.APP_PARAMETER.Info.app_admin_app_id,
+                                                                        rest_api_version:   INITmessage.APP_PARAMETER.Info.rest_api_version,
+                                                                        rest_bff_path   :   INITmessage.APP_PARAMETER.Info.rest_resource_bff,
+                                                                        data:{  
+                                                                                idToken:            INITmessage.APP_PARAMETER.Info.app_idtoken,
+                                                                                authorization_type: 'APP_ID', 
+                                                                                query:              'content_type=text/javascript&IAM_data_app_id=0',
+                                                                                path:               '/app-resource/~common~js~common.js', 
+                                                                                method:             'GET',
+                                                                                body:               null}})
                                                                 .then(result=>{
-                                                                    common = result;
-                                                                    if (x.apps && INITmessage.APP_PARAMETER.Info.x)
-                                                                        for (const app of INITmessage.APP_PARAMETER.Info.x)
-                                                                            x.apps.push(app)
-                                                                    common[Object.keys(common.default)[0]]( INITmessage.APP.id, 
-                                                                                                            INITmessage.APP_PARAMETER,
-                                                                                                            x);
+                                                                    import(URL.createObjectURL(  new Blob ([result],{type: 'text/javascript'})))
+                                                                    .then(common=>{
+                                                                        if (x.apps && INITmessage.APP_PARAMETER.Info.x)
+                                                                            for (const app of INITmessage.APP_PARAMETER.Info.x)
+                                                                                x.apps.push(app)
+                                                                        common[Object.keys(common.default)[0]]( INITmessage.APP.id, 
+                                                                                                                INITmessage.APP_PARAMETER,
+                                                                                                                x);
+                                                                    })
                                                                 });
                                                                 break;
                                                             }
@@ -119,7 +116,7 @@ const template = props =>`  <!DOCTYPE html>
                                                 }
                                             //The total number of chunks that can be contained in the internal queue before backpressure is applied
                                             }, new CountQueuingStrategy({ highWaterMark: 1 }));
-                                            const BFF = socket.pipeTo(BFFStream).catch(()=>common?setTimeout(()=>{common.commonSocketConnectOnline();}, 5000):null);
+                                            const BFF = parameters.socket.pipeTo(BFFStream).catch(()=>common?setTimeout(()=>{common.commonSocketConnectOnline();}, 5000):null);
                                         }
                                         /**
                                          * @description Front end for backend (FFB) that receives responses 
@@ -198,19 +195,22 @@ const template = props =>`  <!DOCTYPE html>
                                                                         JSON.stringify({data:btoa(JSON.stringify(parameters.data.body))}):
                                                                             null
                                                             };
+                                            const showError = message => common?.commonMessageShow?common.commonMessageShow('ERROR_BFF', null, null, message):alert(message);
+                                            const showException = message => common?.commonException?common.commonException(common.COMMON_GLOBAL.app_function_exception, message):alert(message);
+                                            const showBadRequest = () => common?.commonMessageShow?common.commonMessageShow('ERROR_BFF', null, 'message_text', '!'):alert('ABC!');
                                             return parameters.response_type=='SSE'?
-                                                    fetch(url, options).then(result=>FFB_SSE(result.body)):
+                                                    fetch(url, options).then(result=>FFB_SSE({socket:result.body, uuid:parameters.uuid, secret:parameters.secret})):
                                                         await Promise.race([ new Promise((resolve)=>
                                                                             //sets timeout after 5 seconds
                                                                             setTimeout(()=>{
                                                                                 if (resultFetch.finished==false){
-                                                                                    common?.commonMessageShow?common.commonMessageShow('ERROR_BFF', null, null, '🗺⛔?'):alert('🗺⛔?');
+                                                                                    showError('🗺⛔?');
                                                                                     resolve('🗺⛔?');
                                                                                     throw ('TIMEOUT');
                                                                                 }
                                                                                 }, parameters.app_id == parameters.app_admin_app_id?
                                                                                         (1000 * 60 * 60): //admin 1 hour
-                                                                                        parameters.timeout || 500000)), //custom timeout or 5 seconds
+                                                                                        parameters.timeout || 5000)), //custom timeout or 5 seconds
                                                                             await fetch(url, options)
                                                                                 /**@ts-ignore */
                                                                                 .then((response) => {
@@ -225,38 +225,25 @@ const template = props =>`  <!DOCTYPE html>
                                                                                     switch (status){
                                                                                         case 200:
                                                                                         case 201:{
-                                                                                            //OK
                                                                                             /**@ts-ignore */
                                                                                             return parameters.response_type=='BLOB'?result_blob:result;
                                                                                         }
                                                                                         case 400:{
                                                                                             //Bad request
-                                                                                            common.commonMessageShow('ERROR_BFF', null, 'message_text', '!');
+                                                                                            showBadRequest();
                                                                                             throw result;
                                                                                         }
-                                                                                        case 404:{
-                                                                                            //Not found
-                                                                                            common.commonMessageShow('ERROR_BFF', null, null, result);
-                                                                                            throw result;
-                                                                                        }
-                                                                                        case 401:{
-                                                                                            //Unauthorized, token expired
-                                                                                            common.commonMessageShow('ERROR_BFF', null, null, result);
-                                                                                            throw result;
-                                                                                        }
-                                                                                        case 403:{
-                                                                                            //Forbidden, not allowed to login or register new user
-                                                                                            common.commonMessageShow('ERROR_BFF', null, null, result);
+                                                                                        case 404:   //Not found
+                                                                                        case 401:   //Unauthorized, token expired
+                                                                                        case 403:   //Forbidden, not allowed to login or register new user
+                                                                                        case 503:   //Service unavailable or other error in microservice
+                                                                                        {   
+                                                                                            showError(result);
                                                                                             throw result;
                                                                                         }
                                                                                         case 500:{
                                                                                             //Unknown error
-                                                                                            common.commonException(COMMON_GLOBAL.app_function_exception, result);
-                                                                                            throw result;
-                                                                                        }
-                                                                                        case 503:{
-                                                                                            //Service unavailable or other error in microservice
-                                                                                            common.commonMessageShow('ERROR_BFF', null, null, result);
+                                                                                            showException(result);
                                                                                             throw result;
                                                                                         }
                                                                                     }
