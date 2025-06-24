@@ -46,6 +46,7 @@ const COMMON_GLOBAL = {
     iam_user_avatar:null,
     admin_first_time:null,
     admin_only:null,
+    x:null,
     client_latitude:'',
     client_longitude:'',
     client_place:'',
@@ -799,6 +800,7 @@ const commonMiscTimezoneOffset = (local_timezone) =>{
                             Number(new Date().toLocaleString('en', {timeZone: local_timezone, minute:'numeric'}))).valueOf();
     return (local-utc) / 1000 / 60 / 60;
 };
+
 /**
  * @name commonWindowUserAgentPlatform
  * @description Get user agent platform
@@ -2157,6 +2159,7 @@ const commonModuleLeafletInit = async parameters => {
                 timezone_text :null
             });
 };
+
 
 /**
  * @name commonFFB
@@ -3852,9 +3855,13 @@ const commonGet = () =>{
  * @function
  * @param {number} start_app_id
  * @param {commonInitAppParameters} parameters 
+ * @param {{encrypt:function,
+ *          decrypt:function,
+ *          uuid:string,
+ *          secret:string}|null} x
  * @returns {Promise.<void>}
  */
-const commonInit = async (start_app_id, parameters) => {  
+const commonInit = async (start_app_id, parameters, x) => {  
     
     //Config Server	
     COMMON_GLOBAL.rest_resource_bff =               parameters.Info.rest_resource_bff;
@@ -3870,6 +3877,7 @@ const commonInit = async (start_app_id, parameters) => {
     COMMON_GLOBAL.app_framework_messages =          parameters.Info.app_framework_messages;
     COMMON_GLOBAL.admin_only =                      parameters.Info.admin_only;
     COMMON_GLOBAL.admin_first_time =                parameters.Info.first_time;
+    COMMON_GLOBAL.x =                               x;
     //AppParameter common
     COMMON_GLOBAL.info_link_policy_name =           parameters.AppParametersCommon.common_info_link_policy_name.value;
     COMMON_GLOBAL.info_link_policy_url =            parameters.AppParametersCommon.common_info_link_policy_url.value;
