@@ -101,7 +101,7 @@ const template = props =>`  <!DOCTYPE html>
                                                                             btoa('content_type=text/javascript&IAM_data_app_id=0'))
                                                                 .then(result=>{
                                                                     common = result;
-                                                                    if (x && INITmessage.APP_PARAMETER.Info.x)
+                                                                    if (x.apps && INITmessage.APP_PARAMETER.Info.x)
                                                                         for (const app of INITmessage.APP_PARAMETER.Info.x)
                                                                             x.apps.push(app)
                                                                     common[Object.keys(common.default)[0]]( INITmessage.APP.id, 
