@@ -50,6 +50,7 @@
  * @property {string}       rest_api_version
  * @property {number}       first_time
  * @property {number}       admin_only
+ * @property {{id:number, uuid:string, secret:string}} x
  */
 
 /**

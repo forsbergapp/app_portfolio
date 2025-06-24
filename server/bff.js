@@ -3,6 +3,8 @@
 /**
  * @import {server_iam_authenticate_request, 
  *          server_db_document_ConfigServer,
+ *          server_db_table_App,
+ *          server_db_table_IamAppIdToken,
  *          server_bff_RestApi_parameters,
  *          server_server_req, 
  *          server_server_res, 
@@ -35,8 +37,12 @@ const fs = await import('node:fs');
  * @returns {Promise.<void>}
  */
 const bffConnect = async parameters =>{
+    const App = await import('./db/App.js');
     const AppParameter = await import('./db/AppParameter.js');
     const ConfigServer = await import('./db/ConfigServer.js');
+    const Security = await import('./security.js');
+    const IamEncryption = await import ('./db/IamEncryption.js');
+    const IamAppIdToken = await import('./db/IamAppIdToken.js');
     const socket = await import('./socket.js');
     const common = await import('../apps/common/src/common.js');
     /**@type{server_db_document_ConfigServer} */
@@ -50,6 +56,9 @@ const bffConnect = async parameters =>{
                                             admin_app_id:
                                                 serverUtilNumberValue(configServer.SERVICE_APP
                                                     .filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??0;
+    /**@type{server_db_table_IamAppIdToken}*/
+    const idToken = IamAppIdToken.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}).result
+                    .filter((/**@type{server_db_table_IamAppIdToken}*/token)=>token.token == parameters.idToken)[0];
     //geodata for APP
     const result_geodata = await common.commonGeodata({   app_id:parameters.app_id, 
                                                         endpoint:'SERVER', 
@@ -74,7 +83,32 @@ const bffConnect = async parameters =>{
         rest_resource_bff:              configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF,
         rest_api_version:               configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION,
         first_time:                     count_user==0?1:0,
-        admin_only:                     admin_only?1:0
+        admin_only:                     admin_only?1:0,
+        x:                              App.get({app_id:parameters.app_id, resource_id:null}).result
+                                        //filter common app_id already in returned start app
+                                        .filter((/**@type{server_db_table_App}*/app)=>app.id !=common_app_id)
+                                        //filter admin app if not admin
+                                        .filter((/**@type{server_db_table_App}*/app)=>
+                                                    ((app.id == admin_app_id && admin_app_id == start_app_id)||app.id != admin_app_id)?
+                                                        true:
+                                                            false)
+                                        .map((/**@type{server_db_table_App}*/app)=>{
+                                            const uuid  = Security.securityUUIDCreate(); 
+                                            const secret= Buffer.from(JSON.stringify(Security.securityTransportCreateSecrets()),'utf-8')
+                                                            .toString('base64');
+                                            //save metadata for each app for given token
+                                            //apps will use the uuid and secret for current app mounted
+                                            //requests and logs can then be traced to correct app id
+                                            //secret is used here to identify app id requesting and tom encrypt transport
+                                            //secret can only be used by given idToken
+                                            IamEncryption.post(parameters.app_id,
+                                                {app_id:app.id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id??0});
+                                            return {
+                                                app_id:     app.id,
+                                                uuid:   uuid,
+                                                secret: secret
+                                            };
+                                        })
     };
     //connect socket
     const connectUserData = await socket.socketPost({  app_id:start_app_id,

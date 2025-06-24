@@ -9,7 +9,8 @@
  * @name template
  * @description Template
  * @function
- * @param {{idToken:string, 
+ * @param {{idToken:string,
+ *          app_id:number,
  *          uuid:string,
  *          secret:string,
  *          encrypt_transport:number,
@@ -98,10 +99,13 @@ const template = props =>`  <!DOCTYPE html>
                                                 return new TextDecoder().decode(decryptedBuffer); 
                                             };
                                             const x =   {
-                                                        encrypt: encrypt,
-                                                        decrypt: decrypt,
-                                                        uuid:    '${props.uuid}',
-                                                        secret:  '${props.secret}',
+                                                        encrypt:encrypt,
+                                                        decrypt:decrypt,
+                                                        apps:   [{
+                                                                app_id:  ${props.app_id},
+                                                                uuid:    '${props.uuid}',
+                                                                secret:  '${props.secret}'
+                                                                }]
                                                         }`:
                                             'const x = null;'     
                                         }
@@ -149,6 +153,9 @@ const template = props =>`  <!DOCTYPE html>
                                                                                     btoa('content_type=text/javascript&IAM_data_app_id=0'))
                                                                         .then(result=>{
                                                                             common = result;
+                                                                            if (x && INITmessage.APP_PARAMETER.Info.x)
+                                                                                for (const app of INITmessage.APP_PARAMETER.Info.x)
+                                                                                    x.apps.push(app)
                                                                             common[Object.keys(common.default)[0]]( INITmessage.APP.id, 
                                                                                                                     INITmessage.APP_PARAMETER,
                                                                                                                     x);
@@ -185,6 +192,7 @@ const template = props =>`  <!DOCTYPE html>
  * @description Component
  * @function
  * @param {{data:       {   
+ *                      app_id:number,
  *                      idToken:string, 
  *                      uuid:string, 
  *                      secret:string
@@ -198,7 +206,8 @@ const template = props =>`  <!DOCTYPE html>
  */
 const component = async props =>{
 
-    return template({   idToken: props.data.idToken, 
+    return template({   app_id:props.data.app_id,
+                        idToken: props.data.idToken, 
                         uuid:props.data.uuid,
                         secret:props.data.secret,
                         encrypt_transport:props.data.encrypt_transport,

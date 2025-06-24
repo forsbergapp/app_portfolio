@@ -961,6 +961,7 @@ const commonApp = async parameters =>{
             const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
             const Security = await import('../../../server/security.js');
             const IamEncryption = await import ('../../../server/db/IamEncryption.js');
+
             //save UUID, secret and idToken (ADD FK) in IamEncryption
             const app_id = commonAppIam(parameters.host, 'APP').admin?
                             serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??0:
@@ -975,6 +976,7 @@ const commonApp = async parameters =>{
             IamEncryption.post(app_id,
                                 {app_id:app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id});
             return {result:await ComponentCreate({data:     {
+                                                            app_id:app_id,
                                                             idToken:idToken.token,
                                                             uuid:   uuid,
                                                             secret: secret,
