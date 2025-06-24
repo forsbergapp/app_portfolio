@@ -1342,7 +1342,7 @@ const iamAuthenticateMicroservice = async parameters =>{
  * @param {number} app_id
  * @param {string|null} ip
  * @param {server_iam_access_token_claim_scope_type} scope
- * @returns {Promise.<string>}
+ * @returns {Promise.<{id:Number, token:string}>}
  */
  const iamAuthorizeIdToken = async (app_id, ip, scope)=>{
     const jwt_data = iamAuthorizeToken(app_id, 'APP_ID', {  app_custom_id:null,
@@ -1361,7 +1361,9 @@ const iamAuthenticateMicroservice = async parameters =>{
                             token:   	jwt_data.token,
                             ip:         ip ?? '',
                             ua:         null};
-    return await IamAppIdToken.post(app_id, file_content).then(()=>jwt_data.token);
+    return await IamAppIdToken.post(app_id, file_content).then(result=>
+                    {return {   id:result.result.insertId,
+                                token:jwt_data.token};});
  };
 /**
  * @name iamAuthorizeToken

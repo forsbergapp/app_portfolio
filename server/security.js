@@ -467,8 +467,60 @@ class Jwt {
 }
 const jwt = new Jwt();
 
+/**
+ * @name securityTransportEncrypt
+ * @description Encrypts response in server for BFF using aes-256-gcm and hex, 
+ *              encryption key parameter and init vector parameter are dynamically created
+ *              and should be unique for an app instance and given idToken
+ * @function
+ * @param {{app_id:number,
+ *          data:{},
+ *          encryption_key: string,
+ *          init_vector:    string}} parameters
+ * @returns {Promise.<{encrypted:string, tag:Buffer}>}
+ */
+const securityTransportEncrypt = async parameters => {
+
+    const cipher = Crypto.createCipheriv('aes-256-gcm', parameters.encryption_key, parameters.init_vector);
+    let encrypted = cipher.update(JSON.stringify(parameters.data), 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    const tag = cipher.getAuthTag();
+    return {encrypted, tag};
+};
+
+/**
+ * @name securityTransportDecrypt
+ * @description Decrypts response in server for BFF
+ * @function
+ * @param {{app_id:number,
+ *          data:*,
+ *          encryption_key: string,
+ *          init_vector:    string}} parameters
+ * @returns {Promise.<*>} 
+*/
+const securityTransportDecrypt = async parameters =>{
+    const decipher = Crypto.createDecipheriv('aes-256-gcm', parameters.encryption_key, parameters.init_vector);
+    const  decrypted = decipher.update(parameters.data, 'base64', 'utf8');
+    try {
+        return (decrypted + decipher.final('utf8'));
+    } catch (error) {
+        return null;
+    }
+};
+/**
+ * @name securityTransportCreateSecrets
+ * @description Creates key and init vector for BFF
+ * @function
+ * @returns {{key:Buffer, iv:Buffer}} 
+ */
+const securityTransportCreateSecrets = () => {
+    return {key:Crypto.randomBytes(32),
+            iv:Crypto.randomBytes(12)};};
+
+
 export {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate, securitySecretCreate, 
         securityOTPKeyCreate,securityOTPKeyValidate, securityTOTPGenerate,securityTOTPValidate,
         securityPasswordCreate, securityPasswordCompare, securityPasswordGet,
         securityKeyPairCreate, securityPublicEncrypt, securityPrivateDecrypt,
-        jwt};
+        jwt,
+        securityTransportEncrypt, securityTransportDecrypt, securityTransportCreateSecrets};

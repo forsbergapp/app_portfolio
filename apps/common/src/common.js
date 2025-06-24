@@ -955,19 +955,37 @@ const commonApp = async parameters =>{
                                                 }), type:'HTML'};
         }
         else{
-            /**@type{server_db_document_ConfigServer} */
-            const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
-            const start_app_id = commonAppIam(parameters.host, 'APP').admin?
-                                    serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??0:
-                                        serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??0;
             const {default:ComponentCreate} = await import('./component/common_app.js');
             const { iamAuthorizeIdToken } = await import('../../../server/iam.js');
-            return {result:await ComponentCreate({data:   {
-                                                        idToken:  await iamAuthorizeIdToken(parameters.app_id,parameters.ip, 'APP')
-                                                    },
-                                                methods:null})
+            /**@type{server_db_document_ConfigServer} */
+            const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
+            const Security = await import('../../../server/security.js');
+            const IamEncryption = await import ('../../../server/db/IamEncryption.js');
+            //save UUID, secret and idToken (ADD FK) in IamEncryption
+            const app_id = commonAppIam(parameters.host, 'APP').admin?
+                            serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??0:
+                                serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
+            const uuid = Security.securityUUIDCreate();
+            const idToken = await iamAuthorizeIdToken(parameters.app_id,parameters.ip, 'APP');
+            //create secrets key and iv inside base64 string
+            const secret = Buffer.from(JSON.stringify(Security.securityTransportCreateSecrets()),'utf-8').toString('base64');
+            //Insert encryption metadata record that can only be used for the new idToken
+            //uuid => fetch url that BFF looks up in IamEncryption and extracts content to call bffRestApi()
+            //secret => encrypt rest api url, app header and body
+            IamEncryption.post(app_id,
+                                {app_id:app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id});
+            return {result:await ComponentCreate({data:     {
+                                                            idToken:idToken.token,
+                                                            uuid:   uuid,
+                                                            secret: secret,
+                                                            encrypt_transport:serverUtilNumberValue(configServer.SERVICE_IAM
+                                                                                                    .filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)??0
+                                                            },
+                                                methods:    {   
+                                                            securityTransportEncrypt:Security.securityTransportEncrypt
+                                                            }})
                                 .catch(error=>{
-                                    return Log.post({   app_id:start_app_id, 
+                                    return Log.post({   app_id:parameters.app_id, 
                                         data:{  object:'LogAppError', 
                                                 app:{   app_filename:serverUtilAppFilename(import.meta.url),
                                                         app_function_name:'commonApp()',
