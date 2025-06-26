@@ -375,7 +375,7 @@ const bffStart = async (req, res) =>{
                                                 return {...query, ...key};
                                                             /**@ts-ignore */
                                             }, {}):null)?.parameters ?? '',
-                            body:           decrypted.body,
+                            body:           decrypted.body?JSON.parse(decrypted.body):null,
                             security_app:   { 
                                             AppId: decrypted.headers['Content-Type'] =='text/event-stream'?
                                                 0:
