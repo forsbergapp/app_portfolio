@@ -159,12 +159,14 @@
 
 /** 
  * @description BFF server_bff_endpoint_type
- * @typedef {'APP'|'APP_ID'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_EXTERNAL'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM'|'IAM_SIGNUP'|'SERVER'|'MICROSERVICE'|'MICROSERVICE_AUTH'} server_bff_endpoint_type
+ * @typedef {'APP'|'APP_ID'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_EXTERNAL'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM'|'IAM_SIGNUP'|'SERVER'|'MICROSERVICE'|'MICROSERVICE_AUTH'|string} server_bff_endpoint_type
  */
 
 /**
  * @description BFF server_bff_parameters
  * @typedef {{
+ *          app_id:number,
+ *          endpoint:server_bff_endpoint_type,
  *          host:string|null,
  *          url:string,
  *          method: string,
@@ -184,17 +186,16 @@
  */
 /**
  * @description BFF server_bff_RestApi_parameters
- * @typedef {{  endpoint: server_bff_endpoint_type,
+ * @typedef {{  app_id:number,
+ *              endpoint: server_bff_endpoint_type,
  *              host:string,
  *              url:string,
  *              method: server_req_method,
  *              parameters: string,
  *              body:*,
- *              idToken:string,
- *              AppId:number,
- *              AppSignature:string,
+ *              idToken:string
  *              authorization:string,
- *               ip: string,
+ *              ip: string,
  *              user_agent:string,
  *              accept_language:string,
  *              res:server_server_res}} server_bff_RestApi_parameters
