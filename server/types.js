@@ -1361,6 +1361,7 @@
  * @property {string} route.path
  * body
  * @property {object} body
+ * @property {string} body.x
  * query
  * @property {object} query
  * @property {string} query.parameters

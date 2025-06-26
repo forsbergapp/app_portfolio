@@ -469,54 +469,93 @@ const jwt = new Jwt();
 
 /**
  * @name securityTransportEncrypt
- * @description Encrypts response in server for BFF using aes-256-gcm and hex, 
- *              encryption key parameter and init vector parameter are dynamically created
- *              and should be unique for an app instance and given idToken
+ * @description Encrypts a string for BFF using Web Crypto API
  * @function
- * @param {{app_id:number,
- *          data:{},
- *          encryption_key: string,
- *          init_vector:    string}} parameters
- * @returns {Promise.<{encrypted:string, tag:Buffer}>}
+ * @param {{app_id: number,
+ *          data:   string,
+ *          jwk:    JsonWebKey,
+ *          iv:     string}} parameters
+ * @returns {Promise.<string>}
  */
 const securityTransportEncrypt = async parameters => {
-
-    const cipher = Crypto.createCipheriv('aes-256-gcm', parameters.encryption_key, parameters.init_vector);
-    let encrypted = cipher.update(JSON.stringify(parameters.data), 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-    const tag = cipher.getAuthTag();
-    return {encrypted, tag};
+    const key = await Crypto.webcrypto.subtle.importKey( 
+            'jwk', 
+            parameters.jwk, 
+            {   name: 'AES-GCM', 
+                length: 256, 
+            }, 
+            true,
+            ['encrypt', 'decrypt'] 
+        );
+    return Buffer.from(await Crypto.webcrypto.subtle.encrypt(
+                            {
+                                name: 'AES-GCM',
+                                iv: Buffer.from(parameters.iv,'base64')
+                            },
+                            key,
+                            new TextEncoder().encode(parameters.data)
+                            )).toString('base64');
 };
 
 /**
  * @name securityTransportDecrypt
- * @description Decrypts response in server for BFF
+ * @description Decrypts for BFF using Web Crypto API
+ *              Data to decrypt should be a base64 string
+ *              IV should be a string so IV can be converted using syntax
+ *              new Uint8Array(IV.split(','))
  * @function
- * @param {{app_id:number,
- *          data:*,
- *          encryption_key: string,
- *          init_vector:    string}} parameters
+ * @param {{app_id:     number,
+ *          encrypted:  string,
+ *          jwk:        JsonWebKey,
+ *          iv:         string}} parameters
  * @returns {Promise.<*>} 
 */
 const securityTransportDecrypt = async parameters =>{
-    const decipher = Crypto.createDecipheriv('aes-256-gcm', parameters.encryption_key, parameters.init_vector);
-    const  decrypted = decipher.update(parameters.data, 'base64', 'utf8');
-    try {
-        return (decrypted + decipher.final('utf8'));
-    } catch (error) {
-        return null;
-    }
+    const key = await Crypto.webcrypto.subtle.importKey( 
+                    'jwk', 
+                    parameters.jwk, 
+                    { 
+                        name: 'AES-GCM', 
+                        length: 256, 
+                    }, 
+                    true,
+                    ['encrypt', 'decrypt'] );
+
+    return new TextDecoder().decode(await Crypto.webcrypto.subtle.decrypt(
+                    {
+                        name: 'AES-GCM',
+                        /**@ts-ignore */
+                        iv: new Uint8Array(Buffer.from(parameters.iv,'base64').toString().split(','))
+                    },
+                    key,
+                    /**@ts-ignore */
+                    new Uint8Array(Buffer.from(parameters.encrypted,'base64').toString().split(','))
+                ));
 };
 /**
  * @name securityTransportCreateSecrets
- * @description Creates key and init vector for BFF
+ * @description Creates key and iv for BFF using Web Crypto API
+ *              IV is converted a string of numbers 
+ *              and can be decoded using new Uint8Array(IV.split(','))
  * @function
- * @returns {{key:Buffer, iv:Buffer}} 
+ * @returns {Promise.<{jwk:JsonWebKey, iv:string}>} 
  */
-const securityTransportCreateSecrets = () => {
-    return {key:Crypto.randomBytes(32),
-            iv:Crypto.randomBytes(12)};};
+const securityTransportCreateSecrets = async () => {
 
+    return {jwk:await Crypto.webcrypto.subtle.exportKey(
+                        'jwk', 
+                        await Crypto.webcrypto.subtle.generateKey(
+                            {
+                                name: 'AES-GCM',
+                                length: 256,
+                            },
+                            true,
+                            ['encrypt', 'decrypt']
+                        )),
+            iv: Buffer.from(Crypto.webcrypto.getRandomValues(new Uint8Array(12)).toString()).toString('base64')
+    };
+    
+};
 
 export {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate, securitySecretCreate, 
         securityOTPKeyCreate,securityOTPKeyValidate, securityTOTPGenerate,securityTOTPValidate,

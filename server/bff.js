@@ -5,6 +5,7 @@
  *          server_db_document_ConfigServer,
  *          server_db_table_App,
  *          server_db_table_IamAppIdToken,
+ *          server_db_table_IamEncryption,
  *          server_bff_RestApi_parameters,
  *          server_server_req, 
  *          server_server_res, 
@@ -94,7 +95,7 @@ const bffConnect = async parameters =>{
                                                             false)
                                         .map((/**@type{server_db_table_App}*/app)=>{
                                             const uuid  = Security.securityUUIDCreate(); 
-                                            const secret= Buffer.from(JSON.stringify(Security.securityTransportCreateSecrets()),'utf-8')
+                                            const secret= Buffer.from(JSON.stringify((async ()=>Security.securityTransportCreateSecrets())()),'utf-8')
                                                             .toString('base64');
                                             //save metadata for each app for given token
                                             //apps will use the uuid and secret for current app mounted
@@ -289,7 +290,93 @@ const bffStart = async (req, res) =>{
  * @returns {Promise<*>}
  */
  const bff = async (req, res) =>{
+    const Security = await import('./security.js');
+    const IamEncryption = await import('./db/IamEncryption.js');
     const resultbffInit =   await bffInit(req, res);
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:0}).result;
+    /**
+     * @returns {Promise.<server_bff_parameters|null>}
+     */
+    const parameters = async () =>{
+        
+        if (req.method=='POST' && req.url.startsWith('/bff/x/') && 
+            serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)==1){
+            /**@type{server_db_table_IamEncryption}*/
+            const encryptionData = (IamEncryption.get({app_id:0, resource_id:null, data:{data_app_id:null}}).result ?? [])
+                                    .filter((/**@type{server_db_table_IamEncryption}*/encryption)=>encryption.uuid==req.url.substring('/bff/x/'.length))[0];
+            if (encryptionData){
+                /**
+                 * @type {{headers:{
+                 *                 'app-id':       number,
+                 *                 'app-signature':string,
+                 *                 'app-id-token': string,
+                 *                 Authorization?: string,
+                 *                 'Content-Type': string,
+                 *                 },
+                 *         method: string,
+                 *         url:    string,
+                 *         body:   *}}}
+                 */
+                const decrypted = await Security.securityTransportDecrypt({ app_id:0,
+                                    encrypted:  req.body.x,
+                                    jwk:        JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).jwk,
+                                    iv:         JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).iv})
+                                    .then(result=>JSON.parse(result));
+                return {
+                        //request
+                        host: req.headers.host ?? '', 
+                        url:decrypted.url,
+                        method: decrypted.method,
+                        query:  (decrypted.url.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
+                                .substring(req.path.indexOf('?')+1)))
+                                .reduce((query, param)=>{
+                                    const key = {[param[0]] : decodeURIComponent(param[1])};
+                                    return {...query, ...key};
+                                                /**@ts-ignore */
+                                }, {}):null)?.parameters ?? '',
+                        body: decrypted.body,
+                        security_app: { AppId: decrypted.headers['Content-Type'] =='text/event-stream'?
+                                            0:
+                                                decrypted.headers['app-id']??null,
+                                        AppSignature: decrypted.headers['app-signature']??null,
+                                        AppIdToken: decrypted.headers['app-id-token']?.replace('Bearer ','')??null
+                        },
+                        authorization:  decrypted.headers.Authorization??null, 
+                        //metadata
+                        ip: req.headers['x-forwarded-for'] || req.ip, 
+                        user_agent: req.headers['user-agent'], 
+                        accept_language: req.headers['accept-language'], 
+                        //response
+                        res: res};
+            }
+            else{
+                return null;
+            }
+        }
+        else
+            return {
+                //request
+                host: req.headers.host ?? '', 
+                url:req.originalUrl,
+                method: req.method,
+                query: req.query?.parameters ?? '',
+                body: req.body,
+                security_app: { AppId: req.headers['content-type'] =='text/event-stream'?
+                                    0:
+                                        req.headers['app-id']??null,
+                                AppSignature: req.headers['app-signature']??null,
+                                AppIdToken: req.headers['app-id-token']?.replace('Bearer ','')??null
+                },
+                authorization:  req.headers.authorization, 
+                //metadata
+                ip: req.headers['x-forwarded-for'] || req.ip, 
+                user_agent: req.headers['user-agent'], 
+                accept_language: req.headers['accept-language'], 
+                //response
+                res: res
+            };
+    };
     if (resultbffInit.reason == null){
         /**@type{server_server_response} */
         const result = await bffStart(req, res);
@@ -300,30 +387,17 @@ const bffStart = async (req, res) =>{
                                     route:null,
                                     res:res});
          else{
-            /**@type{server_bff_parameters} */
-            const bff_parameters = {
-                                    //request
-                                    host: req.headers.host ?? '', 
-                                    url:req.originalUrl,
-                                    method: req.method,
-                                    query: req.query?.parameters ?? '',
-                                    body: req.body,
-                                    security_app: { AppId: req.headers['content-type'] =='text/event-stream'?
-                                                        0:
-                                                            req.headers['app-id']??null,
-                                                    AppSignature: req.headers['app-signature']??null,
-                                                    AppIdToken: req.headers['app-id-token']?.replace('Bearer ','')??null
-                                    },
-                                    authorization:  req.headers.authorization, 
-                                    //metadata
-                                    ip: req.headers['x-forwarded-for'] || req.ip, 
-                                    user_agent: req.headers['user-agent'], 
-                                    accept_language: req.headers['accept-language'], 
-                                    //response
-                                    res: res
-                                };
-            /**@type{server_db_document_ConfigServer} */
-            const configServer = ConfigServer.get({app_id:0}).result;
+            /**@type{server_bff_parameters|null} */
+            const bff_parameters = await parameters();
+            if (bff_parameters==null){
+                const iam = await import('./iam.js');
+                return {http:401,
+                        code:'SERVER',
+                        text:iam.iamUtilMessageNotAuthorized(),
+                        developerText:'bff',
+                        moreInfo:null,
+                        type:'JSON'};
+            }
             
             //all rest api starts with REST_RESOURCE_BFF parameter value (add '/')
             const endpoint_role =  bff_parameters.url.startsWith(configServer.SERVER.filter(parameter=>parameter.REST_RESOURCE_BFF)[0].REST_RESOURCE_BFF + '/')?
