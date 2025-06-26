@@ -87,22 +87,16 @@ const bffConnect = async parameters =>{
         admin_only:                     admin_only?1:0,
         x:                              await (async ()=>{
                                             const appX = [];
+                                            //fetch secret metadata for available apps
+                                            //admin: have common app id and admin app id, admin id app already fetched in commonApp()
+                                            //user : have all except admin app id, common app id already fetched in commonApp()
                                             for (const app of App.get({app_id:parameters.app_id, resource_id:null}).result
-                                                //filter common app_id already in returned start app
-                                                .filter((/**@type{server_db_table_App}*/app)=>app.id !=common_app_id)
-                                                //filter admin app if not admin
                                                 .filter((/**@type{server_db_table_App}*/app)=>
-                                                        ((app.id == admin_app_id && admin_app_id == start_app_id)||app.id != admin_app_id)?
-                                                            true:
-                                                                false)){
+                                                        (start_app_id != admin_app_id && app.id != common_app_id && app.id != admin_app_id) ||
+                                                        (start_app_id == admin_app_id && app.id == common_app_id))){
                                                 const uuid  = Security.securityUUIDCreate(); 
                                                 const secret= Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8')
                                                                 .toString('base64');
-                                                //save metadata for each app for given token
-                                                //apps will use the uuid and secret for current app mounted
-                                                //requests and logs can then be traced to correct app id
-                                                //secret is used here to identify app id requesting and to encrypt transport
-                                                //secret can only be used by given idToken
                                                 await IamEncryption.post(parameters.app_id,
                                                     {app_id:app.id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id??0});
                                                 appX.push({
@@ -261,7 +255,7 @@ const bffStart = async (req, res) =>{
     const {serverProcess} = await import('./server.js');
     const {commonAppIam} = await import('../apps/common/src/common.js');
     //if first time, when no user exists, show maintenance in main server
-    if (IamUser.get(0, null).result.length==0 && commonAppIam(req.headers.host).admin == false){
+    if (IamUser.get(0, null).result.length==0 && (await commonAppIam(req.headers.host)).admin == false){
         const {default:ComponentCreate} = await import('../apps/common/src/component/common_maintenance.js');
         return {result:await ComponentCreate({  data:   null,
                                                 methods:null
@@ -294,7 +288,6 @@ const bffStart = async (req, res) =>{
  const bff = async (req, res) =>{
     const Security = await import('./security.js');
     const IamEncryption = await import('./db/IamEncryption.js');
-    const IamAppIdToken = await import('./db/IamAppIdToken.js');
     const iam = await import('./iam.js');
 
     const resultbffInit =   await bffInit(req, res);
@@ -312,8 +305,6 @@ const bffStart = async (req, res) =>{
                                     .filter((/**@type{server_db_table_IamEncryption}*/encryption)=>encryption.uuid==req.url.substring('/bff/x/'.length))[0];
 
             if (encryptionData){
-                /**@type{server_db_table_IamAppIdToken}*/
-                const IamAppIdTokenData = IamAppIdToken.get({app_id:0, resource_id:encryptionData.iam_app_id_token_id, data:{data_app_id:null}}).result[0];
 
                 /**
                  * @type {{headers:{
@@ -344,23 +335,19 @@ const bffStart = async (req, res) =>{
         
                 const authenticate = await iam.iamAuthenticateCommon({
                         idToken: idToken, 
-
                         endpoint:endpoint,
                         authorization: decrypted.headers.Authorization??'', 
                         host: req.headers.host ?? '', 
-                        AppId:decrypted.headers['app-id'], 
-                        AppSignature: decrypted.headers['app-signature'],
+                        security:{
+                                    IamEncryption:encryptionData,
+                                    idToken:idToken,
+                                    AppId:decrypted.headers['app-id'], 
+                                    AppSignature: decrypted.headers['app-signature'],
+                        },
                         ip: req.headers['x-forwarded-for'] || req.ip,
                         res:res
                         });
-                        //authenticate:
-                        //app_id 
-                        //data is decrypted 
-                        //decrypted app id = [app id for uuid]
-                        //token = [token for uuid]
-                return  (authenticate.app_id !=null && decrypted && 
-                        encryptionData.app_id == decrypted.headers['app-id'] &&
-                        IamAppIdTokenData.token == decrypted.headers['app-id-token'].replace('Bearer ',''))?
+                return  (authenticate.app_id !=null && decrypted)?
                             {
                             app_id:         authenticate.app_id,
                             endpoint:       endpoint,
@@ -411,8 +398,7 @@ const bffStart = async (req, res) =>{
                 endpoint:endpoint,
                 authorization: req.headers.authorization??'', 
                 host: req.headers.host??'', 
-                AppId:req.headers['app-id'], 
-                AppSignature: req.headers['app-signature'],
+                security:null,
                 ip: req.headers['x-forwarded-for'] || req.ip, 
                 res:res
                 });
@@ -495,10 +481,7 @@ const bffStart = async (req, res) =>{
                     case bff_parameters.url == '/':{
                         //App route for app asset, common asset, app info page and app
                         return serverResponse({app_id:common_app_id,
-                                        result_request:await app_common.commonApp({  app_id:app_common.commonAppIam(bff_parameters.host??'', 
-                                                                                            bff_parameters.endpoint, 
-                                                                                            bff_parameters.security_app.AppId, 
-                                                                                            bff_parameters.security_app.AppSignature).app_id??0,
+                                        result_request:await app_common.commonApp({  app_id:common_app_id,
                                                                     ip:bff_parameters.ip, 
                                                                     host:bff_parameters.host ?? '', 
                                                                     user_agent:bff_parameters.user_agent, 
