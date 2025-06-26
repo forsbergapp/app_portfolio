@@ -85,31 +85,34 @@ const bffConnect = async parameters =>{
         rest_api_version:               configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION,
         first_time:                     count_user==0?1:0,
         admin_only:                     admin_only?1:0,
-        x:                              App.get({app_id:parameters.app_id, resource_id:null}).result
-                                        //filter common app_id already in returned start app
-                                        .filter((/**@type{server_db_table_App}*/app)=>app.id !=common_app_id)
-                                        //filter admin app if not admin
-                                        .filter((/**@type{server_db_table_App}*/app)=>
-                                                    ((app.id == admin_app_id && admin_app_id == start_app_id)||app.id != admin_app_id)?
-                                                        true:
-                                                            false)
-                                        .map((/**@type{server_db_table_App}*/app)=>{
-                                            const uuid  = Security.securityUUIDCreate(); 
-                                            const secret= Buffer.from(JSON.stringify((async ()=>Security.securityTransportCreateSecrets())()),'utf-8')
-                                                            .toString('base64');
-                                            //save metadata for each app for given token
-                                            //apps will use the uuid and secret for current app mounted
-                                            //requests and logs can then be traced to correct app id
-                                            //secret is used here to identify app id requesting and tom encrypt transport
-                                            //secret can only be used by given idToken
-                                            IamEncryption.post(parameters.app_id,
-                                                {app_id:app.id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id??0});
-                                            return {
-                                                app_id:     app.id,
-                                                uuid:   uuid,
-                                                secret: secret
-                                            };
-                                        })
+        x:                              await (async ()=>{
+                                            const appX = [];
+                                            for (const app of App.get({app_id:parameters.app_id, resource_id:null}).result
+                                                //filter common app_id already in returned start app
+                                                .filter((/**@type{server_db_table_App}*/app)=>app.id !=common_app_id)
+                                                //filter admin app if not admin
+                                                .filter((/**@type{server_db_table_App}*/app)=>
+                                                        ((app.id == admin_app_id && admin_app_id == start_app_id)||app.id != admin_app_id)?
+                                                            true:
+                                                                false)){
+                                                const uuid  = Security.securityUUIDCreate(); 
+                                                const secret= Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8')
+                                                                .toString('base64');
+                                                //save metadata for each app for given token
+                                                //apps will use the uuid and secret for current app mounted
+                                                //requests and logs can then be traced to correct app id
+                                                //secret is used here to identify app id requesting and to encrypt transport
+                                                //secret can only be used by given idToken
+                                                await IamEncryption.post(parameters.app_id,
+                                                    {app_id:app.id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id??0});
+                                                appX.push({
+                                                    app_id:     app.id,
+                                                    uuid:   uuid,
+                                                    secret: secret
+                                                });
+                                            }
+                                            return appX;
+                                        })()
     };
     //connect socket
     const connectUserData = await socket.socketPost({  app_id:start_app_id,
@@ -328,8 +331,8 @@ const bffStart = async (req, res) =>{
                         host: req.headers.host ?? '', 
                         url:decrypted.url,
                         method: decrypted.method,
-                        query:  (decrypted.url.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
-                                .substring(req.path.indexOf('?')+1)))
+                        query:  (decrypted.url.indexOf('?')>-1?Array.from(new URLSearchParams(decrypted.url
+                                .substring(decrypted.url.indexOf('?')+1)))
                                 .reduce((query, param)=>{
                                     const key = {[param[0]] : decodeURIComponent(param[1])};
                                     return {...query, ...key};
