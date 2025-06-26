@@ -6,13 +6,14 @@
  *          server_db_table_AppSecret,
  *          server_db_table_IamAppIdToken,
  *          server_db_table_IamAppAccess,
+ *          server_db_table_IamEncryption,
  *          server_db_table_IamMicroserviceToken,
- *          server_db_table_ServiceRegistry,
  *          server_db_table_IamUser,
  *          server_db_table_IamUserApp,
  *          server_db_table_IamUserEvent,
  *          server_db_table_IamControlObserve,server_db_table_IamControlUserAgent,
  *          server_db_table_IamControlIp,
+ *          server_db_table_ServiceRegistry,
  *          server_iam_access_token_claim,server_iam_access_token_claim_scope_type,
  *          server_iam_microservice_token_claim,
  *          server_bff_endpoint_type,
@@ -708,8 +709,12 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *          endpoint: server_bff_endpoint_type,
  *          authorization: string,
  *          host: string,
- *          AppId:number,
- *          AppSignature:string,
+ *          security:{
+ *                      IamEncryption:  server_db_table_IamEncryption,
+ *                      idToken:        string,
+ *                      AppId:          number, 
+ *                      AppSignature:   string
+ *                  }|null,
  *          ip: string,
  *          res: server_server_res}} parameters
  * @returns {Promise.<{app_id:number|null}>}
@@ -717,7 +722,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
  const iamAuthenticateCommon = async parameters  =>{
     /**@type{server_db_document_ConfigServer} */
     const configServer = ConfigServer.get({app_id:0}).result;
-    const appIam = commonAppIam(parameters.host, parameters.endpoint, parameters.AppId, parameters.AppSignature);
+    const appIam = await commonAppIam(parameters.host, parameters.endpoint, parameters.security);
     
     if (parameters.endpoint=='APP_EXTERNAL' ||
         parameters.endpoint=='APP_ACCESS_EXTERNAL' ||
@@ -886,7 +891,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *                          statusMessage: string}>}
  */
  const iamAuthenticateRequest = async parameters => {
-    const app_id = commonAppIam(parameters.host, null).app_id;
+    const app_id = (await commonAppIam(parameters.host, null)).app_id;
     //set calling app_id using app_id or common app_id if app_id is unknown
     const calling_app_id = app_id ?? serverUtilNumberValue(ConfigServer.get({app_id:app_id??0, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
 

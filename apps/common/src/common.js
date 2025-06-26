@@ -3,10 +3,10 @@
 /**
  * @import {server_db_table_App,
  *          server_db_table_AppModule,
- *          server_db_table_AppParameter,
+ *          server_db_table_IamAppIdToken,
+ *          server_db_table_IamEncryption,
  *          server_db_table_IamUser,
  *          server_apps_report_create_parameters,
- *          server_apps_info_parameters,
  *          server_apps_module_with_metadata,
  *          server_apps_module_metadata,
  *          APP_server_apps_module_common_type,
@@ -22,9 +22,10 @@ const App = await import('../../../server/db/App.js');
 const AppModule = await import('../../../server/db/AppModule.js');
 const AppParameter = await import('../../../server/db/AppParameter.js');
 const ConfigServer = await import('../../../server/db/ConfigServer.js');
+const IamAppIdToken = await import('../../../server/db/IamAppIdToken.js');
 const Log = await import('../../../server/db/Log.js');
-const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import('../../../server/server.js');
-const {serverProcess} = await import('../../../server/server.js');
+const Security = await import('../../../server/security.js');
+const {serverProcess, serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import('../../../server/server.js');
 
 const fs = await import('node:fs');
 
@@ -749,53 +750,87 @@ const commonModuleMetaDataGet = async parameters =>{
  * @description Returns authenticated app id 
  * @param {string} host 
  * @param {server_bff_endpoint_type|null} endpoint
- * @param {number|null} AppId
- * @param {string|null} AppSignature
- * @returns {{  admin:boolean,
- *              app_id:number|null,
- *              app_id_token:number|null,
- *              apps:server_db_table_App['id'][]}}
+ * @param {{
+ *          IamEncryption:  server_db_table_IamEncryption,
+ *          idToken:        string,
+ *          AppId:          number, 
+ *          AppSignature:   string
+ *          }|null} security
+ * @returns {Promise.<{ admin:boolean,
+ *                      app_id:number|null,
+ *                      app_id_token:number|null,
+ *                      apps:server_db_table_App['id'][]}>}
  */
-const commonAppIam = (host, endpoint=null, AppId=null, AppSignature=null) =>{
-    /**@type{server_db_document_ConfigServer} */
-    const configServer = ConfigServer.get({app_id:0}).result;
-    /**@type{server_db_table_App['id'][]} */
-    const apps = App.get({app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0, resource_id:null})
-                .result.map((/**@type{server_db_table_App}*/app)=>{return app.id;});
-    if (endpoint !=null && ['MICROSERVICE', 'MICROSERVICE_AUTH'].includes(endpoint))
-        return {admin:false, 
-                app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
-                app_id_token:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
-                //all apps
-                apps:apps};
-    else
-        if ([configServer.SERVER.filter(parameter=>'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN,
-            configServer.SERVER.filter(parameter=>'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN]
-                                .includes(host.split(':')[host.split(':').length-1]))
-            return {
-                    admin:true,
-                    app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID),
-                    app_id_token:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID),
-                    //all apps
-                    apps:apps
-            };
-        else        
-            if (endpoint==null)
-                return {
-                    admin:false,
+const commonAppIam = async (host, endpoint=null, security=null) =>{
+    //authenticate:
+    //app_id 
+    //decrypted app id = [app id for uuid]
+    //decrypted token = [token for uuid]
+    //decrypted Appsignature can be decrypted using 
+    //  secret found in IamEncryption for decrypted app id, token and for uuid used in request
+    if (security != null && 
+        (
+        security?.AppId == security?.IamEncryption.app_id  &&
+        security?.idToken.replace('Bearer ','') == IamAppIdToken.get({  app_id:0, 
+                                                                        resource_id:security?.IamEncryption.iam_app_id_token_id??null, 
+                                                                        data:{data_app_id:null}}).result[0].token &&
+        await Security.securityTransportDecrypt({ 
+            app_id:0,
+            encrypted:  security.AppSignature??'',
+            jwk:        JSON.parse(Buffer.from(security.IamEncryption.secret, 'base64').toString('utf-8')).jwk,
+            iv:         JSON.parse(Buffer.from(security.IamEncryption.secret, 'base64').toString('utf-8')).iv})
+            .then(()=>
+                1)
+            .catch(()=>
+                0
+            )==1)==false){
+            return {admin:false, 
+                    app_id:null,
+                    app_id_token:null,
+                    apps:[]};
+    }
+    else{
+        /**@type{server_db_document_ConfigServer} */
+        const configServer = ConfigServer.get({app_id:0}).result;
+        /**@type{server_db_table_App['id'][]} */
+        const apps = App.get({app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0, resource_id:null})
+                    .result.map((/**@type{server_db_table_App}*/app)=>{return app.id;});
+        if (endpoint !=null && ['MICROSERVICE', 'MICROSERVICE_AUTH'].includes(endpoint))
+            return {admin:false, 
                     app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
                     app_id_token:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
-                    //no apps
-                    apps:[]
+                    //all apps
+                    apps:apps};
+        else
+            if ([configServer.SERVER.filter(parameter=>'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN,
+                configServer.SERVER.filter(parameter=>'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN]
+                                    .includes(host.split(':')[host.split(':').length-1]))
+                return {
+                        admin:true,
+                        app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID),
+                        app_id_token:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID),
+                        //all apps
+                        apps:apps
                 };
             else        
-                return {
+                if (endpoint==null)
+                    return {
                         admin:false,
-                        app_id:serverUtilNumberValue(AppId)??0,
+                        app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
                         app_id_token:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
-                        //all apps except admin
-                        apps:apps.filter(id=>id != serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID))
-                };
+                        //no apps
+                        apps:[]
+                    };
+                else        
+                    return {
+                            admin:false,
+                            app_id:serverUtilNumberValue(security?.AppId)??0,
+                            app_id_token:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
+                            //all apps except admin
+                            apps:apps.filter(id=>id != serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID))
+                    };
+    }
+    
  };
  /**
   * @name commonAppInit
@@ -947,7 +982,7 @@ const commonApp = async parameters =>{
                 sendfile:null,
                 type:'JSON'};
     else
-        if  (commonAppIam(parameters.host, 'APP').admin == false && 
+        if  ((await commonAppIam(parameters.host, 'APP')).admin == false && 
                 await commonAppStart(parameters.app_id) ==false){
             const {default:ComponentCreate} = await import('./component/common_maintenance.js');
             return {result:await ComponentCreate({  data:   null,
@@ -962,17 +997,17 @@ const commonApp = async parameters =>{
             const Security = await import('../../../server/security.js');
             const IamEncryption = await import ('../../../server/db/IamEncryption.js');
             const admin_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
+            const common_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
             //save UUID, secret and idToken (ADD FK) in IamEncryption
-            const app_id = commonAppIam(parameters.host, 'APP').admin?
+            const app_id = (await commonAppIam(parameters.host, 'APP')).admin?
                                 admin_app_id:
-                                    serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
+                                    common_app_id;
             const uuid = Security.securityUUIDCreate();
-            const idToken = await iamAuthorizeIdToken(parameters.app_id,parameters.ip, 'APP');
+            //save token in admin appid for admin or in commmon app id for users
+            const idToken = await iamAuthorizeIdToken(app_id,parameters.ip, 'APP');
             //create secrets key and iv inside base64 string
             const secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8').toString('base64');
-            //Insert encryption metadata record that can only be used for the new idToken
-            //uuid => fetch url that BFF looks up in IamEncryption and extracts content to call bffRestApi()
-            //secret => encrypt rest api url, app header and body
+            //Insert encryption metadata record 
             IamEncryption.post(app_id,
                                 {app_id:app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id});
             return {result:await ComponentCreate({data:     {

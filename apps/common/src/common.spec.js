@@ -72,6 +72,7 @@ const test = async t =>
             const app_common = await import('./common.js');
                  
             /**
+             * @description 
              * @type{{  app_id:number,
              *          ip:string,
              *          host:string,
@@ -79,7 +80,7 @@ const test = async t =>
              *          accept_language:string,}}
              */
             const parameters = {
-                app_id:app_common.commonAppIam('localhost').app_id ?? 0,
+                app_id:0,
                 ip:'::1',
                 host:'localhost',
                 user_agent:'BDD test',

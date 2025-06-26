@@ -81,9 +81,18 @@ const template = props =>`  <!DOCTYPE html>
                                                     switch (message.broadcast_type){
                                                         case 'INIT':{
                                                             const INITmessage = JSON.parse(message.broadcast_message);
-                                                            FFB({   app_id:             INITmessage.APP_PARAMETER.Info.app_id,
-                                                                    uuid:               parameters.uuid,
-                                                                    secret:             parameters.secret,
+                                                            //Use uuid and secret from common app id in this INIT message
+                                                            const uuid = INITmessage.APP_PARAMETER.Info.x?.filter(app=>app.app_id==INITmessage.APP_PARAMETER.Info.app_common_app_id)[0]?.uuid;
+                                                            const secret = INITmessage.APP_PARAMETER.Info.x?.filter(app=>app.app_id==INITmessage.APP_PARAMETER.Info.app_common_app_id)[0]?.secret;
+                                                            FFB({   app_id:             uuid?
+                                                                                            INITmessage.APP_PARAMETER.Info.app_common_app_id:
+                                                                                                INITmessage.APP_PARAMETER.Info.app_id,
+                                                                    uuid:               uuid?
+                                                                                            uuid:
+                                                                                                parameters.uuid,
+                                                                    secret:             uuid?
+                                                                                            secret:
+                                                                                                parameters.secret,
                                                                     response_type:      'BLOB',
                                                                     app_admin_app_id:   INITmessage.APP_PARAMETER.Info.app_admin_app_id,
                                                                     rest_api_version:   INITmessage.APP_PARAMETER.Info.rest_api_version,
@@ -200,7 +209,8 @@ const template = props =>`  <!DOCTYPE html>
                                                                         data:JSON.stringify({  
                                                                                 headers:{
                                                                                         'app-id':       parameters.app_id,
-                                                                                        'app-signature':'commonFFB',
+                                                                                        'app-signature':await encrypt({ secret:parameters.secret,
+                                                                                                                        data:'FFB'}),
                                                                                         'app-id-token': 'Bearer ' + parameters.data.idToken,
                                                                                         ...(authorization && {Authorization: authorization}),
                                                                                         'Content-Type': parameters.response_type =='SSE'?
