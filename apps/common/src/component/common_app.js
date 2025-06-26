@@ -173,28 +173,67 @@ const template = props =>`  <!DOCTYPE html>
                                             const bff_path = parameters.rest_bff_path + '/' + 
                                                                 ROLE.toLowerCase() + 
                                                                 '/v' + (parameters.rest_api_version ??1);
-                                            const url = bff_path + parameters.data.path + '?parameters=' + encodedparameters;
+                                            const url = (encrypt && parameters.uuid && parameters.secret)?
+                                                            ('/bff/x/' + parameters.uuid):
+                                                                bff_path + parameters.data.path + '?parameters=' + encodedparameters;
+
                                             if (parameters.spinner_id && common.COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
                                                 common.COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.add('css_spinner');
                                             const resultFetch = {finished:false};
-                                            const options = {
-                                                            cache: 'no-store',
-                                                            method: parameters.data.method,
-                                                            headers:{   'app-id': parameters.app_id,
-                                                                        'app-signature': 'commonFFB',
-                                                                        'app-id-token': 'Bearer ' + parameters.data.idToken,
-                                                                        ...(parameters.response_type =='SSE' && {'Cache-control': 'no-cache'}),
-                                                                        'Content-Type': parameters.response_type =='SSE'?
-                                                                                            'text/event-stream':
-                                                                                                'application/json',
-                                                                        'Connection':   parameters.response_type =='SSE'?
-                                                                                            'keep-alive':
-                                                                                                'close',
-                                                                        ...(authorization && {Authorization: authorization})},
-                                                            body:  parameters.data.body?
-                                                                        JSON.stringify({data:btoa(JSON.stringify(parameters.data.body))}):
-                                                                            null
-                                                            };
+                                            const options = (encrypt && parameters.uuid && parameters.secret)?
+                                                                //encrypted options
+                                                                {
+                                                                cache:  'no-store',
+                                                                method: 'POST',
+                                                                headers:{
+                                                                            ...(parameters.response_type =='SSE' && {'Cache-control': 'no-cache'}),
+                                                                            'Content-Type': 'application/json',
+                                                                            'Connection':   parameters.response_type =='SSE'?
+                                                                                                'keep-alive':
+                                                                                                    'close',
+                                                                        },
+                                                                body: JSON.stringify({
+                                                                        x: await encrypt({
+                                                                            secret:parameters.secret,
+                                                                            data:JSON.stringify({  
+                                                                                    headers:{
+                                                                                            'app-id':       parameters.app_id,
+                                                                                            'app-signature':'commonFFB',
+                                                                                            'app-id-token': 'Bearer ' + parameters.data.idToken,
+                                                                                            ...(authorization && {Authorization: authorization}),
+                                                                                            'Content-Type': parameters.response_type =='SSE'?
+                                                                                                                'text/event-stream':
+                                                                                                                    'application/json',
+                                                                                            },
+                                                                                    method: parameters.data.method,
+                                                                                    url:    bff_path + parameters.data.path + '?parameters=' + encodedparameters,
+                                                                                    body:   parameters.data.body?
+                                                                                                JSON.stringify({data:btoa(JSON.stringify(parameters.data.body))}):
+                                                                                                    null
+                                                                                })
+                                                                            })
+                                                                    })
+                                                                }
+                                                            :
+                                                                //not encrypted options
+                                                                {
+                                                                cache: 'no-store',
+                                                                method: parameters.data.method,
+                                                                headers:{   'app-id': parameters.app_id,
+                                                                            'app-signature': 'commonFFB',
+                                                                            'app-id-token': 'Bearer ' + parameters.data.idToken,
+                                                                            ...(parameters.response_type =='SSE' && {'Cache-control': 'no-cache'}),
+                                                                            'Content-Type': parameters.response_type =='SSE'?
+                                                                                                'text/event-stream':
+                                                                                                    'application/json',
+                                                                            'Connection':   parameters.response_type =='SSE'?
+                                                                                                'keep-alive':
+                                                                                                    'close',
+                                                                            ...(authorization && {Authorization: authorization})},
+                                                                body:  parameters.data.body?
+                                                                            JSON.stringify({data:btoa(JSON.stringify(parameters.data.body))}):
+                                                                                null
+                                                                };
                                             const showError = message => common?.commonMessageShow?common.commonMessageShow('ERROR_BFF', null, null, message):alert(message);
                                             const showException = message => common?.commonException?common.commonException(common.COMMON_GLOBAL.app_function_exception, message):alert(message);
                                             const showBadRequest = () => common?.commonMessageShow?common.commonMessageShow('ERROR_BFF', null, 'message_text', '!'):alert('ABC!');
@@ -260,45 +299,43 @@ const template = props =>`  <!DOCTYPE html>
                                         }
                                         ${props.encrypt_transport==1?
                                             `const encrypt = async parameters =>{
-                                                const keyImported = await window.crypto.subtle.importKey(
-                                                    'raw',
-                                                    parameters.key,
-                                                    {
-                                                        name: 'AES-GCM',
-                                                    },
-                                                    false,
-                                                    ['encrypt']
-                                                );
-
-                                                const encryptedBuffer = await window.crypto.subtle.encrypt(
-                                                    {
-                                                        name: 'AES-GCM',
-                                                        iv: parameters.iv,
-                                                    },
-                                                    keyImported,
-                                                    new TextEncoder().encode(parameters.data)
-                                                );
-                                                return new Uint8Array(encryptedBuffer);
+                                                const key = await window.crypto.subtle.importKey( 
+                                                                'jwk', 
+                                                                JSON.parse(atob(parameters.secret)).jwk, 
+                                                                {   name: 'AES-GCM', 
+                                                                    length: 256, 
+                                                                }, 
+                                                                true,
+                                                                ['encrypt', 'decrypt'] 
+                                                            );
+                                                return btoa(new Uint8Array(await window.crypto.subtle.encrypt(
+                                                                        {
+                                                                            name: 'AES-GCM',
+                                                                            iv: new Uint8Array(atob(JSON.parse(atob(parameters.secret)).iv).split(','))
+                                                                        },
+                                                                        key,
+                                                                        new TextEncoder().encode(parameters.data)
+                                                        )).toString());
                                             };
                                             const decrypt = async parameters =>{
-                                                const keyImported = await window.crypto.subtle.importKey(
-                                                    'raw',
-                                                    parameters.key,
-                                                    {
-                                                        name: 'AES-GCM',
-                                                    },
-                                                    false,
-                                                    ['decrypt']
-                                                );
-                                                const decryptedBuffer = await window.crypto.subtle.decrypt(
-                                                    {
-                                                        name: 'AES-GCM',
-                                                        iv: parameters.iv,
-                                                    },
-                                                    keyImported,
-                                                    parameters.data
-                                                );
-                                                return new TextDecoder().decode(decryptedBuffer); 
+                                                const key = await window.crypto.subtle.importKey( 
+                                                                'jwk', 
+                                                                JSON.parse(atob(parameters.secret)).jwk, 
+                                                                { 
+                                                                    name: 'AES-GCM', 
+                                                                    length: 256, 
+                                                                }, 
+                                                                true,
+                                                                ['encrypt', 'decrypt'] );
+
+                                                return new TextDecoder().decode(await window.crypto.subtle.decrypt(
+                                                                {
+                                                                    name: 'AES-GCM',
+                                                                    iv: new Uint8Array(atob(JSON.parse(atob(parameters.secret)).iv).split(','))
+                                                                },
+                                                                key,
+                                                                atob(parameters.encrypted) )
+                                                        );
                                             };
                                             const x =   {
                                                         FFB:    FFB,

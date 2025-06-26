@@ -8,6 +8,39 @@
         {"url": ""}
     ],
     "paths": {
+        "/bff/x/${resource_id_string}": {
+            "post": {
+                "summary": "",
+                "operationId": "server.bff.bffX",
+                "security":[],
+                "parameters": [
+                        {"description": "Encrypted BFF"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "description":"UUID used in IamEncryption",
+                            "in":"path",
+                            "required":true
+                        }
+                ],
+                "requestBody":{
+                            "description":"Encrypted data from FFB, BFF decrypts in server and forwards to REST API",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object",
+                                        "properties":{
+                                            "x":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
+                "responses": {}
+            }
+        },
         "/bff/app_id/v1/server-bff": {
             "post": {
                 "summary": "",

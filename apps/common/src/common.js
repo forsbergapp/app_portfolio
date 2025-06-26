@@ -969,7 +969,7 @@ const commonApp = async parameters =>{
             const uuid = Security.securityUUIDCreate();
             const idToken = await iamAuthorizeIdToken(parameters.app_id,parameters.ip, 'APP');
             //create secrets key and iv inside base64 string
-            const secret = Buffer.from(JSON.stringify(Security.securityTransportCreateSecrets()),'utf-8').toString('base64');
+            const secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8').toString('base64');
             //Insert encryption metadata record that can only be used for the new idToken
             //uuid => fetch url that BFF looks up in IamEncryption and extracts content to call bffRestApi()
             //secret => encrypt rest api url, app header and body
