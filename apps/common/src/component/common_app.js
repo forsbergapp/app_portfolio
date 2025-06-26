@@ -146,6 +146,7 @@ const template = props =>`  <!DOCTYPE html>
                                             /**@type{number} */
                                             let status;
                                             let authorization = null;
+                                            const encrypt_transport = ${props.encrypt_transport==1?'true':'false'};
                                             
                                             parameters.data.query = parameters.data.query==null?'':parameters.data.query;
                                             parameters.data.body = parameters.data.body?parameters.data.body:null;
@@ -166,21 +167,21 @@ const template = props =>`  <!DOCTYPE html>
                                                 }
                                             }
                                             //add common query parameter
-                                            parameters.data.query += '&locale=' + parameters.data.locale;
+                                            parameters.data.query += '&locale=' + (parameters.data.locale??'');
 
                                             //encode query parameters
                                             const encodedparameters = parameters.data.query?btoa(parameters.data.query):'';
                                             const bff_path = parameters.rest_bff_path + '/' + 
                                                                 ROLE.toLowerCase() + 
                                                                 '/v' + (parameters.rest_api_version ??1);
-                                            const url = (encrypt && parameters.uuid && parameters.secret)?
+                                            const url = encrypt_transport?
                                                             ('/bff/x/' + parameters.uuid):
                                                                 bff_path + parameters.data.path + '?parameters=' + encodedparameters;
 
                                             if (parameters.spinner_id && common.COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
                                                 common.COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.add('css_spinner');
                                             const resultFetch = {finished:false};
-                                            const options = (encrypt && parameters.uuid && parameters.secret)?
+                                            const options = encrypt_transport?
                                                                 //encrypted options
                                                                 {
                                                                 cache:  'no-store',
