@@ -97,7 +97,8 @@ const template = props =>`  <!DOCTYPE html>
                                                                             body:               null}})
                                                             .then(result=>{
                                                                 import(URL.createObjectURL(  new Blob ([result],{type: 'text/javascript'})))
-                                                                .then(common=>{
+                                                                .then(result=>{
+                                                                    common = result;
                                                                     if (x.apps && INITmessage.APP_PARAMETER.Info.x)
                                                                         for (const app of INITmessage.APP_PARAMETER.Info.x)
                                                                             x.apps.push(app)
