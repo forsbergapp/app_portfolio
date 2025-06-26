@@ -828,17 +828,19 @@
 /** 
  * @description DB server_db_config_server_service_app
  * @memberof dbObjects
- * @typedef {{APP_START_APP_ID              :string,
- *            APP_COMMON_APP_ID             :string,
- *            APP_ADMIN_APP_ID              :string,
- *            APP_TOOLBAR_BUTTON_START      :string,
- *            APP_TOOLBAR_BUTTON_FRAMEWORK  :string,
- *            APP_CACHE_CONTROL             :string,
- *            APP_CACHE_CONTROL_FONT        :string,
- *            APP_FRAMEWORK                 :number,
- *            APP_FRAMEWORK_MESSAGES        :number,
- *            APP_LIMIT_RECORDS             :number,
- *            APP_DEFAULT_RANDOM_COUNTRY    :string}} server_db_config_server_service_app
+ * @typedef {{APP_START_APP_ID                  :string,
+ *            APP_COMMON_APP_ID                 :string,
+ *            APP_ADMIN_APP_ID                  :string,
+ *            APP_TOOLBAR_BUTTON_START          :string,
+ *            APP_TOOLBAR_BUTTON_FRAMEWORK      :string,
+ *            APP_CACHE_CONTROL                 :string,
+ *            APP_CACHE_CONTROL_FONT            :string,
+ *            APP_FRAMEWORK                     :number,
+ *            APP_FRAMEWORK_MESSAGES            :number,
+ *            APP_LIMIT_RECORDS                 :number,
+ *            APP_DEFAULT_RANDOM_COUNTRY        :string,
+ *            APP_REQUESTTIMEOUT_SECONDS        :string,
+ *            APP_REQUESTTIMEOUT_ADMIN_MINUTES  :string}} server_db_config_server_service_app
  */
 
 /** 
