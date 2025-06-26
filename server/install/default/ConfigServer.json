@@ -29,7 +29,9 @@
         {"APP_FRAMEWORK": "1","COMMENT": "1=Javascript (default), 2=Vue, 3=React"},  
         {"APP_FRAMEWORK_MESSAGES":"1", "COMMENT": "0=NO, 1=YES"},
         {"APP_LIMIT_RECORDS":"100", "COMMENT": ""},
-        {"APP_DEFAULT_RANDOM_COUNTRY":"", "COMMENT": "Used by worldcities random function" }
+        {"APP_DEFAULT_RANDOM_COUNTRY":"", "COMMENT": "Used by worldcities random function" },
+        {"APP_REQUESTTIMEOUT_SECONDS": 5,"COMMENT":""},
+        {"APP_REQUESTTIMEOUT_ADMIN_MINUTES": 60,"COMMENT":""}
     ],
     "SERVICE_MICROSERVICE":[
         {"CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS": 5, "COMMENT":""},

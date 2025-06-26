@@ -961,11 +961,11 @@ const commonApp = async parameters =>{
             const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
             const Security = await import('../../../server/security.js');
             const IamEncryption = await import ('../../../server/db/IamEncryption.js');
-
+            const admin_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
             //save UUID, secret and idToken (ADD FK) in IamEncryption
             const app_id = commonAppIam(parameters.host, 'APP').admin?
-                            serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??0:
-                                serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
+                                admin_app_id:
+                                    serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
             const uuid = Security.securityUUIDCreate();
             const idToken = await iamAuthorizeIdToken(parameters.app_id,parameters.ip, 'APP');
             //create secrets key and iv inside base64 string
@@ -976,12 +976,17 @@ const commonApp = async parameters =>{
             IamEncryption.post(app_id,
                                 {app_id:app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id});
             return {result:await ComponentCreate({data:     {
-                                                            app_id:app_id,
-                                                            idToken:idToken.token,
-                                                            uuid:   uuid,
-                                                            secret: secret,
-                                                            encrypt_transport:serverUtilNumberValue(configServer.SERVICE_IAM
-                                                                                                    .filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)??0
+                                                            app_id:                             app_id,
+                                                            app_admin_app_id:                   admin_app_id,
+                                                            rest_resource_bff:                  configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF,
+                                                            app_rest_api_version:               configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION,
+                                                            app_request_timeout_seconds:        serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_SECONDS' in parameter)[0].APP_REQUESTTIMEOUT_SECONDS)??5,
+                                                            app_requesttimeout_admin_minutes:   serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0].APP_REQUESTTIMEOUT_ADMIN_MINUTES)??60,
+                                                            idToken:                            idToken.token,
+                                                            uuid:                               uuid,
+                                                            secret:                             secret,
+                                                            encrypt_transport:                  serverUtilNumberValue(configServer.SERVICE_IAM
+                                                                                                .filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)??0
                                                             },
                                                 methods:    {   
                                                             securityTransportEncrypt:Security.securityTransportEncrypt
