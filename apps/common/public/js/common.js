@@ -3693,12 +3693,11 @@ const commonGet = () =>{
  * @name commonInit
  * @description Init common
  * @function
- * @param {number} start_app_id
  * @param {commonInitAppParameters} parameters 
  * @param {CommonGlobal['x']} x
  * @returns {Promise.<void>}
  */
-const commonInit = async (start_app_id, parameters, x) => {  
+const commonInit = async (parameters, x) => {  
     
     //Config Server	
     COMMON_GLOBAL.rest_resource_bff =               parameters.Info.rest_resource_bff;
@@ -3738,7 +3737,8 @@ const commonInit = async (start_app_id, parameters, x) => {
 
     setUserAgentAttributes();
     custom_framework();
-    COMMON_GLOBAL.app_id =                          COMMON_GLOBAL.app_start_app_id;
+    //set common app id
+    COMMON_GLOBAL.app_id =                          COMMON_GLOBAL.app_common_app_id;
     await commonComponentRender({   mountDiv:   'common_app',
         data:       {
                     app_toolbar_button_start:       COMMON_GLOBAL.app_toolbar_button_start,
@@ -3752,7 +3752,7 @@ const commonInit = async (start_app_id, parameters, x) => {
         data:           null,
         methods:        null,
         path:           '/common/component/common_dialogue_message.js'});
-    commonMountApp(start_app_id);
+    commonMountApp(COMMON_GLOBAL.app_start_app_id);
     
 };
 export{/* GLOBALS*/

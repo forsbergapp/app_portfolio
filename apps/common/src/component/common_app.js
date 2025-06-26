@@ -80,7 +80,7 @@ const template = props =>`  <!DOCTYPE html>
                                                         switch (message.broadcast_type){
                                                             case 'INIT':{
                                                                 const INITmessage = JSON.parse(message.broadcast_message);
-                                                                FFB({   app_id:             INITmessage.APP.id,
+                                                                FFB({   app_id:             INITmessage.APP_PARAMETER.Info.app_id,
                                                                         uuid:               parameters.uuid,
                                                                         secret:             parameters.secret,
                                                                         response_type:      'BLOB',
@@ -100,8 +100,7 @@ const template = props =>`  <!DOCTYPE html>
                                                                         if (x.apps && INITmessage.APP_PARAMETER.Info.x)
                                                                             for (const app of INITmessage.APP_PARAMETER.Info.x)
                                                                                 x.apps.push(app)
-                                                                        common[Object.keys(common.default)[0]]( INITmessage.APP.id, 
-                                                                                                                INITmessage.APP_PARAMETER,
+                                                                        common[Object.keys(common.default)[0]]( INITmessage.APP_PARAMETER,
                                                                                                                 x);
                                                                     })
                                                                 });
