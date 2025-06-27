@@ -98,6 +98,10 @@
 #toolbar_btn_right::before{									content:var(--common_app_icon_right)}
 #toolbar_btn_search::before{								content:var(--common_app_icon_search)}
 
+/* PAPER, PREVIEW AND PRINT*/
+#common_window_info #paper {
+	margin-top: 10px;
+}
 
 /* TOOLBAR TOP*/
 #toolbar_top {
@@ -107,7 +111,7 @@
     justify-content: center;
 	z-index: 2;
     position: fixed;
-
+    top: 0;
 }
 #toolbar_btn_zoomin,#toolbar_btn_zoomout,#toolbar_btn_left, #toolbar_btn_right, #toolbar_btn_search {
 	font-size: 48px;
