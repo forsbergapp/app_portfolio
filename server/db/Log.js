@@ -170,7 +170,7 @@ const getStatusCodes = async () =>{
 };
 /**
 * @name getStat
-* @description Get log stat, returns base64 string with server_log_result_logStatGet[] to avoid record limit issue
+* @description Get Request log stat, returns base64 string with server_log_result_logStatGet[] to avoid record limit issue
 * @function
 * @memberof ROUTE_REST_API
 * @param {{app_id:number,
@@ -200,8 +200,6 @@ const getStat = async parameters => {
    const logfiles = [];
    /**@type{server_log_result_logStatGet[]|[]} */
    const logstat = [];
-
-   const {commonAppIam}= await import('../../apps/common/src/common.js');
    
    const files = await ORM.getFsDir().then(files=>files.filter(file=>file.isDirectory()==false));
    /**@type{string} */
@@ -232,8 +230,7 @@ const getStat = async parameters => {
                logs.rows.forEach((/**@type{server_db_table_LogRequestInfo|''}*/record) => {
                    if (record != ''){
                        if (data.statGroup != null){
-                           const domain_app_id = record.host?commonAppIam(record.host).app_id:null;
-                           if (data.app_id == null || data.app_id == domain_app_id){
+                           if (data.app_id == null || data.app_id == record?.app_id){
                                const statGroupvalue = (data.statGroup=='url' && record[data.statGroup].indexOf('?')>0)?record[data.statGroup].substring(0,record[data.statGroup].indexOf('?')):record[data.statGroup];
                                //add unique statGroup to a set
                                log_stat_value.add(statGroupvalue);
@@ -254,8 +251,7 @@ const getStat = async parameters => {
                            //add for given status code or all status codes if all should be returned
                            //save this as chart 2 with days
                            if (data.statValue == null || data.statValue == record.statusCode){
-                               const domain_app_id = record.host?commonAppIam(record.host).app_id:null;
-                               if (data.app_id == null || data.app_id == domain_app_id){
+                               if (data.app_id == null || data.app_id == record?.app_id){
                                    //add unique status codes to a set
                                    log_stat_value.add(record.statusCode);
                                    log_days.add(day);
@@ -439,12 +435,16 @@ const post = async parameters => {
             const request_level = ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}).result; 
             if (request_level=='1'||request_level=='2'){
                 log = { host:               parameters.data.request?.req.headers.host,
+                        app_id:             parameters.data.request?.req.headers.x?.app_id,
+                        app_id_auth:        parameters.data.request?.req.headers.x?.app_id_auth,
                         ip:                 parameters.data.request?.req.ip,
                         requestid:          parameters.data.request?.req.headers['x-request-id'],
                         correlationid:      parameters.data.request?.req.headers['x-correlation-id'],
                         url:                parameters.data.request?.req.originalUrl,
+                        x_url:              parameters.data.request?.req.headers.x?.url,
                         http_info:          parameters.data.request?.req.protocol + '/' + parameters.data.request?.req.httpVersion,
                         method:             parameters.data.request?.req.method,
+                        x_method:           parameters.data.request?.req.headers.x?.method,
                         statusCode:         parameters.data.request?.statusCode,
                         statusMessage:      parameters.data.request?.statusMessage,
                         ['user-agent']:     parameters.data.request?.req.headers['user-agent'], 

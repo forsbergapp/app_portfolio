@@ -347,6 +347,11 @@ const bffStart = async (req, res) =>{
                         ip: req.headers['x-forwarded-for'] || req.ip,
                         res:res
                         });
+                //save decrypted info for logs
+                req.headers.x = {   app_id:     decrypted?.headers['app-id']??null, 
+                                    app_id_auth:authenticate.app_id !=null?1:0, 
+                                    method:     decrypted?.method??null, 
+                                    url:        decrypted?.url??null};
                 return  (authenticate.app_id !=null && decrypted)?
                             {
                             app_id:         authenticate.app_id,
@@ -402,6 +407,11 @@ const bffStart = async (req, res) =>{
                 ip: req.headers['x-forwarded-for'] || req.ip, 
                 res:res
                 });
+            //save info for logs
+            req.headers.x = {   app_id:     req.headers['app-id']??null, 
+                                app_id_auth:null, 
+                                method:     req.method, 
+                                url:        req.url};
             return (endpoint=='APP' ||authenticate?.app_id != null)?{
                     app_id:         authenticate?.app_id??0,
                     endpoint:       endpoint,
@@ -446,7 +456,7 @@ const bffStart = async (req, res) =>{
                 const iam = await import('./iam.js');
                 res.statusCode =401;
                 return res.send(iam.iamUtilMessageNotAuthorized(), 'utf8');
-            }
+            }   
             if (bff_parameters.endpoint == 'APP' && 
                 bff_parameters.method.toUpperCase() == 'GET' && 
                 !bff_parameters.url?.startsWith(configServer.SERVER.filter(row=>'REST_RESOURCE_BFF' in row)[0].REST_RESOURCE_BFF + '/')){
