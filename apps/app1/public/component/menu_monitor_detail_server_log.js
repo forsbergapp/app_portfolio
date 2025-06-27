@@ -32,6 +32,12 @@ const template = props => ` ${  /*
                                     <div data-column='host' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('host')}'>
                                         HOST
                                     </div>
+                                    <div data-column='app_id' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                        APP_ID
+                                    </div>
+                                    <div data-column='app_id_auth' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('app_id_auth')}'>
+                                        APP_ID_AUTH
+                                    </div>
                                     <div data-column='ip' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('ip')}'>
                                         IP
                                     </div>
@@ -44,11 +50,17 @@ const template = props => ` ${  /*
                                     <div data-column='url' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('url')}'>
                                         URL
                                     </div>
+                                    <div data-column='x_url' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('x_url')}'>
+                                        X_URL
+                                    </div>
                                     <div data-column='http_info' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('http_info')}'>
                                         HTTP INFO
                                     </div>
                                     <div data-column='method' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('method')}'>
                                         METHOD
+                                    </div>
+                                    <div data-column='x_method' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('x_method')}'>
+                                        X_METHOD
                                     </div>
                                     <div data-column='statuscode' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('statuscode')}'>
                                         STATUSCODE
@@ -80,12 +92,16 @@ const template = props => ` ${  /*
                                 </div>
                                 ${props.logs.map((/**@type{{id:number,
                                                             host:string,
+                                                            app_id:number|null,
+                                                            app_id_auth:1|0|null,
                                                             ip:string,
                                                             requestid:string,
                                                             correlationid:string,
                                                             url:string,
+                                                            x_url:string|null,
                                                             http_info:string,
                                                             method:string,
+                                                            x_method:string|null,
                                                             statusCode:string,
                                                             statusMessage:string,
                                                             'user-agent':string,
@@ -107,6 +123,12 @@ const template = props => ` ${  /*
                                         <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>
                                             ${log.host}
                                         </div>
+                                        <div class='menu_monitor_detail_server_log_request_log_col'>
+                                            ${log.app_id}
+                                        </div>
+                                        <div class='menu_monitor_detail_server_log_request_log_col'>
+                                            ${log.app_id_auth}
+                                        </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col gps_click' data-ip='${log.ip}'>
                                             ${log.ip}
                                         </div>
@@ -119,11 +141,17 @@ const template = props => ` ${  /*
                                         <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>
                                             ${log.url}
                                         </div>
+                                        <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>
+                                            ${log.x_url}
+                                        </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
                                             ${log.http_info}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
                                             ${log.method}
+                                        </div>
+                                        <div class='menu_monitor_detail_server_log_request_log_col'>
+                                            ${log.x_method}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
                                             ${log.statusCode}
@@ -155,7 +183,7 @@ const template = props => ` ${  /*
                                 }`:''
                             }
                             ${props.logscope=='LogServer'?
-                                `<div class='menu_monitor_detail_server_log_row'>
+                                `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_server_row'>
                                     <div data-column='id' class='menu_monitor_detail_server_log_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                         ID
                                     </div>
@@ -170,7 +198,7 @@ const template = props => ` ${  /*
                                                             logtext:string,
                                                             created:string
                                                             }}*/log)=>
-                                    `<div class='menu_monitor_detail_server_log_row'>
+                                    `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_server_row'>
                                         <div class='menu_monitor_detail_server_log_col'>
                                             ${log.id}
                                         </div>
@@ -185,7 +213,7 @@ const template = props => ` ${  /*
                                 }`:''
                             }
                             ${props.logscope=='LogApp'?
-                                `<div class='menu_monitor_detail_server_log_row'>
+                                `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_app_row'>
                                     <div data-column='id' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                         ID
                                     </div>
@@ -216,7 +244,7 @@ const template = props => ` ${  /*
                                                             logtext:string,
                                                             created:string
                                                             }}*/log)=>
-                                    `<div class='menu_monitor_detail_server_log_row'>
+                                    `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_app_row'>
                                         <div class='menu_monitor_detail_server_log_app_data_stat_col'>
                                             ${log.id}
                                         </div>
@@ -243,7 +271,7 @@ const template = props => ` ${  /*
                                 }`:''
                             }
                             ${props.logscope=='LogService'?
-                                `<div class='menu_monitor_detail_server_log_row'>
+                                `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_service_row'>
                                     <div data-column='id' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                         ID
                                     </div>
@@ -270,7 +298,7 @@ const template = props => ` ${  /*
                                                             logtext:string,
                                                             created:string
                                                             }}*/log)=>
-                                    `<div class='menu_monitor_detail_server_log_row'>
+                                    `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_service_row'>
                                         <div class='menu_monitor_detail_server_log_service_log_col'>
                                             ${log.id}
                                         </div>
@@ -294,7 +322,7 @@ const template = props => ` ${  /*
                                 }`:''
                             }    
                             ${props.logscope=='LogDb'?
-                                `<div class='menu_monitor_detail_server_log_row'>
+                                `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_db_row'>
                                     <div data-column='id' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                         ID
                                     </div>
@@ -325,7 +353,7 @@ const template = props => ` ${  /*
                                                             logtext:string,
                                                             created:string
                                                             }}*/log)=>
-                                    `<div class='menu_monitor_detail_server_log_row'>
+                                    `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_db_row'>
                                         <div class='menu_monitor_detail_server_log_db_log_col'>
                                             ${log.id}
                                         </div>

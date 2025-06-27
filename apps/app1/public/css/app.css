@@ -647,110 +647,27 @@
 	padding-top:4px;
 	padding-inline-start: 5px;
 	text-align: start;
+    display:grid;
+    grid-template-columns: 80px 120px 90px 70px 70px 70px 170px 170px 250px 1000px 70px 70px 70px 70px 100px 80px 200px 200px 70px 70px 100px;
 }
 .menu_monitor_detail_server_log_row>div{
 	display:inline-block;
 	width:auto;
 	margin-inline-end: 10px;
 }
+.menu_monitor_detail_server_log_server_row{
+    grid-template-columns: 80px 120px auto !important;
+}
+.menu_monitor_detail_server_log_app_row{
+    grid-template-columns: 80px 120px 30px 150px 100px 100px !important;
+}
+.menu_monitor_detail_server_log_service_row{
+    grid-template-columns: 80px 30px 170px 625px 500px 500px !important;
+}
+.menu_monitor_detail_server_log_db_row{
+    grid-template-columns: 80px 120px 70px 100px 50px 500px 400px 100px !important;
+}
 
-.menu_monitor_detail_server_log_request_log_col:nth-child(1),
-.menu_monitor_detail_server_log_col:nth-child(1),
-.menu_monitor_detail_server_log_app_data_stat_col:nth-child(1),
-.menu_monitor_detail_server_log_service_log_col:nth-child(1),
-.menu_monitor_detail_server_log_db_log_col:nth-child(1)
-{
-	width:80px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(2){
-	width:120px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(3){
-	width:90px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(4){
-	width:170px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(5){
-	width:170px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(6){
-	width:170px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(7){
-	width:1000px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(8){
-	width:70px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(9){
-	width: 60px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(10){
-	width:70px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(11){
-	width:70px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(12){
-	width:350px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(13){
-	width:100px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(14){
-	width:350px;
-}
-.menu_monitor_detail_server_log_request_log_col:nth-child(15),
-.menu_monitor_detail_server_log_request_log_col:nth-child(16),
-.menu_monitor_detail_server_log_request_log_col:nth-child(17){
-	width:80px;
-}
-.menu_monitor_detail_server_log_app_data_stat_col:nth-child(2){
-	width:120px;
-}
-.menu_monitor_detail_server_log_app_data_stat_col:nth-child(3){
-	width:30px;
-}
-.menu_monitor_detail_server_log_app_data_stat_col:nth-child(4){
-	width:150px;
-}
-.menu_monitor_detail_server_log_app_data_stat_col:nth-child(5){
-	width:100px;
-}
-.menu_monitor_detail_server_log_app_data_stat_col:nth-child(6){
-	width:100px;
-}
-.menu_monitor_detail_server_log_service_log_col:nth-child(2){
-	width:30px;
-}
-.menu_monitor_detail_server_log_service_log_col:nth-child(3){
-	width:170px;
-}
-.menu_monitor_detail_server_log_service_log_col:nth-child(4){
-	width:625px;
-}
-.menu_monitor_detail_server_log_service_log_col:nth-child(4){
-	width:500px;
-}
-.menu_monitor_detail_server_log_service_log_col:nth-child(5){
-	width:500px;
-}
-.menu_monitor_detail_server_log_db_log_col:nth-child(2){
-	width:120px;
-}
-.menu_monitor_detail_server_log_db_log_col:nth-child(3){
-	width:30px;
-}
-.menu_monitor_detail_server_log_db_log_col:nth-child(4){
-	width:250px;
-}
-.menu_monitor_detail_server_log_db_log_col:nth-child(5){
-	width:50px;
-}
-.menu_monitor_detail_server_log_db_log_col:nth-child(6){
-	width:400px;
-}
 /*MAP*/
 #menu_monitor_mapid{
 	height: 100%;
