@@ -8,7 +8,7 @@
 	--report_theme_text_color: var(--common_report_color_black);
 	--report_theme_notes_background_color:inherit !important;
 }
-/*Print preview styles*/
+/* PAPER, PREVIEW AND PRINT*/
 #printbody {
 	margin: 0px;
 }
@@ -21,13 +21,12 @@
 #printbody #settings{
 	visibility: hidden;
 }
-/* PAPER*/
 #paper {
 	background-color:var(--common_report_color_white);
 	z-index: 0;
 	transform: scale(0.5);
 	transform-origin: top left;
-	margin-top: 10px;
+	margin-top: 60px;
 }
 #paper.A4{
 	width : 210mm;
@@ -37,18 +36,15 @@
 	width : 8.5in;
 	height : 11in;
 }
-
-/*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
 	#paper {
 		margin: 0 auto;
 		transform: scale(0.7);
 		transform-origin:top;
 		position: inherit;
-		margin-top: 10px;
+		margin-top: 60px;
 	}
 }
-
 #printbody #paper {
 	box-shadow: none;
 	transform:scale(1) !important;
