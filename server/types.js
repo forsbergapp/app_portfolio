@@ -600,12 +600,16 @@
  * @memberof dbObjects
  * @typedef {{  id?:number,
  *              host:string,
+ *              app_id:number|null,
+ *              app_id_auth:1|0|null,
  *              ip:string,
  *              requestid:string,
  *              correlationid:string,
  *              url:string,
+ *              x_url:string|null,
  *              http_info:string,
  *              method:string,
+ *              x_method:string|null,
  *              statusCode:number,
  *              statusMessage:string,
  *              'user-agent':string,
@@ -1384,7 +1388,11 @@
  *              referer:string,
  *              'x-request-id':string,
  *              'x-forwarded-for':string,
- *              'x-correlation-id':string}} headers
+ *              'x-correlation-id':string,
+ *              x?:{app_id:     number|null, 
+ *                  app_id_auth:number|null, 
+ *                  method:     string|null, 
+ *                  url:        string|null}}} headers
  * socket
  * @property {object} socket
  * @property {number} socket.bytesRead
