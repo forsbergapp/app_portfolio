@@ -47,12 +47,12 @@
 	--common_report_color_blue2: #006dbf;
 	--common_report_color_darkblue: #012d74;
 	--common_report_color_gold: #cea87a;
+    --common_report_color_green:#3baea3;
+    --common_report_color_green2:#76d5bb;
 	--common_report_color_lightblue: #5cacf6;
 	--common_report_color_lightblue2: #afd2fa;
 	--common_report_color_lightblue3: #daebff;
 	--common_report_color_lightgold: #d2c196;
-	--common_report_color_pink: #ffd2e3;
-	--common_report_color_pink2: #f2c2d3;
 	--common_report_color_shadow1: rgb(0 0 0 / 20%);
 	--common_report_color_shadow2: rgb(0 0 0 / 19%);
 	--common_report_color_white: white;
