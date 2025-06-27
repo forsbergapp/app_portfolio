@@ -1,9 +1,6 @@
 /*Variables*/
 :root{
 	--font_1: 'Noto Sans';
-	--font_2: 'Cinzel Decorative';
-	--font_3: 'Caveat';
-	--font_4: 'Montserrat';
 
 	--app_day_columns:6;
 	--report_theme_display_font_family:var(--font_1);
@@ -833,61 +830,57 @@
 	--report_theme_timetable_data_border_color:var(--common_report_color_black);
 }
 .theme_month_20030{
-	--report_theme_display_font_family:var(--font_2);
-	--report_theme_default_font_family:var(--font_1);
-	--report_theme_header_color:var(--common_report_color_pink);
+	--report_theme_header_color:var(--common_report_color_green);
 	--report_theme_header_background_color:inherit;
-	--report_theme_timetable_header_background_color:var(--common_report_color_pink);
-	--report_theme_timetable_header_color:inherit;
-	--report_theme_timetable_data_header_background_color:var(--common_report_color_pink);
-	--report_theme_timetable_data_header_color:inherit;
+	--report_theme_timetable_header_background_color:var(--common_report_color_green);
+	--report_theme_timetable_header_color:var(--common_report_color_white);
+	--report_theme_timetable_data_header_background_color:var(--common_report_color_green);
+	--report_theme_timetable_data_header_color:var(--common_report_color_white);
 	--report_theme_timetable_data_background_color:inherit;
 	--report_theme_timetable_data_color:inherit;
-	--report_theme_timetable_footer_background_color:var(--common_report_color_pink);
-	--report_theme_timetable_footer_color:inherit;
+	--report_theme_timetable_footer_background_color:var(--common_report_color_green);
+	--report_theme_timetable_footer_color:var(--common_report_color_white);
 	--report_theme_footer_color:inherit;
 	--report_theme_footer_background_color:inherit;	
 	--report_theme_fast_start_end_color:inherit;
-	--report_theme_fast_start_end_background_color:var(--common_report_color_pink);
+	--report_theme_fast_start_end_background_color:var(--common_report_color_green);
 	--report_theme_fast_start_end_border_color:var(--common_report_color_black);
 
 	--report_theme_timetable_data_border_color:inherit;
 	--report_theme_timetable_data_highlight_row_color:var(--common_report_color_white);
 	--report_theme_timetable_data_highlight_row_background_color:var(--common_report_color_black);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--common_report_color_pink2);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--common_report_color_green2);
 	--report_theme_timetable_data_highlight_1_10_color:var(--common_report_color_black);
 	--report_theme_timetable_data_highlight_11_20_background_color:var(--common_report_color_white);
 	--report_theme_timetable_data_highlight_1_10_color:inherit;
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--common_report_color_pink2);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--common_report_color_green2);
 	--report_theme_timetable_data_highlight_1_10_color:var(--common_report_color_black);
 }
 .theme_month_20031{
-	--report_theme_display_font_family:var(--font_3);
-	--report_theme_default_font_family:var(--font_4);
-	--report_theme_header_color:var(--common_report_color_gold);
+	--report_theme_header_color:var(--common_report_color_green);
 	--report_theme_header_background_color:inherit;
-	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:var(--common_report_color_gold);
+	--report_theme_timetable_header_background_color:var(--common_report_color_blue2);
+	--report_theme_timetable_header_color:var(--common_report_color_white);
 	--report_theme_timetable_data_header_background_color:var(--common_report_color_blue2);
 	--report_theme_timetable_data_header_color:var(--common_report_color_white);
 	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:var(--common_report_color_gold);
+	--report_theme_timetable_data_color:var(--common_report_color_green);
 	--report_theme_timetable_footer_background_color:var(--common_report_color_blue2);
 	--report_theme_timetable_footer_color:var(--common_report_color_white);
-	--report_theme_footer_color:var(--common_report_color_gold);
+	--report_theme_footer_color:var(--common_report_color_green);
 	--report_theme_footer_background_color:inherit;	
 	--report_theme_fast_start_end_color:var(--common_report_color_white);
 	--report_theme_fast_start_end_background_color:var(--common_report_color_blue2);
-	--report_theme_fast_start_end_border_color:var(--common_report_color_gold);
+	--report_theme_fast_start_end_border_color:var(--common_report_color_green);
 
 	--report_theme_timetable_data_border_color:inherit;
 	--report_theme_timetable_data_highlight_row_color:var(--common_report_color_white);
-	--report_theme_timetable_data_highlight_row_background_color:var(--common_report_color_gold);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--common_report_color_lightgold);
+	--report_theme_timetable_data_highlight_row_background_color:var(--common_report_color_green);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--common_report_color_green2);
 	--report_theme_timetable_data_highlight_1_10_color:var(--common_report_color_black);
 	--report_theme_timetable_data_highlight_11_20_background_color:var(--common_report_color_white);
 	--report_theme_timetable_data_highlight_1_10_color:inherit;
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--common_report_color_lightgold);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--common_report_color_green2);
 	--report_theme_timetable_data_highlight_1_10_color:var(--common_report_color_black);
 }
 /*no odd even row colors*/
