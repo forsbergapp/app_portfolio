@@ -60,8 +60,8 @@ const bffConnect = async parameters =>{
     /**@type{server_db_table_IamAppIdToken}*/
     const idToken = IamAppIdToken.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}).result
                     .filter((/**@type{server_db_table_IamAppIdToken}*/token)=>token.token == parameters.idToken)[0];
-    //geodata for APP
-    const result_geodata = await common.commonGeodata({   app_id:parameters.app_id, 
+    //geodata for APP using start_app_id
+    const result_geodata = await common.commonGeodata({ app_id:start_app_id, 
                                                         endpoint:'SERVER', 
                                                         ip:parameters.ip, 
                                                         user_agent:parameters.user_agent ??'', 
