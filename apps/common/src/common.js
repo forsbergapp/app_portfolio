@@ -1,9 +1,8 @@
-/** @module apps/common/src/common/service */
+/** @module apps/common/src/common */
 
 /**
  * @import {server_db_table_App,
  *          server_db_table_AppModule,
- *          server_db_table_IamAppIdToken,
  *          server_db_table_IamEncryption,
  *          server_db_table_IamUser,
  *          server_apps_report_create_parameters,
@@ -26,9 +25,11 @@ const IamAppIdToken = await import('../../../server/db/IamAppIdToken.js');
 const Log = await import('../../../server/db/Log.js');
 const Security = await import('../../../server/security.js');
 const {serverProcess, serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import('../../../server/server.js');
+const {serverCircuitBreakerBFE, serverRequest} = await import('../../../server/server.js');
 
 const fs = await import('node:fs');
 
+const circuitBreaker = await serverCircuitBreakerBFE();
 /**
  * @name commonSearchMatch
  * @description Searches for text in given variables without diacrites
@@ -149,7 +150,8 @@ const commonGeodata = async parameters =>{
  * @name commonBFE
  * @description External request with JSON
  * @function
- * @param {{url:string,
+ * @param {{app_id:number,
+ *          url:string,
  *          method:string,
  *          body:*,
  *          user_agent:string,
@@ -161,68 +163,39 @@ const commonGeodata = async parameters =>{
  */
 const commonBFE = async parameters =>{
     if (parameters.url.toLowerCase().startsWith('https://') || parameters.url.toLowerCase().startsWith('http://')){
-        const zlib = await import('node:zlib');
-        const request_protocol = parameters.url.toLowerCase().startsWith('https')?await import('node:https'):await import('node:http');
-        const timeout_message = '🗺⛔?';
-        const timeout = 5000;
-        return new Promise((resolve)=>{           
-            const options = {
-                method: parameters.method,
-                timeout: timeout,
-                headers : {
-                    'User-Agent': parameters.user_agent,
-                    'Accept-Language': parameters.locale,
-                    'Content-Type': 'application/json',
-                    'Content-Length': Buffer.byteLength(JSON.stringify(parameters.body)),
-                    'Authorization': parameters.authorization ?? '',
-                    ...parameters.appHeader,
-                    'x-forwarded-for': parameters.ip
-                },
-                rejectUnauthorized: false
-            };
-            const request = request_protocol.request(new URL(parameters.url),options, res =>{
-                let responseBody = '';
-                if (res.headers['content-encoding'] == 'gzip'){
-                    const gunzip = zlib.createGunzip();
-                    res.pipe(gunzip);
-                    gunzip.on('data', (chunk) =>responseBody += chunk);
-                    gunzip.on('end', () => resolve ({result:JSON.parse(responseBody), type:'JSON'}));
-                }
-                else{
-                    res.setEncoding('utf8');
-                    res.on('data', (chunk) =>{
-                        responseBody += chunk;
-                    });
-                    res.on('end', ()=>{
-                        resolve ({result:JSON.parse(responseBody), type:'JSON'});
-                    });
-                }
-                
+        /**@type{server_db_document_ConfigServer} */
+        const CONFIG_SERVER = ConfigServer.get({app_id:0}).result;
+        return await circuitBreaker.serverRequest( 
+            {
+                request_function:   serverRequest,
+                service:            'BFE',
+                protocol:           parameters.url.toLowerCase().startsWith('https')?'https':'http',
+                url:                parameters.url,
+                host:               null,
+                port:               null,
+                admin:              parameters.app_id == serverUtilNumberValue(CONFIG_SERVER.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
+                path:               null,
+                body:               parameters.body,
+                method:             parameters.method,
+                client_ip:          parameters.ip,
+                authorization:      parameters.authorization??'',
+                user_agent:         parameters.user_agent,
+                accept_language:    parameters.locale,
+                endpoint:           null
+            })
+            .then((/**@type{*}*/result)=>{
+                return {result:JSON.parse(result), type:'JSON'};
+            })
+            .catch((/**@type{*}*/error)=>{
+                return error.error?.http?
+                            error.error:
+                            {   http:503, 
+                                code:'MICROSERVICE', 
+                                text:error, 
+                                developerText:null, 
+                                moreInfo:null,
+                                type:'JSON'};
             });
-            
-            if (parameters.method !='GET')
-                request.write(JSON.stringify(parameters.body));
-            request.on('error', error => {
-                resolve({http:500,
-                        code:'APP',
-                        /**@ts-ignore */
-                        text:error,
-                        developerText:'commonBFE',
-                        moreInfo:null,
-                        type:'JSON'
-                    });
-            });
-            request.on('timeout', () => {
-                resolve({http:503,
-                    code:'APP',
-                    text:timeout_message,
-                    developerText:'commonBFE',
-                    moreInfo:null,
-                    type:'JSON'
-                });
-            });
-            request.end();
-        });
     }
     else{
         const { iamUtilMessageNotAuthorized } = await import('../../../server/iam.js');
