@@ -6,6 +6,7 @@
  * @import {server_req_method, server_server_response_type, 
  *          server_server_error, server_server_req, server_server_res,
  *          server_db_document_ConfigServer,
+ *          server_bff_endpoint_type,
  *          server_server_req_id_number} from './types.js'
  */
 
@@ -639,7 +640,266 @@ class ClassServerProcess {
     version = process.version;
 }
 const serverProcess = new ClassServerProcess();
+
+/**
+ * @name serverCircuitBreakerClass
+ * @description Circuit breaker
+ *              Uses circuit states CLOSED, HALF, OPEN
+ *              Origin   Timeout
+ *              server   1 second
+ *              users    1 second * CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS or default 20 seconds
+ *              admin    1 minute * CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES or default 60 minutes
+ * 
+ *              Failure threshold    CONFIG.CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS or default 5 seconds
+ *              Cooldown period      CONFIG.CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS or default 10 seconds
+ * @class
+ */
+class serverCircuitBreakerClass {
+    /**
+     * @param {import('./db/ConfigServer.js')} ConfigServer
+     */
+    constructor(ConfigServer) {
+        /**@type{server_db_document_ConfigServer} */
+        const CONFIG_SERVER = ConfigServer.get({app_id:0}).result;
+        /**@type{[index:any][*]} */
+        this.states = {};
+                                                        
+        this.requestTimeout =       CONFIG_SERVER.SERVER
+                                    .filter(parameter=>'CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS' in parameter)[0]
+                                    .CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS ?? 20;
+        this.requestTimeoutAdmin =  CONFIG_SERVER.SERVER
+                                    .filter(parameter=>'CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0]
+                                    .CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES ?? 60;
+        this.failureThreshold =     CONFIG_SERVER.SERVER
+                                    .filter(parameter=>'CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS' in parameter)[0]
+                                    .CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS ?? 5;
+        this.cooldownPeriod =       CONFIG_SERVER.SERVER
+                                    .filter(parameter=>'CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS' in parameter)[0]
+                                    .CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS ?? 10;
+
+    }
+    /**
+     * @name serverRequest
+     * @description Request url
+     * @method
+     * @param {{request_function:function,
+     *          service:string,
+     *          url:string|null,
+     *          protocol:'https'|'http'|null,
+     *          host:string|null,
+     *          port:number|null,
+     *          admin:Boolean,
+     *          path:string,
+     *          body:{}|null,
+     *          method:string,
+     *          client_ip:string,
+     *          authorization:string,
+     *          user_agent:string,
+     *          accept_language:string,
+     *          endpoint:server_bff_endpoint_type}} parameters
+     * @returns {Promise.<string>}
+     */
+    async serverRequest(parameters){
+        if (!this.canRequest(parameters.service))
+            return '';
+        try {
+            let timeout;
+            if (parameters.endpoint == 'SERVER'){
+                //wait max 1 second when service called from SERVER to speed up app start
+                timeout = 1000;
+            }
+            else
+                if (parameters.admin)
+                    timeout = 60 * 1000 * this.requestTimeoutAdmin;
+                else
+                    timeout = this.requestTimeout * 1000;
+            const response = await parameters.request_function ({   protocol:parameters.protocol,
+                                                                    url:parameters.url,
+                                                                    host:parameters.host,
+                                                                    port:parameters.port,
+                                                                    path:parameters.path,
+                                                                    body:parameters.body,
+                                                                    method:parameters.method,
+                                                                    client_ip:parameters.client_ip,
+                                                                    authorization:parameters.authorization,
+                                                                    user_agent:parameters.user_agent,
+                                                                    accept_language:parameters.accept_language,
+                                                                    timeout:timeout});
+            this.onSuccess(parameters.service);
+            return response;    
+        } catch (error) {
+            this.onFailure(parameters.service);
+            throw error;
+        }
+    }
+    /**
+     * @name onSuccess
+     * @description Circuitbreaker on success
+     * @method
+     * @param {string} service
+     */
+    onSuccess(service){
+        this.initState(service);
+    }
+    /**
+     * @name onFailure
+     * @description Circuitbreaker on failure
+     * @method
+     * @param {string} service 
+     */
+    onFailure(service){
+        const state = this.states[service];
+        state.failures +=1;
+        if (state.failures > this.failureThreshold){
+            state.circuit = 'OPEN';
+            state.nexttry = +new Date() / 1000 + this.cooldownPeriod;
+        }
+    }
+    /**
+     * @name canRequest
+     * @description Circuitbreaker can request
+     * @method
+     * @param {string} service
+     * @returns 
+     */
+    canRequest (service){
+        if (!this.states[service]) this.initState(service);
+        const state = this.states[service];
+        if (state.circuit==='CLOSED') return true;
+        const now = +new Date() / 1000;
+        if (state.nexttry <= now){
+            state.circuit='HALF';
+            return true;
+        }
+        return false;
+    }
+    /**
+     * @name initState
+     * @description Circuitbreaker init
+     * @method
+     * @param {string} service 
+     */
+    initState(service){
+        this.states[service]={
+            failures: 0,
+            cooldownPeriod: this.cooldownPeriod,
+            circuit: 'CLOSED',
+            nexttry: 0,
+        };
+    }
+}
+/**
+ * @returns {Promise.<import('./db/ConfigServer.js')>}
+ */
+const importConfig = async () =>import('./db/ConfigServer.js');
+/**
+ * @name serverCircuitBreakerMicroService
+ * @description Circuitbreaker for MicroService
+ * @function
+ * @returns {Promise.<serverCircuitBreakerClass>}
+ */
+const serverCircuitBreakerMicroService = async ()=> new serverCircuitBreakerClass(await importConfig());
+
+/**
+ * @name serverCircuitBreakerBFE
+ * @description Circuitbreaker for backend for external (BFE)
+ * @function
+ * @returns {Promise.<serverCircuitBreakerClass>}
+ */
+const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass(await importConfig());
+
+
+/**
+ * @name serverRequest
+ * @description Request url, use parameter url or protocol, host, port and path
+ *              Returns raw response from request
+ * @function
+ * @param {{protocol:'https'|'http'|null,
+ *          url:string|null,
+ *          host:string|null,
+ *          port:number|null,
+ *          path:string|null,
+ *          body:{}|null,
+ *          method:string,
+ *          client_ip:string,
+ *          authorization:string,
+ *          user_agent:string,
+ *          accept_language:string,
+ *          timeout:number}} parameters
+ * @returns {Promise.<*>}
+ */                    
+const serverRequest = async parameters =>{
+    const zlib = await import('node:zlib');
+    const MESSAGE_TIMEOUT = '🗺⛔?';
+    
+    /**@type {'http'|'https'} */
+    const protocol = parameters.protocol ?? parameters.url?.toLowerCase().startsWith('http')?
+                        'http':
+                            'https';
+    /**@type {import('node:http')|import('node:https')} */
+    const request_protocol = await import(`node:${protocol}`);
+    return new Promise ((resolve, reject)=>{
+        const headers = {
+                'User-Agent': parameters.user_agent,
+                'Accept-Language': parameters.accept_language,
+                'Authorization': parameters.authorization,
+                'x-forwarded-for': parameters.client_ip,
+                ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
+                ...(parameters.method!='GET' && {'Content-Length':  Buffer.byteLength(JSON.stringify(parameters.body))})
+        };
+        /**@type{import('node:https').RequestOptions}*/    
+        const options = {
+            method: parameters.method,
+            timeout: parameters.timeout,
+            headers : headers,
+            ...(parameters.url ==null && {host:  parameters.host}),
+            ...(parameters.url ==null && {port:  parameters.port}),
+            ...(parameters.url ==null && {path:  parameters.path}),
+            ...(protocol=='https' && {rejectUnauthorized: false})
+        };
+        /**
+         * @param {import('node:http').IncomingMessage} res
+         * @returns {void}
+         */
+        const respond = res =>{
+            let responseBody = '';
+            res.setEncoding('utf8');
+            if (res.headers['content-encoding'] == 'gzip'){
+                const gunzip = zlib.createGunzip();
+                res.pipe(gunzip);
+                gunzip.on('data', (/**@type{*}*/chunk) =>responseBody += chunk);
+                gunzip.on('end', () => resolve (responseBody));
+            }
+            else{
+                res.on('data', (/**@type{*}*/chunk) =>{
+                    responseBody += chunk;
+                });
+                res.on('end', ()=>{
+                    if (res.statusCode == 200)
+                        resolve (responseBody);
+                    else
+                        reject(res.statusMessage);
+                });
+            }
+        };
+        const request = parameters.url?
+                            request_protocol.request(parameters.url, options, respond):
+                                request_protocol.request(options, respond);
+        if (parameters.method !='GET')
+            request.write(JSON.stringify(parameters.body));
+        request.on('error', error => {
+            reject(error);
+        });
+        request.on('timeout', () => {
+            reject(MESSAGE_TIMEOUT);
+        });
+        request.end();
+    });
+};
 export {serverResponse, 
         serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppLine , 
         serverStart,
-        serverProcess};
+        serverProcess,
+        serverCircuitBreakerMicroService,
+        serverCircuitBreakerBFE,
+        serverRequest};
