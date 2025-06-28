@@ -73,42 +73,39 @@ const microserviceRequest = async parameters =>{
                                     + `app_id=${parameters.app_id}`
                                 ).toString('base64');
         const ServiceRegistry = await registryConfigServices(parameters.microservice);
-        /**@ts-ignore */
         return await circuitBreaker.serverRequest( 
-                                                {
-                                                    request_function:   serverRequest,
-                                                    service:            parameters.microservice,
-                                                    protocol:           ServiceRegistry.server_protocol,
-                                                    url:                null,
-                                                    host:               ServiceRegistry.server_host,
-                                                    port:               ServiceRegistry.server_port,
-                                                    admin:              parameters.app_id == serverUtilNumberValue(
-                                                                                    ConfigServer.get({  app_id:parameters.app_id, 
-                                                                                                        data:{  config_group:'SERVICE_APP', 
-                                                                                                                parameter:'APP_COMMON_APP_ID'}}).result
-                                                                                ),
-                                                    path:               `/api/v${await registryMicroserviceApiVersion(parameters.microservice)}?${query}`,
-                                                    body:               parameters.data,
-                                                    method:             parameters.method,
-                                                    client_ip:          parameters.ip,
-                                                    authorization:      authorization,
-                                                    user_agent:         parameters.user_agent,
-                                                    accept_language:    parameters.accept_language,
-                                                    endpoint:           parameters.endpoint
-                                                })
-                                                .then((/**@type{*}*/result)=>{
-                                                    return {result:JSON.parse(result), type:'JSON'};
-                                                })
-                                                .catch((/**@type{*}*/error)=>{
-                                                    return error.error?.http?
-                                                                error.error:
-                                                                {   http:503, 
-                                                                    code:'MICROSERVICE', 
-                                                                    text:error, 
-                                                                    developerText:null, 
-                                                                    moreInfo:null,
-                                                                    type:'JSON'};
-                                                });
+                        {
+                            request_function:   serverRequest,
+                            service:            parameters.microservice,
+                            protocol:           ServiceRegistry.server_protocol,
+                            url:                null,
+                            host:               ServiceRegistry.server_host,
+                            port:               ServiceRegistry.server_port,
+                            admin:              parameters.app_id == serverUtilNumberValue(
+                                                            ConfigServer.get({  app_id:parameters.app_id, 
+                                                                                data:{  config_group:'SERVICE_APP', 
+                                                                                        parameter:'APP_COMMON_APP_ID'}}).result
+                                                        ),
+                            path:               `/api/v${await registryMicroserviceApiVersion(parameters.microservice)}?${query}`,
+                            body:               parameters.data,
+                            method:             parameters.method,
+                            client_ip:          parameters.ip,
+                            authorization:      authorization,
+                            user_agent:         parameters.user_agent,
+                            accept_language:    parameters.accept_language,
+                            endpoint:           parameters.endpoint
+                        })
+                        .then((/**@type{*}*/result)=>{
+                            return result.http?result:{result:JSON.parse(result), type:'JSON'};
+                        })
+                        .catch((/**@type{*}*/error)=>{
+                            return {http:500, 
+                                    code:'MICROSERVICE', 
+                                    text:error, 
+                                    developerText:null, 
+                                    moreInfo:null,
+                                    type:'JSON'};
+                        });
         }
     else{
         const  {iamUtilMessageNotAuthorized} = await import('../server/iam.js');
