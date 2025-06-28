@@ -789,16 +789,12 @@ class serverCircuitBreakerClass {
     }
 }
 /**
- * @returns {Promise.<import('./db/ConfigServer.js')>}
- */
-const importConfig = async () =>import('./db/ConfigServer.js');
-/**
  * @name serverCircuitBreakerMicroService
  * @description Circuitbreaker for MicroService
  * @function
  * @returns {Promise.<serverCircuitBreakerClass>}
  */
-const serverCircuitBreakerMicroService = async ()=> new serverCircuitBreakerClass(await importConfig());
+const serverCircuitBreakerMicroService = async ()=> new serverCircuitBreakerClass(await import('./db/ConfigServer.js'));
 
 /**
  * @name serverCircuitBreakerBFE
@@ -806,7 +802,7 @@ const serverCircuitBreakerMicroService = async ()=> new serverCircuitBreakerClas
  * @function
  * @returns {Promise.<serverCircuitBreakerClass>}
  */
-const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass(await importConfig());
+const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass(await import('./db/ConfigServer.js'));
 
 
 /**

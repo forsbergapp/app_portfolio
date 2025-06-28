@@ -8,7 +8,12 @@
 const {registryConfigServices} = await import('./registry.js');
 const { iamAuthenticateApp } = await import('../server/iam.js');
 const {serverUtilNumberValue} = await import('../server/server.js');
+const ConfigServer = await import('../server/db/ConfigServer.js');
+const AppSecret = await import('../server/db/AppSecret.js');
+const {registryMicroserviceApiVersion}= await import('./registry.js');
+const {serverCircuitBreakerMicroService, serverRequest} = await import('../server/server.js');
 
+const circuitBreaker = await serverCircuitBreakerMicroService();
 const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
 /**
  * @name microserviceUtilResourceIdNumberGet
@@ -50,7 +55,7 @@ const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
  * @returns {Promise.<server_server_response>}
  */
 const microserviceRequest = async parameters =>{
-    const ConfigServer = await import('../server/db/ConfigServer.js');
+
     /**@type{server_db_document_ConfigServer} */
     const CONFIG_SERVER = ConfigServer.get({app_id:0}).result;
     
@@ -59,9 +64,6 @@ const microserviceRequest = async parameters =>{
                                                         .filter(parameter=>'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1)||
         parameters.microservice != 'GEOLOCATION'){
         
-        const AppSecret = await import('../server/db/AppSecret.js');
-        const {registryMicroserviceApiVersion}= await import('./registry.js');
-        const {serverCircuitBreakerMicroService, serverRequest} = await import('../server/server.js');
         
         //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
         const authorization = `Basic ${Buffer.from(     AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].client_id + ':' + 
@@ -72,7 +74,7 @@ const microserviceRequest = async parameters =>{
                                 ).toString('base64');
         const ServiceRegistry = await registryConfigServices(parameters.microservice);
         /**@ts-ignore */
-        return (await serverCircuitBreakerMicroService()).serverRequest( 
+        return await circuitBreaker.serverRequest( 
                                                 {
                                                     request_function:   serverRequest,
                                                     service:            parameters.microservice,
