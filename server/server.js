@@ -684,19 +684,19 @@ class serverCircuitBreakerClass {
      * @method
      * @param {{request_function:function,
      *          service:string,
+     *          admin:boolean,
      *          url:string|null,
      *          protocol:'https'|'http'|null,
      *          host:string|null,
      *          port:number|null,
-     *          admin:Boolean,
-     *          path:string,
+     *          path:string|null,
      *          body:{}|null,
      *          method:string,
      *          client_ip:string,
      *          authorization:string,
      *          user_agent:string,
      *          accept_language:string,
-     *          endpoint:server_bff_endpoint_type}} parameters
+     *          endpoint:server_bff_endpoint_type|null}} parameters
      * @returns {Promise.<string>}
      */
     async serverRequest(parameters){
@@ -829,9 +829,9 @@ const serverRequest = async parameters =>{
     const MESSAGE_TIMEOUT = '🗺⛔?';
     
     /**@type {'http'|'https'} */
-    const protocol = parameters.protocol ?? parameters.url?.toLowerCase().startsWith('http')?
-                        'http':
-                            'https';
+    const protocol = parameters.protocol ?? (parameters.url?.toLowerCase().startsWith('https')?
+                                                'https':
+                                                    'http');
     /**@type {import('node:http')|import('node:https')} */
     const request_protocol = await import(`node:${protocol}`);
     return new Promise ((resolve, reject)=>{
@@ -857,7 +857,7 @@ const serverRequest = async parameters =>{
          * @param {import('node:http').IncomingMessage} res
          * @returns {void}
          */
-        const respond = res =>{
+        const response = res =>{
             let responseBody = '';
             res.setEncoding('utf8');
             if (res.headers['content-encoding'] == 'gzip'){
@@ -879,15 +879,28 @@ const serverRequest = async parameters =>{
             }
         };
         const request = parameters.url?
-                            request_protocol.request(parameters.url, options, respond):
-                                request_protocol.request(options, respond);
+                            request_protocol.request(parameters.url, options, response):
+                                request_protocol.request(options, response);
         if (parameters.method !='GET')
             request.write(JSON.stringify(parameters.body));
         request.on('error', error => {
-            reject(error);
+            resolve({http:500,
+                code:'SERVER',
+                /**@ts-ignore */
+                text:error,
+                developerText:'serverRequest',
+                moreInfo:null,
+                type:'JSON'
+            });
         });
         request.on('timeout', () => {
-            reject(MESSAGE_TIMEOUT);
+            resolve({http:503,
+                code:'SERVER',
+                text:MESSAGE_TIMEOUT,
+                developerText:'serverRequest',
+                moreInfo:null,
+                type:'JSON'
+            });
         });
         request.end();
     });

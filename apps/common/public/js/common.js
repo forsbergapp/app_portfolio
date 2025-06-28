@@ -2354,18 +2354,6 @@ const commonMicroserviceWorldcitiesSearch = async (event_function) =>{
         path:       '/common/component/common_module_leaflet_search_city.js'});
 };
 /**
- * @name commonException
- * @description Exception function
- * @function
- * @param {function|null} appException_function 
- * @param {Error|string} error 
- * @returns {void}
- */
-const commonException = (appException_function, error) => {
-    if (appException_function)
-        appException_function(error);
-};
-/**
  * @name commonTextEditingDisabled
  * @description Check if textediting is disabled
  * @function
@@ -3686,9 +3674,23 @@ const commonGet = () =>{
         commonEvent:commonEvent,
         /* INIT */
         commonMountApp:commonMountApp,
+        commonException:commonException,
         commonInit:commonInit,
         default:{commonInit}};
 };
+/**
+ * @name commonException
+ * @description Exception function
+ * @function
+ * @param {function|null} appException_function 
+ * @param {Error|string} error 
+ * @returns {void}
+ */
+const commonException = (appException_function, error) => {
+    if (appException_function)
+        appException_function(error);
+};
+
 /**
  * @name commonInit
  * @description Init common
@@ -3837,5 +3839,6 @@ export{/* GLOBALS*/
        commonEvent,
        /* INIT */
        commonMountApp,
+       commonException,
        commonInit};
 export default {commonInit};
