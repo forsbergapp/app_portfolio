@@ -16,7 +16,11 @@
         {"PATH_JOBS":"/jobs", "COMMENT": "Report queue jobs path"},
         {"PATH_SSL":"/ssl", "COMMENT": "SSL path"},
         {"HTTPS_KEY": "/ssl/privkey.pem", "COMMENT": ""},
-        {"HTTPS_CERT": "/ssl/fullchain.pem", "COMMENT": ""}
+        {"HTTPS_CERT": "/ssl/fullchain.pem", "COMMENT": ""},
+        {"CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS": 5, "COMMENT":""},
+        {"CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS": 10,"COMMENT":""},
+        {"CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS": 5,"COMMENT":""},
+        {"CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES": 60,"COMMENT":""}
     ],
     "SERVICE_APP":[
         {"APP_START_APP_ID": "2", "COMMENT": "start app id"},
@@ -32,12 +36,6 @@
         {"APP_DEFAULT_RANDOM_COUNTRY":"", "COMMENT": "Used by worldcities random function" },
         {"APP_REQUESTTIMEOUT_SECONDS": 5,"COMMENT":""},
         {"APP_REQUESTTIMEOUT_ADMIN_MINUTES": 60,"COMMENT":""}
-    ],
-    "SERVICE_MICROSERVICE":[
-        {"CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS": 5, "COMMENT":""},
-        {"CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS": 10,"COMMENT":""},
-        {"CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS": 5,"COMMENT":""},
-        {"CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES": 60,"COMMENT":""}
     ],
     "SERVICE_DB":[
         {"JOURNAL":"1", "COMMENT": "1=on, 0=off"}

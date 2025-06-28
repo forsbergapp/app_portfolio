@@ -644,7 +644,6 @@
  * @memberof dbObjects
  * @typedef  {{ ['SERVER']:[server_db_config_server_server], 
  *              ['SERVICE_APP']:[server_db_config_server_service_app], 
- *              ['SERVICE_MICROSERVICE']:[server_db_config_server_service_microservice],
  *              ['SERVICE_DB']:[server_db_config_server_service_db],
  *              ['SERVICE_IAM']:[server_db_config_server_service_iam],
  *              ['SERVICE_SOCKET']:[server_db_config_server_service_socket],
@@ -826,7 +825,11 @@
  *              REST_API_VERSION:string,
  *              GIT_REPOSITORY_URL:string,
  *              NETWORK_INTERFACE:string,
- *              PATH_JOBS:string}} server_db_config_server_server
+ *              PATH_JOBS:string,
+ *              CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
+ *              CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS       : number
+ *              CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS       : number
+ *              CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}} server_db_config_server_server
  */
 
 /** 
@@ -845,15 +848,6 @@
  *            APP_DEFAULT_RANDOM_COUNTRY        :string,
  *            APP_REQUESTTIMEOUT_SECONDS        :string,
  *            APP_REQUESTTIMEOUT_ADMIN_MINUTES  :string}} server_db_config_server_service_app
- */
-
-/** 
- * @description DB server_db_config_server_service_microservice
- * @memberof dbObjects
- * @typedef {{CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
- *            CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS       : number
- *            CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS       : number
- *            CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}} server_db_config_server_service_microservice
  */
 
 /**
