@@ -115,7 +115,7 @@ const getCacheGeodata = async (config, cachetype, ip, latitude, longitude) =>{
                     else
                         return false;
                 };
-                for (const row of geodata_cache){
+                for (const row of geodata_cache.filter(geodata=>geodata!='')){
                     const row_obj = JSON.parse(row);
                     //check 1 decimal for current service provider without round
                     const lat_row = getFixed(row_obj.latitude,2);
