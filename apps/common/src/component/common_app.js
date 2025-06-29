@@ -69,9 +69,18 @@ const template = props =>`  <!DOCTYPE html>
                                      */
                                     const FFB_SSE = async parameters =>{
                                         const getMessage = BFFmessage =>{
-                                                const messageDecoded = atob(BFFmessage);
-                                                return { broadcast_type:JSON.parse(messageDecoded).broadcast_type,
-                                                        broadcast_message:JSON.parse(messageDecoded).broadcast_message};
+                                            const commonWindowFromBase64 = str => {
+                                                const binary_string = atob(str);
+                                                const len = binary_string.length;
+                                                const bytes = new Uint8Array(len);
+                                                for (let i = 0; i < len; i++) {
+                                                    bytes[i] = binary_string.charCodeAt(i);
+                                                }
+                                                return new TextDecoder('utf-8').decode(bytes);
+                                            };
+                                            const messageDecoded = commonWindowFromBase64(BFFmessage);
+                                            return { broadcast_type:JSON.parse(messageDecoded).broadcast_type,
+                                                    broadcast_message:JSON.parse(messageDecoded).broadcast_message};
                                         }
                                         const BFFStream = new WritableStream({
                                             write(data, controller){
