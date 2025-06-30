@@ -1406,7 +1406,7 @@ const iamAuthenticateMicroservice = async parameters =>{
         //only allowed to use app_access_verification token expire used to set short expire time
         case 'APP_ACCESS_EXTERNAL':{
             secret = configServer.SERVICE_IAM.filter(parameter=> 'USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET' in parameter)[0].USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET;
-            expiresin = configServer.SERVICE_IAM.filter(parameter=> 'USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET' in parameter)[0].USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET;
+            expiresin = configServer.SERVICE_IAM.filter(parameter=> 'USER_TOKEN_APP_ACCESS_VERIFICATION_EXPIRE' in parameter)[0].USER_TOKEN_APP_ACCESS_VERIFICATION_EXPIRE;
             break;
         }
     }
