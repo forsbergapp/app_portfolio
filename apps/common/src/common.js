@@ -156,7 +156,7 @@ const commonGeodata = async parameters =>{
  *          body:*,
  *          user_agent:string,
  *          ip:string,
- *          appHeader: Object.<string,*>,
+ *          'app-id': number,
  *          authorization:string|null,
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response>}
@@ -181,20 +181,20 @@ const commonBFE = async parameters =>{
                 authorization:      parameters.authorization??'',
                 user_agent:         parameters.user_agent,
                 accept_language:    parameters.locale,
+                encryption_type:    'BFE',
+                'app-id':           parameters['app-id'],
                 endpoint:           null
             })
             .then((/**@type{*}*/result)=>{
-                return {result:JSON.parse(result), type:'JSON'};
+                return result.http?result:{result:JSON.parse(result), type:'JSON'};
             })
             .catch((/**@type{*}*/error)=>{
-                return error.error?.http?
-                            error.error:
-                            {   http:503, 
-                                code:'MICROSERVICE', 
-                                text:error, 
-                                developerText:null, 
-                                moreInfo:null,
-                                type:'JSON'};
+                return {http:500, 
+                    code:'commonBFE', 
+                    text:error, 
+                    developerText:null, 
+                    moreInfo:null,
+                    type:'JSON'};
             });
     }
     else{
@@ -724,10 +724,10 @@ const commonModuleMetaDataGet = async parameters =>{
  * @param {string} host 
  * @param {server_bff_endpoint_type|null} endpoint
  * @param {{
- *          IamEncryption:  server_db_table_IamEncryption,
- *          idToken:        string,
+ *          IamEncryption:  server_db_table_IamEncryption|null,
+ *          idToken:        string|null,
  *          AppId:          number, 
- *          AppSignature:   string
+ *          AppSignature:   string|null
  *          }|null} security
  * @returns {Promise.<{ admin:boolean,
  *                      app_id:number|null,
@@ -741,10 +741,10 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
     //decrypted token = [token for uuid]
     //decrypted Appsignature can be decrypted using 
     //  secret found in IamEncryption for decrypted app id, token and for uuid used in request
-    if (security != null && 
+    if (security?.IamEncryption && 
         (
-        security?.AppId == security?.IamEncryption.app_id  &&
-        security?.idToken.replace('Bearer ','') == IamAppIdToken.get({  app_id:0, 
+        security?.AppId == security?.IamEncryption?.app_id  &&
+        security?.idToken?.replace('Bearer ','') == IamAppIdToken.get({  app_id:0, 
                                                                         resource_id:security?.IamEncryption.iam_app_id_token_id??null, 
                                                                         data:{data_app_id:null}}).result[0].token &&
         await Security.securityTransportDecrypt({ 
@@ -872,8 +872,6 @@ const commonAppInit = async parameters =>{
                 /**@ts-ignore */
                 return resource?fs.promises.readFile(resource.sendfile, 'utf8'):null;
             }
-                                    
-
         };
         if (app)
             return {result:{App:{   id:                     app.id,
@@ -982,7 +980,7 @@ const commonApp = async parameters =>{
             const secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8').toString('base64');
             //Insert encryption metadata record 
             IamEncryption.post(app_id,
-                                {app_id:app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id});
+                                {app_id:app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id, type:'SERVER'});
             return {result:await ComponentCreate({data:     {
                                                             app_id:                             app_id,
                                                             app_admin_app_id:                   admin_app_id,

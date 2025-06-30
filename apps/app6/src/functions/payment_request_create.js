@@ -81,14 +81,14 @@ const paymentRequestCreate = async parameters =>{
         *          message:        string,
         *          origin:         string}}
         */
-       const body = {	api_secret:     Entity.json_data.merchant_api_secret??'',
-                       reference:      parameters.data.reference.substring(0,30),
-                       payeeid:        Entity.json_data.merchant_vpa??'', 
-                       payerid:        parameters.data.payerid,
-                       currency_code:  currency.json_data.currency_code,
-                       amount:         serverUtilNumberValue(parameters.data.amount) ?? 0, 
-                       message:        parameters.data.message,
-                       origin:         parameters.host
+       const body = {   api_secret:     Entity.json_data.merchant_api_secret??'',
+                        reference:      parameters.data.reference.substring(0,30),
+                        payeeid:        Entity.json_data.merchant_vpa??'', 
+                        payerid:        parameters.data.payerid,
+                        currency_code:  currency.json_data.currency_code,
+                        amount:         serverUtilNumberValue(parameters.data.amount) ?? 0, 
+                        message:        parameters.data.message,
+                        origin:         parameters.host
        };
        //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
        //use general id and message keys so no info about what type of message is sent, only the receinving function should know
@@ -103,10 +103,7 @@ const paymentRequestCreate = async parameters =>{
                                                    body:{data:Buffer.from(JSON.stringify(body_encrypted)).toString('base64')}, 
                                                    user_agent:parameters.user_agent, 
                                                    ip:parameters.ip, 
-                                                   appHeader:{
-                                                       'app-id':Entity.json_data.merchant_api_url_payment_request_app_id,
-                                                       'app-signature':'Shop'
-                                                   },
+                                                   'app-id':Entity.json_data.merchant_api_url_payment_request_app_id,
                                                    authorization:null, 
                                                    locale:parameters.locale});
        if (result_commonBFE.result.error) {

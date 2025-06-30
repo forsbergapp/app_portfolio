@@ -3,8 +3,7 @@
  */
 
 /**
- * @import {server_iam_access_token_claim, 
- *          server_db_table_AppDataEntity, server_db_table_AppDataResourceMaster,server_db_table_AppDataResourceDetail,
+ * @import {server_db_table_AppDataEntity, server_db_table_AppDataResourceMaster,server_db_table_AppDataResourceDetail,
  *          server_db_table_IamAppAccess, 
  *          server_server_response} from '../../../../server/types.js'
  * @import {payment_request, bank_account, merchant} from './types.js'
@@ -178,6 +177,7 @@ const paymentRequestCreate = async parameters =>{
                 await AppDataResourceMaster.post({app_id:parameters.app_id, data:data_new_payment_request});
                 const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS_EXTERNAL', {   
                                                                                                 app_id:             parameters.app_id,
+                                                                                                app_id_token:       null,
                                                                                                 iam_user_app_id:    null,
                                                                                                 iam_user_id:        null,
                                                                                                 iam_user_username:  null,
@@ -196,6 +196,7 @@ const paymentRequestCreate = async parameters =>{
                                         //save the payment request id
                                         app_custom_id:          payment_request_id,
                                         app_id:                 parameters.app_id,
+                                        app_id_token:           null,
                                         res:		            1,
                                         token:                  jwt_data?jwt_data.token:null,
                                         ip:                     parameters.ip,

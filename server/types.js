@@ -14,7 +14,6 @@
  * @module server/types 
  */
 
-
 /**
  * @description APP server_apps_app_info
  * @typedef {object} server_apps_app_info   - app info
@@ -394,9 +393,10 @@
  * @memberof dbObjects
  * @typedef {{  id?:number,
  *              app_id:number,
- *              iam_app_id_token_id:number,
+ *              iam_app_id_token_id:number|null,
  *              uuid:string, 
  *              secret:string,
+ *              type:'MICROSERVICE'|'BFE'|'SERVER',
  *              created?:string}} server_db_table_IamEncryption
  */
 
@@ -1264,7 +1264,7 @@
  * @description IAM server_iam_access_token_claim
  * @typedef {{  
  *              app_id:                 number,
- *              app_id_token:           number,
+ *              app_id_token:           number|null,
  *              app_custom_id:          number|string|null,
  *              iam_user_app_id:        number|null,
  *              iam_user_id:            number|null,
@@ -1340,6 +1340,7 @@
 /**
  * @typedef {'GET'|'POST'|'DELETE'|'PATCH'|'PUT'|string} server_req_method
  */
+
 /**
  * @description SERVER server_server_req
  * @typedef {Object} server_server_req
