@@ -45,6 +45,7 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
+<nullsAllowed>true</nullsAllowed>
 <referedAttribute>EB8B29F3-FF06-354E-E1FC-7855C828A886</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
@@ -56,13 +57,22 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="secret" id="4B392F74-337C-1599-0655-A6D61741135E">
 <createdBy>admin</createdBy>
 <createdTime>2025-06-23 05:50:39 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="type" id="F94FBB1C-793E-4989-625A-AEF634D93D83">
+<createdBy>admin</createdBy>
+<createdTime>2025-06-29 13:30:19 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>

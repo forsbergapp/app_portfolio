@@ -90,9 +90,11 @@ const microserviceRequest = async parameters =>{
                             body:               parameters.data,
                             method:             parameters.method,
                             client_ip:          parameters.ip,
-                            authorization:      authorization,
                             user_agent:         parameters.user_agent,
                             accept_language:    parameters.accept_language,
+                            authorization:      authorization,
+                            encryption_type:    'MICROSERVICE',
+                            'app-id':           parameters.app_id,
                             endpoint:           parameters.endpoint
                         })
                         .then((/**@type{*}*/result)=>{
