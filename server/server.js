@@ -402,30 +402,34 @@ const server = async (req, res)=>{
     res.send =          async (/**@type{*}*/result) =>{
                             if (res.getHeader('Content-Type')==undefined)
                                 res.type('text/html; charset=utf-8');
-                            res.setHeader('Content-Encoding', 'gzip');
-                            res.removeHeader('Content-Length');
                             /**
                              * @name compress
                              * @description compress all requests (SSE uses res.write)
                              * @param {*} data
                              */
-                            const compress = async data =>{
-                                
+                            const compress = async data =>{    
                                 return new Promise(resolve=>{
                                     try {
+                                        res.removeHeader('Content-Length');
+                                        res.setHeader('Content-Encoding', 'gzip');
                                         zlib.gzip(Buffer.from(data.toString(), 'utf8'), (err, compressed)=>{
                                             if (err)
                                                 resolve(data);
                                             else
                                                 resolve(compressed);
-                                        });    
+                                        });
                                     } catch (error) {
                                         resolve(data);
                                     }
                                 });
                             };
-                            const compressed = await compress(result);
-                            res.write(compressed, 'utf8');
+                            //Use compression only if specified
+                            if (res.req.headers['accept-encoding']==undefined)
+                                res.write(Buffer.from(result.toString(), 'utf8'));
+                            else{
+                                const compressed = await compress(result);
+                                res.write(compressed, 'utf8');
+                            }
                             res.end();
                         };
     res.sendFile =      async (/**@type{*}*/path) =>{
@@ -949,36 +953,16 @@ const serverRequest = async parameters =>{
         const response = res =>{
             let responseBody = '';
             res.setEncoding('utf8');
-            if (res.headers['content-encoding'] == 'gzip'){
-                try {
-                    const gunzip = zlib.createGunzip();
-                    res.pipe(gunzip);
-                    gunzip.on('data', (/**@type{*}*/chunk) =>
-                        responseBody += chunk);
-                    gunzip.on('end', () =>{ 
-                    
-                        if ([200,201].includes(res.statusCode??0))
-                            resolve (responseBody);
-                        else
-                            reject(res.statusMessage);    
-                    });
-                } catch (error) {
-                    reject(error);
-                }
-                    
-                
-            }
-            else{
-                res.on('data', (/**@type{*}*/chunk) =>{
-                    responseBody += chunk;
-                });
-                res.on('end', ()=>{
-                    if ([200,201].includes(res.statusCode??0))
-                        resolve (responseBody);
-                    else
-                        reject(res.statusMessage);
-                });
-            }
+            //no compression supported in server requests
+            res.on('data', (/**@type{*}*/chunk) =>{
+                responseBody += chunk;
+            });
+            res.on('end', ()=>{
+                if ([200,201].includes(res.statusCode??0))
+                    resolve (responseBody);
+                else
+                    reject(res.statusMessage);
+            });
         };
         const request = request_protocol.request(new URL(url), options, response);
         if (parameters.method !='GET')
