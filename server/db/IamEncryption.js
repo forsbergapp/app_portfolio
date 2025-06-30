@@ -42,6 +42,7 @@ const post = async (app_id, data) => {
         data_new.app_id = data.app_id;
         data_new.uuid = data.uuid;
         data_new.secret = data.secret;
+        data_new.type = data.type;
         data_new.iam_app_id_token_id = data.iam_app_id_token_id;
         data_new.created = new Date().toISOString();
         return ORM.Execute({app_id:app_id, dml:'POST', object:'IamEncryption', post:{data:data_new}}).then((result)=>{

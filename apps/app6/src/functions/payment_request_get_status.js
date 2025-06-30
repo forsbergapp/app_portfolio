@@ -63,19 +63,16 @@ const paymentRequestGetStatus = async parameters =>{
                                            Entity.json_data.merchant_public_key??'', 
                                            JSON.stringify(body))};
    
-   const result_commonBFE = await commonBFE({  app_id:parameters.app_id,
-                                               url:Entity.json_data.merchant_api_url_payment_request_get_status??'', 
-                                               method:'POST', 
-                                               //send body in base64 format
-                                               body:{data:Buffer.from(JSON.stringify(body_encrypted)).toString('base64')},
-                                               user_agent:parameters.user_agent, 
-                                               ip:parameters.ip, 
-                                               appHeader:{
-                                                   'app-id':Entity.json_data.merchant_api_url_payment_request_app_id,
-                                                   'app-signature':'Shop'
-                                               },
-                                               authorization:parameters.authorization, 
-                                               locale:parameters.locale});
+   const result_commonBFE = await commonBFE({   app_id:parameters.app_id,
+                                                url:Entity.json_data.merchant_api_url_payment_request_get_status??'', 
+                                                method:'POST', 
+                                                //send body in base64 format
+                                                body:{data:Buffer.from(JSON.stringify(body_encrypted)).toString('base64')},
+                                                user_agent:parameters.user_agent, 
+                                                ip:parameters.ip, 
+                                                'app-id':Entity.json_data.merchant_api_url_payment_request_app_id,
+                                                authorization:parameters.authorization, 
+                                                locale:parameters.locale});
    if (result_commonBFE.result.error)
        //read external ISO20022 error format and return internal server format using camel case format
        return {http:           result_commonBFE.result.error.http,

@@ -32,6 +32,7 @@
 <createdBy>admin</createdBy>
 <createdTime>2025-06-23 19:56:47 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <previousColumn>false</previousColumn>
@@ -51,6 +52,14 @@
 <Column name="secret" id="8F4329BC-3004-8C0A-D11F-036C6B33A7A2">
 <createdBy>admin</createdBy>
 <createdTime>2025-06-23 05:57:46 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="type" id="9B35ECD9-8302-D816-44D1-55389FA872E4">
+<createdBy>admin</createdBy>
+<createdTime>2025-06-29 13:31:06 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>

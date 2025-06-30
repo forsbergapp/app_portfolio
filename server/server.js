@@ -7,9 +7,11 @@
  *          server_server_error, server_server_req, server_server_res,
  *          server_db_document_ConfigServer,
  *          server_bff_endpoint_type,
- *          server_server_req_id_number} from './types.js'
+ *          server_server_req_id_number,
+ server_db_table_IamEncryption} from './types.js'
  */
 
+ const zlib = await import('node:zlib');
 /**
  *  Returns response to client
  *  Uses host parameter for errors in requests or unknown route paths
@@ -383,9 +385,9 @@ const server = async (req, res)=>{
     };
     await read_body().catch(()=>null);
     req.protocol =      req.socket.encrypted?'https':'http';
-    req.ip =            req.socket.remoteAddress;
-    req.hostname =      req.headers.host;
-    req.path =          req.url;
+    req.ip =            req.socket.remoteAddress ??'';
+    req.hostname =      req.headers.host ??'';
+    req.path =          req.url??'';
     req.originalUrl =   req.url;
     /**@ts-ignore */
     req.query =         req.path.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
@@ -408,7 +410,7 @@ const server = async (req, res)=>{
                              * @param {*} data
                              */
                             const compress = async data =>{
-                                const zlib = await import('node:zlib');
+                                
                                 return new Promise(resolve=>{
                                     try {
                                         zlib.gzip(Buffer.from(data.toString(), 'utf8'), (err, compressed)=>{
@@ -438,7 +440,6 @@ const server = async (req, res)=>{
                                 /**@ts-ignore */
                                 readStream.pipe(res);
                             else{
-                                const zlib = await import('node:zlib');
                                 const gzip = zlib.createGzip();
                                 res.setHeader('Content-Encoding', 'gzip');
                                 res.removeHeader('Content-Length');
@@ -563,7 +564,10 @@ const serverStart = async () =>{
                                             
         const NETWORK_INTERFACE = configServer.SERVER.filter(parameter=> 'NETWORK_INTERFACE' in parameter)[0].NETWORK_INTERFACE;
         //START HTTP SERVER                                                     
-        http.createServer((req,res)=>server(req,res))
+        http.createServer((req,res)=>server(
+                                            /**@ts-ignore*/
+                                            req,
+                                            res))
             .listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80, NETWORK_INTERFACE, () => {
             Log.post({   app_id:0, 
                 data:{  object:'LogServerInfo', 
@@ -571,7 +575,10 @@ const serverStart = async () =>{
                     }
                 });
         });
-        http.createServer((req,res)=>server(req,res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
+        http.createServer((req,res)=>server(
+                                            /**@ts-ignore*/
+                                            req,
+                                            res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
             Log.post({   app_id:0, 
                 data:{  object:'LogServerInfo', 
                         log:'HTTP Server Admin  PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000
@@ -587,14 +594,20 @@ const serverStart = async () =>{
                 key: HTTPS_KEY.toString(),
                 cert: HTTPS_CERT.toString()
             };
-            https.createServer(options, (req,res)=> server(req,res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443,NETWORK_INTERFACE, () => {
+            https.createServer(options, (req,res)=> server(
+                                                            /**@ts-ignore*/
+                                                            req,
+                                                            res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443,NETWORK_INTERFACE, () => {
                 Log.post({   app_id:0, 
                     data:{  object:'LogServerInfo', 
                             log:'HTTPS Server PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443
                         }
                     });
             });
-            https.createServer(options,  (req,res)=> server(req,res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000,NETWORK_INTERFACE, () => {
+            https.createServer(options,  (req,res)=> server(
+                                                            /**@ts-ignore*/
+                                                            req,
+                                                            res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000,NETWORK_INTERFACE, () => {
                 Log.post({   app_id:0, 
                     data:{  object:'LogServerInfo', 
                             log:'HTTPS Server admin PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000
@@ -693,9 +706,11 @@ class serverCircuitBreakerClass {
      *          body:{}|null,
      *          method:string,
      *          client_ip:string,
-     *          authorization:string,
      *          user_agent:string,
      *          accept_language:string,
+     *          authorization:string,
+     *          encryption_type:server_db_table_IamEncryption['type'],
+     *          'app-id':number,
      *          endpoint:server_bff_endpoint_type|null}} parameters
      * @returns {Promise.<string>}
      */
@@ -721,9 +736,11 @@ class serverCircuitBreakerClass {
                                                                     body:parameters.body,
                                                                     method:parameters.method,
                                                                     client_ip:parameters.client_ip,
-                                                                    authorization:parameters.authorization,
                                                                     user_agent:parameters.user_agent,
                                                                     accept_language:parameters.accept_language,
+                                                                    authorization:parameters.authorization,
+                                                                    encryption_type:parameters.encryption_type,
+                                                                    'app-id':parameters['app-id'],
                                                                     timeout:timeout});
             this.onSuccess(parameters.service);
             return response;    
@@ -818,15 +835,22 @@ const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass(await 
  *          body:{}|null,
  *          method:string,
  *          client_ip:string,
- *          authorization:string,
  *          user_agent:string,
  *          accept_language:string,
+ *          authorization:string,
+ *          encryption_type:server_db_table_IamEncryption['type'],
+ *          'app-id':number,
  *          timeout:number}} parameters
  * @returns {Promise.<*>}
  */                    
 const serverRequest = async parameters =>{
-    const zlib = await import('node:zlib');
+    const ConfigServer = await import('./db/ConfigServer.js');
+    const Security = await import('./security.js');
+    const IamEncryption = await import('./db/IamEncryption.js');
     const MESSAGE_TIMEOUT = '🗺⛔?';
+    
+    /**@type{server_db_document_ConfigServer['SERVICE_IAM']} */
+    const CONFIG_SERVER = ConfigServer.get({app_id:0,data:{ config_group:'SERVICE_IAM'}}).result;
     
     /**@type {'http'|'https'} */
     const protocol = parameters.protocol ?? (parameters.url?.toLowerCase().startsWith('https')?
@@ -834,25 +858,90 @@ const serverRequest = async parameters =>{
                                                     'http');
     /**@type {import('node:http')|import('node:https')} */
     const request_protocol = await import(`node:${protocol}`);
-    return new Promise ((resolve, reject)=>{
-        const headers = {
-                'User-Agent': parameters.user_agent,
-                'Accept-Language': parameters.accept_language,
-                'Authorization': parameters.authorization,
-                'x-forwarded-for': parameters.client_ip,
-                ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
-                ...(parameters.method!='GET' && {'Content-Length':  Buffer.byteLength(JSON.stringify(parameters.body))})
-        };
-        /**@type{import('node:https').RequestOptions}*/    
-        const options = {
+    
+    const encrypt_transport = parameters.encryption_type ==parameters.encryption_type?
+                                0:
+                                    serverUtilNumberValue(CONFIG_SERVER
+                                        .filter(parameter=> 'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT);
+    const url_unencrypted = parameters.url??
+                                    (protocol + '://' + parameters.host + ':' + parameters.port + parameters.path);
+
+    const uuid = Security.securityUUIDCreate();
+    const secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8')
+                    .toString('base64');
+    encrypt_transport==1?
+        await IamEncryption.post(0, {   app_id:parameters['app-id'], 
+                                        iam_app_id_token_id: parameters['app-id'],
+                                        uuid: uuid,
+                                        type:parameters.encryption_type,
+                                        secret: secret}):
+            null;
+    const url = encrypt_transport==1?
+                    (parameters.url?
+                        //external url should be syntax [protocol]://[host + optional port]/[path]
+                        //implements same path for external url
+                        (protocol + '://' + parameters.url.split('/')[2] + '/bff/x/' + uuid):
+                            (protocol + '://' + parameters.host + ':' + parameters.port + '/bff/x/' + uuid)):
+                        parameters.url??url_unencrypted;
+
+    /**@type{import('node:https').RequestOptions['headers'] & {'app-id':number, 'app-signature'?:string}} */
+    const headers = {
+        'User-Agent':       parameters.user_agent,
+        'Accept-Language':  parameters.accept_language,
+        'x-forwarded-for':  parameters.client_ip,
+        ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
+        ...(parameters.authorization && {Authorization: parameters.authorization}),
+        'app-id':           parameters['app-id'],
+        ...(encrypt_transport==1 && {'app-signature': await Security.securityTransportEncrypt({
+                                                        app_id:parameters['app-id'],
+                                                        jwk:JSON.parse(atob(secret)).jwk,
+                                                        iv:JSON.parse(atob(secret)).iv,
+                                                        data:'serverRequest'})})
+    };
+    const body = parameters.method=='GET'?
+                    null:
+                        encrypt_transport==1?
+                            JSON.stringify({
+                                x: await Security.securityTransportEncrypt({
+                                    app_id:parameters['app-id'],
+                                    jwk:JSON.parse(atob(secret)).jwk,
+                                    iv:JSON.parse(atob(secret)).iv,
+                                    data:JSON.stringify({  
+                                            headers:headers,
+                                            method: parameters.method,
+                                            url:    url,
+                                            ...(parameters.method!='GET' && {body:  parameters.body?
+                                                JSON.stringify(parameters.body):
+                                                    ''})
+                                        })
+                                    })
+                            }):
+                                (parameters.body?
+                                    JSON.stringify(parameters.body):
+                                        '');
+    /**@type{import('node:https').RequestOptions}*/    
+    const options = encrypt_transport==1?
+        {
+            family: 4,
             method: parameters.method,
             timeout: parameters.timeout,
-            headers : headers,
-            ...(parameters.url ==null && {host:  parameters.host}),
-            ...(parameters.url ==null && {port:  parameters.port}),
-            ...(parameters.url ==null && {path:  parameters.path}),
-            ...(protocol=='https' && {rejectUnauthorized: false})
-        };
+            headers:{
+                        ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
+                        'Connection':   'close'
+                    },
+            ...(protocol=='https' && {rejectUnauthorized: false}),
+        }:
+            {
+                family:     4,
+                method:     parameters.method,
+                timeout:    parameters.timeout,
+                headers :   { 
+                            ...headers
+                            },
+                ...(protocol=='https' && {rejectUnauthorized: false})
+            };
+    return new Promise ((resolve, reject)=>{
+        
         /**
          * @param {import('node:http').IncomingMessage} res
          * @returns {void}
@@ -861,28 +950,39 @@ const serverRequest = async parameters =>{
             let responseBody = '';
             res.setEncoding('utf8');
             if (res.headers['content-encoding'] == 'gzip'){
-                const gunzip = zlib.createGunzip();
-                res.pipe(gunzip);
-                gunzip.on('data', (/**@type{*}*/chunk) =>responseBody += chunk);
-                gunzip.on('end', () => resolve (responseBody));
+                try {
+                    const gunzip = zlib.createGunzip();
+                    res.pipe(gunzip);
+                    gunzip.on('data', (/**@type{*}*/chunk) =>
+                        responseBody += chunk);
+                    gunzip.on('end', () =>{ 
+                    
+                        if ([200,201].includes(res.statusCode??0))
+                            resolve (responseBody);
+                        else
+                            reject(res.statusMessage);    
+                    });
+                } catch (error) {
+                    reject(error);
+                }
+                    
+                
             }
             else{
                 res.on('data', (/**@type{*}*/chunk) =>{
                     responseBody += chunk;
                 });
                 res.on('end', ()=>{
-                    if (res.statusCode == 200)
+                    if ([200,201].includes(res.statusCode??0))
                         resolve (responseBody);
                     else
                         reject(res.statusMessage);
                 });
             }
         };
-        const request = parameters.url?
-                            request_protocol.request(parameters.url, options, response):
-                                request_protocol.request(options, response);
+        const request = request_protocol.request(new URL(url), options, response);
         if (parameters.method !='GET')
-            request.write(JSON.stringify(parameters.body));
+            request.write(body);
         request.on('error', error => {
             resolve({http:500,
                 code:'SERVER',

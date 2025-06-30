@@ -710,10 +710,10 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *          authorization: string,
  *          host: string,
  *          security:{
- *                      IamEncryption:  server_db_table_IamEncryption,
- *                      idToken:        string,
+ *                      IamEncryption:  server_db_table_IamEncryption|null,
+ *                      idToken:        string|null,
  *                      AppId:          number, 
- *                      AppSignature:   string
+ *                      AppSignature:   string|null
  *                  }|null,
  *          ip: string,
  *          res: server_server_res}} parameters
