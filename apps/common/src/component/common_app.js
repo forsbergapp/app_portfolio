@@ -19,7 +19,8 @@
  *          uuid:string,
  *          secret:string,
  *          encrypt_transport:number,
- *          securityTransportEncrypt:securityTransportEncrypt}} props
+ *          securityTransportEncrypt:securityTransportEncrypt,
+ *          css:string}} props
  * @returns {string}
  */
 const template = props =>`  <!DOCTYPE html>
@@ -32,35 +33,11 @@ const template = props =>`  <!DOCTYPE html>
                                 <meta name='viewport' content='width=device-width, minimum-scale=1.0, maximum-scale = 1'>
                             </head>	
                             <body class='start'>
-                                <style> 
-                                    body {
-                                        background-color: rgb(81, 171, 255);
-                                    }
-                                    .start {    
-                                        display:flex;
-                                        justify-content:center;
-                                        align-items:center;
-                                        min-height:100vh;
-                                        margin:0;
-                                    }
-                                    @keyframes start_spin{
-                                        from {transform:rotate(0deg);}
-                                        to {transform:rotate(360deg);}
-                                    }
-                                    .start::before{
-                                        content:'' !important;
-                                        width:25px;
-                                        height:25px;
-                                        position:absolute;
-                                        border:4px solid #404040;
-                                        border-top-color: rgb(81, 171, 255);
-                                        border-radius:50%;
-                                        animation:start_spin 1s linear infinite;
-                                    }
-                                </style>
-                                <script type='module'>                                        
+                                <script type='module'>
+                                    const css = new CSSStyleSheet();
+                                    css.replace(atob('${props.css}'));
+                                    document.adoptedStyleSheets = [...document.adoptedStyleSheets, css];
                                     let common = null;
-                                    
                                     /**
                                      * @description Receives server side event from BFF, decrypts message and delegates event
                                      * @param {{socket:*, 
@@ -416,7 +393,31 @@ const template = props =>`  <!DOCTYPE html>
  * @returns {Promise.<string>}
  */
 const component = async props =>{
-
+    //declare css outside to keep HTML clean
+    const css = Buffer.from(`body{
+                                background-color: rgb(81, 171, 255);
+                            }
+                            .start {    
+                                display:flex;
+                                justify-content:center;
+                                align-items:center;
+                                min-height:100vh;
+                                margin:0;
+                            }
+                            @keyframes start_spin{
+                                from {transform:rotate(0deg);}
+                                to {transform:rotate(360deg);}
+                            }
+                            .start::before{
+                                content:'' !important;
+                                width:25px;
+                                height:25px;
+                                position:absolute;
+                                border:4px solid #404040;
+                                border-top-color: rgb(81, 171, 255);
+                                border-radius:50%;
+                                animation:start_spin 1s linear infinite;
+                            }`).toString('base64');
     return template({   app_id:                             props.data.app_id,
                         app_admin_app_id:                   props.data.app_admin_app_id,
                         rest_resource_bff:                  props.data.rest_resource_bff,
@@ -427,6 +428,7 @@ const component = async props =>{
                         uuid:                               props.data.uuid,
                         secret:                             props.data.secret,
                         encrypt_transport:                  props.data.encrypt_transport,
-                        securityTransportEncrypt:           props.methods.securityTransportEncrypt});
+                        securityTransportEncrypt:           props.methods.securityTransportEncrypt,
+                        css:                                css});
 };
 export default component;
