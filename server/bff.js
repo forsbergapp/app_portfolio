@@ -293,108 +293,143 @@ const bffStart = async (req, res) =>{
     const resultbffInit =   await bffInit(req, res);
     /**@type{server_db_document_ConfigServer} */
     const configServer = ConfigServer.get({app_id:0}).result;
+    const common_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
     /**
      * @returns {Promise.<server_bff_parameters|null>}
      */
     const parameters = async () =>{
-        
-        if (req.method=='POST' && req.url.startsWith('/bff/x/') && 
+        //if not start url and encryption is used and method='POST and path starts with /bff/x/
+        if (req.url !='/' && 
             serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)==1){
-            /**@type{server_db_table_IamEncryption}*/
-            const encryptionData = (IamEncryption.get({app_id:0, resource_id:null, data:{data_app_id:null}}).result ?? [])
-                                    .filter((/**@type{server_db_table_IamEncryption}*/encryption)=>encryption.uuid==req.url.substring('/bff/x/'.length))[0];
-
-            if (encryptionData){
-
-                /**
-                 * @type {{headers:{
-                 *                 'app-id':       number,
-                 *                 'app-signature':string,
-                 *                 'app-id-token': string,
-                 *                 Authorization?: string,
-                 *                 'Content-Type': string,
-                 *                 },
-                 *         method: string,
-                 *         url:    string,
-                 *         body:   *}}}
-                 */
-                return await Security.securityTransportDecrypt({ 
-                                app_id:0,
-                                encrypted:  req.body.x,
-                                jwk:        JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).jwk,
-                                iv:         JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).iv})
-                                .then(result=>{
-                                    const decrypted = JSON.parse(result);
-                                    const endpoint = decrypted.url.startsWith(configServer.SERVER
-                                        .filter(parameter=>parameter.REST_RESOURCE_BFF)[0].REST_RESOURCE_BFF + '/')?
-                                            (decrypted.url.split('/')[2]?.toUpperCase()):
-                                                'APP';
-                                    const idToken = //All external roles and microservice do not use AppId Token
-                                                        (endpoint.indexOf('EXTERNAL')>-1 ||
-                                                        endpoint.indexOf('MICROSERVICE')>-1)?
-                                                                '':
-                                                                decrypted.headers['app-id-token']?.replace('Bearer ',''); 
-                            
-                                    return iam.iamAuthenticateCommon({
-                                            idToken: idToken, 
-                                            endpoint:endpoint,
-                                            authorization: decrypted.headers.Authorization??'', 
-                                            host: req.headers.host ?? '', 
-                                            security:{
-                                                        IamEncryption:encryptionData,
-                                                        idToken:idToken,
-                                                        AppId:decrypted.headers['app-id'], 
-                                                        AppSignature: decrypted.headers['app-signature'],
-                                            },
-                                            ip: req.headers['x-forwarded-for'] || req.ip,
-                                            res:res
-                                            })
-                                            .then(authenticate=>{
-                                                //save decrypted info for logs
-                                                req.headers.x = {   app_id:     decrypted?.headers['app-id']??null, 
-                                                                    app_id_auth:authenticate.app_id !=null?1:0, 
-                                                                    method:     decrypted?.method??null, 
-                                                                    url:        decrypted?.url??null};
-                                                return  (authenticate.app_id !=null && decrypted)?
-                                                            {
-                                                            app_id:         authenticate.app_id,
-                                                            endpoint:       endpoint,
-                                                            //request
-                                                            host:           req.headers.host ?? '', 
-                                                            url:            decrypted.url,
-                                                            method:         decrypted.method,
-                                                            query:          (decrypted.url.indexOf('?')>-1?Array.from(new URLSearchParams(decrypted.url
-                                                                            .substring(decrypted.url.indexOf('?')+1)))
-                                                                            .reduce((query, param)=>{
-                                                                                const key = {[param[0]] : decodeURIComponent(param[1])};
-                                                                                return {...query, ...key};
-                                                                                            /**@ts-ignore */
-                                                                            }, {}):null)?.parameters ?? '',
-                                                            body:           decrypted.body?JSON.parse(decrypted.body):null,
-                                                            security_app:   { 
-                                                                            AppId: decrypted.headers['Content-Type'] =='text/event-stream'?
-                                                                                0:
-                                                                                    decrypted.headers['app-id']??null,
-                                                                            AppSignature: decrypted.headers['app-signature']??null,
-                                                                            AppIdToken: decrypted.headers['app-id-token']?.replace('Bearer ','')??null
-                                                                            },
-                                                            authorization:  decrypted.headers.Authorization??null, 
-                                                            //metadata
-                                                            ip:             req.headers['x-forwarded-for'] || req.ip, 
-                                                            user_agent:     req.headers['user-agent'], 
-                                                            accept_language:req.headers['accept-language'], 
-                                                            //response
-                                                            res:            res}:
-                                                                null;
-                                            });
-                                })
-                                .catch(()=>null);
+            //fonts use GET all others use POST
+            if (['POST', 'GET'].includes(req.method) && req.url.startsWith('/bff/x/')){
+                /**@type{server_db_table_IamEncryption}*/
+                const encryptionData = (IamEncryption.get({app_id:common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
+                                        .filter((/**@type{server_db_table_IamEncryption}*/encryption)=>encryption.uuid==req.url.substring('/bff/x/'.length))[0];
+                if (encryptionData){
+                    if(encryptionData.type=='FONT'){
+                        return {
+                            app_id:         common_app_id,
+                            endpoint:       'APP',
+                            //request
+                            host:           req.headers.host ?? '', 
+                                            //use font url loaded in css
+                            url:            encryptionData.url??'',
+                            method:         req.method,
+                            query:          '',
+                            body:           null,
+                            security_app:   null,
+                            authorization:  null, 
+                            //metadata
+                            ip:             req.headers['x-forwarded-for'] || req.ip, 
+                            user_agent:     req.headers['user-agent'], 
+                            accept_language:req.headers['accept-language'], 
+                            //response
+                            res:            res};
+                    }
+                    else{
+                        /**
+                                             * @type {{headers:{
+                        *                 'app-id':       number,
+                        *                 'app-signature':string,
+                        *                 'app-id-token': string,
+                        *                 Authorization?: string,
+                        *                 'Content-Type': string,
+                        *                 },
+                        *         method: string,
+                        *         url:    string,
+                        *         body:   *}}}
+                        */
+                        return await Security.securityTransportDecrypt({ 
+                                    app_id:0,
+                                    encrypted:  req.body.x,
+                                    jwk:        JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).jwk,
+                                    iv:         JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).iv})
+                                    .then(result=>{
+                                        const decrypted = JSON.parse(result);
+                                        const endpoint = decrypted.url.startsWith(configServer.SERVER
+                                            .filter(parameter=>parameter.REST_RESOURCE_BFF)[0].REST_RESOURCE_BFF + '/')?
+                                                (decrypted.url.split('/')[2]?.toUpperCase()):
+                                                    'APP';
+                                        const idToken = //All external roles and microservice do not use AppId Token
+                                                            (endpoint.indexOf('EXTERNAL')>-1 ||
+                                                            endpoint.indexOf('MICROSERVICE')>-1)?
+                                                                    '':
+                                                                    decrypted.headers['app-id-token']?.replace('Bearer ',''); 
+                                
+                                        return iam.iamAuthenticateCommon({
+                                                idToken: idToken, 
+                                                endpoint:endpoint,
+                                                authorization: decrypted.headers.Authorization??'', 
+                                                host: req.headers.host ?? '', 
+                                                security:{
+                                                            IamEncryption:encryptionData,
+                                                            idToken:idToken,
+                                                            AppId:decrypted.headers['app-id'], 
+                                                            AppSignature: decrypted.headers['app-signature'],
+                                                },
+                                                ip: req.headers['x-forwarded-for'] || req.ip,
+                                                res:res
+                                                })
+                                                .then(authenticate=>{
+                                                    //save decrypted info for logs
+                                                    req.headers.x = {   app_id:     decrypted?.headers['app-id']??null, 
+                                                                        app_id_auth:authenticate.app_id !=null?1:0, 
+                                                                        method:     decrypted?.method??null, 
+                                                                        url:        decrypted?.url??null};
+                                                    return  (authenticate.app_id !=null && decrypted)?
+                                                                {
+                                                                app_id:         authenticate.app_id,
+                                                                endpoint:       endpoint,
+                                                                //request
+                                                                host:           req.headers.host ?? '', 
+                                                                url:            decrypted.url,
+                                                                method:         decrypted.method,
+                                                                query:          (decrypted.url.indexOf('?')>-1?
+                                                                                    Array.from(new URLSearchParams(decrypted.url
+                                                                                    .substring(decrypted.url.indexOf('?')+1)))
+                                                                                    .reduce((query, param)=>{
+                                                                                        const key = {[param[0]] : decodeURIComponent(param[1])};
+                                                                                        return {...query, ...key};
+                                                                                                    /**@ts-ignore */
+                                                                                    }, {}):null)?.parameters ?? '',
+                                                                body:           decrypted.body?JSON.parse(decrypted.body):null,
+                                                                security_app:   { 
+                                                                                AppId: decrypted.headers['Content-Type'] =='text/event-stream'?
+                                                                                    0:
+                                                                                        decrypted.headers['app-id']??null,
+                                                                                AppSignature: decrypted.headers['app-signature']??null,
+                                                                                AppIdToken: decrypted.headers['app-id-token']?.replace('Bearer ','')??null
+                                                                                },
+                                                                authorization:  decrypted.headers.Authorization??null, 
+                                                                //metadata
+                                                                ip:             req.headers['x-forwarded-for'] || req.ip, 
+                                                                user_agent:     req.headers['user-agent'], 
+                                                                accept_language:req.headers['accept-language'], 
+                                                                //response
+                                                                res:            res}:
+                                                                    null;
+                                                });
+               })
+               .catch(()=>
+                   //decrypt failed
+                   null
+               );
+                    }
+                    
+                }
+                else{
+                    //no encryption data
+                    return null;
+                }
             }
             else{
+                //request not using method POST and url that starts with /bff/x/
                 return null;
             }
         }
         else{
+            //start url or not using encryption
             const endpoint = req.url.startsWith(configServer.SERVER.filter(parameter=>parameter.REST_RESOURCE_BFF)[0].REST_RESOURCE_BFF + '/')?
                                     (req.url.split('/')[2]?.toUpperCase()):
                                         'APP';
@@ -472,20 +507,7 @@ const bffStart = async (req, res) =>{
                 bff_parameters.method.toUpperCase() == 'GET' && 
                 !bff_parameters.url?.startsWith(configServer.SERVER.filter(row=>'REST_RESOURCE_BFF' in row)[0].REST_RESOURCE_BFF + '/')){
                 //use common app id for APP since no app id decided
-                const common_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
                 switch (true){
-                    //font css that can contain font source links
-                    case (bff_parameters.url.startsWith('/common/css/font/font')):{
-                        const {commonResourceFile} = await import('../apps/common/src/common.js');
-                        return serverResponse({app_id:common_app_id,
-                                        result_request: await commonResourceFile({   app_id:common_app_id, 
-                                                        resource_id:bff_parameters.url, 
-                                                        content_type:'text/css',
-                                                        data_app_id: common_app_id}),
-                                        host:bff_parameters.host,
-                                        route : 'APP',
-                                        res:bff_parameters.res});
-                    }
                     //font src used in a font css
                     case (bff_parameters.url.startsWith('/common/modules/fontawesome/webfonts/')):
                     case (bff_parameters.url.startsWith('/common/css/font/')):{
@@ -550,7 +572,7 @@ const bffStart = async (req, res) =>{
                                         url:bff_parameters.url ?? '',
                                         user_agent:bff_parameters.user_agent, 
                                         accept_language:bff_parameters.accept_language, 
-                                        idToken:bff_parameters.security_app.AppIdToken, 
+                                        idToken:bff_parameters.security_app?.AppIdToken??'', 
                                         authorization:bff_parameters.authorization ?? '', 
                                         parameters:decodedquery, 
                                         body:decodedbody,
