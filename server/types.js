@@ -170,12 +170,12 @@
  *          url:string,
  *          method: string,
  *          query: string,
- *          body:server_server_req['body'] & {type?:string, IAM_data_app_id?:number|null, data?:string},
+ *          body:server_server_req['body'] & {type?:string, IAM_data_app_id?:number|null, data?:string}|null,
  *          security_app:{
  *              AppId:  server_server_req['headers']['app-id'], 
  *              AppSignature:  server_server_req['headers']['app-signature'], 
  *              AppIdToken:  server_server_req['headers']['app-id-token']
- *          },
+ *          }|null,
  *          authorization:string|null,
  *          ip: string,
  *          user_agent:string,
@@ -396,7 +396,8 @@
  *              iam_app_id_token_id:number|null,
  *              uuid:string, 
  *              secret:string,
- *              type:'MICROSERVICE'|'BFE'|'SERVER',
+ *              url?:string|null,
+ *              type:'MICROSERVICE'|'BFE'|'SERVER'|'FONT',
  *              created?:string}} server_db_table_IamEncryption
  */
 

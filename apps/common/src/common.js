@@ -22,12 +22,68 @@ const AppModule = await import('../../../server/db/AppModule.js');
 const AppParameter = await import('../../../server/db/AppParameter.js');
 const ConfigServer = await import('../../../server/db/ConfigServer.js');
 const IamAppIdToken = await import('../../../server/db/IamAppIdToken.js');
+const IamEncryption = await import ('../../../server/db/IamEncryption.js');
 const Log = await import('../../../server/db/Log.js');
 const Security = await import('../../../server/security.js');
 const {serverProcess, serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import('../../../server/server.js');
 const {serverCircuitBreakerBFE, serverRequest} = await import('../../../server/server.js');
 
 const fs = await import('node:fs');
+
+/**
+ * @name commonCssFontsSecure
+ * @description resource /common/css/font/fonts.css replaced with secure font url /bff/x/[uuid]
+ *              creates IamEncryption records with old url for all font url at server start
+ *              font url syntax 'src: url([url]]) format'
+ *              using IIFE to save as constant
+ *              constant: {css:string, db_records:server_db_table_IamEncryption[]}
+ * @constant
+ */
+const commonCssFontsSecure = await (async ()=>{
+                        const css = [];
+                        /**@type {{uuid:String, url:string}[]}} */
+                        const url_record = [];
+                        const db_records = [];
+                        for (const row of (await fs.promises
+                                                .readFile(`${serverProcess.cwd()}${App.get({app_id:0, resource_id:0}).result[0].path}/css/font/fonts.css`))
+                                                .toString('utf8')
+                                                .split('\n')){
+                            if (row.trimStart().toLowerCase().startsWith('src')){
+                                const startString = 'src: url(';
+                                const endString = ') format';
+                                const url = row.substring(
+                                                            row.indexOf(startString) + startString.length,
+                                                            row.indexOf(endString)
+                                                        );
+                                //font url can be repeated in css
+                                if (url_record.filter(row=>row.url == url).length==0){
+                                    const uuid  = Security.securityUUIDCreate(); 
+                                    url_record.push({uuid:uuid, url:url});
+                                    const secret= Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8')
+                                                    .toString('base64');
+                                    //IamEncryption.post too slow at start to create all records
+                                    db_records.push({id:                Date.now(),
+                                                    app_id:             0, 
+                                                    iam_app_id_token_id:null, 
+                                                    uuid:               uuid, 
+                                                    secret:             secret, 
+                                                    url:                row.substring(
+                                                                                    row.indexOf(startString) + startString.length,
+                                                                                    row.indexOf(endString)),
+                                                    type:               'FONT',
+                                                    created:            new Date().toISOString()});
+                                    css.push(row.substring(0, row.indexOf(startString) + startString.length) +
+                                                    `/bff/x/${uuid}` + row.substring(row.indexOf(endString)));
+                                }
+                                else
+                                    css.push(row.substring(0, row.indexOf(startString) + startString.length) +
+                                                    `/bff/x/${url_record.filter(row=>row.url == url)[0].uuid}` + row.substring(row.indexOf(endString)));
+                            }
+                            else
+                                css.push(row);
+                        }
+                        return {css:css.join(''), db_records:db_records};
+                    })();
 
 const circuitBreaker = await serverCircuitBreakerBFE();
 /**
@@ -968,7 +1024,7 @@ const commonApp = async parameters =>{
             /**@type{server_db_document_ConfigServer} */
             const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
             const Security = await import('../../../server/security.js');
-            const IamEncryption = await import ('../../../server/db/IamEncryption.js');
+            
             const admin_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
             const common_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
             //save UUID, secret and idToken (ADD FK) in IamEncryption
@@ -1052,7 +1108,7 @@ const commonApp = async parameters =>{
  * @returns {Promise.<server_server_response>}
  */
 const commonAppResource = async parameters =>{
-   
+    
     if (parameters.app_id==null)
         return {http:404,
                 code:null,
@@ -1073,6 +1129,10 @@ const commonAppResource = async parameters =>{
                                                                 type:       'INFO_' + parameters.resource_id.toUpperCase()},
                                                         methods:null}), 
                         type:'HTML'};
+            }
+            case parameters.data.content_type == 'text/css' && parameters.resource_id.replaceAll('~','/')=='/common/css/font/fonts.css':{
+                //loaded at server start with font url replaced with secure url and about 1700 IamEncryption records
+                return {result:commonCssFontsSecure.css, type:'CSS'};
             }
             case parameters.data.content_type == 'text/css':
             case parameters.data.content_type == 'text/javascript':
@@ -1107,7 +1167,8 @@ const commonRegistryAppModule = (app_id, parameters) => AppModule.get({app_id:ap
                                                                app.common_name==parameters.name && 
                                                                app.common_role == parameters.role)[0];
 
-export {commonSearchMatch,
+export {commonCssFontsSecure,
+        commonSearchMatch,
         commonAppStart, commonClientLocale,
         commonAppIam, commonResourceFile,
         commonModuleAsset,commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 

@@ -98,7 +98,7 @@ const getObjectRecord = filename =>JSON.parse(JSON.stringify(DB.data.filter(file
  * @function
  * @param {server_DbObject} object 
  * @param {string} filepath
- * @returns {Promise.<number>}
+ * @returns {Promise.<{transaction_id:number, transaction_content:*}>}
  */
 const fileTransactionStart = async (object, filepath)=>{
     const record = DB.data.filter(file_db=>file_db.name == object)[0];
@@ -108,7 +108,9 @@ const fileTransactionStart = async (object, filepath)=>{
         record.transaction_content = record.in_memory?
                                             JSON.parse(record.content?? (record.type.startsWith('TABLE')?'[]':'{}')):
                                             await getFsFile(filepath,record.type.startsWith('TABLE'));
-        return transaction_id;
+        return {transaction_id:transaction_id,
+                transaction_content:record.transaction_content
+        };
     };
     return new Promise((resolve, reject)=>{
         if  (record.lock==0){
@@ -334,6 +336,25 @@ const postFsAdmin = async (object, file_content) =>{
 };
 
 /**
+ * @name postAdmin
+ * @description Add table content for memory only table used at server start
+ * @function
+ * @param {server_DbObject} object
+ * @param {{}} data
+ * @returns {Promise.<void>}
+ */
+const postAdmin = async (object, data) =>{
+    const record = getObjectRecord(object);
+    if (record.in_memory){
+        DB.data.filter(row=>row.name == object)[0].cache_content = data;
+        DB.data.filter(row=>row.name == object)[0].content = formatContent(record.type.startsWith('TABLE'),data);
+    }
+    else
+        throw getError(0, 401);    
+};
+    
+
+/**
  * @name lockObject
  * @description Locks object in DB
  * @function
@@ -344,8 +365,8 @@ const postFsAdmin = async (object, file_content) =>{
  */
 const lockObject = async (app_id, object, filepath_partition=null) =>{
     const filepath = filepath_partition ?? (DB_DIR.db + object + '.json');
-    const transaction_id = await fileTransactionStart(object, filepath);
-    return {   file_content:    getObjectRecord(object).transaction_content,
+    const {transaction_id, transaction_content} = await fileTransactionStart(object, filepath);
+    return {   file_content:    transaction_content,
                 lock:           true,
                 transaction_id: transaction_id};
 };
@@ -951,6 +972,7 @@ export {
         getFsDir, getFsDataExists,
         postFsDir,
         postFsAdmin,
+        postAdmin,
         getObject,
         getObjectFile,
         Execute,

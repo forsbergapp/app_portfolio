@@ -596,6 +596,17 @@ const commonMiscResourceFetch = async (url,element, content_type, content=null )
     * @returns{Promise.<*>}
     */
     const getUrl = async ()=>{
+        /**
+         * @description use adoptedStyleSheets to apply font css
+         * @param {string} cssText
+         * @returns {null}
+         */
+        const cssAdd = cssText => {
+            const css = new CSSStyleSheet();
+            css.replace(cssText);
+            COMMON_DOCUMENT.adoptedStyleSheets = [...COMMON_DOCUMENT.adoptedStyleSheets, css];
+            return null;
+        };
         const resource = COMMON_GLOBAL.resource_import.filter(resource=>resource.url==url && resource.app_id == app_id)[0]?.content;
         if (resource) 
             return resource;
@@ -605,20 +616,23 @@ const commonMiscResourceFetch = async (url,element, content_type, content=null )
                     {
                         app_id:app_id,
                         url:url,
-                        //font css can contain src() with external reference, fetch font css using default link
-                        content:content?URL.createObjectURL(new Blob ([content], {type: content_type})):url.startsWith('/common/css/font')?
-                                    url:
+                        content:content?
+                                    URL.createObjectURL(new Blob ([content], {type: content_type})):
                                         await commonFFB({   path:'/app-resource/' + url.replaceAll('/','~'), 
                                                             query:`content_type=${content_type}&IAM_data_app_id=${app_id}`, 
                                                             method:'GET', 
-                                                            //images use base64 strings
-                                                            response_type:content_type.startsWith('image')?'TEXT':'BLOB',
+                                                            //uses TEXT for images that use base64 strings and font css
+                                                            response_type:(content_type.startsWith('image') ||url=='/common/css/font/fonts.css')?
+                                                                'TEXT':'BLOB',
                                                             authorization_type:'APP_ID'})
                                                 .then(module=>
                                                     content_type.startsWith('image')?
                                                         JSON.parse(module).resource:
-                                                            URL.createObjectURL(  new Blob ([module], 
-                                                                {type: content_type}))),
+                                                            url=='/common/css/font/fonts.css'?
+                                                                //fonts have links, URL.createObjectURL does not support links
+                                                                cssAdd(module):
+                                                                    URL.createObjectURL(  new Blob ([module], 
+                                                                        {type: content_type}))),
                         content_type:content_type
                     }); 
             return COMMON_GLOBAL.resource_import[COMMON_GLOBAL.resource_import.length-1].content;
