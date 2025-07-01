@@ -88,6 +88,7 @@
  * @typedef {{  body:{className:string, requestFullscreen:function, classList:{add:function, remove:function, contains:function}},
  *              createElement:function,
  *              addEventListener:function,
+ *              adoptedStyleSheets:DocumentOrShadowRoot['adoptedStyleSheets'],
  *              removeEventListener:function,
  *              fullscreenElement:Element|null,
  *              exitFullscreen:function,
