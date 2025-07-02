@@ -34,7 +34,7 @@ const fs = await import('node:fs');
  * @name commonCssFontsSecure
  * @description resource /common/css/font/fonts.css replaced with secure font url /bff/x/[uuid]
  *              creates IamEncryption records with old url for all font url at server start
- *              font url syntax 'src: url([url]]) format'
+ *              font url syntax 'src: url([uuid]~[org url]) format' 
  *              using IIFE to save as constant
  *              constant: {css:string, db_records:server_db_table_IamEncryption[]}
  * @constant
@@ -67,17 +67,15 @@ const commonCssFontsSecure = await (async ()=>{
                                                     iam_app_id_token_id:null, 
                                                     uuid:               uuid, 
                                                     secret:             secret, 
-                                                    url:                row.substring(
-                                                                                    row.indexOf(startString) + startString.length,
-                                                                                    row.indexOf(endString)),
+                                                    url:                uuid +'~' +url,
                                                     type:               'FONT',
                                                     created:            new Date().toISOString()});
                                     css.push(row.substring(0, row.indexOf(startString) + startString.length) +
-                                                    `/bff/x/${uuid}` + row.substring(row.indexOf(endString)));
+                                                    `/bff/x/${uuid}` +'~' + url + row.substring(row.indexOf(endString)));
                                 }
                                 else
                                     css.push(row.substring(0, row.indexOf(startString) + startString.length) +
-                                                    `/bff/x/${url_record.filter(row=>row.url == url)[0].uuid}` + row.substring(row.indexOf(endString)));
+                                                    `/bff/x/${url_record.filter(row=>row.url == url)[0].uuid}` +'~' +url + row.substring(row.indexOf(endString)));
                             }
                             else
                                 css.push(row);
@@ -295,11 +293,14 @@ const commonResourceFile = parameters =>{
      */
     const convertBinary = async (content_type, path) =>
         fs.promises.readFile(`${serverProcess.cwd()}${path}`)
-                .then(image=> {
+                .then(file=> {
                     return {type:'JSON', 
                             result:{resource:
-                                    /**@ts-ignore */                
-                                    `data:${content_type};base64,${Buffer.from(image, 'binary').toString('base64')}`}};
+                                    content_type.startsWith('font/woff')? 
+                                        `data:font/woff2;charset=utf8;base64,${Buffer.from(file.toString(), 'binary').toString('base64')}`:
+                                            `data:${content_type};base64,${Buffer.from(file.toString(), 'binary').toString('base64')}`
+                                    }
+                            };
                 });
     
    
@@ -357,15 +358,9 @@ const commonResourceFile = parameters =>{
                break;
            }
            case parameters.content_type == 'image/webp':
-           case parameters.content_type == 'image/png':{
+           case parameters.content_type == 'image/png':
+           case parameters.content_type == 'font/woff2':{
                resolve(convertBinary(parameters.content_type, `${resource_directory}/${resource_path}`));
-               break;
-           }
-           case ['WOFF2','TTF'].includes(resource_path.toUpperCase().substring(resource_path.lastIndexOf('.')+1)):{
-               //fonts loaded in css, replace 'common' in path
-               /**@type {'WOFF2'|'TTF'|*} */
-               const type = resource_path.toUpperCase().substring(resource_path.lastIndexOf('.')+1);
-               resolve({type:type.replace('WOFF2','WOFF'), sendfile:`${serverProcess.cwd()}${resource_directory}${resource_path}`});
                break;
            }
            default:{
@@ -1135,6 +1130,7 @@ const commonAppResource = async parameters =>{
                 return {result:commonCssFontsSecure.css, type:'CSS'};
             }
             case parameters.data.content_type == 'text/css':
+            case parameters.data.content_type == 'font/woff2':
             case parameters.data.content_type == 'text/javascript':
             case parameters.data.content_type == 'image/webp':
             case parameters.data.content_type == 'image/png':

@@ -89,6 +89,7 @@
  *              createElement:function,
  *              addEventListener:function,
  *              adoptedStyleSheets:DocumentOrShadowRoot['adoptedStyleSheets'],
+ *              fonts:*,
  *              removeEventListener:function,
  *              fullscreenElement:Element|null,
  *              exitFullscreen:function,
@@ -231,7 +232,12 @@
  *              user_timezone:string,
  *              user_direction:string,
  *              user_arabic_script:string,
- *              resource_import:{app_id:number, url:string,content:*, content_type:string}[]|[],
+ *              resource_import:{   app_id:number, 
+ *                                  url:string, 
+ *                                  url_original?: string|null, 
+ *                                  url_loaded?: string|null, 
+ *                                  content:*, 
+ *                                  content_type:string}[]|[],
  *              component_import:{app_id:number, url:string,component:*}[]|[],
  *              component:{
  *                          common_dialogue_iam_verify:{

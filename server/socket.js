@@ -72,9 +72,9 @@ const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, header
  *              
  * @function
  * @param {string} idtoken
- * @returns {server_socket_connected_list['id']}
+ * @returns {server_socket_connected_list}
  */
-const socketClientGet = idtoken => SOCKET_CONNECTED_CLIENTS.filter(client => client.authorization_bearer == idtoken)[0]?.id;
+const socketClientGet = idtoken => SOCKET_CONNECTED_CLIENTS.filter(client => client.authorization_bearer == idtoken)[0];
 
 /**
  * @name socketClientAdd
@@ -182,7 +182,7 @@ const socketClientAdd = (newClient) => {
         //except MAINTENANCE to admin and current user
         let sent = 0;
         for (const client of SOCKET_CONNECTED_CLIENTS){
-            if (client.id != socketClientGet(parameters.idToken))
+            if (client.id != socketClientGet(parameters.idToken)?.id)
                 if (parameters.data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result))
                     null;
                 else
