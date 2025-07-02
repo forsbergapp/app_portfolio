@@ -112,7 +112,7 @@ const serverResponse = async parameters =>{
             case 'WOFF':{
                 if (app_cache_control_font !='')
                     parameters.res.setHeader('Cache-Control', app_cache_control_font);
-                parameters.res.type('font/woff; charset=utf-8');
+                parameters.res.type('font/woff2; charset=utf-8');
                 break;
             }
             case 'TTF':{
