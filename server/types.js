@@ -1511,7 +1511,7 @@
 
 /** 
  * @description SOCKET server_socket_broadcast_type_all
- * @typedef {'INIT'|'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'|'MESSAGE'} server_socket_broadcast_type_all
+ * @typedef {'INIT'|'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'|'MESSAGE'|'FONT_URL'} server_socket_broadcast_type_all
  */
 
 /**
@@ -1521,7 +1521,7 @@
 
 /** 
  * @description SOCKET server_socket_broadcast_type_app_function
- * @typedef {'INIT'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'APP_FUNCTION'} server_socket_broadcast_type_app_function
+ * @typedef {'INIT'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'APP_FUNCTION'|'FONT_URL'} server_socket_broadcast_type_app_function
  */
 
 /**

@@ -306,7 +306,7 @@ const postDemo = async parameters=> {
        socketAdminSend({   app_id:parameters.app_id, 
                            idToken:parameters.idToken,
                            data:{  app_id:null,
-                                   client_id:socketClientGet(parameters.idToken),
+                                   client_id:socketClientGet(parameters.idToken)?.id,
                                    broadcast_type:'PROGRESS',
                                    broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'})).toString('base64')
                                }});
@@ -318,7 +318,7 @@ const postDemo = async parameters=> {
            socketAdminSend({   app_id:parameters.app_id, 
                                idToken:parameters.idToken,
                                data:{  app_id:null,        
-                                       client_id:socketClientGet(parameters.idToken),
+                                       client_id:socketClientGet(parameters.idToken)?.id,
                                        broadcast_type:'PROGRESS',
                                        broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username})).toString('base64')
                                }
@@ -619,7 +619,7 @@ const postDemo = async parameters=> {
            socketAdminSend({   app_id:parameters.app_id, 
                                idToken:parameters.idToken,
                                data:{  app_id:null,
-                                       client_id:socketClientGet(parameters.idToken),
+                                       client_id:socketClientGet(parameters.idToken)?.id,
                                        broadcast_type:'PROGRESS',
                                        broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total_count, text:social_type})).toString('base64')
                                }
@@ -759,7 +759,7 @@ const deleteDemo = async parameters => {
                    socketAdminSend({   app_id:parameters.app_id, 
                                        idToken:parameters.idToken,
                                        data:{  app_id:null,
-                                               client_id:socketClientGet(parameters.idToken),
+                                               client_id:socketClientGet(parameters.idToken)?.id,
                                                broadcast_type:'PROGRESS',
                                                broadcast_message:Buffer.from(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username})).toString('base64')
                                        }

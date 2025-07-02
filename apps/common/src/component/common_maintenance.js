@@ -155,7 +155,7 @@ const component = async props =>{
     const load = async path =>fs.promises.readFile(serverProcess.cwd() + path)
                         .then(file=>{
                             /**@ts-ignore */
-                            return `data:font/woff;base64,${Buffer.from(file, 'binary').toString('base64')}`;
+                            return `data:font/woff2;base64,${Buffer.from(file, 'binary').toString('base64')}`;
                         });
 
     const font_noto_sans_latin_ext  = await load('/apps/common/public/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5aDdu2ui.woff2');

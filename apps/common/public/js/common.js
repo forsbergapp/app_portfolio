@@ -3,7 +3,10 @@
  */
 
 /** @import {   COMMON_WINDOW, COMMON_DOCUMENT, CommonGlobal,
- *              commonAppInit, commonInitAppParameters, commonMetadata, CommonModuleCommon} from '../../../common_types.js' */
+ *              CommonAppEvent,CommonRESTAPIMethod,CommonRESTAPIAuthorizationType,CommonComponentResult,
+ *              CommonModuleLeafletMethods,CommonModuleVue,CommonModuleReact,CommonModuleReactDOM,
+ *              commonAppInit, commonInitAppParameters, commonMetadata, CommonModuleCommon} from '../../../common_types.js' 
+ */
 
 /**@type{COMMON_WINDOW} */
 const COMMON_WINDOW = window;
@@ -147,7 +150,7 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
         //in ISO 8601 format
         //JSON returns format 2020-08-08T05:15:28Z
         //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-        /**@type{import('../../../common_types.js').COMMON_WINDOW['Intl']['DateTimeFormatOptions']} */ 
+        /**@type{COMMON_WINDOW['Intl']['DateTimeFormatOptions']} */ 
         let options;
         switch (format){
             case 'SHORT':{
@@ -401,7 +404,7 @@ const commonMiscInputControl = (dialogue, validate_items) =>{
  * @name commonMiscListKeyEvent
  * @description List key event
  * @function
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @param {CommonAppEvent} event 
  * @param {string} module 
  * @param {function|null} event_function 
  * @returns {void}
@@ -597,45 +600,123 @@ const commonMiscResourceFetch = async (url,element, content_type, content=null )
     */
     const getUrl = async ()=>{
         /**
-         * @description use adoptedStyleSheets to apply font css
+         * @description Parse css and save metadata about fonts, apply font css using adoptedStyleSheets without comments
+         *              and url updated with syntax (/bff/x/[font uuid]~[app uuid])
          * @param {string} cssText
-         * @returns {null}
+         * @returns {void}
          */
         const cssAdd = cssText => {
-            const css = new CSSStyleSheet();
-            css.replace(cssText);
-            COMMON_DOCUMENT.adoptedStyleSheets = [...COMMON_DOCUMENT.adoptedStyleSheets, css];
-            return null;
+            const cssTextNew = [];
+            try {
+                /**
+                 * @description convert css to JSON
+                 * @param {string} css
+                 */
+                const cssJSON = css =>'{' + css
+                                .replace('@font-face','')
+                                .replace('url(','')
+                                .replaceAll(')','')
+                                .replace('format(',';format:')
+                                .split(';')
+                                .filter(row=>row.indexOf('}')==-1)
+                                .map(row=>row.replace('{','').split(':').map(col=>col.indexOf('"')==-1?`"${col.trimStart()}"`:col.trimStart()).join(':'))
+                                .join(',') + '}';
+                                                  
+                for (const fontCSS of cssText
+                                        .split('\r')
+                                        .filter(row=>row.indexOf('/*')==-1 && 
+                                                row.indexOf('*/')==-1 &&
+                                                row.indexOf('Fonts:')==-1 &&
+                                                row.indexOf('Font:')==-1)
+                                        .join('\n')
+                                        .split('@font-face')
+                                        .filter(row=>row.indexOf('font-family')>-1)){
+
+                    const content = {
+                                        //server returns syntax src: url([uuid]~[org url]) where uuid is added to IamEncryption records
+                                        //let the browser fetch this URL:
+                                        url:            JSON.parse(cssJSON(fontCSS)).src.split('~')[0].replace(' ','') + 
+                                                        //add current UUID
+                                                        '~' + 
+                                                        COMMON_GLOBAL.x.apps?.filter(app=>app.app_id==COMMON_GLOBAL.app_id)[0].uuid,
+                                        'font-family':  JSON.parse(cssJSON(fontCSS))['font-family'],
+                                        style:          JSON.parse(cssJSON(fontCSS))['font-style'],
+                                        weight:         JSON.parse(cssJSON(fontCSS))['font-weight'],
+                                        ...(JSON.parse(cssJSON(fontCSS))['font-stretch'] && {'stretch': JSON.parse(cssJSON(fontCSS))['font-stretch']}),
+                                        display:        JSON.parse(cssJSON(fontCSS))['font-display'],
+                                        ...(JSON.parse(cssJSON(fontCSS))['unicode-range'] && {'unicodeRange': JSON.parse(cssJSON(fontCSS))['unicode-range']})
+                                    };
+                    /**@ts-ignore */
+                    COMMON_GLOBAL.resource_import.push({
+                        app_id:app_id,
+                        url:content.url,
+                        //to be used in FFB request:
+                        url_original:JSON.parse(cssJSON(fontCSS)).src.split('~')[1],
+                        url_loaded:null,
+                        //save object in content using CSS Font Load API key names
+                        content:content,
+                        content_type:'font/woff2'
+                    });
+                    cssTextNew.push(`@font-face {
+                                    font-family: '${content['font-family']}';
+                                    font-style: ${content.style};
+                                    font-weight: ${content.weight};
+                                    font-display: ${content.display};
+                                    src: url(${content.url}) format('woff2');` +
+                                    (content.stretch?`font-stretch: ${content.stretch};`:'') +
+                                    (content.unicodeRange?`unicode-range: ${content.unicodeRange};`:'') +
+                                    '}');
+                }
+                //apply font updated css
+                const css = new CSSStyleSheet();
+                css.replace(cssTextNew.join('\n'));
+                COMMON_DOCUMENT.adoptedStyleSheets = [...COMMON_DOCUMENT.adoptedStyleSheets, css];
+            } catch (error) {
+                console.log(error);
+            }
+            
         };
         const resource = COMMON_GLOBAL.resource_import.filter(resource=>resource.url==url && resource.app_id == app_id)[0]?.content;
         if (resource) 
             return resource;
         else{
-            COMMON_GLOBAL.resource_import.push(
-                    /*@ts-ignore*/
-                    {
-                        app_id:app_id,
-                        url:url,
-                        content:content?
-                                    URL.createObjectURL(new Blob ([content], {type: content_type})):
-                                        await commonFFB({   path:'/app-resource/' + url.replaceAll('/','~'), 
-                                                            query:`content_type=${content_type}&IAM_data_app_id=${app_id}`, 
-                                                            method:'GET', 
-                                                            //uses TEXT for images that use base64 strings and font css
-                                                            response_type:(content_type.startsWith('image') ||url=='/common/css/font/fonts.css')?
-                                                                'TEXT':'BLOB',
-                                                            authorization_type:'APP_ID'})
-                                                .then(module=>
-                                                    content_type.startsWith('image')?
-                                                        JSON.parse(module).resource:
-                                                            url=='/common/css/font/fonts.css'?
-                                                                //fonts have links, URL.createObjectURL does not support links
-                                                                cssAdd(module):
-                                                                    URL.createObjectURL(  new Blob ([module], 
-                                                                        {type: content_type}))),
-                        content_type:content_type
-                    }); 
-            return COMMON_GLOBAL.resource_import[COMMON_GLOBAL.resource_import.length-1].content;
+            content?
+                /**@ts-ignore */
+                COMMON_GLOBAL.resource_import.push({
+                                app_id:app_id,
+                                url:url,
+                                content:URL.createObjectURL(new Blob ([content], {type: content_type})),
+                                content_type:content_type
+                            }):
+                    await commonFFB({   path:'/app-resource/' + url.replaceAll('/','~'), 
+                                        query:`content_type=${content_type}&IAM_data_app_id=${app_id}`, 
+                                        method:'GET', 
+                                        //uses TEXT for images that use base64 strings and font css
+                                        response_type:(content_type.startsWith('image') ||url=='/common/css/font/fonts.css')?
+                                            'TEXT':'BLOB',
+                                        authorization_type:'APP_ID'})
+                            .then(module=>
+                                content_type.startsWith('image')?
+                                    /**@ts-ignore */
+                                    COMMON_GLOBAL.resource_import.push({
+                                        app_id:app_id,
+                                        url:url,
+                                        content:JSON.parse(module).resource,
+                                        content_type:content_type
+                                    }):
+                                        url=='/common/css/font/fonts.css'?
+                                            //fonts have links, URL.createObjectURL does not support links
+                                            cssAdd(module):
+                                                /**@ts-ignore */
+                                                COMMON_GLOBAL.resource_import.push({
+                                                    app_id:app_id,
+                                                    url:url,
+                                                    content:URL.createObjectURL(  new Blob ([module], {type: content_type})),
+                                                    content_type:content_type
+                                                })
+                            );
+            //load font css using adoptedStyleSheets since URL.createObjectURL does not permit url links
+            return url=='/common/css/font/fonts.css'?null:COMMON_GLOBAL.resource_import[COMMON_GLOBAL.resource_import.length-1].content;
         }
     }; 
 
@@ -893,7 +974,7 @@ const commonWindowNavigatorLocale = () => COMMON_WINDOW.navigator.language.toLow
  * @name commonWindowDocumentFrame
  * @description Returns frames document element
  * @function
- * @returns {import('../../../common_types.js').COMMON_DOCUMENT}
+ * @returns {COMMON_DOCUMENT}
  */
 const commonWindowDocumentFrame = () => COMMON_WINDOW.frames.document;
 
@@ -1023,7 +1104,7 @@ const commonComponentRender = async commonComponentRender => {
     if (commonComponentRender.mountDiv)
         COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`).innerHTML = '<div class=\'css_spinner\'></div>';
 
-    /**@type{import('../../../common_types.js').CommonComponentResult}*/
+    /**@type{CommonComponentResult}*/
     const component = await ComponentCreate({   data:       {...commonComponentRender.data,       ...{commonMountdiv:commonComponentRender.mountDiv}},
                                                 methods:    {...commonComponentRender.methods,    ...{COMMON_DOCUMENT:COMMON_DOCUMENT}}})
                                                 .catch((/**@type{Error}*/error)=>{
@@ -1231,7 +1312,7 @@ const commonUserSessionClear = () => {
  * @name commonLovEvent
  * @description LOV event
  * @function
- * @param {import('../../../common_types.js').CommonAppEvent} event
+ * @param {CommonAppEvent} event
  * @param {string} lov
  * @returns {void}
  */
@@ -1244,7 +1325,7 @@ const commonLovEvent = (event, lov) => {
      *  common_input_value = data-value
      * app data row for users should not show technical details
      *  common_input_value = data-value
-     * @param {import('../../../common_types.js').CommonAppEvent} event_lov 
+     * @param {CommonAppEvent} event_lov 
      */
     const commonLovEvent_function = event_lov => {
         //setting values from LOV
@@ -1275,13 +1356,13 @@ const commonLovEvent = (event, lov) => {
  * @name commonLovAction
  * @description Lov action fetches id and value, updates values and manages data-defaultValue
  * @function
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @param {CommonAppEvent} event 
  * @param {string} lov 
  * @param {string|null} old_value
  * @param {string} path 
  * @param {string} query 
- * @param {import('../../../common_types.js').CommonRESTAPIMethod} method 
- * @param {import('../../../common_types.js').CommonRESTAPIAuthorizationType} authorization_type 
+ * @param {CommonRESTAPIMethod} method 
+ * @param {CommonRESTAPIAuthorizationType} authorization_type 
  * @param {{}|null} json_data 
  * @returns {void}
  */
@@ -1887,7 +1968,7 @@ const commonUserSignup = () => {
 const commonUserFunction = function_name => {
     return new Promise((resolve, reject)=>{
         const user_id_profile = Number(COMMON_DOCUMENT.querySelector('#common_profile_id').textContent);
-        /**@type{import('../../../common_types.js').CommonRESTAPIMethod} */
+        /**@type{CommonRESTAPIMethod} */
         let method;
         let path;
         let json_data;
@@ -2126,7 +2207,7 @@ const commonModuleLeafletInit = async parameters => {
     /**
      * 
      * @type {{ data:null,
-     *          methods:import('../../../common_types.js').CommonModuleLeafletMethods}}
+     *          methods:CommonModuleLeafletMethods}}
      */
     const module_leaflet = await commonComponentRender({
                             mountDiv:   parameters.mount_div,
@@ -2183,8 +2264,8 @@ const commonModuleLeafletInit = async parameters => {
  * @function
  * @param {{path:string,
  *          query?:string|null,
- *          method:import('../../../common_types.js').CommonRESTAPIMethod,
- *          authorization_type:import('../../../common_types.js').CommonRESTAPIAuthorizationType,
+ *          method:CommonRESTAPIMethod,
+ *          authorization_type:CommonRESTAPIAuthorizationType,
  *          username?:string,
  *          password?:string,
  *          body?:*,
@@ -2274,7 +2355,58 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
         }
         case 'MESSAGE':{
             commonUserMessageShowStat();
+            break;
         }
+        case 'FONT_URL':{
+            for (const font of COMMON_GLOBAL.resource_import
+                                .filter(row=>
+                                        row.content_type=='font/woff2' &&
+                                        row.url_loaded ==null &&
+                                        row.url_original?.trimEnd() == JSON.parse(commonWindowFromBase64(message)).url
+                                        ))
+                 await commonFFB({   path: ('/app-resource/' + JSON.parse(commonWindowFromBase64(message)).url.replaceAll('/','~')), 
+                                     query:`content_type=${'font/woff2'}&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`, 
+                                     method:'GET', 
+                                     authorization_type:'APP_ID'})
+                      .then((/**@type{string}*/result)=> {
+                        const fontResult = JSON.parse(result).resource;
+                        // const attributes = {
+                        //                         style: font.content.style,
+                        //                         weight:font.content.weight,
+                        //                         ...(font.content['stretch'] && {'stretch': font.content['stretch']}),
+                        //                         display: font.content.display,
+                        //                         ...(font.content['unicodeRange'] && {'unicodeRange': font.content['unicodeRange']})
+                        //                     };
+                        
+                        const css_new = `@font-face \n
+                                            font-family: '${font.content['font-family']}';\n
+                                            font-style: ${font.content.style};\n
+                                            font-weight: ${font.content.weight};\n
+                                            font-display: ${font.content.display};\n
+                                            src: url('${fontResult.trimStart().trimEnd()}') format('woff2');\n` +
+                                            (font.content.stretch?`font-stretch: ${font.content.stretch};\n`:'') +
+                                            (font.content.unicodeRange?`unicode-range: ${font.content.unicodeRange};\n`:'') +
+                                            '}\n';
+                        COMMON_DOCUMENT.querySelector('#common_fontface').textContent += css_new;
+                        //apply font updated css
+                        // const css = new CSSStyleSheet();
+                        // css.replace(css_new);
+                        // COMMON_DOCUMENT.adoptedStyleSheets = [...COMMON_DOCUMENT.adoptedStyleSheets, css];
+
+                        // const fontNew = new FontFace(
+                        //     font.content['font-family'],
+                        //     `url(${fontResult})`, // format('woff2') not needed?
+                        //     attributes
+                        // );  
+                        // fontNew.load().then(()=>{
+                        //     COMMON_DOCUMENT.fonts.add(fontNew);
+                        //     font.url_loaded = fontResult;
+                        // })
+                        // .catch(error=>
+                        //     console.log(error)
+                        // );    
+                      });
+            }
     }
 };
 /**
@@ -2380,8 +2512,8 @@ const commonTextEditingDisabled = () =>COMMON_GLOBAL.app_text_edit=='0';
  * @description Performs action for select event
  * @function
  * @param {string} event_target_id
- * @param { import('../../../common_types.js').CommonAppEvent['target']|
- *          import('../../../common_types.js').CommonAppEvent['target']['parentNode']|null} target
+ * @param { CommonAppEvent['target']|
+ *          CommonAppEvent['target']['parentNode']|null} target
  * @returns {Promise.<void>}
  */
 const commonEventSelectAction = async (event_target_id, target) =>{
@@ -2456,12 +2588,12 @@ const commonEventSelectAction = async (event_target_id, target) =>{
  * @description Common events
  * @function
  * @param {string} event_type 
- * @param {import('../../../common_types.js').CommonAppEvent|null} event 
+ * @param {CommonAppEvent|null} event 
  * @returns {Promise.<void>}
  */
 const commonEvent = async (event_type,event=null) =>{
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{CommonAppEvent}*/event) => {
             commonEvent(event_type, event);
         });
     }
@@ -3014,7 +3146,7 @@ const commonEvent = async (event_type,event=null) =>{
  * @name commonEventCopyPasteCutDisable
  * @description Disable copy cut paste
  * @function
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
  const commonEventCopyPasteCutDisable = event => {
@@ -3035,7 +3167,7 @@ const commonEvent = async (event_type,event=null) =>{
  * @name commonEventInputDisable
  * @description Disable common input textediting
  * @function
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const commonEventInputDisable = event => {
@@ -3098,7 +3230,7 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
     switch (framework){
         case 2:{
             //Vue
-            /**@type {import('../../../common_types.js').CommonModuleVue} */
+            /**@type {CommonModuleVue} */
             const Vue = await commonMiscImport(commonMiscImportmap('Vue'));
 
             //Use tempmount div to be able to return pure HTML without extra events
@@ -3131,9 +3263,9 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
         }
         case 3:{
             //React
-            /**@type {import('../../../common_types.js').CommonModuleReact} */
+            /**@type {CommonModuleReact} */
             const React = await commonMiscImport(commonMiscImportmap('React')).then(module=>module.React);
-            /**@type {import('../../../common_types.js').CommonModuleReactDOM} */
+            /**@type {CommonModuleReactDOM} */
             const ReactDOM = await commonMiscImport(commonMiscImportmap('ReactDOM')).then(module=>module.ReactDOM);
 
             try {
@@ -3237,12 +3369,12 @@ const commonFrameworkSet = async (framework, events) => {
     commonFrameworkClean();
 
     //set default function if anyone missing
-    events.Change?null:events.Change = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>commonEvent('change', event));
-    events.Click?null:events.Click = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>commonEvent('click', event));
-    events.Focus?null:events.Focus = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>commonEvent('focus', event));
-    events.Input?null:events.Input = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>commonEvent('input', event));
-    events.KeyDown?null:events.KeyDown = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>commonEvent('keydown', event));
-    events.KeyUp?null:events.KeyUp = ((/**@type{import('../../../common_types.js').CommonAppEvent}*/event)=>commonEvent('keyup', event));
+    events.Change?null:events.Change = ((/**@type{CommonAppEvent}*/event)=>commonEvent('change', event));
+    events.Click?null:events.Click = ((/**@type{CommonAppEvent}*/event)=>commonEvent('click', event));
+    events.Focus?null:events.Focus = ((/**@type{CommonAppEvent}*/event)=>commonEvent('focus', event));
+    events.Input?null:events.Input = ((/**@type{CommonAppEvent}*/event)=>commonEvent('input', event));
+    events.KeyDown?null:events.KeyDown = ((/**@type{CommonAppEvent}*/event)=>commonEvent('keydown', event));
+    events.KeyUp?null:events.KeyUp = ((/**@type{CommonAppEvent}*/event)=>commonEvent('keyup', event));
 
     events.Other?null:null;
 
@@ -3257,19 +3389,19 @@ const commonFrameworkSet = async (framework, events) => {
                                     ${common_app_element.outerHTML}
                                 </div>`;
             const methods = {
-                                CommonAppEventChange: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+                                CommonAppEventChange: (/**@type{CommonAppEvent}*/event) => {
                                     events.Change?events.Change(event):null;
                                 },
-                                CommonAppEventClick: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+                                CommonAppEventClick: (/**@type{CommonAppEvent}*/event) => {
                                     events.Click?events.Click(event):null;
                                 },
-                                CommonAppEventInput: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+                                CommonAppEventInput: (/**@type{CommonAppEvent}*/event) => {
                                     events.Input?events.Input(event):null;
                                 },
-                                CommonAppEventKeyDown: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+                                CommonAppEventKeyDown: (/**@type{CommonAppEvent}*/event) => {
                                     events.KeyDown?events.KeyDown(event):null;
                                 },
-                                CommonAppEventKeyUp: (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+                                CommonAppEventKeyUp: (/**@type{CommonAppEvent}*/event) => {
                                     events.KeyUp?events.KeyUp(event):null;
                                 }
                             };
