@@ -598,84 +598,7 @@ const commonMiscResourceFetch = async (url,element, content_type, content=null )
     /**
     * @returns{Promise.<*>}
     */
-    const getUrl = async ()=>{
-        /**
-         * @description Parse css and save metadata about fonts, apply font css using adoptedStyleSheets without comments
-         *              and url updated with syntax (/bff/x/[font uuid]~[app uuid])
-         * @param {string} cssText
-         * @returns {void}
-         */
-        const cssAdd = cssText => {
-            const cssTextNew = [];
-            try {
-                /**
-                 * @description convert css to JSON
-                 * @param {string} css
-                 */
-                const cssJSON = css =>'{' + css
-                                .replace('@font-face','')
-                                .replace('url(','')
-                                .replaceAll(')','')
-                                .replace('format(',';format:')
-                                .split(';')
-                                .filter(row=>row.indexOf('}')==-1)
-                                .map(row=>row.replace('{','').split(':').map(col=>col.indexOf('"')==-1?`"${col.trimStart()}"`:col.trimStart()).join(':'))
-                                .join(',') + '}';
-                                                  
-                for (const fontCSS of cssText
-                                        .split('\r')
-                                        .filter(row=>row.indexOf('/*')==-1 && 
-                                                row.indexOf('*/')==-1 &&
-                                                row.indexOf('Fonts:')==-1 &&
-                                                row.indexOf('Font:')==-1)
-                                        .join('\n')
-                                        .split('@font-face')
-                                        .filter(row=>row.indexOf('font-family')>-1)){
-
-                    const content = {
-                                        //server returns syntax src: url([uuid]~[org url]) where uuid is added to IamEncryption records
-                                        //let the browser fetch this URL:
-                                        url:            JSON.parse(cssJSON(fontCSS)).src.split('~')[0].replace(' ','') + 
-                                                        //add current UUID
-                                                        '~' + 
-                                                        COMMON_GLOBAL.x.apps?.filter(app=>app.app_id==COMMON_GLOBAL.app_id)[0].uuid,
-                                        'font-family':  JSON.parse(cssJSON(fontCSS))['font-family'],
-                                        style:          JSON.parse(cssJSON(fontCSS))['font-style'],
-                                        weight:         JSON.parse(cssJSON(fontCSS))['font-weight'],
-                                        ...(JSON.parse(cssJSON(fontCSS))['font-stretch'] && {'stretch': JSON.parse(cssJSON(fontCSS))['font-stretch']}),
-                                        display:        JSON.parse(cssJSON(fontCSS))['font-display'],
-                                        ...(JSON.parse(cssJSON(fontCSS))['unicode-range'] && {'unicodeRange': JSON.parse(cssJSON(fontCSS))['unicode-range']})
-                                    };
-                    /**@ts-ignore */
-                    COMMON_GLOBAL.resource_import.push({
-                        app_id:app_id,
-                        url:content.url,
-                        //to be used in FFB request:
-                        url_original:JSON.parse(cssJSON(fontCSS)).src.split('~')[1],
-                        url_loaded:null,
-                        //save object in content using CSS Font Load API key names
-                        content:content,
-                        content_type:'font/woff2'
-                    });
-                    cssTextNew.push(`@font-face {
-                                    font-family: '${content['font-family']}';
-                                    font-style: ${content.style};
-                                    font-weight: ${content.weight};
-                                    font-display: ${content.display};
-                                    src: url(${content.url}) format('woff2');` +
-                                    (content.stretch?`font-stretch: ${content.stretch};`:'') +
-                                    (content.unicodeRange?`unicode-range: ${content.unicodeRange};`:'') +
-                                    '}');
-                }
-                //apply font updated css
-                const css = new CSSStyleSheet();
-                css.replace(cssTextNew.join('\n'));
-                COMMON_DOCUMENT.adoptedStyleSheets = [...COMMON_DOCUMENT.adoptedStyleSheets, css];
-            } catch (error) {
-                console.log(error);
-            }
-            
-        };
+    const getUrl = async ()=>{        
         const resource = COMMON_GLOBAL.resource_import.filter(resource=>resource.url==url && resource.app_id == app_id)[0]?.content;
         if (resource) 
             return resource;
@@ -704,19 +627,15 @@ const commonMiscResourceFetch = async (url,element, content_type, content=null )
                                         content:JSON.parse(module).resource,
                                         content_type:content_type
                                     }):
-                                        url=='/common/css/font/fonts.css'?
-                                            //fonts have links, URL.createObjectURL does not support links
-                                            cssAdd(module):
-                                                /**@ts-ignore */
-                                                COMMON_GLOBAL.resource_import.push({
-                                                    app_id:app_id,
-                                                    url:url,
-                                                    content:URL.createObjectURL(  new Blob ([module], {type: content_type})),
-                                                    content_type:content_type
-                                                })
+                                        /**@ts-ignore */
+                                        COMMON_GLOBAL.resource_import.push({
+                                            app_id:app_id,
+                                            url:url,
+                                            content:URL.createObjectURL(  new Blob ([module], {type: content_type})),
+                                            content_type:content_type
+                                        })
                             );
-            //load font css using adoptedStyleSheets since URL.createObjectURL does not permit url links
-            return url=='/common/css/font/fonts.css'?null:COMMON_GLOBAL.resource_import[COMMON_GLOBAL.resource_import.length-1].content;
+            return COMMON_GLOBAL.resource_import[COMMON_GLOBAL.resource_import.length-1].content;
         }
     }; 
 
@@ -897,7 +816,72 @@ const commonMiscTimezoneOffset = (local_timezone) =>{
                             Number(new Date().toLocaleString('en', {timeZone: local_timezone, minute:'numeric'}))).valueOf();
     return (local-utc) / 1000 / 60 / 60;
 };
-
+/**
+ * @name commonMiscLoadFont
+ * @description loads a font using app resource fetch and FontFace
+ * @param {{app_id:number,
+ *          uuid:string,
+ *          secret:string,
+ *          message:string,
+ *          cssFonts:string}} parameters
+ */
+const commonMiscLoadFont = parameters => {
+    const fontData = JSON.parse(commonWindowFromBase64(parameters.message));
+    COMMON_GLOBAL.x.FFB({   app_id:             parameters.app_id,
+                            uuid:               parameters.uuid,
+                            secret:             parameters.secret,
+                            app_admin_app_id:   COMMON_GLOBAL.app_admin_app_id,
+                            rest_api_version:   COMMON_GLOBAL.app_rest_api_version??'',
+                            rest_bff_path   :   COMMON_GLOBAL.rest_resource_bff??'',
+                            data:{  
+                                    locale:             COMMON_GLOBAL.user_locale,
+                                    idToken:            COMMON_GLOBAL.token_dt??'',
+                                    authorization_type: 'APP_ID', 
+                                    query:              'content_type=font/woff2&IAM_data_app_id=0', 
+                                    path:               '/app-resource/' + fontData.url.replaceAll('/','~'),
+                                    method:             'GET'}})
+    .then((/**@type{string}*/result)=> {
+        const fontResult = JSON.parse(result).resource;
+        /**
+         * @param {string} css
+         */
+        const cssJSON = css =>'{' + css
+                                .replace('@font-face','')
+                                .replace('url(','')
+                                .replaceAll(')','')
+                                .replace('format(',';format:')
+                                .split(';')
+                                .filter(row=>row.indexOf('}')==-1)
+                                .map(row=>row.replace('{','').split(':')
+                                            .map(col=>col.indexOf('"')==-1?
+                                                        '"' + col.trimStart() + '"':
+                                                            col.trimStart()).join(':'))
+                                .join(',') + '}';
+        //load font url where uuid is used
+        for (const fontFaceCSS of commonWindowFromBase64(parameters.cssFonts)
+                                    .split('@font-face')
+                                    .filter((row, index)=>index>0)
+                                    .filter(row=>row.indexOf(fontData.uuid)>-1)
+                                    .map(row=>row.substring(0, row.indexOf('}')+1))){
+            const attributes =  {
+                                style:          JSON.parse(cssJSON(fontFaceCSS))['font-style'],
+                                weight:         JSON.parse(cssJSON(fontFaceCSS))['font-weight'],
+                                ...(JSON.parse(cssJSON(fontFaceCSS))['font-stretch'] && {'stretch': JSON.parse(cssJSON(fontFaceCSS))['font-stretch']}),
+                                display:        JSON.parse(cssJSON(fontFaceCSS))['font-display'],
+                                ...(JSON.parse(cssJSON(fontFaceCSS))['unicode-range'] && {'unicodeRange': JSON.parse(cssJSON(fontFaceCSS))['unicode-range']})
+                                };
+            const fontNew = new FontFace(
+                    JSON.parse(cssJSON(fontFaceCSS))['font-family'],
+                    'url(' + fontResult + ')',
+                    attributes
+                );  
+            fontNew.load().then(()=>{
+                /**@ts-ignore */
+                document.fonts.add(fontNew);
+            });
+        }
+    });
+};
 /**
  * @name commonWindowUserAgentPlatform
  * @description Get user agent platform
@@ -2356,57 +2340,7 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
         case 'MESSAGE':{
             commonUserMessageShowStat();
             break;
-        }
-        case 'FONT_URL':{
-            for (const font of COMMON_GLOBAL.resource_import
-                                .filter(row=>
-                                        row.content_type=='font/woff2' &&
-                                        row.url_loaded ==null &&
-                                        row.url_original?.trimEnd() == JSON.parse(commonWindowFromBase64(message)).url
-                                        ))
-                 await commonFFB({   path: ('/app-resource/' + JSON.parse(commonWindowFromBase64(message)).url.replaceAll('/','~')), 
-                                     query:`content_type=${'font/woff2'}&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`, 
-                                     method:'GET', 
-                                     authorization_type:'APP_ID'})
-                      .then((/**@type{string}*/result)=> {
-                        const fontResult = JSON.parse(result).resource;
-                        // const attributes = {
-                        //                         style: font.content.style,
-                        //                         weight:font.content.weight,
-                        //                         ...(font.content['stretch'] && {'stretch': font.content['stretch']}),
-                        //                         display: font.content.display,
-                        //                         ...(font.content['unicodeRange'] && {'unicodeRange': font.content['unicodeRange']})
-                        //                     };
-                        
-                        const css_new = `@font-face \n
-                                            font-family: '${font.content['font-family']}';\n
-                                            font-style: ${font.content.style};\n
-                                            font-weight: ${font.content.weight};\n
-                                            font-display: ${font.content.display};\n
-                                            src: url('${fontResult.trimStart().trimEnd()}') format('woff2');\n` +
-                                            (font.content.stretch?`font-stretch: ${font.content.stretch};\n`:'') +
-                                            (font.content.unicodeRange?`unicode-range: ${font.content.unicodeRange};\n`:'') +
-                                            '}\n';
-                        COMMON_DOCUMENT.querySelector('#common_fontface').textContent += css_new;
-                        //apply font updated css
-                        // const css = new CSSStyleSheet();
-                        // css.replace(css_new);
-                        // COMMON_DOCUMENT.adoptedStyleSheets = [...COMMON_DOCUMENT.adoptedStyleSheets, css];
-
-                        // const fontNew = new FontFace(
-                        //     font.content['font-family'],
-                        //     `url(${fontResult})`, // format('woff2') not needed?
-                        //     attributes
-                        // );  
-                        // fontNew.load().then(()=>{
-                        //     COMMON_DOCUMENT.fonts.add(fontNew);
-                        //     font.url_loaded = fontResult;
-                        // })
-                        // .catch(error=>
-                        //     console.log(error)
-                        // );    
-                      });
-            }
+        }   
     }
 };
 /**
@@ -3762,6 +3696,7 @@ const commonGet = () =>{
         commonMiscTypewatch:commonMiscTypewatch,
         commonMiscShowDateUpdate:commonMiscShowDateUpdate,
         commonMiscSecondsToTime:commonMiscSecondsToTime,
+        commonMiscLoadFont:commonMiscLoadFont,
         /**WINDOW OBJECT */
         commonWindowDocumentFrame:commonWindowDocumentFrame,
         commonWindowFromBase64:commonWindowFromBase64, 
@@ -3927,6 +3862,7 @@ export{/* GLOBALS*/
        commonMiscTypewatch,      
        commonMiscShowDateUpdate,
        commonMiscSecondsToTime,
+       commonMiscLoadFont,
        /**WINDOW OBJECT */
        commonWindowDocumentFrame,
        commonWindowFromBase64, 

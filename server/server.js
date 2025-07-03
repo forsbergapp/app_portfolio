@@ -927,7 +927,7 @@ const serverStart = async () =>{
             const common = await import ('../apps/common/src/common.js');
             //common font css contain many font urls, return css file with each url replaced with a secure url
             //and save encryption data for all records directly in table at start to speed up performance
-            await ORM.postAdmin('IamEncryption', common.commonCssFontsSecure.db_records);
+            await ORM.postAdmin('IamEncryption', common.commonCssFonts.db_records);
         } 
 
         if (configServer.SERVICE_IAM.filter(parameter=> 'SERVER_UPDATE_SECRETS_START' in parameter)[0].SERVER_UPDATE_SECRETS_START=='1')

@@ -20,7 +20,8 @@
  *          secret:string,
  *          encrypt_transport:number,
  *          securityTransportEncrypt:securityTransportEncrypt,
- *          css:string}} props
+ *          css:string,
+ *          cssFonts:string}} props
  * @returns {string}
  */
 const template = props =>`  <!DOCTYPE html>
@@ -34,19 +35,14 @@ const template = props =>`  <!DOCTYPE html>
                             </head>	
                             <body class='start'>
                                 <script type='module'>
-                                    const css = new CSSStyleSheet();
-                                    css.replace(atob('${props.css}'));
-                                    document.adoptedStyleSheets = [...document.adoptedStyleSheets, css];
+                                    const cssStart = '${props.css}';
+                                    const cssFonts = '${props.cssFonts}';
                                     let common = null;
-                                    /**
-                                     * @description Receives server side event from BFF, decrypts message and delegates event
-                                     * @param {{socket:*, 
-                                     *          uuid:string|null, 
-                                     *          secret:string|null}} parameters
-                                     */
-                                    const FFB_SSE = async parameters =>{
-                                        const getMessage = BFFmessage =>{
-                                            const commonWindowFromBase64 = str => {
+                                    const css = new CSSStyleSheet();
+                                    css.replace(atob(cssStart) + atob(cssFonts));
+                                    document.adoptedStyleSheets = [...document.adoptedStyleSheets, css];
+
+                                    const fromBase64 = str => {
                                                 const binary_string = atob(str);
                                                 const len = binary_string.length;
                                                 const bytes = new Uint8Array(len);
@@ -55,7 +51,15 @@ const template = props =>`  <!DOCTYPE html>
                                                 }
                                                 return new TextDecoder('utf-8').decode(bytes);
                                             };
-                                            const messageDecoded = commonWindowFromBase64(BFFmessage);
+                                    /**
+                                     * @description Receives server side event from BFF, decrypts message and delegates event
+                                     * @param {{socket:*, 
+                                     *          uuid:string|null, 
+                                     *          secret:string|null}} parameters
+                                     */
+                                    const FFB_SSE = async parameters =>{
+                                        const getMessage = BFFmessage =>{
+                                            const messageDecoded = fromBase64(BFFmessage);
                                             return { broadcast_type:JSON.parse(messageDecoded).broadcast_type,
                                                     broadcast_message:JSON.parse(messageDecoded).broadcast_message};
                                         }
@@ -66,6 +70,7 @@ const template = props =>`  <!DOCTYPE html>
                                                     const message = getMessage(BFFmessage.split('data: ')[1]);
                                                     switch (message.broadcast_type){
                                                         case 'INIT':{
+                                                            
                                                             const INITmessage = JSON.parse(message.broadcast_message);
                                                             //Use uuid and secret from common app id in this INIT message
                                                             const uuid = INITmessage.APP_PARAMETER.Info.x?.filter(app=>app.app_id==INITmessage.APP_PARAMETER.Info.app_common_app_id)[0]?.uuid;
@@ -103,6 +108,15 @@ const template = props =>`  <!DOCTYPE html>
                                                             });
                                                             break;
                                                         }
+                                                        case 'FONT_URL':{
+                                                            common.commonMiscLoadFont({ app_id:             ${props.app_id},
+                                                                                        uuid:               '${props.uuid}',
+                                                                                        secret:             '${props.secret}',
+                                                                                        message:            message.broadcast_message,
+                                                                                        cssFonts:           cssFonts})
+                                                            //loadFont(fromBase64(message.broadcast_message));
+                                                            break;
+                                                        }
                                                         default:{
                                                             common.commonSocketBroadcastShow(BFFmessage.split('data: ')[1]);
                                                             break
@@ -120,7 +134,7 @@ const template = props =>`  <!DOCTYPE html>
                                      * @param {{app_id:number,
                                      *          uuid:string,
                                      *          secret:string,
-                                     *          response_type:'SSE'|'TEXT'|'BLOB',
+                                     *          response_type?:'SSE'|'TEXT'|'BLOB',
                                      *          spinner_id?:string|null,
                                      *          timeout?:number|null,
                                      *          app_admin_app_id:number,
@@ -129,7 +143,7 @@ const template = props =>`  <!DOCTYPE html>
                                      *          data:{
                                      *              locale:string,
                                      *              idToken: string,
-                                     *              accessToken:string,
+                                     *              accessToken?:string,
                                      *              query?:string|null,
                                      *              method:string,
                                      *              authorization_type:string,
@@ -351,7 +365,7 @@ const template = props =>`  <!DOCTYPE html>
                                                 secret:             '${props.secret}',
                                                 response_type:      'SSE',
                                                 app_admin_app_id:   ${props.app_admin_app_id},
-                                                rest_api_version:   ${props.app_rest_api_version},
+                                                rest_api_version:   '${props.app_rest_api_version}',
                                                 rest_bff_path   :   '${props.rest_resource_bff}',
                                                 data:{  
                                                         idToken:            '${props.idToken}',
@@ -393,6 +407,21 @@ const template = props =>`  <!DOCTYPE html>
  * @returns {Promise.<string>}
  */
 const component = async props =>{
+    const common = await import ('../common.js');
+    const fs = await import('node:fs');
+    const {serverProcess} = await import('../../../../server/server.js');
+    const App = await import('../../../../server/db/App.js');
+    /**
+     * @param {string} path
+     * @returns {Promise.<string>}
+     */
+    const load = async path =>fs.promises.readFile(serverProcess.cwd() + 
+                                                    App.get({app_id:0, resource_id:0}).result[0].path + 
+                                                    path.replace('/common',''))
+                        .then(file=>{
+                            /**@ts-ignore */
+                            return `data:font/woff2;base64,${Buffer.from(file, 'binary').toString('base64')}`;
+                        });
     //declare css outside to keep HTML clean
     const css = Buffer.from(`body{
                                 background-color: rgb(81, 171, 255);
@@ -417,7 +446,32 @@ const component = async props =>{
                                 border-top-color: rgb(81, 171, 255);
                                 border-radius:50%;
                                 animation:start_spin 1s linear infinite;
-                            }`).toString('base64');
+                            }
+                            /*Fontawesome icons*/
+                            @font-face {
+                                font-family: "Font Awesome 6 Free";
+                                font-style: normal;
+                                font-weight: 400;
+                                font-display: block;
+                                src: url(${await load('/common/modules/fontawesome/webfonts/fa-regular-400.woff2')}) format("woff2")
+                            }
+                            @font-face {
+                                font-family: "Font Awesome 6 Free";
+                                font-style: normal;
+                                font-weight: 900;
+                                font-display: block;
+                                src: url(${await load('/common/modules/fontawesome/webfonts/fa-solid-900.woff2')}) format("woff2")
+                            }
+                            @font-face {
+                                font-family: "Font Awesome 6 Brands";
+                                font-style: normal;
+                                font-weight: 900;
+                                font-display: block;
+                                src: url(${await load('/common/modules/fontawesome/webfonts/fa-brands-400.woff2')}) format("woff2")
+                            }
+
+                            `).toString('base64');
+
     return template({   app_id:                             props.data.app_id,
                         app_admin_app_id:                   props.data.app_admin_app_id,
                         rest_resource_bff:                  props.data.rest_resource_bff,
@@ -429,6 +483,19 @@ const component = async props =>{
                         secret:                             props.data.secret,
                         encrypt_transport:                  props.data.encrypt_transport,
                         securityTransportEncrypt:           props.methods.securityTransportEncrypt,
-                        css:                                css});
+                        css:                                css,
+                        cssFonts:                           Buffer.from(common.commonCssFonts.css
+                                                                        .split('url(')
+                                                                        .map(row=>{
+                                                                            if (row.startsWith('/bff/x/'))
+                                                                                //add app start uuid after font uuid separated with '~'
+                                                                                return row.replace( row.substring(0,'/bff/x/'.length+36),
+                                                                                                    row.substring(0,'/bff/x/'.length+36) + '~' + 
+                                                                                                    props.data.uuid);
+                                                                            else
+                                                                                return row;
+                                                                        }).join('url('))
+                                                            .toString('base64')
+                    });
 };
 export default component;
