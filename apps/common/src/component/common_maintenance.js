@@ -1,7 +1,9 @@
 /**
  * @module apps/common/src/component/common_maintenance
  */
-
+/**
+ * @typedef {import('../common.js')['commonConvertBinary']} commonConvertBinary
+ */
 /**
  * @name template
  * @description Template
@@ -141,28 +143,19 @@ const template = props =>`  <!DOCTYPE html>
  * @description Component
  * @function
  * @param {{data:       null,
- *          methods:    null}} props 
+ *          methods:    {commonConvertBinary:commonConvertBinary}}} props 
  * @returns {Promise.<string>}
  */
 const component = async props =>{
-    props;
-    const fs = await import('node:fs');
-    const {serverProcess} = await import('../../../../server/server.js');
-    /**
-     * @param {string} path
-     * @returns {Promise.<string>}
-     */
-    const load = async path =>fs.promises.readFile(serverProcess.cwd() + path)
-                        .then(file=>{
-                            /**@ts-ignore */
-                            return `data:font/woff2;base64,${Buffer.from(file, 'binary').toString('base64')}`;
-                        });
 
-    const font_noto_sans_latin_ext  = await load('/apps/common/public/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5aDdu2ui.woff2');
-    const font_noto_sans_latin      = await load('/apps/common/public/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5a7duw.woff2');    
-
-    return template({   font_noto_sans_latin_ext:font_noto_sans_latin_ext,
-                        font_noto_sans_latin:font_noto_sans_latin,
+    return template({   font_noto_sans_latin_ext:   (await props.methods.commonConvertBinary(
+                                                        'font/woff2',
+                                                        '/apps/common/public/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5aDdu2ui.woff2'))
+                                                        .result.resource,
+                        font_noto_sans_latin:       (await props.methods.commonConvertBinary(
+                                                        'font/woff2',
+                                                        '/apps/common/public/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5a7duw.woff2'))
+                                                        .result.resource,
                         message:'',
                         footer:''
     });
