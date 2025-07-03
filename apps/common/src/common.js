@@ -31,57 +31,93 @@ const {serverCircuitBreakerBFE, serverRequest} = await import('../../../server/s
 const fs = await import('node:fs');
 
 /**
- * @name commonCssFontsSecure
- * @description resource /common/css/font/fonts.css replaced with secure font url /bff/x/[uuid]
- *              creates IamEncryption records with old url for all font url at server start
- *              font url syntax 'src: url([uuid]~[org url]) format' 
- *              using IIFE to save as constant
- *              constant: {css:string, db_records:server_db_table_IamEncryption[]}
+ * @name commonConvertBinary
+ * @description  converts binary file to base64 url string
+ * @param {string} content_type
+ * @param {string} path
+ * @returns {Promise.<server_server_response>}
+ */
+const commonConvertBinary = async (content_type, path) =>
+    fs.promises.readFile(`${serverProcess.cwd()}${path}`)
+            .then(file=> {
+                return {type:'JSON', 
+                        result:{resource:
+                                content_type.startsWith('font/woff')? 
+                                    /**@ts-ignore */
+                                    `data:font/woff2;charset=utf8;base64,${Buffer.from(file, 'binary').toString('base64')}`:
+                                        `data:${content_type};base64,${Buffer.from(file.toString(), 'binary').toString('base64')}`
+                                }
+                        };
+            });
+/**
+ * @name commonCssFonts
+ * @description resource /common/css/font/fonts.css using IIFE to save as constant
+ *              can return base64 url or secure url:
+ *              secur url logic:
+ *              replaces url with secure font url /bff/x/[uuid]
+ *              returns array with data to create records in IamEncryption with old url for all font url
+ *              returns {css:string, db_records:server_db_table_IamEncryption[]}
  * @constant
  */
-const commonCssFontsSecure = await (async ()=>{
-                        const css = [];
-                        /**@type {{uuid:String, url:string}[]}} */
-                        const url_record = [];
-                        const db_records = [];
-                        for (const row of (await fs.promises
-                                                .readFile(`${serverProcess.cwd()}${App.get({app_id:0, resource_id:0}).result[0].path}/css/font/fonts.css`))
-                                                .toString('utf8')
-                                                .split('\n')){
-                            if (row.trimStart().toLowerCase().startsWith('src')){
-                                const startString = 'src: url(';
-                                const endString = ') format';
-                                const url = row.substring(
-                                                            row.indexOf(startString) + startString.length,
-                                                            row.indexOf(endString)
-                                                        );
-                                //font url can be repeated in css
-                                if (url_record.filter(row=>row.url == url).length==0){
-                                    const uuid  = Security.securityUUIDCreate(); 
-                                    url_record.push({uuid:uuid, url:url});
-                                    const secret= Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8')
-                                                    .toString('base64');
-                                    //IamEncryption.post too slow at start to create all records
-                                    db_records.push({id:                Date.now(),
-                                                    app_id:             0, 
-                                                    iam_app_id_token_id:null, 
-                                                    uuid:               uuid, 
-                                                    secret:             secret, 
-                                                    url:                uuid +'~' +url,
-                                                    type:               'FONT',
-                                                    created:            new Date().toISOString()});
-                                    css.push(row.substring(0, row.indexOf(startString) + startString.length) +
-                                                    `/bff/x/${uuid}` +'~' + url + row.substring(row.indexOf(endString)));
-                                }
-                                else
-                                    css.push(row.substring(0, row.indexOf(startString) + startString.length) +
-                                                    `/bff/x/${url_record.filter(row=>row.url == url)[0].uuid}` +'~' +url + row.substring(row.indexOf(endString)));
+const commonCssFonts = await (async (base64)=>{
+    const cssFontFace = [];
+    /**@type {{uuid:String, url:string}[]}} */
+    const url_record = [];
+    const db_records = [];
+    const resource_directory = App.get({app_id:0, resource_id:0}).result[0].path;
+    for (const fontFace of (await fs.promises
+                            .readFile(`${serverProcess.cwd()}${App.get({app_id:0, resource_id:0}).result[0].path}/css/font/fonts.css`))
+                            .toString('utf8')
+                            .replaceAll('\r','\n')
+                            .split('@')){
+        //Filter font most used or set * for all
+        if (['*'].filter(font=>font=='*'?true:fontFace.indexOf(`font-family: '${font}'`)>-1).length>0){
+                const css = [];
+                for (const row of fontFace.split('\n'))
+                    if (row.trimStart().toLowerCase().startsWith('src')){
+                        const startString = 'src: url(';
+                        const endString = ') format';
+                        const url = row.substring(
+                                                    row.indexOf(startString) + startString.length,
+                                                    row.indexOf(endString)
+                                                );
+                        if (base64)
+                            css.push(   row.substring(0, row.indexOf(startString) + startString.length) +
+                                        (await commonConvertBinary('font/woff2',`${resource_directory}${url.replace('/common','')}`)).result.resource + 
+                                        row.substring(row.indexOf(endString)));
+                        else{
+                            //font url can be repeated in css
+                            if (url_record.filter(row=>row.url == url).length==0){
+                                const uuid  = Security.securityUUIDCreate(); 
+                                url_record.push({uuid:uuid, url:url});
+                                const secret= Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8')
+                                                .toString('base64');
+                                //IamEncryption.post too slow at start to create all records
+                                db_records.push({id:                Date.now(),
+                                                app_id:             0, 
+                                                iam_app_id_token_id:null, 
+                                                uuid:               uuid, 
+                                                secret:             secret, 
+                                                url:                url,
+                                                type:               'FONT',
+                                                created:            new Date().toISOString()});
+                                css.push(row.substring(0, row.indexOf(startString) + startString.length) +
+                                                `/bff/x/${uuid}` + row.substring(row.indexOf(endString)));
                             }
                             else
-                                css.push(row);
-                        }
-                        return {css:css.join(''), db_records:db_records};
-                    })();
+                                css.push(row.substring(0, row.indexOf(startString) + startString.length) +
+                                                `/bff/x/${url_record.filter(row=>row.url == url)[0].uuid}` + row.substring(row.indexOf(endString)));
+
+                        }                        
+                            
+                    }
+                    else
+                        css.push(row);
+                cssFontFace.push('@' + css.join('').substring(0, css.join('').indexOf('}')+1));
+        }
+    }
+    return {css:cssFontFace.join('\n'), db_records:db_records};
+})(false);
 
 const circuitBreaker = await serverCircuitBreakerBFE();
 /**
@@ -257,6 +293,7 @@ const commonBFE = async parameters =>{
     }
 };
 
+
 /**
  * @name commonResourceFile
  * @memberof ROUTE_APP
@@ -286,23 +323,6 @@ const commonBFE = async parameters =>{
  */
 const commonResourceFile = parameters =>{
 
-    /**
-     * @param {string} content_type
-     * @param {string} path
-     * @returns {Promise.<server_server_response>}
-     */
-    const convertBinary = async (content_type, path) =>
-        fs.promises.readFile(`${serverProcess.cwd()}${path}`)
-                .then(file=> {
-                    return {type:'JSON', 
-                            result:{resource:
-                                    content_type.startsWith('font/woff')? 
-                                        `data:font/woff2;charset=utf8;base64,${Buffer.from(file.toString(), 'binary').toString('base64')}`:
-                                            `data:${content_type};base64,${Buffer.from(file.toString(), 'binary').toString('base64')}`
-                                    }
-                            };
-                });
-    
    
    const resource_directory = App.get({app_id:parameters.app_id, resource_id:parameters.data_app_id}).result[0].path;
    const resource_path = parameters.data_app_id==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id,data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result)?
@@ -360,7 +380,7 @@ const commonResourceFile = parameters =>{
            case parameters.content_type == 'image/webp':
            case parameters.content_type == 'image/png':
            case parameters.content_type == 'font/woff2':{
-               resolve(convertBinary(parameters.content_type, `${resource_directory}/${resource_path}`));
+               resolve(commonConvertBinary(parameters.content_type, `${resource_directory}/${resource_path}`));
                break;
            }
            default:{
@@ -1127,7 +1147,7 @@ const commonAppResource = async parameters =>{
             }
             case parameters.data.content_type == 'text/css' && parameters.resource_id.replaceAll('~','/')=='/common/css/font/fonts.css':{
                 //loaded at server start with font url replaced with secure url and about 1700 IamEncryption records
-                return {result:commonCssFontsSecure.css, type:'CSS'};
+                return {result:commonCssFonts.css, type:'CSS'};
             }
             case parameters.data.content_type == 'text/css':
             case parameters.data.content_type == 'font/woff2':
@@ -1163,7 +1183,7 @@ const commonRegistryAppModule = (app_id, parameters) => AppModule.get({app_id:ap
                                                                app.common_name==parameters.name && 
                                                                app.common_role == parameters.role)[0];
 
-export {commonCssFontsSecure,
+export {commonCssFonts,
         commonSearchMatch,
         commonAppStart, commonClientLocale,
         commonAppIam, commonResourceFile,

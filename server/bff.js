@@ -320,12 +320,13 @@ const bffStart = async (req, res) =>{
                                         data:{data_app_id:null}}).result[0].token;
                         if (token){
                             const current_app_id = socketClientGet(token)?.app_id;
-                            if (current_app_id){
+                            if (current_app_id!=null){
                                 socketAppServerFunctionSend(current_app_id,
                                                             token,
                                                             'FONT_URL',
                                                             Buffer.from(JSON.stringify({
-                                                                url: encryptionData.url?.split('~')[1]
+                                                                uuid:req.url.substring('/bff/x/'.length).split('~')[0],
+                                                                url: encryptionData.url
                                                             })).toString('base64')
                                                             );
                                 return 1;
