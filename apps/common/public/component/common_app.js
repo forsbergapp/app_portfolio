@@ -53,9 +53,7 @@ const template = props =>`  <div id='common_app_toolbar' ${(props.app_toolbar_bu
                             <div id='common_profile_toolbar'></div>
                             <div id='common_style'>
                                 <link id='common_link_common_css' rel='stylesheet' type='text/css' data-href='/common/css/common.css' />
-                                <link media='all' data-href='/common/css/font/fonts.css' type='text/css' rel='stylesheet'>
                             </div>
-                            <style id='common_fontface'></style>
                             `;
 /**
  * @name component
