@@ -1030,7 +1030,7 @@ const commonApp = async parameters =>{
                 await commonAppStart(parameters.app_id) ==false){
             const {default:ComponentCreate} = await import('./component/common_maintenance.js');
             return {result:await ComponentCreate({  data:   null,
-                                                    methods:null
+                                                    methods:{commonConvertBinary:commonConvertBinary}
                                                 }), type:'HTML'};
         }
         else{
@@ -1068,7 +1068,8 @@ const commonApp = async parameters =>{
                                                                                                 .filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)??0
                                                             },
                                                 methods:    {   
-                                                            securityTransportEncrypt:Security.securityTransportEncrypt
+                                                            securityTransportEncrypt:Security.securityTransportEncrypt,
+                                                            commonConvertBinary:commonConvertBinary
                                                             }})
                                 .catch(error=>{
                                     return Log.post({   app_id:parameters.app_id, 
@@ -1183,7 +1184,8 @@ const commonRegistryAppModule = (app_id, parameters) => AppModule.get({app_id:ap
                                                                app.common_name==parameters.name && 
                                                                app.common_role == parameters.role)[0];
 
-export {commonCssFonts,
+export {commonConvertBinary,
+        commonCssFonts,
         commonSearchMatch,
         commonAppStart, commonClientLocale,
         commonAppIam, commonResourceFile,

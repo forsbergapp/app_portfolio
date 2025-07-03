@@ -6,13 +6,12 @@
  * @name template
  * @description Template
  * @function
- * @param {{data: null, methods:null}} props
+ * @param {{font: string}} props
  * @returns {string}
  */
 const template = props =>`  <!DOCTYPE html>
                             <html>
                             <head>
-                                ${props?'':''}
                                 <style>
                                     body{
                                         --common_app_color_black: #404040;
@@ -23,7 +22,7 @@ const template = props =>`  <!DOCTYPE html>
                                         /* latin */
                                         @font-face {
                                             font-family: 'Noto Sans';
-                                            src: url(/common/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5a7duw.woff2) format('woff2');
+                                            src: url(${props.font}) format('woff2');
                                         }
                                         font-size: 16px;
                                         font-family: 'Noto Sans';
@@ -75,7 +74,16 @@ const template = props =>`  <!DOCTYPE html>
  * @function
  * @param {{data:       null,
  *          methods:    null}} props 
- * @returns {string}
+ * @returns {Promise.<string>}
  */
-const component = props => template(props);
+const component = async props =>{
+    props;
+    const fs = await import('node:fs');
+    const {serverProcess} = await import('../../../../server/server.js');
+    return template({font:await fs.promises
+                                .readFile(`${serverProcess.cwd()}/apps/common/public/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5a7duw.woff2`)
+                                /**@ts-ignore */
+                                .then(file=>`data:font/woff2;charset=utf8;base64,${Buffer.from(file, 'binary').toString('base64')}`)
+                    });  
+};
 export default component;

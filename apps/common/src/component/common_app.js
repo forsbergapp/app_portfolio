@@ -4,6 +4,7 @@
 
 /**
  * @typedef {import('../../../../server/security')['securityTransportEncrypt']} securityTransportEncrypt
+ * @typedef {import('../common.js')['commonConvertBinary']} commonConvertBinary
  */
 /**
  * @name template
@@ -40,8 +41,11 @@ const template = props =>`  <!DOCTYPE html>
                                     let common = null;
                                     const css = new CSSStyleSheet();
                                     css.replace(atob(cssStart) + atob(cssFonts));
-                                    document.adoptedStyleSheets = [...document.adoptedStyleSheets, css];
-
+                                    try {
+                                        document.adoptedStyleSheets = [...document.adoptedStyleSheets, css];
+                                    } catch (error) {
+                                      console.log(error);
+                                    }
                                     const fromBase64 = str => {
                                                 const binary_string = atob(str);
                                                 const len = binary_string.length;
@@ -114,7 +118,6 @@ const template = props =>`  <!DOCTYPE html>
                                                                                         secret:             '${props.secret}',
                                                                                         message:            message.broadcast_message,
                                                                                         cssFonts:           cssFonts})
-                                                            //loadFont(fromBase64(message.broadcast_message));
                                                             break;
                                                         }
                                                         default:{
@@ -401,27 +404,15 @@ const template = props =>`  <!DOCTYPE html>
  *                      encrypt_transport:number
  *                      },
  *        methods:      {
- *                      securityTransportEncrypt:securityTransportEncrypt
+ *                      securityTransportEncrypt:securityTransportEncrypt,
+ *                      commonConvertBinary:commonConvertBinary
  *                      }
  *      }} props 
  * @returns {Promise.<string>}
  */
 const component = async props =>{
     const common = await import ('../common.js');
-    const fs = await import('node:fs');
-    const {serverProcess} = await import('../../../../server/server.js');
-    const App = await import('../../../../server/db/App.js');
-    /**
-     * @param {string} path
-     * @returns {Promise.<string>}
-     */
-    const load = async path =>fs.promises.readFile(serverProcess.cwd() + 
-                                                    App.get({app_id:0, resource_id:0}).result[0].path + 
-                                                    path.replace('/common',''))
-                        .then(file=>{
-                            /**@ts-ignore */
-                            return `data:font/woff2;base64,${Buffer.from(file, 'binary').toString('base64')}`;
-                        });
+    
     //declare css outside to keep HTML clean
     const css = Buffer.from(`body{
                                 background-color: rgb(81, 171, 255);
@@ -453,21 +444,30 @@ const component = async props =>{
                                 font-style: normal;
                                 font-weight: 400;
                                 font-display: block;
-                                src: url(${await load('/common/modules/fontawesome/webfonts/fa-regular-400.woff2')}) format("woff2")
+                                src: url(${(await props.methods.commonConvertBinary(
+                                                    'font/woff2',
+                                                    '/apps/common/public/modules/fontawesome/webfonts/fa-regular-400.woff2'))
+                                                .result.resource}) format("woff2")
                             }
                             @font-face {
                                 font-family: "Font Awesome 6 Free";
                                 font-style: normal;
                                 font-weight: 900;
                                 font-display: block;
-                                src: url(${await load('/common/modules/fontawesome/webfonts/fa-solid-900.woff2')}) format("woff2")
+                                src: url(${(await props.methods.commonConvertBinary(
+                                                    'font/woff2',
+                                                    '/apps/common/public/modules/fontawesome/webfonts/fa-solid-900.woff2'))
+                                                .result.resource}) format("woff2")
                             }
                             @font-face {
                                 font-family: "Font Awesome 6 Brands";
                                 font-style: normal;
                                 font-weight: 900;
                                 font-display: block;
-                                src: url(${await load('/common/modules/fontawesome/webfonts/fa-brands-400.woff2')}) format("woff2")
+                                src: url(${(await props.methods.commonConvertBinary(
+                                                    'font/woff2',
+                                                    '/apps/common/public/modules/fontawesome/webfonts/fa-brands-400.woff2'))
+                                                .result.resource}) format("woff2")
                             }
 
                             `).toString('base64');

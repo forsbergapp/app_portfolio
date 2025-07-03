@@ -256,9 +256,10 @@ const bffStart = async (req, res) =>{
     const {commonAppIam} = await import('../apps/common/src/common.js');
     //if first time, when no user exists, show maintenance in main server
     if (IamUser.get(0, null).result.length==0 && (await commonAppIam(req.headers.host)).admin == false){
+        const {commonConvertBinary} = await import('../apps/common/src/common.js');
         const {default:ComponentCreate} = await import('../apps/common/src/component/common_maintenance.js');
         return {result:await ComponentCreate({  data:   null,
-                                                methods:null
+                                                methods:{commonConvertBinary:commonConvertBinary}
                                             }), type:'HTML'};
     }   
     else{
@@ -509,15 +510,20 @@ const bffStart = async (req, res) =>{
             const bff_parameters = await parameters();
             //if decrypt failed, authentication failed or font
             if (bff_parameters==null || bff_parameters==1){
-                if (bff_parameters==1)
+                if (bff_parameters==1){
+                    res.statusCode =200;
+                    res.write(`data:font/woff2;base64,${btoa('')}`);
+                    res.end();
                     //return empty for font request by browser, sse message is sent
-                    serverResponse({app_id:common_app_id,
-                                    result_request:{result:'', type:'JSON'}, 
-                                    host:req.host,
-                                    route:'REST_API',
-                                    method:req.method, 
-                                    decodedquery:'', 
-                                    res:res});
+                    // serverResponse({app_id:common_app_id,
+                    //     result_request:{result:'', type:'JSON'}, 
+                    //     host:req.host,
+                    //     route:'REST_API',
+                    //     method:req.method, 
+                    //     decodedquery:'', 
+                    //     res:res});
+                }
+                    
                 else{
                     const iam = await import('./iam.js');
                     res.statusCode =401;
