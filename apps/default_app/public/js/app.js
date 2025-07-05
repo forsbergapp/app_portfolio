@@ -76,7 +76,7 @@ const appEventClick = event => {
  */
 const appInit = async () => {
     await common.commonComponentRender({mountDiv:common.COMMON_GLOBAL.app_div,
-        data:null,
+        data:       {logo:common.COMMON_GLOBAL.app_logo},
         methods:    {commonMiscResourceFetch:common.commonMiscResourceFetch},
         path:'/component/app.js'});
     await common.commonComponentRender({  mountDiv:'app_construction',
@@ -116,7 +116,8 @@ const appMetadata = () =>{
             KeyDown: null,
             KeyUp:   null,
             Focus:   null,
-            Input:   null}
+            Input:   null},
+            lifeCycle:{onMounted:null}
     };
 };
 export{appCommonInit, appMetadata};

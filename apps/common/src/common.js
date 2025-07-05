@@ -45,7 +45,8 @@ const commonConvertBinary = async (content_type, path) =>
                                 content_type.startsWith('font/woff')? 
                                     /**@ts-ignore */
                                     `data:font/woff2;charset=utf8;base64,${Buffer.from(file, 'binary').toString('base64')}`:
-                                        `data:${content_type};base64,${Buffer.from(file.toString(), 'binary').toString('base64')}`
+                                        /**@ts-ignore */
+                                        `data:${content_type};base64,${Buffer.from(file, 'binary').toString('base64')}`
                                 }
                         };
             });

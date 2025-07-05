@@ -3624,7 +3624,7 @@ const commonMountApp = async (app_id) =>{
         commonComponentRemove('common_dialogue_apps');
 
     COMMON_GLOBAL.app_id =          CommonAppInit.App.id;
-    COMMON_GLOBAL.app_logo =        CommonAppInit.App.logo;
+    COMMON_GLOBAL.app_logo =        CommonAppInit.App.logo_content;
     COMMON_GLOBAL.app_copyright =   CommonAppInit.App.copyright;
     COMMON_GLOBAL.app_link_url =    CommonAppInit.App.link_url;
     COMMON_GLOBAL.app_link_title =  CommonAppInit.App.link_title;

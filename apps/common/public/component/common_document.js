@@ -71,9 +71,9 @@ const component = async props => {
                     props.methods.commonMiscResourceFetch(image_div.getAttribute('data-url_small')??'', image_div,'image/webp');
             (image_div.getAttribute('data-url')==''||image_div.getAttribute('data-url')==null)?
                 null:
-                    //set attribute that is read by iamge click event
+                    //set attribute that is read by image click event
                     image_div.setAttribute('data-url_link', 
-                                            await props.methods.commonMiscResourceFetch(image_div.getAttribute('data-url')??'', null,'image/webp')) ;
+                                            await props.methods.commonMiscResourceFetch(image_div.getAttribute('data-url')??'', null,'image/webp'));
         }
 
     };
