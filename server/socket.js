@@ -9,8 +9,9 @@
 
 
 const {serverUtilNumberValue} = await import('./server.js');
-const {iamUtilTokenExpired} = await import('./iam.js');
+const {iamUtilTokenExpired, iamUtilMessageNotAuthorized} = await import('./iam.js');
 const ConfigServer = await import('./db/ConfigServer.js');
+const {microserviceRequest} = await import('../serviceregistry/microservice.js');
 
 /**@type{server_socket_connected_list[]} */
 let SOCKET_CONNECTED_CLIENTS = [];
@@ -29,8 +30,6 @@ let SOCKET_CONNECTED_CLIENTS = [];
  *               timezone:string}>}
  */
 const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, headers_accept_language) =>{
-    const {microserviceRequest} = await import('../serviceregistry/microservice.js');
-
     //get GPS from IP
     const result_geodata = await microserviceRequest({  app_id:app_id,
                                                     microservice:'GEOLOCATION',
@@ -105,7 +104,6 @@ const socketClientAdd = (newClient) => {
  * @returns {Promise.<server_server_response>}
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
-    const { iamUtilMessageNotAuthorized} = await import('./iam.js');
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == parameters.idToken).length==0){
         return {http:401,
                 code:'IAM',

@@ -10,7 +10,6 @@ const { iamAuthenticateApp } = await import('../server/iam.js');
 const {serverUtilNumberValue} = await import('../server/server.js');
 const ConfigServer = await import('../server/db/ConfigServer.js');
 const AppSecret = await import('../server/db/AppSecret.js');
-const {registryMicroserviceApiVersion}= await import('./registry.js');
 const {serverCircuitBreakerMicroService, serverRequest} = await import('../server/server.js');
 
 const circuitBreaker = await serverCircuitBreakerMicroService();
@@ -86,7 +85,7 @@ const microserviceRequest = async parameters =>{
                                                                                 data:{  config_group:'SERVICE_APP', 
                                                                                         parameter:'APP_COMMON_APP_ID'}}).result
                                                         ),
-                            path:               `/api/v${await registryMicroserviceApiVersion(parameters.microservice)}?${query}`,
+                            path:               `/api/v${ServiceRegistry.rest_api_version}?${query}`,
                             body:               parameters.data,
                             method:             parameters.method,
                             client_ip:          parameters.ip,
