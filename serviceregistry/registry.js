@@ -25,14 +25,4 @@ const registryConfigServices = async servicename =>{
     });
 };
 
-/**
- * @name registryMicroserviceApiVersion
- * @description Get microservice API version
- * @function
- * @param {microservice_registry_service} service 
- * @returns {Promise.<number>}
- */
-const registryMicroserviceApiVersion = async service =>(await registryConfigServices(service)).rest_api_version;
-
-
-export {registryConfigServices, registryMicroserviceApiVersion};
+export {registryConfigServices};

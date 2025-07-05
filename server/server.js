@@ -12,6 +12,7 @@
  */
 
  const zlib = await import('node:zlib');
+ const fs = await import('node:fs');
 /**
  *  Returns response to client
  *  Uses host parameter for errors in requests or unknown route paths
@@ -161,15 +162,13 @@ const serverResponse = async parameters =>{
                 else
                     parameters.res.statusCode =200;
                 if (parameters.result_request?.sendfile){
-                    const fs = await import('node:fs');
-                    const Log = await import('./db/Log.js');
-                    const  {iamUtilMessageNotAuthorized} = await import('./iam.js');
                     await fs.promises.access(parameters.result_request.sendfile)
                     .then(()=>{
                         parameters.res.sendFile(parameters.result_request.sendfile);
                     })
                     .catch(error=>{
-                        Log.post({    app_id:parameters.app_id ?? common_app_id, 
+                        import('./db/Log.js')
+                        .then(log=>log.post({    app_id:parameters.app_id ?? common_app_id, 
                             data:{  object:'LogServiceInfo', 
                                     service:{service:parameters.result_request.code?.toString()??'',
                                             parameters:parameters.decodedquery??''
@@ -177,10 +176,11 @@ const serverResponse = async parameters =>{
                                     log:error
                                 }
                             })
-                        .then(result=>{if (result.http)
-                            parameters.res.statusCode =400;
-                            parameters.res.send(iamUtilMessageNotAuthorized(), 'utf8');
-                        });
+                            .then(result=>{if (result.http)
+                                parameters.res.statusCode =400;
+                                import('./iam.js').then(({iamUtilMessageNotAuthorized})=>
+                                    parameters.res.send(iamUtilMessageNotAuthorized(), 'utf8'));
+                        }));
                     });
                 }
                 else{
@@ -427,7 +427,6 @@ const server = async (req, res)=>{
                             res.end();
                         };
     res.sendFile =      async (/**@type{*}*/path) =>{
-                            const fs = await import('node:fs');
                             const readStream = fs.createReadStream(path);
                             readStream.on ('error', streamErr =>{
                                 streamErr;
@@ -888,7 +887,6 @@ const serverStart = async () =>{
     
     const ORM = await  import('./db/ORM.js');
 
-    const fs = await import('node:fs');
     const http = await import('node:http');
     const https = await import('node:https');
 

@@ -945,49 +945,32 @@ const commonAppInit = async parameters =>{
         const {socketConnectedUpdate} = await import ('../../../server/socket.js');
         const fs = await import('node:fs');
         
-        /**
-         * @param {string} path
-         * @param {string} content_type
-         * @returns {Promise.<string|null>}
-         */
-        const fetchResource = async (path, content_type) =>{
-            const resource = await commonResourceFile({app_id:parameters.app_id, 
-                                    resource_id:path, 
-                                    content_type:content_type,
-                                    data_app_id: parameters.app_id});
-            if (content_type.startsWith('image'))
-                return resource.result.resource ?? null;
-            else{
-                /**@ts-ignore */
-                return resource?fs.promises.readFile(resource.sendfile, 'utf8'):null;
-            }
-        };
         if (app)
             return {result:{App:{   id:                     app.id,
                                     name:                   app.name,
                                     js:                     app.js,
                                     js_content:             app.js?
-                                                                await fetchResource(app.js, 'text/javascript'):
+                                                                await fs.promises.readFile(`${serverProcess.cwd()}${app.path}${app.js}`, 'utf8'):
                                                                     null,
                                     css:                    app.css,
                                     css_content:            app.css?
-                                                                await fetchResource(app.css, 'text/css'):
+                                                                await fs.promises.readFile(`${serverProcess.cwd()}${app.path}${app.css}`, 'utf8'):
                                                                     null,
                                     css_report:             app.css_report,
                                     css_report_content:     app.css_report?
-                                                                await fetchResource(app.css_report, 'text/css'):
+                                                                await fs.promises.readFile(`${serverProcess.cwd()}${app.path}${app.css_report}`, 'utf8'):
                                                                     null,
                                     favicon_32x32:          app.favicon_32x32,
                                     favicon_32x32_content:  app.favicon_32x32?
-                                                                await fetchResource(app.favicon_32x32, 'image/png'):
+                                                                (await commonConvertBinary('image/png', `${app.path}${app.favicon_32x32}`)).result.resource:
                                                                     null,
                                     favicon_192x192:        app.favicon_192x192,
                                     favicon_192x192_content:app.favicon_192x192?
-                                                                await fetchResource(app.favicon_192x192, 'image/png'):
+                                                                (await commonConvertBinary('image/png', `${app.path}${app.favicon_192x192}`)).result.resource:
                                                                     null,
                                     logo:                   app.logo,
                                     logo_content:           app.logo?
-                                                                await fetchResource(app.logo, 'image/png'):
+                                                                (await commonConvertBinary('image/png', `${app.path}${app.logo}`)).result.resource:
                                                                     null,
                                     copyright:              app.copyright,
                                     link_url:               app.link_url,
