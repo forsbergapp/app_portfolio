@@ -1993,6 +1993,9 @@ body.rtl{
 }
 
 /*Module leaflet, dynamically created popup*/
+.leaflet-popup{
+    margin-bottom: 0px;
+}
 .common_module_leaflet_popup_title,
 .common_module_leaflet_popup_sub_title,
 .common_module_leaflet_popup_sub_title_timezone,
