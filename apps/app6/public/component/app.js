@@ -25,9 +25,14 @@ const template = () =>` <div id='app_top'>
  * @name component
  * @description Component
  * @function
- * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonMiscResourceFetch:CommonModuleCommon['commonMiscResourceFetch']}}} props 
+ * @param {{data:       {
+ *                      logo:string,
+ *                      commonMountdiv:string
+ *                      },
+ *          methods:    {
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonMiscResourceFetch:CommonModuleCommon['commonMiscResourceFetch']
+ *                      }}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
@@ -35,11 +40,9 @@ const template = () =>` <div id='app_top'>
  */
 const component = async props => {
 
-    const onMounted = async () =>{
-        props.methods.commonMiscResourceFetch( '/images/logo.png',
-                                            props.methods.COMMON_DOCUMENT.querySelector('#app_top_logo'), 
-                                            'image/png');
-    };
+    const onMounted = async () =>
+        props.methods.COMMON_DOCUMENT.querySelector('#app_top_logo').style.backgroundImage = `url(${props.data.logo})`;
+
     return {
         lifecycle:  {onMounted:onMounted},
         data:       null,

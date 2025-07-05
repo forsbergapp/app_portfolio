@@ -501,7 +501,7 @@ const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div, 
-        data:       null,
+        data:       {logo:common.COMMON_GLOBAL.app_logo},
         methods:    {commonMiscResourceFetch:common.commonMiscResourceFetch},
         path:       '/component/app.js'})
     .then(()=> 

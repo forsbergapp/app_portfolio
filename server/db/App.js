@@ -58,7 +58,7 @@ const getViewInfo = async parameters =>{
     for (const app of apps){
         const image = await fs.promises.readFile(`${serverProcess.cwd()}${app.path + app.logo}`);
         /**@ts-ignore */
-        app.logo        = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
+        app.logo        = 'data:image/png;base64,' + Buffer.from(image, 'binary').toString('base64');
        }
     return {result:apps
             .filter(app=>app.id == (parameters.resource_id ?? app.id))

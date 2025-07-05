@@ -18,7 +18,10 @@ const template = () =>` <div id='dialogue_documents' class='dialogue'>
                         </div>`;
 /**
  * 
- * @param {{data:       {commonMountdiv:string},
+ * @param {{data:       {
+ *                      logo:string,
+ *                      commonMountdiv:string
+ *                      },
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
 *                       commonMiscResourceFetch:CommonModuleCommon['commonMiscResourceFetch']}}} props 
  * @returns {Promise.<{ lifecycle:  CommonComponentLifecycle, 
@@ -27,11 +30,8 @@ const template = () =>` <div id='dialogue_documents' class='dialogue'>
  *                      template:   string}>}
  */
 const component = async props => {
-    const onMounted = async () =>{
-        props.methods.commonMiscResourceFetch( '/images/logo.png', 
-                                            props.methods.COMMON_DOCUMENT.querySelector('#app_logo'), 
-                                            'image/png');
-    };
+    const onMounted = async () =>
+        props.methods.COMMON_DOCUMENT.querySelector('#app_logo').style.backgroundImage = `url(${props.data.logo})`;
     return {
         lifecycle:  {onMounted:onMounted},
         data:       null,
