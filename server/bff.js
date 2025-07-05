@@ -14,13 +14,21 @@
  *          server_apps_info_parameters,
  *          server_bff_parameters} from './types.js'
  */
-
-const {serverResponse, serverUtilResponseTime, serverUtilNumberValue} = await import('./server.js');
-const ConfigServer = await import('./db/ConfigServer.js');
-const IamUser = await import('./db/IamUser.js');
-const Log = await import('./db/Log.js');
-const {iamAuthenticateRequest} = await import('./iam.js');
 const app_common= await import('../apps/common/src/common.js');
+const {serverProcess,serverResponse, serverUtilResponseTime, serverUtilNumberValue} = await import('./server.js');
+const socket = await import('./socket.js');
+const Security = await import('./security.js');
+const iam = await import('./iam.js');
+
+const App = await import('./db/App.js');
+const AppParameter = await import('./db/AppParameter.js');
+const ConfigServer = await import('./db/ConfigServer.js');
+const ConfigRestApi = await import('./db/ConfigRestApi.js');
+const IamUser = await import('./db/IamUser.js');
+const IamEncryption = await import ('./db/IamEncryption.js');
+const IamAppIdToken = await import('./db/IamAppIdToken.js');
+const Log = await import('./db/Log.js');
+
 const fs = await import('node:fs');
 
 /**
@@ -38,21 +46,14 @@ const fs = await import('node:fs');
  * @returns {Promise.<void>}
  */
 const bffConnect = async parameters =>{
-    const App = await import('./db/App.js');
-    const AppParameter = await import('./db/AppParameter.js');
-    const ConfigServer = await import('./db/ConfigServer.js');
-    const Security = await import('./security.js');
-    const IamEncryption = await import ('./db/IamEncryption.js');
-    const IamAppIdToken = await import('./db/IamAppIdToken.js');
-    const socket = await import('./socket.js');
-    const common = await import('../apps/common/src/common.js');
+    
     /**@type{server_db_document_ConfigServer} */
     const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
 
     const common_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
     const admin_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID);
     const count_user = IamUser.get(parameters.app_id, null).result.length;
-    const admin_only = (await common.commonAppStart(parameters.app_id)==true?false:true) && count_user==0;
+    const admin_only = (await app_common.commonAppStart(parameters.app_id)==true?false:true) && count_user==0;
     const start_app_id = admin_app_id == parameters.app_id?
                                             admin_app_id:
                                                 serverUtilNumberValue(configServer.SERVICE_APP
@@ -61,7 +62,7 @@ const bffConnect = async parameters =>{
     const idToken = IamAppIdToken.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}).result
                     .filter((/**@type{server_db_table_IamAppIdToken}*/token)=>token.token == parameters.idToken)[0];
     //geodata for APP using start_app_id
-    const result_geodata = await common.commonGeodata({ app_id:start_app_id, 
+    const result_geodata = await app_common.commonGeodata({ app_id:start_app_id, 
                                                         endpoint:'SERVER', 
                                                         ip:parameters.ip, 
                                                         user_agent:parameters.user_agent ??'', 
@@ -199,7 +200,7 @@ const bffInit = async (req, res) =>{
     else{
         //access control that stops request if not passing controls
         /**@type{server_iam_authenticate_request}*/
-        const result = await iamAuthenticateRequest({ip:req.ip, 
+        const result = await iam.iamAuthenticateRequest({ip:req.ip, 
                                                     host:req.headers.host ?? '', 
                                                     method: req.method, 
                                                     'user-agent': req.headers['user-agent'], 
@@ -252,14 +253,11 @@ const bffInit = async (req, res) =>{
 const bffStart = async (req, res) =>{
     /**@type{server_db_document_ConfigServer} */
     const configServer = ConfigServer.get({app_id:0}).result;
-    const {serverProcess} = await import('./server.js');
-    const {commonAppIam} = await import('../apps/common/src/common.js');
     //if first time, when no user exists, show maintenance in main server
-    if (IamUser.get(0, null).result.length==0 && (await commonAppIam(req.headers.host)).admin == false){
-        const {commonConvertBinary} = await import('../apps/common/src/common.js');
+    if (IamUser.get(0, null).result.length==0 && (await app_common.commonAppIam(req.headers.host)).admin == false){
         const {default:ComponentCreate} = await import('../apps/common/src/component/common_maintenance.js');
         return {result:await ComponentCreate({  data:   null,
-                                                methods:{commonConvertBinary:commonConvertBinary}
+                                                methods:{commonConvertBinary:app_common.commonConvertBinary}
                                             }), type:'HTML'};
     }   
     else{
@@ -287,9 +285,6 @@ const bffStart = async (req, res) =>{
  * @returns {Promise<*>}
  */
  const bff = async (req, res) =>{
-    const Security = await import('./security.js');
-    const IamEncryption = await import('./db/IamEncryption.js');
-    const iam = await import('./iam.js');
 
     const resultbffInit =   await bffInit(req, res);
     /**@type{server_db_document_ConfigServer} */
@@ -311,8 +306,6 @@ const bffStart = async (req, res) =>{
                                         )[0];
                 if (encryptionData){
                     if(encryptionData.type=='FONT'){
-                        const IamAppIdToken = await import('./db/IamAppIdToken.js');
-                        const {socketClientGet, socketAppServerFunctionSend} = await import('./socket.js');
                         const token = IamAppIdToken.get({ app_id:common_app_id, 
                                         resource_id:(IamEncryption.get({app_id:common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
                                                         .filter((/**@type{server_db_table_IamEncryption}*/encryption)=>
@@ -320,9 +313,9 @@ const bffStart = async (req, res) =>{
                                                         )[0].iam_app_id_token_id, 
                                         data:{data_app_id:null}}).result[0].token;
                         if (token){
-                            const current_app_id = socketClientGet(token)?.app_id;
+                            const current_app_id = socket.socketClientGet(token)?.app_id;
                             if (current_app_id!=null){
-                                socketAppServerFunctionSend(current_app_id,
+                                socket.socketAppServerFunctionSend(current_app_id,
                                                             token,
                                                             'FONT_URL',
                                                             Buffer.from(JSON.stringify({
@@ -525,7 +518,6 @@ const bffStart = async (req, res) =>{
                 }
                     
                 else{
-                    const iam = await import('./iam.js');
                     res.statusCode =401;
                     return res.send(iam.iamUtilMessageNotAuthorized(), 'utf8');
                 }
@@ -539,9 +531,8 @@ const bffStart = async (req, res) =>{
                         //font src used in a font css
                         case (bff_parameters.url.startsWith('/common/modules/fontawesome/webfonts/')):
                         case (bff_parameters.url.startsWith('/common/css/font/')):{
-                            const {commonResourceFile} = await import('../apps/common/src/common.js');
                             return serverResponse({app_id:common_app_id,
-                                            result_request: await commonResourceFile({   app_id:common_app_id, 
+                                            result_request: await app_common.commonResourceFile({   app_id:common_app_id, 
                                                                     resource_id:bff_parameters.url, 
                                                                     content_type:'',
                                                                     data_app_id: common_app_id}),
@@ -665,8 +656,6 @@ const bffStart = async (req, res) =>{
  * @returns {Promise.<server_server_response>}
  */
 const bffRestApi = async (routesparameters) =>{        
-    const iam = await import('./iam.js');
-    const ConfigRestApi = await import('./db/ConfigRestApi.js');
     const URI_query = routesparameters.parameters;
     const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
     const app_query = URI_query?new URLSearchParams(URI_query):null;
