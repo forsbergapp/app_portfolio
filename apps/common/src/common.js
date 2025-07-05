@@ -324,82 +324,97 @@ const commonBFE = async parameters =>{
 const commonResourceFile = parameters =>{
 
    
-   const resource_directory = App.get({app_id:parameters.app_id, resource_id:parameters.data_app_id}).result[0].path;
-   const resource_path = parameters.data_app_id==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id,data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result)?
-                           parameters.resource_id.replace('/common', ''):
-                               parameters.resource_id;
-   return new Promise((resolve)=>{
-       switch (true){
-           case parameters.content_type == 'text/css':{
-               resolve({type:'CSS', sendfile:`${serverProcess.cwd()}${resource_directory}${resource_path}`});
-               break;
-           }
-           case parameters.content_type == 'application/json':{
-               resolve({type:'JSON', sendfile:`${serverProcess.cwd()}${resource_directory}${resource_path}`});
-               break;
-           }
-           case parameters.content_type == 'text/javascript':{
-               switch (resource_path){
-                   case '/modules/react/react-dom.development.js':
-                   case '/modules/react/react.development.js':{
-                       fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`, 'utf8').then((modulefile)=>{
-                           if (resource_path == '/modules/react/react-dom.development.js'){
-                               modulefile = 'let ReactDOM;\r\n' + modulefile;                                
-                               modulefile = modulefile.replace(  'exports.version = ReactVersion;',
-                                                               'exports.version = ReactVersion;\r\n  ReactDOM=exports;');
-                               modulefile = modulefile + 'export {ReactDOM}';
-                           }
-                           else{
-                               modulefile = 'let React;\r\n' + modulefile;
-                               modulefile = modulefile.replace(  'exports.version = ReactVersion;',
-                                                               'exports.version = ReactVersion;\r\n  React=exports;');
-                               modulefile = modulefile + 'export {React}';
-                           }
-                           
-                           resolve({type:'JS', result:modulefile});
-                       });
-                       break;
-                   }
-                   //case '/modules/vue/vue.esm-browser.js':{
-                   //     resolve({type:'JS', sendfile:`${serverProcess.cwd()}${resource_directory}/modules/vue/${parameters.resource_id}`});
-                   //     break;
-                   // }
-                   case '/modules/leaflet/leaflet-src.esm.js':{
-                       fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`, 'utf8').then((modulefile)=>{
-                           modulefile = modulefile.replace(  '//# sourceMappingURL=','//');
-                           resolve({type:'JS', result:modulefile});
-                       });
-                       break;
-                   }
-                   default:
-                       resolve({type:'JS', sendfile:`${serverProcess.cwd()}${resource_directory}${resource_path}`});
-               }
-               
-               break;
-           }
-           case parameters.content_type == 'image/webp':
-           case parameters.content_type == 'image/png':
-           case parameters.content_type == 'font/woff2':{
-               resolve(commonConvertBinary(parameters.content_type, `${resource_directory}/${resource_path}`));
-               break;
-           }
-           default:{
-               Log.post({  app_id:parameters.app_id, 
-                   data:{  object:'LogAppError', 
-                           app:{   app_filename:serverUtilAppFilename(import.meta.url),
-                                   app_function_name:'commonResourceFile()',
-                                   app_line:serverUtilAppLine()
-                           },
-                           log:`Invalid resource ${parameters.resource_id}`
-                       }
-                   })
-               .then(()=>{
-                   resolve({http:404, code:'APP', text:null, developerText:null, moreInfo:null, type:'JSON'});
+    const resource_directory = App.get({app_id:parameters.app_id, resource_id:parameters.data_app_id}).result[0].path;
+    const resource_path = parameters.data_app_id==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id,data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result)?
+                            parameters.resource_id.replace('/common', ''):
+                                parameters.resource_id;
+    return new Promise((resolve)=>{
+        switch (true){
+            case parameters.content_type == 'text/css' && parameters.resource_id == '/common/modules/leaflet/leaflet.css':{
+                fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`, 'utf8').then((modulefile)=>{
+                    //remove third party fonts
+                    resolve({   type:'CSS', 
+                                result:modulefile
+                                        .replaceAll('\r','\n')
+                                        .split('\n')
+                                        .map(row=> {
+                                            const match = /font-family:[\s\S]*?;/g.exec(row);
+                                            if (match)
+                                                return row.replace(match[0], '');
+                                            else
+                                                return row;
+                                        })
+                                        .join('\n')
+                                        });
+                });
+                break;
+            }
+            case parameters.content_type == 'text/css':{
+                resolve({type:'CSS', sendfile:`${serverProcess.cwd()}${resource_directory}${resource_path}`});
+                break;
+            }
+            case parameters.content_type == 'application/json':{
+                resolve({type:'JSON', sendfile:`${serverProcess.cwd()}${resource_directory}${resource_path}`});
+                break;
+            }
+            case parameters.content_type == 'text/javascript':{
+                switch (resource_path){
+                    case '/modules/react/react-dom.development.js':
+                    case '/modules/react/react.development.js':{
+                        fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`, 'utf8').then((modulefile)=>{
+                            if (resource_path == '/modules/react/react-dom.development.js'){
+                                modulefile = 'let ReactDOM;\r\n' + modulefile;                                
+                                modulefile = modulefile.replace(  'exports.version = ReactVersion;',
+                                                                'exports.version = ReactVersion;\r\n  ReactDOM=exports;');
+                                modulefile = modulefile + 'export {ReactDOM}';
+                            }
+                            else{
+                                modulefile = 'let React;\r\n' + modulefile;
+                                modulefile = modulefile.replace(  'exports.version = ReactVersion;',
+                                                                'exports.version = ReactVersion;\r\n  React=exports;');
+                                modulefile = modulefile + 'export {React}';
+                            }
+                            
+                            resolve({type:'JS', result:modulefile});
+                        });
+                        break;
+                    }
+                    case '/modules/leaflet/leaflet-src.esm.js':{
+                        fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`, 'utf8').then((modulefile)=>{
+                            modulefile = modulefile.replace(  '//# sourceMappingURL=','//');
+                            resolve({type:'JS', result:modulefile});
+                        });
+                        break;
+                    }
+                    default:
+                        resolve({type:'JS', sendfile:`${serverProcess.cwd()}${resource_directory}${resource_path}`});
+                }
+                
+                break;
+            }
+            case parameters.content_type == 'image/webp':
+            case parameters.content_type == 'image/png':
+            case parameters.content_type == 'font/woff2':{
+                resolve(commonConvertBinary(parameters.content_type, `${resource_directory}/${resource_path}`));
+                break;
+            }
+            default:{
+                Log.post({  app_id:parameters.app_id, 
+                    data:{  object:'LogAppError', 
+                            app:{   app_filename:serverUtilAppFilename(import.meta.url),
+                                    app_function_name:'commonResourceFile()',
+                                    app_line:serverUtilAppLine()
+                            },
+                            log:`Invalid resource ${parameters.resource_id}`
+                        }
+                    })
+                .then(()=>{
+                    resolve({http:404, code:'APP', text:null, developerText:null, moreInfo:null, type:'JSON'});
 
-               });
-           }
-       }
-   });
+                });
+            }
+        }
+    });
 };
 /**
  * @name commonModuleAsset
