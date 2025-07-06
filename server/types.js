@@ -1589,8 +1589,6 @@
  *   path_data:                         string,
  *   service_registry_auth_path:		string,
  *   service_registry_auth_method:      'POST',
- *   service_registry_path:	            string,
- *   service_registry_method:	        'GET',
  *   message_queue_path:	            string,
  *   message_queue_method:	            'POST',
  *   iam_auth_app_path:	                string,
