@@ -46,8 +46,6 @@
  *   path_data:                         string,
  *   service_registry_auth_url:		    string,
  *   service_registry_auth_method:      'POST',
- *   service_registry_url:	            string,
- *   service_registry_method:	        'GET',
  *   message_queue_url:	                string,
  *   message_queue_method:	            'POST',
  *   iam_auth_app_url:	                string,
