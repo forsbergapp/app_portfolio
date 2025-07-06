@@ -664,8 +664,8 @@
  *              metrics_url:        string, 
  *              health_url:         string, 
  *              rest_api_version:   number,
- *              public_key:         string,
- *              private_key:        string,
+ *              uuid:               string,
+ *              secret:             string,
  *              status:             string,
  *              created?:           string,
  *              modified?:          string}} server_db_table_ServiceRegistry
@@ -1593,8 +1593,8 @@
  *   message_queue_method:	            'POST',
  *   iam_auth_app_path:	                string,
  *   iam_auth_app_method:	            'POST',
- *   public_key:                        string,
- *   private_key:                       string,
+ *   uuid:                              string,
+ *   secret:                            string,
  *   config:{url_ip:string, url_place:string}}} microservice_local_config
  */
 
