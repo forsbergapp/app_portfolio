@@ -901,6 +901,11 @@ const postConfigDefault = async () => {
     updateMicroserviceSecurity({serveRegistry:              config_obj[2][1],
                                 pathMicroserviceSource:     '/server/install/default/microservice/',
                                 pathMicroserviceDestination:'/data/microservice/'});
+    //install default microservice commin library
+    await fs.copyFile(serverProcess.cwd() + '/server/install/default/microservice/common.js', serverProcess.cwd() + '/data/microservice', err=> {
+        if (err) 
+            throw err;
+    });
 
     //write files to ORM
     for (const config_row of config_obj){
@@ -981,8 +986,8 @@ const updateMicroserviceSecurity = async parameters =>{
     for (const file of ['BATCH', 'GEOLOCATION']){
         /**@type{microservice_local_config} */
         const content = await fs.promises.readFile(serverProcess.cwd() + `${parameters.pathMicroserviceSource}${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
-        content.public_key = parameters.serveRegistry.filter(microservice=>microservice.name==content.name)[0].public_key;
-        content.private_key = parameters.serveRegistry.filter(microservice=>microservice.name==content.name)[0].private_key;
+        content.uuid = parameters.serveRegistry.filter(microservice=>microservice.name==content.name)[0].uuid;
+        content.secret = parameters.serveRegistry.filter(microservice=>microservice.name==content.name)[0].secret;
         await fs.promises.writeFile(serverProcess.cwd() + `${parameters.pathMicroserviceDestination}${file}.json`, 
                                                             JSON.stringify(content, undefined, 2),'utf8');
     }
@@ -1043,11 +1048,9 @@ const getConfigSecurityUpdate = async parameters =>{
                                 /**@type{server_db_table_ServiceRegistry[]}*/
                                 const content = await fs.promises.readFile(serverProcess.cwd() + parameters.pathServiceRegistry)
                                                     .then(file=>JSON.parse(file.toString()));
-                                //update public key and private for each microservice, use 4096 bits
                                 for (const row of content){
-                                    const {publicKey, privateKey} = await Security.securityKeyPairCreate(4096);
-                                    row.public_key = publicKey;
-                                    row.private_key = privateKey;
+                                    row.uuid = Security.securityUUIDCreate();
+                                    row.secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8').toString('base64');
                                 }
                                 resolve(content);
                             })();}):ORM.getObject(0,'ServiceRegistry'),
