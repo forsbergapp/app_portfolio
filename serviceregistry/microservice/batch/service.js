@@ -5,8 +5,9 @@
 
 
 /**
- * @import {config, jobs} from './types.js'
+ * @import {common, config, jobs} from './types.js'
  */
+
 /**@type{jobs} */
 const JOBS = [];
 
@@ -264,7 +265,9 @@ const scheduleMilliseconds = (cron_expression) =>{
  * @name scheduleJob
  * @description Schedule job
  * @function
- * @param {function}    logFunction
+ * @param {common['commonLog']}    commonLog
+ * @param {config}      config
+ * @param {string}      token
  * @param {number}      jobid 
  * @param {'OS'}        command_type 
  * @param {string}      path 
@@ -273,7 +276,22 @@ const scheduleMilliseconds = (cron_expression) =>{
  * @param {string}      cron_expression 
  * @returns {Promise.<void>}
  */
-const scheduleJob = async (logFunction, jobid, command_type, path, command, argument, cron_expression) =>{
+const scheduleJob = async (commonLog, config, token, jobid, command_type, path, command, argument, cron_expression) =>{
+    /**
+     * @param {{}} message
+     * @param {'MICROSERVICE_LOG'|'MICROSERVICE_ERROR'|null} type
+     */
+    const log = async (message, type='MICROSERVICE_LOG') =>{
+        commonLog({type:type,
+                    service:'BATCH',
+                    message:JSON.stringify(message),
+                    token:token,
+                    message_queue_method:config.message_queue_method,
+                    message_queue_url:config.message_queue_url,
+                    uuid:config.uuid,
+                    secret:config.secret
+        });
+    };
     const {serverProcess} = await import('./server.js');
     const {exec} = await import('node:child_process');
     switch (command_type){
@@ -283,23 +301,23 @@ const scheduleJob = async (logFunction, jobid, command_type, path, command, argu
             //first log for jobid will get correlation log id
             //so all logs for this jobid can be traced
             const log_id = Date.now();
-            await logFunction('MICROSERVICE_LOG', { log_id: log_id,
-                                                    jobid: jobid, 
-                                                    scheduled_start: scheduled_start, 
-                                                    start:null, 
-                                                    end:null, 
-                                                    status:'PENDING', 
-                                                    result:null});
+            await log({ log_id: log_id,
+                        jobid: jobid, 
+                        scheduled_start: scheduled_start, 
+                        start:null, 
+                        end:null, 
+                        status:'PENDING', 
+                        result:null});
             /**@type{NodeJS.Timeout} */
             let timeId = setTimeout(async () =>{
                     const start = new Date().toISOString();
-                    await logFunction('MICROSERVICE_LOG', { log_id: log_id,
-                                                            jobid: jobid, 
-                                                            scheduled_start: null, 
-                                                            start:start, 
-                                                            end:null, 
-                                                            status:'RUNNING', 
-                                                            result:null});
+                    await log({ log_id: log_id,
+                                jobid: jobid, 
+                                scheduled_start: null, 
+                                start:start, 
+                                end:null, 
+                                status:'RUNNING', 
+                                result:null});
                     try{
                         let command_path;
                         if (path.includes('%HOMEPATH%')){
@@ -311,16 +329,15 @@ const scheduleJob = async (logFunction, jobid, command_type, path, command, argu
                             command_path = path.replace('$HOME', serverProcess.env.HOME);
                         }
                         exec(`${command} ${argument}`, {cwd: command_path}, (err, stdout, stderr) => {
-                            logFunction('MICROSERVICE_LOG', 
-                                        {
-                                            log_id: log_id,
-                                            jobid: jobid, 
-                                            scheduled_start: null, 
-                                            start:start, 
-                                            end:new Date().toISOString(), 
-                                            status:err?'FAILED':'FINISHED', 
-                                            result:err?err:`stdout: ${stdout}, stderr: ${stderr}`
-                                        }).then(()=>{
+                            log({
+                                    log_id: log_id,
+                                    jobid: jobid, 
+                                    scheduled_start: null, 
+                                    start:start, 
+                                    end:new Date().toISOString(), 
+                                    status:err?'FAILED':'FINISHED', 
+                                    result:err?err:`stdout: ${stdout}, stderr: ${stderr}`
+                                }).then(()=>{
                                 //remove job
                                 JOBS.forEach((job,index)=>{
                                     if (job.timeId == timeId)
@@ -335,16 +352,15 @@ const scheduleJob = async (logFunction, jobid, command_type, path, command, argu
                         });
                     }
                     catch(error){
-                        await logFunction('MICROSERVICE_ERROR', 
-                                            {
-                                                log_id: log_id,
-                                                jobid: jobid, 
-                                                scheduled_start: null, 
-                                                start:start, 
-                                                end:new Date().toISOString(), 
-                                                status:'FAILED', 
-                                                result:error
-                                            });
+                        await log({
+                                    log_id: log_id,
+                                    jobid: jobid, 
+                                    scheduled_start: null, 
+                                    start:start, 
+                                    end:new Date().toISOString(), 
+                                    status:'FAILED', 
+                                    result:error
+                                });
                     }
                 }, milliseconds);
             JOBS.push({ jobid:jobid, 
@@ -357,10 +373,10 @@ const scheduleJob = async (logFunction, jobid, command_type, path, command, argu
             break;
         }
         default:{
-            logFunction('MICROSERVICE_ERROR', 
+            log( 
                 {
                     error:'Command type:' + command_type
-                });
+                }, 'MICROSERVICE_ERROR');
         }
     }		
 };
@@ -368,14 +384,16 @@ const scheduleJob = async (logFunction, jobid, command_type, path, command, argu
  * @name startJobs
  * @description Start jobs
  * @function
+ * @param {common} common
  * @param {config} config
- * @param {function} logFunction
+ * @param {string} token
  * @returns {Promise.<void>}
  */
-const startJobs = async (config, logFunction) =>{
+const startJobs = async (common, config, token) =>{
     const os = await import('node:os');
-    await logFunction('MICROSERVICE_LOG', 
-                                    { 
+    await common.commonLog({type:'MICROSERVICE_LOG', 
+                            service:'BATCH',
+                            message: JSON.stringify({ 
                                         log_id: null,
                                         jobid: null, 
                                         scheduled_start: null, 
@@ -383,7 +401,13 @@ const startJobs = async (config, logFunction) =>{
                                         end:null, 
                                         status:'CANCELED', 
                                         result:'SERVER RESTART'
-                                    });
+                                    }),
+                            token:token,
+                            message_queue_url:config.message_queue_url,
+                            message_queue_method:config.message_queue_method,
+                            uuid:config.uuid,
+                            secret:config.secret
+                        });
     /**@type{{  jobid:number,
      *          name:string,
      *          command_type:'OS',
@@ -400,7 +424,9 @@ const startJobs = async (config, logFunction) =>{
         //use cron expression syntax
         if (job.enabled == true && job.platform == os.platform()){
             if (validateCronExpression(job.cron_expression))
-                await scheduleJob(  logFunction, 
+                await scheduleJob(  common.commonLog, 
+                                    config,
+                                    token,
                                     job.jobid, 
                                     job.command_type, 
                                     job.path, 
@@ -408,7 +434,14 @@ const startJobs = async (config, logFunction) =>{
                                     job.argument, 
                                     job.cron_expression);
             else
-                logFunction('MICROSERVICE_ERROR', 'Not supported cron expression'); 
+                await common.commonLog({type:'MICROSERVICE_ERROR', 
+                                        service:'BATCH',
+                                        message: 'Not supported cron expression',
+                                        token:token,
+                                        message_queue_url:config.message_queue_url,
+                                        message_queue_method:config.message_queue_method,
+                                        uuid:config.uuid,
+                                        secret:config.secret}); 
         }
     }
 };

@@ -8,8 +8,8 @@
         "metrics_url": "http://localhost:3001/metrics", 
         "health_url": "http://localhost:3001/health", 
         "rest_api_version":1,
-        "public_key":"",
-        "private_key":"",
+        "uuid":"",
+        "secret":"",
         "status":"ONLINE",
         "created": "2025-01-01T00:00:00.000Z",
         "modified": null
@@ -23,8 +23,8 @@
         "metrics_url": "http://localhost:3002/metrics", 
         "health_url": "http://localhost:3002/health", 
         "rest_api_version":1,
-        "public_key":"",
-        "private_key":"",
+        "uuid":"",
+        "secret":"",
         "status":"ONLINE",
         "created": "2025-01-01T00:00:00.000Z",
         "modified": null

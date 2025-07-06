@@ -5,7 +5,7 @@
 
 
 /**
- * @import {config} from './types.js'
+ * @import {common, config} from './types.js'
  */
 
 const fs = await import('node:fs');
@@ -164,84 +164,17 @@ const writeCacheGeodata = async (config, cachetype, geodata) =>{
     }
 };
 /**
- * @name requestUrl
- * @description Returns result from given url
- * @function
- * @param { url:string, 
- *          method:'GET'|'POST',
- *          authorizsation:string|null,
- *          body:{},
- *          language:string} parameters
- * @returns {Promise.<string>}
- */
-const requestUrl = async parameters => {
-    const protocol = (await import(`node:${parameters.url.split('://')[0]}`));
-    const zlib = await import('node:zlib');
-    return new Promise((resolve, reject) =>{
-        //geolocation service using http 
-
-        const headers = parameters.method=='GET'? {
-            'User-Agent': 'Server',
-            'Accept-Language': parameters.language,
-            ...(parameters.authorization && {Authorization: parameters.authorization})
-        }: {
-            'User-Agent': 'Server',
-            'Accept-Language': parameters.language,
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(JSON.stringify(parameters.body)),
-            ...(parameters.authorization && {Authorization: parameters.authorization})
-        };
-        const options = {
-            method: parameters.method,
-            rejectUnauthorized: false,
-            headers : headers
-        };
-        
-        const request = protocol.request(parameters.url, options, res =>{
-            let responseBody = '';
-            if (res.headers['content-encoding'] == 'gzip'){
-                const gunzip = zlib.createGunzip();
-                res.pipe(gunzip);
-                gunzip.on('data', (chunk) =>responseBody += chunk);
-                gunzip.on('end', () => {
-                    if (res.statusCode == 200 ||res.statusCode == 201)
-                        resolve (JSON.parse(responseBody));
-                    else
-                        reject(res.statusCode);
-                });
-            }
-            else{
-                res.setEncoding('utf8');
-                res.on('data', (chunk) =>{
-                    responseBody += chunk;
-                });
-                res.on('end', ()=>{
-                    if (res.statusCode == 200 ||res.statusCode == 201)
-                        resolve (JSON.parse(responseBody));
-                    else
-                        reject(res.statusCode);
-                });
-            }
-        });
-        request.on('error', error => {
-            reject(error);
-        });
-        if (parameters.method !='GET')
-            request.write(JSON.stringify(parameters.body));
-        request.end();        
-    });
-};
-/**
  * @name getPlace
  * @description Get place
  * @function
+ * @param {common} common
  * @param {config['config']} config
  * @param {string} latitude
  * @param {string} longitude
  * @param {string} accept_language
  * @returns {Promise<string>}
  */
- const getPlace = async (config, latitude, longitude, accept_language) => {
+ const getPlace = async (common, config, latitude, longitude, accept_language) => {
 	let geodata;
 	geodata = await getCacheGeodata(config, 'PLACE', null, latitude, longitude);
 	if (geodata != null)
@@ -252,7 +185,14 @@ const requestUrl = async parameters => {
                     .replace('<LONGITUDE/>', longitude);
         //return result without prefix
 
-		geodata = await requestUrl({url:url, method:'GET', language:accept_language})
+		geodata = await await common.commonRequestUrl({ url:url, 
+                                                        external: true,
+                                                        encrypt: false,
+                                                        uuid:null,
+                                                        secret:null,
+                                                        body:null,
+                                                        method:'GET', 
+                                                        language:accept_language})
                             .then(result=>JSON.stringify(result).replaceAll('geoplugin_',''));
 		if (geodata != '[[]]')
 			writeCacheGeodata(config, 'PLACE', geodata);
@@ -263,12 +203,13 @@ const requestUrl = async parameters => {
  * @name getIp
  * @description Get geodata for ip
  * @function
+ * @param {common} common
  * @param {config} config
  * @param {string} ip
  * @param {string} accept_language
  * @returns {Promise.<string>}
  */
-const getIp = async (config, ip, accept_language) => {
+const getIp = async (common, config, ip, accept_language) => {
 	let geodata;
 	let url;
 	geodata = await getCacheGeodata(config, 'IP', ip, '', '');
@@ -283,10 +224,17 @@ const getIp = async (config, ip, accept_language) => {
 		else
             url =   config.config.filter(parameter=>'url_ip' in parameter)[0].url_ip.replace('<IP/>', ip);
         //return result without prefix
-		geodata = await requestUrl({url:url, method:'GET', language:accept_language})
+		geodata = await common.commonRequestUrl({   url:url, 
+                                                    external: true,
+                                                    encrypt: false,
+                                                    uuid:null,
+                                                    secret:null,
+                                                    body:null,
+                                                    method:'GET', 
+                                                    language:accept_language})
                         .then(result=>JSON.stringify(result).replaceAll('geoplugin_',''));
 		writeCacheGeodata(config, 'IP', geodata);
         return geodata;
 	}
 };
-export {getGeodataEmpty, getCacheGeodata, writeCacheGeodata, requestUrl, getIp, getPlace};
+export {getGeodataEmpty, getCacheGeodata, writeCacheGeodata, getIp, getPlace};
