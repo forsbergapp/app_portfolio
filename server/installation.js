@@ -902,7 +902,7 @@ const postConfigDefault = async () => {
                                 pathMicroserviceSource:     '/server/install/default/microservice/',
                                 pathMicroserviceDestination:'/data/microservice/'});
     //install default microservice commin library
-    await fs.copyFile(serverProcess.cwd() + '/server/install/default/microservice/common.js', serverProcess.cwd() + '/data/microservice', err=> {
+    await fs.copyFile(serverProcess.cwd() + '/server/install/default/microservice/common.js', serverProcess.cwd() + '/data/microservice/common.js', err=> {
         if (err) 
             throw err;
     });
