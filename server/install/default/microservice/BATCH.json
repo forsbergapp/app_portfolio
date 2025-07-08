@@ -14,8 +14,8 @@
     "message_queue_method":	            "POST",
     "iam_auth_app_url":	                "http://localhost:3000/bff/microservice/v1/server-iam-authenticateapp/BATCH",
     "iam_auth_app_method":	            "POST",
-    "public_key":                       "",
-    "private_key":                      "",
+    "uuid":                             "",
+    "secret":                           "",
     "config":[
             {"jobs":[
                 {"jobid":1 , "name": "Pipeline every minute", "command_type":"OS", "platform": "linux", "path": "$HOME/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"* * * * *", "enabled":false},
