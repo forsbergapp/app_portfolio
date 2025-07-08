@@ -4666,13 +4666,22 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "id":{
-                                                "type":"number",
+                                            "header":{
+                                                "app-id":{
+                                                    "type":"number",
+                                                    "required":true
+                                                },
+                                                "app-signature":{
+                                                    "type":"string",
+                                                    "required":true
+                                                }   
+                                            },
+                                            "url":{
+                                                "type":"string",
                                                 "required":true
                                             },
-                                            "message":{
-                                                "description":"Encrypted message",
-                                                "type":"string",
+                                            "body":{
+                                                "type":"object",
                                                 "required":true
                                             }
                                         }

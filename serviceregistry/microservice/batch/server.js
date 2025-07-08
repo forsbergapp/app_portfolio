@@ -5,7 +5,11 @@
 
 
 /**
- * @import {common, config, request, response} from './types.js'
+ * @import {config, request, response} from './types.js'
+ */
+
+/**
+ * @import {common} from '../../../data/microservice/types.js'
  */
 
 /**

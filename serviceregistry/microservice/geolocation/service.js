@@ -187,7 +187,6 @@ const writeCacheGeodata = async (config, cachetype, geodata) =>{
 
 		geodata = await await common.commonRequestUrl({ url:url, 
                                                         external: true,
-                                                        encrypt: false,
                                                         uuid:null,
                                                         secret:null,
                                                         body:null,
