@@ -76,34 +76,36 @@ const commonConfig = async service =>{
  *          service_registry_auth_method:'POST'|'GET',
  *          uuid:string,
  *          secret:string}} parameters
- * @returns {Promise.<{ token: string,
- *                       exp: number,
- *                       iat: number}|null>}
+ * @returns {Promise.<{ token:  string,
+ *                      exp:    number,
+ *                      iat:    number,
+ *                      }|null>}
  */
 const commonAuth = async parameters =>{
     const attempts = 10;
     /**
      * @param {number|null} attempt
-     * @returns {Promise.<{
-     *                       token: string,
-     *                       exp: number,
-     *                       iat: number}|null>}
+     * @returns {Promise.<{ 
+     *                       token: string;
+     *                       exp:   number;
+     *                       iat:   number;
+     *                   }|null>}
      */
     const auth = async (attempt=null) =>{
         /**
          * @type{{  token:string,
-         *           exp:number,
-         *           iat:number}}
+         *          exp:number,
+         *          iat:number}}
          */
         const jwt_data = await commonRequestUrl({
                                 url:parameters.service_registry_auth_url, 
                                 external:false,
-                                encrypt:true,
                                 uuid:parameters.uuid,
                                 secret:parameters.secret,
                                 method:parameters.service_registry_auth_method, 
                                 body:null,
                                 language:'en'})
+                                .then(result=>JSON.parse(result))
                                 .catch(()=>null);
         if (jwt_data == null && ((attempt??1) <=attempts) )
             return await new Promise ((resolve)=>{setTimeout(()=>{auth((attempt??1) +1).then(()=>resolve(null));}, 5000);});
@@ -123,14 +125,12 @@ const commonAuth = async parameters =>{
  * @name commonServerReturn
  * @description returns result using ISO20022 format
  * @function
- * @param {{
- *          service:string,
+ * @param {{code:string,
  *          token:string,
  *          uuid:string,
  *          secret:string,
  *          message_queue_url:string,
  *          message_queue_method:'POST'|'GET',
- *          code:string,
  *          error:*,
  *          result:*,
  *          res:import('node:http')['IncomingMessage'] & {  statusCode:string, 
@@ -143,7 +143,6 @@ const commonServerReturn = parameters=>{
     parameters.res.statusCode = parameters.code;
     if (parameters.error){
         commonLog({type:'MICROSERVICE_ERROR', 
-                   service:parameters.service,
                    message:parameters.error,
                    token:parameters.token,
                    message_queue_url:parameters.message_queue_url,
@@ -170,7 +169,6 @@ const commonServerReturn = parameters=>{
  * @name commonLog
  * @description Logs info or error in message queue
  * @param {{type:'MICROSERVICE_LOG'|'MICROSERVICE_ERROR',
- *          service:string,
  *          message:string,
  *          token:string,
  *          message_queue_url:string,
@@ -183,12 +181,11 @@ const commonLog = parameters =>{
     commonRequestUrl({
         url:parameters.message_queue_url, 
         external:false,
-        encrypt:true,
         uuid:parameters.uuid,
         secret:parameters.secret,
         method:parameters.message_queue_method, 
         body:{data:Buffer.from(
-                        JSON.stringify({IAM_service:parameters.service, 
+                        JSON.stringify({IAM_service:'GEOLOCATION', 
                                         type: parameters.type, 
                                         message:parameters.message})).toString('base64')
             },
@@ -263,33 +260,27 @@ const commonDecrypt = async parameters =>{
  * @name commonIamAuthenticateApp
  * @description Authenticates app using IAM and sends query encoded with base64
  * @function
- * @param {{app_id:number,
- *          token:string,
+ * @param {{token:string,
  *          iam_auth_app_url:string,
  *          iam_auth_app_method:'POST'|'GET',
  *          uuid:string,
- *          secret:string,
- *          'app-id':number,
- *          'app-signature':string}} parameters
- * @returns {Promise.<boolean>}
+ *          req:import('node:http').IncomingMessage & {headers:{'app-id':number, 'app-signature':string}},
+ *          secret:string}} parameters
+ * @returns {Promise.<{authenticated:boolean,
+ *                      data:*}>}
  */
 const commonIamAuthenticateApp = async parameters =>{
     return await commonRequestUrl({ url:parameters.iam_auth_app_url, 
                                     external:false,
-                                    encrypt:true,
                                     uuid:parameters.uuid,
                                     secret:parameters.secret,
                                     method:parameters.iam_auth_app_method, 
-                                    'app-id':       parameters['app-id'],
-                                    'app-signature':parameters['app-signature'],
-                                    body:null,
+                                    body:commonRequestData(parameters.req),
                                     authorization:'Bearer ' + parameters.token,
                                     language:'en'})
-                .then(result=>
-                    result.error?false:true
-                )
+                .then(result=>{return {authenticated:true, data:JSON.parse(result)};})
                 .catch(()=>
-                    false
+                    {return {authenticated:false, data:null};}
                 );
 };
 
@@ -306,11 +297,8 @@ const commonIamAuthenticateApp = async parameters =>{
  * @function
  * @param {{url:string,
  *          external:boolean,
- *          encrypt:boolean,
- *          uuid:string|null,
- *          secret:string|null,
- *          'app-id'?:number|null,
- *          'app-signature'?:string|null,
+ *          uuid:string,
+ *          secret:string,
  *          method:'GET'|'POST',
  *          authorization?:string|null,
  *          body:{}|null,
@@ -318,12 +306,13 @@ const commonIamAuthenticateApp = async parameters =>{
  * @returns {Promise.<*>}
  */
 const commonRequestUrl = async parameters => {
+    const encrypt = 1;
     const protocol = (await import(`node:${parameters.url.split('://')[0]}`));    
     //url should use syntax protocol://[host][optional port]/[path]
-    const url = parameters.encrypt?
+    const url = encrypt?
                     (parameters.url.split('/')[2] + '/bff/x/' + parameters.uuid):
                         parameters.url;
-    const options = parameters.encrypt?
+    const options = encrypt?
                         //encrypted options
                         {
                         family: 4,
@@ -332,7 +321,7 @@ const commonRequestUrl = async parameters => {
                         headers:{
                                     'User-Agent': 'Server',
                                     'Accept-Language': parameters.language,
-                                    'Content-Type': 'application/json',
+                                    'Content-Type':  'application/json',
                                     'Connection':   'close',
                                 },
                         ...(protocol=='https' && {rejectUnauthorized: false})
@@ -346,36 +335,37 @@ const commonRequestUrl = async parameters => {
                         headers:{   
                                     'User-Agent': 'Server',
                                     'Accept-Language': parameters.language,
-                                    ...(parameters.external==false && parameters['app-id'] &&  {'app-id':       parameters['app-id']}),
-                                    ...(parameters.external==false && parameters['app-signature'] && {'app-signature':parameters['app-signature']}),
+                                    ...(parameters.external==false && {'app-id':       0}),
+                                    ...(parameters.external==false && {'app-signature':'commonRequestUrl'}),
                                     ...(parameters.external==false && parameters.authorization && {Authorization: parameters.authorization}),
                                     ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
                                     'Connection':   'close'
                                 },
                         ...(protocol=='https' && {rejectUnauthorized: false})
                         };
-    const body = parameters.encrypt?
-                    JSON.stringify({
-                        x: await commonEncrypt({
-                                    secret:parameters.secret??'',
-                                    data:JSON.stringify({  
-                                            headers:{
-                                                    ...(parameters.external==false && parameters['app-id'] && {'app-id':       parameters['app-id']}),
-                                                    ...(parameters.external==false && parameters['app-signature'] && {'app-signature':parameters['app-signature']}),
-                                                    ...(parameters.external==false && parameters.authorization && {Authorization: parameters.authorization}),
-                                                    ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
-                                                    },
-                                            method: parameters.method,
-                                            url:    url,
-                                            ...(parameters.method!='GET' && {body:  parameters.body?
-                                                JSON.stringify(parameters.body):
-                                                    ''})
-                                        })
-                                })
-                    }):
-                        ((parameters.body && parameters.external==false)?
-                                    JSON.stringify({data:btoa(JSON.stringify(parameters.body))}):
-                                        '');
+    const body =    encrypt?
+                        JSON.stringify({
+                            x: await commonEncrypt({
+                                        secret:parameters.secret??'',
+                                        data:JSON.stringify({  
+                                                headers:{
+                                                        ...(parameters.external==false &&  {'app-id':       0}),
+                                                        ...(parameters.external==false &&  {'app-signature':await commonEncrypt({   secret:parameters.secret,
+                                                                                                                                    data:'FFB'})}),
+                                                        ...(parameters.external==false && parameters.authorization && {Authorization: parameters.authorization}),
+                                                        ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
+                                                        },
+                                                method: parameters.method,
+                                                url:    url,
+                                                body:   parameters.body?
+                                                            JSON.stringify(parameters.body):
+                                                                ''
+                                            })
+                                    })
+                        }):
+                            ((parameters.body && parameters.external==false)?
+                                        JSON.stringify({data:btoa(JSON.stringify(parameters.body))}):
+                                            '');
 
     return new Promise((resolve, reject) =>{
 
@@ -413,10 +403,54 @@ const commonRequestUrl = async parameters => {
         request.end();        
     });
 };
+/**
+ * @name commonRequestData
+ * @description Get data from request, microservice dno't need to know if encryption is used or not
+ * @param {import('node:http').IncomingMessage & {headers:{'app-id':number, 'app-signature':string}}} req
+ * @returns {Promise.<{ header:{'app-id':number|null, 
+ *                              'app-signature':string}|null,
+ *                      url:string,
+ *                      body:{}}>}
+ */
+const commonRequestData = async req =>{
+
+    const read_body = async () =>{
+        return new Promise((resolve,reject)=>{
+            if (req.headers['content-type'] =='application/json'){
+                let body= '';
+                req.on('data', chunk =>{
+                    body += chunk.toString();
+                });
+                req.on('end', ()=>{
+                    try {
+                        resolve(JSON.parse(body));
+                    } catch (error) {
+                        reject(null);
+                    }
+                    
+                });
+            }
+            else{
+                resolve({});
+            }
+        });
+    };
+    
+    return {
+        header:{
+            'app-id' : req.headers['app-id'] ?? null,
+            'app-signature' : req.headers['app-signature'] ?? null
+        },
+        url: req.url??'',
+        body:await read_body().catch(()=>null)
+    };
+};
                    
 export {commonConfig,
         commonAuth, 
         commonServerReturn,
         commonLog, 
+        commonEncrypt, 
+        commonDecrypt,
         commonIamAuthenticateApp, 
         commonRequestUrl};

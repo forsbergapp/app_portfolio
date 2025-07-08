@@ -4,7 +4,10 @@
  */
 
 /**
- * @import {common, config, request, response, geolocation_data} from './types.js'
+ * @import {config, request, response, geolocation_data} from './types.js'
+ */
+/**
+ * @import {common} from '../../../data/microservice/types.js'
  */
 
 /**
@@ -47,35 +50,23 @@ const serverStart = async () =>{
     });
 
 	Config.server.createServer(Config.options, (/**@type{request}*/req, /**@type{response}*/res) => {
-		res.setHeader('Access-Control-Allow-Methods', 'GET');
+		res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST');
 		res.setHeader('Access-Control-Allow-Origin', '*');
-		const URI_query = Buffer.from(req.url.substring(req.url.indexOf('?')), 'base64').toString('utf-8');
-		const URI_path = req.url.substring(0, req.url.indexOf('?'));
-		const app_query = new URLSearchParams(URI_query);
-		/**@type{geolocation_data} */
-		const data = {	latitude:	app_query.get('latitude') ?? '',
-						longitude:	app_query.get('longitude') ?? '',
-						ip: 		app_query.get('ip')};
-		req.query = {	service:    app_query.get('service'),
-                        app_id:	    (app_query.get('app_id')==null||app_query.get('app_id')===undefined||app_query.get('app_id')==='')?
-                                        null:
-                                            Number(app_query.get('app_id')),
-						data:	    data};
-                        
-		common.commonIamAuthenticateApp({app_id:req.query.app_id,
+		
+		common.commonIamAuthenticateApp({
                                         token:auth.token,
                                         iam_auth_app_url:Config.iam_auth_app_url,
                                         iam_auth_app_method:Config.iam_auth_app_method,
                                         uuid:Config.uuid,
-                                        secret:Config.secret,
-                                        'app-id':req.query.app_id,
-                                        'app-signature':''}).then((/**@type{boolean}*/authenticate)=>{
-			if (authenticate){
+                                        req:req,
+                                        secret:Config.secret})
+        .then(resultAuthenticateApp=>{
+			if (resultAuthenticateApp.authenticated){
 				switch (true){
-					case URI_path == '/api/v1' && req.query.service == 'PLACE' && req.method =='GET':{
-						if(	(req.query.data.latitude !=null && req.query.data.latitude!='') ||
-							(req.query.data.longitude !=null && req.query.data.longitude!='')){
-							service.getPlace(common, Config, req.query.data.latitude, req.query.data.longitude, req.headers['accept-language'])
+					case resultAuthenticateApp.service == 'PLACE':{
+						if(	(resultAuthenticateApp.data.latitude !=null && resultAuthenticateApp.data.latitude!='') ||
+							(resultAuthenticateApp.data.longitude !=null && resultAuthenticateApp.data.longitude!='')){
+							service.getPlace(common, Config, resultAuthenticateApp.data.latitude, resultAuthenticateApp.data.longitude, req.headers['accept-language'])
                             
 							.then(result=>result?.length>0?
                                             common.commonServerReturn({
@@ -87,7 +78,7 @@ const serverStart = async () =>{
                                                             message_queue_method: Config.message_queue_method,
                                                             code: 200,
                                                             error: null,
-                                                            result: JSON.parse(result),
+                                                            result: result,
                                                             res:res}):
                                                 '')
 							.catch(error =>common.commonServerReturn({
@@ -116,9 +107,9 @@ const serverStart = async () =>{
                                 res:res});
 						break;
 					}
-                    case URI_path == '/api/v1' && req.query.service == 'IP' && req.method =='GET':{
+                    case resultAuthenticateApp.service == 'IP':{
 						//no v6 support
-						service.getIp(common, Config, req.query.data.ip.replace('::ffff:',''), req.headers['accept-language'])
+						service.getIp(common, Config, resultAuthenticateApp.data.ip.replace('::ffff:',''), req.headers['accept-language'])
 						.then(result=>common.commonServerReturn({
                             service: 'GEOLOCATION',
                             token: auth.token,
@@ -128,7 +119,7 @@ const serverStart = async () =>{
                             message_queue_method: Config.message_queue_method,
                             code: 200,
                             error: null,
-                            result: JSON.parse(result),
+                            result: result,
                             res:res}))
 						.catch(error =>common.commonServerReturn({
                             service: 'GEOLOCATION',
