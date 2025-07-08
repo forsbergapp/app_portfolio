@@ -16,7 +16,7 @@
  * @class
  */
 class ClassServerProcess {
-    cwd = () => process.cwd();
+    cwd = () => process.cwd().replaceAll('\\','/');
     /**
      * @param {string|symbol} event
      * @param {(...args: any[]) => void} listener
@@ -34,9 +34,8 @@ const serverProcess = new ClassServerProcess();
 const serverStart = async () =>{
     const service = await import('./service.js');
 
-    
     /**@type{common} */
-    const common = await import(serverProcess.cwd() + '/data/microservice/common.js');
+    const common = await import('file://' + serverProcess.cwd() + '/data/microservice/common.js');
     /**
      * @description Get config
      * @type{config} 

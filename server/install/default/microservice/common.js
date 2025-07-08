@@ -4,9 +4,7 @@ const zlib = await import('node:zlib');
 const fs = await import('node:fs');
 const Crypto = await import('node:crypto');
 class ClassServerProcess {
-    cwd = () => import.meta.dirname
-                .replaceAll('\\','/')
-                .replaceAll('/data/microservice','');
+    cwd = () => process.cwd().replaceAll('\\','/');
 }
 const serverProcess = new ClassServerProcess();
 /**
@@ -38,7 +36,7 @@ const serverProcess = new ClassServerProcess();
  *   options:                           {key?:string, cert?:string}}>}
  */
 const commonConfig = async service =>{
-    const Config = JSON.parse(await fs.promises.readFile(`./${service}.json`, 'utf8'));
+    const Config = JSON.parse(await fs.promises.readFile(serverProcess.cwd() + `/data/microservice/${service}.json`, 'utf8'));
     return {
         name:                               Config.name,
         server_protocol:                    Config.server_protocol,
@@ -307,7 +305,9 @@ const commonIamAuthenticateApp = async parameters =>{
  */
 const commonRequestUrl = async parameters => {
     const encrypt = 1;
-    const protocol = (await import(`node:${parameters.url.split('://')[0]}`));    
+    const protocol = parameters.url.split('://')[0];
+    const protocolRequest = (await import(`node:${protocol}`));
+    
     //url should use syntax protocol://[host][optional port]/[path]
     const url = encrypt?
                     (parameters.url.split('/')[2] + '/bff/x/' + parameters.uuid):
@@ -369,7 +369,7 @@ const commonRequestUrl = async parameters => {
 
     return new Promise((resolve, reject) =>{
 
-        const request = protocol.request(url, options, (/**@type{import('node:http').IncomingMessage}*/res) =>{
+        const request = protocolRequest.request(url, options, (/**@type{import('node:http').IncomingMessage}*/res) =>{
             let responseBody = '';
             if (res.headers['content-encoding'] == 'gzip'){
                 const gunzip = zlib.createGunzip();

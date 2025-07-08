@@ -3,7 +3,6 @@
 /**
  * @import {server_server_response,
  *          server_db_document_ConfigServer,
- *          server_db_table_AppSecret,
  *          server_db_table_IamAppIdToken,
  *          server_db_table_IamAppAccess,
  *          server_db_table_IamEncryption,
@@ -26,7 +25,6 @@
 const {serverResponse, serverUtilNumberValue} = await import('./server.js');
 const Security = await import('./security.js');
 const app_common = await import('../apps/common/src/common.js');
-const Socket = await import('./socket.js');
 
 const ConfigServer = await import('./db/ConfigServer.js');
 const IamAppAccess = await import('./db/IamAppAccess.js');
@@ -40,7 +38,6 @@ const IamUser = await import('./db/IamUser.js');
 const IamUserApp = await import('./db/IamUserApp.js');
 const IamUserEvent = await import('./db/IamUserEvent.js');
 const ServiceRegistry = await import('./db/ServiceRegistry.js');
-
 
 /**
  * @name iamRequestRateLimiterCount
@@ -236,6 +233,7 @@ const iamAuthenticateUser = async parameters =>{
              * @returns {Promise.<server_server_response>}
              */
             const return_result = async (iam_user_app_id) =>{
+                const Socket = await import('./socket.js');
                 //authorize access token ADMIN or APP_ACCESS for active account or APP_ACCESS_VERFICATION
                 const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                                     user.active==1?token_type:'APP_ACCESS_VERIFICATION', 
@@ -426,6 +424,7 @@ const iamAuthenticateUserSignup = async parameters =>{
                                                             active:0,
                                                             type:'USER'});
     if (new_user.result){
+        const Socket = await import('./socket.js');
         const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                             'APP_ACCESS_VERIFICATION', 
                                             {   app_id:                 parameters.app_id, 
