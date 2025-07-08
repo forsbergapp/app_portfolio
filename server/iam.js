@@ -24,17 +24,23 @@
  */
 
 const {serverResponse, serverUtilNumberValue} = await import('./server.js');
-const {commonAppIam}= await import('../apps/common/src/common.js');
+const Security = await import('./security.js');
+const app_common = await import('../apps/common/src/common.js');
+const Socket = await import('./socket.js');
+
 const ConfigServer = await import('./db/ConfigServer.js');
-const AppSecret = await import('./db/AppSecret.js');
+const IamAppAccess = await import('./db/IamAppAccess.js');
+const IamAppIdToken = await import('./db/IamAppIdToken.js');
 const IamControlIp = await import('./db/IamControlIp.js');
 const IamControlUserAgent = await import('./db/IamControlUserAgent.js');
 const IamControlObserve = await import('./db/IamControlObserve.js');
+const IamEncryption = await import('./db/IamEncryption.js');
+const IamMicroserviceToken = await import('./db/IamMicroserviceToken.js');
 const IamUser = await import('./db/IamUser.js');
 const IamUserApp = await import('./db/IamUserApp.js');
-const IamAppAccess = await import('./db/IamAppAccess.js');
-const IamAppIdToken = await import('./db/IamAppIdToken.js');
-const Security = await import('./security.js');
+const IamUserEvent = await import('./db/IamUserEvent.js');
+const ServiceRegistry = await import('./db/ServiceRegistry.js');
+
 
 /**
  * @name iamRequestRateLimiterCount
@@ -212,7 +218,6 @@ const iamAuthenticateUser = async parameters =>{
     const username = userpass.split(':')[0];
     const password = userpass.split(':')[1];
 
-    const {socketConnectedUpdate} = await import('./socket.js');
     /**
      * @param {1|0} result
      * @param {server_db_table_IamUser & {id:number, type:string}} user
@@ -258,7 +263,7 @@ const iamAuthenticateUser = async parameters =>{
                         ua:                     null};
                 await IamAppAccess.post(parameters.app_id, file_content);
                 //update info in connected list and then return login result
-                return await socketConnectedUpdate(parameters.app_id, 
+                return await Socket.socketConnectedUpdate(parameters.app_id, 
                     {   idToken:                parameters.idToken,
                         iam_user_id:            user.id,
                         iam_user_username:      user.username,
@@ -345,11 +350,10 @@ const iamAuthenticateUser = async parameters =>{
                                                                     active:     1
                                                                     }, 'ADMIN'));
         else{
-            const {securityPasswordCompare}= await import('./security.js');
 
             /**@type{server_db_table_IamUser}*/
             const user =  IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/user)=>user.username == username)[0];
-            if (user && await securityPasswordCompare(parameters.app_id, password, user.password)){
+            if (user && await Security.securityPasswordCompare(parameters.app_id, password, user.password)){
                 if (parameters.app_id == serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result)){
                     //admin allowed to login to admin app only
                     if (user.type=='ADMIN'){
@@ -412,8 +416,7 @@ const iamAuthenticateUser = async parameters =>{
  *                                              iam_user_id:number} }>}
  */
 const iamAuthenticateUserSignup = async parameters =>{
-    const {socketConnectedUpdate} = await import('./socket.js');
-    const IamUser = await import('./db/IamUser.js');
+
     const new_user = await IamUser.post(parameters.app_id, { username:parameters.data.username,
                                                             password:parameters.data.password,
                                                             password_reminder:parameters.data.password_reminder,
@@ -451,7 +454,7 @@ const iamAuthenticateUserSignup = async parameters =>{
             ua:                     parameters.user_agent};
         await IamAppAccess.post(parameters.app_id, data_body);
         //updated info in connected list and then return signup result
-        return await socketConnectedUpdate(parameters.app_id, 
+        return await Socket.socketConnectedUpdate(parameters.app_id, 
             {   idToken:                parameters.idToken,
                 iam_user_id:            new_user.result.insertId,
                 iam_user_username:      parameters.data.username,
@@ -497,13 +500,11 @@ const iamAuthenticateUserSignup = async parameters =>{
  */
 const iamAuthenticateUserActivate = async parameters =>{
     if (parameters.data.verification_type=='1' || parameters.data.verification_type=='2'){
-        const Security= await import('./security.js');    
         const result_activate =  await Security.securityTOTPValidate(parameters.data.verification_code, IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.otp_key);
         if (result_activate){
             //set user active = 1
             IamUser.updateAdmin({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{active:1}});
 
-            const IamUserEvent = await import('./db/IamUserEvent.js');
             /**@type{server_db_table_IamUserEvent}*/
             const eventData = {
                 /**@ts-ignore */
@@ -573,7 +574,6 @@ const iamAuthenticateUserUpdate = async parameters => {
     
     const result_totp =  await Security.securityTOTPValidate(parameters.data.totp, IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.otp_key);
     if (result_totp){
-        const IamUserEvent = await import('./db/IamUserEvent.js');
 
         /**@type{server_db_table_IamUser} */
         const data_update = {   type:               IamUser.get(parameters.app_id, parameters.resource_id).result[0].type,
@@ -672,12 +672,10 @@ const iamAuthenticateUserDelete = async parameters => IamUser.deleteRecord(param
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const iamAuthenticateUserAppDelete = async parameters => {
-    const IamUser = await import('./db/IamUser.js');
-    const {securityPasswordCompare}= await import('./security.js');    
     if (parameters.resource_id!=null){
         const user = IamUser.get(parameters.app_id, parameters.data.iam_user_id);
         if (user.result)
-            if (await securityPasswordCompare(parameters.app_id, parameters.data.password, user.result[0]?.password))
+            if (await Security.securityPasswordCompare(parameters.app_id, parameters.data.password, user.result[0]?.password))
                 return IamUserApp.deleteRecord({app_id:parameters.app_id, 
                                                 resource_id:parameters.resource_id});
             else
@@ -722,7 +720,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
  const iamAuthenticateCommon = async parameters  =>{
     /**@type{server_db_document_ConfigServer} */
     const configServer = ConfigServer.get({app_id:0}).result;
-    const appIam = await commonAppIam(parameters.host, parameters.endpoint, parameters.security);
+    const appIam = await app_common.commonAppIam(parameters.host, parameters.endpoint, parameters.security);
     
     if (parameters.endpoint=='APP_EXTERNAL' ||
         parameters.endpoint=='APP_ACCESS_EXTERNAL' ||
@@ -730,8 +728,6 @@ const iamAuthenticateUserAppDelete = async parameters => {
         return {app_id:appIam.app_id};
     else
         if (parameters.endpoint=='MICROSERVICE'){
-            const ServiceRegistry = await import('./db/ServiceRegistry.js');
-            const IamMicroserviceToken = await import('./db/IamMicroserviceToken.js');
             //authenticate access token
             const microservice_token = parameters.authorization?.split(' ')[1] ?? '';
             /**@type{*} */
@@ -891,7 +887,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *                          statusMessage: string}>}
  */
  const iamAuthenticateRequest = async parameters => {
-    const app_id = (await commonAppIam(parameters.host, null)).app_id;
+    const app_id = (await app_common.commonAppIam(parameters.host, null)).app_id;
     //set calling app_id using app_id or common app_id if app_id is unknown
     const calling_app_id = app_id ?? serverUtilNumberValue(ConfigServer.get({app_id:app_id??0, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
 
@@ -1096,7 +1092,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
 
 /**
  * @name iamAuthenticateApp
- * @description Authenticate app in microservice using encrypted message
+ * @description Authenticate app in microservice and returns data
  * @function
  * @function
  * @memberof ROUTE_REST_API
@@ -1105,9 +1101,11 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *           ip:string,
  *           host:string,
  *           user_agent:string,
- *           data:{ id:*,
- *                  message:string}}} parameters
- * @returns {Promise.<server_server_response>}
+ *           data:{ header:{'app-id':number,
+ *                          'app-signature':string},
+ *                  url:string,
+ *                  body:{}}}} parameters
+ * @returns {Promise.<server_server_response & {data?:Object.<string,*>}>}
  */
  const iamAuthenticateApp = async parameters =>{
     if (parameters.app_id == null)
@@ -1119,37 +1117,29 @@ const iamAuthenticateUserAppDelete = async parameters => {
             type:'JSON'
         };
     else{
-        const ServiceRegistry = await import('./db/ServiceRegistry.js');
-        /**@type{server_db_table_ServiceRegistry[]} */
-        const service = ServiceRegistry.get({app_id:parameters.app_id, resource_id:null, data:{name:parameters.resource_id}}).result;
-        const decrypted = (()=>{ try {
-            const decrypted_message = JSON.parse(Security.securityPrivateDecrypt(service[0].private_key, parameters.data.message));
-            //message should have a message key with app_id, client_id and client_secret
-            //id key not used here but all endpoints using encrypted messages should use id and message keys
-            return ('app_id' in decrypted_message &&
-                    'client_id' in decrypted_message &&
-                    'client_secret' in decrypted_message)?decrypted_message:null;
-        } catch (error) {
-            //code:ERR_OSSL_RSA_OAEP_DECODING_ERROR
-            return null;
-        }})();
-        if (decrypted){
-            const app_secret = AppSecret.get({app_id:parameters.app_id, resource_id:decrypted.app_id}).result
-                            .filter((/**@type{server_db_table_AppSecret}*/app)=>
-                                app.client_id == decrypted.client_id &&
-                                app.client_secret == decrypted.client_secret)[0];
-            if (app_secret)
-                return {result:{}, 
-                        type:'JSON'};
-            else
-                return {http:401,
-                    code:'IAM',
-                    text:iamUtilMessageNotAuthorized(),
-                    developerText:null,
-                    moreInfo:null,
-                    type:'JSON'
-                };        
-        }
+        //authenticate microservice request from app
+        const encryptionData = (IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
+                                        .filter((/**@type{server_db_table_IamEncryption}*/encryption)=>
+                                                encryption.app_id == parameters.data.header['app-id'] && 
+                                                encryption.uuid==(parameters.data.url.substring('/bff/x/'.length).split('~')[0])
+                                        )[0]; 
+        const result = await Security.securityTransportDecrypt({ 
+            app_id:0,
+            encrypted:  parameters.data.header['app-signature'],
+            jwk:        JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).jwk,
+            iv:         JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).iv
+        })
+        .catch(()=>
+            null
+        );
+
+        if (result)
+            return {result: {data:{...Buffer.from(parameters.data.url.substring(parameters.data.url.indexOf('?')), 'base64').toString('utf-8')
+                                        .split('&')
+                                        .map(key=>{
+                                            return {[key.split('=')[0]]:key.split('=')[1]};
+                                        })}},
+                    type:'JSON'};
         else
             return {http:401,
                 code:'IAM',
@@ -1157,7 +1147,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                 developerText:null,
                 moreInfo:null,
                 type:'JSON'
-            };        
+            };
     }    
 };
 /**
@@ -1279,18 +1269,10 @@ const iamAuthenticateResource = parameters =>  {
  * @returns {Promise.<server_server_response>}
  */
 const iamAuthenticateMicroservice = async parameters =>{
-    const ServiceRegistry = await import('./db/ServiceRegistry.js');
     /**@type{server_db_table_ServiceRegistry[]} */
     const service = ServiceRegistry.get({app_id:parameters.app_id, resource_id:null, data:{name:parameters.resource_id}}).result;
-    const decrypted = ()=>{ try {
-        //authenticate private key is correct, the content of the message not needed here
-        return Security.securityPrivateDecrypt(service[0].private_key, parameters.data.message);
-    } catch (error) {
-        return null;
-    }};
-    //service name and calling host without port should be registered in service registry and message should be decrypted
-    if (service.length==1 && decrypted() && service[0].server_host == parameters.host.split(':')[0]){
-        const IamMicroserviceToken = await import('./db/IamMicroserviceToken.js');
+    
+    if (service.length==1 && service[0].server_host == parameters.host.split(':')[0]){
         const token = Security.jwt.sign ({
                                     app_id: parameters.app_id, 
                                     service_registry_id:service[0].id,
@@ -1464,7 +1446,6 @@ const iamAppAccessGet = parameters => {const rows = IamAppAccess.get(parameters.
  * @returns {Promise.<server_server_response & {result?:server_db_table_IamUser }>}
  */
 const iamUserGet = async parameters =>{
-    const IamUser = await import('./db/IamUser.js');
     
     const result = IamUser.get(parameters.app_id, parameters.resource_id);
     return result.http?
@@ -1500,17 +1481,16 @@ const iamUserGet = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_table_IamUser[]}>}
  */
 const iamUserGetAdmin = async parameters => {
-    const IamUser = await import('./db/IamUser.js');
-    const {commonSearchMatch} = await import('../apps/common/src/common.js');
+
     const order_by_num = parameters.data.order_by =='asc'?1:-1;
     return {
             result:IamUser.get(parameters.app_id, parameters.resource_id).result
                     .filter((/**@type{server_db_table_IamUser}*/row)=>
                                 parameters.data.search=='*'?row:
-                                (commonSearchMatch(row.username??'', parameters.data?.search??'') ||
-                                commonSearchMatch(row.bio??'', parameters.data?.search??'') ||
-                                commonSearchMatch(row.otp_key??'', parameters.data?.search??'') ||
-                                commonSearchMatch(row.id?.toString()??'', parameters.data?.search??''))
+                                (app_common.commonSearchMatch(row.username??'', parameters.data?.search??'') ||
+                                app_common.commonSearchMatch(row.bio??'', parameters.data?.search??'') ||
+                                app_common.commonSearchMatch(row.otp_key??'', parameters.data?.search??'') ||
+                                app_common.commonSearchMatch(row.id?.toString()??'', parameters.data?.search??''))
                             )
                     .sort((/**@type{server_db_table_IamUser}*/first, /**@type{server_db_table_IamUser}*/second)=>{
                         const default_sort = 'id';

@@ -901,11 +901,12 @@ const postConfigDefault = async () => {
     updateMicroserviceSecurity({serveRegistry:              config_obj[2][1],
                                 pathMicroserviceSource:     '/server/install/default/microservice/',
                                 pathMicroserviceDestination:'/data/microservice/'});
-    //install default microservice commin library
-    await fs.copyFile(serverProcess.cwd() + '/server/install/default/microservice/common.js', serverProcess.cwd() + '/data/microservice/common.js', err=> {
-        if (err) 
-            throw err;
-    });
+    //install default microservice common library and types.js
+    await fs.promises.copyFile(serverProcess.cwd() + '/server/install/default/microservice/common.js', serverProcess.cwd() + '/data/microservice/common.js')
+        .catch(error=>{throw error;});
+        
+    await fs.promises.copyFile(serverProcess.cwd() + '/server/install/default/microservice/types.js', serverProcess.cwd() + '/data/microservice/types.js')
+        .catch(error=>{throw error;});
 
     //write files to ORM
     for (const config_row of config_obj){

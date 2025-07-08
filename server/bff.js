@@ -6,6 +6,7 @@
  *          server_db_table_App,
  *          server_db_table_IamAppIdToken,
  *          server_db_table_IamEncryption,
+ *          server_db_table_ServiceRegistry,
  *          server_bff_RestApi_parameters,
  *          server_server_req, 
  *          server_server_res, 
@@ -24,10 +25,11 @@ const App = await import('./db/App.js');
 const AppParameter = await import('./db/AppParameter.js');
 const ConfigServer = await import('./db/ConfigServer.js');
 const ConfigRestApi = await import('./db/ConfigRestApi.js');
-const IamUser = await import('./db/IamUser.js');
-const IamEncryption = await import ('./db/IamEncryption.js');
 const IamAppIdToken = await import('./db/IamAppIdToken.js');
+const IamEncryption = await import ('./db/IamEncryption.js');
+const IamUser = await import('./db/IamUser.js');
 const Log = await import('./db/Log.js');
+const ServiceRegistry = await import('./db/ServiceRegistry.js');
 
 const fs = await import('node:fs');
 
@@ -299,11 +301,24 @@ const bffStart = async (req, res) =>{
             serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)==1){
             //fonts use GET all others use POST
             if (['POST', 'GET'].includes(req.method) && req.url.startsWith('/bff/x/') && req.url.length>'/bff/x/'.length){
+                //lookup uuid in IamEncryption or ServiceRegistry for microservice
                 /**@type{server_db_table_IamEncryption}*/
                 const encryptionData = (IamEncryption.get({app_id:common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
                                         .filter((/**@type{server_db_table_IamEncryption}*/encryption)=>
                                                 encryption.uuid==(req.url.substring('/bff/x/'.length).split('~')[0])
-                                        )[0];
+                                        )[0] ?? (ServiceRegistry.get({app_id:common_app_id, resource_id:null, data:{name:null}}).result ?? [])
+                                        .filter((/**@type{server_db_table_ServiceRegistry}*/service)=>service.uuid==(req.url.substring('/bff/x/'.length).split('~')[0]))
+                                        .map((/**@type{server_db_table_ServiceRegistry}*/service)=>{
+                                            return {
+                                                id:                 null,
+                                                app_id:             0,
+                                                iam_app_id_token_id:null,
+                                                uuid:               service.uuid,
+                                                secret:             service.secret,
+                                                url:                null,
+                                                type:               'MICROSERVICE',
+                                                created:            null};})[0];
+                                        
                 if (encryptionData){
                     if(encryptionData.type=='FONT'){
                         const token = IamAppIdToken.get({ app_id:common_app_id, 
@@ -414,11 +429,11 @@ const bffStart = async (req, res) =>{
                                                                 res:            res}:
                                                                     null;
                                                 });
-               })
-               .catch(()=>
-                   //decrypt failed
-                   null
-               );
+                                    })
+                                    .catch(()=>
+                                        //decrypt failed
+                                        null
+                                    );
                     }
                     
                 }
