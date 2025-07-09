@@ -1103,8 +1103,17 @@ const iamAuthenticateUserAppDelete = async parameters => {
  *           data:{ header:{'app-id':number,
  *                          'app-signature':string},
  *                  url:string,
- *                  body:{}}}} parameters
- * @returns {Promise.<server_server_response & {data?:Object.<string,*>}>}
+ *                  body:{  headers: {
+ *                                  'Accept-Language':string,
+ *                                  'User-Agent':String,
+ *                                  Authorization:string|null,
+ *                                  'x-forwarded-for':string,
+ *                                  'app-id':number,
+ *                                  'app-signature':string
+ *                                  },
+ *                          method: string,
+ *                          url:    string}}}} parameters
+ * @returns {Promise.<server_server_response & Object.<string,*>>}
  */
  const iamAuthenticateApp = async parameters =>{
     if (parameters.app_id == null)
@@ -1119,12 +1128,12 @@ const iamAuthenticateUserAppDelete = async parameters => {
         //authenticate microservice request from app
         const encryptionData = (IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
                                         .filter((/**@type{server_db_table_IamEncryption}*/encryption)=>
-                                                encryption.app_id == parameters.data.header['app-id'] && 
+                                                encryption.app_id == (parameters.data.body.headers['app-id'] ?? parameters.data.header['app-id']) && 
                                                 encryption.uuid==(parameters.data.url.substring('/bff/x/'.length).split('~')[0])
                                         )[0]; 
         const result = await Security.securityTransportDecrypt({ 
             app_id:0,
-            encrypted:  parameters.data.header['app-signature'],
+            encrypted:  parameters.data.body.headers['app-signature'] ?? parameters.data.header['app-signature'],
             jwk:        JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).jwk,
             iv:         JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).iv
         })
@@ -1133,11 +1142,14 @@ const iamAuthenticateUserAppDelete = async parameters => {
         );
 
         if (result)
-            return {result: {data:{...Buffer.from(parameters.data.url.substring(parameters.data.url.indexOf('?')), 'base64').toString('utf-8')
+            return {result: Buffer.from(encryptionData.url.substring(encryptionData.url.indexOf('?')+1), 'base64').toString('utf-8')
                                         .split('&')
                                         .map(key=>{
                                             return {[key.split('=')[0]]:key.split('=')[1]};
-                                        })}},
+                                        })
+                                        .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
+                                            return {...keys, ...key};
+                                        }),
                     type:'JSON'};
         else
             return {http:401,
@@ -1262,9 +1274,7 @@ const iamAuthenticateResource = parameters =>  {
  *           resource_id:string,
  *           ip:string,
  *           host:string,
- *           user_agent:string,
- *           data:{ id:*,
- *                  message:string}}} parameters
+ *           user_agent:string}} parameters
  * @returns {Promise.<server_server_response>}
  */
 const iamAuthenticateMicroservice = async parameters =>{

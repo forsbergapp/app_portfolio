@@ -51,23 +51,22 @@ const serverStart = async () =>{
 	Config.server.createServer(Config.options, (/**@type{request}*/req, /**@type{response}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST');
 		res.setHeader('Access-Control-Allow-Origin', '*');
-		
-		common.commonIamAuthenticateApp({
-                                        token:auth.token,
-                                        iam_auth_app_url:Config.iam_auth_app_url,
-                                        iam_auth_app_method:Config.iam_auth_app_method,
-                                        uuid:Config.uuid,
-                                        req:req,
-                                        secret:Config.secret})
+        common.commonIamAuthenticateApp({
+                                    token:auth.token,
+                                    iam_auth_app_url:Config.iam_auth_app_url,
+                                    iam_auth_app_method:Config.iam_auth_app_method,
+                                    uuid:Config.uuid,
+                                    req:req,
+                                    secret:Config.secret})
         .then(resultAuthenticateApp=>{
-			if (resultAuthenticateApp.authenticated){
-				switch (true){
-					case resultAuthenticateApp.service == 'PLACE':{
-						if(	(resultAuthenticateApp.data.latitude !=null && resultAuthenticateApp.data.latitude!='') ||
-							(resultAuthenticateApp.data.longitude !=null && resultAuthenticateApp.data.longitude!='')){
-							service.getPlace(common, Config, resultAuthenticateApp.data.latitude, resultAuthenticateApp.data.longitude, req.headers['accept-language'])
+            if (resultAuthenticateApp.authenticated){
+                switch (true){
+                    case resultAuthenticateApp.data.service == 'PLACE':{
+                        if(	(resultAuthenticateApp.data.latitude !=null && resultAuthenticateApp.data.latitude!='') ||
+                            (resultAuthenticateApp.data.longitude !=null && resultAuthenticateApp.data.longitude!='')){
+                            service.getPlace(common, Config, resultAuthenticateApp.data.latitude, resultAuthenticateApp.data.longitude, req.headers['accept-language'])
                             
-							.then(result=>result?.length>0?
+                            .then(result=>result?.length>0?
                                             common.commonServerReturn({
                                                             service: 'GEOLOCATION',
                                                             token: auth.token,
@@ -80,7 +79,7 @@ const serverStart = async () =>{
                                                             result: result,
                                                             res:res}):
                                                 '')
-							.catch(error =>common.commonServerReturn({
+                            .catch(error =>common.commonServerReturn({
                                 service: 'GEOLOCATION',
                                 token: auth.token,
                                 uuid: Config.uuid,
@@ -91,8 +90,8 @@ const serverStart = async () =>{
                                 error: error,
                                 result: null,
                                 res:res}));
-						}
-						else
+                        }
+                        else
                             common.commonServerReturn({
                                 service: 'GEOLOCATION',
                                 token: auth.token,
@@ -104,12 +103,12 @@ const serverStart = async () =>{
                                 error: '⛔',
                                 result: null,
                                 res:res});
-						break;
-					}
-                    case resultAuthenticateApp.service == 'IP':{
-						//no v6 support
-						service.getIp(common, Config, resultAuthenticateApp.data.ip.replace('::ffff:',''), req.headers['accept-language'])
-						.then(result=>common.commonServerReturn({
+                        break;
+                    }
+                    case resultAuthenticateApp.data.service == 'IP':{
+                        //no v6 support
+                        service.getIp(common, Config, resultAuthenticateApp.data.ip.replace('::ffff:',''), req.headers['accept-language'])
+                        .then(result=>common.commonServerReturn({
                             service: 'GEOLOCATION',
                             token: auth.token,
                             uuid: Config.uuid,
@@ -120,7 +119,7 @@ const serverStart = async () =>{
                             error: null,
                             result: result,
                             res:res}))
-						.catch(error =>common.commonServerReturn({
+                        .catch(error =>common.commonServerReturn({
                             service: 'GEOLOCATION',
                             token: auth.token,
                             uuid: Config.uuid,
@@ -131,10 +130,10 @@ const serverStart = async () =>{
                             error: error,
                             result: null,
                             res:res}));
-						break;
-					}
-					default:{
-						common.commonServerReturn({
+                        break;
+                    }
+                    default:{
+                        common.commonServerReturn({
                             service: 'GEOLOCATION',
                             token: auth.token,
                             uuid: Config.uuid,
@@ -145,10 +144,10 @@ const serverStart = async () =>{
                             error: '⛔',
                             result: null,
                             res:res});
-					}
-				}
-			}
-			else
+                    }
+                }
+            }
+            else
                 common.commonServerReturn({
                     service: 'GEOLOCATION',
                     token: auth.token,
@@ -160,7 +159,8 @@ const serverStart = async () =>{
                     error: '⛔',
                     result: null,
                     res:res});
-		});
+        });
+		
 	}).listen(Config.port, ()=>{
         common.commonLog({
             type:'MICROSERVICE_LOG',
