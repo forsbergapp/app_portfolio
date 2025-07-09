@@ -4601,25 +4601,7 @@
                 ],
                 "requestBody":{
                             "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "id":{
-                                                "type":"number",
-                                                "required":true
-                                            },
-                                            "message":{
-                                                "description":"Encrypted message",
-                                                "type":"string",
-                                                "required":true
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            "content":{}
 			            },
                 "responses": {
                     "oneOf":[
@@ -4667,14 +4649,8 @@
                                         "type":"object" ,
                                         "properties":{
                                             "header":{
-                                                "app-id":{
-                                                    "type":"number",
-                                                    "required":true
-                                                },
-                                                "app-signature":{
-                                                    "type":"string",
-                                                    "required":true
-                                                }   
+                                                "type":"object",
+                                                "required":true
                                             },
                                             "url":{
                                                 "type":"string",

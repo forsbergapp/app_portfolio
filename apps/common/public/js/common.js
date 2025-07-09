@@ -1010,7 +1010,7 @@ const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
 const commonWindowEncrypt = async parameters =>{
    const key = await COMMON_WINDOW.crypto.subtle.importKey( 
                    'jwk', 
-                   JSON.parse(atob(parameters.secret)).jwk, 
+                   JSON.parse(commonWindowFromBase64(parameters.secret)).jwk, 
                    {   name: 'AES-GCM', 
                        length: 256, 
                    }, 
@@ -1021,7 +1021,7 @@ const commonWindowEncrypt = async parameters =>{
                            {
                                name: 'AES-GCM',
                                /**@ts-ignore */
-                               iv: new Uint8Array(commonWindowFromBase64(JSON.parse(atob(parameters.secret)).iv).split(','))
+                               iv: new Uint8Array(commonWindowFromBase64(JSON.parse(commonWindowFromBase64(parameters.secret)).iv).split(','))
                            },
                            key,
                            new TextEncoder().encode(parameters.data)
@@ -1053,8 +1053,9 @@ const commonWindowDecrypt = async parameters =>{
                        iv: new Uint8Array(commonWindowFromBase64(JSON.parse(atob(parameters.secret)).iv).split(','))
                    },
                    key,
-                   commonWindowFromBase64(parameters.data) )
-           );
+                   /**@ts-ignore */
+                   new Uint8Array(commonWindowFromBase64(parameters.data).toString().split(','))
+           ));
 };
 
 /**

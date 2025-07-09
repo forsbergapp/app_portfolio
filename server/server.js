@@ -6,6 +6,7 @@
  * @import {server_req_method, server_server_response_type, 
  *          server_server_error, server_server_req, server_server_res,
  *          server_db_document_ConfigServer,
+ *          server_db_table_ServiceRegistry,
  *          server_bff_endpoint_type,
  *          server_server_req_id_number,
  server_db_table_IamEncryption} from './types.js'
@@ -614,7 +615,8 @@ class serverCircuitBreakerClass {
                     timeout = 60 * 1000 * this.requestTimeoutAdmin;
                 else
                     timeout = this.requestTimeout * 1000;
-            const response = await parameters.request_function ({   protocol:parameters.protocol,
+            const response = await parameters.request_function ({   service:parameters.service,
+                                                                    protocol:parameters.protocol,
                                                                     url:parameters.url,
                                                                     host:parameters.host,
                                                                     port:parameters.port,
@@ -713,7 +715,8 @@ const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass(await 
  * @description Request url, use parameter url or protocol, host, port and path
  *              Returns raw response from request
  * @function
- * @param {{protocol:'https'|'http'|null,
+ * @param {{service:'MICROSERVICE'|'BFE',
+ *          protocol:'https'|'http'|null,
  *          url:string|null,
  *          host:string|null,
  *          port:number|null,
@@ -733,6 +736,7 @@ const serverRequest = async parameters =>{
     const ConfigServer = await import('./db/ConfigServer.js');
     const Security = await import('./security.js');
     const IamEncryption = await import('./db/IamEncryption.js');
+    const ServiceRegistry = await import('./db/ServiceRegistry.js');
     const MESSAGE_TIMEOUT = '🗺⛔?';
     
     /**@type{server_db_document_ConfigServer['SERVICE_IAM']} */
@@ -745,19 +749,19 @@ const serverRequest = async parameters =>{
     /**@type {import('node:http')|import('node:https')} */
     const request_protocol = await import(`node:${protocol}`);
     
-    const encrypt_transport = parameters.encryption_type ==parameters.encryption_type?
-                                0:
-                                    serverUtilNumberValue(CONFIG_SERVER
+    const encrypt_transport = serverUtilNumberValue(CONFIG_SERVER
                                         .filter(parameter=> 'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT);
     const url_unencrypted = parameters.url??
                                     (protocol + '://' + parameters.host + ':' + parameters.port + parameters.path);
 
+    //crea new uid and secret for app authentication
     const uuid = Security.securityUUIDCreate();
     const secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8')
                     .toString('base64');
     encrypt_transport==1?
         await IamEncryption.post(0, {   app_id:parameters['app-id'], 
                                         iam_app_id_token_id: parameters['app-id'],
+                                        url:url_unencrypted,
                                         uuid: uuid,
                                         type:parameters.encryption_type,
                                         secret: secret}):
@@ -775,7 +779,7 @@ const serverRequest = async parameters =>{
         'User-Agent':       parameters.user_agent,
         'Accept-Language':  parameters.accept_language,
         'x-forwarded-for':  parameters.client_ip,
-        ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
+        
         ...(parameters.authorization && {Authorization: parameters.authorization}),
         'app-id':           parameters['app-id'],
         ...(encrypt_transport==1 && {'app-signature': await Security.securityTransportEncrypt({
@@ -784,35 +788,47 @@ const serverRequest = async parameters =>{
                                                         iv:JSON.parse(atob(secret)).iv,
                                                         data:'serverRequest'})})
     };
-    const body = parameters.method=='GET'?
-                    null:
-                        encrypt_transport==1?
-                            JSON.stringify({
-                                x: await Security.securityTransportEncrypt({
-                                    app_id:parameters['app-id'],
-                                    jwk:JSON.parse(atob(secret)).jwk,
-                                    iv:JSON.parse(atob(secret)).iv,
-                                    data:JSON.stringify({  
-                                            headers:headers,
-                                            method: parameters.method,
-                                            url:    url,
-                                            ...(parameters.method!='GET' && {body:  parameters.body?
-                                                JSON.stringify(parameters.body):
-                                                    ''})
-                                        })
+    //get encryption parameters for transport
+    const {jwk, iv} = parameters.encryption_type=='BFE'?
+                        {jwk:JSON.parse(atob(secret)).jwk,
+                         iv:JSON.parse(atob(secret)).iv
+                        }:
+                            ServiceRegistry.get({   app_id:parameters['app-id'], 
+                                                    resource_id:null, 
+                                                    data:{name:parameters.service}}).result
+                            .map((/**@type{server_db_table_ServiceRegistry}*/row)=>{
+                                return {
+                                    jwk:JSON.parse(Buffer.from(row.secret, 'base64').toString('utf-8')).jwk,
+                                    iv:JSON.parse(Buffer.from(row.secret, 'base64').toString('utf-8')).iv,
+                                };
+                            })[0];
+    const body =    encrypt_transport==1?
+                        JSON.stringify({
+                            x: await Security.securityTransportEncrypt({
+                                app_id:parameters['app-id'],
+                                jwk:jwk,
+                                iv: iv,
+                                data:JSON.stringify({  
+                                        headers:headers,
+                                        method: parameters.method,
+                                        url:    url,
+                                        ...(parameters.method!='GET' && {body:  parameters.body?
+                                            JSON.stringify(parameters.body):
+                                                ''})
                                     })
-                            }):
-                                (parameters.body?
-                                    JSON.stringify(parameters.body):
-                                        '');
+                                })
+                        }):
+                            (parameters.body?
+                                JSON.stringify(parameters.body):
+                                    '');
     /**@type{import('node:https').RequestOptions}*/    
     const options = encrypt_transport==1?
         {
             family: 4,
-            method: parameters.method,
+            method: 'POST',
             timeout: parameters.timeout,
             headers:{
-                        ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
+                        'Content-Type':  'application/json',
                         'Connection':   'close'
                     },
             ...(protocol=='https' && {rejectUnauthorized: false}),
@@ -822,6 +838,7 @@ const serverRequest = async parameters =>{
                 method:     parameters.method,
                 timeout:    parameters.timeout,
                 headers :   { 
+                            ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
                             ...headers
                             },
                 ...(protocol=='https' && {rejectUnauthorized: false})
@@ -847,7 +864,7 @@ const serverRequest = async parameters =>{
             });
         };
         const request = request_protocol.request(new URL(url), options, response);
-        if (parameters.method !='GET')
+        if (encrypt_transport==1 ||parameters.method !='GET')
             request.write(body);
         request.on('error', error => {
             resolve({http:500,

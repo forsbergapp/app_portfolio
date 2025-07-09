@@ -1,5 +1,6 @@
 /** @module server/install/default/microservice/common */
 
+
 const zlib = await import('node:zlib');
 const fs = await import('node:fs');
 const Crypto = await import('node:crypto');
@@ -7,6 +8,25 @@ class ClassServerProcess {
     cwd = () => process.cwd().replaceAll('\\','/');
 }
 const serverProcess = new ClassServerProcess();
+
+/**
+ * @name commonFromBase64
+ * @description Convert base64 containing unicode to string
+ * @function
+ * @param {string} str 
+ * @returns {string}
+ */
+const commonFromBase64 = str => {
+    const binary_string = atob(str);
+    const len = binary_string.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return new TextDecoder('utf-8').decode(bytes);
+};
+
+
 /**
  * @name commonConfig
  * @description config
@@ -202,25 +222,24 @@ const commonLog = parameters =>{
  * @returns {Promise.<string>}
  */
 const commonEncrypt = async parameters =>{
-    const jwk = JSON.parse(Buffer.from(parameters.secret, 'base64').toString('utf-8')).jwk;
-    const iv = JSON.parse(Buffer.from(parameters.secret, 'base64').toString('utf-8')).iv;
     const key = await Crypto.webcrypto.subtle.importKey( 
-        'jwk', 
-        jwk, 
-        {   name: 'AES-GCM', 
-            length: 256, 
-        }, 
-        true,
-        ['encrypt', 'decrypt'] 
+                    'jwk', 
+                    JSON.parse(commonFromBase64(parameters.secret)).jwk, 
+                    {   name: 'AES-GCM', 
+                        length: 256, 
+                    }, 
+                    true,
+                    ['encrypt', 'decrypt'] 
     );
-    return Buffer.from(await Crypto.webcrypto.subtle.encrypt(
+    return btoa(new Uint8Array(await Crypto.webcrypto.subtle.encrypt(
                         {
                             name: 'AES-GCM',
-                            iv: Buffer.from(iv,'base64')
+                            /**@ts-ignore */
+                            iv: new Uint8Array(commonFromBase64(JSON.parse(commonFromBase64(parameters.secret)).iv).split(','))
                         },
                         key,
                         new TextEncoder().encode(parameters.data)
-                        )).toString('base64');
+        )).toString());
 };
 /**
  * @name commonDecrypt
@@ -262,7 +281,7 @@ const commonDecrypt = async parameters =>{
  *          iam_auth_app_url:string,
  *          iam_auth_app_method:'POST'|'GET',
  *          uuid:string,
- *          req:import('node:http').IncomingMessage & {headers:{'app-id':number, 'app-signature':string}},
+ *          req:import('node:http').IncomingMessage & {body:{x:String}, headers:{'app-id':number, 'app-signature':string}},
  *          secret:string}} parameters
  * @returns {Promise.<{authenticated:boolean,
  *                      data:*}>}
@@ -273,7 +292,7 @@ const commonIamAuthenticateApp = async parameters =>{
                                     uuid:parameters.uuid,
                                     secret:parameters.secret,
                                     method:parameters.iam_auth_app_method, 
-                                    body:commonRequestData(parameters.req),
+                                    body:await commonRequestData({secret:parameters.secret, req:parameters.req}),
                                     authorization:'Bearer ' + parameters.token,
                                     language:'en'})
                 .then(result=>{return {authenticated:true, data:JSON.parse(result)};})
@@ -305,12 +324,14 @@ const commonIamAuthenticateApp = async parameters =>{
  */
 const commonRequestUrl = async parameters => {
     const encrypt = 1;
+    const restAPIPath = '/bff';
+    const restAPIPathEncrypted = restAPIPath + '/x/';
     const protocol = parameters.url.split('://')[0];
     const protocolRequest = (await import(`node:${protocol}`));
     
     //url should use syntax protocol://[host][optional port]/[path]
     const url = encrypt?
-                    (parameters.url.split('/')[2] + '/bff/x/' + parameters.uuid):
+                    (protocol + '://' + parameters.url.split('/')[2] + restAPIPathEncrypted + parameters.uuid):
                         parameters.url;
     const options = encrypt?
                         //encrypted options
@@ -347,24 +368,25 @@ const commonRequestUrl = async parameters => {
                         JSON.stringify({
                             x: await commonEncrypt({
                                         secret:parameters.secret??'',
-                                        data:JSON.stringify({  
-                                                headers:{
+                                        data:JSON.stringify(
+                                                {
+                                                    headers:{
                                                         ...(parameters.external==false &&  {'app-id':       0}),
                                                         ...(parameters.external==false &&  {'app-signature':await commonEncrypt({   secret:parameters.secret,
                                                                                                                                     data:'FFB'})}),
                                                         ...(parameters.external==false && parameters.authorization && {Authorization: parameters.authorization}),
                                                         ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
                                                         },
-                                                method: parameters.method,
-                                                url:    url,
-                                                body:   parameters.body?
-                                                            JSON.stringify(parameters.body):
-                                                                ''
+                                                    method: parameters.method,
+                                                    url:    restAPIPath + parameters.url.split(restAPIPath)[1],
+                                                    body:   parameters.body?
+                                                                JSON.stringify({data:btoa(JSON.stringify(parameters.body))}):
+                                                                    ''
                                             })
                                     })
                         }):
                             ((parameters.body && parameters.external==false)?
-                                        JSON.stringify({data:btoa(JSON.stringify(parameters.body))}):
+                                JSON.stringify({data:btoa(JSON.stringify(parameters.body))}):
                                             '');
 
     return new Promise((resolve, reject) =>{
@@ -406,43 +428,43 @@ const commonRequestUrl = async parameters => {
 /**
  * @name commonRequestData
  * @description Get data from request, microservice dno't need to know if encryption is used or not
- * @param {import('node:http').IncomingMessage & {headers:{'app-id':number, 'app-signature':string}}} req
+ * @param {{req:import('node:http').IncomingMessage & {headers:{'app-id':number, 'app-signature':string}},
+ *         secret:string }} parameters
  * @returns {Promise.<{ header:{'app-id':number|null, 
  *                              'app-signature':string}|null,
  *                      url:string,
  *                      body:{}}>}
  */
-const commonRequestData = async req =>{
-
+const commonRequestData = async parameters =>{
     const read_body = async () =>{
-        return new Promise((resolve,reject)=>{
-            if (req.headers['content-type'] =='application/json'){
+        return new Promise((resolve)=>{
+            if (parameters.req.headers['content-type'] =='application/json'){
                 let body= '';
-                req.on('data', chunk =>{
+                parameters.req.on('data', chunk =>{
                     body += chunk.toString();
                 });
-                req.on('end', ()=>{
+                parameters.req.on('end', ()=>{
                     try {
-                        resolve(JSON.parse(body));
+                        resolve(JSON.parse(body).x);
                     } catch (error) {
-                        reject(null);
+                        resolve(null);
                     }
                     
                 });
             }
-            else{
-                resolve({});
-            }
+            else
+                resolve(null);
         });
-    };
     
+    };
     return {
         header:{
-            'app-id' : req.headers['app-id'] ?? null,
-            'app-signature' : req.headers['app-signature'] ?? null
+            'app-id' : parameters.req.headers['app-id'] ?? null,
+            'app-signature' : parameters.req.headers['app-signature'] ?? null
         },
-        url: req.url??'',
-        body:await read_body().catch(()=>null)
+        url: parameters.req.url??'',
+        body:await commonDecrypt({secret:parameters.secret, data:await read_body()??''})
+                .then(result=>JSON.parse(result))
     };
 };
                    

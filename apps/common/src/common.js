@@ -832,7 +832,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
         (
         security?.AppId == security?.IamEncryption?.app_id  &&
         //external can use encryption without idToken
-        (endpoint == 'APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL' ||
+        (endpoint?.startsWith('MICROSERVICE') ||endpoint == 'APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL' ||
         security?.idToken?.replace('Bearer ','') == IamAppIdToken.get({  app_id:0, 
                                                                         resource_id:security?.IamEncryption.iam_app_id_token_id??null, 
                                                                         data:{data_app_id:null}}).result[0].token) &&
