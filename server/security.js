@@ -487,14 +487,15 @@ const securityTransportEncrypt = async parameters => {
             true,
             ['encrypt', 'decrypt'] 
         );
-    return Buffer.from(await Crypto.webcrypto.subtle.encrypt(
+    return btoa(new Uint8Array(await Crypto.webcrypto.subtle.encrypt(
                             {
                                 name: 'AES-GCM',
-                                iv: Buffer.from(parameters.iv,'base64')
+                                /**@ts-ignore */
+                                iv: new Uint8Array(Buffer.from(parameters.iv,'base64').toString().split(','))
                             },
                             key,
                             new TextEncoder().encode(parameters.data)
-                            )).toString('base64');
+            )).toString());
 };
 
 /**
