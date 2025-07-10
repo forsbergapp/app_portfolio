@@ -24,11 +24,11 @@
  *           method?:server_req_method,
  *           statusMessage: string,
  *           statusCode: number,
+ *           sse_message?:string,
  *           res:server_server_res}} parameters
  *  @returns {Promise.<void>}
  */
 const serverResponse = async parameters =>{
-    
     /**
      * Sets response type
      * @param {server_server_response_type} type
@@ -56,52 +56,57 @@ const serverResponse = async parameters =>{
             }
         }
     };
-    parameters.res.setHeader('Connection', 'Close');
-    await setType(parameters.type);
-    if (parameters.route=='APP' && parameters.res.statusCode==301){
-        //result from APP can request to redirect
-        parameters.res.redirect('/');
-    }
-    else{        
-        if(parameters.type){
-            parameters.res.setHeader('Cache-control', 'no-cache');
-            parameters.res.setHeader('Access-Control-Max-Age', '0');
+    /**
+     * @name compress
+     * @description compress all requests (SSE uses res.write)
+     * @param {*} data
+     */
+    const compress = async data =>{    
+        return new Promise(resolve=>{
+            try {
+                parameters.res.removeHeader('Content-Length');
+                parameters.res.setHeader('Content-Encoding', 'gzip');
+                zlib.gzip(Buffer.from(data.toString(), 'utf8'), (err, compressed)=>{
+                    if (err)
+                        resolve(data);
+                    else
+                        resolve(compressed);
+                });
+            } catch (error) {
+                resolve(data);
+            }
+        });
+    };
+    if (parameters.sse_message)
+        parameters.res.write(parameters.sse_message);
+    else{
+        parameters.res.setHeader('Connection', 'Close');
+        await setType(parameters.type);
+        if (parameters.route=='APP' && parameters.res.statusCode==301){
+            //result from APP can request to redirect
+            parameters.res.redirect('/');
         }
-        parameters.res.statusMessage = parameters.statusMessage;
-        parameters.res.statusCode = parameters.statusCode;
-
-        if (parameters.res.getHeader('Content-Type')==undefined)
-            parameters.res.type('text/html; charset=utf-8');
-        /**
-         * @name compress
-         * @description compress all requests (SSE uses res.write)
-         * @param {*} data
-         */
-        const compress = async data =>{    
-            return new Promise(resolve=>{
-                try {
-                    parameters.res.removeHeader('Content-Length');
-                    parameters.res.setHeader('Content-Encoding', 'gzip');
-                    zlib.gzip(Buffer.from(data.toString(), 'utf8'), (err, compressed)=>{
-                        if (err)
-                            resolve(data);
-                        else
-                            resolve(compressed);
-                    });
-                } catch (error) {
-                    resolve(data);
-                }
-            });
-        };
-        //Use compression only if specified
-        if (parameters.res.req.headers['accept-encoding']==undefined)
-            parameters.res.write(Buffer.from(parameters.result.toString(), 'utf8'));
-        else{
-            const compressed = await compress(parameters.result);
-            parameters.res.write(compressed, 'utf8');
+        else{        
+            if(parameters.type){
+                parameters.res.setHeader('Cache-control', 'no-cache');
+                parameters.res.setHeader('Access-Control-Max-Age', '0');
+            }
+            parameters.res.statusMessage = parameters.statusMessage;
+            parameters.res.statusCode = parameters.statusCode;
+    
+            if (parameters.res.getHeader('Content-Type')==undefined)
+                parameters.res.type('text/html; charset=utf-8');
+            //Use compression only if specified
+            if (parameters.res.req.headers['accept-encoding']==undefined)
+                parameters.res.write(Buffer.from(parameters.result.toString(), 'utf8'));
+            else{
+                const compressed = await compress(parameters.result);
+                parameters.res.write(compressed, 'utf8');
+            }
+            parameters.res.end();
         }
-        parameters.res.end();
     }
+    
 };
 
 /**

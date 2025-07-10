@@ -7,7 +7,7 @@
  *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
  */
 
-const {serverUtilNumberValue} = await import('./server.js');
+const {serverResponse, serverUtilNumberValue} = await import('./server.js');
 const {iamUtilTokenExpired, iamUtilMessageNotAuthorized} = await import('./iam.js');
 const ConfigServer = await import('./db/ConfigServer.js');
 const {microserviceRequest} = await import('../serviceregistry/microservice.js');
@@ -62,7 +62,15 @@ const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, header
  * @returns {void}
  */
  const socketClientSend = (res, message, message_type) => {
-    res.write (`data: ${Buffer.from(JSON.stringify({broadcast_type : message_type, broadcast_message: message})).toString('base64')}\n\n`);
+    serverResponse ({   app_id:null,
+                        type:'JSON',
+                        result:'',
+                        route:null,
+                        method:'',
+                        statusMessage:'',
+                        statusCode:200,
+                        sse_message:`data: ${Buffer.from(JSON.stringify({broadcast_type : message_type, broadcast_message: message})).toString('base64')}\n\n`,
+                        res:res});
 };
 /**
  * @name socketClientGet
