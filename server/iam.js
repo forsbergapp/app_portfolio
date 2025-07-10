@@ -1142,7 +1142,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
         );
 
         if (result)
-            return {result: Buffer.from(encryptionData.url.substring(encryptionData.url.indexOf('?')+1), 'base64').toString('utf-8')
+            return {result: {...Buffer.from(encryptionData.url.substring(encryptionData.url.indexOf('?')+1), 'base64').toString('utf-8')
                                         .split('&')
                                         .map(key=>{
                                             return {[key.split('=')[0]]:key.split('=')[1]};
@@ -1150,6 +1150,8 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
                                             return {...keys, ...key};
                                         }),
+                            ...{'Accept-Language':parameters.data.body.headers['Accept-Language']},
+                            ...{'User-Agent':parameters.data.body.headers['User-Agent']}},
                     type:'JSON'};
         else
             return {http:401,

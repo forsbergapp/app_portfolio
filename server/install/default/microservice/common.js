@@ -330,10 +330,10 @@ const commonRequestUrl = async parameters => {
     const protocolRequest = (await import(`node:${protocol}`));
     
     //url should use syntax protocol://[host][optional port]/[path]
-    const url = encrypt?
+    const url = (parameters.external ==false && encrypt)?
                     (protocol + '://' + parameters.url.split('/')[2] + restAPIPathEncrypted + parameters.uuid):
                         parameters.url;
-    const options = encrypt?
+    const options = (parameters.external ==false && encrypt)?
                         //encrypted options
                         {
                         family: 4,
@@ -364,7 +364,7 @@ const commonRequestUrl = async parameters => {
                                 },
                         ...(protocol=='https' && {rejectUnauthorized: false})
                         };
-    const body =    encrypt?
+    const body =    (parameters.external ==false && encrypt)?
                         JSON.stringify({
                             x: await commonEncrypt({
                                         secret:parameters.secret??'',
