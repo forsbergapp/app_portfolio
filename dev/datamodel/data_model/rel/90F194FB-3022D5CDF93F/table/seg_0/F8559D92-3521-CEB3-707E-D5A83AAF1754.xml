@@ -65,6 +65,15 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="url" id="1535F662-0C4C-44C1-1782-2A710EAFD544">
+<createdBy>admin</createdBy>
+<createdTime>2025-07-10 11:41:11 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 <Column name="created" id="E122822D-D291-449A-06B0-A1A815B53D8C">
 <createdBy>admin</createdBy>
 <createdTime>2025-06-23 05:57:46 UTC</createdTime>

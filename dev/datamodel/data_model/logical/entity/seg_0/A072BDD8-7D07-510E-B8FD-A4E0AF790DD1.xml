@@ -80,6 +80,17 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="url" id="5787CE38-C98E-056D-0190-CB4814B0EE08">
+<createdBy>admin</createdBy>
+<createdTime>2025-07-10 11:42:01 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="created" id="34093F8A-B2F8-3AB8-9981-B56525D2B782">
 <createdBy>admin</createdBy>
 <createdTime>2025-06-23 05:50:43 UTC</createdTime>
