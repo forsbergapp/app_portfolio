@@ -36,7 +36,17 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="host" id="9D12C0F8-BE48-D4C5-3108-774ED9DC50F6">
+<Attribute name="server_protocol" id="BA6B215B-A29F-862B-E6F4-F7ED3F98504E">
+<createdBy>admin</createdBy>
+<createdTime>2025-07-10 11:34:16 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="server_host" id="9D12C0F8-BE48-D4C5-3108-774ED9DC50F6">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:56:12 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -46,7 +56,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="port" id="253C2630-0BF3-D74F-3166-F080ADB17298">
+<Attribute name="server_port" id="253C2630-0BF3-D74F-3166-F080ADB17298">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:56:16 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -56,9 +66,19 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="https_enable" id="E9E462B3-0F64-DBA1-AC3F-A4B8D4CA71E4">
+<Attribute name="rest_api_version" id="25D8D9EC-04D5-BAE3-731C-88C29CCA141A">
 <createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:56:20 UTC</createdTime>
+<createdTime>2025-07-10 11:36:13 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="metric_url" id="F700C99B-85B4-949B-803A-ABF2E290E9D8">
+<createdBy>admin</createdBy>
+<createdTime>2025-07-10 11:34:41 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
@@ -67,9 +87,9 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="https_keys" id="249A8ACD-C147-1B91-0616-85D0BD3B0F84">
+<Attribute name="health_url" id="1F8471C1-C6A8-E72F-4015-EE2B1A2918C6">
 <createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:56:25 UTC</createdTime>
+<createdTime>2025-07-10 11:34:57 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
@@ -78,53 +98,9 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="https_cert" id="BB55EF9F-05A3-BA41-F6A4-2A5B0997AE69">
+<Attribute name="uuid" id="6B29142C-1A23-61A8-DF24-89E96207803E">
 <createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:56:30 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="https_ssl_verification" id="8A31297D-79F4-D1EF-54D3-5FBF9A0347D1">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:56:34 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="https_ssl_verification_path" id="84ED46BF-6A01-333A-BE03-5E931E23BB0E">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:56:51 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="https_port" id="65B03E0A-0B6F-79C9-F1A6-54EE53E68BF9">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:56:55 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="path" id="04CD9FDC-C3F2-5BCB-5303-0D6E3218ABB9">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:57:06 UTC</createdTime>
+<createdTime>2025-07-10 11:35:53 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
@@ -132,24 +108,13 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="path_data" id="585639CC-8DF9-9481-6AEA-7019BC0D676E">
+<Attribute name="secret" id="E6DA6C7D-DB98-FF0D-5158-3D7D33C7CB1B">
 <createdBy>admin</createdBy>
-<createdTime>2025-05-23 20:13:52 UTC</createdTime>
+<createdTime>2025-07-10 11:35:57 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="config" id="B2CB77DB-E1A2-0182-6717-643E7923D4D2">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:57:09 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
