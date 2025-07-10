@@ -661,14 +661,14 @@
  *              server_protocol:    'http'|'https',
  *              server_host:        string,
  *              server_port:        number,
- *              metrics_url:        string, 
- *              health_url:         string, 
+ *              metrics_url:        string|null, 
+ *              health_url:         string|null, 
  *              rest_api_version:   number,
  *              uuid:               string,
  *              secret:             string,
  *              status:             string,
  *              created?:           string,
- *              modified?:          string}} server_db_table_ServiceRegistry
+ *              modified?:          string|null}} server_db_table_ServiceRegistry
  */
 
 /**

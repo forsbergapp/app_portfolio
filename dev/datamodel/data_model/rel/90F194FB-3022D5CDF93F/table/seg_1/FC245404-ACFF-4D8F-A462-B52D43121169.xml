@@ -26,7 +26,15 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="host" id="1E413D71-814E-2D5D-DEBB-029420840E86">
+<Column name="server_protocol" id="70C47A5F-F2B2-A733-A71D-71DED256469D">
+<createdBy>admin</createdBy>
+<createdTime>2025-07-10 11:40:02 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="server_host" id="1E413D71-814E-2D5D-DEBB-029420840E86">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>9D12C0F8-BE48-D4C5-3108-774ED9DC50F6</generatorID>
@@ -35,7 +43,7 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="port" id="BF39958C-676C-4F47-EDFD-9CA5F11791F9">
+<Column name="server_port" id="BF39958C-676C-4F47-EDFD-9CA5F11791F9">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>253C2630-0BF3-D74F-3166-F080ADB17298</generatorID>
@@ -44,89 +52,45 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="https_enable" id="E083062A-32B3-C100-336B-A1F6AB110281">
+<Column name="metrics_url" id="71CB4AEA-DCB5-1891-6A23-813CE463D3FE">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>E9E462B3-0F64-DBA1-AC3F-A4B8D4CA71E4</generatorID>
+<createdTime>2025-07-10 11:40:02 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="https_keys" id="1090B2E2-E70C-665D-1556-9E10E5326FB7">
+<Column name="health_url" id="03C0F628-4AAD-B12B-0995-A55DCE578E38">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>249A8ACD-C147-1B91-0616-85D0BD3B0F84</generatorID>
+<createdTime>2025-07-10 11:40:02 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="https_cert" id="39A4BB25-11CD-E00D-40BA-D1C56A1C7E7B">
+<Column name="rest_api_version" id="0207E6A7-128C-0048-8D22-F6B7D2E689A1">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>BB55EF9F-05A3-BA41-F6A4-2A5B0997AE69</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="https_ssl_verification" id="C462205C-B96A-32C3-7355-191EA280AD97">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>8A31297D-79F4-D1EF-54D3-5FBF9A0347D1</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="https_ssl_verification_path" id="1B96A0B3-59B4-A3A7-16F0-D1AD71935F91">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>84ED46BF-6A01-333A-BE03-5E931E23BB0E</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="https_port" id="649138EF-0ADD-4254-43CA-719149D0E1DB">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>65B03E0A-0B6F-79C9-F1A6-54EE53E68BF9</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="path" id="81DBE2E3-C31E-C5A7-1D3E-607478B16C23">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>04CD9FDC-C3F2-5BCB-5303-0D6E3218ABB9</generatorID>
+<createdTime>2025-07-10 11:40:02 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="path_data" id="25666F5C-E1AF-09A1-BAD9-7E8B17315014">
-<createdBy>admin</createdBy>
-<createdTime>2025-05-23 20:10:33 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="config" id="A3F43E08-5898-1406-D5AE-E7781A6D348C">
+<Column name="uuid" id="A3F43E08-5898-1406-D5AE-E7781A6D348C">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>B2CB77DB-E1A2-0182-6717-643E7923D4D2</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="secret" id="EA622E2F-471C-0817-907E-E3C6A9DE42A8">
+<createdBy>admin</createdBy>
+<createdTime>2025-07-10 11:40:02 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
