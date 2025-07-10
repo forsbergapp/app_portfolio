@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {APP_REPORT_column_titles, APP_REPORT_times, APP_REPORT_settings, APP_REPORT_GLOBAL, APP_REPORT_day_user_account_app_data_posts, timesType}  from '../types.js'
+ * @import {APP_REPORT_column_titles, APP_REPORT_times, APP_REPORT_settings, APP_REPORT_GLOBAL, APP_REPORT_day_user_account_app_data_posts, timesType}  from '../js/types.js'
  * @import {serverComponentLifecycle}  from '../../../../server/types.js'
  */
 
@@ -2243,6 +2243,7 @@ const component = props => {
 									times.day = ++data.date_hijri[2] - 1;
 								return {
 										class:	`${'timetable_month_data_row'} ${isToday(data.date, timezone_offset)?'timetable_month_data_today_row':''} ${highlight_row(settings.highlight, data.date.getDay(), times.day)}`,
+                                        /**@ts-ignore */
 										columns: makeTableRow(times, data.year, data.month, settings, settings.calendartype=='HIJRI'?getGregorian([data.year,data.month,times.day], settings.hijri_adj):null)
 										};
 
