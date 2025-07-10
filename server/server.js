@@ -9,67 +9,34 @@
  *          server_db_table_ServiceRegistry,
  *          server_bff_endpoint_type,
  *          server_server_req_id_number,
- server_db_table_IamEncryption} from './types.js'
+ *          server_db_table_IamEncryption} from './types.js'
  */
 
  const zlib = await import('node:zlib');
  const fs = await import('node:fs');
-/**
+
+ /**
  *  Returns response to client
- *  Uses host parameter for errors in requests or unknown route paths
- *  Returns result using ISO20022 format
- *  Error
- *           http:          statusCode,
- *           code:          optional app Code,
- *           text:          error,
- *           developerText: optional text,
- *           moreInfo:      optionlal text
- *  Result
- *          Single resource format supported return types
- *             JSON, HTML, CSS, JS, WEBP, PNG, WOFF, TTF
- *             returned as result with resource key and all type JSON
- * 
- *          Multiple resources in JSON format:
- *              list_header : {	total_count:	number of records,
- *                              offset: 		offset parameter or 0,
- *                              count:			limit parameter or number of records
- *                            }
- *              rows        : array of anything
- *          Pagination result
- *              page_header : {	total_count:	number of records or 0,
- *								offset: 		offset parameter or 0,
- *								count:			least number of limit parameter and number of records
- *                            }
- *              rows        : array of anything
- * 
  *  @param {{app_id?:number|null,
- *           result_request:{   http?:number|null,
- *                              code?:number|string|null,
- *                              text?:*,
- *                              developerText?:string|null,
- *                              moreInfo?:string|null,
- *                              result?:*,
- *                              type:server_server_response_type,
- *                              singleResource?:boolean},
- *           host?:string|null,
+ *           type:server_server_response_type,
+ *           result:string,
  *           route:'APP'|'REST_API'|null,
  *           method?:server_req_method,
- *           decodedquery?:string|null,
+ *           statusMessage: string,
+ *           statusCode: number,
  *           res:server_server_res}} parameters
  *  @returns {Promise.<void>}
  */
 const serverResponse = async parameters =>{
-    const ConfigServer = await import('./db/ConfigServer.js');
-    /**@type{server_db_document_ConfigServer['SERVICE_APP']} */
-    const CONFIG_SERVICE_APP = ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;
-
-    const admin_app_id = serverUtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_ADMIN_APP_ID)[0].APP_ADMIN_APP_ID);
+    
     /**
      * Sets response type
      * @param {server_server_response_type} type
      */
-    const setType = type => {
-        
+    const setType = async type => {
+        const ConfigServer = await import('./db/ConfigServer.js');
+        /**@type{server_db_document_ConfigServer['SERVICE_APP']} */
+        const CONFIG_SERVICE_APP = ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;    
         const app_cache_control =       CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_CACHE_CONTROL)[0].APP_CACHE_CONTROL;
         switch (type){
             case 'JSON':{
@@ -89,150 +56,54 @@ const serverResponse = async parameters =>{
             }
         }
     };
-    if (parameters.result_request.http){
-        
-    
-        //ISO20022 error format
-        const message = {error:{
-                                http:parameters.result_request.http, 
-                                code:parameters.result_request.code, 
-                                //return SERVER ERROR if status code starts with 5
-                                text:(admin_app_id!=parameters.app_id && parameters.result_request.http.toString().startsWith('5'))?
-                                        'SERVER ERROR':
-                                            parameters.result_request.text?.code=='DB'?
-                                                parameters.result_request.text.text:
-                                                    parameters.result_request.text?.message?
-                                                        parameters.result_request.text?.message:
-                                                            parameters.result_request.text, 
-                                developer_text:parameters.result_request.developerText, 
-                                more_info:parameters.result_request.moreInfo}};
-        //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
-        parameters.res.statusMessage = '';
-        parameters.res.statusCode = parameters.result_request.http ?? 500;
-        setType('JSON');
-        parameters.res.send(JSON.stringify(message), 'utf8');
+    parameters.res.setHeader('Connection', 'Close');
+    await setType(parameters.type);
+    if (parameters.route=='APP' && parameters.res.statusCode==301){
+        //result from APP can request to redirect
+        parameters.res.redirect('/');
     }
-    else{
-        if (parameters.res.getHeader('Content-Type')?.startsWith('text/event-stream')){
-            //For SSE so no more update of response
-            null;
+    else{        
+        if(parameters.type){
+            parameters.res.setHeader('Cache-control', 'no-cache');
+            parameters.res.setHeader('Access-Control-Max-Age', '0');
         }
-        else{
-            parameters.res.setHeader('Connection', 'Close');
-            setType(parameters.result_request.type);
-            if (parameters.route=='APP' && parameters.res.statusCode==301){
-                //result from APP can request to redirect
-                parameters.res.redirect('/');
-            }
-            else{
-                if (parameters.method?.toUpperCase() == 'POST')
-                    parameters.res.statusCode =201;
-                else
-                    parameters.res.statusCode =200;
-                
-                if(parameters.result_request.type){
-                    parameters.res.setHeader('Cache-control', 'no-cache');
-                    parameters.res.setHeader('Access-Control-Max-Age', '0');
-                    if (parameters.result_request?.type == 'HTML' || parameters.result_request.result?.resource){
-                        //resource or html
-                        parameters.res.send(parameters.result_request.result.resource?
-                                                JSON.stringify(parameters.result_request.result):
-                                                    parameters.result_request.result, 'utf8');
-                    }
-                    else{
-                        if (parameters.decodedquery && new URLSearchParams(parameters.decodedquery).get('fields')){
-                            if (parameters.result_request.result[0]){
-                                //limit fields/keys in rows
-                                const limit_fields = parameters.result_request.result.map((/**@type{*}*/row)=>{
-                                    const row_new = {};
-                                    /**@ts-ignore */
-                                    for (const field of new URLSearchParams(parameters.decodedquery).get('fields').split(',')){
-                                        /**@ts-ignore */
-                                        row_new[field] = row[field];
-                                    }
-                                    return row_new;
-                                });
-                                parameters.result_request.result = limit_fields;
-                            }
-                            else{
-                                //limit fields/keys in object
-                                const result_service_fields = {};
-                                /**@ts-ignore */
-                                for (const field of new URLSearchParams(parameters.decodedquery).get('fields').split(',')){
-                                    /**@ts-ignore */
-                                    result_service_fields[field] = parameters.result_request.result[field];
-                                }
-                                parameters.result_request.result = result_service_fields;
-                            }
-                        }
-                        //records limit in controlled by server, apps can not set limits
-                                                                    
-                        const limit = serverUtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS??0);
-                        if (parameters.result_request.singleResource)
-                            //limit rows if single resource response contains rows
-                            parameters.res.send(JSON.stringify((typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
-                                                                    parameters.result_request.result
-                                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
-                                                                    (index+1)<=(limit??0)
-                                                                        :true):
-                                                                        parameters.result_request.result), 'utf8');
-                        else{
-                            
-                            let result;
-                            if (parameters.decodedquery && new URLSearchParams(parameters.decodedquery).has('offset')){
-                                const offset = serverUtilNumberValue(new URLSearchParams(parameters.decodedquery).get('offset'));
-                                //return pagination format
-                                result = {  
-                                            page_header:
-                                                {	total_count:	parameters.result_request.result.length,
-                                                    offset: 		offset??0,
-                                                    count:			parameters.result_request.result
-                                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>(offset??0)>0?
-                                                                                                                            (index+1)>=(offset??0):
-                                                                                                                                true)
-                                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
-                                                                                                                            (index+1)<=(limit??0)
-                                                                                                                                :true).length
-                                                },
-                                            rows:               parameters.result_request.result
-                                                                .filter((/**@type{*}*/row, /**@type{number}*/index)=>(offset??0)>0?
-                                                                                                                        (index+1)>=(offset??0):
-                                                                                                                            true)
-                                                                .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
-                                                                                                                        (index+1)<=(limit??0)
-                                                                                                                            :true)
-                                };
-                            }
-                            else{
-                                //return list header format
-                                result = {  
-                                            list_header:
-                                                {	
-                                                    total_count:	parameters.result_request.result.length,
-                                                    offset: 		0,
-                                                    count:			Math.min(limit??0,parameters.result_request.result.length)
-                                                },
-                                            rows:               (typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
-                                                                    parameters.result_request.result
-                                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
-                                                                                                                            (index+1)<=(limit??0)
-                                                                                                                                :true):
-                                                                        parameters.result_request.result
-                                        };
-                            }
-                            parameters.res.send(JSON.stringify(result), 'utf8');    
-                        }
-                    }
+        parameters.res.statusMessage = parameters.statusMessage;
+        parameters.res.statusCode = parameters.statusCode;
+
+        if (parameters.res.getHeader('Content-Type')==undefined)
+            parameters.res.type('text/html; charset=utf-8');
+        /**
+         * @name compress
+         * @description compress all requests (SSE uses res.write)
+         * @param {*} data
+         */
+        const compress = async data =>{    
+            return new Promise(resolve=>{
+                try {
+                    parameters.res.removeHeader('Content-Length');
+                    parameters.res.setHeader('Content-Encoding', 'gzip');
+                    zlib.gzip(Buffer.from(data.toString(), 'utf8'), (err, compressed)=>{
+                        if (err)
+                            resolve(data);
+                        else
+                            resolve(compressed);
+                    });
+                } catch (error) {
+                    resolve(data);
                 }
-                else{
-                    const  {iamUtilMessageNotAuthorized} = await import('./iam.js');
-                    parameters.res.statusCode =500;
-                    parameters.res.send(iamUtilMessageNotAuthorized(), 'utf8');
-                }        
-            }    
-        }   
+            });
+        };
+        //Use compression only if specified
+        if (parameters.res.req.headers['accept-encoding']==undefined)
+            parameters.res.write(Buffer.from(parameters.result.toString(), 'utf8'));
+        else{
+            const compressed = await compress(parameters.result);
+            parameters.res.write(compressed, 'utf8');
+        }
+        parameters.res.end();
     }
 };
+
 /**
  * @name serverUtilNumberValue
  * @description Get number value from request key
@@ -290,10 +161,9 @@ const serverUtilAppLine = () =>{
  * @returns {Promise.<*>}
  */
 const server = async (req, res)=>{
-    const Log = await import('./db/Log.js');
     const ConfigServer = await import('./db/ConfigServer.js');
     const {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate}= await import('./security.js');
-    const {iamUtilMessageNotAuthorized} = await import('./iam.js');
+   
     /**@type{server_db_document_ConfigServer} */
     const CONFIG_SERVER = ConfigServer.get({app_id:0}).result;
     const read_body = async () =>{
@@ -341,39 +211,7 @@ const server = async (req, res)=>{
     res.type =          (/**@type{string}*/type)=>{
                             res.setHeader('Content-Type', type);
                         };
-    res.send =          async (/**@type{*}*/result) =>{
-                            if (res.getHeader('Content-Type')==undefined)
-                                res.type('text/html; charset=utf-8');
-                            /**
-                             * @name compress
-                             * @description compress all requests (SSE uses res.write)
-                             * @param {*} data
-                             */
-                            const compress = async data =>{    
-                                return new Promise(resolve=>{
-                                    try {
-                                        res.removeHeader('Content-Length');
-                                        res.setHeader('Content-Encoding', 'gzip');
-                                        zlib.gzip(Buffer.from(data.toString(), 'utf8'), (err, compressed)=>{
-                                            if (err)
-                                                resolve(data);
-                                            else
-                                                resolve(compressed);
-                                        });
-                                    } catch (error) {
-                                        resolve(data);
-                                    }
-                                });
-                            };
-                            //Use compression only if specified
-                            if (res.req.headers['accept-encoding']==undefined)
-                                res.write(Buffer.from(result.toString(), 'utf8'));
-                            else{
-                                const compressed = await compress(result);
-                                res.write(compressed, 'utf8');
-                            }
-                            res.end();
-                        };
+
     res.redirect =      (/**@type{string}*/url) =>{
                             res.writeHead(301, {'Location':url});
                             res.end();
@@ -403,38 +241,9 @@ const server = async (req, res)=>{
     res.setHeader('x-permitted-cross-domain-policies', 'none');
     res.setHeader('x-xss-protection', '0');
 
-    // check JSON maximum size, parameter uses megabytes (MB)
-    if (req.body && JSON.stringify(req.body).length/1024/1024 > 
-            (serverUtilNumberValue((CONFIG_SERVER.SERVER.filter(parameter=>parameter.JSON_LIMIT)[0].JSON_LIMIT ?? '0').replace('MB',''))??0)){
-        //log error                                        
-        Log.post({  app_id:0, 
-                    data:{  object:'LogRequestError', 
-                            request:{   req:req,
-                                        responsetime:serverUtilResponseTime(res),
-                                        statusCode:res.statusCode,
-                                        statusMessage:res.statusMessage
-                                    },
-                            log:'PayloadTooLargeError'
-                        }
-                    }).then(() => {
-            serverResponse({
-                            result_request:{http:400, 
-                                            code:null, 
-                                            text:iamUtilMessageNotAuthorized(), 
-                                            developerText:'',
-                                            moreInfo:'',
-                                            type:'HTML'},
-                            host:req.headers.host,
-                            route:null,
-                            res:res});
-        });
-    }
-    else{
-        const bff = await import('./bff.js');
-        //Backend for frontend (BFF) start
-        return bff.bff(req, res);
-    }
-
+    const bff = await import('./bff.js');
+    //Backend for frontend (BFF) start
+    return bff.bff(req, res);
 };
 
 

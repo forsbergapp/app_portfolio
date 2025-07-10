@@ -22,7 +22,7 @@
  *          server_server_res} from './types.js'
  */
 
-const {serverResponse, serverUtilNumberValue} = await import('./server.js');
+const {serverUtilNumberValue} = await import('./server.js');
 const Security = await import('./security.js');
 const app_common = await import('../apps/common/src/common.js');
 
@@ -176,18 +176,26 @@ const iamUtilTokenExpiredSet = async (app_id, authorization, ip) =>{
  * @param {number} status
  * @param {string} reason
  * @param {boolean} bff
- * @returns {string|void}
+ * @returns {Promise.<string|void>}
  */
-const iamUtilResponseNotAuthorized = (res, status, reason, bff=false) => {
+const iamUtilResponseNotAuthorized = async (res, status, reason, bff=false) => {
     if (bff){
         res.statusCode = status;
         res.statusMessage = reason;
         return iamUtilMessageNotAuthorized();
     }
-    else
-        serverResponse({result_request:{http:status, code:'IAM',text:iamUtilMessageNotAuthorized(), developerText:reason,moreInfo:null, type:'JSON'},
-                        route:null,
-                        res:res});
+    else{
+        const {bffResponse} = await import('./bff.js');
+        bffResponse({
+                    result_request:{http:status, 
+                                    code:'IAM',
+                                    text:iamUtilMessageNotAuthorized(), 
+                                    developerText:reason,
+                                    moreInfo:null, 
+                                    type:'JSON'},
+                                    route:null,
+                                    res:res});
+    }
 };
 
 /**
