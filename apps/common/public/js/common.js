@@ -205,11 +205,10 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
  * @name commonMiscImport
  * @description fetches javascript module to use in import statement
  * @param {string} url
- * @param {boolean} [appModule]
  * @param {string|null} content
  * @returns {Promise.<*>}
  */
-const commonMiscImport = async (url, appModule=false, content=null) =>{
+const commonMiscImport = async (url, content=null) =>{
     const app_id = url.startsWith('/common')?COMMON_GLOBAL.app_common_app_id:COMMON_GLOBAL.app_id;
     const module = COMMON_GLOBAL.component_import.filter(module=>module.url==url && module.app_id == app_id)[0]?.component;
     if (module) 
@@ -222,8 +221,8 @@ const commonMiscImport = async (url, appModule=false, content=null) =>{
                     url:url,
                     component:content?
                                 URL.createObjectURL(new Blob ([content], {type: 'text/javascript'})):
-                                    await commonFFB({   path: appModule?url:('/app-resource/' + url.replaceAll('/','~')), 
-                                                        query:appModule?'':`content_type=${'text/javascript'}&IAM_data_app_id=${app_id}`, 
+                                    await commonFFB({   path: '/app-resource/' + url.replaceAll('/','~'), 
+                                                        query:`content_type=${'text/javascript'}&IAM_data_app_id=${app_id}`, 
                                                         method:'GET', 
                                                         response_type:'BLOB',
                                                         authorization_type:'APP_ID'})
@@ -3704,7 +3703,7 @@ const commonMountApp = async (app_id) =>{
         null:
             COMMON_DOCUMENT.querySelector('#app_link_app_css').href = await commonMiscResourceFetch(CommonAppInit.App.css, null, 'text/css', CommonAppInit.App.css_content);
 
-    const {appMetadata, default:AppInit} = await commonMiscImport(CommonAppInit.App.js, false, CommonAppInit.App.js_content);
+    const {appMetadata, default:AppInit} = await commonMiscImport(CommonAppInit.App.js, CommonAppInit.App.js_content);
 
     /**@type{commonMetadata} */
     const appdata = appMetadata();

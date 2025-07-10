@@ -4,13 +4,13 @@
  * @import {server_apps_report_create_parameters,
  * 			server_db_table_IamUserAppDataPostView,
  * 			server_server_error} from './../../../../server/types.js'
- * @import {APP_user_setting_record} from '../types.js'
+ * @import {APP_REPORT_day_user_account_app_data_posts, APP_REPORT_settings, APP_user_setting_record} from '../types.js'
  */
 
 const {serverUtilNumberValue} = await import('../../../../server/server.js');
 const IamUserAppDataPostView = await import('../../../../server/db/IamUserAppDataPostView.js');
 
-const {APP_REPORT_GLOBAL, component} = await import('./lib_timetable.js');
+const {APP_REPORT_GLOBAL, component} = await import('../../public/component/app_lib.js');
 
 /**
  * @name timetable_user_account_app_data_post_get
@@ -18,7 +18,7 @@ const {APP_REPORT_GLOBAL, component} = await import('./lib_timetable.js');
  * @function
  * @param {number} app_id 
  * @param {number} user_account_app_data_post_id 
- * @returns {Promise.<import('../types.js').APP_REPORT_settings>}
+ * @returns {Promise.<APP_REPORT_settings>}
  */
 const timetable_user_account_app_data_post_get = async (app_id, user_account_app_data_post_id) => {
     const IamUserAppDataPost = await import('../../../../server/db/IamUserAppDataPost.js');
@@ -109,10 +109,10 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
  * @function
  * @param {number} app_id 
  * @param {number} iam_user_id
- * @returns {Promise.<import('../types.js').APP_REPORT_day_user_account_app_data_posts[]>}
+ * @returns {Promise.<APP_REPORT_day_user_account_app_data_posts[]>}
  */
 const timetable_day_user_account_app_data_posts_get = async (app_id, iam_user_id) => {
-	/**@type{import('../types.js').APP_REPORT_day_user_account_app_data_posts[]} */
+	/**@type{APP_REPORT_day_user_account_app_data_posts[]} */
 	const user_account_app_data_posts = [];
     const IamUserAppDataPost = await import('../../../../server/db/IamUserAppDataPost.js');
 	const result_user_account_app_data_posts = IamUserAppDataPost.get({	app_id:app_id, 
@@ -221,6 +221,7 @@ const timetable = async (timetable_parameters) => {
 																	button_id:null,
 																	timetable:'DAY',
 																	user_account_app_data_post:user_account_app_data_post,
+                                                                    /**@ts-ignore */
 																	user_account_app_data_posts_parameters:user_account_app_data_posts_parameters
 																	},
 														methods:	{

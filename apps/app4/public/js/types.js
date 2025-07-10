@@ -45,7 +45,7 @@
  *              regional_layout_direction: string,
  *              regional_second_language_locale: string,
  *              regional_arabic_script: string,
- *              regional_calendar_type: string,
+ *              regional_calendar_type: 'GREGORIAN'|'HIJRI',
  *              regional_calendar_hijri_type: string,
  *              gps_popular_place_id: number|null,
  *              gps_lat_text: number|null,
@@ -109,7 +109,7 @@
  *          regional_default_direction:string,
  *          regional_default_locale_second:string,
  *          regional_default_arabic_script:string,
- *          regional_default_calendartype:string,
+ *          regional_default_calendartype:'GREGORIAN'|'HIJRI',
  *          regional_default_calendar_hijri_type:string,
  *          gps_default_place_id:number,
  *          gps_module_leaflet_qibbla_title:string,
@@ -165,6 +165,7 @@
  *          function_profile_user_setting_update:function,
  *          function_profile_show_user_setting_detail: function,
  *          function_profile_user_setting_stat: function
+ *          appLibTimetable:CommonModuleLibTimetable
  *          }} APP_GLOBAL
  */
 
@@ -176,7 +177,7 @@
  *          app_regional_default_direction:                   {value:string, comment:string},
  *          app_regional_default_locale_second:               {value:string, comment:string},
  *          app_regional_default_arabic_script:               {value:string, comment:string},
- *          app_regional_default_calendartype:                {value:string, comment:string},
+ *          app_regional_default_calendartype:                {value:'GREGORIAN'|'HIJRI', comment:string},
  *          app_regional_default_calendar_hijri_type:         {value:string, comment:string},
  *          app_regional_default_calendar_lang:               {value:string, comment:string},
  *          app_regional_default_locale_ext_prefix:           {value:string, comment:string},
@@ -245,11 +246,11 @@
  * @property {string}	direction
  * @property {string}	second_locale
  * @property {string}	arabic_script
- * @property {string}	calendartype
+ * @property {'GREGORIAN'|'HIJRI'}	calendartype
  * @property {string}	calendar_hijri_type
  * @property {string}	place
- * @property {number|null}	gps_lat
- * @property {number|null}	gps_long
+ * @property {number}	gps_lat
+ * @property {number}	gps_long
  * @property {string}	theme_day
  * @property {string}	theme_month
  * @property {string}	theme_year
@@ -288,8 +289,8 @@
  * @property {string}	timetable_year_month	- class to add for year
  * @property {string}	reporttype_year_month	- MONTH:default, normal month with more info, 
  *												- YEAR:	month with less info
- * @property {string}	ui_navigation_left
- * @property {string}	ui_navigation_right
+ * @property {'toolbar_btn_left'|null}	ui_navigation_left
+ * @property {'toolbar_btn_right'|null}	ui_navigation_right
  */
 /** 
  * @description Type APP_REPORT_column_titles
@@ -366,6 +367,21 @@
  * 		    gps_lat_text: string,
  * 		    gps_long_text: string
  * 			}} APP_REPORT_GLOBAL
+ */
+
+/**
+ * @description Type timesType
+ *              added day key for timetables
+ * @typedef {{  day?:number|string, 
+ *              imsak:number|string, 
+ *              fajr:number|string, 
+ *              sunrise:number|string, 
+ *              dhuhr:number|string, 
+ *              asr:number|string, 
+ *              sunset:number|string, 
+ *              maghrib:number|string, 
+ *              isha:number|string, 
+ *              midnight?:number|string}} timesType
  */
 
 export{};

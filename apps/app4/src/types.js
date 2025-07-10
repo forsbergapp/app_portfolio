@@ -109,40 +109,6 @@
  */
 
 /**
- * @description Type APP_REPORT_column_titles
- * @typedef {object}	APP_REPORT_column_titles
- * @property {string}	day
- * @property {string}	weekday
- * @property {string}	weekday_tr
- * @property {string}	caltype
- * @property {string}	imsak
- * @property {string}	fajr
- * @property {string}	iqamat_fajr
- * @property {string}	sunrise
- * @property {string}	dhuhr
- * @property {string}	iqamat_dhuhr
- * @property {string}	asr
- * @property {string}	iqamat_asr
- * @property {string}	sunset
- * @property {string}	maghrib
- * @property {string}	iqamat_maghrib
- * @property {string}	isha
- * @property {string}	iqamat_isha
- * @property {string}	midnight
- * @property {string}	notes
- */
-/**
- * @description Type APP_REPORT_times
- * @typedef	{{[index: string]:string|number}}	APP_REPORT_times
- * @property{number}	day
- * @property{number}	fajr
- * @property{number}	dhuhr
- * @property{number}	asr
- * @property{number}	maghrib
- * @property{number}	isha
- * @property{number}	midnight
- */
-/**
  * @description Type APP_REPORT_day_user_account_app_data_posts
  * @typedef {object}	APP_REPORT_day_user_account_app_data_posts
  * @property {string}	description
@@ -183,84 +149,5 @@
  * 		    gps_long_text: string
  * 			}}  APP_REPORT_GLOBAL
  */
-/** 
- * @description Type APP_PARAMETERS
- * @typedef {{
- *          app_copyright:                                    {value:string, comment:string}
- *          app_default_startup_page:                         {value:string, comment:string}
- *          app_report_timetable:                             {value:string, comment:string}
- *          app_regional_default_direction:                   {value:string, comment:string}
- *          app_regional_default_locale_second:               {value:string, comment:string}
- *          app_regional_default_arabic_script:               {value:string, comment:string}
- *          app_regional_default_calendartype:                {value:string, comment:string}
- *          app_regional_default_calendar_hijri_type:         {value:string, comment:string}
- *          app_regional_default_calendar_lang:               {value:string, comment:string}
- *          app_regional_default_locale_ext_prefix:           {value:string, comment:string}
- *          app_regional_default_locale_ext_number_system:    {value:string, comment:string}
- *          app_regional_default_locale_ext_calendar:         {value:string, comment:string}
- *          app_regional_default_calendar_type_greg:          {value:string, comment:string}
- *          app_regional_default_calendar_number_system:      {value:string, comment:string}
- *          app_gps_default_place_id:                         {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_title:              {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_text_size:          {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_lat:                {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_long:               {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_color:              {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_width:              {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_opacity:            {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_old_title:          {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_old_text_size:      {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_old_lat:            {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_old_long:           {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_old_color:          {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_old_width:          {value:string, comment:string}
- *          app_gps_module_leaflet_qibbla_old_opacity:        {value:string, comment:string}
- *          app_design_default_theme_day:                     {value:string, comment:string}
- *          app_design_default_theme_month:                   {value:string, comment:string}
- *          app_design_default_theme_year:                    {value:string, comment:string}
- *          app_design_default_papersize:                     {value:string, comment:string}
- *          app_design_default_highlight_row:                 {value:string, comment:string}
- *          app_design_default_show_weekday:                  {value:boolean, comment:string}
- *          app_design_default_show_calendartype:             {value:boolean, comment:string}
- *          app_design_default_show_notes:                    {value:boolean, comment:string}
- *          app_design_default_show_gps:                      {value:boolean, comment:string}
- *          app_design_default_show_timezone:                 {value:boolean, comment:string}
- *          app_image_default_report_header_src:              {value:string, comment:string}
- *          app_image_default_report_footer_src:              {value:string, comment:string}
- *          app_text_default_reporttitle1:                    {value:string, comment:string}
- *          app_text_default_reporttitle2:                    {value:string, comment:string}
- *          app_text_default_reporttitle3:                    {value:string, comment:string}
- *          app_text_default_reportfooter1:                   {value:string, comment:string}
- *          app_text_default_reportfooter2:                   {value:string, comment:string}
- *          app_text_default_reportfooter3:                   {value:string, comment:string}
- *          app_prayer_default_method:                        {value:string, comment:string}
- *          app_prayer_default_asr:                           {value:string, comment:string}
- *          app_prayer_default_highlatitude:                  {value:string, comment:string}
- *          app_prayer_default_timeformat:                    {value:string, comment:string}
- *          app_prayer_default_hijri_adjustment:              {value:number, comment:string}
- *          app_prayer_default_iqamat_title_fajr:             {value:string, comment:string}
- *          app_prayer_default_iqamat_title_dhuhr:            {value:string, comment:string}
- *          app_prayer_default_iqamat_title_asr:              {value:string, comment:string}
- *          app_prayer_default_iqamat_title_maghrib:          {value:string, comment:string}
- *          app_prayer_default_iqamat_title_isha:             {value:string, comment:string}
- *          app_prayer_default_show_imsak:                    {value:boolean, comment:string}
- *          app_prayer_default_show_sunset:                   {value:boolean, comment:string}
- *          app_prayer_default_show_midnight:                 {value:boolean, comment:string}
- *          app_prayer_default_show_fast_start_end:           {value:string, comment:string}
- *          }} APP_PARAMETERS
- */
-/**
- * @description Type timesType
- *              added day key for timetables
- * @typedef {{  day?:number|string, 
- *              imsak:number|string, 
- *              fajr:number|string, 
- *              sunrise:number|string, 
- *              dhuhr:number|string, 
- *              asr:number|string, 
- *              sunset:number|string, 
- *              maghrib:number|string, 
- *              isha:number|string, 
- *              midnight?:number|string}} timesType
- */
+
 export{};

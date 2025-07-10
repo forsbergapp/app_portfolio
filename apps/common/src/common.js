@@ -418,37 +418,6 @@ const commonResourceFile = parameters =>{
     });
 };
 /**
- * @name commonModuleAsset
- * @description Get asset using commonModuleRun since assets are not using idToken or authorization
- * @function
- * @memberof ROUTE_REST_API
- * @param {{app_id:number,
-*          resource_id:string,
-*          data: {},
-*          user_agent:string,
-*          ip:string,
-*          host:string,
-*          locale:string,
-*          endpoint:server_bff_endpoint_type}} parameters
-* @returns {Promise.<server_server_response>}
-*/
-const commonModuleAsset = async parameters => {
-    return commonModuleRun({app_id:         parameters.app_id,
-                            resource_id:    parameters.resource_id,
-                            data:           {
-                                                type:'ASSET', 
-                                                module_app_id:parameters.app_id,
-                                                data_app_id:parameters.app_id
-                                            },
-                            user_agent:     parameters.user_agent,
-                            ip:             parameters.ip,
-                            host:           '',
-                            locale:         parameters.locale,
-                            idToken:        '',
-                            authorization:  '',
-                            endpoint:       parameters.endpoint});
-};
-/**
  * @name commonModuleRun
  * @description Run function for given app and role
  *              Parameters in data should be requried data_app_id plus additional keys
@@ -1188,7 +1157,7 @@ export {commonConvertBinary,
         commonSearchMatch,
         commonAppStart, commonClientLocale,
         commonAppIam, commonResourceFile,
-        commonModuleAsset,commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
+        commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
         commonAppInit,
         commonApp,
         commonAppResource,
