@@ -612,13 +612,13 @@ const commonAppReport = async parameters => {
                     return {result:'', type:'HTML'};
                 }
                 else
-                    return {result:await ComponentCreate({data:   {
+                    return {result:{resource:await ComponentCreate({data:   {
                                                     CONFIG_APP: {...App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0]},
                                                     data:       data,
                                                     /**@ts-ignore */
                                                     papersize:  (pagesize=='' ||pagesize==null)?'A4':pagesize
                                                     },
-                                            methods:{function_report:RunReport}}), type:'HTML'};
+                                            methods:{function_report:RunReport}})}, type:'JSON'};
             }
             else{
                 return Log.post({   app_id:parameters.app_id, 
