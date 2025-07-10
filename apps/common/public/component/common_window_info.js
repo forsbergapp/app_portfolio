@@ -69,11 +69,14 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
  */
 const component = async props => {
     const content_fetch = (props.data.info=='URL' && props.data.path && props.data.method && props.data.authorization)?
-                            await props.methods.commonFFB({ path:props.data.path, 
-                                                            method:props.data.method, 
-                                                            query:props.data.query, 
-                                                            authorization_type:props.data.authorization, 
-                                                            body:props.data.body??null}):null;
+                                await props.methods.commonFFB({ path:props.data.path, 
+                                                                method:props.data.method, 
+                                                                query:props.data.query, 
+                                                                authorization_type:props.data.authorization, 
+                                                                body:props.data.body??null})
+                                .then(result=>JSON.parse(result).resource):
+                                    null;
+                            
     
     const onMounted = async () =>{
         props.methods.COMMON_DOCUMENT.querySelector('#common_window_info').style.visibility='visible';

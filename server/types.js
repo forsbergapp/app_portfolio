@@ -842,7 +842,6 @@
  *            APP_TOOLBAR_BUTTON_START          :string,
  *            APP_TOOLBAR_BUTTON_FRAMEWORK      :string,
  *            APP_CACHE_CONTROL                 :string,
- *            APP_CACHE_CONTROL_FONT            :string,
  *            APP_FRAMEWORK                     :number,
  *            APP_FRAMEWORK_MESSAGES            :number,
  *            APP_LIMIT_RECORDS                 :number,
@@ -1408,7 +1407,6 @@
  * @property {function} type
  * @property {function} end
  * @property {function} send
- * @property {function} sendFile
  * @property {function} redirect 
  * @property {function} getHeader
  * @property {function} setHeader
@@ -1422,7 +1420,7 @@
 
 /**
  * @description SERVER server_server_response_type
- * @typedef {'JSON'|'HTML'|'CSS'|'JS'|'WEBP'|'PNG'|'WOFF'|'TTF'} server_server_response_type
+ * @typedef {'JSON'|'HTML'} server_server_response_type
  */
 
 /**
@@ -1433,7 +1431,6 @@
  *              developerText?:string|null,
  *              moreInfo?:string|null,
  *              result?:*,
- *              sendfile?:string|null,
  *              sendcontent?:string,
  *              type:server_server_response_type}} server_server_response
  */

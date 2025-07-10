@@ -224,9 +224,9 @@ const commonMiscImport = async (url, content=null) =>{
                                     await commonFFB({   path: '/app-resource/' + url.replaceAll('/','~'), 
                                                         query:`content_type=${'text/javascript'}&IAM_data_app_id=${app_id}`, 
                                                         method:'GET', 
-                                                        response_type:'BLOB',
+                                                        response_type:'TEXT',
                                                         authorization_type:'APP_ID'})
-                                            .then(module=>URL.createObjectURL(  new Blob ([module], {type: 'text/javascript'})))
+                                            .then(module=>URL.createObjectURL(  new Blob ([JSON.parse(module).resource], {type: 'text/javascript'})))
                 }); 
         return import(COMMON_GLOBAL.component_import[COMMON_GLOBAL.component_import.length-1].component);
     }
@@ -614,8 +614,7 @@ const commonMiscResourceFetch = async (url,element, content_type, content=null )
                                         query:`content_type=${content_type}&IAM_data_app_id=${app_id}`, 
                                         method:'GET', 
                                         //uses TEXT for images that use base64 strings and font css
-                                        response_type:(content_type.startsWith('image') ||url=='/common/css/font/fonts.css')?
-                                            'TEXT':'BLOB',
+                                        response_type:'TEXT',
                                         authorization_type:'APP_ID'})
                             .then(module=>
                                 content_type.startsWith('image')?
@@ -630,7 +629,7 @@ const commonMiscResourceFetch = async (url,element, content_type, content=null )
                                         COMMON_GLOBAL.resource_import.push({
                                             app_id:app_id,
                                             url:url,
-                                            content:URL.createObjectURL(  new Blob ([module], {type: content_type})),
+                                            content:URL.createObjectURL(  new Blob ([JSON.parse(module).resource], {type: content_type})),
                                             content_type:content_type
                                         })
                             );
@@ -2322,7 +2321,7 @@ const commonModuleLeafletInit = async parameters => {
  *          username?:string,
  *          password?:string,
  *          body?:*,
- *          response_type?:'SSE'|'TEXT'|'BLOB'
+ *          response_type?:'SSE'|'TEXT'
  *          spinner_id?:string|null,
  *          timeout?:number|null}} parameter
  * @returns {Promise.<*>} 
