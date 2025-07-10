@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {config, request, response, geolocation_data} from './types.js'
+ * @import {config, request, response} from './types.js'
  */
 /**
  * @import {common} from '../../../data/microservice/types.js'
@@ -64,7 +64,11 @@ const serverStart = async () =>{
                     case resultAuthenticateApp.data.service == 'PLACE':{
                         if(	(resultAuthenticateApp.data.latitude !=null && resultAuthenticateApp.data.latitude!='') ||
                             (resultAuthenticateApp.data.longitude !=null && resultAuthenticateApp.data.longitude!='')){
-                            service.getPlace(common, Config, resultAuthenticateApp.data.latitude, resultAuthenticateApp.data.longitude, req.headers['accept-language'])
+                            service.getPlace(   common, 
+                                                Config, 
+                                                resultAuthenticateApp.data.latitude, 
+                                                resultAuthenticateApp.data.longitude, 
+                                                resultAuthenticateApp.data['Accept-Language'])
                             
                             .then(result=>result?.length>0?
                                             common.commonServerReturn({
@@ -76,10 +80,11 @@ const serverStart = async () =>{
                                                             message_queue_method: Config.message_queue_method,
                                                             code: 200,
                                                             error: null,
-                                                            result: result,
+                                                            result: JSON.parse(result),
                                                             res:res}):
                                                 '')
-                            .catch(error =>common.commonServerReturn({
+                            .catch(error =>
+                                common.commonServerReturn({
                                 service: 'GEOLOCATION',
                                 token: auth.token,
                                 uuid: Config.uuid,
@@ -107,8 +112,12 @@ const serverStart = async () =>{
                     }
                     case resultAuthenticateApp.data.service == 'IP':{
                         //no v6 support
-                        service.getIp(common, Config, resultAuthenticateApp.data.ip.replace('::ffff:',''), req.headers['accept-language'])
-                        .then(result=>common.commonServerReturn({
+                        service.getIp(  common, 
+                                        Config, 
+                                        resultAuthenticateApp.data.ip.replace('::ffff:',''), 
+                                        resultAuthenticateApp.data['Accept-Language'])
+                        .then(result=>
+                            common.commonServerReturn({
                             service: 'GEOLOCATION',
                             token: auth.token,
                             uuid: Config.uuid,
@@ -117,9 +126,10 @@ const serverStart = async () =>{
                             message_queue_method: Config.message_queue_method,
                             code: 200,
                             error: null,
-                            result: result,
+                            result: JSON.parse(result),
                             res:res}))
-                        .catch(error =>common.commonServerReturn({
+                        .catch(error =>
+                            common.commonServerReturn({
                             service: 'GEOLOCATION',
                             token: auth.token,
                             uuid: Config.uuid,
