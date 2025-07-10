@@ -223,21 +223,16 @@ const template = props =>`  <!DOCTYPE html>
                                                                                    (1000 * 60 * ${props.app_requesttimeout_admin_minutes}):
                                                                                    parameters.timeout || (1000 * ${props.app_request_timeout_seconds}))),
                                                                        await fetch(url, options)
-                                                                           /**@ts-ignore */
-                                                                           .then((response) => {
+                                                                           .then(response =>{
                                                                                status = response.status;
-                                                                               const clonedResponse = response.clone();
-                                                                                   return Promise.all([
-                                                                                       clonedResponse.text(),
-                                                                                       parameters.response_type=='BLOB'?response.blob():null
-                                                                                   ]);
-                                                                           })
-                                                                           .then(([result, result_blob]) => {
+                                                                               return response.text();
+                                                                            })
+                                                                           .then(result => {
                                                                                switch (status){
                                                                                    case 200:
                                                                                    case 201:{
                                                                                        /**@ts-ignore */
-                                                                                       return parameters.response_type=='BLOB'?result_blob:result;
+                                                                                       return result;
                                                                                    }
                                                                                    case 400:{
                                                                                        //Bad request
