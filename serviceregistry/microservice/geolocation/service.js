@@ -184,7 +184,6 @@ const writeCacheGeodata = async (config, cachetype, geodata) =>{
                     .replace('<LATITUDE/>', latitude)
                     .replace('<LONGITUDE/>', longitude);
         //return result without prefix
-
 		geodata = await await common.commonRequestUrl({ url:url, 
                                                         external: true,
                                                         uuid:null,
@@ -192,7 +191,7 @@ const writeCacheGeodata = async (config, cachetype, geodata) =>{
                                                         body:null,
                                                         method:'GET', 
                                                         language:accept_language})
-                            .then(result=>JSON.stringify(result).replaceAll('geoplugin_',''));
+                            .then(result=>result.replaceAll('geoplugin_',''));
 		if (geodata != '[[]]')
 			writeCacheGeodata(config, 'PLACE', geodata);
 		return geodata;
@@ -231,7 +230,7 @@ const getIp = async (common, config, ip, accept_language) => {
                                                     body:null,
                                                     method:'GET', 
                                                     language:accept_language})
-                        .then(result=>JSON.stringify(result).replaceAll('geoplugin_',''));
+                        .then(result=>result.replaceAll('geoplugin_',''));
 		writeCacheGeodata(config, 'IP', geodata);
         return geodata;
 	}
