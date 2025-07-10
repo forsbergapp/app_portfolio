@@ -758,7 +758,7 @@ const bffResponse = async parameters =>{
                     if (bff_parameters==1){
                         //respond with empty font, fonts are fetched using REST API
                         bffResponse({
-                                    result_request:{result:'', type:'JSON'},
+                                    result_request:{result:{resource:`data:font/woff2;base64,${btoa('')}`}, type:'JSON'},
                                     route:null,
                                     res:res
                         });
