@@ -7,7 +7,6 @@
  *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
  */
 
-
 const {serverUtilNumberValue} = await import('./server.js');
 const {iamUtilTokenExpired, iamUtilMessageNotAuthorized} = await import('./iam.js');
 const ConfigServer = await import('./db/ConfigServer.js');
@@ -355,7 +354,7 @@ const socketPost = async parameters =>{
     if (SOCKET_CONNECTED_CLIENTS
             .filter(row=>row.authorization_bearer == parameters.idToken).length>0 ||parameters.response.req.headers['sec-fetch-mode']!='cors'){
         const {iamUtilResponseNotAuthorized} = await import('./iam.js');
-        throw iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
+        throw await iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
     }
     else{
         const client_id = Date.now();
