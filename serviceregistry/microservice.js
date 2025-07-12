@@ -6,7 +6,6 @@
  */
 
 const {registryConfigServices} = await import('./registry.js');
-const { iamAuthenticateApp } = await import('../server/iam.js');
 const {serverUtilNumberValue} = await import('../server/server.js');
 const ConfigServer = await import('../server/db/ConfigServer.js');
 const AppSecret = await import('../server/db/AppSecret.js');
@@ -120,4 +119,4 @@ const microserviceRequest = async parameters =>{
     }
 }; 
 
-export {MICROSERVICE_RESOURCE_ID_STRING, microserviceUtilResourceIdNumberGet, microserviceUtilResourceIdStringGet, microserviceRequest, iamAuthenticateApp};
+export {MICROSERVICE_RESOURCE_ID_STRING, microserviceUtilResourceIdNumberGet, microserviceUtilResourceIdStringGet, microserviceRequest};
