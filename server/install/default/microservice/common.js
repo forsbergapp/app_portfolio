@@ -46,8 +46,6 @@ const commonFromBase64 = str => {
  *   service_registry_auth_method:      'POST',
  *   message_queue_url:	                string,
  *   message_queue_method:	            'POST',
- *   iam_auth_app_url:	                string,
- *   iam_auth_app_method:	            'POST',
  *   uuid:                              string,
  *   secret:                            string,
  *   config:                            *,
@@ -71,8 +69,6 @@ const commonConfig = async service =>{
         service_registry_auth_method:       Config.service_registry_auth_method,
         message_queue_url:                  Config.message_queue_url,
         message_queue_method:               Config.message_queue_method,
-        iam_auth_app_url:                   Config.iam_auth_app_url,
-        iam_auth_app_method:                Config.iam_auth_app_method,
         uuid:                               Config.uuid,
         secret:                             Config.secret,
         config:                             Config.config,
@@ -174,11 +170,11 @@ const commonServerReturn = parameters=>{
                                         text:parameters.error, 
                                         developer_text:null, 
                                         more_info:null}});
-        parameters.res.write(message, 'utf8');
+        parameters.res.write(commonEncrypt({secret:parameters.secret, data:message}), 'utf8');
     }
     else{
         parameters.res.setHeader('Content-Type',  'application/json; charset=utf-8');
-        parameters.res.write(JSON.stringify(parameters.result), 'utf8');
+        parameters.res.write(JSON.stringify(commonEncrypt({secret:parameters.secret, data:parameters.result})), 'utf8');
     }
     parameters.res.end();
 };
@@ -272,33 +268,6 @@ const commonDecrypt = async parameters =>{
                     /**@ts-ignore */
                     new Uint8Array(Buffer.from(parameters.data,'base64').toString().split(','))
                 ));
-};
-/**
- * @name commonIamAuthenticateApp
- * @description Authenticates app using IAM and sends query encoded with base64
- * @function
- * @param {{token:string,
- *          iam_auth_app_url:string,
- *          iam_auth_app_method:'POST'|'GET',
- *          uuid:string,
- *          req:import('node:http').IncomingMessage & {body:{x:String}, headers:{'app-id':number, 'app-signature':string}},
- *          secret:string}} parameters
- * @returns {Promise.<{authenticated:boolean,
- *                      data:*}>}
- */
-const commonIamAuthenticateApp = async parameters =>{
-    return await commonRequestUrl({ url:parameters.iam_auth_app_url, 
-                                    external:false,
-                                    uuid:parameters.uuid,
-                                    secret:parameters.secret,
-                                    method:parameters.iam_auth_app_method, 
-                                    body:await commonRequestData({secret:parameters.secret, req:parameters.req}),
-                                    authorization:'Bearer ' + parameters.token,
-                                    language:'en'})
-                .then(result=>{return {authenticated:true, data:JSON.parse(result)};})
-                .catch(()=>
-                    {return {authenticated:false, data:null};}
-                );
 };
 
 /**
@@ -427,13 +396,10 @@ const commonRequestUrl = async parameters => {
 };
 /**
  * @name commonRequestData
- * @description Get data from request, microservice dno't need to know if encryption is used or not
- * @param {{req:import('node:http').IncomingMessage & {headers:{'app-id':number, 'app-signature':string}},
+ * @description Get data from request
+ * @param {{req:import('node:http').IncomingMessage,
  *         secret:string }} parameters
- * @returns {Promise.<{ header:{'app-id':number|null, 
- *                              'app-signature':string}|null,
- *                      url:string,
- *                      body:{}}>}
+ * @returns {Promise.<{}>}
  */
 const commonRequestData = async parameters =>{
     const read_body = async () =>{
@@ -457,15 +423,7 @@ const commonRequestData = async parameters =>{
         });
     
     };
-    return {
-        header:{
-            'app-id' : parameters.req.headers['app-id'] ?? null,
-            'app-signature' : parameters.req.headers['app-signature'] ?? null
-        },
-        url: parameters.req.url??'',
-        body:await commonDecrypt({secret:parameters.secret, data:await read_body()??''})
-                .then(result=>JSON.parse(result))
-    };
+    return await commonDecrypt({secret:parameters.secret, data:await read_body()??''}).then(result=>JSON.parse(result));
 };
                    
 export {commonConfig,
@@ -474,5 +432,5 @@ export {commonConfig,
         commonLog, 
         commonEncrypt, 
         commonDecrypt,
-        commonIamAuthenticateApp, 
-        commonRequestUrl};
+        commonRequestUrl,
+        commonRequestData};

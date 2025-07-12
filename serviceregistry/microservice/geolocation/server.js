@@ -51,13 +51,7 @@ const serverStart = async () =>{
 	Config.server.createServer(Config.options, (/**@type{request}*/req, /**@type{response}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST');
 		res.setHeader('Access-Control-Allow-Origin', '*');
-        common.commonIamAuthenticateApp({
-                                    token:auth.token,
-                                    iam_auth_app_url:Config.iam_auth_app_url,
-                                    iam_auth_app_method:Config.iam_auth_app_method,
-                                    uuid:Config.uuid,
-                                    req:req,
-                                    secret:Config.secret})
+        common.commonRequestData({ req:req, secret:Config.secret})
         .then(resultAuthenticateApp=>{
             if (resultAuthenticateApp.authenticated){
                 switch (true){
