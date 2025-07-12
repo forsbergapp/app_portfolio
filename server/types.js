@@ -180,6 +180,8 @@
  *          ip: string,
  *          user_agent:string,
  *          accept_language:string,
+ *          jwk:JsonWebKey|null,
+ *          iv:string|null,
  *          res: server_server_res}} server_bff_parameters
  *
  */

@@ -321,10 +321,22 @@ const bffStart = async (req, res) =>{
  *           route:'APP'|'REST_API'|null,
  *           method?:server_req_method,
  *           decodedquery?:string|null,
+ *           jwk?:JsonWebKey|null,
+ *           iv?:string|null,
  *           res:server_server_res}} parameters
  *  @returns {Promise.<void>}
  */
 const bffResponse = async parameters =>{
+
+    const Security = await import('./security.js');
+    /**
+     * @param {string} data
+     * @returns {Promise.<string>}
+     */
+    const encrypt = async data => (parameters.jwk && parameters.iv)?
+                                    Security.securityTransportEncrypt({app_id:parameters.app_id??0, data:data, jwk:parameters.jwk, iv:parameters.iv }):
+                                        data;
+
     /**@type{server_db_document_ConfigServer['SERVICE_APP']} */
     const CONFIG_SERVICE_APP = ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;
 
@@ -347,7 +359,7 @@ const bffResponse = async parameters =>{
         //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
         serverResponse({app_id:parameters.app_id,
                        type:'JSON',
-                       result:JSON.stringify(message),
+                       result:await encrypt(JSON.stringify(message)),
                        route:parameters.route,
                        method:parameters.method,
                        statusMessage: '',
@@ -365,9 +377,9 @@ const bffResponse = async parameters =>{
                     //resource or html
                     serverResponse({app_id:parameters.app_id,
                                     type:parameters.result_request?.type,
-                                    result:parameters.result_request.result.resource?
+                                    result:await encrypt(parameters.result_request.result.resource?
                                             JSON.stringify(parameters.result_request.result):
-                                                parameters.result_request.result,
+                                                parameters.result_request.result),
                                     route:parameters.route,
                                     method:parameters.method,
                                     statusMessage: '',
@@ -406,12 +418,12 @@ const bffResponse = async parameters =>{
                         //limit rows if single resource response contains rows
                         serverResponse({app_id:parameters.app_id,
                                         type:parameters.result_request?.type,
-                                        result:JSON.stringify((typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
+                                        result:await encrypt(JSON.stringify((typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
                                                     parameters.result_request.result
                                                     .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
                                                     (index+1)<=(limit??0)
                                                         :true):
-                                                        parameters.result_request.result),
+                                                        parameters.result_request.result)),
                                         route:parameters.route,
                                         method:parameters.method,
                                         statusMessage: '',
@@ -463,7 +475,7 @@ const bffResponse = async parameters =>{
                         }
                         serverResponse({app_id:parameters.app_id,
                                         type:parameters.result_request?.type,
-                                        result:JSON.stringify(result),
+                                        result:await encrypt(JSON.stringify(result)),
                                         route:parameters.route,
                                         method:parameters.method,
                                         statusMessage: '',
@@ -476,7 +488,7 @@ const bffResponse = async parameters =>{
                 const  {iamUtilMessageNotAuthorized} = await import('./iam.js');
                 serverResponse({app_id:parameters.app_id,
                                 type:parameters.result_request?.type,
-                                result:iamUtilMessageNotAuthorized(),
+                                result:await encrypt(iamUtilMessageNotAuthorized()),
                                 route:parameters.route,
                                 method:parameters.method,
                                 statusMessage: '',
@@ -584,23 +596,25 @@ const bffResponse = async parameters =>{
                                 return null;
                         }
                         else{
+                            const jwk = JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).jwk;
+                            const iv  = JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).iv;
                             /**
-                                                 * @type {{headers:{
-                            *                 'app-id':       number,
-                            *                 'app-signature':string,
-                            *                 'app-id-token': string,
-                            *                 Authorization?: string,
-                            *                 'Content-Type': string,
-                            *                 },
-                            *         method: string,
-                            *         url:    string,
-                            *         body:   *}}}
-                            */
+                             * @type {{headers:{
+                             *                 'app-id':       number,
+                             *                 'app-signature':string,
+                             *                 'app-id-token': string,
+                             *                 Authorization?: string,
+                             *                 'Content-Type': string,
+                             *                 },
+                             *         method: string,
+                             *         url:    string,
+                             *         body:   *}}}
+                             */
                             return await Security.securityTransportDecrypt({ 
                                         app_id:0,
                                         encrypted:  req.body.x,
-                                        jwk:        JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).jwk,
-                                        iv:         JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).iv})
+                                        jwk:        jwk,
+                                        iv:         iv})
                                         .then(result=>{
                                             const decrypted = JSON.parse(result);
                                             const endpoint = decrypted.url.startsWith(configServer.SERVER
@@ -663,6 +677,8 @@ const bffResponse = async parameters =>{
                                                                     user_agent:     req.headers['user-agent'], 
                                                                     accept_language:req.headers['accept-language'], 
                                                                     //response
+                                                                    jwk:            jwk,
+                                                                    iv:             iv,
                                                                     res:            res}:
                                                                         null;
                                                     });
@@ -736,6 +752,8 @@ const bffResponse = async parameters =>{
                         user_agent:     req.headers['user-agent'], 
                         accept_language:req.headers['accept-language'], 
                         //response
+                        jwk:            null,
+                        iv:             null,
                         res:            res
                     }:null;
             }
@@ -784,26 +802,26 @@ const bffResponse = async parameters =>{
                             case (bff_parameters.url.startsWith('/common/modules/fontawesome/webfonts/')):
                             case (bff_parameters.url.startsWith('/common/css/font/')):{
                                 return bffResponse({app_id:common_app_id,
-                                                result_request: await app_common.commonResourceFile({   app_id:common_app_id, 
-                                                                        resource_id:bff_parameters.url, 
-                                                                        content_type:'',
-                                                                        data_app_id: common_app_id}),
-                                                                        host:bff_parameters.host,
-                                                                        route : 'APP',
-                                                                        res:bff_parameters.res});
+                                                    result_request: await app_common.commonResourceFile({   app_id:common_app_id, 
+                                                                            resource_id:bff_parameters.url, 
+                                                                            content_type:'',
+                                                                            data_app_id: common_app_id}),
+                                                                            host:bff_parameters.host,
+                                                                            route : 'APP',
+                                                                            res:bff_parameters.res});
                             }
                             case bff_parameters.url == '/':{
-                                //App route for app asset, common asset, app info page and app
+                                //App route
                                 return bffResponse({app_id:common_app_id,
-                                                result_request:await app_common.commonApp({  app_id:common_app_id,
-                                                                            ip:bff_parameters.ip, 
-                                                                            host:bff_parameters.host ?? '', 
-                                                                            user_agent:bff_parameters.user_agent, 
-                                                                            accept_language:bff_parameters.accept_language})
-                                                                        .then(result=>result?.http == 301?bff_parameters.res.redirect('/'):result),
-                                                host:bff_parameters.host,
-                                                route : 'APP',
-                                                res:bff_parameters.res})
+                                                    result_request:await app_common.commonApp({  app_id:common_app_id,
+                                                                                ip:bff_parameters.ip, 
+                                                                                host:bff_parameters.host ?? '', 
+                                                                                user_agent:bff_parameters.user_agent, 
+                                                                                accept_language:bff_parameters.accept_language})
+                                                                            .then(result=>result?.http == 301?bff_parameters.res.redirect('/'):result),
+                                                    host:bff_parameters.host,
+                                                    route : 'APP',
+                                                    res:bff_parameters.res})
                                 .catch((error)=>
                                                 /**@ts-ignore */
                                     Log.post({  app_id:common_app_id, 
@@ -828,7 +846,6 @@ const bffResponse = async parameters =>{
                         }
                     }
                     else{
-    
                         //REST API route
                         //REST API requests from client are encoded using base64
                         const decodedquery = bff_parameters.query?decodeURIComponent(Buffer.from(bff_parameters.query, 'base64').toString('utf-8')):'';   
@@ -861,12 +878,14 @@ const bffResponse = async parameters =>{
                                             /**@ts-ignore */
                                         }).then(result_log=>result_log.http?
                                                                 result_log:
-                                                                bffResponse({app_id:result_service.app_id,
+                                                                bffResponse({   app_id:result_service.app_id,
                                                                                 result_request:result_service, 
                                                                                 host:bff_parameters.host,
                                                                                 route:'REST_API',
                                                                                 method:bff_parameters.method, 
                                                                                 decodedquery:decodedquery, 
+                                                                                jwk:bff_parameters.jwk,
+                                                                                iv:bff_parameters.iv,
                                                                                 res:bff_parameters.res})
                                                                     );
                                 })
@@ -882,6 +901,8 @@ const bffResponse = async parameters =>{
                                         }).then(() => 
                                             bffResponse({result_request:{http:500, code:null,text:error, developerText:'bff',moreInfo:null, type:'JSON'},
                                                             route:null,
+                                                            jwk:bff_parameters.jwk,
+                                                            iv:bff_parameters.iv,
                                                             res:bff_parameters.res}));
                                                         
                                                     

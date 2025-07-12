@@ -32,7 +32,6 @@ const IamAppIdToken = await import('./db/IamAppIdToken.js');
 const IamControlIp = await import('./db/IamControlIp.js');
 const IamControlUserAgent = await import('./db/IamControlUserAgent.js');
 const IamControlObserve = await import('./db/IamControlObserve.js');
-const IamEncryption = await import('./db/IamEncryption.js');
 const IamMicroserviceToken = await import('./db/IamMicroserviceToken.js');
 const IamUser = await import('./db/IamUser.js');
 const IamUserApp = await import('./db/IamUserApp.js');
@@ -1098,80 +1097,6 @@ const iamAuthenticateUserAppDelete = async parameters => {
 };
 
 /**
- * @name iamAuthenticateApp
- * @description Authenticate app in microservice and returns data
- * @function
- * @function
- * @memberof ROUTE_REST_API
- * @param { {app_id:number,
- *           resource_id:string,
- *           ip:string,
- *           host:string,
- *           user_agent:string,
- *           data:{ header:{'app-id':number,
- *                          'app-signature':string},
- *                  url:string,
- *                  body:{  headers: {
- *                                  'Accept-Language':string,
- *                                  'User-Agent':String,
- *                                  Authorization:string|null,
- *                                  'x-forwarded-for':string,
- *                                  'app-id':number,
- *                                  'app-signature':string
- *                                  },
- *                          method: string,
- *                          url:    string}}}} parameters
- * @returns {Promise.<server_server_response & Object.<string,*>>}
- */
- const iamAuthenticateApp = async parameters =>{
-    if (parameters.app_id == null)
-        return {http:401,
-            code:'IAM',
-            text:iamUtilMessageNotAuthorized(),
-            developerText:null,
-            moreInfo:null,
-            type:'JSON'
-        };
-    else{
-        //authenticate microservice request from app
-        const encryptionData = (IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
-                                        .filter((/**@type{server_db_table_IamEncryption}*/encryption)=>
-                                                encryption.app_id == (parameters.data.body.headers['app-id'] ?? parameters.data.header['app-id']) && 
-                                                encryption.uuid==(parameters.data.url.substring('/bff/x/'.length).split('~')[0])
-                                        )[0]; 
-        const result = await Security.securityTransportDecrypt({ 
-            app_id:0,
-            encrypted:  parameters.data.body.headers['app-signature'] ?? parameters.data.header['app-signature'],
-            jwk:        JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).jwk,
-            iv:         JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).iv
-        })
-        .catch(()=>
-            null
-        );
-
-        if (result)
-            return {result: {...Buffer.from(encryptionData.url.substring(encryptionData.url.indexOf('?')+1), 'base64').toString('utf-8')
-                                        .split('&')
-                                        .map(key=>{
-                                            return {[key.split('=')[0]]:key.split('=')[1]};
-                                        })
-                                        .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
-                                            return {...keys, ...key};
-                                        }),
-                            ...{'Accept-Language':parameters.data.body.headers['Accept-Language']},
-                            ...{'User-Agent':parameters.data.body.headers['User-Agent']}},
-                    type:'JSON'};
-        else
-            return {http:401,
-                code:'IAM',
-                text:iamUtilMessageNotAuthorized(),
-                developerText:null,
-                moreInfo:null,
-                type:'JSON'
-            };
-    }    
-};
-/**
  * @name iamAuthenticateResource
  * @description Authenticate resource used as REST API parameter
  *              Authenticates using access token if provided or else the idToken
@@ -1644,7 +1569,6 @@ export{ iamUtilMessageNotAuthorized,
         iamAuthenticateUserAppDelete,
         iamAuthenticateCommon,
         iamAuthenticateRequest,
-        iamAuthenticateApp,
         iamAuthenticateResource,
         iamAuthenticateMicroservice,
         iamAuthorizeIdToken,

@@ -77,8 +77,14 @@ const serverResponse = async parameters =>{
             }
         });
     };
+    /**
+     * @param {string} response
+     */
+    const write = async response =>{
+        parameters.res.write(response, 'utf8');
+    };
     if (parameters.sse_message)
-        parameters.res.write(parameters.sse_message);
+        write(parameters.sse_message);
     else{
         parameters.res.setHeader('Connection', 'Close');
         await setType(parameters.type);
@@ -98,10 +104,10 @@ const serverResponse = async parameters =>{
                 parameters.res.type('text/html; charset=utf-8');
             //Use compression only if specified
             if (parameters.res.req.headers['accept-encoding']==undefined)
-                parameters.res.write(Buffer.from(parameters.result.toString(), 'utf8'));
+                write(parameters.result);
             else{
                 const compressed = await compress(parameters.result);
-                parameters.res.write(compressed, 'utf8');
+                write(compressed);
             }
             parameters.res.end();
         }
@@ -456,7 +462,7 @@ const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass(await 
  * @description Request url, use parameter url or protocol, host, port and path
  *              Returns raw response from request
  * @function
- * @param {{service:'MICROSERVICE'|'BFE',
+ * @param {{service:'GEOLOCATION'|'BATCH'|'BFE',
  *          protocol:'https'|'http'|null,
  *          url:string|null,
  *          host:string|null,
@@ -483,8 +489,8 @@ const serverRequest = async parameters =>{
     /**@type{server_db_document_ConfigServer['SERVICE_IAM']} */
     const CONFIG_SERVER = ConfigServer.get({app_id:0,data:{ config_group:'SERVICE_IAM'}}).result;
     
-    /**@type {'http'|'https'} */
-    const protocol = parameters.protocol ?? (parameters.url?.toLowerCase().startsWith('https')?
+    /**@type {'http'|'https'|string} */
+    const protocol = parameters.protocol?.toLowerCase() ?? (parameters.url?.toLowerCase().startsWith('https')?
                                                 'https':
                                                     'http');
     /**@type {import('node:http')|import('node:https')} */
@@ -492,16 +498,35 @@ const serverRequest = async parameters =>{
     
     const encrypt_transport = serverUtilNumberValue(CONFIG_SERVER
                                         .filter(parameter=> 'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT);
-    const url_unencrypted = parameters.url??
+    //BFE uses url, microservice uses host, port and path
+    const url_unencrypted = parameters.url?
+                                //use path for BFE
+                                parameters.url.split(protocol + '://' + parameters.url.split('/')[2])[1]:
+                                    //use full url for microservice
                                     (protocol + '://' + parameters.host + ':' + parameters.port + parameters.path);
 
-    //crea new uid and secret for app authentication
-    const uuid = Security.securityUUIDCreate();
-    const secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8')
-                    .toString('base64');
-    encrypt_transport==1?
+    //get new encryption parameters for BFE or existing for microservice in ServiceRegistry if using encryption
+    const {uuid, secret} = encrypt_transport==1?
+                                    (parameters.encryption_type=='BFE'?
+                                        {
+                                            uuid:   Security.securityUUIDCreate(),
+                                            secret: await Security.securityTransportCreateSecrets()
+                                                        .then(result=>Buffer.from(JSON.stringify(result),'utf-8').toString('base64'))
+                                        }:
+                                            ServiceRegistry.get({   app_id:parameters['app-id'], 
+                                                                    resource_id:null, 
+                                                                    data:{name:parameters.service}}).result
+                                            .map((/**@type{server_db_table_ServiceRegistry}*/row)=>{
+                                                return {
+                                                    uuid:row.uuid,
+                                                    secret:row.secret
+                                                };
+                                            })[0]):
+                                    null;
+    //if encryption and BFE then save encryption record
+    encrypt_transport==1 && parameters.encryption_type=='BFE'?
         await IamEncryption.post(0, {   app_id:parameters['app-id'], 
-                                        iam_app_id_token_id: parameters['app-id'],
+                                        iam_app_id_token_id: null,
                                         url:url_unencrypted,
                                         uuid: uuid,
                                         type:parameters.encryption_type,
@@ -513,46 +538,32 @@ const serverRequest = async parameters =>{
                         //implements same path for external url
                         (protocol + '://' + parameters.url.split('/')[2] + '/bff/x/' + uuid):
                             (protocol + '://' + parameters.host + ':' + parameters.port + '/bff/x/' + uuid)):
-                        parameters.url??url_unencrypted;
+                        url_unencrypted;
 
-    /**@type{import('node:https').RequestOptions['headers'] & {'app-id':number, 'app-signature'?:string}} */
+    /**@type{import('node:https').RequestOptions['headers'] & {'app-id'?:number, 'app-signature'?:string}} */
     const headers = {
         'User-Agent':       parameters.user_agent,
         'Accept-Language':  parameters.accept_language,
         'x-forwarded-for':  parameters.client_ip,
-        
         ...(parameters.authorization && {Authorization: parameters.authorization}),
-        'app-id':           parameters['app-id'],
-        ...(encrypt_transport==1 && {'app-signature': await Security.securityTransportEncrypt({
-                                                        app_id:parameters['app-id'],
-                                                        jwk:JSON.parse(atob(secret)).jwk,
-                                                        iv:JSON.parse(atob(secret)).iv,
-                                                        data:'serverRequest'})})
+        ...(parameters.encryption_type=='BFE' && {'app-id':           parameters['app-id']}),
+        ...(parameters.encryption_type=='BFE' && encrypt_transport==1 && {'app-signature': await Security.securityTransportEncrypt({
+                                                                                                app_id:parameters['app-id'],
+                                                                                                jwk:JSON.parse(atob(secret)).jwk,
+                                                                                                iv:JSON.parse(atob(secret)).iv,
+                                                                                                data:'serverRequest'})})
     };
-    //get encryption parameters for transport
-    const {jwk, iv} = parameters.encryption_type=='BFE'?
-                        {jwk:JSON.parse(atob(secret)).jwk,
-                         iv:JSON.parse(atob(secret)).iv
-                        }:
-                            ServiceRegistry.get({   app_id:parameters['app-id'], 
-                                                    resource_id:null, 
-                                                    data:{name:parameters.service}}).result
-                            .map((/**@type{server_db_table_ServiceRegistry}*/row)=>{
-                                return {
-                                    jwk:JSON.parse(Buffer.from(row.secret, 'base64').toString('utf-8')).jwk,
-                                    iv:JSON.parse(Buffer.from(row.secret, 'base64').toString('utf-8')).iv,
-                                };
-                            })[0];
+    
     const body =    encrypt_transport==1?
                         JSON.stringify({
                             x: await Security.securityTransportEncrypt({
                                 app_id:parameters['app-id'],
-                                jwk:jwk,
-                                iv: iv,
+                                jwk:JSON.parse(atob(secret)).jwk,
+                                iv: JSON.parse(atob(secret)).iv,
                                 data:JSON.stringify({  
                                         headers:headers,
                                         method: parameters.method,
-                                        url:    url,
+                                        url:    url_unencrypted,
                                         ...(parameters.method!='GET' && {body:  parameters.body?
                                             JSON.stringify(parameters.body):
                                                 ''})
@@ -585,7 +596,6 @@ const serverRequest = async parameters =>{
                 ...(protocol=='https' && {rejectUnauthorized: false})
             };
     return new Promise ((resolve, reject)=>{
-        
         /**
          * @param {import('node:http').IncomingMessage} res
          * @returns {void}
@@ -599,26 +609,43 @@ const serverRequest = async parameters =>{
             });
             res.on('end', ()=>{
                 if ([200,201].includes(res.statusCode??0))
-                    resolve (responseBody);
+                    resolve (encrypt_transport==1?
+                                Security.securityTransportDecrypt({ 
+                                    app_id:parameters['app-id'],
+                                    encrypted:  responseBody,
+                                    jwk:        JSON.parse(Buffer.from(secret, 'base64').toString('utf-8')).jwk,
+                                    iv:         JSON.parse(Buffer.from(secret, 'base64').toString('utf-8')).iv
+                                    }):
+                                        responseBody);
                 else
-                    reject(res.statusMessage);
+                    reject({   
+                            http:res.statusCode,
+                            code:'SERVER',
+                            /**@ts-ignore */
+                            text:null,
+                            developerText:'serverRequest',
+                            moreInfo:null,
+                            type:'JSON'
+                    });
             });
         };
         const request = request_protocol.request(new URL(url), options, response);
         if (encrypt_transport==1 ||parameters.method !='GET')
             request.write(body);
         request.on('error', error => {
-            resolve({http:500,
-                code:'SERVER',
-                /**@ts-ignore */
-                text:error,
-                developerText:'serverRequest',
-                moreInfo:null,
-                type:'JSON'
+            resolve({   
+                        http:500,
+                        code:'SERVER',
+                        /**@ts-ignore */
+                        text:error,
+                        developerText:'serverRequest',
+                        moreInfo:null,
+                        type:'JSON'
             });
         });
         request.on('timeout', () => {
-            resolve({http:503,
+            resolve({
+                http:503,
                 code:'SERVER',
                 text:MESSAGE_TIMEOUT,
                 developerText:'serverRequest',

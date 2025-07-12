@@ -228,31 +228,36 @@ const template = props =>`  <!DOCTYPE html>
                                                                                return response.text();
                                                                             })
                                                                            .then(result => {
-                                                                               switch (status){
-                                                                                   case 200:
-                                                                                   case 201:{
-                                                                                       /**@ts-ignore */
-                                                                                       return result;
-                                                                                   }
-                                                                                   case 400:{
-                                                                                       //Bad request
-                                                                                       common.commonMessageShow('ERROR_BFF', null, 'message_text', '!');
-                                                                                       throw result;
-                                                                                   }
-                                                                                   case 404:   //Not found
-                                                                                   case 401:   //Unauthorized, token expired
-                                                                                   case 403:   //Forbidden, not allowed to login or register new user
-                                                                                   case 503:   //Service unavailable or other error in microservice
-                                                                                   {   
-                                                                                       showError(result);
-                                                                                       throw result;
-                                                                                   }
-                                                                                   case 500:{
-                                                                                       //Unknown error
-                                                                                       common.commonException(common.COMMON_GLOBAL.app_function_exception, result);
-                                                                                       throw result;
-                                                                                   }
-                                                                               }
+                                                                               return (encrypt_transport?
+                                                                                    common.commonWindowDecrypt({secret:parameters.secret, data:result}):
+                                                                                        async ()=>result)
+                                                                               .then(result_decryped=>{
+                                                                                    switch (status){
+                                                                                        case 200:
+                                                                                        case 201:{
+                                                                                            /**@ts-ignore */
+                                                                                            return result_decryped;
+                                                                                        }
+                                                                                        case 400:{
+                                                                                            //Bad request
+                                                                                            common.commonMessageShow('ERROR_BFF', null, 'message_text', '!');
+                                                                                            throw result_decryped;
+                                                                                        }
+                                                                                        case 404:   //Not found
+                                                                                        case 401:   //Unauthorized, token expired
+                                                                                        case 403:   //Forbidden, not allowed to login or register new user
+                                                                                        case 503:   //Service unavailable or other error in microservice
+                                                                                        {   
+                                                                                            showError(result);
+                                                                                            throw result_decryped;
+                                                                                        }
+                                                                                        case 500:{
+                                                                                            //Unknown error
+                                                                                            common.commonException(common.COMMON_GLOBAL.app_function_exception, result_decryped);
+                                                                                            throw result_decryped;
+                                                                                        }
+                                                                                    }
+                                                                                })
                                                                            })
                                                                            .catch(error=>{
                                                                                throw error;

@@ -49,8 +49,6 @@
  *   service_registry_auth_method:      'POST',
  *   message_queue_url:	                string,
  *   message_queue_method:	            'POST',
- *   iam_auth_app_url:	                string,
- *   iam_auth_app_method:	            'POST',
  *   uuid:                              string,
  *   secret:                            string,
  *   config:                            {url_ip:string, url_place:string},
