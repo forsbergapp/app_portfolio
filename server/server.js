@@ -342,7 +342,7 @@ class serverCircuitBreakerClass {
      *          client_ip:string,
      *          user_agent:string,
      *          accept_language:string,
-     *          authorization:string,
+     *          authorization:string|null,
      *          encryption_type:server_db_table_IamEncryption['type'],
      *          'app-id':number,
      *          endpoint:server_bff_endpoint_type|null}} parameters
@@ -473,7 +473,7 @@ const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass(await 
  *          client_ip:string,
  *          user_agent:string,
  *          accept_language:string,
- *          authorization:string,
+ *          authorization:string|null,
  *          encryption_type:server_db_table_IamEncryption['type'],
  *          'app-id':number,
  *          timeout:number}} parameters
@@ -609,14 +609,14 @@ const serverRequest = async parameters =>{
             });
             res.on('end', ()=>{
                 if ([200,201].includes(res.statusCode??0))
-                    resolve (encrypt_transport==1?
+                    encrypt_transport==1?
                                 Security.securityTransportDecrypt({ 
                                     app_id:parameters['app-id'],
                                     encrypted:  responseBody,
                                     jwk:        JSON.parse(Buffer.from(secret, 'base64').toString('utf-8')).jwk,
                                     iv:         JSON.parse(Buffer.from(secret, 'base64').toString('utf-8')).iv
-                                    }):
-                                        responseBody);
+                                    }).then(result=>resolve(result)):
+                                        resolve(responseBody);
                 else
                     reject({   
                             http:res.statusCode,

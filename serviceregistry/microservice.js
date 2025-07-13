@@ -8,7 +8,6 @@
 const {registryConfigServices} = await import('./registry.js');
 const {serverUtilNumberValue} = await import('../server/server.js');
 const ConfigServer = await import('../server/db/ConfigServer.js');
-const AppSecret = await import('../server/db/AppSecret.js');
 const {serverCircuitBreakerMicroService, serverRequest} = await import('../server/server.js');
 
 const circuitBreaker = await serverCircuitBreakerMicroService();
@@ -61,11 +60,7 @@ const microserviceRequest = async parameters =>{
     if ((parameters.microservice == 'GEOLOCATION' && serverUtilNumberValue(CONFIG_SERVER.SERVICE_IAM
                                                         .filter(parameter=>'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1)||
         parameters.microservice != 'GEOLOCATION'){
-        
-        
-        //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-        const authorization = `Basic ${Buffer.from(     AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].client_id + ':' + 
-                                                        AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].client_secret,'utf-8').toString('base64')}`;
+               
         //convert data object to string if method=GET, add always app_id parameter for authentication and send as base64 encoded
         const query = Buffer.from((parameters.method=='GET'?Object.entries({...parameters.data, ...{service:parameters.service}}).reduce((query, param)=>query += `${param[0]}=${param[1]}&`, ''):'')
                                     + `app_id=${parameters.app_id}`
@@ -90,7 +85,7 @@ const microserviceRequest = async parameters =>{
                             client_ip:          parameters.ip,
                             user_agent:         parameters.user_agent,
                             accept_language:    parameters.accept_language,
-                            authorization:      authorization,
+                            authorization:      null,
                             encryption_type:    'MICROSERVICE',
                             'app-id':           parameters.app_id,
                             endpoint:           parameters.endpoint
