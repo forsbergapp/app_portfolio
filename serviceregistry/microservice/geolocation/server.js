@@ -52,17 +52,17 @@ const serverStart = async () =>{
 		res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST');
 		res.setHeader('Access-Control-Allow-Origin', '*');
         common.commonRequestData({ req:req, secret:Config.secret})
-        .then(resultAuthenticateApp=>{
-            if (resultAuthenticateApp.authenticated){
+        .then(resultRequest=>{
+            if (resultRequest){
                 switch (true){
-                    case resultAuthenticateApp.data.service == 'PLACE':{
-                        if(	(resultAuthenticateApp.data.latitude !=null && resultAuthenticateApp.data.latitude!='') ||
-                            (resultAuthenticateApp.data.longitude !=null && resultAuthenticateApp.data.longitude!='')){
+                    case resultRequest.service == 'PLACE':{
+                        if(	(resultRequest.latitude !=null && resultRequest.latitude!='') ||
+                            (resultRequest.longitude !=null && resultRequest.longitude!='')){
                             service.getPlace(   common, 
                                                 Config, 
-                                                resultAuthenticateApp.data.latitude, 
-                                                resultAuthenticateApp.data.longitude, 
-                                                resultAuthenticateApp.data['Accept-Language'])
+                                                resultRequest.latitude, 
+                                                resultRequest.longitude, 
+                                                resultRequest['Accept-Language'])
                             
                             .then(result=>result?.length>0?
                                             common.commonServerReturn({
@@ -104,12 +104,12 @@ const serverStart = async () =>{
                                 res:res});
                         break;
                     }
-                    case resultAuthenticateApp.data.service == 'IP':{
+                    case resultRequest.service == 'IP':{
                         //no v6 support
                         service.getIp(  common, 
                                         Config, 
-                                        resultAuthenticateApp.data.ip.replace('::ffff:',''), 
-                                        resultAuthenticateApp.data['Accept-Language'])
+                                        resultRequest.ip.replace('::ffff:',''), 
+                                        resultRequest['Accept-Language'])
                         .then(result=>
                             common.commonServerReturn({
                             service: 'GEOLOCATION',
