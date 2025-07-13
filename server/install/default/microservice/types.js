@@ -58,11 +58,8 @@
 *                                      authorization?:string|null,
 *                                      body:{}|null,
 *                                      language:string}) => Promise.<*>,
-*          commonRequestData:(arg0: {  req:import('node:http').IncomingMessage & {headers:{'app-id':number, 'app-signature':string}}}) => 
-*                              Promise.<{ header:{'app-id':number|null, 
-*                                                 'app-signature':string}|null,
-*                                         url:string,
-*                                         body:{}}>
+*          commonRequestData:(arg0: {  req:import('node:http').IncomingMessage}) => 
+*                              Promise.<Object.<string,*>>
 * }} common
 */
 export {};

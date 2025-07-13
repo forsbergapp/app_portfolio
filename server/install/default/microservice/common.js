@@ -151,9 +151,9 @@ const commonAuth = async parameters =>{
  *                                                          write:function, 
  *                                                          setHeader:function, 
  *                                                          end:function}}} parameters
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const commonServerReturn = parameters=>{
+const commonServerReturn = async parameters=>{
     parameters.res.statusCode = parameters.code;
     if (parameters.error){
         commonLog({type:'MICROSERVICE_ERROR', 
@@ -170,11 +170,11 @@ const commonServerReturn = parameters=>{
                                         text:parameters.error, 
                                         developer_text:null, 
                                         more_info:null}});
-        parameters.res.write(commonEncrypt({secret:parameters.secret, data:message}), 'utf8');
+        parameters.res.write(await commonEncrypt({secret:parameters.secret, data:message}), 'utf8');
     }
     else{
         parameters.res.setHeader('Content-Type',  'application/json; charset=utf-8');
-        parameters.res.write(JSON.stringify(commonEncrypt({secret:parameters.secret, data:parameters.result})), 'utf8');
+        parameters.res.write(await commonEncrypt({secret:parameters.secret, data:JSON.stringify(parameters.result)}), 'utf8');
     }
     parameters.res.end();
 };
@@ -368,7 +368,12 @@ const commonRequestUrl = async parameters => {
                 gunzip.on('data', (chunk) =>responseBody += chunk);
                 gunzip.on('end', () => {
                     if (res.statusCode == 200 ||res.statusCode == 201)
-                        resolve (responseBody);
+                        resolve((parameters.external ==false && encrypt)?
+                                    commonDecrypt({ 
+                                        data:  responseBody,
+                                        secret: parameters.secret
+                                        }):
+                                        responseBody);
                     else
                         reject(res.statusCode);
                 });
@@ -380,7 +385,12 @@ const commonRequestUrl = async parameters => {
                 });
                 res.on('end', ()=>{
                     if (res.statusCode == 200 ||res.statusCode == 201)
-                        resolve (responseBody);
+                        resolve((parameters.external ==false && encrypt)?
+                                    commonDecrypt({ 
+                                        data:  responseBody,
+                                        secret:  parameters.secret
+                                        }):
+                                    responseBody);
                     else
                         reject(res.statusCode);
                 });
@@ -399,7 +409,7 @@ const commonRequestUrl = async parameters => {
  * @description Get data from request
  * @param {{req:import('node:http').IncomingMessage,
  *         secret:string }} parameters
- * @returns {Promise.<{}>}
+ * @returns {Promise.<Object.<string,*>>}
  */
 const commonRequestData = async parameters =>{
     const read_body = async () =>{
@@ -423,7 +433,19 @@ const commonRequestData = async parameters =>{
         });
     
     };
-    return await commonDecrypt({secret:parameters.secret, data:await read_body()??''}).then(result=>JSON.parse(result));
+    const data = await commonDecrypt({secret:parameters.secret, data:await read_body()??''})
+                        .then(result=>JSON.parse(result));
+    return {...Buffer.from(data.url.substring(data.url.indexOf('?')+1), 'base64').toString('utf-8')
+                .split('&')
+                .map(key=>{
+                    return {[key.split('=')[0]]:key.split('=')[1]};
+                })
+                .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
+                    return {...keys, ...key};
+                }),
+            'Accept-Language':  data.headers['Accept-Language'],
+            'User-Agent':       data.headers['User-Agent']
+            };   
 };
                    
 export {commonConfig,
