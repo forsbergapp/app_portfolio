@@ -259,7 +259,7 @@ const appSecureDialogueSendBroadcastSend = () => {
         const json_data ={  app_id:             app_id==''?null:app_id,
                             client_id:          client_id==''?null:client_id,
                             broadcast_type:     broadcast_type, 
-                            broadcast_message:  common.commonWindowToBase64(broadcast_message)};
+                            broadcast_message:  broadcast_message};
         
         common.commonFFB({path:'/server-socket/message', method:'POST', authorization_type:'ADMIN', body:json_data})
         .then((/**@type{string}*/result)=>{
