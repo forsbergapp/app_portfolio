@@ -82,24 +82,31 @@ const appFunction = async parameters =>{
         const IamUser = await import('../../../../server/db/IamUser.js');
         /**@type{server_db_table_MessageQueuePublish} */
         const message_queue_message = {service:'MESSAGE', message:message};
-        return {result:[await MessageQueuePublish.post({app_id:parameters.app_id, 
-                                                        data:message_queue_message})
-                        .then(result=>{
-                            if(result.result?.affectedRows){
-                                /**@type{server_db_table_IamUser[]} */
-                                const users = IamUser.get(parameters.app_id, message.receiver_id).result;                               
-                                for (const user of users.filter(user=>  user.type == (( message.receiver_id && 
-                                                                                        users.length == 1)?users[0].type:'ADMIN') &&
-                                                                        user.id == (message.receiver_id ?? user.id))){
-                                    /**@ts-ignore */
-                                    for (const connection of socket.socketConnectedGet(user.id))
-                                        socket.socketClientSend(connection.response, '', 'MESSAGE');
+        const messagePost = (await MessageQueuePublish.post({app_id:parameters.app_id, 
+                                                            data:message_queue_message})).result;
+        return {result:[ await (async ()=>{
+                                if(messagePost.result?.affectedRows){
+                                    /**@type{server_db_table_IamUser[]} */
+                                    const users = IamUser.get(parameters.app_id, message.receiver_id).result;                               
+                                    for (const user of users.filter(user=>  user.type == (( message.receiver_id && 
+                                                                                            users.length == 1)?users[0].type:'ADMIN') &&
+                                                                            user.id == (message.receiver_id ?? user.id))){
+                                        socket.socketClientPostMessage({app_id:parameters.app_id,
+                                                                        resource_id:null,
+                                                                        data:{  data_app_id:null,
+                                                                                /**@ts-ignore */
+                                                                                iam_user_id:user.id,
+                                                                                idToken:null,
+                                                                                message:'',
+                                                                                message_type:'MESSAGE'
+                                                                            }
+                                                                    });
+                                    }
+                                    return {sent:messagePost.result.affectedRows};
                                 }
-                                return {sent:result.result.affectedRows};
-                            }
-                            else
-                                return {sent:0};
-                        })], type:'JSON'};
+                                else
+                                    return {sent:0};
+                        })()], type:'JSON'};
     };
     /**
      * @description get MessageQueuPublish stat

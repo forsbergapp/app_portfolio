@@ -29,7 +29,7 @@ const paymentRequestGetStatus = async parameters =>{
     const {serverUtilNumberValue} = await import('../../../../server/server.js');
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import('../../../../server/security.js');
     const  {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
-    const {socketClientSend, socketConnectedGet} = await import('../../../../server/socket.js');
+    const {socketClientPostMessage} = await import('../../../../server/socket.js');
     const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
     const AppDataResourceMaster = await import('../../../../server/db/AppDataResourceMaster.js');
     const AppDataResourceDetail = await import('../../../../server/db/AppDataResourceDetail.js');
@@ -107,16 +107,20 @@ const paymentRequestGetStatus = async parameters =>{
                                                                                 resource_name:'CUSTOMER',
                                                                                 app_data_entity_id:Entity.id
                                                                         }}).result[0];
-                            //check SOCKET connected list
-                            for (const user_connected of socketConnectedGet(IamUserApp.get({app_id:parameters.app_id, resource_id:customer.iam_user_app_id, data:{iam_user_id:null, data_app_id:null}}).result[0].iam_user_id)){
-                                const message = {
-                                    type: 'PAYMENT_REQUEST', 
-                                    token:parameters.authorization.split('Bearer ')[1], 
-                                    exp:access_token.exp
-                                };
-                                //send payment request message
-                                socketClientSend(user_connected.response, Buffer.from(JSON.stringify(message)).toString('base64'), 'APP_FUNCTION');    
-                            }
+                            //send payment request message
+                            socketClientPostMessage({   app_id:parameters.app_id,
+                                                        resource_id:null,
+                                                        data:{  data_app_id:null,
+                                                                iam_user_id:IamUserApp.get({app_id:parameters.app_id, resource_id:customer.iam_user_app_id, data:{iam_user_id:null, data_app_id:null}}).result[0].iam_user_id,
+                                                                idToken:null,
+                                                                message:JSON.stringify({
+                                                                                        type: 'PAYMENT_REQUEST', 
+                                                                                        token:parameters.authorization.split('Bearer ')[1], 
+                                                                                        exp:access_token.exp
+                                                                                    }),
+                                                                message_type:'APP_FUNCTION'
+                                                            }
+                                                    });
                         }
                         return {result:{message:data_encrypted}, type:'JSON'};
                     }
