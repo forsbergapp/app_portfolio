@@ -4,7 +4,7 @@
  * @import {server_server_response,
  *          server_socket_broadcast_type_all, server_server_res,
  *          server_db_table_IamEncryption,
- *          server_socket_broadcast_type_app_function,
+ *          server_db_table_IamAppIdToken,
  *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
  */
 
@@ -162,7 +162,7 @@ const socketClientAdd = (newClient) => {
         //except MAINTENANCE to admin and current user
         let sent = 0;
         for (const client of SOCKET_CONNECTED_CLIENTS){
-            if (client.id != socketClientGet(parameters.idToken)?.id)
+            if (client.idToken != parameters.idToken)
                 if (parameters.data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result))
                     null;
                 else
@@ -409,7 +409,7 @@ const socketPost = async parameters =>{
                                 resource_id:connectUserData.insertId,
                                 data:{  data_app_id:null,
                                         iam_user_id:null,
-                                        idToken:parameters.idToken,
+                                        idToken:null,
                                         message:JSON.stringify({latitude: connectUserData.latitude,
                                                                 longitude: connectUserData.longitude,
                                                                 place: connectUserData.place,
@@ -498,33 +498,43 @@ const CheckOnline = parameters => {
 const socketClientPostMessage = async parameters => {
     const Security = await import('./security.js');
     const IamEncryption = await import('./db/IamEncryption.js');
+    const IamAppIdToken = await import ('./db/IamAppIdToken.js');
     const encrypt_transport = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_IAM', parameter:'ENCRYPT_TRANSPORT'}}).result);
     for (const client of SOCKET_CONNECTED_CLIENTS
                         .filter(row=>
                             row.id == (parameters.resource_id??row.id) &&
-                            row.app_id == (parameters.app_id ?? row.app_id) && 
+                            row.app_id == (parameters.data.data_app_id ?? row.app_id) && 
                             row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) && 
                             row.idToken == (parameters.data.idToken ?? row.idToken) 
                         )){
+        //get id for token in the record found
+        const token_id = IamAppIdToken.get({  app_id:parameters.app_id, 
+                                        resource_id:null, 
+                                        data:{data_app_id:null}}).result
+                    .filter((/**@type{server_db_table_IamAppIdToken}*/row)=>row.token == client.idToken)?.[0].id;
+        //get secrets from IamEncryption using uuid saved at record creation and token id
         const {jwk, iv} = IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}). result
-                            .filter((/**@type{server_db_table_IamEncryption}*/row)=>row.uuid == client.uuid)
+                            .filter((/**@type{server_db_table_IamEncryption}*/row)=>
+                                row.uuid == client.uuid && 
+                                row.iam_app_id_token_id == token_id)
                             .map((/**@type{server_db_table_IamEncryption}*/row)=>{
                                 return {jwk:JSON.parse(atob(row.secret)).jwk,
                                         iv:JSON.parse(atob(row.secret)).iv
                                 };
                             })[0];
+        //encrypt message using secrets for curent app id and token found in IamEncryption
         const encrypted = encrypt_transport==1?
                                 'data: ' + (await Security.securityTransportEncrypt({   
                                         app_id: parameters.app_id,
                                         data:   Buffer.from(JSON.stringify({   
-                                                            broadcast_type :    parameters.data.message_type, 
-                                                            broadcast_message:  parameters.data.message}))
+                                                            sse_type :    parameters.data.message_type, 
+                                                            sse_message:  parameters.data.message}))
                                                         .toString('base64'),
                                         jwk:    jwk,
                                         iv:     iv})) + '\n\n':
                                     `data: ${Buffer.from(JSON.stringify({   
-                                                            broadcast_type :    parameters.data.message_type, 
-                                                            broadcast_message:  parameters.data.message}))
+                                                            sse_type :    parameters.data.message_type, 
+                                                            sse_message:  parameters.data.message}))
                                                         .toString('base64')}\n\n`;
                                     
         

@@ -48,27 +48,31 @@ const template = props =>`  <!DOCTYPE html>
                                    common.commonMiscCssApply(atob(cssStart) + atob(cssFonts));
 
                                    /**
-                                    * @description Receives server side event from BFF, decrypts message and delegates event
+                                    * @description Receives server side event from BFF, decrypts message using start uuid and delegates message
                                     * @param {{socket:*, 
                                     *          uuid:string|null, 
                                     *          secret:string|null}} parameters
                                     */
                                    const FFB_SSE = async parameters =>{
-                                       const getMessage = BFFmessage =>{
+                                        /**
+                                         * @returns {sse_type:string,
+                                         *           sse_message:string}
+                                         */
+                                        const getMessage = BFFmessage =>{
                                            const messageDecoded = common.commonWindowFromBase64(BFFmessage);
-                                           return { broadcast_type:JSON.parse(messageDecoded).broadcast_type,
-                                                   broadcast_message:JSON.parse(messageDecoded).broadcast_message};
-                                       }
-                                       const BFFStream = new WritableStream({
+                                           return {sse_type:JSON.parse(messageDecoded).sse_type,
+                                                   sse_message:JSON.parse(messageDecoded).sse_message};
+                                        }
+                                        const BFFStream = new WritableStream({
                                            write(data, controller){
                                                 (encrypt_transport?
                                                     common.commonWindowDecrypt({secret:parameters.secret, data:new TextDecoder('utf-8').decode(new Uint8Array(data)).split('data: ')[1]}):
                                                         async ()=>new TextDecoder('utf-8').decode(new Uint8Array(data)).split('\\n\\n')[0].split('data: ')[1])
                                                 .then(BFFmessage=>{
-                                                    const message = getMessage(BFFmessage);
-                                                    switch (message.broadcast_type){
+                                                    const SSEmessage = getMessage(BFFmessage);
+                                                    switch (SSEmessage.sse_type){
                                                         case 'INIT':{
-                                                                const INITmessage = JSON.parse(message.broadcast_message);
+                                                                const INITmessage = JSON.parse(SSEmessage.sse_message);
                                                                 if (x.apps && INITmessage.APP_PARAMETER.Info.x)
                                                                     for (const app of INITmessage.APP_PARAMETER.Info.x)
                                                                         x.apps.push(app)
@@ -80,12 +84,12 @@ const template = props =>`  <!DOCTYPE html>
                                                             common.commonMiscLoadFont({ app_id:             ${props.app_id},
                                                                                         uuid:               '${props.uuid}',
                                                                                         secret:             '${props.secret}',
-                                                                                        message:            message.broadcast_message,
+                                                                                        message:            SSEmessage.sse_message,
                                                                                         cssFonts:           cssFonts})
                                                             break;
                                                         }
                                                         default:{
-                                                            common.commonSocketBroadcastShow(BFFmessage);
+                                                            common.commonSocketSSEShow(SSEmessage);
                                                             break
                                                         }
                                                     }

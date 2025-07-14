@@ -2351,17 +2351,15 @@ const commonFFB = async parameter =>
                             body: parameter.body ?? null
                         }});
 /**
- * @name commonSocketBroadcastShow
- * @description Show broadcast message
+ * @name commonSocketSSEShow
+ * @description Show sse message
  * @function
- * @param {string} broadcast_message 
+ * @param {{sse_type:string,
+*           sse_message:string}} sse_message 
  * @returns {Promise.<void>}
  */
-const commonSocketBroadcastShow = async (broadcast_message) => {
-    broadcast_message = commonWindowFromBase64(broadcast_message);
-    const broadcast_type = JSON.parse(broadcast_message).broadcast_type;
-    const message = JSON.parse(broadcast_message).broadcast_message;
-    switch (broadcast_type){
+const commonSocketSSEShow = async (sse_message) => {
+    switch (sse_message.sse_type){
         case 'MAINTENANCE':{
             window.location.href = '/';
             break;
@@ -2372,36 +2370,36 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
             break;
         }
         case 'CONNECTINFO':{
-            COMMON_GLOBAL.client_latitude =             JSON.parse(commonWindowFromBase64(message)).latitude==''?
+            COMMON_GLOBAL.client_latitude =             JSON.parse(sse_message.sse_message).latitude==''?
                                                             COMMON_GLOBAL.client_latitude:
-                                                                JSON.parse(commonWindowFromBase64(message)).latitude;
-            COMMON_GLOBAL.client_longitude =            JSON.parse(commonWindowFromBase64(message)).longitude==''?
+                                                                JSON.parse(sse_message.sse_message).latitude;
+            COMMON_GLOBAL.client_longitude =            JSON.parse(sse_message.sse_message).longitude==''?
                                                             COMMON_GLOBAL.client_longitude:
-                                                                JSON.parse(commonWindowFromBase64(message)).longitude;
-            COMMON_GLOBAL.client_place =                JSON.parse(commonWindowFromBase64(message)).place==''?
+                                                                JSON.parse(sse_message.sse_message).longitude;
+            COMMON_GLOBAL.client_place =                JSON.parse(sse_message.sse_message).place==''?
                                                             COMMON_GLOBAL.client_place:
-                                                                JSON.parse(commonWindowFromBase64(message)).place;
-            COMMON_GLOBAL.client_timezone =             JSON.parse(commonWindowFromBase64(message)).timezone==''?
+                                                                JSON.parse(sse_message.sse_message).place;
+            COMMON_GLOBAL.client_timezone =             JSON.parse(sse_message.sse_message).timezone==''?
                                                             COMMON_GLOBAL.client_timezone:
-                                                                JSON.parse(commonWindowFromBase64(message)).timezone;
+                                                                JSON.parse(sse_message.sse_message).timezone;
             break;
         }
         case 'CHAT':
         case 'ALERT':{
             commonComponentRender({
                 mountDiv:   'common_broadcast',
-                data:       {message:commonWindowFromBase64(message)},
+                data:       {message:sse_message.sse_message},
                 methods:    {commonMiscResourceFetch:commonMiscResourceFetch},
                 path:       '/common/component/common_broadcast.js'});
             break;
         }
 		case 'PROGRESS':{
-			commonMessageShow('PROGRESS', null, null, JSON.parse(commonWindowFromBase64(message)));
+			commonMessageShow('PROGRESS', null, null, JSON.parse(sse_message.sse_message));
             break;
         }
         case 'APP_FUNCTION':{
             if (COMMON_GLOBAL.app_function_sse)
-                COMMON_GLOBAL.app_function_sse(commonWindowFromBase64(message));
+                COMMON_GLOBAL.app_function_sse(sse_message.sse_message);
             break;
         }
         case 'MESSAGE':{
@@ -3815,7 +3813,7 @@ const commonGet = () =>{
         /* FFB */
         commonFFB:commonFFB,
         /* SERVICE SOCKET */
-        commonSocketBroadcastShow:commonSocketBroadcastShow, 
+        commonSocketSSEShow:commonSocketSSEShow, 
         commonSocketConnectOnline:commonSocketConnectOnline,
         commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck,
         /* MICROSERVICE GEOLOCATION */
@@ -3984,7 +3982,7 @@ export{/* GLOBALS*/
        /* FFB */
        commonFFB,
        /* SERVICE SOCKET */
-       commonSocketBroadcastShow, 
+       commonSocketSSEShow, 
        commonSocketConnectOnline,
        commonSocketConnectOnlineCheck,
        /* MICROSERVICE GEOLOCATION */
