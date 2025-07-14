@@ -583,24 +583,19 @@ const bffResponse = async parameters =>{
                                                             )[0].iam_app_id_token_id, 
                                             data:{data_app_id:null}}).result[0].token;
                             if (token){
-                                const current_app_id = socket.socketClientGet(token)?.app_id;
-                                if (current_app_id!=null){
-                                    socket.socketClientPostMessage({app_id:current_app_id,
-                                                                    resource_id:null,
-                                                                    data:{  data_app_id:null,
-                                                                            iam_user_id:null,
-                                                                            idToken:token,
-                                                                            message:JSON.stringify({
-                                                                                        uuid:req.url.substring('/bff/x/'.length).split('~')[0],
-                                                                                        url: encryptionData.url
-                                                                                    }),
-                                                                            message_type:'FONT_URL'
-                                                                        }
-                                                                });
-                                    return 1;
-                                }
-                                else
-                                    return null;
+                                socket.socketClientPostMessage({app_id:common_app_id,
+                                                                resource_id:null,
+                                                                data:{  data_app_id:null,
+                                                                        iam_user_id:null,
+                                                                        idToken:token,
+                                                                        message:JSON.stringify({
+                                                                                    uuid:req.url.substring('/bff/x/'.length).split('~')[0],
+                                                                                    url: encryptionData.url
+                                                                                }),
+                                                                        message_type:'FONT_URL'
+                                                                    }
+                                                            });
+                                return 1;
                             }
                             else
                                 return null;
