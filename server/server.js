@@ -80,11 +80,13 @@ const serverResponse = async parameters =>{
     /**
      * @param {string} response
      */
-    const write = async response =>{
+    const write = response =>{
         parameters.res.write(response, 'utf8');
     };
-    if (parameters.sse_message)
+
+    if (parameters.sse_message){
         write(parameters.sse_message);
+    }
     else{
         parameters.res.setHeader('Connection', 'Close');
         await setType(parameters.type);

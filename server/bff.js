@@ -41,6 +41,7 @@ const fs = await import('node:fs');
  * @function 
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
+ *          resource_id:string|null,
  *          ip:string,
  *          idToken:string,
  *          user_agent:string,
@@ -116,31 +117,36 @@ const bffConnect = async parameters =>{
     const connectUserData = await socket.socketPost({  app_id:common_app_id,
                             idToken:parameters.idToken,
                             authorization:'',
+                            uuid:parameters.resource_id,
                             user_agent:parameters.user_agent,
                             accept_language:parameters.accept_language,
                             ip:parameters.ip,
                             response:parameters.response
                             });
-    
     //send SSE INIT for common app id
-    await socket.socketAppServerFunctionSend( common_app_id, 
-        parameters.idToken, 
-        'INIT', 
-        JSON.stringify({
-            APP_PARAMETER:{ 
-                AppParametersCommon:AppParameter.get({app_id:parameters.app_id,
-                                                        resource_id:common_app_id}).result[0]??{},
-                Info:server_apps_info_parameters
-            }
-        })
-    );  
+    socket.socketClientPostMessage({app_id:common_app_id, 
+                                    resource_id:connectUserData.insertId, 
+                                    data:{  data_app_id:null, 
+                                            iam_user_id: null,
+                                            idToken:null,
+                                            message: JSON.stringify({APP_PARAMETER:{ 
+                                                AppParametersCommon:AppParameter.get({app_id:parameters.app_id,
+                                                                                        resource_id:common_app_id}).result[0]??{},
+                                                Info:server_apps_info_parameters
+                                            }}),
+                                            message_type:'INIT'}});
     //send SSE CONNECTINFO
-    socket.socketClientSend(parameters.response, 
-                            Buffer.from(JSON.stringify({ 
-                                latitude: connectUserData.latitude,
-                                longitude: connectUserData.longitude,
-                                place: connectUserData.place,
-                                timezone: connectUserData.timezone})).toString('base64'), 'CONNECTINFO');
+    socket.socketClientPostMessage({app_id:common_app_id, 
+                                    resource_id:connectUserData.insertId, 
+                                    data:{  data_app_id:null, 
+                                            iam_user_id: null,
+                                            idToken:null,
+                                            message: JSON.stringify({ 
+                                                        latitude: connectUserData.latitude,
+                                                        longitude: connectUserData.longitude,
+                                                        place: connectUserData.place,
+                                                        timezone: connectUserData.timezone}),
+                                            message_type:'CONNECTINFO'}});
 };
 /**
  * @name bffInit
@@ -579,14 +585,18 @@ const bffResponse = async parameters =>{
                             if (token){
                                 const current_app_id = socket.socketClientGet(token)?.app_id;
                                 if (current_app_id!=null){
-                                    socket.socketAppServerFunctionSend(current_app_id,
-                                                                token,
-                                                                'FONT_URL',
-                                                                Buffer.from(JSON.stringify({
-                                                                    uuid:req.url.substring('/bff/x/'.length).split('~')[0],
-                                                                    url: encryptionData.url
-                                                                })).toString('base64')
-                                                                );
+                                    socket.socketClientPostMessage({app_id:current_app_id,
+                                                                    resource_id:null,
+                                                                    data:{  data_app_id:null,
+                                                                            iam_user_id:null,
+                                                                            idToken:token,
+                                                                            message:JSON.stringify({
+                                                                                        uuid:req.url.substring('/bff/x/'.length).split('~')[0],
+                                                                                        url: encryptionData.url
+                                                                                    }),
+                                                                            message_type:'FONT_URL'
+                                                                        }
+                                                                });
                                     return 1;
                                 }
                                 else

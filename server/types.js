@@ -1476,7 +1476,8 @@
  * @property {number} id
  * @property {string} connection_date
  * @property {number} app_id
- * @property {string|null} authorization_bearer
+ * @property {string|null} idToken
+ * @property {string|null} uuid
  * @property {number|null} iam_user_id
  * @property {string|null} iam_user_username
  * @property {'ADMIN'|'USER'|null} iam_user_type
