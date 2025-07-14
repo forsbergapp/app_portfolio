@@ -41,7 +41,7 @@
                 "responses": {}
             }
         },
-        "/bff/app_id/v1/server-bff": {
+        "/bff/app_id/v1/server-bff/${resource_id_string}": {
             "post": {
                 "summary": "",
                 "operationId": "server.bff.bffConnect",
@@ -50,6 +50,11 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "description":"uuid",
+                            "in":"path"
+                        },
                         {
                             "$ref": "#/components/parameters/server_app_id"
                         },
@@ -2684,7 +2689,9 @@
                         {"$ref": "#/components/schema/ErrorResponse"}
                     ]
                 }
-            },
+            }
+        },
+        "/bff/admin/v1/server-socket/socket/$resource_id_string": {
             "post": {
                 "summary": "",
                 "operationId": "server.socket.socketConnect",
@@ -2693,6 +2700,11 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "description":"uuid",
+                            "in":"path"
+                        },
                         {
                             "$ref": "#/components/parameters/server_app_id"
                         },
@@ -4215,7 +4227,7 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-socket/socket": {
+        "/bff/app_id/v1/server-socket/socket/$resource_id_string": {
             "post": {
                 "summary": "",
                 "operationId": "server.socket.socketConnect",
@@ -4224,6 +4236,11 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "description":"uuid",
+                            "in":"path"
+                        },
                         {
                             "$ref": "#/components/parameters/server_app_id"
                         },
@@ -4289,7 +4306,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-socket/socket": {
+        "/bff/app_access/v1/server-socket/socket/$resource_id_string": {
             "post": {
                 "summary": "",
                 "operationId": "server.socket.socketConnect",
@@ -4298,6 +4315,11 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "description":"uuid",
+                            "in":"path"
+                        },
                         {
                             "$ref": "#/components/parameters/server_app_id"
                         },

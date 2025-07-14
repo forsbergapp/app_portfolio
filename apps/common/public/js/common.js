@@ -824,7 +824,7 @@ const commonMiscTimezoneOffset = (local_timezone) =>{
  *          cssFonts:string}} parameters
  */
 const commonMiscLoadFont = parameters => {
-    const fontData = JSON.parse(commonWindowFromBase64(parameters.message));
+    const fontData = JSON.parse(parameters.message);
     COMMON_GLOBAL.x.FFB({   app_id:             parameters.app_id,
                             uuid:               parameters.uuid,
                             secret:             parameters.secret,
@@ -1030,7 +1030,7 @@ const commonWindowEncrypt = async parameters =>{
 * @description Decrypt
 * @function
 * @param {{ secret:string,
-*           data:string}} parameters
+*           data:Uint8Array}} parameters
 * @returns {Promise.<*>} 
 */
 const commonWindowDecrypt = async parameters =>{
@@ -1043,17 +1043,16 @@ const commonWindowDecrypt = async parameters =>{
                    }, 
                    true,
                    ['encrypt', 'decrypt'] );
-
-   return new TextDecoder().decode(await window.crypto.subtle.decrypt(
-                   {
-                       name: 'AES-GCM',
-                       /**@ts-ignore */
-                       iv: new Uint8Array(commonWindowFromBase64(JSON.parse(atob(parameters.secret)).iv).split(','))
-                   },
-                   key,
-                   /**@ts-ignore */
-                   new Uint8Array(commonWindowFromBase64(parameters.data).toString().split(','))
-           ));
+    return new TextDecoder().decode(await window.crypto.subtle.decrypt(
+        {
+            name: 'AES-GCM',
+            /**@ts-ignore */
+            iv: new Uint8Array(commonWindowFromBase64(JSON.parse(atob(parameters.secret)).iv).split(','))
+        },
+        key,
+        /**@ts-ignore */
+        new Uint8Array(commonWindowFromBase64(parameters.data).toString().split(','))
+    ));
 };
 
 /**
@@ -2421,7 +2420,7 @@ const commonSocketConnectOnline = async () => {
     const  authorization_type= (COMMON_GLOBAL.token_at && COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id)?
                                     'ADMIN':
                                         COMMON_GLOBAL.token_at?'APP_ACCESS':'APP_ID';
-    commonFFB({path:'/server-socket/socket', response_type: 'SSE', method:'POST', authorization_type:authorization_type});
+    commonFFB({path:'/server-socket/socket/' + COMMON_GLOBAL.x.apps?.[0].uuid ?? '', response_type: 'SSE', method:'POST', authorization_type:authorization_type});
 };
 /**
  * @name commonSocketConnectOnlineCheck

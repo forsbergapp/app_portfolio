@@ -2,7 +2,8 @@
 
 /**
  * @import {server_server_response,
- *          server_socket_broadcast_type_all, server_server_res,server_server_req,
+ *          server_socket_broadcast_type_all, server_server_res,
+ *          server_db_table_IamEncryption,
  *          server_socket_broadcast_type_app_function,
  *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
  */
@@ -31,17 +32,17 @@ let SOCKET_CONNECTED_CLIENTS = [];
 const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, headers_accept_language) =>{
     //get GPS from IP
     const result_geodata = await microserviceRequest({  app_id:app_id,
-                                                    microservice:'GEOLOCATION',
-                                                    service:'IP', 
-                                                    method:'GET',
-                                                    data:{ip:ip},
-                                                    ip:ip,
-                                                    user_agent:headers_user_agent,
-                                                    accept_language:headers_accept_language,
-                                                    endpoint:'SERVER'
-                                                })
-                                                .then((/**@type{*}*/result_gps)=>result_gps.http?null:result_gps.result)
-                                                .catch(()=>null);
+                                                        microservice:'GEOLOCATION',
+                                                        service:'IP', 
+                                                        method:'GET',
+                                                        data:{ip:ip},
+                                                        ip:ip,
+                                                        user_agent:headers_user_agent,
+                                                        accept_language:headers_accept_language,
+                                                        endpoint:'SERVER'
+                                                    })
+                                                    .then((/**@type{*}*/result_gps)=>result_gps.http?null:result_gps.result)
+                                                    .catch(()=>null);
     
     const place = result_geodata?
                     (result_geodata.city + ', ' +
@@ -53,26 +54,6 @@ const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, header
             timezone:result_geodata?result_geodata.timezone ?? '':''};
 };
 /**
- * @name socketClientSend
- * @description Socket client send
- * @function
- * @param {server_server_res} res
- * @param {string} message
- * @param {server_socket_broadcast_type_all} message_type
- * @returns {void}
- */
- const socketClientSend = (res, message, message_type) => {
-    serverResponse ({   app_id:null,
-                        type:'JSON',
-                        result:'',
-                        route:null,
-                        method:'',
-                        statusMessage:'',
-                        statusCode:200,
-                        sse_message:`data: ${Buffer.from(JSON.stringify({broadcast_type : message_type, broadcast_message: message})).toString('base64')}\n\n`,
-                        res:res});
-};
-/**
  * @name socketClientGet
  * @description Socket client get client_id for given id token
  *              
@@ -80,7 +61,7 @@ const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, header
  * @param {string} idtoken
  * @returns {server_socket_connected_list}
  */
-const socketClientGet = idtoken => SOCKET_CONNECTED_CLIENTS.filter(client => client.authorization_bearer == idtoken)[0];
+const socketClientGet = idtoken => SOCKET_CONNECTED_CLIENTS.filter(client => client.idToken == idtoken)[0];
 
 /**
  * @name socketClientAdd
@@ -111,7 +92,7 @@ const socketClientAdd = (newClient) => {
  * @returns {Promise.<server_server_response>}
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
-    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == parameters.idToken).length==0){
+    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.idToken == parameters.idToken).length==0){
         return {http:401,
                 code:'IAM',
                 text:iamUtilMessageNotAuthorized(),
@@ -122,7 +103,7 @@ const socketClientAdd = (newClient) => {
     }
     else{
         for (const connected of SOCKET_CONNECTED_CLIENTS){
-            if (connected.authorization_bearer == parameters.idToken){
+            if (connected.idToken == parameters.idToken){
                 if (parameters.app_only == true){
                     connected.app_id = app_id;
                     connected.ip = parameters.ip;
@@ -142,28 +123,22 @@ const socketClientAdd = (newClient) => {
                     connected.place = connectUserData.place;
                     connected.timezone = connectUserData.timezone;
                     //send message to client with updated data
-                    socketClientSend( connected.response, 
-                                        Buffer.from(JSON.stringify({   client_id: connected.id, 
-                                            latitude: connectUserData.latitude,
-                                            longitude: connectUserData.longitude,
-                                            place: connectUserData.place,
-                                            timezone: connectUserData.timezone})).toString('base64')
-                                        , 'CONNECTINFO');
+                    socketClientPostMessage({   app_id:app_id,
+                                                resource_id:connected.id,
+                                                data:{  data_app_id:null,
+                                                        iam_user_id:null,
+                                                        idToken:null,
+                                                        message:JSON.stringify({client_id:  connected.id, 
+                                                                                latitude:   connectUserData.latitude,
+                                                                                longitude:  connectUserData.longitude,
+                                                                                place:      connectUserData.place,
+                                                                                timezone:   connectUserData.timezone}),
+                                                        message_type:'CONNECTINFO'}});
                 }
             }
         }
         return {result:null, type:'JSON'};
     }
-};
-/**
- * @name socketConnectedGet
- * @description Socket check connected
- * @function
- * @param {number} iam_user_id
- * @returns {server_socket_connected_list[]}
- */
- const socketConnectedGet = iam_user_id => {
-    return SOCKET_CONNECTED_CLIENTS.filter(client => client.iam_user_id == iam_user_id);
 };
 
 /**
@@ -192,7 +167,13 @@ const socketClientAdd = (newClient) => {
                     null;
                 else
                     if (client.app_id == parameters.data.app_id || parameters.data.app_id == null){
-                        socketClientSend(client.response, parameters.data.broadcast_message, parameters.data.broadcast_type);
+                        socketClientPostMessage({   app_id:parameters.app_id,
+                                                    resource_id:client.id,
+                                                    data:{  data_app_id:null,
+                                                            iam_user_id:null,
+                                                            idToken:null,
+                                                            message:parameters.data.broadcast_message,
+                                                            message_type:parameters.data.broadcast_type}});
                         sent++;
                     }
         }
@@ -203,7 +184,13 @@ const socketClientAdd = (newClient) => {
             //broadcast CHAT to specific client
             for (const client of SOCKET_CONNECTED_CLIENTS){
                 if (client.id == parameters.data.client_id){
-                    socketClientSend(client.response, parameters.data.broadcast_message, parameters.data.broadcast_type);
+                    socketClientPostMessage({   app_id:parameters.app_id,
+                                                resource_id:client.id,
+                                                data:{  data_app_id:null,
+                                                        iam_user_id:null,
+                                                        idToken:null,
+                                                        message:parameters.data.broadcast_message,
+                                                        message_type:parameters.data.broadcast_type}});
                     return {result:{sent:1}, type:'JSON'};
                 }
             }
@@ -251,7 +238,7 @@ const socketClientAdd = (newClient) => {
                     .map(client=>{
                         return {id:                     client.id,
                                 app_id:                 client.app_id, 
-                                authorization_bearer:   client.authorization_bearer,
+                                authorization_bearer:   client.idToken,
                                 iam_user_id:            client.iam_user_id,
                                 iam_user_username:      client.iam_user_username,
                                 iam_user_type:          client.iam_user_type,
@@ -293,27 +280,6 @@ const socketClientAdd = (newClient) => {
             type:'JSON'};
 };
 /**
- * @name socketAppServerFunctionSend
- * @description Sends message to given app having the correct authorization_header
- *              Used for sending server side event from an app server function
- * @function
- * @param {number} app_id
- * @param {string} idToken
- * @param {server_socket_broadcast_type_app_function} message_type
- * @param {string} message
- * @returns {Promise.<{sent:number}>}
- */
-const socketAppServerFunctionSend = async (app_id, idToken, message_type, message) =>{
-
-    const client = SOCKET_CONNECTED_CLIENTS.filter(client=>client.app_id == app_id && client.authorization_bearer == idToken);
-    if (client.length == 1){
-        socketClientSend(client[0].response, message, message_type);
-        return {sent:1};
-    }
-    else
-        return {sent:0};
-};
-/**
  * @name socketConnectedCount
  * @description Socket connected count
  * @function
@@ -333,15 +299,17 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
  * @param {{app_id:number,
  *          idToken:string,
  *          authorization:string,
+ *          uuid:string|null,
  *          user_agent:string,
  *          accept_language:string,
  *          ip:string,
  *          response:server_server_res
  *          }} parameters
- * @returns {Promise.<{  latitude:string,
- *              longitude: string,
- *              place: string,
- *              timezone: string}>}
+ * @returns {Promise.<{ insertId:number,
+ *                      latitude:string,
+ *                      longitude: string,
+ *                      place: string,
+ *                      timezone: string}>}
  */
 const socketPost = async parameters =>{
     const { iamUtilTokenGet } = await import('./iam.js');
@@ -360,7 +328,7 @@ const socketPost = async parameters =>{
                                         null;
     //no authorization for repeated request using same id token or requesting from browser
     if (SOCKET_CONNECTED_CLIENTS
-            .filter(row=>row.authorization_bearer == parameters.idToken).length>0 ||parameters.response.req.headers['sec-fetch-mode']!='cors'){
+            .filter(row=>row.idToken == parameters.idToken).length>0 ||parameters.response.req.headers['sec-fetch-mode']!='cors'){
         const {iamUtilResponseNotAuthorized} = await import('./iam.js');
         throw await iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
     }
@@ -385,7 +353,8 @@ const socketPost = async parameters =>{
                             id:                     client_id,
                             connection_date:        new Date().toISOString(),
                             app_id:                 parameters.app_id,
-                            authorization_bearer:   parameters.idToken,
+                            idToken:                parameters.idToken,
+                            uuid:                   parameters.uuid,
                             token_access:           null,
                             iam_user_id:            iam_user?iam_user.id:null,
                             iam_user_username:      iam_user?iam_user.username:null,
@@ -401,10 +370,11 @@ const socketPost = async parameters =>{
                         };
     
         socketClientAdd(newClient);
-        return {latitude:connectUserData.latitude,
-                          longitude: connectUserData.longitude,
-                          place: connectUserData.place,
-                          timezone:connectUserData.timezone};
+        return {    insertId:client_id,
+                    latitude:connectUserData.latitude,
+                    longitude: connectUserData.longitude,
+                    place: connectUserData.place,
+                    timezone:connectUserData.timezone};
     }
 };
 /**
@@ -416,6 +386,7 @@ const socketPost = async parameters =>{
  * @param {{app_id:number,
  *          idToken:string,
  *          authorization:string,
+ *          resource_id:string|null,
  *          user_agent:string,
  *          accept_language:string,
  *          ip:string,
@@ -424,33 +395,47 @@ const socketPost = async parameters =>{
  * @returns {Promise.<void>}
  */
  const socketConnect = async parameters =>{   
-    const connectUserData = await socketPost(parameters);
-    //send message to client with data
-    socketClientSend(parameters.response, Buffer.from(JSON.stringify({ latitude: connectUserData.latitude,
-                                                                        longitude: connectUserData.longitude,
-                                                                        place: connectUserData.place,
-                                                                        timezone: connectUserData.timezone})).toString('base64'), 'CONNECTINFO');
+    const connectUserData = await socketPost({  app_id:parameters.app_id,
+                                                idToken:parameters.idToken,
+                                                authorization:parameters.authorization,
+                                                uuid:parameters.resource_id,
+                                                user_agent:parameters.user_agent,
+                                                accept_language:parameters.accept_language,
+                                                ip:parameters.ip,
+                                                response:parameters.response
+                                                });
+    //send CONNECTINFO message
+    socketClientPostMessage({   app_id:parameters.app_id,
+                                resource_id:connectUserData.insertId,
+                                data:{  data_app_id:null,
+                                        iam_user_id:null,
+                                        idToken:parameters.idToken,
+                                        message:JSON.stringify({latitude: connectUserData.latitude,
+                                                                longitude: connectUserData.longitude,
+                                                                place: connectUserData.place,
+                                                                timezone: connectUserData.timezone}),
+                                        message_type:'CONNECTINFO'}});
 };
 
 /**
  * @name socketIntervalCheck
  * @description Socket start setInterval to check maintenance and logout users with expired tokens using server side event
  * @function
- * @returns {void}
+ * @returns {Promise.<void>}
  */
- const socketIntervalCheck = () => {
-    setInterval(() => {
+ const socketIntervalCheck = async () => {
+    setInterval(async () => {
         //server interval run as app 0
         if (serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'METADATA',parameter:'MAINTENANCE'}}).result)==1){
-            socketAdminSend({   app_id:0,
-                                idToken:'',
-                                data:{app_id:null,
-                                    client_id:null,
-                                    broadcast_type:'MAINTENANCE',
-                                    broadcast_message:''}}
-                                );
+            await socketAdminSend({ app_id:0,
+                                    idToken:'',
+                                    data:{app_id:null,
+                                        client_id:null,
+                                        broadcast_type:'MAINTENANCE',
+                                        broadcast_message:''}}
+                                    );
         }
-        socketExpiredTokensUpdate();
+        await socketExpiredTokensUpdate();
     //set default interval to 5 seconds if no parameter is set
     }, serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_SOCKET', parameter:'CHECK_INTERVAL'}}).result)??5000);
 };
@@ -459,9 +444,9 @@ const socketPost = async parameters =>{
  * @name socketExpiredTokensUpdate
  * @description Sends SESSION_EXPIRED message to clients with expired token
  * @function
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const socketExpiredTokensUpdate = () =>{
+const socketExpiredTokensUpdate = async () =>{
     for (const client of SOCKET_CONNECTED_CLIENTS){
         if ((client.token_access && iamUtilTokenExpired(client.app_id, 'APP_ACCESS', client.token_access)&&
             client.token_access && iamUtilTokenExpired(client.app_id, 'APP_ACCESS_VERIFICATION', client.token_access)) ||
@@ -471,7 +456,13 @@ const socketExpiredTokensUpdate = () =>{
                 client.iam_user_username=null;
                 client.token_access=null;
                 client.token_admin=null;
-                socketClientSend(client.response, '', 'SESSION_EXPIRED');
+                socketClientPostMessage({   app_id:0,
+                                            resource_id:client.id,
+                                            data:{  data_app_id:null,
+                                                    iam_user_id:null,
+                                                    idToken:null,
+                                                    message:'',
+                                                    message_type:'SESSION_EXPIRED'}});
             }
     }
 };
@@ -481,14 +472,74 @@ const socketExpiredTokensUpdate = () =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{resource_id :number|null}} parameters
- * @returns {server_server_response & {result?:{online:1|0} }}
+ * @returns {server_server_response & {result:{online:1|0} }}
  */
-const CheckOnline = parameters => { /**@ts-ignore */
+const CheckOnline = parameters => { 
+                                    /**@ts-ignore */
                                     return { result:parameters.resource_id?
-                                                    (socketConnectedGet(parameters.resource_id).length>0?{online:1}:{online:0}):
-                                                        {online:0}, 
+                                                (SOCKET_CONNECTED_CLIENTS
+                                                    .filter(client => client.iam_user_id == parameters.resource_id).length>0?
+                                                        {online:1}:
+                                                            {online:0}):
+                                                    {online:0}, 
                                             type:'JSON'};};
-
-export {socketClientSend, socketClientGet, socketConnectedUpdate, socketConnectedGet, socketConnectedList, socketConnectedCount, socketPost, socketConnect, 
-        socketAdminSend, socketAppServerFunctionSend, 
-        socketIntervalCheck, socketExpiredTokensUpdate, CheckOnline, };
+/**
+ * @name socketClientPostMessage
+ * @decription Post message for given client_id, app_id, iam_user_id or idToken or for admin: all or for all given app id
+ * @function
+ * @param {{app_id:Number,
+ *          resource_id:number|null,
+ *          data:{  data_app_id:number|null,
+ *                  iam_user_id:number|null,
+ *                  idToken:string|null,
+ *                  message:String,
+ *                  message_type:server_socket_broadcast_type_all}}} parameters
+ */
+const socketClientPostMessage = async parameters => {
+    const Security = await import('./security.js');
+    const IamEncryption = await import('./db/IamEncryption.js');
+    const encrypt_transport = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_IAM', parameter:'ENCRYPT_TRANSPORT'}}).result);
+    for (const client of SOCKET_CONNECTED_CLIENTS
+                        .filter(row=>
+                            row.id == (parameters.resource_id??row.id) &&
+                            row.app_id == (parameters.app_id ?? row.app_id) && 
+                            row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) && 
+                            row.idToken == (parameters.data.idToken ?? row.idToken) 
+                        )){
+        const {jwk, iv} = IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}). result
+                            .filter((/**@type{server_db_table_IamEncryption}*/row)=>row.uuid == client.uuid)
+                            .map((/**@type{server_db_table_IamEncryption}*/row)=>{
+                                return {jwk:JSON.parse(atob(row.secret)).jwk,
+                                        iv:JSON.parse(atob(row.secret)).iv
+                                };
+                            })[0];
+        const encrypted = encrypt_transport==1?
+                                'data: ' + (await Security.securityTransportEncrypt({   
+                                        app_id: parameters.app_id,
+                                        data:   Buffer.from(JSON.stringify({   
+                                                            broadcast_type :    parameters.data.message_type, 
+                                                            broadcast_message:  parameters.data.message}))
+                                                        .toString('base64'),
+                                        jwk:    jwk,
+                                        iv:     iv})) + '\n\n':
+                                    `data: ${Buffer.from(JSON.stringify({   
+                                                            broadcast_type :    parameters.data.message_type, 
+                                                            broadcast_message:  parameters.data.message}))
+                                                        .toString('base64')}\n\n`;
+                                    
+        
+        serverResponse ({   app_id:null,
+            type:'JSON',
+            result:'',
+            route:null,
+            method:'',
+            statusMessage:'',
+            statusCode:200,
+            sse_message:encrypted,
+            res:client.response});
+    }
+};
+export {socketClientGet, socketConnectedUpdate, socketConnectedList, socketConnectedCount, socketPost, socketConnect, 
+        socketAdminSend, 
+        socketIntervalCheck, socketExpiredTokensUpdate, CheckOnline, 
+        socketClientPostMessage};

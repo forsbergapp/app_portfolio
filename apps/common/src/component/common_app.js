@@ -41,6 +41,8 @@ const template = props =>`  <!DOCTYPE html>
                                    const cssStart = '${props.cssStart}';
                                    const cssFonts = '${props.cssFonts}';
                                    const cssCommon = '${props.cssCommon}';
+                                   const encrypt_transport = ${props.encrypt_transport==1?'true':'false'};
+
                                    const common = await import(URL.createObjectURL(  new Blob ([atob('${props.jsCommon}')],{type: 'text/javascript'})));
                                    
                                    common.commonMiscCssApply(atob(cssStart) + atob(cssFonts));
@@ -59,33 +61,35 @@ const template = props =>`  <!DOCTYPE html>
                                        }
                                        const BFFStream = new WritableStream({
                                            write(data, controller){
-                                               const BFFmessage = new TextDecoder('utf-8').decode(new Uint8Array(data)).split('\\n\\n')[0];
-                                               if (BFFmessage.split('data: ')[1]){
-                                                   const message = getMessage(BFFmessage.split('data: ')[1]);
-                                                   switch (message.broadcast_type){
-                                                       case 'INIT':{
-                                                            const INITmessage = JSON.parse(message.broadcast_message);
-                                                            if (x.apps && INITmessage.APP_PARAMETER.Info.x)
-                                                                for (const app of INITmessage.APP_PARAMETER.Info.x)
-                                                                    x.apps.push(app)
-                                                            common[Object.keys(common.default)[0]]( INITmessage.APP_PARAMETER, x);
-                                                            common.commonMiscCssApply(common.commonWindowFromBase64(cssCommon));
+                                                (encrypt_transport?
+                                                    common.commonWindowDecrypt({secret:parameters.secret, data:new TextDecoder('utf-8').decode(new Uint8Array(data)).split('data: ')[1]}):
+                                                        async ()=>new TextDecoder('utf-8').decode(new Uint8Array(data)).split('\\n\\n')[0].split('data: ')[1])
+                                                .then(BFFmessage=>{
+                                                    const message = getMessage(BFFmessage);
+                                                    switch (message.broadcast_type){
+                                                        case 'INIT':{
+                                                                const INITmessage = JSON.parse(message.broadcast_message);
+                                                                if (x.apps && INITmessage.APP_PARAMETER.Info.x)
+                                                                    for (const app of INITmessage.APP_PARAMETER.Info.x)
+                                                                        x.apps.push(app)
+                                                                common[Object.keys(common.default)[0]]( INITmessage.APP_PARAMETER, x);
+                                                                common.commonMiscCssApply(common.commonWindowFromBase64(cssCommon));
+                                                                break;
+                                                        }
+                                                        case 'FONT_URL':{
+                                                            common.commonMiscLoadFont({ app_id:             ${props.app_id},
+                                                                                        uuid:               '${props.uuid}',
+                                                                                        secret:             '${props.secret}',
+                                                                                        message:            message.broadcast_message,
+                                                                                        cssFonts:           cssFonts})
                                                             break;
-                                                       }
-                                                       case 'FONT_URL':{
-                                                           common.commonMiscLoadFont({ app_id:             ${props.app_id},
-                                                                                       uuid:               '${props.uuid}',
-                                                                                       secret:             '${props.secret}',
-                                                                                       message:            message.broadcast_message,
-                                                                                       cssFonts:           cssFonts})
-                                                           break;
-                                                       }
-                                                       default:{
-                                                           common.commonSocketBroadcastShow(BFFmessage.split('data: ')[1]);
-                                                           break
-                                                       }
-                                                   }
-                                               }
+                                                        }
+                                                        default:{
+                                                            common.commonSocketBroadcastShow(BFFmessage);
+                                                            break
+                                                        }
+                                                    }
+                                                })
                                            }
                                        //The total number of chunks that can be contained in the internal queue before backpressure is applied
                                        }, new CountQueuingStrategy({ highWaterMark: 1 }));
@@ -119,7 +123,6 @@ const template = props =>`  <!DOCTYPE html>
                                        /**@type{number} */
                                        let status;
                                        let authorization = null;
-                                       const encrypt_transport = ${props.encrypt_transport==1?'true':'false'};
                                        
                                        parameters.data.query = parameters.data.query==null?'':parameters.data.query;
                                        parameters.data.body = parameters.data.body?parameters.data.body:null;
@@ -231,17 +234,17 @@ const template = props =>`  <!DOCTYPE html>
                                                                                return (encrypt_transport?
                                                                                     common.commonWindowDecrypt({secret:parameters.secret, data:result}):
                                                                                         async ()=>result)
-                                                                               .then(result_decryped=>{
+                                                                               .then(result_decrypted=>{
                                                                                     switch (status){
                                                                                         case 200:
                                                                                         case 201:{
                                                                                             /**@ts-ignore */
-                                                                                            return result_decryped;
+                                                                                            return result_decrypted;
                                                                                         }
                                                                                         case 400:{
                                                                                             //Bad request
                                                                                             common.commonMessageShow('ERROR_BFF', null, 'message_text', '!');
-                                                                                            throw result_decryped;
+                                                                                            throw result_decrypted;
                                                                                         }
                                                                                         case 404:   //Not found
                                                                                         case 401:   //Unauthorized, token expired
@@ -249,12 +252,12 @@ const template = props =>`  <!DOCTYPE html>
                                                                                         case 503:   //Service unavailable or other error in microservice
                                                                                         {   
                                                                                             showError(result);
-                                                                                            throw result_decryped;
+                                                                                            throw result_decrypted;
                                                                                         }
                                                                                         case 500:{
                                                                                             //Unknown error
-                                                                                            common.commonException(common.COMMON_GLOBAL.app_function_exception, result_decryped);
-                                                                                            throw result_decryped;
+                                                                                            common.commonException(common.COMMON_GLOBAL.app_function_exception, result_decrypted);
+                                                                                            throw result_decrypted;
                                                                                         }
                                                                                     }
                                                                                 })
@@ -291,7 +294,7 @@ const template = props =>`  <!DOCTYPE html>
                                                data:{  
                                                        idToken:            '${props.idToken}',
                                                        authorization_type: 'APP_ID', 
-                                                       path:               '/server-bff', 
+                                                       path:               '/server-bff/' + '${props.uuid}', 
                                                        method:             'POST',
                                                        body:               null}});
                                </script>
