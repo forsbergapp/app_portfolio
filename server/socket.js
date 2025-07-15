@@ -2,7 +2,9 @@
 
 /**
  * @import {server_server_response,
- *          server_socket_broadcast_type_all, server_server_res,
+ *          server_socket_broadcast_type_all, 
+ *          server_socket_broadcast_type_admin,
+ *          server_server_res,
  *          server_db_table_IamEncryption,
  *          server_db_table_IamAppIdToken,
  *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
@@ -150,7 +152,7 @@ const socketClientAdd = (newClient) => {
  *          idToken:string,
  *          data:{  app_id:number|null,
  *                  client_id:number|null,
- *                  broadcast_type:server_socket_broadcast_type_all,
+ *                  broadcast_type:server_socket_broadcast_type_admin,
  *                  broadcast_message:string}}} parameters
  * @returns {Promise.<server_server_response & {result?:{sent:number} }>}
  */
@@ -180,7 +182,7 @@ const socketClientAdd = (newClient) => {
         return {result:{sent:sent}, type:'JSON'};
     }
     else
-        if (parameters.data.broadcast_type=='CHAT' || parameters.data.broadcast_type=='PROGRESS'|| parameters.data.broadcast_type=='SESSION_EXPIRED'){
+        if (parameters.data.broadcast_type=='CHAT'){
             //broadcast CHAT to specific client
             for (const client of SOCKET_CONNECTED_CLIENTS){
                 if (client.id == parameters.data.client_id){
