@@ -1516,7 +1516,7 @@
 
 /**
  * @description SOCKET server_socket_broadcast_type_admin
- * @typedef {'ALERT'|'CHAT'|'PROGRESS'} server_socket_broadcast_type_admin
+ * @typedef {'ALERT'|'CHAT'|'MAINTENANCE'} server_socket_broadcast_type_admin
  */
 
 /** 

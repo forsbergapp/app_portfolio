@@ -59,7 +59,7 @@ const DB_DEMO_FILE              = 'demo_data.json';
 * @returns {Promise.<server_server_response & {result?:{info: {}[]} }>}
 */
 const postDemo = async parameters=> {
-   const {socketClientGet, socketAdminSend} = await import('./socket.js');
+   const Socket = await import('./socket.js');
    const Log = await import('./db/Log.js');
    const {getError} = await import('./db/ORM.js');
    const IamUser = await import('./db/IamUser.js');
@@ -303,26 +303,27 @@ const postDemo = async parameters=> {
        
        //2.Generate key pairs for each user that can be saved both in resource and apps configuration
        //Use same for all demo users since key creation can be slow
-       socketAdminSend({   app_id:parameters.app_id, 
-                           idToken:parameters.idToken,
-                           data:{  app_id:null,
-                                   client_id:socketClientGet(parameters.idToken)?.id,
-                                   broadcast_type:'PROGRESS',
-                                   broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'})).toString('base64')
-                               }});
+       Socket.socketClientPostMessage({ app_id:parameters.app_id, 
+                                        resource_id:null, 
+                                        data:{  data_app_id:null, 
+                                                iam_user_id: null,
+                                                idToken:parameters.idToken,
+                                                message: JSON.stringify({   part:install_count, 
+                                                                            total:install_total_count, text:'Generating key pair...'}),
+                                                message_type:'PROGRESS'}});
        const {publicKey, privateKey} = await Security.securityKeyPairCreate();
        const demo_public_key = publicKey;
        const demo_private_key = privateKey;
        //3.Loop users created
        for (const demo_user of demo_users){
-           socketAdminSend({   app_id:parameters.app_id, 
-                               idToken:parameters.idToken,
-                               data:{  app_id:null,        
-                                       client_id:socketClientGet(parameters.idToken)?.id,
-                                       broadcast_type:'PROGRESS',
-                                       broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username})).toString('base64')
-                               }
-                           });
+            Socket.socketClientPostMessage({app_id:parameters.app_id, 
+                                            resource_id:null, 
+                                            data:{  data_app_id:null, 
+                                                    iam_user_id: null,
+                                                    idToken:parameters.idToken,
+                                                    message: JSON.stringify({   part:install_count, 
+                                                                                total:install_total_count, text:demo_user.username}),
+                                                    message_type:'PROGRESS'}});
            install_count++;
 
            //3A.Generate vpa for each user that can be saved both in resource and apps configuration
@@ -616,14 +617,14 @@ const postDemo = async parameters=> {
        };
        //4.Create social record
        for (const social_type of social_types){
-           socketAdminSend({   app_id:parameters.app_id, 
-                               idToken:parameters.idToken,
-                               data:{  app_id:null,
-                                       client_id:socketClientGet(parameters.idToken)?.id,
-                                       broadcast_type:'PROGRESS',
-                                       broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total_count, text:social_type})).toString('base64')
-                               }
-                           });
+            Socket.socketClientPostMessage({app_id:parameters.app_id, 
+                                            resource_id:null, 
+                                            data:{  data_app_id:null, 
+                                                    iam_user_id: null,
+                                                    idToken:parameters.idToken,
+                                                    message: JSON.stringify({   part:install_count, 
+                                                                                total:install_total_count, text:social_type}),
+                                                    message_type:'PROGRESS'}});
            //4A.Create random sample
            install_count++;
            //select new random sample for each social type
@@ -745,7 +746,7 @@ const postDemo = async parameters=> {
 * @returns {Promise.<server_server_response & {result?:{info: {}[]} }>}
 */
 const deleteDemo = async parameters => {
-   const {socketClientGet, socketAdminSend} = await import('./socket.js');
+   const Socket = await import('./socket.js');
    const Log = await import('./db/Log.js');
    const IamUser = await import('./db/IamUser.js');
    const {getError} = await import('./db/ORM.js');
@@ -756,14 +757,14 @@ const deleteDemo = async parameters => {
        if (result_demo_users.length>0){
            const delete_users = async () => {
                for (const user of result_demo_users){
-                   socketAdminSend({   app_id:parameters.app_id, 
-                                       idToken:parameters.idToken,
-                                       data:{  app_id:null,
-                                               client_id:socketClientGet(parameters.idToken)?.id,
-                                               broadcast_type:'PROGRESS',
-                                               broadcast_message:Buffer.from(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username})).toString('base64')
-                                       }
-                                   });
+                    Socket.socketClientPostMessage({app_id:parameters.app_id, 
+                                                    resource_id:null, 
+                                                    data:{  data_app_id:null, 
+                                                            iam_user_id: null,
+                                                            idToken:parameters.idToken,
+                                                            message: JSON.stringify({   part:deleted_user, 
+                                                                                        total:result_demo_users.length, text:user.username}),
+                                                            message_type:'PROGRESS'}});
                     //delete iam user
                     await IamUser.deleteRecordAdmin(parameters.app_id,user.id)
                     .then((result)=>{
