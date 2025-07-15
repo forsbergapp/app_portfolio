@@ -10,6 +10,7 @@ All apps use pure div elements in HTML without any semantic HTML and without any
 All apps use mostly logographic UI compared to traditional phonemic UI
 All apps use common user access and any user data is saved in each app for the user.
 
+Apps and server use encrypted transport without the need of HTTPS.
 Server uses Node.js and does not use any third party modules in production.
 Server renders apps using Vue SFC pattern.
 Server uses secure REST API with openAPI documentation used as documentation and business logic.
