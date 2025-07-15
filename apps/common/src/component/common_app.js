@@ -255,7 +255,7 @@ const template = props =>`  <!DOCTYPE html>
                                                                                         case 403:   //Forbidden, not allowed to login or register new user
                                                                                         case 503:   //Service unavailable or other error in microservice
                                                                                         {   
-                                                                                            showError(result);
+                                                                                            showError(result_decrypted);
                                                                                             throw result_decrypted;
                                                                                         }
                                                                                         case 500:{
