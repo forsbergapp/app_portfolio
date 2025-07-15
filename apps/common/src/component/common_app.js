@@ -64,36 +64,35 @@ const template = props =>`  <!DOCTYPE html>
                                                    sse_message:JSON.parse(messageDecoded).sse_message};
                                         }
                                         const BFFStream = new WritableStream({
-                                           write(data, controller){
-                                                (encrypt_transport?
-                                                    common.commonWindowDecrypt({secret:parameters.secret, data:new TextDecoder('utf-8').decode(new Uint8Array(data)).split('data: ')[1]}):
-                                                        async ()=>new TextDecoder('utf-8').decode(new Uint8Array(data)).split('\\n\\n')[0].split('data: ')[1])
-                                                .then(BFFmessage=>{
-                                                    const SSEmessage = getMessage(BFFmessage);
-                                                    switch (SSEmessage.sse_type){
-                                                        case 'INIT':{
-                                                                const INITmessage = JSON.parse(SSEmessage.sse_message);
-                                                                if (x.apps && INITmessage.APP_PARAMETER.Info.x)
-                                                                    for (const app of INITmessage.APP_PARAMETER.Info.x)
-                                                                        x.apps.push(app)
-                                                                common[Object.keys(common.default)[0]]( INITmessage.APP_PARAMETER, x);
-                                                                common.commonMiscCssApply(common.commonWindowFromBase64(cssCommon));
-                                                                break;
-                                                        }
-                                                        case 'FONT_URL':{
-                                                            common.commonMiscLoadFont({ app_id:             ${props.app_id},
-                                                                                        uuid:               '${props.uuid}',
-                                                                                        secret:             '${props.secret}',
-                                                                                        message:            SSEmessage.sse_message,
-                                                                                        cssFonts:           cssFonts})
+                                           async write(data, controller){
+                                                const BFFmessage = encrypt_transport?
+                                                                        await common.commonWindowDecrypt({  secret:parameters.secret, 
+                                                                                                            data:new TextDecoder('utf-8').decode(new Uint8Array(data)).split('data: ')[1]}):
+                                                                            new TextDecoder('utf-8').decode(new Uint8Array(data)).split('\\n\\n')[0].split('data: ')[1];
+                                                const SSEmessage = getMessage(BFFmessage);
+                                                switch (SSEmessage.sse_type){
+                                                    case 'INIT':{
+                                                            const INITmessage = JSON.parse(SSEmessage.sse_message);
+                                                            if (x.apps && INITmessage.APP_PARAMETER.Info.x)
+                                                                for (const app of INITmessage.APP_PARAMETER.Info.x)
+                                                                    x.apps.push(app)
+                                                            await common[Object.keys(common.default)[0]]( INITmessage.APP_PARAMETER, x);
+                                                            common.commonMiscCssApply(common.commonWindowFromBase64(cssCommon));
                                                             break;
-                                                        }
-                                                        default:{
-                                                            common.commonSocketSSEShow(SSEmessage);
-                                                            break
-                                                        }
                                                     }
-                                                })
+                                                    case 'FONT_URL':{
+                                                        common.commonMiscLoadFont({ app_id:             ${props.app_id},
+                                                                                    uuid:               '${props.uuid}',
+                                                                                    secret:             '${props.secret}',
+                                                                                    message:            SSEmessage.sse_message,
+                                                                                    cssFonts:           cssFonts})
+                                                        break;
+                                                    }
+                                                    default:{
+                                                        common.commonSocketSSEShow(SSEmessage);
+                                                        break
+                                                    }
+                                                }
                                            }
                                        //The total number of chunks that can be contained in the internal queue before backpressure is applied
                                        }, new CountQueuingStrategy({ highWaterMark: 1 }));
