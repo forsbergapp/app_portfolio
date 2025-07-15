@@ -85,7 +85,7 @@ const appFunction = async parameters =>{
         const messagePost = (await MessageQueuePublish.post({app_id:parameters.app_id, 
                                                             data:message_queue_message})).result;
         return {result:[ await (async ()=>{
-                                if(messagePost.result?.affectedRows){
+                                if(messagePost.affectedRows){
                                     /**@type{server_db_table_IamUser[]} */
                                     const users = IamUser.get(parameters.app_id, message.receiver_id).result;                               
                                     for (const user of users.filter(user=>  user.type == (( message.receiver_id && 
@@ -102,7 +102,7 @@ const appFunction = async parameters =>{
                                                                             }
                                                                     });
                                     }
-                                    return {sent:messagePost.result.affectedRows};
+                                    return {sent:messagePost.affectedRows};
                                 }
                                 else
                                     return {sent:0};
