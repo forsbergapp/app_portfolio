@@ -212,8 +212,6 @@
  *              admin_only:number|null,
  *              x:{ 
  *                  FFB:    (arg0:CommonFFB_parameters) => Promise.<*>,
- *                  encrypt?:function,
- *                  decrypt?:function,
  *                  apps?:  {
  *                          app_id:number,
  *                          uuid:string,

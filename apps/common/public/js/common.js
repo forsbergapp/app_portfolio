@@ -998,64 +998,6 @@ const commonWindowOpen = url => COMMON_WINDOW.open(url, '_blank');
 const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
 
 /**
- * @name commonEncrypt
- * @description Encrypt
- * @function
- * @param {{secret:string,
-*          data:string}} parameters
-* @returns {Promise.<*>} 
-*/
-const commonWindowEncrypt = async parameters =>{
-   const key = await COMMON_WINDOW.crypto.subtle.importKey( 
-                   'jwk', 
-                   JSON.parse(commonWindowFromBase64(parameters.secret)).jwk, 
-                   {   name: 'AES-GCM', 
-                       length: 256, 
-                   }, 
-                   true,
-                   ['encrypt', 'decrypt'] 
-               );
-   return btoa(new Uint8Array(await COMMON_WINDOW.crypto.subtle.encrypt(
-                           {
-                               name: 'AES-GCM',
-                               /**@ts-ignore */
-                               iv: new Uint8Array(commonWindowFromBase64(JSON.parse(commonWindowFromBase64(parameters.secret)).iv).split(','))
-                           },
-                           key,
-                           new TextEncoder().encode(parameters.data)
-           )).toString());
-};
-/**
-* @name commonWindowDecrypt
-* @description Decrypt
-* @function
-* @param {{ secret:string,
-*           data:Uint8Array}} parameters
-* @returns {Promise.<*>} 
-*/
-const commonWindowDecrypt = async parameters =>{
-   const key = await window.crypto.subtle.importKey( 
-                   'jwk', 
-                   JSON.parse(atob(parameters.secret)).jwk, 
-                   { 
-                       name: 'AES-GCM', 
-                       length: 256, 
-                   }, 
-                   true,
-                   ['encrypt', 'decrypt'] );
-    return new TextDecoder().decode(await window.crypto.subtle.decrypt(
-        {
-            name: 'AES-GCM',
-            /**@ts-ignore */
-            iv: new Uint8Array(commonWindowFromBase64(JSON.parse(atob(parameters.secret)).iv).split(','))
-        },
-        key,
-        /**@ts-ignore */
-        new Uint8Array(commonWindowFromBase64(parameters.data).toString().split(','))
-    ));
-};
-
-/**
  * @name commonFrameworkHtml2ReactComponent
  * @description Convert HTML to React component
  * @function
@@ -3774,8 +3716,6 @@ const commonGet = () =>{
         commonWindowToBase64:commonWindowToBase64, 
         commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
         commonWindowWait:commonWindowWait,
-        commonWindowEncrypt:commonWindowEncrypt,
-        commonWindowDecrypt:commonWindowDecrypt,
         /* COMPONENTS */
         commonComponentRemove:commonComponentRemove,
         commonComponentRender:commonComponentRender,
@@ -3943,8 +3883,6 @@ export{/* GLOBALS*/
        commonWindowToBase64, 
        commonWindowUserAgentPlatform,
        commonWindowWait,
-       commonWindowEncrypt,
-       commonWindowDecrypt,
        /* COMPONENTS */
        commonComponentRemove,
        commonComponentRender,

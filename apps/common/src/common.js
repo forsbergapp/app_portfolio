@@ -841,7 +841,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
             iv:         JSON.parse(Buffer.from(security.IamEncryption.secret, 'base64').toString('utf-8')).iv})
             .then(()=>
                 1)
-            .catch(()=>
+            .catch(error=>
                 0
             )==1)==false){
             return {admin:false, 

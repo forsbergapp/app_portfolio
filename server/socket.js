@@ -540,7 +540,7 @@ const socketClientPostMessage = async parameters => {
                                                         .toString('base64')}\n\n`;
                                     
         
-        serverResponse ({   app_id:null,
+        await serverResponse ({   app_id:null,
             type:'JSON',
             result:'',
             route:null,
