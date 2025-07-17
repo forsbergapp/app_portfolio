@@ -469,7 +469,7 @@ const jwt = new Jwt();
 
 /**
  * @name securityTransportEncrypt
- * @description Encrypts a string for BFF using Web Crypto API
+ * @description Encrypts a string for BFF using Web Crypto API pattern
  * @function
  * @param {{app_id: number,
  *          data:   string,
@@ -478,32 +478,18 @@ const jwt = new Jwt();
  * @returns {Promise.<string>}
  */
 const securityTransportEncrypt = async parameters => {
-    const key = await Crypto.webcrypto.subtle.importKey( 
-            'jwk', 
-            parameters.jwk, 
-            {   name: 'AES-GCM', 
-                length: 256, 
-            }, 
-            true,
-            ['encrypt', 'decrypt'] 
-        );
-    return btoa(new Uint8Array(await Crypto.webcrypto.subtle.encrypt(
-                            {
-                                name: 'AES-GCM',
-                                /**@ts-ignore */
-                                iv: new Uint8Array(Buffer.from(parameters.iv,'base64').toString().split(','))
-                            },
-                            key,
-                            new TextEncoder().encode(parameters.data)
-            )).toString());
+    const Crypto = await import('../apps/common/src/functions/common_crypto.js');
+	return Crypto.subtle.encrypt({	
+                        iv:     parameters.iv,
+						key:    parameters.jwk.k, 
+						data:   parameters.data, 
+						});
 };
 
 /**
  * @name securityTransportDecrypt
- * @description Decrypts for BFF using Web Crypto API
+ * @description Decrypts for BFF using Web Crypto API pattern
  *              Data to decrypt should be a base64 string
- *              IV should be a string so IV can be converted using syntax
- *              new Uint8Array(IV.split(','))
  * @function
  * @param {{app_id:     number,
  *          encrypted:  string,
@@ -512,49 +498,27 @@ const securityTransportEncrypt = async parameters => {
  * @returns {Promise.<*>} 
 */
 const securityTransportDecrypt = async parameters =>{
-    const key = await Crypto.webcrypto.subtle.importKey( 
-                    'jwk', 
-                    parameters.jwk, 
-                    { 
-                        name: 'AES-GCM', 
-                        length: 256, 
-                    }, 
-                    true,
-                    ['encrypt', 'decrypt'] );
-
-    return new TextDecoder().decode(await Crypto.webcrypto.subtle.decrypt(
-                    {
-                        name: 'AES-GCM',
-                        /**@ts-ignore */
-                        iv: new Uint8Array(Buffer.from(parameters.iv,'base64').toString().split(','))
-                    },
-                    key,
-                    /**@ts-ignore */
-                    new Uint8Array(Buffer.from(parameters.encrypted,'base64').toString().split(','))
-                ));
+    const Crypto = await import('../apps/common/src/functions/common_crypto.js');
+	return Crypto.subtle.decrypt({	
+                    iv:         parameters.iv,
+					key:        parameters.jwk.k, 
+					ciphertext: parameters.encrypted});
 };
 /**
  * @name securityTransportCreateSecrets
- * @description Creates key and iv for BFF using Web Crypto API
- *              IV is converted a string of numbers 
- *              and can be decoded using new Uint8Array(IV.split(','))
+ * @description Creates jwk and iv for BFF using Web Crypto API pattern
  * @function
  * @returns {Promise.<{jwk:JsonWebKey, iv:string}>} 
  */
 const securityTransportCreateSecrets = async () => {
-
-    return {jwk:await Crypto.webcrypto.subtle.exportKey(
-                        'jwk', 
-                        await Crypto.webcrypto.subtle.generateKey(
-                            {
-                                name: 'AES-GCM',
-                                length: 256,
-                            },
-                            true,
-                            ['encrypt', 'decrypt']
-                        )),
-            iv: Buffer.from(Crypto.webcrypto.getRandomValues(new Uint8Array(12)).toString()).toString('base64')
-    };
+    return {
+            jwk : {	alg:'A256CFB', 
+                    ext:true, 
+                    k: securitySecretCreate(false, 32),
+                    key_ops:['encrypt','decrypt'], 
+                    kty:'oct'},
+            iv  : securitySecretCreate(false, 16)
+            };
     
 };
 
