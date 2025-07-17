@@ -328,9 +328,8 @@ const socketPost = async parameters =>{
                                     /*@ts-ignore*/
                                     IamUser.get(parameters.app_id, serverUtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
                                         null;
-    //no authorization for repeated request using same id token or requesting from browser
     if (SOCKET_CONNECTED_CLIENTS
-            .filter(row=>row.idToken == parameters.idToken).length>0 ||parameters.response.req.headers['sec-fetch-mode']!='cors'){
+            .filter(row=>row.idToken == parameters.idToken).length>0){
         const {iamUtilResponseNotAuthorized} = await import('./iam.js');
         throw await iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
     }
