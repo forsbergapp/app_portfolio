@@ -1379,8 +1379,6 @@
  *              'accept-language': string, 
  *              'content-type': string, 
  *              host:string, 
- *              'sec-fetch-mode':string,
- *              'sec-fetch-dest':string,
  *              accept:string, 
  *              'accept-encoding'?:'deflate'|'gzip',
  *              referer:string,
