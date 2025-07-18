@@ -1,34 +1,37 @@
-/**
- * @module apps/common/src/component/common_app
- */  
+    /**
+     * @module apps/common/src/component/common_app
+     */  
 
-/**
- * @typedef {import('../../../../server/security')['securityTransportEncrypt']} securityTransportEncrypt
- * @typedef {import('../common.js')['commonConvertBinary']} commonConvertBinary
- */
-/**
- * @name template
- * @description Template
- * @function
- * @param {{app_id:number,
-*          app_admin_app_id:number,
-*          rest_resource_bff:string,
-*          app_rest_api_version:string,
-*          app_request_timeout_seconds: number,
-*          app_requesttimeout_admin_minutes: number,
-*          idToken:string,
-*          uuid:string,
-*          secret:string,
-*          encrypt_transport:number,
-*          securityTransportEncrypt:securityTransportEncrypt,
-*          cssStart:string,
-*          cssCommon:string,
-*          jsCommon:string,
-*          jsCrypto:string,
-*          cssFonts:string}} props
-* @returns {string}
-*/
-const template = props =>`  <!DOCTYPE html>
+    /**
+     * @typedef {import('../common.js')['commonConvertBinary']} commonConvertBinary
+     * @typedef {import('../../../../server/db/ConfigServer.js')} ConfigServer
+     * @typedef {import('../../../../server/server.js')['serverUtilNumberValue']} serverUtilNumberValue
+     * @import {server_db_table_App,server_db_document_ConfigServer, server_db_table_IamAppIdToken} from '../../../../server/types.js';
+     */
+    /**
+     * @name template
+     * @description Template
+     * @function
+     * @param {{app_id:number,
+    *          app_admin_app_id:number,
+    *          rest_resource_bff:string,
+    *          app_rest_api_version:string,
+    *          app_request_timeout_seconds: number,
+    *          app_requesttimeout_admin_minutes: number,
+    *          idToken:{id:server_db_table_IamAppIdToken['id'],
+    *                   token:server_db_table_IamAppIdToken['token']}, 
+    *          uuid:string,
+    *          secret:string,
+    *          encrypt_transport:number,
+    *          cssStart:string,
+    *          cssCommon:string,
+    *          jsCommon:string,
+    *          jsCrypto:string,
+    *          globals:Object.<String,*>,
+    *          cssFonts:string}} props
+    * @returns {string}
+    */
+    const template = props =>`  <!DOCTYPE html>
                             <html>
                             <head>
                                 <meta charset='UTF-8'>
@@ -58,22 +61,13 @@ const template = props =>`  <!DOCTYPE html>
                                         const BFFStream = new WritableStream({
                                             async write(data, controller){
                                                 const BFFmessage = encrypt_transport?
-                                                                        x.decrypt({  
+                                                                        common.COMMON_GLOBAL.x.decrypt({  
                                                                                 iv:         JSON.parse(atob(parameters.secret)).iv,
                                                                                 key:        JSON.parse(atob(parameters.secret)).jwk.k, 
                                                                                 ciphertext: new TextDecoder('utf-8').decode(data).split('\\n\\n')[0].split('data: ')[1]}):
                                                                             new TextDecoder('utf-8').decode(data).split('\\n\\n')[0].split('data: ')[1];
                                                 const SSEmessage = getMessage(BFFmessage);
                                                 switch (SSEmessage.sse_type){
-                                                    case 'INIT':{
-                                                            const INITmessage = JSON.parse(SSEmessage.sse_message);
-                                                            if (x.apps && INITmessage.APP_PARAMETER.Info.x)
-                                                                for (const app of INITmessage.APP_PARAMETER.Info.x)
-                                                                    x.apps.push(app)
-                                                            await common[Object.keys(common.default)[0]]( INITmessage.APP_PARAMETER, x);
-                                                            common.commonMiscCssApply(common.commonWindowFromBase64(cssCommon));
-                                                            break;
-                                                    }
                                                     case 'FONT_URL':{
                                                         common.commonMiscLoadFont({ app_id:             ${props.app_id},
                                                                                     uuid:               '${props.uuid}',
@@ -106,7 +100,7 @@ const template = props =>`  <!DOCTYPE html>
                                     *          rest_bff_path   : string,
                                     *          data:{
                                     *              locale:string,
-                                    *              idToken: string,
+                                    *              idToken: server_db_table_IamAppIdToken['token'],
                                     *              accessToken?:string,
                                     *              query?:string|null,
                                     *              method:string,
@@ -167,17 +161,17 @@ const template = props =>`  <!DOCTYPE html>
                                                                                                 'close',
                                                                     },
                                                             body: JSON.stringify({
-                                                                    x: x.encrypt({
+                                                                    x: common.COMMON_GLOBAL.x.encrypt({
                                                                         iv:     JSON.parse(common.commonWindowFromBase64(parameters.secret)).iv,
-						                                                key:    JSON.parse(common.commonWindowFromBase64(parameters.secret)).jwk.k, 
+                                                                        key:    JSON.parse(common.commonWindowFromBase64(parameters.secret)).jwk.k, 
                                                                         data:JSON.stringify({  
                                                                                 headers:{
                                                                                         'app-id':       parameters.app_id,
-                                                                                        'app-signature':x.encrypt({ 
+                                                                                        'app-signature':common.COMMON_GLOBAL.x.encrypt({ 
                                                                                                             iv:     JSON.parse(common.commonWindowFromBase64(parameters.secret)).iv,
                                                                                                             key:    JSON.parse(common.commonWindowFromBase64(parameters.secret)).jwk.k, 
                                                                                                             data:'FFB'}),
-                                                                                        'app-id-token': 'Bearer ' + parameters.data.idToken,
+                                                                                        'app-id-token': 'Bearer ' + parameters.data.idToken.token,
                                                                                         ...(authorization && {Authorization: authorization}),
                                                                                         'Content-Type': parameters.response_type =='SSE'?
                                                                                                             'text/event-stream':
@@ -199,7 +193,7 @@ const template = props =>`  <!DOCTYPE html>
                                                             method: parameters.data.method,
                                                             headers:{   'app-id': parameters.app_id,
                                                                         'app-signature': 'commonFFB',
-                                                                        'app-id-token': 'Bearer ' + parameters.data.idToken,
+                                                                        'app-id-token': 'Bearer ' + parameters.data.idToken.token,
                                                                         ...(parameters.response_type =='SSE' && {'Cache-control': 'no-cache'}),
                                                                         'Content-Type': parameters.response_type =='SSE'?
                                                                                             'text/event-stream':
@@ -233,7 +227,7 @@ const template = props =>`  <!DOCTYPE html>
                                                                             .then(result => {
                                                                                 const result_decrypted = 
                                                                                         encrypt_transport?
-                                                                                            x.decrypt({
+                                                                                            common.COMMON_GLOBAL.x.decrypt({
                                                                                                     iv:         JSON.parse(common.commonWindowFromBase64(parameters.secret)).iv,
                                                                                                     key:        JSON.parse(common.commonWindowFromBase64(parameters.secret)).jwk.k, 
                                                                                                     ciphertext: result}):
@@ -274,33 +268,31 @@ const template = props =>`  <!DOCTYPE html>
                                                                             })
                                         ]);
                                     }
-                                    const x =   {
-                                        FFB:    FFB,
-                                            ...(${props.encrypt_transport==1} && 
-                                                await import(URL.createObjectURL(  new Blob ([atob('${props.jsCrypto}')],
-                                                                {type: 'text/javascript'})))
-                                                        .then(crypto=>{
-                                                        return {encrypt:crypto.subtle.encrypt, decrypt:crypto.subtle.decrypt}
-                                                    })
-                                                ),
-                                        ...(${props.encrypt_transport==1} && 
-                                            {apps:  [{
-                                                    app_id:  ${props.app_id},
-                                                    uuid:    '${props.uuid}',
-                                                    secret:  '${props.secret}'
-                                                    }]
-                                            })
-                                        };
+                                    //set variables
+                                    const encrypt_transport = ${props.encrypt_transport==1?'true':'false'};
                                     const cssStart = '${props.cssStart}';
                                     const cssFonts = '${props.cssFonts}';
                                     const cssCommon = '${props.cssCommon}';
-                                    const encrypt_transport = ${props.encrypt_transport==1?'true':'false'};
-
+                                    //import common library
                                     const common = await import(URL.createObjectURL(  new Blob ([atob('${props.jsCommon}')],{type: 'text/javascript'})));
-                                    common.COMMON_GLOBAL.x.encrypt = 
-                                    
+                                    //set start css
                                     common.commonMiscCssApply(atob(cssStart) + atob(cssFonts));
 
+                                    //set globals
+                                    common.commonGlobals('${props.globals}');
+                                    const {encrypt, decrypt} = await import(URL.createObjectURL(  new Blob ([atob('${props.jsCrypto}')],{type: 'text/javascript'})))
+                                                                    .then(crypto=>{
+                                                                        return {encrypt:crypto.subtle.encrypt, decrypt:crypto.subtle.decrypt};
+                                                                    })
+                                    common.COMMON_GLOBAL.x.FFB = FFB;
+                                    common.COMMON_GLOBAL.x.encrypt = encrypt;
+                                    common.COMMON_GLOBAL.x.decrypt = decrypt;
+
+                                    //init app js
+                                    await common[Object.keys(common.default)[0]]();
+                                    //apply common css
+                                    common.commonMiscCssApply(common.commonWindowFromBase64(cssCommon));
+                                    //connect to BFF
                                     await FFB({ app_id:             ${props.app_id},
                                                 uuid:               '${props.uuid}',
                                                 secret:             '${props.secret}',
@@ -309,7 +301,7 @@ const template = props =>`  <!DOCTYPE html>
                                                 rest_api_version:   '${props.app_rest_api_version}',
                                                 rest_bff_path   :   '${props.rest_resource_bff}',
                                                 data:{  
-                                                        idToken:            '${props.idToken}',
+                                                        idToken:            '${props.idToken.token}',
                                                         authorization_type: 'APP_ID', 
                                                         path:               '/server-bff/' + '${props.uuid}', 
                                                         method:             'POST',
@@ -325,118 +317,226 @@ const template = props =>`  <!DOCTYPE html>
                                 </div>
                             </body>
                             </html> `;
-/**
-* @name component
-* @description Component
-* @function
-* @param {{data:       {   
-*                      app_id:number,
-*                      app_admin_app_id:number,
-*                      rest_resource_bff:string,
-*                      app_rest_api_version: string,
-*                      app_request_timeout_seconds: number,
-*                      app_requesttimeout_admin_minutes: number,
-*                      idToken:string, 
-*                      uuid:string, 
-*                      secret:string
-*                      encrypt_transport:number
-*                      },
-*        methods:      {
-*                      securityTransportEncrypt:securityTransportEncrypt,
-*                      commonConvertBinary:commonConvertBinary
-*                      }
-*      }} props 
-* @returns {Promise.<string>}
-*/
-const component = async props =>{
-   const fs = await import('node:fs');
-   const common = await import ('../common.js');
-   const {serverProcess} = await import('../../../../server/server.js');
-   //declare css outside to keep HTML clean
-   const css = Buffer.from(`body{
-                               background-color: rgb(81, 171, 255);
-                           }
-                           .start {    
-                               display:flex;
-                               justify-content:center;
-                               align-items:center;
-                               min-height:100vh;
-                               margin:0;
-                           }
-                           @keyframes start_spin{
-                               from {transform:rotate(0deg);}
-                               to {transform:rotate(360deg);}
-                           }
-                           .start::before{
-                               content:'' !important;
-                               width:25px;
-                               height:25px;
-                               position:absolute;
-                               border:4px solid #404040;
-                               border-top-color: rgb(81, 171, 255);
-                               border-radius:50%;
-                               animation:start_spin 1s linear infinite;
-                           }
-                           /*Fontawesome icons*/
-                           @font-face {
-                               font-family: "Font Awesome 6 Free";
-                               font-style: normal;
-                               font-weight: 400;
-                               font-display: block;
-                               src: url(${(await props.methods.commonConvertBinary(
-                                                   'font/woff2',
-                                                   '/apps/common/public/modules/fontawesome/webfonts/fa-regular-400.woff2'))
-                                               .result.resource}) format("woff2")
-                           }
-                           @font-face {
-                               font-family: "Font Awesome 6 Free";
-                               font-style: normal;
-                               font-weight: 900;
-                               font-display: block;
-                               src: url(${(await props.methods.commonConvertBinary(
-                                                   'font/woff2',
-                                                   '/apps/common/public/modules/fontawesome/webfonts/fa-solid-900.woff2'))
-                                               .result.resource}) format("woff2")
-                           }
-                           @font-face {
-                               font-family: "Font Awesome 6 Brands";
-                               font-style: normal;
-                               font-weight: 900;
-                               font-display: block;
-                               src: url(${(await props.methods.commonConvertBinary(
-                                                   'font/woff2',
-                                                   '/apps/common/public/modules/fontawesome/webfonts/fa-brands-400.woff2'))
-                                               .result.resource}) format("woff2")
-                           }
-                           `).toString('base64');
+    /**
+    * @name component
+    * @description Component
+    * @function
+    * @param {{data:       {   
+    *                      app_id:number,
+    *                      app_admin_app_id:number,
+    *                      ip:string, 
+    *                      user_agent:string, 
+    *                      accept_language:string
+    *                      },
+    *        methods:      {
+    *                      ConfigServer:ConfigServer,
+    *                      serverUtilNumberValue:serverUtilNumberValue,
+    *                      commonConvertBinary:commonConvertBinary
+    *                      }
+    *      }} props 
+    * @returns {Promise.<string>}
+    */
+    const component = async props =>{
+        const fs = await import('node:fs');
+        const common = await import ('../common.js');
+        const App = await import('../../../../server/db/App.js');
+        const IamEncryption = await import('../../../../server/db/IamEncryption.js');
+        const { iamAuthorizeIdToken } = await import('../../../../server/iam.js');
+        const Security = await import('../../../../server/security.js');
+        const {serverProcess} = await import('../../../../server/server.js');
 
-   return template({   app_id:                             props.data.app_id,
-                       app_admin_app_id:                   props.data.app_admin_app_id,
-                       rest_resource_bff:                  props.data.rest_resource_bff,
-                       app_rest_api_version:               props.data.app_rest_api_version,
-                       app_request_timeout_seconds:        props.data.app_request_timeout_seconds,
-                       app_requesttimeout_admin_minutes:   props.data.app_requesttimeout_admin_minutes,
-                       idToken:                            props.data.idToken, 
-                       uuid:                               props.data.uuid,
-                       secret:                             props.data.secret,
-                       encrypt_transport:                  props.data.encrypt_transport,
-                       securityTransportEncrypt:           props.methods.securityTransportEncrypt,
-                       cssStart:                           css,
-                       cssCommon:                          Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/css/common.css')).toString()).toString('base64'),
-                       jsCommon:                           Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/js/common.js')).toString()).toString('base64'),
-                       jsCrypto:                           Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/src/functions/common_crypto.js')).toString()).toString('base64'),
-                       cssFonts:                           Buffer.from(common.commonCssFonts.css
-                                                                       .split('url(')
-                                                                       .map(row=>{
-                                                                           if (row.startsWith('/bff/x/'))
-                                                                               //add app start uuid after font uuid separated with '~'
-                                                                               return row.replace( row.substring(0,'/bff/x/'.length+36),
-                                                                                                   row.substring(0,'/bff/x/'.length+36) + '~' + 
-                                                                                                   props.data.uuid);
-                                                                           else
-                                                                               return row;
-                                                                       }).join('url('))
-                                                           .toString('base64')
-                   });
-};
-export default component;
+        //declare css outside to keep HTML clean
+        const css = Buffer.from(`body{
+                                    background-color: rgb(81, 171, 255);
+                                }
+                                .start {    
+                                    display:flex;
+                                    justify-content:center;
+                                    align-items:center;
+                                    min-height:100vh;
+                                    margin:0;
+                                }
+                                @keyframes start_spin{
+                                    from {transform:rotate(0deg);}
+                                    to {transform:rotate(360deg);}
+                                }
+                                .start::before{
+                                    content:'' !important;
+                                    width:25px;
+                                    height:25px;
+                                    position:absolute;
+                                    border:4px solid #404040;
+                                    border-top-color: rgb(81, 171, 255);
+                                    border-radius:50%;
+                                    animation:start_spin 1s linear infinite;
+                                }
+                                /*Fontawesome icons*/
+                                @font-face {
+                                    font-family: "Font Awesome 6 Free";
+                                    font-style: normal;
+                                    font-weight: 400;
+                                    font-display: block;
+                                    src: url(${(await props.methods.commonConvertBinary(
+                                                        'font/woff2',
+                                                        '/apps/common/public/modules/fontawesome/webfonts/fa-regular-400.woff2'))
+                                                    .result.resource}) format("woff2")
+                                }
+                                @font-face {
+                                    font-family: "Font Awesome 6 Free";
+                                    font-style: normal;
+                                    font-weight: 900;
+                                    font-display: block;
+                                    src: url(${(await props.methods.commonConvertBinary(
+                                                        'font/woff2',
+                                                        '/apps/common/public/modules/fontawesome/webfonts/fa-solid-900.woff2'))
+                                                    .result.resource}) format("woff2")
+                                }
+                                @font-face {
+                                    font-family: "Font Awesome 6 Brands";
+                                    font-style: normal;
+                                    font-weight: 900;
+                                    font-display: block;
+                                    src: url(${(await props.methods.commonConvertBinary(
+                                                        'font/woff2',
+                                                        '/apps/common/public/modules/fontawesome/webfonts/fa-brands-400.woff2'))
+                                                    .result.resource}) format("woff2")
+                                }
+                                `).toString('base64');
+        
+        /**@type{server_db_document_ConfigServer} */
+        const configServer = props.methods.ConfigServer.get({app_id:props.data.app_id}).result;
+
+        const common_app_id = props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??1;
+        const admin_app_id = props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
+        const start_app_id = props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??1;
+        const encrypt_transport = props.methods.serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)??0;
+        const app_request_timeout_seconds = props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_SECONDS' in parameter)[0].APP_REQUESTTIMEOUT_SECONDS)??5;
+        const app_requesttimeout_admin_minutes =  props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0].APP_REQUESTTIMEOUT_ADMIN_MINUTES)??60;
+        const rest_resource_bff = configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF;
+        const app_rest_api_version =configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION;
+        const uuid = Security.securityUUIDCreate();
+        //save token in admin appid for admin or in commmon app id for users
+        const idToken = await iamAuthorizeIdToken(props.data.app_id,props.data.ip, 'APP');
+        //create secrets key and iv inside base64 string
+        const secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8').toString('base64');
+        //Insert encryption metadata record 
+        IamEncryption.post(props.data.app_id,
+                            {app_id:props.data.app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id, type:'SERVER'});
+        
+        /**
+         * @description get globals with keys same as COMMON_GLOBAL in common.js
+         * @return {Promise.<string>}
+         */    
+        const getGlobals = async ()=>{
+            const IamUser = await import('../../../../server/db/IamUser.js');
+            const app_common= await import('../common.js');
+            const AppParameter = await import('../../../../server/db/AppParameter.js');
+            const count_user = IamUser.get(props.data.app_id, null).result.length;
+            const admin_only = (await app_common.commonAppStart(props.data.app_id)==true?false:true) && count_user==0;
+            
+
+            const APP_PARAMETER = AppParameter.get({app_id:props.data.app_id,resource_id:common_app_id}).result[0]??{};
+            //geodata for APP using start_app_id
+            const result_geodata = await app_common.commonGeodata({ app_id:start_app_id, 
+                                                                    endpoint:'SERVER', 
+                                                                    ip:props.data.ip, 
+                                                                    user_agent:props.data.user_agent, 
+                                                                    accept_language:props.data.accept_language});
+            
+            const appX = [];
+            //fetch secret metadata for available apps
+            //admin: have common app id and admin app id, admin id app already fetched in commonApp()
+            //user : have all except admin app id, common app id already fetched in commonApp()
+            for (const app of App.get({app_id:props.data.app_id, resource_id:null}).result
+                .filter((/**@type{server_db_table_App}*/app)=>
+                        (start_app_id != admin_app_id && app.id != common_app_id && app.id != admin_app_id) ||
+                        (start_app_id == admin_app_id && app.id == common_app_id))){
+                const uuid  = Security.securityUUIDCreate(); 
+                const secret= Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8')
+                                .toString('base64');
+                await IamEncryption.post(props.data.app_id,
+                    {app_id:app.id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id??0, type:'SERVER'});
+                appX.push({
+                    app_id: app.id,
+                    uuid:   uuid,
+                    secret: secret
+                });
+            }
+
+            return btoa(JSON.stringify({
+                    //update COMMON_GLOBAL keys:
+                    //Config Server	
+                    rest_resource_bff:              rest_resource_bff,
+                    app_rest_api_version:           app_rest_api_version,
+                    //Config ServiceApp
+                    app_common_app_id:              common_app_id,
+                    app_admin_app_id:               admin_app_id,
+                    app_start_app_id:               start_app_id,
+
+                    app_toolbar_button_start:       configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START??1,
+                    app_toolbar_button_framework:   configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK??1,
+                    app_framework:                  configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK??1,
+                    app_framework_messages:         configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES??1,
+                    admin_only:                     admin_only?1:0,
+                    admin_first_time:               count_user==0?1:0,
+
+                    //AppParameter common
+                    info_link_policy_name:          APP_PARAMETER.common_info_link_policy_name.value,
+                    info_link_policy_url:           APP_PARAMETER.common_info_link_policy_url.value,
+                    info_link_disclaimer_name:      APP_PARAMETER.common_info_link_disclaimer_name.value,
+                    info_link_disclaimer_url:       APP_PARAMETER.common_info_link_disclaimer_url.value,
+                    info_link_terms_name:           APP_PARAMETER.common_info_link_terms_name.value,
+                    info_link_terms_url:            APP_PARAMETER.common_info_link_terms_url.value,
+                    
+                    //User
+                    token_dt:                       idToken.token,
+                    client_latitude:                result_geodata?.latitude,
+                    client_longitude:               result_geodata?.longitude,
+                    client_place:                   result_geodata?.place ?? '',
+                    client_timezone:                result_geodata?.timezone==''?null:result_geodata?.timezone,
+                                                    //concat start app info with all apps
+                    x:                              {...(encrypt_transport==1 && {apps:  [{
+                                                                            app_id:  props.data.app_id,
+                                                                            uuid:    uuid,
+                                                                            secret:  secret
+                                                                            }
+                                                                        ].concat(appX.map(app =>{
+                                                                                        return {
+                                                                                            app_id:  app.app_id,
+                                                                                            uuid:    app.uuid,
+                                                                                            secret:  app.secret
+                                                                                            }; 
+                                                                                    }))})
+                                                    }
+            }));
+        };
+        return template({   app_id:                             props.data.app_id,
+                            app_admin_app_id:                   admin_app_id,
+                            rest_resource_bff:                  rest_resource_bff,
+                            app_rest_api_version:               app_rest_api_version,
+                            app_request_timeout_seconds:        app_request_timeout_seconds,
+                            app_requesttimeout_admin_minutes:   app_requesttimeout_admin_minutes,
+                            idToken:                            idToken, 
+                            uuid:                               uuid,
+                            secret:                             secret,
+                            encrypt_transport:                  encrypt_transport,
+                            cssStart:                           css,
+                            cssCommon:                          Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/css/common.css')).toString()).toString('base64'),
+                            jsCommon:                           Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/js/common.js')).toString()).toString('base64'),
+                            jsCrypto:                           Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/src/functions/common_crypto.js')).toString()).toString('base64'),
+                            globals:                            await getGlobals(),
+                            cssFonts:                           Buffer.from(common.commonCssFonts.css
+                                                                            .split('url(')
+                                                                            .map(row=>{
+                                                                                if (row.startsWith('/bff/x/'))
+                                                                                    //add app start uuid after font uuid separated with '~'
+                                                                                    return row.replace( row.substring(0,'/bff/x/'.length+36),
+                                                                                                        row.substring(0,'/bff/x/'.length+36) + '~' + 
+                                                                                                        uuid);
+                                                                                else
+                                                                                    return row;
+                                                                            }).join('url('))
+                                                                .toString('base64')
+                        });
+    };
+    export default component;

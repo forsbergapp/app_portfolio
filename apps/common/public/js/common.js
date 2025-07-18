@@ -5,7 +5,7 @@
 /** @import {   COMMON_WINDOW, COMMON_DOCUMENT, CommonGlobal,
  *              CommonAppEvent,CommonRESTAPIMethod,CommonRESTAPIAuthorizationType,CommonComponentResult,
  *              CommonModuleLeafletMethods,CommonModuleVue,CommonModuleReact,CommonModuleReactDOM,
- *              commonAppInit, commonInitAppParameters, commonMetadata, CommonModuleCommon} from '../../../common_types.js' 
+ *              commonAppInit, commonMetadata, CommonModuleCommon} from '../../../common_types.js' 
  */
 
 /**@type{COMMON_WINDOW} */
@@ -3764,6 +3764,7 @@ const commonGet = () =>{
         /* INIT */
         commonMountApp:commonMountApp,
         commonException:commonException,
+        commonGlobals:commonGlobals,
         commonInit:commonInit,
         default:{commonInit}};
 };
@@ -3781,45 +3782,27 @@ const commonException = (appException_function, error) => {
 };
 
 /**
+ * 
+ * @name commonGlobals
+ * @description Sets start globals
+ * @function
+ * @param {string} globals
+ * @returns {void}
+ */
+const commonGlobals = globals => {  
+    const globalsObj = JSON.parse(atob(globals));
+    Object.entries(globalsObj).forEach(key=>{
+        /**@ts-ignore */
+        COMMON_GLOBAL[key[0]] = key[1];
+    });
+};
+/**
  * @name commonInit
  * @description Init common
  * @function
- * @param {commonInitAppParameters} parameters 
- * @param {CommonGlobal['x']} x
  * @returns {Promise.<void>}
  */
-const commonInit = async (parameters, x) => {  
-    
-    //Config Server	
-    COMMON_GLOBAL.rest_resource_bff =               parameters.Info.rest_resource_bff;
-    COMMON_GLOBAL.app_rest_api_version =            parameters.Info.rest_api_version;
-
-    //Config ServiceApp
-    COMMON_GLOBAL.app_common_app_id=                parameters.Info.app_common_app_id;
-    COMMON_GLOBAL.app_admin_app_id=                 parameters.Info.app_admin_app_id;
-    COMMON_GLOBAL.app_start_app_id=                 parameters.Info.app_start_app_id;
-    COMMON_GLOBAL.app_toolbar_button_start =        parameters.Info.app_toolbar_button_start;
-    COMMON_GLOBAL.app_toolbar_button_framework =    parameters.Info.app_toolbar_button_framework;
-    COMMON_GLOBAL.app_framework =                   parameters.Info.app_framework;
-    COMMON_GLOBAL.app_framework_messages =          parameters.Info.app_framework_messages;
-    COMMON_GLOBAL.admin_only =                      parameters.Info.admin_only;
-    COMMON_GLOBAL.admin_first_time =                parameters.Info.first_time;
-    COMMON_GLOBAL.x =                               x;
-    //AppParameter common
-    COMMON_GLOBAL.info_link_policy_name =           parameters.AppParametersCommon.common_info_link_policy_name.value;
-    COMMON_GLOBAL.info_link_policy_url =            parameters.AppParametersCommon.common_info_link_policy_url.value;
-    COMMON_GLOBAL.info_link_disclaimer_name =       parameters.AppParametersCommon.common_info_link_disclaimer_name.value;
-    COMMON_GLOBAL.info_link_disclaimer_url =        parameters.AppParametersCommon.common_info_link_disclaimer_url.value;
-    COMMON_GLOBAL.info_link_terms_name =            parameters.AppParametersCommon.common_info_link_terms_name.value;
-    COMMON_GLOBAL.info_link_terms_url =             parameters.AppParametersCommon.common_info_link_terms_url.value;
-    //User
-    COMMON_GLOBAL.token_dt =                        parameters.Info.app_idtoken;
-    COMMON_GLOBAL.client_latitude  =                parameters.Info.client_latitude;
-    COMMON_GLOBAL.client_longitude =                parameters.Info.client_longitude;
-    COMMON_GLOBAL.client_place     =                parameters.Info.client_place;
-    COMMON_GLOBAL.client_timezone  =                parameters.Info.client_timezone==''?
-                                                        null:
-                                                            parameters.Info.client_timezone;
+const commonInit = async () => {  
 
     commonUserPreferencesGlobalSetDefault('LOCALE');
     commonUserPreferencesGlobalSetDefault('TIMEZONE');
@@ -3931,5 +3914,6 @@ export{/* GLOBALS*/
        /* INIT */
        commonMountApp,
        commonException,
+       commonGlobals,
        commonInit};
 export default {commonInit};
