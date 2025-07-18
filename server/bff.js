@@ -3,8 +3,6 @@
 /**
  * @import {server_iam_authenticate_request, 
  *          server_db_document_ConfigServer,
- *          server_db_table_App,
- *          server_db_table_IamAppIdToken,
  *          server_db_table_IamEncryption,
  *          server_db_table_ServiceRegistry,
  *          server_bff_RestApi_parameters,
@@ -13,7 +11,6 @@
  *          server_server_error, 
  *          server_server_response,
  *          server_req_method,
- *          server_apps_info_parameters,
  *          server_server_response_type,
  *          server_bff_parameters} from './types.js'
  */
@@ -23,8 +20,6 @@ const socket = await import('./socket.js');
 const Security = await import('./security.js');
 const iam = await import('./iam.js');
 
-const App = await import('./db/App.js');
-const AppParameter = await import('./db/AppParameter.js');
 const ConfigServer = await import('./db/ConfigServer.js');
 const ConfigRestApi = await import('./db/ConfigRestApi.js');
 const IamAppIdToken = await import('./db/IamAppIdToken.js');
@@ -55,64 +50,7 @@ const bffConnect = async parameters =>{
     const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
 
     const common_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
-    const admin_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID);
-    const count_user = IamUser.get(parameters.app_id, null).result.length;
-    const admin_only = (await app_common.commonAppStart(parameters.app_id)==true?false:true) && count_user==0;
-    const start_app_id = admin_app_id == parameters.app_id?
-                                            admin_app_id:
-                                                serverUtilNumberValue(configServer.SERVICE_APP
-                                                    .filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??0;
-    /**@type{server_db_table_IamAppIdToken}*/
-    const idToken = IamAppIdToken.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}).result
-                    .filter((/**@type{server_db_table_IamAppIdToken}*/token)=>token.token == parameters.idToken)[0];
-    //geodata for APP using start_app_id
-    const result_geodata = await app_common.commonGeodata({ app_id:start_app_id, 
-                                                        endpoint:'SERVER', 
-                                                        ip:parameters.ip, 
-                                                        user_agent:parameters.user_agent ??'', 
-                                                        accept_language:parameters.locale??''});
-    /**@type{server_apps_info_parameters} */
-    const server_apps_info_parameters = {   
-        app_id:                         common_app_id,
-        app_idtoken:                    parameters.idToken,
-        client_latitude:                result_geodata?.latitude,
-        client_longitude:               result_geodata?.longitude,
-        client_place:                   result_geodata?.place ?? '',
-        client_timezone:                result_geodata?.timezone,
-        app_common_app_id:              common_app_id,
-        app_admin_app_id:               admin_app_id,
-        app_start_app_id:               start_app_id, //after common app id intial request
-        app_toolbar_button_start:       serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START)??1,
-        app_toolbar_button_framework:   serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK)??1,
-        app_framework:                  serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK)??1,
-        app_framework_messages:         serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES)??1,
-        rest_resource_bff:              configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF,
-        rest_api_version:               configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION,
-        first_time:                     count_user==0?1:0,
-        admin_only:                     admin_only?1:0,
-        x:                              await (async ()=>{
-                                            const appX = [];
-                                            //fetch secret metadata for available apps
-                                            //admin: have common app id and admin app id, admin id app already fetched in commonApp()
-                                            //user : have all except admin app id, common app id already fetched in commonApp()
-                                            for (const app of App.get({app_id:parameters.app_id, resource_id:null}).result
-                                                .filter((/**@type{server_db_table_App}*/app)=>
-                                                        (start_app_id != admin_app_id && app.id != common_app_id && app.id != admin_app_id) ||
-                                                        (start_app_id == admin_app_id && app.id == common_app_id))){
-                                                const uuid  = Security.securityUUIDCreate(); 
-                                                const secret= Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8')
-                                                                .toString('base64');
-                                                await IamEncryption.post(parameters.app_id,
-                                                    {app_id:app.id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id??0, type:'SERVER'});
-                                                appX.push({
-                                                    app_id:     app.id,
-                                                    uuid:   uuid,
-                                                    secret: secret
-                                                });
-                                            }
-                                            return appX;
-                                        })()
-    };
+
     //connect socket for common app id
     const connectUserData = await socket.socketPost({  app_id:common_app_id,
                             idToken:parameters.idToken,
@@ -123,18 +61,6 @@ const bffConnect = async parameters =>{
                             ip:parameters.ip,
                             response:parameters.response
                             });
-    //send SSE INIT for common app id
-    socket.socketClientPostMessage({app_id:common_app_id, 
-                                    resource_id:connectUserData.insertId, 
-                                    data:{  data_app_id:null, 
-                                            iam_user_id: null,
-                                            idToken:null,
-                                            message: JSON.stringify({APP_PARAMETER:{ 
-                                                AppParametersCommon:AppParameter.get({app_id:parameters.app_id,
-                                                                                        resource_id:common_app_id}).result[0]??{},
-                                                Info:server_apps_info_parameters
-                                            }}),
-                                            message_type:'INIT'}});
     //send SSE CONNECTINFO
     socket.socketClientPostMessage({app_id:common_app_id, 
                                     resource_id:connectUserData.insertId, 

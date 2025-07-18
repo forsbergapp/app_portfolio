@@ -22,7 +22,6 @@ const AppModule = await import('../../../server/db/AppModule.js');
 const AppParameter = await import('../../../server/db/AppParameter.js');
 const ConfigServer = await import('../../../server/db/ConfigServer.js');
 const IamAppIdToken = await import('../../../server/db/IamAppIdToken.js');
-const IamEncryption = await import ('../../../server/db/IamEncryption.js');
 const Log = await import('../../../server/db/Log.js');
 const Security = await import('../../../server/security.js');
 const {serverProcess, serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import('../../../server/server.js');
@@ -1029,10 +1028,8 @@ const commonApp = async parameters =>{
         }
         else{
             const {default:ComponentCreate} = await import('./component/common_app.js');
-            const { iamAuthorizeIdToken } = await import('../../../server/iam.js');
             /**@type{server_db_document_ConfigServer} */
             const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
-            const Security = await import('../../../server/security.js');
             
             const admin_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
             const common_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
@@ -1040,29 +1037,17 @@ const commonApp = async parameters =>{
             const app_id = (await commonAppIam(parameters.host, 'APP')).admin?
                                 admin_app_id:
                                     common_app_id;
-            const uuid = Security.securityUUIDCreate();
-            //save token in admin appid for admin or in commmon app id for users
-            const idToken = await iamAuthorizeIdToken(app_id,parameters.ip, 'APP');
-            //create secrets key and iv inside base64 string
-            const secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8').toString('base64');
-            //Insert encryption metadata record 
-            IamEncryption.post(app_id,
-                                {app_id:app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id, type:'SERVER'});
+            
             return {result:await ComponentCreate({data:     {
                                                             app_id:                             app_id,
                                                             app_admin_app_id:                   admin_app_id,
-                                                            rest_resource_bff:                  configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF,
-                                                            app_rest_api_version:               configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION,
-                                                            app_request_timeout_seconds:        serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_SECONDS' in parameter)[0].APP_REQUESTTIMEOUT_SECONDS)??5,
-                                                            app_requesttimeout_admin_minutes:   serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0].APP_REQUESTTIMEOUT_ADMIN_MINUTES)??60,
-                                                            idToken:                            idToken.token,
-                                                            uuid:                               uuid,
-                                                            secret:                             secret,
-                                                            encrypt_transport:                  serverUtilNumberValue(configServer.SERVICE_IAM
-                                                                                                .filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)??0
+                                                            ip:                                 parameters.ip, 
+                                                            user_agent:                         parameters.user_agent ??'', 
+                                                            accept_language:                    parameters.accept_language??''
                                                             },
                                                 methods:    {   
-                                                            securityTransportEncrypt:Security.securityTransportEncrypt,
+                                                            ConfigServer:ConfigServer,
+                                                            serverUtilNumberValue:serverUtilNumberValue,
                                                             commonConvertBinary:commonConvertBinary
                                                             }})
                                 .catch(error=>{
