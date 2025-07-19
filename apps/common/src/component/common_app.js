@@ -337,71 +337,14 @@
     * @returns {Promise.<string>}
     */
     const component = async props =>{
-        const fs = await import('node:fs');
+        
         const common = await import ('../common.js');
         const App = await import('../../../../server/db/App.js');
         const IamEncryption = await import('../../../../server/db/IamEncryption.js');
         const { iamAuthorizeIdToken } = await import('../../../../server/iam.js');
         const Security = await import('../../../../server/security.js');
         const {serverProcess} = await import('../../../../server/server.js');
-
-        //declare css outside to keep HTML clean
-        const css = Buffer.from(`body{
-                                    background-color: rgb(81, 171, 255);
-                                }
-                                .start {    
-                                    display:flex;
-                                    justify-content:center;
-                                    align-items:center;
-                                    min-height:100vh;
-                                    margin:0;
-                                }
-                                @keyframes start_spin{
-                                    from {transform:rotate(0deg);}
-                                    to {transform:rotate(360deg);}
-                                }
-                                .start::before{
-                                    content:'' !important;
-                                    width:25px;
-                                    height:25px;
-                                    position:absolute;
-                                    border:4px solid #404040;
-                                    border-top-color: rgb(81, 171, 255);
-                                    border-radius:50%;
-                                    animation:start_spin 1s linear infinite;
-                                }
-                                /*Fontawesome icons*/
-                                @font-face {
-                                    font-family: "Font Awesome 6 Free";
-                                    font-style: normal;
-                                    font-weight: 400;
-                                    font-display: block;
-                                    src: url(${(await props.methods.commonConvertBinary(
-                                                        'font/woff2',
-                                                        '/apps/common/public/modules/fontawesome/webfonts/fa-regular-400.woff2'))
-                                                    .result.resource}) format("woff2")
-                                }
-                                @font-face {
-                                    font-family: "Font Awesome 6 Free";
-                                    font-style: normal;
-                                    font-weight: 900;
-                                    font-display: block;
-                                    src: url(${(await props.methods.commonConvertBinary(
-                                                        'font/woff2',
-                                                        '/apps/common/public/modules/fontawesome/webfonts/fa-solid-900.woff2'))
-                                                    .result.resource}) format("woff2")
-                                }
-                                @font-face {
-                                    font-family: "Font Awesome 6 Brands";
-                                    font-style: normal;
-                                    font-weight: 900;
-                                    font-display: block;
-                                    src: url(${(await props.methods.commonConvertBinary(
-                                                        'font/woff2',
-                                                        '/apps/common/public/modules/fontawesome/webfonts/fa-brands-400.woff2'))
-                                                    .result.resource}) format("woff2")
-                                }
-                                `).toString('base64');
+        
         
         /**@type{server_db_document_ConfigServer} */
         const configServer = props.methods.ConfigServer.get({app_id:props.data.app_id}).result;
@@ -414,35 +357,27 @@
         const app_requesttimeout_admin_minutes =  props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0].APP_REQUESTTIMEOUT_ADMIN_MINUTES)??60;
         const rest_resource_bff = configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF;
         const app_rest_api_version =configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION;
-        const uuid = Security.securityUUIDCreate();
-        //save token in admin appid for admin or in commmon app id for users
-        const idToken = await iamAuthorizeIdToken(props.data.app_id,props.data.ip, 'APP');
-        //create secrets key and iv inside base64 string
-        const secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8').toString('base64');
-        //Insert encryption metadata record 
-        IamEncryption.post(props.data.app_id,
-                            {app_id:props.data.app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id, type:'SERVER'});
-        
-        /**
-         * @description get globals with keys same as COMMON_GLOBAL in common.js
-         * @return {Promise.<string>}
-         */    
-        const getGlobals = async ()=>{
-            const IamUser = await import('../../../../server/db/IamUser.js');
-            const app_common= await import('../common.js');
-            const AppParameter = await import('../../../../server/db/AppParameter.js');
-            const count_user = IamUser.get(props.data.app_id, null).result.length;
-            const admin_only = (await app_common.commonAppStart(props.data.app_id)==true?false:true) && count_user==0;
-            
 
-            const APP_PARAMETER = AppParameter.get({app_id:props.data.app_id,resource_id:common_app_id}).result[0]??{};
-            //geodata for APP using start_app_id
-            const result_geodata = await app_common.commonGeodata({ app_id:start_app_id, 
-                                                                    endpoint:'SERVER', 
-                                                                    ip:props.data.ip, 
-                                                                    user_agent:props.data.user_agent, 
-                                                                    accept_language:props.data.accept_language});
-            
+        /**
+         * @description post data and return created values
+         * @return {Promise.<{  uuid:string,
+         *                      idToken:{id:number, token:string},
+         *                      secret:string,
+         *                      appX:{
+         *                           app_id: number,
+         *                           uuid:   string,
+         *                           secret: string
+         *                       }[]}>}
+         */
+        const postInit = async () =>{
+            const uuid = Security.securityUUIDCreate();
+            //save token in admin appid for admin or in commmon app id for users
+            const idToken = await iamAuthorizeIdToken(props.data.app_id,props.data.ip, 'APP');
+            //create secrets key and iv inside base64 string
+            const secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8').toString('base64');
+            //Insert encryption metadata record 
+            await IamEncryption.post(props.data.app_id,
+                                {app_id:props.data.app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id, type:'SERVER'});
             const appX = [];
             //fetch secret metadata for available apps
             //admin: have common app id and admin app id, admin id app already fetched in commonApp()
@@ -462,81 +397,189 @@
                     secret: secret
                 });
             }
-
-            return btoa(JSON.stringify({
-                    //update COMMON_GLOBAL keys:
-                    //Config Server	
-                    rest_resource_bff:              rest_resource_bff,
-                    app_rest_api_version:           app_rest_api_version,
-                    //Config ServiceApp
-                    app_common_app_id:              common_app_id,
-                    app_admin_app_id:               admin_app_id,
-                    app_start_app_id:               start_app_id,
-
-                    app_toolbar_button_start:       configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START??1,
-                    app_toolbar_button_framework:   configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK??1,
-                    app_framework:                  configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK??1,
-                    app_framework_messages:         configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES??1,
-                    admin_only:                     admin_only?1:0,
-                    admin_first_time:               count_user==0?1:0,
-
-                    //AppParameter common
-                    info_link_policy_name:          APP_PARAMETER.common_info_link_policy_name.value,
-                    info_link_policy_url:           APP_PARAMETER.common_info_link_policy_url.value,
-                    info_link_disclaimer_name:      APP_PARAMETER.common_info_link_disclaimer_name.value,
-                    info_link_disclaimer_url:       APP_PARAMETER.common_info_link_disclaimer_url.value,
-                    info_link_terms_name:           APP_PARAMETER.common_info_link_terms_name.value,
-                    info_link_terms_url:            APP_PARAMETER.common_info_link_terms_url.value,
-                    
-                    //User
-                    token_dt:                       idToken.token,
-                    client_latitude:                result_geodata?.latitude,
-                    client_longitude:               result_geodata?.longitude,
-                    client_place:                   result_geodata?.place ?? '',
-                    client_timezone:                result_geodata?.timezone==''?null:result_geodata?.timezone,
-                                                    //concat start app info with all apps
-                    x:                              {...(encrypt_transport==1 && {apps:  [{
-                                                                            app_id:  props.data.app_id,
-                                                                            uuid:    uuid,
-                                                                            secret:  secret
-                                                                            }
-                                                                        ].concat(appX.map(app =>{
-                                                                                        return {
-                                                                                            app_id:  app.app_id,
-                                                                                            uuid:    app.uuid,
-                                                                                            secret:  app.secret
-                                                                                            }; 
-                                                                                    }))})
-                                                    }
-            }));
+            return {
+                uuid:uuid,
+                idToken:idToken,
+                secret:secret,
+                appX:appX
+            };
         };
+        
+        /**
+         * @description get data and globals with keys same as COMMON_GLOBAL in common.js
+         * @returns {Promise.<{ cssCommon:string,
+         *                      jsCommon: string,
+         *                      jsCrypto: string,
+         *                      globals:  string,
+         *                      cssFonts: string,
+         *                      css:      string,
+         *                      uuid:     string,
+         *                      idToken:  {id:number, token:string},
+         *                      secret:   string}>}
+         */    
+        const getData = async ()=>{
+            const IamUser = await import('../../../../server/db/IamUser.js');
+            const app_common = await import('../common.js');
+            const AppParameter = await import('../../../../server/db/AppParameter.js');
+            const fs = await import('node:fs');
+
+            const count_user = IamUser.get(props.data.app_id, null).result.length;
+            const admin_only = (await app_common.commonAppStart(props.data.app_id)==true?false:true) && count_user==0;
+            
+
+            const APP_PARAMETER = AppParameter.get({app_id:props.data.app_id,resource_id:common_app_id}).result[0]??{};
+            //geodata for APP using start_app_id
+            const result_geodata = await app_common.commonGeodata({ app_id:start_app_id, 
+                                                                    endpoint:'SERVER', 
+                                                                    ip:props.data.ip, 
+                                                                    user_agent:props.data.user_agent, 
+                                                                    accept_language:props.data.accept_language});
+            
+            const postData = await postInit();
+            const globals = JSON.stringify({
+                                //update COMMON_GLOBAL keys:
+                                //Config Server	
+                                rest_resource_bff:              rest_resource_bff,
+                                app_rest_api_version:           app_rest_api_version,
+                                //Config ServiceApp
+                                app_common_app_id:              common_app_id,
+                                app_admin_app_id:               admin_app_id,
+                                app_start_app_id:               start_app_id,
+
+                                app_toolbar_button_start:       configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START??1,
+                                app_toolbar_button_framework:   configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK??1,
+                                app_framework:                  configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK??1,
+                                app_framework_messages:         configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES??1,
+                                admin_only:                     admin_only?1:0,
+                                admin_first_time:               count_user==0?1:0,
+
+                                //AppParameter common
+                                info_link_policy_name:          APP_PARAMETER.common_info_link_policy_name.value,
+                                info_link_policy_url:           APP_PARAMETER.common_info_link_policy_url.value,
+                                info_link_disclaimer_name:      APP_PARAMETER.common_info_link_disclaimer_name.value,
+                                info_link_disclaimer_url:       APP_PARAMETER.common_info_link_disclaimer_url.value,
+                                info_link_terms_name:           APP_PARAMETER.common_info_link_terms_name.value,
+                                info_link_terms_url:            APP_PARAMETER.common_info_link_terms_url.value,
+                                
+                                //User
+                                token_dt:                       postData.idToken.token,
+                                client_latitude:                result_geodata?.latitude,
+                                client_longitude:               result_geodata?.longitude,
+                                client_place:                   result_geodata?.place ?? '',
+                                client_timezone:                result_geodata?.timezone==''?null:result_geodata?.timezone,
+                                                                //concat start app info with all apps
+                                x:                              {...(encrypt_transport==1 && {apps:  [{
+                                                                                        app_id:  props.data.app_id,
+                                                                                        uuid:    postData.uuid,
+                                                                                        secret:  postData.secret
+                                                                                        }
+                                                                                    ].concat(postData.appX.map(app =>{
+                                                                                                    return {
+                                                                                                        app_id:  app.app_id,
+                                                                                                        uuid:    app.uuid,
+                                                                                                        secret:  app.secret
+                                                                                                        }; 
+                                                                                                }))})
+                                                                }
+                                });
+            
+            return {
+                    globals:    Buffer.from(globals).toString('base64'),
+                    cssCommon:  Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/css/common.css')).toString()).toString('base64'),
+                    jsCommon:   Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/js/common.js')).toString()).toString('base64'),
+                    jsCrypto:   Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/src/functions/common_crypto.js')).toString()).toString('base64'),
+                    cssFonts:   Buffer.from(common.commonCssFonts.css
+                                            .split('url(')
+                                            .map(row=>{
+                                                if (row.startsWith('/bff/x/'))
+                                                    //add app start uuid after font uuid separated with '~'
+                                                    return row.replace( row.substring(0,'/bff/x/'.length+36),
+                                                                        row.substring(0,'/bff/x/'.length+36) + '~' + 
+                                                                        postData.uuid);
+                                                else
+                                                    return row;
+                                            }).join('url('))
+                                .toString('base64'),
+                    css:        Buffer.from(`body{
+                                                background-color: rgb(81, 171, 255);
+                                            }
+                                            .start {    
+                                                display:flex;
+                                                justify-content:center;
+                                                align-items:center;
+                                                min-height:100vh;
+                                                margin:0;
+                                            }
+                                            @keyframes start_spin{
+                                                from {transform:rotate(0deg);}
+                                                to {transform:rotate(360deg);}
+                                            }
+                                            .start::before{
+                                                content:'' !important;
+                                                width:25px;
+                                                height:25px;
+                                                position:absolute;
+                                                border:4px solid #404040;
+                                                border-top-color: rgb(81, 171, 255);
+                                                border-radius:50%;
+                                                animation:start_spin 1s linear infinite;
+                                            }
+                                            /*Fontawesome icons*/
+                                            @font-face {
+                                                font-family: "Font Awesome 6 Free";
+                                                font-style: normal;
+                                                font-weight: 400;
+                                                font-display: block;
+                                                src: url(${(await props.methods.commonConvertBinary(
+                                                                    'font/woff2',
+                                                                    '/apps/common/public/modules/fontawesome/webfonts/fa-regular-400.woff2'))
+                                                                .result.resource}) format("woff2")
+                                            }
+                                            @font-face {
+                                                font-family: "Font Awesome 6 Free";
+                                                font-style: normal;
+                                                font-weight: 900;
+                                                font-display: block;
+                                                src: url(${(await props.methods.commonConvertBinary(
+                                                                    'font/woff2',
+                                                                    '/apps/common/public/modules/fontawesome/webfonts/fa-solid-900.woff2'))
+                                                                .result.resource}) format("woff2")
+                                            }
+                                            @font-face {
+                                                font-family: "Font Awesome 6 Brands";
+                                                font-style: normal;
+                                                font-weight: 900;
+                                                font-display: block;
+                                                src: url(${(await props.methods.commonConvertBinary(
+                                                                    'font/woff2',
+                                                                    '/apps/common/public/modules/fontawesome/webfonts/fa-brands-400.woff2'))
+                                                                .result.resource}) format("woff2")
+                                            }
+                                            `).toString('base64'),
+                    uuid:       postData.uuid,
+                    idToken:    postData.idToken,
+                    secret:     postData.secret
+            };
+        };
+        const data = await getData().catch(error=>{
+            throw error;
+        });
         return template({   app_id:                             props.data.app_id,
                             app_admin_app_id:                   admin_app_id,
                             rest_resource_bff:                  rest_resource_bff,
                             app_rest_api_version:               app_rest_api_version,
                             app_request_timeout_seconds:        app_request_timeout_seconds,
                             app_requesttimeout_admin_minutes:   app_requesttimeout_admin_minutes,
-                            idToken:                            idToken, 
-                            uuid:                               uuid,
-                            secret:                             secret,
+                            idToken:                            data.idToken, 
+                            uuid:                               data.uuid,
+                            secret:                             data.secret,
                             encrypt_transport:                  encrypt_transport,
-                            cssStart:                           css,
-                            cssCommon:                          Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/css/common.css')).toString()).toString('base64'),
-                            jsCommon:                           Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/js/common.js')).toString()).toString('base64'),
-                            jsCrypto:                           Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/src/functions/common_crypto.js')).toString()).toString('base64'),
-                            globals:                            await getGlobals(),
-                            cssFonts:                           Buffer.from(common.commonCssFonts.css
-                                                                            .split('url(')
-                                                                            .map(row=>{
-                                                                                if (row.startsWith('/bff/x/'))
-                                                                                    //add app start uuid after font uuid separated with '~'
-                                                                                    return row.replace( row.substring(0,'/bff/x/'.length+36),
-                                                                                                        row.substring(0,'/bff/x/'.length+36) + '~' + 
-                                                                                                        uuid);
-                                                                                else
-                                                                                    return row;
-                                                                            }).join('url('))
-                                                                .toString('base64')
+                            cssStart:                           data.css,
+                            cssCommon:                          data.cssCommon,
+                            jsCommon:                           data.jsCommon,
+                            jsCrypto:                           data.jsCrypto,
+                            globals:                            data.globals,
+                            cssFonts:                           data.cssFonts
                         });
     };
     export default component;

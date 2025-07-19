@@ -892,7 +892,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
     
  };
  /**
-  * @name commonAppInit
+  * @name commonAppMount
   * @memberof ROUTE_REST_API
   * @description Get app 
   * @function
@@ -924,7 +924,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
   *                                                            text_edit:server_db_table_App['text_edit']},
   *                                                       AppParameter:server_db_table_AppParameter | {} } }>}
   */
-const commonAppInit = async parameters =>{
+const commonAppMount = async parameters =>{
     /**@type{server_db_document_ConfigServer} */
     const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
     if (parameters.resource_id == serverUtilNumberValue(configServer.SERVICE_APP
@@ -997,7 +997,7 @@ const commonAppInit = async parameters =>{
     }
 };
 
- /**
+/**
  * @name commonApp
  * @memberof ROUTE_APP
  * @description Get app 
@@ -1033,7 +1033,7 @@ const commonApp = async parameters =>{
             
             const admin_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
             const common_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
-            //save UUID, secret and idToken (ADD FK) in IamEncryption
+            
             const app_id = (await commonAppIam(parameters.host, 'APP')).admin?
                                 admin_app_id:
                                     common_app_id;
@@ -1061,10 +1061,7 @@ const commonApp = async parameters =>{
                                             }
                                         })
                                     .then(()=>{
-                                        return import('./component/common_server_error.js')
-                                            .then(({default:serverError})=>{
-                                                return {result:serverError({data:null, methods:null}), type:'HTML'};
-                                            });
+                                        return commonAppError();
                                     });
                             }),
                     type:'HTML'};
@@ -1072,7 +1069,16 @@ const commonApp = async parameters =>{
         }
             
 };
-
+/**
+ * @name commonAppError
+ * @description Get server error
+ * @function
+* @returns {Promise.<string>}
+*/
+const commonAppError = async () =>{
+    const {default:serverError} = await import('./component/common_server_error.js');
+    return serverError({data:null, methods:null});
+};
 /**
  * @name commonAppResource
  * @memberof ROUTE_REST_API
@@ -1169,8 +1175,9 @@ export {commonConvertBinary,
         commonAppStart, commonClientLocale,
         commonAppIam, commonResourceFile,
         commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
-        commonAppInit,
+        commonAppMount,
         commonApp,
+        commonAppError,
         commonAppResource,
         commonGeodata,
         commonBFE,

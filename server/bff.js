@@ -762,11 +762,8 @@ const bffResponse = async parameters =>{
                                                         },
                                                 log:error
                                             }
-                                        }).then(() =>
-                                        import('../apps/common/src/component/common_server_error.js')
-                                            .then(({default:serverError})=>{
-                                                return {result:serverError({data:null, methods:null}), type:'HTML'};
-                                            })));
+                                        }).then(() =>app_common.commonAppError())
+                                );
                             } 
                             default:{
                                 //unknown path, redirect to hostname
