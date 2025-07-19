@@ -3,9 +3,6 @@
      */  
 
     /**
-     * @typedef {import('../common.js')['commonConvertBinary']} commonConvertBinary
-     * @typedef {import('../../../../server/db/ConfigServer.js')} ConfigServer
-     * @typedef {import('../../../../server/server.js')['serverUtilNumberValue']} serverUtilNumberValue
      * @import {server_db_table_App,server_db_document_ConfigServer, server_db_table_IamAppIdToken} from '../../../../server/types.js';
      */
     /**
@@ -366,43 +363,42 @@
     *                      app_admin_app_id:number,
     *                      ip:string, 
     *                      user_agent:string, 
-    *                      accept_language:string
+    *                      accept_language:string,
+    *                      configServer:server_db_document_ConfigServer,
     *                      },
     *        methods:      {
-    *                      ConfigServer:ConfigServer,
-    *                      serverUtilNumberValue:serverUtilNumberValue,
-    *                      commonConvertBinary:commonConvertBinary
+    *                      commonCssFonts:import('../common.js')['commonCssFonts'],
+    *                      commonAppStart:import('../common.js')['commonAppStart'],
+    *                      commonGeodata:import('../common.js')['commonGeodata'],
+    *                      App:import('../../../../server/db/App.js'),
+    *                      AppParameter:import('../../../../server/db/AppParameter.js'),
+    *                      IamEncryption:import('../../../../server/db/IamEncryption.js'),
+    *                      IamUser:import('../../../../server/db/IamUser.js'),
+    *                      iamAuthorizeIdToken:import('../../../../server/iam.js')['iamAuthorizeIdToken'],
+    *                      serverProcess:import('../../../../server/server.js')['serverProcess'],
+    *                      serverUtilNumberValue:import('../../../../server/server.js')['serverUtilNumberValue'],
+    *                      Security:import('../../../../server/security.js'),
+    *                      commonConvertBinary:import('../common.js')['commonConvertBinary'],
+    *                      fs:import('node:fs')
     *                      }
     *      }} props 
     * @returns {Promise.<string>}
     */
     const component = async props =>{
         
-        const common = await import ('../common.js');
-        const App = await import('../../../../server/db/App.js');
-        const IamEncryption = await import('../../../../server/db/IamEncryption.js');
-        const { iamAuthorizeIdToken } = await import('../../../../server/iam.js');
-        const Security = await import('../../../../server/security.js');
-        const {serverProcess} = await import('../../../../server/server.js');
-        
-        
-        /**@type{server_db_document_ConfigServer} */
-        const configServer = props.methods.ConfigServer.get({app_id:props.data.app_id}).result;
 
-        const common_app_id = props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??1;
-        const admin_app_id = props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
-        const start_app_id = props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??1;
-        const encrypt_transport = props.methods.serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)??0;
-        const app_request_timeout_seconds = props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_SECONDS' in parameter)[0].APP_REQUESTTIMEOUT_SECONDS)??5;
-        const app_requesttimeout_admin_minutes =  props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0].APP_REQUESTTIMEOUT_ADMIN_MINUTES)??60;
-        const rest_resource_bff = configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF;
-        const app_rest_api_version =configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION;
+        const common_app_id =                   props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??1;
+        const admin_app_id =                    props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
+        const start_app_id =                    props.data.app_id==admin_app_id?admin_app_id:props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??1;
+        const app_request_timeout_seconds =     props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_SECONDS' in parameter)[0].APP_REQUESTTIMEOUT_SECONDS)??5;
+        const app_requesttimeout_admin_minutes =props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0].APP_REQUESTTIMEOUT_ADMIN_MINUTES)??60;
+        const encrypt_transport =               props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_IAM.filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)??0;
+        const rest_resource_bff =               props.data.configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF;
+        const app_rest_api_version =            props.data.configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION;
 
         /**
          * @description post data and return created values
-         * @return {Promise.<{  uuid:string,
-         *                      idToken:{id:number, token:string},
-         *                      secret:string,
+         * @return {Promise.<{  idToken:{id:number, token:string},
          *                      appX:{
          *                           app_id: number,
          *                           uuid:   string,
@@ -410,26 +406,21 @@
          *                       }[]}>}
          */
         const postInit = async () =>{
-            const uuid = Security.securityUUIDCreate();
             //save token in admin appid for admin or in commmon app id for users
-            const idToken = await iamAuthorizeIdToken(props.data.app_id,props.data.ip, 'APP');
-            //create secrets key and iv inside base64 string
-            const secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8').toString('base64');
-            //Insert encryption metadata record 
-            await IamEncryption.post(props.data.app_id,
-                                {app_id:props.data.app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id, type:'SERVER'});
+            const idToken = await props.methods.iamAuthorizeIdToken(props.data.app_id,props.data.ip, 'APP');
             const appX = [];
             //fetch secret metadata for available apps
-            //admin: have common app id and admin app id, admin id app already fetched in commonApp()
-            //user : have all except admin app id, common app id already fetched in commonApp()
-            for (const app of App.get({app_id:props.data.app_id, resource_id:null}).result
+            //admin: all apps
+            //user : all apps except admin app
+            for (const app of props.methods.App.get({app_id:props.data.app_id, resource_id:null}).result
                 .filter((/**@type{server_db_table_App}*/app)=>
-                        (start_app_id != admin_app_id && app.id != common_app_id && app.id != admin_app_id) ||
-                        (start_app_id == admin_app_id && app.id == common_app_id))){
-                const uuid  = Security.securityUUIDCreate(); 
-                const secret= Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8')
+                        (app.id != admin_app_id && props.data.app_id != admin_app_id) ||
+                        (props.data.app_id == admin_app_id))){
+                const uuid  = props.methods.Security.securityUUIDCreate();
+                //create secrets key and iv inside base64 string 
+                const secret= Buffer.from(JSON.stringify(await props.methods.Security.securityTransportCreateSecrets()),'utf-8')
                                 .toString('base64');
-                await IamEncryption.post(props.data.app_id,
+                await props.methods.IamEncryption.post(props.data.app_id,
                     {app_id:app.id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id??0, type:'SERVER'});
                 appX.push({
                     app_id: app.id,
@@ -438,9 +429,7 @@
                 });
             }
             return {
-                uuid:uuid,
                 idToken:idToken,
-                secret:secret,
                 appX:appX
             };
         };
@@ -453,35 +442,30 @@
          *                      globals:  string,
          *                      cssFonts: string,
          *                      cssFontsStart:string,
-         *                      uuid:     string,
          *                      idToken:  {id:number, token:string},
+         *                      uuid:     string,
          *                      secret:   string,
          *                      app_toolbar_button_start:       number,
          *                      app_toolbar_button_framework:   number,
          *                      app_framework:number}>}
          */    
         const getData = async ()=>{
-            const IamUser = await import('../../../../server/db/IamUser.js');
-            const app_common = await import('../common.js');
-            const AppParameter = await import('../../../../server/db/AppParameter.js');
-            const fs = await import('node:fs');
 
-            const count_user = IamUser.get(props.data.app_id, null).result.length;
-            const admin_only = (await app_common.commonAppStart(props.data.app_id)==true?false:true) && count_user==0;
+            const count_user = props.methods.IamUser.get(props.data.app_id, null).result.length;
+            const admin_only = (await props.methods.commonAppStart(props.data.app_id)==true?false:true) && count_user==0;
             
-
-            const APP_PARAMETER = AppParameter.get({app_id:props.data.app_id,resource_id:common_app_id}).result[0]??{};
+            const APP_PARAMETER = props.methods.AppParameter.get({app_id:props.data.app_id,resource_id:common_app_id}).result[0]??{};
             //geodata for APP using start_app_id
-            const result_geodata = await app_common.commonGeodata({ app_id:start_app_id, 
+            const result_geodata = await props.methods.commonGeodata({ app_id:start_app_id, 
                                                                     endpoint:'SERVER', 
                                                                     ip:props.data.ip, 
                                                                     user_agent:props.data.user_agent, 
                                                                     accept_language:props.data.accept_language});
             
             const postData = await postInit();
-            const app_toolbar_button_start =  props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START)??1;
-            const app_toolbar_button_framework = props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK)??1;
-            const app_framework = props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK)??1;
+            const app_toolbar_button_start =  props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START)??1;
+            const app_toolbar_button_framework = props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK)??1;
+            const app_framework = props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK)??1;
             const globals = JSON.stringify({
                                 //update COMMON_GLOBAL keys:
                                 //Config Server	
@@ -495,7 +479,7 @@
                                 app_toolbar_button_start:       app_toolbar_button_start,
                                 app_toolbar_button_framework:   app_toolbar_button_framework,
                                 app_framework:                  app_framework,
-                                app_framework_messages:         props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES)??1,
+                                app_framework_messages:         props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES)??1,
                                 admin_only:                     admin_only?1:0,
                                 admin_first_time:               count_user==0?1:0,
 
@@ -513,35 +497,22 @@
                                 client_longitude:               result_geodata?.longitude,
                                 client_place:                   result_geodata?.place ?? '',
                                 client_timezone:                result_geodata?.timezone==''?null:result_geodata?.timezone,
-                                                                //concat start app info with all apps
-                                x:                              {...(encrypt_transport==1 && {apps:  [{
-                                                                                        app_id:  props.data.app_id,
-                                                                                        uuid:    postData.uuid,
-                                                                                        secret:  postData.secret
-                                                                                        }
-                                                                                    ].concat(postData.appX.map(app =>{
-                                                                                                    return {
-                                                                                                        app_id:  app.app_id,
-                                                                                                        uuid:    app.uuid,
-                                                                                                        secret:  app.secret
-                                                                                                        }; 
-                                                                                                }))})
-                                                                }
+                                x:                              {...(encrypt_transport==1 && {apps:  postData.appX})}
                                 });
             
             return {
                     globals:        Buffer.from(globals).toString('base64'),
-                    cssCommon:      Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/css/common.css')).toString()).toString('base64'),
-                    jsCommon:       Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/js/common.js')).toString()).toString('base64'),
-                    jsCrypto:       Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/src/functions/common_crypto.js')).toString()).toString('base64'),
-                    cssFonts:       Buffer.from(common.commonCssFonts.css
+                    cssCommon:      Buffer.from((await props.methods.fs.promises.readFile(props.methods.serverProcess.cwd() + '/apps/common/public/css/common.css')).toString()).toString('base64'),
+                    jsCommon:       Buffer.from((await props.methods.fs.promises.readFile(props.methods.serverProcess.cwd() + '/apps/common/public/js/common.js')).toString()).toString('base64'),
+                    jsCrypto:       Buffer.from((await props.methods.fs.promises.readFile(props.methods.serverProcess.cwd() + '/apps/common/src/functions/common_crypto.js')).toString()).toString('base64'),
+                    cssFonts:       Buffer.from(props.methods.commonCssFonts.css
                                             .split('url(')
                                             .map(row=>{
                                                 if (row.startsWith('/bff/x/'))
                                                     //add app start uuid after font uuid separated with '~'
                                                     return row.replace( row.substring(0,'/bff/x/'.length+36),
                                                                         row.substring(0,'/bff/x/'.length+36) + '~' + 
-                                                                        postData.uuid);
+                                                                        postData.appX.filter(app=>app.app_id == props.data.app_id)[0].uuid);
                                                 else
                                                     return row;
                                             }).join('url('))
@@ -578,9 +549,10 @@
                                                                     .result.resource}) format("woff2")
                                                 }
                                                 `).toString('base64'),
-                    uuid:           postData.uuid,
                     idToken:        postData.idToken,
-                    secret:         postData.secret,
+                    //start uuid and secret
+                    uuid:           postData.appX.filter(app=>app.app_id == props.data.app_id)[0].uuid,
+                    secret:         postData.appX.filter(app=>app.app_id == props.data.app_id)[0].secret,
                     app_toolbar_button_start:       app_toolbar_button_start,
                     app_toolbar_button_framework:   app_toolbar_button_framework,
                     app_framework:  app_framework
@@ -596,7 +568,7 @@
                             app_rest_api_version:               app_rest_api_version,
                             app_request_timeout_seconds:        app_request_timeout_seconds,
                             app_requesttimeout_admin_minutes:   app_requesttimeout_admin_minutes,
-                            idToken:                              data.idToken.token, 
+                            idToken:                            data.idToken.token, 
                             uuid:                               data.uuid,
                             secret:                             data.secret,
                             encrypt_transport:                  encrypt_transport,

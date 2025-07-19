@@ -20,12 +20,13 @@
 const App = await import('../../../server/db/App.js');
 const AppModule = await import('../../../server/db/AppModule.js');
 const AppParameter = await import('../../../server/db/AppParameter.js');
+const IamEncryption = await import('../../../server/db/IamEncryption.js');
+const IamUser = await import('../../../server/db/IamUser.js');
 const ConfigServer = await import('../../../server/db/ConfigServer.js');
 const IamAppIdToken = await import('../../../server/db/IamAppIdToken.js');
 const Log = await import('../../../server/db/Log.js');
 const Security = await import('../../../server/security.js');
-const {serverProcess, serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import('../../../server/server.js');
-const {serverCircuitBreakerBFE, serverRequest} = await import('../../../server/server.js');
+const {serverCircuitBreakerBFE, serverRequest, serverProcess, serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import('../../../server/server.js');
 
 const fs = await import('node:fs');
 
@@ -558,8 +559,8 @@ const commonAppReport = async parameters => {
                                                                                             app.common_name==parameters.resource_id && 
                                                                                             app.common_role == parameters.endpoint)[0];
             if (module){
+                const {iamAuthorizeIdToken} = await import('../../../server/iam.js');
                 //report
-                const { iamAuthorizeIdToken } = await import('../../../server/iam.js');
                 //ID token is created but not used in report
                 await iamAuthorizeIdToken(parameters.app_id, parameters.ip, 'REPORT');
                 const {default:ComponentCreate} = await import('./component/common_report.js');
@@ -671,7 +672,6 @@ const commonAppReport = async parameters => {
  */
 const commonAppReportQueue = async parameters =>{
     const AppModuleQueue = await import('../../../server/db/AppModuleQueue.js');
-    const IamUser = await import('../../../server/db/IamUser.js');
     const { iamUtilTokenGet } = await import('../../../server/iam.js');
     const {iamUtilMessageNotAuthorized} = await import('../../../server/iam.js');
 
@@ -840,7 +840,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
             iv:         JSON.parse(Buffer.from(security.IamEncryption.secret, 'base64').toString('utf-8')).iv})
             .then(()=>
                 1)
-            .catch(error=>
+            .catch(()=>
                 0
             )==1)==false){
             return {admin:false, 
@@ -1027,6 +1027,7 @@ const commonApp = async parameters =>{
                                                 }), type:'HTML'};
         }
         else{
+            const {iamAuthorizeIdToken} = await import('../../../server/iam.js');
             const {default:ComponentCreate} = await import('./component/common_app.js');
             /**@type{server_db_document_ConfigServer} */
             const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
@@ -1043,12 +1044,23 @@ const commonApp = async parameters =>{
                                                             app_admin_app_id:                   admin_app_id,
                                                             ip:                                 parameters.ip, 
                                                             user_agent:                         parameters.user_agent ??'', 
-                                                            accept_language:                    parameters.accept_language??''
+                                                            accept_language:                    parameters.accept_language??'',
+                                                            configServer:                       configServer
                                                             },
-                                                methods:    {   
-                                                            ConfigServer:ConfigServer,
+                                                methods:    {
+                                                            commonCssFonts:commonCssFonts,
+                                                            commonAppStart:commonAppStart,
+                                                            commonGeodata:commonGeodata,
+                                                            App:App,
+                                                            AppParameter:AppParameter,
+                                                            IamEncryption:IamEncryption,
+                                                            IamUser:IamUser,   
+                                                            iamAuthorizeIdToken:iamAuthorizeIdToken,
+                                                            serverProcess:serverProcess,
                                                             serverUtilNumberValue:serverUtilNumberValue,
-                                                            commonConvertBinary:commonConvertBinary
+                                                            Security:Security,
+                                                            commonConvertBinary:commonConvertBinary,
+                                                            fs:fs
                                                             }})
                                 .catch(error=>{
                                     return Log.post({   app_id:parameters.app_id, 
