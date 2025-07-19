@@ -1210,10 +1210,10 @@
                 }
             }
         },
-        "/bff/app_id/v1/app-init/${IAM_data_app_id}": {
+        "/bff/app_id/v1/app-mount/${IAM_data_app_id}": {
             "get": {
                 "summary": "",
-                "operationId": "apps_common_src.common.commonAppInit",
+                "operationId": "apps_common_src.common.commonAppMount",
                 "security":[
                     {"$ref":"#/components/securitySchemes/SecurityApp"}
                 ],
