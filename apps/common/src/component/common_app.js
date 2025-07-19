@@ -18,17 +18,16 @@
     *          app_rest_api_version:string,
     *          app_request_timeout_seconds: number,
     *          app_requesttimeout_admin_minutes: number,
-    *          idToken:{id:server_db_table_IamAppIdToken['id'],
-    *                   token:server_db_table_IamAppIdToken['token']}, 
+    *          idToken:server_db_table_IamAppIdToken['token'], 
     *          uuid:string,
     *          secret:string,
     *          encrypt_transport:number,
-    *          cssStart:string,
     *          cssCommon:string,
     *          jsCommon:string,
     *          jsCrypto:string,
     *          globals:Object.<String,*>,
-    *          cssFonts:string}} props
+    *          cssFonts:string,
+    *          cssFontsStart:string}} props
     * @returns {string}
     */
     const template = props =>`  <!DOCTYPE html>
@@ -171,7 +170,7 @@
                                                                                                             iv:     JSON.parse(common.commonWindowFromBase64(parameters.secret)).iv,
                                                                                                             key:    JSON.parse(common.commonWindowFromBase64(parameters.secret)).jwk.k, 
                                                                                                             data:'FFB'}),
-                                                                                        'app-id-token': 'Bearer ' + parameters.data.idToken.token,
+                                                                                        'app-id-token': 'Bearer ' + parameters.data.idToken,
                                                                                         ...(authorization && {Authorization: authorization}),
                                                                                         'Content-Type': parameters.response_type =='SSE'?
                                                                                                             'text/event-stream':
@@ -193,7 +192,7 @@
                                                             method: parameters.data.method,
                                                             headers:{   'app-id': parameters.app_id,
                                                                         'app-signature': 'commonFFB',
-                                                                        'app-id-token': 'Bearer ' + parameters.data.idToken.token,
+                                                                        'app-id-token': 'Bearer ' + parameters.data.idToken,
                                                                         ...(parameters.response_type =='SSE' && {'Cache-control': 'no-cache'}),
                                                                         'Content-Type': parameters.response_type =='SSE'?
                                                                                             'text/event-stream':
@@ -270,14 +269,16 @@
                                     }
                                     //set variables
                                     const encrypt_transport = ${props.encrypt_transport==1?'true':'false'};
-                                    const cssStart = '${props.cssStart}';
                                     const cssFonts = '${props.cssFonts}';
+                                    const cssFontsStart = '${props.cssFontsStart}';
                                     const cssCommon = '${props.cssCommon}';
+                                    
                                     //import common library
                                     const common = await import(URL.createObjectURL(  new Blob ([atob('${props.jsCommon}')],{type: 'text/javascript'})));
-                                    //set start css
-                                    common.commonMiscCssApply(atob(cssStart) + atob(cssFonts));
-
+                                    
+                                    //apply start fonts + common css
+                                    common.commonMiscCssApply(common.commonWindowFromBase64(cssFontsStart) + common.commonWindowFromBase64(cssCommon));
+                                    
                                     //set globals
                                     common.commonGlobals('${props.globals}');
                                     const {encrypt, decrypt} = await import(URL.createObjectURL(  new Blob ([atob('${props.jsCrypto}')],{type: 'text/javascript'})))
@@ -290,8 +291,7 @@
 
                                     //init app js
                                     await common[Object.keys(common.default)[0]]();
-                                    //apply common css
-                                    common.commonMiscCssApply(common.commonWindowFromBase64(cssCommon));
+                                    
                                     //connect to BFF
                                     await FFB({ app_id:             ${props.app_id},
                                                 uuid:               '${props.uuid}',
@@ -301,11 +301,13 @@
                                                 rest_api_version:   '${props.app_rest_api_version}',
                                                 rest_bff_path   :   '${props.rest_resource_bff}',
                                                 data:{  
-                                                        idToken:            '${props.idToken.token}',
+                                                        idToken:            '${props.idToken}',
                                                         authorization_type: 'APP_ID', 
                                                         path:               '/server-bff/' + '${props.uuid}', 
                                                         method:             'POST',
                                                         body:               null}});
+                                    //apply font css
+                                    common.commonMiscCssApply(common.commonWindowFromBase64(cssFonts));
                                 </script>
                                 <link id="app_link_app_css"         rel='stylesheet'  type='text/css'     href=''/>
                                 <link id="app_link_app_report_css"  rel='stylesheet'  type='text/css'     href=''/>
@@ -412,7 +414,7 @@
          *                      jsCrypto: string,
          *                      globals:  string,
          *                      cssFonts: string,
-         *                      css:      string,
+         *                      cssFontsStart:string,
          *                      uuid:     string,
          *                      idToken:  {id:number, token:string},
          *                      secret:   string}>}
@@ -500,62 +502,38 @@
                                                     return row;
                                             }).join('url('))
                                 .toString('base64'),
-                    css:        Buffer.from(`body{
-                                                background-color: rgb(81, 171, 255);
-                                            }
-                                            .start {    
-                                                display:flex;
-                                                justify-content:center;
-                                                align-items:center;
-                                                min-height:100vh;
-                                                margin:0;
-                                            }
-                                            @keyframes start_spin{
-                                                from {transform:rotate(0deg);}
-                                                to {transform:rotate(360deg);}
-                                            }
-                                            .start::before{
-                                                content:'' !important;
-                                                width:25px;
-                                                height:25px;
-                                                position:absolute;
-                                                border:4px solid #404040;
-                                                border-top-color: rgb(81, 171, 255);
-                                                border-radius:50%;
-                                                animation:start_spin 1s linear infinite;
-                                            }
-                                            /*Fontawesome icons*/
-                                            @font-face {
-                                                font-family: "Font Awesome 6 Free";
-                                                font-style: normal;
-                                                font-weight: 400;
-                                                font-display: block;
-                                                src: url(${(await props.methods.commonConvertBinary(
-                                                                    'font/woff2',
-                                                                    '/apps/common/public/modules/fontawesome/webfonts/fa-regular-400.woff2'))
-                                                                .result.resource}) format("woff2")
-                                            }
-                                            @font-face {
-                                                font-family: "Font Awesome 6 Free";
-                                                font-style: normal;
-                                                font-weight: 900;
-                                                font-display: block;
-                                                src: url(${(await props.methods.commonConvertBinary(
-                                                                    'font/woff2',
-                                                                    '/apps/common/public/modules/fontawesome/webfonts/fa-solid-900.woff2'))
-                                                                .result.resource}) format("woff2")
-                                            }
-                                            @font-face {
-                                                font-family: "Font Awesome 6 Brands";
-                                                font-style: normal;
-                                                font-weight: 900;
-                                                font-display: block;
-                                                src: url(${(await props.methods.commonConvertBinary(
-                                                                    'font/woff2',
-                                                                    '/apps/common/public/modules/fontawesome/webfonts/fa-brands-400.woff2'))
-                                                                .result.resource}) format("woff2")
-                                            }
-                                            `).toString('base64'),
+                    cssFontsStart: Buffer.from(`/*Fontawesome icons*/
+                                                @font-face {
+                                                    font-family: "Font Awesome 6 Free";
+                                                    font-style: normal;
+                                                    font-weight: 400;
+                                                    font-display: block;
+                                                    src: url(${(await props.methods.commonConvertBinary(
+                                                                        'font/woff2',
+                                                                        '/apps/common/public/modules/fontawesome/webfonts/fa-regular-400.woff2'))
+                                                                    .result.resource}) format("woff2")
+                                                }
+                                                @font-face {
+                                                    font-family: "Font Awesome 6 Free";
+                                                    font-style: normal;
+                                                    font-weight: 900;
+                                                    font-display: block;
+                                                    src: url(${(await props.methods.commonConvertBinary(
+                                                                        'font/woff2',
+                                                                        '/apps/common/public/modules/fontawesome/webfonts/fa-solid-900.woff2'))
+                                                                    .result.resource}) format("woff2")
+                                                }
+                                                @font-face {
+                                                    font-family: "Font Awesome 6 Brands";
+                                                    font-style: normal;
+                                                    font-weight: 900;
+                                                    font-display: block;
+                                                    src: url(${(await props.methods.commonConvertBinary(
+                                                                        'font/woff2',
+                                                                        '/apps/common/public/modules/fontawesome/webfonts/fa-brands-400.woff2'))
+                                                                    .result.resource}) format("woff2")
+                                                }
+                                                `).toString('base64'),
                     uuid:       postData.uuid,
                     idToken:    postData.idToken,
                     secret:     postData.secret
@@ -564,22 +542,23 @@
         const data = await getData().catch(error=>{
             throw error;
         });
+
         return template({   app_id:                             props.data.app_id,
                             app_admin_app_id:                   admin_app_id,
                             rest_resource_bff:                  rest_resource_bff,
                             app_rest_api_version:               app_rest_api_version,
                             app_request_timeout_seconds:        app_request_timeout_seconds,
                             app_requesttimeout_admin_minutes:   app_requesttimeout_admin_minutes,
-                            idToken:                            data.idToken, 
+                            idToken:                              data.idToken.token, 
                             uuid:                               data.uuid,
                             secret:                             data.secret,
                             encrypt_transport:                  encrypt_transport,
-                            cssStart:                           data.css,
                             cssCommon:                          data.cssCommon,
                             jsCommon:                           data.jsCommon,
                             jsCrypto:                           data.jsCrypto,
                             globals:                            data.globals,
-                            cssFonts:                           data.cssFonts
+                            cssFonts:                           data.cssFonts,
+                            cssFontsStart:                      data.cssFontsStart
                         });
     };
     export default component;
