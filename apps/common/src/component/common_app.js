@@ -27,7 +27,10 @@
     *          jsCrypto:string,
     *          globals:Object.<String,*>,
     *          cssFonts:string,
-    *          cssFontsStart:string}} props
+    *          cssFontsStart:string,
+    *          app_toolbar_button_start:number,
+    *          app_toolbar_button_framework:number,
+    *          app_framework:number}} props
     * @returns {string}
     */
     const template = props =>`  <!DOCTYPE html>
@@ -315,7 +318,42 @@
                                 <link id="app_link_favicon_192x192" rel='icon'        type='image/png'    href='' sizes='192x192'/>
                                 <div id='app_root'>
                                     <div id='app'></div>
-                                    <div id='common_app'></div>
+                                    <div id='common_app'>
+                                        <div id='common_app_toolbar' ${(props.app_toolbar_button_start==1 ||props.app_toolbar_button_framework==1)?'class=\'show\'':''}>
+                                            <div id='common_app_toolbar_start' class='common_icon common_toolbar_button ${props.app_toolbar_button_start==1?'show':''}'></div>
+                                            <div id='common_app_toolbar_framework_js' class='common_icon common_toolbar_button ${props.app_toolbar_button_framework==1?'show':''} ${props.app_framework==1?'common_toolbar_selected':''}'></div>
+                                            <div id='common_app_toolbar_framework_vue' class='common_icon common_toolbar_button ${props.app_toolbar_button_framework==1?'show':''}'></div>
+                                            <div id='common_app_toolbar_framework_react' class='common_icon common_toolbar_button ${props.app_toolbar_button_framework==1?'show':''}'></div>
+                                        </div>
+                                        <div id='common_dialogues'>
+                                            <div id='common_dialogue_apps' class='common_dialogue_content'></div>
+                                            <div id='common_dialogue_info' class='common_dialogue_content'></div>
+                                            <div id='common_dialogue_iam_start' class='common_dialogue_content'></div>
+                                            <div id='common_dialogue_user_menu' class='common_dialogue_content'></div>
+                                            <div id='common_dialogue_iam_verify' class='common_dialogue_content'></div>
+                                            <div id='common_dialogue_message' class='common_dialogue_content'></div>
+                                            <div id='common_dialogue_profile' class='common_dialogue_content'></div>
+                                            <div id='common_dialogue_lov' class='common_dialogue_content'></div>
+                                            <div id='common_dialogue_app_data_display' class='common_dialogue_content'></div>
+                                        </div>
+                                        <div id='common_window_info'></div>
+                                        <div id='common_broadcast'></div>
+                                        <div id='common_profile_search'></div>
+                                        <div id='common_user_account'>
+                                            <div id='common_iam_avatar'>
+                                                <div id='common_iam_avatar_logged_in'>
+                                                    <div id='common_iam_avatar_avatar'>
+                                                        <div id='common_iam_avatar_avatar_img' class='common_image common_image_avatar'></div>
+                                                        <div id='common_iam_avatar_message_count' class='common_icon'><div id='common_iam_avatar_message_count_text'></div></div>
+                                                    </div>
+                                                </div>
+                                                <div id='common_iam_avatar_logged_out'>
+                                                    <div id='common_iam_avatar_default_avatar' class='common_icon'></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id='common_profile_toolbar'></div>
+                                    </div>
                                 </div>
                             </body>
                             </html> `;
@@ -417,7 +455,10 @@
          *                      cssFontsStart:string,
          *                      uuid:     string,
          *                      idToken:  {id:number, token:string},
-         *                      secret:   string}>}
+         *                      secret:   string,
+         *                      app_toolbar_button_start:       number,
+         *                      app_toolbar_button_framework:   number,
+         *                      app_framework:number}>}
          */    
         const getData = async ()=>{
             const IamUser = await import('../../../../server/db/IamUser.js');
@@ -438,6 +479,9 @@
                                                                     accept_language:props.data.accept_language});
             
             const postData = await postInit();
+            const app_toolbar_button_start =  props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START)??1;
+            const app_toolbar_button_framework = props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK)??1;
+            const app_framework = props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK)??1;
             const globals = JSON.stringify({
                                 //update COMMON_GLOBAL keys:
                                 //Config Server	
@@ -448,10 +492,10 @@
                                 app_admin_app_id:               admin_app_id,
                                 app_start_app_id:               start_app_id,
 
-                                app_toolbar_button_start:       configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START??1,
-                                app_toolbar_button_framework:   configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK??1,
-                                app_framework:                  configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK??1,
-                                app_framework_messages:         configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES??1,
+                                app_toolbar_button_start:       app_toolbar_button_start,
+                                app_toolbar_button_framework:   app_toolbar_button_framework,
+                                app_framework:                  app_framework,
+                                app_framework_messages:         props.methods.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES)??1,
                                 admin_only:                     admin_only?1:0,
                                 admin_first_time:               count_user==0?1:0,
 
@@ -486,11 +530,11 @@
                                 });
             
             return {
-                    globals:    Buffer.from(globals).toString('base64'),
-                    cssCommon:  Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/css/common.css')).toString()).toString('base64'),
-                    jsCommon:   Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/js/common.js')).toString()).toString('base64'),
-                    jsCrypto:   Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/src/functions/common_crypto.js')).toString()).toString('base64'),
-                    cssFonts:   Buffer.from(common.commonCssFonts.css
+                    globals:        Buffer.from(globals).toString('base64'),
+                    cssCommon:      Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/css/common.css')).toString()).toString('base64'),
+                    jsCommon:       Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/public/js/common.js')).toString()).toString('base64'),
+                    jsCrypto:       Buffer.from((await fs.promises.readFile(serverProcess.cwd() + '/apps/common/src/functions/common_crypto.js')).toString()).toString('base64'),
+                    cssFonts:       Buffer.from(common.commonCssFonts.css
                                             .split('url(')
                                             .map(row=>{
                                                 if (row.startsWith('/bff/x/'))
@@ -501,8 +545,8 @@
                                                 else
                                                     return row;
                                             }).join('url('))
-                                .toString('base64'),
-                    cssFontsStart: Buffer.from(`/*Fontawesome icons*/
+                                    .toString('base64'),
+                    cssFontsStart:  Buffer.from(`/*Fontawesome icons*/
                                                 @font-face {
                                                     font-family: "Font Awesome 6 Free";
                                                     font-style: normal;
@@ -534,9 +578,12 @@
                                                                     .result.resource}) format("woff2")
                                                 }
                                                 `).toString('base64'),
-                    uuid:       postData.uuid,
-                    idToken:    postData.idToken,
-                    secret:     postData.secret
+                    uuid:           postData.uuid,
+                    idToken:        postData.idToken,
+                    secret:         postData.secret,
+                    app_toolbar_button_start:       app_toolbar_button_start,
+                    app_toolbar_button_framework:   app_toolbar_button_framework,
+                    app_framework:  app_framework
             };
         };
         const data = await getData().catch(error=>{
@@ -558,7 +605,10 @@
                             jsCrypto:                           data.jsCrypto,
                             globals:                            data.globals,
                             cssFonts:                           data.cssFonts,
-                            cssFontsStart:                      data.cssFontsStart
+                            cssFontsStart:                      data.cssFontsStart,
+                            app_toolbar_button_start:           data.app_toolbar_button_start,
+                            app_toolbar_button_framework:       data.app_toolbar_button_framework,
+                            app_framework:                      data.app_framework
                         });
     };
     export default component;

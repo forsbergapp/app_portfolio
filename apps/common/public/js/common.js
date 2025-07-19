@@ -3813,14 +3813,6 @@ const commonInit = async () => {
     custom_framework();
     //set common app id
     COMMON_GLOBAL.app_id =                          COMMON_GLOBAL.app_common_app_id;
-    await commonComponentRender({   mountDiv:   'common_app',
-        data:       {
-                    app_toolbar_button_start:       COMMON_GLOBAL.app_toolbar_button_start,
-                    app_toolbar_button_framework:   COMMON_GLOBAL.app_toolbar_button_framework,
-                    app_framework:                  COMMON_GLOBAL.app_framework
-                    },
-        methods:    null,
-        path:       '/common/component/common_app.js'});
     commonComponentRender({
         mountDiv:       null,
         data:           null,
