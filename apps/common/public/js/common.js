@@ -3619,7 +3619,7 @@ const commonMountApp = async (app_id) =>{
     
     COMMON_GLOBAL.app_id =          app_id;
     /**@type{commonAppInit} */
-    const CommonAppInit = await commonFFB({ path:`/app-init/${app_id}`, 
+    const CommonAppInit = await commonFFB({ path:`/app-mount/${app_id}`, 
                                             method:'GET', 
                                             authorization_type:'APP_ID'})
                             .then(app=>JSON.parse(app));
