@@ -235,7 +235,7 @@
     --common_app_icon_message_text:             '\41\42\43';
 	/*icons app*/
 	--common_app_icon_verification_code:    	'❂❂❂❂❂❂';
-	
+
 	/*fonts*/
 	--common_app_font_languages_1:  	"Noto Sans Hebrew", "Noto Sans Thai", "Noto Sans Khmer", 
 										"Noto Sans Bengali", "Noto Sans Telugu","Noto Sans Tamil",
@@ -298,8 +298,8 @@
 	--common_app_font_arabic_nastaliq: 	'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 
 									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
 									var(--common_app_font_languages_1), var(--common_app_font_symbols), var(--common_app_font_languages_2);
+	
 }
-
 /*default font*/
 body
 {
@@ -325,6 +325,21 @@ body.font_arabic_nastaliq{
 body.font_arabic_nastaliq select,
 body.font_arabic_nastaliq .common_input{
 	font-size:0.7em;
+}
+.common_password_container{
+	font-family: 'Noto Sans Mono';
+}
+#common_confirm_question{
+	font-family: inherit;
+}
+.common_markdown_code {
+ 	font-family: 'Noto Sans Mono';
+}
+.common_markdown_code_inline{
+	font-family: "Noto Sans Mono";
+}
+.common_markdown_table{
+	font-family: "Noto Sans Mono";
 }
 
 
@@ -535,6 +550,28 @@ body.rtl{
 	direction:rtl;
 }
 
+.start {    
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    margin:0;
+}
+@keyframes start_spin{
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+.start::before{
+    content:'' !important;
+    width:25px;
+    height:25px;
+    position:absolute;
+    border:4px solid #404040;
+    border-top-color: rgb(81, 171, 255);
+    border-radius:50%;
+    animation:start_spin 1s linear infinite;
+}
+
 /*images common*/
 .common_image{
 	border-radius: 50%;
@@ -634,8 +671,8 @@ body.rtl{
 	background-color: var(--common_app_color_white3);
 }
 .common_placeholder:empty::before{
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands";
 	opacity:0.7;
-	font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands";
 	font-style: normal;
 	font-weight: 900;
 }
@@ -649,7 +686,6 @@ body.rtl{
 	border: 1px solid;
 }
 .common_password_container{
-	font-family: 'Noto Sans Mono';
 	position: relative;
 	display: inherit;
 	width: 100%;
@@ -1040,7 +1076,6 @@ body.rtl{
 	cursor:default;
 	display:inline-block;
 	margin-bottom:10px;
-	font-family: inherit;
 }
 #common_message_progressbar_wrap{
 	display:inline-block;
@@ -1900,12 +1935,10 @@ body.rtl{
     border-radius: var(--common_app_css_border_radius);
     padding: 0.5em;
     font-size: 0.9em !important;
-	font-family: 'Noto Sans Mono';
 }
 .common_markdown_code_inline{
 	border: 1px solid;
 	border-radius:var(--common_app_css_border_radius);
-	font-family: "Noto Sans Mono";
 	display: inline-block;
 }
 .common_markdown_note{
@@ -1926,7 +1959,6 @@ body.rtl{
   	margin-bottom: 0.5em;
 }
 .common_markdown_table{
-	font-family: "Noto Sans Mono";
 	font-size: 0.9em;
 }
 .common_markdown_table_method{
