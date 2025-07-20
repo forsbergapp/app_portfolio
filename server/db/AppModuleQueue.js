@@ -33,15 +33,15 @@ const get = parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {Promise.<server_server_response & {result?:string}>}
+ * @returns {Promise.<server_server_response & {result?:{resource:string}}>}
  */
 const getResult = async parameters => {
     const ConfigServer = await import('./ConfigServer.js');
     const {serverProcess} = await import('../server.js');
     const fs = await import('node:fs');
-    return {result:(await fs.promises.readFile(serverProcess.cwd() + `/data/${ConfigServer.get({app_id:parameters.app_id, 
-                                                                    data:{config_group:'SERVER',parameter:'PATH_JOBS'}}).result}/${parameters.resource_id}.html`)).toString(), 
-            type:'HTML'};
+    return {result:{resource:(await fs.promises.readFile(serverProcess.cwd() + `/data/${ConfigServer.get({app_id:parameters.app_id, 
+                                                                    data:{config_group:'SERVER',parameter:'PATH_JOBS'}}).result}/${parameters.resource_id}.html`)).toString()}, 
+            type:'JSON'};
 };
 /**
  * @name post
