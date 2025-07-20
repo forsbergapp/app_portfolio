@@ -297,10 +297,10 @@ const commonRequestUrl = async parameters => {
                                     'User-Agent': 'Server',
                                     'Accept-Language': parameters.language,
                                     ...(parameters.external==false && {'app-id':       0}),
-                                    ...(parameters.external==false && {'app-signature':'commonRequestUrl'}),
+                                    ...(parameters.external==false && {'app-signature':JSON.stringify({app_id: 0 })}),
                                     ...(parameters.external==false && parameters.authorization && {Authorization: parameters.authorization}),
                                     ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
-                                    'Connection':   'close'
+                                    'Connection':   'close1'
                                 },
                         ...(protocol=='https' && {rejectUnauthorized: false})
                         };
@@ -313,7 +313,7 @@ const commonRequestUrl = async parameters => {
                                                 headers:{
                                                     ...(parameters.external==false &&  {'app-id':       0}),
                                                     ...(parameters.external==false &&  {'app-signature':commonEncrypt({ secret:parameters.secret,
-                                                                                                                        data:'FFB'})}),
+                                                                                                                        data:JSON.stringify({app_id: 0 })})}),
                                                     ...(parameters.external==false && parameters.authorization && {Authorization: parameters.authorization}),
                                                     ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
                                                     },
