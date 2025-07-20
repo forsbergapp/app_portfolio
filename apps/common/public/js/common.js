@@ -2270,8 +2270,8 @@ const commonModuleLeafletInit = async parameters => {
 const commonFFB = async parameter =>
     await COMMON_GLOBAL.x.FFB({
                         app_id: COMMON_GLOBAL.app_id,
-                        uuid: COMMON_GLOBAL.x.apps?.filter(app=>app.app_id==COMMON_GLOBAL.app_id)[0].uuid??'',
-                        secret: COMMON_GLOBAL.x.apps?.filter(app=>app.app_id==COMMON_GLOBAL.app_id)[0].secret??'',
+                        uuid: COMMON_GLOBAL.x.uuid??'',
+                        secret: COMMON_GLOBAL.x.secret??'',
                         response_type: parameter.response_type??'TEXT',
                         spinner_id: parameter.spinner_id,
                         timeout: parameter.timeout,
@@ -2360,7 +2360,7 @@ const commonSocketConnectOnline = async () => {
     const  authorization_type= (COMMON_GLOBAL.token_at && COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id)?
                                     'ADMIN':
                                         COMMON_GLOBAL.token_at?'APP_ACCESS':'APP_ID';
-    commonFFB({path:'/server-socket/socket/' + COMMON_GLOBAL.x.apps?.[0].uuid ?? '', response_type: 'SSE', method:'POST', authorization_type:authorization_type});
+    commonFFB({path:'/server-socket/socket/' + COMMON_GLOBAL.x.uuid ?? '', response_type: 'SSE', method:'POST', authorization_type:authorization_type});
 };
 /**
  * @name commonSocketConnectOnlineCheck
