@@ -212,11 +212,10 @@
  *              admin_only:number|null,
  *              x:{ 
  *                  FFB:    (arg0:CommonFFB_parameters) => Promise.<*>,
- *                  apps?:  {
- *                          app_id:number,
- *                          uuid:string,
- *                          secret:string
- *                          }[]},
+ *                  encrypt?:(arg0:{iv:string, key:string, data:string})=> string,
+ *                  decrypt?:(arg0:{iv:string, key:string, ciphertext:string})=> string 
+ *                  uuid?:   string,
+ *                  secret?: string},
  *              client_latitude:string|null,
  *              client_longitude:string|null,
  *              client_place:string|null,

@@ -3,7 +3,7 @@
      */  
 
     /**
-     * @import {server_db_table_App,server_db_document_ConfigServer, server_db_table_IamAppIdToken} from '../../../../server/types.js';
+     * @import {server_db_document_ConfigServer, server_db_table_IamAppIdToken} from '../../../../server/types.js';
      */
     /**
      * @name template
@@ -68,9 +68,9 @@
                                                 const SSEmessage = getMessage(BFFmessage);
                                                 switch (SSEmessage.sse_type){
                                                     case 'FONT_URL':{
-                                                        common.commonMiscLoadFont({ app_id:             ${props.app_id},
-                                                                                    uuid:               '${props.uuid}',
-                                                                                    secret:             '${props.secret}',
+                                                        common.commonMiscLoadFont({ app_id:             common.COMMON_GLOBAL.app_id,
+                                                                                    uuid:               parameters.uuid,
+                                                                                    secret:             parameters.secret,
                                                                                     message:            SSEmessage.sse_message,
                                                                                     cssFonts:           cssFonts})
                                                         break;
@@ -169,7 +169,7 @@
                                                                                         'app-signature':common.COMMON_GLOBAL.x.encrypt({ 
                                                                                                             iv:     JSON.parse(common.commonWindowFromBase64(parameters.secret)).iv,
                                                                                                             key:    JSON.parse(common.commonWindowFromBase64(parameters.secret)).jwk.k, 
-                                                                                                            data:'FFB'}),
+                                                                                                            data:   JSON.stringify({app_id: parameters.app_id })}),
                                                                                         'app-id-token': 'Bearer ' + parameters.data.idToken,
                                                                                         ...(authorization && {Authorization: authorization}),
                                                                                         'Content-Type': parameters.response_type =='SSE'?
@@ -191,7 +191,7 @@
                                                             cache: 'no-store',
                                                             method: parameters.data.method,
                                                             headers:{   'app-id': parameters.app_id,
-                                                                        'app-signature': 'commonFFB',
+                                                                        'app-signature': JSON.stringify({app_id: parameters.app_id }),
                                                                         'app-id-token': 'Bearer ' + parameters.data.idToken,
                                                                         ...(parameters.response_type =='SSE' && {'Cache-control': 'no-cache'}),
                                                                         'Content-Type': parameters.response_type =='SSE'?
@@ -399,38 +399,22 @@
         /**
          * @description post data and return created values
          * @return {Promise.<{  idToken:{id:number, token:string},
-         *                      appX:{
-         *                           app_id: number,
-         *                           uuid:   string,
-         *                           secret: string
-         *                       }[]}>}
+         *                      uuid:   string,
+         *                      secret: string}>}
          */
         const postInit = async () =>{
             //save token in admin appid for admin or in commmon app id for users
             const idToken = await props.methods.iamAuthorizeIdToken(props.data.app_id,props.data.ip, 'APP');
-            const appX = [];
-            //fetch secret metadata for available apps
-            //admin: all apps
-            //user : all apps except admin app
-            for (const app of props.methods.App.get({app_id:props.data.app_id, resource_id:null}).result
-                .filter((/**@type{server_db_table_App}*/app)=>
-                        (app.id != admin_app_id && props.data.app_id != admin_app_id) ||
-                        (props.data.app_id == admin_app_id))){
-                const uuid  = props.methods.Security.securityUUIDCreate();
-                //create secrets key and iv inside base64 string 
-                const secret= Buffer.from(JSON.stringify(await props.methods.Security.securityTransportCreateSecrets()),'utf-8')
+            const uuid  = props.methods.Security.securityUUIDCreate();
+            const secret= Buffer.from(JSON.stringify(await props.methods.Security.securityTransportCreateSecrets()),'utf-8')
                                 .toString('base64');
-                await props.methods.IamEncryption.post(props.data.app_id,
-                    {app_id:app.id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id??0, type:'SERVER'});
-                appX.push({
-                    app_id: app.id,
-                    uuid:   uuid,
-                    secret: secret
-                });
-            }
+            await props.methods.IamEncryption.post(props.data.app_id,
+                {app_id:common_app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id??0, type:'APP'});
+            
             return {
                 idToken:idToken,
-                appX:appX
+                uuid:uuid,
+                secret:secret
             };
         };
         
@@ -457,7 +441,7 @@
             const APP_PARAMETER = props.methods.AppParameter.get({app_id:props.data.app_id,resource_id:common_app_id}).result[0]??{};
             //geodata for APP using start_app_id
             const result_geodata = await props.methods.commonGeodata({ app_id:start_app_id, 
-                                                                    endpoint:'SERVER', 
+                                                                    endpoint:'APP', 
                                                                     ip:props.data.ip, 
                                                                     user_agent:props.data.user_agent, 
                                                                     accept_language:props.data.accept_language});
@@ -497,7 +481,10 @@
                                 client_longitude:               result_geodata?.longitude,
                                 client_place:                   result_geodata?.place ?? '',
                                 client_timezone:                result_geodata?.timezone==''?null:result_geodata?.timezone,
-                                x:                              {...(encrypt_transport==1 && {apps:  postData.appX})}
+                                x:                              {...(encrypt_transport==1 && {
+                                                                                                uuid:  postData.uuid,
+                                                                                                secret:postData.secret
+                                                                                            })}
                                 });
             
             return {
@@ -511,8 +498,7 @@
                                                 if (row.startsWith('/bff/x/'))
                                                     //add app start uuid after font uuid separated with '~'
                                                     return row.replace( row.substring(0,'/bff/x/'.length+36),
-                                                                        row.substring(0,'/bff/x/'.length+36) + '~' + 
-                                                                        postData.appX.filter(app=>app.app_id == props.data.app_id)[0].uuid);
+                                                                        row.substring(0,'/bff/x/'.length+36) + '~' + postData.uuid);
                                                 else
                                                     return row;
                                             }).join('url('))
@@ -550,9 +536,8 @@
                                                 }
                                                 `).toString('base64'),
                     idToken:        postData.idToken,
-                    //start uuid and secret
-                    uuid:           postData.appX.filter(app=>app.app_id == props.data.app_id)[0].uuid,
-                    secret:         postData.appX.filter(app=>app.app_id == props.data.app_id)[0].secret,
+                    uuid:           postData.uuid,
+                    secret:         postData.secret,
                     app_toolbar_button_start:       app_toolbar_button_start,
                     app_toolbar_button_framework:   app_toolbar_button_framework,
                     app_framework:  app_framework
