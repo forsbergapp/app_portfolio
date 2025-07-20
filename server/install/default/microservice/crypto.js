@@ -505,7 +505,7 @@ const Crypto = (() =>{
     };
 
     /**
-     * @@description Inherit from Mode
+     * @description Inherit from Mode
      */
     const OFB_prototype = OFB.prototype = new Mode;
 

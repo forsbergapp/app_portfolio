@@ -820,14 +820,11 @@ const commonModuleMetaDataGet = async parameters =>{
  */
 const commonAppIam = async (host, endpoint=null, security=null) =>{
     //authenticate:
-    //app_id 
-    //decrypted app id = [app id for uuid]
-    //decrypted token = [token for uuid]
-    //decrypted Appsignature can be decrypted using 
-    //  secret found in IamEncryption for decrypted app id, token and for uuid used in request
+    //encryption data exists
+    //MICROSERVICE, APP_EXTERNAL, APP_ACESS_EXTERNAL or token exists
+    //decrypted Appsignature contains app_id = AppId
     if (security?.IamEncryption && 
         (
-        security?.AppId == security?.IamEncryption?.app_id  &&
         //external can use encryption without idToken
         (endpoint?.startsWith('MICROSERVICE') ||endpoint == 'APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL' ||
         security?.idToken?.replace('Bearer ','') == IamAppIdToken.get({  app_id:0, 
@@ -838,8 +835,8 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
             encrypted:  security.AppSignature??'',
             jwk:        JSON.parse(Buffer.from(security.IamEncryption.secret, 'base64').toString('utf-8')).jwk,
             iv:         JSON.parse(Buffer.from(security.IamEncryption.secret, 'base64').toString('utf-8')).iv})
-            .then(()=>
-                1)
+            .then(result=>
+                (JSON.parse(result).app_id == security?.AppId)?1:0)
             .catch(()=>
                 0
             )==1)==false){

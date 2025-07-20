@@ -399,7 +399,7 @@
  *              uuid:string, 
  *              secret:string,
  *              url?:string|null,
- *              type:'MICROSERVICE'|'BFE'|'SERVER'|'FONT',
+ *              type:'BFE'|'APP'|'FONT',
  *              created?:string}} server_db_table_IamEncryption
  */
 
