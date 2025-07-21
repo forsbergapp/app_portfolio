@@ -253,14 +253,14 @@ const commonGeodata = async parameters =>{
  * @returns {Promise.<server_server_response>}
  */
 const commonBFE = async parameters =>{
-    if (parameters.url.toLowerCase().startsWith('https://') || parameters.url.toLowerCase().startsWith('http://')){
+    if (parameters.url.toLowerCase().startsWith('http://')){
         /**@type{server_db_document_ConfigServer} */
         const CONFIG_SERVER = ConfigServer.get({app_id:0}).result;
         return await circuitBreaker.serverRequest( 
             {
                 request_function:   serverRequest,
                 service:            'BFE',
-                protocol:           parameters.url.toLowerCase().startsWith('https')?'https':'http',
+                protocol:           'http',
                 url:                parameters.url,
                 host:               null,
                 port:               null,
@@ -313,7 +313,6 @@ const commonBFE = async parameters =>{
  *              .webp files
  *              .png files
  *              .woff2 files
- *              .ttf files
  *              .json
  * @function
  * @param {{app_id:number,
@@ -451,7 +450,7 @@ const commonResourceFile = async parameters =>{
  * @description Run function for given app and role
  *              Parameters in data should be requried data_app_id plus additional keys
  *              Can return anything specified by the function and supported by the server
- *              JSON, HTML, CSS, JS, WEBP, PNG, WOFF, TTF
+ *              JSON, HTML, CSS, JS, WEBP, PNG, WOFF
  *              Response JSON format can be single resource format, list format or pagination format
  *              that the app should be responisble of
  * @function
@@ -858,8 +857,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
                     //all apps
                     apps:apps};
         else
-            if ([configServer.SERVER.filter(parameter=>'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN,
-                configServer.SERVER.filter(parameter=>'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN]
+            if ([configServer.SERVER.filter(parameter=>'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN]
                                     .includes(host.split(':')[host.split(':').length-1]))
                 return {
                         admin:true,

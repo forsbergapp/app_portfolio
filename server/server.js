@@ -13,7 +13,6 @@
  */
 
  const zlib = await import('node:zlib');
- const fs = await import('node:fs');
 
  /**
  *  Returns response to client
@@ -209,7 +208,6 @@ const server = async (req, res)=>{
         
     };
     await read_body().catch(()=>null);
-    req.protocol =      req.socket.encrypted?'https':'http';
     req.ip =            req.socket.remoteAddress ??'';
     req.hostname =      req.headers.host ??'';
     req.path =          req.url??'';
@@ -335,7 +333,7 @@ class serverCircuitBreakerClass {
      *          service:string,
      *          admin:boolean,
      *          url:string|null,
-     *          protocol:'https'|'http'|null,
+     *          protocol:'http'|null,
      *          host:string|null,
      *          port:number|null,
      *          path:string|null,
@@ -345,7 +343,7 @@ class serverCircuitBreakerClass {
      *          user_agent:string,
      *          accept_language:string,
      *          authorization:string|null,
-     *          encryption_type:server_db_table_IamEncryption['type'],
+     *          encryption_type:'BFE' | 'APP' | 'FONT'|'MICROSERVICE',
      *          'app-id':number,
      *          endpoint:server_bff_endpoint_type|null}} parameters
      * @returns {Promise.<string>}
@@ -465,7 +463,7 @@ const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass(await 
  *              Returns raw response from request
  * @function
  * @param {{service:'GEOLOCATION'|'BATCH'|'BFE',
- *          protocol:'https'|'http'|null,
+ *          protocol:'http'|null,
  *          url:string|null,
  *          host:string|null,
  *          port:number|null,
@@ -476,7 +474,7 @@ const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass(await 
  *          user_agent:string,
  *          accept_language:string,
  *          authorization:string|null,
- *          encryption_type:server_db_table_IamEncryption['type'],
+ *          encryption_type:'BFE' | 'APP' | 'FONT'|'MICROSERVICE',
  *          'app-id':number,
  *          timeout:number}} parameters
  * @returns {Promise.<*>}
@@ -491,11 +489,9 @@ const serverRequest = async parameters =>{
     /**@type{server_db_document_ConfigServer['SERVICE_IAM']} */
     const CONFIG_SERVER = ConfigServer.get({app_id:0,data:{ config_group:'SERVICE_IAM'}}).result;
     
-    /**@type {'http'|'https'|string} */
-    const protocol = parameters.protocol?.toLowerCase() ?? (parameters.url?.toLowerCase().startsWith('https')?
-                                                'https':
-                                                    'http');
-    /**@type {import('node:http')|import('node:https')} */
+    /**@type {'http'|string} */
+    const protocol = parameters.protocol?.toLowerCase() ??'http';
+    /**@type {import('node:http')} */
     const request_protocol = await import(`node:${protocol}`);
     
     const encrypt_transport = serverUtilNumberValue(CONFIG_SERVER
@@ -542,7 +538,7 @@ const serverRequest = async parameters =>{
                             (protocol + '://' + parameters.host + ':' + parameters.port + '/bff/x/' + uuid)):
                         url_unencrypted;
 
-    /**@type{import('node:https').RequestOptions['headers'] & {'app-id'?:number, 'app-signature'?:string}} */
+    /**@type{import('node:http').RequestOptions['headers'] & {'app-id'?:number, 'app-signature'?:string}} */
     const headers = {
         'User-Agent':       parameters.user_agent,
         'Accept-Language':  parameters.accept_language,
@@ -575,7 +571,7 @@ const serverRequest = async parameters =>{
                             (parameters.body?
                                 JSON.stringify(parameters.body):
                                     '');
-    /**@type{import('node:https').RequestOptions}*/    
+    /**@type{import('node:http').RequestOptions}*/    
     const options = encrypt_transport==1?
         {
             family: 4,
@@ -585,7 +581,6 @@ const serverRequest = async parameters =>{
                         'Content-Type':  'application/json',
                         'Connection':   'close'
                     },
-            ...(protocol=='https' && {rejectUnauthorized: false}),
         }:
             {
                 family:     4,
@@ -594,8 +589,7 @@ const serverRequest = async parameters =>{
                 headers :   { 
                             ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
                             ...headers
-                            },
-                ...(protocol=='https' && {rejectUnauthorized: false})
+                            }
             };
     return new Promise ((resolve, reject)=>{
         /**
@@ -662,7 +656,7 @@ const serverRequest = async parameters =>{
  * @name serverStart
  * @description Server start
  *              Logs uncaughtException and unhandledRejection
- *              Start http server and https server if enabled
+ *              Start http server for users and admin
  * @function
  * @returns{Promise.<void>}
  */
@@ -675,7 +669,6 @@ const serverStart = async () =>{
     const ORM = await  import('./db/ORM.js');
 
     const http = await import('node:http');
-    const https = await import('node:https');
 
     serverProcess.env.TZ = 'UTC';
     serverProcess.on('uncaughtException', err =>{
@@ -738,36 +731,6 @@ const serverStart = async () =>{
                     }
                 });
         });
-        if (configServer.SERVER.filter(parameter=> 'HTTPS_ENABLE' in parameter)[0].HTTPS_ENABLE=='1'){
-            //START HTTPS SERVER
-            //SSL files for HTTPS
-            const HTTPS_KEY = await fs.promises.readFile(serverProcess.cwd() + '/data' + configServer.SERVER.filter(parameter=> 'HTTPS_KEY' in parameter)[0].HTTPS_KEY, 'utf8');
-            const HTTPS_CERT = await fs.promises.readFile(serverProcess.cwd() + '/data' + configServer.SERVER.filter(parameter=> 'HTTPS_CERT' in parameter)[0].HTTPS_CERT, 'utf8');
-            const options = {
-                key: HTTPS_KEY.toString(),
-                cert: HTTPS_CERT.toString()
-            };
-            https.createServer(options, (req,res)=> server(
-                                                            /**@ts-ignore*/
-                                                            req,
-                                                            res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443,NETWORK_INTERFACE, () => {
-                Log.post({   app_id:0, 
-                    data:{  object:'LogServerInfo', 
-                            log:'HTTPS Server PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT)??443
-                        }
-                    });
-            });
-            https.createServer(options,  (req,res)=> server(
-                                                            /**@ts-ignore*/
-                                                            req,
-                                                            res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000,NETWORK_INTERFACE, () => {
-                Log.post({   app_id:0, 
-                    data:{  object:'LogServerInfo', 
-                            log:'HTTPS Server admin PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN)??6000
-                        }
-                    });
-            });
-        }
     } catch (/**@type{server_server_error}*/error) {
         Log.post({   app_id:0, 
             data:{  object:'LogServerError', 

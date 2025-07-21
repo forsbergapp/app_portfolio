@@ -41,8 +41,6 @@ const update = async parameters => {
    //allowed parameters to update:
    if (parameters.data.name!=null)
        data_update.name = parameters.data.name;
-   if (parameters.data.server_protocol!=null)
-       data_update.server_protocol = parameters.data.server_protocol;
    if (parameters.data.server_host!=null)
        data_update.server_host = parameters.data.server_host;
    if (parameters.data.server_port!=null)
@@ -53,10 +51,6 @@ const update = async parameters => {
         data_update.health_url = parameters.data.health_url;
    if (parameters.data.rest_api_version!=null)
         data_update.rest_api_version = parameters.data.rest_api_version;
-   if (parameters.data.public_key!=null)
-        data_update.public_key = parameters.data.public_key;
-   if (parameters.data.private_key!=null)
-        data_update.private_key = parameters.data.private_key;
    if (parameters.data.status!=null)
         data_update.status = parameters.data.status;
    data_update.modified = new Date().toISOString();

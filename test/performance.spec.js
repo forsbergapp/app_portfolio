@@ -24,12 +24,9 @@ const test = async t =>
 
                 /**@type{number} */
                 let status;
-                const HTTPS_ENABLE = ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTPS_ENABLE'}}).result;
-                const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
+                const PROTOCOL = 'http://';
                 const HOST = ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'HOST'}}).result;
-                const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                                ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTPS_PORT'}}).result:
-                                    ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
+                const PORT = serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
                 const requests = [];
                 const totalRequests = 100;
                 //set parameter to avoid certificate errors

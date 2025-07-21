@@ -70,7 +70,7 @@ const microserviceRequest = async parameters =>{
                         {
                             request_function:   serverRequest,
                             service:            parameters.microservice,
-                            protocol:           ServiceRegistry.server_protocol,
+                            protocol:           'http',
                             url:                null,
                             host:               ServiceRegistry.server_host,
                             port:               ServiceRegistry.server_port,

@@ -92,12 +92,9 @@ const component = async props => {
     const ConfigServer = await import('../../../../server/db/ConfigServer.js');
     const {serverProcess} = await import('../../../../server/server.js');
 
-    const HTTPS_ENABLE = ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTPS_ENABLE'}}).result;
-    const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
+    const PROTOCOL = 'http://';
     const HOST = ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER', parameter:'HOST'}}).result;
-    const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                    ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTPS_PORT'}}).result:
-                        ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
+    const PORT = serverUtilNumberValue(ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
 
     class Benchmark {
         /**
