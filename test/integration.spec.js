@@ -23,15 +23,10 @@ const test = async t =>
             const {serverUtilNumberValue} = await import('../server/server.js');
             const ConfigServer = await import('../server/db/ConfigServer.js');
         
-            const HTTPS_ENABLE = ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTPS_ENABLE'}}).result;
             const HOST = ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'HOST'}}).result;
-            const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                            ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTPS_PORT'}}).result:
-                                ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
+            const PORT = serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
 
             return [
-                /**@ts-ignore */
-                t.expect('HTTPS_ENABLE',    HTTPS_ENABLE)['not.toBe'](null),
                 /**@ts-ignore */
                 t.expect('HOST',            HOST)['not.toBe'](null),
                 /**@ts-ignore */

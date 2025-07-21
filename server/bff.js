@@ -15,7 +15,7 @@
  *          server_bff_parameters} from './types.js'
  */
 const app_common= await import('../apps/common/src/common.js');
-const {serverProcess,serverResponse, serverUtilResponseTime, serverUtilNumberValue} = await import('./server.js');
+const {serverResponse, serverUtilResponseTime, serverUtilNumberValue} = await import('./server.js');
 const socket = await import('./socket.js');
 const Security = await import('./security.js');
 const iam = await import('./iam.js');
@@ -27,8 +27,6 @@ const IamEncryption = await import ('./db/IamEncryption.js');
 const IamUser = await import('./db/IamUser.js');
 const Log = await import('./db/Log.js');
 const ServiceRegistry = await import('./db/ServiceRegistry.js');
-
-const fs = await import('node:fs');
 
 /**
  * @name bffConnect
@@ -82,7 +80,6 @@ const bffConnect = async parameters =>{
  *              Authenticates the request
  *              Sets header values on both on the response and on the request
  *              Checks robots.txt and favicon.ico
- *              Redirects from http to https if https is enabled 
  *              Returns a reason if response should be closed
  * @function
  * @param {server_server_req} req
@@ -126,88 +123,44 @@ const bffInit = async (req, res) =>{
             res.end();
         });
     });
-    /**@type{server_db_document_ConfigServer} */
-    const config_SERVER = ConfigServer.get({app_id:0}).result;
-    const HTTPS_PORT = serverUtilNumberValue(config_SERVER.SERVER.filter(row=>'HTTPS_PORT' in row)[0].HTTPS_PORT);
-    //redirect from http to https if https is enabled
-    if (req.protocol=='http' && config_SERVER.SERVER.filter(row=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE=='1')
-        return {reason:'REDIRECT', redirect:`https://${req.headers.host.split(':')[0] + (HTTPS_PORT==443?'':':' + HTTPS_PORT)}${req.originalUrl}`};
+    //access control that stops request if not passing controls
+    /**@type{server_iam_authenticate_request}*/
+    const result = await iam.iamAuthenticateRequest({ip:req.ip, 
+                                                host:req.headers.host ?? '', 
+                                                method: req.method, 
+                                                'user-agent': req.headers['user-agent'], 
+                                                'accept-language':req.headers['accept-language'], 
+                                                path:req.path})
+                        .catch((/**@type{server_server_error}*/error)=>{return { statusCode: 500, statusMessage: error};});
+    if (result != null){
+        res.statusCode = result.statusCode;
+        res.statusMessage = ' ';
+        res.writeHead(res.statusCode, {
+            'Content-Type': 'text/plain;charset=utf-8',
+            'Content-length':0
+        });
+        return {reason:'REQUEST'};
+    }
     else{
-        //access control that stops request if not passing controls
-        /**@type{server_iam_authenticate_request}*/
-        const result = await iam.iamAuthenticateRequest({ip:req.ip, 
-                                                    host:req.headers.host ?? '', 
-                                                    method: req.method, 
-                                                    'user-agent': req.headers['user-agent'], 
-                                                    'accept-language':req.headers['accept-language'], 
-                                                    path:req.path})
-                            .catch((/**@type{server_server_error}*/error)=>{return { statusCode: 500, statusMessage: error};});
-        if (result != null){
-            res.statusCode = result.statusCode;
+
+        //check robots.txt
+        if (req.originalUrl=='/robots.txt'){
             res.statusMessage = ' ';
-            res.writeHead(res.statusCode, {
-                'Content-Type': 'text/plain;charset=utf-8',
-                'Content-length':0
-            });
-            return {reason:'REQUEST'};
+            res.type('text/plain');
+            res.write('User-agent: *\nDisallow: /');
+            return {reason:'ROBOT'};
         }
         else{
-
-            //check robots.txt
-            if (req.originalUrl=='/robots.txt'){
+            //browser favorite icon to ignore
+            if (req.originalUrl=='/favicon.ico'){
                 res.statusMessage = ' ';
-                res.type('text/plain');
-                res.write('User-agent: *\nDisallow: /');
-                return {reason:'ROBOT'};
+                res.write('');
+                return {reason:'FAVICON'};
             }
             else{
-                //browser favorite icon to ignore
-                if (req.originalUrl=='/favicon.ico'){
-                    res.statusMessage = ' ';
-                    res.write('');
-                    return {reason:'FAVICON'};
-                }
-                else{
-                    return {reason:null};
-                }
+                return {reason:null};
             }
         }
-    }
-};
-/**
- * @name bffStart
- * @description Backend for frontend (BFF) start 
- *              If first time, when no admin exists, then redirect everything to admin
- *              Checks if SSL verification using Letsencrypt is enabled when validating domain
- *              and sends requested verifcation file
- * @functions
- * @param {server_server_req} req
- * @param {server_server_res} res
- * @returns {Promise.<server_server_response>}
- */
-const bffStart = async (req, res) =>{
-    /**@type{server_db_document_ConfigServer} */
-    const configServer = ConfigServer.get({app_id:0}).result;
-    //if first time, when no user exists, show maintenance in main server
-    if (IamUser.get(0, null).result.length==0 && (await app_common.commonAppIam(req.headers.host)).admin == false){
-        const {default:ComponentCreate} = await import('../apps/common/src/component/common_maintenance.js');
-        return {result:await ComponentCreate({  data:   null,
-                                                methods:{commonConvertBinary:app_common.commonConvertBinary}
-                                            }), type:'HTML'};
-    }   
-    else{
-        //check if SSL verification using letsencrypt is enabled when validating domains
-        if (configServer.SERVER.filter(row=>'HTTPS_SSL_VERIFICATION' in row)[0].HTTPS_SSL_VERIFICATION=='1'){
-            if (req.originalUrl.startsWith(configServer.SERVER.filter(row=>'HTTPS_SSL_VERIFICATION_PATH' in row)[0].HTTPS_SSL_VERIFICATION_PATH ?? '')){
-                res.type('text/plain');
-                res.write(await fs.promises.readFile(`${serverProcess.cwd()}${req.originalUrl}`, 'utf8'));
-                return {result:null, type:'HTML'};
-            }
-            else
-                return {result:null, type:'HTML'};
-        }
-        else
-            return {result:null, type:'HTML'};
     }
 };
 /**
@@ -691,15 +644,19 @@ const bffResponse = async parameters =>{
                 
         };
         if (resultbffInit.reason == null){
-            /**@type{server_server_response} */
-            const result = await bffStart(req, res);
-            if (result.result)
+            //If first time, when no admin exists, then display maintenance for users
+            if (IamUser.get(0, null).result.length==0 && (await app_common.commonAppIam(req.headers.host)).admin == false){
+                const {default:ComponentCreate} = await import('../apps/common/src/component/common_maintenance.js');
                 return bffResponse({
-                                        result_request:result,
+                                        result_request:{result:await ComponentCreate({  data:   null,
+                                                                    methods:{commonConvertBinary:app_common.commonConvertBinary}
+                                                                }), 
+                                                        type:'HTML'},
                                         host:req.headers.host,
                                         route:null,
                                         res:res});
-             else{
+            }
+            else{
                 /**@type{server_bff_parameters|null|1} */
                 const bff_parameters = await parameters();
                 //if decrypt failed, authentication failed or font
@@ -840,10 +797,7 @@ const bffResponse = async parameters =>{
              }
         }
         else
-            if (resultbffInit.redirect)
-                res.redirect(resultbffInit.redirect);
-            else
-                res.end();
+            res.end();
     }
 };
 

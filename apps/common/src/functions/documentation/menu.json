@@ -30,6 +30,10 @@
                 },
                 {   "id":2,
                     "menu":"",
+                    "doc":"3.security"
+                },
+                {   "id":3,
+                    "menu":"",
                     "doc":"3.database"
                 }]
     },
@@ -57,10 +61,6 @@
                 {   "id":5,
                     "menu":"",
                     "doc":"4.installationPMMicroservices"
-                },
-                {   "id":6,
-                    "menu":"",
-                    "doc":"4.installationSSLDNS"
                 }]
     },
     {

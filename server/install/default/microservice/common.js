@@ -37,10 +37,6 @@ const commonFromBase64 = str => {
  *   server_protocol:	                string,
  *   server_host:		                string,
  *   server_port:                       number,
- *   server_https_key:                  string,
- *   server_https_cert:                 string,
- *   server_https_ssl_verification:     0|1,
- *   server_https_ssl_verification_path:string,
  *   path_data:                         string,
  *   service_registry_auth_url:		    string,
  *   service_registry_auth_method:      'POST',
@@ -60,10 +56,6 @@ const commonConfig = async service =>{
         server_protocol:                    Config.server_protocol,
         server_host:                        Config.server_host,
         server_port:                        Config.server_port,
-        server_https_key:                   Config.server_https_key,
-        server_https_cert:                  Config.server_https_cert,
-        server_https_ssl_verification:      Config.server_https_ssl_verification,
-        server_https_ssl_verification_path: Config.server_https_ssl_verification_path,
         path_data:                          Config.path_data,
         service_registry_auth_url:          Config.service_registry_auth_url,
         service_registry_auth_method:       Config.service_registry_auth_method,
@@ -75,10 +67,7 @@ const commonConfig = async service =>{
         //server start info:
         server:                             await import(`node:${Config.server_protocol}`),
         port:                               Config.server_port,
-        options:                            Config.server_protocol=='https'?{
-                                                key: await fs.promises.readFile(serverProcess.cwd() + Config.server_https_key, 'utf8'),
-                                                cert: await fs.promises.readFile(serverProcess.cwd() + Config.server_https_cert, 'utf8')
-                                            }:{}
+        options:                            {}
         };
 };
 
@@ -245,11 +234,11 @@ const commonDecrypt = parameters =>{
  * @name commonRequestUrl
  * @description Returns result from request
  *              Url external third party does not use any custom headers
- *              Url external third party can use http or https
+ *              Url external third party can use http
  *              Url external third party does not use encryption 
  *              Url external third party does not use parameters encrypt, uuid, secret, app-id, app-signature and autorization
  *              Url to main server uses custom headers
- *              Url to main server can use http or https
+ *              Url to main server can use http
  *              Url to main server can use encryption or not
  * @function
  * @param {{url:string,
@@ -284,8 +273,7 @@ const commonRequestUrl = async parameters => {
                                     'Accept-Language': parameters.language,
                                     'Content-Type':  'application/json',
                                     'Connection':   'close',
-                                },
-                        ...(protocol=='https' && {rejectUnauthorized: false})
+                                }
                         }
                     :
                         //not encrypted options
@@ -301,8 +289,7 @@ const commonRequestUrl = async parameters => {
                                     ...(parameters.external==false && parameters.authorization && {Authorization: parameters.authorization}),
                                     ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
                                     'Connection':   'close1'
-                                },
-                        ...(protocol=='https' && {rejectUnauthorized: false})
+                                }
                         };
     const body =    (parameters.external ==false && encrypt)?
                         JSON.stringify({
