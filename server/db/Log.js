@@ -442,7 +442,7 @@ const post = async parameters => {
                         correlationid:      parameters.data.request?.req.headers['x-correlation-id'],
                         url:                parameters.data.request?.req.originalUrl,
                         x_url:              parameters.data.request?.req.headers.x?.url,
-                        http_info:          parameters.data.request?.req.protocol + '/' + parameters.data.request?.req.httpVersion,
+                        http_info:          'HTTP/' + parameters.data.request?.req.httpVersion,
                         method:             parameters.data.request?.req.method,
                         x_method:           parameters.data.request?.req.headers.x?.method,
                         statusCode:         parameters.data.request?.statusCode,

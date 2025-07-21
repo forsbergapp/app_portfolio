@@ -80,15 +80,15 @@ resource "oci_core_security_list" "security-list" {
     }
     description = "Allow HTTP"
   }
-  ingress_security_rules {
+    ingress_security_rules {
     protocol = "6" #tcp protocol
     source  = "0.0.0.0/0"
     tcp_options {
-        min = 443
-        max = 443
+        min = 3000
+        max = 3000
     }
-    description = "Allow HTTPS"
-  } 
+    description = "HTTP 3000"
+  }
   ingress_security_rules {
     protocol = "6" #tcp protocol
     source  = "0.0.0.0/0"
@@ -98,15 +98,6 @@ resource "oci_core_security_list" "security-list" {
     }
     description = "HTTP Admin"
   }
-  ingress_security_rules {
-    protocol = "6" #tcp protocol
-    source  = "0.0.0.0/0"
-    tcp_options {
-        min = 4444
-        max = 4444
-    }
-    description = "HTTPS Admin"
-  }  
   egress_security_rules {
     protocol = "all" #all protocols or -1
     destination  = "0.0.0.0/0"
@@ -146,13 +137,11 @@ resource "oci_core_instance" "compute_instance_network" {
                               sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
                               sudo apt install nodejs -y
                               sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/node
-                              sudo snap install --classic certbot
                               sudo apt-get install ufw -y
                               sudo ufw allow 22/tcp
                               sudo ufw allow 80/tcp
-                              sudo ufw allow 443/tcp
+                              sudo ufw allow 3000/tcp
                               sudo ufw allow 3333/tcp
-                              sudo ufw allow 4444/tcp
                               sudo ufw --force enable
                               sudo -i -u ubuntu git clone ${var.git_repository_url} app_portfolio
                               sudo npm install -g pm2
@@ -196,13 +185,11 @@ resource "oci_core_instance" "compute_instance_only" {
                               sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
                               sudo apt install nodejs -y
                               sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/node
-                              sudo snap install --classic certbot
                               sudo apt-get install ufw -y
                               sudo ufw allow 22/tcp
                               sudo ufw allow 80/tcp
-                              sudo ufw allow 443/tcp
+                              sudo ufw allow 3000/tcp
                               sudo ufw allow 3333/tcp
-                              sudo ufw allow 4444/tcp
                               sudo ufw --force enable
                               sudo -i -u ubuntu git clone ${var.git_repository_url} app_portfolio
                               sudo npm install -g pm2

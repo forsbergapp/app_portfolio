@@ -207,14 +207,9 @@ const component = async props => {
     /**@type{server_db_document_ConfigServer['SERVER']} */
     const configServer = props.methods.ConfigServer.get({app_id:props.data.app_id,data:{ config_group:'SERVER'}}).result;
 
-    const HTTPS_ENABLE = configServer.filter(parameter=> 'HTTPS_ENABLE' in parameter)[0].HTTPS_ENABLE;
     const HOST = configServer.filter(parameter=> 'HOST' in parameter)[0].HOST;
-    const PORT = props.methods.serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                        configServer.filter(parameter=> 'HTTPS_PORT' in parameter)[0].HTTPS_PORT:
-                            configServer.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT);
-    const PORT_ADMIN = props.methods.serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                                configServer.filter(parameter=> 'HTTPS_PORT_ADMIN' in parameter)[0].HTTPS_PORT_ADMIN:
-                                    configServer.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN);
+    const PORT = props.methods.serverUtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT);
+    const PORT_ADMIN = props.methods.serverUtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN);
     const roleOrder = ['app_id', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'app_access_external', 'iam', 'iam_signup', 'microservice', 'microservice_auth'];
     /**
      * Sort paths by defined role order
@@ -228,10 +223,10 @@ const component = async props => {
                                 
     CONFIG_REST_API.servers = [
                                 {
-                                url:(HTTPS_ENABLE=='1'? 'https://':'http://') + HOST + ((PORT==80||PORT==443)?'':`/:${PORT}`)
+                                url:'http://' + HOST + ((PORT==80||PORT==443)?'':`/:${PORT}`)
                                 },
                                 {
-                                    url:(HTTPS_ENABLE=='1'? 'https://':'http://') + HOST + ((PORT_ADMIN==80||PORT_ADMIN==443)?'':`/:${PORT_ADMIN}`)
+                                    url:'http://' + HOST + ((PORT_ADMIN==80||PORT_ADMIN==443)?'':`/:${PORT_ADMIN}`)
                                 },
                                 ];
     for (const path of Object.entries(CONFIG_REST_API.paths))
