@@ -30,6 +30,8 @@ const {serverCircuitBreakerBFE, serverRequest, serverProcess, serverUtilAppFilen
 
 const fs = await import('node:fs');
 
+const FILES= {data:[]};
+
 /**
  * @name commonConvertBinary
  * @description  converts binary file to base64 url string
@@ -50,6 +52,61 @@ const commonConvertBinary = async (content_type, path) =>
                                 }
                         };
             });
+
+/**
+ * @name commonGetFile
+ * @description Returns file from cache in FILES variable or reads from disk, saves in variable and returns file content
+ *              Modify function parameter can be used to modify original content
+ * @function
+ * @param{{ app_id:number,
+ *          path:string,
+ *          modify?:(arg0:string)=>string }} parameters
+ * @returns {Promise.<*>}
+ */
+const commonGetFile = async parameters =>{
+    return FILES.data.filter(row=>row[0]==parameters.path)[0]?.[1] ??
+        new Promise((resolve, reject)=>{
+            fs.promises.access(`${serverProcess.cwd()}${parameters.path}`)
+            .then(()=>{		
+                    fs.promises.readFile(`${serverProcess.cwd()}${parameters.path}`, 'utf8')
+                    .then(result=>{
+                        const file = parameters.modify?parameters.modify(result.toString()):result.toString();
+                        /**@ts-ignore */
+                        FILES.data.push([parameters.path, file]);
+                        resolve(file);
+                    });
+            })
+            .catch(error=>{
+                import('../../../server/db/Log.js')
+                .then(log=>log.post({    app_id:parameters.app_id, 
+                    data:{  object:'LogServiceInfo', 
+                            app:{   app_filename:serverUtilAppFilename(import.meta.url),
+                                    app_function_name:'commonGetFile()',
+                                    app_line:serverUtilAppLine()
+                            },
+                            log:`Resource ${parameters.path}, error:${error}`
+                        }
+                    })
+                    /**@ts-ignore */
+                    .then(result=>{
+                        result.http?
+                            reject(result):
+                                import('../../../server/iam.js')
+                                .then(({iamUtilMessageNotAuthorized})=>{
+                                    reject({http:400,
+                                        code:'APP',
+                                        text:iamUtilMessageNotAuthorized(),
+                                        developerText:'commonGetFile',
+                                        moreInfo:null,
+                                        type:'JSON'
+                                        });
+                                });
+                    })
+                );
+            });
+        });
+};
+
 /**
  * @name commonCssFonts
  * @description resource /common/css/font/fonts.css using IIFE to save as constant
@@ -299,7 +356,7 @@ const commonBFE = async parameters =>{
 /**
  * @name commonResourceFile
  * @memberof ROUTE_APP
- * @description Get resource
+ * @description Get resource from file or from cached file in FILES variable to avoid disk read
  *              Supported
  *              .css files
  *              .js files       
@@ -323,106 +380,94 @@ const commonBFE = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:{resource:*}}>}
  */
 const commonResourceFile = async parameters =>{
-    /**
-     * @param {string} path
-     * @returns {Promise.<*>}
-     */
-    const getFile = async path =>{
-        return fs.promises.access(path)
-                .then(()=>{
-                    return fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`, 'utf8');
-                })
-                .catch(error=>{
-                    return import('../../../server/db/Log.js')
-                    .then(log=>log.post({    app_id:parameters.app_id, 
-                        data:{  object:'LogServiceInfo', 
-                                app:{   app_filename:serverUtilAppFilename(import.meta.url),
-                                        app_function_name:'commonResourceFile()',
-                                        app_line:serverUtilAppLine()
-                                },
-                                log:`Resource ${parameters.resource_id}, error:${error}`
-                            }
-                        })
-                        /**@ts-ignore */
-                        .then(result=>{
-                            return result.http?
-                                    result:
-                                        import('../../../server/iam.js')
-                                        .then(({iamUtilMessageNotAuthorized})=>{
-                                            return {http:400,
-                                                code:'APP',
-                                                text:iamUtilMessageNotAuthorized(),
-                                                developerText:'commonModuleRun',
-                                                moreInfo:null,
-                                                type:'JSON'
-                                                };
-                                        });
-                        })
-                    );
-                });
-    };
     
-   
+  
     const resource_directory = App.get({app_id:parameters.app_id, resource_id:parameters.data_app_id}).result[0].path;
     const resource_path = parameters.data_app_id==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id,data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result)?
                             parameters.resource_id.replace('/common', ''):
                                 parameters.resource_id;
     switch (true){
+        case parameters.content_type == 'text/css' && parameters.resource_id=='/common/css/font/fonts.css':{
+            //loaded at server start with font url replaced with secure url and about 1700 IamEncryption records
+            return {result:{resource:commonCssFonts.css}, type:'JSON'};
+        }
         case parameters.content_type == 'text/css' && parameters.resource_id == '/common/modules/leaflet/leaflet.css':{
-            return fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`, 'utf8').then((modulefile)=>{
-                //remove third party fonts
-                return {   type:'JSON', 
-                            result:{resource:modulefile
-                                            .replaceAll('\r','\n')
-                                            .split('\n')
-                                            .map(row=> {
-                                                const match = /font-family:[\s\S]*?;/g.exec(row);
-                                                if (match)
-                                                    return row.replace(match[0], '');
-                                                else
-                                                    return row;
-                                            })
-                                            .join('\n')
-                                    }
-                        };
-            });
+            /**
+             * @description Remove third party fonts
+             * @param {string} file
+             */
+            const modify = file =>{
+                return  file
+                        .replaceAll('\r','\n')
+                        .split('\n')
+                        .map(row=> {
+                            const match = /font-family:[\s\S]*?;/g.exec(row);
+                            if (match)
+                                return row.replace(match[0], '');
+                            else
+                                return row;
+                        })
+                        .join('\n');
+            };
+            return {type:'JSON', 
+                    result:{
+                            resource:await commonGetFile({app_id:parameters.app_id, path:`${resource_directory}${resource_path}`, modify:modify})
+                            }
+                    };
         }
         case parameters.content_type == 'text/css':
         case parameters.content_type == 'application/json':{
-            return {type:'JSON', result:{
-                                    resource: await getFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`)
-                                    }
+            return {type:'JSON', 
+                    result:{
+                            resource: await commonGetFile({app_id:parameters.app_id, path:`${resource_directory}${resource_path}`})
+                            }
                     };
         }
         case parameters.content_type == 'text/javascript':{
             switch (resource_path){
                 case '/modules/react/react-dom.development.js':
                 case '/modules/react/react.development.js':{
-                    return fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`, 'utf8').then((modulefile)=>{
+                    /**
+                     * @description Make ESM module
+                     * @param {string} file
+                     */
+                    const modify = file =>{
                         if (resource_path == '/modules/react/react-dom.development.js'){
-                            modulefile = 'let ReactDOM;\r\n' + modulefile;                                
-                            modulefile = modulefile.replace(  'exports.version = ReactVersion;',
+                            file = 'let ReactDOM;\r\n' + file;
+                            file = file.replace(  'exports.version = ReactVersion;',
                                                             'exports.version = ReactVersion;\r\n  ReactDOM=exports;');
-                            modulefile = modulefile + 'export {ReactDOM}';
+                            file = file + 'export {ReactDOM}';
                         }
                         else{
-                            modulefile = 'let React;\r\n' + modulefile;
-                            modulefile = modulefile.replace(  'exports.version = ReactVersion;',
+                            file = 'let React;\r\n' + file;
+                            file = file.replace(  'exports.version = ReactVersion;',
                                                             'exports.version = ReactVersion;\r\n  React=exports;');
-                            modulefile = modulefile + 'export {React}';
-                        }
-                        
-                        return {type:'JSON', result:{resource:modulefile}};
-                    });
+                            file = file + 'export {React}';
+                        }  
+                        return file;
+                    };
+                    return {type:'JSON', 
+                            result:{
+                                    resource:await commonGetFile({app_id:parameters.app_id, path:`${resource_directory}${resource_path}`, modify:modify})
+                                    }
+                            };
                 }
                 case '/modules/leaflet/leaflet-src.esm.js':{
-                    return fs.promises.readFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`, 'utf8').then((modulefile)=>{
-                        modulefile = modulefile.replace(  '//# sourceMappingURL=','//');
-                        return {type:'JSON', result:{resource:modulefile}};
-                    });
+                    /**
+                     * @description Replace sourceMappingUrl
+                     * @param {string} file
+                     */
+                    const modify = file =>{
+                        return file.replace(  '//# sourceMappingURL=','//');
+                    };
+                    return {type:'JSON', 
+                        result:{
+                                resource:await commonGetFile({app_id:parameters.app_id, path:`${resource_directory}${resource_path}`, modify:modify})
+                                }
+                        };
                 }
                 default:
-                    return {type:'JSON', result:{resource:await getFile(`${serverProcess.cwd()}${resource_directory}${resource_path}`)}};
+                    return {type:'JSON', result:{resource:await commonGetFile({app_id:parameters.app_id, path:`${resource_directory}${resource_path}`})}};
             }
         }
         case parameters.content_type == 'image/webp':
@@ -935,34 +980,51 @@ const commonAppMount = async parameters =>{
         /**@type{server_db_table_App} */
         const app = App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
         const {socketConnectedUpdate} = await import ('../../../server/socket.js');
-        const fs = await import('node:fs');
         
         if (app)
             return {result:{App:{   id:                     app.id,
                                     name:                   app.name,
                                     js:                     app.js,
-                                    js_content:             app.js?
-                                                                await fs.promises.readFile(`${serverProcess.cwd()}${app.path}${app.js}`, 'utf8'):
+                                    js_content:             (app.js && app.js!='')?
+                                                                (await commonResourceFile({ app_id:parameters.app_id, 
+                                                                                            resource_id:app.js,
+                                                                                            content_type:'text/javascript', 
+                                                                                            data_app_id:parameters.app_id})).result.resource:
                                                                     null,
                                     css:                    app.css,
-                                    css_content:            app.css?
-                                                                await fs.promises.readFile(`${serverProcess.cwd()}${app.path}${app.css}`, 'utf8'):
+                                    css_content:            (app.css && app.css!='')?
+                                                                (await commonResourceFile({ app_id:parameters.app_id, 
+                                                                                            resource_id:app.css,
+                                                                                            content_type:'text/css', 
+                                                                                            data_app_id:parameters.app_id})).result.resource:
                                                                     null,
                                     css_report:             app.css_report,
-                                    css_report_content:     app.css_report?
-                                                                await fs.promises.readFile(`${serverProcess.cwd()}${app.path}${app.css_report}`, 'utf8'):
+                                    css_report_content:     (app.css_report && app.css_report!='')?
+                                                                (await commonResourceFile({ app_id:parameters.app_id, 
+                                                                                            resource_id:app.css_report,
+                                                                                            content_type:'text/css', 
+                                                                                            data_app_id:parameters.app_id})).result.resource:
                                                                     null,
                                     favicon_32x32:          app.favicon_32x32,
                                     favicon_32x32_content:  app.favicon_32x32?
-                                                                (await commonConvertBinary('image/png', `${app.path}${app.favicon_32x32}`)).result.resource:
+                                                                (await commonResourceFile({ app_id:parameters.app_id, 
+                                                                                            resource_id:app.favicon_32x32,
+                                                                                            content_type:'image/png', 
+                                                                                            data_app_id:parameters.app_id})).result.resource:
                                                                     null,
                                     favicon_192x192:        app.favicon_192x192,
                                     favicon_192x192_content:app.favicon_192x192?
-                                                                (await commonConvertBinary('image/png', `${app.path}${app.favicon_192x192}`)).result.resource:
+                                                                (await commonResourceFile({ app_id:parameters.app_id, 
+                                                                                            resource_id:app.favicon_192x192,
+                                                                                            content_type:'image/png', 
+                                                                                            data_app_id:parameters.app_id})).result.resource:
                                                                     null,
                                     logo:                   app.logo,
                                     logo_content:           app.logo?
-                                                                (await commonConvertBinary('image/png', `${app.path}${app.logo}`)).result.resource:
+                                                                (await commonResourceFile({ app_id:parameters.app_id, 
+                                                                                            resource_id:app.logo,
+                                                                                            content_type:'image/png', 
+                                                                                            data_app_id:parameters.app_id})).result.resource:
                                                                     null,
                                     copyright:              app.copyright,
                                     link_url:               app.link_url,
@@ -1044,7 +1106,6 @@ const commonApp = async parameters =>{
                                                             configServer:                       configServer
                                                             },
                                                 methods:    {
-                                                            commonCssFonts:commonCssFonts,
                                                             commonAppStart:commonAppStart,
                                                             commonGeodata:commonGeodata,
                                                             App:App,
@@ -1055,8 +1116,8 @@ const commonApp = async parameters =>{
                                                             serverProcess:serverProcess,
                                                             serverUtilNumberValue:serverUtilNumberValue,
                                                             Security:Security,
-                                                            commonConvertBinary:commonConvertBinary,
-                                                            fs:fs
+                                                            commonResourceFile:commonResourceFile,
+                                                            commonGetFile:commonGetFile
                                                             }})
                                 .catch(error=>{
                                     return Log.post({   app_id:parameters.app_id, 
@@ -1139,10 +1200,6 @@ const commonAppResource = async parameters =>{
                                 }, 
                         type:'JSON'};
             }
-            case parameters.data.content_type == 'text/css' && parameters.resource_id.replaceAll('~','/')=='/common/css/font/fonts.css':{
-                //loaded at server start with font url replaced with secure url and about 1700 IamEncryption records
-                return {result:{resource:commonCssFonts.css}, type:'JSON'};
-            }
             case parameters.data.content_type == 'text/css':
             case parameters.data.content_type == 'font/woff2':
             case parameters.data.content_type == 'text/javascript':
@@ -1178,6 +1235,7 @@ const commonRegistryAppModule = (app_id, parameters) => AppModule.get({app_id:ap
                                                                app.common_role == parameters.role)[0];
 
 export {commonConvertBinary,
+        commonGetFile,
         commonCssFonts,
         commonSearchMatch,
         commonAppStart, commonClientLocale,
