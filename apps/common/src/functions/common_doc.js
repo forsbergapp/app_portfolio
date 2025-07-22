@@ -460,7 +460,7 @@ const appFunction = async parameters =>{
             }
             case parameters.data.documentType=='MODULE_CODE' && 
             (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/serviceregistry')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
-                return {result:await getFile(`${serverProcess.cwd()}${parameters.data.doc}.js`, true), type:'JS'};
+                return {result:await getFile(`${serverProcess.cwd()}${parameters.data.doc}.js`, true), type:'HTML'};
             }
             case parameters.data.documentType=='GUIDE':
             case parameters.data.documentType=='APP' && App.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.data.doc)}).result?.length==1:
