@@ -8,8 +8,7 @@
  *          server_db_document_ConfigServer,
  *          server_db_table_ServiceRegistry,
  *          server_bff_endpoint_type,
- *          server_server_req_id_number,
- *          server_db_table_IamEncryption} from './types.js'
+ *          server_server_req_id_number} from './types.js'
  */
 
  const zlib = await import('node:zlib');
@@ -480,22 +479,16 @@ const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass(await 
  * @returns {Promise.<*>}
  */                    
 const serverRequest = async parameters =>{
-    const ConfigServer = await import('./db/ConfigServer.js');
     const Security = await import('./security.js');
     const IamEncryption = await import('./db/IamEncryption.js');
     const ServiceRegistry = await import('./db/ServiceRegistry.js');
     const MESSAGE_TIMEOUT = '🗺⛔?';
-    
-    /**@type{server_db_document_ConfigServer['SERVICE_IAM']} */
-    const CONFIG_SERVER = ConfigServer.get({app_id:0,data:{ config_group:'SERVICE_IAM'}}).result;
     
     /**@type {'http'|string} */
     const protocol = parameters.protocol?.toLowerCase() ??'http';
     /**@type {import('node:http')} */
     const request_protocol = await import(`node:${protocol}`);
     
-    const encrypt_transport = serverUtilNumberValue(CONFIG_SERVER
-                                        .filter(parameter=> 'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT);
     //BFE uses url, microservice uses host, port and path
     const url_unencrypted = parameters.url?
                                 //use path for BFE
@@ -504,25 +497,23 @@ const serverRequest = async parameters =>{
                                     (protocol + '://' + parameters.host + ':' + parameters.port + parameters.path);
 
     //get new encryption parameters for BFE or existing for microservice in ServiceRegistry if using encryption
-    const {uuid, secret} = encrypt_transport==1?
-                                    (parameters.encryption_type=='BFE'?
-                                        {
-                                            uuid:   Security.securityUUIDCreate(),
-                                            secret: await Security.securityTransportCreateSecrets()
-                                                        .then(result=>Buffer.from(JSON.stringify(result),'utf-8').toString('base64'))
-                                        }:
-                                            ServiceRegistry.get({   app_id:parameters['app-id'], 
-                                                                    resource_id:null, 
-                                                                    data:{name:parameters.service}}).result
-                                            .map((/**@type{server_db_table_ServiceRegistry}*/row)=>{
-                                                return {
-                                                    uuid:row.uuid,
-                                                    secret:row.secret
-                                                };
-                                            })[0]):
-                                    null;
-    //if encryption and BFE then save encryption record
-    encrypt_transport==1 && parameters.encryption_type=='BFE'?
+    const {uuid, secret} = (parameters.encryption_type=='BFE'?
+                                {
+                                    uuid:   Security.securityUUIDCreate(),
+                                    secret: await Security.securityTransportCreateSecrets()
+                                                .then(result=>Buffer.from(JSON.stringify(result),'utf-8').toString('base64'))
+                                }:
+                                    ServiceRegistry.get({   app_id:parameters['app-id'], 
+                                                            resource_id:null, 
+                                                            data:{name:parameters.service}}).result
+                                    .map((/**@type{server_db_table_ServiceRegistry}*/row)=>{
+                                        return {
+                                            uuid:row.uuid,
+                                            secret:row.secret
+                                        };
+                                    })[0]);
+    //if BFE then save encryption record
+    parameters.encryption_type=='BFE'?
         await IamEncryption.post(0, {   app_id:parameters['app-id'], 
                                         iam_app_id_token_id: null,
                                         url:url_unencrypted,
@@ -530,13 +521,11 @@ const serverRequest = async parameters =>{
                                         type:parameters.encryption_type,
                                         secret: secret}):
             null;
-    const url = encrypt_transport==1?
-                    (parameters.url?
+    const url = (parameters.url?
                         //external url should be syntax [protocol]://[host + optional port]/[path]
                         //implements same path for external url
                         (protocol + '://' + parameters.url.split('/')[2] + '/bff/x/' + uuid):
-                            (protocol + '://' + parameters.host + ':' + parameters.port + '/bff/x/' + uuid)):
-                        url_unencrypted;
+                            (protocol + '://' + parameters.host + ':' + parameters.port + '/bff/x/' + uuid));
 
     /**@type{import('node:http').RequestOptions['headers'] & {'app-id'?:number, 'app-signature'?:string}} */
     const headers = {
@@ -544,16 +533,15 @@ const serverRequest = async parameters =>{
         'Accept-Language':  parameters.accept_language,
         'x-forwarded-for':  parameters.client_ip,
         ...(parameters.authorization && {Authorization: parameters.authorization}),
-        ...(parameters.encryption_type=='BFE' && {'app-id':           parameters['app-id']}),
-        ...(parameters.encryption_type=='BFE' && encrypt_transport==1 && {'app-signature': await Security.securityTransportEncrypt({
+        ...(parameters.encryption_type=='BFE' && {'app-id':         parameters['app-id']}),
+        ...(parameters.encryption_type=='BFE' && {'app-signature':  await Security.securityTransportEncrypt({
                                                                                                 app_id:parameters['app-id'],
                                                                                                 jwk:JSON.parse(atob(secret)).jwk,
                                                                                                 iv:JSON.parse(atob(secret)).iv,
                                                                                                 data:'serverRequest'})})
     };
     
-    const body =    encrypt_transport==1?
-                        JSON.stringify({
+    const body =    JSON.stringify({
                             x: await Security.securityTransportEncrypt({
                                 app_id:parameters['app-id'],
                                 jwk:JSON.parse(atob(secret)).jwk,
@@ -567,30 +555,18 @@ const serverRequest = async parameters =>{
                                                 ''})
                                     })
                                 })
-                        }):
-                            (parameters.body?
-                                JSON.stringify(parameters.body):
-                                    '');
+                        });
     /**@type{import('node:http').RequestOptions}*/    
-    const options = encrypt_transport==1?
-        {
-            family: 4,
-            method: 'POST',
-            timeout: parameters.timeout,
-            headers:{
-                        'Content-Type':  'application/json',
-                        'Connection':   'close'
-                    },
-        }:
-            {
-                family:     4,
-                method:     parameters.method,
-                timeout:    parameters.timeout,
-                headers :   { 
-                            ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
-                            ...headers
-                            }
-            };
+    const options = {
+                        family: 4,
+                        method: 'POST',
+                        timeout: parameters.timeout,
+                        headers:{
+                                    'Content-Type':  'application/json',
+                                    'Connection':   'close'
+                                },
+                    };
+            
     return new Promise ((resolve, reject)=>{
         /**
          * @param {import('node:http').IncomingMessage} res
@@ -605,14 +581,12 @@ const serverRequest = async parameters =>{
             });
             res.on('end', ()=>{
                 if ([200,201].includes(res.statusCode??0))
-                    encrypt_transport==1?
-                                Security.securityTransportDecrypt({ 
+                    Security.securityTransportDecrypt({ 
                                     app_id:parameters['app-id'],
                                     encrypted:  responseBody,
                                     jwk:        JSON.parse(Buffer.from(secret, 'base64').toString('utf-8')).jwk,
                                     iv:         JSON.parse(Buffer.from(secret, 'base64').toString('utf-8')).iv
-                                    }).then(result=>resolve(result)):
-                                        resolve(responseBody);
+                                    }).then(result=>resolve(result));
                 else
                     reject({   
                             http:res.statusCode,
@@ -626,8 +600,8 @@ const serverRequest = async parameters =>{
             });
         };
         const request = request_protocol.request(new URL(url), options, response);
-        if (encrypt_transport==1 ||parameters.method !='GET')
-            request.write(body);
+        //only method POST used, write body always
+        request.write(body);
         request.on('error', error => {
             resolve({   
                         http:500,
@@ -695,12 +669,10 @@ const serverStart = async () =>{
         /**@type{server_db_document_ConfigServer} */
         const configServer = ConfigServer.get({app_id:0}).result;
 
-        if (configServer.SERVICE_IAM.filter(parameter=> 'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT=='1'){
-            const common = await import ('../apps/common/src/common.js');
-            //common font css contain many font urls, return css file with each url replaced with a secure url
-            //and save encryption data for all records directly in table at start to speed up performance
-            await ORM.postAdmin('IamEncryption', common.commonCssFonts.db_records);
-        } 
+        const common = await import ('../apps/common/src/common.js');
+        //common font css contain many font urls, return css file with each url replaced with a secure url
+        //and save encryption data for all records directly in table at start to speed up performance
+        await ORM.postAdmin('IamEncryption', common.commonCssFonts.db_records);
 
         if (configServer.SERVICE_IAM.filter(parameter=> 'SERVER_UPDATE_SECRETS_START' in parameter)[0].SERVER_UPDATE_SECRETS_START=='1')
             await Installation.updateConfigSecrets();

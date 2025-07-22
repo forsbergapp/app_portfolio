@@ -430,9 +430,8 @@ const bffResponse = async parameters =>{
          * @returns {Promise.<server_bff_parameters|null|1>}
          */
         const parameters = async () =>{
-            //if not start url and encryption is used and method='POST and path starts with /bff/x/
-            if (req.url !='/' && 
-                serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)==1){
+            //if not start url and method='POST and path starts with /bff/x/
+            if (req.url !='/'){
                 //fonts use GET all others use POST
                 if (['POST', 'GET'].includes(req.method) && req.url.startsWith('/bff/x/') && req.url.length>'/bff/x/'.length){
                     //lookup uuid in IamEncryption or ServiceRegistry for microservice
@@ -585,7 +584,7 @@ const bffResponse = async parameters =>{
                 }
             }
             else{
-                //start url or not using encryption
+                //start url
                 const endpoint = req.url.startsWith(configServer.SERVER.filter(parameter=>parameter.REST_RESOURCE_BFF)[0].REST_RESOURCE_BFF + '/')?
                                         (req.url.split('/')[2]?.toUpperCase()):
                                             'APP';
@@ -687,7 +686,6 @@ const bffResponse = async parameters =>{
                         //use common app id for APP since no app id decided
                         switch (true){
                             //font src used in a font css
-                            case (bff_parameters.url.startsWith('/common/modules/fontawesome/webfonts/')):
                             case (bff_parameters.url.startsWith('/common/css/font/')):{
                                 return bffResponse({app_id:common_app_id,
                                                     result_request: await app_common.commonResourceFile({   app_id:common_app_id, 

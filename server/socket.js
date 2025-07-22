@@ -500,7 +500,6 @@ const socketClientPostMessage = async parameters => {
     const Security = await import('./security.js');
     const IamEncryption = await import('./db/IamEncryption.js');
     const IamAppIdToken = await import ('./db/IamAppIdToken.js');
-    const encrypt_transport = serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_IAM', parameter:'ENCRYPT_TRANSPORT'}}).result);
     for (const client of SOCKET_CONNECTED_CLIENTS
                         .filter(row=>
                             row.id == (parameters.resource_id??row.id) &&
@@ -524,22 +523,18 @@ const socketClientPostMessage = async parameters => {
                                 };
                             })[0];
         //encrypt message using secrets for curent app id and token found in IamEncryption
-        const encrypted = encrypt_transport==1?
-                                'data: ' + (await Security.securityTransportEncrypt({   
+        const encrypted = 'data: ' + (await Security.securityTransportEncrypt({   
                                         app_id: parameters.app_id,
                                         data:   Buffer.from(JSON.stringify({   
                                                             sse_type :    parameters.data.message_type, 
                                                             sse_message:  parameters.data.message}))
                                                         .toString('base64'),
                                         jwk:    jwk,
-                                        iv:     iv})) + '\n\n':
-                                    `data: ${Buffer.from(JSON.stringify({   
-                                                            sse_type :    parameters.data.message_type, 
-                                                            sse_message:  parameters.data.message}))
-                                                        .toString('base64')}\n\n`;
+                                        iv:     iv})) + '\n\n';
                                     
         
-        await serverResponse ({   app_id:null,
+        await serverResponse ({
+            app_id:null,
             type:'JSON',
             result:'',
             route:null,

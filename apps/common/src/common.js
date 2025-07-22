@@ -54,13 +54,13 @@ const commonConvertBinary = async (content_type, path) =>
  * @name commonCssFonts
  * @description resource /common/css/font/fonts.css using IIFE to save as constant
  *              can return base64 url or secure url:
- *              secur url logic:
+ *              secure url logic:
  *              replaces url with secure font url /bff/x/[uuid]
  *              returns array with data to create records in IamEncryption with old url for all font url
  *              returns {css:string, db_records:server_db_table_IamEncryption[]}
  * @constant
  */
-const commonCssFonts = await (async (base64)=>{
+const commonCssFonts = await (async base64=>{
     const cssFontFace = [];
     /**@type {{uuid:String, url:string}[]}} */
     const url_record = [];
@@ -83,17 +83,18 @@ const commonCssFonts = await (async (base64)=>{
                                                     row.indexOf(endString)
                                                 );
                         if (base64)
+                            //save url as base64 without link
                             css.push(   row.substring(0, row.indexOf(startString) + startString.length) +
                                         (await commonConvertBinary('font/woff2',`${resource_directory}${url.replace('/common','')}`)).result.resource + 
                                         row.substring(row.indexOf(endString)));
                         else{
+                            //save url as secure url link
                             //font url can be repeated in css
                             if (url_record.filter(row=>row.url == url).length==0){
                                 const uuid  = Security.securityUUIDCreate(); 
                                 url_record.push({uuid:uuid, url:url});
                                 const secret= Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8')
                                                 .toString('base64');
-                                //IamEncryption.post too slow at start to create all records
                                 db_records.push({id:                Date.now(),
                                                 app_id:             0, 
                                                 iam_app_id_token_id:null, 

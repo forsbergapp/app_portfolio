@@ -18,7 +18,6 @@
     *          idToken:server_db_table_IamAppIdToken['token'], 
     *          uuid:string,
     *          secret:string,
-    *          encrypt_transport:number,
     *          cssCommon:string,
     *          jsCommon:string,
     *          jsCrypto:string,
@@ -59,12 +58,10 @@
                                         }
                                         const BFFStream = new WritableStream({
                                             async write(data, controller){
-                                                const BFFmessage = encrypt_transport?
-                                                                        common.COMMON_GLOBAL.x.decrypt({  
-                                                                                iv:         JSON.parse(atob(parameters.secret)).iv,
-                                                                                key:        JSON.parse(atob(parameters.secret)).jwk.k, 
-                                                                                ciphertext: new TextDecoder('utf-8').decode(data).split('\\n\\n')[0].split('data: ')[1]}):
-                                                                            new TextDecoder('utf-8').decode(data).split('\\n\\n')[0].split('data: ')[1];
+                                                const BFFmessage = common.COMMON_GLOBAL.x.decrypt({  
+                                                                        iv:         JSON.parse(atob(parameters.secret)).iv,
+                                                                        key:        JSON.parse(atob(parameters.secret)).jwk.k, 
+                                                                        ciphertext: new TextDecoder('utf-8').decode(data).split('\\n\\n')[0].split('data: ')[1]});
                                                 const SSEmessage = getMessage(BFFmessage);
                                                 switch (SSEmessage.sse_type){
                                                     case 'FONT_URL':{
@@ -140,16 +137,12 @@
                                         const bff_path = parameters.rest_bff_path + '/' + 
                                                             ROLE.toLowerCase() + 
                                                             '/v' + (parameters.rest_api_version ??1);
-                                        const url = encrypt_transport?
-                                                        ('/bff/x/' + parameters.uuid):
-                                                            bff_path + parameters.data.path + '?parameters=' + encodedparameters;
+                                        const url = ('/bff/x/' + parameters.uuid);
 
                                         if (parameters.spinner_id && common.COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
                                             common.COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.add('css_spinner');
                                         const resultFetch = {finished:false};
-                                        const options = encrypt_transport?
-                                                            //encrypted options
-                                                            {
+                                        const options =     {
                                                             cache:  'no-store',
                                                             method: 'POST',
                                                             headers:{
@@ -184,26 +177,6 @@
                                                                             })
                                                                         })
                                                                 })
-                                                            }
-                                                        :
-                                                            //not encrypted options
-                                                            {
-                                                            cache: 'no-store',
-                                                            method: parameters.data.method,
-                                                            headers:{   'app-id': parameters.app_id,
-                                                                        'app-signature': JSON.stringify({app_id: parameters.app_id }),
-                                                                        'app-id-token': 'Bearer ' + parameters.data.idToken,
-                                                                        ...(parameters.response_type =='SSE' && {'Cache-control': 'no-cache'}),
-                                                                        'Content-Type': parameters.response_type =='SSE'?
-                                                                                            'text/event-stream':
-                                                                                                'application/json',
-                                                                        'Connection':   parameters.response_type =='SSE'?
-                                                                                            'keep-alive':
-                                                                                                'close',
-                                                                        ...(authorization && {Authorization: authorization})},
-                                                            body:  parameters.data.body?
-                                                                        JSON.stringify({data:btoa(JSON.stringify(parameters.data.body))}):
-                                                                            null
                                                             };
                                         const showError      = message   => common.commonMessageShow('ERROR_BFF', null, null, message);
                                         return parameters.response_type=='SSE'?
@@ -225,12 +198,10 @@
                                                                             })
                                                                             .then(result => {
                                                                                 const result_decrypted = 
-                                                                                        encrypt_transport?
                                                                                             common.COMMON_GLOBAL.x.decrypt({
                                                                                                     iv:         JSON.parse(common.commonWindowFromBase64(parameters.secret)).iv,
-                                                                                                    key:        JSON.parse(common.commonWindowFromBase64(parameters.secret)).jwk.k, 
-                                                                                                    ciphertext: result}):
-                                                                                                result;
+                                                                                                    key:        JSON.parse(common.commonWindowFromBase64(parameters.secret)).jwk.k,
+                                                                                                    ciphertext: result});
                                                                                 switch (status){
                                                                                     case 200:
                                                                                     case 201:{
@@ -268,7 +239,6 @@
                                         ]);
                                     }
                                     //set variables
-                                    const encrypt_transport = ${props.encrypt_transport==1?'true':'false'};
                                     const cssFonts = '${props.cssFonts}';
                                     const cssFontsStart = '${props.cssFontsStart}';
                                     const cssCommon = '${props.cssCommon}';
@@ -392,7 +362,6 @@
         const start_app_id =                    props.data.app_id==admin_app_id?admin_app_id:props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??1;
         const app_request_timeout_seconds =     props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_SECONDS' in parameter)[0].APP_REQUESTTIMEOUT_SECONDS)??5;
         const app_requesttimeout_admin_minutes =props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0].APP_REQUESTTIMEOUT_ADMIN_MINUTES)??60;
-        const encrypt_transport =               props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_IAM.filter(parameter=>'ENCRYPT_TRANSPORT' in parameter)[0].ENCRYPT_TRANSPORT)??0;
         const rest_resource_bff =               props.data.configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF;
         const app_rest_api_version =            props.data.configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION;
 
@@ -481,10 +450,10 @@
                                 client_longitude:               result_geodata?.longitude,
                                 client_place:                   result_geodata?.place ?? '',
                                 client_timezone:                result_geodata?.timezone==''?null:result_geodata?.timezone,
-                                x:                              {...(encrypt_transport==1 && {
-                                                                                                uuid:  postData.uuid,
-                                                                                                secret:postData.secret
-                                                                                            })}
+                                x:                              {...{
+                                                                    uuid:  postData.uuid,
+                                                                    secret:postData.secret
+                                                                }}
                                 });
             
             return {
@@ -556,7 +525,6 @@
                             idToken:                            data.idToken.token, 
                             uuid:                               data.uuid,
                             secret:                             data.secret,
-                            encrypt_transport:                  encrypt_transport,
                             cssCommon:                          data.cssCommon,
                             jsCommon:                           data.jsCommon,
                             jsCrypto:                           data.jsCrypto,
