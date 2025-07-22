@@ -851,8 +851,7 @@
  */
 /**
  * @description DB server_db_config_server_service_iam
- * @typedef {{  ENCRYPT_TRANSPORT:string,
- *              AUTHENTICATE_REQUEST_ENABLE:string,
+ * @typedef {{  AUTHENTICATE_REQUEST_ENABLE:string,
  *              AUTHENTICATE_REQUEST_OBSERVE_LIMIT:string,
  *              AUTHENTICATE_REQUEST_IP:string,
  *              MICROSERVICE_TOKEN_EXPIRE_ACCESS:string,

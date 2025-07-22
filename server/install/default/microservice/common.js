@@ -252,72 +252,68 @@ const commonDecrypt = parameters =>{
  * @returns {Promise.<*>}
  */
 const commonRequestUrl = async parameters => {
-    const encrypt = 1;
     const restAPIPath = '/bff';
     const restAPIPathEncrypted = restAPIPath + '/x/';
     const protocol = parameters.url.split('://')[0];
     const protocolRequest = (await import(`node:${protocol}`));
     
     //url should use syntax protocol://[host][optional port]/[path]
-    const url = (parameters.external ==false && encrypt)?
-                    (protocol + '://' + parameters.url.split('/')[2] + restAPIPathEncrypted + parameters.uuid):
-                        parameters.url;
-    const options = (parameters.external ==false && encrypt)?
-                        //encrypted options
+    const url = parameters.external?
+                    parameters.url:
+                    (protocol + '://' + parameters.url.split('/')[2] + restAPIPathEncrypted + parameters.uuid);
+    const options = parameters.external?
+                        //no encryption for external url
                         {
-                        family: 4,
-                        cache:  'no-store',
-                        method: 'POST',
-                        headers:{
-                                    'User-Agent': 'Server',
-                                    'Accept-Language': parameters.language,
-                                    'Content-Type':  'application/json',
-                                    'Connection':   'close',
-                                }
-                        }
-                    :
-                        //not encrypted options
-                        {
-                        family: 4,
-                        cache: 'no-store',
-                        method: parameters.method,
-                        headers:{   
-                                    'User-Agent': 'Server',
-                                    'Accept-Language': parameters.language,
-                                    ...(parameters.external==false && {'app-id':       0}),
-                                    ...(parameters.external==false && {'app-signature':JSON.stringify({app_id: 0 })}),
-                                    ...(parameters.external==false && parameters.authorization && {Authorization: parameters.authorization}),
-                                    ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
-                                    'Connection':   'close1'
-                                }
-                        };
-    const body =    (parameters.external ==false && encrypt)?
-                        JSON.stringify({
-                            x: commonEncrypt({
-                                    secret:parameters.secret??'',
-                                    data:JSON.stringify(
-                                            {
-                                                headers:{
-                                                    ...(parameters.external==false &&  {'app-id':       0}),
-                                                    ...(parameters.external==false &&  {'app-signature':commonEncrypt({ secret:parameters.secret,
-                                                                                                                        data:JSON.stringify({app_id: 0 })})}),
-                                                    ...(parameters.external==false && parameters.authorization && {Authorization: parameters.authorization}),
-                                                    ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
-                                                    },
-                                                method: parameters.method,
-                                                url:    restAPIPath + parameters.url.split(restAPIPath)[1],
-                                                body:   parameters.body?
-                                                            JSON.stringify({data:btoa(JSON.stringify(parameters.body))}):
-                                                                ''
+                            family: 4,
+                            cache: 'no-store',
+                            method: parameters.method,
+                            headers:{   
+                                        'User-Agent': 'Server',
+                                        'Accept-Language': parameters.language,
+                                        ...(parameters.authorization && {Authorization: parameters.authorization}),
+                                        ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
+                                        'Connection':   'close1'
+                                    }
+                            }:
+                            //not external, encrypted options
+                            {
+                            family: 4,
+                            cache:  'no-store',
+                            method: 'POST',
+                            headers:{
+                                        'User-Agent': 'Server',
+                                        'Accept-Language': parameters.language,
+                                        'Content-Type':  'application/json',
+                                        'Connection':   'close',
+                                    }
+                            };
+                        
+    const body =    parameters.external?
+                        (parameters.body?
+                            JSON.stringify({data:btoa(JSON.stringify(parameters.body))}):
+                                        ''):
+                                JSON.stringify({
+                                    x: commonEncrypt({
+                                            secret:parameters.secret??'',
+                                            data:JSON.stringify(
+                                                    {
+                                                        headers:{
+                                                            ...(parameters.external==false &&  {'app-id':       0}),
+                                                            ...(parameters.external==false &&  {'app-signature':commonEncrypt({ secret:parameters.secret,
+                                                                                                                                data:JSON.stringify({app_id: 0 })})}),
+                                                            ...(parameters.external==false && parameters.authorization && {Authorization: parameters.authorization}),
+                                                            ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
+                                                            },
+                                                        method: parameters.method,
+                                                        url:    restAPIPath + parameters.url.split(restAPIPath)[1],
+                                                        body:   parameters.body?
+                                                                    JSON.stringify({data:btoa(JSON.stringify(parameters.body))}):
+                                                                        ''
+                                                })
                                         })
-                                })
-                        }):
-                            ((parameters.body && parameters.external==false)?
-                                JSON.stringify({data:btoa(JSON.stringify(parameters.body))}):
-                                            '');
+                                });
 
     return new Promise((resolve, reject) =>{
-
         const request = protocolRequest.request(url, options, (/**@type{import('node:http').IncomingMessage}*/res) =>{
             let responseBody = '';
             if (res.headers['content-encoding'] == 'gzip'){
@@ -326,12 +322,13 @@ const commonRequestUrl = async parameters => {
                 gunzip.on('data', (chunk) =>responseBody += chunk);
                 gunzip.on('end', () => {
                     if (res.statusCode == 200 ||res.statusCode == 201)
-                        resolve((parameters.external ==false && encrypt)?
-                                    commonDecrypt({ 
-                                        data:  responseBody,
-                                        secret: parameters.secret
-                                        }):
-                                        responseBody);
+                        resolve(parameters.external?
+                                    responseBody:
+                                        commonDecrypt({
+                                            data:  responseBody,
+                                            secret: parameters.secret
+                                            })
+                                );
                     else
                         reject(res.statusCode);
                 });
@@ -343,12 +340,13 @@ const commonRequestUrl = async parameters => {
                 });
                 res.on('end', ()=>{
                     if (res.statusCode == 200 ||res.statusCode == 201)
-                        resolve((parameters.external ==false && encrypt)?
-                                    commonDecrypt({ 
-                                        data:  responseBody,
-                                        secret:  parameters.secret
-                                        }):
-                                    responseBody);
+                        resolve(parameters.external?
+                                    responseBody:
+                                        commonDecrypt({
+                                            data:  responseBody,
+                                            secret:  parameters.secret
+                                            })
+                                );
                     else
                         reject(res.statusCode);
                 });
