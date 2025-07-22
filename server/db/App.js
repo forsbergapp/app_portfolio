@@ -11,6 +11,9 @@
  */
 
 const ORM = await import('./ORM.js');
+const AppTranslation = await import('./AppTranslation.js');
+const ConfigServer = await import('./ConfigServer.js');
+const {serverUtilNumberValue} = await import('../server.js');
 
 /**
  * @name get
@@ -40,12 +43,7 @@ const get = parameters =>{
 * @returns {Promise.<server_server_response & {result?:server_config_apps_with_db_columns[] }>}
 */
 const getViewInfo = async parameters =>{
-    const AppTranslation = await import('./AppTranslation.js');
-    const ConfigServer = await import('./ConfigServer.js');
-    const {serverUtilNumberValue} = await import('../server.js');
-    const {serverProcess} = await import('../server.js');
-    const fs = await import('node:fs');
-
+    const common = await import('../../apps/common/src/common.js');
     /**@type{server_db_document_ConfigServer} */
     const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
     /**@type{server_db_table_App[]}*/
@@ -56,9 +54,10 @@ const getViewInfo = async parameters =>{
                         app.id != (serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)) &&
                         app.id != (serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)));
     for (const app of apps){
-        const image = await fs.promises.readFile(`${serverProcess.cwd()}${app.path + app.logo}`);
-        /**@ts-ignore */
-        app.logo        = 'data:image/png;base64,' + Buffer.from(image, 'binary').toString('base64');
+        app.logo = (await common.commonResourceFile({app_id:parameters.app_id, 
+                                                    resource_id:app.logo, 
+                                                    content_type:'image/png',
+                                                    data_app_id:app.id})).result.resource;
        }
     return {result:apps
             .filter(app=>app.id == (parameters.resource_id ?? app.id))
