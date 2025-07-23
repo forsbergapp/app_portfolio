@@ -11,8 +11,6 @@
  *          server_server_req_id_number} from './types.js'
  */
 
- const zlib = await import('node:zlib');
-
  /**
  *  Returns response to client
  *  @param {{app_id?:number|null,
@@ -55,27 +53,6 @@ const serverResponse = async parameters =>{
         }
     };
     /**
-     * @name compress
-     * @description compress all requests (SSE uses res.write)
-     * @param {*} data
-     */
-    const compress = async data =>{    
-        return new Promise(resolve=>{
-            try {
-                parameters.res.removeHeader('Content-Length');
-                parameters.res.setHeader('Content-Encoding', 'gzip');
-                zlib.gzip(Buffer.from(data.toString(), 'utf8'), (err, compressed)=>{
-                    if (err)
-                        resolve(data);
-                    else
-                        resolve(compressed);
-                });
-            } catch (error) {
-                resolve(data);
-            }
-        });
-    };
-    /**
      * @param {string} response
      */
     const write = response =>{
@@ -102,13 +79,8 @@ const serverResponse = async parameters =>{
     
             if (parameters.res.getHeader('Content-Type')==undefined)
                 parameters.res.type('text/html; charset=utf-8');
-            //Use compression only if specified
-            if (parameters.res.req.headers['accept-encoding']==undefined)
-                write(parameters.result);
-            else{
-                const compressed = await compress(parameters.result);
-                write(compressed);
-            }
+            
+            write(parameters.result);
             parameters.res.end();
         }
     }
