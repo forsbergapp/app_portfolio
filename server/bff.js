@@ -648,7 +648,7 @@ const bffResponse = async parameters =>{
                 const {default:ComponentCreate} = await import('../apps/common/src/component/common_maintenance.js');
                 return bffResponse({
                                         result_request:{result:await ComponentCreate({  data:   null,
-                                                                    methods:{commonConvertBinary:app_common.commonConvertBinary}
+                                                                    methods:{commonResourceFile:app_common.commonResourceFile}
                                                                 }), 
                                                         type:'HTML'},
                                         host:req.headers.host,
