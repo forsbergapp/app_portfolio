@@ -468,7 +468,8 @@
                                                         data_app_id:common_app_id})).result.resource).toString('base64'),
                     jsCrypto:       Buffer.from(await props.methods.commonGetFile({ 
                                                         app_id:props.data.app_id, 
-                                                        path:'/apps/common/src/functions/common_crypto.js'})).toString('base64'),
+                                                        path:'/apps/common/src/functions/common_crypto.js',
+                                                        content_type:'text/javascript'})).toString('base64'),
                     cssFonts:       Buffer.from((await props.methods.commonResourceFile({ 
                                                     app_id:props.data.app_id, 
                                                     resource_id:'/common/css/font/fonts.css',

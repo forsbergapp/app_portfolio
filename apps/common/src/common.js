@@ -60,21 +60,27 @@ const commonConvertBinary = async (content_type, path) =>
  * @function
  * @param{{ app_id:number,
  *          path:string,
+ *          content_type:string,
  *          modify?:(arg0:string)=>string }} parameters
  * @returns {Promise.<*>}
  */
 const commonGetFile = async parameters =>{
     return FILES.data.filter(row=>row[0]==parameters.path)[0]?.[1] ??
-        new Promise((resolve, reject)=>{
-            fs.promises.access(`${serverProcess.cwd()}${parameters.path}`)
-            .then(()=>{		
-                    fs.promises.readFile(`${serverProcess.cwd()}${parameters.path}`, 'utf8')
-                    .then(result=>{
-                        const file = parameters.modify?parameters.modify(result.toString()):result.toString();
-                        /**@ts-ignore */
-                        FILES.data.push([parameters.path, file]);
-                        resolve(file);
-                    });
+            (['font/woff2','image/png', 'image/webp'].includes(parameters.content_type)?
+                fs.promises.readFile(`${serverProcess.cwd()}${parameters.path}`):
+                    fs.promises.readFile(`${serverProcess.cwd()}${parameters.path}`, 'utf8'))
+            .then(result=>{
+                const file = ['font/woff2','image/png', 'image/webp'].includes(parameters.content_type)?
+                                parameters.content_type == 'font/woff2'? 
+                                            /**@ts-ignore */
+                                            `data:font/woff2;charset=utf8;base64,${Buffer.from(result, 'binary').toString('base64')}`:
+                                                /**@ts-ignore */
+                                                `data:${parameters.content_type};base64,${Buffer.from(result, 'binary').toString('base64')}`
+                                        :
+                                parameters.modify?parameters.modify(result.toString()):result.toString();
+                /**@ts-ignore */
+                FILES.data.push([parameters.path, file]);
+                return file;
             })
             .catch(error=>{
                 import('../../../server/db/Log.js')
@@ -89,22 +95,21 @@ const commonGetFile = async parameters =>{
                     })
                     /**@ts-ignore */
                     .then(result=>{
-                        result.http?
-                            reject(result):
+                        return result.http?
+                            result:
                                 import('../../../server/iam.js')
                                 .then(({iamUtilMessageNotAuthorized})=>{
-                                    reject({http:400,
-                                        code:'APP',
-                                        text:iamUtilMessageNotAuthorized(),
-                                        developerText:'commonGetFile',
-                                        moreInfo:null,
-                                        type:'JSON'
-                                        });
+                                    return {http:400,
+                                            code:'APP',
+                                            text:iamUtilMessageNotAuthorized(),
+                                            developerText:'commonGetFile',
+                                            moreInfo:null,
+                                            type:'JSON'
+                                            };
                                 });
                     })
                 );
             });
-        });
 };
 
 /**
@@ -411,15 +416,23 @@ const commonResourceFile = async parameters =>{
             };
             return {type:'JSON', 
                     result:{
-                            resource:await commonGetFile({app_id:parameters.app_id, path:`${resource_directory}${resource_path}`, modify:modify})
+                            resource:await commonGetFile({  app_id:parameters.app_id, 
+                                                            path:`${resource_directory}${resource_path}`, 
+                                                            content_type:'text/css',
+                                                            modify:modify})
                             }
                     };
         }
         case parameters.content_type == 'text/css':
-        case parameters.content_type == 'application/json':{
+        case parameters.content_type == 'application/json':
+        case parameters.content_type == 'image/webp':
+        case parameters.content_type == 'image/png':
+        case parameters.content_type == 'font/woff2':{        
             return {type:'JSON', 
                     result:{
-                            resource: await commonGetFile({app_id:parameters.app_id, path:`${resource_directory}${resource_path}`})
+                            resource: await commonGetFile({ app_id:parameters.app_id, 
+                                                            path:`${resource_directory}${resource_path}`,
+                                                            content_type:parameters.content_type})
                             }
                     };
         }
@@ -448,7 +461,10 @@ const commonResourceFile = async parameters =>{
                     };
                     return {type:'JSON', 
                             result:{
-                                    resource:await commonGetFile({app_id:parameters.app_id, path:`${resource_directory}${resource_path}`, modify:modify})
+                                    resource:await commonGetFile({  app_id:parameters.app_id, 
+                                                                    path:`${resource_directory}${resource_path}`, 
+                                                                    content_type:parameters.content_type,
+                                                                    modify:modify})
                                     }
                             };
                 }
@@ -461,19 +477,22 @@ const commonResourceFile = async parameters =>{
                         return file.replace(  '//# sourceMappingURL=','//');
                     };
                     return {type:'JSON', 
-                        result:{
-                                resource:await commonGetFile({app_id:parameters.app_id, path:`${resource_directory}${resource_path}`, modify:modify})
-                                }
-                        };
+                            result:{
+                                    resource:await commonGetFile({  app_id:parameters.app_id, 
+                                                                    path:`${resource_directory}${resource_path}`, 
+                                                                    content_type:parameters.content_type,
+                                                                    modify:modify})
+                                    }
+                            };
                 }
                 default:
-                    return {type:'JSON', result:{resource:await commonGetFile({app_id:parameters.app_id, path:`${resource_directory}${resource_path}`})}};
+                    return {type:'JSON', 
+                            result:{resource:await commonGetFile({  app_id:parameters.app_id, 
+                                                                    path:`${resource_directory}${resource_path}`,
+                                                                    content_type:parameters.content_type})
+                                    }
+                            };
             }
-        }
-        case parameters.content_type == 'image/webp':
-        case parameters.content_type == 'image/png':
-        case parameters.content_type == 'font/woff2':{
-            return commonConvertBinary(parameters.content_type, `${resource_directory}/${resource_path}`);
         }
         default:{
             return Log.post({  app_id:parameters.app_id, 
@@ -1081,7 +1100,7 @@ const commonApp = async parameters =>{
                 await commonAppStart(parameters.app_id) ==false){
             const {default:ComponentCreate} = await import('./component/common_maintenance.js');
             return {result:await ComponentCreate({  data:   null,
-                                                    methods:{commonConvertBinary:commonConvertBinary}
+                                                    methods:{commonResourceFile:commonResourceFile}
                                                 }), type:'HTML'};
         }
         else{
@@ -1234,8 +1253,7 @@ const commonRegistryAppModule = (app_id, parameters) => AppModule.get({app_id:ap
                                                                app.common_name==parameters.name && 
                                                                app.common_role == parameters.role)[0];
 
-export {commonConvertBinary,
-        commonGetFile,
+export {commonGetFile,
         commonCssFonts,
         commonSearchMatch,
         commonAppStart, commonClientLocale,

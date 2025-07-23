@@ -1,9 +1,7 @@
 /**
  * @module apps/common/src/component/common_maintenance
  */
-/**
- * @typedef {import('../common.js')['commonConvertBinary']} commonConvertBinary
- */
+
 /**
  * @name template
  * @description Template
@@ -143,19 +141,24 @@ const template = props =>`  <!DOCTYPE html>
  * @description Component
  * @function
  * @param {{data:       null,
- *          methods:    {commonConvertBinary:commonConvertBinary}}} props 
+ *          methods:    {commonResourceFile:import('../common.js')['commonResourceFile']}}} props 
  * @returns {Promise.<string>}
  */
 const component = async props =>{
 
-    return template({   font_noto_sans_latin_ext:   (await props.methods.commonConvertBinary(
-                                                        'font/woff2',
-                                                        '/apps/common/public/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5aDdu2ui.woff2'))
-                                                        .result.resource,
-                        font_noto_sans_latin:       (await props.methods.commonConvertBinary(
-                                                        'font/woff2',
-                                                        '/apps/common/public/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5a7duw.woff2'))
-                                                        .result.resource,
+    return template({   font_noto_sans_latin_ext:   (await props.methods.commonResourceFile({
+                                                        app_id:0,
+                                                        resource_id:'/common/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5aDdu2ui.woff2',
+                                                        content_type:'font/woff2',
+                                                        data_app_id:0
+                                                    })).result.resource,
+                                                    
+                        font_noto_sans_latin:       (await props.methods.commonResourceFile({
+                                                        app_id:0,
+                                                        resource_id:'/common/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5a7duw.woff2',
+                                                        content_type:'font/woff2',
+                                                        data_app_id:0
+                                                    })).result.resource,
                         message:'',
                         footer:''
     });
