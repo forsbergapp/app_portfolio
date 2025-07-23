@@ -8,19 +8,20 @@ All apps use pure Javascript (ES6+), Typescript, Vue, React, HTML and CSS withou
 All apps use Vue SFC pattern and realtime switchable framework between Vue, React and Javascipt.
 All apps use pure div elements in HTML without any semantic HTML and without any specific user agent CSS.
 All apps use mostly logographic UI compared to traditional phonemic UI
-All apps use common user access and any user data is saved in each app for the user.
 
-Apps and server use encrypted transport without the need of HTTPS.
+Apps and server use encrypted REST API and app resource transport including fonts without the need of HTTPS.
 Server uses Node.js and does not use any third party modules in production.
 Server renders apps using Vue SFC pattern.
 Server uses secure REST API with openAPI documentation used as documentation and business logic.
 Server uses ORM Database and noSQL pattern.
 
-Implemented with many examples of patterns 
+Implemented with many examples of patterns
+- Web crypto API without browser or protocol restrictions
 - Software as a Service (SaaS)
 - Infrastructure As Code (IaC)
 - Frontend For Backend (FFB)
 - Backend For Frontend (BFF)
+- Backend For External (BFE)
 - ISO20022
 - openAPI
 - CI/CD
@@ -29,6 +30,7 @@ Implemented with many examples of patterns
 - object relational mapping (ORM) database with PK, UK and FK table constraints including cascade delete for tables and support for non tables like key value and documents
 - circuitbreaker
 - message queue
+- email message pattern using message queue pattern
 - factory
 - race condition
 - file transaction management
@@ -46,7 +48,7 @@ Databases used as reference to implement database patterns are MariaDB, MySQL, O
 A global support implemented in client with ALL Unicode characters supported by Noto Sans font
 included different Arabic scripts and different font heights (Nastaliq).
 Any regional setting supported including direction right to left. More than 500 locales with language and
-country translations. Logographic UI chosen is implemented to minimize text usage and to provide simplier and better explanation to a global audience.
+country translations. Logographic UI chosen is implemented to minimize text usage and to provide simpler and better explanation to a global audience.
 
 Developed in Visual Studio Code in Windows with integration with Github following 
 Scrum agile project management framework and deployed on Oracle Cloud and Ubuntu server.

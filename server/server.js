@@ -510,7 +510,7 @@ const serverRequest = async parameters =>{
                                                                                                 app_id:parameters['app-id'],
                                                                                                 jwk:JSON.parse(atob(secret)).jwk,
                                                                                                 iv:JSON.parse(atob(secret)).iv,
-                                                                                                data:'serverRequest'})})
+                                                                                                data:JSON.stringify({app_id: parameters['app-id'] })})})
     };
     
     const body =    JSON.stringify({
