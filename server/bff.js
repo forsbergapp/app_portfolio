@@ -580,7 +580,23 @@ const bffResponse = async parameters =>{
                 }
                 else{
                     //request not using method POST and url that starts with /bff/x/
-                    return null;
+                    return  {
+                            app_id:         0,
+                            endpoint:       'APP',
+                            host:           req.headers.host ?? '', 
+                            url:            req.url,
+                            method:         req.method,
+                            query:          '',
+                            body:           null,
+                            security_app:   null,
+                            authorization:  null, 
+                            ip:             req.headers['x-forwarded-for'] || req.ip, 
+                            user_agent:     req.headers['user-agent'], 
+                            accept_language:req.headers['accept-language'], 
+                            //response
+                            jwk:            null,
+                            iv:             null,
+                            res:            res};
                 }
             }
             else{
@@ -685,17 +701,6 @@ const bffResponse = async parameters =>{
                         !bff_parameters.url?.startsWith(configServer.SERVER.filter(row=>'REST_RESOURCE_BFF' in row)[0].REST_RESOURCE_BFF + '/')){
                         //use common app id for APP since no app id decided
                         switch (true){
-                            //font src used in a font css
-                            case (bff_parameters.url.startsWith('/common/css/font/')):{
-                                return bffResponse({app_id:common_app_id,
-                                                    result_request: await app_common.commonResourceFile({   app_id:common_app_id, 
-                                                                            resource_id:bff_parameters.url, 
-                                                                            content_type:'',
-                                                                            data_app_id: common_app_id}),
-                                                                            host:bff_parameters.host,
-                                                                            route : 'APP',
-                                                                            res:bff_parameters.res});
-                            }
                             case bff_parameters.url == '/':{
                                 //App route
                                 return bffResponse({app_id:common_app_id,
