@@ -175,9 +175,10 @@ const component = async props => {
         if (cube_result.length>0){
             const cube_result_lov = cube_result.map(row=>{return {
                 //use base64 for solution in id column
+                //replace single quote display with ’ to avoid string issues
                 id:props.methods.commonWindowToBase64(row.cube_solution, true), 
                 cube_solution: `${row.cube_solution_model==0?ICONS.robot:ICONS.human} 
-                                (${ICONS.moves}:${row.cube_solution_length}, ${ICONS.time}:${row.cube_solution_time}) - ${row.cube_solution}`}; 
+                                (${ICONS.moves}:${row.cube_solution_length}, ${ICONS.time}:${row.cube_solution_time}) - ${row.cube_solution.replaceAll('\'', '’')}`}; 
             });
             /**
              * Start cube moves if button solve clicked or show cube step by step cube moves
