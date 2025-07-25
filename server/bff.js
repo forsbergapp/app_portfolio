@@ -1004,9 +1004,9 @@ const bffRestApi = async (routesparameters) =>{
                 for (const key of Object.entries(parametersIn))
                     if (key[1]?.type == 'PATH')
                         delete parametersIn[key[0]];
-                //replace metadata with value
+                //replace temporary metadata with value
                 Object.keys(parametersIn).forEach(key=>
-                    parametersIn[key]= (typeof parametersIn[key] == 'object' && parametersIn[key]!=null)?
+                    parametersIn[key]= (typeof parametersIn[key] == 'object' && parametersIn[key]?.constructor.name !='Array' && parametersIn[key]!=null)?
                                             parametersIn[key].data:
                                                 parametersIn[key]
                 );
