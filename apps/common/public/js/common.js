@@ -1030,6 +1030,7 @@ const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
                                     ['shape-rendering', 'shapeRendering'],
                                     ['xmlns:xlink',     'xmlnsXlink'],
                                     //other attributes
+                                    ['charset',         'charSet'],
                                     ['tabindex',        'tabIndex'],
                                     ['contenteditable', 'contentEditable'],
                                     ];
@@ -1059,10 +1060,15 @@ const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
                 /**@type{Object.<string, {}>} */
                 const style_object = {};
                 for (const style of subelement.style){
-                    style_object[style] = subelement.style[style];
+                    //rename used css properties
+                    style_object[style
+                                .replace('background-image', 'backgroundImage')
+                                .replace('background-color', 'backgroundColor')] = subelement.style[style];
                 }
-                props.style = {style:{...style_object}};
+                props.style = {...style_object};
             }
+            //replace '' with null
+            props.style = props.style==''?null:props.style;
             const reactobj = subelement.childElementCount>0?React_create_element(subelement.nodeName.toLowerCase(), 
                                                 props,
                                                 commonFrameworkHtml2ReactComponent(React_create_element, subelement.children)):
