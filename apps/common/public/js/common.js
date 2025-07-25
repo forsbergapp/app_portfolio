@@ -1063,7 +1063,13 @@ const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
                     //rename used css properties
                     style_object[style
                                 .replace('background-image', 'backgroundImage')
-                                .replace('background-color', 'backgroundColor')] = subelement.style[style];
+                                .replace('background-color', 'backgroundColor')
+                                .replace('background-size', 'backgroundSize')
+                                .replace('z-index', 'zIndex')
+                                .replace('margin-left', 'marginLeft')
+                                .replace('margin-right', 'marginRight')
+                                .replace('margin-top', 'marginTop')
+                                .replace('margin-bottom', 'marginBottom')] = subelement.style[style];
                 }
                 props.style = {...style_object};
             }
