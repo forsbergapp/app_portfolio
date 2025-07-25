@@ -33,9 +33,9 @@ const template = props => `
                                 data-subject='${row.message.subject}'
                                 data-message='${row.message.message}'>
                                 <div class='common_dialogue_user_menu_messages_col common_dialogue_user_menu_messages_col_delete common_icon'></div>
-                                <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${props.commonMiscFormatJsonDate(row.created??'')}</div>
-                                <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${row.message.subject}</div>
-                                <div class='common_dialogue_user_menu_messages_col' class='common_icon'>${row.message.sender ?? ''}</div>
+                                <div class='common_dialogue_user_menu_messages_col'>${props.commonMiscFormatJsonDate(row.created??'')}</div>
+                                <div class='common_dialogue_user_menu_messages_col'>${row.message.subject}</div>
+                                <div class='common_dialogue_user_menu_messages_col'>${row.message.sender ?? ''}</div>
                             </div>`).join('')
                             }`;
 /**
