@@ -3220,10 +3220,17 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
                 COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML ='<div id=\'tempmount\'></div>'; 
                 const application = ReactDOM.createRoot(COMMON_DOCUMENT.querySelector(`#${mount_div} #tempmount`));
                 application.render( component);
-                await new Promise ((resolve)=>{commonWindowSetTimeout(()=> resolve(null), 200);});
-                //React is only used as a parser of HTML and all Reacts events are removed by removing tempmount div
-                //Mount template HTML
-                COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = template;    
+                const mount = async () =>{
+                    //React is only used as a parser of HTML and all Reacts events are removed by removing tempmount div
+                    //Mount template HTML
+                    if (COMMON_DOCUMENT.querySelector(`#${mount_div}`)){
+                        COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = template;
+                    }
+                    else
+                        await new Promise ((resolve)=>{commonWindowSetTimeout(()=> resolve(mount()), 200);});
+                };
+                //wait until react is finished
+                await mount();
             } catch (error) {
                 COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = template;
             }            

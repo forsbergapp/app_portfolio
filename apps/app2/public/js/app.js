@@ -282,18 +282,19 @@ const appFrameworkSet = async (framework=null) =>
  * @returns {Promise.<void>}
  */
 const appInit = async () => {
-    appAppsGet();
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
         methods:    null,
         path:       '/component/app.js'})
-    .then(()=>
+    .then(()=>{
+        appAppsGet();
         common.commonComponentRender({
             mountDiv:   'common_profile_search',
             data:       null,
             methods:    null,
-            path:       '/common/component/common_profile_search.js'}))
+            path:       '/common/component/common_profile_search.js'});
+    })
     .then(()=>
         common.commonComponentRender({
             mountDiv:   'app_profile_toolbar',
