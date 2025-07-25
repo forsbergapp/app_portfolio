@@ -76,14 +76,14 @@ const cubeSolve = async parameters =>{
 				if (solver2_moves_from_solved=='')
 						return {result:[], type:'JSON'};
 				else{
-                    socketClientPostMessage({   app_id:parameters.app_id,
-                                                resource_id:null,
-                                                data:{  data_app_id:parameters.app_id,
-                                                        iam_user_id:null,
-                                                        idToken:parameters.idToken,
-                                                        message:JSON.stringify({part:1, total:3, text:''}),
-                                                        message_type:'PROGRESS'
-                                                    }
+                    await socketClientPostMessage({ app_id:parameters.app_id,
+                                                    resource_id:null,
+                                                    data:{  data_app_id:parameters.app_id,
+                                                            iam_user_id:null,
+                                                            idToken:parameters.idToken,
+                                                            message:JSON.stringify({part:1, total:3, text:''}),
+                                                            message_type:'PROGRESS'
+                                                        }
                                             });
 					// Solve using Kociemba algorithm from calculated moves from solved using first Thistlewaite
 					/**
@@ -103,15 +103,7 @@ const cubeSolve = async parameters =>{
 						});
 					};					
 					const solution1 = await solve1(solver2_moves_from_solved);
-                    socketClientPostMessage({   app_id:parameters.app_id,
-                                                resource_id:null,
-                                                data:{  data_app_id:parameters.app_id,
-                                                        iam_user_id:null,
-                                                        idToken:parameters.idToken,
-                                                        message:JSON.stringify({part:2, total:3, text:''}),
-                                                        message_type:'PROGRESS'
-                                                    }
-                                            });
+                    
 					const timer2 = Date.now();
 					const solution2 = solver2.solve(parameters.data.cube_currentstate, parameters.data.cube_goalstate ?? GOAL_SOLVE);
 					const timer3 = Date.now();
