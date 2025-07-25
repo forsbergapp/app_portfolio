@@ -17,7 +17,7 @@
  * @returns {string}
  */
 const template = props =>`  <div id='cube'>
-                                <svg xmlns='http://www.w3.org/2000/svg'>
+                                <svg>
                                     ${Array(...Array(156)).map((i, index)=>
                                         `<path class='cube_face' id='cube_face_${index}'/>`
                                         ).join('')

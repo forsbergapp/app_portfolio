@@ -9,7 +9,7 @@
 
 const { parentPort, workerData } = await import('node:worker_threads');
 const {default:cuberSolver1} = await import('./index.js');
-const result = cuberSolver1.solve(workerData, 'kociemba');
+const result = cuberSolver1.solve(workerData);
 /**@ts-ignore */
 parentPort.postMessage(result);
 export {};
