@@ -65,7 +65,7 @@
     },
     {
         "id":5,
-        "menu":"4 Configuration",
+        "menu":"5 Configuration",
         "type":"GUIDE",
         "menu_sub":[
                 {   "id":1,
