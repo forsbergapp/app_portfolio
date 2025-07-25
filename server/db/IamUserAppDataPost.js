@@ -169,7 +169,7 @@ const getViewProfileStatPost = async parameters =>{
                                 top:serverUtilNumberValue(parameters.data.statchoice)==4?
                                         'LIKED_POST':
                                             'VIEWED_POST',
-                                iam_user_id:row.id,
+                                id:row.id,
                                 avatar:row.avatar,
                                 username:row.username,
                                 count:serverUtilNumberValue(parameters.data.statchoice)==4?
