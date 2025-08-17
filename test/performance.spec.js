@@ -19,7 +19,6 @@ const test = async t =>
         return await new Promise(resolve=>
         t.it('should handle 100 concurrent requests without any error within 10 seconds', async () =>{ 
                 const {serverUtilNumberValue} = await import('../server/server.js');
-                const {serverProcess} = await import('../server/server.js');
                 const ConfigServer = await import('../server/db/ConfigServer.js');
 
                 /**@type{number} */
@@ -29,9 +28,6 @@ const test = async t =>
                 const PORT = serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
                 const requests = [];
                 const totalRequests = 100;
-                //set parameter to avoid certificate errors
-                const old = serverProcess.env.NODE_TLS_REJECT_UNAUTHORIZED;
-                serverProcess.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
                 let err=0;
                 /**@type{number[]} */
                 const request_status = [];
@@ -51,7 +47,6 @@ const test = async t =>
                 }
                 const start = Date.now();
                 await Promise.all(requests);
-                serverProcess.env.NODE_TLS_REJECT_UNAUTHORIZED=old;
                 const total_time = (Date.now() -start)/1000;
 
                 return [
