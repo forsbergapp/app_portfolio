@@ -675,6 +675,10 @@ const serverStart = async () =>{
                     }
                 });
         });
+        //create dummy default https listener that will be destroyed or browser might hang
+        const net = await import('node:net');
+        net.createServer(socket => socket.destroy()).listen(443, () => null);
+
     } catch (/**@type{server_server_error}*/error) {
         Log.post({   app_id:0, 
             data:{  object:'LogServerError', 
