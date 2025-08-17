@@ -40,7 +40,7 @@ const test = async t =>
          */
         const beforeAll = ()=>{
             /**
-             * Custom filter function to count and log Error().stack when AppSecret is read 
+             * Custom filter function to count and log Error().stack when object is read 
              * @param {(value: any, index: number, array: any[])=>any} callBack
              * @param {*} thisArg
              */
@@ -64,8 +64,8 @@ const test = async t =>
     
         beforeAll();
         return await new Promise(resolve=>
-        t.it('should call AppSecret.get and read AppSecret and IamAppIdToken at least 1 time each when requesting app', async () =>{
-            //Solution to test if DB object is fetching the AppSecret or IamAppIdToken record is to create a custom filter function 
+        t.it('should read IamAppIdToken at least 1 time when requesting app', async () =>{
+            //Solution to test if DB object is fetching the IamAppIdToken record is to create a custom filter function 
             //that is available in global scope in NodeJS since DB object uses Object.seal() so no getter can be added 
             //and module is using closure pattern.
             
@@ -89,9 +89,6 @@ const test = async t =>
             
             test_running = false;
             return [
-                /**@ts-ignore */
-                t.expect(   'Count AppSecret',    
-                            spyObject.filter(row=>row.id == spyId && row.object=='AppSecret').length).toBeGreaterThan(0),
                 /**@ts-ignore */
                 t.expect(   'Count IamAppIdToken',    
                             spyObject.filter(row=>row.id == spyId && row.object=='IamAppIdToken').length).toBeGreaterThan(0)

@@ -5,8 +5,7 @@
 
 /**
  * @import {test_spec_result, 
- *          server_db_table_App,
- *          server_bff_parameters} from '../server/types.js'
+ *          server_db_table_App} from '../server/types.js'
  */
 
 /**
