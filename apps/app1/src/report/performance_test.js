@@ -90,7 +90,6 @@ const component = async props => {
     const {commonRegistryAppModule} = await import('../../../common/src/common.js');
     const AppModuleQueue = await import('../../../../server/db/AppModuleQueue.js');
     const ConfigServer = await import('../../../../server/db/ConfigServer.js');
-    const {serverProcess} = await import('../../../../server/server.js');
 
     const PROTOCOL = 'http://';
     const HOST = ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER', parameter:'HOST'}}).result;
@@ -396,16 +395,10 @@ const component = async props => {
                                     }))
                     .catch((err)=>{throw err;});
     };
-    //set parameter to avoid certificate errors
-    const old = serverProcess.env.NODE_TLS_REJECT_UNAUTHORIZED;
-    serverProcess.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
     const report = await new Benchmark({  concurrency: Number(props.queue_parameters.concurrency),
                                     requests: Number(props.queue_parameters.requests),
                                     name:commonRegistryAppModule(props.app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).common_name
                                     }).run();
-
-    serverProcess.env.NODE_TLS_REJECT_UNAUTHORIZED=old;
-
     return template(report);
 };
 /**@type{server_apps_module_metadata[]}*/
