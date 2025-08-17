@@ -80,7 +80,16 @@ resource "oci_core_security_list" "security-list" {
     }
     description = "Allow HTTP"
   }
-    ingress_security_rules {
+  ingress_security_rules {
+    protocol = "6" #tcp protocol
+    source  = "0.0.0.0/0"
+    tcp_options {
+        min = 443
+        max = 443
+    }
+    description = "Allow HTTPS"
+  }
+  ingress_security_rules {
     protocol = "6" #tcp protocol
     source  = "0.0.0.0/0"
     tcp_options {
@@ -140,6 +149,7 @@ resource "oci_core_instance" "compute_instance_network" {
                               sudo apt-get install ufw -y
                               sudo ufw allow 22/tcp
                               sudo ufw allow 80/tcp
+                              sudo ufw allow 443/tcp
                               sudo ufw allow 3000/tcp
                               sudo ufw allow 3333/tcp
                               sudo ufw --force enable
@@ -188,6 +198,7 @@ resource "oci_core_instance" "compute_instance_only" {
                               sudo apt-get install ufw -y
                               sudo ufw allow 22/tcp
                               sudo ufw allow 80/tcp
+                              sudo ufw allow 443/tcp
                               sudo ufw allow 3000/tcp
                               sudo ufw allow 3333/tcp
                               sudo ufw --force enable
