@@ -78,10 +78,7 @@ const component = async props => {
                                     null;
                             
     
-    const onMounted = async () =>{
-        props.methods.COMMON_DOCUMENT.querySelector('#common_window_info').style.visibility='visible';
-        props.methods.COMMON_DOCUMENT.querySelector('#common_window_info_info').style.overflow= props.data.info=='URL'?'hidden':'auto';
-    };
+    const onMounted = async () => props.methods.COMMON_DOCUMENT.querySelector('#common_window_info').style.visibility='visible';
     
     return {
         lifecycle:  {onMounted:onMounted},
