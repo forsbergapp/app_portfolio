@@ -1,15 +1,13 @@
-/*  Fonts: are ordered in groups:
+/*  Fonts: are ordered in groups:*/
+/*  Fonts: Default*/
+/*  Fonts: Arabic*/
+/*  Fonts: Major scripts*/
+/*  Fonts: Symbols*/
+/*  Fonts: Minor scripts*/
+/*  Fonts: Default*/
 
-    Fonts: Default
-    Fonts: Arabic
-    Fonts: Major scripts
-    Fonts: Symbols
-    Fonts: Minor scripts
-    Fonts: Default
-*/
-/*  Fonts: Default
-    Font:  Noto Sans + Noto Sans Mono
-*/
+/*  Fonts: Default*/
+/*  Font:  Noto Sans + Noto Sans Mono*/
 
 /* cyrillic-ext */
 @font-face {
@@ -311,12 +309,12 @@
   src: url(/common/css/font/notosansmono/v30/BngcUXNETWXI6LwhGYvaxZikqZqK6fBq6kPvUce2oAZ2evCj.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-/*  Fonts: Arabic
-    Font:  Noto Sans Arabic
-    Font:  Noto Kufi Arabic
-    Font:  Noto Naskh Arabic
-    Font:  Noto Nastaliq Urdu
-*/
+/*  Fonts: Arabic */
+/*  Font:  Noto Sans Arabic */
+/*  Font:  Noto Kufi Arabic */
+/*  Font:  Noto Naskh Arabic */
+/*  Font:  Noto Nastaliq Urdu */
+
 /* arabic */
 @font-face {
     font-family: 'Noto Kufi Arabic';
@@ -463,13 +461,13 @@
     src: url(/common/css/font/notosansarabic/v18/nwpCtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlj4wv4o.woff2) format('woff2');
     unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
-/*  Fonts Asian:
-    Noto Sans JP
-    Noto Sans KR
-    Noto Sans HK
-    Noto Sans SC
-    Noto Sans TC
-*/
+/*  Fonts Asian: */
+/*  Noto Sans JP */
+/*  Noto Sans KR */
+/*  Noto Sans HK */
+/*  Noto Sans SC */
+/*  Noto Sans TC */
+
 /* [0] */
 @font-face {
     font-family: 'Noto Sans HK';
@@ -10604,21 +10602,21 @@
     src: url(/common/css/font/notosanstc/v35/-nF7OG829Oofr2wohFbTp9i1OCEK.woff2) format('woff2');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
-/*  Fonts: Major scripts
-    Font:  Noto Sans Bengali
-    Font:  Noto Sans Gujarati
-    Font:  Noto Sans Hebrew
-    Font:  Noto Sans Javanese
-    Font:  Noto Sans Kannada
-    Font:  Noto Sans Khmer
-    Font:  Noto Sans Malayalam
-    Font:  Noto Sans Sinhala
-    Font:  Noto Sans Sundanese
-    Font:  Noto Sans Tagalog
-    Font:  Noto Sans Tamil
-    Font:  Noto Sans Telugu
-    Font:  Noto Sans Thai
-*/
+/*  Fonts: Major scripts */
+/*  Font:  Noto Sans Bengali */
+/*  Font:  Noto Sans Gujarati */
+/*  Font:  Noto Sans Hebrew */
+/*  Font:  Noto Sans Javanese */
+/*  Font:  Noto Sans Kannada */
+/*  Font:  Noto Sans Khmer */
+/*  Font:  Noto Sans Malayalam */
+/*  Font:  Noto Sans Sinhala */
+/*  Font:  Noto Sans Sundanese */
+/*  Font:  Noto Sans Tagalog */
+/*  Font:  Noto Sans Tamil */
+/*  Font:  Noto Sans Telugu */
+/*  Font:  Noto Sans Thai */
+
 /* bengali */
 @font-face {
     font-family: 'Noto Sans Bengali';
@@ -11274,16 +11272,16 @@
     src: url(/common/css/font/notosansthai/v25/iJWQBXeUZi_OHPqn4wq6hQ2_hbJ1xyN9wd43SofNWcdfPI2h.woff2) format('woff2');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
-/*  Fonts: Symbols
-    Font:  Noto Emoji
-    Font:  Noto Sans Anatolian Hieroglyphs
-    Font:  Noto Sans Egyptian Hieroglyphs
-    Font:  Noto Sans Indic Siyaq NUmbers
-    Font:  Noto Sans Math
-    Font:  Noto Sans Music
-    Font:  Noto Sans Symbols 2
-    Font:  Noto Sans Symbols
-*/
+/*  Fonts: Symbols */
+/*  Font:  Noto Emoji */
+/*  Font:  Noto Sans Anatolian Hieroglyphs */
+/*  Font:  Noto Sans Egyptian Hieroglyphs */
+/*  Font:  Noto Sans Indic Siyaq NUmbers */
+/*  Font:  Noto Sans Math */
+/*  Font:  Noto Sans Music */
+/*  Font:  Noto Sans Symbols 2 */
+/*  Font:  Noto Sans Symbols */
+
 /* [0] */
 @font-face {
     font-family: 'Noto Emoji';
@@ -11707,126 +11705,126 @@
     src: url(/common/css/font/notosanssymbols2/v23/I_uyMoGduATTei9eI8daxVHDyfisHr71-pTgfA.woff2) format('woff2');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
-/*  Fonts: Minor scripts
-    Font:  Noto Sans Adlam Unjoined
-    Font:  Noto Sans Adlam
-    Font:  Noto Sans Armenian
-    Font:  Noto Sans Avestan
-    Font:  Noto Sans Balinese
-    Font:  Noto Sans Bamum
-    Font:  Noto Sans Bassa Vah
-    Font:  Noto Sans Batak
-    Font:  Noto Sans Bhaiksuki
-    Font:  Noto Sans Brahmi
-    Font:  Noto Sans Buginese
-    Font:  Noto Sans Buhid
-    Font:  Noto Sans Canadian Aboriginal
-    Font:  Noto Sans Carian
-    Font:  Noto Sans Caucasian Albanian
-    Font:  Noto Sans Chakma
-    Font:  Noto Sans Cham
-    Font:  Noto Sans Cherokee
-    Font:  Noto Sans Coptic
-    Font:  Noto Sans Cuneiform
-    Font:  Noto Sans Cypriot
-    Font:  Noto Sans Deseret
-    Font:  Noto Sans Duployan
-    Font:  Noto Sans Elbasan
-    Font:  Noto Sans Elymaic
-    Font:  Noto Sans Georgian
-    Font:  Noto Sans Glagolitic
-    Font:  Noto Sans Gothic
-    Font:  Noto Sans Grantha
-    Font:  Noto Sans Gunjala Gondi
-    Font:  Noto Sans Gurmukhi
-    Font:  Noto Sans Hanifi Rohingya
-    Font:  Noto Sans Hanunoo
-    Font:  Noto Sans Hatran
-    Font:  Noto Sans Imperial Aramaic
-    Font:  Noto Sans Indic Devanagari
-    Font:  Noto Sans Inscriptional Pahlavi
-    Font:  Noto Sans Inscriptional Parthian
-    Font:  Noto Sans Kaithi
-    Font:  Noto Sans Kayah Li
-    Font:  Noto Sans Kharoshthi
-    Font:  Noto Sans Khojki
-    Font:  Noto Sans Khudawadi
-    Font:  Noto Sans Lao
-    Font:  Noto Sans Lepcha
-    Font:  Noto Sans Limbu
-    Font:  Noto Sans Linear A
-    Font:  Noto Sans Linear B
-    Font:  Noto Sans Lisu
-    Font:  Noto Sans Lycian
-    Font:  Noto Sans Lydian
-    Font:  Noto Sans Mahajani
-    Font:  Noto Sans Mandaic
-    Font:  Noto Sans Manichaean
-    Font:  Noto Sans Marchen
-    Font:  Noto Sans Masaram Gondi
-    Font:  Noto Sans Mayan Numerals
-    Font:  Noto Sans Medefaidrin
-    Font:  Noto Sans Meetei Mayek
-    Font:  Noto Sans Meroitic
-    Font:  Noto Sans Miao
-    Font:  Noto Sans Modi
-    Font:  Noto Sans Mongolia
-    Font:  Noto Sans Mro
-    Font:  Noto Sans Multani
-    Font:  Noto Sans Myanmar
-    Font:  Noto Sans N'Ko
-    Font:  Noto Sans Nabataean
-    Font:  Noto Sans New Tai Lue
-    Font:  Noto Sans Newa
-    Font:  Noto Sans Nushu
-    Font:  Noto Sans Ogham
-    Font:  Noto Sans Ol Chiki
-    Font:  Noto Sans Old Hungarian
-    Font:  Noto Sans Old Italic
-    Font:  Noto Sans Old North Arabian
-    Font:  Noto Sans Old Permic
-    Font:  Noto Sans Old Persian
-    Font:  Noto Sans Old Sogdian
-    Font:  Noto Sans Old South Arabian
-    Font:  Noto Sans Old Turkic
-    Font:  Noto Sans Oriya
-    Font:  Noto Sans Osage
-    Font:  Noto Sans Osmanya
-    Font:  Noto Sans Pahawh Hmong
-    Font:  Noto Sans Palmyrene
-    Font:  Noto Sans Pau Cin Hau
-    Font:  Noto Sans Phags Pa
-    Font:  Noto Sans Phoenician
-    Font:  Noto Sans Psalter Pahlavi
-    Font:  Noto Sans Rejang
-    Font:  Noto Sans Runic
-    Font:  Noto Sans Samaritan
-    Font:  Noto Sans Saurashtra
-    Font:  Noto Sans Sharada
-    Font:  Noto Sans Shavian
-    Font:  Noto Sans Siddham
-    Font:  Noto Sans Sogdian
-    Font:  Noto Sans Sora Sompeng
-    Font:  Noto Sans Soyombo
-    Font:  Noto Sans Syloti Nagri
-    Font:  Noto Sans Syriac
-    Font:  Noto Sans Tagbanwa
-    Font:  Noto Sans Tai Le
-    Font:  Noto Sans Tai Tham
-    Font:  Noto Sans Tai Viet
-    Font:  Noto Sans Takri
-    Font:  Noto Sans Tamil Supplement
-    Font:  Noto Sans Thaana
-    Font:  Noto Sans Tifinagh
-    Font:  Noto Sans Tirhuta
-    Font:  Noto Sans Traditional Nushu
-    Font:  Noto Sans Ugaritic
-    Font:  Noto Sans Vai
-    Font:  Noto Sans Wancho
-    Font:  Noto Sans Warang Citi
-    Font:  Noto Sans Yi
-    Font:  Noto Sans Zanabazar Square
-*/
+/*  Fonts: Minor scripts */
+/*  Font:  Noto Sans Adlam Unjoined */
+/*  Font:  Noto Sans Adlam */
+/*  Font:  Noto Sans Armenian */
+/*  Font:  Noto Sans Avestan */
+/*  Font:  Noto Sans Balinese */
+/*  Font:  Noto Sans Bamum */
+/*  Font:  Noto Sans Bassa Vah */
+/*  Font:  Noto Sans Batak */
+/*  Font:  Noto Sans Bhaiksuki */
+/*  Font:  Noto Sans Brahmi */
+/*  Font:  Noto Sans Buginese */
+/*  Font:  Noto Sans Buhid */
+/*  Font:  Noto Sans Canadian Aboriginal */
+/*  Font:  Noto Sans Carian */
+/*  Font:  Noto Sans Caucasian Albanian */
+/*  Font:  Noto Sans Chakma */
+/*  Font:  Noto Sans Cham */
+/*  Font:  Noto Sans Cherokee */
+/*  Font:  Noto Sans Coptic */
+/*  Font:  Noto Sans Cuneiform */
+/*  Font:  Noto Sans Cypriot */
+/*  Font:  Noto Sans Deseret */
+/*  Font:  Noto Sans Duployan */
+/*  Font:  Noto Sans Elbasan */
+/*  Font:  Noto Sans Elymaic */
+/*  Font:  Noto Sans Georgian */
+/*  Font:  Noto Sans Glagolitic */
+/*  Font:  Noto Sans Gothic */
+/*  Font:  Noto Sans Grantha */
+/*  Font:  Noto Sans Gunjala Gondi */
+/*  Font:  Noto Sans Gurmukhi */
+/*  Font:  Noto Sans Hanifi Rohingya */
+/*  Font:  Noto Sans Hanunoo */
+/*  Font:  Noto Sans Hatran */
+/*  Font:  Noto Sans Imperial Aramaic */
+/*  Font:  Noto Sans Indic Devanagari */
+/*  Font:  Noto Sans Inscriptional Pahlavi */
+/*  Font:  Noto Sans Inscriptional Parthian */
+/*  Font:  Noto Sans Kaithi */
+/*  Font:  Noto Sans Kayah Li */
+/*  Font:  Noto Sans Kharoshthi */
+/*  Font:  Noto Sans Khojki */
+/*  Font:  Noto Sans Khudawadi */
+/*  Font:  Noto Sans Lao */
+/*  Font:  Noto Sans Lepcha */
+/*  Font:  Noto Sans Limbu */
+/*  Font:  Noto Sans Linear A */
+/*  Font:  Noto Sans Linear B */
+/*  Font:  Noto Sans Lisu */
+/*  Font:  Noto Sans Lycian */
+/*  Font:  Noto Sans Lydian */
+/*  Font:  Noto Sans Mahajani */
+/*  Font:  Noto Sans Mandaic */
+/*  Font:  Noto Sans Manichaean */
+/*  Font:  Noto Sans Marchen */
+/*  Font:  Noto Sans Masaram Gondi */
+/*  Font:  Noto Sans Mayan Numerals */
+/*  Font:  Noto Sans Medefaidrin */
+/*  Font:  Noto Sans Meetei Mayek */
+/*  Font:  Noto Sans Meroitic */
+/*  Font:  Noto Sans Miao */
+/*  Font:  Noto Sans Modi */
+/*  Font:  Noto Sans Mongolia */
+/*  Font:  Noto Sans Mro */
+/*  Font:  Noto Sans Multani */
+/*  Font:  Noto Sans Myanmar */
+/*  Font:  Noto Sans N'Ko */
+/*  Font:  Noto Sans Nabataean */
+/*  Font:  Noto Sans New Tai Lue */
+/*  Font:  Noto Sans Newa */
+/*  Font:  Noto Sans Nushu */
+/*  Font:  Noto Sans Ogham */
+/*  Font:  Noto Sans Ol Chiki */
+/*  Font:  Noto Sans Old Hungarian */
+/*  Font:  Noto Sans Old Italic */
+/*  Font:  Noto Sans Old North Arabian */
+/*  Font:  Noto Sans Old Permic */
+/*  Font:  Noto Sans Old Persian */
+/*  Font:  Noto Sans Old Sogdian */
+/*  Font:  Noto Sans Old South Arabian */
+/*  Font:  Noto Sans Old Turkic */
+/*  Font:  Noto Sans Oriya */
+/*  Font:  Noto Sans Osage */
+/*  Font:  Noto Sans Osmanya */
+/*  Font:  Noto Sans Pahawh Hmong */
+/*  Font:  Noto Sans Palmyrene */
+/*  Font:  Noto Sans Pau Cin Hau */
+/*  Font:  Noto Sans Phags Pa */
+/*  Font:  Noto Sans Phoenician */
+/*  Font:  Noto Sans Psalter Pahlavi */
+/*  Font:  Noto Sans Rejang */
+/*  Font:  Noto Sans Runic */
+/*  Font:  Noto Sans Samaritan */
+/*  Font:  Noto Sans Saurashtra */
+/*  Font:  Noto Sans Sharada */
+/*  Font:  Noto Sans Shavian */
+/*  Font:  Noto Sans Siddham */
+/*  Font:  Noto Sans Sogdian */
+/*  Font:  Noto Sans Sora Sompeng */
+/*  Font:  Noto Sans Soyombo */
+/*  Font:  Noto Sans Syloti Nagri */
+/*  Font:  Noto Sans Syriac */
+/*  Font:  Noto Sans Tagbanwa */
+/*  Font:  Noto Sans Tai Le */
+/*  Font:  Noto Sans Tai Tham */
+/*  Font:  Noto Sans Tai Viet */
+/*  Font:  Noto Sans Takri */
+/*  Font:  Noto Sans Tamil Supplement */
+/*  Font:  Noto Sans Thaana */
+/*  Font:  Noto Sans Tifinagh */
+/*  Font:  Noto Sans Tirhuta */
+/*  Font:  Noto Sans Traditional Nushu */
+/*  Font:  Noto Sans Ugaritic */
+/*  Font:  Noto Sans Vai */
+/*  Font:  Noto Sans Wancho */
+/*  Font:  Noto Sans Warang Citi */
+/*  Font:  Noto Sans Yi */
+/*  Font:  Noto Sans Zanabazar Square */
+
 /* adlam */
 @font-face {
     font-family: 'Noto Sans Adlam';
