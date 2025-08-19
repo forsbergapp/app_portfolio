@@ -35,7 +35,7 @@ const appTotpGet = otp_key =>{
      * @param {number} expire
      */
     const countdown = async expire =>{
-        if (COMMON_DOCUMENT.querySelector('#otp_key').textContent !=''){
+        if (COMMON_DOCUMENT.querySelector('#otp_key') && COMMON_DOCUMENT.querySelector('#otp_key').textContent !=''){
             const time_left = (expire * 1000) - (Date.now());
             if (time_left < 0)
                 appTotpGet(COMMON_DOCUMENT.querySelector('#otp_key').textContent);

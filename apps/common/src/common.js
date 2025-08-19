@@ -55,8 +55,9 @@ const commonConvertBinary = async (content_type, path) =>
 
 /**
  * @name commonGetFile
- * @description Returns file from cache in FILES variable or reads from disk, saves in variable and returns file content
- *              Modify function parameter can be used to modify original content
+ * @description Returns file from cache in FILES variable or reads from disk, saves in variable and returns file content.
+ *              Modify function parameter can be used to modify original content.
+ *              Comment rows are removed from all css and javascript except common third party modules before modify function.
  * @function
  * @param{{ app_id:number,
  *          path:string,
@@ -65,6 +66,29 @@ const commonConvertBinary = async (content_type, path) =>
  * @returns {Promise.<*>}
  */
 const commonGetFile = async parameters =>{
+    /**
+     * @param {{path:string,
+     *          file:string
+     *          content_type:string,
+     *          }} parameters
+     */
+    const adjustResult = parameters =>{
+        // remove comment rows for text/css and text/javascript and except third party modules
+        return  (parameters.path.startsWith('/apps/') && 
+                !parameters.path.startsWith('/apps/common/public/modules/') &&
+                ['text/css','text/javascript'].includes(parameters.content_type))?
+                parameters.file
+                .replaceAll('\r','\n')
+                .split('\n')
+                .filter(row=>
+                            !row.trimStart().toLowerCase().startsWith('/*') &&
+                            !row.trimStart().toLowerCase().startsWith('*') &&
+                            !row.trimStart().toLowerCase().startsWith('//') &&
+                            row!='')
+                .join('\n'):
+                    parameters.file;
+    };
+    
     return FILES.data.filter(row=>row[0]==parameters.path)[0]?.[1] ??
             (['font/woff2','image/png', 'image/webp'].includes(parameters.content_type)?
                 fs.promises.readFile(`${serverProcess.cwd()}${parameters.path}`):
@@ -77,7 +101,15 @@ const commonGetFile = async parameters =>{
                                                 /**@ts-ignore */
                                                 `data:${parameters.content_type};base64,${Buffer.from(result, 'binary').toString('base64')}`
                                         :
-                                parameters.modify?parameters.modify(result.toString()):result.toString();
+                                    (parameters.modify?
+                                        parameters.modify(adjustResult({  
+                                                                path:parameters.path,
+                                                                content_type:parameters.content_type,
+                                                                file:result.toString()})):
+                                            adjustResult({  
+                                                path:parameters.path,
+                                                content_type:parameters.content_type,
+                                                file:result.toString()}));
                 /**@ts-ignore */
                 FILES.data.push([parameters.path, file]);
                 return file;

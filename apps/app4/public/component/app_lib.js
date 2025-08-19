@@ -303,56 +303,53 @@ const component = props => {
 	
 	//--------------------- Copyright Block ----------------------
 	/* 
-
-	PrayTimes.js: Prayer Times Calculator (ver 2.3)
-	Copyright (C) 2007-2011 PrayTimes.org
-
-	Developer: Hamid Zarrabi-Zadeh
-	License: GNU LGPL v3.0
-
-	TERMS OF USE:
-		Permission is granted to use this code, with or 
-		without modification, in any website or application 
-		provided that credit is given to the original work 
-		with a link back to PrayTimes.org.
-
-	This program is distributed in the hope that it will 
-	be useful, but WITHOUT ANY WARRANTY. 
-
-	PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.
+    *
+    *	PrayTimes.js: Prayer Times Calculator (ver 2.3)
+    *	Copyright (C) 2007-2011 PrayTimes.org
+    *
+    *	Developer: Hamid Zarrabi-Zadeh
+    *	License: GNU LGPL v3.0
+    *
+    *	TERMS OF USE:
+    *		Permission is granted to use this code, with or 
+    *		without modification, in any website or application 
+    *		provided that credit is given to the original work 
+    *		with a link back to PrayTimes.org.
+    *
+    *	This program is distributed in the hope that it will 
+    *	be useful, but WITHOUT ANY WARRANTY. 
+    *
+    *	PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.
 	*/ 
 	//--------------------- Help and Manual ----------------------
 	/*
-
-	User's Manual: 
-	http://praytimes.org/manual
-
-	Calculation Formulas: 
-	http://praytimes.org/calculation
-
-
-	//------------------------ User Interface -------------------------
-
-
-		getTimes (date, coordinates [, timeZone [, dst [, timeFormat]]]) 
-		
-		setMethod (method)       // set calculation method 
-		adjust (parameters)      // adjust calculation parameters	
-		tune (offsets)           // tune times by given offsets 
-
-		getMethod ()             // get calculation method 
-		getSetting ()            // get current calculation parameters
-		getOffsets ()            // get current time offsets
-
-
-	//------------------------- Sample Usage --------------------------
-
-
-		var PT = new PrayTimes('ISNA');
-		var times = PT.getTimes(new Date(), [43, -80], -5);
-		document.write('Sunrise = '+ times.sunrise)
-
-
+    *	User's Manual: 
+	*   http://praytimes.org/manual
+    *
+	*   Calculation Formulas: 
+	*   http://praytimes.org/calculation
+    */
+	/*------------------------ User Interface -------------------------
+	*	getTimes (date, coordinates [, timeZone [, dst [, timeFormat]]]) 
+	*	
+	*	setMethod (method)       // set calculation method 
+	*	adjust (parameters)      // adjust calculation parameters	
+	*	tune (offsets)           // tune times by given offsets 
+    *
+    *		getMethod ()             // get calculation method 
+    *		getSetting ()            // get current calculation parameters
+    *		getOffsets ()            // get current time offsets
+    *
+    *
+    */
+	/*------------------------- Sample Usage --------------------------
+    *
+    *
+    *		var PT = new PrayTimes('ISNA');
+    *		var times = PT.getTimes(new Date(), [43, -80], -5);
+    *		document.write('Sunrise = '+ times.sunrise)
+    *
+    *
 	*/
 		
 	//----------------------- PrayTimes Class ------------------------
@@ -431,38 +428,34 @@ const component = props => {
 		
 		
 			//----------------------- Parameter Values ----------------------
-			/*
-			
-			// Asr Juristic Methods
-			asrJuristics = [ 
-				'Standard',    // Shafi`i, Maliki, Ja`fari, Hanbali
-				'Hanafi'       // Hanafi
-			],
+            /*
+			*   // Asr Juristic Methods
+			*asrJuristics = [ 
+			*	'Standard',    // Shafi`i, Maliki, Ja`fari, Hanbali
+			*	'Hanafi'       // Hanafi
+			*],
 
+			*   // Midnight Mode
+			*midnightMethods = [ 
+			*	'Standard',    // Mid Sunset to Sunrise
+			*	'Jafari'       // Mid Sunset to Fajr
+			*],
 
-			// Midnight Mode
-			midnightMethods = [ 
-				'Standard',    // Mid Sunset to Sunrise
-				'Jafari'       // Mid Sunset to Fajr
-			],
+			*   // Adjust Methods for Higher Latitudes
+			*highLatMethods = [
+			*	'NightMiddle', // middle of night
+			*	'AngleBased',  // angle/60th of night
+			*	'OneSeventh',  // 1/7th of night
+			*	'None'         // No adjustment
+			*],
 
-
-			// Adjust Methods for Higher Latitudes
-			highLatMethods = [
-				'NightMiddle', // middle of night
-				'AngleBased',  // angle/60th of night
-				'OneSeventh',  // 1/7th of night
-				'None'         // No adjustment
-			],
-
-
-			// Time Formats
-			timeFormats = [
-				'24h',         // 24-hour format
-				'12h',         // 12-hour format
-				'12hNS',       // 12-hour format with no suffix
-				'Float'        // floating point number 
-			],
+			*   // Time Formats
+			*timeFormats = [
+			*	'24h',         // 24-hour format
+			*	'12h',         // 12-hour format
+			*	'12hNS',       // 12-hour format with no suffix
+			*	'Float'        // floating point number 
+			*],
 			*/	
 			//---------------------- Default Settings --------------------
 		
@@ -1549,12 +1542,12 @@ const component = props => {
 		const calc = value==null?{hours:0, minutes:0}:float_to_hourminutes(value);
 		
 		/* 	Intl.DateTimeFormat is about same speed than localtime.toLocaleTimeString
-			although result can vary within about halv second testing speed on year timetable
-
-			times from PRAYTIMES.getTimes are returned with 24 hours format and minutes in decimals using Float format
-
-			using toLocaleString that is about 7 times faster than Intl.DateTimeFormat and toLocaleTimeString
-			however toLocaleTimeString is needed for format 12h since dayPeriod should be locale adjusted
+		*	although result can vary within about halv second testing speed on year timetable
+        *
+        *	times from PRAYTIMES.getTimes are returned with 24 hours format and minutes in decimals using Float format
+        *
+        *	using toLocaleString that is about 7 times faster than Intl.DateTimeFormat and toLocaleTimeString
+        *	however toLocaleTimeString is needed for format 12h since dayPeriod should be locale adjusted
 		*/
 		switch (format){
 			//24h
