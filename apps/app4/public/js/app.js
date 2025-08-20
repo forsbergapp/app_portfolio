@@ -5,8 +5,9 @@
 /**
  * @import {commonMetadata, CommonAppEvent, CommonRESTAPIMethod, CommonComponentResult, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
  * @import {APP_PARAMETERS, APP_user_setting_data, APP_user_setting_record, APP_REPORT_day_user_account_app_data_posts, APP_REPORT_settings, APP_GLOBAL, 
- *          CommonModuleLibTimetable, APP_user_setting} from './types.js'
+ *          APP_user_setting} from './types.js'
  */
+
 
 /**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
@@ -157,14 +158,13 @@ const appReportTimetablePrint = async () => {
     /**@type{CommonComponentResult}*/
     const {template} = await common.commonComponentRender({ mountDiv:   null,
                                                             data:  {   
-                                                            commonMountdiv:null, 
-                                                            appHtml:COMMON_DOCUMENT.querySelector('#paper').outerHTML
-                                                            },
-                                                    methods:{
-                                                            COMMON_DOCUMENT:COMMON_DOCUMENT,
-                                                            commonMiscResourceFetch:common.commonMiscResourceFetch
-                                                            },
-                                                    path: '/component/print.js'});
+                                                                    commonMountdiv:null, 
+                                                                    appHtml:COMMON_DOCUMENT.querySelector('#paper').outerHTML
+                                                                    },
+                                                            methods:{
+                                                                    commonMiscResourceFetch:common.commonMiscResourceFetch
+                                                                    },
+                                                            path: '/component/print.js'});
     template?common.commonMiscPrint(template):null;
 };
 /**
