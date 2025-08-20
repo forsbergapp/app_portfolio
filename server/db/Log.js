@@ -352,7 +352,7 @@ const getFiles = async () => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async parameters => {
-    const ORM = await import('./ORM.js');
+    
     const ConfigServer = await import('./ConfigServer.js');
 
     let log;
@@ -474,6 +474,7 @@ const post = async parameters => {
     if (log==null || log_object==null)
         return {result:{affectedRows:0}, type:'JSON'};
     else{
+        const ORM = await import('./ORM.js');
         await ORM.Execute({ app_id:parameters.app_id, 
                             dml:'POST',object:log_object, 
                             post:{data:{...{id:Date.now()}, 
