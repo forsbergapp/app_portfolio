@@ -38,7 +38,8 @@ const COMMON_GLOBAL = {
     app_function_exception:null,
     app_function_session_expired:null,
     app_function_sse:null,
-    app_fonts:null,
+    app_fonts:[],
+    app_fonts_loaded:[],
     app_requesttimeout_seconds:5,
     app_requesttimeout_admin_minutes:60,
     info_link_policy_name:null,
@@ -572,7 +573,19 @@ const commonMiscPrint = async html => {
     const printelement = COMMON_DOCUMENT.querySelector(`#${id}`);
     printelement.contentWindow.document.open();
     printelement.contentWindow.document.write(html);
+
+    for (const font of COMMON_GLOBAL.app_fonts_loaded) {         
+        const fontNew = new FontFace(
+            font.family,
+            'url(' + font.url + ')',
+            font.attributes
+        );  
+        fontNew.load().then(()=>{
+            printelement.contentWindow.document.fonts.add(fontNew);
+        });
+    }  
     printelement.focus();
+
     //await delay to avoid browser render error
     await new Promise (resolve=>commonWindowSetTimeout(()=> {printelement.contentWindow.print();resolve(null);}, 100));
     COMMON_DOCUMENT.querySelector(`#common_app #${printelement.id}`).remove();
@@ -861,10 +874,15 @@ const commonMiscLoadFont = parameters => {
                                 display:        JSON.parse(cssJSON(fontFaceCSS))['font-display'],
                                 ...(JSON.parse(cssJSON(fontFaceCSS))['unicode-range'] && {'unicodeRange': JSON.parse(cssJSON(fontFaceCSS))['unicode-range']})
                                 };
+            const fontLoad = {family:JSON.parse(cssJSON(fontFaceCSS))['font-family'],
+                                url:   fontResult,
+                                attributes:attributes
+                                };
+            COMMON_GLOBAL.app_fonts_loaded.push(fontLoad);
             const fontNew = new FontFace(
-                    JSON.parse(cssJSON(fontFaceCSS))['font-family'],
-                    'url(' + fontResult + ')',
-                    attributes
+                    fontLoad.family,
+                    'url(' + fontLoad.url + ')',
+                    fontLoad.attributes
                 );  
             fontNew.load().then(()=>{
                 /**@ts-ignore */

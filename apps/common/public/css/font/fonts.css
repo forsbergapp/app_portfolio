@@ -5,10 +5,10 @@
 /*  Fonts: Symbols*/
 /*  Fonts: Minor scripts*/
 /*  Fonts: Default*/
-
+/*  --------------*/
 /*  Fonts: Default*/
 /*  Font:  Noto Sans + Noto Sans Mono*/
-
+/*  --------------*/
 /* cyrillic-ext */
 @font-face {
   font-family: 'Noto Sans';
@@ -314,7 +314,7 @@
 /*  Font:  Noto Kufi Arabic */
 /*  Font:  Noto Naskh Arabic */
 /*  Font:  Noto Nastaliq Urdu */
-
+/*  --------------*/
 /* arabic */
 @font-face {
     font-family: 'Noto Kufi Arabic';
@@ -467,7 +467,7 @@
 /*  Noto Sans HK */
 /*  Noto Sans SC */
 /*  Noto Sans TC */
-
+/*  --------------*/
 /* [0] */
 @font-face {
     font-family: 'Noto Sans HK';
@@ -10616,7 +10616,7 @@
 /*  Font:  Noto Sans Tamil */
 /*  Font:  Noto Sans Telugu */
 /*  Font:  Noto Sans Thai */
-
+/*  --------------*/
 /* bengali */
 @font-face {
     font-family: 'Noto Sans Bengali';
@@ -11281,7 +11281,7 @@
 /*  Font:  Noto Sans Music */
 /*  Font:  Noto Sans Symbols 2 */
 /*  Font:  Noto Sans Symbols */
-
+/*  --------------*/
 /* [0] */
 @font-face {
     font-family: 'Noto Emoji';
@@ -11824,7 +11824,7 @@
 /*  Font:  Noto Sans Warang Citi */
 /*  Font:  Noto Sans Yi */
 /*  Font:  Noto Sans Zanabazar Square */
-
+/*  --------------*/
 /* adlam */
 @font-face {
     font-family: 'Noto Sans Adlam';
