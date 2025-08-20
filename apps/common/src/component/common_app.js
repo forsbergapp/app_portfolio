@@ -31,8 +31,17 @@
                             </head>	
                             <body class='start'>
                                 <script type='module'>                                                                            
+                                    const commonWindowFromBase64 = str => {
+                                        const binary_string = atob(str);
+                                        const len = binary_string.length;
+                                        const bytes = new Uint8Array(len);
+                                        for (let i = 0; i < len; i++) {
+                                            bytes[i] = binary_string.charCodeAt(i);
+                                        }
+                                        return new TextDecoder('utf-8').decode(bytes);
+                                    };
                                     //import common library
-                                    const common = await import(URL.createObjectURL(  new Blob ([atob('${props.jsCommon}')],{type: 'text/javascript'})));
+                                    const common = await import(URL.createObjectURL(  new Blob ([commonWindowFromBase64('${props.jsCommon}')],{type: 'text/javascript'})));
                                     //init
                                     await common[Object.keys(common.default)[0]]({
                                         globals:        '${props.globals}',
