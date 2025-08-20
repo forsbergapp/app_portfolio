@@ -209,10 +209,10 @@ const commonCssFonts = await (async base64=>{
                     }
                     else
                         css.push(row);
-                cssFontFace.push('@' + css.join('').substring(0, css.join('').indexOf('}')+1));
+                cssFontFace.push(css.join('').substring(0, css.join('').indexOf('}')+1));
         }
     }
-    return {css:cssFontFace.join('\n'), db_records:db_records};
+    return {css:cssFontFace.join('\n@'), db_records:db_records};
 })(false);
 
 const circuitBreaker = await serverCircuitBreakerBFE();

@@ -198,6 +198,9 @@
  *              app_function_exception:function|null,
  *              app_function_session_expired:function|null,
  *              app_function_sse:function|null,
+ *              app_fonts:null|[],
+ *              app_requesttimeout_seconds:number,
+ *              app_requesttimeout_admin_minutes:number,
  *              info_link_policy_name:string|null,
  *              info_link_disclaimer_name:string|null,
  *              info_link_terms_name:string|null,
@@ -211,9 +214,8 @@
  *              admin_first_time:number|null,
  *              admin_only:number|null,
  *              x:{ 
- *                  FFB:    (arg0:CommonFFB_parameters) => Promise.<*>,
- *                  encrypt?:(arg0:{iv:string, key:string, data:string})=> string,
- *                  decrypt?:(arg0:{iv:string, key:string, ciphertext:string})=> string 
+ *                  encrypt:(arg0:{iv:string, key:string, data:string})=> string,
+ *                  decrypt:(arg0:{iv:string, key:string, ciphertext:string})=> string 
  *                  uuid?:   string,
  *                  secret?: string},
  *              client_latitude:string|null,

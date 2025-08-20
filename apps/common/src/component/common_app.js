@@ -3,26 +3,17 @@
      */  
 
     /**
-     * @import {server_db_document_ConfigServer, server_db_table_IamAppIdToken} from '../../../../server/types.js';
+     * @import {server_db_document_ConfigServer} from '../../../../server/types.js';
      */
     /**
      * @name template
      * @description Template
      * @function
      * @param {{app_id:number,
-    *          app_admin_app_id:number,
-    *          rest_resource_bff:string,
-    *          app_rest_api_version:string,
-    *          app_request_timeout_seconds: number,
-    *          app_requesttimeout_admin_minutes: number,
-    *          idToken:server_db_table_IamAppIdToken['token'], 
-    *          uuid:string,
-    *          secret:string,
     *          cssCommon:string,
     *          jsCommon:string,
     *          jsCrypto:string,
     *          globals:Object.<String,*>,
-    *          cssFonts:string,
     *          cssFontsStart:string,
     *          app_toolbar_button_start:number,
     *          app_toolbar_button_framework:number,
@@ -39,245 +30,16 @@
                                 <meta name='viewport' content='width=device-width, minimum-scale=1.0, maximum-scale = 1'>
                             </head>	
                             <body class='start'>
-                                <script type='module'>                                        
-                                    /**
-                                    * @description Receives server side event from BFF, decrypts message using start uuid and delegates message
-                                    * @param {{socket:*, 
-                                    *          uuid:string|null, 
-                                    *          secret:string|null}} parameters
-                                    */
-                                    const FFB_SSE = async parameters =>{
-                                        /**
-                                         * @returns {sse_type:string,
-                                         *           sse_message:string}
-                                         */
-                                        const getMessage = BFFmessage =>{
-                                            const messageDecoded = common.commonWindowFromBase64(BFFmessage);
-                                            return {sse_type:JSON.parse(messageDecoded).sse_type,
-                                                    sse_message:JSON.parse(messageDecoded).sse_message};
-                                        }
-                                        const BFFStream = new WritableStream({
-                                            async write(data, controller){
-                                                const BFFmessage = common.COMMON_GLOBAL.x.decrypt({  
-                                                                        iv:         JSON.parse(atob(parameters.secret)).iv,
-                                                                        key:        JSON.parse(atob(parameters.secret)).jwk.k, 
-                                                                        ciphertext: new TextDecoder('utf-8').decode(data).split('\\n\\n')[0].split('data: ')[1]});
-                                                const SSEmessage = getMessage(BFFmessage);
-                                                switch (SSEmessage.sse_type){
-                                                    case 'FONT_URL':{
-                                                        common.commonMiscLoadFont({ app_id:             common.COMMON_GLOBAL.app_id,
-                                                                                    uuid:               parameters.uuid,
-                                                                                    secret:             parameters.secret,
-                                                                                    message:            SSEmessage.sse_message,
-                                                                                    cssFonts:           cssFonts})
-                                                        break;
-                                                    }
-                                                    default:{
-                                                        common.commonSocketSSEShow(SSEmessage);
-                                                        break
-                                                    }
-                                                }
-                                            }
-                                        //The total number of chunks that can be contained in the internal queue before backpressure is applied
-                                        }, new CountQueuingStrategy({ highWaterMark: 1 }));
-                                        const BFF = parameters.socket.pipeTo(BFFStream).catch(()=>common.commonWindowSetTimeout(()=>{common.commonSocketConnectOnline();}, 5000));
-                                    }
-                                    /**
-                                    * @description Front end for backend (FFB) that receives responses 
-                                    *              from backend for frontend (BFF)
-                                    * @param {{app_id:number,
-                                    *          uuid:string,
-                                    *          secret:string,
-                                    *          response_type?:'SSE'|'TEXT'|'BLOB',
-                                    *          spinner_id?:string|null,
-                                    *          timeout?:number|null,
-                                    *          app_admin_app_id:number,
-                                    *          rest_api_version: string,
-                                    *          rest_bff_path   : string,
-                                    *          data:{
-                                    *              locale:string,
-                                    *              idToken: server_db_table_IamAppIdToken['token'],
-                                    *              accessToken?:string,
-                                    *              query?:string|null,
-                                    *              method:string,
-                                    *              authorization_type:string,
-                                    *              username?:string,
-                                    *              password?:string,
-                                    *              body?:*,
-                                    *          }}} parameters
-                                    */
-                                    const FFB = async parameters =>{
-                                        /**@type{number} */
-                                        let status;
-                                        let authorization = null;
-                                        
-                                        parameters.data.query = parameters.data.query==null?'':parameters.data.query;
-                                        parameters.data.body = parameters.data.body?parameters.data.body:null;
-                                        //admin uses ADMIN instead of APP_ACCESS so all ADMIN requests use separate admin token
-                                        const ROLE = (parameters.app_id == parameters.app_admin_app_id && parameters.data.authorization_type =='APP_ACCESS')?
-                                                        'ADMIN':parameters.data.authorization_type;
-                                        switch (ROLE){
-                                            case 'APP_ACCESS':
-                                            case 'APP_ACCESS_VERIFICATION':
-                                            case 'APP_ACCESS_EXTERNAL':
-                                            case 'ADMIN':{
-                                                authorization = 'Bearer ' + parameters.data.accessToken;
-                                                break;
-                                            }
-                                            case 'IAM':{
-                                                authorization = 'Basic ' + btoa(parameters.data.username + ':' + parameters.data.password);
-                                                break;
-                                            }
-                                        }
-                                        //add common query parameter
-                                        parameters.data.query += '&locale=' + (parameters.data.locale??'');
-
-                                        //encode query parameters
-                                        const encodedparameters = parameters.data.query?common.commonWindowToBase64(parameters.data.query):'';
-                                        const bff_path = parameters.rest_bff_path + '/' + 
-                                                            ROLE.toLowerCase() + 
-                                                            '/v' + (parameters.rest_api_version ??1);
-                                        const url = ('/bff/x/' + parameters.uuid);
-
-                                        if (parameters.spinner_id && common.COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
-                                            common.COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.add('css_spinner');
-                                        const resultFetch = {finished:false};
-                                        const options =     {
-                                                            cache:  'no-store',
-                                                            method: 'POST',
-                                                            headers:{
-                                                                        ...(parameters.response_type =='SSE' && {'Cache-control': 'no-cache'}),
-                                                                        'Content-Type': 'application/json',
-                                                                        'Connection':   parameters.response_type =='SSE'?
-                                                                                            'keep-alive':
-                                                                                                'close',
-                                                                    },
-                                                            body: JSON.stringify({
-                                                                    x: common.COMMON_GLOBAL.x.encrypt({
-                                                                        iv:     JSON.parse(common.commonWindowFromBase64(parameters.secret)).iv,
-                                                                        key:    JSON.parse(common.commonWindowFromBase64(parameters.secret)).jwk.k, 
-                                                                        data:JSON.stringify({  
-                                                                                headers:{
-                                                                                        'app-id':       parameters.app_id,
-                                                                                        'app-signature':common.COMMON_GLOBAL.x.encrypt({ 
-                                                                                                            iv:     JSON.parse(common.commonWindowFromBase64(parameters.secret)).iv,
-                                                                                                            key:    JSON.parse(common.commonWindowFromBase64(parameters.secret)).jwk.k, 
-                                                                                                            data:   JSON.stringify({app_id: parameters.app_id })}),
-                                                                                        'app-id-token': 'Bearer ' + parameters.data.idToken,
-                                                                                        ...(authorization && {Authorization: authorization}),
-                                                                                        'Content-Type': parameters.response_type =='SSE'?
-                                                                                                            'text/event-stream':
-                                                                                                                'application/json',
-                                                                                        },
-                                                                                method: parameters.data.method,
-                                                                                url:    bff_path + parameters.data.path + '?parameters=' + encodedparameters,
-                                                                                body:   parameters.data.body?
-                                                                                            JSON.stringify({data:btoa(JSON.stringify(parameters.data.body))}):
-                                                                                                null
-                                                                            })
-                                                                        })
-                                                                })
-                                                            };
-                                        const showError      = message   => common.commonMessageShow('ERROR_BFF', null, null, message);
-                                        return parameters.response_type=='SSE'?
-                                                fetch(url, options).then(result=>FFB_SSE({socket:result.body, uuid:parameters.uuid, secret:parameters.secret})):
-                                                    await Promise.race([ new Promise((resolve)=>
-                                                                        setTimeout(()=>{
-                                                                            if (resultFetch.finished==false){
-                                                                                showError('🗺⛔?');
-                                                                                resolve('🗺⛔?');
-                                                                                throw ('TIMEOUT');
-                                                                            }
-                                                                            }, parameters.app_id == parameters.app_admin_app_id?
-                                                                                    (1000 * 60 * ${props.app_requesttimeout_admin_minutes}):
-                                                                                    parameters.timeout || (1000 * ${props.app_request_timeout_seconds}))),
-                                                                        await fetch(url, options)
-                                                                            .then(response =>{
-                                                                                status = response.status;
-                                                                                return response.text();
-                                                                            })
-                                                                            .then(result => {
-                                                                                const result_decrypted = 
-                                                                                            common.COMMON_GLOBAL.x.decrypt({
-                                                                                                    iv:         JSON.parse(common.commonWindowFromBase64(parameters.secret)).iv,
-                                                                                                    key:        JSON.parse(common.commonWindowFromBase64(parameters.secret)).jwk.k,
-                                                                                                    ciphertext: result});
-                                                                                switch (status){
-                                                                                    case 200:
-                                                                                    case 201:{
-                                                                                        /**@ts-ignore */
-                                                                                        return result_decrypted;
-                                                                                    }
-                                                                                    case 400:{
-                                                                                        //Bad request
-                                                                                        common.commonMessageShow('ERROR_BFF', null, 'message_text', '!');
-                                                                                        throw result_decrypted;
-                                                                                    }
-                                                                                    case 404:   //Not found
-                                                                                    case 401:   //Unauthorized, token expired
-                                                                                    case 403:   //Forbidden, not allowed to login or register new user
-                                                                                    case 503:   //Service unavailable or other error in microservice
-                                                                                    {   
-                                                                                        showError(result_decrypted);
-                                                                                        throw result_decrypted;
-                                                                                    }
-                                                                                    case 500:{
-                                                                                        //Unknown error
-                                                                                        common.commonException(common.COMMON_GLOBAL.app_function_exception, result_decrypted);
-                                                                                        throw result_decrypted;
-                                                                                    }
-                                                                                }
-                                                                            })
-                                                                            .catch(error=>{
-                                                                                throw error;
-                                                                            })
-                                                                            .finally(()=>{
-                                                                                resultFetch.finished=true;
-                                                                                if (parameters.spinner_id && common.COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
-                                                                                    common.COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.remove('css_spinner');
-                                                                            })
-                                        ]);
-                                    }
-                                    //set variables
-                                    const cssFonts = '${props.cssFonts}';
-                                    const cssFontsStart = '${props.cssFontsStart}';
-                                    const cssCommon = '${props.cssCommon}';
-                                    
+                                <script type='module'>                                                                            
                                     //import common library
                                     const common = await import(URL.createObjectURL(  new Blob ([atob('${props.jsCommon}')],{type: 'text/javascript'})));
-                                    
-                                    //apply start fonts + common css
-                                    common.commonMiscCssApply(common.commonWindowFromBase64(cssFontsStart) + common.commonWindowFromBase64(cssCommon));
-                                    
-                                    //set globals
-                                    common.commonGlobals('${props.globals}');
-                                    const {encrypt, decrypt} = await import(URL.createObjectURL(  new Blob ([atob('${props.jsCrypto}')],{type: 'text/javascript'})))
-                                                                    .then(crypto=>{
-                                                                        return {encrypt:crypto.subtle.encrypt, decrypt:crypto.subtle.decrypt};
-                                                                    })
-                                    common.COMMON_GLOBAL.x.FFB = FFB;
-                                    common.COMMON_GLOBAL.x.encrypt = encrypt;
-                                    common.COMMON_GLOBAL.x.decrypt = decrypt;
-
-                                    //init app js
-                                    await common[Object.keys(common.default)[0]]();
-                                    
-                                    //connect to BFF
-                                    await FFB({ app_id:             ${props.app_id},
-                                                uuid:               '${props.uuid}',
-                                                secret:             '${props.secret}',
-                                                response_type:      'SSE',
-                                                app_admin_app_id:   ${props.app_admin_app_id},
-                                                rest_api_version:   '${props.app_rest_api_version}',
-                                                rest_bff_path   :   '${props.rest_resource_bff}',
-                                                data:{  
-                                                        idToken:            '${props.idToken}',
-                                                        authorization_type: 'APP_ID', 
-                                                        path:               '/server-bff/' + '${props.uuid}', 
-                                                        method:             'POST',
-                                                        body:               null}});
-                                    //apply font css
-                                    common.commonMiscCssApply(common.commonWindowFromBase64(cssFonts));
+                                    //init
+                                    await common[Object.keys(common.default)[0]]({
+                                        globals:        '${props.globals}',
+                                        cssFontsStart:  '${props.cssFontsStart}',
+                                        cssCommon:      '${props.cssCommon}',
+                                        jsCrypto:       '${props.jsCrypto}'
+                                    });
                                 </script>
                                 <link id="app_link_app_css"         rel='stylesheet'  type='text/css'     href=''/>
                                 <link id="app_link_app_report_css"  rel='stylesheet'  type='text/css'     href=''/>
@@ -359,8 +121,6 @@
         const common_app_id =                   props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??1;
         const admin_app_id =                    props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
         const start_app_id =                    props.data.app_id==admin_app_id?admin_app_id:props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??1;
-        const app_request_timeout_seconds =     props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_SECONDS' in parameter)[0].APP_REQUESTTIMEOUT_SECONDS)??5;
-        const app_requesttimeout_admin_minutes =props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0].APP_REQUESTTIMEOUT_ADMIN_MINUTES)??60;
         const rest_resource_bff =               props.data.configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF;
         const app_rest_api_version =            props.data.configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION;
 
@@ -378,7 +138,6 @@
                                 .toString('base64');
             await props.methods.IamEncryption.post(props.data.app_id,
                 {app_id:common_app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id??0, type:'APP'});
-            
             return {
                 idToken:idToken,
                 uuid:uuid,
@@ -392,7 +151,6 @@
          *                      jsCommon: string,
          *                      jsCrypto: string,
          *                      globals:  string,
-         *                      cssFonts: string,
          *                      cssFontsStart:string,
          *                      idToken:  {id:number, token:string},
          *                      uuid:     string,
@@ -413,7 +171,6 @@
                                                                     ip:props.data.ip, 
                                                                     user_agent:props.data.user_agent, 
                                                                     accept_language:props.data.accept_language});
-            
             const postData = await postInit();
             const app_toolbar_button_start =  props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START)??1;
             const app_toolbar_button_framework = props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK)??1;
@@ -427,14 +184,30 @@
                                 app_common_app_id:              common_app_id,
                                 app_admin_app_id:               admin_app_id,
                                 app_start_app_id:               start_app_id,
-
                                 app_toolbar_button_start:       app_toolbar_button_start,
                                 app_toolbar_button_framework:   app_toolbar_button_framework,
                                 app_framework:                  app_framework,
                                 app_framework_messages:         props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES)??1,
                                 admin_only:                     admin_only?1:0,
                                 admin_first_time:               count_user==0?1:0,
-
+                                app_requesttimeout_seconds:     props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_SECONDS' in parameter)[0].APP_REQUESTTIMEOUT_SECONDS)??5,
+                                app_requesttimeout_admin_minutes:props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0].APP_REQUESTTIMEOUT_ADMIN_MINUTES)??60,
+                                //font css split by '@font-face' in array
+                                app_fonts:                      (await props.methods.commonResourceFile({ 
+                                                                        app_id:props.data.app_id, 
+                                                                        resource_id:'/common/css/font/fonts.css',
+                                                                        content_type:'text/css', 
+                                                                        data_app_id:common_app_id})).result.resource
+                                                                .split('url(')
+                                                                .map((/**@type{string}*/row)=>{
+                                                                    if (row.startsWith('/bff/x/'))
+                                                                        //add app start uuid after font uuid separated with '~'
+                                                                        return row.replace( row.substring(0,'/bff/x/'.length+36),
+                                                                                            row.substring(0,'/bff/x/'.length+36) + '~' + postData.uuid);
+                                                                    else
+                                                                        return row;
+                                                                }).join('url(')
+                                                                .split('@'),
                                 //AppParameter common
                                 info_link_policy_name:          APP_PARAMETER.common_info_link_policy_name.value,
                                 info_link_policy_url:           APP_PARAMETER.common_info_link_policy_url.value,
@@ -449,10 +222,10 @@
                                 client_longitude:               result_geodata?.longitude,
                                 client_place:                   result_geodata?.place ?? '',
                                 client_timezone:                result_geodata?.timezone==''?null:result_geodata?.timezone,
-                                x:                              {...{
+                                x:                              {
                                                                     uuid:  postData.uuid,
                                                                     secret:postData.secret
-                                                                }}
+                                                                }
                                 });
             return {
                     globals:        Buffer.from(globals).toString('base64'),
@@ -470,23 +243,8 @@
                                                         app_id:props.data.app_id, 
                                                         path:'/apps/common/src/functions/common_crypto.js',
                                                         content_type:'text/javascript'})).toString('base64'),
-                    cssFonts:       Buffer.from((await props.methods.commonResourceFile({ 
-                                                    app_id:props.data.app_id, 
-                                                    resource_id:'/common/css/font/fonts.css',
-                                                    content_type:'text/css', 
-                                                    data_app_id:common_app_id})).result.resource
-                                            .split('url(')
-                                            .map((/**@type{string}*/row)=>{
-                                                if (row.startsWith('/bff/x/'))
-                                                    //add app start uuid after font uuid separated with '~'
-                                                    return row.replace( row.substring(0,'/bff/x/'.length+36),
-                                                                        row.substring(0,'/bff/x/'.length+36) + '~' + postData.uuid);
-                                                else
-                                                    return row;
-                                            }).join('url('))
-                                    .toString('base64'),
-                    cssFontsStart:  Buffer.from(`/*Fontawesome icons*/
-                                                @font-face {
+                    /*Fontawesome icons*/
+                    cssFontsStart:  Buffer.from(`@font-face {
                                                     font-family: "Font Awesome 6 Free";
                                                     font-style: normal;
                                                     font-weight: 400;
@@ -531,21 +289,11 @@
         const data = await getData().catch(error=>{
             throw error;
         });
-
         return template({   app_id:                             props.data.app_id,
-                            app_admin_app_id:                   admin_app_id,
-                            rest_resource_bff:                  rest_resource_bff,
-                            app_rest_api_version:               app_rest_api_version,
-                            app_request_timeout_seconds:        app_request_timeout_seconds,
-                            app_requesttimeout_admin_minutes:   app_requesttimeout_admin_minutes,
-                            idToken:                            data.idToken.token, 
-                            uuid:                               data.uuid,
-                            secret:                             data.secret,
                             cssCommon:                          data.cssCommon,
                             jsCommon:                           data.jsCommon,
                             jsCrypto:                           data.jsCrypto,
                             globals:                            data.globals,
-                            cssFonts:                           data.cssFonts,
                             cssFontsStart:                      data.cssFontsStart,
                             app_toolbar_button_start:           data.app_toolbar_button_start,
                             app_toolbar_button_framework:       data.app_toolbar_button_framework,
