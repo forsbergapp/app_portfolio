@@ -24,7 +24,7 @@
  *                  DOCUMENT with any content can be saved in a record using name json_data implemented
  *  TABLE_KEY_VALUE JSON object with array of records managed as table identified by app_id and records can have different attributes
  *  TABLE_LOG       JSON object with array of records, does not use cache_content, only admin should read logs
- *                  uses temporary transaction_content from file on disk to concat new log record
+ *                  does not use temporary transaction_content and does not read file on disk and instead uses WritableStream for performance
  *  TABLE_LOG_DATE  same as TABLE_LOG but uses additional filename partition with date implemented as partition
  * 
  *  Admin uses postFsAdmin to create initial object content
@@ -54,6 +54,15 @@ const DB = {data: []};
 Object.seal(DB);
 
 /**
+ * @name DB_LOG
+ * @description File database log writestreams where all logs files are written using fs.createWriteStream and write()
+ *              for high performance og logging
+ * @constant
+ * @type{{path:string,
+ *        writeStream:WritableStream}[]}
+ */
+const DB_LOG = [];
+/**
  * @name DB_DIR
  * @description File database paths
  * @constant
@@ -68,16 +77,19 @@ const Log = await import('./Log.js');
  * @name formatContent
  * @description Formats content
  * @function
- * @param {boolean} table
+ * @param {server_DbObject_record['type']} object_type
  * @param {*} content
  * @returns {string}
  */
-const formatContent = (table, content) =>
-    table?
-        //table, save records in new row and compact format
-                    '[\n' + content.map((/**@type{*}*/row)=>JSON.stringify(row)).join(',\n') + '\n]':
-                        //not a table, convert to string
-                            JSON.stringify(content, undefined, 2);
+const formatContent = (object_type, content) =>
+    object_type.startsWith('TABLE_LOG')?
+        //log object, save JSON rows with ',' at the end
+        '\n' + content.map((/**@type{*}*/row)=>JSON.stringify(row)).join(',\n') + ',':
+            object_type== 'TABLE'?
+                //table, save records in new row and compact format
+                '[\n' + content.map((/**@type{*}*/row)=>JSON.stringify(row)).join(',\n') + '\n]':
+                    //not a table, convert to string
+                        JSON.stringify(content, undefined, 2);
 
 /**
  * @name getObjectRecord
@@ -105,9 +117,11 @@ const fileTransactionStart = async (object, filepath)=>{
     const transaction = async ()=>{
         const transaction_id = Date.now();
         record.transaction_id = transaction_id;
-        record.transaction_content = record.in_memory?
-                                            JSON.parse(record.content?? (record.type.startsWith('TABLE')?'[]':'{}')):
-                                            await getFsFile(filepath,record.type.startsWith('TABLE'));
+        record.transaction_content = record.type.startsWith('TABLE_LOG')?
+                                                null:
+                                                    record.in_memory?
+                                                        JSON.parse(record.content?? (record.type.startsWith('TABLE')?'[]':'{}')):
+                                                            await getFsFile(filepath,record.type);
         return {transaction_id:transaction_id,
                 transaction_content:record.transaction_content
         };
@@ -227,14 +241,21 @@ const getFsDir = async () => await fs.promises.readdir(`${serverProcess.cwd()}${
  * @name getFsFile
  * @description Get parsed file for given filepath
  * @param {string} filepath
- * @param {boolean} table
+ * @param {server_DbObject_record['type']|null} [object_type]
  * @returns {Promise.<*>}
  */
-const getFsFile = async (filepath, table=false) => fs.promises.readFile(serverProcess.cwd() + filepath, 'utf8')
+const getFsFile = async (filepath, object_type=null) => fs.promises.readFile(serverProcess.cwd() + filepath, 'utf8')
                                                     .then(result=>
-                                                        JSON.parse(result==''?(table?'[]':'{}'):result)
+                                                        JSON.parse(result==''?
+                                                                        (object_type?.startsWith('TABLE')?'[]':
+                                                                            '{}'):
+                                                                                //logs save as JSON records 
+                                                                                object_type?.startsWith('TABLE_LOG')?
+                                                                                    //remove last ','
+                                                                                    '[' + result.substring(0,result.length-1) + ']':
+                                                                                        result)
                                                     )
-                                                    .catch(()=>JSON.parse(table?'[]':'{}'));
+                                                    .catch(()=>JSON.parse(object_type?.startsWith('TABLE')?'[]':'{}'));
 
 /**
  * @name getFsDataExists
@@ -274,7 +295,7 @@ const getFsDbObject = async () => getFsFile(DB_DIR.db + 'DbObjects.json');
 const updateFsFile = async (object, transaction_id, file_content, filepath=null) =>{  
     const record = getObjectRecord(object);
     if (record.in_memory==true)
-        DB.data.filter(file_db=>file_db.name == object)[0].content = formatContent(record.type.startsWith('TABLE'), file_content);
+        DB.data.filter(file_db=>file_db.name == object)[0].content = formatContent(record.type, file_content);
     else
         if (!transaction_id || record.transaction_id != transaction_id){
             const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
@@ -283,10 +304,10 @@ const updateFsFile = async (object, transaction_id, file_content, filepath=null)
         else{
             if (['TABLE', 'TABLE_KEY_VALUE', 'DOCUMENT'].includes(record.type) && getObject(0,'ConfigServer').SERVICE_DB.filter((/**@type{*}*/key)=>'JOURNAL' in key)[0]?.JOURNAL=='1'){
                 //write to journal using format [Date.now()].[ISO Date string].[object].json
-                await postFsFile(`${DB_DIR.journal}${Date.now()}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}.${object}.json`, file_content, record.type.startsWith('TABLE'));
+                await postFsFile(`${DB_DIR.journal}${Date.now()}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}.${object}.json`, file_content, record.type);
             }
             //write new file content
-            await postFsFile(filepath ?? (DB_DIR.db + object + '.json'), file_content, record.type.startsWith('TABLE'));
+            await postFsFile(filepath ?? (DB_DIR.db + object + '.json'), file_content, record.type);
         }
 };
 
@@ -296,11 +317,23 @@ const updateFsFile = async (object, transaction_id, file_content, filepath=null)
  * @function
  * @param {string} path
  * @param {*} content
- * @param {boolean} table
+ * @param {server_DbObject_record['type']} object_type
  * @returns{Promise.<void>}
  */
-const postFsFile = async (path, content, table) => await fs.promises.writeFile(serverProcess.cwd() + path, 
-                                                    formatContent(table, content),'utf8');                                            
+const postFsFile = async (path, content, object_type) => {
+    if (['TABLE_LOG', 'TABLE_LOG_DATE'].includes(object_type)){
+        if (DB_LOG.filter(row=>row.path==path).length==0){
+            //add new write stream with append
+            /**@ts-ignore */
+            DB_LOG.push({path:path, writeStream:fs.createWriteStream(serverProcess.cwd() + path, { flags: 'a' })});    
+            
+        }
+        /**@ts-ignore */
+        DB_LOG.filter(row=>row.path==path)[0].writeStream.write(formatContent(object_type, [content]));    
+    }
+    else
+        await fs.promises.writeFile(serverProcess.cwd() + path, formatContent(object_type, content),'utf8');
+};
 /**
  * @name postFsDir
  * @description Created directories and should be used only when server is started first time
@@ -332,7 +365,7 @@ const postFsDir = async paths => {
  * @returns {Promise.<void>}
  */
 const postFsAdmin = async (object, file_content) =>{
-    await postFsFile(DB_DIR.db + object + '.json', file_content, DB.data.filter(file_db=>file_db.name==object)[0]?.type.startsWith('TABLE'));
+    await postFsFile(DB_DIR.db + object + '.json', file_content, DB.data.filter(file_db=>file_db.name==object)[0]?.type);
 };
 
 /**
@@ -347,7 +380,7 @@ const postAdmin = async (object, data) =>{
     const record = getObjectRecord(object);
     if (record.in_memory){
         DB.data.filter(row=>row.name == object)[0].cache_content = data;
-        DB.data.filter(row=>row.name == object)[0].content = formatContent(record.type.startsWith('TABLE'),data);
+        DB.data.filter(row=>row.name == object)[0].content = formatContent(record.type,data);
     }
     else
         throw getError(0, 401);    
@@ -454,14 +487,14 @@ const getObjectFile = async (app_id, object, resource_id, partition) =>{
                                 DB_DIR.db + `${object}_${fileNamePartition(partition)}.json`:
                                     DB_DIR.db + `${object}.json`;
             /**@type{*[]} */
-            const file = await getFsFile(filepath, record.type.startsWith('TABLE'));
+            const file = await getFsFile(filepath, record.type);
             if (record.type=='TABLE_KEY_VALUE')
                 return {rows:file.filter(row=>row.app_id == (resource_id??row.app_id))};    
             else
                 return {rows:file.filter(row=>row.id == (resource_id??row.id))};    
         }
         else
-            return await getFsFile(DB_DIR.db + object + '.json', record.type.startsWith('TABLE'));
+            return await getFsFile(DB_DIR.db + object + '.json', record.type);
 };
 
 /**
@@ -547,12 +580,12 @@ const postObject = async (app_id, object, data) =>{
         if (object_type.startsWith('TABLE')){
             const filepath = object_type=='TABLE'?`${DB_DIR.db}${object}.json`:`${DB_DIR.db}${object}_${fileNamePartition()}.json`;
             const file = await lockObject(app_id, object, object_type=='TABLE'?null:filepath);
-            if ((object_type =='TABLE'  && constraintsValidate(object, 
+            if ((object_type !='TABLE' || (object_type =='TABLE'  && constraintsValidate(object, 
                 /**@ts-ignore */
                 file.file_content, 
-                data, 'POST')) ||object_type !='TABLE' ){
+                data, 'POST')))){
                     /**@ts-ignore */
-                    const update_data = (DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data);
+                    const update_data = object_type =='TABLE'?(DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data):data;
                     await updateFsFile( object, 
                         file.transaction_id, 
                         update_data,
@@ -892,7 +925,7 @@ const getError = (app_id, statusCode, error=null) =>{
             if ('cache_content' in file_db_record &&
                 file_db_record.in_memory==false
             ){
-                const file = await getFsFile(DB_DIR.db + file_db_record.name + '.json', file_db_record.type.startsWith('TABLE'));
+                const file = await getFsFile(DB_DIR.db + file_db_record.name + '.json', file_db_record.type);
                 file_db_record.cache_content = file?file:null;
             }
         }
