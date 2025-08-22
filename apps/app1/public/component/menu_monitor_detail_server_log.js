@@ -10,6 +10,8 @@
 /**
  * @name template
  * @description Template
+ *              use this grouping to decide column orders
+ *              [log columns][server columns][user columns][detail columms][app columns(broadcast, edit etc)]
  * @function
  * @param {{function_get_order_by:function,
  *          function_roundOff:CommonModuleCommon['commonMiscRoundOff'],
@@ -17,11 +19,7 @@
  *          logscope:'LogRequest'|'LogServer'|'LogApp'|'LogService'|'LogDb'|''}} props
  * @returns {string}
  */
-const template = props => ` ${  /*
-                                use this grouping to decide column orders
-                                [log columns][server columns][user columns][detail columms][app columns(broadcast, edit etc)]
-                                */
-                                props.logscope=='LogRequest'?
+const template = props => ` ${  props.logscope=='LogRequest'?
                                 `<div class='menu_monitor_detail_server_log_row'>
                                     <div data-column='id' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                         ID
