@@ -114,43 +114,51 @@ const getObjectRecord = filename =>JSON.parse(JSON.stringify(DB.data.filter(file
  */
 const fileTransactionStart = async (object, filepath)=>{
     const record = DB.data.filter(file_db=>file_db.name == object)[0];
-    const transaction = async ()=>{
+    if (record.type.startsWith('TABLE_LOG')){
+        record.lock = 1;
         const transaction_id = Date.now();
         record.transaction_id = transaction_id;
-        record.transaction_content = record.type.startsWith('TABLE_LOG')?
-                                                null:
-                                                    record.in_memory?
-                                                        JSON.parse(record.content?? (record.type.startsWith('TABLE')?'[]':'{}')):
-                                                            await getFsFile(filepath,record.type);
         return {transaction_id:transaction_id,
-                transaction_content:record.transaction_content
+            transaction_content:null
         };
-    };
-    return new Promise((resolve, reject)=>{
-        if  (record.lock==0){
-            record.lock = 1;
-            //add 1ms wait so transaction_id will be guaranteed unique on a fast server
-            setTimeout(()=>{
-                transaction().then((result)=>resolve(result)); 
-                }, 1);
-        }
-        else{
-            let tries = 0;
-            const lock = () =>{
-                tries++;
-                if (tries > 10000)
-                    reject ('timeout');
-                else
-                    if (record.lock==0){
-                        record.lock = 1;
-                        transaction().then((result)=>resolve(result)); 
-                    }
-                    else
-                        setTimeout(()=>{lock(), 1;});
+    }
+    else{
+        const transaction = async ()=>{
+            const transaction_id = Date.now();
+            record.transaction_id = transaction_id;
+            record.transaction_content = record.in_memory?
+                                            JSON.parse(record.content?? (record.type.startsWith('TABLE')?'[]':'{}')):
+                                                await getFsFile(filepath,record.type);
+            return {transaction_id:transaction_id,
+                    transaction_content:record.transaction_content
             };
-            lock();
-        }
-    });
+        };
+        return new Promise((resolve, reject)=>{
+            if  (record.lock==0){
+                record.lock = 1;
+                //add 1ms wait so transaction_id will be guaranteed unique on a fast server
+                setTimeout(()=>{
+                    transaction().then((result)=>resolve(result)); 
+                    }, 1);
+            }
+            else{
+                let tries = 0;
+                const lock = () =>{
+                    tries++;
+                    if (tries > 10000)
+                        reject ('timeout');
+                    else
+                        if (record.lock==0){
+                            record.lock = 1;
+                            transaction().then((result)=>resolve(result)); 
+                        }
+                        else
+                            setTimeout(()=>{lock(), 1;});
+                };
+                lock();
+            }       
+        });
+    }
 };
 /**
  * @name commit
