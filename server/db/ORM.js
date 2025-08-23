@@ -37,7 +37,8 @@
  *          server_DbObject, server_DbObject_record, 
  *          server_db_config_server_server,server_db_config_server_service_log,
  *          server_db_result_fileFsRead,
- *          server_db_common_result_update, server_db_common_result_delete,server_db_common_result_insert} from '../types.js'
+ *          server_db_common_result_update, server_db_common_result_delete,server_db_common_result_insert,
+ *          server_db_document_ConfigServer} from '../types.js'
  * @import {Dirent} from 'node:fs'
  */
 
@@ -114,51 +115,43 @@ const getObjectRecord = filename =>JSON.parse(JSON.stringify(DB.data.filter(file
  */
 const fileTransactionStart = async (object, filepath)=>{
     const record = DB.data.filter(file_db=>file_db.name == object)[0];
-    if (record.type.startsWith('TABLE_LOG')){
-        record.lock = 1;
+    const transaction = async ()=>{
         const transaction_id = Date.now();
         record.transaction_id = transaction_id;
+        record.transaction_content = record.type.startsWith('TABLE_LOG')?
+                                                null:
+                                                    record.in_memory?
+                                                        JSON.parse(record.content?? (record.type.startsWith('TABLE')?'[]':'{}')):
+                                                            await getFsFile(filepath,record.type);
         return {transaction_id:transaction_id,
-            transaction_content:null
+                transaction_content:record.transaction_content
         };
-    }
-    else{
-        const transaction = async ()=>{
-            const transaction_id = Date.now();
-            record.transaction_id = transaction_id;
-            record.transaction_content = record.in_memory?
-                                            JSON.parse(record.content?? (record.type.startsWith('TABLE')?'[]':'{}')):
-                                                await getFsFile(filepath,record.type);
-            return {transaction_id:transaction_id,
-                    transaction_content:record.transaction_content
-            };
-        };
-        return new Promise((resolve, reject)=>{
-            if  (record.lock==0){
-                record.lock = 1;
-                //add 1ms wait so transaction_id will be guaranteed unique on a fast server
-                setTimeout(()=>{
-                    transaction().then((result)=>resolve(result)); 
-                    }, 1);
-            }
-            else{
-                let tries = 0;
-                const lock = () =>{
-                    tries++;
-                    if (tries > 10000)
-                        reject ('timeout');
+    };
+    return new Promise((resolve, reject)=>{
+        if  (record.lock==0){
+            record.lock = 1;
+            //add 1ms wait so transaction_id will be guaranteed unique on a fast server
+            setTimeout(()=>{
+                transaction().then((result)=>resolve(result)); 
+                }, 1);
+        }
+        else{
+            let tries = 0;
+            const lock = () =>{
+                tries++;
+                if (tries > 10000)
+                    reject ('timeout');
+                else
+                    if (record.lock==0){
+                        record.lock = 1;
+                        transaction().then((result)=>resolve(result)); 
+                    }
                     else
-                        if (record.lock==0){
-                            record.lock = 1;
-                            transaction().then((result)=>resolve(result)); 
-                        }
-                        else
-                            setTimeout(()=>{lock(), 1;});
-                };
-                lock();
-            }       
-        });
-    }
+                        setTimeout(()=>{lock(), 1;});
+            };
+            lock();
+        }
+    });
 };
 /**
  * @name commit
@@ -925,6 +918,11 @@ const getError = (app_id, statusCode, error=null) =>{
  * @returns {Promise.<void>}
  */
  const Init = async (default_db=null) => {
+    const ConfigServer = await import('./ConfigServer.js');    
+    const Installation = await import('../installation.js');
+    const result_data = await getFsDataExists();
+    if (result_data==false)
+        await Installation.postConfigDefault();
     
     DB.data = default_db?default_db:await getFsDbObject();
     
@@ -937,6 +935,16 @@ const getError = (app_id, statusCode, error=null) =>{
                 file_db_record.cache_content = file?file:null;
             }
         }
+    /**@type{server_db_document_ConfigServer} */
+    const configServer = ConfigServer.get({app_id:0}).result;
+
+    const common = await import ('../../apps/common/src/common.js');
+    //common font css contain many font urls, return css file with each url replaced with a secure url
+    //and save encryption data for all records directly in table at start to speed up performance
+    await postAdmin('IamEncryption', common.commonCssFonts.db_records);
+
+    if (configServer.SERVICE_IAM.filter(parameter=> 'SERVER_UPDATE_SECRETS_START' in parameter)[0].SERVER_UPDATE_SECRETS_START=='1')
+        await Installation.updateConfigSecrets();
  };
  
  /**
