@@ -610,10 +610,7 @@ const serverStart = async () =>{
     
     const Log = await import('./db/Log.js');
     const ConfigServer = await import('./db/ConfigServer.js');
-    const Installation = await import('./installation.js');
-    
     const ORM = await  import('./db/ORM.js');
-
     const http = await import('node:http');
 
     serverProcess.env.TZ = 'UTC';
@@ -633,21 +630,10 @@ const serverStart = async () =>{
                 }
             });
     });
-    try {       
-        const result_data = await ORM.getFsDataExists();
-        if (result_data==false)
-            await Installation.postConfigDefault();
+    try {               
         await ORM.Init();
         /**@type{server_db_document_ConfigServer} */
         const configServer = ConfigServer.get({app_id:0}).result;
-
-        const common = await import ('../apps/common/src/common.js');
-        //common font css contain many font urls, return css file with each url replaced with a secure url
-        //and save encryption data for all records directly in table at start to speed up performance
-        await ORM.postAdmin('IamEncryption', common.commonCssFonts.db_records);
-
-        if (configServer.SERVICE_IAM.filter(parameter=> 'SERVER_UPDATE_SECRETS_START' in parameter)[0].SERVER_UPDATE_SECRETS_START=='1')
-            await Installation.updateConfigSecrets();
 
         const {socketIntervalCheck} = await import('./socket.js');
         socketIntervalCheck();
