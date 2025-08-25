@@ -172,12 +172,16 @@ class ORM_class {
                             JSON.stringify(content, undefined, 2);
     /**
      * @name getObjectRecord
-     * @description Get file record from file db
+     * @description Get file record from file db, uses default not immutable
+     *              if record can be updated or no update in calling function using local variable for performance.
      * @method
      * @param {server_DbObject} filename 
+     * @param {boolean}  immutable
      * @returns {server_DbObject_record}
      */
-    getObjectRecord = filename =>JSON.parse(JSON.stringify(DB.data.filter(file_db=>file_db.name == filename)[0]));
+    getObjectRecord = (filename, immutable=false) =>immutable?
+                                                        JSON.parse(JSON.stringify(DB.data.filter(file_db=>file_db.name == filename)[0])):
+                                                            DB.data.filter(file_db=>file_db.name == filename)[0];
 
     /**
      * @name fileTransactionStart
@@ -374,7 +378,7 @@ class ORM_class {
     updateFsFile = async (object, transaction_id, file_content, filepath=null) =>{  
         const record = this.getObjectRecord(object);
         if (record.in_memory==true)
-            DB.data.filter(file_db=>file_db.name == object)[0].content = this.formatContent(record.type, file_content);
+            record.content = this.formatContent(record.type, file_content);
         else
             if (!transaction_id || record.transaction_id != transaction_id){
                 const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
@@ -461,8 +465,8 @@ class ORM_class {
     postAdmin = async (object, data) =>{
         const record = this.getObjectRecord(object);
         if (record.in_memory){
-            DB.data.filter(row=>row.name == object)[0].cache_content = data;
-            DB.data.filter(row=>row.name == object)[0].content = this.formatContent(record.type,data);
+            record.cache_content = data;
+            record.content = this.formatContent(record.type,data);
         }
         else
             throw this.getError(0, 401);    
@@ -502,7 +506,7 @@ class ORM_class {
     getObject = (app_id, object, resource_id, data_app_id) =>{
         try {
             //fetch record with already removed object reference
-            const record = this.getObjectRecord(object);
+            const record = this.getObjectRecord(object, true);
             switch(record.type){
                 case 'TABLE':
                 case 'TABLE_KEY_VALUE':{
@@ -656,32 +660,30 @@ class ORM_class {
      */
     postObject = async (app_id, object, data) =>{
         if (app_id!=null){
-            const object_type = this.getObjectRecord(object).type;
-            if (object_type.startsWith('TABLE')){
-                const filepath = object_type=='TABLE'?`${DB_DIR.db}${object}.json`:`${DB_DIR.db}${object}_${this.fileNamePartition()}.json`;
-                const file = await this.lockObject(app_id, object, object_type=='TABLE'?null:filepath);
-                if ((object_type !='TABLE' || (object_type =='TABLE'  && this.constraintsValidate(object, 
+            const record = this.getObjectRecord(object);
+            if (record.type.startsWith('TABLE')){
+                const filepath = record.type=='TABLE'?`${DB_DIR.db}${object}.json`:`${DB_DIR.db}${object}_${this.fileNamePartition()}.json`;
+                const file = await this.lockObject(app_id, object, record.type=='TABLE'?null:filepath);
+                if ((record.type !='TABLE' || (record.type =='TABLE'  && this.constraintsValidate(object, 
                     /**@ts-ignore */
                     file.file_content, 
                     data, 'POST')))){
                         /**@ts-ignore */
-                        const update_data = object_type =='TABLE'?(DB.data.filter(row=>row.name==object)[0].transaction_content?? []).concat(data):data;
-                        await this.updateFsFile( object, 
-                            file.transaction_id, 
-                            update_data,
-                            object_type=='TABLE'?null:filepath)
+                        const update_data = record.type =='TABLE'?(record.transaction_content?? []).concat(data):data;
+                        await this.updateFsFile(object, 
+                                                file.transaction_id, 
+                                                update_data,
+                                                record.type=='TABLE'?null:filepath)
                         .catch(()=>{
-                            this.rollback(object, 
-                                /*@ts-ignore*/
-                                file.transaction_id);
-                            
+                            this.rollback(  object, 
+                                            /*@ts-ignore*/
+                                            file.transaction_id);
                         });
                         //commit and update cache for TABLE
-                        if (this.commit(  object, 
-                                                    /*@ts-ignore*/
-                                                    file.transaction_id,
-                                                    /*@ts-ignore*/
-                                                    object_type=='TABLE'?update_data:null))
+                        if (this.commit(object, 
+                                        /*@ts-ignore*/
+                                        file.transaction_id,
+                                        record.type=='TABLE'?update_data:null))
                             return {affectedRows:1};
                         else{
                             const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
