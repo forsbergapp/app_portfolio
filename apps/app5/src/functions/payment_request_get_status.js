@@ -26,7 +26,7 @@
 const paymentRequestGetStatus = async parameters =>{
      
     const {getToken} = await import('./payment_request_create.js');
-    const {ORM, serverUtilNumberValue} = await import('../../../../server/server.js');
+    const {ORM} = await import('../../../../server/server.js');
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import('../../../../server/security.js');
     const  {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
     const {socketClientPostMessage} = await import('../../../../server/socket.js');
@@ -46,7 +46,7 @@ const paymentRequestGetStatus = async parameters =>{
                                                                         app_data_entity_id:Entity.id
                                                                 }}).result
                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/merchant)=>
-                                serverUtilNumberValue(merchant.json_data?.merchant_id)==parameters.data.id
+                                ORM.serverUtilNumberValue(merchant.json_data?.merchant_id)==parameters.data.id
                             )[0];
     if (merchant){
         /** 
