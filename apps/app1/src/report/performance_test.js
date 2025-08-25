@@ -86,12 +86,12 @@ const template = props => ` <div id='report'>
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    const {ORM,serverUtilNumberValue} = await import('../../../../server/server.js');
+    const {ORM} = await import('../../../../server/server.js');
     const {commonRegistryAppModule} = await import('../../../common/src/common.js');
 
     const PROTOCOL = 'http://';
     const HOST = ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER', parameter:'HOST'}}).result;
-    const PORT = serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
+    const PORT = ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
 
     class Benchmark {
         /**

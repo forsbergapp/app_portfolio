@@ -22,7 +22,7 @@
  *          server_server_res} from './types.js'
  */
 
-const {ORM, serverUtilNumberValue} = await import('./server.js');
+const {ORM} = await import('./server.js');
 const Security = await import('./security.js');
 const app_common = await import('../apps/common/src/common.js');
 
@@ -52,9 +52,9 @@ const iamUtilMessageNotAuthorized = () => '⛔';
 const iamUtilTokenAppId = app_id => {
     /**@type{server_db_document_ConfigServer} */
     const configServer = ORM.db.ConfigServer.get({app_id:0}).result;
-    return app_id==(serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=> 'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID))?
+    return app_id==(ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=> 'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID))?
                             app_id:
-                                serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=> 'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
+                                ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=> 'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
 };
 /**
  * @name iamUtilTokenGet
@@ -296,7 +296,7 @@ const iamAuthenticateUser = async parameters =>{
             const file_content = {	
                         app_id:                 parameters.app_id,
                         app_id_token:           null,
-                        type:                   parameters.app_id==serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result)?
+                        type:                   parameters.app_id==ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result)?
                                                     'ADMIN':
                                                         'APP_ACCESS',
                         app_custom_id:          null,
@@ -321,7 +321,7 @@ const iamAuthenticateUser = async parameters =>{
     };
     if(parameters.authorization){       
         //if admin app create user if first time
-        if (parameters.app_id == serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result) && 
+        if (parameters.app_id == ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result) && 
             ORM.db.IamUser.get(parameters.app_id, null).result.length==0)
             return ORM.db.IamUser.post(parameters.app_id,{
                             username:           username, 
@@ -348,7 +348,7 @@ const iamAuthenticateUser = async parameters =>{
             /**@type{server_db_table_IamUser}*/
             const user =  ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/user)=>user.username == username)[0];
             if (user && await Security.securityPasswordCompare(parameters.app_id, password, user.password)){
-                if (parameters.app_id == serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result)){
+                if (parameters.app_id == ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result)){
                     //admin allowed to login to admin app only
                     if (user.type=='ADMIN'){
                         /**@ts-ignore */
@@ -503,7 +503,7 @@ const iamAuthenticateUserActivate = async parameters =>{
             const eventData = {
                 /**@ts-ignore */
                 iam_user_id:    iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_VERIFICATION').iam_user_id,
-                event:          serverUtilNumberValue(parameters.data.verification_type)==1?
+                event:          ORM.serverUtilNumberValue(parameters.data.verification_type)==1?
                                     'OTP_LOGIN':
                                         'OTP_SIGNUP'
             };
@@ -786,14 +786,14 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                     if (appIam.admin)
                                         return {app_id:appIam.app_id};
                                     else
-                                        if (serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'USER_ENABLE_LOGIN' in parameter)[0].USER_ENABLE_LOGIN)==1)
+                                        if (ORM.serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'USER_ENABLE_LOGIN' in parameter)[0].USER_ENABLE_LOGIN)==1)
                                             return {app_id:appIam.app_id};
                                         else
                                             return {app_id:null};
                                 }
                                 case parameters.endpoint=='ADMIN' && appIam.admin && parameters.authorization.toUpperCase().startsWith('BEARER'):
                                 case parameters.endpoint=='APP_ACCESS_VERIFICATION' && parameters.authorization.toUpperCase().startsWith('BEARER'):
-                                case parameters.endpoint=='APP_ACCESS' && serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'USER_ENABLE_LOGIN' in parameter)[0].USER_ENABLE_LOGIN)==1 && parameters.authorization.toUpperCase().startsWith('BEARER'):{
+                                case parameters.endpoint=='APP_ACCESS' && ORM.serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'USER_ENABLE_LOGIN' in parameter)[0].USER_ENABLE_LOGIN)==1 && parameters.authorization.toUpperCase().startsWith('BEARER'):{
                                     //authenticate access token
                                     const access_token = parameters.authorization?.split(' ')[1] ?? '';
                                     const access_token_decoded = iamUtilTokenGet(appIam.app_id, access_token, parameters.endpoint);
@@ -833,7 +833,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                     else
                                         return {app_id:null};
                                 }
-                                case parameters.endpoint=='IAM_SIGNUP' && serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'USER_ENABLE_REGISTRATION' in parameter)[0].USER_ENABLE_REGISTRATION)==1 && appIam.admin==false:{
+                                case parameters.endpoint=='IAM_SIGNUP' && ORM.serverUtilNumberValue(configServer.SERVICE_IAM.filter(parameter=> 'USER_ENABLE_REGISTRATION' in parameter)[0].USER_ENABLE_REGISTRATION)==1 && appIam.admin==false:{
                                     return {app_id:appIam.app_id};
                                 }
                                 default:
@@ -882,7 +882,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
  const iamAuthenticateRequest = async parameters => {
     const app_id = (await app_common.commonAppIam(parameters.host, null)).app_id;
     //set calling app_id using app_id or common app_id if app_id is unknown
-    const calling_app_id = app_id ?? serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:app_id??0, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
+    const calling_app_id = app_id ?? ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:app_id??0, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
 
     /**@type{server_db_document_ConfigServer} */
     const config_SERVER = ORM.db.ConfigServer.get({app_id:calling_app_id}).result;
@@ -1103,7 +1103,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
 const iamAuthenticateResource = parameters =>  {
     /**@type{server_db_document_ConfigServer} */
     const configServer = ORM.db.ConfigServer.get({app_id:parameters.app_id}).result;
-    const app_id_common = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=> 'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
+    const app_id_common = ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=> 'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
     
     const iamuserApp = (parameters.claim_iam_user_id !=null||parameters.claim_iam_user_app_id!=null)?
                             (ORM.db.IamUserApp.get({app_id:parameters.app_id, 
@@ -1357,8 +1357,8 @@ const iamAuthenticateMicroservice = async parameters =>{
  */
 const iamAppAccessGet = parameters => {const rows = ORM.db.IamAppAccess.get(parameters.app_id, null).result
                                                                 .filter((/**@type{server_db_table_IamAppAccess}*/row)=>
-                                                                    row.iam_user_id==serverUtilNumberValue(parameters.data.iam_user_id) &&  
-                                                                    row.app_id==(serverUtilNumberValue(parameters.data.data_app_id==''?null:parameters.data.data_app_id) ?? row.app_id));
+                                                                    row.iam_user_id==ORM.serverUtilNumberValue(parameters.data.iam_user_id) &&  
+                                                                    row.app_id==(ORM.serverUtilNumberValue(parameters.data.data_app_id==''?null:parameters.data.data_app_id) ?? row.app_id));
                                                     
                                                     return {result:rows.length>0?
                                                                 rows.sort(( /**@type{server_db_table_IamAppAccess}*/a,

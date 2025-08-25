@@ -10,7 +10,7 @@
  *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
  */
 
-const {ORM, serverResponse, serverUtilNumberValue} = await import('./server.js');
+const {ORM, serverResponse} = await import('./server.js');
 const {iamUtilResponseNotAuthorized, iamUtilTokenGet, iamUtilTokenExpired, iamUtilMessageNotAuthorized} = await import('./iam.js');
 const {microserviceRequest} = await import('../serviceregistry/microservice.js');
 
@@ -156,7 +156,7 @@ const socketClientAdd = (newClient) => {
  * @returns {Promise.<server_server_response & {result?:{sent:number} }>}
  */
  const socketAdminSend = async parameters => {
-    parameters.data.client_id = serverUtilNumberValue(parameters.data.client_id);
+    parameters.data.client_id = ORM.serverUtilNumberValue(parameters.data.client_id);
 
     if (parameters.data.broadcast_type=='ALERT' || parameters.data.broadcast_type=='MAINTENANCE'){
         //broadcast INFO or MAINTENANCE to all connected to given app_id 
@@ -165,7 +165,7 @@ const socketClientAdd = (newClient) => {
         for (const client of SOCKET_CONNECTED_CLIENTS){
             if (client.idToken != parameters.idToken)
                 if (parameters.data.broadcast_type=='MAINTENANCE' && 
-                    client.app_id ==serverUtilNumberValue(ORM.db.ConfigServer.get({ app_id:parameters.app_id, 
+                    client.app_id ==ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({ app_id:parameters.app_id, 
                                                                                     data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result))
                     null;
                 else
@@ -217,13 +217,13 @@ const socketClientAdd = (newClient) => {
  * @returns{Promise.<server_server_response & {result?:server_socket_connected_list_no_res[]}>}
  */
  const socketConnectedList = async parameters => {
-    const app_id_select = serverUtilNumberValue(parameters.data.data_app_id);
+    const app_id_select = ORM.serverUtilNumberValue(parameters.data.data_app_id);
     /**@type{number|null} */
-    const year = serverUtilNumberValue(parameters.data.year);
+    const year = ORM.serverUtilNumberValue(parameters.data.year);
     /**@type{number|null} */
-    const month = serverUtilNumberValue(parameters.data.month);
+    const month = ORM.serverUtilNumberValue(parameters.data.month);
     /**@type{number|null} */
-    const day= serverUtilNumberValue(parameters.data.day);
+    const day= ORM.serverUtilNumberValue(parameters.data.day);
     /**@type{string} */
     const order_by = parameters.data.order_by ?? '';
     /**@type{server_socket_connected_list_sort} */
@@ -291,7 +291,7 @@ const socketClientAdd = (newClient) => {
  * @returns {server_server_response & {result?:{count_connected:number} }}
  */
  const socketConnectedCount = parameters => {
-    const logged_in = serverUtilNumberValue(parameters.data.logged_in);
+    const logged_in = ORM.serverUtilNumberValue(parameters.data.logged_in);
     if (logged_in == 1)
         return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>  connected.iam_user_id != null).length}, type:'JSON'};
     else
@@ -318,13 +318,13 @@ const socketPost = async parameters =>{
     //get access token if any
     const access_token =    parameters.authorization?iamUtilTokenGet(   parameters.app_id,
                                             parameters.authorization, 
-                                            parameters.app_id==serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result)?'ADMIN':'APP_ACCESS'):null;
+                                            parameters.app_id==ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result)?'ADMIN':'APP_ACCESS'):null;
 
     const iam_user =        parameters.authorization?
                                 /**@ts-ignore */
-                                (serverUtilNumberValue(access_token?.iam_user_id)?
+                                (ORM.serverUtilNumberValue(access_token?.iam_user_id)?
                                     /*@ts-ignore*/
-                                    ORM.db.IamUser.get(parameters.app_id, serverUtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
+                                    ORM.db.IamUser.get(parameters.app_id, ORM.serverUtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
                                         null;
     if (SOCKET_CONNECTED_CLIENTS
             .filter(row=>row.idToken == parameters.idToken).length>0){
@@ -424,7 +424,7 @@ const socketPost = async parameters =>{
  const socketIntervalCheck = async () => {
     setInterval(async () => {
         //server interval run as app 0
-        if (serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:0, data:{config_group:'METADATA',parameter:'MAINTENANCE'}}).result)==1){
+        if (ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:0, data:{config_group:'METADATA',parameter:'MAINTENANCE'}}).result)==1){
             await socketAdminSend({ app_id:0,
                                     idToken:'',
                                     data:{app_id:null,
@@ -435,7 +435,7 @@ const socketPost = async parameters =>{
         }
         await socketExpiredTokensUpdate();
     //set default interval to 5 seconds if no parameter is set
-    }, serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVICE_SOCKET', parameter:'CHECK_INTERVAL'}}).result)??5000);
+    }, ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVICE_SOCKET', parameter:'CHECK_INTERVAL'}}).result)??5000);
 };
 
 /**
