@@ -13,8 +13,6 @@ const {ORM} = await import('../server/server.js');
  * @returns {Promise.<server_db_table_ServiceRegistry>}
  */
 const registryConfigServices = async servicename =>
-        ORM.db.ServiceRegistry.get(0,null).result.rows
-            .filter((/**@type{server_db_table_ServiceRegistry}*/service)=>service.name == servicename)[0];
-
+        ORM.db.ServiceRegistry.get({app_id:0,resource_id:null, data:{name:servicename}}).result[0];
 
 export {registryConfigServices};
