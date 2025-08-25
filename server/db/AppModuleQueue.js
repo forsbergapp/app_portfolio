@@ -6,7 +6,7 @@
  *          server_db_table_AppModuleQueue} from '../types.js'
  */
 
-const ORM = await import('./ORM.js');
+const {ORM} = await import ('../server.js');
 
 /**
  * @name get
@@ -36,10 +36,8 @@ const get = parameters =>{
  * @returns {Promise.<server_server_response & {result?:{resource:string}}>}
  */
 const getResult = async parameters => {
-    const ConfigServer = await import('./ConfigServer.js');
-    const {serverProcess} = await import('../server.js');
     const fs = await import('node:fs');
-    return {result:{resource:(await fs.promises.readFile(serverProcess.cwd() + `/data/${ConfigServer.get({app_id:parameters.app_id, 
+    return {result:{resource:(await fs.promises.readFile(ORM.serverProcess.cwd() + `/data/${ORM.db.ConfigServer.get({app_id:parameters.app_id, 
                                                                     data:{config_group:'SERVER',parameter:'PATH_JOBS'}}).result}/${parameters.resource_id}.html`)).toString()}, 
             type:'JSON'};
 };
@@ -96,10 +94,8 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postResult = async (app_id, id, result) =>{
-    const ConfigServer = await import('./ConfigServer.js');
-    const {serverProcess} = await import('../server.js');
     const fs = await import('node:fs');
-    await fs.promises.writeFile(serverProcess.cwd() + `/data/${ConfigServer.get({app_id:app_id, data:{config_group:'SERVER',parameter:'PATH_JOBS'}}).result}/${id}.html`, result,  'utf8');
+    await fs.promises.writeFile(ORM.serverProcess.cwd() + `/data/${ORM.db.ConfigServer.get({app_id:app_id, data:{config_group:'SERVER',parameter:'PATH_JOBS'}}).result}/${id}.html`, result,  'utf8');
     return {result:{affectedRows:1}, type:'JSON'};
 };
 /**

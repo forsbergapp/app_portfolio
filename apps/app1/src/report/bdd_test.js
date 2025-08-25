@@ -93,18 +93,16 @@ const template = props => ` <div id='report'>
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    
-    const AppModuleQueue = await import('../../../../server/db/AppModuleQueue.js');
+    const {ORM, serverProcess} = await import('../../../../server/server.js');    
     const {commonRegistryAppModule} = await import('../../../common/src/common.js');
-    const ConfigServer = await import('../../../../server/db/ConfigServer.js');
     const test_lib = await import('../../../../test/test.js');
     /**@type{server_db_config_server_service_test[]} */
-    const params = ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVICE_TEST'}}).result;
+    const params = ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVICE_TEST'}}).result;
     const fs = await import('node:fs');
     let finished = 0;
     /**@type{test_spec_result[]} */
     const specs = [];
-    const {serverProcess} = await import('../../../../server/server.js');
+
     /**@type {test_specrunner} */
     const specrunner = await fs.promises.readFile(`${serverProcess.cwd()}/test/specrunner.json`, 'utf8')
                         .then((/**@type{string}*/result)=>JSON.parse(result));
@@ -129,7 +127,7 @@ const component = async props => {
                         detail:detail_result});
             finished++;
             if (props.queue_parameters.appModuleQueueId)
-                AppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(finished / specrunner.specFiles.length)});
+                ORM.db.AppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(finished / specrunner.specFiles.length)});
         } catch (/**@type{*}*/error) {
             if (params.filter(row=>'STOP_ON_SPEC_FAILURE' in row)[0].STOP_ON_SPEC_FAILURE=='1')
                 throw spec.path + ', ' + (typeof error == 'string'?

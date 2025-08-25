@@ -15,18 +15,10 @@
  *          server_bff_parameters} from './types.js'
  */
 const app_common= await import('../apps/common/src/common.js');
-const {serverResponse, serverUtilResponseTime, serverUtilNumberValue} = await import('./server.js');
+const {ORM, serverResponse, serverUtilResponseTime, serverUtilNumberValue} = await import('./server.js');
 const socket = await import('./socket.js');
 const Security = await import('./security.js');
 const iam = await import('./iam.js');
-
-const ConfigServer = await import('./db/ConfigServer.js');
-const ConfigRestApi = await import('./db/ConfigRestApi.js');
-const IamAppIdToken = await import('./db/IamAppIdToken.js');
-const IamEncryption = await import ('./db/IamEncryption.js');
-const IamUser = await import('./db/IamUser.js');
-const Log = await import('./db/Log.js');
-const ServiceRegistry = await import('./db/ServiceRegistry.js');
 
 /**
  * @name bffConnect
@@ -45,7 +37,7 @@ const ServiceRegistry = await import('./db/ServiceRegistry.js');
  */
 const bffConnect = async parameters =>{
     /**@type{server_db_document_ConfigServer} */
-    const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
+    const configServer = ORM.db.ConfigServer.get({app_id:parameters.app_id}).result;
 
     const common_app_id = serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
 
@@ -89,7 +81,7 @@ const bffConnect = async parameters =>{
 const bffInit = async (req, res) =>{
     if (req.headers.accept == 'text/event-stream'){
         //SSE, log since response is open and log again when closing
-        Log.post({  app_id:0, 
+        ORM.db.Log.post({  app_id:0, 
             data:{  object:'LogRequestInfo', 
                     request:{   req:req,
                                 responsetime:serverUtilResponseTime(res),
@@ -108,7 +100,7 @@ const bffInit = async (req, res) =>{
         
     res.on('close',()=>{	
         //SSE response time will be time connected until disconnected
-        Log.post({  app_id:0, 
+        ORM.db.Log.post({  app_id:0, 
             data:{  object:'LogRequestInfo', 
                     request:{   req:req,
                                 responsetime:serverUtilResponseTime(res),
@@ -212,8 +204,6 @@ const bffInit = async (req, res) =>{
  *  @returns {Promise.<void>}
  */
 const bffResponse = async parameters =>{
-
-    const Security = await import('./security.js');
     /**
      * @param {string} data
      * @returns {Promise.<string>}
@@ -223,7 +213,7 @@ const bffResponse = async parameters =>{
                                         data;
 
     /**@type{server_db_document_ConfigServer['SERVICE_APP']} */
-    const CONFIG_SERVICE_APP = ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;
+    const CONFIG_SERVICE_APP = ORM.db.ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;
 
     const admin_app_id = serverUtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_ADMIN_APP_ID)[0].APP_ADMIN_APP_ID);
     if (parameters.result_request.http){    
@@ -370,10 +360,9 @@ const bffResponse = async parameters =>{
                 }
             }
             else{
-                const  {iamUtilMessageNotAuthorized} = await import('./iam.js');
                 serverResponse({app_id:parameters.app_id,
                                 type:parameters.result_request?.type,
-                                result:await encrypt(iamUtilMessageNotAuthorized()),
+                                result:await encrypt(iam.iamUtilMessageNotAuthorized()),
                                 route:parameters.route,
                                 method:parameters.method,
                                 statusMessage: '',
@@ -394,14 +383,12 @@ const bffResponse = async parameters =>{
  */
  const bff = async (req, res) =>{
     /**@type{server_db_document_ConfigServer} */
-    const configServer = ConfigServer.get({app_id:0}).result;
+    const configServer = ORM.db.ConfigServer.get({app_id:0}).result;
     // check JSON maximum size, parameter uses megabytes (MB)
     if (req.body && JSON.stringify(req.body).length/1024/1024 > 
             (serverUtilNumberValue((configServer.SERVER.filter(parameter=>parameter.JSON_LIMIT)[0].JSON_LIMIT ?? '0').replace('MB',''))??0)){
-        const Log = await import('./db/Log.js');
-        const {iamUtilMessageNotAuthorized} = await import('./iam.js');
         //log error                                        
-        Log.post({  app_id:0, 
+        ORM.db.Log.post({  app_id:0, 
                     data:{  object:'LogRequestError', 
                             request:{   req:req,
                                         responsetime:serverUtilResponseTime(res),
@@ -414,7 +401,7 @@ const bffResponse = async parameters =>{
             bffResponse({
                             result_request:{http:400, 
                                             code:null, 
-                                            text:iamUtilMessageNotAuthorized(), 
+                                            text:iam.iamUtilMessageNotAuthorized(), 
                                             developerText:'',
                                             moreInfo:'',
                                             type:'JSON'},
@@ -436,10 +423,10 @@ const bffResponse = async parameters =>{
                 if (['POST', 'GET'].includes(req.method) && req.url.startsWith('/bff/x/') && req.url.length>'/bff/x/'.length){
                     //lookup uuid in IamEncryption or ServiceRegistry for microservice
                     /**@type{server_db_table_IamEncryption}*/
-                    const encryptionData = (IamEncryption.get({app_id:common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
+                    const encryptionData = (ORM.db.IamEncryption.get({app_id:common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
                                             .filter((/**@type{server_db_table_IamEncryption}*/encryption)=>
                                                     encryption.uuid==(req.url.substring('/bff/x/'.length).split('~')[0])
-                                            )[0] ?? (ServiceRegistry.get({app_id:common_app_id, resource_id:null, data:{name:null}}).result ?? [])
+                                            )[0] ?? (ORM.db.ServiceRegistry.get({app_id:common_app_id, resource_id:null, data:{name:null}}).result ?? [])
                                             .filter((/**@type{server_db_table_ServiceRegistry}*/service)=>service.uuid==(req.url.substring('/bff/x/'.length).split('~')[0]))
                                             .map((/**@type{server_db_table_ServiceRegistry}*/service)=>{
                                                 return {
@@ -454,8 +441,8 @@ const bffResponse = async parameters =>{
                                             
                     if (encryptionData){
                         if(encryptionData.type=='FONT'){
-                            const token = IamAppIdToken.get({ app_id:common_app_id, 
-                                            resource_id:(IamEncryption.get({app_id:common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
+                            const token = ORM.db.IamAppIdToken.get({ app_id:common_app_id, 
+                                            resource_id:(ORM.db.IamEncryption.get({app_id:common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
                                                             .filter((/**@type{server_db_table_IamEncryption}*/encryption)=>
                                                                     encryption.uuid==(req.url.substring('/bff/x/'.length).split('~')[1])
                                                             )[0].iam_app_id_token_id, 
@@ -656,11 +643,10 @@ const bffResponse = async parameters =>{
                         res:            res
                     }:null;
             }
-                
         };
         if (resultbffInit.reason == null){
             //If first time, when no admin exists, then display maintenance for users
-            if (IamUser.get(0, null).result.length==0 && (await app_common.commonAppIam(req.headers.host)).admin == false){
+            if (ORM.db.IamUser.get(0, null).result.length==0 && (await app_common.commonAppIam(req.headers.host)).admin == false){
                 const {default:ComponentCreate} = await import('../apps/common/src/component/common_maintenance.js');
                 return bffResponse({
                                         result_request:{result:await ComponentCreate({  data:   null,
@@ -715,7 +701,7 @@ const bffResponse = async parameters =>{
                                                     res:bff_parameters.res})
                                 .catch((error)=>
                                                 /**@ts-ignore */
-                                    Log.post({  app_id:common_app_id, 
+                                    ORM.db.Log.post({  app_id:common_app_id, 
                                         data:{  object:'LogServiceError', 
                                                 service:{   service:bff_parameters.endpoint,
                                                             parameters:bff_parameters.query
@@ -756,7 +742,7 @@ const bffResponse = async parameters =>{
                                 .then((/**@type{*}*/result_service) => {
                                     const log_result = serverUtilNumberValue(configServer.SERVICE_LOG.filter(row=>'REQUEST_LEVEL' in row)[0].REQUEST_LEVEL)==2?result_service:'✅';
                                                         /**@ts-ignore */
-                                    return Log.post({  app_id:result_service.app_id, 
+                                    return ORM.db.Log.post({  app_id:result_service.app_id, 
                                         data:{  object:'LogServiceInfo', 
                                                 service:{   service:bff_parameters.endpoint,
                                                             parameters:bff_parameters.query
@@ -779,7 +765,7 @@ const bffResponse = async parameters =>{
                                 })
                                 .catch((/**@type{server_server_error}*/error) => {
                                     //log with app id 0 if app id still not authenticated
-                                    return Log.post({  app_id:0, 
+                                    return ORM.db.Log.post({  app_id:0, 
                                         data:{  object:'LogServiceError', 
                                                 service:{   service:bff_parameters.endpoint,
                                                             parameters:bff_parameters.query
@@ -791,11 +777,8 @@ const bffResponse = async parameters =>{
                                                             route:null,
                                                             jwk:bff_parameters.jwk,
                                                             iv:bff_parameters.iv,
-                                                            res:bff_parameters.res}));
-                                                        
-                                                    
+                                                            res:bff_parameters.res}));  
                                 });
-    
                     }
              }
         }
@@ -819,7 +802,7 @@ const bffRestApi = async (routesparameters) =>{
     const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
     const app_query = URI_query?new URLSearchParams(URI_query):null;
     /**@type{server_db_document_ConfigServer} */
-    const configServer = ConfigServer.get({app_id:0}).result;
+    const configServer = ORM.db.ConfigServer.get({app_id:0}).result;
 
     
     /**
@@ -880,7 +863,7 @@ const bffRestApi = async (routesparameters) =>{
 
     //get paths and components keys in ConfigRestApi
     const configPath = (() => { 
-        const { paths, components } = ConfigRestApi.get({app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>parameter.APP_COMMON_APP_ID)[0].APP_COMMON_APP_ID) ?? 0}).result; 
+        const { paths, components } = ORM.db.ConfigRestApi.get({app_id:serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>parameter.APP_COMMON_APP_ID)[0].APP_COMMON_APP_ID) ?? 0}).result; 
             return {paths:Object.entries(paths).filter(path=>   
                 //match with resource id string             
                 (path[0].indexOf('${')>-1 && path[0].substring(0,path[0].lastIndexOf('${')) == URI_path.substring(0,URI_path.lastIndexOf('/')+1)) ||

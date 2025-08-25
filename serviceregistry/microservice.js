@@ -6,9 +6,7 @@
  */
 
 const {registryConfigServices} = await import('./registry.js');
-const {serverUtilNumberValue} = await import('../server/server.js');
-const ConfigServer = await import('../server/db/ConfigServer.js');
-const {serverCircuitBreakerMicroService, serverRequest} = await import('../server/server.js');
+const {ORM, serverUtilNumberValue, serverCircuitBreakerMicroService, serverRequest} = await import('../server/server.js');
 
 const circuitBreaker = await serverCircuitBreakerMicroService();
 const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
@@ -54,7 +52,7 @@ const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
 const microserviceRequest = async parameters =>{
 
     /**@type{server_db_document_ConfigServer} */
-    const CONFIG_SERVER = ConfigServer.get({app_id:0}).result;
+    const CONFIG_SERVER = ORM.db.ConfigServer.get({app_id:0}).result;
     
     /**@type{microservice_registry_service} */
     if ((parameters.microservice == 'GEOLOCATION' && serverUtilNumberValue(CONFIG_SERVER.SERVICE_IAM
@@ -75,7 +73,7 @@ const microserviceRequest = async parameters =>{
                             host:               ServiceRegistry.server_host,
                             port:               ServiceRegistry.server_port,
                             admin:              parameters.app_id == serverUtilNumberValue(
-                                                            ConfigServer.get({  app_id:parameters.app_id, 
+                                                            ORM.db.ConfigServer.get({  app_id:parameters.app_id, 
                                                                                 data:{  config_group:'SERVICE_APP', 
                                                                                         parameter:'APP_COMMON_APP_ID'}}).result
                                                         ),

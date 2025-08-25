@@ -4,7 +4,7 @@
  * @import {server_db_document_ConfigServer, server_security_jwt_complete, server_security_jwt_payload} from './types.js'}
  */
 const Crypto = await import('node:crypto');
-
+const {ORM} = await import('./server.js');
 /**
  * @name securityCreateRandomString
  * @description Create random string
@@ -255,9 +255,8 @@ const securityPasswordCompare = async (app_id, password, compare_password) =>{
  *                      user_password_init_vector:string}>} 
  */
 const securityParametersGet = async parameters =>{
-    const ConfigServer = await import('./db/ConfigServer.js');
     /**@type{server_db_document_ConfigServer['SERVICE_IAM']} */
-    const configServer = ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_IAM'}}).result;
+    const configServer = ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_IAM'}}).result;
     return {user_password_encryption_key: configServer.filter(parameter=> 'USER_PASSWORD_ENCRYPTION_KEY' in parameter)[0].USER_PASSWORD_ENCRYPTION_KEY,
             user_password_init_vector : configServer.filter(parameter=> 'USER_PASSWORD_INIT_VECTOR' in parameter)[0].USER_PASSWORD_INIT_VECTOR
         };    

@@ -22,8 +22,7 @@
  * @returns {Promise.<server_server_response & {result?:{ status:string}[]}>}
  */
 const paymentRequestGetStatus = async parameters =>{
-   const {serverUtilNumberValue} = await import('../../../../server/server.js');
-   const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
+   const {ORM, serverUtilNumberValue} = await import('../../../../server/server.js');
    const {commonBFE} = await import('../../../../apps/common/src/common.js');
    const {securityPrivateDecrypt, securityPublicEncrypt} = await import('../../../../server/security.js'); 
    
@@ -42,9 +41,9 @@ const paymentRequestGetStatus = async parameters =>{
     *                      merchant_private_key:string|null,
     *                      merchant_vpa:string|null,
     *                      iam_user_id_anonymous:number|null}}} */
-   const Entity            = AppDataEntity.get({   app_id:parameters.app_id, 
-                                                   resource_id:null, 
-                                                   data:{data_app_id:parameters.data.data_app_id}}).result[0];
+   const Entity            = ORM.db.AppDataEntity.get({ app_id:parameters.app_id, 
+                                                        resource_id:null, 
+                                                        data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
    /** 
     * @type {{ api_secret:             string,

@@ -3,10 +3,7 @@
 /**
  * @import {server_server_response,server_db_table_AppDataEntityResource, server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
-
-const ORM = await import('./ORM.js');
-const AppData = await import('./AppData.js');
-
+const {ORM} = await import ('../server.js');
 /**
  * @name get
  * @description Get record
@@ -26,8 +23,7 @@ const get = parameters =>{
         /**@ts-ignore */
         return {result:result
                         .map((/**@type{server_db_table_AppDataEntityResource & {app_data_name:string, app_data_value:string, app_data_display_data:string}}*/row)=>{
-                            /**@ts-ignore */
-                            const app_data = AppData.getServer({ app_id:parameters.app_id, 
+                            const app_data = ORM.db.AppData.getServer({ app_id:parameters.app_id, 
                                                                                 resource_id:row.app_data_id,
                                                                                 data:{data_app_id:null}}).result[0];
                             row.app_data_name = app_data?.name;

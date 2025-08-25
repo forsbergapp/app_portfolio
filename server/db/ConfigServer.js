@@ -5,9 +5,7 @@
  *          server_db_document_ConfigServer,
  *          server_db_config_server_metadata} from '../types.js'
  */
-
-const ORM = await import('./ORM.js');
-
+const {ORM} = await import ('../server.js');
 /**
  * @name get
  * @description Config get
@@ -70,7 +68,6 @@ const get = parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters => {
-    const {serverUtilNumberValue} = await import('../server.js');
     //can only use config or a config key
     if (parameters.data.config && 
         (parameters.data.maintenance ||parameters.data.comment||parameters.data.configuration))
@@ -80,7 +77,7 @@ const update = async parameters => {
         const old_config = get({app_id:parameters.app_id}).result;
         /**@type{server_db_config_server_metadata} */
         const metadata = {
-                            MAINTENANCE:serverUtilNumberValue(parameters.data.maintenance ?? old_config.METADATA.MAINTENANCE) ?? old_config.METADATA.MAINTENANCE,
+                            MAINTENANCE:ORM.serverUtilNumberValue(parameters.data.maintenance ?? old_config.METADATA.MAINTENANCE) ?? old_config.METADATA.MAINTENANCE,
                             CONFIGURATION:parameters.data.configuration ?? old_config.METADATA.CONFIGURATION,
                             COMMENT:parameters.data.comment ?? old_config.METADATA.COMMENT,
                             MODIFIED:new Date().toISOString(),
