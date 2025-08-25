@@ -24,7 +24,7 @@
 
 const DB_DEMO_PATH              = '/server/install/db/demo/';
 const DB_DEMO_FILE              = 'demo_data.json';
-const {ORM, serverProcess, serverUtilNumberValue} = await import('./server.js');
+const {ORM} = await import('./server.js');
 const fs = await import('node:fs');
 /**
  * @name postDemo
@@ -66,7 +66,7 @@ const postDemo = async parameters=> {
    /**@type{{[key:string]: string|number}[]} */
    const install_result = [];
    install_result.push({'start': new Date().toISOString()});
-   const fileBuffer = await fs.promises.readFile(`${serverProcess.cwd()}${DB_DEMO_PATH}${DB_DEMO_FILE}`, 'utf8');
+   const fileBuffer = await fs.promises.readFile(`${ORM.serverProcess.cwd()}${DB_DEMO_PATH}${DB_DEMO_FILE}`, 'utf8');
    /**@type{[server_db_database_demo_data]}*/
    const demo_users = JSON.parse(fileBuffer.toString()).demo_users;
    //create social records
@@ -80,8 +80,8 @@ const postDemo = async parameters=> {
    let install_count=0;
    const install_total_count = demo_users.length + social_types.length;
    install_count++;
-   const common_app_id = serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
-   const admin_app_id = serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result);
+   const common_app_id = ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
+   const admin_app_id = ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result);
 
    try {
        /**
@@ -329,7 +329,7 @@ const postDemo = async parameters=> {
                else
                    settings_header_image = `${demo_user.username}.webp`;
                /**@type{Buffer} */
-               const image = await fs.promises.readFile(`${serverProcess.cwd()}${DB_DEMO_PATH}${settings_header_image}`);
+               const image = await fs.promises.readFile(`${ORM.serverProcess.cwd()}${DB_DEMO_PATH}${settings_header_image}`);
                /**@ts-ignore */
                const image_string = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
                //update settings with loaded image into BASE64 format
@@ -383,7 +383,7 @@ const postDemo = async parameters=> {
                                     const {SERVER:config_SERVER} = ORM.db.ConfigServer.get({app_id:0}).result;
                                     //use HTTP configuration as default
                                     const HOST = config_SERVER.filter(row=>'HOST' in row)[0].HOST;
-                                    const HTTP_PORT = serverUtilNumberValue(config_SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT);
+                                    const HTTP_PORT = ORM.serverUtilNumberValue(config_SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT);
                                     return key_name[1]?.replaceAll('<HOST/>', HOST + ((HTTP_PORT==443)?'':`:${HTTP_PORT}`));
                                }
                                else
@@ -814,7 +814,7 @@ const postConfigDefault = async () => {
      * @param {server_DbObject} object
      */
     const getObject = async object => 
-            await fs.promises.readFile(serverProcess.cwd() + `/server/install/default/${object}.json`)
+            await fs.promises.readFile(ORM.serverProcess.cwd() + `/server/install/default/${object}.json`)
                     .then(filebuffer=>JSON.parse(filebuffer.toString()));
     //read all default files
     /**
@@ -872,8 +872,8 @@ const postConfigDefault = async () => {
                                 pathMicroserviceDestination:'/data/microservice/'});
     //install default microservice files
     for (const file of ['common.js', 'crypto.js', 'types.js'])
-        await fs.promises.copyFile( serverProcess.cwd() + `/server/install/default/microservice/${file}`, 
-                                    serverProcess.cwd() + `/data/microservice/${file}`)
+        await fs.promises.copyFile( ORM.serverProcess.cwd() + `/server/install/default/microservice/${file}`, 
+                                    ORM.serverProcess.cwd() + `/data/microservice/${file}`)
             .catch(error=>{throw error;});
     
 
@@ -947,10 +947,10 @@ const updateConfigSecrets = async () =>{
 const updateMicroserviceSecurity = async parameters =>{
     for (const file of ['BATCH', 'GEOLOCATION']){
         /**@type{microservice_local_config} */
-        const content = await fs.promises.readFile(serverProcess.cwd() + `${parameters.pathMicroserviceSource}${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
+        const content = await fs.promises.readFile(ORM.serverProcess.cwd() + `${parameters.pathMicroserviceSource}${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
         content.uuid = parameters.serveRegistry.filter(microservice=>microservice.name==content.name)[0].uuid;
         content.secret = parameters.serveRegistry.filter(microservice=>microservice.name==content.name)[0].secret;
-        await fs.promises.writeFile(serverProcess.cwd() + `${parameters.pathMicroserviceDestination}${file}.json`, 
+        await fs.promises.writeFile(ORM.serverProcess.cwd() + `${parameters.pathMicroserviceDestination}${file}.json`, 
                                                             JSON.stringify(content, undefined, 2),'utf8');
     }
 };
@@ -973,7 +973,7 @@ const getConfigSecurityUpdate = async parameters =>{
     return {
         ConfigServer:await new Promise(resolve=>{(async () =>{ 
                             /**@type{server_db_document_ConfigServer}*/
-                            const content = parameters.pathConfigServer?await fs.promises.readFile(serverProcess.cwd() + parameters.pathConfigServer)
+                            const content = parameters.pathConfigServer?await fs.promises.readFile(ORM.serverProcess.cwd() + parameters.pathConfigServer)
                                                 .then(file=>JSON.parse(file.toString())):ORM.getObject(0,'ConfigServer');
                             //generate secrets
                             content.SERVICE_IAM.map((/**@type{server_db_config_server_service_iam}*/row)=>{
@@ -1004,7 +1004,7 @@ const getConfigSecurityUpdate = async parameters =>{
                         })();}),
         ServiceRegistry:parameters.pathServiceRegistry?await new Promise(resolve=>{(async () =>{ 
                                 /**@type{server_db_table_ServiceRegistry[]}*/
-                                const content = await fs.promises.readFile(serverProcess.cwd() + parameters.pathServiceRegistry)
+                                const content = await fs.promises.readFile(ORM.serverProcess.cwd() + parameters.pathServiceRegistry)
                                                     .then(file=>JSON.parse(file.toString()));
                                 for (const row of content){
                                     row.uuid = Security.securityUUIDCreate();
@@ -1012,7 +1012,7 @@ const getConfigSecurityUpdate = async parameters =>{
                                 }
                                 resolve(content);
                             })();}):ORM.getObject(0,'ServiceRegistry'),
-        AppSecret:parameters.pathAppSecret?await fs.promises.readFile(serverProcess.cwd() + parameters.pathAppSecret)
+        AppSecret:parameters.pathAppSecret?await fs.promises.readFile(ORM.serverProcess.cwd() + parameters.pathAppSecret)
                         .then(filebuffer=>
                         //generate secrets
                         JSON.parse(filebuffer.toString())

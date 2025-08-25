@@ -22,7 +22,7 @@
  * @returns {Promise.<server_server_response & {result?:{ status:string}[]}>}
  */
 const paymentRequestGetStatus = async parameters =>{
-   const {ORM, serverUtilNumberValue} = await import('../../../../server/server.js');
+   const {ORM} = await import('../../../../server/server.js');
    const {commonBFE} = await import('../../../../apps/common/src/common.js');
    const {securityPrivateDecrypt, securityPublicEncrypt} = await import('../../../../server/security.js'); 
    
@@ -57,7 +57,7 @@ const paymentRequestGetStatus = async parameters =>{
    };
    //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
    //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-   const body_encrypted = {id:         serverUtilNumberValue(Entity.json_data.merchant_id),
+   const body_encrypted = {id:         ORM.serverUtilNumberValue(Entity.json_data.merchant_id),
                            message:    securityPublicEncrypt(
                                            Entity.json_data.merchant_public_key??'', 
                                            JSON.stringify(body))};

@@ -29,7 +29,7 @@ const paymentRequestUpdate = async parameters =>{
 
     const {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
     const {getToken} = await import('./payment_request_create.js');
-    const {ORM, serverUtilNumberValue} = await import('../../../../server/server.js');
+    const {ORM} = await import('../../../../server/server.js');
 
     /**@type{server_db_table_AppDataEntity} */
     const Entity    = ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
@@ -60,9 +60,9 @@ const paymentRequestUpdate = async parameters =>{
                                         payment_request.json_data?.payment_request_id==token?.app_custom_id
                                     )[0];
 
-    if (customer && payment_request && payment_request.id!=null && (serverUtilNumberValue(parameters.data.status)==1 || serverUtilNumberValue(parameters.data.status)==0)){
+    if (customer && payment_request && payment_request.id!=null && (ORM.serverUtilNumberValue(parameters.data.status)==1 || ORM.serverUtilNumberValue(parameters.data.status)==0)){
         let status ='PENDING';
-        if (serverUtilNumberValue(parameters.data.status)==1)
+        if (ORM.serverUtilNumberValue(parameters.data.status)==1)
             try {
                 const account_payer         =  ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                             resource_id:null, 

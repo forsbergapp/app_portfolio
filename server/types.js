@@ -498,12 +498,12 @@
 /**
  * @description DB TABLE IamUserAppDataPostView
  * @memberof dbObjects
- * @typedef {{  id:number,
+ * @typedef {{  id?:number,
  *              iam_user_app_id:number|null, 
  *              iam_user_app_data_post_id:number,
  *              client_ip:string|null,
  *              client_user_agent:string|null,
- *              created:string}} server_db_table_IamUserAppDataPostView
+ *              created?:string}} server_db_table_IamUserAppDataPostView
  */
     
 /**

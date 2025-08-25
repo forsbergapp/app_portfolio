@@ -36,7 +36,7 @@
 const paymentRequestGet = async parameters =>{
     const  {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
     const {getToken} = await import('./payment_request_create.js');
-    const {ORM, serverUtilNumberValue} = await import('../../../../server/server.js');
+    const {ORM} = await import('../../../../server/server.js');
 
     /**@type{server_db_table_AppDataEntity} */
     const Entity    = ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
@@ -99,7 +99,7 @@ const paymentRequestGet = async parameters =>{
                                 payment_request_id:     payment_request.json_data?.payment_request_id??'',
                                 status:                 payment_request.json_data?.status??'',
                                 merchant_name:          merchant.json_data?.merchant_name??'',
-                                amount:			        serverUtilNumberValue(payment_request.json_data?.amount),
+                                amount:			        ORM.serverUtilNumberValue(payment_request.json_data?.amount),
                                 currency_symbol:        currency.json_data?.currency_symbol??'',
                                 countdown:              ''}],
                     type:'JSON'};

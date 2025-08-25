@@ -7,7 +7,7 @@
  * @import {APP_REPORT_day_user_account_app_data_posts, APP_REPORT_settings, APP_user_setting_record} from '../types.js'
  */
 
-const {ORM, serverUtilNumberValue} = await import('../../../../server/server.js');
+const {ORM} = await import('../../../../server/server.js');
 
 const {APP_REPORT_GLOBAL, component} = await import('../../public/component/app_lib.js');
 
@@ -47,15 +47,15 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
                     papersize				: user_account_app_data_post.design_paper_size,
                     highlight           	: user_account_app_data_post.design_row_highlight,
                     /**@ts-ignore */
-                    show_weekday        	: serverUtilNumberValue(user_account_app_data_post.design_column_weekday_checked),
+                    show_weekday        	: ORM.serverUtilNumberValue(user_account_app_data_post.design_column_weekday_checked),
                     /**@ts-ignore */
-                    show_calendartype   	: serverUtilNumberValue(user_account_app_data_post.design_column_calendartype_checked),
+                    show_calendartype   	: ORM.serverUtilNumberValue(user_account_app_data_post.design_column_calendartype_checked),
                     /**@ts-ignore */
-                    show_notes          	: serverUtilNumberValue(user_account_app_data_post.design_column_notes_checked),
+                    show_notes          	: ORM.serverUtilNumberValue(user_account_app_data_post.design_column_notes_checked),
                     /**@ts-ignore */
-                    show_gps   	       		: serverUtilNumberValue(user_account_app_data_post.design_column_gps_checked),
+                    show_gps   	       		: ORM.serverUtilNumberValue(user_account_app_data_post.design_column_gps_checked),
                     /**@ts-ignore */
-                    show_timezone       	: serverUtilNumberValue(user_account_app_data_post.design_column_timezone_checked),
+                    show_timezone       	: ORM.serverUtilNumberValue(user_account_app_data_post.design_column_timezone_checked),
                     /**@ts-ignore */
                     header_img_src      	: (user_account_app_data_post.image_header_image_img == '' || user_account_app_data_post.image_header_image_img == null)?null:user_account_app_data_post.image_header_image_img,
                     /**@ts-ignore */
@@ -77,20 +77,20 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
                     highlat             	: user_account_app_data_post.prayer_high_latitude_adjustment,
                     format              	: user_account_app_data_post.prayer_time_format,
                     /**@ts-ignore */
-                    hijri_adj           	: serverUtilNumberValue(user_account_app_data_post.prayer_hijri_date_adjustment),
+                    hijri_adj           	: ORM.serverUtilNumberValue(user_account_app_data_post.prayer_hijri_date_adjustment),
                     iqamat_fajr         	: user_account_app_data_post.prayer_fajr_iqamat,
                     iqamat_dhuhr        	: user_account_app_data_post.prayer_dhuhr_iqamat,
                     iqamat_asr          	: user_account_app_data_post.prayer_asr_iqamat,
                     iqamat_maghrib      	: user_account_app_data_post.prayer_maghrib_iqamat,
                     iqamat_isha         	: user_account_app_data_post.prayer_isha_iqamat,
                     /**@ts-ignore */
-                    show_imsak          	: serverUtilNumberValue(user_account_app_data_post.prayer_column_imsak_checked),
+                    show_imsak          	: ORM.serverUtilNumberValue(user_account_app_data_post.prayer_column_imsak_checked),
                     /**@ts-ignore */
-                    show_sunset         	: serverUtilNumberValue(user_account_app_data_post.prayer_column_sunset_checked),
+                    show_sunset         	: ORM.serverUtilNumberValue(user_account_app_data_post.prayer_column_sunset_checked),
                     /**@ts-ignore */
-                    show_midnight       	: serverUtilNumberValue(user_account_app_data_post.prayer_column_midnight_checked),
+                    show_midnight       	: ORM.serverUtilNumberValue(user_account_app_data_post.prayer_column_midnight_checked),
                     /**@ts-ignore */
-                    show_fast_start_end 	: serverUtilNumberValue(user_account_app_data_post.prayer_column_fast_start_end),
+                    show_fast_start_end 	: ORM.serverUtilNumberValue(user_account_app_data_post.prayer_column_fast_start_end),
                     
                     timetable_class			: 'timetable_class',
                     timetable_month         : 'timetable_month_class',
@@ -182,7 +182,7 @@ const timetable = async (timetable_parameters) => {
 								client_user_agent:  		timetable_parameters.user_agent,
 								iam_user_app_id:    		iam_user_app_id_view,
 								/**@ts-ignore */
-								iam_user_app_data_post_id: 	serverUtilNumberValue(user_account_app_data_post_id)};
+								iam_user_app_data_post_id: 	ORM.serverUtilNumberValue(user_account_app_data_post_id)};
 		
         ORM.db.IamUserAppDataPostView.post(timetable_parameters.app_id, data_ViewStat)
 		.then(()=>{

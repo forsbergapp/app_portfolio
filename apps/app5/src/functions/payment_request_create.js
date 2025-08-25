@@ -59,7 +59,6 @@ const getToken = async parameters => {
 */
 const paymentRequestCreate = async parameters =>{
   
-   const {serverUtilNumberValue} = await import('../../../../server/server.js');
    const {iamUtilMessageNotAuthorized, iamAuthorizeToken} = await import('../../../../server/iam.js');
    const {securityUUIDCreate, securityPrivateDecrypt, securityPublicEncrypt} = await import('../../../../server/security.js');
    
@@ -85,7 +84,7 @@ const paymentRequestCreate = async parameters =>{
                                                        app_data_entity_id:Entity.id
                                                }}).result
                        .filter((/**@type{server_db_table_AppDataResourceMaster}*/merchant)=>
-                           serverUtilNumberValue(merchant.json_data?.merchant_id)==parameters.data.id
+                           ORM.serverUtilNumberValue(merchant.json_data?.merchant_id)==parameters.data.id
                        )
                        .map((/**@type{server_db_table_AppDataResourceMaster}*/result)=>{return {  
                                                                    merchant_id:                        result.json_data?.merchant_id,
@@ -156,7 +155,7 @@ const paymentRequestCreate = async parameters =>{
                                                payeeid:        body_decrypted.payeeid,
                                                payerid:        body_decrypted.payerid,
                                                currency_code:  body_decrypted.currency_code,
-                                               amount:         serverUtilNumberValue(body_decrypted.amount),
+                                               amount:         ORM.serverUtilNumberValue(body_decrypted.amount),
                                                message:        body_decrypted.message,
                                                status:         'PENDING'
                                            };

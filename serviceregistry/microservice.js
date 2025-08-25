@@ -6,7 +6,7 @@
  */
 
 const {registryConfigServices} = await import('./registry.js');
-const {ORM, serverUtilNumberValue, serverCircuitBreakerMicroService, serverRequest} = await import('../server/server.js');
+const {ORM, serverCircuitBreakerMicroService, serverRequest} = await import('../server/server.js');
 
 const circuitBreaker = await serverCircuitBreakerMicroService();
 const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
@@ -18,7 +18,7 @@ const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
  * @param {string} uri_path
  * @returns {number|null}
  */
- const microserviceUtilResourceIdNumberGet = uri_path => serverUtilNumberValue(uri_path.substring(uri_path.lastIndexOf('/') + 1));
+ const microserviceUtilResourceIdNumberGet = uri_path => ORM.serverUtilNumberValue(uri_path.substring(uri_path.lastIndexOf('/') + 1));
 /**
  * @name microserviceUtilResourceIdStringGet
  * @description Returns resource id string from URI path
@@ -55,7 +55,7 @@ const microserviceRequest = async parameters =>{
     const CONFIG_SERVER = ORM.db.ConfigServer.get({app_id:0}).result;
     
     /**@type{microservice_registry_service} */
-    if ((parameters.microservice == 'GEOLOCATION' && serverUtilNumberValue(CONFIG_SERVER.SERVICE_IAM
+    if ((parameters.microservice == 'GEOLOCATION' && ORM.serverUtilNumberValue(CONFIG_SERVER.SERVICE_IAM
                                                         .filter(parameter=>'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1)||
         parameters.microservice != 'GEOLOCATION'){
                
@@ -72,7 +72,7 @@ const microserviceRequest = async parameters =>{
                             url:                null,
                             host:               ServiceRegistry.server_host,
                             port:               ServiceRegistry.server_port,
-                            admin:              parameters.app_id == serverUtilNumberValue(
+                            admin:              parameters.app_id == ORM.serverUtilNumberValue(
                                                             ORM.db.ConfigServer.get({  app_id:parameters.app_id, 
                                                                                 data:{  config_group:'SERVICE_APP', 
                                                                                         parameter:'APP_COMMON_APP_ID'}}).result
