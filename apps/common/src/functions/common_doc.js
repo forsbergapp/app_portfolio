@@ -7,7 +7,8 @@
  *          serverDocumentMenu,
  *          server_db_table_App} from '../../../../server/types.js'
  */
-
+const {ORM, serverProcess, serverUtilNumberValue} = await import('../../../../server/server.js');
+const fs = await import('node:fs');
 /**
  * @name getFile
  * @description  Get file and add given suffix to path
@@ -40,8 +41,7 @@ const getFile = async (path, fileRequest=false) =>{
  * @returns {Promise.<{id:number, file:string}[]>}
  */
 const getFiles = async (directory, filePattern) =>{
-    const {serverProcess} = await import('../../../../server/server.js');
-    const fs = await import('node:fs');
+    
     /**@type{{id:number, file:string}[]}*/
     const fileList = [];
     let index =0;
@@ -221,20 +221,15 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
  * @returns {Promise.<string>}
  */
 const markdownRender = async parameters =>{
-    const {serverUtilNumberValue} = await import('../../../../server/server.js');
-    const App = await import('../../../../server/db/App.js');
-    const ConfigServer = await import('../../../../server/db/ConfigServer.js');
-    const {serverProcess} = await import('../../../../server/server.js');
-
+    
     switch (true){
         case parameters.type.toUpperCase()=='APP':{
             //replace variables for APP template
-            const AppTranslation = await import('../../../../server/db/AppTranslation.js');
             
-            const app_translation = AppTranslation.get(parameters.app_id,null, parameters.locale, 
+            const app_translation = ORM.db.AppTranslation.get(parameters.app_id,null, parameters.locale, 
                                                                 /**@ts-ignore */
                                                                 serverUtilNumberValue(parameters.doc)).result[0];
-            const app = App.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.doc)}).result[0];
+            const app = ORM.db.App.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.doc)}).result[0];
 
             let markdown = await getFile(`${serverProcess.cwd()}/apps/common/src/functions/documentation/2.app.md`);
             //remove all '\r' in '\r\n'
@@ -280,9 +275,9 @@ const markdownRender = async parameters =>{
                                 .replaceAll('@{MODULE}',            parameters.module ??'')
                                 .replaceAll('@{SOURCE_LINK}',       parameters.module ??'')
                                 //metadata tags                            
-                                .replaceAll('@{SERVER_HOST}',       ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'HOST'}}).result??'')
-                                .replaceAll('@{APP_CONFIGURATION}', ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'METADATA', parameter:'CONFIGURATION'}}).result??'')
-                                .replaceAll('@{APP_COPYRIGHT}',     App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].copyright)
+                                .replaceAll('@{SERVER_HOST}',       ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'HOST'}}).result??'')
+                                .replaceAll('@{APP_CONFIGURATION}', ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'METADATA', parameter:'CONFIGURATION'}}).result??'')
+                                .replaceAll('@{APP_COPYRIGHT}',     ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].copyright)
                         );
             
             //replace all found JSDoc comments with markdown formatted module functions
@@ -346,7 +341,7 @@ const markdownRender = async parameters =>{
         }
         case parameters.type.toUpperCase()=='GUIDE':{
             return await getFile(`${serverProcess.cwd()}/apps/common/src/functions/documentation/${parameters.doc}.md`, true)
-                        .then(markdown=>markdown.replaceAll('@{GIT_REPOSITORY_URL}',ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'GIT_REPOSITORY_URL'}}).result));
+                        .then(markdown=>markdown.replaceAll('@{GIT_REPOSITORY_URL}',ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'GIT_REPOSITORY_URL'}}).result));
         }
         default:{
             return '';
@@ -361,8 +356,6 @@ const markdownRender = async parameters =>{
  * @returns {Promise.<string>}
  */
 const menuRender = async parameters =>{
-    const App = await import('../../../../server/db/App.js');
-    const {serverProcess} = await import('../../../../server/server.js');
 
     /**@type{serverDocumentMenu[]} */
     const markdown_menu_docs = await getFile(`${serverProcess.cwd()}/apps/common/src/functions/documentation/menu.json`).then((/**@type{string}*/result)=>JSON.parse(result));
@@ -370,7 +363,7 @@ const menuRender = async parameters =>{
         switch (true){
             case menu.type=='APP':{
                 //return menu for app with updated id and app name
-                menu.menu_sub = App.get({app_id:parameters.app_id, resource_id:null}).result
+                menu.menu_sub = ORM.db.App.get({app_id:parameters.app_id, resource_id:null}).result
                                 // sort common last
                                 .sort((/**@type{server_db_table_App}*/a,/**@type{server_db_table_App}*/b)=>(a.id==0&&b.id==0)?0:a.id==0?1:b.id==0?-1:a.id-b.id)
                                 .map((/**@type{server_db_table_App}*/app)=>{
@@ -437,9 +430,6 @@ const menuRender = async parameters =>{
  */
 const appFunction = async parameters =>{
     const {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
-    const App = await import('../../../../server/db/App.js');
-    const {serverUtilNumberValue} = await import('../../../../server/server.js');
-    const {serverProcess} = await import('../../../../server/server.js');
 
     //check if valid document request
     if (
@@ -463,14 +453,12 @@ const appFunction = async parameters =>{
                 return {result:await getFile(`${serverProcess.cwd()}${parameters.data.doc}.js`, true), type:'HTML'};
             }
             case parameters.data.documentType=='GUIDE':
-            case parameters.data.documentType=='APP' && App.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.data.doc)}).result?.length==1:
+            case parameters.data.documentType=='APP' && ORM.db.App.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.data.doc)}).result?.length==1:
             case parameters.data.documentType=='ROUTE':
             case parameters.data.documentType.startsWith('MODULE') &&
                 (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/serviceregistry')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
                 const {default:ComponentMarkdown} = await import('../component/common_markdown.js');
                 const {default:ComponentOpenAPI} = await import('../component/common_openapi.js');
-                const ConfigServer = await import('../../../../server/db/ConfigServer.js');
-                const ConfigRestApi = await import('../../../../server/db/ConfigRestApi.js');
                 //guide documents in separate files, app and modules use templates
                 return {result:(await ComponentMarkdown({   data:{  markdown:await markdownRender({ app_id:parameters.app_id,
                                                                     type:parameters.data.documentType,
@@ -483,9 +471,9 @@ const appFunction = async parameters =>{
                                                                                 app_id: parameters.app_id
                                                                                 },
                                                                         methods:{
-                                                                                App:App,
-                                                                                ConfigServer:ConfigServer,
-                                                                                ConfigRestApi:ConfigRestApi,
+                                                                                App:ORM.db.App,
+                                                                                ConfigServer:ORM.db.ConfigServer,
+                                                                                ConfigRestApi:ORM.db.ConfigRestApi,
                                                                                 serverUtilNumberValue:serverUtilNumberValue
                                                                                 }
                                                                         }):''),

@@ -6,9 +6,7 @@
  *          server_db_common_result_delete,
  *          server_db_common_result_insert} from '../types.js'
  */
-
-const ORM = await import('./ORM.js');
-
+const {ORM} = await import ('../server.js');
 /**
  * @name get
  * @description Get record

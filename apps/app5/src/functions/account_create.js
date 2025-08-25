@@ -29,8 +29,8 @@ const createBankAccountVPA = ()=>securityUUIDCreate();
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
 const createBankAccount = async parameters =>{
-    const AppDataResourceDetail = await import('../../../../server/db/AppDataResourceDetail.js');
-    return AppDataResourceDetail.post({app_id:parameters.app_id, data:{...{json_data:{
+    const {ORM} = await import('../../../../server/server.js');
+    return ORM.db.AppDataResourceDetail.post({app_id:parameters.app_id, data:{...{json_data:{
                                                                                         bank_account_number :createBankAccountNumber(),
                                                                                         bank_account_secret :createBankAccountSecret(),
                                                                                         bank_account_vpa    :createBankAccountVPA()

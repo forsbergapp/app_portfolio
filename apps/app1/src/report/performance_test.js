@@ -86,14 +86,12 @@ const template = props => ` <div id='report'>
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    const {serverUtilNumberValue} = await import('../../../../server/server.js');
+    const {ORM,serverUtilNumberValue} = await import('../../../../server/server.js');
     const {commonRegistryAppModule} = await import('../../../common/src/common.js');
-    const AppModuleQueue = await import('../../../../server/db/AppModuleQueue.js');
-    const ConfigServer = await import('../../../../server/db/ConfigServer.js');
 
     const PROTOCOL = 'http://';
-    const HOST = ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER', parameter:'HOST'}}).result;
-    const PORT = serverUtilNumberValue(ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
+    const HOST = ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER', parameter:'HOST'}}).result;
+    const PORT = serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
 
     class Benchmark {
         /**
@@ -356,7 +354,7 @@ const component = async props => {
                         }
                         if (this._finished % Math.min(Math.floor((this.requests * this.concurrency) / 10),10000) === 0) {
                             if (props.queue_parameters.appModuleQueueId)
-                                AppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(this._finished / (this.requests * this.concurrency))});
+                                ORM.db.AppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(this._finished / (this.requests * this.concurrency))});
                         }
                         if (this._finished >= (this.requests * this.concurrency)) 
                             return resolve(this.done(startTime));

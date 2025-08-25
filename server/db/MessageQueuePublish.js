@@ -5,12 +5,9 @@
  *          server_db_table_MessageQueuePublish,
  *          server_db_table_MessageQueuePublishMessage,
  *          server_db_table_MessageQueuePublishMicroserviceLog,
- *          server_db_common_result_delete
-} from '../types.js'
+ *          server_db_common_result_delete} from '../types.js'
  */
-
-const ORM = await import('./ORM.js');
-
+const {ORM} = await import ('../server.js');
 /**
  * @name get
  * @description Get 

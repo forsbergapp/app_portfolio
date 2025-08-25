@@ -26,22 +26,18 @@
 const paymentRequestGetStatus = async parameters =>{
      
     const {getToken} = await import('./payment_request_create.js');
-    const {serverUtilNumberValue} = await import('../../../../server/server.js');
+    const {ORM, serverUtilNumberValue} = await import('../../../../server/server.js');
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import('../../../../server/security.js');
     const  {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
     const {socketClientPostMessage} = await import('../../../../server/socket.js');
-    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
-    const AppDataResourceMaster = await import('../../../../server/db/AppDataResourceMaster.js');
-    const AppDataResourceDetail = await import('../../../../server/db/AppDataResourceDetail.js');
-    const IamUserApp = await import('../../../../server/db/IamUserApp.js');
 
     /**@type{server_db_table_AppDataEntity} */
-    const Entity    = AppDataEntity.get({   app_id:parameters.app_id, 
+    const Entity    = ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.app_id}}).result[0];
 
 
-    const merchant = await AppDataResourceMaster.get({   app_id:parameters.app_id, 
+    const merchant = await ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                 all_users:true,
                                                                 resource_id:null, 
                                                                 data:{  iam_user_id:null,
@@ -61,7 +57,7 @@ const paymentRequestGetStatus = async parameters =>{
         const  body_decrypted = JSON.parse(securityPrivateDecrypt(merchant.merchant_private_key, parameters.data.message));
         if (merchant.json_data.merchant_api_secret==body_decrypted.api_secret && merchant.json_data.merchant_url == body_decrypted.origin){
             /**@type{payment_request} */
-            const payment_request = await AppDataResourceMaster.get({   app_id:parameters.app_id, 
+            const payment_request = await ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                         all_users:true,
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:null,
@@ -83,7 +79,7 @@ const paymentRequestGetStatus = async parameters =>{
                     const data_encrypted = securityPublicEncrypt(merchant.merchant_public_key, JSON.stringify(data_return));
 
                     /**@type{bank_account & {app_data_resource_master_id:server_db_table_AppDataResourceDetail['app_data_resource_master_id']}}*/
-                    const account_payer =  AppDataResourceDetail.get({  app_id:parameters.app_id, 
+                    const account_payer =  ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                         all_users:true,
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:null,
@@ -99,7 +95,7 @@ const paymentRequestGetStatus = async parameters =>{
                         //if status is still pending then send server side event message to customer
                         if (payment_request.status=='PENDING'){
                             /**@type{server_db_table_AppDataResourceMaster} */
-                            const customer = AppDataResourceMaster.get({app_id:parameters.app_id, 
+                            const customer = ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                         all_users:true,
                                                                         resource_id:account_payer.app_data_resource_master_id, 
                                                                         data:{  iam_user_id:null,
@@ -111,7 +107,7 @@ const paymentRequestGetStatus = async parameters =>{
                             socketClientPostMessage({   app_id:parameters.app_id,
                                                         resource_id:null,
                                                         data:{  data_app_id:null,
-                                                                iam_user_id:IamUserApp.get({app_id:parameters.app_id, resource_id:customer.iam_user_app_id, data:{iam_user_id:null, data_app_id:null}}).result[0].iam_user_id,
+                                                                iam_user_id:ORM.db.IamUserApp.get({app_id:parameters.app_id, resource_id:customer.iam_user_app_id, data:{iam_user_id:null, data_app_id:null}}).result[0].iam_user_id,
                                                                 idToken:null,
                                                                 message:JSON.stringify({
                                                                                         type: 'PAYMENT_REQUEST', 

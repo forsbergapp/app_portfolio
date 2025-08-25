@@ -8,9 +8,14 @@
  *          server_db_document_ConfigServer,
  *          server_db_table_ServiceRegistry,
  *          server_bff_endpoint_type,
+ *          server_server_response,
  *          server_server_req_id_number} from './types.js'
  */
-
+/**
+ * @description ORM database variable, assigned in serverStart()
+ * @type{Object.<string,*>}
+ */
+let ORM = {};
  /**
  *  Returns response to client
  *  @param {{app_id?:number|null,
@@ -30,9 +35,8 @@ const serverResponse = async parameters =>{
      * @param {server_server_response_type} type
      */
     const setType = async type => {
-        const ConfigServer = await import('./db/ConfigServer.js');
         /**@type{server_db_document_ConfigServer['SERVICE_APP']} */
-        const CONFIG_SERVICE_APP = ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;    
+        const CONFIG_SERVICE_APP = ORM.db.ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;    
         const app_cache_control =       CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_CACHE_CONTROL)[0].APP_CACHE_CONTROL;
         switch (type){
             case 'JSON':{
@@ -144,11 +148,10 @@ const serverUtilAppLine = () =>{
  * @returns {Promise.<*>}
  */
 const server = async (req, res)=>{
-    const ConfigServer = await import('./db/ConfigServer.js');
     const {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate}= await import('./security.js');
    
     /**@type{server_db_document_ConfigServer} */
-    const CONFIG_SERVER = ConfigServer.get({app_id:0}).result;
+    const CONFIG_SERVER = ORM.db.ConfigServer.get({app_id:0}).result;
     const read_body = async () =>{
         return new Promise((resolve,reject)=>{
             if (req.headers['content-type'] =='application/json'){
@@ -228,7 +231,6 @@ const server = async (req, res)=>{
     return bff.bff(req, res);
 };
 
-
 class ClassServerProcess {
     cwd = () => import.meta.dirname
                 .replaceAll('\\','/')
@@ -273,12 +275,10 @@ const serverProcess = new ClassServerProcess();
  * @class
  */
 class serverCircuitBreakerClass {
-    /**
-     * @param {import('./db/ConfigServer.js')} ConfigServer
-     */
-    constructor(ConfigServer) {
+
+    constructor() {
         /**@type{server_db_document_ConfigServer} */
-        const CONFIG_SERVER = ConfigServer.get({app_id:0}).result;
+        const CONFIG_SERVER = ORM.db.ConfigServer.get({app_id:0}).result;
         /**@type{[index:any][*]} */
         this.states = {};
                                                         
@@ -417,7 +417,7 @@ class serverCircuitBreakerClass {
  * @function
  * @returns {Promise.<serverCircuitBreakerClass>}
  */
-const serverCircuitBreakerMicroService = async ()=> new serverCircuitBreakerClass(await import('./db/ConfigServer.js'));
+const serverCircuitBreakerMicroService = async ()=> new serverCircuitBreakerClass();
 
 /**
  * @name serverCircuitBreakerBFE
@@ -425,7 +425,7 @@ const serverCircuitBreakerMicroService = async ()=> new serverCircuitBreakerClas
  * @function
  * @returns {Promise.<serverCircuitBreakerClass>}
  */
-const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass(await import('./db/ConfigServer.js'));
+const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass();
 
 
 /**
@@ -452,8 +452,6 @@ const serverCircuitBreakerBFE = async () => new serverCircuitBreakerClass(await 
  */                    
 const serverRequest = async parameters =>{
     const Security = await import('./security.js');
-    const IamEncryption = await import('./db/IamEncryption.js');
-    const ServiceRegistry = await import('./db/ServiceRegistry.js');
     const MESSAGE_TIMEOUT = '🗺⛔?';
     
     /**@type {'http'|string} */
@@ -475,9 +473,9 @@ const serverRequest = async parameters =>{
                                     secret: await Security.securityTransportCreateSecrets()
                                                 .then(result=>Buffer.from(JSON.stringify(result),'utf-8').toString('base64'))
                                 }:
-                                    ServiceRegistry.get({   app_id:parameters['app-id'], 
-                                                            resource_id:null, 
-                                                            data:{name:parameters.service}}).result
+                                    ORM.db.ServiceRegistry.get({ app_id:parameters['app-id'], 
+                                                                        resource_id:null, 
+                                                                        data:{name:parameters.service}}).result
                                     .map((/**@type{server_db_table_ServiceRegistry}*/row)=>{
                                         return {
                                             uuid:row.uuid,
@@ -486,12 +484,12 @@ const serverRequest = async parameters =>{
                                     })[0]);
     //if BFE then save encryption record
     parameters.encryption_type=='BFE'?
-        await IamEncryption.post(0, {   app_id:parameters['app-id'], 
-                                        iam_app_id_token_id: null,
-                                        url:url_unencrypted,
-                                        uuid: uuid,
-                                        type:parameters.encryption_type,
-                                        secret: secret}):
+        await ORM.db.IamEncryption.post(0, { app_id:parameters['app-id'], 
+                                                    iam_app_id_token_id: null,
+                                                    url:url_unencrypted,
+                                                    uuid: uuid,
+                                                    type:parameters.encryption_type,
+                                                    secret: secret}):
             null;
     const url = (parameters.url?
                         //external url should be syntax [protocol]://[host + optional port]/[path]
@@ -608,32 +606,31 @@ const serverRequest = async parameters =>{
  */
 const serverStart = async () =>{
     
-    const Log = await import('./db/Log.js');
-    const ConfigServer = await import('./db/ConfigServer.js');
-    const ORM = await  import('./db/ORM.js');
     const http = await import('node:http');
-
     serverProcess.env.TZ = 'UTC';
-    serverProcess.on('uncaughtException', err =>{
-        console.log(err);
-        Log.post({   app_id:0, 
-            data:{  object:'LogServerError', 
-                    log:'Process uncaughtException: ' + err.stack
-                }
-            });
-    });
-    serverProcess.on('unhandledRejection', (/**@type{*}*/reason) =>{
-        console.log(reason?.stack ?? reason?.message ?? reason ?? new Error().stack);
-        Log.post({   app_id:0, 
-            data:{  object:'LogServerError', 
-                    log:'Process unhandledRejection: ' + reason?.stack ?? reason?.message ?? reason ?? new Error().stack
-                }
-            });
-    });
-    try {               
-        await ORM.Init();
+    try {         
+        ORM = await  import('./db/ORM.js').then(ORM=>new ORM.ORM_class(serverProcess, serverUtilNumberValue));
+		await ORM.init();
+
+        serverProcess.on('uncaughtException', err =>{
+            console.log(err);
+            ORM.db.Log.post({   app_id:0, 
+                data:{  object:'LogServerError', 
+                        log:'Process uncaughtException: ' + err.stack
+                    }
+                });
+        });
+        serverProcess.on('unhandledRejection', (/**@type{*}*/reason) =>{
+            console.log(reason?.stack ?? reason?.message ?? reason ?? new Error().stack);
+            ORM.db.Log.post({   app_id:0, 
+                data:{  object:'LogServerError', 
+                        log:'Process unhandledRejection: ' + reason?.stack ?? reason?.message ?? reason ?? new Error().stack
+                    }
+                });
+        });
+    
         /**@type{server_db_document_ConfigServer} */
-        const configServer = ConfigServer.get({app_id:0}).result;
+        const configServer = ORM.db.ConfigServer.get({app_id:0}).result;
 
         const {socketIntervalCheck} = await import('./socket.js');
         socketIntervalCheck();
@@ -645,39 +642,74 @@ const serverStart = async () =>{
                                             req,
                                             res))
             .listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80, NETWORK_INTERFACE, () => {
-            Log.post({   app_id:0, 
-                data:{  object:'LogServerInfo', 
-                        log:'HTTP Server PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80
-                    }
-                });
+                ORM.db.Log.post({app_id:0, 
+                                        data:{  object:'LogServerInfo', 
+                                                log:'HTTP Server PORT: ' + 
+                                                    serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80
+                                            }
+                                        });
         });
         http.createServer((req,res)=>server(
                                             /**@ts-ignore*/
                                             req,
                                             res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
-            Log.post({   app_id:0, 
-                data:{  object:'LogServerInfo', 
-                        log:'HTTP Server Admin  PORT: ' + serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000
-                    }
-                });
+            ORM.db.Log.post({app_id:0, 
+                                    data:{  object:'LogServerInfo', 
+                                            log:'HTTP Server Admin  PORT: ' + 
+                                                serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000
+                                        }
+                                    });
         });
         //create dummy default https listener that will be destroyed or browser might hang
         const net = await import('node:net');
         net.createServer(socket => socket.destroy()).listen(443, () => null);
 
     } catch (/**@type{server_server_error}*/error) {
-        Log.post({   app_id:0, 
-            data:{  object:'LogServerError', 
-                    log:'serverStart: ' + error.stack
-                }
-            });
+        ORM.db.Log.post({app_id:0, 
+                                data:{  object:'LogServerError', 
+                                        log:'serverStart: ' + error.stack
+                                    }
+                                });
     }
-    
 };
+/**
+ * @name getViewInfo
+ * @description Database info
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number}}parameters
+ * @returns {Promise.<server_server_response & {result?:{   database_name:string, 
+*                                                          version:number,
+*                                                          hostname:string,
+*                                                          connections:Number,
+*                                                          started:number}[]}>}
+*/
+const ORM_getViewInfo = async parameters =>ORM.getViewInfo(parameters);
+/**
+* @name getViewObjects
+* @description Get all objects in ORM
+* @function
+* @memberof ROUTE_REST_API
+* @param {{app_id:number}}parameters
+* @returns {server_server_response & {result?:{name:server_DbObject_record['name'],
+*                                              type:server_DbObject_record['type'],
+*                                              lock:server_DbObject_record['lock'],
+*                                              transaction_id:server_DbObject_record['transaction_id'],
+*                                              rows:number|null,
+*                                              size:number|null,
+*                                              pk:server_DbObject_record['pk'],
+*                                              uk:server_DbObject_record['uk'],
+*                                              fk:server_DbObject_record['fk']}[]}}
+*/
+const ORM_getViewObjects = parameters =>ORM.getViewObjects(parameters);
+
 export {serverResponse, 
         serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppLine , 
         serverProcess,
         serverCircuitBreakerMicroService,
         serverCircuitBreakerBFE,
         serverRequest,
-        serverStart,};
+        serverStart,
+        ORM,
+        ORM_getViewInfo,
+        ORM_getViewObjects};

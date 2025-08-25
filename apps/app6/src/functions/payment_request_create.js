@@ -35,12 +35,10 @@
  *                                                      countdown:string}[]}>}
  */
 const paymentRequestCreate = async parameters =>{
-   const {serverUtilNumberValue} = await import('../../../../server/server.js');
+   const {ORM, serverUtilNumberValue} = await import('../../../../server/server.js');
    const {commonBFE} = await import('../../../../apps/common/src/common.js');
    const  {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
    const {securityPrivateDecrypt, securityPublicEncrypt} = await import('../../../../server/security.js'); 
-   const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
-   const AppDataResourceMaster = await import('../../../../server/db/AppDataResourceMaster.js');
    
    /**@type{server_db_table_AppDataEntity & 
     *       {json_data:{   description:string, 
@@ -57,12 +55,12 @@ const paymentRequestCreate = async parameters =>{
     *                      merchant_private_key:string|null,
     *                      merchant_vpa:string|null,
     *                      iam_user_id_anonymous:number|null}}} */
-   const Entity            = AppDataEntity.get({   app_id:parameters.app_id, 
+   const Entity            = ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                                    resource_id:null, 
                                                    data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
    /**@type{server_db_table_AppDataResourceMaster} */
-   const currency = AppDataResourceMaster.get({   app_id:parameters.app_id, 
+   const currency = ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                resource_id:null, 
                                                                data:{  iam_user_id:null,
                                                                        data_app_id:parameters.data.data_app_id,

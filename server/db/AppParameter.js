@@ -5,8 +5,7 @@
  *          server_db_table_AppParameter} from '../types.js'
  */
 
-const ORM = await import('./ORM.js');
-const {serverUtilNumberValue} = await import('../server.js');
+const {ORM} = await import ('../server.js');
 
 /**
  * @name get
@@ -18,7 +17,7 @@ const {serverUtilNumberValue} = await import('../server.js');
  * @returns {server_server_response & {result?:server_db_table_AppParameter[] }}
  */
 const get = parameters =>{
-    const result = ORM.getObject(parameters.app_id, 'AppParameter',null, serverUtilNumberValue(parameters.resource_id));
+    const result = ORM.getObject(parameters.app_id, 'AppParameter',null, ORM.serverUtilNumberValue(parameters.resource_id));
     if (result.rows.length>0)
         return {result:result.rows, type:'JSON'};
     else

@@ -3,9 +3,7 @@
 /**
  * @import {server_server_response,server_db_common_result_insert, server_db_table_IamAppIdToken} from '../types.js'
  */
-
-const ORM = await import('./ORM.js');
-
+const {ORM} = await import ('../server.js');
 /**
  * @name get
  * @description Get

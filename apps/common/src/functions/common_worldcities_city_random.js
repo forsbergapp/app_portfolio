@@ -22,8 +22,8 @@
  */
 const appFunction = async parameters =>{
     const fs = await import('node:fs');
-    const ConfigServer = await import('../../../../server/db/ConfigServer.js');
-    const APP_DEFAULT_RANDOM_COUNTRY = ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP'}}).result
+    const {ORM} = await import('../../../../server/server.js');
+    const APP_DEFAULT_RANDOM_COUNTRY = ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP'}}).result
                                         .filter((/**@type{server_db_document_ConfigServer['SERVICE_APP']}*/parameter)=>
                                             'APP_DEFAULT_RANDOM_COUNTRY' in parameter)[0].APP_DEFAULT_RANDOM_COUNTRY;
     /**

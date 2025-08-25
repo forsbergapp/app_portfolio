@@ -21,15 +21,13 @@
  * @returns {Promise.<server_server_response & {result?:server_db_table_AppDataResourceDetail[]}>}
  */
 const accountGet = async parameters =>{
-    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
+    const {ORM} = await import('../../../../server/server.js');
     /**@type{server_db_table_AppDataEntity} */
-    const Entity            = AppDataEntity.get({  app_id:parameters.app_id, 
+    const Entity            = ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
-
-    const AppDataResourceDetail = await import('../../../../server/db/AppDataResourceDetail.js');
     
-    return AppDataResourceDetail.get({ app_id:parameters.app_id, 
+    return ORM.db.AppDataResourceDetail.get({ app_id:parameters.app_id, 
                                                             resource_id:parameters.data.resource_id, 
                                                             data:{  iam_user_id:parameters.data.iam_user_id,
                                                                     data_app_id:parameters.data.data_app_id,

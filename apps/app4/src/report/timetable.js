@@ -7,8 +7,7 @@
  * @import {APP_REPORT_day_user_account_app_data_posts, APP_REPORT_settings, APP_user_setting_record} from '../types.js'
  */
 
-const {serverUtilNumberValue} = await import('../../../../server/server.js');
-const IamUserAppDataPostView = await import('../../../../server/db/IamUserAppDataPostView.js');
+const {ORM, serverUtilNumberValue} = await import('../../../../server/server.js');
 
 const {APP_REPORT_GLOBAL, component} = await import('../../public/component/app_lib.js');
 
@@ -21,9 +20,8 @@ const {APP_REPORT_GLOBAL, component} = await import('../../public/component/app_
  * @returns {Promise.<APP_REPORT_settings>}
  */
 const timetable_user_account_app_data_post_get = async (app_id, user_account_app_data_post_id) => {
-    const IamUserAppDataPost = await import('../../../../server/db/IamUserAppDataPost.js');
 	
-	const result_user_account_app_data_post =  IamUserAppDataPost.get({app_id:app_id, resource_id:user_account_app_data_post_id, data:{data_app_id:null, iam_user_id:null}});
+	const result_user_account_app_data_post =  ORM.db.IamUserAppDataPost.get({app_id:app_id, resource_id:user_account_app_data_post_id, data:{data_app_id:null, iam_user_id:null}});
     if (result_user_account_app_data_post.result){
         /**@type{APP_user_setting_record}*/
         const user_account_app_data_post = result_user_account_app_data_post.result[0].json_data;
@@ -114,8 +112,7 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
 const timetable_day_user_account_app_data_posts_get = async (app_id, iam_user_id) => {
 	/**@type{APP_REPORT_day_user_account_app_data_posts[]} */
 	const user_account_app_data_posts = [];
-    const IamUserAppDataPost = await import('../../../../server/db/IamUserAppDataPost.js');
-	const result_user_account_app_data_posts = IamUserAppDataPost.get({	app_id:app_id, 
+	const result_user_account_app_data_posts = ORM.db.IamUserAppDataPost.get({	app_id:app_id, 
 												resource_id:null,
 												data:{data_app_id:app_id, iam_user_id:iam_user_id}
 												});
@@ -156,10 +153,7 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, iam_user_id
  * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
-	const App = await import('../../../../server/db/App.js');
-    const AppParameter = await import('../../../../server/db/AppParameter.js');
 
-	/**@ts-ignore */
 	const decodedReportparameters = Buffer.from(timetable_parameters.reportid, 'base64').toString('utf-8');
 	const urlParams = new URLSearchParams(decodeURIComponent(decodedReportparameters));
 	const iam_user_id = Number(urlParams.get('id'));
@@ -172,21 +166,15 @@ const timetable = async (timetable_parameters) => {
 	 * @returns 
 	 */
 	
-	const parametersApp = AppParameter.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
-    const result_app = App.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
+	const parametersApp = ORM.db.AppParameter.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
+    const result_app = ORM.db.App.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
 	return await new Promise((resolve) => {
 		APP_REPORT_GLOBAL.app_copyright = result_app.copyright;
-		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_calendar_lang = parametersApp.app_regional_default_calendar_lang.value;
-		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parametersApp.app_regional_default_locale_ext_prefix.value;
-		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parametersApp.app_regional_default_locale_ext_number_system.value;
-		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parametersApp.app_regional_default_locale_ext_calendar.value;
-		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parametersApp.app_regional_default_calendar_type_greg.value;
-		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_calendar_number_system = parametersApp.app_regional_default_calendar_number_system.value;
 		
 		/**@type{server_db_table_IamUserAppDataPostView} */
@@ -196,7 +184,7 @@ const timetable = async (timetable_parameters) => {
 								/**@ts-ignore */
 								iam_user_app_data_post_id: 	serverUtilNumberValue(user_account_app_data_post_id)};
 		
-        IamUserAppDataPostView.post(timetable_parameters.app_id, data_ViewStat)
+        ORM.db.IamUserAppDataPostView.post(timetable_parameters.app_id, data_ViewStat)
 		.then(()=>{
 			timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id)
 			.then((user_account_app_data_post)=>{

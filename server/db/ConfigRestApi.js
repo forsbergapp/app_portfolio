@@ -4,7 +4,7 @@
  * @import {server_server_response,server_db_document_ConfigRestApi} from '../types.js'
  */
 
-const ORM = await import('./ORM.js');
+const {ORM} = await import ('../server.js');
 
 /**
  * @name get

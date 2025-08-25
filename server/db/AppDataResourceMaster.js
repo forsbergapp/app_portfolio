@@ -6,10 +6,7 @@
  *          server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
 
-const ORM = await import('./ORM.js');
-const AppDataEntity = await import('./AppDataEntity.js');
-const AppDataEntityResource = await import('./AppDataEntityResource.js');
-const IamUserApp = await import('./IamUserApp.js');
+const {ORM} = await import ('../server.js');
 /**
  * @name get
  * @description Get record
@@ -25,15 +22,15 @@ const IamUserApp = await import('./IamUserApp.js');
  * @returns {server_server_response & {result?:server_db_table_AppDataResourceMaster[] }}
  */
 const get = parameters =>{ 
-    const iam_user_app = parameters.data.iam_user_id==null?null:IamUserApp.get({app_id:parameters.app_id, 
+    const iam_user_app = parameters.data.iam_user_id==null?null:ORM.db.IamUserApp.get({app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  data_app_id:parameters.data.data_app_id??null,
                                                                                         iam_user_id:parameters.data.iam_user_id}}).result[0];
 
-    const result_AppDataEntityResource = AppDataEntityResource.get({ app_id:parameters.app_id, 
+    const result_AppDataEntityResource = ORM.db.AppDataEntityResource.get({ app_id:parameters.app_id, 
                                                                     resource_id:null,
                                                                     data:{  app_data_entity_id:parameters.data?.app_data_entity_id?? 
-                                                                                                AppDataEntity.get({ app_id:parameters.app_id, 
+                                                                                                ORM.db.AppDataEntity.get({ app_id:parameters.app_id, 
                                                                                                                     resource_id:null,
                                                                                                                     data:{data_app_id:parameters.app_id}}).result[0].id,
                                                                             resource_name:parameters.data.resource_name

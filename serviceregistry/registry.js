@@ -4,7 +4,7 @@
  * @import {microservice_registry_service, 
  *          server_db_table_ServiceRegistry} from '../server/types.js'
  */
-
+const {ORM} = await import('../server/server.js');
 /**
  * @name registryConfigServices
  * @description Reads config services
@@ -12,17 +12,9 @@
  * @param {microservice_registry_service} servicename
  * @returns {Promise.<server_db_table_ServiceRegistry>}
  */
-const registryConfigServices = async servicename =>{
-    const ORM = await import('../server/db/ORM.js');
+const registryConfigServices = async servicename =>
+        ORM.db.ServiceRegistry.get(0,null).result.rows
+            .filter((/**@type{server_db_table_ServiceRegistry}*/service)=>service.name == servicename)[0];
 
-    return await new Promise(resolve=>{
-        ORM.Execute({app_id:0, 
-            dml:'GET',
-            object:'ServiceRegistry', 
-            get:{resource_id:null, partition:null}})
-        .then((/**@type{{rows:server_db_table_ServiceRegistry[]}}*/service)=>
-                resolve(service.rows.filter(service=>service.name == servicename)[0]));
-    });
-};
 
 export {registryConfigServices};

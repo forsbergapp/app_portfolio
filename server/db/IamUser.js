@@ -4,8 +4,7 @@
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
  *          server_db_table_IamUser, server_db_table_IamUserLike, server_db_table_IamUserFollow, server_db_iam_user_admin} from '../types.js'
  */
-const ORM = await import('./ORM.js');
-const {serverUtilNumberValue} = await import('../server.js');
+const {ORM} = await import ('../server.js');
 /**
  * @name get
  * @description Get 
@@ -44,9 +43,6 @@ const get = (app_id, resource_id) =>{
 *                                                                                   liked_id:       number}[]}>}
 */
 const getViewProfile = async parameters =>{
-  const IamUserFollow = await import('./IamUserFollow.js');
-  const IamUserLike = await import('./IamUserLike.js');
-  const IamUserView = await import('./IamUserView.js');
   const {commonSearchMatch} = await import('../../apps/common/src/common.js');
   
   const result_getProfileUser = get(parameters.app_id, parameters.resource_id).result
@@ -57,14 +53,14 @@ const getViewProfile = async parameters =>{
                                     commonSearchMatch(row.username, parameters.data.name??''))
                                 .map((/**@type{server_db_table_IamUser}*/row)=>{
                                     // check if friends
-                                    const friends =  IamUserFollow.get({app_id:parameters.app_id, 
+                                    const friends =  ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
-                                                                    data:{  iam_user_id:serverUtilNumberValue(parameters.data?.id),
+                                                                    data:{  iam_user_id:ORM.serverUtilNumberValue(parameters.data?.id),
                                                                             iam_user_id_follow:row.id??null}}).result[0] ??
-                                                    IamUserFollow.get({app_id:parameters.app_id, 
+                                                    ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:row.id??null,
-                                                                            iam_user_id_follow:serverUtilNumberValue(parameters.data?.id)}}).result[0];
+                                                                            iam_user_id_follow:ORM.serverUtilNumberValue(parameters.data?.id)}}).result[0];
                                     return {id:             row.id,
                                             active:         row.active,
                                             username:       row.username, 
@@ -76,39 +72,39 @@ const getViewProfile = async parameters =>{
                                             created:        row.created,
                                             count_following:((row.private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
-                                                                    IamUserFollow.get({ app_id:parameters.app_id, 
+                                                                    ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                         resource_id:null, 
                                                                                         data:{  iam_user_id:row.id??null,
                                                                                                 iam_user_id_follow:null}}).result.length,
                                             count_followed: ((row.private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
-                                                                    IamUserFollow.get({ app_id:parameters.app_id, 
+                                                                    ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                         resource_id:null, 
                                                                                         data:{  iam_user_id:null,
                                                                                                 iam_user_id_follow:row.id??null}}).result.length,
                                             count_likes:    ((row.private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
-                                                                    IamUserLike.get({   app_id:parameters.app_id, 
+                                                                    ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:row.id??null,
                                                                                         iam_user_id_like:null}}).result.length,
                                             count_liked:    ((row.private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
-                                                                    IamUserLike.get({   app_id:parameters.app_id, 
+                                                                    ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
                                                                                         iam_user_id_like:row.id??null}}).result.length,
-                                            count_views:    IamUserView.get({   app_id:parameters.app_id, 
+                                            count_views:    ORM.db.IamUserView.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
                                                                                         iam_user_id_view:row.id??null}}).result.length,
-                                            followed_id:    (parameters.data?.id==null ||parameters.data?.id=='')?null:IamUserFollow.get({ app_id:parameters.app_id, 
+                                            followed_id:    (parameters.data?.id==null ||parameters.data?.id=='')?null:ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                 resource_id:null, 
-                                                                                data:{  iam_user_id:serverUtilNumberValue(parameters.data?.id),
+                                                                                data:{  iam_user_id:ORM.serverUtilNumberValue(parameters.data?.id),
                                                                                         iam_user_id_follow:row.id??null}}).result[0]?.id??null,
-                                            liked_id:       (parameters.data?.id==null ||parameters.data?.id=='')?null:IamUserLike.get({   app_id:parameters.app_id, 
+                                            liked_id:       (parameters.data?.id==null ||parameters.data?.id=='')?null:ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
-                                                                                data:{  iam_user_id:serverUtilNumberValue(parameters.data?.id),
+                                                                                data:{  iam_user_id:ORM.db.serverUtilNumberValue(parameters.data?.id),
                                                                                         iam_user_id_like:row.id??null}}).result[0]?.id??null};
                                 });
   if (parameters.data.search){
@@ -117,11 +113,11 @@ const getViewProfile = async parameters =>{
   else
       if (result_getProfileUser[0]){
           //always save stat who is viewing, same user, none or someone else
-          const data_body = { iam_user_id:        serverUtilNumberValue(parameters.data.id),    //who views
-                              iam_user_id_view:   serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
+          const data_body = { iam_user_id:        ORM.serverUtilNumberValue(parameters.data.id),    //who views
+                              iam_user_id_view:   ORM.serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
                               client_ip:              parameters.ip,
                               client_user_agent:      parameters.user_agent};
-          return await IamUserView.post(parameters.app_id, 
+          return await ORM.db.IamUserView.post(parameters.app_id, 
                                         /**@ts-ignore */
                                         data_body)
                             .then(()=>{return {result:result_getProfileUser, type:'JSON'};});
@@ -144,16 +140,12 @@ const getViewProfile = async parameters =>{
  *                                                          count:number}[] }>}
  */
 const getViewProfileStat = async parameters =>{
-    const IamUserApp = await import('./IamUserApp.js');
-    const IamUserFollow = await import('./IamUserFollow.js');
-    const IamUserLike = await import('./IamUserLike.js');
-    const IamUserView = await import('./IamUserView.js');
     
     return {result:get(parameters.app_id, null).result
                             .filter((/**@type{server_db_table_IamUser}*/row)=>
                                     row.active==1 && row.private !=1 &&
                                     //user should have a record in current app
-                                    IamUserApp.get({  app_id:parameters.app_id, 
+                                    ORM.db.IamUserApp.get({  app_id:parameters.app_id, 
                                                                 resource_id:null,
                                                                 data: {
                                                                     iam_user_id: row.id??null,
@@ -162,24 +154,24 @@ const getViewProfileStat = async parameters =>{
                             )              
                             .map((/**@type{server_db_table_IamUser}*/row)=>{
                                 return {
-                                    top:    serverUtilNumberValue(parameters.data?.statchoice)==1?'VISITED':
-                                            serverUtilNumberValue(parameters.data?.statchoice)==2?'FOLLOWING':
-                                            serverUtilNumberValue(parameters.data?.statchoice)==3?'LIKE_USER':null,
+                                    top:    ORM.serverUtilNumberValue(parameters.data?.statchoice)==1?'VISITED':
+                                            ORM.serverUtilNumberValue(parameters.data?.statchoice)==2?'FOLLOWING':
+                                            ORM.serverUtilNumberValue(parameters.data?.statchoice)==3?'LIKE_USER':null,
                                     id:     row.id,
                                     avatar: row.avatar,
                                     username:row.username,
-                                    count:  serverUtilNumberValue(parameters.data?.statchoice)==1?
-                                                IamUserView.get({   app_id:parameters.app_id, 
+                                    count:  ORM.serverUtilNumberValue(parameters.data?.statchoice)==1?
+                                                ORM.db.IamUserView.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
                                                                             iam_user_id_view:row.id??null}}).result.length:
-                                            serverUtilNumberValue(parameters.data?.statchoice)==2?
-                                                IamUserFollow.get({   app_id:parameters.app_id, 
+                                            ORM.serverUtilNumberValue(parameters.data?.statchoice)==2?
+                                                ORM.db.IamUserFollow.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
                                                                             iam_user_id_follow:row.id??null}}).result.length:
-                                            serverUtilNumberValue(parameters.data?.statchoice)==3?
-                                                IamUserLike.get({   app_id:parameters.app_id, 
+                                            ORM.serverUtilNumberValue(parameters.data?.statchoice)==3?
+                                                ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
                                                                             iam_user_id_like:row.id??null}}).result.length:
@@ -206,32 +198,29 @@ const getViewProfileStat = async parameters =>{
  *                                                      }[] }>}
  */
 const getViewProfileDetail = async parameters =>{
-   const IamUserFollow = await import('./IamUserFollow.js');
-   const IamUserLike = await import('./IamUserLike.js');
-
    return {result:( //following
-                    serverUtilNumberValue(parameters.data?.detailchoice)==1?
-                        IamUserFollow.get({ app_id:parameters.app_id, 
+                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==1?
+                        ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:parameters.resource_id,
                                                     iam_user_id_follow:null}}).result
                             .map((/**@type{server_db_table_IamUserFollow}*/row)=>{return {iam_user_id:row.iam_user_id_follow};}):
                     //followed
-                    serverUtilNumberValue(parameters.data?.detailchoice)==2?
-                        IamUserFollow.get({ app_id:parameters.app_id, 
+                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==2?
+                        ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:null,
                                                     iam_user_id_follow:parameters.resource_id}}).result:
                     //like user
-                    serverUtilNumberValue(parameters.data?.detailchoice)==3?
-                        IamUserLike.get({   app_id:parameters.app_id, 
+                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==3?
+                        ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:parameters.resource_id,
                                                     iam_user_id_like:null}}).result
                             .map((/**@type{server_db_table_IamUserLike}*/row)=>{return {iam_user_id:row.iam_user_id_like};}):
                     //liked user
-                    serverUtilNumberValue(parameters.data?.detailchoice)==4?
-                        IamUserLike.get({   app_id:parameters.app_id, 
+                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==4?
+                        ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:null,
                                                     iam_user_id_like:parameters.resource_id}}).result:
@@ -243,10 +232,10 @@ const getViewProfileDetail = async parameters =>{
                     })              
                     .map((/**@type{server_db_table_IamUserFollow}*/row)=>{
                         return {
-                            detail: serverUtilNumberValue(parameters.data?.detailchoice)==1?'FOLLOWING':
-                                    serverUtilNumberValue(parameters.data?.detailchoice)==2?'FOLLOWED':
-                                    serverUtilNumberValue(parameters.data?.detailchoice)==3?'LIKE_USER':
-                                    serverUtilNumberValue(parameters.data?.detailchoice)==4?'LIKED_USER':null,
+                            detail: ORM.serverUtilNumberValue(parameters.data?.detailchoice)==1?'FOLLOWING':
+                                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==2?'FOLLOWED':
+                                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==3?'LIKE_USER':
+                                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==4?'LIKED_USER':null,
                             iam_user_id:  row.iam_user_id,
                             avatar: get(parameters.app_id,row.iam_user_id).result[0]?.avatar,
                             username:get(parameters.app_id,row.iam_user_id).result[0]?.username
@@ -348,14 +337,13 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postAdmin = async (app_id, data) => {
-    const {securityPasswordCreate}= await import('../security.js');
     const Security= await import('../security.js');
     /**@type{server_db_iam_user_admin} */
     const data_new =     {
                             id:Date.now(),
                             username:data.username, 
                             //save encrypted password
-                            password:await securityPasswordCreate(app_id, data.password), 
+                            password:await Security.securityPasswordCreate(app_id, data.password), 
                             password_reminder:data.password_reminder,
                             type: data.type, 
                             bio:data.bio, 
@@ -405,7 +393,7 @@ const update = async (app_id, resource_id, data) => {
             if (data.bio!=null)
                 data_update.bio = data.bio;
             if (data.private!=null)
-                data_update.private = serverUtilNumberValue(data.private);
+                data_update.private = ORM.serverUtilNumberValue(data.private);
             if (data.avatar!=null)
                 data_update.avatar = data.avatar;
             data_update.modified = new Date().toISOString();
@@ -453,7 +441,7 @@ const updateAdmin = async parameters => {
             if (parameters.data?.bio!=null)
                 data_update.bio = parameters.data.bio;
             if (parameters.data?.private!=null)
-                data_update.private = serverUtilNumberValue(parameters.data.private) ?? 0;
+                data_update.private = ORM.serverUtilNumberValue(parameters.data.private) ?? 0;
             if (parameters.data?.otp_key!=null)
                 data_update.otp_key = parameters.data.otp_key;
             if (parameters.data?.avatar!=null)
@@ -462,11 +450,11 @@ const updateAdmin = async parameters => {
             if (parameters.data?.type!=null)
                 data_update.type = parameters.data.type;
             if (parameters.data?.user_level!=null)
-                data_update.user_level = serverUtilNumberValue(parameters.data.user_level);
+                data_update.user_level = ORM.serverUtilNumberValue(parameters.data.user_level);
             if (parameters.data?.status!=null)
                 data_update.status = parameters.data.status;
             if (parameters.data?.active!=null)
-                data_update.active = serverUtilNumberValue(parameters.data.active) ?? 0;
+                data_update.active = ORM.serverUtilNumberValue(parameters.data.active) ?? 0;
             data_update.modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)

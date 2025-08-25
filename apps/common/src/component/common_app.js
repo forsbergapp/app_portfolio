@@ -110,7 +110,6 @@
     *        methods:      {
     *                      commonAppStart:import('../common.js')['commonAppStart'],
     *                      commonGeodata:import('../common.js')['commonGeodata'],
-    *                      App:import('../../../../server/db/App.js'),
     *                      AppParameter:import('../../../../server/db/AppParameter.js'),
     *                      IamEncryption:import('../../../../server/db/IamEncryption.js'),
     *                      IamUser:import('../../../../server/db/IamUser.js'),

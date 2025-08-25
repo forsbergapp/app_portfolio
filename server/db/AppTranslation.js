@@ -5,7 +5,7 @@
  *          server_db_table_AppTranslation} from '../types.js'
  */
 
-const ORM = await import('./ORM.js');
+const {ORM} = await import ('../server.js');
 
 /**
  * @name get

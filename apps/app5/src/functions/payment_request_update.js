@@ -29,18 +29,14 @@ const paymentRequestUpdate = async parameters =>{
 
     const {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
     const {getToken} = await import('./payment_request_create.js');
-    const {serverUtilNumberValue} = await import('../../../../server/server.js');
-    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
-    const AppDataResourceMaster = await import('../../../../server/db/AppDataResourceMaster.js');
-    const AppDataResourceDetail = await import('../../../../server/db/AppDataResourceDetail.js');
-    const AppDataResourceDetailData = await import('../../../../server/db/AppDataResourceDetailData.js');
+    const {ORM, serverUtilNumberValue} = await import('../../../../server/server.js');
 
     /**@type{server_db_table_AppDataEntity} */
-    const Entity    = AppDataEntity.get({   app_id:parameters.app_id, 
+    const Entity    = ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
-    const customer = AppDataResourceMaster.get({app_id:parameters.app_id, 
+    const customer = ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                 resource_id:null, 
                                                 data:{  iam_user_id:parameters.data.iam_user_id,
                                                         data_app_id:parameters.data.data_app_id,
@@ -52,7 +48,7 @@ const paymentRequestUpdate = async parameters =>{
 
     //get payment request using app_custom_id that should be the payment request id
     /**@type{payment_request & {id:server_db_table_AppDataResourceMaster['id']}}*/
-    const payment_request = AppDataResourceMaster.get({ app_id:parameters.app_id, 
+    const payment_request = ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         all_users:true,
                                                         resource_id:null, 
                                                         data:{  iam_user_id:null,
@@ -68,7 +64,7 @@ const paymentRequestUpdate = async parameters =>{
         let status ='PENDING';
         if (serverUtilNumberValue(parameters.data.status)==1)
             try {
-                const account_payer         =  AppDataResourceDetail.get({  app_id:parameters.app_id, 
+                const account_payer         =  ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                             resource_id:null, 
                                                                             data:{  iam_user_id:parameters.data.iam_user_id,
                                                                                     data_app_id:parameters.app_id,
@@ -77,7 +73,7 @@ const paymentRequestUpdate = async parameters =>{
                                                                                     app_data_entity_id:Entity.id
                                                                             }}).result[0];
                 /**@type{number} */
-                const account_payer_saldo   =  AppDataResourceDetailData.get({  app_id:parameters.app_id, 
+                const account_payer_saldo   =  ORM.db.AppDataResourceDetailData.get({  app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  app_data_resource_detail_id:account_payer.id,
                                                                                         iam_user_id:parameters.data.iam_user_id,
@@ -103,9 +99,9 @@ const paymentRequestUpdate = async parameters =>{
                                         app_data_resource_master_attribute_id   : null
                                         };
                     //create DEBIT transaction PAYERID resource TRANSACTION
-                    await AppDataResourceDetailData.post({app_id:parameters.app_id, data:data_debit});
+                    await ORM.db.AppDataResourceDetailData.post({app_id:parameters.app_id, data:data_debit});
                     /**@type{bank_account & {id:server_db_table_AppDataResourceDetail['id']}} */
-                    const account_payee         =  AppDataResourceDetail.get({  app_id:parameters.app_id, 
+                    const account_payee         =  ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                                 all_users:true,
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
@@ -128,7 +124,7 @@ const paymentRequestUpdate = async parameters =>{
                                                 app_data_resource_master_attribute_id   : null
                                                 };
                         //create CREDIT transaction PAYEEID resource TRANSACTION
-                        await AppDataResourceDetailData.post({app_id:parameters.app_id, data:data_credit});
+                        await ORM.db.AppDataResourceDetailData.post({app_id:parameters.app_id, data:data_credit});
                         status = 'PAID';
                     }
                     else
@@ -147,7 +143,7 @@ const paymentRequestUpdate = async parameters =>{
                                         };
         
         //update payment request
-        await AppDataResourceMaster.update({app_id:parameters.app_id, 
+        await ORM.db.AppDataResourceMaster.update({app_id:parameters.app_id, 
                                             resource_id:payment_request.id, 
                                             data:data_payment_request});
         return {result:[{status:status}], type:'JSON'};

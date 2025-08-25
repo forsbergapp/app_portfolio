@@ -95,17 +95,13 @@ const IBAN_validate = iban => {
  *                                                          bank_account_balance:number}[]}>}
  */
 const getStatement = async parameters =>{
-    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
-    const AppDataResourceMaster = await import('../../../../server/db/AppDataResourceMaster.js');
-    const AppDataResourceDetail = await import('../../../../server/db/AppDataResourceDetail.js');
-    const AppDataResourceDetailData = await import('../../../../server/db/AppDataResourceDetailData.js');
-
+    const {ORM} = await import('../../../../server/server.js');
+    
     /**@type{server_db_table_AppDataEntity} */
-    const Entity            = AppDataEntity.get({   app_id:parameters.app_id, 
+    const Entity            = ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                                     resource_id:null, 
                                                     data:{data_app_id:parameters.data.data_app_id}}).result[0];
-
-    const transactions = AppDataResourceDetailData.get({app_id:parameters.app_id, 
+    const transactions = ORM.db.AppDataResourceDetailData.get({app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{  iam_user_id:parameters.data.iam_user_id,
                                                                 data_app_id:parameters.data.data_app_id,
@@ -115,16 +111,14 @@ const getStatement = async parameters =>{
                                                                 app_data_resource_detail_id:null,
                                                                 app_data_entity_id:Entity.id
                                                         }});
-    
-
-    const AccountMetaData   = AppDataResourceMaster.get({   app_id:parameters.app_id, 
+    const AccountMetaData   = ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
                                                                     data_app_id:parameters.data.data_app_id,
                                                                     resource_name:'ACCOUNT',
                                                                     app_data_entity_id:Entity.id
                                                             }}).result;
-    const CustomerAccount   = AppDataResourceDetail.get(   {app_id:parameters.app_id, 
+    const CustomerAccount   = ORM.db.AppDataResourceDetail.get(   {app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:parameters.data.iam_user_id,
                                                                     data_app_id:parameters.data.data_app_id,
@@ -132,7 +126,7 @@ const getStatement = async parameters =>{
                                                                     app_data_resource_master_id:null,
                                                                     app_data_entity_id:Entity.id
                                                             }}).result[0];
-    const currency          = AppDataResourceMaster.get({   app_id:parameters.app_id, 
+    const currency          = ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
                                                                     data_app_id:parameters.data.data_app_id,

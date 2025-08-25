@@ -5,8 +5,7 @@
  *          server_db_table_IamUserEvent} from '../types.js'
  */
 
-const ORM = await import('./ORM.js');
-
+const {ORM} = await import ('../server.js');
 /**
  * @name get
  * @description Get record 

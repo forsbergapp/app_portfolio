@@ -21,16 +21,13 @@
  * @returns {Promise.<server_server_response & {result?:bank_transaction}>}
  */
 const getTransacions = async parameters =>{
-    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
-    const AppDataResourceDetailData = await import('../../../../server/db/AppDataResourceDetailData.js');
+    const {ORM} = await import('../../../../server/server.js');
     
     /**@type{server_db_table_AppDataEntity} */
-    const Entity            = AppDataEntity.get({  app_id:parameters.app_id, 
+    const Entity            = ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
-    
-
-    return AppDataResourceDetailData.get({app_id:parameters.app_id, 
+    return ORM.db.AppDataResourceDetailData.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:parameters.data.iam_user_id,
                                                                             data_app_id:parameters.data.data_app_id,

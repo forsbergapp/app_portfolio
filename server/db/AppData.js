@@ -3,9 +3,7 @@
 /**
  * @import {server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete, server_server_response,server_db_table_AppData} from '../types.js'
  */
-const ORM = await import('./ORM.js');
-const {serverUtilNumberValue} = await import('../server.js');
-
+const {ORM} = await import ('../server.js');
 /**
  * @name get
  * @description Get record
@@ -22,7 +20,7 @@ const {serverUtilNumberValue} = await import('../server.js');
  * @returns {server_server_response & {result?:{data:string}[]}}
  */
 const get = parameters => {
-    const result = ORM.getObject(parameters.app_id, 'AppData',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
+    const result = ORM.getObject(parameters.app_id, 'AppData',parameters.resource_id, ORM.serverUtilNumberValue(parameters.data.data_app_id));
     if (result.rows.length>0 || parameters.resource_id==null)
         return {result:[{
                             data:Buffer.from (JSON.stringify(result.rows.filter((/**@type{server_db_table_AppData}*/row)=>row.name==(parameters.data?.name ?? row.name) && row.value==(parameters.data?.value ?? row.value)))).toString('base64')
@@ -44,7 +42,7 @@ const get = parameters => {
 * @returns {server_server_response & {result?:server_db_table_AppData[]}}
 */
 const getServer = parameters => {
-   const result = ORM.getObject(parameters.app_id, 'AppData',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
+   const result = ORM.getObject(parameters.app_id, 'AppData',parameters.resource_id, ORM.serverUtilNumberValue(parameters.data.data_app_id));
    if (result.rows.length>0 || parameters.resource_id==null)
        return {result:result.rows.filter((/**@type{server_db_table_AppData}*/row)=>row.name==(parameters.data?.name ?? row.name) && row.value==(parameters.data?.value ?? row.value)), 
                type:'JSON'};

@@ -6,10 +6,7 @@
  *          server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
 
-const ORM = await import('./ORM.js');
-const AppDataEntity = await import('./AppDataEntity.js');
-const AppDataResourceMaster = await import('./AppDataResourceMaster.js');
-const AppDataResourceDetail = await import('./AppDataResourceDetail.js');
+const {ORM} = await import ('../server.js');
 
 /**
  * @name get
@@ -29,24 +26,24 @@ const AppDataResourceDetail = await import('./AppDataResourceDetail.js');
  * @returns {server_server_response & {result?:server_db_table_AppDataResourceDetailData & {adrm_attribute_master_json_data:{}}[]|*}}
  */
 const get = parameters =>{ 
-    const entity_id = parameters.data?.app_data_entity_id?? AppDataEntity.get({  app_id:parameters.app_id, 
+    const entity_id = parameters.data?.app_data_entity_id?? ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
                                         resource_id:null,
                                         data:{data_app_id:parameters.app_id}}).result[0].id;
-    const restult_AppDataResourceMasterAttributeDetail = AppDataResourceMaster.get({  app_id:parameters.app_id, 
+    const restult_AppDataResourceMasterAttributeDetail = ORM.db.AppDataResourceMaster.get({  app_id:parameters.app_id, 
                                                                     join:true,
                                                                     resource_id: null,
                                                                     data:{  data_app_id:parameters.data.data_app_id,
                                                                             iam_user_id:parameters.data.iam_user_id,
                                                                             resource_name:parameters.data.resource_name_master_attribute,
                                                                             app_data_entity_id:entity_id}}).result;
-    const result_AppDataResourceMasterAttributeDetailData = AppDataResourceMaster.get({app_id:parameters.app_id, 
+    const result_AppDataResourceMasterAttributeDetailData = ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                     join:true,
                                                                     resource_id:null,
                                                                     data:{  data_app_id:parameters.data.data_app_id,
                                                                             iam_user_id:parameters.data.iam_user_id,
                                                                             resource_name:parameters.data.resource_name_data_master_attribute,
                                                                             app_data_entity_id:entity_id}}).result;
-    const result_AppDataResourceDetail = AppDataResourceDetail.get({app_id:parameters.app_id, 
+    const result_AppDataResourceDetail = ORM.db.AppDataResourceDetail.get({app_id:parameters.app_id, 
                                                                     join:true,
                                                                     resource_id:null,
                                                                     data:{  data_app_id:parameters.data.data_app_id,
@@ -74,7 +71,7 @@ const get = parameters =>{
                         
                     )
                     .map((/**@type{server_db_table_AppDataResourceDetailData & {adrm_attribute_master_json_data:{}}}*/row)=>{     
-                            row.adrm_attribute_master_json_data = AppDataResourceMaster.get({   app_id:parameters.app_id, 
+                            row.adrm_attribute_master_json_data = ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                                                 join:true,
                                                                                                 resource_id:row.app_data_resource_master_attribute_id,
                                                                                                 data:{  data_app_id:null,

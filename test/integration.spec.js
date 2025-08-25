@@ -19,11 +19,10 @@ const test = async t =>
     [await t.describe('Integration test, setting DB cache', async ()=> {
         return await new Promise(resolve=>
         t.it('should return values when using ORM pattern for Config', async () =>{
-            const {serverUtilNumberValue} = await import('../server/server.js');
-            const ConfigServer = await import('../server/db/ConfigServer.js');
+            const {ORM, serverUtilNumberValue} = await import('../server/server.js');
         
-            const HOST = ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'HOST'}}).result;
-            const PORT = serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
+            const HOST = ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'HOST'}}).result;
+            const PORT = serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
 
             return [
                 /**@ts-ignore */
@@ -36,13 +35,11 @@ const test = async t =>
     await t.describe('Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps except common app id', async ()=> {
         return await new Promise(resolve=>
         t.it('should return values', async () =>{
-            const App = await import('../server/db/App.js');
-            const ConfigServer = await import('../server/db/ConfigServer.js');
-            const {serverUtilNumberValue} = await import('../server/server.js');
+            const {ORM, serverUtilNumberValue} = await import('../server/server.js');
             /**@type{server_db_table_App[]}*/
-            const apps = App.get({app_id:0, resource_id:null})
+            const apps = ORM.db.App.get({app_id:0, resource_id:null})
                         .result.filter((/**@type{server_db_table_App}*/app)=>
-                            app.id !=serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0);
+                            app.id !=serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0);
             const {microserviceRequest} = await import('../serviceregistry/microservice.js');
             //
             for (const app of apps) {
@@ -80,11 +77,11 @@ const test = async t =>
     await t.describe('Integration test, server function worldcities random city called from BFF and from all apps', async ()=> {    
         return await new Promise(resolve=>
         t.it('should return values ', async () =>{
-            const App = await import('../server/db/App.js');
+            const {ORM} = await import('../server/server.js');
             const {default:worldcities} = await import('../apps/common/src/functions/common_worldcities_city_random.js');
 
             /**@type{server_db_table_App[]}*/
-            const apps = App.get({app_id:0, resource_id:null}).result;
+            const apps = ORM.db.App.get({app_id:0, resource_id:null}).result;
             
             for (const app of apps){ 
                 const result = await worldcities({ app_id:app.id,

@@ -46,7 +46,7 @@ const test = async t =>
              */
             Array.prototype.filter = function (callBack, thisArg){
                 const caller = (new Error().stack?.split('\n'))?.map(row=>row.trimStart().split(' ')[1])[2];
-                if (spyId>0 && ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.name && caller=='getObjectRecord')
+                if (spyId>0 && ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.name && caller=='ORM_class.getObjectRecord')
                     spyObject.push({id:spyId, caller:caller, object:ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.name});
                 return ORIGINAL_FILTER.call(this, callBack, thisArg);  
             };
