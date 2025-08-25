@@ -3599,7 +3599,7 @@
         "/bff/admin/v1/server-db/ORM-objects": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.ORM.getViewObjects",
+                "operationId": "server.server.ORM_getViewObjects",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3630,7 +3630,7 @@
         "/bff/admin/v1/server-db/ORM": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.ORM.getViewInfo",
+                "operationId": "server.server.ORM_getViewInfo",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}

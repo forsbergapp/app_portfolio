@@ -19,47 +19,44 @@
  * @returns {Promise.<server_server_response & {result?:server_db_table_AppDataResourceMaster[]}>}
  */
 const productGet = async parameters =>{
-    
-    const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
-    const AppDataResourceMaster = await import('../../../../server/db/AppDataResourceMaster.js');
-    const AppDataResourceDetail = await import('../../../../server/db/AppDataResourceDetail.js');
+    const {ORM} = await import('../../../../server/server.js');
         
     /**@type{server_db_table_AppDataEntity} */
-    const Entity            = AppDataEntity.get({   app_id:parameters.app_id, 
-                                                    resource_id:null, 
-                                                    data:{data_app_id:parameters.data.data_app_id}}).result[0];
+    const Entity            = ORM.db.AppDataEntity.get({app_id:parameters.app_id, 
+                                                        resource_id:null, 
+                                                        data:{data_app_id:parameters.data.data_app_id}}).result[0];
     
-    const products = AppDataResourceMaster.get({app_id:parameters.app_id, 
-                                                resource_id:parameters.data.resource_id, 
-                                                data:{  iam_user_id:null,
-                                                        data_app_id:parameters.data.data_app_id,
-                                                        resource_name:'PRODUCT',
-                                                        app_data_entity_id:Entity.id
-                                                }});
-    
-    
-    const currency = AppDataResourceMaster.get({   app_id:parameters.app_id, 
-                                                                resource_id:null, 
-                                                                data:{  iam_user_id:null,
-                                                                        data_app_id:parameters.data.data_app_id,
-                                                                        resource_name:'CURRENCY',
-                                                                        app_data_entity_id:Entity.id
-                                                                }}).result[0];
-    const product_variants = AppDataResourceDetail.get({app_id:parameters.app_id, 
-                                                        resource_id:parameters.data.resource_id_variant, 
+    const products = ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
+                                                        resource_id:parameters.data.resource_id, 
                                                         data:{  iam_user_id:null,
                                                                 data_app_id:parameters.data.data_app_id,
-                                                                resource_name:'PRODUCT_VARIANT',
-                                                                app_data_resource_master_id:null,
+                                                                resource_name:'PRODUCT',
                                                                 app_data_entity_id:Entity.id
                                                         }});
-    const product_variant_metadatas = AppDataResourceMaster.get({   app_id:parameters.app_id, 
-                                                                    resource_id:null, 
-                                                                    data:{  iam_user_id:null,
-                                                                            data_app_id:parameters.data.data_app_id,
-                                                                            resource_name:'PRODUCT_VARIANT_METADATA',
-                                                                            app_data_entity_id:Entity.id,
-                                                                    }});
+    
+    
+    const currency = ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
+                                                        resource_id:null, 
+                                                        data:{  iam_user_id:null,
+                                                                data_app_id:parameters.data.data_app_id,
+                                                                resource_name:'CURRENCY',
+                                                                app_data_entity_id:Entity.id
+                                                        }}).result[0];
+    const product_variants = ORM.db.AppDataResourceDetail.get({ app_id:parameters.app_id, 
+                                                                resource_id:parameters.data.resource_id_variant, 
+                                                                data:{  iam_user_id:null,
+                                                                        data_app_id:parameters.data.data_app_id,
+                                                                        resource_name:'PRODUCT_VARIANT',
+                                                                        app_data_resource_master_id:null,
+                                                                        app_data_entity_id:Entity.id
+                                                                }});
+    const product_variant_metadatas = ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
+                                                                        resource_id:null, 
+                                                                        data:{  iam_user_id:null,
+                                                                                data_app_id:parameters.data.data_app_id,
+                                                                                resource_name:'PRODUCT_VARIANT_METADATA',
+                                                                                app_data_entity_id:Entity.id,
+                                                                        }});
     for (const product of products.result){
         product.sku = [];
         for (const product_variant of product_variants.result.filter((/**@type{server_db_table_AppDataResourceDetail}*/row)=>row.app_data_resource_master_id == product.id)){

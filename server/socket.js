@@ -10,9 +10,8 @@
  *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
  */
 
-const {serverResponse, serverUtilNumberValue} = await import('./server.js');
-const {iamUtilTokenExpired, iamUtilMessageNotAuthorized} = await import('./iam.js');
-const ConfigServer = await import('./db/ConfigServer.js');
+const {ORM, serverResponse, serverUtilNumberValue} = await import('./server.js');
+const {iamUtilResponseNotAuthorized, iamUtilTokenGet, iamUtilTokenExpired, iamUtilMessageNotAuthorized} = await import('./iam.js');
 const {microserviceRequest} = await import('../serviceregistry/microservice.js');
 
 /**@type{server_socket_connected_list[]} */
@@ -165,7 +164,9 @@ const socketClientAdd = (newClient) => {
         let sent = 0;
         for (const client of SOCKET_CONNECTED_CLIENTS){
             if (client.idToken != parameters.idToken)
-                if (parameters.data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result))
+                if (parameters.data.broadcast_type=='MAINTENANCE' && 
+                    client.app_id ==serverUtilNumberValue(ORM.db.ConfigServer.get({ app_id:parameters.app_id, 
+                                                                                    data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result))
                     null;
                 else
                     if (client.app_id == parameters.data.app_id || parameters.data.app_id == null){
@@ -314,23 +315,19 @@ const socketClientAdd = (newClient) => {
  *                      timezone: string}>}
  */
 const socketPost = async parameters =>{
-    const { iamUtilTokenGet } = await import('./iam.js');
-    const IamUser = await import('./db/IamUser.js');
-
     //get access token if any
     const access_token =    parameters.authorization?iamUtilTokenGet(   parameters.app_id,
                                             parameters.authorization, 
-                                            parameters.app_id==serverUtilNumberValue(ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result)?'ADMIN':'APP_ACCESS'):null;
+                                            parameters.app_id==serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result)?'ADMIN':'APP_ACCESS'):null;
 
     const iam_user =        parameters.authorization?
                                 /**@ts-ignore */
                                 (serverUtilNumberValue(access_token?.iam_user_id)?
                                     /*@ts-ignore*/
-                                    IamUser.get(parameters.app_id, serverUtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
+                                    ORM.db.IamUser.get(parameters.app_id, serverUtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
                                         null;
     if (SOCKET_CONNECTED_CLIENTS
             .filter(row=>row.idToken == parameters.idToken).length>0){
-        const {iamUtilResponseNotAuthorized} = await import('./iam.js');
         throw await iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
     }
     else{
@@ -427,7 +424,7 @@ const socketPost = async parameters =>{
  const socketIntervalCheck = async () => {
     setInterval(async () => {
         //server interval run as app 0
-        if (serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'METADATA',parameter:'MAINTENANCE'}}).result)==1){
+        if (serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:0, data:{config_group:'METADATA',parameter:'MAINTENANCE'}}).result)==1){
             await socketAdminSend({ app_id:0,
                                     idToken:'',
                                     data:{app_id:null,
@@ -438,7 +435,7 @@ const socketPost = async parameters =>{
         }
         await socketExpiredTokensUpdate();
     //set default interval to 5 seconds if no parameter is set
-    }, serverUtilNumberValue(ConfigServer.get({app_id:0, data:{config_group:'SERVICE_SOCKET', parameter:'CHECK_INTERVAL'}}).result)??5000);
+    }, serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVICE_SOCKET', parameter:'CHECK_INTERVAL'}}).result)??5000);
 };
 
 /**
@@ -498,8 +495,7 @@ const CheckOnline = parameters => {
  */
 const socketClientPostMessage = async parameters => {
     const Security = await import('./security.js');
-    const IamEncryption = await import('./db/IamEncryption.js');
-    const IamAppIdToken = await import ('./db/IamAppIdToken.js');
+
     for (const client of SOCKET_CONNECTED_CLIENTS
                         .filter(row=>
                             row.id == (parameters.resource_id??row.id) &&
@@ -508,12 +504,12 @@ const socketClientPostMessage = async parameters => {
                             row.idToken == (parameters.data.idToken ?? row.idToken) 
                         )){
         //get id for token in the record found
-        const token_id = IamAppIdToken.get({  app_id:parameters.app_id, 
+        const token_id = ORM.db.IamAppIdToken.get({  app_id:parameters.app_id, 
                                         resource_id:null, 
                                         data:{data_app_id:null}}).result
                     .filter((/**@type{server_db_table_IamAppIdToken}*/row)=>row.token == client.idToken)?.[0].id;
         //get secrets from IamEncryption using uuid saved at record creation and token id
-        const {jwk, iv} = IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}). result
+        const {jwk, iv} = ORM.db.IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}). result
                             .filter((/**@type{server_db_table_IamEncryption}*/row)=>
                                 row.uuid == client.uuid && 
                                 row.iam_app_id_token_id == token_id)

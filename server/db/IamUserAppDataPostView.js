@@ -7,8 +7,7 @@
  *          server_db_common_result_delete,
  *          server_db_common_result_insert} from '../types.js'
  */
-const ORM = await import('./ORM.js');
-const IamUserApp = await import('./IamUserApp.js');
+const {ORM} = await import ('../server.js');
 /**
  * @name get
  * @description Get
@@ -21,7 +20,7 @@ const IamUserApp = await import('./IamUserApp.js');
  * @returns {server_server_response & {result?:server_db_table_IamUserAppDataPostView[] }}
  */
 const get = parameters =>{
-    const IamUserApp_records =  IamUserApp.get({ app_id:parameters.app_id,
+    const IamUserApp_records =  ORM.db.IamUserApp.get({ app_id:parameters.app_id,
                                                 resource_id:null, 
                                                 data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result;
     const result = ORM.getObject(parameters.app_id, 'IamUserAppDataPostView',parameters.resource_id, null).rows

@@ -9,12 +9,7 @@
  *          server_db_document_ConfigServer,
  *          server_config_apps_with_db_columns} from '../types.js'
  */
-
-const ORM = await import('./ORM.js');
-const AppTranslation = await import('./AppTranslation.js');
-const ConfigServer = await import('./ConfigServer.js');
-const {serverUtilNumberValue} = await import('../server.js');
-
+const {ORM} = await import ('../server.js');
 /**
  * @name get
  * @description Get records for given appid
@@ -45,14 +40,14 @@ const get = parameters =>{
 const getViewInfo = async parameters =>{
     const common = await import('../../apps/common/src/common.js');
     /**@type{server_db_document_ConfigServer} */
-    const configServer = ConfigServer.get({app_id:parameters.app_id}).result;
+    const configServer = ORM.db.ConfigServer.get({app_id:parameters.app_id}).result;
     /**@type{server_db_table_App[]}*/
     const apps = get({app_id:parameters.app_id, resource_id:null}).result
                     //do not show common app id, admin app id or start app id
                     .filter((/**@type{server_db_table_App}*/app)=>
-                        app.id != (serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)) &&
-                        app.id != (serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)) &&
-                        app.id != (serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)));
+                        app.id != (ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)) &&
+                        app.id != (ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)) &&
+                        app.id != (ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)));
     for (const app of apps){
         app.logo = (await common.commonResourceFile({app_id:parameters.app_id, 
                                                     resource_id:app.logo, 
@@ -65,7 +60,7 @@ const getViewInfo = async parameters =>{
                 return {
                             id:app.id,
                             name:app.name,
-                            app_name_translation : AppTranslation.get(parameters.app_id,null,parameters.locale, app.id).result
+                            app_name_translation : ORM.db.AppTranslation.get(parameters.app_id,null,parameters.locale, app.id).result
                                                     .filter((/**@type{server_db_table_AppTranslation}*/appTranslation)=>appTranslation.app_id==app.id)[0].json_data.name,
                             logo:app.logo
                         };

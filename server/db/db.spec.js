@@ -19,7 +19,7 @@ const test = async t =>
     [await t.describe('Unit test, test ORM post, update, get and delete', async ()=> {
         return await new Promise(resolve=>
         t.it('should create a record, update the record, get correct value from updated record and delete the record', async () =>{            
-            const App = await import('./App.js');
+            const {ORM} = await import('../server.js');
             
             const app_data = {  name:'ORM',
                                 path:'/apps/orm/public',
@@ -34,18 +34,18 @@ const test = async t =>
                                 link_url:'',
                                 status:'ONLINE'};
             //test post, insert value 1
-            const result_post = await App.post(0, app_data);
+            const result_post = await ORM.db.App.post(0, app_data);
             //test update, update value
             app_data.name='THE ORM';
 
-            const result_update = await App.update({app_id:0, 
+            const result_update = await ORM.db.App.update({app_id:0, 
                                                     resource_id:result_post.result.insertId, 
                                                     /**@ts-ignore} */
                                                     data:app_data});
             //test get from cache, get updated value
-            const result_get = App.get({app_id:0,  resource_id:result_post.result.insertId});
+            const result_get = ORM.db.App.get({app_id:0,  resource_id:result_post.result.insertId});
             //test delete, delete record
-            const result_delete = await App.deleteRecord(0, result_post.result.insertId);
+            const result_delete = await ORM.db.App.deleteRecord(0, result_post.result.insertId);
 
                     
             return [

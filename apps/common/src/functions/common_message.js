@@ -35,9 +35,8 @@
  */
 const appFunction = async parameters =>{
     const {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
-    const MessageQueuePublish = await import('../../../../server/db/MessageQueuePublish.js');
-    const MessageQueueConsume = await import('../../../../server/db/MessageQueueConsume.js');
-    const MessageQueueError = await import('../../../../server/db/MessageQueueError.js');
+    const {ORM} = await import('../../../../server/server.js');
+    
     /**
      * @returns {server_server_response}
      */
@@ -55,7 +54,8 @@ const appFunction = async parameters =>{
      * @returns {server_server_response}
      */
     const messagePublishGet = () =>{
-        const result = MessageQueuePublish.get({app_id:parameters.app_id, resource_id:null});
+        const result = ORM.db.MessageQueuePublish.get({app_id:parameters.app_id, resource_id:null});
+        const IamUser = ORM.db.IamUser.get(parameters.app_id, parameters.data.iam_user_id).result[0];
         if (result.http)
             return result;
         else{
@@ -79,15 +79,14 @@ const appFunction = async parameters =>{
      */
     const messagePublishPost = async message =>{
         const socket = await import('../../../../server/socket.js');
-        const IamUser = await import('../../../../server/db/IamUser.js');
         /**@type{server_db_table_MessageQueuePublish} */
         const message_queue_message = {service:'MESSAGE', message:message};
-        const messagePost = (await MessageQueuePublish.post({app_id:parameters.app_id, 
+        const messagePost = (await ORM.db.MessageQueuePublish.post({app_id:parameters.app_id, 
                                                             data:message_queue_message})).result;
         return {result:[ await (async ()=>{
                                 if(messagePost.affectedRows){
                                     /**@type{server_db_table_IamUser[]} */
-                                    const users = IamUser.get(parameters.app_id, message.receiver_id).result;                               
+                                    const users = ORM.db.IamUser.get(parameters.app_id, message.receiver_id).result;                               
                                     for (const user of users.filter(user=>  user.type == (( message.receiver_id && 
                                                                                             users.length == 1)?users[0].type:'ADMIN') &&
                                                                             user.id == (message.receiver_id ?? user.id))){
@@ -115,17 +114,16 @@ const appFunction = async parameters =>{
      */
     const messagesStat = messages =>{
         return {unread:messages.filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>
-                    (MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
+                    (ORM.db.MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
                             .filter((/**@type{*}*/messageConsume)=>
                                 message.id == messageConsume.message_queue_publish_id).length==0).length,
                 read:messages.filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>
-                    (MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
+                    (ORM.db.MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
                             .filter((/**@type{*}*/messageConsume)=>
                                 message.id == messageConsume.message_queue_publish_id).length>0).length,
                 };
     };
-    const IamUser = (await import('../../../../server/db/IamUser.js')).get(parameters.app_id, 
-                                                                                   parameters.data.iam_user_id).result[0];
+    
             
     switch (parameters.resource_id){
         case 'COMMON_MESSAGE_CONTACT':{
@@ -160,7 +158,7 @@ const appFunction = async parameters =>{
                 return {result:result.result 
                                             // add message read info
                                             .map((/**@type{server_db_table_MessageQueuePublish}*/message)=>{
-                                                return (MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
+                                                return (ORM.db.MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
                                                         .filter((/**@type{*}*/messageConsume)=>message.id == messageConsume.message_queue_publish_id).length>0?
                                                             {...message,
                                                                     read:true
@@ -194,15 +192,15 @@ const appFunction = async parameters =>{
                             finished:   new Date().toISOString(),
                             result:     1};
                         //send MessageQueueConsume message
-                        return {result:[await MessageQueueConsume.post({app_id:parameters.app_id, 
+                        return {result:[await ORM.db.MessageQueueConsume.post({app_id:parameters.app_id, 
                                                                         data:message_queue_message})
-                                        .then(result=>{
+                                        .then((/**@type{server_server_response}*/result)=>{
                                             if(result.result?.affectedRows)
                                                 return {sent:result.result.affectedRows};
                                             else
                                                 return {sent:0};
                                         })
-                                        .catch(error=>MessageQueueError.post({  app_id:parameters.app_id,
+                                        .catch((/**@type{*}*/error)=>ORM.db.MessageQueueError.post({  app_id:parameters.app_id,
                                                                                 data:{message_queue_publish_id:parameters.data.message_queue_publish_id,
                                                                                 message:error, 
                                                                                 result:0}}).then(()=>{return {sent:0};}))
@@ -216,7 +214,7 @@ const appFunction = async parameters =>{
         }
         case 'COMMON_MESSAGE_DELETE':{
             if (parameters.data.message_id)
-                return MessageQueuePublish.deleteRecord({app_id:parameters.app_id, resource_id:parameters.data.message_id});
+                return ORM.db.MessageQueuePublish.deleteRecord({app_id:parameters.app_id, resource_id:parameters.data.message_id});
             else
                 return messageError();
         }

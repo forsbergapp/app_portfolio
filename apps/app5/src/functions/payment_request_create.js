@@ -11,7 +11,7 @@
  *          server_server_response} from '../../../../server/types.js'
  * @import {payment_request, bank_account, merchant} from './types.js'
  */
-
+const {ORM} = await import('../../../../server/server.js');
 /**
  * @param {{app_id:number,
  *          authorization:string,
@@ -19,16 +19,13 @@
  * @returns {Promise.<server_iam_access_token_claim & {exp?:number, iat?:number}|null>}
  */
 const getToken = async parameters => {
-   
-   const IamAppAccess = await import('../../../../server/db/IamAppAccess.js');
    const {iamUtilTokenGet} = await import('../../../../server/iam.js');
-   
    const token_verify = iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_EXTERNAL');
    if (token_verify.app_id         == parameters.app_id && 
        token_verify.ip             == parameters.ip && 
        token_verify.scope          == 'APP_EXTERNAL' &&
        //authenticated saved values in iam_app_access
-       IamAppAccess.get(parameters.app_id, null).result
+       ORM.db.IamAppAccess.get(parameters.app_id, null).result
                        .filter((/**@type{server_db_table_IamAppAccess}*/row)=>
                                                                //Authenticate the token type
                                                                row.type                    == 'APP_ACCESS_EXTERNAL' &&
@@ -65,18 +62,13 @@ const paymentRequestCreate = async parameters =>{
    const {serverUtilNumberValue} = await import('../../../../server/server.js');
    const {iamUtilMessageNotAuthorized, iamAuthorizeToken} = await import('../../../../server/iam.js');
    const {securityUUIDCreate, securityPrivateDecrypt, securityPublicEncrypt} = await import('../../../../server/security.js');
-   const IamAppAccess = await import('../../../../server/db/IamAppAccess.js');
-   const AppDataEntity = await import('../../../../server/db/AppDataEntity.js');
-   const AppDataEntityResource = await import('../../../../server/db/AppDataEntityResource.js');
-   const AppDataResourceMaster = await import('../../../../server/db/AppDataResourceMaster.js');
-   const AppDataResourceDetail = await import('../../../../server/db/AppDataResourceDetail.js');
-
+   
    /**@type{server_db_table_AppDataEntity} */
-   const Entity    = AppDataEntity.get({   app_id:parameters.app_id, 
+   const Entity    = ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                            resource_id:null, 
                                            data:{data_app_id:parameters.app_id}}).result[0];
 
-   const currency = AppDataResourceMaster.get({app_id:parameters.app_id, 
+   const currency = ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                resource_id:null, 
                                                data:{  iam_user_id:null,
                                                        data_app_id:parameters.app_id,
@@ -84,7 +76,7 @@ const paymentRequestCreate = async parameters =>{
                                                        app_data_entity_id:Entity.id
                                                }}).result[0];
    /**@type{merchant} */
-   const merchant = AppDataResourceMaster.get({app_id:parameters.app_id, 
+   const merchant = ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                all_users:true,
                                                resource_id:null, 
                                                data:{  iam_user_id:null,
@@ -120,7 +112,7 @@ const paymentRequestCreate = async parameters =>{
        const  body_decrypted = JSON.parse(securityPrivateDecrypt(merchant.merchant_private_key, parameters.data.message));
 
        /**@type{bank_account} */
-       const merchant_bankaccount = AppDataResourceDetail.get({app_id:parameters.app_id, 
+       const merchant_bankaccount = ORM.db.AppDataResourceDetail.get({app_id:parameters.app_id, 
                                                                all_users:true,
                                                                resource_id:null, 
                                                                data:{  iam_user_id:null,
@@ -134,7 +126,7 @@ const paymentRequestCreate = async parameters =>{
                                            account.json_data?.bank_account_vpa==merchant.merchant_vpa
                                        )[0];
        /**@type{bank_account} */                                                            
-       const bankaccount_payer = AppDataResourceDetail.get({   app_id:parameters.app_id, 
+       const bankaccount_payer = ORM.db.AppDataResourceDetail.get({   app_id:parameters.app_id, 
                                                                all_users:true,
                                                                resource_id:null, 
                                                                data:{  iam_user_id:null,
@@ -172,13 +164,13 @@ const paymentRequestCreate = async parameters =>{
                const data_new_payment_request = {
                                                json_data                                   : data_payment_request,
                                                iam_user_app_id                             : merchant.iam_user_app_id,
-                                               app_data_entity_resource_id                 : AppDataEntityResource.get({   app_id:parameters.app_id, 
+                                               app_data_entity_resource_id                 : ORM.db.AppDataEntityResource.get({   app_id:parameters.app_id, 
                                                                                                                            resource_id:null, 
                                                                                                                            data:{  resource_name:'PAYMENT_REQUEST',
                                                                                                                                    app_data_entity_id:Entity.id
                                                                                                                            }}).result[0].id
                                    };
-               await AppDataResourceMaster.post({app_id:parameters.app_id, data:data_new_payment_request});
+               await ORM.db.AppDataResourceMaster.post({app_id:parameters.app_id, data:data_new_payment_request});
                const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS_EXTERNAL', {   
                                                                                                app_id:             parameters.app_id,
                                                                                                app_id_token:       null,
@@ -205,7 +197,7 @@ const paymentRequestCreate = async parameters =>{
                                        token:                  jwt_data?jwt_data.token:null,
                                        ip:                     parameters.ip,
                                        ua:                     parameters.user_agent};
-               await IamAppAccess.post(parameters.app_id, file_content);
+               await ORM.db.IamAppAccess.post(parameters.app_id, file_content);
    
                /**
                * @type {{ token:string,
