@@ -51,7 +51,7 @@ const get = parameters =>{
                                                                             resource_name:parameters.data.resource_name,
                                                                             app_data_resource_master_id:null,
                                                                             app_data_entity_id:entity_id}}).result;    
-    const result = ORM.getObject(parameters.app_id, 'AppDataResourceDetailData',parameters.resource_id, null).rows
+    const result = (ORM.getObject(parameters.app_id, 'AppDataResourceDetailData',parameters.resource_id, null).result ?? [])
                     .filter((/**@type{server_db_table_AppDataResourceDetailData}*/row)=>
                         row.app_data_resource_detail_id == (parameters.data.app_data_resource_detail_id??row.app_data_resource_detail_id) && 
                         result_AppDataResourceDetail

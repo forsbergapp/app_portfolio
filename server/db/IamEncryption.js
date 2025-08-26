@@ -13,13 +13,8 @@ const {ORM} = await import ('../server.js');
  *          data:{data_app_id:number|null}}} parameters
  * @returns {server_server_response & {result?:server_db_table_IamEncryption[] }}
  */
-const get = parameters =>{
-    const result = ORM.getObject(parameters.app_id, 'IamEncryption',parameters.resource_id, parameters.data.data_app_id);
-    if (result.rows.length>0)
-        return {result:result.rows, type:'JSON'};
-    else
-        return ORM.getError(parameters.app_id, 404);
-};
+const get = parameters =>ORM.getObject(parameters.app_id, 'IamEncryption',parameters.resource_id, parameters.data.data_app_id);
+    
 /**
  * @name post
  * @description Add record

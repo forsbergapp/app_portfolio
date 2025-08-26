@@ -13,13 +13,8 @@ const {ORM} = await import ('../server.js');
  *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_MessageQueueConsume[]}}
  */
-const get = parameters =>{
-    const result = ORM.getObject(parameters.app_id, 'MessageQueueConsume',null, null);
-    if (result.rows.length>0 || parameters.resource_id==null)
-        return {result:result.rows, type:'JSON'};
-    else
-        return ORM.getError(null, 404);
-};
+const get = parameters =>ORM.getObject(parameters.app_id, 'MessageQueueConsume',null, null);
+
 /**
  * @name post
  * @description Add record

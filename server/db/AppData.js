@@ -21,13 +21,13 @@ const {ORM} = await import ('../server.js');
  */
 const get = parameters => {
     const result = ORM.getObject(parameters.app_id, 'AppData',parameters.resource_id, ORM.UtilNumberValue(parameters.data.data_app_id));
-    if (result.rows.length>0 || parameters.resource_id==null)
+    if (result.result)
         return {result:[{
-                            data:Buffer.from (JSON.stringify(result.rows.filter((/**@type{server_db_table_AppData}*/row)=>row.name==(parameters.data?.name ?? row.name) && row.value==(parameters.data?.value ?? row.value)))).toString('base64')
+                            data:Buffer.from (JSON.stringify(result.result.filter((/**@type{server_db_table_AppData}*/row)=>row.name==(parameters.data?.name ?? row.name) && row.value==(parameters.data?.value ?? row.value)))).toString('base64')
                         }], 
                 type:'JSON'};
     else
-        return ORM.getError(parameters.app_id, 404);
+        return result;
 };
 
 /**
@@ -43,11 +43,11 @@ const get = parameters => {
 */
 const getServer = parameters => {
    const result = ORM.getObject(parameters.app_id, 'AppData',parameters.resource_id, ORM.UtilNumberValue(parameters.data.data_app_id));
-   if (result.rows.length>0 || parameters.resource_id==null)
-       return {result:result.rows.filter((/**@type{server_db_table_AppData}*/row)=>row.name==(parameters.data?.name ?? row.name) && row.value==(parameters.data?.value ?? row.value)), 
+   if (result.result)
+       return {result:result.result.filter((/**@type{server_db_table_AppData}*/row)=>row.name==(parameters.data?.name ?? row.name) && row.value==(parameters.data?.value ?? row.value)), 
                type:'JSON'};
    else
-       return ORM.getError(parameters.app_id, 404);
+       return result;
 };
 
 /**

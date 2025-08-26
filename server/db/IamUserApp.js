@@ -20,7 +20,7 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_IamUserApp[] }}
  */
 const get = parameters =>{
-    const result = ORM.getObject(parameters.app_id, 'IamUserApp',parameters.resource_id, parameters.data.data_app_id??null).rows
+    const result = (ORM.getObject(parameters.app_id, 'IamUserApp',parameters.resource_id, parameters.data.data_app_id??null).result ??[])
                     .filter((/**@type{server_db_table_IamUserApp}*/row)=>row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};

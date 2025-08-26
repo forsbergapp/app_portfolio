@@ -17,13 +17,7 @@ const {ORM} = await import ('../server.js');
  *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_AppModuleQueue[] }}
  */
-const get = parameters =>{ 
-    const result = ORM.getObject(parameters.app_id, 'AppModuleQueue',parameters.resource_id, parameters.app_id);
-    if (result.rows.length>0 || parameters.resource_id==null)
-        return  {result:result.rows, type:'JSON'};
-    else
-        return ORM.getError(parameters.app_id, 404);
-};
+const get = parameters =>ORM.getObject(parameters.app_id, 'AppModuleQueue',parameters.resource_id, parameters.app_id);
 
 /**
  * @name getResult

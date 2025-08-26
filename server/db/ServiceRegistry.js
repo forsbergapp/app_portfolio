@@ -15,7 +15,7 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_ServiceRegistry[] }}
  */
 const get = parameters =>{
-    const result = ORM.getObject(parameters.app_id, 'ServiceRegistry',parameters.resource_id, null).rows
+    const result = (ORM.getObject(parameters.app_id, 'ServiceRegistry',parameters.resource_id, null).result??[])
                     .filter((/**@type{server_db_table_ServiceRegistry}*/row)=>
                         row.name == (parameters.data.name ?? row.name ));
     if (result.length>0 || parameters.resource_id==null)

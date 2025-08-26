@@ -509,6 +509,7 @@ class ORM_class {
             switch(record.type){
                 case 'TABLE':
                 case 'TABLE_KEY_VALUE':{
+                    /**@type{*[]} */
                     const records = record.cache_content
                                     .filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id))
                                     .map((/**@type{*}*/row)=>{
@@ -529,18 +530,18 @@ class ORM_class {
                                                         log:records
                                                     }
                                                 });
-                    if (records.length>0)
-                        return {rows:records};
+                    if (records.length>0 || resource_id==null)
+                        return {result:records, type:'JSON'};
                     else
-                        return {rows:[]};
+                        return ORM.getError(app_id, 404);
                 }
                 case 'DOCUMENT':
                     return record.cache_content;
                 default:
-                    return {};
+                    return ORM.getError(app_id, 404);
             }
         } catch (error) {
-            return {rows:[]};
+            return {result:[], type:'JSON'};
         }  
     };
     /**
