@@ -60,9 +60,9 @@ const paymentRequestUpdate = async parameters =>{
                                         payment_request.json_data?.payment_request_id==token?.app_custom_id
                                     )[0];
 
-    if (customer && payment_request && payment_request.id!=null && (ORM.serverUtilNumberValue(parameters.data.status)==1 || ORM.serverUtilNumberValue(parameters.data.status)==0)){
+    if (customer && payment_request && payment_request.id!=null && (ORM.UtilNumberValue(parameters.data.status)==1 || ORM.UtilNumberValue(parameters.data.status)==0)){
         let status ='PENDING';
-        if (ORM.serverUtilNumberValue(parameters.data.status)==1)
+        if (ORM.UtilNumberValue(parameters.data.status)==1)
             try {
                 const account_payer         =  ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                             resource_id:null, 

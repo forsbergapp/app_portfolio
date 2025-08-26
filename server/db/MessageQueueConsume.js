@@ -47,7 +47,7 @@ const post = async parameters => {
         return ORM.Execute({app_id:parameters.app_id, 
                             dml:'POST', 
                             object:'MessageQueueConsume', 
-                            post:{data:data_new}}).then((result)=>{
+                            post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};

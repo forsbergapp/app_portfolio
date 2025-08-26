@@ -57,7 +57,7 @@ const update = async parameters => {
                             dml:'UPDATE', 
                             object:'ServiceRegistry', 
                             update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}})
-                .then((result)=>{
+                .then((/**@type{server_db_common_result_update}*/result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else

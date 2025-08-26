@@ -76,7 +76,7 @@ const getViewProfileUserPosts = async parameters =>{
                                                                             iam_user_app_data_post_id:  row.id}}).result.length,
                             liked: ORM.db.IamUserAppDataPostLike.get({ app_id:parameters.app_id, 
                                                                 resource_id:null, 
-                                                                data:{  iam_user_id:                ORM.serverUtilNumberValue(parameters.data?.id_current_user), 
+                                                                data:{  iam_user_id:                ORM.UtilNumberValue(parameters.data?.id_current_user), 
                                                                         data_app_id:                parameters.app_id,
                                                                         iam_user_app_data_post_id:  row.id}}).result.length
                             };
@@ -157,13 +157,13 @@ const getViewProfileStatPost = async parameters =>{
         return {result:IamUser.get(parameters.app_id, null).result
                         .map((/**@type{server_db_table_IamUser}*/row)=>{
                             return {
-                                top:ORM.serverUtilNumberValue(parameters.data.statchoice)==4?
+                                top:ORM.UtilNumberValue(parameters.data.statchoice)==4?
                                         'LIKED_POST':
                                             'VIEWED_POST',
                                 id:row.id,
                                 avatar:row.avatar,
                                 username:row.username,
-                                count:ORM.serverUtilNumberValue(parameters.data.statchoice)==4?
+                                count:ORM.UtilNumberValue(parameters.data.statchoice)==4?
                                         ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
                                                                     resource_id:null,
                                                                     data:{  iam_user_id:row.id??null, 
@@ -202,14 +202,14 @@ const getViewProfileUserPostDetail = async parameters =>{
         return ORM.getError(parameters.app_id, 400);
     else{
         const IamUser = await import('./IamUser.js');
-        const result_IamUserAppDataPost = ORM.serverUtilNumberValue(parameters.data.detailchoice)==6?
+        const result_IamUserAppDataPost = ORM.UtilNumberValue(parameters.data.detailchoice)==6?
                                             null:
                                                 get({   app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{  iam_user_id:parameters.resource_id, 
                                                                 data_app_id:parameters.app_id}}).result;
         //filter iam_user_app_data_post_id where iam_user_app_id = IamUserApp.id where iam_user_id = parameters.resource_id, 
-        const result = ORM.serverUtilNumberValue(parameters.data.detailchoice)==6?
+        const result = ORM.UtilNumberValue(parameters.data.detailchoice)==6?
                             //LIKE
                             ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
                                 resource_id:null, 
@@ -232,7 +232,7 @@ const getViewProfileUserPostDetail = async parameters =>{
         return { result: result
                         .map((/**@type{server_db_table_IamUserAppDataPostLike}*/row)=>{
                             const result_IamUserApp_id =    ORM.db.IamUserApp.get({app_id:parameters.app_id, 
-                                                                            resource_id:ORM.serverUtilNumberValue(parameters.data.detailchoice)==6?
+                                                                            resource_id:ORM.UtilNumberValue(parameters.data.detailchoice)==6?
                                                                                             get({   app_id:parameters.app_id, 
                                                                                                     resource_id:row.iam_user_app_data_post_id, 
                                                                                                     data:{  iam_user_id:null, 
@@ -243,7 +243,7 @@ const getViewProfileUserPostDetail = async parameters =>{
                             const result_IamUser = IamUser.get(parameters.app_id, 
                                                                 result_IamUserApp_id).result[0];
                             return {
-                                detail:ORM.serverUtilNumberValue(parameters.data.detailchoice)==1?
+                                detail:ORM.UtilNumberValue(parameters.data.detailchoice)==1?
                                         'LIKE_POST':
                                             'LIKED_POST',
                                 iam_user_id:result_IamUserApp_id,

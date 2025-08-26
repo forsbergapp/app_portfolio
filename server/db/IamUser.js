@@ -55,12 +55,12 @@ const getViewProfile = async parameters =>{
                                     // check if friends
                                     const friends =  ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
-                                                                    data:{  iam_user_id:ORM.serverUtilNumberValue(parameters.data?.id),
+                                                                    data:{  iam_user_id:ORM.UtilNumberValue(parameters.data?.id),
                                                                             iam_user_id_follow:row.id??null}}).result[0] ??
                                                     ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:row.id??null,
-                                                                            iam_user_id_follow:ORM.serverUtilNumberValue(parameters.data?.id)}}).result[0];
+                                                                            iam_user_id_follow:ORM.UtilNumberValue(parameters.data?.id)}}).result[0];
                                     return {id:             row.id,
                                             active:         row.active,
                                             username:       row.username, 
@@ -100,11 +100,11 @@ const getViewProfile = async parameters =>{
                                                                                         iam_user_id_view:row.id??null}}).result.length,
                                             followed_id:    (parameters.data?.id==null ||parameters.data?.id=='')?null:ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                 resource_id:null, 
-                                                                                data:{  iam_user_id:ORM.serverUtilNumberValue(parameters.data?.id),
+                                                                                data:{  iam_user_id:ORM.UtilNumberValue(parameters.data?.id),
                                                                                         iam_user_id_follow:row.id??null}}).result[0]?.id??null,
                                             liked_id:       (parameters.data?.id==null ||parameters.data?.id=='')?null:ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
-                                                                                data:{  iam_user_id:ORM.db.serverUtilNumberValue(parameters.data?.id),
+                                                                                data:{  iam_user_id:ORM.UtilNumberValue(parameters.data?.id),
                                                                                         iam_user_id_like:row.id??null}}).result[0]?.id??null};
                                 });
   if (parameters.data.search){
@@ -113,8 +113,8 @@ const getViewProfile = async parameters =>{
   else
       if (result_getProfileUser[0]){
           //always save stat who is viewing, same user, none or someone else
-          const data_body = { iam_user_id:        ORM.serverUtilNumberValue(parameters.data.id),    //who views
-                              iam_user_id_view:   ORM.serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
+          const data_body = { iam_user_id:        ORM.UtilNumberValue(parameters.data.id),    //who views
+                              iam_user_id_view:   ORM.UtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
                               client_ip:              parameters.ip,
                               client_user_agent:      parameters.user_agent};
           return await ORM.db.IamUserView.post(parameters.app_id, 
@@ -154,23 +154,23 @@ const getViewProfileStat = async parameters =>{
                             )              
                             .map((/**@type{server_db_table_IamUser}*/row)=>{
                                 return {
-                                    top:    ORM.serverUtilNumberValue(parameters.data?.statchoice)==1?'VISITED':
-                                            ORM.serverUtilNumberValue(parameters.data?.statchoice)==2?'FOLLOWING':
-                                            ORM.serverUtilNumberValue(parameters.data?.statchoice)==3?'LIKE_USER':null,
+                                    top:    ORM.UtilNumberValue(parameters.data?.statchoice)==1?'VISITED':
+                                            ORM.UtilNumberValue(parameters.data?.statchoice)==2?'FOLLOWING':
+                                            ORM.UtilNumberValue(parameters.data?.statchoice)==3?'LIKE_USER':null,
                                     id:     row.id,
                                     avatar: row.avatar,
                                     username:row.username,
-                                    count:  ORM.serverUtilNumberValue(parameters.data?.statchoice)==1?
+                                    count:  ORM.UtilNumberValue(parameters.data?.statchoice)==1?
                                                 ORM.db.IamUserView.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
                                                                             iam_user_id_view:row.id??null}}).result.length:
-                                            ORM.serverUtilNumberValue(parameters.data?.statchoice)==2?
+                                            ORM.UtilNumberValue(parameters.data?.statchoice)==2?
                                                 ORM.db.IamUserFollow.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
                                                                             iam_user_id_follow:row.id??null}}).result.length:
-                                            ORM.serverUtilNumberValue(parameters.data?.statchoice)==3?
+                                            ORM.UtilNumberValue(parameters.data?.statchoice)==3?
                                                 ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
@@ -199,27 +199,27 @@ const getViewProfileStat = async parameters =>{
  */
 const getViewProfileDetail = async parameters =>{
    return {result:( //following
-                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==1?
+                    ORM.UtilNumberValue(parameters.data?.detailchoice)==1?
                         ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:parameters.resource_id,
                                                     iam_user_id_follow:null}}).result
                             .map((/**@type{server_db_table_IamUserFollow}*/row)=>{return {iam_user_id:row.iam_user_id_follow};}):
                     //followed
-                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==2?
+                    ORM.UtilNumberValue(parameters.data?.detailchoice)==2?
                         ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:null,
                                                     iam_user_id_follow:parameters.resource_id}}).result:
                     //like user
-                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==3?
+                    ORM.UtilNumberValue(parameters.data?.detailchoice)==3?
                         ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:parameters.resource_id,
                                                     iam_user_id_like:null}}).result
                             .map((/**@type{server_db_table_IamUserLike}*/row)=>{return {iam_user_id:row.iam_user_id_like};}):
                     //liked user
-                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==4?
+                    ORM.UtilNumberValue(parameters.data?.detailchoice)==4?
                         ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:null,
@@ -232,10 +232,10 @@ const getViewProfileDetail = async parameters =>{
                     })              
                     .map((/**@type{server_db_table_IamUserFollow}*/row)=>{
                         return {
-                            detail: ORM.serverUtilNumberValue(parameters.data?.detailchoice)==1?'FOLLOWING':
-                                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==2?'FOLLOWED':
-                                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==3?'LIKE_USER':
-                                    ORM.serverUtilNumberValue(parameters.data?.detailchoice)==4?'LIKED_USER':null,
+                            detail: ORM.UtilNumberValue(parameters.data?.detailchoice)==1?'FOLLOWING':
+                                    ORM.UtilNumberValue(parameters.data?.detailchoice)==2?'FOLLOWED':
+                                    ORM.UtilNumberValue(parameters.data?.detailchoice)==3?'LIKE_USER':
+                                    ORM.UtilNumberValue(parameters.data?.detailchoice)==4?'LIKED_USER':null,
                             iam_user_id:  row.iam_user_id,
                             avatar: get(parameters.app_id,row.iam_user_id).result[0]?.avatar,
                             username:get(parameters.app_id,row.iam_user_id).result[0]?.username
@@ -316,7 +316,7 @@ const post = async (app_id, data) => {
                                 created:            new Date().toISOString(), 
                                 modified:           new Date().toISOString()
                         };
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((result)=>{
+        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -356,7 +356,7 @@ const postAdmin = async (app_id, data) => {
                             created:new Date().toISOString(), 
                             modified:new Date().toISOString()
                     };
-    return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((result)=>{
+    return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
         if (result.affectedRows>0){
             result.insertId=data_new.id;
             return {result:result, type:'JSON'};
@@ -393,13 +393,13 @@ const update = async (app_id, resource_id, data) => {
             if (data.bio!=null)
                 data_update.bio = data.bio;
             if (data.private!=null)
-                data_update.private = ORM.serverUtilNumberValue(data.private);
+                data_update.private = ORM.UtilNumberValue(data.private);
             if (data.avatar!=null)
                 data_update.avatar = data.avatar;
             data_update.modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)
-                return ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamUser', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+                return ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamUser', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
@@ -441,7 +441,7 @@ const updateAdmin = async parameters => {
             if (parameters.data?.bio!=null)
                 data_update.bio = parameters.data.bio;
             if (parameters.data?.private!=null)
-                data_update.private = ORM.serverUtilNumberValue(parameters.data.private) ?? 0;
+                data_update.private = ORM.UtilNumberValue(parameters.data.private) ?? 0;
             if (parameters.data?.otp_key!=null)
                 data_update.otp_key = parameters.data.otp_key;
             if (parameters.data?.avatar!=null)
@@ -450,18 +450,18 @@ const updateAdmin = async parameters => {
             if (parameters.data?.type!=null)
                 data_update.type = parameters.data.type;
             if (parameters.data?.user_level!=null)
-                data_update.user_level = ORM.serverUtilNumberValue(parameters.data.user_level);
+                data_update.user_level = ORM.UtilNumberValue(parameters.data.user_level);
             if (parameters.data?.status!=null)
                 data_update.status = parameters.data.status;
             if (parameters.data?.active!=null)
-                data_update.active = ORM.serverUtilNumberValue(parameters.data.active) ?? 0;
+                data_update.active = ORM.UtilNumberValue(parameters.data.active) ?? 0;
             data_update.modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)
                 return ORM.Execute({  app_id:parameters.app_id, 
                                             dml:'UPDATE', 
                                             object:'IamUser', 
-                                            update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+                                            update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
@@ -492,7 +492,7 @@ const deleteRecord = async (app_id, resource_id, data) => {
             return ORM.Execute({app_id:app_id, 
                                 dml:'DELETE', 
                                 object:'IamUser', 
-                                delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+                                delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
@@ -517,7 +517,7 @@ const deleteRecordAdmin = async (app_id, resource_id) => {
     const user = get(app_id, resource_id).result[0];
     if (user){
         return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUser', delete:{resource_id:resource_id, data_app_id:null}})
-                .then(result=>{
+                .then((/**@type{server_db_common_result_delete}*/result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else

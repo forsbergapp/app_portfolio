@@ -13495,7 +13495,7 @@ function processFor(node, dir, context, processCodegen) {
   }
   const parseResult = parseForExpression(
     // can only be simple expression because vFor transform is applied
-    // before expression transform.
+    // before expression transfORM.
     dir.exp,
     context
   );

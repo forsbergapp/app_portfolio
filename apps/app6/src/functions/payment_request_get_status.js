@@ -57,7 +57,7 @@ const paymentRequestGetStatus = async parameters =>{
    };
    //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
    //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-   const body_encrypted = {id:         ORM.serverUtilNumberValue(Entity.json_data.merchant_id),
+   const body_encrypted = {id:         ORM.UtilNumberValue(Entity.json_data.merchant_id),
                            message:    securityPublicEncrypt(
                                            Entity.json_data.merchant_public_key??'', 
                                            JSON.stringify(body))};

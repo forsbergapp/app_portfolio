@@ -15,7 +15,8 @@
  *          server_bff_parameters} from './types.js'
  */
 const app_common= await import('../apps/common/src/common.js');
-const {ORM, serverResponse, serverUtilResponseTime} = await import('./server.js');
+const {ORM} = await import('./server.js');
+const {serverResponse, serverUtilResponseTime} = await import('./server.js');
 const socket = await import('./socket.js');
 const Security = await import('./security.js');
 const iam = await import('./iam.js');
@@ -39,7 +40,7 @@ const bffConnect = async parameters =>{
     /**@type{server_db_document_ConfigServer} */
     const configServer = ORM.db.ConfigServer.get({app_id:parameters.app_id}).result;
 
-    const common_app_id = ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
+    const common_app_id = ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
 
     //connect socket for common app id
     const connectUserData = await socket.socketPost({  app_id:common_app_id,
@@ -215,7 +216,7 @@ const bffResponse = async parameters =>{
     /**@type{server_db_document_ConfigServer['SERVICE_APP']} */
     const CONFIG_SERVICE_APP = ORM.db.ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;
 
-    const admin_app_id = ORM.serverUtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_ADMIN_APP_ID)[0].APP_ADMIN_APP_ID);
+    const admin_app_id = ORM.UtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_ADMIN_APP_ID)[0].APP_ADMIN_APP_ID);
     if (parameters.result_request.http){    
         //ISO20022 error format
         const message = {error:{
@@ -288,7 +289,7 @@ const bffResponse = async parameters =>{
                         }
                     }
                     //records limit in controlled by server, apps can not set limits                                                     
-                    const limit = ORM.serverUtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS??0);
+                    const limit = ORM.UtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS??0);
                     if (parameters.result_request.singleResource)
                         //limit rows if single resource response contains rows
                         serverResponse({app_id:parameters.app_id,
@@ -308,7 +309,7 @@ const bffResponse = async parameters =>{
                         
                         let result;
                         if (parameters.decodedquery && new URLSearchParams(parameters.decodedquery).has('offset')){
-                            const offset = ORM.serverUtilNumberValue(new URLSearchParams(parameters.decodedquery).get('offset'));
+                            const offset = ORM.UtilNumberValue(new URLSearchParams(parameters.decodedquery).get('offset'));
                             //return pagination format
                             result = {  
                                         page_header:
@@ -386,7 +387,7 @@ const bffResponse = async parameters =>{
     const configServer = ORM.db.ConfigServer.get({app_id:0}).result;
     // check JSON maximum size, parameter uses megabytes (MB)
     if (req.body && JSON.stringify(req.body).length/1024/1024 > 
-            (ORM.serverUtilNumberValue((configServer.SERVER.filter(parameter=>parameter.JSON_LIMIT)[0].JSON_LIMIT ?? '0').replace('MB',''))??0)){
+            (ORM.UtilNumberValue((configServer.SERVER.filter(parameter=>parameter.JSON_LIMIT)[0].JSON_LIMIT ?? '0').replace('MB',''))??0)){
         //log error                                        
         ORM.db.Log.post({  app_id:0, 
                     data:{  object:'LogRequestError', 
@@ -412,7 +413,7 @@ const bffResponse = async parameters =>{
     }
     else{
         const resultbffInit =   await bffInit(req, res);
-        const common_app_id = ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
+        const common_app_id = ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
         /**
          * @returns {Promise.<server_bff_parameters|null|1>}
          */
@@ -740,7 +741,7 @@ const bffResponse = async parameters =>{
                                                 body:decodedbody,
                                                 res:bff_parameters.res})
                                 .then((/**@type{*}*/result_service) => {
-                                    const log_result = ORM.serverUtilNumberValue(configServer.SERVICE_LOG.filter(row=>'REQUEST_LEVEL' in row)[0].REQUEST_LEVEL)==2?result_service:'✅';
+                                    const log_result = ORM.UtilNumberValue(configServer.SERVICE_LOG.filter(row=>'REQUEST_LEVEL' in row)[0].REQUEST_LEVEL)==2?result_service:'✅';
                                                         /**@ts-ignore */
                                     return ORM.db.Log.post({  app_id:result_service.app_id, 
                                         data:{  object:'LogServiceInfo', 
@@ -828,10 +829,10 @@ const bffRestApi = async (routesparameters) =>{
                                                 idToken:                    routesparameters.idToken,
                                                 endpoint:                   routesparameters.endpoint,
                                                 authorization:              routesparameters.authorization, 
-                                                claim_iam_user_app_id:      ORM.serverUtilNumberValue(params.IAM_iam_user_app_id),
-                                                claim_iam_user_id:          ORM.serverUtilNumberValue(params.IAM_iam_user_id),
-                                                claim_iam_module_app_id:    ORM.serverUtilNumberValue(params.IAM_module_app_id),
-                                                claim_iam_data_app_id:      ORM.serverUtilNumberValue(params.IAM_data_app_id),
+                                                claim_iam_user_app_id:      ORM.UtilNumberValue(params.IAM_iam_user_app_id),
+                                                claim_iam_user_id:          ORM.UtilNumberValue(params.IAM_iam_user_id),
+                                                claim_iam_module_app_id:    ORM.UtilNumberValue(params.IAM_module_app_id),
+                                                claim_iam_data_app_id:      ORM.UtilNumberValue(params.IAM_data_app_id),
                                                 claim_iam_service:          params.IAM_service}))
                 return true;
             else
@@ -855,7 +856,7 @@ const bffRestApi = async (routesparameters) =>{
             )[0]==null?null:
             {[paths[0].substring(paths[0].indexOf('${')+'${'.length).replace('}','')]:
                 (components.parameters[paths[0].substring(paths[0].indexOf('${')+'${'.length).replace('}','')]?.schema.type == 'number'?
-                        ORM.serverUtilNumberValue(URI_path.substring(URI_path.lastIndexOf('/')+1)):
+                        ORM.UtilNumberValue(URI_path.substring(URI_path.lastIndexOf('/')+1)):
                             URI_path.substring(URI_path.lastIndexOf('/')+1))
             }:
                 //no resource id string in defined path
@@ -863,7 +864,7 @@ const bffRestApi = async (routesparameters) =>{
 
     //get paths and components keys in ConfigRestApi
     const configPath = (() => { 
-        const { paths, components } = ORM.db.ConfigRestApi.get({app_id:ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>parameter.APP_COMMON_APP_ID)[0].APP_COMMON_APP_ID) ?? 0}).result; 
+        const { paths, components } = ORM.db.ConfigRestApi.get({app_id:ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>parameter.APP_COMMON_APP_ID)[0].APP_COMMON_APP_ID) ?? 0}).result; 
             return {paths:Object.entries(paths).filter(path=>   
                 //match with resource id string             
                 (path[0].indexOf('${')>-1 && path[0].substring(0,path[0].lastIndexOf('${')) == URI_path.substring(0,URI_path.lastIndexOf('/')+1)) ||
@@ -1000,7 +1001,7 @@ const bffRestApi = async (routesparameters) =>{
                     parametersIn.module_app_id = routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?
                                                     routesparameters.app_id:
                                                         parametersIn.IAM_module_app_id!=null?
-                                                            ORM.serverUtilNumberValue(parametersIn.IAM_module_app_id):
+                                                            ORM.UtilNumberValue(parametersIn.IAM_module_app_id):
                                                                 null;
                 }
                 if ('IAM_data_app_id' in parametersIn ||routesparameters.endpoint=='APP_ACCESS_EXTERNAL'){
@@ -1008,17 +1009,17 @@ const bffRestApi = async (routesparameters) =>{
                     parametersIn.data_app_id = routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?
                                                     routesparameters.app_id:
                                                         parametersIn.IAM_data_app_id!=null?
-                                                            ORM.serverUtilNumberValue(parametersIn.IAM_data_app_id):
+                                                            ORM.UtilNumberValue(parametersIn.IAM_data_app_id):
                                                                 null;
                 }
                 if ('IAM_iam_user_app_id' in parametersIn){
                     parametersIn.iam_user_app_id = parametersIn.IAM_iam_user_app_id!=null?
-                                                        ORM.serverUtilNumberValue(parametersIn.IAM_iam_user_app_id):
+                                                        ORM.UtilNumberValue(parametersIn.IAM_iam_user_app_id):
                                                             null;
                 }
                 if ('IAM_iam_user_id' in parametersIn){
                     parametersIn.iam_user_id = parametersIn.IAM_iam_user_id!=null?
-                                                    ORM.serverUtilNumberValue(parametersIn.IAM_iam_user_id):
+                                                    ORM.UtilNumberValue(parametersIn.IAM_iam_user_id):
                                                         null;
                 }
                 if ('IAM_service' in parametersIn){

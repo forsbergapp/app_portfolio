@@ -93,7 +93,7 @@ const template = props => ` <div id='report'>
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    const {ORM, serverProcess} = await import('../../../../server/server.js');    
+    const {ORM} = await import('../../../../server/server.js');
     const {commonRegistryAppModule} = await import('../../../common/src/common.js');
     const test_lib = await import('../../../../test/test.js');
     /**@type{server_db_config_server_service_test[]} */
@@ -104,7 +104,7 @@ const component = async props => {
     const specs = [];
 
     /**@type {test_specrunner} */
-    const specrunner = await fs.promises.readFile(`${serverProcess.cwd()}/test/specrunner.json`, 'utf8')
+    const specrunner = await fs.promises.readFile(`${ORM.serverProcess.cwd()}/test/specrunner.json`, 'utf8')
                         .then((/**@type{string}*/result)=>JSON.parse(result));
     //run in random order if RANDOM parameter = '1'
     if (params.filter(row=>'RANDOM' in row)[0].RANDOM=='1')

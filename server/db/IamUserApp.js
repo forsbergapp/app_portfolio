@@ -51,7 +51,7 @@ const post = async (app_id, data) =>{
                                 created:new Date().toISOString(),
                                 modified:null
                         };
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserApp', post:{data:data_new}}).then((result)=>{
+        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserApp', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -85,7 +85,7 @@ const update = async parameters =>{
         return ORM.Execute({  app_id:parameters.app_id, 
                                     dml:'UPDATE', 
                                     object:'IamUserApp', 
-                                    update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+                                    update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
@@ -103,7 +103,7 @@ const update = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
-    return ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'IamUserApp', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+    return ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'IamUserApp', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

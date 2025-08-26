@@ -77,7 +77,7 @@ const update = async parameters => {
         const old_config = get({app_id:parameters.app_id}).result;
         /**@type{server_db_config_server_metadata} */
         const metadata = {
-                            MAINTENANCE:ORM.serverUtilNumberValue(parameters.data.maintenance ?? old_config.METADATA.MAINTENANCE) ?? old_config.METADATA.MAINTENANCE,
+                            MAINTENANCE:ORM.UtilNumberValue(parameters.data.maintenance ?? old_config.METADATA.MAINTENANCE) ?? old_config.METADATA.MAINTENANCE,
                             CONFIGURATION:parameters.data.configuration ?? old_config.METADATA.CONFIGURATION,
                             COMMENT:parameters.data.comment ?? old_config.METADATA.COMMENT,
                             MODIFIED:new Date().toISOString(),

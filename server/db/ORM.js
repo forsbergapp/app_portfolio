@@ -12,7 +12,6 @@
  *  Database layer
  *  ORM.js              file management API using async Execute() with file read and write
  *                      and getObject() reading directly from cached object in memory using closure pattern
- *                      in /server/db/ORM.js
  *                      getObjectFile is used if to read from file instead of from memory
  *                      manages objects, constraints, transactions with commit and rollback
  *                      returns database result
@@ -38,10 +37,12 @@
  *          server_db_config_server_server,server_db_config_server_service_log,
  *          server_db_result_fileFsRead,
  *          server_db_common_result_update, server_db_common_result_delete,server_db_common_result_insert,
- *          server_db_document_ConfigServer} from '../types.js'
+ *          server_db_document_ConfigServer,
+ *          server_server_req_id_number} from '../types.js'
  * @import {Dirent} from 'node:fs'
  */
 
+const {serverProcess} = await import('../info.js');
 const fs = await import('node:fs');
 //Private properties
 /**
@@ -78,19 +79,14 @@ Object.seal(DB_DIR);
  * @class
  */
 class ORM_class {
-    
     /**
-     * @param {import('../server.js')['serverProcess']}serverProcess
-     * @param {import('../server.js')['serverUtilNumberValue']}serverUtilNumberValue
+     * @param {import('../info.js')['serverProcess']}serverProcess
      */
-    constructor (serverProcess, serverUtilNumberValue) {    
+    constructor (serverProcess) {    
         /**@type{Object.<String,*>} */
         this.db = {};
         this.init = this.InitAsync;
         this.serverProcess = serverProcess;
-        this.serverUtilNumberValue = serverUtilNumberValue;
-        //seal private objects
-        
     }
     /**
      * @name InitAsync
@@ -102,11 +98,11 @@ class ORM_class {
      */
     InitAsync = async (default_db=null) => {
         if (Object.keys(this.db).length>0){
-            const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
+            const {iamUtilMessageNotAuthorized} = await import('../iam.js');
             throw iamUtilMessageNotAuthorized();
         }
         else{
-            const Installation = await import('../installation.js');
+            const Installation = await import('../installation.js');            
             const result_data = await this.getFsDataExists();
             if (result_data==false)
                 await Installation.postConfigDefault();
@@ -133,15 +129,18 @@ class ORM_class {
                                 /**@type{Object.<String,*>} */
                                 const ORMObjects = {};
                                 for (const file of filePaths){
-                                    if (!file.isDirectory() && file.name !='ORM.js')
-                                        ORMObjects[file.name.replace('.js','')] = await import( 'file://' + file.parentPath + '/' +  file.name); 
+                                    //filter directory, ORM file and test spec files
+                                    if (!file.isDirectory() && file.name !='ORM.js' && !file.name.endsWith('spec.js')){
+                                        ORMObjects[file.name.replace('.js','')] = await import('./' +  file.name); 
+                                    }
+                                        
                                 }
                                 resolve(ORMObjects);
                         })();});
             Object.seal(this.db);
             /**@type{server_db_document_ConfigServer} */
             const configServer = this.db.ConfigServer.get({app_id:0}).result;
-            //import common after db started
+            
             const common = await import ('../../apps/common/src/common.js');
             //common font css contain many font urls, return css file with each url replaced with a secure url
             //and save encryption data for all records directly in table at start to speed up performance
@@ -381,7 +380,7 @@ class ORM_class {
             record.content = this.formatContent(record.type, file_content);
         else
             if (!transaction_id || record.transaction_id != transaction_id){
-                const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
+                const {iamUtilMessageNotAuthorized} = await import('../iam.js');
                 throw iamUtilMessageNotAuthorized();
             }
             else{
@@ -686,8 +685,8 @@ class ORM_class {
                                         record.type=='TABLE'?update_data:null))
                             return {affectedRows:1};
                         else{
-                            const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
-                            throw (iamUtilMessageNotAuthorized());
+                            const {iamUtilMessageNotAuthorized} = await import('../iam.js');
+                            throw iamUtilMessageNotAuthorized();
                         }
                 }
                 else{
@@ -756,8 +755,8 @@ class ORM_class {
                                         file.file_content))
                                 return {affectedRows:count};
                             else{
-                                const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
-                                throw (iamUtilMessageNotAuthorized());
+                                const {iamUtilMessageNotAuthorized} = await import('../iam.js');
+                                throw iamUtilMessageNotAuthorized();
                             }
                         }
                         else
@@ -783,8 +782,8 @@ class ORM_class {
                                                 data))
                         return {affectedRows:1};
                     else{
-                        const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
-                        throw (iamUtilMessageNotAuthorized());
+                        const {iamUtilMessageNotAuthorized} = await import('../iam.js');
+                        throw iamUtilMessageNotAuthorized();
                     }
                 }
             }
@@ -852,8 +851,8 @@ class ORM_class {
                                                 new_content))
                         return {affectedRows:   file.file_content.length - new_content.length};
                     else{
-                        const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
-                        throw (iamUtilMessageNotAuthorized());
+                        const {iamUtilMessageNotAuthorized} = await import('../iam.js');
+                        throw iamUtilMessageNotAuthorized();
                     }
                 }
             }
@@ -885,8 +884,8 @@ class ORM_class {
                                                 new_content))
                         return {affectedRows:   file.file_content.length - new_content.length};
                     else{
-                        const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
-                        throw (iamUtilMessageNotAuthorized());
+                        const {iamUtilMessageNotAuthorized} = await import('../iam.js');
+                        throw iamUtilMessageNotAuthorized();
                     }
         }
         else
@@ -912,7 +911,7 @@ class ORM_class {
         try{
             if (parameters.dml!='GET' && parameters.dml!='UPDATE' && parameters.dml!='POST' && parameters.dml!='DELETE')
             {
-                const  {iamUtilMessageNotAuthorized} = await import('../iam.js');
+                const {iamUtilMessageNotAuthorized} = await import('../iam.js');
                 throw iamUtilMessageNotAuthorized();
             }
             else{
@@ -992,6 +991,16 @@ class ORM_class {
                     type:'JSON'};
         }
     };
+    /**
+     * @name UtilNumberValue
+     * @description Get number value from request key
+     *              returns number or null for numbers
+     *              so undefined and '' are avoided sending argument to service functions
+     * @method
+     * @param {server_server_req_id_number} param
+     * @returns {number|null}
+     */
+    UtilNumberValue = param => (param==null||param===undefined||param==='undefined'||param==='')?null:Number(param);
     
     /**
      * @name getViewInfo
@@ -1015,7 +1024,7 @@ class ORM_class {
                         }],
                 type:'JSON'};
     };
-   /**
+    /**
      * @name getViewObjects
      * @description Get all objects in ORM
      * @method
@@ -1058,4 +1067,37 @@ class ORM_class {
             return this.getError(parameters.app_id, 404);
     };
 }
-export {ORM_class};
+/**
+ * @name getViewInfo
+ * @description Database info
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number}}parameters
+ * @returns {Promise.<server_server_response & {result?:{   database_name:string, 
+ *                                                          version:number,
+ *                                                          hostname:string,
+ *                                                          connections:Number,
+ *                                                          started:number}[]}>}
+ */
+const getViewInfo = async parameters =>ORM.getViewInfo(parameters);
+/**
+ * @name getViewObjects
+ * @description Get all objects in ORM
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number}}parameters
+ * @returns {server_server_response & {result?:{name:server_DbObject_record['name'],
+ *                                              type:server_DbObject_record['type'],
+ *                                              lock:server_DbObject_record['lock'],
+ *                                              transaction_id:server_DbObject_record['transaction_id'],
+ *                                              rows:number|null,
+ *                                              size:number|null,
+ *                                              pk:server_DbObject_record['pk'],
+ *                                              uk:server_DbObject_record['uk'],
+ *                                              fk:server_DbObject_record['fk']}[]}}
+ */
+const getViewObjects = parameters =>ORM.getViewObjects(parameters);
+
+const ORM = new ORM_class(serverProcess);
+
+export {ORM_class, ORM, getViewInfo, getViewObjects};

@@ -140,12 +140,12 @@ const template = props =>`
 *                       App:import('../../../../server/db/App.js'),
 *                       ConfigServer:import('../../../../server/db/ConfigServer.js'),
 *                       ConfigRestApi:import('../../../../server/db/ConfigRestApi.js'),
-*                       serverUtilNumberValue:import('../../../../server/server.js')['serverUtilNumberValue']
+*                       UtilNumberValue:import('../../../../server/server.js')['ORM']['UtilNumberValue']
 *                       }}} props
 * @returns {Promise.<string>}
 */
 const component = async props => {
-    const {serverProcess} = await import('../../../../server/server.js');
+    const {serverProcess} = await import('../../../../server/info.js');
     const fs = await import('node:fs');
     /**
      * Return description tag for given operationId
@@ -208,8 +208,8 @@ const component = async props => {
     const configServer = props.methods.ConfigServer.get({app_id:props.data.app_id,data:{ config_group:'SERVER'}}).result;
 
     const HOST = configServer.filter(parameter=> 'HOST' in parameter)[0].HOST;
-    const PORT = props.methods.serverUtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT);
-    const PORT_ADMIN = props.methods.serverUtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN);
+    const PORT = props.methods.UtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT);
+    const PORT_ADMIN = props.methods.UtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN);
     const roleOrder = ['app_id', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'app_access_external', 'iam', 'iam_signup', 'microservice', 'microservice_auth'];
     /**
      * Sort paths by defined role order

@@ -44,7 +44,7 @@ const post = async (app_id, data) => {
                                                 url:data.url,
                                                 status:data.status,
                                                 type:data.type,
-                                                created:new Date().toISOString()}}}).then((result)=>{
+                                                created:new Date().toISOString()}}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId = id;
                 return {result:result,type:'JSON'};
@@ -86,7 +86,7 @@ const update = async (app_id, resource_id, data) => {
         data_update.modified = new Date().toISOString();
         //id and type not allowed to update
         if (Object.entries(data_update).length>0)
-            return ORM.Execute({app_id:app_id, dml:'UPDATE',object:'IamControlObserve', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+            return ORM.Execute({app_id:app_id, dml:'UPDATE',object:'IamControlObserve', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
                 if (result.affectedRows>0)
                     return {result:result,type:'JSON'};
                 else
@@ -108,7 +108,7 @@ const update = async (app_id, resource_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlObserve', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlObserve', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
