@@ -75,11 +75,12 @@ Object.seal(DB_DIR);
 
 /**
  * @name ORM_class
- * @description ORM class
+ * @description ORM class with Dependency Injection pattern
  * @class
  */
 class ORM_class {
     /**
+     * @description Using Dependency Injection pattern
      * @param {import('../info.js')['serverProcess']}serverProcess
      */
     constructor (serverProcess) {    
@@ -120,6 +121,7 @@ class ORM_class {
                 }
             /** 
              * @description Get all imported ORM objects from file system
+             *              Using Dependency Injection pattern
              * @type {Object.<String,*>}
              */
             this.db = await new Promise(resolve=>{(async () =>{ 

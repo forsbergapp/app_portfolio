@@ -567,6 +567,7 @@ const serverStart = async () =>{
     const http = await import('node:http');
     serverProcess.env.TZ = 'UTC';
     try {
+        //Using Static Asynchronous Factory Method pattern in ORM class
         await ORM.init();
         Object.seal(ORM);
         serverProcess.on('uncaughtException', err =>{
