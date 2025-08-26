@@ -4,6 +4,7 @@
  * @import {server_server_response,
  *          server_db_common_result_update, 
  *          server_db_common_result_delete, 
+ *          server_db_common_result_insert,
  *          server_db_table_App, 
  *          server_db_table_AppTranslation,
  *          server_db_document_ConfigServer,
@@ -45,9 +46,9 @@ const getViewInfo = async parameters =>{
     const apps = get({app_id:parameters.app_id, resource_id:null}).result
                     //do not show common app id, admin app id or start app id
                     .filter((/**@type{server_db_table_App}*/app)=>
-                        app.id != (ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)) &&
-                        app.id != (ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)) &&
-                        app.id != (ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)));
+                        app.id != (ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)) &&
+                        app.id != (ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)) &&
+                        app.id != (ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)));
     for (const app of apps){
         app.logo = (await common.commonResourceFile({app_id:parameters.app_id, 
                                                     resource_id:app.logo, 
@@ -96,7 +97,7 @@ const post = async (app_id, data) => {
             link_url:data.app_link_url,
             status: 'ONLINE'
         };
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'App', post:{data:app}}).then((result)=>{
+        return ORM.Execute({app_id:app_id, dml:'POST', object:'App', post:{data:app}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId = app.id;
                 return {result:result, type:'JSON'};
@@ -164,7 +165,7 @@ const update = async parameters => {
         if (parameters.data.status!=null)
             data_update.status = parameters.data.status;
         if (Object.entries(data_update).length>0)
-            return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'App', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+            return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'App', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
@@ -186,7 +187,7 @@ const update = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'App', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'App', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

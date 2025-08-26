@@ -99,7 +99,7 @@ const paymentRequestGet = async parameters =>{
                                 payment_request_id:     payment_request.json_data?.payment_request_id??'',
                                 status:                 payment_request.json_data?.status??'',
                                 merchant_name:          merchant.json_data?.merchant_name??'',
-                                amount:			        ORM.serverUtilNumberValue(payment_request.json_data?.amount),
+                                amount:			        ORM.UtilNumberValue(payment_request.json_data?.amount),
                                 currency_symbol:        currency.json_data?.currency_symbol??'',
                                 countdown:              ''}],
                     type:'JSON'};

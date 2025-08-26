@@ -33,7 +33,7 @@ const post = async (app_id, data) => {
     //check required attributes
     if (data.name!=null && data.user_agent!=null){
         const id = Date.now();
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamControlUserAgent', post:{data:{id:id, name:data.name, user_agent:data.user_agent}}}).then((result)=>{
+        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamControlUserAgent', post:{data:{id:id, name:data.name, user_agent:data.user_agent}}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=id;
                 return {result:result, type:'JSON'};
@@ -61,7 +61,7 @@ const update = async (app_id, resource_id, data) => {
         data_update.name = data.name;
         data_update.user_agent = data.user_agent;
         if (Object.entries(data_update).length==2)
-            return ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamControlUserAgent', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+            return ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamControlUserAgent', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
@@ -83,7 +83,7 @@ const update = async (app_id, resource_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlUserAgent', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlUserAgent', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

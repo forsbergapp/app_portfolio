@@ -17,7 +17,7 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_AppSecret[] }}
  */
 const get = parameters => {
-    const result = ORM.getObject(parameters.app_id, 'AppSecret',null, ORM.serverUtilNumberValue(parameters.resource_id));
+    const result = ORM.getObject(parameters.app_id, 'AppSecret',null, ORM.UtilNumberValue(parameters.resource_id));
     if (result.rows.length>0)
         return {result:result.rows, type:'JSON'};
     else
@@ -60,7 +60,7 @@ const update = async parameters => {
                             update:{    resource_id:null, 
                                         data_app_id:parameters.resource_id, 
                                         data:{[parameters.data.parameter_name]:parameters.data.parameter_value}}})
-                .then((result)=>{
+                .then((/**@type{server_db_common_result_update}*/result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
@@ -78,7 +78,7 @@ const update = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppSecret', delete:{resource_id:null, data_app_id:resource_id}}).then((result)=>{
+    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppSecret', delete:{resource_id:null, data_app_id:resource_id}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

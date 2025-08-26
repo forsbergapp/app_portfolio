@@ -61,7 +61,7 @@ const post = async parameters => {
                                 created:new Date().toISOString(),
                                 modified:null
                        };
-       return ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'AppDataEntityResource', post:{data:data_new}}).then((result)=>{
+       return ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'AppDataEntityResource', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
            if (result.affectedRows>0){
                result.insertId=data_new.id;
                return {result:result, type:'JSON'};
@@ -93,7 +93,7 @@ const update = async parameters =>{
            data_update.json_data = parameters.data.json_data;
        data_update.modified = new Date().toISOString();
        if (Object.entries(data_update).length>0)
-           return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppDataEntityResource', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+           return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppDataEntityResource', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
                if (result.affectedRows>0)
                    return {result:result, type:'JSON'};
                else
@@ -113,7 +113,7 @@ const update = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
-    return ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'AppDataEntityResource', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+    return ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'AppDataEntityResource', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

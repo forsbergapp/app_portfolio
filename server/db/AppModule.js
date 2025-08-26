@@ -17,7 +17,7 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_AppModule[] }}
  */
 const get = parameters => {
-    const result = ORM.getObject(parameters.app_id, 'AppModule',parameters.resource_id, ORM.serverUtilNumberValue(parameters.data.data_app_id));
+    const result = ORM.getObject(parameters.app_id, 'AppModule',parameters.resource_id, ORM.UtilNumberValue(parameters.data.data_app_id));
     if (result.rows.length>0 || parameters.resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
@@ -45,7 +45,7 @@ const post = async (app_id, data) => {
             common_path:        data.common_path,
             common_description: data.common_description
         };
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'AppModule', post:{data:data_new}}).then((result)=>{
+        return ORM.Execute({app_id:app_id, dml:'POST', object:'AppModule', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId = data_new.id;
                 return {result:result, type:'JSON'};
@@ -83,7 +83,7 @@ const update = async parameters => {
     if (parameters.data.common_description!=null)
         data_update.common_description = parameters.data.common_description;
     if (Object.entries(data_update).length>0)
-        return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppModule', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+        return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppModule', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
@@ -102,7 +102,7 @@ const update = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppModule', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppModule', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

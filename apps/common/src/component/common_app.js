@@ -114,8 +114,8 @@
     *                      IamEncryption:import('../../../../server/db/IamEncryption.js'),
     *                      IamUser:import('../../../../server/db/IamUser.js'),
     *                      iamAuthorizeIdToken:import('../../../../server/iam.js')['iamAuthorizeIdToken'],
-    *                      serverProcess:import('../../../../server/server.js')['serverProcess'],
-    *                      serverUtilNumberValue:import('../../../../server/server.js')['serverUtilNumberValue'],
+    *                      serverProcess:import('../../../../server/info.js')['serverProcess'],
+    *                      UtilNumberValue:import('../../../../server/server.js')['ORM']['UtilNumberValue'],
     *                      Security:import('../../../../server/security.js'),
     *                      commonResourceFile:import('../common.js')['commonResourceFile'],
     *                      commonGetFile:import('../common.js')['commonGetFile']
@@ -126,9 +126,9 @@
     const component = async props =>{
         
 
-        const common_app_id =                   props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??1;
-        const admin_app_id =                    props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
-        const start_app_id =                    props.data.app_id==admin_app_id?admin_app_id:props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??1;
+        const common_app_id =                   props.methods.UtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??1;
+        const admin_app_id =                    props.methods.UtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
+        const start_app_id =                    props.data.app_id==admin_app_id?admin_app_id:props.methods.UtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??1;
         const rest_resource_bff =               props.data.configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF;
         const app_rest_api_version =            props.data.configServer.SERVER.filter(parameter=>'REST_API_VERSION' in parameter)[0].REST_API_VERSION;
 
@@ -180,9 +180,9 @@
                                                                     user_agent:props.data.user_agent, 
                                                                     accept_language:props.data.accept_language});
             const postData = await postInit();
-            const app_toolbar_button_start =  props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START)??1;
-            const app_toolbar_button_framework = props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK)??1;
-            const app_framework = props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK)??1;
+            const app_toolbar_button_start =  props.methods.UtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_START' in parameter)[0].APP_TOOLBAR_BUTTON_START)??1;
+            const app_toolbar_button_framework = props.methods.UtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_TOOLBAR_BUTTON_FRAMEWORK' in parameter)[0].APP_TOOLBAR_BUTTON_FRAMEWORK)??1;
+            const app_framework = props.methods.UtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK' in parameter)[0].APP_FRAMEWORK)??1;
             const app_fonts_ui = `@font-face {
                                         font-family: "Font Awesome 6 Free";
                                         font-style: normal;
@@ -228,11 +228,11 @@
                                 app_toolbar_button_start:       app_toolbar_button_start,
                                 app_toolbar_button_framework:   app_toolbar_button_framework,
                                 app_framework:                  app_framework,
-                                app_framework_messages:         props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES)??1,
+                                app_framework_messages:         props.methods.UtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_FRAMEWORK_MESSAGES' in parameter)[0].APP_FRAMEWORK_MESSAGES)??1,
                                 admin_only:                     admin_only?1:0,
                                 admin_first_time:               count_user==0?1:0,
-                                app_requesttimeout_seconds:     props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_SECONDS' in parameter)[0].APP_REQUESTTIMEOUT_SECONDS)??5,
-                                app_requesttimeout_admin_minutes:props.methods.serverUtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0].APP_REQUESTTIMEOUT_ADMIN_MINUTES)??60,
+                                app_requesttimeout_seconds:     props.methods.UtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_SECONDS' in parameter)[0].APP_REQUESTTIMEOUT_SECONDS)??5,
+                                app_requesttimeout_admin_minutes:props.methods.UtilNumberValue(props.data.configServer.SERVICE_APP.filter(parameter=>'APP_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0].APP_REQUESTTIMEOUT_ADMIN_MINUTES)??60,
                                 //font css split by '@font-face' in array, unicode fonts only, ui fonts applied at start
                                 app_fonts:                      (await props.methods.commonResourceFile({ 
                                                                         app_id:props.data.app_id, 

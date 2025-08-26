@@ -65,7 +65,7 @@ const post = async parameters =>{
                                 iam_user_app_data_post_id:parameters.data.iam_user_app_data_post_id,
                                 created:new Date().toISOString()
                         };
-        return ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPostLike', post:{data:data_new}}).then((result)=>{
+        return ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPostLike', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -95,7 +95,7 @@ const deleteRecord = async parameters =>{
     return ORM.Execute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
                                 object:'IamUserAppDataPostLike', 
-                                delete:{resource_id:parameters.resource_id ?? result.id, data_app_id:null}}).then((result)=>{
+                                delete:{resource_id:parameters.resource_id ?? result.id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

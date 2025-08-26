@@ -4,6 +4,36 @@
  * @import {server_server_response,server_info_result_Info} from './types.js'
  */
 
+
+class ClassServerProcess {
+    cwd = () => import.meta.dirname
+                .replaceAll('\\','/')
+                .replaceAll('/server','');
+
+    uptime = () => process.uptime();
+    memoryUsage = () => {
+        return {rss:process.memoryUsage().rss,
+                heapTotal:process.memoryUsage().heapTotal,
+                heapUsed:process.memoryUsage().heapUsed,
+                external:process.memoryUsage().external,
+                arrayBuffers:process.memoryUsage().arrayBuffers
+        };
+    };
+    /**
+     * @param {*} [value]
+     */
+    hrtime = value => process.hrtime(value);
+    /**
+     * @param {string|symbol} event
+     * @param {(...args: any[]) => void} listener
+     */
+    on = (event, listener) => process.on(event, listener);
+
+    argv = process.argv;
+    env = process.env;
+    version = process.version;
+}
+const serverProcess = new ClassServerProcess();
 /**
  * @name info
  * @description Info about operating system and process
@@ -12,7 +42,6 @@
  * @returns {Promise.<server_server_response & {result?:server_info_result_Info }>}
  */
  const info = async () => {
-    const {serverProcess} = await import('./server.js');
     const os = await import('node:os');
     const os_json = {
                     hostname: os.hostname(),
@@ -43,4 +72,4 @@
                         };
     return {result:{os: os_json,process: process_json}, type:'JSON'};
 };
-export{info};
+export{info, serverProcess};
