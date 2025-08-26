@@ -3,7 +3,27 @@
 ![App Portfolio](apps/common/public/documents/screenshot_app2.webp)
 
 An app portfolio created as a reference platform with refactored and simplified solutions of common used third party solutions and support for any language and regional settings.
-	
+
+Comparison tables with solutions are presented in the Presentation app and Apps and Server menus that includes:
+- Jasmine/Jest
+- JSDoc
+- ReadtheDocs
+- Swish payment UI
+- Stripe payment process
+- Pix Brazil
+- Vue/React
+- Polyfill
+- JSON Web token
+- Express
+- Web Crypto API
+- HTTPS
+- SSL
+- SQL databases
+- MongoDB
+- Redis
+- Microsoft Azure Cosmos DB
+- GraphQL
+
 All apps use pure Javascript (ES6+), Typescript, Vue, React, HTML and CSS without any build steps
 All apps use Vue SFC pattern and realtime switchable framework between Vue, React and Javascipt.
 All apps use pure div elements in HTML without any semantic HTML and without any specific user agent CSS.
@@ -38,7 +58,7 @@ Implemented with many examples of patterns
 - role based and secure app server functions (simplified version of Function as a Service and serverless functions model)
 - batch cron pattern
 
-Continuous deployment implemented using batch server with scheduled git pull requests and automatic restart 
+CI/CD implemented using batch server with scheduled git pull requests and automatic restart 
 of Node.js using pm2 managed processes.
 Runs in Node.js.
 	
