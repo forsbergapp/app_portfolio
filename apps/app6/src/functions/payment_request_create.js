@@ -84,13 +84,13 @@ const paymentRequestCreate = async parameters =>{
                         payeeid:        Entity.json_data.merchant_vpa??'', 
                         payerid:        parameters.data.payerid,
                         currency_code:  currency.json_data.currency_code,
-                        amount:         ORM.serverUtilNumberValue(parameters.data.amount) ?? 0, 
+                        amount:         ORM.UtilNumberValue(parameters.data.amount) ?? 0, 
                         message:        parameters.data.message,
                         origin:         parameters.host
        };
        //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
        //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-       const body_encrypted = {id:     ORM.serverUtilNumberValue(Entity.json_data.merchant_id),
+       const body_encrypted = {id:     ORM.UtilNumberValue(Entity.json_data.merchant_id),
                                message:securityPublicEncrypt(
                                                                Entity.json_data.merchant_public_key??'', 
                                                                JSON.stringify(body))};

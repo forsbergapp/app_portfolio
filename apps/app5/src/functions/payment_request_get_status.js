@@ -46,7 +46,7 @@ const paymentRequestGetStatus = async parameters =>{
                                                                         app_data_entity_id:Entity.id
                                                                 }}).result
                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/merchant)=>
-                                ORM.serverUtilNumberValue(merchant.json_data?.merchant_id)==parameters.data.id
+                                ORM.UtilNumberValue(merchant.json_data?.merchant_id)==parameters.data.id
                             )[0];
     if (merchant){
         /** 

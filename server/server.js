@@ -7,16 +7,17 @@
  *          server_server_error, server_server_req, server_server_res,
  *          server_db_document_ConfigServer,
  *          server_db_table_ServiceRegistry,
- *          server_bff_endpoint_type,
  *          server_server_response,
- *          server_server_req_id_number} from './types.js'
+ *          server_bff_endpoint_type} from './types.js'
  */
+
+const {serverProcess} = await import('./info.js');
 /**
  * @description ORM database variable, assigned in serverStart()
- * @type{Object.<string,*>}
  */
-let ORM = {};
- /**
+const {ORM} = await import('./db/ORM.js');
+ 
+/**
  *  Returns response to client
  *  @param {{app_id?:number|null,
  *           type:server_server_response_type,
@@ -92,17 +93,6 @@ const serverResponse = async parameters =>{
 };
 
 /**
- * @name serverUtilNumberValue
- * @description Get number value from request key
- *              returns number or null for numbers
- *              so undefined and '' are avoided sending argument to service functions
- * @function
- * @param {server_server_req_id_number} param
- * @returns {number|null}
- */
- const serverUtilNumberValue = param => (param==null||param===undefined||param==='undefined'||param==='')?null:Number(param);
-
-/**
  * @name serverUtilResponseTime
  * @description Calculate responsetime
  * @function
@@ -122,7 +112,6 @@ const serverUtilResponseTime = (res) => {
  * @returns {string}
  */
 const serverUtilAppFilename = module =>{
-    
     const from_app_root = ('file://' + serverProcess.cwd()).length;
     return module.substring(from_app_root);
 };
@@ -230,36 +219,6 @@ const server = async (req, res)=>{
     //Backend for frontend (BFF) start
     return bff.bff(req, res);
 };
-
-class ClassServerProcess {
-    cwd = () => import.meta.dirname
-                .replaceAll('\\','/')
-                .replaceAll('/server','');
-
-    uptime = () => process.uptime();
-    memoryUsage = () => {
-        return {rss:process.memoryUsage().rss,
-                heapTotal:process.memoryUsage().heapTotal,
-                heapUsed:process.memoryUsage().heapUsed,
-                external:process.memoryUsage().external,
-                arrayBuffers:process.memoryUsage().arrayBuffers
-        };
-    };
-    /**
-     * @param {*} [value]
-     */
-    hrtime = value => process.hrtime(value);
-    /**
-     * @param {string|symbol} event
-     * @param {(...args: any[]) => void} listener
-     */
-    on = (event, listener) => process.on(event, listener);
-
-    argv = process.argv;
-    env = process.env;
-    version = process.version;
-}
-const serverProcess = new ClassServerProcess();
 
 /**
  * @name serverCircuitBreakerClass
@@ -605,13 +564,11 @@ const serverRequest = async parameters =>{
  * @returns{Promise.<void>}
  */
 const serverStart = async () =>{
-    
     const http = await import('node:http');
     serverProcess.env.TZ = 'UTC';
-    try {         
-        ORM = await  import('./db/ORM.js').then(ORM=>new ORM.ORM_class(serverProcess, serverUtilNumberValue));
-		await ORM.init();
-
+    try {
+        await ORM.init();
+        Object.seal(ORM);
         serverProcess.on('uncaughtException', err =>{
             console.log(err);
             ORM.db.Log.post({   app_id:0, 
@@ -641,22 +598,22 @@ const serverStart = async () =>{
                                             /**@ts-ignore*/
                                             req,
                                             res))
-            .listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80, NETWORK_INTERFACE, () => {
+            .listen(ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80, NETWORK_INTERFACE, () => {
                 ORM.db.Log.post({app_id:0, 
                                         data:{  object:'LogServerInfo', 
                                                 log:'HTTP Server PORT: ' + 
-                                                    serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80
+                                                    ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80
                                             }
                                         });
         });
         http.createServer((req,res)=>server(
                                             /**@ts-ignore*/
                                             req,
-                                            res)).listen(serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
+                                            res)).listen(ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
             ORM.db.Log.post({app_id:0, 
                                     data:{  object:'LogServerInfo', 
                                             log:'HTTP Server Admin  PORT: ' + 
-                                                serverUtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000
+                                                ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000
                                         }
                                     });
         });
@@ -672,44 +629,12 @@ const serverStart = async () =>{
                                 });
     }
 };
-/**
- * @name getViewInfo
- * @description Database info
- * @function
- * @memberof ROUTE_REST_API
- * @param {{app_id:number}}parameters
- * @returns {Promise.<server_server_response & {result?:{   database_name:string, 
-*                                                          version:number,
-*                                                          hostname:string,
-*                                                          connections:Number,
-*                                                          started:number}[]}>}
-*/
-const ORM_getViewInfo = async parameters =>ORM.getViewInfo(parameters);
-/**
-* @name getViewObjects
-* @description Get all objects in ORM
-* @function
-* @memberof ROUTE_REST_API
-* @param {{app_id:number}}parameters
-* @returns {server_server_response & {result?:{name:server_DbObject_record['name'],
-*                                              type:server_DbObject_record['type'],
-*                                              lock:server_DbObject_record['lock'],
-*                                              transaction_id:server_DbObject_record['transaction_id'],
-*                                              rows:number|null,
-*                                              size:number|null,
-*                                              pk:server_DbObject_record['pk'],
-*                                              uk:server_DbObject_record['uk'],
-*                                              fk:server_DbObject_record['fk']}[]}}
-*/
-const ORM_getViewObjects = parameters =>ORM.getViewObjects(parameters);
 
-export {serverResponse, 
-        serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppLine , 
-        serverProcess,
+export {serverProcess,
+        serverResponse, 
+        serverUtilResponseTime, serverUtilAppFilename,serverUtilAppLine,
         serverCircuitBreakerMicroService,
         serverCircuitBreakerBFE,
         serverRequest,
         serverStart,
-        ORM,
-        ORM_getViewInfo,
-        ORM_getViewObjects};
+        ORM};

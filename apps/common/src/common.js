@@ -18,7 +18,8 @@
  */
 
 const Security = await import('../../../server/security.js');
-const {ORM, serverCircuitBreakerBFE, serverRequest, serverUtilAppFilename, serverUtilAppLine} = await import('../../../server/server.js');
+const {ORM} = await import('../../../server/server.js');
+const {serverCircuitBreakerBFE, serverRequest, serverUtilAppFilename, serverUtilAppLine} = await import('../../../server/server.js');
 const {microserviceRequest} = await import('../../../serviceregistry/microservice.js');
 const fs = await import('node:fs');
 
@@ -229,10 +230,10 @@ const commonSearchMatch = (col, search) =>{
 const commonAppStart = async (app_id) =>{
     /**@type{server_db_document_ConfigServer} */
     const configServer = ORM.db.ConfigServer.get({app_id:app_id}).result;
-    if (ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)!=null &&
+    if (ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)!=null &&
         configServer.METADATA.MAINTENANCE==0 &&
         ORM.db.App.get({ app_id:app_id, 
-                                resource_id:ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??0}).result[0].status =='ONLINE')
+                                resource_id:ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)??0}).result[0].status =='ONLINE')
             return true;
     else
         return false;
@@ -346,7 +347,7 @@ const commonBFE = async parameters =>{
                 url:                parameters.url,
                 host:               null,
                 port:               null,
-                admin:              parameters.app_id == ORM.serverUtilNumberValue(CONFIG_SERVER.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
+                admin:              parameters.app_id == ORM.UtilNumberValue(CONFIG_SERVER.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
                 path:               null,
                 body:               parameters.body,
                 method:             parameters.method,
@@ -405,7 +406,7 @@ const commonBFE = async parameters =>{
  */
 const commonResourceFile = async parameters =>{
     const resource_directory = ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.data_app_id}).result[0].path;
-    const resource_path = parameters.data_app_id==ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id,data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result)?
+    const resource_path = parameters.data_app_id==ORM.UtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id,data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result)?
                             parameters.resource_id.replace('/common', ''):
                                 parameters.resource_id;
     switch (true){
@@ -758,9 +759,9 @@ const commonAppReportQueue = async parameters =>{
     if (report.result){
         /**@type{server_db_table_IamUser} */
         const user = ORM.db.IamUser.get(  parameters.app_id, 
-                                            ORM.serverUtilNumberValue(iamUtilTokenGet(  parameters.app_id, 
+                                            ORM.UtilNumberValue(iamUtilTokenGet(  parameters.app_id, 
                                                                                         parameters.authorization, 
-                                                                                        parameters.app_id==ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result)?
+                                                                                        parameters.app_id==ORM.UtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result)?
                                                                                                                                                         'ADMIN':
                                                                                                                                                             /**@ts-ignore */
                                                                                                                                                             'APP_ACCESS').iam_user_id)).result[0];
@@ -928,12 +929,12 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
         /**@type{server_db_document_ConfigServer} */
         const configServer = ORM.db.ConfigServer.get({app_id:0}).result;
         /**@type{server_db_table_App['id'][]} */
-        const apps = ORM.db.App.get({app_id:ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0, resource_id:null})
+        const apps = ORM.db.App.get({app_id:ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0, resource_id:null})
                     .result.map((/**@type{server_db_table_App}*/app)=>{return app.id;});
         if (endpoint !=null && ['MICROSERVICE', 'MICROSERVICE_AUTH'].includes(endpoint))
             return {admin:false, 
-                    app_id:ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
-                    app_id_token:ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
+                    app_id:ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
+                    app_id_token:ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
                     //all apps
                     apps:apps};
         else
@@ -941,8 +942,8 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
                                     .includes(host.split(':')[host.split(':').length-1]))
                 return {
                         admin:true,
-                        app_id:ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID),
-                        app_id_token:ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID),
+                        app_id:ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID),
+                        app_id_token:ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID),
                         //all apps
                         apps:apps
                 };
@@ -950,18 +951,18 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
                 if (endpoint==null)
                     return {
                         admin:false,
-                        app_id:ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
-                        app_id_token:ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
+                        app_id:ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
+                        app_id_token:ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
                         //no apps
                         apps:[]
                     };
                 else        
                     return {
                             admin:false,
-                            app_id:ORM.serverUtilNumberValue(security?.AppId)??0,
-                            app_id_token:ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
+                            app_id:ORM.UtilNumberValue(security?.AppId)??0,
+                            app_id_token:ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
                             //all apps except admin
-                            apps:apps.filter(id=>id != ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID))
+                            apps:apps.filter(id=>id != ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID))
                     };
     }
     
@@ -1002,7 +1003,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
 const commonAppMount = async parameters =>{
     /**@type{server_db_document_ConfigServer} */
     const configServer = ORM.db.ConfigServer.get({app_id:parameters.app_id}).result;
-    if (parameters.resource_id == ORM.serverUtilNumberValue(configServer.SERVICE_APP
+    if (parameters.resource_id == ORM.UtilNumberValue(configServer.SERVICE_APP
                                                         .filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID))
         return {http:400,
             code:null,
@@ -1124,8 +1125,8 @@ const commonApp = async parameters =>{
             /**@type{server_db_document_ConfigServer} */
             const configServer = ORM.db.ConfigServer.get({app_id:parameters.app_id}).result;
             
-            const admin_app_id = ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
-            const common_app_id = ORM.serverUtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
+            const admin_app_id = ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)??1;
+            const common_app_id = ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
             
             const app_id = (await commonAppIam(parameters.host, 'APP')).admin?
                                 admin_app_id:
@@ -1147,7 +1148,7 @@ const commonApp = async parameters =>{
                                                             IamUser:ORM.db.IamUser,
                                                             iamAuthorizeIdToken:iamAuthorizeIdToken,
                                                             serverProcess:ORM.serverProcess,
-                                                            serverUtilNumberValue:ORM.serverUtilNumberValue,
+                                                            UtilNumberValue:ORM.UtilNumberValue,
                                                             Security:Security,
                                                             commonResourceFile:commonResourceFile,
                                                             commonGetFile:commonGetFile

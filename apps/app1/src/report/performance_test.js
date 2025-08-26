@@ -91,7 +91,7 @@ const component = async props => {
 
     const PROTOCOL = 'http://';
     const HOST = ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER', parameter:'HOST'}}).result;
-    const PORT = ORM.serverUtilNumberValue(ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
+    const PORT = ORM.UtilNumberValue(ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
 
     class Benchmark {
         /**

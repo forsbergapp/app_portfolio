@@ -35,7 +35,7 @@ const get = async parameters => {
     
     /**@type{server_log_data_parameter_logGet} */
     const data = {  app_id:			parameters.app_id,
-                   data_app_id:	    ORM.serverUtilNumberValue(parameters.data.data_app_id),
+                   data_app_id:	    ORM.UtilNumberValue(parameters.data.data_app_id),
                    /**@ts-ignore */
                    logobject:		parameters.data.logobject,
                    /**@ts-ignore */
@@ -183,13 +183,13 @@ const getStatusCodes = async () =>{
 const getStat = async parameters => {
 
     /**@type{server_log_data_parameter_getLogStats} */
-    const data = {	app_id:			ORM.serverUtilNumberValue(parameters.data.data_app_id),
+    const data = {	app_id:			ORM.UtilNumberValue(parameters.data.data_app_id),
                    /**@ts-ignore */
                    statGroup:		parameters.data.statGroup==''?null:parameters.data.statGroup,
-                   unique:		    ORM.serverUtilNumberValue(parameters.data.unique),
-                   statValue:		ORM.serverUtilNumberValue(parameters.data.statValue),
-                   year: 			ORM.serverUtilNumberValue(parameters.data.year) ?? new Date().getFullYear(),
-                   month:			ORM.serverUtilNumberValue(parameters.data.month) ?? new Date().getMonth() +1
+                   unique:		    ORM.UtilNumberValue(parameters.data.unique),
+                   statValue:		ORM.UtilNumberValue(parameters.data.statValue),
+                   year: 			ORM.UtilNumberValue(parameters.data.year) ?? new Date().getFullYear(),
+                   month:			ORM.UtilNumberValue(parameters.data.month) ?? new Date().getMonth() +1
                    };
    /**@type{server_log_result_logStatGet[]|[]} */
    const logfiles = [];
@@ -465,21 +465,24 @@ const post = async parameters => {
     if (log==null || log_object==null)
         return {result:{affectedRows:0}, type:'JSON'};
     else{
-        await ORM.Execute({ app_id:parameters.app_id, 
-                            dml:'POST',object:log_object, 
-                            post:{data:{...{id:Date.now()}, 
-                                        ...log, 
-                                        ...{created:new Date().toISOString()}
-                                        }
-                                }
-                            })
+        const data_new = {  ...{id:Date.now()}, 
+                            ...log, 
+                            ...{created:new Date().toISOString()}
+                        };
+        /**@ts-ignore */
+        return ORM.Execute({app_id:parameters.app_id, dml:'POST', object:log_object, post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+            if (result.affectedRows>0){
+                result.insertId=data_new.id;
+                return {result:result, type:'JSON'};
+            }
+            else
+                return ORM.getError(parameters.app_id, 404);
+        })
         .catch((/**@type{server_server_error}*/error)=>{
             console.log(error);
             console.log(parameters.data.log);
             throw error;
         });
-    
-        return {result:{affectedRows:1}, type:'JSON'};
     }
 };
 

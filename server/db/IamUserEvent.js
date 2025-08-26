@@ -46,7 +46,7 @@ const post = async (app_id, data) => {
                                 event_status:data.event_status,
                                 created:new Date().toISOString()
                         };
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserEvent', post:{data:data_new}}).then((result)=>{
+        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserEvent', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -65,7 +65,7 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUserEvent', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUserEvent', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

@@ -44,7 +44,7 @@ const post = async (app_id, data) => {
         data_new.type = data.type;
         data_new.url = data.url;
         data_new.created = new Date().toISOString();
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamEncryption', post:{data:data_new}}).then((result)=>{
+        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamEncryption', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else

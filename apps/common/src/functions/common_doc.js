@@ -230,8 +230,8 @@ const markdownRender = async parameters =>{
             
             const app_translation = ORM.db.AppTranslation.get(parameters.app_id,null, parameters.locale, 
                                                                 /**@ts-ignore */
-                                                                ORM.serverUtilNumberValue(parameters.doc)).result[0];
-            const app = ORM.db.App.get({app_id:parameters.app_id, resource_id:ORM.serverUtilNumberValue(parameters.doc)}).result[0];
+                                                                ORM.UtilNumberValue(parameters.doc)).result[0];
+            const app = ORM.db.App.get({app_id:parameters.app_id, resource_id:ORM.UtilNumberValue(parameters.doc)}).result[0];
 
             let markdown = await getFile(`${ORM.serverProcess.cwd()}/apps/common/src/functions/documentation/2.app.md`);
             //remove all '\r' in '\r\n'
@@ -453,7 +453,7 @@ const appFunction = async parameters =>{
                 return {result:await getFile(`${ORM.serverProcess.cwd()}${parameters.data.doc}.js`, true), type:'HTML'};
             }
             case parameters.data.documentType=='GUIDE':
-            case parameters.data.documentType=='APP' && ORM.db.App.get({app_id:parameters.app_id, resource_id:ORM.serverUtilNumberValue(parameters.data.doc)}).result?.length==1:
+            case parameters.data.documentType=='APP' && ORM.db.App.get({app_id:parameters.app_id, resource_id:ORM.UtilNumberValue(parameters.data.doc)}).result?.length==1:
             case parameters.data.documentType=='ROUTE':
             case parameters.data.documentType.startsWith('MODULE') &&
                 (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/serviceregistry')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
@@ -472,7 +472,7 @@ const appFunction = async parameters =>{
                                                                                 App:ORM.db.App,
                                                                                 ConfigServer:ORM.db.ConfigServer,
                                                                                 ConfigRestApi:ORM.db.ConfigRestApi,
-                                                                                serverUtilNumberValue:ORM.serverUtilNumberValue
+                                                                                UtilNumberValue:ORM.UtilNumberValue
                                                                                 }
                                                                         }):''),
                         type:'HTML'};

@@ -6,7 +6,7 @@
 /**
  * @import {test_spec_result} from '../types.js'
  */
-
+const {ORM} = await import('../server.js');
 /**
  * @name test
  * @description Unit test, test ORM post, update, get and delete
@@ -18,9 +18,7 @@
 const test = async t =>
     [await t.describe('Unit test, test ORM post, update, get and delete', async ()=> {
         return await new Promise(resolve=>
-        t.it('should create a record, update the record, get correct value from updated record and delete the record', async () =>{            
-            const {ORM} = await import('../server.js');
-            
+        t.it('should create a record, update the record, get correct value from updated record and delete the record', async () =>{
             const app_data = {  name:'ORM',
                                 path:'/apps/orm/public',
                                 logo:'/images/logo.png',
