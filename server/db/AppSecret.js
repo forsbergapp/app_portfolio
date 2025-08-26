@@ -16,13 +16,7 @@ const {ORM} = await import ('../server.js');
  *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_AppSecret[] }}
  */
-const get = parameters => {
-    const result = ORM.getObject(parameters.app_id, 'AppSecret',null, ORM.UtilNumberValue(parameters.resource_id));
-    if (result.rows.length>0)
-        return {result:result.rows, type:'JSON'};
-    else
-        return ORM.getError(parameters.app_id, 404);
-};
+const get = parameters => ORM.getObject(parameters.app_id, 'AppSecret',null, ORM.UtilNumberValue(parameters.resource_id));
 
 /**
  * @name post

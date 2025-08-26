@@ -13,13 +13,8 @@ const {ORM} = await import ('../server.js');
  * @param {number|null} resource_id
  * @returns {server_server_response & {result?:server_db_table_IamAppAccess[] }}
  */
-const get = (app_id, resource_id) =>{
-    const result = ORM.getObject(app_id, 'IamAppAccess',resource_id, null);
-    if (result.rows.length>0)
-        return {result:result.rows, type:'JSON'};
-    else
-        return ORM.getError(app_id, 404);
-};
+const get = (app_id, resource_id) =>ORM.getObject(app_id, 'IamAppAccess',resource_id, null);
+    
 /**
  * @name post
  * @description Add record
@@ -35,7 +30,7 @@ const post = async (app_id, data) =>{
         data.res != null &&
         data.ip != null){
         //security check that token is not used already
-        if (ORM.getObject(app_id, 'IamAppAccess', null, null).rows.filter((/**@type{server_db_table_IamAppAccess} */row)=>row.token==data.token && data.token !=null).length==0){
+        if (ORM.getObject(app_id, 'IamAppAccess', null, null).result.filter((/**@type{server_db_table_IamAppAccess} */row)=>row.token==data.token && data.token !=null).length==0){
             /**@type{server_db_table_IamAppAccess} */
             const data_new = {};
             data_new.id =  Date.now();

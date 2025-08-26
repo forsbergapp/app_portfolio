@@ -12,7 +12,7 @@ const {ORM} = await import ('../server.js');
  *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_IamMicroserviceToken[] }}
  */
-const get = parameters => {return {result:ORM.getObject(parameters.app_id, 'IamMicroserviceToken', parameters.resource_id, parameters.app_id).rows, type:'JSON'};};
+const get = parameters => ORM.getObject(parameters.app_id, 'IamMicroserviceToken', parameters.resource_id, parameters.app_id);
 
 /**
  * @name post
@@ -33,7 +33,7 @@ const post = async (app_id, data) => {
         data.ip != null &&
         data.host != null){
         //security check that token is not used already
-        if (ORM.getObject(app_id, 'IamMicroserviceToken', null, null).rows.filter((/**@type{server_db_table_IamMicroserviceToken} */row)=>row.token==data.token).length==0){
+        if (ORM.getObject(app_id, 'IamMicroserviceToken', null, null).result.filter((/**@type{server_db_table_IamMicroserviceToken} */row)=>row.token==data.token).length==0){
             /**@type{server_db_table_IamMicroserviceToken} */
             const data_new = {};
             data_new.id = Date.now();

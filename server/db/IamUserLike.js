@@ -18,7 +18,7 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_IamUserLike[] }}
  */
 const get = parameters =>{
-    const result = ORM.getObject(parameters.app_id, 'IamUserLike',parameters.resource_id, null).rows
+    const result = (ORM.getObject(parameters.app_id, 'IamUserLike',parameters.resource_id, null).result??[])
                     .filter((/**@type{server_db_table_IamUserLike}*/row)=>
                         row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) &&
                         row.iam_user_id_like == (parameters.data.iam_user_id_like ?? row.iam_user_id_like) );

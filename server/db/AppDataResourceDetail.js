@@ -40,7 +40,7 @@ const get = parameters =>{
                                                                             iam_user_id:parameters.data.iam_user_id,
                                                                             resource_name:null,
                                                                             app_data_entity_id:entity_id}}).result;
-    const result = ORM.getObject(parameters.app_id, 'AppDataResourceDetail',parameters.resource_id, null).rows
+    const result = (ORM.getObject(parameters.app_id, 'AppDataResourceDetail',parameters.resource_id, null).result ?? [])
                     .filter((/**@type{server_db_table_AppDataResourceDetail}*/row)=>
                             row.app_data_resource_master_id == (parameters.data.app_data_resource_master_id ?? row.app_data_resource_master_id) &&
                             result_AppDataEntityResource

@@ -13,13 +13,8 @@ const {ORM} = await import ('../server.js');
  * @param {number|null} resource_id
  * @returns {server_server_response & {result?:server_db_table_IamControlObserve[] }}
  */
-const get = (app_id, resource_id) =>{
-    const result = ORM.getObject(app_id, 'IamControlObserve',resource_id, null);
-    if (result.rows.length>0 || resource_id==null)
-        return {result:result.rows, type:'JSON'};
-    else
-        return ORM.getError(app_id, 404);
-};
+const get = (app_id, resource_id) =>ORM.getObject(app_id, 'IamControlObserve',resource_id, null);
+    
 /**
  * @name post
  * @description Add record

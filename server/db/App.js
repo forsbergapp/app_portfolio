@@ -20,13 +20,7 @@ const {ORM} = await import ('../server.js');
  *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_App[] }}
  */
-const get = parameters =>{ 
-    const result = ORM.getObject(parameters.app_id, 'App',parameters.resource_id, null);
-    if (result.rows.length>0 || parameters.resource_id==null)
-        return {result:result.rows, type:'JSON'};
-    else
-        return ORM.getError(parameters.app_id, 404);
-};
+const get = parameters =>ORM.getObject(parameters.app_id, 'App',parameters.resource_id, null);
 
 /**
  * @name getViewInfo
@@ -82,7 +76,7 @@ const post = async (app_id, data) => {
         /**@type{server_db_table_App} */
         const app =     {
             //fetch max app id + 1
-            id:Math.max(...ORM.getObject(app_id, 'App',null, null).rows.map((/**@type{server_db_table_App}*/app)=>app.id)) +1,
+            id:Math.max(...ORM.getObject(app_id, 'App',null, null).result.map((/**@type{server_db_table_App}*/app)=>app.id)) +1,
             name: data.name,
             path: data.path,
             logo: data.logo,
