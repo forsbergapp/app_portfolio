@@ -15,12 +15,11 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_AppDataEntityResource & {app_data_name:string, app_data_value:string, app_data_display_data:string}[] }}
  */
 const get = parameters =>{ 
-    const result = ORM.getObject(parameters.app_id, 'AppDataEntityResource',parameters.resource_id, null).rows
+    const result = (ORM.getObject(parameters.app_id, 'AppDataEntityResource',parameters.resource_id, null).result ?? [])
                     .filter((/**@type{server_db_table_AppDataEntityResource}*/row)=>
                                 row.id                      == (parameters.resource_id ?? row.id) &&
                                 row.app_data_entity_id      == (parameters.data.app_data_entity_id ?? row.app_data_entity_id));
-    if (result.length>0 || parameters.resource_id==null)
-        /**@ts-ignore */
+    if (result)
         return {result:result
                         .map((/**@type{server_db_table_AppDataEntityResource & {app_data_name:string, app_data_value:string, app_data_display_data:string}}*/row)=>{
                             const app_data = ORM.db.AppData.getServer({ app_id:parameters.app_id, 

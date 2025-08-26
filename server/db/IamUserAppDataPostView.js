@@ -23,7 +23,7 @@ const get = parameters =>{
     const IamUserApp_records =  ORM.db.IamUserApp.get({ app_id:parameters.app_id,
                                                 resource_id:null, 
                                                 data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result;
-    const result = ORM.getObject(parameters.app_id, 'IamUserAppDataPostView',parameters.resource_id, null).rows
+    const result = (ORM.getObject(parameters.app_id, 'IamUserAppDataPostView',parameters.resource_id, null).result??[])
                     .filter((/**@type{server_db_table_IamUserAppDataPostView}*/row)=>
                         row.iam_user_app_data_post_id == (parameters.data.iam_user_app_data_post_id ?? row.iam_user_app_data_post_id) && 
                         IamUserApp_records

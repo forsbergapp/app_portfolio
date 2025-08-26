@@ -36,7 +36,7 @@ const get = parameters =>{
                                                                             resource_name:parameters.data.resource_name
                                                                     }}).result;
 
-    const result = ORM.getObject(parameters.app_id, 'AppDataResourceMaster',parameters.resource_id, null).rows
+    const result = (ORM.getObject(parameters.app_id, 'AppDataResourceMaster',parameters.resource_id, null).result ?? [])
                     .filter((/**@type{server_db_table_AppDataResourceMaster}*/row)=>
                             (parameters.all_users ||
                                 ((parameters.data.iam_user_id==null && row.iam_user_app_id==null)|| 

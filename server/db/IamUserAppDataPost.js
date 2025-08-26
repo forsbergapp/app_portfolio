@@ -18,7 +18,7 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_IamUserAppDataPost[] }}
  */
 const get = parameters =>{
-    const result = ORM.getObject(parameters.app_id, 'IamUserAppDataPost',parameters.resource_id, null).rows
+    const result = (ORM.getObject(parameters.app_id, 'IamUserAppDataPost',parameters.resource_id, null).result??[])
                     .filter((/**@type{server_db_table_IamUserAppDataPost}*/row)=>
                         ORM.db.IamUserApp.get({ app_id:parameters.app_id,
                                         resource_id:null, 

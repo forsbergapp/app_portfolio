@@ -920,12 +920,12 @@ const updateConfigSecrets = async () =>{
                                         });
     }
     //update ServiceRegistry with new secrets
-    for(const record of updatedConfigSecurity.ServiceRegistry.rows??[])
+    for(const record of updatedConfigSecurity.ServiceRegistry??[])
         await ORM.db.ServiceRegistry.update({app_id:0,
                                             resource_id:record.id,
                                             data:record});
     //update AppSecret with new secrets
-    for(const record of updatedConfigSecurity.AppSecret.rows??[])
+    for(const record of updatedConfigSecurity.AppSecret??[])
         for (const key of Object.keys(record).filter(key=>key !='app_id'))
             await ORM.db.AppSecret.update({ app_id:0,
                                             resource_id:record.app_id,
@@ -933,7 +933,7 @@ const updateConfigSecrets = async () =>{
                                                     /**@ts-ignore */
                                                     parameter_value:record[key]}});
 
-    await updateMicroserviceSecurity({  serveRegistry:               updatedConfigSecurity.ServiceRegistry.rows??[],
+    await updateMicroserviceSecurity({  serveRegistry:               updatedConfigSecurity.ServiceRegistry??[],
                                         pathMicroserviceSource:     '/data/microservice/',
                                         pathMicroserviceDestination:'/data/microservice/'});
 };
@@ -966,8 +966,8 @@ const updateMicroserviceSecurity = async parameters =>{
  *          pathServiceRegistry:   string|null,
  *          pathAppSecret:         string|null}} parameters
  * @returns {Promise.<{ ConfigServer:   server_db_document_ConfigServer,
- *                      ServiceRegistry:server_db_table_ServiceRegistry[] & {rows?:server_db_table_ServiceRegistry[]},
- *                      AppSecret:      server_db_table_AppSecret[] & {rows?:server_db_table_AppSecret[]}}>}
+ *                      ServiceRegistry:server_db_table_ServiceRegistry[],
+ *                      AppSecret:      server_db_table_AppSecret[]}>}
  */
 const getConfigSecurityUpdate = async parameters =>{
     const {ORM} = await import('./server.js');
@@ -1015,7 +1015,7 @@ const getConfigSecurityUpdate = async parameters =>{
                                     row.secret = Buffer.from(JSON.stringify(await Security.securityTransportCreateSecrets()),'utf-8').toString('base64');
                                 }
                                 resolve(content);
-                            })();}):ORM.getObject(0,'ServiceRegistry'),
+                            })();}):ORM.getObject(0,'ServiceRegistry').result,
         AppSecret:parameters.pathAppSecret?await fs.promises.readFile(ORM.serverProcess.cwd() + parameters.pathAppSecret)
                         .then(filebuffer=>
                         //generate secrets
@@ -1025,7 +1025,7 @@ const getConfigSecurityUpdate = async parameters =>{
                             row.client_id = Security.securitySecretCreate();
                             row.client_secret = Security.securitySecretCreate();
                             return row;
-                        })):ORM.getObject(0,'AppSecret')
+                        })):ORM.getObject(0,'AppSecret').result
     };
 };
 export{ postDemo, deleteDemo, 
