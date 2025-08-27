@@ -5,6 +5,7 @@
  */
 const Crypto = await import('node:crypto');
 const {ORM} = await import('./server.js');
+const commonCrypto = await import('../apps/common/src/functions/common_crypto.js');
 /**
  * @name securityCreateRandomString
  * @description Create random string
@@ -477,8 +478,7 @@ const jwt = new Jwt();
  * @returns {Promise.<string>}
  */
 const securityTransportEncrypt = async parameters => {
-    const Crypto = await import('../apps/common/src/functions/common_crypto.js');
-	return Crypto.subtle.encrypt({	
+	return commonCrypto.subtle.encrypt({	
                         iv:     parameters.iv,
 						key:    parameters.jwk.k, 
 						data:   parameters.data, 
@@ -497,11 +497,10 @@ const securityTransportEncrypt = async parameters => {
  * @returns {Promise.<*>} 
 */
 const securityTransportDecrypt = async parameters =>{
-    const Crypto = await import('../apps/common/src/functions/common_crypto.js');
-	return Crypto.subtle.decrypt({	
-                    iv:         parameters.iv,
-					key:        parameters.jwk.k, 
-					ciphertext: parameters.encrypted});
+	return commonCrypto.subtle.decrypt({	
+                        iv:         parameters.iv,
+                        key:        parameters.jwk.k, 
+                        ciphertext: parameters.encrypted});
 };
 /**
  * @name securityTransportCreateSecrets
