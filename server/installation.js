@@ -24,7 +24,16 @@
 
 const DB_DEMO_PATH              = '/server/install/db/demo/';
 const DB_DEMO_FILE              = 'demo_data.json';
+const {ORM} = await import('./server.js');
 const fs = await import('node:fs');
+
+/**
+ * @description Get default file for given object in default directory
+ * @param {server_DbObject} object
+ */
+const getDefaultObject = async object => 
+    await fs.promises.readFile(ORM.serverProcess.cwd() + `/server/install/default/${object}.json`)
+            .then(filebuffer=>JSON.parse(filebuffer.toString()));
 /**
  * @name postDemo
  * @description Install demo users and sends server side events of progress
@@ -59,7 +68,6 @@ const fs = await import('node:fs');
 * @returns {Promise.<server_server_response & {result?:{info: {}[]} }>}
 */
 const postDemo = async parameters=> {
-    const {ORM} = await import('./server.js');
     const Socket = await import('./socket.js');
     const Security = await import('./security.js');
 
@@ -722,7 +730,6 @@ const postDemo = async parameters=> {
 * @returns {Promise.<server_server_response & {result?:{info: {}[]} }>}
 */
 const deleteDemo = async parameters => {
-    const {ORM} = await import('./server.js');
     const Socket = await import('./socket.js');
 
     const result_demo_users = ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/row)=>row.user_level==2);
@@ -800,64 +807,32 @@ const deleteDemo = async parameters => {
 };
 /**
  * @name postConfigDefault
- * @description Default config
+ * @description Install default config
  * @function
  * @returns {Promise<void>}
  */
 const postConfigDefault = async () => {
-    const {ORM} = await import('./server.js');
     const updatedConfigSecurity = await getConfigSecurityUpdate({   
                                             pathConfigServer:'/server/install/default/ConfigServer.json',
                                             pathServiceRegistry:'/server/install/default/ServiceRegistry.json',
                                             pathAppSecret:'/server/install/default/AppSecret.json'
     });
     /**
-     * @param {server_DbObject} object
-     */
-    const getObject = async object => 
-            await fs.promises.readFile(ORM.serverProcess.cwd() + `/server/install/default/${object}.json`)
-                    .then(filebuffer=>JSON.parse(filebuffer.toString()));
-    //read all default files
-    /**
-     * @type{[  [server_DbObject, server_db_document_ConfigServer],
-     *           [server_DbObject, server_db_document_ConfigRestApi],
-     *           [server_DbObject, server_db_table_ServiceRegistry[]],
-     *           [server_DbObject, server_db_table_IamUser[]],
-     *           [server_DbObject, server_db_table_App[]],
-     *           [server_DbObject, server_db_table_AppDataEntityResource[]],
-     *           [server_DbObject, server_db_table_AppDataEntity[]],
-     *           [server_DbObject, server_db_table_AppDataResourceDetailData[]],
-     *           [server_DbObject, server_db_table_AppDataResourceDetail[]],
-     *           [server_DbObject, server_db_table_AppDataResourceMaster[]],
-     *           [server_DbObject, server_db_table_AppModule[]],
-     *           [server_DbObject, server_db_table_AppParameter[]],
-     *           [server_DbObject, server_db_table_AppSecret[]],
-     *           [server_DbObject, server_db_table_AppData[]],
-     *           [server_DbObject, server_db_table_AppTranslation[]],
-     *           [server_DbObject, server_DbObject_record[]]
+     * @type{[  [server_DbObject, server_DbObject_record[]],
+     *          [server_DbObject, server_db_document_ConfigServer],
+     *          [server_DbObject, server_db_table_ServiceRegistry[]],
+     *          [server_DbObject, server_db_table_AppSecret[]] 
      *       ]}
      */
     const config_obj = [
+                            ['DbObjects',                       await getDefaultObject('DbObjects')],
                             ['ConfigServer',                    updatedConfigSecurity.ConfigServer],
-                            ['ConfigRestApi',                   await getObject('ConfigRestApi')],
                             ['ServiceRegistry',                 updatedConfigSecurity.ServiceRegistry],
-                            ['IamUser',                         await getObject('IamUser')],
-                            ['App',                             await getObject('App')],
-                            ['AppDataEntityResource',           await getObject('AppDataEntityResource')],
-                            ['AppDataEntity',                   await getObject('AppDataEntity')],
-                            ['AppDataResourceDetailData',       await getObject('AppDataResourceDetailData')],
-                            ['AppDataResourceDetail',           await getObject('AppDataResourceDetail')],
-                            ['AppDataResourceMaster',           await getObject('AppDataResourceMaster')],
-                            ['AppModule',                       await getObject('AppModule')],
-                            ['AppParameter',                    await getObject('AppParameter')],
-                            ['AppSecret',                       updatedConfigSecurity.AppSecret],
-                            ['AppData',                         await getObject('AppData')],
-                            ['AppTranslation',                  await getObject('AppTranslation')],
-                            ['DbObjects',                       await getObject('DbObjects')]
+                            ['AppSecret',                       updatedConfigSecurity.AppSecret]
                         ]; 
     //create directories in orm
     await ORM.postFsDir(['/data',
-                            '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_JOBS' in key)[0].PATH_JOBS,
+                            '/data' + config_obj[1][1].SERVER.filter(key=>'PATH_JOBS' in key)[0].PATH_JOBS,
                             '/data/db',
                             '/data/db/journal',
                             '/data/microservice',
@@ -877,10 +852,66 @@ const postConfigDefault = async () => {
                                     ORM.serverProcess.cwd() + `/data/microservice/${file}`)
             .catch(error=>{throw error;});
     
-
-    //write files to orm
+    //write files to ORM
     for (const config_row of config_obj){
-        await ORM.postFsAdmin(config_row[0], config_row[1]);
+                                //Object
+        await ORM.postFsAdmin(  config_row[0], 
+                                //Content
+                                config_row[1], 
+                                //type
+                                config_row[0]=='DbObjects'?'DOCUMENT':config_obj[0][1].filter(row=>row.name==config_row[0])[0].type); 
+    }
+};
+/**
+ * @name postDataDefault
+ * @description Install default data
+ * @function
+ * @returns {Promise<void>}
+ */
+const postDataDefault = async () => {
+    
+    /**
+     * @type{[  [server_DbObject, server_db_document_ConfigRestApi],
+     *          [server_DbObject, server_db_table_IamUser[]],
+     *          [server_DbObject, server_db_table_App[]],
+     *          [server_DbObject, server_db_table_AppDataEntityResource[]],
+     *          [server_DbObject, server_db_table_AppDataEntity[]],
+     *          [server_DbObject, server_db_table_AppDataResourceDetailData[]],
+     *          [server_DbObject, server_db_table_AppDataResourceDetail[]],
+     *          [server_DbObject, server_db_table_AppDataResourceMaster[]],
+     *          [server_DbObject, server_db_table_AppModule[]],
+     *          [server_DbObject, server_db_table_AppParameter[]],
+     *          [server_DbObject, server_db_table_AppData[]],
+     *          [server_DbObject, server_db_table_AppTranslation[]]
+     *       ]}
+     */
+    const config_obj = [
+                            ['ConfigRestApi',                   await getDefaultObject('ConfigRestApi')],
+                            ['IamUser',                         await getDefaultObject('IamUser')],
+                            ['App',                             await getDefaultObject('App')],
+                            ['AppDataEntityResource',           await getDefaultObject('AppDataEntityResource')],
+                            ['AppDataEntity',                   await getDefaultObject('AppDataEntity')],
+                            ['AppDataResourceDetailData',       await getDefaultObject('AppDataResourceDetailData')],
+                            ['AppDataResourceDetail',           await getDefaultObject('AppDataResourceDetail')],
+                            ['AppDataResourceMaster',           await getDefaultObject('AppDataResourceMaster')],
+                            ['AppModule',                       await getDefaultObject('AppModule')],
+                            ['AppParameter',                    await getDefaultObject('AppParameter')],
+                            ['AppData',                         await getDefaultObject('AppData')],
+                            ['AppTranslation',                  await getDefaultObject('AppTranslation')]
+                        ]; 
+    
+    //write files to ORM
+    //read default where type is configured
+    /**@type{server_DbObject_record[]}*/
+    const DbObjects = await getDefaultObject('DbObjects');
+    
+    for (const config_row of config_obj){
+        //Object
+        await ORM.postFsAdmin(  config_row[0], 
+            //Content
+            config_row[1], 
+            //type
+            DbObjects.filter(row=>row.name==config_row[0])[0].type); 
     }
 };
 /**
@@ -890,7 +921,6 @@ const postConfigDefault = async () => {
  * @returns {Promise<void>}
  */
 const updateConfigSecrets = async () =>{
-    const {ORM} = await import('./server.js');
     const security = await import('./security.js');
     
     //get ConfigServer, ServiceRegistry and AppSecret with new secrets
@@ -947,7 +977,6 @@ const updateConfigSecrets = async () =>{
  * @returns {Promise.<void>}
  */
 const updateMicroserviceSecurity = async parameters =>{
-    const {ORM} = await import('./server.js');
     for (const file of ['BATCH', 'GEOLOCATION']){
         /**@type{microservice_local_config} */
         const content = await fs.promises.readFile(ORM.serverProcess.cwd() + `${parameters.pathMicroserviceSource}${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
@@ -970,7 +999,6 @@ const updateMicroserviceSecurity = async parameters =>{
  *                      AppSecret:      server_db_table_AppSecret[]}>}
  */
 const getConfigSecurityUpdate = async parameters =>{
-    const {ORM} = await import('./server.js');
     const Security = await import('./security.js');
     const APP_PORTFOLIO_TITLE = 'App Portfolio';
     
@@ -1030,5 +1058,6 @@ const getConfigSecurityUpdate = async parameters =>{
 };
 export{ postDemo, deleteDemo, 
         postConfigDefault, 
+        postDataDefault,
         updateConfigSecrets, 
         updateMicroserviceSecurity};
