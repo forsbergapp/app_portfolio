@@ -743,7 +743,7 @@ const bffResponse = async parameters =>{
                                 .then((/**@type{*}*/result_service) => {
                                     const log_result = ORM.UtilNumberValue(configServer.SERVICE_LOG.filter(row=>'REQUEST_LEVEL' in row)[0].REQUEST_LEVEL)==2?result_service:'✅';
                                                         /**@ts-ignore */
-                                    return ORM.db.Log.post({  app_id:result_service.app_id, 
+                                    return ORM.db.Log.post({  app_id:bff_parameters.app_id, 
                                         data:{  object:'LogServiceInfo', 
                                                 service:{   service:bff_parameters.endpoint,
                                                             parameters:bff_parameters.query
@@ -753,7 +753,7 @@ const bffResponse = async parameters =>{
                                             /**@ts-ignore */
                                         }).then(result_log=>result_log.http?
                                                                 result_log:
-                                                                bffResponse({   app_id:result_service.app_id,
+                                                                bffResponse({   app_id:bff_parameters.app_id,
                                                                                 result_request:result_service, 
                                                                                 host:bff_parameters.host,
                                                                                 route:'REST_API',

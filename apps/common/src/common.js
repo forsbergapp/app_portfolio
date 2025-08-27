@@ -103,8 +103,11 @@ const commonGetFile = async parameters =>{
                                                 path:parameters.path,
                                                 content_type:parameters.content_type,
                                                 file:result.toString()}));
-                /**@ts-ignore */
-                FILES.data.push([parameters.path, file]);
+                //save in cache if not already in cache
+                FILES.data.filter(row=>row[0]==parameters.path)[0]?
+                    null:
+                        /**@ts-ignore */
+                        FILES.data.push([parameters.path, file]);
                 return file;
             })
             .catch(error=>{
