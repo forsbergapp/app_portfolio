@@ -94,31 +94,14 @@ class ORM_class {
      * @description Load default database or read existing from disk. Set cache for files in existing database using `cache_content` key to increase performance
      *              Can only be ecxecuted once after ORM objects are loaded and sealed
      * @method
-     * @param {server_DbObject_record[]|null} default_db
      * @returns {Promise.<void>}
      */
-    InitAsync = async (default_db=null) => {
+    InitAsync = async () => {
         if (Object.keys(this.db).length>0){
             const {iamUtilMessageNotAuthorized} = await import('../iam.js');
             throw iamUtilMessageNotAuthorized();
         }
         else{
-            const Installation = await import('../installation.js');            
-            const result_data = await this.getFsDataExists();
-            if (result_data==false)
-                await Installation.postConfigDefault();
-            
-            DB.data = default_db?default_db:await this.getFsDbObject();
-            
-            if (default_db == null)
-                for (const file_db_record of DB.data){
-                    if ('cache_content' in file_db_record &&
-                        file_db_record.in_memory==false
-                    ){
-                        const file = await this.getFsFile(DB_DIR.db + file_db_record.name + '.json', file_db_record.type);
-                        file_db_record.cache_content = file?file:null;
-                    }
-                }
             /** 
              * @description Get all imported ORM objects from file system
              *              Using Dependency Injection pattern
@@ -140,6 +123,27 @@ class ORM_class {
                                 resolve(ORMObjects);
                         })();});
             Object.seal(this.db);
+
+            const Installation = await import('../installation.js');            
+            const result_data = await this.getFsDataExists();
+            if (result_data==false){
+                //first time , create default config for microservice and DbObjects
+                await Installation.postConfigDefault();
+                //first time, insert default data
+                await Installation.postDataDefault();
+            
+            }    
+            DB.data = await this.getFsDbObject();
+
+            //cache file content in db
+            for (const file_db_record of DB.data){
+                if ('cache_content' in file_db_record &&
+                    file_db_record.in_memory==false
+                ){
+                    const file = await this.getFsFile(DB_DIR.db + file_db_record.name + '.json', file_db_record.type);
+                    file_db_record.cache_content = file?file:null;
+                }
+            }
             /**@type{server_db_document_ConfigServer} */
             const configServer = this.db.ConfigServer.get({app_id:0}).result;
             
@@ -449,10 +453,11 @@ class ORM_class {
      * @method
      * @param {server_DbObject} object
      * @param {{}} file_content 
+     * @param {server_DbObject_record['type']} object_type
      * @returns {Promise.<void>}
      */
-    postFsAdmin = async (object, file_content) =>{
-        await this.postFsFile(DB_DIR.db + object + '.json', file_content, DB.data.filter(file_db=>file_db.name==object)[0]?.type);
+    postFsAdmin = async (object, file_content, object_type) =>{
+        await this.postFsFile(DB_DIR.db + object + '.json', file_content, object_type);
     };
 
     /**
