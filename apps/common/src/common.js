@@ -12,15 +12,13 @@
  *          server_server_res,
  *          server_bff_endpoint_type,
  *          server_db_document_ConfigServer,
- *          server_server_error,
  *          server_server_response} from '../../../server/types.js'
  * 
  */
 
 const Security = await import('../../../server/security.js');
-const {ORM} = await import('../../../server/server.js');
-const {serverCircuitBreakerBFE, serverRequest, serverUtilAppFilename, serverUtilAppLine} = await import('../../../server/server.js');
-const {microserviceRequest} = await import('../../../serviceregistry/microservice.js');
+const {ORM, serverUtilAppFilename, serverUtilAppLine} = await import('../../../server/server.js');
+const {default:ComponentCreate} = await import('./component/common_app.js');
 const fs = await import('node:fs');
 
 const FILES= {data:[]};
@@ -209,7 +207,7 @@ const commonCssFonts = await (async base64=>{
     return {css:cssFontFace.join('\n@'), db_records:db_records};
 })(false);
 
-const circuitBreaker = await serverCircuitBreakerBFE();
+
 /**
  * @name commonSearchMatch
  * @description Searches for text in given variables without diacrites
@@ -268,116 +266,6 @@ const commonClientLocale = accept_language =>{
         }
     }
     return locale;
-};
-/**
- * @name commonGeodata
- * @description Returns geodata
- * @function
- * @param {{app_id:number,
- *          endpoint:server_bff_endpoint_type,
- *          ip:string,
- *          user_agent:string,
- *          accept_language:string}} parameters
- * @returns {Promise.<*>}
- */
-const commonGeodata = async parameters =>{
-    //get GPS from IP
-    const result_gps = await microserviceRequest({  app_id:parameters.app_id,
-                                                    microservice:'GEOLOCATION',
-                                                    service:'IP', 
-                                                    method:'GET',
-                                                    data:{ip:parameters.ip},
-                                                    ip:parameters.ip,
-                                                    user_agent:parameters.user_agent,
-                                                    accept_language:parameters.user_agent,
-                                                    endpoint:'SERVER'
-                                                })
-    .catch(()=>null);
-    const result_geodata = {};
-    if (result_gps?.result){
-        result_geodata.latitude =   result_gps.result.latitude;
-        result_geodata.longitude=   result_gps.result.longitude;
-        result_geodata.place    =   result_gps.result.city + ', ' +
-                                    result_gps.result.regionName + ', ' +
-                                    result_gps.result.countryName;
-        result_geodata.timezone =   result_gps.result.timezone;
-    }
-    else{
-        const {default:worldcities} = await import('./functions/common_worldcities_city_random.js');
-        
-        const result_city = await worldcities({ app_id:parameters.app_id,
-                                                data:null,
-                                                user_agent:parameters.user_agent,
-                                                ip:parameters.ip,
-                                                host:'',
-                                                idToken:'', 
-                                                authorization:'',
-                                                locale:parameters.accept_language})
-                                    .then(result=>{if (result.http) throw result; else return result.result;})
-                                    .catch((/**@type{server_server_error}*/error)=>{throw error;});
-        result_geodata.latitude =   result_city.lat;
-        result_geodata.longitude=   result_city.lng;
-        result_geodata.place    =   result_city.city + ', ' + result_city.admin_name + ', ' + result_city.country;
-        result_geodata.timezone =   null;
-    }
-    return result_geodata;
-};
-
-/**
- * @name commonBFE
- * @description External request with JSON
- * @function
- * @param {{app_id:number,
- *          url:string,
- *          method:string,
- *          body:*,
- *          user_agent:string,
- *          ip:string,
- *          'app-id': number,
- *          authorization:string|null,
- *          locale:string}} parameters
- * @returns {Promise.<server_server_response>}
- */
-const commonBFE = async parameters =>{
-    if (parameters.url.toLowerCase().startsWith('http://')){
-        /**@type{server_db_document_ConfigServer} */
-        const CONFIG_SERVER = ORM.db.ConfigServer.get({app_id:0}).result;
-        return await circuitBreaker.serverRequest( 
-            {
-                request_function:   serverRequest,
-                service:            'BFE',
-                protocol:           'http',
-                url:                parameters.url,
-                host:               null,
-                port:               null,
-                admin:              parameters.app_id == ORM.UtilNumberValue(CONFIG_SERVER.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
-                path:               null,
-                body:               parameters.body,
-                method:             parameters.method,
-                client_ip:          parameters.ip,
-                authorization:      parameters.authorization??'',
-                user_agent:         parameters.user_agent,
-                accept_language:    parameters.locale,
-                encryption_type:    'BFE',
-                'app-id':           parameters['app-id'],
-                endpoint:           null
-            })
-            .then((/**@type{*}*/result)=>{
-                return result.http?result:{result:JSON.parse(result), type:'JSON'};
-            })
-            .catch((/**@type{*}*/error)=>{
-                return {http:500, 
-                    code:'commonBFE', 
-                    text:error, 
-                    developerText:null, 
-                    moreInfo:null,
-                    type:'JSON'};
-            });
-    }
-    else{
-        const { iamUtilMessageNotAuthorized } = await import('../../../server/iam.js');
-        throw iamUtilMessageNotAuthorized();
-    }
 };
 
 
@@ -1124,7 +1012,8 @@ const commonApp = async parameters =>{
         }
         else{
             const {iamAuthorizeIdToken} = await import('../../../server/iam.js');
-            const {default:ComponentCreate} = await import('./component/common_app.js');
+            
+            const {bffGeodata} = await import('../../../server/bff.js');
             /**@type{server_db_document_ConfigServer} */
             const configServer = ORM.db.ConfigServer.get({app_id:parameters.app_id}).result;
             
@@ -1145,7 +1034,7 @@ const commonApp = async parameters =>{
                                                             },
                                                 methods:    {
                                                             commonAppStart:commonAppStart,
-                                                            commonGeodata:commonGeodata,
+                                                            bffGeodata:bffGeodata,
                                                             AppParameter:ORM.db.AppParameter,
                                                             IamEncryption:ORM.db.IamEncryption,
                                                             IamUser:ORM.db.IamUser,
@@ -1280,6 +1169,4 @@ export {commonGetFile,
         commonApp,
         commonAppError,
         commonAppResource,
-        commonGeodata,
-        commonBFE,
         commonRegistryAppModule};
