@@ -109,7 +109,7 @@
     *                      },
     *        methods:      {
     *                      commonAppStart:import('../common.js')['commonAppStart'],
-    *                      commonGeodata:import('../common.js')['commonGeodata'],
+    *                      bffGeodata:import('../../../../server/bff.js')['bffGeodata'],
     *                      AppParameter:import('../../../../server/db/AppParameter.js'),
     *                      IamEncryption:import('../../../../server/db/IamEncryption.js'),
     *                      IamUser:import('../../../../server/db/IamUser.js'),
@@ -174,7 +174,7 @@
             
             const APP_PARAMETER = props.methods.AppParameter.get({app_id:props.data.app_id,resource_id:common_app_id}).result[0]??{};
             //geodata for APP using start_app_id
-            const result_geodata = await props.methods.commonGeodata({ app_id:start_app_id, 
+            const result_geodata = await props.methods.bffGeodata({ app_id:start_app_id, 
                                                                     endpoint:'APP', 
                                                                     ip:props.data.ip, 
                                                                     user_agent:props.data.user_agent, 

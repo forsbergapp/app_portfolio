@@ -23,7 +23,7 @@
  */
 const paymentRequestGetStatus = async parameters =>{
    const {ORM} = await import('../../../../server/server.js');
-   const {commonBFE} = await import('../../../../apps/common/src/common.js');
+   const {bffExternal} = await import('../../../../server/bff.js');
    const {securityPrivateDecrypt, securityPublicEncrypt} = await import('../../../../server/security.js'); 
    
    /**@type{server_db_table_AppDataEntity & 
@@ -62,7 +62,7 @@ const paymentRequestGetStatus = async parameters =>{
                                            Entity.json_data.merchant_public_key??'', 
                                            JSON.stringify(body))};
    
-   const result_commonBFE = await commonBFE({   app_id:parameters.app_id,
+   const result_bffExternal = await bffExternal({   app_id:parameters.app_id,
                                                 url:Entity.json_data.merchant_api_url_payment_request_get_status??'', 
                                                 method:'POST', 
                                                 //send body in base64 format
@@ -72,13 +72,13 @@ const paymentRequestGetStatus = async parameters =>{
                                                 'app-id':Entity.json_data.merchant_api_url_payment_request_app_id,
                                                 authorization:parameters.authorization, 
                                                 locale:parameters.locale});
-   if (result_commonBFE.result.error)
+   if (result_bffExternal.result.error)
        //read external ISO20022 error format and return internal server format using camel case format
-       return {http:           result_commonBFE.result.error.http,
-               code:           result_commonBFE.result.error.code,
-               text:           result_commonBFE.result.error.text,
-               developerText:  result_commonBFE.result.error.developer_text,
-               moreInfo:       result_commonBFE.result.error.more_info,
+       return {http:           result_bffExternal.result.error.http,
+               code:           result_bffExternal.result.error.code,
+               text:           result_bffExternal.result.error.text,
+               developerText:  result_bffExternal.result.error.developer_text,
+               moreInfo:       result_bffExternal.result.error.more_info,
                type:           'JSON'
    };
    else{
@@ -87,7 +87,7 @@ const paymentRequestGetStatus = async parameters =>{
         */
        const body_decrypted = JSON.parse(securityPrivateDecrypt(
                                                Entity.json_data.merchant_private_key??'', 
-                                               result_commonBFE.result.rows.message));
+                                               result_bffExternal.result.rows.message));
 
        return {result:[{status:body_decrypted.status}], type:'JSON'};
    }

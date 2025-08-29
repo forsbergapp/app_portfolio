@@ -12,15 +12,21 @@
  *          server_server_response,
  *          server_req_method,
  *          server_server_response_type,
- *          server_bff_parameters} from './types.js'
+ *          server_bff_parameters,
+ *          server_bff_endpoint_type,
+ *          microservice_registry_service} from './types.js'
  */
 const app_common= await import('../apps/common/src/common.js');
 const {ORM} = await import('./server.js');
-const {serverResponse, serverUtilResponseTime} = await import('./server.js');
+const {serverCircuitBreakerBFE, serverCircuitBreakerMicroService, serverRequest, serverResponse, serverUtilResponseTime} = await import('./server.js');
 const socket = await import('./socket.js');
 const Security = await import('./security.js');
 const iam = await import('./iam.js');
+const {registryConfigServices} = await import('../serviceregistry/registry.js');
+const {default:worldcities} = await import('../apps/common/src/functions/common_worldcities_city_random.js');
 
+const circuitBreakerBFE = await serverCircuitBreakerBFE();
+const circuitBreakerMicroservice = await serverCircuitBreakerMicroService();
 /**
  * @name bffConnect
  * @description Initial request from app, connects to socket, sends SSE message with common library and parameters
@@ -65,6 +71,233 @@ const bffConnect = async parameters =>{
                                                         timezone: connectUserData.timezone}),
                                             message_type:'CONNECTINFO'}});
 };
+/**
+ * @name bffExternal
+ * @description External request with JSON
+ * @function
+ * @param {{app_id:number,
+*          url:string,
+*          method:string,
+*          body:*,
+*          user_agent:string,
+*          ip:string,
+*          'app-id': number,
+*          authorization:string|null,
+*          locale:string}} parameters
+* @returns {Promise.<server_server_response>}
+*/
+const bffExternal = async parameters =>{
+   if (parameters.url.toLowerCase().startsWith('http://')){
+       /**@type{server_db_document_ConfigServer} */
+       const CONFIG_SERVER = ORM.db.ConfigServer.get({app_id:0}).result;
+       return await circuitBreakerBFE.serverRequest( 
+           {
+               request_function:   serverRequest,
+               service:            'BFE',
+               protocol:           'http',
+               url:                parameters.url,
+               host:               null,
+               port:               null,
+               admin:              parameters.app_id == ORM.UtilNumberValue(CONFIG_SERVER.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
+               path:               null,
+               body:               parameters.body,
+               method:             parameters.method,
+               client_ip:          parameters.ip,
+               authorization:      parameters.authorization??'',
+               user_agent:         parameters.user_agent,
+               accept_language:    parameters.locale,
+               encryption_type:    'BFE',
+               'app-id':           parameters['app-id'],
+               endpoint:           null
+           })
+           .then((/**@type{*}*/result)=>{
+               return result.http?result:{result:JSON.parse(result), type:'JSON'};
+           })
+           .catch((/**@type{*}*/error)=>{
+               return {http:500, 
+                   code:'bffExternal', 
+                   text:error, 
+                   developerText:null, 
+                   moreInfo:null,
+                   type:'JSON'};
+           });
+   }
+   else{
+       throw iam.iamUtilMessageNotAuthorized();
+   }
+};
+/**
+ * @name bffMicroservice
+ * @description Request microservice using circuitbreaker
+ *              Uses client_id and client_secret defined for given app
+ *              microservice REST API syntax:
+ *              [microservice protocol]://[microservice host]:[microservice port]/api/v[microservice API version]/[resource]/[optional resource id]?[base64 encoded URI query]
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+*          microservice:string, 
+*          service:string, 
+*          method:server_req_method,
+*          data:*,
+*          ip:string,
+*          user_agent:string,
+*          accept_language:string,
+*          endpoint:server_bff_endpoint_type
+*       }} parameters
+* @returns {Promise.<server_server_response>}
+*/
+const bffMicroservice = async parameters =>{
+
+   /**@type{server_db_document_ConfigServer} */
+   const CONFIG_SERVER = ORM.db.ConfigServer.get({app_id:0}).result;
+   
+   /**@type{microservice_registry_service} */
+   if ((parameters.microservice == 'GEOLOCATION' && ORM.UtilNumberValue(CONFIG_SERVER.SERVICE_IAM
+                                                       .filter(parameter=>'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1)||
+       parameters.microservice != 'GEOLOCATION'){
+              
+       //convert data object to string if method=GET, add always app_id parameter for authentication and send as base64 encoded
+       const query = Buffer.from((parameters.method=='GET'?Object.entries({...parameters.data, ...{service:parameters.service}}).reduce((query, param)=>query += `${param[0]}=${param[1]}&`, ''):'')
+                                   + `app_id=${parameters.app_id}`
+                               ).toString('base64');
+       const ServiceRegistry = await registryConfigServices(parameters.microservice);
+       return await circuitBreakerMicroservice.serverRequest( 
+                       {
+                           request_function:   serverRequest,
+                           service:            parameters.microservice,
+                           protocol:           'http',
+                           url:                null,
+                           host:               ServiceRegistry.server_host,
+                           port:               ServiceRegistry.server_port,
+                           admin:              parameters.app_id == ORM.UtilNumberValue(
+                                                           ORM.db.ConfigServer.get({  app_id:parameters.app_id, 
+                                                                               data:{  config_group:'SERVICE_APP', 
+                                                                                       parameter:'APP_COMMON_APP_ID'}}).result
+                                                       ),
+                           path:               `/api/v${ServiceRegistry.rest_api_version}?${query}`,
+                           body:               parameters.data,
+                           method:             parameters.method,
+                           client_ip:          parameters.ip,
+                           user_agent:         parameters.user_agent,
+                           accept_language:    parameters.accept_language,
+                           authorization:      null,
+                           encryption_type:    'MICROSERVICE',
+                           'app-id':           parameters.app_id,
+                           endpoint:           parameters.endpoint
+                       })
+                       .then((/**@type{*}*/result)=>{
+                           return result.http?result:{result:JSON.parse(result), type:'JSON'};
+                       })
+                       .catch((/**@type{*}*/error)=>{
+                           return {http:500, 
+                                   code:'MICROSERVICE', 
+                                   text:error, 
+                                   developerText:null, 
+                                   moreInfo:null,
+                                   type:'JSON'};
+                       });
+       }
+   else{
+       const  {iamUtilMessageNotAuthorized} = await import('../server/iam.js');
+       return {
+               http:503, 
+               code:'MICROSERVICE', 
+               text:iamUtilMessageNotAuthorized(), 
+               developerText:null, 
+               moreInfo:null,
+               type:'JSON'};
+   }
+}; 
+/**
+ * @name bffGeodata
+ * @description Returns geodata
+ * @function
+ * @param {{app_id:number,
+*          endpoint:server_bff_endpoint_type,
+*          ip:string,
+*          user_agent:string,
+*          accept_language:string}} parameters
+* @returns {Promise.<*>}
+*/
+const bffGeodata = async parameters =>{
+   //get GPS from IP
+   const result_gps = await bffMicroservice({  app_id:parameters.app_id,
+                                                   microservice:'GEOLOCATION',
+                                                   service:'IP', 
+                                                   method:'GET',
+                                                   data:{ip:parameters.ip},
+                                                   ip:parameters.ip,
+                                                   user_agent:parameters.user_agent,
+                                                   accept_language:parameters.user_agent,
+                                                   endpoint:'SERVER'
+                                               })
+   .catch(()=>null);
+   const result_geodata = {};
+   if (result_gps?.result){
+       result_geodata.latitude =   result_gps.result.latitude;
+       result_geodata.longitude=   result_gps.result.longitude;
+       result_geodata.place    =   result_gps.result.city + ', ' +
+                                   result_gps.result.regionName + ', ' +
+                                   result_gps.result.countryName;
+       result_geodata.timezone =   result_gps.result.timezone;
+   }
+   else{
+       const result_city = await worldcities({ app_id:parameters.app_id,
+                                               data:null,
+                                               user_agent:parameters.user_agent,
+                                               ip:parameters.ip,
+                                               host:'',
+                                               idToken:'', 
+                                               authorization:'',
+                                               locale:parameters.accept_language})
+                                   .then(result=>{if (result.http) throw result; else return result.result;})
+                                   .catch((/**@type{server_server_error}*/error)=>{throw error;});
+       result_geodata.latitude =   result_city.lat;
+       result_geodata.longitude=   result_city.lng;
+       result_geodata.place    =   result_city.city + ', ' + result_city.admin_name + ', ' + result_city.country;
+       result_geodata.timezone =   null;
+   }
+   return result_geodata;
+};
+/**
+ * @name bffGeodataUser
+ * @description Get geodata and user account data
+ * @function
+ * @param {number} app_id 
+ * @param {string} ip
+ * @param {string} headers_user_agent 
+ * @param {string} headers_accept_language
+ * @returns {Promise.<{  latitude:string,
+*              longitude:string,
+*               place:string,
+*               timezone:string}>}
+*/
+const bffGeodataUser = async (app_id, ip, headers_user_agent, headers_accept_language) =>{
+   //get GPS from IP
+   const result_geodata = await bffMicroservice({  app_id:app_id,
+                                                       microservice:'GEOLOCATION',
+                                                       service:'IP', 
+                                                       method:'GET',
+                                                       data:{ip:ip},
+                                                       ip:ip,
+                                                       user_agent:headers_user_agent,
+                                                       accept_language:headers_accept_language,
+                                                       endpoint:'SERVER'
+                                                   })
+                                                   .then((/**@type{*}*/result_gps)=>result_gps.http?null:result_gps.result)
+                                                   .catch(()=>null);
+   
+   const place = result_geodata?
+                   (result_geodata.city + ', ' +
+                   result_geodata.regionName + ', ' +
+                   result_geodata.countryName):'';
+   return {latitude:result_geodata?result_geodata.latitude ?? '':'',
+           longitude:result_geodata?result_geodata.longitude ?? '':'',
+           place:place,
+           timezone:result_geodata?result_geodata.timezone ?? '':''};
+};
+
+
 /**
  * @name bffInit
  * @description Backend for frontend (BFF) init
@@ -1104,4 +1337,4 @@ const bffRestApi = async (routesparameters) =>{
                 type:'JSON'};
 };
 
-export{bffConnect, bffResponse, bff};
+export{bffConnect, bffExternal, bffMicroservice, bffGeodata, bffGeodataUser, bffResponse, bff};

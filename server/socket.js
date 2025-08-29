@@ -13,48 +13,11 @@
 const {ORM} = await import('./server.js');
 const {serverResponse} = await import('./server.js');
 const {iamUtilResponseNotAuthorized, iamUtilTokenGet, iamUtilTokenExpired, iamUtilMessageNotAuthorized} = await import('./iam.js');
-const {microserviceRequest} = await import('../serviceregistry/microservice.js');
+
 
 /**@type{server_socket_connected_list[]} */
 let SOCKET_CONNECTED_CLIENTS = [];
 
-/**
- * @name socketConnectedUserDataGet
- * @description Get geodata and user account data for connected user
- * @function
- * @param {number} app_id 
- * @param {string} ip
- * @param {string} headers_user_agent 
- * @param {string} headers_accept_language
- * @returns {Promise.<{  latitude:string,
- *              longitude:string,
- *               place:string,
- *               timezone:string}>}
- */
-const socketConnectedUserDataGet = async (app_id, ip, headers_user_agent, headers_accept_language) =>{
-    //get GPS from IP
-    const result_geodata = await microserviceRequest({  app_id:app_id,
-                                                        microservice:'GEOLOCATION',
-                                                        service:'IP', 
-                                                        method:'GET',
-                                                        data:{ip:ip},
-                                                        ip:ip,
-                                                        user_agent:headers_user_agent,
-                                                        accept_language:headers_accept_language,
-                                                        endpoint:'SERVER'
-                                                    })
-                                                    .then((/**@type{*}*/result_gps)=>result_gps.http?null:result_gps.result)
-                                                    .catch(()=>null);
-    
-    const place = result_geodata?
-                    (result_geodata.city + ', ' +
-                    result_geodata.regionName + ', ' +
-                    result_geodata.countryName):'';
-    return {latitude:result_geodata?result_geodata.latitude ?? '':'',
-            longitude:result_geodata?result_geodata.longitude ?? '':'',
-            place:place,
-            timezone:result_geodata?result_geodata.timezone ?? '':''};
-};
 /**
  * @name socketClientGet
  * @description Socket client get client_id for given id token
@@ -112,7 +75,8 @@ const socketClientAdd = (newClient) => {
                     connected.user_agent = parameters.headers_user_agent;
                 }
                 else{
-                    const connectUserData =  await socketConnectedUserDataGet(app_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
+                    const {bffGeodataUser} = await import('./bff.js');
+                    const connectUserData =  await bffGeodataUser(app_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
                     connected.app_id = app_id;
                     connected.connection_date = new Date().toISOString();
                     connected.token_access = parameters.token_access;
@@ -342,8 +306,8 @@ const socketPost = async parameters =>{
             SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.id !== client_id);
             parameters.response.end();
         });
-    
-        const connectUserData =  await socketConnectedUserDataGet(  parameters.app_id, 
+        const {bffGeodataUser} = await import('./bff.js');
+        const connectUserData =  await bffGeodataUser(  parameters.app_id, 
                                                                     parameters.ip, 
                                                                     parameters.user_agent, 
                                                                     parameters.accept_language);

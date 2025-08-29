@@ -4707,7 +4707,7 @@
         "/bff/app_id/v1/geolocation/ip": {
             "get": {
                 "summary": "",
-                "operationId": "serviceregistry.microservice.microserviceRequest",
+                "operationId": "server.bff.bffMicroservice",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"}
                 ],
@@ -4914,7 +4914,7 @@
         "/bff/app_id/v1/geolocation/place": {
             "get": {
                 "summary": "",
-                "operationId": "serviceregistry.microservice.microserviceRequest",
+                "operationId": "server.bff.bffMicroservice",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"}
                 ],
