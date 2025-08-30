@@ -5,7 +5,7 @@
 /**
  * @import {server_db_document_ConfigServer, server_server_response,commonWorldCitiesCity} from '../../../../server/types.js'
  */
-
+const {server} = await import('../../../../server/server.js');
 /**
  * @name appFunction
  * @description Get random city from worldcities db
@@ -22,8 +22,7 @@
  */
 const appFunction = async parameters =>{
     const fs = await import('node:fs');
-    const {ORM} = await import('../../../../server/server.js');
-    const APP_DEFAULT_RANDOM_COUNTRY = ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP'}}).result
+    const APP_DEFAULT_RANDOM_COUNTRY = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP'}}).result
                                         .filter((/**@type{server_db_document_ConfigServer['SERVICE_APP']}*/parameter)=>
                                             'APP_DEFAULT_RANDOM_COUNTRY' in parameter)[0].APP_DEFAULT_RANDOM_COUNTRY;
     /**

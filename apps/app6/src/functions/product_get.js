@@ -4,6 +4,7 @@
 /**
  * @import {server_server_response, server_db_table_AppDataResourceDetail, server_db_table_AppDataEntity, server_db_table_AppDataResourceMaster} from '../../../../server/types.js'
  */
+const {server} = await import('../../../../server/server.js');
 /**
  * @name productGet
  * @description Get product
@@ -19,14 +20,13 @@
  * @returns {Promise.<server_server_response & {result?:server_db_table_AppDataResourceMaster[]}>}
  */
 const productGet = async parameters =>{
-    const {ORM} = await import('../../../../server/server.js');
         
     /**@type{server_db_table_AppDataEntity} */
-    const Entity            = ORM.db.AppDataEntity.get({app_id:parameters.app_id, 
+    const Entity            = server.ORM.db.AppDataEntity.get({app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{data_app_id:parameters.data.data_app_id}}).result[0];
     
-    const products = ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
+    const products = server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         resource_id:parameters.data.resource_id, 
                                                         data:{  iam_user_id:null,
                                                                 data_app_id:parameters.data.data_app_id,
@@ -35,14 +35,14 @@ const productGet = async parameters =>{
                                                         }});
     
     
-    const currency = ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
+    const currency = server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{  iam_user_id:null,
                                                                 data_app_id:parameters.data.data_app_id,
                                                                 resource_name:'CURRENCY',
                                                                 app_data_entity_id:Entity.id
                                                         }}).result[0];
-    const product_variants = ORM.db.AppDataResourceDetail.get({ app_id:parameters.app_id, 
+    const product_variants = server.ORM.db.AppDataResourceDetail.get({ app_id:parameters.app_id, 
                                                                 resource_id:parameters.data.resource_id_variant, 
                                                                 data:{  iam_user_id:null,
                                                                         data_app_id:parameters.data.data_app_id,
@@ -50,7 +50,7 @@ const productGet = async parameters =>{
                                                                         app_data_resource_master_id:null,
                                                                         app_data_entity_id:Entity.id
                                                                 }});
-    const product_variant_metadatas = ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
+    const product_variant_metadatas = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:null,
                                                                                 data_app_id:parameters.data.data_app_id,

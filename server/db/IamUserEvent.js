@@ -5,7 +5,7 @@
  *          server_db_table_IamUserEvent} from '../types.js'
  */
 
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 /**
  * @name get
  * @description Get record 
@@ -14,7 +14,7 @@ const {ORM} = await import ('../server.js');
  * @param {number|null} resource_id
  * @returns {server_server_response & {result?:server_db_table_IamUserEvent[] }}
  */
-const get = (app_id, resource_id) =>ORM.getObject(app_id, 'IamUserEvent',resource_id, null);
+const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamUserEvent',resource_id, null);
 
 /**
  * @name post
@@ -29,7 +29,7 @@ const post = async (app_id, data) => {
     if (data.iam_user_id==null || data.event==null || data.event_status==null||
         //check not allowed attributes when creating a user
         data.id||data.created){
-            return ORM.getError(app_id, 400);
+            return server.ORM.getError(app_id, 400);
     }
     else{
         /**@type{server_db_table_IamUserEvent} */
@@ -40,13 +40,13 @@ const post = async (app_id, data) => {
                                 event_status:data.event_status,
                                 created:new Date().toISOString()
                         };
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserEvent', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserEvent', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
             }
             else
-                return ORM.getError(app_id, 404);
+                return server.ORM.getError(app_id, 404);
         });
     }
 };
@@ -59,11 +59,11 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUserEvent', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
+    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUserEvent', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return ORM.getError(app_id, 404);
+            return server.ORM.getError(app_id, 404);
     });
 };
 

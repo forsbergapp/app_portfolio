@@ -5,7 +5,7 @@
 /**
  * @import {server_server_response, server_db_table_AppDataResourceMaster, server_db_table_AppDataEntity} from '../../../../server/types.js'
  */
-
+const {server} = await import('../../../../server/server.js');
 /**
  * @name paymentRequestCreate
  * @description Create payment request
@@ -35,10 +35,6 @@
  *                                                      countdown:string}[]}>}
  */
 const paymentRequestCreate = async parameters =>{
-   const {ORM} = await import('../../../../server/server.js');
-   const {bffExternal} = await import('../../../../server/bff.js');
-   const  {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
-   const {securityPrivateDecrypt, securityPublicEncrypt} = await import('../../../../server/security.js'); 
    
    /**@type{server_db_table_AppDataEntity & 
     *       {json_data:{   description:string, 
@@ -55,12 +51,12 @@ const paymentRequestCreate = async parameters =>{
     *                      merchant_private_key:string|null,
     *                      merchant_vpa:string|null,
     *                      iam_user_id_anonymous:number|null}}} */
-   const Entity            = ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
+   const Entity            = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                                    resource_id:null, 
                                                    data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
    /**@type{server_db_table_AppDataResourceMaster} */
-   const currency = ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
+   const currency = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                resource_id:null, 
                                                                data:{  iam_user_id:null,
                                                                        data_app_id:parameters.data.data_app_id,
@@ -84,17 +80,17 @@ const paymentRequestCreate = async parameters =>{
                         payeeid:        Entity.json_data.merchant_vpa??'', 
                         payerid:        parameters.data.payerid,
                         currency_code:  currency.json_data.currency_code,
-                        amount:         ORM.UtilNumberValue(parameters.data.amount) ?? 0, 
+                        amount:         server.ORM.UtilNumberValue(parameters.data.amount) ?? 0, 
                         message:        parameters.data.message,
                         origin:         parameters.host
        };
        //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
        //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-       const body_encrypted = {id:     ORM.UtilNumberValue(Entity.json_data.merchant_id),
-                               message:securityPublicEncrypt(
+       const body_encrypted = {id:     server.ORM.UtilNumberValue(Entity.json_data.merchant_id),
+                               message:server.security.securityPublicEncrypt(
                                                                Entity.json_data.merchant_public_key??'', 
                                                                JSON.stringify(body))};
-       const result_bffExternal = await bffExternal({  app_id:parameters.app_id,
+       const result_bffExternal = await server.bff.bffExternal({  app_id:parameters.app_id,
                                                    url:Entity.json_data.merchant_api_url_payment_request_create??'', 
                                                    method:'POST', 
                                                    //send body in base64 format
@@ -125,7 +121,7 @@ const paymentRequestCreate = async parameters =>{
             *          amount:number,
             *          currency_symbol:string}}
             */
-           const body_decrypted = JSON.parse(securityPrivateDecrypt(
+           const body_decrypted = JSON.parse(server.security.securityPrivateDecrypt(
                                                    Entity.json_data.merchant_private_key??'', 
                                                    result_bffExternal.result.rows.message));
 
@@ -145,7 +141,7 @@ const paymentRequestCreate = async parameters =>{
    else
        return {http:400,
                code:'APP',
-               text:iamUtilMessageNotAuthorized(),
+               text:server.iam.iamUtilMessageNotAuthorized(),
                developerText:'paymentRequestCreate',
                moreInfo:null,
                type:'JSON'

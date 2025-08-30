@@ -5,7 +5,7 @@
 /**
  * @import {server_server_response} from '../../../../server/types.js'
  */
-
+const {formatLocale} = await import('./common_locale.js');
 /**
  * @name appFunction
  * @description Get countries using ISO 3166-1 country code and language code using ISO 639-1
@@ -28,7 +28,6 @@
  * @returns {Promise.<server_server_response & {result?:{data:string}[]}>}
  */
 const appFunction = async parameters =>{
-    const {formatLocale} = await import('./common_locale.js');
 
     /**
      * @param {number} code

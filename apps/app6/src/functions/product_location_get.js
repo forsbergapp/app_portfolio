@@ -4,6 +4,7 @@
 /**
  * @import {server_server_response, server_db_table_AppDataEntity} from '../../../../server/types.js'
  */
+const {server} = await import('../../../../server/server.js');
 /**
  * @name productLocationGet
  * @description Get product location
@@ -21,15 +22,13 @@
  */
 const productLocationGet = async parameters =>{
 
-    const {ORM} = await import('../../../../server/server.js');
-
     /**@type{server_db_table_AppDataEntity} */
-    const Entity            = ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
+    const Entity            = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                                     resource_id:null, 
                                                     data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
     const stock = [];
-    const product_variant_location = ORM.db.AppDataResourceDetailData.get({ app_id:parameters.app_id, 
+    const product_variant_location = server.ORM.db.AppDataResourceDetailData.get({ app_id:parameters.app_id, 
                                                                             resource_id:null, 
                                                                             data:{  app_data_resource_detail_id:parameters.data.resource_id,
                                                                                     iam_user_id:null,
@@ -39,7 +38,7 @@ const productLocationGet = async parameters =>{
                                                                                     resource_name_data_master_attribute:'LOCATION',
                                                                                     app_data_entity_id:Entity.id
                                                                             }});
-    const product_variant_location_metadata = ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
+    const product_variant_location_metadata = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
                                                                                         data_app_id:parameters.data.data_app_id,

@@ -4,7 +4,7 @@
  * @import {server_server_response,server_db_common_result_update,
  *          server_db_table_ServiceRegistry} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 /**
  * @name get
  * @description Get record
@@ -15,13 +15,13 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_ServiceRegistry[] }}
  */
 const get = parameters =>{
-    const result = (ORM.getObject(parameters.app_id, 'ServiceRegistry',parameters.resource_id, null).result??[])
+    const result = (server.ORM.getObject(parameters.app_id, 'ServiceRegistry',parameters.resource_id, null).result??[])
                     .filter((/**@type{server_db_table_ServiceRegistry}*/row)=>
                         row.name == (parameters.data.name ?? row.name ));
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return ORM.getError(parameters.app_id, 404);
+        return server.ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -53,7 +53,7 @@ const update = async parameters => {
         data_update.status = parameters.data.status;
    data_update.modified = new Date().toISOString();
    if (Object.entries(data_update).length>0)
-       return ORM.Execute({ app_id:parameters.app_id, 
+       return server.ORM.Execute({ app_id:parameters.app_id, 
                             dml:'UPDATE', 
                             object:'ServiceRegistry', 
                             update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}})
@@ -61,10 +61,10 @@ const update = async parameters => {
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
-                        return ORM.getError(parameters.app_id, 404);
+                        return server.ORM.getError(parameters.app_id, 404);
                 });
    else
-       return ORM.getError(parameters.app_id, 400);
+       return server.ORM.getError(parameters.app_id, 400);
 };
 
 export {get, update};

@@ -4,7 +4,7 @@
 /**
  * @import {server_server_response, server_db_table_AppDataEntity, server_db_table_AppDataResourceMaster} from '../../../../server/types.js'
  */
-
+const {server} = await import('../../../../server/server.js');
 /**
  * @name customerGet
  * @description Customer get
@@ -22,13 +22,12 @@
  * @returns {Promise.<server_server_response & {result?:server_db_table_AppDataResourceMaster[]}>}
  */
 const customerGet = async parameters =>{
-    const {ORM} = await import('../../../../server/server.js');
     
     /**@type{server_db_table_AppDataEntity} */
-    const Entity    = ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
+    const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
-    return ORM.db.AppDataResourceMaster.get({  app_id:parameters.app_id, 
+    return server.ORM.db.AppDataResourceMaster.get({  app_id:parameters.app_id, 
                                         resource_id:parameters.data.resource_id, 
                                         data:{  iam_user_id:parameters.data.iam_user_id,
                                                 data_app_id:parameters.data.data_app_id,

@@ -8,6 +8,7 @@
  */
 
 const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 'BR', 'BL', 'UFR', 'URB', 'UBL', 'ULF', 'DRF', 'DFL', 'DLB', 'DBR'];
+const {server} = await import('../../../../server/server.js');
 
 /**
  * @name cubeSolve
@@ -38,7 +39,6 @@ const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 
  * @returns {Promise.<server_server_response & {result?:APP_FUNCTION_cube_solve_return[]}>}
  */
 const cubeSolve = async parameters =>{
-	const  {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
 	if ((parameters.data.model ==0 || parameters.data.model ==1) && parameters.data.preamble == 0 && (parameters.data.temperature == 0 || parameters.data.temperature == 1) && 
 		parameters.data.cube_currentstate !=''){
 		//Algorithm information:
@@ -66,7 +66,6 @@ const cubeSolve = async parameters =>{
 		switch (parameters.data.model){
 			case 0:{
 				//Model robot can be slow, send PROGRESS using server side event				
-				const {socketClientPostMessage} = await import('../../../../server/socket.js');
 
 				const timer1 = Date.now();
 				const solver2 = new cuberSolver2.RubiksCubeSolver();	
@@ -76,7 +75,7 @@ const cubeSolve = async parameters =>{
 				if (solver2_moves_from_solved=='')
 						return {result:[], type:'JSON'};
 				else{
-                    await socketClientPostMessage({ app_id:parameters.app_id,
+                    await server.socket.socketClientPostMessage({ app_id:parameters.app_id,
                                                     resource_id:null,
                                                     data:{  data_app_id:parameters.app_id,
                                                             iam_user_id:null,
@@ -180,7 +179,7 @@ const cubeSolve = async parameters =>{
 		else{
 			return {http:400,
 				code:'CUBE_SOLVE',
-				text:iamUtilMessageNotAuthorized(),
+				text:server.iam.iamUtilMessageNotAuthorized(),
 				developerText:null,
 				moreInfo:null,
 				type:'JSON'
