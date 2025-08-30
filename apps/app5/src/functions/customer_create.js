@@ -8,7 +8,8 @@
  *          server_db_table_AppDataResourceMaster,
  *          server_db_common_result_insert} from '../../../../server/types.js'
  */
-
+const {server} = await import('../../../../server/server.js');
+const {default:createBankAccount} = await import('./account_create.js');
 /**
  * @name customerCreate
  * @description Customer create
@@ -30,15 +31,13 @@
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
 const customerCreate = async parameters =>{
-    const {ORM} = await import('../../../../server/server.js');
-    const {default:createBankAccount} = await import('./account_create.js');
 
     /**@type{server_db_table_AppDataEntity} */
-    const Entity    = ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
+    const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
-    const resource_customer = ORM.db.AppDataEntityResource.get({   app_id:parameters.app_id, 
+    const resource_customer = server.ORM.db.AppDataEntityResource.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  app_data_entity_id:Entity.id,
                                                                     resource_name:'CUSTOMER'
@@ -57,9 +56,9 @@ const customerCreate = async parameters =>{
             app_data_entity_resource_id                 : resource_customer.result[0].id,
             };
         //create CUSTOMER    
-        const Customer = await ORM.db.AppDataResourceMaster.post({app_id:parameters.app_id, data:post_data});
+        const Customer = await server.ORM.db.AppDataResourceMaster.post({app_id:parameters.app_id, data:post_data});
         if (Customer.result){
-            const resource_account = ORM.db.AppDataEntityResource.get({app_id:parameters.app_id, 
+            const resource_account = server.ORM.db.AppDataEntityResource.get({app_id:parameters.app_id, 
                                                                 resource_id:null, 
                                                                 data:{  app_data_entity_id:Entity.id, 
                                                                         resource_name:'ACCOUNT'}});

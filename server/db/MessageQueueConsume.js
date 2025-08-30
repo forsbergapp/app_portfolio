@@ -4,7 +4,7 @@
  * @import {server_server_response, server_db_common_result_insert, 
  *          server_db_table_MessageQueueConsume} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 /**
  * @name get
  * @description Get 
@@ -13,7 +13,7 @@ const {ORM} = await import ('../server.js');
  *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_MessageQueueConsume[]}}
  */
-const get = parameters =>ORM.getObject(parameters.app_id, 'MessageQueueConsume',null, null);
+const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueueConsume',null, null);
 
 /**
  * @name post
@@ -39,7 +39,7 @@ const post = async parameters => {
                             result:parameters.data.result,
                             created: new Date().toISOString()
                         };
-        return ORM.Execute({app_id:parameters.app_id, 
+        return server.ORM.Execute({app_id:parameters.app_id, 
                             dml:'POST', 
                             object:'MessageQueueConsume', 
                             post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
@@ -48,11 +48,11 @@ const post = async parameters => {
                 return {result:result, type:'JSON'};
             }
             else
-                return ORM.getError(parameters.app_id, 404);
+                return server.ORM.getError(parameters.app_id, 404);
         });
     }
     else
-        return ORM.getError(null, 400);
+        return server.ORM.getError(null, 400);
 };
 
 export {get, post};

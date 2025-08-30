@@ -3,7 +3,7 @@
 /**
  * @import {server_server_response,server_db_common_result_insert, server_db_table_IamEncryption} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 /**
  * @name get
  * @description Get
@@ -13,7 +13,7 @@ const {ORM} = await import ('../server.js');
  *          data:{data_app_id:number|null}}} parameters
  * @returns {server_server_response & {result?:server_db_table_IamEncryption[] }}
  */
-const get = parameters =>ORM.getObject(parameters.app_id, 'IamEncryption',parameters.resource_id, parameters.data.data_app_id);
+const get = parameters =>server.ORM.getObject(parameters.app_id, 'IamEncryption',parameters.resource_id, parameters.data.data_app_id);
     
 /**
  * @name post
@@ -39,15 +39,15 @@ const post = async (app_id, data) => {
         data_new.type = data.type;
         data_new.url = data.url;
         data_new.created = new Date().toISOString();
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamEncryption', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamEncryption', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
-                return ORM.getError(app_id, 404);
+                return server.ORM.getError(app_id, 404);
         });
     }
     else
-        return ORM.getError(app_id, 400);
+        return server.ORM.getError(app_id, 400);
 };
 
 export {get, post};

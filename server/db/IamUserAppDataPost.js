@@ -5,7 +5,7 @@
  *          server_db_table_IamUserAppDataPost,server_db_table_IamUser, server_db_table_IamUserApp, server_db_table_IamUserAppDataPostLike,
  *          server_db_common_result_insert,server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 /**
  * @name get
  * @description Get record
@@ -18,9 +18,9 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_IamUserAppDataPost[] }}
  */
 const get = parameters =>{
-    const result = (ORM.getObject(parameters.app_id, 'IamUserAppDataPost',parameters.resource_id, null).result??[])
+    const result = (server.ORM.getObject(parameters.app_id, 'IamUserAppDataPost',parameters.resource_id, null).result??[])
                     .filter((/**@type{server_db_table_IamUserAppDataPost}*/row)=>
-                        ORM.db.IamUserApp.get({ app_id:parameters.app_id,
+                        server.ORM.db.IamUserApp.get({ app_id:parameters.app_id,
                                         resource_id:null, 
                                         data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result
                         .filter((/**@type{server_db_table_IamUserApp}*/rowIamUserApp)=>
@@ -31,7 +31,7 @@ const get = parameters =>{
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return ORM.getError(parameters.app_id, 404);
+        return server.ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -60,30 +60,30 @@ const getViewProfileUserPosts = async parameters =>{
                         return {
                             id: row.id,
                             description:row.json_data?.description, 
-                            iam_user_id:ORM.db.IamUserApp.get({app_id:parameters.app_id, 
+                            iam_user_id:server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
                                                         resource_id:row.iam_user_app_id, 
                                                         data:{  iam_user_id:    parameters.resource_id, 
                                                                 data_app_id:    parameters.app_id}}).result[0]?.iam_user_id,
-                            count_likes:ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
+                            count_likes:server.ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:                null, 
                                                                             data_app_id:                parameters.app_id,
                                                                             iam_user_app_data_post_id:  row.id}}).result.length,
-                            count_views:ORM.db.IamUserAppDataPostView.get({app_id:parameters.app_id, 
+                            count_views:server.ORM.db.IamUserAppDataPostView.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:    null, 
                                                                             data_app_id:    parameters.app_id,
                                                                             iam_user_app_data_post_id:  row.id}}).result.length,
-                            liked: ORM.db.IamUserAppDataPostLike.get({ app_id:parameters.app_id, 
+                            liked: server.ORM.db.IamUserAppDataPostLike.get({ app_id:parameters.app_id, 
                                                                 resource_id:null, 
-                                                                data:{  iam_user_id:                ORM.UtilNumberValue(parameters.data?.id_current_user), 
+                                                                data:{  iam_user_id:                server.ORM.UtilNumberValue(parameters.data?.id_current_user), 
                                                                         data_app_id:                parameters.app_id,
                                                                         iam_user_app_data_post_id:  row.id}}).result.length
                             };
                         })
                         ,type:'JSON'};
         else
-            return ORM.getError(parameters.app_id, 404);
+            return server.ORM.getError(parameters.app_id, 404);
     else
         return result;
 };
@@ -107,7 +107,7 @@ const getViewProfileUserPosts = async parameters =>{
                                         data_app_id:parameters.app_id}}).result;
 
     return {result:{
-                    count_user_post_likes:ORM.db.IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
+                    count_user_post_likes:server.ORM.db.IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:parameters.resource_id, 
                                                                                 data_app_id:parameters.app_id,
@@ -119,7 +119,7 @@ const getViewProfileUserPosts = async parameters =>{
                                                             data_app_id:parameters.app_id}}).result[0]?.iam_user_app_id
                                                 
                                             ).length,
-                    count_user_post_liked:ORM.db.IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
+                    count_user_post_liked:server.ORM.db.IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:null, 
                                                                                 data_app_id:parameters.app_id,
@@ -151,25 +151,24 @@ const getViewProfileUserPosts = async parameters =>{
  */
 const getViewProfileStatPost = async parameters =>{
     if (parameters.data.statchoice==null)
-        return ORM.getError(parameters.app_id, 400);
+        return server.ORM.getError(parameters.app_id, 400);
     else{
-        const IamUser = await import('./IamUser.js');
-        return {result:IamUser.get(parameters.app_id, null).result
+        return {result:server.ORM.db.IamUser.get(parameters.app_id, null).result
                         .map((/**@type{server_db_table_IamUser}*/row)=>{
                             return {
-                                top:ORM.UtilNumberValue(parameters.data.statchoice)==4?
+                                top:server.ORM.UtilNumberValue(parameters.data.statchoice)==4?
                                         'LIKED_POST':
                                             'VIEWED_POST',
                                 id:row.id,
                                 avatar:row.avatar,
                                 username:row.username,
-                                count:ORM.UtilNumberValue(parameters.data.statchoice)==4?
-                                        ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
+                                count:server.ORM.UtilNumberValue(parameters.data.statchoice)==4?
+                                        server.ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
                                                                     resource_id:null,
                                                                     data:{  iam_user_id:row.id??null, 
                                                                             data_app_id:parameters.app_id,
                                                                             iam_user_app_data_post_id:null}}).result.length:
-                                            ORM.db.IamUserAppDataPostView.get({app_id:parameters.app_id, 
+                                            server.ORM.db.IamUserAppDataPostView.get({app_id:parameters.app_id, 
                                                                         resource_id:null,
                                                                         data:{  iam_user_id:row.id??null, 
                                                                                 data_app_id:parameters.app_id,
@@ -199,25 +198,24 @@ const getViewProfileStatPost = async parameters =>{
  */
 const getViewProfileUserPostDetail = async parameters =>{
     if (parameters.data.detailchoice==null)
-        return ORM.getError(parameters.app_id, 400);
+        return server.ORM.getError(parameters.app_id, 400);
     else{
-        const IamUser = await import('./IamUser.js');
-        const result_IamUserAppDataPost = ORM.UtilNumberValue(parameters.data.detailchoice)==6?
+        const result_IamUserAppDataPost = server.ORM.UtilNumberValue(parameters.data.detailchoice)==6?
                                             null:
                                                 get({   app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{  iam_user_id:parameters.resource_id, 
                                                                 data_app_id:parameters.app_id}}).result;
         //filter iam_user_app_data_post_id where iam_user_app_id = IamUserApp.id where iam_user_id = parameters.resource_id, 
-        const result = ORM.UtilNumberValue(parameters.data.detailchoice)==6?
+        const result = server.ORM.UtilNumberValue(parameters.data.detailchoice)==6?
                             //LIKE
-                            ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
+                            server.ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
                                 resource_id:null, 
                                 data:{  iam_user_id:parameters.resource_id, 
                                         data_app_id:parameters.app_id,
                                         iam_user_app_data_post_id:null}}).result:
                                 //LIKED
-                                ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
+                                server.ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null, 
                                                                     data_app_id:parameters.app_id,
@@ -231,8 +229,8 @@ const getViewProfileUserPostDetail = async parameters =>{
 
         return { result: result
                         .map((/**@type{server_db_table_IamUserAppDataPostLike}*/row)=>{
-                            const result_IamUserApp_id =    ORM.db.IamUserApp.get({app_id:parameters.app_id, 
-                                                                            resource_id:ORM.UtilNumberValue(parameters.data.detailchoice)==6?
+                            const result_IamUserApp_id =    server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
+                                                                            resource_id:server.ORM.UtilNumberValue(parameters.data.detailchoice)==6?
                                                                                             get({   app_id:parameters.app_id, 
                                                                                                     resource_id:row.iam_user_app_data_post_id, 
                                                                                                     data:{  iam_user_id:null, 
@@ -240,10 +238,10 @@ const getViewProfileUserPostDetail = async parameters =>{
                                                                                                 row.iam_user_app_id,
                                                                             data:{iam_user_id:null, data_app_id:null}}).result[0]?.iam_user_id;
                             /**@type{server_db_table_IamUser} */
-                            const result_IamUser = IamUser.get(parameters.app_id, 
+                            const result_IamUser = server.ORM.db.IamUser.get(parameters.app_id, 
                                                                 result_IamUserApp_id).result[0];
                             return {
-                                detail:ORM.UtilNumberValue(parameters.data.detailchoice)==1?
+                                detail:server.ORM.UtilNumberValue(parameters.data.detailchoice)==1?
                                         'LIKE_POST':
                                             'LIKED_POST',
                                 iam_user_id:result_IamUserApp_id,
@@ -268,7 +266,7 @@ const getViewProfileUserPostDetail = async parameters =>{
 const post = async parameters => {
     //check required attributes
     if (parameters.data.iam_user_app_id==null){
-        return ORM.getError(parameters.app_id, 400);
+        return server.ORM.getError(parameters.app_id, 400);
     }
     else{
         /**@type{server_db_table_IamUserAppDataPost} */
@@ -279,13 +277,13 @@ const post = async parameters => {
                                 created:new Date().toISOString(),
                                 modified:null
                         };
-        return ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPost', post:{data:data_new}}).then((result)=>{
+        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPost', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
             }
             else
-                return ORM.getError(parameters.app_id, 404);
+                return server.ORM.getError(parameters.app_id, 404);
         });
     }
 };
@@ -307,17 +305,17 @@ const update = async parameters =>{
         data_update.json_data = parameters.data.json_data;
     data_update.modified = new Date().toISOString();
     if (Object.entries(data_update).length>0)
-        return ORM.Execute({  app_id:parameters.app_id, 
+        return server.ORM.Execute({  app_id:parameters.app_id, 
                                     dml:'UPDATE', 
                                     object: 'IamUserAppDataPost', 
                                     update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
-                return ORM.getError(parameters.app_id, 404);
+                return server.ORM.getError(parameters.app_id, 404);
         });
     else
-        return ORM.getError(parameters.app_id, 400);
+        return server.ORM.getError(parameters.app_id, 400);
 };
 /**
  * @name deleteRecord
@@ -329,14 +327,14 @@ const update = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
-    return ORM.Execute({  app_id:parameters.app_id, 
+    return server.ORM.Execute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
                                 object:'IamUserAppDataPost', 
                                 delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return ORM.getError(parameters.app_id, 404);
+            return server.ORM.getError(parameters.app_id, 404);
     });
 };
 export {get, getViewProfileUserPosts, getViewProfileStatLike, getViewProfileStatPost, getViewProfileUserPostDetail, post, update, deleteRecord};

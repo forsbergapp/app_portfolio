@@ -5,7 +5,7 @@
  *          server_db_document_ConfigServer,
  *          server_db_config_server_metadata} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 /**
  * @name get
  * @description Config get
@@ -19,7 +19,7 @@ const {ORM} = await import ('../server.js');
  */
 const get = parameters => {
     try {
-        const ConfigServer = ORM.getObject(parameters.app_id,'ConfigServer');
+        const ConfigServer = server.ORM.getObject(parameters.app_id,'ConfigServer');
         if (parameters.data?.config_group && parameters.data?.parameter){
             if (ConfigServer[parameters.data?.config_group].length>0){
                 //return parameter in array
@@ -71,13 +71,13 @@ const update = async parameters => {
     //can only use config or a config key
     if (parameters.data.config && 
         (parameters.data.maintenance ||parameters.data.comment||parameters.data.configuration))
-        return ORM.getError(parameters.app_id, 400);
+        return server.ORM.getError(parameters.app_id, 400);
     else{
         /**@type{server_db_document_ConfigServer} */
         const old_config = get({app_id:parameters.app_id}).result;
         /**@type{server_db_config_server_metadata} */
         const metadata = {
-                            MAINTENANCE:ORM.UtilNumberValue(parameters.data.maintenance ?? old_config.METADATA.MAINTENANCE) ?? old_config.METADATA.MAINTENANCE,
+                            MAINTENANCE:server.ORM.UtilNumberValue(parameters.data.maintenance ?? old_config.METADATA.MAINTENANCE) ?? old_config.METADATA.MAINTENANCE,
                             CONFIGURATION:parameters.data.configuration ?? old_config.METADATA.CONFIGURATION,
                             COMMENT:parameters.data.comment ?? old_config.METADATA.COMMENT,
                             MODIFIED:new Date().toISOString(),
@@ -87,7 +87,7 @@ const update = async parameters => {
             ...(parameters.data.config ?? old_config),
             ...{METADATA:metadata}
         };
-        return {result:await ORM.Execute({app_id:parameters.app_id, 
+        return {result:await server.ORM.Execute({app_id:parameters.app_id, 
                                         object:'ConfigServer',
                                         dml:'UPDATE',                  
                                         update:{resource_id:null, 

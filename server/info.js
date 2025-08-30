@@ -3,7 +3,7 @@
 /**
  * @import {server_server_response,server_info_result_Info} from './types.js'
  */
-
+const os = await import('node:os');
 
 class ClassServerProcess {
     cwd = () => import.meta.dirname
@@ -42,7 +42,6 @@ const serverProcess = new ClassServerProcess();
  * @returns {Promise.<server_server_response & {result?:server_info_result_Info }>}
  */
  const info = async () => {
-    const os = await import('node:os');
     const os_json = {
                     hostname: os.hostname(),
                     platform: os.platform(),

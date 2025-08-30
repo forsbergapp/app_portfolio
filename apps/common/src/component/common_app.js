@@ -115,7 +115,7 @@
     *                      IamUser:import('../../../../server/db/IamUser.js'),
     *                      iamAuthorizeIdToken:import('../../../../server/iam.js')['iamAuthorizeIdToken'],
     *                      serverProcess:import('../../../../server/info.js')['serverProcess'],
-    *                      UtilNumberValue:import('../../../../server/server.js')['ORM']['UtilNumberValue'],
+    *                      UtilNumberValue:import('../../../../server/server.js')['server']['ORM']['UtilNumberValue'],
     *                      Security:import('../../../../server/security.js'),
     *                      commonResourceFile:import('../common.js')['commonResourceFile'],
     *                      commonGetFile:import('../common.js')['commonGetFile']

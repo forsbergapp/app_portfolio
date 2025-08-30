@@ -12,7 +12,8 @@
  *          server_log_data_parameter_getLogStats, server_log_result_logStatGet, server_log_data_parameter_logGet,
  *          server_server_error, server_server_req} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
+const {STATUS_CODES} = await import('node:http');
 /**
  * @name get
  * @description Get logs with page navigation support using limit and offset parameters
@@ -35,7 +36,7 @@ const get = async parameters => {
     
     /**@type{server_log_data_parameter_logGet} */
     const data = {  app_id:			parameters.app_id,
-                   data_app_id:	    ORM.UtilNumberValue(parameters.data.data_app_id),
+                   data_app_id:	    server.ORM.UtilNumberValue(parameters.data.data_app_id),
                    /**@ts-ignore */
                    logobject:		parameters.data.logobject,
                    /**@ts-ignore */
@@ -73,7 +74,7 @@ const get = async parameters => {
 
        const partition = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
        
-       ORM.Execute({app_id:parameters.app_id, dml:'GET', object:data.logobject, get:{resource_id:null, partition:partition}})
+       server.ORM.Execute({app_id:parameters.app_id, dml:'GET', object:data.logobject, get:{resource_id:null, partition:partition}})
        .then(log_rows_array_obj=>{
            data.search = data.search=='null'?'':data.search;
            data.search = data.search==null?'':data.search;
@@ -163,7 +164,6 @@ const get = async parameters => {
 * @returns {Promise.<server_server_response & {result?:object}>}
 */
 const getStatusCodes = async () =>{
-   const {STATUS_CODES} = await import('node:http');
    return {result:{status_codes: STATUS_CODES}, type:'JSON'};
 };
 /**
@@ -183,20 +183,20 @@ const getStatusCodes = async () =>{
 const getStat = async parameters => {
 
     /**@type{server_log_data_parameter_getLogStats} */
-    const data = {	app_id:			ORM.UtilNumberValue(parameters.data.data_app_id),
+    const data = {	app_id:			server.ORM.UtilNumberValue(parameters.data.data_app_id),
                    /**@ts-ignore */
                    statGroup:		parameters.data.statGroup==''?null:parameters.data.statGroup,
-                   unique:		    ORM.UtilNumberValue(parameters.data.unique),
-                   statValue:		ORM.UtilNumberValue(parameters.data.statValue),
-                   year: 			ORM.UtilNumberValue(parameters.data.year) ?? new Date().getFullYear(),
-                   month:			ORM.UtilNumberValue(parameters.data.month) ?? new Date().getMonth() +1
+                   unique:		    server.ORM.UtilNumberValue(parameters.data.unique),
+                   statValue:		server.ORM.UtilNumberValue(parameters.data.statValue),
+                   year: 			server.ORM.UtilNumberValue(parameters.data.year) ?? new Date().getFullYear(),
+                   month:			server.ORM.UtilNumberValue(parameters.data.month) ?? new Date().getMonth() +1
                    };
    /**@type{server_log_result_logStatGet[]|[]} */
    const logfiles = [];
    /**@type{server_log_result_logStatGet[]|[]} */
    const logstat = [];
    
-   const files = await ORM.getFsDir().then(files=>files.filter(file=>file.isDirectory()==false));
+   const files = await server.ORM.getFsDir().then(files=>files.filter(file=>file.isDirectory()==false));
    /**@type{string} */
    let sample;
    let day = '';
@@ -213,14 +213,14 @@ const getStat = async parameters => {
            (file.name.startsWith(`LogRequestVerbose_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
            (regexp_verbose_day.exec(file.name)!=null||regexp_verbose_month.exec(file.name)!=null))){
            //filename format: log_request_info_YYYMMDD.json
-           if (ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'FILE_INTERVAL'}}).result=='1D'){
+           if (server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'FILE_INTERVAL'}}).result=='1D'){
                //return DD
                day = file.name.slice(-7).substring(0,2);
                sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;
            }
            else
                sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
-           await ORM.Execute({app_id:parameters.app_id, dml:'GET', object:file.name.startsWith('LogRequestInfo')?'LogRequestInfo':'LogRequestVerbose', get:{resource_id:null, partition:sample}})
+           await server.ORM.Execute({app_id:parameters.app_id, dml:'GET', object:file.name.startsWith('LogRequestInfo')?'LogRequestInfo':'LogRequestVerbose', get:{resource_id:null, partition:sample}})
            .then((logs)=>{
                logs.rows.forEach((/**@type{server_db_table_LogRequestInfo|''}*/record) => {
                    if (record != ''){
@@ -266,7 +266,7 @@ const getStat = async parameters => {
                });
            })
            .catch((error)=>{
-               return ORM.getError(parameters.app_id, 500, `${file}: ${error}`);
+               return server.ORM.getError(parameters.app_id, 500, `${file}: ${error}`);
            });
        }
    }
@@ -309,7 +309,7 @@ const getStat = async parameters => {
 * @returns{Promise.<server_server_response & {result?:{id:number, filename:string}[]|[]}>}
 */
 const getFiles = async () => {
-    return {result:await ORM.getFsDir()
+    return {result:await server.ORM.getFsDir()
                    .then(result=>
                        result
                        .filter(row=>row.name.startsWith('Log') && row.isDirectory()==false)
@@ -359,7 +359,7 @@ const post = async parameters => {
         }
         case 'LogServiceError':
         case 'LogServiceInfo':{
-            const service_level = ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'SERVICE_LEVEL'}}).result;
+            const service_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'SERVICE_LEVEL'}}).result;
             /**@type{server_db_table_LogServiceInfo}*/
             log = (service_level=='1' ||service_level=='2')?
                     {app_id:    parameters.app_id,
@@ -372,7 +372,7 @@ const post = async parameters => {
         }
         case 'LogAppError':
         case 'LogAppInfo':{
-            const app_level = ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'APP_LEVEL'}}).result;
+            const app_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'APP_LEVEL'}}).result;
             if (app_level=='1'||app_level=='2'){
                 /**@type{server_db_table_LogAppInfo} */
                 log ={
@@ -390,7 +390,7 @@ const post = async parameters => {
         }
         case 'LogDbError':
         case 'LogDbInfo':{
-            const db_level = ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'DB_LEVEL'}}).result;
+            const db_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'DB_LEVEL'}}).result;
             if (db_level=='1'||db_level=='2'){
                 log_object = (db_level=='2' && parameters.data.object=='LogDbInfo')?'LogDbVerbose':parameters.data.object;
                 /**@type{server_db_table_LogDbError} */
@@ -423,7 +423,7 @@ const post = async parameters => {
                     return value;
                 };
             };
-            const request_level = ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}).result; 
+            const request_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}).result; 
             if (request_level=='1'||request_level=='2'){
                 log = { host:               parameters.data.request?.req.headers.host,
                         app_id:             parameters.data.request?.req.headers.x?.app_id,
@@ -470,13 +470,13 @@ const post = async parameters => {
                             ...{created:new Date().toISOString()}
                         };
         /**@ts-ignore */
-        return ORM.Execute({app_id:parameters.app_id, dml:'POST', object:log_object, post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:log_object, post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
             }
             else
-                return ORM.getError(parameters.app_id, 404);
+                return server.ORM.getError(parameters.app_id, 404);
         })
         .catch((/**@type{server_server_error}*/error)=>{
             console.log(error);

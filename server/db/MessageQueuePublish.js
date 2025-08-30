@@ -7,7 +7,7 @@
  *          server_db_table_MessageQueuePublishMicroserviceLog,
  *          server_db_common_result_delete} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 /**
  * @name get
  * @description Get 
@@ -16,7 +16,7 @@ const {ORM} = await import ('../server.js');
  *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_MessageQueuePublish[]}}
  */
-const get = parameters =>ORM.getObject(parameters.app_id, 'MessageQueuePublish',null, null);
+const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueuePublish',null, null);
     
 /**
  * @name post
@@ -53,7 +53,7 @@ const post = async parameters => {
             created:new Date().toISOString()
         };
         return {
-            result:await ORM.Execute({ app_id:parameters.app_id, 
+            result:await server.ORM.Execute({ app_id:parameters.app_id, 
             dml:'POST',
             object:'MessageQueuePublish', 
             post:{data:data_new}}), type:'JSON'};
@@ -75,13 +75,13 @@ const post = async parameters => {
                 created: new Date().toISOString()
             };
             return {
-                result:await ORM.Execute({ app_id:parameters.app_id, 
+                result:await server.ORM.Execute({ app_id:parameters.app_id, 
                 dml:'POST',
                 object:'MessageQueuePublish', 
                 post:{data:data_new}}), type:'JSON'};
         }
         else
-            return ORM.getError(null, 400);
+            return server.ORM.getError(null, 400);
             
     
 };
@@ -94,11 +94,11 @@ const post = async parameters => {
 * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
 */
 const deleteRecord = async parameters =>{
-   return ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'MessageQueuePublish', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+   return server.ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'MessageQueuePublish', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
        if (result.affectedRows>0)
            return {result:result, type:'JSON'};
        else
-           return ORM.getError(parameters.app_id, 404);
+           return server.ORM.getError(parameters.app_id, 404);
    });
 };
 export {get, post, deleteRecord};

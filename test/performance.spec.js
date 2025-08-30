@@ -5,8 +5,7 @@
 /**
  * @import {test_spec_result} from '../server/types.js'
  */
-
-const {ORM} = await import('../server/server.js');
+const {server} = await import('../server/server.js');
 
 /**
  * @name test
@@ -23,8 +22,8 @@ const test = async t =>
                 /**@type{number} */
                 let status;
                 const PROTOCOL = 'http://';
-                const HOST = ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'HOST'}}).result;
-                const PORT = ORM.UtilNumberValue(ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
+                const HOST = server.ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'HOST'}}).result;
+                const PORT = server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
                 const requests = [];
                 const totalRequests = 100;
                 let err=0;
