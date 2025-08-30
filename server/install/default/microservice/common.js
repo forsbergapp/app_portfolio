@@ -187,10 +187,9 @@ const commonLog = parameters =>{
         uuid:parameters.uuid,
         secret:parameters.secret,
         method:parameters.message_queue_method, 
-        body:{data:Buffer.from(
-                        JSON.stringify({IAM_service:'GEOLOCATION', 
-                                        type: parameters.type, 
-                                        message:parameters.message})).toString('base64')
+        body:{  IAM_service:'GEOLOCATION', 
+                type: parameters.type, 
+                message:parameters.message
             },
         authorization:'Bearer ' + parameters.token,
         language:'en'})
