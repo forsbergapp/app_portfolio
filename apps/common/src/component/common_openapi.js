@@ -140,7 +140,7 @@ const template = props =>`
 *                       App:import('../../../../server/db/App.js'),
 *                       ConfigServer:import('../../../../server/db/ConfigServer.js'),
 *                       ConfigRestApi:import('../../../../server/db/ConfigRestApi.js'),
-*                       UtilNumberValue:import('../../../../server/server.js')['ORM']['UtilNumberValue']
+*                       UtilNumberValue:import('../../../../server/server.js')['server']['ORM']['UtilNumberValue']
 *                       }}} props
 * @returns {Promise.<string>}
 */

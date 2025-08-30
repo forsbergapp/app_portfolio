@@ -5,7 +5,7 @@
  *          server_db_table_AppSecret} from '../types.js'
  */
 
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 
 /**
  * @name get
@@ -16,7 +16,7 @@ const {ORM} = await import ('../server.js');
  *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_AppSecret[] }}
  */
-const get = parameters => ORM.getObject(parameters.app_id, 'AppSecret',null, ORM.UtilNumberValue(parameters.resource_id));
+const get = parameters => server.ORM.getObject(parameters.app_id, 'AppSecret',null, server.ORM.UtilNumberValue(parameters.resource_id));
 
 /**
  * @name post
@@ -45,10 +45,10 @@ const post = async (app_id, resource_id, data) => update({app_id:app_id, resourc
  */
 const update = async parameters => {
     if  (parameters.data.parameter_name=='app_id')
-        return ORM.getError(parameters.app_id, 400);
+        return server.ORM.getError(parameters.app_id, 400);
     else{
         //updates only one key in the record
-        return ORM.Execute({app_id:parameters.app_id, 
+        return server.ORM.Execute({app_id:parameters.app_id, 
                             dml:'UPDATE', 
                             object:'AppSecret', 
                             update:{    resource_id:null, 
@@ -58,7 +58,7 @@ const update = async parameters => {
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
-                        return ORM.getError(parameters.app_id, 404);
+                        return server.ORM.getError(parameters.app_id, 404);
                 });
     }
 };
@@ -72,11 +72,11 @@ const update = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppSecret', delete:{resource_id:null, data_app_id:resource_id}}).then((/**@type{server_db_common_result_delete}*/result)=>{
+    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppSecret', delete:{resource_id:null, data_app_id:resource_id}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return ORM.getError(app_id, 404);
+            return server.ORM.getError(app_id, 404);
     });
 };
                    

@@ -22,6 +22,7 @@
  * @import {server_apps_module_metadata} from '../../../../server/types.js'
  * @import {report_data,test_function_result} from '../types.js'
  */
+const {server} = await import('../../../../server/server.js');
 /**
  * @name template
  * @description Template
@@ -86,12 +87,10 @@ const template = props => ` <div id='report'>
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    const {ORM} = await import('../../../../server/server.js');
-    const {commonRegistryAppModule} = await import('../../../common/src/common.js');
 
     const PROTOCOL = 'http://';
-    const HOST = ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER', parameter:'HOST'}}).result;
-    const PORT = ORM.UtilNumberValue(ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
+    const HOST = server.ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER', parameter:'HOST'}}).result;
+    const PORT = server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
 
     class Benchmark {
         /**
@@ -354,7 +353,7 @@ const component = async props => {
                         }
                         if (this._finished % Math.min(Math.floor((this.requests * this.concurrency) / 10),10000) === 0) {
                             if (props.queue_parameters.appModuleQueueId)
-                                ORM.db.AppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(this._finished / (this.requests * this.concurrency))});
+                                server.ORM.db.AppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(this._finished / (this.requests * this.concurrency))});
                         }
                         if (this._finished >= (this.requests * this.concurrency)) 
                             return resolve(this.done(startTime));
@@ -395,7 +394,7 @@ const component = async props => {
     };
     const report = await new Benchmark({  concurrency: Number(props.queue_parameters.concurrency),
                                     requests: Number(props.queue_parameters.requests),
-                                    name:commonRegistryAppModule(props.app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).common_name
+                                    name:server.app_common.commonRegistryAppModule(props.app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).common_name
                                     }).run();
     return template(report);
 };

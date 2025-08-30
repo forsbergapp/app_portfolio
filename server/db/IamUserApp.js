@@ -7,7 +7,7 @@
  *          server_db_common_result_update,
  *          server_db_common_result_insert} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 
 /**
  * @name get
@@ -20,12 +20,12 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_IamUserApp[] }}
  */
 const get = parameters =>{
-    const result = (ORM.getObject(parameters.app_id, 'IamUserApp',parameters.resource_id, parameters.data.data_app_id??null).result ??[])
+    const result = (server.ORM.getObject(parameters.app_id, 'IamUserApp',parameters.resource_id, parameters.data.data_app_id??null).result ??[])
                     .filter((/**@type{server_db_table_IamUserApp}*/row)=>row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return ORM.getError(parameters.app_id, 404);
+        return server.ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -39,7 +39,7 @@ const get = parameters =>{
 const post = async (app_id, data) =>{
     //check required attributes
     if (data.app_id==null || data.iam_user_id==null){
-        return ORM.getError(app_id, 400);
+        return server.ORM.getError(app_id, 400);
     }
     else{
         /**@type{server_db_table_IamUserApp} */
@@ -51,13 +51,13 @@ const post = async (app_id, data) =>{
                                 created:new Date().toISOString(),
                                 modified:null
                         };
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserApp', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserApp', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
             }
             else
-                return ORM.getError(app_id, 404);
+                return server.ORM.getError(app_id, 404);
         });
     }
 };
@@ -82,17 +82,17 @@ const update = async parameters =>{
     data_update.modified = new Date().toISOString();
 
     if (Object.entries(data_update).length>0)
-        return ORM.Execute({  app_id:parameters.app_id, 
+        return server.ORM.Execute({  app_id:parameters.app_id, 
                                     dml:'UPDATE', 
                                     object:'IamUserApp', 
                                     update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
-                return ORM.getError(parameters.app_id, 404);
+                return server.ORM.getError(parameters.app_id, 404);
         });
     else
-        return ORM.getError(parameters.app_id, 400);
+        return server.ORM.getError(parameters.app_id, 400);
 };
 /**
  * @name deleteRecord
@@ -103,11 +103,11 @@ const update = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
-    return ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'IamUserApp', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
+    return server.ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'IamUserApp', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return ORM.getError(parameters.app_id, 404);
+            return server.ORM.getError(parameters.app_id, 404);
     });
 };
 

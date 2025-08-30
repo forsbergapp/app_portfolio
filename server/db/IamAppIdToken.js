@@ -3,7 +3,7 @@
 /**
  * @import {server_server_response,server_db_common_result_insert, server_db_table_IamAppIdToken} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 /**
  * @name get
  * @description Get
@@ -13,7 +13,7 @@ const {ORM} = await import ('../server.js');
  *          data:{data_app_id:number|null}}} parameters
  * @returns {server_server_response & {result?:server_db_table_IamAppIdToken[] }}
  */
-const get = parameters =>ORM.getObject(parameters.app_id, 'IamAppIdToken',parameters.resource_id, parameters.data.data_app_id);
+const get = parameters =>server.ORM.getObject(parameters.app_id, 'IamAppIdToken',parameters.resource_id, parameters.data.data_app_id);
     
 /**
  * @name post
@@ -31,7 +31,7 @@ const post = async (app_id, data) => {
         data.token != null &&
         data.ip != null){
         //security check that token is not used already
-        if (ORM.getObject(app_id, 'IamAppIdToken', null, null).result.filter((/**@type{server_db_table_IamAppIdToken} */row)=>row.token==data.token).length==0){
+        if (server.ORM.getObject(app_id, 'IamAppIdToken', null, null).result.filter((/**@type{server_db_table_IamAppIdToken} */row)=>row.token==data.token).length==0){
             /**@type{server_db_table_IamAppIdToken} */
             const data_new = {};
             data_new.id = Date.now();
@@ -45,20 +45,20 @@ const post = async (app_id, data) => {
             if (data.ua!=null)
                 data_new.ua = data.ua;
             data_new.created = new Date().toISOString();
-            return ORM.Execute({app_id:app_id, dml:'POST', object:'IamAppIdToken', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+            return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamAppIdToken', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
                 if (result.affectedRows>0){
                     result.insertId = data_new.id;
                     return {result:result, type:'JSON'};
                 }
                 else
-                    return ORM.getError(app_id, 404);
+                    return server.ORM.getError(app_id, 404);
             });
         }
         else
-            return ORM.getError(app_id, 401);
+            return server.ORM.getError(app_id, 401);
     }
     else
-        return ORM.getError(app_id, 400);
+        return server.ORM.getError(app_id, 400);
 };
 
 export {get, post};

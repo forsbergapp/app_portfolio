@@ -5,7 +5,7 @@
 /**
  * @import {server_server_response,commonWorldCitiesCity} from '../../../../server/types.js'
  */
-
+const {commonSearchMatch} = await import('../common.js');
 /**
  * @name appFunction
  * @description Get searched city from worldcities db
@@ -23,7 +23,7 @@
  * @returns {Promise.<server_server_response & {result?:commonWorldCitiesCity[]}>}
  */
 const appFunction = async parameters =>{
-    const {commonSearchMatch} = await import('../common.js');
+    
     const fs = await import('node:fs');
     /**
      *  Get file

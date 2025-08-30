@@ -10,9 +10,7 @@
  *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
  */
 
-const {ORM} = await import('./server.js');
-const {serverResponse} = await import('./server.js');
-const {iamUtilResponseNotAuthorized, iamUtilTokenGet, iamUtilTokenExpired, iamUtilMessageNotAuthorized} = await import('./iam.js');
+const {server} = await import('./server.js');
 
 
 /**@type{server_socket_connected_list[]} */
@@ -60,7 +58,7 @@ const socketClientAdd = (newClient) => {
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.idToken == parameters.idToken).length==0){
         return {http:401,
                 code:'IAM',
-                text:iamUtilMessageNotAuthorized(),
+                text:server.iam.iamUtilMessageNotAuthorized(),
                 developerText:null,
                 moreInfo:null,
                 type:'JSON'
@@ -75,8 +73,7 @@ const socketClientAdd = (newClient) => {
                     connected.user_agent = parameters.headers_user_agent;
                 }
                 else{
-                    const {bffGeodataUser} = await import('./bff.js');
-                    const connectUserData =  await bffGeodataUser(app_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
+                    const connectUserData =  await server.bff.bffGeodataUser(app_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
                     connected.app_id = app_id;
                     connected.connection_date = new Date().toISOString();
                     connected.token_access = parameters.token_access;
@@ -121,7 +118,7 @@ const socketClientAdd = (newClient) => {
  * @returns {Promise.<server_server_response & {result?:{sent:number} }>}
  */
  const socketAdminSend = async parameters => {
-    parameters.data.client_id = ORM.UtilNumberValue(parameters.data.client_id);
+    parameters.data.client_id = server.ORM.UtilNumberValue(parameters.data.client_id);
 
     if (parameters.data.broadcast_type=='ALERT' || parameters.data.broadcast_type=='MAINTENANCE'){
         //broadcast INFO or MAINTENANCE to all connected to given app_id 
@@ -130,7 +127,7 @@ const socketClientAdd = (newClient) => {
         for (const client of SOCKET_CONNECTED_CLIENTS){
             if (client.idToken != parameters.idToken)
                 if (parameters.data.broadcast_type=='MAINTENANCE' && 
-                    client.app_id ==ORM.UtilNumberValue(ORM.db.ConfigServer.get({ app_id:parameters.app_id, 
+                    client.app_id ==server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({ app_id:parameters.app_id, 
                                                                                     data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result))
                     null;
                 else
@@ -182,13 +179,13 @@ const socketClientAdd = (newClient) => {
  * @returns{Promise.<server_server_response & {result?:server_socket_connected_list_no_res[]}>}
  */
  const socketConnectedList = async parameters => {
-    const app_id_select = ORM.UtilNumberValue(parameters.data.data_app_id);
+    const app_id_select = server.ORM.UtilNumberValue(parameters.data.data_app_id);
     /**@type{number|null} */
-    const year = ORM.UtilNumberValue(parameters.data.year);
+    const year = server.ORM.UtilNumberValue(parameters.data.year);
     /**@type{number|null} */
-    const month = ORM.UtilNumberValue(parameters.data.month);
+    const month = server.ORM.UtilNumberValue(parameters.data.month);
     /**@type{number|null} */
-    const day= ORM.UtilNumberValue(parameters.data.day);
+    const day= server.ORM.UtilNumberValue(parameters.data.day);
     /**@type{string} */
     const order_by = parameters.data.order_by ?? '';
     /**@type{server_socket_connected_list_sort} */
@@ -256,7 +253,7 @@ const socketClientAdd = (newClient) => {
  * @returns {server_server_response & {result?:{count_connected:number} }}
  */
  const socketConnectedCount = parameters => {
-    const logged_in = ORM.UtilNumberValue(parameters.data.logged_in);
+    const logged_in = server.ORM.UtilNumberValue(parameters.data.logged_in);
     if (logged_in == 1)
         return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>  connected.iam_user_id != null).length}, type:'JSON'};
     else
@@ -281,19 +278,19 @@ const socketClientAdd = (newClient) => {
  */
 const socketPost = async parameters =>{
     //get access token if any
-    const access_token =    parameters.authorization?iamUtilTokenGet(   parameters.app_id,
+    const access_token =    parameters.authorization?server.iam.iamUtilTokenGet(   parameters.app_id,
                                             parameters.authorization, 
-                                            parameters.app_id==ORM.UtilNumberValue(ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result)?'ADMIN':'APP_ACCESS'):null;
+                                            parameters.app_id==server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result)?'ADMIN':'APP_ACCESS'):null;
 
     const iam_user =        parameters.authorization?
                                 /**@ts-ignore */
-                                (ORM.UtilNumberValue(access_token?.iam_user_id)?
+                                (server.ORM.UtilNumberValue(access_token?.iam_user_id)?
                                     /*@ts-ignore*/
-                                    ORM.db.IamUser.get(parameters.app_id, ORM.UtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
+                                    server.ORM.db.IamUser.get(parameters.app_id, server.ORM.UtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
                                         null;
     if (SOCKET_CONNECTED_CLIENTS
             .filter(row=>row.idToken == parameters.idToken).length>0){
-        throw await iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
+        throw await server.iam.iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
     }
     else{
         const client_id = Date.now();
@@ -306,11 +303,10 @@ const socketPost = async parameters =>{
             SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.id !== client_id);
             parameters.response.end();
         });
-        const {bffGeodataUser} = await import('./bff.js');
-        const connectUserData =  await bffGeodataUser(  parameters.app_id, 
-                                                                    parameters.ip, 
-                                                                    parameters.user_agent, 
-                                                                    parameters.accept_language);
+        const connectUserData =  await server.bff.bffGeodataUser(  parameters.app_id, 
+                                                        parameters.ip, 
+                                                        parameters.user_agent, 
+                                                        parameters.accept_language);
         /**@type{server_socket_connected_list} */
         const newClient = {
                             id:                     client_id,
@@ -389,7 +385,7 @@ const socketPost = async parameters =>{
  const socketIntervalCheck = async () => {
     setInterval(async () => {
         //server interval run as app 0
-        if (ORM.UtilNumberValue(ORM.db.ConfigServer.get({app_id:0, data:{config_group:'METADATA',parameter:'MAINTENANCE'}}).result)==1){
+        if (server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0, data:{config_group:'METADATA',parameter:'MAINTENANCE'}}).result)==1){
             await socketAdminSend({ app_id:0,
                                     idToken:'',
                                     data:{app_id:null,
@@ -400,7 +396,7 @@ const socketPost = async parameters =>{
         }
         await socketExpiredTokensUpdate();
     //set default interval to 5 seconds if no parameter is set
-    }, ORM.UtilNumberValue(ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVICE_SOCKET', parameter:'CHECK_INTERVAL'}}).result)??5000);
+    }, server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVICE_SOCKET', parameter:'CHECK_INTERVAL'}}).result)??5000);
 };
 
 /**
@@ -411,9 +407,9 @@ const socketPost = async parameters =>{
  */
 const socketExpiredTokensUpdate = async () =>{
     for (const client of SOCKET_CONNECTED_CLIENTS){
-        if ((client.token_access && iamUtilTokenExpired(client.app_id, 'APP_ACCESS', client.token_access)&&
-            client.token_access && iamUtilTokenExpired(client.app_id, 'APP_ACCESS_VERIFICATION', client.token_access)) ||
-            client.token_admin && iamUtilTokenExpired(client.app_id, 'ADMIN', client.token_admin)){
+        if ((client.token_access && server.iam.iamUtilTokenExpired(client.app_id, 'APP_ACCESS', client.token_access)&&
+            client.token_access && server.iam.iamUtilTokenExpired(client.app_id, 'APP_ACCESS_VERIFICATION', client.token_access)) ||
+            client.token_admin && server.iam.iamUtilTokenExpired(client.app_id, 'ADMIN', client.token_admin)){
                 client.iam_user_id=null;
                 client.iam_user_type=null;
                 client.iam_user_username=null;
@@ -459,7 +455,6 @@ const CheckOnline = parameters => {
  *                  message_type:server_socket_broadcast_type_all}}} parameters
  */
 const socketClientPostMessage = async parameters => {
-    const Security = await import('./security.js');
 
     for (const client of SOCKET_CONNECTED_CLIENTS
                         .filter(row=>
@@ -469,12 +464,12 @@ const socketClientPostMessage = async parameters => {
                             row.idToken == (parameters.data.idToken ?? row.idToken) 
                         )){
         //get id for token in the record found
-        const token_id = ORM.db.IamAppIdToken.get({  app_id:parameters.app_id, 
+        const token_id = server.ORM.db.IamAppIdToken.get({  app_id:parameters.app_id, 
                                         resource_id:null, 
                                         data:{data_app_id:null}}).result
                     .filter((/**@type{server_db_table_IamAppIdToken}*/row)=>row.token == client.idToken)?.[0].id;
         //get secrets from IamEncryption using uuid saved at record creation and token id
-        const {jwk, iv} = ORM.db.IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}). result
+        const {jwk, iv} = server.ORM.db.IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}). result
                             .filter((/**@type{server_db_table_IamEncryption}*/row)=>
                                 row.uuid == client.uuid && 
                                 row.iam_app_id_token_id == token_id)
@@ -484,7 +479,7 @@ const socketClientPostMessage = async parameters => {
                                 };
                             })[0];
         //encrypt message using secrets for curent app id and token found in IamEncryption
-        const encrypted = 'data: ' + (await Security.securityTransportEncrypt({   
+        const encrypted = 'data: ' + (await server.security.securityTransportEncrypt({   
                                         app_id: parameters.app_id,
                                         data:   Buffer.from(JSON.stringify({   
                                                             sse_type :    parameters.data.message_type, 
@@ -494,7 +489,7 @@ const socketClientPostMessage = async parameters => {
                                         iv:     iv})) + '\n\n';
                                     
         
-        await serverResponse ({
+        await server.response ({
             app_id:null,
             type:'JSON',
             result:'',

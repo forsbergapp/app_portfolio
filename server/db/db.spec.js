@@ -6,7 +6,7 @@
 /**
  * @import {test_spec_result} from '../types.js'
  */
-const {ORM} = await import('../server.js');
+const {server} = await import('../server.js');
 /**
  * @name test
  * @description Unit test, test ORM post, update, get and delete
@@ -32,18 +32,18 @@ const test = async t =>
                                 link_url:'',
                                 status:'ONLINE'};
             //test post, insert value 1
-            const result_post = await ORM.db.App.post(0, app_data);
+            const result_post = await server.ORM.db.App.post(0, app_data);
             //test update, update value
             app_data.name='THE ORM';
 
-            const result_update = await ORM.db.App.update({app_id:0, 
+            const result_update = await server.ORM.db.App.update({app_id:0, 
                                                     resource_id:result_post.result.insertId, 
                                                     /**@ts-ignore} */
                                                     data:app_data});
             //test get from cache, get updated value
-            const result_get = ORM.db.App.get({app_id:0,  resource_id:result_post.result.insertId});
+            const result_get = server.ORM.db.App.get({app_id:0,  resource_id:result_post.result.insertId});
             //test delete, delete record
-            const result_delete = await ORM.db.App.deleteRecord(0, result_post.result.insertId);
+            const result_delete = await server.ORM.db.App.deleteRecord(0, result_post.result.insertId);
 
                     
             return [

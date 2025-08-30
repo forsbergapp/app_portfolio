@@ -6,7 +6,7 @@
  *          server_db_table_MessageQueueConsume,
  *          server_db_table_MessageQueuePublishMicroserviceLog} from '../server/types.js'
  */
-
+const {server} = await import('../server/server.js');
 /**
  * @name messageQueue
  * @description Message queue for micoservice logs and errors
@@ -23,7 +23,6 @@
  * @returns {Promise.<server_server_response>}
  */
 const messageQueue = async parameters => {
-    const {ORM} = await import('../server/server.js');
     switch (parameters.message_queue_type) {
         case 'PUBLISH': {
             /**@type{server_db_table_MessageQueuePublish} */
@@ -31,12 +30,12 @@ const messageQueue = async parameters => {
                                     message:   {type:parameters.data.type,
                                                 message:parameters.data.message}
                                     };
-            return await ORM.db.MessageQueuePublish.post({app_id:parameters.app_id, data:message_queue});
+            return await server.ORM.db.MessageQueuePublish.post({app_id:parameters.app_id, data:message_queue});
         }
         case 'CONSUME': {
             //message CONSUME
             //direct microservice call
-            return await ORM.db.MessageQueuePublish.get({app_id:parameters.app_id, resource_id:parameters.data.message_id})
+            return await server.ORM.db.MessageQueuePublish.get({app_id:parameters.app_id, resource_id:parameters.data.message_id})
             .then(message_queue=>{
                 /**@type{server_db_table_MessageQueueConsume} */
                 const message_consume = {   message_queue_publish_id: parameters.data.message_id,
@@ -52,9 +51,9 @@ const messageQueue = async parameters => {
                 }
                 message_consume.start = new Date().toISOString();
                 //write to message_queue_consume.json
-                return ORM.db.MessageQueueConsume.post({app_id:parameters.app_id, data:message_consume})
+                return server.ORM.db.MessageQueueConsume.post({app_id:parameters.app_id, data:message_consume})
                 .catch((/**@type{server_server_error}*/error)=>{
-                    ORM.db.MessageQueueError.post({app_id:parameters.app_id, 
+                    server.ORM.db.MessageQueueError.post({app_id:parameters.app_id, 
                                             data:{  message_queue_publish_id: parameters.data.message_id, 
                                                     message:   error, 
                                                     result:error}}).then(()=>{
@@ -64,10 +63,9 @@ const messageQueue = async parameters => {
             });
         }
         default: {
-            const  {iamUtilMessageNotAuthorized} = await import('../server/iam.js');
             throw {http:400,
                 code:'IAM',
-                text:iamUtilMessageNotAuthorized(),
+                text:server.iam.iamUtilMessageNotAuthorized(),
                 developerText:null,
                 moreInfo:null,
                 type:'JSON'

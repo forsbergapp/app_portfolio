@@ -4,7 +4,7 @@
  * @import {server_server_response,server_db_document_ConfigRestApi} from '../types.js'
  */
 
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 
 /**
  * @name get
@@ -14,7 +14,7 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_document_ConfigRestApi }}
  */
 const get = parameters => {
-    return {result:ORM.getObject(parameters.app_id, 'ConfigRestApi',null, null), 
+    return {result:server.ORM.getObject(parameters.app_id, 'ConfigRestApi',null, null), 
             type:'JSON'};
 };
 

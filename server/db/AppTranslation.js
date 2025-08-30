@@ -5,7 +5,7 @@
  *          server_db_table_AppTranslation} from '../types.js'
  */
 
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 
 /**
  * @name get
@@ -25,7 +25,7 @@ const {ORM} = await import ('../server.js');
 const get = (app_id, resource_id, locale, data_app_id) =>{
     //all locales should be saved with '-' if used
     const SPLIT = '-';
-    const result = ORM.getObject(app_id, 'AppTranslation',resource_id, data_app_id).result.filter((/**@type{server_db_table_AppTranslation}*/row)=>row.app_id == data_app_id);
+    const result = server.ORM.getObject(app_id, 'AppTranslation',resource_id, data_app_id).result.filter((/**@type{server_db_table_AppTranslation}*/row)=>row.app_id == data_app_id);
     if ((result ??[]).filter((/**@type{server_db_table_AppTranslation}*/row)=>row.locale == locale)[0]){
         //return found for requested locale
         return {result:result.filter((/**@type{server_db_table_AppTranslation}*/row)=>(row.locale == locale)), type:'JSON'};
@@ -46,7 +46,7 @@ const get = (app_id, resource_id, locale, data_app_id) =>{
                     return {result:result.filter((/**@type{server_db_table_AppTranslation}*/row)=>row.locale == 'en'), type:'JSON'};
                 }
                 else
-                    return ORM.getError(app_id, 404);
+                    return server.ORM.getError(app_id, 404);
 };
                    
 export {get};

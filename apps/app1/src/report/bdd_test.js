@@ -19,6 +19,9 @@
  * @import {server_apps_module_metadata, server_db_config_server_service_test,
  *          test_specrunner, test_spec_result} from '../../../../server/types.js'
  */
+const {server} = await import('../../../../server/server.js');
+const test_lib = await import('../../../../test/test.js');
+
 /**
  * @name template
  * @description Template
@@ -93,18 +96,15 @@ const template = props => ` <div id='report'>
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    const {ORM} = await import('../../../../server/server.js');
-    const {commonRegistryAppModule} = await import('../../../common/src/common.js');
-    const test_lib = await import('../../../../test/test.js');
     /**@type{server_db_config_server_service_test[]} */
-    const params = ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVICE_TEST'}}).result;
+    const params = server.ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVICE_TEST'}}).result;
     const fs = await import('node:fs');
     let finished = 0;
     /**@type{test_spec_result[]} */
     const specs = [];
 
     /**@type {test_specrunner} */
-    const specrunner = await fs.promises.readFile(`${ORM.serverProcess.cwd()}/test/specrunner.json`, 'utf8')
+    const specrunner = await fs.promises.readFile(`${server.ORM.serverProcess.cwd()}/test/specrunner.json`, 'utf8')
                         .then((/**@type{string}*/result)=>JSON.parse(result));
     //run in random order if RANDOM parameter = '1'
     if (params.filter(row=>'RANDOM' in row)[0].RANDOM=='1')
@@ -127,14 +127,14 @@ const component = async props => {
                         detail:detail_result});
             finished++;
             if (props.queue_parameters.appModuleQueueId)
-                ORM.db.AppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(finished / specrunner.specFiles.length)});
+                server.ORM.db.AppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(finished / specrunner.specFiles.length)});
         } catch (/**@type{*}*/error) {
             if (params.filter(row=>'STOP_ON_SPEC_FAILURE' in row)[0].STOP_ON_SPEC_FAILURE=='1')
                 throw spec.path + ', ' + (typeof error == 'string'?
                                             error:JSON.stringify(error.message ?? error));
         }   
     }
-    const report = {title:commonRegistryAppModule(props.app_id, {type:'REPORT', name:'BDD_TEST', role:'ADMIN'}).common_name,
+    const report = {title:server.app_common.commonRegistryAppModule(props.app_id, {type:'REPORT', name:'BDD_TEST', role:'ADMIN'}).common_name,
                     date:Date(),
                     specs:specs};
     return template(report);

@@ -7,7 +7,8 @@
  *          server_db_table_AppDataResourceMaster,server_db_table_AppDataResourceDetail, server_db_table_AppDataEntity} from '../../../../server/types.js'
  * @import {payment_request, bank_account, merchant} from './types.js'
  */
-
+const {server} = await import('../../../../server/server.js');
+const {getToken} = await import('./payment_request_create.js');
 /**
  * @name paymentRequestGet
  * @description Get payment request
@@ -34,12 +35,9 @@
  *                                              countdown:              string}[]}>}
  */
 const paymentRequestGet = async parameters =>{
-    const  {iamUtilMessageNotAuthorized} = await import('../../../../server/iam.js');
-    const {getToken} = await import('./payment_request_create.js');
-    const {ORM} = await import('../../../../server/server.js');
 
     /**@type{server_db_table_AppDataEntity} */
-    const Entity    = ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
+    const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
@@ -47,7 +45,7 @@ const paymentRequestGet = async parameters =>{
 
     //get payment request using app_custom_id that should be the payment request id
     /**@type{payment_request} */
-    const payment_request = ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
+    const payment_request = server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         all_users:true,
                                                         resource_id:null, 
                                                         data:{  iam_user_id:null,
@@ -60,7 +58,7 @@ const paymentRequestGet = async parameters =>{
                                     )[0];
     if (payment_request){
         /**@type{bank_account} */
-        const account_payer = ORM.db.AppDataResourceDetail.get({   app_id:parameters.app_id, 
+        const account_payer = server.ORM.db.AppDataResourceDetail.get({   app_id:parameters.app_id, 
                                                             all_users:true,
                                                             resource_id:null, 
                                                             data:{  iam_user_id:parameters.data.iam_user_id,
@@ -73,7 +71,7 @@ const paymentRequestGet = async parameters =>{
                                     result.json_data?.bank_account_vpa == payment_request.payerid
                                 )[0];
         /**@type{merchant} */
-        const merchant      = ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
+        const merchant      = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             all_users:true,
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
@@ -84,7 +82,7 @@ const paymentRequestGet = async parameters =>{
                                 .filter((/**@type{server_db_table_AppDataResourceMaster}*/merchant)=>
                                     merchant.json_data?.merchant_id==payment_request.merchant_id
                                 )[0];
-        const currency      = ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
+        const currency      = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
                                                                     data_app_id:parameters.data.data_app_id,
@@ -99,7 +97,7 @@ const paymentRequestGet = async parameters =>{
                                 payment_request_id:     payment_request.json_data?.payment_request_id??'',
                                 status:                 payment_request.json_data?.status??'',
                                 merchant_name:          merchant.json_data?.merchant_name??'',
-                                amount:			        ORM.UtilNumberValue(payment_request.json_data?.amount),
+                                amount:			        server.ORM.UtilNumberValue(payment_request.json_data?.amount),
                                 currency_symbol:        currency.json_data?.currency_symbol??'',
                                 countdown:              ''}],
                     type:'JSON'};
@@ -107,7 +105,7 @@ const paymentRequestGet = async parameters =>{
         else
             return {http:404,
                     code:'PAYMENT_REQUEST_GET',
-                    text:iamUtilMessageNotAuthorized(),
+                    text:server.iam.iamUtilMessageNotAuthorized(),
                     developerText:null,
                     moreInfo:null,
                     type:'JSON'
@@ -116,7 +114,7 @@ const paymentRequestGet = async parameters =>{
     else
         return {http:404,
                 code:'PAYMENT_REQUEST_GET',
-                text:iamUtilMessageNotAuthorized(),
+                text:server.iam.iamUtilMessageNotAuthorized(),
                 developerText:null,
                 moreInfo:null,
                 type:'JSON'

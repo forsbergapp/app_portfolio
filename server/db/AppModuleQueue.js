@@ -6,8 +6,8 @@
  *          server_db_table_AppModuleQueue} from '../types.js'
  */
 
-const {ORM} = await import ('../server.js');
-
+const {server} = await import ('../server.js');
+const fs = await import('node:fs');
 /**
  * @name get
  * @description Get records for given appid
@@ -17,7 +17,7 @@ const {ORM} = await import ('../server.js');
  *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_AppModuleQueue[] }}
  */
-const get = parameters =>ORM.getObject(parameters.app_id, 'AppModuleQueue',parameters.resource_id, parameters.app_id);
+const get = parameters =>server.ORM.getObject(parameters.app_id, 'AppModuleQueue',parameters.resource_id, parameters.app_id);
 
 /**
  * @name getResult
@@ -30,8 +30,7 @@ const get = parameters =>ORM.getObject(parameters.app_id, 'AppModuleQueue',param
  * @returns {Promise.<server_server_response & {result?:{resource:string}}>}
  */
 const getResult = async parameters => {
-    const fs = await import('node:fs');
-    return {result:{resource:(await fs.promises.readFile(ORM.serverProcess.cwd() + `/data/${ORM.db.ConfigServer.get({app_id:parameters.app_id, 
+    return {result:{resource:(await fs.promises.readFile(server.ORM.serverProcess.cwd() + `/data/${server.ORM.db.ConfigServer.get({app_id:parameters.app_id, 
                                                                     data:{config_group:'SERVER',parameter:'PATH_JOBS'}}).result}/${parameters.resource_id}.html`)).toString()}, 
             type:'JSON'};
 };
@@ -68,15 +67,15 @@ const post = async (app_id, data) => {
                             status:data.status,
                             message:null
                         };
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'AppModuleQueue', post:{data:job}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'AppModuleQueue', post:{data:job}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0)
                 return  {result:{insertId:job.id, affectedRows:result.affectedRows}, type:'JSON'};
             else
-                return ORM.getError(app_id, 404);
+                return server.ORM.getError(app_id, 404);
         });
     }
     else
-        return ORM.getError(app_id, 400);
+        return server.ORM.getError(app_id, 400);
 };
 /**
  * @name postResult
@@ -88,8 +87,7 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postResult = async (app_id, id, result) =>{
-    const fs = await import('node:fs');
-    await fs.promises.writeFile(ORM.serverProcess.cwd() + `/data/${ORM.db.ConfigServer.get({app_id:app_id, data:{config_group:'SERVER',parameter:'PATH_JOBS'}}).result}/${id}.html`, result,  'utf8');
+    await fs.promises.writeFile(server.ORM.serverProcess.cwd() + `/data/${server.ORM.db.ConfigServer.get({app_id:app_id, data:{config_group:'SERVER',parameter:'PATH_JOBS'}}).result}/${id}.html`, result,  'utf8');
     return {result:{affectedRows:1}, type:'JSON'};
 };
 /**
@@ -119,14 +117,14 @@ const update = async (app_id, resource_id, data) => {
     if (data.message!=null)
         data_update.message = data.message;
     if (Object.entries(data_update).length>0)
-        return ORM.Execute({app_id:app_id, dml:'UPDATE', object:'AppModuleQueue', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
+        return server.ORM.Execute({app_id:app_id, dml:'UPDATE', object:'AppModuleQueue', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
-                return ORM.getError(app_id, 404);
+                return server.ORM.getError(app_id, 404);
         });
     else
-        return ORM.getError(app_id, 400);
+        return server.ORM.getError(app_id, 400);
 };
 
 /**
@@ -138,11 +136,11 @@ const update = async (app_id, resource_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppModuleQueue', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
+    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppModuleQueue', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return ORM.getError(app_id, 404);
+            return server.ORM.getError(app_id, 404);
     });
 };
                    

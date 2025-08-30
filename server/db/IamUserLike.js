@@ -6,7 +6,7 @@
  *          server_db_common_result_delete,
  *          server_db_common_result_insert} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 /**
  * @name get
  * @description Get record
@@ -18,14 +18,14 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_IamUserLike[] }}
  */
 const get = parameters =>{
-    const result = (ORM.getObject(parameters.app_id, 'IamUserLike',parameters.resource_id, null).result??[])
+    const result = (server.ORM.getObject(parameters.app_id, 'IamUserLike',parameters.resource_id, null).result??[])
                     .filter((/**@type{server_db_table_IamUserLike}*/row)=>
                         row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) &&
                         row.iam_user_id_like == (parameters.data.iam_user_id_like ?? row.iam_user_id_like) );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return ORM.getError(parameters.app_id, 404);
+        return server.ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -41,7 +41,7 @@ const get = parameters =>{
 const post = async parameters =>{
     //check required attributes
     if (parameters.data.iam_user_id==null || parameters.data.iam_user_id_like==null){
-        return ORM.getError(parameters.app_id, 400);
+        return server.ORM.getError(parameters.app_id, 400);
     }
     else{
         /**@type{server_db_table_IamUserLike} */
@@ -51,13 +51,13 @@ const post = async parameters =>{
                                 iam_user_id_like:parameters.data.iam_user_id_like,
                                 created:new Date().toISOString()
                         };
-        return ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserLike', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserLike', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
             }
             else
-                return ORM.getError(parameters.app_id, 404);
+                return server.ORM.getError(parameters.app_id, 404);
         });
     }
 };
@@ -74,24 +74,24 @@ const post = async parameters =>{
  */
 const deleteRecord = async parameters =>{
     if (parameters.resource_id==null){
-        return ORM.getError(parameters.app_id, 400);
+        return server.ORM.getError(parameters.app_id, 400);
     }
     else
         if (get({   app_id:parameters.app_id, 
                     resource_id:parameters.resource_id, 
                     data:{  iam_user_id:parameters.data.iam_user_id, 
                             iam_user_id_like:null}}).result?.[0])
-            return ORM.Execute({  app_id:parameters.app_id, 
+            return server.ORM.Execute({  app_id:parameters.app_id, 
                                         dml:'DELETE', 
                                         object:'IamUserLike', 
                                         delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
-                    return ORM.getError(parameters.app_id, 404);
+                    return server.ORM.getError(parameters.app_id, 404);
             });
         else
-            return ORM.getError(parameters.app_id, 401);
+            return server.ORM.getError(parameters.app_id, 401);
 };
 
 export {get, post, deleteRecord};

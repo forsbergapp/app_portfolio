@@ -8,6 +8,9 @@
  * @import {common, config, jobs} from './types.js'
  */
 
+const {exec} = await import('node:child_process');
+const os = await import('node:os');
+
 /**@type{jobs} */
 const JOBS = [];
 
@@ -209,6 +212,7 @@ const scheduleMilliseconds = (cron_expression) =>{
  * @returns {Promise.<void>}
  */
 const scheduleJob = async (commonLog, config, token, jobid, command_type, path, command, argument, cron_expression) =>{
+    const {serverProcess} = await import('./server.js');
     /**
      * @param {{}} message
      * @param {'MICROSERVICE_LOG'|'MICROSERVICE_ERROR'|null} type
@@ -224,8 +228,6 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, path, 
                     secret:config.secret
         });
     };
-    const {serverProcess} = await import('./server.js');
-    const {exec} = await import('node:child_process');
     switch (command_type){
         case 'OS':{
             const milliseconds = scheduleMilliseconds(cron_expression);
@@ -322,7 +324,7 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, path, 
  * @returns {Promise.<void>}
  */
 const startJobs = async (common, config, token) =>{
-    const os = await import('node:os');
+    
     await common.commonLog({type:'MICROSERVICE_LOG', 
                             service:'BATCH',
                             message: JSON.stringify({ 

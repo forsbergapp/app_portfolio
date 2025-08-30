@@ -4,7 +4,7 @@
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
  *          server_db_table_IamControlObserve} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 /**
  * @name get
  * @description Get 
@@ -13,7 +13,7 @@ const {ORM} = await import ('../server.js');
  * @param {number|null} resource_id
  * @returns {server_server_response & {result?:server_db_table_IamControlObserve[] }}
  */
-const get = (app_id, resource_id) =>ORM.getObject(app_id, 'IamControlObserve',resource_id, null);
+const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamControlObserve',resource_id, null);
     
 /**
  * @name post
@@ -27,7 +27,7 @@ const post = async (app_id, data) => {
     //check required attributes
     if ((data.status==0 ||data.status==1) && data.type){
         const id = Date.now();
-        return ORM.Execute({  app_id:app_id, dml:'POST', object:'IamControlObserve', 
+        return server.ORM.Execute({  app_id:app_id, dml:'POST', object:'IamControlObserve', 
                                     post:{data:{id:id, 
                                                 iam_user_id:data.iam_user_id,
                                                 app_id:data.app_id,
@@ -45,11 +45,11 @@ const post = async (app_id, data) => {
                 return {result:result,type:'JSON'};
             }
             else
-                return ORM.getError(app_id, 404);
+                return server.ORM.getError(app_id, 404);
         });
     }
     else
-        return ORM.getError(app_id, 400);
+        return server.ORM.getError(app_id, 400);
 };
 /**
  * @name update
@@ -81,17 +81,17 @@ const update = async (app_id, resource_id, data) => {
         data_update.modified = new Date().toISOString();
         //id and type not allowed to update
         if (Object.entries(data_update).length>0)
-            return ORM.Execute({app_id:app_id, dml:'UPDATE',object:'IamControlObserve', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
+            return server.ORM.Execute({app_id:app_id, dml:'UPDATE',object:'IamControlObserve', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
                 if (result.affectedRows>0)
                     return {result:result,type:'JSON'};
                 else
-                    return ORM.getError(app_id, 404);
+                    return server.ORM.getError(app_id, 404);
             });
         else
-            return ORM.getError(app_id, 400);
+            return server.ORM.getError(app_id, 400);
     }
     else
-        return ORM.getError(app_id, 400);
+        return server.ORM.getError(app_id, 400);
 };
 
 /**
@@ -103,11 +103,11 @@ const update = async (app_id, resource_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlObserve', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
+    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlObserve', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return ORM.getError(app_id, 404);
+            return server.ORM.getError(app_id, 404);
     });
 };
                    

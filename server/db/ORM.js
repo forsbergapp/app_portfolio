@@ -37,12 +37,12 @@
  *          server_db_config_server_server,server_db_config_server_service_log,
  *          server_db_result_fileFsRead,
  *          server_db_common_result_update, server_db_common_result_delete,server_db_common_result_insert,
- *          server_db_document_ConfigServer,
  *          server_server_req_id_number} from '../types.js'
  * @import {Dirent} from 'node:fs'
  */
 
 const {serverProcess} = await import('../info.js');
+const {server} = await import('../server.js');
 const fs = await import('node:fs');
 //Private properties
 /**
@@ -98,8 +98,7 @@ class ORM_class {
      */
     InitAsync = async () => {
         if (Object.keys(this.db).length>0){
-            const {iamUtilMessageNotAuthorized} = await import('../iam.js');
-            throw iamUtilMessageNotAuthorized();
+            throw server.iam.iamUtilMessageNotAuthorized();
         }
         else{
             /** 
@@ -124,13 +123,12 @@ class ORM_class {
                         })();});
             Object.seal(this.db);
 
-            const Installation = await import('../installation.js');            
             const result_data = await this.getFsDataExists();
             if (result_data==false){
                 //first time , create default config for microservice and DbObjects
-                await Installation.postConfigDefault();
+                await server.installation.postConfigDefault();
                 //first time, insert default data
-                await Installation.postDataDefault();
+                await server.installation.postDataDefault();
             
             }    
             DB.data = await this.getFsDbObject();
@@ -144,16 +142,6 @@ class ORM_class {
                     file_db_record.cache_content = file?file:null;
                 }
             }
-            /**@type{server_db_document_ConfigServer} */
-            const configServer = this.db.ConfigServer.get({app_id:0}).result;
-            
-            const common = await import ('../../apps/common/src/common.js');
-            //common font css contain many font urls, return css file with each url replaced with a secure url
-            //and save encryption data for all records directly in table at start to speed up performance
-            await this.postAdmin('IamEncryption', common.commonCssFonts.db_records);
-    
-            if (configServer.SERVICE_IAM.filter(parameter=> 'SERVER_UPDATE_SECRETS_START' in parameter)[0].SERVER_UPDATE_SECRETS_START=='1')
-                await Installation.updateConfigSecrets();
     
         }
     };
@@ -386,8 +374,7 @@ class ORM_class {
             record.content = this.formatContent(record.type, file_content);
         else
             if (!transaction_id || record.transaction_id != transaction_id){
-                const {iamUtilMessageNotAuthorized} = await import('../iam.js');
-                throw iamUtilMessageNotAuthorized();
+                throw server.iam.iamUtilMessageNotAuthorized();
             }
             else{
                 if (['TABLE', 'TABLE_KEY_VALUE', 'DOCUMENT'].includes(record.type) && this.getObject(0,'ConfigServer').SERVICE_DB.filter((/**@type{*}*/key)=>'JOURNAL' in key)[0]?.JOURNAL=='1'){
@@ -693,8 +680,7 @@ class ORM_class {
                                         record.type=='TABLE'?update_data:null))
                             return {affectedRows:1};
                         else{
-                            const {iamUtilMessageNotAuthorized} = await import('../iam.js');
-                            throw iamUtilMessageNotAuthorized();
+                            throw server.iam.iamUtilMessageNotAuthorized();
                         }
                 }
                 else{
@@ -763,8 +749,7 @@ class ORM_class {
                                         file.file_content))
                                 return {affectedRows:count};
                             else{
-                                const {iamUtilMessageNotAuthorized} = await import('../iam.js');
-                                throw iamUtilMessageNotAuthorized();
+                                throw server.iam.iamUtilMessageNotAuthorized();
                             }
                         }
                         else
@@ -790,8 +775,7 @@ class ORM_class {
                                                 data))
                         return {affectedRows:1};
                     else{
-                        const {iamUtilMessageNotAuthorized} = await import('../iam.js');
-                        throw iamUtilMessageNotAuthorized();
+                        throw server.iam.iamUtilMessageNotAuthorized();
                     }
                 }
             }
@@ -859,8 +843,7 @@ class ORM_class {
                                                 new_content))
                         return {affectedRows:   file.file_content.length - new_content.length};
                     else{
-                        const {iamUtilMessageNotAuthorized} = await import('../iam.js');
-                        throw iamUtilMessageNotAuthorized();
+                        throw server.iam.iamUtilMessageNotAuthorized();
                     }
                 }
             }
@@ -892,8 +875,7 @@ class ORM_class {
                                                 new_content))
                         return {affectedRows:   file.file_content.length - new_content.length};
                     else{
-                        const {iamUtilMessageNotAuthorized} = await import('../iam.js');
-                        throw iamUtilMessageNotAuthorized();
+                        throw server.iam.iamUtilMessageNotAuthorized();
                     }
         }
         else
@@ -919,8 +901,7 @@ class ORM_class {
         try{
             if (parameters.dml!='GET' && parameters.dml!='UPDATE' && parameters.dml!='POST' && parameters.dml!='DELETE')
             {
-                const {iamUtilMessageNotAuthorized} = await import('../iam.js');
-                throw iamUtilMessageNotAuthorized();
+                throw server.iam.iamUtilMessageNotAuthorized();
             }
             else{
                 const result =  parameters.dml=='GET'?  await this.getObjectFile(   parameters.app_id, 
@@ -1022,12 +1003,11 @@ class ORM_class {
      *                                                          started:number}[]}>}
      */
     getViewInfo = async parameters =>{
-        const {socketConnectedCount} = await import('../socket.js');
         return {result: [{
                             database_name:  this.getObject(parameters.app_id,'ConfigServer')['METADATA'].CONFIGURATION,
                             version:        1,
                             hostname:       this.getObject(parameters.app_id,'ConfigServer')['SERVER'].filter((/**@type{server_db_config_server_server}*/row)=>row.HOST)[0].HOST,
-                            connections:    socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
+                            connections:    server.socket.socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
                             started:        this.serverProcess.uptime()
                         }],
                 type:'JSON'};

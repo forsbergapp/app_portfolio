@@ -104,7 +104,20 @@
  * @property {string} app_name_translation
  * @property {string} logo
  */
-
+/**
+ * @description APP CommonCssFonts
+ * @typedef {{  css: string;
+ *              db_records: {
+ *                  id: number;
+ *                  app_id: number;
+ *                  iam_app_id_token_id: null;
+ *                  uuid: string;
+ *                  secret: string;
+ *                  url: string;
+ *                  type: "FONT";
+ *                  created: string}[]}}
+ *                  server_app_CommonCSSFonts
+ */
 /**
  * @description APP serverComponentLifecycle
  * @typedef  {{ onBeforeMounted?:function|null,

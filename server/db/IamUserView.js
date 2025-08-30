@@ -6,7 +6,7 @@
  *          server_db_common_result_delete,
  *          server_db_common_result_insert} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 /**
  * @name get
  * @description Get record
@@ -18,14 +18,14 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_IamUserView[] }}
  */
 const get = parameters =>{
-    const result = (ORM.getObject(parameters.app_id, 'IamUserView',parameters.resource_id, null).result??[])
+    const result = (server.ORM.getObject(parameters.app_id, 'IamUserView',parameters.resource_id, null).result??[])
                     .filter((/**@type{server_db_table_IamUserView}*/row)=>
                         row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) &&
                         row.iam_user_id_view == (parameters.data.iam_user_id_view ?? row.iam_user_id_view) );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return ORM.getError(parameters.app_id, 404);
+        return server.ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -40,7 +40,7 @@ const get = parameters =>{
 const post = async (app_id, data) =>{
     //check required attributes
     if (data.iam_user_id_view==null){
-        return ORM.getError(app_id, 400);
+        return server.ORM.getError(app_id, 400);
     }
     else{
         /**@type{server_db_table_IamUserView} */
@@ -52,13 +52,13 @@ const post = async (app_id, data) =>{
                                 client_user_agent:data.client_user_agent,
                                 created:new Date().toISOString()
                         };
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserView', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserView', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
             }
             else
-                return ORM.getError(app_id, 404);
+                return server.ORM.getError(app_id, 404);
         });
     }
 };
@@ -73,14 +73,14 @@ const post = async (app_id, data) =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
-    return ORM.Execute({  app_id:parameters.app_id, 
+    return server.ORM.Execute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
                                 object:'IamUserView', 
                                 delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return ORM.getError(parameters.app_id, 404);
+            return server.ORM.getError(parameters.app_id, 404);
     });
 };
 

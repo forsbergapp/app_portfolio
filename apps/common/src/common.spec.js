@@ -7,6 +7,7 @@
  */
 
 let test_running = false;
+const app_common = await import('./common.js');
 /**
  * @name test
  * @description describe: Spy test, commonApp as called from bff, will return expect false if test is already running
@@ -68,8 +69,6 @@ const test = async t =>
             //Solution to test if DB object is fetching the IamAppIdToken record is to create a custom filter function 
             //that is available in global scope in NodeJS since DB object uses Object.seal() so no getter can be added 
             //and module is using closure pattern.
-            
-            const app_common = await import('./common.js');
                  
             /**
              * @description 

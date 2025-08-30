@@ -6,7 +6,7 @@
  *          server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
 
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 
 /**
  * @name get
@@ -26,24 +26,24 @@ const {ORM} = await import ('../server.js');
  * @returns {server_server_response & {result?:server_db_table_AppDataResourceDetailData & {adrm_attribute_master_json_data:{}}[]|*}}
  */
 const get = parameters =>{ 
-    const entity_id = parameters.data?.app_data_entity_id?? ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
+    const entity_id = parameters.data?.app_data_entity_id?? server.ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
                                         resource_id:null,
                                         data:{data_app_id:parameters.app_id}}).result[0].id;
-    const restult_AppDataResourceMasterAttributeDetail = ORM.db.AppDataResourceMaster.get({  app_id:parameters.app_id, 
+    const restult_AppDataResourceMasterAttributeDetail = server.ORM.db.AppDataResourceMaster.get({  app_id:parameters.app_id, 
                                                                     join:true,
                                                                     resource_id: null,
                                                                     data:{  data_app_id:parameters.data.data_app_id,
                                                                             iam_user_id:parameters.data.iam_user_id,
                                                                             resource_name:parameters.data.resource_name_master_attribute,
                                                                             app_data_entity_id:entity_id}}).result;
-    const result_AppDataResourceMasterAttributeDetailData = ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
+    const result_AppDataResourceMasterAttributeDetailData = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                     join:true,
                                                                     resource_id:null,
                                                                     data:{  data_app_id:parameters.data.data_app_id,
                                                                             iam_user_id:parameters.data.iam_user_id,
                                                                             resource_name:parameters.data.resource_name_data_master_attribute,
                                                                             app_data_entity_id:entity_id}}).result;
-    const result_AppDataResourceDetail = ORM.db.AppDataResourceDetail.get({app_id:parameters.app_id, 
+    const result_AppDataResourceDetail = server.ORM.db.AppDataResourceDetail.get({app_id:parameters.app_id, 
                                                                     join:true,
                                                                     resource_id:null,
                                                                     data:{  data_app_id:parameters.data.data_app_id,
@@ -51,7 +51,7 @@ const get = parameters =>{
                                                                             resource_name:parameters.data.resource_name,
                                                                             app_data_resource_master_id:null,
                                                                             app_data_entity_id:entity_id}}).result;    
-    const result = (ORM.getObject(parameters.app_id, 'AppDataResourceDetailData',parameters.resource_id, null).result ?? [])
+    const result = (server.ORM.getObject(parameters.app_id, 'AppDataResourceDetailData',parameters.resource_id, null).result ?? [])
                     .filter((/**@type{server_db_table_AppDataResourceDetailData}*/row)=>
                         row.app_data_resource_detail_id == (parameters.data.app_data_resource_detail_id??row.app_data_resource_detail_id) && 
                         result_AppDataResourceDetail
@@ -71,7 +71,7 @@ const get = parameters =>{
                         
                     )
                     .map((/**@type{server_db_table_AppDataResourceDetailData & {adrm_attribute_master_json_data:{}}}*/row)=>{     
-                            row.adrm_attribute_master_json_data = ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
+                            row.adrm_attribute_master_json_data = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                                                 join:true,
                                                                                                 resource_id:row.app_data_resource_master_attribute_id,
                                                                                                 data:{  data_app_id:null,
@@ -83,7 +83,7 @@ const get = parameters =>{
     if (result.length>0 || parameters.resource_id==null||parameters.join)
         return {result:result, type:'JSON'};
     else
-        return ORM.getError(parameters.app_id, 404);
+        return server.ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -97,7 +97,7 @@ const get = parameters =>{
 const post = async parameters => {
  //check required attributes
  if (  parameters.data.app_data_resource_detail_id==null){
-     return ORM.getError(parameters.app_id, 400);
+     return server.ORM.getError(parameters.app_id, 400);
  }
  else{
      /**@type{server_db_table_AppDataResourceDetailData} */
@@ -109,13 +109,13 @@ const post = async parameters => {
                               created:new Date().toISOString(),
                               modified:null
                      };
-     return ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'AppDataResourceDetailData', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+     return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'AppDataResourceDetailData', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
          if (result.affectedRows>0){
              result.insertId=data_new.id;
              return {result:result, type:'JSON'};
          }
          else
-             return ORM.getError(parameters.app_id, 404);
+             return server.ORM.getError(parameters.app_id, 404);
      });
  }
 };
@@ -132,7 +132,7 @@ const post = async parameters => {
 const update = async parameters =>{
   //check required attributes
   if (parameters.resource_id==null){
-      return ORM.getError(parameters.app_id, 400);
+      return server.ORM.getError(parameters.app_id, 400);
   }
   else{
       /**@type{server_db_table_AppDataResourceDetailData} */
@@ -142,14 +142,14 @@ const update = async parameters =>{
           data_update.json_data = parameters.data.json_data;
       data_update.modified = new Date().toISOString();
       if (Object.entries(data_update).length>0)
-          return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppDataResourceDetailData', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
+          return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppDataResourceDetailData', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
               if (result.affectedRows>0)
                   return {result:result, type:'JSON'};
               else
-                  return ORM.getError(parameters.app_id, 404);
+                  return server.ORM.getError(parameters.app_id, 404);
           });
       else
-          return ORM.getError(parameters.app_id, 400);
+          return server.ORM.getError(parameters.app_id, 400);
  }
 };
 
@@ -162,11 +162,11 @@ const update = async parameters =>{
 * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
 */
 const deleteRecord = async parameters =>{
-    return ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'AppDataResourceDetailData', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
+    return server.ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'AppDataResourceDetailData', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return ORM.getError(parameters.app_id, 404);
+            return server.ORM.getError(parameters.app_id, 404);
     });
 };        
 export {get, post, update, deleteRecord};

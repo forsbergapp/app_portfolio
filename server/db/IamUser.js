@@ -4,7 +4,7 @@
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
  *          server_db_table_IamUser, server_db_table_IamUserLike, server_db_table_IamUserFollow, server_db_iam_user_admin} from '../types.js'
  */
-const {ORM} = await import ('../server.js');
+const {server} = await import ('../server.js');
 /**
  * @name get
  * @description Get 
@@ -13,7 +13,7 @@ const {ORM} = await import ('../server.js');
  * @param {number|null} resource_id
  * @returns {server_server_response & {result?:server_db_table_IamUser[] }}
  */
-const get = (app_id, resource_id) =>ORM.getObject(app_id, 'IamUser',resource_id, null);
+const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamUser',resource_id, null);
 
 /**
  * @name getViewProfile
@@ -37,24 +37,23 @@ const get = (app_id, resource_id) =>ORM.getObject(app_id, 'IamUser',resource_id,
 *                                                                                   liked_id:       number}[]}>}
 */
 const getViewProfile = async parameters =>{
-  const {commonSearchMatch} = await import('../../apps/common/src/common.js');
-  
+ 
   const result_getProfileUser = get(parameters.app_id, parameters.resource_id).result
                                 .filter((/**@type{server_db_table_IamUser}*/row)=>   
                                     row.active==1 && 
                                     row.private !=1 &&
-                                    commonSearchMatch(row.username, parameters.data.search??'') &&
-                                    commonSearchMatch(row.username, parameters.data.name??''))
+                                    server.app_common.commonSearchMatch(row.username, parameters.data.search??'') &&
+                                    server.app_common.commonSearchMatch(row.username, parameters.data.name??''))
                                 .map((/**@type{server_db_table_IamUser}*/row)=>{
                                     // check if friends
-                                    const friends =  ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
+                                    const friends =  server.ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
-                                                                    data:{  iam_user_id:ORM.UtilNumberValue(parameters.data?.id),
+                                                                    data:{  iam_user_id:server.ORM.UtilNumberValue(parameters.data?.id),
                                                                             iam_user_id_follow:row.id??null}}).result[0] ??
-                                                    ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
+                                                    server.ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:row.id??null,
-                                                                            iam_user_id_follow:ORM.UtilNumberValue(parameters.data?.id)}}).result[0];
+                                                                            iam_user_id_follow:server.ORM.UtilNumberValue(parameters.data?.id)}}).result[0];
                                     return {id:             row.id,
                                             active:         row.active,
                                             username:       row.username, 
@@ -66,39 +65,39 @@ const getViewProfile = async parameters =>{
                                             created:        row.created,
                                             count_following:((row.private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
-                                                                    ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
+                                                                    server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                         resource_id:null, 
                                                                                         data:{  iam_user_id:row.id??null,
                                                                                                 iam_user_id_follow:null}}).result.length,
                                             count_followed: ((row.private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
-                                                                    ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
+                                                                    server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                         resource_id:null, 
                                                                                         data:{  iam_user_id:null,
                                                                                                 iam_user_id_follow:row.id??null}}).result.length,
                                             count_likes:    ((row.private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
-                                                                    ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
+                                                                    server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:row.id??null,
                                                                                         iam_user_id_like:null}}).result.length,
                                             count_liked:    ((row.private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
-                                                                    ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
+                                                                    server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
                                                                                         iam_user_id_like:row.id??null}}).result.length,
-                                            count_views:    ORM.db.IamUserView.get({   app_id:parameters.app_id, 
+                                            count_views:    server.ORM.db.IamUserView.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
                                                                                         iam_user_id_view:row.id??null}}).result.length,
-                                            followed_id:    (parameters.data?.id==null ||parameters.data?.id=='')?null:ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
+                                            followed_id:    (parameters.data?.id==null ||parameters.data?.id=='')?null:server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                 resource_id:null, 
-                                                                                data:{  iam_user_id:ORM.UtilNumberValue(parameters.data?.id),
+                                                                                data:{  iam_user_id:server.ORM.UtilNumberValue(parameters.data?.id),
                                                                                         iam_user_id_follow:row.id??null}}).result[0]?.id??null,
-                                            liked_id:       (parameters.data?.id==null ||parameters.data?.id=='')?null:ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
+                                            liked_id:       (parameters.data?.id==null ||parameters.data?.id=='')?null:server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
-                                                                                data:{  iam_user_id:ORM.UtilNumberValue(parameters.data?.id),
+                                                                                data:{  iam_user_id:server.ORM.UtilNumberValue(parameters.data?.id),
                                                                                         iam_user_id_like:row.id??null}}).result[0]?.id??null};
                                 });
   if (parameters.data.search){
@@ -107,17 +106,17 @@ const getViewProfile = async parameters =>{
   else
       if (result_getProfileUser[0]){
           //always save stat who is viewing, same user, none or someone else
-          const data_body = { iam_user_id:        ORM.UtilNumberValue(parameters.data.id),    //who views
-                              iam_user_id_view:   ORM.UtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
+          const data_body = { iam_user_id:        server.ORM.UtilNumberValue(parameters.data.id),    //who views
+                              iam_user_id_view:   server.ORM.UtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
                               client_ip:              parameters.ip,
                               client_user_agent:      parameters.user_agent};
-          return await ORM.db.IamUserView.post(parameters.app_id, 
+          return await server.ORM.db.IamUserView.post(parameters.app_id, 
                                         /**@ts-ignore */
                                         data_body)
                             .then(()=>{return {result:result_getProfileUser, type:'JSON'};});
       }
       else
-          return result_getProfileUser.http?result_getProfileUser:ORM.getError(parameters.app_id, 404);
+          return result_getProfileUser.http?result_getProfileUser:server.ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -139,7 +138,7 @@ const getViewProfileStat = async parameters =>{
                             .filter((/**@type{server_db_table_IamUser}*/row)=>
                                     row.active==1 && row.private !=1 &&
                                     //user should have a record in current app
-                                    ORM.db.IamUserApp.get({  app_id:parameters.app_id, 
+                                    server.ORM.db.IamUserApp.get({  app_id:parameters.app_id, 
                                                                 resource_id:null,
                                                                 data: {
                                                                     iam_user_id: row.id??null,
@@ -148,24 +147,24 @@ const getViewProfileStat = async parameters =>{
                             )              
                             .map((/**@type{server_db_table_IamUser}*/row)=>{
                                 return {
-                                    top:    ORM.UtilNumberValue(parameters.data?.statchoice)==1?'VISITED':
-                                            ORM.UtilNumberValue(parameters.data?.statchoice)==2?'FOLLOWING':
-                                            ORM.UtilNumberValue(parameters.data?.statchoice)==3?'LIKE_USER':null,
+                                    top:    server.ORM.UtilNumberValue(parameters.data?.statchoice)==1?'VISITED':
+                                            server.ORM.UtilNumberValue(parameters.data?.statchoice)==2?'FOLLOWING':
+                                            server.ORM.UtilNumberValue(parameters.data?.statchoice)==3?'LIKE_USER':null,
                                     id:     row.id,
                                     avatar: row.avatar,
                                     username:row.username,
-                                    count:  ORM.UtilNumberValue(parameters.data?.statchoice)==1?
-                                                ORM.db.IamUserView.get({   app_id:parameters.app_id, 
+                                    count:  server.ORM.UtilNumberValue(parameters.data?.statchoice)==1?
+                                                server.ORM.db.IamUserView.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
                                                                             iam_user_id_view:row.id??null}}).result.length:
-                                            ORM.UtilNumberValue(parameters.data?.statchoice)==2?
-                                                ORM.db.IamUserFollow.get({   app_id:parameters.app_id, 
+                                            server.ORM.UtilNumberValue(parameters.data?.statchoice)==2?
+                                                server.ORM.db.IamUserFollow.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
                                                                             iam_user_id_follow:row.id??null}}).result.length:
-                                            ORM.UtilNumberValue(parameters.data?.statchoice)==3?
-                                                ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
+                                            server.ORM.UtilNumberValue(parameters.data?.statchoice)==3?
+                                                server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
                                                                             iam_user_id_like:row.id??null}}).result.length:
@@ -193,28 +192,28 @@ const getViewProfileStat = async parameters =>{
  */
 const getViewProfileDetail = async parameters =>{
    return {result:( //following
-                    ORM.UtilNumberValue(parameters.data?.detailchoice)==1?
-                        ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
+                    server.ORM.UtilNumberValue(parameters.data?.detailchoice)==1?
+                        server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:parameters.resource_id,
                                                     iam_user_id_follow:null}}).result
                             .map((/**@type{server_db_table_IamUserFollow}*/row)=>{return {iam_user_id:row.iam_user_id_follow};}):
                     //followed
-                    ORM.UtilNumberValue(parameters.data?.detailchoice)==2?
-                        ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
+                    server.ORM.UtilNumberValue(parameters.data?.detailchoice)==2?
+                        server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:null,
                                                     iam_user_id_follow:parameters.resource_id}}).result:
                     //like user
-                    ORM.UtilNumberValue(parameters.data?.detailchoice)==3?
-                        ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
+                    server.ORM.UtilNumberValue(parameters.data?.detailchoice)==3?
+                        server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:parameters.resource_id,
                                                     iam_user_id_like:null}}).result
                             .map((/**@type{server_db_table_IamUserLike}*/row)=>{return {iam_user_id:row.iam_user_id_like};}):
                     //liked user
-                    ORM.UtilNumberValue(parameters.data?.detailchoice)==4?
-                        ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
+                    server.ORM.UtilNumberValue(parameters.data?.detailchoice)==4?
+                        server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:null,
                                                     iam_user_id_like:parameters.resource_id}}).result:
@@ -226,10 +225,10 @@ const getViewProfileDetail = async parameters =>{
                     })              
                     .map((/**@type{server_db_table_IamUserFollow}*/row)=>{
                         return {
-                            detail: ORM.UtilNumberValue(parameters.data?.detailchoice)==1?'FOLLOWING':
-                                    ORM.UtilNumberValue(parameters.data?.detailchoice)==2?'FOLLOWED':
-                                    ORM.UtilNumberValue(parameters.data?.detailchoice)==3?'LIKE_USER':
-                                    ORM.UtilNumberValue(parameters.data?.detailchoice)==4?'LIKED_USER':null,
+                            detail: server.ORM.UtilNumberValue(parameters.data?.detailchoice)==1?'FOLLOWING':
+                                    server.ORM.UtilNumberValue(parameters.data?.detailchoice)==2?'FOLLOWED':
+                                    server.ORM.UtilNumberValue(parameters.data?.detailchoice)==3?'LIKE_USER':
+                                    server.ORM.UtilNumberValue(parameters.data?.detailchoice)==4?'LIKED_USER':null,
                             iam_user_id:  row.iam_user_id,
                             avatar: get(parameters.app_id,row.iam_user_id).result[0]?.avatar,
                             username:get(parameters.app_id,row.iam_user_id).result[0]?.username
@@ -291,18 +290,17 @@ const validationData = data =>{
  */
 const post = async (app_id, data) => {
     if (validationData(data)){
-        const Security= await import('../security.js');
         /**@type{server_db_iam_user_admin} */
         const data_new =     {
                                 id:                 Date.now(),
                                 username:           data.username, 
                                 //save encrypted password
-                                password:           await Security.securityPasswordCreate(app_id, data.password), 
+                                password:           await server.security.securityPasswordCreate(app_id, data.password), 
                                 password_reminder:  data.password_reminder ?? null,
                                 type:               data.type, 
                                 bio:                data.bio ?? null, 
                                 private:            data.private, 
-                                otp_key:            Security.securityOTPKeyCreate(),
+                                otp_key:            server.security.securityOTPKeyCreate(),
                                 avatar:             data.avatar,
                                 user_level:         data.user_level, 
                                 status:             data.status, 
@@ -310,17 +308,17 @@ const post = async (app_id, data) => {
                                 created:            new Date().toISOString(), 
                                 modified:           new Date().toISOString()
                         };
-        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
             }
             else
-                return ORM.getError(app_id, 404);
+                return server.ORM.getError(app_id, 404);
         });
     }
     else
-        return ORM.getError(app_id, 400);
+        return server.ORM.getError(app_id, 400);
 };
 /**
  * @name postAdmin
@@ -331,18 +329,17 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postAdmin = async (app_id, data) => {
-    const Security= await import('../security.js');
     /**@type{server_db_iam_user_admin} */
     const data_new =     {
                             id:Date.now(),
                             username:data.username, 
                             //save encrypted password
-                            password:await Security.securityPasswordCreate(app_id, data.password), 
+                            password:await server.security.securityPasswordCreate(app_id, data.password), 
                             password_reminder:data.password_reminder,
                             type: data.type, 
                             bio:data.bio, 
                             private:data.private, 
-                            otp_key: Security.securityOTPKeyCreate(),
+                            otp_key: server.security.securityOTPKeyCreate(),
                             avatar:data.avatar,
                             user_level:data.user_level, 
                             status:data.status, 
@@ -350,13 +347,13 @@ const postAdmin = async (app_id, data) => {
                             created:new Date().toISOString(), 
                             modified:new Date().toISOString()
                     };
-    return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+    return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
         if (result.affectedRows>0){
             result.insertId=data_new.id;
             return {result:result, type:'JSON'};
         }
         else
-            return ORM.getError(app_id, 404);
+            return server.ORM.getError(app_id, 404);
     });
 };
 
@@ -370,43 +367,42 @@ const postAdmin = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async (app_id, resource_id, data) => {
-    const {securityPasswordCompare, securityPasswordCreate}= await import('../security.js');    
     /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        if (validationData(data) && user.username == data.username && data.password && await securityPasswordCompare(app_id, data.password, user.password)){
+        if (validationData(data) && user.username == data.username && data.password && await server.security.securityPasswordCompare(app_id, data.password, user.password)){
             /**@type{server_db_table_IamUser} */
             const data_update = {};
             //allowed parameters to update:
             if (data.username!=null && data.username != '')
                 data_update.username = data.username;
             if (data.password!=null && data.password != '')
-                data_update.password = await securityPasswordCreate(app_id, data.password_new ?? data.password);
+                data_update.password = await server.security.securityPasswordCreate(app_id, data.password_new ?? data.password);
             if (data.password_reminder!=null)
                 data_update.password_reminder = data.password_reminder;
             if (data.bio!=null)
                 data_update.bio = data.bio;
             if (data.private!=null)
-                data_update.private = ORM.UtilNumberValue(data.private);
+                data_update.private = server.ORM.UtilNumberValue(data.private);
             if (data.avatar!=null)
                 data_update.avatar = data.avatar;
             data_update.modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)
-                return ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamUser', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
+                return server.ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamUser', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
-                        return ORM.getError(app_id, 404);
+                        return server.ORM.getError(app_id, 404);
                 });
             else
-                return ORM.getError(app_id, 400);
+                return server.ORM.getError(app_id, 400);
         }
         else
-            return ORM.getError(app_id, 400);
+            return server.ORM.getError(app_id, 400);
     }
     else
-        return ORM.getError(app_id, 404);
+        return server.ORM.getError(app_id, 404);
 };
 /**
  * @name updateAdmin
@@ -419,7 +415,6 @@ const update = async (app_id, resource_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const updateAdmin = async parameters => {
-    const {securityPasswordCreate}= await import('../security.js');    
     /**@type{server_db_table_IamUser}*/
     const user = get(parameters.app_id, parameters.resource_id).result[0];
     if (user){
@@ -429,13 +424,13 @@ const updateAdmin = async parameters => {
             if (parameters.data?.username!=null && parameters.data?.username!='')
                 data_update.username = parameters.data.username;
             if (parameters.data?.password!=null && parameters.data?.password!='')
-                data_update.password = await securityPasswordCreate(parameters.app_id, parameters.data?.password_new ?? parameters.data.password);
+                data_update.password = await server.security.securityPasswordCreate(parameters.app_id, parameters.data?.password_new ?? parameters.data.password);
             if (parameters.data?.password_reminder!=null)
                 data_update.password_reminder = parameters.data.password_reminder;
             if (parameters.data?.bio!=null)
                 data_update.bio = parameters.data.bio;
             if (parameters.data?.private!=null)
-                data_update.private = ORM.UtilNumberValue(parameters.data.private) ?? 0;
+                data_update.private = server.ORM.UtilNumberValue(parameters.data.private) ?? 0;
             if (parameters.data?.otp_key!=null)
                 data_update.otp_key = parameters.data.otp_key;
             if (parameters.data?.avatar!=null)
@@ -444,28 +439,28 @@ const updateAdmin = async parameters => {
             if (parameters.data?.type!=null)
                 data_update.type = parameters.data.type;
             if (parameters.data?.user_level!=null)
-                data_update.user_level = ORM.UtilNumberValue(parameters.data.user_level);
+                data_update.user_level = server.ORM.UtilNumberValue(parameters.data.user_level);
             if (parameters.data?.status!=null)
                 data_update.status = parameters.data.status;
             if (parameters.data?.active!=null)
-                data_update.active = ORM.UtilNumberValue(parameters.data.active) ?? 0;
+                data_update.active = server.ORM.UtilNumberValue(parameters.data.active) ?? 0;
             data_update.modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)
-                return ORM.Execute({  app_id:parameters.app_id, 
+                return server.ORM.Execute({  app_id:parameters.app_id, 
                                             dml:'UPDATE', 
                                             object:'IamUser', 
                                             update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
-                        return ORM.getError(parameters.app_id, 404);
+                        return server.ORM.getError(parameters.app_id, 404);
                 });
             else
-                return ORM.getError(parameters.app_id, 400);
+                return server.ORM.getError(parameters.app_id, 400);
     }
     else
-        return ORM.getError(parameters.app_id, 404);
+        return server.ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -478,22 +473,21 @@ const updateAdmin = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id, data) => {
-    const {securityPasswordCompare}= await import('../security.js');    
     /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        if (data.password && await securityPasswordCompare(app_id, data.password, user.password))
-            return ORM.Execute({app_id:app_id, 
+        if (data.password && await server.security.securityPasswordCompare(app_id, data.password, user.password))
+            return server.ORM.Execute({app_id:app_id, 
                                 dml:'DELETE', 
                                 object:'IamUser', 
                                 delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
-                    return ORM.getError(app_id, 404);
+                    return server.ORM.getError(app_id, 404);
             });
         else
-            return ORM.getError(app_id, 400);
+            return server.ORM.getError(app_id, 400);
     }
     else
         return user;
@@ -510,12 +504,12 @@ const deleteRecordAdmin = async (app_id, resource_id) => {
     /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUser', delete:{resource_id:resource_id, data_app_id:null}})
+        return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUser', delete:{resource_id:resource_id, data_app_id:null}})
                 .then((/**@type{server_db_common_result_delete}*/result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
-                        return ORM.getError(app_id, 404);
+                        return server.ORM.getError(app_id, 404);
                     });
     }
     else

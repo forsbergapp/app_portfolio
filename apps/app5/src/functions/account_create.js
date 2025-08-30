@@ -6,11 +6,11 @@
  * @import {    server_server_response, 
  *              server_db_common_result_insert} from '../../../../server/types.js'
  */
-const {securitySecretCreate, securityUUIDCreate} = await import('../../../../server/security.js');
+const {server} = await import('../../../../server/server.js');
 
-const createBankAccountSecret = ()=>securitySecretCreate();
+const createBankAccountSecret = ()=>server.security.securitySecretCreate();
 const createBankAccountNumber = ()=>Date.now().toString().padStart(16,'0');
-const createBankAccountVPA = ()=>securityUUIDCreate();
+const createBankAccountVPA = ()=>server.security.securityUUIDCreate();
 
 /**
  * @name createBankAccount
@@ -29,8 +29,7 @@ const createBankAccountVPA = ()=>securityUUIDCreate();
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
 const createBankAccount = async parameters =>{
-    const {ORM} = await import('../../../../server/server.js');
-    return ORM.db.AppDataResourceDetail.post({app_id:parameters.app_id, data:{...{json_data:{
+    return server.ORM.db.AppDataResourceDetail.post({app_id:parameters.app_id, data:{...{json_data:{
                                                                                         bank_account_number :createBankAccountNumber(),
                                                                                         bank_account_secret :createBankAccountSecret(),
                                                                                         bank_account_vpa    :createBankAccountVPA()
