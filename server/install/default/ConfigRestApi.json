@@ -4707,7 +4707,7 @@
         "/bff/app_id/v1/geolocation/ip": {
             "get": {
                 "summary": "",
-                "operationId": "server.bff.bffMicroservice",
+                "operationId": "apps_common_src_functions.common_geolocation.getIP",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"}
                 ],
@@ -4725,27 +4725,11 @@
                             }    
                         },
                         {
+                            "$ref": "#/components/parameters/locale",
+                            "required":false
+                        },
+                        {
                             "$ref": "#/components/parameters/server_ip"
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_user_agent"
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language"
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_endpoint"
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_microservice",
-                            "default":"GEOLOCATION"
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_microservice_service",
-                            "default":"IP"
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_method"
                         }
                 ],
                 "responses": {
@@ -4756,102 +4740,6 @@
                                     "allOf":[
                                                 {"$ref": "#/components/schema/SuccessResponseSingleResource"},
                                                 {"properties": {
-                                                        "request":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "status":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "delay":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "credit":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "city":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "region":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "regionCode":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "regionName":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "areaCode":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "dmaCode":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "countryCode":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "countryName":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "inEU":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "euVATrate":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "continentCode":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "continentName":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
                                                         "latitude":{
                                                             "description":"",
                                                             "schema":{
@@ -4864,37 +4752,13 @@
                                                                 "type": "string"
                                                             }
                                                         },
-                                                        "locationAccuracyRadius":{
+                                                        "place":{
                                                             "description":"",
                                                             "schema":{
                                                                 "type": "string"
                                                             }
                                                         },
                                                         "timezone":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "currencyCode":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "currencySymbol":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "currencySymbol_UTF8":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "currencyConverter":{
                                                             "description":"",
                                                             "schema":{
                                                                 "type": "string"
@@ -4914,7 +4778,7 @@
         "/bff/app_id/v1/geolocation/place": {
             "get": {
                 "summary": "",
-                "operationId": "server.bff.bffMicroservice",
+                "operationId": "apps_common_src_functions.common_geolocation.getPlace",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"}
                 ],
@@ -4940,27 +4804,11 @@
                             }    
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_user_agent"
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language"
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_endpoint"
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_microservice",
-                            "default":"GEOLOCATION"
+                            "$ref": "#/components/parameters/locale",
+                            "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_microservice_service",
-                            "default":"PLACE"
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_method"
+                            "$ref": "#/components/parameters/server_ip"
                         }
                 ],
                 "responses": {
@@ -4989,12 +4837,6 @@
                                                                 "type": "string"
                                                             }
                                                         },
-                                                        "regionAbbreviated":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
                                                         "country":{
                                                             "description":"",
                                                             "schema":{
@@ -5013,13 +4855,7 @@
                                                                 "type": "string"
                                                             }
                                                         },
-                                                        "distanceMiles":{
-                                                            "description":"",
-                                                            "schema":{
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "distanceKilometers":{
+                                                        "timezone":{
                                                             "description":"",
                                                             "schema":{
                                                                 "type": "string"
