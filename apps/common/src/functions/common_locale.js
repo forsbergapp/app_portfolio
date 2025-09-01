@@ -5,6 +5,7 @@
  * @import {server_server_response} from '../../../../server/types.js'
  */
 
+const {getData} = await import('./common_data.js');
 /**
  * @name formatLocale
  * @description Converts locale format
@@ -73,19 +74,15 @@ const formatLocale = locale =>{
  * @returns {Promise.<server_server_response & {result?:{data: string}[]}>}
  */
 const appFunction = async parameters =>{
-    const fs = await import('node:fs');
-    /**
-     *  Get locale from locale.json 
-     * @param {string} locale
-     * @returns {Promise.<[key:string]>}
-     */
-    const getFile = async (locale) =>{
-        /**@ts-ignore */
-        const PATH = `${import.meta.dirname.replaceAll('\\', '/')}/locale-list/data/`;
-        const FILE = 'locales.json';
-        return fs.promises.readFile(`${PATH}${formatLocale(locale)}/${FILE}`, 'utf8').then(file=>JSON.parse(file.toString()));
-    };
-    const locales = await getFile(parameters.locale).catch(()=>getFile('en'));
+    
+    const locales = getData('LOCALE').filter((/**@type {{   locale:string,
+                                                            countries:[key:string]}}*/row)=>
+                                                                row.locale == formatLocale(parameters.locale))[0].locales
+                    ??
+                    getData('LOCALE').filter((/**@type {{   locale:string,
+                                                            countries:[key:string]}}*/row)=>
+                                                                row.locale == 'en')[0].locales
+                    ;
     //format result and order by text using base 64 to avoid record limit
     return {result:[{data:Buffer.from (JSON.stringify(Object.entries(locales)
                                                         .map(locale => {

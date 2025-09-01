@@ -1,0 +1,674 @@
+TH;Yala;Betong;5.77434;101.072
+MY;Penang;"George Town";5.41123;100.335
+MY;Penang;Juru;5.31201;100.442
+MY;Penang;"Bukit Tengah";5.34605;100.439
+MY;Labuan;Labuan;5.28028;115.247
+MY;Kelantan;Ketereh;5.95701;102.248
+MY;Sabah;"Bandar Labuan";5.28319;115.254
+MY;Terengganu;"Kuala Besut";5.83303;102.555
+MY;Penang;Perai;5.38333;100.383
+MY;Penang;"Bukit Mertajam";5.36301;100.467
+MY;Terengganu;"Kuala Nerus";5.37293;103.021
+MY;Penang;"George Town";5.41639;100.333
+MY;Sabah;Inanam;5.9922;116.132
+GH;"Greater Accra";Accra;5.60372;-0.186964
+GF;Guyane;Kourou;5.16281;-52.6427
+GH;"Greater Accra";Accra;5.55928;-0.197431
+CO;"Caldas Department";Marmato;5.47501;-75.6004
+CO;"Santander Department";"La Belleza";5.86371;-73.9617
+CO;"Tolima Department";Padua;5.13429;-75.14
+CO;Chocó;Lloró;5.49605;-76.5495
+CO;Antioquia;Jardín;5.59902;-75.8198
+CO;Antioquia;Betania;5.74601;-75.9777
+MY;Penang;Farlim;5.38907;100.282
+MY;Penang;"Taman Prai";5.37729;100.4
+MY;Sabah;"Kota Kinabalu (Kampung Likas)";5.99617;116.115
+MV;"Baa Atholhu";"Open Stage";5.1053;73.0712
+ID;Aceh;"Mata Ie";5.5278;95.3347
+ID;Aceh;Peukanbada;5.53606;95.2284
+ID;Aceh;"Banda Aceh";5.54167;95.3333
+ID;Aceh;Lambaro;5.55579;95.3438
+ID;Aceh;Lhokseumawe;5.1801;97.1507
+ID;Aceh;Bireun;5.203;96.7009
+CI;"Abidjan Autonomous District";Abadjin-Kouté;5.33017;-4.15226
+CI;"Abidjan Autonomous District";"Abidjan (Yopougon)";5.32559;-4.0564
+CI;"Abidjan Autonomous District";Koumassi;5.29716;-3.96753
+CI;"Comoé District";Bonoua;5.27247;-3.59625
+CI;"Abidjan Autonomous District";Abobo;5.41613;-4.0159
+CO;"Risaralda Department";"La Celia";5.00332;-76.0035
+CO;Boyacá;Paya;5.62492;-72.4234
+CO;"Casanare Department";Yopal;5.34548;-72.3992
+CO;Boyacá;Guateque;5.00619;-73.4727
+CO;Boyacá;Garagoa;5.08236;-73.3633
+CO;Cundinamarca;Villeta;5.00886;-74.4723
+CO;"Santander Department";Barbosa;5.93168;-73.6151
+CO;"Casanare Department";Aguazul;5.16967;-72.553
+CO;Chocó;Quibdó;5.69188;-76.6583
+CO;Boyacá;Tunja;5.54464;-73.3576
+CO;Boyacá;Nobsa;5.76978;-72.941
+CO;Boyacá;Paipa;5.78013;-73.1171
+CO;"Casanare Department";Aguazul;5.17282;-72.5471
+CO;Boyacá;Ramiriquí;5.4002;-73.3354
+CO;Boyacá;Tunja;5.54481;-73.3576
+CI;"Abidjan Autonomous District";Abidjan;5.32523;-4.0196
+CI;"Abidjan Autonomous District";Abidjan;5.35444;-4.00167
+CI;"Abidjan Autonomous District";Akouai-Santai;5.36568;-3.89847
+CI;"Comoé District";Modeste;5.22444;-3.8264
+CI;"Comoé District";Grand-Bassam;5.2118;-3.73884
+CO;"Caldas Department";Manzanares;5.25372;-75.1542
+CO;"Caldas Department";Pácora;5.52708;-75.4593
+CO;"Caldas Department";Victoria;5.31648;-74.911
+CO;"Casanare Department";Yopal;5.34769;-72.39
+GH;"Greater Accra";"Accra (Osu Klottey)";5.57262;-0.202906
+GH;"Greater Accra";"Accra (Osu Klottey)";5.57157;-0.206899
+CI;"Abidjan Autonomous District";"Abidjan (Cocody)";5.37916;-3.99609
+CI;"Abidjan Autonomous District";"Audoin Santé";5.28995;-4.13712
+CI;"Abidjan Autonomous District";Abadjin-Doumé;5.30962;-4.14669
+CI;"Abidjan Autonomous District";"Abidjan (Le Plateau)";5.31768;-4.01779
+CI;"Abidjan Autonomous District";Akouédo;5.34905;-3.95187
+CI;"Abidjan Autonomous District";"Abidjan (Marcory)";5.29777;-3.98515
+CI;"Abidjan Autonomous District";Abidjan;5.35995;-4.00826
+CI;"Abidjan Autonomous District";"Abidjan (Port-Bouët)";5.25429;-3.93242
+GH;"Greater Accra";Lashibi;5.68476;-0.04011
+GH;"Greater Accra";"Accra (Kpeshie)";5.59966;-0.176387
+GH;"Greater Accra";Accra;5.55602;-0.1969
+GH;"Greater Accra";"Accra (Ayawaso)";5.57249;-0.21672
+GH;Western;"Shama Junction";5.01806;-1.66437
+GH;"Greater Accra";Sakumona;5.62135;-0.05193
+GH;"Greater Accra";Tema;5.6698;-0.01657
+GH;"Greater Accra";Awoshi;5.58385;-0.27787
+GH;"Greater Accra";"Tema New Town";5.65396;0.0264
+GH;"Greater Accra";"Medina Estates";5.6658;-0.16307
+GH;Western;Tarkwa;5.30383;-1.98956
+CI;"Abidjan Autonomous District";"Abidjan (Le Plateau)";5.31922;-4.01514
+CI;"Abidjan Autonomous District";Marcory;5.31198;-3.99363
+CI;"Abidjan Autonomous District";Allokoa;5.39738;-4.14884
+CI;Gôh-Djiboua;Guitry;5.51952;-5.24038
+GH;Central;Winneba;5.36223;-0.629892
+GH;Central;Winneba;5.35113;-0.62313
+NG;Delta;Kwale;5.70773;6.43402
+GH;"Greater Accra";"Medina Estates (Kpeshie)";5.63084;-0.143204
+GH;"Greater Accra";Accra;5.54463;-0.203991
+GH;"Greater Accra";"Accra (Osu Klottey)";5.57172;-0.200397
+SO;Mudug;"Diga gaw";5.69935;48.4664
+GH;Eastern;Berekuso;5.75835;-0.219758
+GH;"Greater Accra";Adenta;5.71417;-0.15418
+CI;"Bas-Sassandra District";Soubré;5.78377;-6.59388
+CI;"Bas-Sassandra District";Méagui;5.4119;-6.5603
+CI;"Comoé District";Adiaké;5.28634;-3.30403
+CI;"Abidjan Autonomous District";Abata;5.3233;-3.91434
+GH;"Greater Accra";"Accra (Ayawaso)";5.61239;-0.21636
+GH;"Greater Accra";"Accra (Ayawaso)";5.57678;-0.208407
+GH;"Greater Accra";"Accra (Osu Klottey)";5.57244;-0.203503
+GH;"Greater Accra";"Accra (Ayawaso)";5.57584;-0.208645
+GH;"Greater Accra";Ashaiman;5.69951;-0.03484
+GH;"Greater Accra";Gbawe;5.57692;-0.31038
+GH;"Greater Accra";Dome;5.65003;-0.2361
+GH;"Greater Accra";Taifa;5.65825;-0.25223
+GH;Central;"Cape Coast";5.10535;-1.2466
+CI;"Abidjan Autonomous District";Angorankoua;5.41094;-3.90577
+CI;Gôh-Djiboua;Divo;5.83739;-5.35723
+GH;"Greater Accra";"Accra (Ayawaso)";5.5932;-0.181948
+GH;"Greater Accra";"Accra (Osu Klottey)";5.55559;-0.20035
+GH;"Greater Accra";"Accra (Ayawaso)";5.61412;-0.195647
+GH;"Greater Accra";"Accra (Ayawaso)";5.61711;-0.192569
+GH;"Greater Accra";"Accra (Osu Klottey)";5.56545;-0.193311
+CI;Gôh-Djiboua;Lakota;5.84752;-5.682
+CI;Abidjan;"Abidjan (Le Plateau)";5.32809;-4.01844
+GH;"Greater Accra";"Accra (Ayawaso)";5.61112;-0.193275
+GH;"Greater Accra";"Accra (Ayawaso)";5.61698;-0.18008
+GH;"Greater Accra";"Accra (Ayawaso)";5.61756;-0.17969
+CI;"Abidjan Autonomous District";"Abidjan (Le Plateau)";5.32809;-4.01844
+CI;"Abidjan Autonomous District";Adiapoto-I;5.31431;-4.19496
+CI;Abidjan;"Abidjan (Le Plateau)";5.31768;-4.01779
+CM;North-West;Bali;5.88745;10.0192
+NG;"Cross River State";Ikom;5.96669;8.70632
+CI;"Comoé District";Assinie-Mafia;5.13384;-3.29096
+CI;"Abidjan Autonomous District";Bingerville;5.35581;-3.88537
+GH;"Greater Accra";"Accra (Ayawaso)";5.60088;-0.18825
+GH;"Greater Accra";"Accra (Osu Klottey)";5.55808;-0.205332
+CI;"Lagunes District";Mborou;5.59474;-4.36334
+CI;"Abidjan Autonomous District";Ebimpe;5.49901;-4.08207
+GH;"Greater Accra";"Accra (Kpeshie)";5.57579;-0.180892
+CF;Nana-Mambéré;Bouar;5.93404;15.596
+GH;"Greater Accra";Accra;5.62263;-0.181017
+GH;"Greater Accra";"Accra (Ayawaso)";5.60318;-0.19544
+MY;Penang;"Batu Feringgi";5.4709;100.245
+MY;Kedah;"Bandar Baharu";5.13428;100.495
+MY;Penang;Jelutong;5.38998;100.319
+MY;Penang;"Sungai Bakap";5.22231;100.495
+MY;Penang;"Simpang Empat";5.2818;100.478
+MY;Kedah;"Sungai Lalang";5.6998;100.514
+MY;Kedah;"Kampung Relau";5.23126;100.556
+MY;Kedah;Kulim;5.36499;100.562
+MY;Kedah;Sidam;5.53333;100.567
+SR;"Paramaribo District";Paramaribo;5.85204;-55.2038
+CO;Boyacá;Sotaquirá;5.76483;-73.2476
+SR;"Paramaribo District";Paramaribo;5.8374;-55.2014
+CO;Cundinamarca;Cachipay;5.26674;-74.5667
+MY;Sabah;Keningau;5.3378;116.16
+MY;Sabah;"Kota Kinabalu (Jalan Bunga Ulam Raja)";5.97616;116.114
+MY;Penang;"Bayan Lepas (Bayan Baru)";5.32568;100.286
+CO;Boyacá;Sogamoso;5.71434;-72.9339
+CO;Boyacá;"Santa Rosa de Viterbo";5.87401;-72.9822
+CO;Boyacá;Tibasosa;5.75;-73
+CO;Cundinamarca;Zipaquirá;5.02208;-74.0048
+CO;"Caldas Department";"Manizales (Chipre)";5.07747;-75.5265
+CO;"Caldas Department";Salamina;5.40733;-75.4875
+CO;"Casanare Department";"Paz de Ariporo";5.88148;-71.8917
+CO;"Caldas Department";Norcasia;5.57535;-74.8883
+CO;"Caldas Department";"La Dorada";5.44783;-74.6631
+CO;Antioquia;"Puerto Triunfo";5.87259;-74.6405
+CO;Antioquia;Nariño;5.60893;-75.1766
+GH;"Greater Accra";"Accra (Osu Klottey)";5.56998;-0.197581
+GH;"Greater Accra";Accra;5.64495;-0.118739
+GH;"Greater Accra";"Accra (Abrekuma)";5.56632;-0.241766
+MY;Sabah;"Kampung Kundassang";5.9824;116.571
+PH;Soccsksargen;Glan;5.82417;125.203
+GF;Guyane;Kourou;5.16113;-52.6493
+MY;Penang;"Bayan Lepas (Kampung Sungai Nibung Besar)";5.33281;100.302
+MY;Penang;"George Town";5.41492;100.33
+MY;Penang;"Bukit Mertajam (Bandar Perda)";5.37008;100.433
+MY;Penang;"Simpang Empat (Nafiri Industri Area)";5.23771;100.485
+MY;Penang;"Butterworth (Bagan Luar)";5.40917;100.369
+MY;Penang;"Bayan Lepas (Bayan Lepas Free Industrial Zone Phase 4)";5.30738;100.293
+MY;Penang;"George Town";5.4244;100.327
+MY;Terengganu;"Kuala Terengganu (Kampung Bukit Kecil)";5.30457;103.139
+MY;Kelantan;"Kuala Krai";5.5313;102.199
+MY;Labuan;Labuan;5.28125;115.248
+MY;Penang;"Batu Feringgi";5.47929;100.255
+MY;Penang;"Bayan Lepas";5.31606;100.287
+MY;Labuan;Labuan;5.29132;115.246
+MY;Sabah;Putatan;5.9258;116.061
+MY;Penang;Relau;5.33096;100.283
+MY;Sabah;"Kota Kinabalu";5.9749;116.072
+MY;Sabah;"Kota Kinabalu";5.97019;116.076
+MY;Sabah;Beaufort;5.3473;115.745
+MY;Kedah;"Sungai Petani";5.647;100.488
+MY;Sabah;Ranau;5.9538;116.664
+MY;Terengganu;"Kampung Kuala Besut";5.83297;102.551
+MY;Terengganu;"Kuala Terengganu";5.3302;103.141
+MY;Penang;"Ayer Itam";5.40158;100.278
+MY;Penang;"Sungai Dua";5.44266;100.43
+MY;Penang;"Kepala Batas";5.51707;100.426
+MY;Penang;"Tanjung Tokong";5.46061;100.307
+MY;Kedah;Lunas;5.43058;100.53
+MY;Penang;"Nibong Tebal";5.16586;100.478
+MY;Penang;"Batu Kawan";5.25822;100.429
+MY;Penang;"Sungai Jawi";5.19779;100.492
+MY;Kelantan;"Tanah Merah";5.8;102.15
+MY;Perak;"Bagan Serai";5.0108;100.541
+MY;Sabah;"Taman Rajawali";5.89477;118.046
+MY;Sabah;Petagas;5.91161;116.05
+MY;Terengganu;Ajil;5.0829;103.086
+MY;Penang;"Kampung Sungai Ara";5.32699;100.273
+MY;Kedah;"Kuala Ketil";5.6;100.65
+MY;Penang;Butterworth;5.3991;100.364
+MY;Sabah;"Kg Ramayah";5.88434;116.093
+MY;Sabah;Donggongon;5.90702;116.101
+MY;Perak;"Parit Buntar";5.12671;100.493
+MY;Penang;"Bukit Jambul";5.3337;100.29
+MY;Perak;Selama;5.2236;100.693
+GH;"Greater Accra";"Accra (Okaikoi South)";5.58269;-0.224065
+CO;"Caldas Department";Riosucio;5.42164;-75.7032
+MV;"Noonu Atoll";Manadhoo;5.76687;73.4136
+GH;"Greater Accra";"Accra (Okaikoi South)";5.58532;-0.217274
+GH;Volta;Anloga;5.79473;0.89728
+CM;West;Bafoussam;5.48075;10.4284
+GF;Guyane;Saint-Laurent-du-Maroni;5.50153;-54.0292
+GF;Guyane;Mana;5.66906;-53.779
+GH;"Greater Accra";Accra;5.55572;-0.196306
+CI;"Comoé District";Aboisso;5.47451;-3.20308
+GF;Guyane;Tonate;5.01171;-52.4724
+NG;Delta;Oghara;5.93554;5.6661
+GH;"Greater Accra";"Accra (Ayawaso)";5.60372;-0.186964
+GH;Central;Dunkwa-on-Offin;5.95996;-1.77792
+GH;"Greater Accra";"Accra (Ayawaso)";5.57412;-0.202164
+NG;"Akwa Ibom State";"Ikot Ekpene (Gra)";5.17713;7.70637
+GH;"Greater Accra";"Accra (Kpeshie)";5.59923;-0.175843
+GH;Eastern;Aburi;5.84318;-0.0406392
+GH;"Greater Accra";"Accra (Ayawaso)";5.61156;-0.221138
+GH;Eastern;Aburi;5.84802;-0.17449
+GH;"Greater Accra";"Accra (Osu Klottey)";5.54467;-0.206079
+NG;"Akwa Ibom State";Uyo;5.05127;7.9335
+NG;"Imo State";Umuguma;5.46783;6.96594
+NG;Anambra;Uruobo-Okija;5.90016;6.84312
+NG;"Rivers State";Elele;5.1009;6.81411
+NG;"Rivers State";Isiokpo;5.00243;6.87262
+NG;Delta;"Warri (Effurun)";5.56237;5.78002
+GH;"Greater Accra";"Accra (Ayawaso)";5.61684;-0.176552
+CI;"Abidjan Autonomous District";"Abidjan (Cocody)";5.34179;-3.99492
+GH;"Greater Accra";"Accra (Kpeshie)";5.57681;-0.174737
+GH;"Greater Accra";"Accra (Abrekuma)";5.54275;-0.256543
+CI;"Abidjan Autonomous District";"Abidjan (Le Plateau)";5.33319;-4.02334
+GH;"Greater Accra";"Accra (Osu Klottey)";5.55615;-0.209263
+CI;"Abidjan Autonomous District";"Abidjan (Yopougon)";5.32096;-4.08249
+NG;Delta;Ughelli;5.48956;6.00407
+CI;"Comoé District";Azuretti;5.20498;-3.77778
+CI;"Lagunes District";Palmci;5.27818;-4.98775
+CI;"Comoé District";Aboisso;5.46779;-3.20711
+CI;"Lagunes District";Jacqueville;5.20515;-4.4146
+CI;"Lagunes District";Dabou;5.32556;-4.37685
+CI;"Lagunes District";Agboville;5.92801;-4.21319
+GH;"Greater Accra";Amanfro;5.53532;-0.39827
+GH;"Greater Accra";Mandela;5.55221;-0.33912
+GH;"Greater Accra";"Accra (Osu Klottey)";5.56921;-0.204837
+CI;Abidjan;"Abidjan (Cocody)";5.36022;-3.96744
+CI;"Abidjan Autonomous District";"Abidjan (Le Plateau)";5.32047;-4.01558
+GH;"Greater Accra";"Accra (Ayawaso)";5.60488;-0.187979
+GH;"Greater Accra";Achiaman;5.69775;-0.32824
+GH;"Greater Accra";"Accra (Kpeshie)";5.58625;-0.165518
+CI;"Abidjan Autonomous District";"Abidjan (Le Plateau)";5.3219;-4.01598
+GH;"Greater Accra";"Accra (Kpeshie)";5.60195;-0.0792387
+GH;"Greater Accra";"Accra (Osu Klottey)";5.5565;-0.205557
+GH;"Greater Accra";"Accra (Osu Klottey)";5.57262;-0.202902
+NG;"Akwa Ibom State";Idu;5.03005;8.01716
+GH;"Greater Accra";"Accra (Ayawaso)";5.6158;-0.179182
+CI;Abidjan;"Abidjan (Le Plateau)";5.3219;-4.01598
+GH;"Greater Accra";"Accra (Osu Klottey)";5.55658;-0.204493
+GH;Central;Buduburam;5.52314;-0.47718
+CI;Abidjan;"Abidjan (Cocody)";5.35995;-4.00826
+CI;"Abidjan Autonomous District";"Abidjan (Le Plateau)";5.3193;-4.01299
+GH;"Greater Accra";Tema;5.63186;-0.0244267
+GH;"Greater Accra";"Accra (Kpeshie)";5.60279;-0.177733
+GH;"Greater Accra";"Accra (Osu Klottey)";5.55225;-0.211151
+GH;"Greater Accra";"Accra (Ayawaso)";5.64331;-0.157584
+GH;"Greater Accra";"Accra (Ayawaso)";5.62074;-0.185255
+GH;Eastern;Akropong;5.97462;-0.08542
+GH;"Greater Accra";"Accra (Osu Klottey)";5.56469;-0.195275
+GH;"Greater Accra";"Accra (Ayawaso)";5.61415;-0.208621
+NG;"Akwa Ibom";"Uyo (Ewet Housing Extension)";5.01303;7.95554
+CI;"Abidjan Autonomous District";"Abidjan (Cocody)";5.33931;-3.99872
+GH;"Greater Accra";"Accra (Ayawaso)";5.63737;-0.170474
+CI;Abidjan;"Abidjan (Le Plateau)";5.3184;-4.0171
+GH;"Greater Accra";"Accra (Ayawaso)";5.61174;-0.17717
+CI;"Abidjan Autonomous District";"Abidjan (Cocody)";5.39792;-3.99149
+CI;Abidjan;"Abidjan (Cocody)";5.39792;-3.99149
+GH;"Greater Accra";"Tema (Kortu-gon)";5.63417;-0.0019861
+CI;Abidjan;"Abidjan (Vge)";5.29441;-3.9792
+CM;North-West;Bamenda;5.9597;10.146
+CM;West;Dschang;5.44397;10.0533
+ID;Aceh;Bireun;5.20176;96.7024
+ID;Aceh;Lhokseumawe;5.17381;97.12
+MY;Penang;"Bayan Lepas (Bandar Bayan Baru)";5.32563;100.286
+MY;Kelantan;"Kampung Gong Badak";5.39882;103.077
+MY;Penang;"George Town";5.43011;100.319
+ID;Aceh;Blangpulo;5.2068;97.0774
+MY;Sabah;Beluran;5.8956;117.556
+MY;Sabah;"Kota Kinabalu";5.98436;116.077
+MY;Sabah;"Kota Kinabalu (Teluk Likas)";5.99125;116.092
+MY;Sabah;"Kota Kinabalu (Sunny Garden)";5.97007;116.084
+ID;Aceh;Lampuuk;5.57006;95.3697
+MY;Penang;"Taman Prai (Bandar Perai Jaya)";5.37599;100.401
+MY;Penang;"Paya Terubong";5.37278;100.28
+ID;Aceh;"Lueng Putu";5.25724;96.0649
+MY;Penang;"Bayan Lepas (Bandar Bayan Baru)";5.3255;100.286
+MY;Kedah;"Sungai Petani";5.68153;100.496
+ID;Aceh;"Banda Aceh";5.57885;95.3674
+ID;Aceh;Lambaro;5.56127;95.3302
+MY;Penang;"Bayan Lepas (Bayan Lepas Free Industrial Zone Phase 4)";5.30821;100.294
+MY;Penang;"Bayan Lepas (Bayan Lepas Industrial Park)";5.3162;100.288
+ID;Aceh;Lambaro;5.57763;95.3297
+ID;Aceh;"Meunasah Kumbang";5.25329;96.0469
+ID;Aceh;"Mata Ie";5.52992;95.3292
+MY;Penang;"Bayan Lepas (Bandar Bayan Baru)";5.32574;100.287
+MY;Penang;"George Town (Pulau Tikus)";5.43284;100.31
+ID;Aceh;Reuleuet;5.21667;96.2833
+MY;Penang;"Bayan Lepas (Bandar Bayan Baru)";5.32608;100.288
+ID;Aceh;Lhokseumawe;5.11739;97.1607
+MY;Penang;"Tasek Gelugor (Taman Tun Sardon)";5.36954;100.309
+CO;Boyacá;Combita;5.63333;-73.3167
+CO;Boyacá;Sora;5.56514;-73.4502
+MY;Penang;"Bayan Lepas (Bayan Baru)";5.32583;100.287
+MY;Kedah;"Sungai Petani (Bandar Laguna Merbok)";5.68142;100.494
+MY;Penang;"Kampung Sungai Ara (Bayan Baru)";5.32567;100.286
+MY;Terengganu;"Kuala Terengganu (Kampung Teliput)";5.42703;103.075
+CO;Cundinamarca;Zipaquirá;5.026;-74.03
+NG;Delta;Sapele;5.89405;5.67666
+NG;Delta;Abraka;5.79023;6.10473
+NG;"Bayelsa State";Kaiama;5.1197;6.30101
+NG;"Rivers State";Akinima;5.08536;6.46633
+NG;"Imo State";Owerri;5.48363;7.03325
+NG;"Abia State";Umuahia;5.52491;7.49461
+NG;"Abia State";Aba;5.10658;7.36667
+NG;Delta;Orerokpe;5.63747;5.89013
+NG;Delta;Effurun;5.55629;5.78459
+NG;"Abia State";Apumiri;5.51398;7.44758
+CI;Abidjan;"Abidjan (Le Plateau)";5.31922;-4.01514
+CI;"Abidjan Autonomous District";Bago;5.49285;-4.26868
+MY;Kelantan;"Tanah Merah";5.11515;101.889
+ID;Aceh;Indrapuri;5.47704;95.4174
+ID;Aceh;"Banda Aceh";5.54829;95.3238
+MY;Penang;"Tanjung Bungah";5.46491;100.282
+MY;Kelantan;"Pulai Chondong";5.87133;102.232
+TH;Narathiwat;Sukhirin;5.93889;101.771
+LK;"Southern Province";Koggala;5.9886;80.3286
+LK;"Southern Province";Talpe;5.9999;80.2787
+LK;"Southern Province";Mirissa;5.94655;80.4583
+LK;"Southern Province";Weligama;5.97501;80.4297
+ID;Aceh;Jumpangdua;5.19669;96.7844
+TH;Narathiwat;Waeng;5.928;101.884
+ID;Aceh;Montasik;5.50266;95.4231
+MY;Terengganu;"Kampung Telaga Papan";5.76319;102.639
+MY;Sabah;"Lahad Datu";5.02298;118.329
+MY;Kedah;"Kampong Merbok";5.71667;100.417
+MY;Perak;"Kampung Simpang Pulai";5.71057;100.997
+MY;Kedah;"Kota Sarang Semut";5.97907;100.4
+MY;Kelantan;Melor;5.96561;102.294
+MY;Sabah;Tenom;5.11922;115.937
+MY;Sabah;Tambunan;5.71667;116.4
+MY;Sabah;Kinabatangan;5.58602;117.851
+ID;Aceh;"Banda Aceh";5.55007;95.3184
+MY;Penang;"Bayan Lepas (Bayan Baru)";5.32585;100.287
+MY;Penang;Penaga;5.52719;100.384
+MY;Kedah;"Kampung Padang Cina";5.43809;100.579
+MY;Penang;"Permatang Kuching";5.46339;100.381
+MY;Kelantan;"Kampung Bukit Bunga";5.83369;101.9
+MY;Kedah;Pendang;5.99516;100.479
+MY;Sabah;Sandakan;5.8402;118.118
+MY;Kedah;"Kampung Sungai Terap";5.29352;100.628
+MY;Penang;Glugor;5.37215;100.307
+BN;Brunei-Muara;Kapok;5.02447;115.047
+PH;Soccsksargen;Tinoto;5.88667;125.071
+PH;"Autonomous Region in Muslim Mindanao";Bongao;5.10418;119.812
+MY;Kedah;"Sungai Petani";5.64359;100.489
+MY;Sabah;"Kuala Penyu";5.5714;115.598
+MY;Penang;"Simpang Empat";5.28353;100.477
+MV;"Raa Atoll";Un’goofaaru;5.66812;73.0302
+MV;"Baa Atholhu";Eydhafushi;5.10327;73.0708
+MY;Sabah;Donggongon;5.92408;116.077
+MY;Penang;"Kampung Sungai Glugur";5.36966;100.314
+MY;Perak;Gerik;5.41667;101.133
+MV;"Faadhippolhu Atoll";Naifaru;5.44438;73.3657
+ID;Aceh;"Blang Ara";5.11088;97.0296
+CM;West;Bafoussam;5.47775;10.4176
+CM;West;Bangangté;5.14079;10.5253
+NG;Delta;Warri;5.51737;5.75006
+NG;Anambra;Ihiala;5.85475;6.85944
+CO;"Casanare Department";Yopal;5.33573;-72.3939
+CO;"Casanare Department";Yopal;5.3489;-72.4005
+MY;Penang;"Bayan Lepas";5.31307;100.277
+MY;Penang;"George Town";5.42984;100.319
+CO;Boyacá;Chiquinquirá;5.61685;-73.8172
+SR;"Paramaribo District";Paramaribo;5.82628;-55.1573
+MY;Penang;"Bayan Lepas";5.32965;100.278
+CO;"Tolima Department";Fresno;5.15264;-75.0362
+CO;"Caldas Department";Aranzazu;5.27123;-75.4904
+CO;"Caldas Department";Pensilvania;5.38346;-75.1612
+CO;Boyacá;Aquitania;5.51858;-72.8839
+CO;"Risaralda Department";"Belén de Umbría";5.20087;-75.8687
+CI;"Abidjan Autonomous District";Anyama;5.49462;-4.05183
+CO;Antioquia;Jericó;5.79211;-75.786
+CO;Cundinamarca;Nemocón;5.06767;-73.8777
+CO;"Caldas Department";Manizales;5.0668;-75.5068
+CO;"Caldas Department";Villamaría;5.04565;-75.5147
+CO;"Caldas Department";Marquetalia;5.29659;-75.055
+GH;"Greater Accra";"Accra (Osu Klottey)";5.55511;-0.177562
+GH;"Greater Accra";"Accra (Osu Klottey)";5.56594;-0.193527
+CI;"Abidjan Autonomous District";"Abidjan (Plateau)";5.32332;-4.02357
+GH;"Greater Accra";Sakumona;5.62978;-0.0659357
+CI;"Lagunes District";Yakassémé;5.81052;-3.9511
+CI;"Abidjan Autonomous District";"Abidjan (Cocody)";5.36287;-3.99726
+GH;"Greater Accra";"Accra (Ayawaso)";5.6024;-0.195165
+GH;"Greater Accra";"Accra (Ayawaso)";5.65064;-0.187051
+GH;Central;Elmina;5.0847;-1.35093
+GH;Central;Kasoa;5.53449;-0.41679
+GH;Eastern;Nsawam;5.80893;-0.35026
+GH;Central;"Twifu Praso";5.61411;-1.5502
+GH;Eastern;"Akim Swedru";5.8938;-1.01636
+GH;Western;Prestea;5.43385;-2.14295
+CI;"Lagunes District";Tiassalé;5.89839;-4.82293
+CI;Gôh-Djiboua;Chiépo;5.69519;-5.06251
+CI;"Comoé District";Ebotiam;5.15341;-3.4296
+CM;West;Foumban;5.72042;10.9016
+CI;Abidjan;"Abidjan (Cocody)";5.3806;-3.989
+GH;"Greater Accra";Gbawe;5.57167;-0.313874
+GH;"Greater Accra";"Accra (Ayawaso)";5.57236;-0.209853
+GH;"Greater Accra";"Accra (Ayawaso)";5.63583;-0.161359
+GH;Central;"Cape Coast";5.13151;-1.27947
+ID;Aceh;"Banda Aceh";5.53616;95.3323
+ID;Aceh;"Banda Aceh";5.53652;95.3302
+MY;Penang;"George Town";5.43483;100.311
+ID;Aceh;Matangkuli;5.04126;97.3223
+GH;"Greater Accra";"Accra (Kpeshie)";5.57892;-0.176526
+GH;"Greater Accra";"Accra (Ayawaso)";5.59908;-0.180062
+CI;"Abidjan Autonomous District";"Abidjan (Cocody)";5.34448;-3.92235
+CI;"Abidjan Autonomous District";Gnansohmun;5.43606;-3.92283
+CI;"Comoé District";Diatokro;5.39545;-3.34407
+MY;Penang;"Tasek Gelugor (Taman Tun Sardon)";5.36889;100.309
+GH;"Greater Accra";"Accra (Kpeshie)";5.57677;-0.178484
+CO;Boyacá;"Villa de Leyva";5.63413;-73.5244
+MY;Penang;"Bayan Lepas";5.29992;100.261
+MY;Penang;"Teluk Bahang";5.45834;100.215
+LR;"Grand Bassa County";Buchanan;5.87693;-10.0496
+CI;"Abidjan Autonomous District";"Abidjan (Cocody)";5.35761;-3.97514
+CI;Abidjan;"Abidjan (Le Plateau)";5.32657;-4.02058
+CI;Abidjan;"Abidjan (Le Plateau)";5.32537;-4.02056
+CI;"Abidjan Autonomous District";"Abidjan (Le Plateau)";5.32537;-4.02056
+GH;"Greater Accra";"Accra (Ayawaso)";5.66697;-0.187751
+MY;Kedah;"Kulim (Pusat Perniagaan Putra)";5.39107;100.564
+SR;"Paramaribo District";Paramaribo;5.83086;-55.1588
+SR;"Brokopondo District";Brownsweg;5.00435;-55.1533
+SR;"Brokopondo District";Brokopondo;5.05594;-54.9804
+SR;"Wanica District";Lelydorp;5.74954;-55.2823
+SR;"Wanica District";Koewarasan;5.74954;-55.2823
+CI;"Abidjan Autonomous District";"Abidjan (Marcory)";5.28768;-3.9753
+CI;"Abidjan Autonomous District";"Abidjan (Cocody)";5.36465;-4.01547
+GH;"Greater Accra";"Accra (Ayawaso)";5.65056;-0.196224
+CO;Boyacá;Ramiriquí;5.40184;-73.3357
+MY;Perak;Lenggong;5.10633;100.968
+MY;Perak;"Alor Pongsu";5.03333;100.583
+MY;Sabah;Bongawan;5.53333;115.85
+MY;Sabah;Sipitang;5.07903;115.55
+MY;Kedah;"Padang Serai";5.51307;100.554
+MY;Penang;"Permatang Pasir";5.41628;100.439
+MY;Terengganu;Jertih;5.7336;102.49
+CO;"Caldas Department";Anserma;5.23479;-75.7847
+CO;"Caldas Department";Anserma;5.2426;-75.7818
+CO;Boyacá;Socha;5.99732;-72.6914
+CO;Boyacá;Miraflores;5.19608;-73.145
+CO;Boyacá;"Paz de Río";5.98452;-72.7505
+CO;"Caldas Department";Risaralda;5.16647;-75.766
+CO;Antioquia;"La Unión";5.97431;-75.362
+CO;"Tolima Department";Mariquita;5.19889;-74.893
+CO;"Tolima Department";Villahermosa;5.03067;-75.1161
+CO;Boyacá;Sutamarchán;5.61538;-73.617
+CO;Boyacá;Chiquinquirá;5.61637;-73.8175
+CO;"Tolima Department";Honda;5.20856;-74.7358
+CO;Cundinamarca;"Villa de San Diego de Ubaté";5.30933;-73.8158
+CO;Cundinamarca;Cogua;5.06051;-73.9792
+CO;Boyacá;Ráquira;5.53793;-73.632
+CO;Boyacá;"Villa de Leyva";5.6365;-73.5271
+CO;Antioquia;"Santa Bárbara";5.87458;-75.5671
+CO;Cundinamarca;Suesca;5.10289;-73.7984
+CO;"Caldas Department";Palestina;5.0161;-75.6285
+MY;Penang;"Kampung Teluk Kumbar";5.289;100.247
+MY;Kelantan;Dabong;5.37676;102.01
+MY;Kelantan;"Kampong Pangkal Kalong";5.91667;102.217
+MY;Kedah;"Kampung Pulai";5.65838;100.892
+ID;Aceh;Matangkuli;5.03198;97.2835
+ID;Aceh;Tiro;5.19196;95.9367
+ID;Aceh;Matangpayang;5.12577;97.2495
+ID;Aceh;Geuleumpangminyeuk;5.25;96.029
+CO;Cundinamarca;"Puerto Salgar";5.46304;-74.6544
+GY;"East Berbice-Corentyne";Skeldon;5.87035;-57.1468
+CO;Boyacá;Moniquirá;5.87638;-73.5728
+CO;Boyacá;Duitama;5.8245;-73.0341
+CO;Boyacá;Soracá;5.50055;-73.333
+CO;Boyacá;Motavita;5.57655;-73.367
+CO;Boyacá;Boyacá;5.45371;-73.3625
+CO;Antioquia;Montebello;5.94806;-75.5275
+CO;Boyacá;"Puerto Boyacá";5.976;-74.5852
+CO;Cundinamarca;Simijaca;5.50291;-73.8523
+CO;Cundinamarca;"La Vega";5.00177;-74.3417
+CO;Antioquia;Pueblorrico;5.79176;-75.841
+CO;"Tolima Department";Guayabal;5.03103;-74.8868
+CO;Boyacá;"Tunja (Centro Histórico)";5.53295;-73.3613
+CO;"Caldas Department";Supía;5.45303;-75.6507
+CO;"Caldas Department";Neira;5.1665;-75.52
+CO;Antioquia;Támesis;5.66462;-75.7134
+CO;Antioquia;Sonsón;5.71062;-75.3107
+CO;Antioquia;Salgar;5.96502;-75.9654
+CO;Antioquia;Caramanta;5.54782;-75.6437
+CO;Antioquia;Venecia;5.96278;-75.7381
+CO;Antioquia;Hispania;5.79925;-75.9072
+CO;Antioquia;Valparaíso;5.615;-75.6242
+CO;Antioquia;Andes;5.6561;-75.8788
+CO;Antioquia;Tarso;5.86467;-75.8219
+CO;Antioquia;"La Pintada";5.74867;-75.6063
+CO;Antioquia;"Ciudad Bolívar";5.85389;-76.0253
+CO;Antioquia;Abejorral;5.78928;-75.4273
+CO;Boyacá;Cómbita;5.63312;-73.324
+CO;"Risaralda Department";Quinchía;5.33957;-75.7302
+CO;Boyacá;"Santa Sofía";5.70908;-73.604
+CO;Cundinamarca;Topaipí;5.33457;-74.3029
+CO;Boyacá;Ventaquemada;5.36753;-73.5208
+CO;"Santander Department";"Puente Nacional";5.87739;-73.6781
+CO;Boyacá;Sáchica;5.58453;-73.5418
+CO;"Casanare Department";Villanueva;5.28333;-71.9667
+CO;Boyacá;Samacá;5.49273;-73.4854
+CO;"Tolima Department";Frías;5.02973;-75.0086
+CO;Antioquia;Argelia;5.73127;-75.1426
+CO;"Caldas Department";Manizales;5.06297;-75.5028
+CO;Boyacá;Tuta;5.68966;-73.2278
+CO;"Risaralda Department";Santuario;5.07415;-75.9642
+CO;Cundinamarca;Zipaquirá;5.02148;-73.991
+CO;Boyacá;Otanche;5.65672;-74.1825
+CO;Boyacá;Gachantivá;5.75662;-73.5395
+ID;Aceh;Sabang;5.88969;95.3164
+PH;"Autonomous Region in Muslim Mindanao";Binuang;5.9749;121.034
+MY;Kelantan;"Cherang Ruku";5.87062;102.495
+MY;Kedah;"Kota Kuala Muda";5.58822;100.371
+MY;Sabah;Papar;5.73333;115.933
+MY;Kedah;Bedong;5.72743;100.509
+CO;Tolima;Honda;5.20278;-74.7389
+MY;Labuan;Labuan;5.29326;115.207
+CO;Cundinamarca;"La Palma";5.3592;-74.3905
+CO;Cundinamarca;Pacho;5.13278;-74.1598
+VE;Amazonas;"Puerto Ayacucho";5.66049;-67.5834
+CO;"Casanare Department";Támara;5.82998;-72.1629
+CO;"Casanare Department";"Paz de Ariporo";5.88064;-71.8929
+CO;"Casanare Department";Tauramena;5.01068;-72.7505
+CO;Boyacá;Firavitoba;5.66885;-72.9929
+CO;Boyacá;Pesca;5.55;-73.05
+CO;Boyacá;"Socha Viejo";5.9817;-72.715
+CO;"Risaralda Department";Mistrató;5.29622;-75.8839
+CO;Cundinamarca;Nocaima;5.06696;-74.3844
+CO;Cundinamarca;Manta;5.00864;-73.5412
+CO;Cundinamarca;Paime;5.37054;-74.1522
+SR;"Paramaribo District";Paramaribo;5.82515;-55.1573
+SR;"Paramaribo District";Paramaribo;5.86638;-55.1668
+SR;"Commewijne District";Meerzorg;5.80789;-55.1408
+SR;"Nickerie District";"Nieuw Nickerie";5.92606;-56.973
+SR;"Marowijne District";Albina;5.49788;-54.0552
+SR;"Commewijne District";"Nieuw Amsterdam";5.88573;-55.0887
+SR;"Wanica District";Lelydorp;5.7;-55.2333
+SR;"Para District";Onverwacht;5.58983;-55.1946
+CO;Boyacá;Chíquiza;5.60412;-73.4852
+CO;Boyacá;Oicatá;5.59548;-73.3082
+CO;"Caldas Department";Viterbo;5.06242;-75.8716
+CO;"Casanare Department";Pore;5.72792;-71.9927
+CO;"Caldas Department";Riosucio;5.42068;-75.7054
+CO;Antioquia;"San Francisco";5.96426;-75.1016
+CO;Boyacá;Chiquinquirá;5.61478;-73.8196
+CO;"Casanare Department";Trinidad;5.40849;-71.662
+CO;"Caldas Department";Manizales;5.04986;-75.4822
+CO;"Caldas Department";Manizales;5.06409;-75.5134
+CO;"Casanare Department";Yopal;5.34916;-72.402
+CO;"Tolima Department";Falan;5.12383;-74.9518
+CO;Cundinamarca;Caparrapí;5.34644;-74.4915
+CO;Cundinamarca;Villapinzón;5.21617;-73.5949
+CO;Cundinamarca;Villeta;5.01075;-74.4721
+CO;"Caldas Department";Manizales;5.06199;-75.4992
+CO;"Caldas Department";Manizales;5.04996;-75.4788
+GY;Potaro-Siparuni;Mahdia;5.28473;-59.1498
+CO;Antioquia;"La Unión";5.97251;-75.3574
+CO;Boyacá;Sogamoso;5.70805;-72.9339
+CO;Cundinamarca;Guaduas;5.06692;-74.595
+CO;Cundinamarca;Sesquilé;5.04463;-73.7972
+CO;Cundinamarca;Lenguazaque;5.30711;-73.7115
+CO;Cundinamarca;Tausa;5.19903;-73.8913
+CO;Cundinamarca;Guachetá;5.38425;-73.6862
+CO;"Caldas Department";"San José";5.0814;-75.7915
+CO;"Caldas Department";"San José";5.08221;-75.7911
+CO;Cundinamarca;Zipaquirá;5.01854;-74.0046
+CO;Chocó;"El Carmen de Atrato";5.89862;-76.1421
+CO;Cundinamarca;Villagómez;5.27372;-74.1961
+CO;Chocó;Bagadó;5.41164;-76.4152
+CO;Boyacá;Quípama;5.5194;-74.1777
+CO;Chocó;Tadó;5.26598;-76.5649
+CO;Antioquia;Fredonia;5.92583;-75.6706
+CO;"Caldas Department";Aguadas;5.61161;-75.4562
+CO;"Risaralda Department";Apía;5.10658;-75.9424
+CO;Cundinamarca;Nimaima;5.12614;-74.3849
+MY;Penang;"Batu Kawan";5.22359;100.45
+CO;"Caldas Department";Manizales;5.06651;-75.5012
+GH;"Greater Accra";"Accra (Abrekuma)";5.56898;-0.268277
+GH;"Greater Accra";"Accra (Ayawaso)";5.63861;-0.144099
+GH;"Greater Accra";Tema;5.64432;0.0150112
+GH;"Greater Accra";"Accra (Kpeshie)";5.6161;-0.103124
+CI;"Abidjan Autonomous District";"Abidjan (Vge)";5.29441;-3.9792
+GH;"Greater Accra";"Accra (Osu Klottey)";5.56446;-0.182042
+GH;"Greater Accra";"Accra (Ayawaso)";5.63294;-0.174437
+GH;Central;Biriwa;5.1624;-1.15221
+GH;"Greater Accra";"Accra (Osu Klottey)";5.563;-0.211571
+GH;"Greater Accra";"Accra (Osu Klottey)";5.5589;-0.200388
+CI;"Abidjan Autonomous District";"Abidjan (Marcory)";5.31065;-3.96489
+GH;"Greater Accra";"Accra (Ayawaso)";5.62215;-0.181511
+GH;"Greater Accra";"Accra (Osu Klottey)";5.56535;-0.179033
+GH;"Greater Accra";"Accra (Okaikoi South)";5.56889;-0.219245
+GH;"Greater Accra";"Accra (Osu Klottey)";5.54928;-0.194631
+GH;"Greater Accra";"Accra (Osu Klottey)";5.56315;-0.189278
+GH;"Greater Accra";"Accra (Osu Klottey)";5.57092;-0.204868
+CI;"Bas-Sassandra District";Niniféroua;5.78202;-6.44184
+CI;"Lagunes District";Bacanda;5.63331;-4.87758
+CI;"Abidjan Autonomous District";Anna;5.32454;-3.87876
+CI;"Lagunes District";Toupah;5.31891;-4.56552
+ET;Oromiya;Negēlē;5.31667;39.5833
+ET;"South Ethiopia Regional State";Bako;5.78333;36.5667
+GH;"Greater Accra";"Accra (Osu Klottey)";5.56099;-0.194326
+GH;"Greater Accra";"Accra (Osu Klottey)";5.55505;-0.201536
+GH;"Greater Accra";"Accra (Osu Klottey)";5.55964;-0.198181
+CI;"Abidjan Autonomous District";"Abidjan (Cocody)";5.33074;-3.99932
+LR;"River Gee County";"Fish Town";5.19739;-7.87579
+CI;"Abidjan Autonomous District";"Abidjan (Cocody)";5.3663;-3.99764
+NG;"Rivers State";Omoku;5.34388;6.65684
+NG;Delta;Aboh;5.54781;6.52588
+LR;"Sinoe County";Greenville;5.01133;-9.0388
+SO;Galguduud;"Dusa Marreb";5.53597;46.3867
+GH;"Greater Accra";"Accra (Okaikoi South)";5.55928;-0.222112
+GH;"Greater Accra";"Accra (Osu Klottey)";5.55239;-0.199611
+LR;"River Cess County";"River Cess";5.45683;-9.58167
+GH;"Greater Accra";"Accra (Osu Klottey)";5.55932;-0.192475
+CO;"Risaralda Department";Guática;5.31569;-75.7983
+CO;Chocó;Condoto;5.09351;-76.6497
+CO;"Santander Department";Guavatá;5.95502;-73.7002
+CO;Boyacá;Toca;5.56393;-73.184
+CO;Boyacá;Corrales;5.82968;-72.8433
+CO;Boyacá;Arcabuco;5.75463;-73.4367
+ID;Aceh;Lampuuk;5.57098;95.3895
+MY;Penang;"Bayan Lepas (Bandar Bayan Baru)";5.32647;100.287
+MV;"Noonu Atoll";Maafaru;5.83078;73.4794
+MY;Perak;"Parit Buntar";5.14657;100.492
+MY;Kedah;Gurun;5.81717;100.474
+MY;Terengganu;"Bandar Permaisuri";5.52241;102.749
+MY;Penang;"Bukit Mertajam (Kampung Tok Ebot)";5.38329;100.415
+FM;Kosrae;Tofol;5.30956;162.981
+MY;Sabah;Tambunan;5.4204;116.797
+MY;Penang;"Tasek Gelugor";5.48032;100.498
+CO;Cundinamarca;"Villa de San Diego de Ubaté";5.31202;-73.8182
+CO;Cundinamarca;"Carmen de Carupa";5.30767;-73.8689
+CO;Boyacá;Pauna;5.65861;-73.9825
+CO;Cundinamarca;"El Peñón";5.25264;-74.2907
+GH;"Greater Accra";"Accra (Ayawaso)";5.6007;-0.190478
+CO;"Tolima Department";Herveo;5.08545;-75.3278
+CO;Cundinamarca;Quebradanegra;5.11737;-74.4794
+CO;Boyacá;Tibaná;5.31728;-73.3966
+MY;Penang;"Taman Prai (Kawasan Perusahaan Bebas Perai)";5.36476;100.39
+MY;Kelantan;"Kampong Tok Bali";5.89174;102.484
+MY;Penang;"Kampung Batu Feringgi";5.46948;100.244
+GH;"Greater Accra";"Accra (Osu Klottey)";5.55968;-0.200233
+GH;"Greater Accra";"Accra (Ayawaso)";5.61526;-0.176465
+GH;"Greater Accra";"Accra (Osu Klottey)";5.55614;-0.205482
+GF;Guyane;Kourou;5.1574;-52.643
+CI;"Abidjan Autonomous District";"Abidjan (Cocody)";5.32865;-4.00723

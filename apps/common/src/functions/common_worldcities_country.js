@@ -5,7 +5,7 @@
 /**
  * @import {server_server_response,commonWorldCitiesCity} from '../../../../server/types.js'
  */
-
+const {getData} = await import('./common_data.js');
 /**
  * @name appFunction
  * @description Get cities for given country from worldcities db
@@ -24,18 +24,13 @@
  * @returns {Promise.<server_server_response & {result?:{data:string}[]}>}
  */
 const appFunction = async parameters =>{
-    const fs = await import('node:fs');
-    /**
-     *  Get file
-     * @returns {Promise.<commonWorldCitiesCity[]>}
-     */
-    const getFile = async () =>{
-        /**@ts-ignore */
-        const PATH = `${import.meta.dirname.replaceAll('\\', '/')}/worldcities`;
-        const FILE = 'worldcities.json';
-        return fs.promises.readFile(`${PATH}/${FILE}`, 'utf8').then(file=>JSON.parse(file.toString()));
-    };
-    return {result:[{data:Buffer.from (JSON.stringify(await getFile().then(cities=>cities.filter((item) => item.iso2 == parameters.data.country)))).toString('base64')}], type:'JSON'};
+
+    return {result:[{data:  Buffer.from (JSON.stringify(
+                                    getData('WORLDCITIES')
+                                    .filter((/**@type{commonWorldCitiesCity}*/cities)=>
+                                        cities.iso2 == parameters.data.country)
+                                    )
+                            ).toString('base64')}], type:'JSON'};
     
 };
 export default appFunction;

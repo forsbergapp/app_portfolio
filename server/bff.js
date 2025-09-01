@@ -20,7 +20,6 @@ const {server} = await import('./server.js');
 const {registryConfigServices} = await import('../serviceregistry/registry.js');
 const {default:worldcities} = await import('../apps/common/src/functions/common_worldcities_city_random.js');
 const {default:ComponentCreate} = await import('../apps/common/src/component/common_maintenance.js');
-
 /**
  * @name bffConnect
  * @description Initial request from app, connects to socket, sends SSE message with common library and parameters
@@ -213,18 +212,12 @@ const bffMicroservice = async parameters =>{
 * @returns {Promise.<*>}
 */
 const bffGeodata = async parameters =>{
-   //get GPS from IP
-   const result_gps = await bffMicroservice({  app_id:parameters.app_id,
-                                                   microservice:'GEOLOCATION',
-                                                   service:'IP', 
-                                                   method:'GET',
-                                                   data:{ip:parameters.ip},
-                                                   ip:parameters.ip,
-                                                   user_agent:parameters.user_agent,
-                                                   accept_language:parameters.user_agent,
-                                                   endpoint:'SERVER'
-                                               })
-   .catch(()=>null);
+   const {getIP} = await import('../apps/common/src/functions/common_geolocation.js');
+   const result_gps = getIP({ app_id:parameters.app_id,
+                                    data:{ip:parameters.ip},
+                                    ip:parameters.ip,
+                                    locale:'en'
+                                }).result;
    const result_geodata = {};
    if (result_gps?.result){
        result_geodata.latitude =   result_gps.result.latitude;
@@ -539,9 +532,9 @@ const bffResponse = async parameters =>{
                             //return pagination format
                             result = {  
                                         page_header:
-                                            {	total_count:	parameters.result_request.result.length,
+                                            {	total_count:	parameters.result_request.result?.length??0,
                                                 offset: 		offset??0,
-                                                count:			parameters.result_request.result
+                                                count:			(parameters.result_request.result??[])
                                                                 .filter((/**@type{*}*/row, /**@type{number}*/index)=>(offset??0)>0?
                                                                                                                         (index+1)>=(offset??0):
                                                                                                                             true)
@@ -549,7 +542,7 @@ const bffResponse = async parameters =>{
                                                                                                                         (index+1)<=(limit??0)
                                                                                                                             :true).length
                                             },
-                                        rows:               parameters.result_request.result
+                                        rows:               (parameters.result_request.result??[])
                                                             .filter((/**@type{*}*/row, /**@type{number}*/index)=>(offset??0)>0?
                                                                                                                     (index+1)>=(offset??0):
                                                                                                                         true)
@@ -563,12 +556,12 @@ const bffResponse = async parameters =>{
                             result = {  
                                         list_header:
                                             {	
-                                                total_count:	parameters.result_request.result.length,
+                                                total_count:	parameters.result_request.result?.length??0,
                                                 offset: 		0,
-                                                count:			Math.min(limit??0,parameters.result_request.result.length)
+                                                count:			Math.min(limit??0,parameters.result_request.result?.length??0)
                                             },
                                         rows:               (typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
-                                                                parameters.result_request.result
+                                                                (parameters.result_request.result??[])
                                                                 .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
                                                                                                                         (index+1)<=(limit??0)
                                                                                                                             :true):
