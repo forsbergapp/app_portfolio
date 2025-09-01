@@ -2317,7 +2317,7 @@ const common_FFBSSE = async parameters =>{
         }
     //The total number of chunks that can be contained in the internal queue before backpressure is applied
     }, new CountQueuingStrategy({ highWaterMark: 1 }));
-    const BFF = parameters.socket.pipeTo(BFFStream).catch(()=>commonWindowSetTimeout(()=>{commonSocketConnectOnline();}, 5000));
+    parameters.socket.pipeTo(BFFStream).catch(()=>commonWindowSetTimeout(()=>{commonSocketConnectOnline();}, 5000));
 };
 /**
  * @name commonFFB
@@ -2618,13 +2618,13 @@ const commonMicroserviceGeolocationPlace = async (longitude, latitude) => {
     return await new Promise((resolve)=>{
        commonFFB({path:'/geolocation/place', query:`longitude=${longitude}&latitude=${latitude}`, method:'GET', authorization_type:'APP_ID'})
         .then(result=>{
-            const json = JSON.parse(result);
+            const json = JSON.parse(result).rows;
             if (json.place=='' && json.region =='' && json.countryCode =='')
                 resolve('');
             else
                 resolve(json.place + ', ' +
                         json.region + ', ' +
-                        json.countryCode);
+                        json.country + ' (' + json.countryCode + ')');
         })
         .catch(()=>resolve(''));
     });
@@ -2640,9 +2640,9 @@ const commonMicroserviceGeolocationIp = async ip => {
     return commonFFB({path:'/geolocation/ip', query:`ip=${ip}`, method:'GET', authorization_type:'APP_ID'})
         .then(result=>{
             return {
-                latitude:JSON.parse(result).latitude,
-                longitude: JSON.parse(result).longitude,
-                place: `${JSON.parse(result).city ?? ''}, ${JSON.parse(result).regionName}, ${JSON.parse(result).countryName}`
+                latitude:JSON.parse(result).rows.latitude,
+                longitude: JSON.parse(result).rows.longitude,
+                place: `${JSON.parse(result).rows.place}`
             };
         })
         .catch(()=>{return {

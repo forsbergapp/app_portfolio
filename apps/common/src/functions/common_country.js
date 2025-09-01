@@ -6,6 +6,7 @@
  * @import {server_server_response} from '../../../../server/types.js'
  */
 const {formatLocale} = await import('./common_locale.js');
+const {getData} = await import('./common_data.js');
 /**
  * @name appFunction
  * @description Get countries using ISO 3166-1 country code and language code using ISO 639-1
@@ -308,16 +309,17 @@ const appFunction = async parameters =>{
 	 *  country-list\data\[language_COUNTRYCODE]\country.json
 	 *	{"DE":"Germany", [CODE]:[Text], [CODE]:[Text], ...}
      */
-    /**@ts-ignore */
-     const PATH = `${import.meta.dirname.replaceAll('\\', '/')}/country-list/data/`;
-     const FILE = 'country.json';
-     const fs = await import('node:fs');
-
-     /**@type {[key:string]} */
-     const countries = await fs.promises.readFile(`${PATH}${formatLocale(parameters.locale)}/${FILE}`, 'utf8')
-                                 .then(file=>JSON.parse(file.toString()));
+    
+    /**@type {[key:string]} */
+    const countries =   getData('COUNTRY').filter((/**@type {{  locale:string,
+                                                                countries:[key:string]}}*/row)=>
+                                                                    row.locale == formatLocale(parameters.locale))[0].countries
+                        ??
+                        getData('COUNTRY').filter((/**@type {{  locale:string,
+                                                                countries:[key:string]}}*/row)=>
+                                                                    row.locale == 'en')[0].countries;
     //format result and order by group name, country code
-     const countries_map = Object.entries(countries)
+    const countries_map = Object.entries(countries)
                                  .map(country => {
                                     const data = {  value:country[0].toLowerCase(), 
                                                     country_code:country[0].toLowerCase(), 
@@ -340,6 +342,6 @@ const appFunction = async parameters =>{
                                         return 0;
                                 });
     
-     return {result:[{data:Buffer.from (JSON.stringify(countries_map)).toString('base64')}], type:'JSON'};
+    return {result:[{data:Buffer.from (JSON.stringify(countries_map)).toString('base64')}], type:'JSON'};
 };
 export default appFunction;
