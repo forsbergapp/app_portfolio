@@ -59,7 +59,7 @@ const getIP = parameters =>{
     if (geolocation_ip && geolocation_ip.split(';')[0] !='127.0.0.0'){
         const lat = geolocation_ip.split(';')[2];
         const long = geolocation_ip.split(';')[3];
-        const place = getData('GEOLOCATION_PLACE').filter((/**@type{string}*/row)=>
+        const place = getData('GEOLOCATION_PLACE')[lat.split('.')[0]].filter((/**@type{string}*/row)=>
                             row.split(';')[3] == lat &&
                             row.split(';')[4] == long
                         )[0];
