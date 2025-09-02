@@ -3,10 +3,11 @@
  */
 
 /**
- * @import {server_server_response} from '../../../../server/types.js'
+ * @import {server_db_document_ConfigServer, server_server_response} from '../../../../server/types.js'
  */
 const {formatLocale} = await import('./common_locale.js');
 const {getData} = await import('./common_data.js');
+const {server} = await import('../../../../server/server.js');
 const { getTimezone } = await import ('../../public/modules/regional/regional.js');
 /**
  * @name getIP
@@ -47,10 +48,14 @@ const getIP = parameters =>{
      *      Decimal longitude
      */
     const ipNumber = IPtoNum(parameters.data.ip??'');
-    //search in partitioned key
-    const geolocation_ip = getData('GEOLOCATION_IP')[('000'+parameters.data.ip?.split(',')[0].split('.')[0]).substr(-3)].filter((/**@type{string}*/row)=> 
+    //if geolocation is enabled then search in partitioned key
+    const geolocation_ip = server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0,data:{ config_group:'SERVICE_IAM'}}).result
+                            .filter((/**@type{server_db_document_ConfigServer['SERVICE_IAM']}*/parameter)=>
+                                    'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1?
+                            getData('GEOLOCATION_IP')[('000'+parameters.data.ip?.split(',')[0].split('.')[0]).substr(-3)].filter((/**@type{string}*/row)=> 
                                            IPtoNum(row.split(';')[0]) <= ipNumber &&
-                                           IPtoNum(row.split(';')[1]) >= ipNumber)[0];
+                                           IPtoNum(row.split(';')[1]) >= ipNumber)[0]:
+                                           null;
     if (geolocation_ip && geolocation_ip.split(';')[0] !='127.0.0.0'){
         const lat = geolocation_ip.split(';')[2];
         const long = geolocation_ip.split(';')[3];
