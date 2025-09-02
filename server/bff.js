@@ -219,13 +219,11 @@ const bffGeodata = async parameters =>{
                                     locale:'en'
                                 }).result;
    const result_geodata = {};
-   if (result_gps?.result){
-       result_geodata.latitude =   result_gps.result.latitude;
-       result_geodata.longitude=   result_gps.result.longitude;
-       result_geodata.place    =   result_gps.result.city + ', ' +
-                                   result_gps.result.regionName + ', ' +
-                                   result_gps.result.countryName;
-       result_geodata.timezone =   result_gps.result.timezone;
+   if (result_gps){
+       result_geodata.latitude =   result_gps.latitude;
+       result_geodata.longitude=   result_gps.longitude;
+       result_geodata.place    =   result_gps.place;
+       result_geodata.timezone =   result_gps.timezone;
    }
    else{
        const result_city = await worldcities({ app_id:parameters.app_id,
