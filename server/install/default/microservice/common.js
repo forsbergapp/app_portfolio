@@ -132,6 +132,7 @@ const commonAuth = async parameters =>{
  *          token:string,
  *          uuid:string,
  *          secret:string,
+ *          service:string,
  *          message_queue_url:string,
  *          message_queue_method:'POST'|'GET',
  *          error:*,
@@ -146,6 +147,7 @@ const commonServerReturn = async parameters=>{
     parameters.res.statusCode = parameters.code;
     if (parameters.error){
         commonLog({type:'MICROSERVICE_ERROR', 
+                   service:parameters.service,
                    message:parameters.error,
                    token:parameters.token,
                    message_queue_url:parameters.message_queue_url,
@@ -172,6 +174,7 @@ const commonServerReturn = async parameters=>{
  * @name commonLog
  * @description Logs info or error in message queue
  * @param {{type:'MICROSERVICE_LOG'|'MICROSERVICE_ERROR',
+ *          service:string,
  *          message:string,
  *          token:string,
  *          message_queue_url:string,
@@ -187,7 +190,7 @@ const commonLog = parameters =>{
         uuid:parameters.uuid,
         secret:parameters.secret,
         method:parameters.message_queue_method, 
-        body:{  IAM_service:'GEOLOCATION', 
+        body:{  IAM_service:parameters.service, 
                 type: parameters.type, 
                 message:parameters.message
             },

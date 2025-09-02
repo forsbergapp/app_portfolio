@@ -2720,9 +2720,6 @@
 			            {
                             "$ref": "#/components/parameters/server_user_agent"
                         },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language"
-                        },
                         {
                             "$ref": "#/components/parameters/server_response"
                         }
@@ -4253,9 +4250,6 @@
 			            {
                             "$ref": "#/components/parameters/server_user_agent"
                         },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language"
-                        },
                         {
                             "$ref": "#/components/parameters/server_response"
                         }
@@ -4334,9 +4328,6 @@
                         },
 			            {
                             "$ref": "#/components/parameters/server_user_agent"
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language"
                         },
                         {
                             "$ref": "#/components/parameters/server_response"

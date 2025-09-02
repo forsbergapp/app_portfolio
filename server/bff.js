@@ -47,7 +47,6 @@ const bffConnect = async parameters =>{
                             authorization:'',
                             uuid:parameters.resource_id,
                             user_agent:parameters.user_agent,
-                            accept_language:parameters.accept_language,
                             ip:parameters.ip,
                             response:parameters.response
                             });
@@ -140,65 +139,47 @@ const bffExternal = async parameters =>{
 * @returns {Promise.<server_server_response>}
 */
 const bffMicroservice = async parameters =>{
-
-   /**@type{server_db_document_ConfigServer} */
-   const CONFIG_SERVER = server.ORM.db.ConfigServer.get({app_id:0}).result;
-   
-   /**@type{microservice_registry_service} */
-   if ((parameters.microservice == 'GEOLOCATION' && server.ORM.UtilNumberValue(CONFIG_SERVER.SERVICE_IAM
-                                                       .filter(parameter=>'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1)||
-       parameters.microservice != 'GEOLOCATION'){
-              
-       //convert data object to string if method=GET, add always app_id parameter for authentication and send as base64 encoded
-       const query = Buffer.from((parameters.method=='GET'?Object.entries({...parameters.data, ...{service:parameters.service}}).reduce((query, param)=>query += `${param[0]}=${param[1]}&`, ''):'')
-                                   + `app_id=${parameters.app_id}`
-                               ).toString('base64');
-       const ServiceRegistry = await registryConfigServices(parameters.microservice);
-       return await server.serverCircuitBreakerMicroService.serverRequest( 
-                       {
-                           request_function:   server.serverRequest,
-                           service:            parameters.microservice,
-                           protocol:           'http',
-                           url:                null,
-                           host:               ServiceRegistry.server_host,
-                           port:               ServiceRegistry.server_port,
-                           admin:              parameters.app_id == server.ORM.UtilNumberValue(
-                                                           server.ORM.db.ConfigServer.get({  app_id:parameters.app_id, 
-                                                                               data:{  config_group:'SERVICE_APP', 
-                                                                                       parameter:'APP_COMMON_APP_ID'}}).result
-                                                       ),
-                           path:               `/api/v${ServiceRegistry.rest_api_version}?${query}`,
-                           body:               parameters.data,
-                           method:             parameters.method,
-                           client_ip:          parameters.ip,
-                           user_agent:         parameters.user_agent,
-                           accept_language:    parameters.accept_language,
-                           authorization:      null,
-                           encryption_type:    'MICROSERVICE',
-                           'app-id':           parameters.app_id,
-                           endpoint:           parameters.endpoint
-                       })
-                       .then((/**@type{*}*/result)=>{
-                           return result.http?result:{result:JSON.parse(result), type:'JSON'};
-                       })
-                       .catch((/**@type{*}*/error)=>{
-                           return {http:500, 
-                                   code:'MICROSERVICE', 
-                                   text:error, 
-                                   developerText:null, 
-                                   moreInfo:null,
-                                   type:'JSON'};
-                       });
-       }
-   else{
-       return {
-               http:503, 
-               code:'MICROSERVICE', 
-               text:server.iam.iamUtilMessageNotAuthorized(), 
-               developerText:null, 
-               moreInfo:null,
-               type:'JSON'};
-   }
+                 
+    //convert data object to string if method=GET, add always app_id parameter for authentication and send as base64 encoded
+    const query = Buffer.from((parameters.method=='GET'?Object.entries({...parameters.data, ...{service:parameters.service}}).reduce((query, param)=>query += `${param[0]}=${param[1]}&`, ''):'')
+                                + `app_id=${parameters.app_id}`
+                            ).toString('base64');
+    const ServiceRegistry = await registryConfigServices(parameters.microservice);
+    return await server.serverCircuitBreakerMicroService.serverRequest( 
+                {
+                    request_function:   server.serverRequest,
+                    service:            parameters.microservice,
+                    protocol:           'http',
+                    url:                null,
+                    host:               ServiceRegistry.server_host,
+                    port:               ServiceRegistry.server_port,
+                    admin:              parameters.app_id == server.ORM.UtilNumberValue(
+                                                    server.ORM.db.ConfigServer.get({  app_id:parameters.app_id, 
+                                                                        data:{  config_group:'SERVICE_APP', 
+                                                                                parameter:'APP_COMMON_APP_ID'}}).result
+                                                ),
+                    path:               `/api/v${ServiceRegistry.rest_api_version}?${query}`,
+                    body:               parameters.data,
+                    method:             parameters.method,
+                    client_ip:          parameters.ip,
+                    user_agent:         parameters.user_agent,
+                    accept_language:    parameters.accept_language,
+                    authorization:      null,
+                    encryption_type:    'MICROSERVICE',
+                    'app-id':           parameters.app_id,
+                    endpoint:           parameters.endpoint
+                })
+                .then((/**@type{*}*/result)=>{
+                    return result.http?result:{result:JSON.parse(result), type:'JSON'};
+                })
+                .catch((/**@type{*}*/error)=>{
+                    return {http:500, 
+                            code:'MICROSERVICE', 
+                            text:error, 
+                            developerText:null, 
+                            moreInfo:null,
+                            type:'JSON'};
+                });
 }; 
 /**
  * @name bffGeodata
@@ -249,32 +230,20 @@ const bffGeodata = async parameters =>{
  * @function
  * @param {number} app_id 
  * @param {string} ip
- * @param {string} headers_user_agent 
- * @param {string} headers_accept_language
  * @returns {Promise.<{  latitude:string,
 *              longitude:string,
 *               place:string,
 *               timezone:string}>}
 */
-const bffGeodataUser = async (app_id, ip, headers_user_agent, headers_accept_language) =>{
+const bffGeodataUser = async (app_id, ip) =>{
    //get GPS from IP
-   const result_geodata = await bffMicroservice({  app_id:app_id,
-                                                       microservice:'GEOLOCATION',
-                                                       service:'IP', 
-                                                       method:'GET',
-                                                       data:{ip:ip},
-                                                       ip:ip,
-                                                       user_agent:headers_user_agent,
-                                                       accept_language:headers_accept_language,
-                                                       endpoint:'SERVER'
-                                                   })
-                                                   .then((/**@type{*}*/result_gps)=>result_gps.http?null:result_gps.result)
-                                                   .catch(()=>null);
-   
-   const place = result_geodata?
-                   (result_geodata.city + ', ' +
-                   result_geodata.regionName + ', ' +
-                   result_geodata.countryName):'';
+   const {getIP} = await import('../apps/common/src/functions/common_geolocation.js');
+   const result_geodata = getIP({ app_id:app_id,
+                                    data:{ip:ip},
+                                    ip:ip,
+                                    locale:'en'
+                                }).result;   
+   const place = result_geodata?result_geodata.place:'';
    return {latitude:result_geodata?result_geodata.latitude ?? '':'',
            longitude:result_geodata?result_geodata.longitude ?? '':'',
            place:place,

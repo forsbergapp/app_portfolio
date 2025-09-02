@@ -114,9 +114,7 @@ pm2 start $HOME/app_portfolio/server/init.js --cwd $HOME/app_portfolio --name ap
 ```
 	optional (batch and git are used for CI/CD solution):
 ```	
-pm2 start $HOME/app_portfolio/serviceregistry/microservice/batch/server.js --cwd $HOME/app_portfolio --name batch --watch="serviceregistry/microservice/geolocation" --watch-delay 10
-
-pm2 start $HOME/app_portfolio/serviceregistry/microservice/geolocation/server.js --cwd $HOME/app_portfolio --name geolocation --watch="serviceregistry/microservice/batch"
+pm2 start $HOME/app_portfolio/serviceregistry/microservice/batch/server.js --cwd $HOME/app_portfolio --name batch
 
 ```
 

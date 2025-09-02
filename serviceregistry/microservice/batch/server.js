@@ -43,7 +43,7 @@ const serverStart = async () =>{
      * @description Get config
      * @type{config} 
      */
-    const Config = await common.commonConfig('GEOLOCATION');
+    const Config = await common.commonConfig('BATCH');
 
     const auth = await common.commonAuth({  service_registry_auth_method:Config.service_registry_auth_method,
                                             service_registry_auth_url:Config.service_registry_auth_url,

@@ -21,15 +21,6 @@
                 "<node_internals>/**"
             ],
             "type": "node"
-        },
-        {
-            "name": "Microservice Geolocation",
-            "program": "${workspaceFolder}/serviceregistry/microservice/geolocation/server.js",
-            "request": "launch",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "type": "node"
         }
     ]
 }

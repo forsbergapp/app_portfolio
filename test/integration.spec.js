@@ -31,46 +31,6 @@ const test = async t =>
         ];
         }).then(result=>resolve(result)));
     }),
-    await t.describe('Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps except common app id', async ()=> {
-        return await new Promise(resolve=>
-        t.it('should return values', async () =>{
-            /**@type{server_db_table_App[]}*/
-            const apps = server.ORM.db.App.get({app_id:0, resource_id:null})
-                        .result.filter((/**@type{server_db_table_App}*/app)=>
-                            app.id !=server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0);
-            //
-            for (const app of apps) {
-                //get GPS from IP
-                const result = await server.bff.bffMicroservice({  app_id:app.id,
-                                                                microservice:'GEOLOCATION',
-                                                                service:'IP', 
-                                                                method:'GET',
-                                                                data:{ip:'127.0.0.1'},
-                                                                ip:'127.0.0.1',
-                                                                user_agent:'*',
-                                                                accept_language:'',
-                                                                endpoint:'SERVER'
-                                                            })
-                                    .catch(error=>{return {http:error.http};});         
-                if (result.http)
-                    return [
-                        /**@ts-ignore */
-                        t.expect('Microservice Geolocation',    result.http)['toBe'](200),
-                    ];
-                else
-                    return [
-                        /**@ts-ignore */
-                        t.expect('Latitude',    result.result?.latitude)['not.toBe'](null),
-                        /**@ts-ignore */
-                        t.expect('Longitude',   result.result?.longitude)['not.toBe'](null),
-                        /**@ts-ignore */
-                        t.expect('Latitude',    result.result?.latitude)['not.toBeUndefined'](),
-                        /**@ts-ignore */
-                        t.expect('Longitude',   result.result?.longitude)['not.toBeUndefined']()
-                    ];
-            }
-        }).then(result=>resolve(result)));
-    }),
     await t.describe('Integration test, server function worldcities random city called from BFF and from all apps', async ()=> {    
         return await new Promise(resolve=>
         t.it('should return values ', async () =>{
