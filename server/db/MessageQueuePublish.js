@@ -59,7 +59,7 @@ const post = async parameters => {
             post:{data:data_new}}), type:'JSON'};
     }
     else
-        if( (parameters.data.service == 'BATCH' || parameters.data.service == 'GEOLOCATION') &&
+        if( parameters.data.service == 'BATCH' &&
             (parameters.data.message?.type=='MICROSERVICE_LOG' || parameters.data.message?.type=='MICROSERVICE_ERROR') &&
             //no other keys
             Object.keys(parameters.data.message).length==2){

@@ -748,7 +748,7 @@
  * @description DB TABLE MessageQueuePublish
  * @memberof dbObjects
  * @typedef {{  id?:number,
- *              service:'MESSAGE'|'BATCH'|'GEOLOCATION',
+ *              service:'MESSAGE'|'BATCH',
  *              message:*,
  *              created?:string}} server_db_table_MessageQueuePublish
  */
@@ -1574,7 +1574,7 @@
 
 /**
  * @description SERVICEREGISTRY microservice_registry_service
- * @typedef {'GEOLOCATION'|'MAIL'|string} microservice_registry_service
+ * @typedef {'MAIL'|string} microservice_registry_service
  */
 
 

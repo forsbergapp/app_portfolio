@@ -974,7 +974,7 @@ const updateConfigSecrets = async () =>{
  * @returns {Promise.<void>}
  */
 const updateMicroserviceSecurity = async parameters =>{
-    for (const file of ['BATCH', 'GEOLOCATION']){
+    for (const file of ['BATCH']){
         /**@type{microservice_local_config} */
         const content = await fs.promises.readFile(server.ORM.serverProcess.cwd() + `${parameters.pathMicroserviceSource}${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
         content.uuid = parameters.serveRegistry.filter(microservice=>microservice.name==content.name)[0].uuid;
