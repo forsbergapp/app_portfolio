@@ -448,17 +448,6 @@ const appSecureCommonButtonSave = async (item) => {
                                                             parameter_comment:  record.querySelector('[data-column=\'comment\']').textContent
                                                         });
                 }
-            if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_secret.list_nav_selected_tab'))
-                //save changes in menu_apps_secret
-                for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_apps_detail_row[data-changed-record=\'1\']')){
-                    await appSecureCommonRecordUpdate(  'app_secret',
-                                                        record,
-                                                        item,
-                                                        record.querySelector('[data-column=\'app_id\']').textContent,
-                                                        {   parameter_name:     record.querySelector('[data-column=\'name\']').textContent,
-                                                            parameter_value:    record.querySelector('[data-column=\'value\']').textContent
-                                                        });
-                }
             if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_module.list_nav_selected_tab'))
                 //save changes in menu_apps_module
                 for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_apps_detail_row[data-changed-record=\'1\']')){
@@ -539,7 +528,7 @@ const appSecureCommonButtonSave = async (item) => {
  * @name appSecureCommonRecordUpdate
  * @description Updates record
  * @function
- * @param {'user_account'|'app'|'app_parameter'|'app_secret'|'app_module'} table 
+ * @param {'user_account'|'app'|'app_parameter'|'app_module'} table 
  * @param {HTMLElement} row_element 
  * @param {string} button 
  * @param {number} resource_id
@@ -572,11 +561,6 @@ const appSecureCommonRecordUpdate = async ( table,
         }
         case 'app_parameter':{
             path = `/server-db/appparameter/${resource_id}`;
-            method = 'PATCH';
-            break;
-        }
-        case 'app_secret':{
-            path = `/server-db/appsecret/${resource_id}`;
             method = 'PATCH';
             break;
         }
@@ -718,7 +702,6 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     break;
                 }
                 case 'menu_apps_detail_parameter':
-                case 'menu_apps_detail_secret':
                 case 'menu_apps_detail_module':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
                     COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('list_nav_selected_tab');

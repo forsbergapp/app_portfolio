@@ -57,7 +57,6 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                             <div id='menu_apps_content_widget2' class='widget'>
                                 <div id='menu_apps_detail_title' class='list_nav'>
                                     <div id='menu_apps_detail_parameter'    class='list_nav_list list_button common_icon list_nav_selected_tab'></div>
-                                    <div id='menu_apps_detail_secret'       class='list_nav_list list_button common_icon'></div>
                                     <div id='menu_apps_detail_module'       class='list_nav_list list_button common_icon'></div>
                                 </div>
                                 <div id='menu_apps_detail' class='common_list_scrollbar'></div>
