@@ -11,8 +11,8 @@ const app_common = await import('./common.js');
 /**
  * @name test
  * @description describe: Spy test, commonApp as called from bff, will return expect false if test is already running
- *              it: should call AppSecret.get and read AppSecret and IamAppIdToken at least 1 time each when requesting app
- *              beforeAll:  Modifies Array.prototype.filter and reviews what filter function is doing and if used with AppSecret and APP_TOKEN
+ *              it: should read IamAppIdToken at least 1 time each when requesting app
+ *              beforeAll:  Modifies Array.prototype.filter and reviews what filter function is doing and if used with APP_TOKEN
  *              afterAll:   restores Array.prototype.filter
  * @function
  * @param {import('../../../test/test.js')} t

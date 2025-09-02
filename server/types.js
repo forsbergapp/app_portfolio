@@ -343,16 +343,6 @@
  */
 
 /**
- * @description DB TABLE AppSecret
- *              apps should use their own types if adding new secrets
- *              SERVICE_MAIL* only used by common app
- * @memberof dbObjects
- * @typedef {{  app_id:number,
- *              client_id: string, 
- *              client_secret:string}} server_db_table_AppSecret
- */
-
-/**
  * @description DB TABLE AppData
  * @memberof dbObjects
  * @typedef {{  id:number,
@@ -1007,7 +997,6 @@
  *              'AppModule'|
  *              'AppModuleQueue'|
  *              'AppParameter'|
- *              'AppSecret'|
  *              'AppTranslation'|
  *              'ConfigServer'| 
  *              'ConfigRestApi'|

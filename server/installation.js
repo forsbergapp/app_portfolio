@@ -14,7 +14,7 @@
  *          server_db_common_result_insert,
  *          server_DbObject, server_DbObject_record, server_server_error, 
  *          server_db_config_server_service_iam,
- *          server_db_table_AppModule, server_db_table_AppParameter, server_db_table_AppSecret,server_db_table_AppData,
+ *          server_db_table_AppModule, server_db_table_AppParameter, server_db_table_AppData,
  *          server_db_table_AppDataEntityResource, server_db_table_AppDataEntity,
  *          server_db_table_AppTranslation,
  *          server_db_document_ConfigRestApi,
@@ -812,21 +812,18 @@ const deleteDemo = async parameters => {
 const postConfigDefault = async () => {
     const updatedConfigSecurity = await getConfigSecurityUpdate({   
                                             pathConfigServer:'/server/install/default/ConfigServer.json',
-                                            pathServiceRegistry:'/server/install/default/ServiceRegistry.json',
-                                            pathAppSecret:'/server/install/default/AppSecret.json'
+                                            pathServiceRegistry:'/server/install/default/ServiceRegistry.json'
     });
     /**
      * @type{[  [server_DbObject, server_DbObject_record[]],
      *          [server_DbObject, server_db_document_ConfigServer],
-     *          [server_DbObject, server_db_table_ServiceRegistry[]],
-     *          [server_DbObject, server_db_table_AppSecret[]] 
+     *          [server_DbObject, server_db_table_ServiceRegistry[]]
      *       ]}
      */
     const config_obj = [
                             ['DbObjects',                       await getDefaultObject('DbObjects')],
                             ['ConfigServer',                    updatedConfigSecurity.ConfigServer],
-                            ['ServiceRegistry',                 updatedConfigSecurity.ServiceRegistry],
-                            ['AppSecret',                       updatedConfigSecurity.AppSecret]
+                            ['ServiceRegistry',                 updatedConfigSecurity.ServiceRegistry]
                         ]; 
     //create directories in orm
     await server.ORM.postFsDir(['/data',
@@ -914,17 +911,16 @@ const postDataDefault = async () => {
 };
 /**
  * @name updateConfigSecrets
- * @description Updates configuration secrets in ConfigServer, ServiceRegistry, AppSecret and IamUser
+ * @description Updates configuration secrets in ConfigServer, ServiceRegistry and IamUser
  * @function
  * @returns {Promise<void>}
  */
 const updateConfigSecrets = async () =>{
     
-    //get ConfigServer, ServiceRegistry and AppSecret with new secrets
+    //get ConfigServer and ServiceRegistry with new secrets
     const updatedConfigSecurity = await getConfigSecurityUpdate({
                                             pathConfigServer:   null,
-                                            pathServiceRegistry:null,
-                                            pathAppSecret:      null
+                                            pathServiceRegistry:null
                                         });
     //get users and password
     const users = await new Promise(resolve=>{(async () =>{ 
@@ -951,14 +947,6 @@ const updateConfigSecrets = async () =>{
         await server.ORM.db.ServiceRegistry.update({app_id:0,
                                             resource_id:record.id,
                                             data:record});
-    //update AppSecret with new secrets
-    for(const record of updatedConfigSecurity.AppSecret??[])
-        for (const key of Object.keys(record).filter(key=>key !='app_id'))
-            await server.ORM.db.AppSecret.update({ app_id:0,
-                                            resource_id:record.app_id,
-                                            data:{  parameter_name:key,
-                                                    /**@ts-ignore */
-                                                    parameter_value:record[key]}});
 
     await updateMicroserviceSecurity({  serveRegistry:               updatedConfigSecurity.ServiceRegistry??[],
                                         pathMicroserviceSource:     '/data/microservice/',
@@ -989,11 +977,9 @@ const updateMicroserviceSecurity = async parameters =>{
  *              If path is empty then object is read from db
  * @function
  * @param {{pathConfigServer:      string|null,
- *          pathServiceRegistry:   string|null,
- *          pathAppSecret:         string|null}} parameters
+ *          pathServiceRegistry:   string|null}} parameters
  * @returns {Promise.<{ ConfigServer:   server_db_document_ConfigServer,
- *                      ServiceRegistry:server_db_table_ServiceRegistry[],
- *                      AppSecret:      server_db_table_AppSecret[]}>}
+ *                      ServiceRegistry:server_db_table_ServiceRegistry[]}>}
  */
 const getConfigSecurityUpdate = async parameters =>{
     const APP_PORTFOLIO_TITLE = 'App Portfolio';
@@ -1039,17 +1025,7 @@ const getConfigSecurityUpdate = async parameters =>{
                                     row.secret = Buffer.from(JSON.stringify(await server.security.securityTransportCreateSecrets()),'utf-8').toString('base64');
                                 }
                                 resolve(content);
-                            })();}):server.ORM.getObject(0,'ServiceRegistry').result,
-        AppSecret:parameters.pathAppSecret?await fs.promises.readFile(server.ORM.serverProcess.cwd() + parameters.pathAppSecret)
-                        .then(filebuffer=>
-                        //generate secrets
-                        JSON.parse(filebuffer.toString())
-                            .filter((/**@type{server_db_table_AppSecret}*/row)=>row.app_id!=0)
-                            .map((/**@type{server_db_table_AppSecret}*/row)=>{
-                            row.client_id = server.security.securitySecretCreate();
-                            row.client_secret = server.security.securitySecretCreate();
-                            return row;
-                        })):server.ORM.getObject(0,'AppSecret').result
+                            })();}):server.ORM.getObject(0,'ServiceRegistry').result
     };
 };
 export{ postDemo, deleteDemo, 

@@ -12,7 +12,7 @@
  * @description Template
  * @function
  * @param {{app_id:number,
- *          detail:'menu_apps_detail_parameter'|'menu_apps_detail_module'|'menu_apps_detail_secret',
+ *          detail:'menu_apps_detail_parameter'|'menu_apps_detail_module',
  *          app_detail:*}} props
  *
  * @returns {string}
@@ -49,9 +49,6 @@ const template = props => ` <div class='menu_apps_detail_row'>
                                     `<div data-changed-record='0' class='menu_apps_detail_row common_row' data-fk='${row[0]=='app_id'?1:0}'>
                                         <div class='menu_apps_detail_col list_readonly' data-column='app_id'>${props.app_id}</div>
                                         <div class='menu_apps_detail_col list_edit' data-column='name'>${row[0]}</div>
-                                        ${props.detail=='menu_apps_detail_secret'?
-                                            `<div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='value'>${row[1]}</div>`:''
-                                        }
                                         ${props.detail=='menu_apps_detail_parameter'?
                                             `<div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='value'>${row[1].value ?? row[1]}</div>
                                              <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='comment'>${row[1].comment ?? ''}</div>`:''
@@ -66,7 +63,7 @@ const template = props => ` <div class='menu_apps_detail_row'>
  * @function
  * @param {{data:{      commonMountdiv:string,
  *                      app_id_data:number,
- *                      detail:'menu_apps_detail_parameter'|'menu_apps_detail_module'|'menu_apps_detail_secret'},
+ *                      detail:'menu_apps_detail_parameter'|'menu_apps_detail_module'},
  *          methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      commonFFB:CommonModuleCommon['commonFFB']}}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -87,11 +84,6 @@ const component = async props => {
             //APP_MODULE saves records for each app
             path = '/server-db/appmodule/';
             query = `data_app_id=${props.data.app_id_data}`;
-            break;
-        }
-        case 'menu_apps_detail_secret':{
-            //APP_SECRET uses one record for all secrets for each app
-            path = `/server-db/appsecret/${props.data.app_id_data}`;
             break;
         }
     }
