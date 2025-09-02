@@ -3,10 +3,11 @@
 */
 
 /**
- * @import {commonWorldCitiesCity} from '../../../../server/types.js'
+ * @import {server_db_document_ConfigServer,commonWorldCitiesCity} from '../../../../server/types.js'
  */
 const fs = await import('node:fs');
 const {serverProcess} = await import('../../../../server/info.js');
+const {server} = await import('../../../../server/server.js');
 const BASE_DIR = '/apps/common/src/functions/data/';
 
 /**
@@ -112,7 +113,11 @@ const postData = async object =>{
              * 
              * Uses partition with arrays to speed up searches
              */
-            return await loadGeolocation(object);
+            return server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0,data:{ config_group:'SERVICE_IAM'}}).result
+                    .filter((/**@type{server_db_document_ConfigServer['SERVICE_IAM']}*/parameter)=>
+                            'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1?
+                    await loadGeolocation(object):
+                        null;
         }
         case 'GEOLOCATION_PLACE':{
             /**
