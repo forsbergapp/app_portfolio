@@ -50,7 +50,15 @@ class serverClass {
         this.serverCircuitBreakerBFE;
         this.init = this.InitAsync;
     }
-    InitAsync = async ()=>{
+    /**
+     * @name InitAsync
+     * @description Server init
+     * @method
+     * @param {import('./db/ORM.js')['ORM']} ORM
+     * @returns {Promise.<*>}
+     */
+    InitAsync = async (ORM)=>{
+        this.ORM = ORM;
         this.bff = await import('./bff.js');
         this.iam = await import('./iam.js');
         this.installation = await import('./installation.js');
@@ -599,12 +607,11 @@ const serverStart = async () =>{
         //Create ORM and server instances
         const {ORM} = await import('./db/ORM.js');
         server = new serverClass();
-        //Using Static Asynchronous Factory Method pattern in serverClass
-        await server.init();       
         //Using Static Asynchronous Factory Method pattern in ORM_class
         await ORM.init();       
+        //Using Static Asynchronous Factory Method pattern in serverClass
+        await server.init(ORM);
         Object.seal(ORM);
-        server.ORM = ORM;
         //Set server process events
         serverProcess.on('uncaughtException', err =>{
             console.log(err);
