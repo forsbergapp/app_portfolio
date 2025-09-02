@@ -526,7 +526,7 @@
 /**
  * @description Type
  * @typedef {{  id?:number,
- *              service:'MESSAGE'|'BATCH'|'GEOLOCATION',
+ *              service:'MESSAGE'|'BATCH',
  *              message:CommonMessageType,
  *              created?:string,
  *              read?:boolean}} MessageQueuePublishMessage
@@ -542,7 +542,7 @@
 /**
  * @description Type
  * @typedef {{  id?:number,
- *              service:'BATCH'|'GEOLOCATION',
+ *              service:'BATCH',
  *              message:{type:'MICROSERVICE_LOG'|'MICROSERVICE_ERROR',
  *                       message:*},
  *              created?:string}} MessageQueuePublishMicroserviceLog

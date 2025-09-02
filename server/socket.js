@@ -73,7 +73,7 @@ const socketClientAdd = (newClient) => {
                     connected.user_agent = parameters.headers_user_agent;
                 }
                 else{
-                    const connectUserData =  await server.bff.bffGeodataUser(app_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
+                    const connectUserData =  await server.bff.bffGeodataUser(app_id, parameters.ip);
                     connected.app_id = app_id;
                     connected.connection_date = new Date().toISOString();
                     connected.token_access = parameters.token_access;
@@ -266,7 +266,6 @@ const socketClientAdd = (newClient) => {
  *          authorization:string,
  *          uuid:string|null,
  *          user_agent:string,
- *          accept_language:string,
  *          ip:string,
  *          response:server_server_res
  *          }} parameters
@@ -303,10 +302,7 @@ const socketPost = async parameters =>{
             SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.id !== client_id);
             parameters.response.end();
         });
-        const connectUserData =  await server.bff.bffGeodataUser(  parameters.app_id, 
-                                                        parameters.ip, 
-                                                        parameters.user_agent, 
-                                                        parameters.accept_language);
+        const connectUserData =  await server.bff.bffGeodataUser(  parameters.app_id, parameters.ip);
         /**@type{server_socket_connected_list} */
         const newClient = {
                             id:                     client_id,
@@ -347,7 +343,6 @@ const socketPost = async parameters =>{
  *          authorization:string,
  *          resource_id:string|null,
  *          user_agent:string,
- *          accept_language:string,
  *          ip:string,
  *          response:server_server_res
  *          }} parameters
@@ -359,7 +354,6 @@ const socketPost = async parameters =>{
                                                 authorization:parameters.authorization,
                                                 uuid:parameters.resource_id,
                                                 user_agent:parameters.user_agent,
-                                                accept_language:parameters.accept_language,
                                                 ip:parameters.ip,
                                                 response:parameters.response
                                                 });

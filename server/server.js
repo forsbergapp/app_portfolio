@@ -234,7 +234,7 @@ class serverClass {
      * @description Request url, use parameter url or protocol, host, port and path
      *              Returns raw response from request
      * @method
-     * @param {{service:'GEOLOCATION'|'BATCH'|'BFE',
+     * @param {{service:'BATCH'|'BFE',
      *          protocol:'http'|null,
      *          url:string|null,
      *          host:string|null,
