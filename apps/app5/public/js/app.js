@@ -183,19 +183,6 @@ const appEventClick = event => {
                     common.commonDialogueShow('SIGNUP');
                     break;
                 }
-                /* COMMON */
-                case 'common_app_toolbar_framework_js':{
-                   appFrameworkSet(1);
-                    break;
-                }
-                case 'common_app_toolbar_framework_vue':{
-                   appFrameworkSet(2);
-                    break;
-                }
-                case 'common_app_toolbar_framework_react':{
-                   appFrameworkSet(3);
-                    break;
-                }
                 //dialogue user menu
                 case 'common_iam_avatar':
                 case 'common_iam_avatar_logged_in':
@@ -482,15 +469,6 @@ const appSecureInit = () => {
                     commonFFB:common.commonFFB},
         path:       '/component/page_secure.js'});
 };
-/**
- * @name appFrameworkSet
- * @description Sets framework
- * @function
- * @param {number|null} framework 
- * @returns {Promise.<void>}
- */
-const appFrameworkSet = async (framework=null) =>
-    await common.commonFrameworkSet(framework, appMetadata().events);
 /**
  * @name appInit
  * @description Init app

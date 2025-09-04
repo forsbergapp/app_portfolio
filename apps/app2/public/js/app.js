@@ -65,19 +65,6 @@ const appEventClick = event => {
                     appThemeUpdate(true);
                     break;
                 }
-                //common
-                case 'common_app_toolbar_framework_js':{
-                    appFrameworkSet(1);
-                    break;
-                }
-                case 'common_app_toolbar_framework_vue':{
-                    appFrameworkSet(2);
-                    break;
-                }
-                case 'common_app_toolbar_framework_react':{
-                    appFrameworkSet(3);
-                    break;
-                }
                 //dialogue user menu
                 case 'common_iam_avatar':
                 case 'common_iam_avatar_logged_in':
@@ -266,15 +253,6 @@ const appAppsGet = () => {
 const appException = error => {
     common.commonMessageShow('EXCEPTION', null, null, error);
 };
-/**
- * @name appFrameworkSet
- * @description Sets framework
- * @function
- * @param {number|null} framework 
- * @returns {Promise.<void>}
- */
-const appFrameworkSet = async (framework=null) =>
-    await common.commonFrameworkSet(framework,appMetadata().events);
 /**
  * @name appInit
  * @description Init app

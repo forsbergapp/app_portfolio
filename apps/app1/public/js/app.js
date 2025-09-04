@@ -985,19 +985,6 @@ const appEventClick = event => {
                     appLogin();
                     break;
                 }
-                //common
-                case 'common_app_toolbar_framework_js':{
-                   appFrameworkSet(1);
-                    break;
-                }
-                case 'common_app_toolbar_framework_vue':{
-                   appFrameworkSet(2);
-                    break;
-                }
-                case 'common_app_toolbar_framework_react':{
-                   appFrameworkSet(3);
-                    break;
-                }
                 //dialogue user menu
                 case 'common_dialogue_user_menu_nav_iam_user_app':{
                     common.commonComponentRender(
@@ -1146,15 +1133,6 @@ const appEventFocus = event => {
 const appException = error => {
     common.commonMessageShow('EXCEPTION', null, null, error);
 };
-/**
- * @name appFrameworkSet
- * @description Sets framework
- * @function
- * @param {number|null} framework 
- * @returns {Promise.<void>}
- */
-const appFrameworkSet = async (framework=null) =>
-    await common.commonFrameworkSet(framework,appMetadata().events);
 /**
  * @name appInit
  * @description App init

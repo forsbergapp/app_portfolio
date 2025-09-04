@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {commonMetadata, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {commonMetadata, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
  */
 
 /**@type{COMMON_DOCUMENT} */
@@ -23,50 +23,6 @@ let common;
     common.commonMessageShow('EXCEPTION', null, null, error);
 };
 
-/**
- * @name appEventClick
- * @description App event click
- * @function
- * @param {CommonAppEvent} event 
- * @returns {void}
- */
-const appEventClick = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
-            appEventClick(event);
-        });
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('click',event)
-        .then(()=>{
-            switch (event_target_id){
-                case 'common_app_toolbar_framework_js':{
-                   appFrameworkSet(1);
-                    break;
-                }
-                case 'common_app_toolbar_framework_vue':{
-                   appFrameworkSet(2);
-                    break;
-                }
-                case 'common_app_toolbar_framework_react':{
-                   appFrameworkSet(3);
-                    break;
-                }
-            }
-        });
-    }
-};
-/**
- * 
- * @name appFrameworkSet
- * @description Sets framework
- * @function
- * @param {number|null} framework 
- * @returns {Promise.<void>}
- */
- const appFrameworkSet = async (framework=null) =>
-    await common.commonFrameworkSet(framework, appMetadata().events);
 /**
  * 
  * @name appIniot
@@ -111,7 +67,7 @@ const appCommonInit = async (commonLib, start, parameters) => {
 const appMetadata = () =>{
     return { 
         events:{  
-            Click:   appEventClick,
+            Click:   null,
             Change:  null,
             KeyDown: null,
             KeyUp:   null,
