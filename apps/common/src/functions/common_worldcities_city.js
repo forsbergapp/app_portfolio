@@ -28,7 +28,6 @@ const appFunction = async parameters =>{
     return {result: getData('WORLDCITIES')
                     .filter((/**@type{commonWorldCitiesCity}*/city)=>( 
                                                     commonSearchMatch(city.city,        parameters.data.search)||
-                                                    commonSearchMatch(city.city_ascii,  parameters.data.search)||
                                                     commonSearchMatch(city.country,     parameters.data.search)||
                                                     commonSearchMatch(city.admin_name,  parameters.data.search)))
                     //Uses localcompare as collation method when sorting
