@@ -42,6 +42,18 @@ const COMMON_GLOBAL = {
     app_fonts_loaded:[],
     app_requesttimeout_seconds:5,
     app_requesttimeout_admin_minutes:60,
+    app_metadata:{  events:{
+                            Change: ()=>null,
+                            Click:  ()=>null,
+                            Focus:  ()=>null,
+                            Input:  ()=>null,
+                            KeyDown:()=>null,
+                            KeyUp:  ()=>null
+                        },
+                    lifeCycle:{
+                        onMounted:()=>null
+                    }
+                },
     info_link_policy_name:null,
     info_link_disclaimer_name:null,
     info_link_terms_name:null,
@@ -3198,12 +3210,18 @@ const commonEvent = async (event_type,event=null) =>{
                         case 'common_app_toolbar_start':{
                             commonMountApp(COMMON_GLOBAL.app_start_app_id);
                              break;
-                         }
+                        }
                         case 'common_app_toolbar_framework_js':
                         case 'common_app_toolbar_framework_vue':
                         case 'common_app_toolbar_framework_react':{
                             COMMON_DOCUMENT.querySelectorAll('#common_app_toolbar .common_toolbar_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_toolbar_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
+                            if (event_target_id=='common_app_toolbar_framework_js')
+                                await commonFrameworkSet(1,COMMON_GLOBAL.app_metadata.events);
+                            if (event_target_id=='common_app_toolbar_framework_vue')
+                                await commonFrameworkSet(2,COMMON_GLOBAL.app_metadata.events);
+                            if (event_target_id=='common_app_toolbar_framework_react')
+                                await commonFrameworkSet(3,COMMON_GLOBAL.app_metadata.events);
                             break;
                         }    
                         //dialogue lov
@@ -3881,19 +3899,30 @@ const commonMountApp = async (app_id) =>{
             COMMON_DOCUMENT.querySelector('#app_link_app_css').href = await commonMiscResourceFetch(CommonAppInit.App.css, null, 'text/css', CommonAppInit.App.css_content);
 
     const {appMetadata, default:AppInit} = await commonMiscImport(CommonAppInit.App.js, CommonAppInit.App.js_content);
-
+    
     /**@type{commonMetadata} */
     const appdata = appMetadata();
+    //add metadata using tree shaking pattern
+    COMMON_GLOBAL.app_metadata.events.Change = appdata.events.Change;
+    COMMON_GLOBAL.app_metadata.events.Click = appdata.events.Click;
+    COMMON_GLOBAL.app_metadata.events.Focus = appdata.events.Focus;
+    COMMON_GLOBAL.app_metadata.events.Input = appdata.events.Input;
+    COMMON_GLOBAL.app_metadata.events.KeyDown = appdata.events.KeyDown;
+    COMMON_GLOBAL.app_metadata.events.KeyUp = appdata.events.KeyUp;
+    COMMON_GLOBAL.app_metadata.lifeCycle.onMounted = appdata.lifeCycle?.onMounted;
+    
     await AppInit(commonGet(), CommonAppInit.AppParameter);
-    appdata.lifeCycle?.onMounted?await appdata.lifeCycle.onMounted():null;
+    COMMON_GLOBAL.app_metadata.lifeCycle.onMounted?
+        await COMMON_GLOBAL.app_metadata.lifeCycle.onMounted():
+            null;
     commonFrameworkSet(null,
-        {   Click: appdata.events.Click,
-            Change: appdata.events.Change,
-            KeyDown: appdata.events.KeyDown,
-            KeyUp: appdata.events.KeyUp,
-            Focus: appdata.events.Focus,
-            Input:appdata.events.Input,
-            Other:appdata.events.Other});
+        {   Click: COMMON_GLOBAL.app_metadata.events.Click,
+            Change: COMMON_GLOBAL.app_metadata.events.Change,
+            KeyDown: COMMON_GLOBAL.app_metadata.events.KeyDown,
+            KeyUp: COMMON_GLOBAL.app_metadata.events.KeyUp,
+            Focus: COMMON_GLOBAL.app_metadata.events.Focus,
+            Input:COMMON_GLOBAL.app_metadata.events.Input,
+            Other:COMMON_GLOBAL.app_metadata.events.Other});
     if (COMMON_GLOBAL.iam_user_id){
         commonUserUpdateAvatar(true, COMMON_GLOBAL.iam_user_avatar);
         commonUserMessageShowStat();

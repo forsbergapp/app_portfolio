@@ -98,18 +98,6 @@ const appEventClick = event => {
                                 event_target_id=='title'?'GUIDE':event_target_id=='content'?'MODULE_CODE':common.commonMiscElementRow(event.target, 'app_menu_data').getAttribute('data-type'));
                     break;
                 }
-                case 'common_app_toolbar_framework_js':{
-                   appFrameworkSet(1);
-                    break;
-                }
-                case 'common_app_toolbar_framework_vue':{
-                   appFrameworkSet(2);
-                    break;
-                }
-                case 'common_app_toolbar_framework_react':{
-                   appFrameworkSet(3);
-                    break;
-                }
                 /*Dialogue user start */
                 case 'common_dialogue_iam_start_login_button':{
                     common.commonUserLogin().catch(()=>null);
@@ -119,15 +107,6 @@ const appEventClick = event => {
         });
     }
 };
-/**
- * @name appFrameworkSet
- * @description Sets framework
- * @function
- * @param {number|null} framework 
- * @returns {Promise.<void>}
- */
-const appFrameworkSet = async (framework=null) =>
-    await common.commonFrameworkSet(framework, appMetadata().events);
 /**
  * @name appInit
  * @description Init app

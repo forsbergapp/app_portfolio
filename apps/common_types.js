@@ -202,6 +202,7 @@
  *              app_fonts_loaded:{family:string, url:string, attributes:Object.<string,*>}[],
  *              app_requesttimeout_seconds:number,
  *              app_requesttimeout_admin_minutes:number,
+ *              app_metadata:commonMetadata,
  *              info_link_policy_name:string|null,
  *              info_link_disclaimer_name:string|null,
  *              info_link_terms_name:string|null,

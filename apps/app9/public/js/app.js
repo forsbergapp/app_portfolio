@@ -91,18 +91,6 @@ const appEventClick = event => {
                     COMMON_DOCUMENT.querySelector('#totp_countdown_time').textContent=null;
                     break;
                 }
-                case 'common_app_toolbar_framework_js':{
-                   appFrameworkSet(1);
-                    break;
-                }
-                case 'common_app_toolbar_framework_vue':{
-                   appFrameworkSet(2);
-                    break;
-                }
-                case 'common_app_toolbar_framework_react':{
-                   appFrameworkSet(3);
-                    break;
-                }
                 /*Dialogue user start */
                 case 'common_dialogue_iam_start_login_button':{
                     common.commonUserLogin().catch(()=>null);
@@ -142,15 +130,6 @@ const appEventKeyUp = event => {
     }
 };
 
-/**
- * @anme appFrameworkSet
- * @description Sets framework
- * @function
- * @param {number|null} framework 
- * @returns {Promise.<void>}
- */
- const appFrameworkSet = async (framework=null) =>
-    await common.commonFrameworkSet(framework, appMetadata().events);
 /**
  * @name appInit
  * @description Init app
