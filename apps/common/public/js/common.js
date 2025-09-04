@@ -2380,7 +2380,7 @@ const commonFFB = async parameter =>{
                 break;
             }
             case 'IAM':{
-                authorization = 'Basic ' + btoa(parameters.data.username + ':' + parameters.data.password);
+                authorization = 'Basic ' + commonWindowToBase64(parameters.data.username + ':' + parameters.data.password);
                 break;
             }
         }
@@ -2427,7 +2427,7 @@ const commonFFB = async parameter =>{
                                                 method: parameters.data.method,
                                                 url:    bff_path + parameters.data.path + '?parameters=' + encodedparameters,
                                                 body:   parameters.data.body?
-                                                            JSON.stringify({data:btoa(JSON.stringify(parameters.data.body))}):
+                                                            JSON.stringify({data:commonWindowToBase64(JSON.stringify(parameters.data.body))}):
                                                                 null
                                             })
                                         })
