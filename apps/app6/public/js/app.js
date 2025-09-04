@@ -62,18 +62,6 @@ const appEventClick = event => {
                     }   
                     break;
                 }
-                case 'common_app_toolbar_framework_js':{
-                   appFrameworkSet(1);
-                    break;
-                }
-                case 'common_app_toolbar_framework_vue':{
-                   appFrameworkSet(2);
-                    break;
-                }
-                case 'common_app_toolbar_framework_react':{
-                   appFrameworkSet(3);
-                    break;
-                }
                 /*Dialogue user start */
                 case 'common_dialogue_iam_start_login_button':{
                     common.commonUserLogin().catch(()=>null);
@@ -333,15 +321,6 @@ const appPay = async () =>{
         COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
         COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').classList.add('common_input_error');
 };
-/**
- * @name appFrameworkSet
- * @description Sets framework
- * @function
- * @param {number|null} framework 
- * @returns {Promise.<void>}
- */
- const appFrameworkSet = async (framework=null) =>
-    await common.commonFrameworkSet(framework, appMetadata().events);
 /**
  * @name appInit
  * @description Init app
