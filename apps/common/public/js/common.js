@@ -42,6 +42,7 @@ const COMMON_GLOBAL = {
     app_fonts_loaded:[],
     app_requesttimeout_seconds:5,
     app_requesttimeout_admin_minutes:60,
+    app_typewatch:[],
     app_metadata:{  events:{
                             Change: ()=>null,
                             Click:  ()=>null,
@@ -757,21 +758,27 @@ const commonMiscTimezoneDate = timezone =>{
  * @param  {...any} parameter 
  */
 const commonMiscTypewatch = (function_name, ...parameter) =>{
-    let type_delay=250;
-    if (parameter.length>0 && parameter[0] !=null)
-        switch (parameter[0].code){
-            case 'ArrowLeft':
-            case 'ArrowRight':
-            case 'ArrowUp':
-            case 'ArrowDown':{
-                //immediate response when navigating
-                type_delay = 0;
-                break;
+    if (COMMON_GLOBAL.app_typewatch.filter(row=>row==function_name.name).length==0){
+        /**@ts-ignore */
+        COMMON_GLOBAL.app_typewatch.push(function_name.name);
+        let type_delay=400;
+        if (parameter.length>0 && parameter[0] !=null)
+            switch (parameter[0].code){
+                case 'ArrowLeft':
+                case 'ArrowRight':
+                case 'ArrowUp':
+                case 'ArrowDown':{
+                    //immediate response when navigating
+                    type_delay = 0;
+                    break;
+                }
             }
-        }
-    commonWindowSetTimeout(() => {
-        function_name(...parameter);
-    }, type_delay);
+        commonWindowSetTimeout(() => {
+            function_name(...parameter);
+            /**@ts-ignore */
+            COMMON_GLOBAL.app_typewatch = COMMON_GLOBAL.app_typewatch.filter(row=>row!=function_name.name);
+        }, type_delay);
+    }
 };
 /**
  * @name commonMiscShowDateUpdate
@@ -3298,7 +3305,7 @@ const commonEvent = async (event_type,event=null) =>{
                         }
                         //module leaflet
                         case 'common_module_leaflet_search_input':{
-                            commonMiscTypewatch(commonMiscListKeyEvent, event, 'module_leaflet', event.target['data-function']); 
+                            commonMiscListKeyEvent(event, 'module_leaflet', event.target['data-function']); 
                             break;
                         }
                         default:{

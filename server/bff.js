@@ -13,13 +13,13 @@
  *          server_req_method,
  *          server_server_response_type,
  *          server_bff_parameters,
- *          server_bff_endpoint_type,
- *          microservice_registry_service} from './types.js'
+ *          server_bff_endpoint_type} from './types.js'
  */
 const {server} = await import('./server.js');
 const {registryConfigServices} = await import('../serviceregistry/registry.js');
-const {default:worldcities} = await import('../apps/common/src/functions/common_worldcities_city_random.js');
+const {default:worldcities} = await import('../apps/common/src/functions/common_worldcities.js');
 const {default:ComponentCreate} = await import('../apps/common/src/component/common_maintenance.js');
+const {getIP} = await import('../apps/common/src/functions/common_geolocation.js');
 /**
  * @name bffConnect
  * @description Initial request from app, connects to socket, sends SSE message with common library and parameters
@@ -193,7 +193,6 @@ const bffMicroservice = async parameters =>{
 * @returns {Promise.<*>}
 */
 const bffGeodata = async parameters =>{
-   const {getIP} = await import('../apps/common/src/functions/common_geolocation.js');
    const result_gps = getIP({ app_id:parameters.app_id,
                                     data:{ip:parameters.ip},
                                     ip:parameters.ip,
@@ -208,7 +207,7 @@ const bffGeodata = async parameters =>{
    }
    else{
        const result_city = await worldcities({ app_id:parameters.app_id,
-                                               data:null,
+                                               data:{searchType:'RANDOM'},
                                                user_agent:parameters.user_agent,
                                                ip:parameters.ip,
                                                host:'',

@@ -89,7 +89,6 @@ launch configured (launch.json) from Visual Studio Code
 App Portfolio
 
 optional:
-Microservice Geolocation
 Microservice Batch
 
 enter http://localhost:3333 

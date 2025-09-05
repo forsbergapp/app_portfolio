@@ -286,23 +286,18 @@ const component = async props => {
     const map_city = async country_code =>{
         if (country_code!=null){
             /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
-            const cities = await props.methods.commonFFB({path:'/app-common-module/COMMON_WORLDCITIES_COUNTRY', 
-                method:'POST', 
-                authorization_type:'APP_ID', 
-                body:{type:'FUNCTION',country:country_code.toUpperCase(), IAM_data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+            const cities = await props.methods.commonFFB({
+                                    path:'/app-common-module/COMMON_WORLDCITIES', 
+                                    method:'POST', 
+                                    authorization_type:'APP_ID', 
+                                    body:{  type:'FUNCTION',
+                                            searchType:'COUNTRY',
+                                            searchString:country_code.toUpperCase(),
+                                            IAM_data_app_id:props.data.data_app_id
+                                        }})
+                            .then(result=>
+                                JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
             
-            //sort admin name + city
-            cities.sort((a, b) => {
-                const x = a.admin_name.toLowerCase() + a.city.toLowerCase();
-                const y = b.admin_name.toLowerCase() + b.city.toLowerCase();
-                if (x < y) {
-                    return -1;
-                }
-                if (x > y) {
-                    return 1;
-                }
-                return 0;
-            });
             await props.methods.commonComponentRender({
                 mountDiv:       'common_module_leaflet_select_city',
                 data:           {
