@@ -157,16 +157,11 @@
  *           "id":           [id]
  *		} 
  * @typedef {{  city:       string,
- *              city_ascii: string,
  *              lat:        string,
  *              lng:        string,
  *              country:    string,
  *              iso2:       string,
- *              iso3:       string,
- *              admin_name: string,
- *              capital:    string
- *              population: number,
- *              id:         number}} commonWorldCitiesCity
+ *              admin_name: string}} commonWorldCitiesCity
  */
 
 /** 

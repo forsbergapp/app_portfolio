@@ -3,7 +3,7 @@
 */
 
 /**
- * @import {server_db_document_ConfigServer,commonWorldCitiesCity} from '../../../../server/types.js'
+ * @import {server_db_document_ConfigServer} from '../../../../server/types.js'
  */
 const fs = await import('node:fs');
 const {serverProcess} = await import('../../../../server/info.js');
@@ -14,7 +14,7 @@ const BASE_DIR = '/apps/common/src/functions/data/';
  * @name postData
  * @description Extract transform load
  * @function
- * @param {'COUNTRY'|'LOCALE'|'WORLDCITIES'|'GEOLOCATION_IP'|'GEOLOCATION_PLACE'} object
+ * @param {'COUNTRY'|'LOCALE'|'GEOLOCATION_IP'|'GEOLOCATION_PLACE'} object
  */
 const postData = async object =>{
 
@@ -85,20 +85,6 @@ const postData = async object =>{
             }
             return records;
         }
-        case 'WORLDCITIES':{
-            //Object with keys city, lat, lng, country, iso2, admin_name.
-            //Removes city_ascii, iso3, capital, population and id'
-            /**@type{commonWorldCitiesCity[]} */
-            return JSON.parse(await getFile(BASE_DIR + '/worldcities',  'worldcities.json'))
-                    .map((/**@type{commonWorldCitiesCity}*/row)=>{
-                        return {city: row.city,
-                                lat: row.lat,
-                                lng: row.lng,
-                                country: row.country,
-                                iso2: row.iso2,
-                                admin_name: row.admin_name};
-                    });
-        }
         case 'GEOLOCATION_IP':{
             /**
              *  File content:
@@ -143,7 +129,6 @@ const postData = async object =>{
 const data = {
                 COUNTRY:		    await postData('COUNTRY'),
                 LOCALE: 		    await postData('LOCALE'),
-                WORLDCITIES: 		await postData('WORLDCITIES'),
                 GEOLOCATION_IP:     await postData('GEOLOCATION_IP'),
                 GEOLOCATION_PLACE:  await postData('GEOLOCATION_PLACE')
         };
@@ -151,9 +136,30 @@ const data = {
 /**
  * @name getData
  * @description Extract transform load
- * @param {'COUNTRY'|'LOCALE'|'WORLDCITIES'|'GEOLOCATION_IP'|'GEOLOCATION_PLACE'} object
+ * @param {'COUNTRY'|'LOCALE'|'GEOLOCATION_IP'|'GEOLOCATION_PLACE'} object
+ * @returns {*}
  */
 const getData = object =>data[object];
 
+/**
+ * @name getDataKeys
+ * @description Get keys of object
+ * @param {'COUNTRY'|'LOCALE'|'GEOLOCATION_IP'|'GEOLOCATION_PLACE'} object
+ * @param {string} key
+ * @returns {*}
+ */
+const getDataKey = (object,key) =>  
+                                    /**@ts-ignore */
+                                    data[object][key];
 
-export {getData};
+/**
+ * @name getDataKeys
+ * @description Get keys of object
+ * @param {'COUNTRY'|'LOCALE'|'GEOLOCATION_IP'|'GEOLOCATION_PLACE'} object
+ * @returns {Object.<string,*>}
+ */
+const getDataKeys = object =>
+                                /**@ts-ignore */
+                                Object.keys(data[object]);
+
+export {getData,getDataKey,getDataKeys};

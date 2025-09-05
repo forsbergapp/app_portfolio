@@ -30,31 +30,13 @@
         "id":4,
         "app_id": 0,
         "common_type": "FUNCTION",
-        "common_name": "COMMON_WORLDCITIES_CITY",
+        "common_name": "COMMON_WORLDCITIES",
         "common_role": "APP_ID",
-        "common_path": "/apps/common/src/functions/common_worldcities_city.js",
-        "common_description": "Get searched city from worldcities database"
+        "common_path": "/apps/common/src/functions/common_worldcities.js",
+        "common_description": "RANDOM=random city, SEARCH=search city, COUNTRY=cities for given country code"
     },
     {
         "id":5,
-        "app_id": 0,
-        "common_type": "FUNCTION",
-        "common_name": "COMMON_WORLDCITIES_CITY_RANDOM",
-        "common_role": "APP_ID",
-        "common_path": "/apps/common/src/functions/common_worldcities_city_random.js",
-        "common_description": "Get random city from worldcities database"
-    },
-    {
-        "id":6,
-        "app_id": 0,
-        "common_type": "FUNCTION",
-        "common_name": "COMMON_WORLDCITIES_COUNTRY",
-        "common_role": "APP_ID",
-        "common_path": "/apps/common/src/functions/common_worldcities_country.js",
-        "common_description": "Get all cities from a given coutry from worldcities database"
-    },
-    {
-        "id":7,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_APP_DATA_METADATA",
@@ -63,7 +45,7 @@
         "common_description": "APP DATA resource metadata"
     },
     {
-        "id":8,
+        "id":6,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_CONTACT",
@@ -72,43 +54,43 @@
         "common_description": "Message contact"
     },
     {
-        "id":9,
+        "id":7,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_COUNT",
         "common_role": "APP_ACCESS",
         "common_path": "/apps/common/src/functions/common_message.js",
         "common_description": "Message count"
+    },
+    {
+        "id":8,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_GET",
+        "common_role": "APP_ACCESS",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message get"
+    },
+    {
+        "id":9,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_MESSAGE_READ",
+        "common_role": "APP_ACCESS",
+        "common_path": "/apps/common/src/functions/common_message.js",
+        "common_description": "Message read and send consume"
     },
     {
         "id":10,
         "app_id": 0,
         "common_type": "FUNCTION",
-        "common_name": "COMMON_MESSAGE_GET",
-        "common_role": "APP_ACCESS",
-        "common_path": "/apps/common/src/functions/common_message.js",
-        "common_description": "Message get"
-    },
-    {
-        "id":11,
-        "app_id": 0,
-        "common_type": "FUNCTION",
-        "common_name": "COMMON_MESSAGE_READ",
-        "common_role": "APP_ACCESS",
-        "common_path": "/apps/common/src/functions/common_message.js",
-        "common_description": "Message read and send consume"
-    },
-    {
-        "id":12,
-        "app_id": 0,
-        "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_DELETE",
         "common_role": "APP_ACCESS",
         "common_path": "/apps/common/src/functions/common_message.js",
         "common_description": "Message delete"
     },
     {
-        "id":13,
+        "id":11,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_SEND",
@@ -117,7 +99,7 @@
         "common_description": "Message send"
     },
     {
-        "id":14,
+        "id":12,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_COUNT",
@@ -126,7 +108,7 @@
         "common_description": "Message count"
     },
     {
-        "id":15,
+        "id":13,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_GET",
@@ -135,7 +117,7 @@
         "common_description": "Message get"
     },
     {
-        "id":16,
+        "id":14,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_READ",
@@ -144,7 +126,7 @@
         "common_description": "Message read and send consume"
     },
     {
-        "id":17,
+        "id":15,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_DELETE",
@@ -153,7 +135,7 @@
         "common_description": "Message delete"
     },
     {
-        "id":18,
+        "id":16,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_MESSAGE_SEND",
@@ -162,7 +144,7 @@
         "common_description": "Message send"
     },
     {
-        "id":19,
+        "id":17,
         "app_id": 1,
         "common_type": "REPORT",
         "common_name": "PERFORMANCE_TEST",
@@ -171,7 +153,7 @@
         "common_description": "Performance test"
     },
     {
-        "id":20,
+        "id":18,
         "app_id": 1,
         "common_type": "REPORT",
         "common_name": "BDD_TEST",
@@ -180,7 +162,7 @@
         "common_description": "Behaviour driven development (BDD) test framework pattern executing spec files specified in /test/specrunner.json"
     },
     {
-        "id":21,
+        "id":19,
         "app_id": 4,
         "common_type": "REPORT",
         "common_name": "TIMETABLE",
@@ -189,7 +171,7 @@
         "common_description": "Timetable day, month and year"
     },
     {
-        "id":22,
+        "id":20,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "ACCOUNT_CREATE",
@@ -198,7 +180,7 @@
         "common_description": "ACCOUNT create"
     },
     {
-        "id":23,
+        "id":21,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "ACCOUNT_GET",
@@ -207,7 +189,7 @@
         "common_description": "ACCOUNT get"
     },
     {
-        "id":24,
+        "id":22,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "ACCOUNT_STATEMENT",
@@ -216,7 +198,7 @@
         "common_description": "ACCOUNT get statement"
     },
     {
-        "id":25,
+        "id":23,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "ACCOUNT_TRANSACTIONS",
@@ -225,7 +207,7 @@
         "common_description": "ACCOUNT get transactions"
     },
     {
-        "id":26,
+        "id":24,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "CUSTOMER_CREATE",
@@ -234,7 +216,7 @@
         "common_description": "CUSTOMER create"
     },
     {
-        "id":27,
+        "id":25,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "CUSTOMER_GET",
@@ -243,7 +225,7 @@
         "common_description": "CUSTOMER get"
     },
     {
-        "id":28,
+        "id":26,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_UPDATE",
@@ -252,7 +234,7 @@
         "common_description": "PAYMENT REQUEST update"
     },
     {
-        "id":29,
+        "id":27,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_CREATE",
@@ -261,7 +243,7 @@
         "common_description": "PAYMENT REQUEST create"
     },
     {
-        "id":30,
+        "id":28,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_GET_STATUS",
@@ -270,7 +252,7 @@
         "common_description": "PAYMENT REQUEST get status"
     },
     {
-        "id":31,
+        "id":29,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_GET",
@@ -279,7 +261,7 @@
         "common_description": "PAYMENT REQUEST get"
     },
     {
-        "id":32,
+        "id":30,
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PRODUCT_GET",
@@ -288,7 +270,7 @@
         "common_description": "PRODUCT get"
     },
     {
-        "id":33,
+        "id":31,
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PRODUCT_LOCATION_GET",
@@ -297,7 +279,7 @@
         "common_description": "PRODUCT location get"
     },
     {
-        "id":34,
+        "id":32,
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_CREATE",
@@ -306,7 +288,7 @@
         "common_description": "PAYMENT REQUEST create"
     },
     {
-        "id":35,
+        "id":33,
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_GET_STATUS",
@@ -315,7 +297,7 @@
         "common_description": "PAYMENT REQUEST get status"
     },
     {
-        "id":36,
+        "id":34,
         "app_id": 8, 
         "common_type": "FUNCTION",
         "common_name": "CUBE_SOLVE",
@@ -324,7 +306,7 @@
         "common_description": "Cube solve"
     },
     {
-        "id":37,
+        "id":35,
         "app_id": 9, 
         "common_type": "FUNCTION",
         "common_name": "TOTP_GET",
