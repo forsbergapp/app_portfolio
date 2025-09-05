@@ -8,7 +8,7 @@
  *          server_db_table_App} from '../server/types.js'
  */
 const {server} = await import('../server/server.js');
-const {default:worldcities} = await import('../apps/common/src/functions/common_worldcities_city_random.js');
+const {default:worldcities} = await import('../apps/common/src/functions/common_worldcities.js');
 /**
  * @name test
  * @description Integration test multplie
@@ -39,14 +39,14 @@ const test = async t =>
             const apps = server.ORM.db.App.get({app_id:0, resource_id:null}).result;
             
             for (const app of apps){ 
-                const result = await worldcities({ app_id:app.id,
-                                                        data:null,
-                                                        user_agent:'*',
-                                                        ip:'127.0.0.1',
-                                                        host:'',
-                                                        idToken:'', 
-                                                        authorization:'',
-                                                        locale:''})
+                const result = await worldcities({  app_id:app.id,
+                                                    data:{searchType:'RANDOM'},
+                                                    user_agent:'*',
+                                                    ip:'127.0.0.1',
+                                                    host:'',
+                                                    idToken:'', 
+                                                    authorization:'',
+                                                    locale:''})
                                     .then(result=>result.result)
                                     .catch(()=>{return {};});
                 return [

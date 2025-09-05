@@ -20,37 +20,39 @@ const {getData} = await import('./common_data.js');
  * @returns {string}
  */
 const formatLocale = locale =>{
+    //adjust from accept language if used  [locale],[locale],...;[browser options]
+    const localeAdjust = locale.split(',')[0]??'en-us';
     const SPLIT_IN  = '-';
     const SPLIT_OUT = '_';
-    switch (locale.split('-').length){
+    switch (localeAdjust.split('-').length){
         case 1:{
                     //language
-            return  locale.toLowerCase();
+            return  localeAdjust.toLowerCase();
         }
         case 2:{
                     //language
-            return  locale.split(SPLIT_IN)[0].toLowerCase() + SPLIT_OUT + 
+            return  localeAdjust.split(SPLIT_IN)[0].toLowerCase() + SPLIT_OUT + 
                     //country or region without country
-                    ((locale.split(SPLIT_IN)[1].toLowerCase()=='cyrl'||
-                    locale.split(SPLIT_IN)[1].toLowerCase()=='latn'||
-                    locale.split(SPLIT_IN)[1].toLowerCase()=='arab'||
-                    locale.split(SPLIT_IN)[1].toLowerCase()=='guru'||
-                    locale.split(SPLIT_IN)[1].toLowerCase()=='hans'||
-                    locale.split(SPLIT_IN)[1].toLowerCase()=='hant')?
-                        locale.split(SPLIT_IN)[1][0].toUpperCase() + locale.split(SPLIT_IN)[1].substring(1).toLowerCase():
-                            locale.split(SPLIT_IN)[1].toUpperCase());
+                    ((localeAdjust.split(SPLIT_IN)[1].toLowerCase()=='cyrl'||
+                    localeAdjust.split(SPLIT_IN)[1].toLowerCase()=='latn'||
+                    localeAdjust.split(SPLIT_IN)[1].toLowerCase()=='arab'||
+                    localeAdjust.split(SPLIT_IN)[1].toLowerCase()=='guru'||
+                    localeAdjust.split(SPLIT_IN)[1].toLowerCase()=='hans'||
+                    localeAdjust.split(SPLIT_IN)[1].toLowerCase()=='hant')?
+                        localeAdjust.split(SPLIT_IN)[1][0].toUpperCase() + localeAdjust.split(SPLIT_IN)[1].substring(1).toLowerCase():
+                            localeAdjust.split(SPLIT_IN)[1].toUpperCase());
         }
         case 3:{
                     //language
-            return  locale.split(SPLIT_IN)[0].toLowerCase() + SPLIT_OUT + 
+            return  localeAdjust.split(SPLIT_IN)[0].toLowerCase() + SPLIT_OUT + 
                     //region
                     //first letter uppercase, the rest lowercase
-                    locale.split(SPLIT_IN)[1][0].toUpperCase() + locale.split(SPLIT_IN)[1].substring(1).toLowerCase() + SPLIT_OUT + 
+                    localeAdjust.split(SPLIT_IN)[1][0].toUpperCase() + localeAdjust.split(SPLIT_IN)[1].substring(1).toLowerCase() + SPLIT_OUT + 
                     //country
-                    locale.split(SPLIT_IN)[2].toUpperCase();
+                    localeAdjust.split(SPLIT_IN)[2].toUpperCase();
         }
         default:
-            return locale;
+            return 'en-us';
     }
 };
 
