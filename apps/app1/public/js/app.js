@@ -944,66 +944,56 @@ const appLogin = async () => {
  * @returns {void}
  */
 const appEventClick = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{CommonAppEvent}*/event) => {
-            appEventClick(event);
-        }, true);
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        const list_title = common.commonMiscElementListTitle(event.target);
-        common.commonEvent('click',event)
-        .then(()=>{
-            switch (event_target_id){
-                case 'secure_menu_open':{
-                    COMMON_DOCUMENT.querySelector('#secure_menu').style.display = 'block';
-                    break;
-                }
-                case 'secure_menu_close': {
-                    COMMON_DOCUMENT.querySelector('#secure_menu').style.display = 'none';
-                    break;
-                }
-                case 'secure_menu_1':
-                case 'secure_menu_2':
-                case 'secure_menu_3':
-                case 'secure_menu_4':
-                case 'secure_menu_5':
-                case 'secure_menu_6':
-                case 'secure_menu_7':
-                case 'secure_menu_8':
-                case 'secure_menu_9':{
-                    appSecureMenuShow(parseInt(event_target_id.substring('secure_menu_'.length)));
-                    break;
-                }
-                case 'secure_menu_10': {
-                    common.commonUserLogout().then(() => {
-                        appLogout();
-                    });
-                    break;
-                }
-                case 'common_dialogue_iam_start_login_admin_button':{
-                    appLogin();
-                    break;
-                }
-                //dialogue user menu
-                case 'common_dialogue_user_menu_nav_iam_user_app':{
-                    common.commonComponentRender(
-                                        {mountDiv:  'common_dialogue_user_menu_app_theme',
-                                        data:       null,
-                                        methods:    {
-                                                    commonMiscThemeDefaultList:common.commonMiscThemeDefaultList, 
-                                                    commonComponentRender:common.commonComponentRender, 
-                                                    app_theme_update:common.commonMiscPreferencesPostMount
-                                                    },
-                                        path:'/common/component/common_dialogue_user_menu_app_theme.js'});
-                    break;
-                }
-                default:{
-                    appSecureEvents('click', event, event_target_id, list_title);
-                    break;
-                }
-            }
-        });
+    const event_target_id = common.commonMiscElementId(event.target);
+    const list_title = common.commonMiscElementListTitle(event.target);
+    switch (event_target_id){
+        case 'secure_menu_open':{
+            COMMON_DOCUMENT.querySelector('#secure_menu').style.display = 'block';
+            break;
+        }
+        case 'secure_menu_close': {
+            COMMON_DOCUMENT.querySelector('#secure_menu').style.display = 'none';
+            break;
+        }
+        case 'secure_menu_1':
+        case 'secure_menu_2':
+        case 'secure_menu_3':
+        case 'secure_menu_4':
+        case 'secure_menu_5':
+        case 'secure_menu_6':
+        case 'secure_menu_7':
+        case 'secure_menu_8':
+        case 'secure_menu_9':{
+            appSecureMenuShow(parseInt(event_target_id.substring('secure_menu_'.length)));
+            break;
+        }
+        case 'secure_menu_10': {
+            common.commonUserLogout().then(() => {
+                appLogout();
+            });
+            break;
+        }
+        case 'common_dialogue_iam_start_login_admin_button':{
+            appLogin();
+            break;
+        }
+        //dialogue user menu
+        case 'common_dialogue_user_menu_nav_iam_user_app':{
+            common.commonComponentRender(
+                                {mountDiv:  'common_dialogue_user_menu_app_theme',
+                                data:       null,
+                                methods:    {
+                                            commonMiscThemeDefaultList:common.commonMiscThemeDefaultList, 
+                                            commonComponentRender:common.commonComponentRender, 
+                                            app_theme_update:common.commonMiscPreferencesPostMount
+                                            },
+                                path:'/common/component/common_dialogue_user_menu_app_theme.js'});
+            break;
+        }
+        default:{
+            appSecureEvents('click', event, event_target_id, list_title);
+            break;
+        }
     }
 };
 /**
@@ -1014,16 +1004,8 @@ const appEventClick = event => {
  * @returns {void}
  */
 const appEventChange = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{CommonAppEvent}*/event) => {
-            appEventChange(event);
-        });
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('change',event)
-        .then(()=>appSecureEvents('change', event, event_target_id));
-    }
+    const event_target_id = common.commonMiscElementId(event.target);
+    appSecureEvents('change', event, event_target_id);
 };
 /**
  * @name appEventKeyUp
@@ -1033,30 +1015,20 @@ const appEventChange = event => {
  * @returns {void}
  */
 const appEventKeyUp = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{CommonAppEvent}*/event) => {
-            appEventKeyUp(event);
-        });
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('keyup',event)
-        .then(()=>{
-            switch (event_target_id){
-                case 'common_dialogue_iam_start_login_admin_username':
-                case 'common_dialogue_iam_start_login_admin_password':
-                case 'common_dialogue_iam_start_login_admin_password_confirm':{
-                    if (event.code === 'Enter') {
-                        event.preventDefault();
-                        appLogin().catch(()=>null);
-                    }
-                    break;
-                }
-                default:
-                    appSecureEvents('keyup', event, event_target_id);
-                    break;
+    const event_target_id = common.commonMiscElementId(event.target);
+    switch (event_target_id){
+        case 'common_dialogue_iam_start_login_admin_username':
+        case 'common_dialogue_iam_start_login_admin_password':
+        case 'common_dialogue_iam_start_login_admin_password_confirm':{
+            if (event.code === 'Enter') {
+                event.preventDefault();
+                appLogin().catch(()=>null);
             }
-        });
+            break;
+        }
+        default:
+            appSecureEvents('keyup', event, event_target_id);
+            break;
     }
 };
 /**
@@ -1067,18 +1039,8 @@ const appEventKeyUp = event => {
  * @returns {void}
  */
 const appEventKeyDown = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keydown',(/**@type{CommonAppEvent}*/event) => {
-            appEventKeyDown(event);
-        });
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('keydown',event)
-        .then(()=>{
-            appSecureEvents('keydown', event, event_target_id);
-        });
-    }
+    const event_target_id = common.commonMiscElementId(event.target);
+    appSecureEvents('keydown', event, event_target_id);
 };
 /**
  * @name appEventInput
@@ -1088,18 +1050,8 @@ const appEventKeyDown = event => {
  * @returns {void}
  */
 const appEventInput = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('input',(/**@type{CommonAppEvent}*/event) => {
-            appEventInput(event);
-        }, true);
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('input',event)
-        .then(()=>{
-            appSecureEvents('input', event, event_target_id);
-        });
-    }
+    const event_target_id = common.commonMiscElementId(event.target);
+    appSecureEvents('input', event, event_target_id);
 };
 /**
  * @name appEventFocus
@@ -1109,18 +1061,8 @@ const appEventInput = event => {
  * @returns {void}
  */
 const appEventFocus = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('focus',(/**@type{CommonAppEvent}*/event) => {
-            appEventFocus(event);
-        }, true);
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('focus',event)
-        .then(()=>{
-            appSecureEvents('focus', event, event_target_id);
-        });
-    }
+    const event_target_id = common.commonMiscElementId(event.target);
+    appSecureEvents('focus', event, event_target_id);
 };
 
 /**

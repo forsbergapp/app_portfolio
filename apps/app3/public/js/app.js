@@ -60,51 +60,41 @@ const appException = error => {
  * @returns {void}
  */
 const appEventClick = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
-            appEventClick(event);
-        });
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('click',event)
-        .then(()=>{
-            switch (event_target_id){
-                case 'menu_open':{
-                    COMMON_DOCUMENT.querySelector('#nav').style.display = 'block';
-                    break;
-                }
-                case 'menu_close': {
-                    COMMON_DOCUMENT.querySelector('#nav').style.display = 'none';
-                    break;
-                }
-                case event.target.classList.contains('app_menu')?event_target_id:'':{
-                    if (event.target.parentNode.querySelector('.app_submenu').classList.contains('active'))
-                        event.target.parentNode.querySelector('.app_submenu').classList.remove('active');
-                    else
-                        event.target.parentNode.querySelector('.app_submenu').classList.add('active');
-                    break;
-                }
-                case 'title':
-                case 'nav_content_app':
-                case 'content':{
-                    event.preventDefault();
-                    if (event.target.getAttribute('href'))
-                        show(   event.target.getAttribute('href'), 
-                                //use title from first menu text if clicking on title
-                                event_target_id=='title'?COMMON_DOCUMENT.querySelectorAll('#nav_content_app .common_link')[0].textContent:event.target.href?event.target.href.split('/')[3]:event.target.textContent, 
-                                //GUIDE in title and nav_content_app
-                                /**@ts-ignore */
-                                event_target_id=='title'?'GUIDE':event_target_id=='content'?'MODULE_CODE':common.commonMiscElementRow(event.target, 'app_menu_data').getAttribute('data-type'));
-                    break;
-                }
-                /*Dialogue user start */
-                case 'common_dialogue_iam_start_login_button':{
-                    common.commonUserLogin().catch(()=>null);
-                    break;
-                }                
-            }
-        });
+    const event_target_id = common.commonMiscElementId(event.target);
+    switch (event_target_id){
+        case 'menu_open':{
+            COMMON_DOCUMENT.querySelector('#nav').style.display = 'block';
+            break;
+        }
+        case 'menu_close': {
+            COMMON_DOCUMENT.querySelector('#nav').style.display = 'none';
+            break;
+        }
+        case event.target.classList.contains('app_menu')?event_target_id:'':{
+            if (event.target.parentNode.querySelector('.app_submenu').classList.contains('active'))
+                event.target.parentNode.querySelector('.app_submenu').classList.remove('active');
+            else
+                event.target.parentNode.querySelector('.app_submenu').classList.add('active');
+            break;
+        }
+        case 'title':
+        case 'nav_content_app':
+        case 'content':{
+            event.preventDefault();
+            if (event.target.getAttribute('href'))
+                show(   event.target.getAttribute('href'), 
+                        //use title from first menu text if clicking on title
+                        event_target_id=='title'?COMMON_DOCUMENT.querySelectorAll('#nav_content_app .common_link')[0].textContent:event.target.href?event.target.href.split('/')[3]:event.target.textContent, 
+                        //GUIDE in title and nav_content_app
+                        /**@ts-ignore */
+                        event_target_id=='title'?'GUIDE':event_target_id=='content'?'MODULE_CODE':common.commonMiscElementRow(event.target, 'app_menu_data').getAttribute('data-type'));
+            break;
+        }
+        /*Dialogue user start */
+        case 'common_dialogue_iam_start_login_button':{
+            common.commonUserLogin().catch(()=>null);
+            break;
+        }                
     }
 };
 /**
@@ -147,12 +137,7 @@ const appCommonInit = async (commonLib, parameters) => {
 const appMetadata = () =>{
     return { 
         events:{  
-            Click:   appEventClick,
-            Change:  null,
-            KeyDown: null,
-            KeyUp:   null,
-            Focus:   null,
-            Input:   null},
+            Click:   appEventClick},
         lifeCycle:{onMounted:null}
     };
 };

@@ -44,12 +44,21 @@ const COMMON_GLOBAL = {
     app_requesttimeout_admin_minutes:60,
     app_typewatch:[],
     app_metadata:{  events:{
-                            Change: ()=>null,
-                            Click:  ()=>null,
-                            Focus:  ()=>null,
-                            Input:  ()=>null,
-                            KeyDown:()=>null,
-                            KeyUp:  ()=>null
+                            Change: null,
+                            Click:  null,
+                            Focus:  null,
+                            Input:  null,
+                            KeyDown:null,
+                            KeyUp:  null,
+                            MouseDown:null,
+                            MouseUp:null,
+                            MouseMove:null,
+                            MouseLeave:null,
+                            Wheel:null,
+                            TouchStart:null,
+                            TouchEnd:null,
+                            TouchCancel:null,
+                            TouchMove:null
                         },
                     lifeCycle:{
                         onMounted:()=>null
@@ -3224,11 +3233,11 @@ const commonEvent = async (event_type,event=null) =>{
                             COMMON_DOCUMENT.querySelectorAll('#common_app_toolbar .common_toolbar_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_toolbar_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
                             if (event_target_id=='common_app_toolbar_framework_js')
-                                await commonFrameworkSet(1,COMMON_GLOBAL.app_metadata.events);
+                                await commonFrameworkSet(1);
                             if (event_target_id=='common_app_toolbar_framework_vue')
-                                await commonFrameworkSet(2,COMMON_GLOBAL.app_metadata.events);
+                                await commonFrameworkSet(2);
                             if (event_target_id=='common_app_toolbar_framework_react')
-                                await commonFrameworkSet(3,COMMON_GLOBAL.app_metadata.events);
+                                await commonFrameworkSet(3);
                             break;
                         }    
                         //dialogue lov
@@ -3272,7 +3281,40 @@ const commonEvent = async (event_type,event=null) =>{
                         }
                     }
                 }   
+                COMMON_GLOBAL.app_metadata.events.Click?COMMON_GLOBAL.app_metadata.events.Click(event):null;
                 break;
+            }
+            case 'change':{
+                COMMON_GLOBAL.app_metadata.events.Change?COMMON_GLOBAL.app_metadata.events.Change(event):null;
+                break;
+            }
+            case 'focus':{
+                COMMON_GLOBAL.app_metadata.events.Focus?COMMON_GLOBAL.app_metadata.events.Focus(event):null;
+                break;
+            }
+            case 'input':{
+                COMMON_GLOBAL.app_metadata.events.Input?COMMON_GLOBAL.app_metadata.events.Input(event):null;
+                break;
+            }
+            case 'keydown':{
+                if (event.code=='Enter')
+                    event.preventDefault();
+                if (commonTextEditingDisabled() &&
+                    event.target.classList.contains('common_input') && 
+                        (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
+                        (event.shiftKey ==true && (event.code=='ArrowLeft' || 
+                                                    event.code=='ArrowRight' || 
+                                                    event.code=='ArrowUp' || 
+                                                    event.code=='ArrowDown'|| 
+                                                    event.code=='Home'|| 
+                                                    event.code=='End'|| 
+                                                    event.code=='PageUp'|| 
+                                                    event.code=='PageDown') ) )
+                    ){
+                        event.preventDefault();
+                }
+                COMMON_GLOBAL.app_metadata.events.KeyDown?COMMON_GLOBAL.app_metadata.events.KeyDown(event):null;
+                break;                
             }
             case 'keyup':{
                 if (event.target.classList.contains('common_password')){   
@@ -3312,27 +3354,66 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                     }
+                COMMON_GLOBAL.app_metadata.events.KeyUp?COMMON_GLOBAL.app_metadata.events.KeyUp(event):null;
                 break;
             }
-            case 'keydown':{
-                if (event.code=='Enter')
-                    event.preventDefault();
-                if (commonTextEditingDisabled() &&
-                    event.target.classList.contains('common_input') && 
-                        (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
-                        (event.shiftKey ==true && (event.code=='ArrowLeft' || 
-                                                    event.code=='ArrowRight' || 
-                                                    event.code=='ArrowUp' || 
-                                                    event.code=='ArrowDown'|| 
-                                                    event.code=='Home'|| 
-                                                    event.code=='End'|| 
-                                                    event.code=='PageUp'|| 
-                                                    event.code=='PageDown') ) )
-                    ){
-                        event.preventDefault();
-                }
+            case 'mousedown':{
+                //common event only
+                commonEventCopyPasteCutDisable(event);
+                //app event
+                COMMON_GLOBAL.app_metadata.events.MouseDown?COMMON_GLOBAL.app_metadata.events.MouseDown(event):null;
                 break;
-            } 
+            }
+            case 'mouseup':{
+                COMMON_GLOBAL.app_metadata.events.MouseUp?COMMON_GLOBAL.app_metadata.events.MouseUp(event):null;
+                break;
+            }
+            case 'mousemove':{
+                COMMON_GLOBAL.app_metadata.events.MouseMove?COMMON_GLOBAL.app_metadata.events.MouseMove(event):null;
+                break;
+            }
+            case 'mouseleave':{
+                COMMON_GLOBAL.app_metadata.events.MouseLeave?COMMON_GLOBAL.app_metadata.events.MouseLeave(event):null;
+                break;
+            }
+            case 'wheel':{
+                COMMON_GLOBAL.app_metadata.events.Wheel?COMMON_GLOBAL.app_metadata.events.Wheel(event):null;
+                break;
+            }
+            case 'touchstart':{
+                //common event only
+                commonEventInputDisable(event);
+                //app event
+                COMMON_GLOBAL.app_metadata.events.TouchStart?COMMON_GLOBAL.app_metadata.events.TouchStart(event):null;
+                break;
+            }
+            case 'touchend':{
+                COMMON_GLOBAL.app_metadata.events.TouchEnd?COMMON_GLOBAL.app_metadata.events.TouchEnd(event):null;
+                break;
+            }
+            case 'touchcancel':{
+                COMMON_GLOBAL.app_metadata.events.TouchCancel?COMMON_GLOBAL.app_metadata.events.TouchCancel(event):null;
+                break;
+            }
+            case 'touchmove':{
+                COMMON_GLOBAL.app_metadata.events.TouchMove?COMMON_GLOBAL.app_metadata.events.TouchMove(event):null;
+                break;
+            }
+            case 'copy':{
+                //common event only
+                commonEventCopyPasteCutDisable(event);
+                break;
+            }
+            case 'paste':{
+                //common event only
+                commonEventCopyPasteCutDisable(event);
+                break;
+            }
+            case 'cut':{
+                //common event only
+                commonEventCopyPasteCutDisable(event);
+                break;
+            }
             default:{
                 break;
             }
@@ -3374,36 +3455,6 @@ const commonEventInputDisable = event => {
             event.preventDefault();
             event.target.focus();
         }
-};
-/**
- * @name commonEventCommonAdd
- * @description Adds common events for all apps
- * @function
- * @returns {void}
- */
-const commonEventCommonAdd = () => {
-
-    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('copy', commonEventCopyPasteCutDisable, false);
-    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('paste', commonEventCopyPasteCutDisable, false);
-    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('cut', commonEventCopyPasteCutDisable, false);
-    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('mousedown', commonEventCopyPasteCutDisable, false);
-    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener('touchstart', commonEventInputDisable, false);
-
-};
-/**
- * @name commonEventCommonRemove
- * @description Remove common events for all apps
- * @function
- * @returns {void}
- */
-const commonEventCommonRemove = () => {
-
-    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('copy', commonEventCopyPasteCutDisable);
-    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('paste', commonEventCopyPasteCutDisable);
-    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('cut', commonEventCopyPasteCutDisable);
-    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('mousedown', commonEventCopyPasteCutDisable);
-    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('touchstart', commonEventInputDisable);
-
 };
 
 /**
@@ -3536,16 +3587,9 @@ const commonFrameworkClean = () =>{
  * @description Sets framework and uses given list of event functions
  * @function
  * @param {number|null} framework
- * @param {{Click:function|null,
- *          Change:function|null,
- *          KeyDown:function|null,
- *          KeyUp:function|null,
- *          Focus:function|null,
- *          Input:function|null,
- *          Other?:function|null}} events 
  * @returns {Promise.<void>}
  */
-const commonFrameworkSet = async (framework, events) => {
+const commonFrameworkSet = async (framework) => {
     const app_root_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`);
     const app_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_div}`);
     const common_app_element = COMMON_DOCUMENT.querySelector('#common_app');
@@ -3563,8 +3607,6 @@ const commonFrameworkSet = async (framework, events) => {
     //save Leaflet containers with special event management and saved objects on elements if any Leaflet container used
     const leaflet_containers = COMMON_DOCUMENT.querySelectorAll('.leaflet-container');
 
-    //remove common listeners
-    commonEventCommonRemove();
     COMMON_GLOBAL.app_eventListeners.OTHER = [];
 
     //remove all listeners in app and app root divs including all objects saved on elements
@@ -3572,17 +3614,7 @@ const commonFrameworkSet = async (framework, events) => {
     app_root_element.replaceWith(app_root_element.cloneNode(true));
     
     commonFrameworkClean();
-
-    //set default function if anyone missing
-    events.Change?null:events.Change = ((/**@type{CommonAppEvent}*/event)=>commonEvent('change', event));
-    events.Click?null:events.Click = ((/**@type{CommonAppEvent}*/event)=>commonEvent('click', event));
-    events.Focus?null:events.Focus = ((/**@type{CommonAppEvent}*/event)=>commonEvent('focus', event));
-    events.Input?null:events.Input = ((/**@type{CommonAppEvent}*/event)=>commonEvent('input', event));
-    events.KeyDown?null:events.KeyDown = ((/**@type{CommonAppEvent}*/event)=>commonEvent('keydown', event));
-    events.KeyUp?null:events.KeyUp = ((/**@type{CommonAppEvent}*/event)=>commonEvent('keyup', event));
-
-    events.Other?null:null;
-
+    
     //app can override framework or use default javascript if Vue or React is not set
     if (framework ?? COMMON_GLOBAL.app_framework !=COMMON_GLOBAL.app_framework)
         COMMON_GLOBAL.app_framework = framework ??1;
@@ -3593,32 +3625,8 @@ const commonFrameworkSet = async (framework, events) => {
                                     ${app_element.outerHTML}
                                     ${common_app_element.outerHTML}
                                 </div>`;
-            const methods = {
-                                CommonAppEventChange: (/**@type{CommonAppEvent}*/event) => {
-                                    events.Change?events.Change(event):null;
-                                },
-                                CommonAppEventClick: (/**@type{CommonAppEvent}*/event) => {
-                                    events.Click?events.Click(event):null;
-                                },
-                                CommonAppEventInput: (/**@type{CommonAppEvent}*/event) => {
-                                    events.Input?events.Input(event):null;
-                                },
-                                CommonAppEventKeyDown: (/**@type{CommonAppEvent}*/event) => {
-                                    events.KeyDown?events.KeyDown(event):null;
-                                },
-                                CommonAppEventKeyUp: (/**@type{CommonAppEvent}*/event) => {
-                                    events.KeyUp?events.KeyUp(event):null;
-                                }
-                            };
-            //App events are used on Vue events using event delegation on app root
+            const methods = {};
             await commonFrameworkMount(2, template, methods, COMMON_GLOBAL.app_root, false);
-            //App events are not supported and not used on app root and are managed in event delegation
-            events.Click();
-            events.Change();
-            events.Focus();
-            events.Input();
-            events.KeyDown();
-            events.KeyUp();
             break;
         }
         case 3:{
@@ -3626,31 +3634,39 @@ const commonFrameworkSet = async (framework, events) => {
             const template = `  ${app_element.outerHTML}
                                 ${common_app_element.outerHTML}`;
             const methods = {};
-            //App events are not supported and not used on app root and are managed in event delegation
             await commonFrameworkMount(3, template, methods, COMMON_GLOBAL.app_root, false);
-            events.Click();
-            events.Change();
-            events.Focus();
-            events.Input();
-            events.KeyDown();
-            events.KeyUp();
             break;
         }
         case 1:
         default:{
             //Javascript
-            events.Click();
-            events.Change();
-            events.Focus();
-            events.Input();
-            events.KeyDown();
-            events.KeyUp();
             break;
         }
     }
-    //set other events not use in common
-    if (events.Other)
-        events.Other();
+    //App events are not supported on other frameworks
+    //All events are managed in event delegation
+    //call event function to add listeners using null parameter
+    commonEvent('click', null);
+    commonEvent('change', null);
+    commonEvent('focus', null);
+    commonEvent('input', null);
+    commonEvent('keydown', null);
+    commonEvent('keyup', null);
+    commonEvent('mousedown', null);
+    commonEvent('mouseup', null);
+    commonEvent('mousemove', null);
+    commonEvent('mouseleave', null);
+    commonEvent('wheeel', null);
+
+    commonEvent('touchstart', null);
+    commonEvent('touchend', null);
+    commonEvent('touchcancel', null);
+    commonEvent('touchmove', null);
+
+    //common only security events
+    commonEvent('copy', null);
+    commonEvent('paste', null);
+    commonEvent('cut', null);
 
     //replace Leaflet containers with the saved ones containing Leaflet objects and events if any Leaflet container used
     let index= 0;
@@ -3660,8 +3676,7 @@ const commonFrameworkSet = async (framework, events) => {
     }
     //update all elements with data-function since copying outerHTML does not include data-function
     data_function.forEach(element =>COMMON_DOCUMENT.querySelector(`#${element.id}`)['data-function'] = element.element_function);
-    //add common events for all apps
-    commonEventCommonAdd();
+    
 };
 /**
  * @name setUserAgentAttributes
@@ -3916,20 +3931,22 @@ const commonMountApp = async (app_id) =>{
     COMMON_GLOBAL.app_metadata.events.Input = appdata.events.Input;
     COMMON_GLOBAL.app_metadata.events.KeyDown = appdata.events.KeyDown;
     COMMON_GLOBAL.app_metadata.events.KeyUp = appdata.events.KeyUp;
+    COMMON_GLOBAL.app_metadata.events.MouseDown = appdata.events.MouseDown;
+    COMMON_GLOBAL.app_metadata.events.MouseUp = appdata.events.MouseUp;
+    COMMON_GLOBAL.app_metadata.events.MouseMove = appdata.events.MouseMove;
+    COMMON_GLOBAL.app_metadata.events.MouseLeave = appdata.events.MouseLeave;
+    COMMON_GLOBAL.app_metadata.events.Wheel = appdata.events.Wheel;
+    COMMON_GLOBAL.app_metadata.events.TouchStart = appdata.events.TouchStart;
+    COMMON_GLOBAL.app_metadata.events.TouchEnd = appdata.events.TouchEnd;
+    COMMON_GLOBAL.app_metadata.events.TouchCancel = appdata.events.TouchCancel;
+    COMMON_GLOBAL.app_metadata.events.TouchMove = appdata.events.TouchMove;
     COMMON_GLOBAL.app_metadata.lifeCycle.onMounted = appdata.lifeCycle?.onMounted;
     
     await AppInit(commonGet(), CommonAppInit.AppParameter);
     COMMON_GLOBAL.app_metadata.lifeCycle.onMounted?
         await COMMON_GLOBAL.app_metadata.lifeCycle.onMounted():
             null;
-    commonFrameworkSet(null,
-        {   Click: COMMON_GLOBAL.app_metadata.events.Click,
-            Change: COMMON_GLOBAL.app_metadata.events.Change,
-            KeyDown: COMMON_GLOBAL.app_metadata.events.KeyDown,
-            KeyUp: COMMON_GLOBAL.app_metadata.events.KeyUp,
-            Focus: COMMON_GLOBAL.app_metadata.events.Focus,
-            Input:COMMON_GLOBAL.app_metadata.events.Input,
-            Other:COMMON_GLOBAL.app_metadata.events.Other});
+    commonFrameworkSet(null);
     if (COMMON_GLOBAL.iam_user_id){
         commonUserUpdateAvatar(true, COMMON_GLOBAL.iam_user_avatar);
         commonUserMessageShowStat();
