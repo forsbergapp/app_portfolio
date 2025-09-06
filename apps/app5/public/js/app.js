@@ -33,216 +33,191 @@ const appException = error => {
  * @returns {void}
  */
 const appEventClick = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
-            appEventClick(event);
-        });
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('click',event)
-        .then(()=>{
+    const event_target_id = common.commonMiscElementId(event.target);
+    switch (event_target_id){
+        case 'tab1':
+        case 'tab2':
+        case 'tab3':{
+            COMMON_DOCUMENT.querySelectorAll('.app_page_secure_tab').forEach((/**@type{HTMLElement}*/element)=>element.classList.remove('active'));
+            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('active');
             switch (event_target_id){
-                case 'tab1':
-                case 'tab2':
-                case 'tab3':{
-                    COMMON_DOCUMENT.querySelectorAll('.app_page_secure_tab').forEach((/**@type{HTMLElement}*/element)=>element.classList.remove('active'));
-                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('active');
-                    switch (event_target_id){
-                        case 'tab1':{
-                            common.commonComponentRender({
-                                mountDiv:   'app_page_secure_tab_content', 
-                                data:       {
-                                            app_id:common.COMMON_GLOBAL.app_id,
-                                            common_app_id:common.COMMON_GLOBAL.app_common_app_id,
-                                            display_type:'MASTER_DETAIL_HORIZONTAL',
-                                            master_path:'/app-common-module/ACCOUNT_STATEMENT',
-                                            master_query:'fields=title,bank_account_balance,bank_account_number,bank_account_iban,currency,currency_name',
-                                            master_body:{   type:'FUNCTION',
-                                                            IAM_iam_user_app_id: common.COMMON_GLOBAL.iam_user_app_id,
-                                                            IAM_iam_user_id: common.COMMON_GLOBAL.iam_user_id, 
-                                                            IAM_data_app_id:common.COMMON_GLOBAL.app_id},
-                                            master_method:'POST',
-                                            master_token_type:'APP_ACCESS',
-                                            master_resource:'ACCOUNT',
-                                            detail_path:'/app-common-module/ACCOUNT_TRANSACTIONS',
-                                            detail_query: 'fields=timestamp,logo,origin,amount_deposit,amount_withdrawal',
-                                            detail_body: {  type:'FUNCTION',
-                                                            IAM_iam_user_id:common.COMMON_GLOBAL.iam_user_id,
-                                                            IAM_data_app_id:common.COMMON_GLOBAL.app_id},
-                                            detail_method:'POST',
-                                            detail_token_type:'APP_ACCESS',
-                                            detail_resource:'TRANSACTION_METADATA',
-                                            detail_class:'bank_statement',
-                                            new_resource:false,
-                                            mode:'READ',
-                                            timezone:common.COMMON_GLOBAL.user_timezone,
-                                            locale:common.COMMON_GLOBAL.user_locale,
-                                            button_print: false,
-                                            button_update: false,
-                                            button_post: false,
-                                            button_delete: false
-                                            },
-                                methods:    {
-                                           commonFFB:common.commonFFB,
-                                            button_print:null,
-                                            button_update:null,
-                                            button_post:null,
-                                            button_delete:null
-                                            },
-                                path:'/common/component/common_app_data_display.js'});
-                            break;
-                        }
-                        case 'tab2':{
-                            common.commonComponentRender({
-                                mountDiv:   'app_page_secure_tab_content', 
-                                data:       {
-                                            app_id:common.COMMON_GLOBAL.app_id,
-                                            common_app_id:common.COMMON_GLOBAL.app_common_app_id,
-                                            display_type:'VERTICAL_KEY_VALUE',
-                                            master_path:'/app-common-module/CUSTOMER_GET',
-                                            master_query: 'fields=name,customer_type,address,city,country',
-                                            master_body:{   type:'FUNCTION',
-                                                            IAM_iam_user_app_id: common.COMMON_GLOBAL.iam_user_app_id,
-                                                            IAM_iam_user_id:common.COMMON_GLOBAL.iam_user_id, 
-                                                            IAM_data_app_id:common.COMMON_GLOBAL.app_id},
-                                            master_method:'POST',
-                                            master_token_type:'APP_ACCESS',
-                                            master_resource:'CUSTOMER',
-                                            detail_path:null,
-                                            detail_query:null,
-                                            detail_method:null,
-                                            detail_token_type:null,
-                                            detail_class:null,
-                                            new_resource:false,
-                                            mode:'READ',
-                                            timezone:common.COMMON_GLOBAL.user_timezone,
-                                            locale:common.COMMON_GLOBAL.user_locale,
-                                            button_print: false,
-                                            button_update: false,
-                                            button_post: false,
-                                            button_delete: false
-                                            },
-                                methods:    {
-                                           commonFFB:common.commonFFB,
-                                            button_print:null,
-                                            button_update:null,
-                                            button_post:null,
-                                            button_delete:null
-                                            },
-                                path:       '/common/component/common_app_data_display.js'});
-                            break;
-                        }
-                        case 'tab3':{
-                            common.commonComponentRender({
-                                mountDiv:   'app_page_secure_tab_content', 
-                                data:       {
-                                            app_id:common.COMMON_GLOBAL.app_id,
-                                            common_app_id:common.COMMON_GLOBAL.app_common_app_id,
-                                            display_type:'VERTICAL_KEY_VALUE',
-                                            master_path:'/app-common-module/ACCOUNT_GET',
-                                            master_query: 'fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa',
-                                            master_body: {  type:'FUNCTION',
-                                                            IAM_iam_user_id:common.COMMON_GLOBAL.iam_user_id, 
-                                                            IAM_data_app_id:common.COMMON_GLOBAL.app_id},
-                                            master_method:'POST',
-                                            master_token_type:'APP_ACCESS',
-                                            master_resource:'ACCOUNT',
-                                            detail_path:null,
-                                            detail_query:null,
-                                            detail_method:null,
-                                            detail_token_type:null,
-                                            detail_class:null,
-                                            new_resource:false,
-                                            mode:'READ',
-                                            timezone:common.COMMON_GLOBAL.user_timezone,
-                                            locale:common.COMMON_GLOBAL.user_locale,
-                                            button_print: false,
-                                            button_update: false,
-                                            button_post: false,
-                                            button_delete: false
-                                            },
-                                methods:    {
-                                           commonFFB:common.commonFFB,
-                                            button_print:null,
-                                            button_update:null,
-                                            button_post:null,
-                                            button_delete:null
-                                            },
-                                path:       '/common/component/common_app_data_display.js'});
-                            break;
-                        }
-                    }
-                    break;
-                }
-                case 'app_page_start_get_bankaccount':
-                case 'app_page_start_bank_account':
-                case 'app_page_start_bank_statements':
-                case 'app_page_start_bank_directpayment':
-                case 'app_page_start_bank_iso':{
-                    common.commonDialogueShow('SIGNUP');
-                    break;
-                }
-                //dialogue user menu
-                case 'common_iam_avatar':
-                case 'common_iam_avatar_logged_in':
-                case 'common_iam_avatar_avatar':
-                case 'common_iam_avatar_avatar_img':
-                case 'common_iam_avatar_logged_out':
-                case 'common_iam_avatar_default_avatar':{
-                    if (common.COMMON_GLOBAL.iam_user_id==null)
-                        common.commonComponentRender({
-                            mountDiv:   'common_dialogue_user_menu_app_theme',
-                            data:       null,
-                            methods:    {
-                                        commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
-                                        commonComponentRender:common.commonComponentRender, 
-                                        app_theme_update:common.commonMiscPreferencesPostMount
-                                        },
-                            path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
-                    break;
-                }
-                case 'common_dialogue_user_menu_nav_iam_user_app':{
+                case 'tab1':{
                     common.commonComponentRender({
-                            mountDiv:   'common_dialogue_user_menu_app_theme', 
-                            data:       null,
-                            methods:    {
-                                        commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
-                                        commonComponentRender:common.commonComponentRender, 
-                                        app_theme_update:common.commonMiscPreferencesPostMount
-                                        },
-                            path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+                        mountDiv:   'app_page_secure_tab_content', 
+                        data:       {
+                                    app_id:common.COMMON_GLOBAL.app_id,
+                                    common_app_id:common.COMMON_GLOBAL.app_common_app_id,
+                                    display_type:'MASTER_DETAIL_HORIZONTAL',
+                                    master_path:'/app-common-module/ACCOUNT_STATEMENT',
+                                    master_query:'fields=title,bank_account_balance,bank_account_number,bank_account_iban,currency,currency_name',
+                                    master_body:{   type:'FUNCTION',
+                                                    IAM_iam_user_app_id: common.COMMON_GLOBAL.iam_user_app_id,
+                                                    IAM_iam_user_id: common.COMMON_GLOBAL.iam_user_id, 
+                                                    IAM_data_app_id:common.COMMON_GLOBAL.app_id},
+                                    master_method:'POST',
+                                    master_token_type:'APP_ACCESS',
+                                    master_resource:'ACCOUNT',
+                                    detail_path:'/app-common-module/ACCOUNT_TRANSACTIONS',
+                                    detail_query: 'fields=timestamp,logo,origin,amount_deposit,amount_withdrawal',
+                                    detail_body: {  type:'FUNCTION',
+                                                    IAM_iam_user_id:common.COMMON_GLOBAL.iam_user_id,
+                                                    IAM_data_app_id:common.COMMON_GLOBAL.app_id},
+                                    detail_method:'POST',
+                                    detail_token_type:'APP_ACCESS',
+                                    detail_resource:'TRANSACTION_METADATA',
+                                    detail_class:'bank_statement',
+                                    new_resource:false,
+                                    mode:'READ',
+                                    timezone:common.COMMON_GLOBAL.user_timezone,
+                                    locale:common.COMMON_GLOBAL.user_locale,
+                                    button_print: false,
+                                    button_update: false,
+                                    button_post: false,
+                                    button_delete: false
+                                    },
+                        methods:    {
+                                    commonFFB:common.commonFFB,
+                                    button_print:null,
+                                    button_update:null,
+                                    button_post:null,
+                                    button_delete:null
+                                    },
+                        path:'/common/component/common_app_data_display.js'});
                     break;
                 }
-                case 'common_dialogue_user_menu_log_out':{
-                    common.commonUserLogout().then(()=>appUserLogout());
+                case 'tab2':{
+                    common.commonComponentRender({
+                        mountDiv:   'app_page_secure_tab_content', 
+                        data:       {
+                                    app_id:common.COMMON_GLOBAL.app_id,
+                                    common_app_id:common.COMMON_GLOBAL.app_common_app_id,
+                                    display_type:'VERTICAL_KEY_VALUE',
+                                    master_path:'/app-common-module/CUSTOMER_GET',
+                                    master_query: 'fields=name,customer_type,address,city,country',
+                                    master_body:{   type:'FUNCTION',
+                                                    IAM_iam_user_app_id: common.COMMON_GLOBAL.iam_user_app_id,
+                                                    IAM_iam_user_id:common.COMMON_GLOBAL.iam_user_id, 
+                                                    IAM_data_app_id:common.COMMON_GLOBAL.app_id},
+                                    master_method:'POST',
+                                    master_token_type:'APP_ACCESS',
+                                    master_resource:'CUSTOMER',
+                                    detail_path:null,
+                                    detail_query:null,
+                                    detail_method:null,
+                                    detail_token_type:null,
+                                    detail_class:null,
+                                    new_resource:false,
+                                    mode:'READ',
+                                    timezone:common.COMMON_GLOBAL.user_timezone,
+                                    locale:common.COMMON_GLOBAL.user_locale,
+                                    button_print: false,
+                                    button_update: false,
+                                    button_post: false,
+                                    button_delete: false
+                                    },
+                        methods:    {
+                                    commonFFB:common.commonFFB,
+                                    button_print:null,
+                                    button_update:null,
+                                    button_post:null,
+                                    button_delete:null
+                                    },
+                        path:       '/common/component/common_app_data_display.js'});
                     break;
                 }
-                /*Dialogue user start */
-                case 'common_dialogue_iam_start_login_button':{
-                    appUserLogin();
+                case 'tab3':{
+                    common.commonComponentRender({
+                        mountDiv:   'app_page_secure_tab_content', 
+                        data:       {
+                                    app_id:common.COMMON_GLOBAL.app_id,
+                                    common_app_id:common.COMMON_GLOBAL.app_common_app_id,
+                                    display_type:'VERTICAL_KEY_VALUE',
+                                    master_path:'/app-common-module/ACCOUNT_GET',
+                                    master_query: 'fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa',
+                                    master_body: {  type:'FUNCTION',
+                                                    IAM_iam_user_id:common.COMMON_GLOBAL.iam_user_id, 
+                                                    IAM_data_app_id:common.COMMON_GLOBAL.app_id},
+                                    master_method:'POST',
+                                    master_token_type:'APP_ACCESS',
+                                    master_resource:'ACCOUNT',
+                                    detail_path:null,
+                                    detail_query:null,
+                                    detail_method:null,
+                                    detail_token_type:null,
+                                    detail_class:null,
+                                    new_resource:false,
+                                    mode:'READ',
+                                    timezone:common.COMMON_GLOBAL.user_timezone,
+                                    locale:common.COMMON_GLOBAL.user_locale,
+                                    button_print: false,
+                                    button_update: false,
+                                    button_post: false,
+                                    button_delete: false
+                                    },
+                        methods:    {
+                                    commonFFB:common.commonFFB,
+                                    button_print:null,
+                                    button_update:null,
+                                    button_post:null,
+                                    button_delete:null
+                                    },
+                        path:       '/common/component/common_app_data_display.js'});
                     break;
                 }
             }
-        });
+            break;
+        }
+        case 'app_page_start_get_bankaccount':
+        case 'app_page_start_bank_account':
+        case 'app_page_start_bank_statements':
+        case 'app_page_start_bank_directpayment':
+        case 'app_page_start_bank_iso':{
+            common.commonDialogueShow('SIGNUP');
+            break;
+        }
+        //dialogue user menu
+        case 'common_iam_avatar':
+        case 'common_iam_avatar_logged_in':
+        case 'common_iam_avatar_avatar':
+        case 'common_iam_avatar_avatar_img':
+        case 'common_iam_avatar_logged_out':
+        case 'common_iam_avatar_default_avatar':{
+            if (common.COMMON_GLOBAL.iam_user_id==null)
+                common.commonComponentRender({
+                    mountDiv:   'common_dialogue_user_menu_app_theme',
+                    data:       null,
+                    methods:    {
+                                commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
+                                commonComponentRender:common.commonComponentRender, 
+                                app_theme_update:common.commonMiscPreferencesPostMount
+                                },
+                    path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+            break;
+        }
+        case 'common_dialogue_user_menu_nav_iam_user_app':{
+            common.commonComponentRender({
+                    mountDiv:   'common_dialogue_user_menu_app_theme', 
+                    data:       null,
+                    methods:    {
+                                commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
+                                commonComponentRender:common.commonComponentRender, 
+                                app_theme_update:common.commonMiscPreferencesPostMount
+                                },
+                    path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+            break;
+        }
+        case 'common_dialogue_user_menu_log_out':{
+            common.commonUserLogout().then(()=>appUserLogout());
+            break;
+        }
+        /*Dialogue user start */
+        case 'common_dialogue_iam_start_login_button':{
+            appUserLogin();
+            break;
+        }
     }
 };
-/**
- * @name appEventChange
- * @description App event change
- * @function
- * @param {CommonAppEvent} event 
- * @returns {void}
- */
-const appEventChange = event =>{
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{CommonAppEvent}*/event) => {
-            appEventChange(event);
-        });
-    }
-    else
-        common.commonEvent('change',event);
-};
+
 /**
  * @name appEventKeyUp
  * @description App event keyup
@@ -251,27 +226,17 @@ const appEventChange = event =>{
  * @returns {void}
  */
 const appEventKeyUp = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{CommonAppEvent}*/event) => {
-            appEventKeyUp(event);
-        }, true);
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('keyup',event)
-        .then(()=>{
-            switch(event_target_id){
-                case 'common_dialogue_iam_start_login_username':
-                case 'common_dialogue_iam_start_login_password':{
-                    if (event.code === 'Enter') {
-                        event.preventDefault();
-                        appUserLogin();
-                    }
-                    break;
-                }
-
+    const event_target_id = common.commonMiscElementId(event.target);
+    switch(event_target_id){
+        case 'common_dialogue_iam_start_login_username':
+        case 'common_dialogue_iam_start_login_password':{
+            if (event.code === 'Enter') {
+                event.preventDefault();
+                appUserLogin();
             }
-        });
+            break;
+        }
+
     }
 };
 /**
@@ -515,11 +480,7 @@ const appMetadata = () =>{
     return { 
         events:{  
             Click:   appEventClick,
-            Change:  appEventChange,
-            KeyDown: null,
-            KeyUp:   appEventKeyUp,
-            Focus:   null,
-            Input:   null},
+            KeyUp:   appEventKeyUp},
         lifeCycle:{onMounted:appUserLoginPost}
     };
 };
