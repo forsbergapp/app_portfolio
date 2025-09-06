@@ -322,13 +322,21 @@
 /**
  * @description commonMetadata
  * @typedef {{  events:{
- *                  Click:function|null,
- *                  Change:function|null,
- *                  KeyDown:function|null,
- *                  KeyUp:function|null,
- *                  Focus:function|null,
- *                  Input:function|null,
- *                  Other?:function|null},
+ *                  Click?:function|null,
+ *                  Change?:function|null,
+ *                  KeyDown?:function|null,
+ *                  KeyUp?:function|null,
+ *                  Focus?:function|null,
+ *                  Input?:function|null,
+ *                  MouseDown?:function|null,
+ *                  MouseUp?:function|null,
+ *                  MouseMove?:function|null,
+ *                  MouseLeave?:function|null,
+ *                  Wheel?:function|null,
+ *                  TouchStart?:function|null,
+ *                  TouchEnd?:function|null,
+ *                  TouchCancel?:function|null,
+ *                  TouchMove?:function|null},
  *              lifeCycle:{onMounted:function|null}}} commonMetadata
  */
 /**

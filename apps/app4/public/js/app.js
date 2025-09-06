@@ -1609,453 +1609,443 @@ const appUserSettingsLike = user_account_app_data_post_id => {
  * @returns {void}
  */
 const appEventClick = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
-            appEventClick(event);
-        }, true);
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('click',event)
-        .then(()=>{
-            switch (event_target_id){
-                case event.target?.classList.contains('common_select_option')?event_target_id:'':
-                case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
-                    //settings regional
-                    if(event_target_id == 'setting_select_locale'){
-                        appUserSettingUpdate('REGIONAL');
-                    }
-                    if(event_target_id == 'setting_select_report_timezone'){
-                        appUserSettingUpdate('REGIONAL');
-                    }
-                    if(event_target_id == 'setting_select_report_numbersystem' ||
-                       event_target_id == 'setting_select_report_direction'){
-                        appUserSettingUpdate('REGIONAL');
-                    }
-                    if(event_target_id == 'setting_select_report_locale_second'){
-                        appUserSettingUpdate('REGIONAL');
-                    }
-                    if( event_target_id == 'setting_select_report_arabic_script' ||
-                        event_target_id == 'setting_select_calendartype' ||
-                        event_target_id == 'setting_select_calendar_hijri_type'){
-                        appUserSettingUpdate('REGIONAL');
-                    }
-                    //settings gps
-                    if(event_target_id=='setting_select_popular_place'){
-                        appUserSettingUpdate('GPS');
-                        appComponentSettingUpdate('GPS', 'POPULAR_PLACES');
-                    }
-                    //settings design
-                    if(event_target_id == 'setting_select_report_papersize'){
-                        appUserSettingUpdate('DESIGN');
-                        appComponentSettingUpdate('DESIGN', 'PAPER');
-                    }
-                    if(event_target_id== 'setting_select_report_highlight_row')
-                        appUserSettingUpdate('DESIGN');
-                    //module leaflet
-                    if (event_target_id == 'common_module_leaflet_select_country')
-                        appUserSettingUpdate('GPS');
-                    if(event_target_id == 'common_module_leaflet_select_city'){
-                        //popular place not on map is read when saving
-                        appComponentSettingUpdate('GPS', 'CITY');
-                    }
-                    if (event_target_id == 'common_module_leaflet_select_mapstyle')
-                        appComponentSettingUpdate('GPS', 'MAP');
-
-                    //settings prayer
-                    if (event_target_id == 'setting_select_method'){
-                        appComponentSettingUpdate('PRAYER', 'METHOD');
-                        appUserSettingUpdate('PRAYER');
-                    }
-                    if (event_target_id == 'setting_select_asr' ||
-                        event_target_id == 'setting_select_highlatitude' ||
-                        event_target_id == 'setting_select_timeformat' ||
-                        event_target_id == 'setting_select_hijri_adjustment' ||
-                        event_target_id == 'setting_select_report_iqamat_title_fajr' ||
-                        event_target_id == 'setting_select_report_iqamat_title_dhuhr' ||
-                        event_target_id == 'setting_select_report_iqamat_title_asr' ||
-                        event_target_id == 'setting_select_report_iqamat_title_maghrib' ||
-                        event_target_id == 'setting_select_report_iqamat_title_isha' ||
-                        event_target_id == 'setting_select_report_show_fast_start_end'){
-                        appUserSettingUpdate('PRAYER');
-                    }
-                    //settings user
-                    if (event_target_id == 'setting_select_user_setting'){
-                        appComponentSettingUpdate('USER', 'SETTING');
-                    }
-                    //profile
-                    if (event_target_id== 'profile_select_user_settings'){
-                        APP_GLOBAL.function_profile_show_user_setting_detail(   Number(JSON.parse(event.target.getAttribute('data-value')).liked), 
-                                                                                Number(JSON.parse(event.target.getAttribute('data-value')).count_likes), 
-                                                                                Number(JSON.parse(event.target.getAttribute('data-value')).count_views));
-                    }
-                    break;
-                }
-                //info dialogue
-                case 'app_link':{
-                    if (common.COMMON_GLOBAL.app_link_url)
-                        common.commonWindowOpen(common.COMMON_GLOBAL.app_link_url);
-                    break;
-                }
-                case 'info_link1':{
-                    common.commonComponentRender({
-                        mountDiv:   'common_window_info',
-                        data:       {
-                                    info:'URL',
-                                    path:'/app-resource/' + common.COMMON_GLOBAL.info_link_policy_url,
-                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
-                                    method:'GET',
-                                    authorization:'APP_ID'
-                                    },
-                        methods:    {commonFFB:common.commonFFB},
-                        path:       '/common/component/common_window_info.js'});
-                    break;
-                }
-                case 'info_link2':{
-                    common.commonComponentRender({
-                        mountDiv:   'common_window_info',
-                        data:       {
-                                    info:'URL',
-                                    path:'/app-resource/' + common.COMMON_GLOBAL.info_link_disclaimer_url,
-                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
-                                    method:'GET',
-                                    authorization:'APP_ID'
-                                    },
-                        methods:    {commonFFB:common.commonFFB},
-                        path:       '/common/component/common_window_info.js'});
-                    break;
-                }
-                case 'info_link3':{
-                    common.commonComponentRender({
-                        mountDiv:   'common_window_info',
-                        data:       {
-                                    info:'URL',
-                                    path:'/app-resource/' + common.COMMON_GLOBAL.info_link_terms_url,
-                                    query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
-                                    method:'GET',
-                                    authorization:'APP_ID'
-                                    },
-                        methods:    {commonFFB:common.commonFFB},
-                        path:       '/common/component/common_window_info.js'});
-                    break;
-                }
-                case 'info_close':{
-                    common.commonComponentRemove('dialogue_info', true);
-                    break;
-                }
-                //toolbar top
-                case 'toolbar_btn_zoomout':{
-                    appPaperZoom(-1);
-                    break;
-                }
-                case 'toolbar_btn_zoomin':{
-                    appPaperZoom(1);
-                    break;
-                }
-                case 'toolbar_btn_left':{
-                    appReportTimetableUpdate(APP_GLOBAL.timetable_type, event_target_id, appReportTimetableSettings());
-                    break;
-                }
-                case 'toolbar_btn_right':{
-                    appReportTimetableUpdate(APP_GLOBAL.timetable_type, event_target_id, appReportTimetableSettings());
-                    break;
-                }
-                case 'toolbar_btn_search':{
-                    const input_row = COMMON_DOCUMENT.querySelector('#common_profile_search_input');
-                    const searchlist = COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap');
-                    if (input_row.style.visibility == 'visible'){
-                        input_row.style.visibility='hidden';
-                        input_row.textContent = '';
-                        searchlist.style.visibility = 'hidden';
-                        searchlist.style.display  = 'flex';
-                        searchlist.textContent = '';
-                    }
-                    else{
-                        input_row.style.visibility='visible';
-                        searchlist.style.visibility = 'visible';
-                        searchlist.style.display  = 'none';
-                    }                   
-                    COMMON_DOCUMENT.querySelector('#common_profile_search_input').focus();
-                    break;
-                }
-                case 'toolbar_btn_print':{
-                    appToolbarButton(1);
-                    break;
-                }
-                case 'toolbar_btn_day':{
-                    appToolbarButton(2);
-                    break;
-                }
-                case 'toolbar_btn_month':{
-                    appToolbarButton(3);
-                    break;
-                }
-                case 'toolbar_btn_year':{
-                    appToolbarButton(4);
-                    break;
-                }
-                case 'toolbar_btn_settings':{
-                    appToolbarButton(5);
-                    break;
-                }
-                //tab navigation
-                case 'settings_tab_nav_1':
-                case 'settings_tab_nav_2':
-                case 'settings_tab_nav_3':
-                case 'settings_tab_nav_4':
-                case 'settings_tab_nav_5':{
-                    SettingShow(Number(event_target_id.substring(event_target_id.length-1)));
-                    break;
-                }
-                case 'settings_tab_nav_6':
-                case 'user_setting_avatar_img':{
-                    SettingShow(6);
-                    break;
-                }
-                //settings
-                case 'settings_close':{
-                    common.commonComponentRemove('settings');
-                    if (common.commonMiscMobile())
-                        COMMON_DOCUMENT.querySelector('#paper').style.display = 'block';
-                    COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
-                    const timetable_type = COMMON_DOCUMENT.querySelector('#toolbar_bottom .toolbar_bottom_selected').id
-                                                .toLowerCase()
-                                                .substring('toolbar_btn_'.length);
-                    appReportTimetableUpdate(timetable_type=='day'?0:timetable_type=='month'?1:2, null, appReportTimetableSettings());
-                    break;
-                }
-                
-                //setting design
-                case 'setting_design_prev_day':
-                case 'setting_design_next_day':
-                case 'setting_design_prev_month':
-                case 'setting_design_next_month':
-                case 'setting_design_prev_year':
-                case 'setting_design_next_year':{
-                    /**@ts-ignore */
-                    appSettingThemeNav(event_target_id.split('_')[2]=='prev'?-1:1, event_target_id.split('_')[3])
-                    .then(()=>appUserSettingUpdate('DESIGN'));
-                    
-                    break;
-                }
-                case 'setting_checkbox_report_show_weekday':
-                case 'setting_checkbox_report_show_calendartype':
-                case 'setting_checkbox_report_show_notes':
-                case 'setting_checkbox_report_show_gps':
-                case 'setting_checkbox_report_show_timezone':{
-                    appUserSettingUpdate('DESIGN');
-                    break;
-                }    
-                //settings text
-                case 'setting_icon_text_theme_day':
-                case 'setting_icon_text_theme_month':
-                case 'setting_icon_text_theme_year':{
-                    COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_day').classList.remove('common_dialogue_button');
-                    COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_month').classList.remove('common_dialogue_button');
-                    COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_year').classList.remove('common_dialogue_button');
-                    const  theme_type = event_target_id.substring(24);
-                    //mark active icon
-                    COMMON_DOCUMENT.querySelector('#' + event_target_id).classList.add('common_dialogue_button');
-                    COMMON_DOCUMENT.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
-                                                                                        `theme_${theme_type}_${appSettingThemeId(theme_type)} ` + 
-                                                                                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_arabic_script;
-                    break;
-                }
-                case 'setting_icon_text_header_aleft':
-                case 'setting_icon_text_header_acenter':
-                case 'setting_icon_text_header_aright':{
-                    appComponentSettingUpdate('TEXT', 'HEADER_ALIGN', event_target_id);
-                    appUserSettingUpdate('TEXT');
-                    break;
-                }
-                case 'setting_icon_text_footer_aleft':
-                case 'setting_icon_text_footer_acenter':
-                case 'setting_icon_text_footer_aright':{
-                    appComponentSettingUpdate('TEXT', 'FOOTER_ALIGN', event_target_id);
-                    appUserSettingUpdate('TEXT');
-                    break;
-                }
-                //settings prayer
-                case 'setting_checkbox_report_show_imsak':
-                case 'setting_checkbox_report_show_sunset':
-                case 'setting_checkbox_report_show_midnight':{
-                    appUserSettingUpdate('PRAYER');
-                    break;
-                }
-                //settings user
-                case 'setting_btn_user_save':{
-                    appUserSettingFunction('SAVE', false);
-                    break;
-                }
-                case 'setting_btn_user_add':{
-                    appUserSettingFunction('ADD', true);
-                    break;
-                }
-                case 'setting_btn_user_delete':{
-                    appUserSettingDelete();
-                    break;
-                }
-                case 'user_day_html':        
-                case 'user_month_html':
-                case 'user_year_html':{
-                    appUserSettingLink(COMMON_DOCUMENT.querySelector('#' + event_target_id));
-                    break;
-                }
-                //app profile
-                case 'profile_main_btn_user_settings':{
-                    COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    appUserProfileDetail(0);
-                    break;
-                }
-                case 'profile_main_btn_user_setting_likes':
-                case 'profile_main_btn_user_setting_likes_user_setting':{
-                    COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    appUserProfileDetail(6);
-                    break;
-                }
-                case 'profile_main_btn_user_setting_liked':
-                case 'profile_main_btn_user_setting_liked_user_setting':{
-                    COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    appUserProfileDetail(7);
-                    break;
-                }
-                case 'profile_stat_row2_1':{
-                    appUserProfileStat(4, '/server-db/iamuserappdatapost-profile-stat');
-                    break;
-                }
-                case 'profile_stat_row2_2':{
-                    appUserProfileStat(5, '/server-db/iamuserappdatapost-profile-stat');
-                    break;
-                }
-                case 'profile_user_settings_day':
-                case 'profile_user_settings_month':
-                case 'profile_user_settings_year':
-                case 'profile_user_settings_like':{
-                    appUserSettingProfileLink(COMMON_DOCUMENT.querySelector(`#${event_target_id}`));
-                    break;
-                }
-                //dialogue user menu
-                case 'common_iam_avatar':
-                case 'common_iam_avatar_logged_in':
-                case 'common_iam_avatar_avatar':
-                case 'common_iam_avatar_avatar_img':
-                case 'common_iam_avatar_logged_out':
-                case 'common_iam_avatar_default_avatar':{
-                    if (common.COMMON_GLOBAL.iam_user_id==null)
-                        common.commonComponentRender({
-                            mountDiv:   'common_dialogue_user_menu_app_theme',
-                            data:       null,
-                            methods:    {
-                                        commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
-                                        commonComponentRender:common.commonComponentRender, 
-                                        app_theme_update:common.commonMiscPreferencesPostMount
-                                        },
-                            path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
-                    break;
-                }
-                case 'common_dialogue_user_menu_nav_iam_user_app':{
-                    common.commonComponentRender({
-                        mountDiv:   'common_dialogue_user_menu_app_theme',
-                        data:       null,
-                        methods:    {
-                                    commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
-                                    commonComponentRender:common.commonComponentRender, 
-                                    app_theme_update:common.commonMiscPreferencesPostMount
-                                    },
-                        path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
-                    break;
-                    }
-                case 'common_dialogue_user_menu_log_out':{
-                    common.commonUserLogout().then(() => {
-                        appUserLogout();
-                    });
-                    break;
-                }
-                case 'common_dialogue_user_menu_username':{
-                    appToolbarButton(6);
-                    break;
-                }
-                //profile button
-                case 'common_profile_btn_top':
-                case 'common_profile_stat_row1_1':
-                case 'common_profile_stat_row1_2':
-                case 'common_profile_stat_row1_3':{
-                    appToolbarButton(7);
-                    break;
-                }
-                
-                //dialogue user start
-                case 'common_dialogue_iam_start_login_button':{
-                    appUserLogin();
-                    break;
-                }
-                //dialogue profile 
-                case 'common_dialogue_profile_home':{
-                    appToolbarButton(7);
-                    break;
-                }
-                case 'common_profile_follow':{
-                    appUserFunction('FOLLOW');
-                    break;
-                }
-                case 'common_profile_like':{
-                    appUserFunction('LIKE');
-                    break;
-                }
-                //dialogue profile stat and info list
-                case 'common_profile_search_list':
-                case 'common_profile_detail_list':
-                case 'common_profile_stat_list':{
-                    if (COMMON_DOCUMENT.querySelector('#common_profile_main_stat_row2'))
-                        common.commonComponentRender({
-                            mountDiv:   'common_profile_main_stat_row2',
-                            data:       {   
-                                        iam_user_id:common.COMMON_GLOBAL.iam_user_id,
-                                        profile_id:common.commonMiscElementRow(event.target).getAttribute('data-iam_user_id')},
-                            methods:    {
-                                        commonComponentRender:common.commonComponentRender,
-                                       commonFFB:common.commonFFB
-                                        },
-                            path:       '/component/profile_info.js'})
-                        .then((/**@type{{data:       null, 
-                                        methods:    {
-                                                    profile_user_setting_update:function,
-                                                    commonProfileShow_user_setting_detail:function, 
-                                                    profile_user_setting_stat:function}}}*/component)=>{
-                            APP_GLOBAL.function_profile_user_setting_update = component.methods.profile_user_setting_update;
-                            APP_GLOBAL.function_profile_show_user_setting_detail= component.methods.commonProfileShow_user_setting_detail;
-                            APP_GLOBAL.function_profile_user_setting_stat = component.methods.profile_user_setting_stat;
-                        });
-                    break;
-                }
-
-                //module leaflet
-                case 'common_module_leaflet_search_list':{
-                    appComponentSettingUpdate('GPS', 'CITY');
-                    break;
-                }
-                case 'common_module_leaflet_control_my_location_id':{
-                    common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
-                    COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = common.COMMON_GLOBAL.client_place;
-                    COMMON_DOCUMENT.querySelector('#setting_input_long').textContent = common.COMMON_GLOBAL.client_longitude;
-                    COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent = common.COMMON_GLOBAL.client_latitude;
-                    //update timezone
-                    common.commonMiscImport(common.commonMiscImportmap('regional'))
-                        .then(({getTimezone})=>{
-                            APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone =
-                                getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
-                            //set qibbla
-                            appModuleLeafletMapQibblaShow();
-                            APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
-                            appUserSettingUpdate('GPS');
-                        });
-                    break;
-                }       
+    const event_target_id = common.commonMiscElementId(event.target);
+    switch (event_target_id){
+        case event.target?.classList.contains('common_select_option')?event_target_id:'':
+        case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
+            //settings regional
+            if(event_target_id == 'setting_select_locale'){
+                appUserSettingUpdate('REGIONAL');
             }
-        });
+            if(event_target_id == 'setting_select_report_timezone'){
+                appUserSettingUpdate('REGIONAL');
+            }
+            if(event_target_id == 'setting_select_report_numbersystem' ||
+                event_target_id == 'setting_select_report_direction'){
+                appUserSettingUpdate('REGIONAL');
+            }
+            if(event_target_id == 'setting_select_report_locale_second'){
+                appUserSettingUpdate('REGIONAL');
+            }
+            if( event_target_id == 'setting_select_report_arabic_script' ||
+                event_target_id == 'setting_select_calendartype' ||
+                event_target_id == 'setting_select_calendar_hijri_type'){
+                appUserSettingUpdate('REGIONAL');
+            }
+            //settings gps
+            if(event_target_id=='setting_select_popular_place'){
+                appUserSettingUpdate('GPS');
+                appComponentSettingUpdate('GPS', 'POPULAR_PLACES');
+            }
+            //settings design
+            if(event_target_id == 'setting_select_report_papersize'){
+                appUserSettingUpdate('DESIGN');
+                appComponentSettingUpdate('DESIGN', 'PAPER');
+            }
+            if(event_target_id== 'setting_select_report_highlight_row')
+                appUserSettingUpdate('DESIGN');
+            //module leaflet
+            if (event_target_id == 'common_module_leaflet_select_country')
+                appUserSettingUpdate('GPS');
+            if(event_target_id == 'common_module_leaflet_select_city'){
+                //popular place not on map is read when saving
+                appComponentSettingUpdate('GPS', 'CITY');
+            }
+            if (event_target_id == 'common_module_leaflet_select_mapstyle')
+                appComponentSettingUpdate('GPS', 'MAP');
+
+            //settings prayer
+            if (event_target_id == 'setting_select_method'){
+                appComponentSettingUpdate('PRAYER', 'METHOD');
+                appUserSettingUpdate('PRAYER');
+            }
+            if (event_target_id == 'setting_select_asr' ||
+                event_target_id == 'setting_select_highlatitude' ||
+                event_target_id == 'setting_select_timeformat' ||
+                event_target_id == 'setting_select_hijri_adjustment' ||
+                event_target_id == 'setting_select_report_iqamat_title_fajr' ||
+                event_target_id == 'setting_select_report_iqamat_title_dhuhr' ||
+                event_target_id == 'setting_select_report_iqamat_title_asr' ||
+                event_target_id == 'setting_select_report_iqamat_title_maghrib' ||
+                event_target_id == 'setting_select_report_iqamat_title_isha' ||
+                event_target_id == 'setting_select_report_show_fast_start_end'){
+                appUserSettingUpdate('PRAYER');
+            }
+            //settings user
+            if (event_target_id == 'setting_select_user_setting'){
+                appComponentSettingUpdate('USER', 'SETTING');
+            }
+            //profile
+            if (event_target_id== 'profile_select_user_settings'){
+                APP_GLOBAL.function_profile_show_user_setting_detail(   Number(JSON.parse(event.target.getAttribute('data-value')).liked), 
+                                                                        Number(JSON.parse(event.target.getAttribute('data-value')).count_likes), 
+                                                                        Number(JSON.parse(event.target.getAttribute('data-value')).count_views));
+            }
+            break;
+        }
+        //info dialogue
+        case 'app_link':{
+            if (common.COMMON_GLOBAL.app_link_url)
+                common.commonWindowOpen(common.COMMON_GLOBAL.app_link_url);
+            break;
+        }
+        case 'info_link1':{
+            common.commonComponentRender({
+                mountDiv:   'common_window_info',
+                data:       {
+                            info:'URL',
+                            path:'/app-resource/' + common.COMMON_GLOBAL.info_link_policy_url,
+                            query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
+                            method:'GET',
+                            authorization:'APP_ID'
+                            },
+                methods:    {commonFFB:common.commonFFB},
+                path:       '/common/component/common_window_info.js'});
+            break;
+        }
+        case 'info_link2':{
+            common.commonComponentRender({
+                mountDiv:   'common_window_info',
+                data:       {
+                            info:'URL',
+                            path:'/app-resource/' + common.COMMON_GLOBAL.info_link_disclaimer_url,
+                            query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
+                            method:'GET',
+                            authorization:'APP_ID'
+                            },
+                methods:    {commonFFB:common.commonFFB},
+                path:       '/common/component/common_window_info.js'});
+            break;
+        }
+        case 'info_link3':{
+            common.commonComponentRender({
+                mountDiv:   'common_window_info',
+                data:       {
+                            info:'URL',
+                            path:'/app-resource/' + common.COMMON_GLOBAL.info_link_terms_url,
+                            query:`type=INFO&IAM_data_app_id=${common.COMMON_GLOBAL.app_common_app_id}`,
+                            method:'GET',
+                            authorization:'APP_ID'
+                            },
+                methods:    {commonFFB:common.commonFFB},
+                path:       '/common/component/common_window_info.js'});
+            break;
+        }
+        case 'info_close':{
+            common.commonComponentRemove('dialogue_info', true);
+            break;
+        }
+        //toolbar top
+        case 'toolbar_btn_zoomout':{
+            appPaperZoom(-1);
+            break;
+        }
+        case 'toolbar_btn_zoomin':{
+            appPaperZoom(1);
+            break;
+        }
+        case 'toolbar_btn_left':{
+            appReportTimetableUpdate(APP_GLOBAL.timetable_type, event_target_id, appReportTimetableSettings());
+            break;
+        }
+        case 'toolbar_btn_right':{
+            appReportTimetableUpdate(APP_GLOBAL.timetable_type, event_target_id, appReportTimetableSettings());
+            break;
+        }
+        case 'toolbar_btn_search':{
+            const input_row = COMMON_DOCUMENT.querySelector('#common_profile_search_input');
+            const searchlist = COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap');
+            if (input_row.style.visibility == 'visible'){
+                input_row.style.visibility='hidden';
+                input_row.textContent = '';
+                searchlist.style.visibility = 'hidden';
+                searchlist.style.display  = 'flex';
+                searchlist.textContent = '';
+            }
+            else{
+                input_row.style.visibility='visible';
+                searchlist.style.visibility = 'visible';
+                searchlist.style.display  = 'none';
+            }                   
+            COMMON_DOCUMENT.querySelector('#common_profile_search_input').focus();
+            break;
+        }
+        case 'toolbar_btn_print':{
+            appToolbarButton(1);
+            break;
+        }
+        case 'toolbar_btn_day':{
+            appToolbarButton(2);
+            break;
+        }
+        case 'toolbar_btn_month':{
+            appToolbarButton(3);
+            break;
+        }
+        case 'toolbar_btn_year':{
+            appToolbarButton(4);
+            break;
+        }
+        case 'toolbar_btn_settings':{
+            appToolbarButton(5);
+            break;
+        }
+        //tab navigation
+        case 'settings_tab_nav_1':
+        case 'settings_tab_nav_2':
+        case 'settings_tab_nav_3':
+        case 'settings_tab_nav_4':
+        case 'settings_tab_nav_5':{
+            SettingShow(Number(event_target_id.substring(event_target_id.length-1)));
+            break;
+        }
+        case 'settings_tab_nav_6':
+        case 'user_setting_avatar_img':{
+            SettingShow(6);
+            break;
+        }
+        //settings
+        case 'settings_close':{
+            common.commonComponentRemove('settings');
+            if (common.commonMiscMobile())
+                COMMON_DOCUMENT.querySelector('#paper').style.display = 'block';
+            COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
+            const timetable_type = COMMON_DOCUMENT.querySelector('#toolbar_bottom .toolbar_bottom_selected').id
+                                        .toLowerCase()
+                                        .substring('toolbar_btn_'.length);
+            appReportTimetableUpdate(timetable_type=='day'?0:timetable_type=='month'?1:2, null, appReportTimetableSettings());
+            break;
+        }
+        
+        //setting design
+        case 'setting_design_prev_day':
+        case 'setting_design_next_day':
+        case 'setting_design_prev_month':
+        case 'setting_design_next_month':
+        case 'setting_design_prev_year':
+        case 'setting_design_next_year':{
+            /**@ts-ignore */
+            appSettingThemeNav(event_target_id.split('_')[2]=='prev'?-1:1, event_target_id.split('_')[3])
+            .then(()=>appUserSettingUpdate('DESIGN'));
+            
+            break;
+        }
+        case 'setting_checkbox_report_show_weekday':
+        case 'setting_checkbox_report_show_calendartype':
+        case 'setting_checkbox_report_show_notes':
+        case 'setting_checkbox_report_show_gps':
+        case 'setting_checkbox_report_show_timezone':{
+            appUserSettingUpdate('DESIGN');
+            break;
+        }    
+        //settings text
+        case 'setting_icon_text_theme_day':
+        case 'setting_icon_text_theme_month':
+        case 'setting_icon_text_theme_year':{
+            COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_day').classList.remove('common_dialogue_button');
+            COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_month').classList.remove('common_dialogue_button');
+            COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_year').classList.remove('common_dialogue_button');
+            const  theme_type = event_target_id.substring(24);
+            //mark active icon
+            COMMON_DOCUMENT.querySelector('#' + event_target_id).classList.add('common_dialogue_button');
+            COMMON_DOCUMENT.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
+                                                                                `theme_${theme_type}_${appSettingThemeId(theme_type)} ` + 
+                                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_arabic_script;
+            break;
+        }
+        case 'setting_icon_text_header_aleft':
+        case 'setting_icon_text_header_acenter':
+        case 'setting_icon_text_header_aright':{
+            appComponentSettingUpdate('TEXT', 'HEADER_ALIGN', event_target_id);
+            appUserSettingUpdate('TEXT');
+            break;
+        }
+        case 'setting_icon_text_footer_aleft':
+        case 'setting_icon_text_footer_acenter':
+        case 'setting_icon_text_footer_aright':{
+            appComponentSettingUpdate('TEXT', 'FOOTER_ALIGN', event_target_id);
+            appUserSettingUpdate('TEXT');
+            break;
+        }
+        //settings prayer
+        case 'setting_checkbox_report_show_imsak':
+        case 'setting_checkbox_report_show_sunset':
+        case 'setting_checkbox_report_show_midnight':{
+            appUserSettingUpdate('PRAYER');
+            break;
+        }
+        //settings user
+        case 'setting_btn_user_save':{
+            appUserSettingFunction('SAVE', false);
+            break;
+        }
+        case 'setting_btn_user_add':{
+            appUserSettingFunction('ADD', true);
+            break;
+        }
+        case 'setting_btn_user_delete':{
+            appUserSettingDelete();
+            break;
+        }
+        case 'user_day_html':        
+        case 'user_month_html':
+        case 'user_year_html':{
+            appUserSettingLink(COMMON_DOCUMENT.querySelector('#' + event_target_id));
+            break;
+        }
+        //app profile
+        case 'profile_main_btn_user_settings':{
+            COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+            appUserProfileDetail(0);
+            break;
+        }
+        case 'profile_main_btn_user_setting_likes':
+        case 'profile_main_btn_user_setting_likes_user_setting':{
+            COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+            appUserProfileDetail(6);
+            break;
+        }
+        case 'profile_main_btn_user_setting_liked':
+        case 'profile_main_btn_user_setting_liked_user_setting':{
+            COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+            appUserProfileDetail(7);
+            break;
+        }
+        case 'profile_stat_row2_1':{
+            appUserProfileStat(4, '/server-db/iamuserappdatapost-profile-stat');
+            break;
+        }
+        case 'profile_stat_row2_2':{
+            appUserProfileStat(5, '/server-db/iamuserappdatapost-profile-stat');
+            break;
+        }
+        case 'profile_user_settings_day':
+        case 'profile_user_settings_month':
+        case 'profile_user_settings_year':
+        case 'profile_user_settings_like':{
+            appUserSettingProfileLink(COMMON_DOCUMENT.querySelector(`#${event_target_id}`));
+            break;
+        }
+        //dialogue user menu
+        case 'common_iam_avatar':
+        case 'common_iam_avatar_logged_in':
+        case 'common_iam_avatar_avatar':
+        case 'common_iam_avatar_avatar_img':
+        case 'common_iam_avatar_logged_out':
+        case 'common_iam_avatar_default_avatar':{
+            if (common.COMMON_GLOBAL.iam_user_id==null)
+                common.commonComponentRender({
+                    mountDiv:   'common_dialogue_user_menu_app_theme',
+                    data:       null,
+                    methods:    {
+                                commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
+                                commonComponentRender:common.commonComponentRender, 
+                                app_theme_update:common.commonMiscPreferencesPostMount
+                                },
+                    path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+            break;
+        }
+        case 'common_dialogue_user_menu_nav_iam_user_app':{
+            common.commonComponentRender({
+                mountDiv:   'common_dialogue_user_menu_app_theme',
+                data:       null,
+                methods:    {
+                            commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
+                            commonComponentRender:common.commonComponentRender, 
+                            app_theme_update:common.commonMiscPreferencesPostMount
+                            },
+                path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+            break;
+            }
+        case 'common_dialogue_user_menu_log_out':{
+            common.commonUserLogout().then(() => {
+                appUserLogout();
+            });
+            break;
+        }
+        case 'common_dialogue_user_menu_username':{
+            appToolbarButton(6);
+            break;
+        }
+        //profile button
+        case 'common_profile_btn_top':
+        case 'common_profile_stat_row1_1':
+        case 'common_profile_stat_row1_2':
+        case 'common_profile_stat_row1_3':{
+            appToolbarButton(7);
+            break;
+        }
+        
+        //dialogue user start
+        case 'common_dialogue_iam_start_login_button':{
+            appUserLogin();
+            break;
+        }
+        //dialogue profile 
+        case 'common_dialogue_profile_home':{
+            appToolbarButton(7);
+            break;
+        }
+        case 'common_profile_follow':{
+            appUserFunction('FOLLOW');
+            break;
+        }
+        case 'common_profile_like':{
+            appUserFunction('LIKE');
+            break;
+        }
+        //dialogue profile stat and info list
+        case 'common_profile_search_list':
+        case 'common_profile_detail_list':
+        case 'common_profile_stat_list':{
+            if (COMMON_DOCUMENT.querySelector('#common_profile_main_stat_row2'))
+                common.commonComponentRender({
+                    mountDiv:   'common_profile_main_stat_row2',
+                    data:       {   
+                                iam_user_id:common.COMMON_GLOBAL.iam_user_id,
+                                profile_id:common.commonMiscElementRow(event.target).getAttribute('data-iam_user_id')},
+                    methods:    {
+                                commonComponentRender:common.commonComponentRender,
+                                commonFFB:common.commonFFB
+                                },
+                    path:       '/component/profile_info.js'})
+                .then((/**@type{{data:       null, 
+                                methods:    {
+                                            profile_user_setting_update:function,
+                                            commonProfileShow_user_setting_detail:function, 
+                                            profile_user_setting_stat:function}}}*/component)=>{
+                    APP_GLOBAL.function_profile_user_setting_update = component.methods.profile_user_setting_update;
+                    APP_GLOBAL.function_profile_show_user_setting_detail= component.methods.commonProfileShow_user_setting_detail;
+                    APP_GLOBAL.function_profile_user_setting_stat = component.methods.profile_user_setting_stat;
+                });
+            break;
+        }
+
+        //module leaflet
+        case 'common_module_leaflet_search_list':{
+            appComponentSettingUpdate('GPS', 'CITY');
+            break;
+        }
+        case 'common_module_leaflet_control_my_location_id':{
+            common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
+            COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = common.COMMON_GLOBAL.client_place;
+            COMMON_DOCUMENT.querySelector('#setting_input_long').textContent = common.COMMON_GLOBAL.client_longitude;
+            COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent = common.COMMON_GLOBAL.client_latitude;
+            //update timezone
+            common.commonMiscImport(common.commonMiscImportmap('regional'))
+                .then(({getTimezone})=>{
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone =
+                        getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
+                    //set qibbla
+                    appModuleLeafletMapQibblaShow();
+                    APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
+                    appUserSettingUpdate('GPS');
+                });
+            break;
+        }       
     }
 };
 /**
@@ -2066,49 +2056,39 @@ const appEventClick = event => {
  * @returns {void}
  */
 const appEventKeyUp = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{CommonAppEvent}*/event) => {
-            appEventKeyUp(event);
-        }, true);
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('keyup',event)
-        .then(()=>{
-            switch(event_target_id){
-                //settings gps
-                case 'setting_input_place':{
-                    common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
-                    appUserSettingUpdate('GPS');
-                    break;
-                }
-                case 'setting_input_long':
-                case 'setting_input_lat':{
-                    appUserSettingUpdate('GPS');
-                    common.commonMiscTypewatch(appComponentSettingUpdate, 'GPS', 'POSITION');
-                    break;
-                }
-                //settings text
-                case 'setting_input_reportheader1':
-                case 'setting_input_reportheader2':
-                case 'setting_input_reportheader3':
-                case 'setting_input_reportfooter1':
-                case 'setting_input_reportfooter2':
-                case 'setting_input_reportfooter3':{
-                    appUserSettingUpdate('TEXT');
-                    break;
-                }
-                //common
-                case 'common_dialogue_iam_start_login_username':
-                case 'common_dialogue_iam_start_login_password':{
-                    if (event.code === 'Enter') {
-                        event.preventDefault();
-                        appUserLogin().catch(()=>null);
-                    }
-                    break;
-                }
+    const event_target_id = common.commonMiscElementId(event.target);
+    switch(event_target_id){
+        //settings gps
+        case 'setting_input_place':{
+            common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
+            appUserSettingUpdate('GPS');
+            break;
+        }
+        case 'setting_input_long':
+        case 'setting_input_lat':{
+            appUserSettingUpdate('GPS');
+            common.commonMiscTypewatch(appComponentSettingUpdate, 'GPS', 'POSITION');
+            break;
+        }
+        //settings text
+        case 'setting_input_reportheader1':
+        case 'setting_input_reportheader2':
+        case 'setting_input_reportheader3':
+        case 'setting_input_reportfooter1':
+        case 'setting_input_reportfooter2':
+        case 'setting_input_reportfooter3':{
+            appUserSettingUpdate('TEXT');
+            break;
+        }
+        //common
+        case 'common_dialogue_iam_start_login_username':
+        case 'common_dialogue_iam_start_login_password':{
+            if (event.code === 'Enter') {
+                event.preventDefault();
+                appUserLogin().catch(()=>null);
             }
-        });
+            break;
+        }
     }
 };
 
@@ -2321,11 +2301,7 @@ const appMetadata = () =>{
     return { 
         events:{  
             Click:   appEventClick,
-            Change:  null,
-            KeyDown: null,
-            KeyUp:   appEventKeyUp,
-            Focus:   null,
-            Input:   null},
+            KeyUp:   appEventKeyUp},
         lifeCycle:{onMounted:appUserLoginPost}
     };
 };

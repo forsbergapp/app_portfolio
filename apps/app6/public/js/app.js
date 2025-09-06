@@ -30,45 +30,35 @@ const appException = error => {
  * @returns {void}
  */
 const appEventClick = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
-            appEventClick(event);
-        });
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('click',event)
-        .then(()=>{
-            switch (event_target_id){
-                case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
-                    appProductUpdate();
-                    break;
-                }
-                case 'tshirt':{
-                    if (COMMON_DOCUMENT.querySelector(`#${event_target_id}`).parentNode.style.transform == 'scale(2)')
-                        COMMON_DOCUMENT.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(1)';
-                    else
-                        COMMON_DOCUMENT.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(2)';
-                    break;
-                }
-                case ('common_lov_list' && COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_method]'))?event_target_id:'' :{
-                    if( COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_method]').getAttribute('data-lov_value')=='VPA'){
-                        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='visible';
-                        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='visible';
-                    }
-                    else{
-                        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
-                        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
-                    }   
-                    break;
-                }
-                /*Dialogue user start */
-                case 'common_dialogue_iam_start_login_button':{
-                    common.commonUserLogin().catch(()=>null);
-                    break;
-                }                
+    const event_target_id = common.commonMiscElementId(event.target);
+    switch (event_target_id){
+        case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
+            appProductUpdate();
+            break;
+        }
+        case 'tshirt':{
+            if (COMMON_DOCUMENT.querySelector(`#${event_target_id}`).parentNode.style.transform == 'scale(2)')
+                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(1)';
+            else
+                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(2)';
+            break;
+        }
+        case ('common_lov_list' && COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_method]'))?event_target_id:'' :{
+            if( COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_method]').getAttribute('data-lov_value')=='VPA'){
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='visible';
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='visible';
             }
-        });
+            else{
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
+            }   
+            break;
+        }
+        /*Dialogue user start */
+        case 'common_dialogue_iam_start_login_button':{
+            common.commonUserLogin().catch(()=>null);
+            break;
+        }                
     }
 };
 /**
@@ -79,22 +69,12 @@ const appEventClick = event => {
  * @returns {void}
  */
 const appEventKeyUp = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{CommonAppEvent}*/event) => {
-            appEventKeyUp(event);
-        }, true);
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('keyup',event)
-        .then(()=>{
-            switch(event_target_id){
-                case event.target.getAttribute('data-value')=='payment_id'?event_target_id:'':{
-                    appVPAIsValid(event.target, event.target.textContent);
-                    break;
-                }
-            }
-        });
+    const event_target_id = common.commonMiscElementId(event.target);    
+    switch(event_target_id){
+        case event.target.getAttribute('data-value')=='payment_id'?event_target_id:'':{
+            appVPAIsValid(event.target, event.target.textContent);
+            break;
+        }
     }
 };
 /**
@@ -376,11 +356,7 @@ const appMetadata = () =>{
     return { 
         events:{  
             Click:   appEventClick,
-            Change:  null,
-            KeyDown: null,
-            KeyUp:   appEventKeyUp,
-            Focus:   null,
-            Input:   null},
+            KeyUp:   appEventKeyUp},
         lifeCycle:{onMounted:null}
     };
 };

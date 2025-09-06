@@ -38,94 +38,69 @@ const appDialogueAppsShowHide = () => {
  * @returns {void}
  */
 const appEventClick = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{CommonAppEvent}*/event) => {
-            appEventClick(event);
-        }, true);
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('click',event)
-        .then(()=>{
-            switch (event_target_id){
-                case event.target.classList.contains('common_select_option')?event_target_id:'':
-                case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
-                    if (event_target_id == 'common_dialogue_user_menu_iam_user_app_locale_select')
-                        appAppsGet();
-                    if (event_target_id == 'common_dialogue_user_menu_iam_user_app_arabic_script_select')
-                        appThemeUpdate();
-                    break;
-                }
-                case 'theme_background':{
-                    appDialogueAppsShowHide();
-                    break;
-                }                    
-                //user preferences
-                case 'app_theme_checkbox':{
-                    appThemeUpdate(true);
-                    break;
-                }
-                //dialogue user menu
-                case 'common_iam_avatar':
-                case 'common_iam_avatar_logged_in':
-                case 'common_iam_avatar_avatar':
-                case 'common_iam_avatar_avatar_img':
-                case 'common_iam_avatar_logged_out':
-                case 'common_iam_avatar_default_avatar':{
-                    if (common.COMMON_GLOBAL.iam_user_id==null)
-                        common.commonComponentRender({
-                            mountDiv:   'common_dialogue_user_menu_app_theme',
-                            data:       null,
-                            methods:    {appPreferencesPostMount:appPreferencesPostMount},
-                            path:       '/component/app_theme.js'});
-                    break;
-                }
-                case 'common_dialogue_user_menu_nav_iam_user_app':{
-                    common.commonComponentRender({
-                            mountDiv:   'common_dialogue_user_menu_app_theme',
-                            data:       null,
-                            methods:    {appPreferencesPostMount:appPreferencesPostMount},
-                            path:       '/component/app_theme.js'});
-                    break;
-                }
-                case 'common_dialogue_user_menu_log_out':{
-                    common.commonUserLogout();
-                    appUserLogout();
-                    break;
-                }
-                //dialogue profile info
-                case 'common_profile_follow':{
-                    common.commonProfileFollowLike('FOLLOW');
-                    break;
-                }
-                case 'common_profile_like':{
-                    common.commonProfileFollowLike('LIKE');
-                    break;
-                }
-                case 'common_dialogue_iam_start_login_button':{
-                    appUserLogin().catch(()=>null);
-                    break;
-                }
-            }
-        });
+    const event_target_id = common.commonMiscElementId(event.target);
+    switch (event_target_id){
+        case event.target.classList.contains('common_select_option')?event_target_id:'':
+        case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
+            if (event_target_id == 'common_dialogue_user_menu_iam_user_app_locale_select')
+                appAppsGet();
+            if (event_target_id == 'common_dialogue_user_menu_iam_user_app_arabic_script_select')
+                appThemeUpdate();
+            break;
+        }
+        case 'theme_background':{
+            appDialogueAppsShowHide();
+            break;
+        }                    
+        //user preferences
+        case 'app_theme_checkbox':{
+            appThemeUpdate(true);
+            break;
+        }
+        //dialogue user menu
+        case 'common_iam_avatar':
+        case 'common_iam_avatar_logged_in':
+        case 'common_iam_avatar_avatar':
+        case 'common_iam_avatar_avatar_img':
+        case 'common_iam_avatar_logged_out':
+        case 'common_iam_avatar_default_avatar':{
+            if (common.COMMON_GLOBAL.iam_user_id==null)
+                common.commonComponentRender({
+                    mountDiv:   'common_dialogue_user_menu_app_theme',
+                    data:       null,
+                    methods:    {appPreferencesPostMount:appPreferencesPostMount},
+                    path:       '/component/app_theme.js'});
+            break;
+        }
+        case 'common_dialogue_user_menu_nav_iam_user_app':{
+            common.commonComponentRender({
+                    mountDiv:   'common_dialogue_user_menu_app_theme',
+                    data:       null,
+                    methods:    {appPreferencesPostMount:appPreferencesPostMount},
+                    path:       '/component/app_theme.js'});
+            break;
+        }
+        case 'common_dialogue_user_menu_log_out':{
+            common.commonUserLogout();
+            appUserLogout();
+            break;
+        }
+        //dialogue profile info
+        case 'common_profile_follow':{
+            common.commonProfileFollowLike('FOLLOW');
+            break;
+        }
+        case 'common_profile_like':{
+            common.commonProfileFollowLike('LIKE');
+            break;
+        }
+        case 'common_dialogue_iam_start_login_button':{
+            appUserLogin().catch(()=>null);
+            break;
+        }
     }
 };
-/**
- * @name appEventChange
- * @description App event change
- * @function
- * @param {CommonAppEvent} event 
- * @returns {void}
- */
-const appEventChange = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change', (/**@type{CommonAppEvent}*/event) => {
-            appEventChange(event);
-        }, true);
-    }
-    else
-        common.commonEvent('change',event);
-};
+
 /**
  * @name appEventKeyUp
  * @description App event keyup
@@ -134,27 +109,17 @@ const appEventChange = event => {
  * @returns {void} 
  */
 const appEventKeyUp = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup', (/**@type{CommonAppEvent}*/event) => {
-            appEventKeyUp(event);
-        });
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('keyup',event)
-        .then(()=>{
-            switch (event_target_id){
-                case 'common_dialogue_iam_start_login_username':
-                case 'common_dialogue_iam_start_login_password':{
-                    if (event.code === 'Enter') {
-                        event.preventDefault();
-                        appUserLogin().catch(()=>null);
-                    }        
-                    break;
-                }
-                
-            }
-        });
+    const event_target_id = common.commonMiscElementId(event.target);
+    switch (event_target_id){
+        case 'common_dialogue_iam_start_login_username':
+        case 'common_dialogue_iam_start_login_password':{
+            if (event.code === 'Enter') {
+                event.preventDefault();
+                appUserLogin().catch(()=>null);
+            }        
+            break;
+        }
+        
     }
 };
 /**
@@ -307,11 +272,7 @@ const appMetadata = () =>{
     return { 
         events:{  
             Click:   appEventClick,
-            Change:  appEventChange,
-            KeyDown: null,
-            KeyUp:   appEventKeyUp,
-            Focus:   null,
-            Input:   null},
+            KeyUp:   appEventKeyUp},
         lifeCycle:{onMounted:null}
     };
 };

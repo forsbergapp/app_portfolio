@@ -75,29 +75,19 @@ const appTotpGet = otp_key =>{
  * @returns {void}
  */
 const appEventClick = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
-            appEventClick(event);
-        });
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('click',event)
-        .then(()=>{
-            switch (event_target_id){
-                case 'clear_button':{
-                    COMMON_DOCUMENT.querySelector('#otp_key').textContent=null;
-                    COMMON_DOCUMENT.querySelector('#totp_value').textContent=null;
-                    COMMON_DOCUMENT.querySelector('#totp_countdown_time').textContent=null;
-                    break;
-                }
-                /*Dialogue user start */
-                case 'common_dialogue_iam_start_login_button':{
-                    common.commonUserLogin().catch(()=>null);
-                    break;
-                }                
-            }
-        });
+    const event_target_id = common.commonMiscElementId(event.target);
+    switch (event_target_id){
+        case 'clear_button':{
+            COMMON_DOCUMENT.querySelector('#otp_key').textContent=null;
+            COMMON_DOCUMENT.querySelector('#totp_value').textContent=null;
+            COMMON_DOCUMENT.querySelector('#totp_countdown_time').textContent=null;
+            break;
+        }
+        /*Dialogue user start */
+        case 'common_dialogue_iam_start_login_button':{
+            common.commonUserLogin().catch(()=>null);
+            break;
+        }                
     }
 };
 /**
@@ -108,25 +98,15 @@ const appEventClick = event => {
  * @returns {void}
  */
 const appEventKeyUp = event => {
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{CommonAppEvent}*/event) => {
-            appEventKeyUp(event);
-        }, true);
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('keyup',event)
-        .then(()=>{
-            switch(event_target_id){
-                case 'otp_key':{
-                    if (event.target.textContent.length==26){
-                        event.target.textContent = event.target.textContent.toUpperCase();
-                        appTotpGet(event.target.textContent);
-                    }
-                    break;
-                }
+    const event_target_id = common.commonMiscElementId(event.target);
+    switch(event_target_id){
+        case 'otp_key':{
+            if (event.target.textContent.length==26){
+                event.target.textContent = event.target.textContent.toUpperCase();
+                appTotpGet(event.target.textContent);
             }
-        });
+            break;
+        }
     }
 };
 
@@ -168,11 +148,7 @@ const appMetadata = () =>{
     return { 
         events:{  
             Click:   appEventClick,
-            Change:  null,
-            KeyDown: null,
-            KeyUp:   appEventKeyUp,
-            Focus:   null,
-            Input:   null},
+            KeyUp:   appEventKeyUp},
         lifeCycle:{onMounted:null}
     };
 };

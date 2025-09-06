@@ -31,58 +31,48 @@ const appException = error => {
  * @returns {void}
  */
 const appEventClick = event =>{
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
-            appEventClick(event);
-        });
-    }
-    else{
-        const event_target_id = common.commonMiscElementId(event.target);
-        common.commonEvent('click',event)
-        .then(()=>{
-            switch (event_target_id){
-                //dialogue user menu
-                case 'common_iam_avatar':
-                case 'common_iam_avatar_logged_in':
-                case 'common_iam_avatar_avatar':
-                case 'common_iam_avatar_avatar_img':
-                case 'common_iam_avatar_logged_out':
-                case 'common_iam_avatar_default_avatar':{
-                    if (common.COMMON_GLOBAL.iam_user_id==null)
-                        common.commonComponentRender({
-                            mountDiv:   'common_dialogue_user_menu_app_theme',
-                            data:       null,
-                            methods:    {
-                                        commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
-                                        commonComponentRender:common.commonComponentRender, 
-                                        app_theme_update:common.commonMiscPreferencesPostMount
-                                        },
-                            path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
-                    break;
-                }
-                case 'common_dialogue_user_menu_nav_iam_user_app':{
-                    common.commonComponentRender({
-                            mountDiv:   'common_dialogue_user_menu_app_theme',
-                            data:       null,
-                            methods:    {
-                                        commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
-                                        commonComponentRender:common.commonComponentRender, 
-                                        app_theme_update:common.commonMiscPreferencesPostMount
-                                        },
-                            path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
-                    break;
-                }
-                case 'common_dialogue_user_menu_log_out':{
-                    common.commonUserLogout();
-                    break;
-                }
-                /*Dialogue user start */
-                case 'common_dialogue_iam_start_login_button':{
-                    common.commonUserLogin().catch(()=>null);
-                    break;
-                }
-            }
-        });
+    const event_target_id = common.commonMiscElementId(event.target);
+    switch (event_target_id){
+        //dialogue user menu
+        case 'common_iam_avatar':
+        case 'common_iam_avatar_logged_in':
+        case 'common_iam_avatar_avatar':
+        case 'common_iam_avatar_avatar_img':
+        case 'common_iam_avatar_logged_out':
+        case 'common_iam_avatar_default_avatar':{
+            if (common.COMMON_GLOBAL.iam_user_id==null)
+                common.commonComponentRender({
+                    mountDiv:   'common_dialogue_user_menu_app_theme',
+                    data:       null,
+                    methods:    {
+                                commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
+                                commonComponentRender:common.commonComponentRender, 
+                                app_theme_update:common.commonMiscPreferencesPostMount
+                                },
+                    path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+            break;
+        }
+        case 'common_dialogue_user_menu_nav_iam_user_app':{
+            common.commonComponentRender({
+                    mountDiv:   'common_dialogue_user_menu_app_theme',
+                    data:       null,
+                    methods:    {
+                                commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
+                                commonComponentRender:common.commonComponentRender, 
+                                app_theme_update:common.commonMiscPreferencesPostMount
+                                },
+                    path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+            break;
+        }
+        case 'common_dialogue_user_menu_log_out':{
+            common.commonUserLogout();
+            break;
+        }
+        /*Dialogue user start */
+        case 'common_dialogue_iam_start_login_button':{
+            common.commonUserLogin().catch(()=>null);
+            break;
+        }
     }
 };
 
@@ -130,12 +120,7 @@ const appCommonInit = async (commonLib, parameters) => {
 const appMetadata = () =>{
     return { 
         events:{  
-            Click:   appEventClick,
-            Change:  null,
-            KeyDown: null,
-            KeyUp:   null,
-            Focus:   null,
-            Input:   null},
+            Click:   appEventClick},
         lifeCycle:{onMounted:null}
     };
 };
