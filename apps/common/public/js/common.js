@@ -2281,7 +2281,7 @@ const commonModuleLeafletInit = async parameters => {
                     commonMiscImport:commonMiscImport,
                     commonMiscImportmap:commonMiscImportmap,
                     commonComponentRender:commonComponentRender,
-                    commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
+                    commonGeolocationPlace:commonGeolocationPlace,
                     commonMiscElementRow:commonMiscElementRow,
                     commonWindowFromBase64:commonWindowFromBase64,
                     commonFFB:commonFFB,
@@ -2635,14 +2635,14 @@ const commonSocketConnectOnlineCheck = (div_icon_online, iam_user_id) => {
     .then(result=>COMMON_DOCUMENT.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online==1?'online':'offline'));
 };
 /**
- * @name commonMicroserviceGeolocationPlace
+ * @name commonGeolocationPlace
  * @description Microservice Geolocation: Get place from GPS
  * @function
  * @param {string} longitude 
  * @param {string} latitude 
  * @returns {Promise.<string>}
  */
-const commonMicroserviceGeolocationPlace = async (longitude, latitude) => {
+const commonGeolocationPlace = async (longitude, latitude) => {
     return await new Promise((resolve)=>{
        commonFFB({path:'/geolocation/place', query:`longitude=${longitude}&latitude=${latitude}`, method:'GET', authorization_type:'APP_ID'})
         .then(result=>{
@@ -2658,13 +2658,13 @@ const commonMicroserviceGeolocationPlace = async (longitude, latitude) => {
     });
 };
 /**
- * @name commonMicroserviceGeolocationIp
+ * @name commonGeolocationIP
  * @description Microservice Geolocation: Get GPS from given ip or current user
  * @function
  * @param {string|null} ip
  * @returns {Promise.<{latitude:String, longitude:string, place:string}>}
  */
-const commonMicroserviceGeolocationIp = async ip => {
+const commonGeolocationIP = async ip => {
     return commonFFB({path:'/geolocation/ip', query:`ip=${ip}`, method:'GET', authorization_type:'APP_ID'})
         .then(result=>{
             return {
@@ -4049,9 +4049,9 @@ const commonGet = () =>{
         commonSocketSSEShow:commonSocketSSEShow, 
         commonSocketConnectOnline:commonSocketConnectOnline,
         commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck,
-        /* MICROSERVICE GEOLOCATION */
-        commonMicroserviceGeolocationIp:commonMicroserviceGeolocationIp,
-        commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
+        /* GEOLOCATION */
+        commonGeolocationIP:commonGeolocationIP,
+        commonGeolocationPlace:commonGeolocationPlace,
         /* EVENT */
         commonEvent:commonEvent,
         /* INIT */
@@ -4222,8 +4222,8 @@ export{/* GLOBALS*/
        commonSocketConnectOnline,
        commonSocketConnectOnlineCheck,
        /* MICROSERVICE GEOLOCATION */
-       commonMicroserviceGeolocationIp,
-       commonMicroserviceGeolocationPlace,
+       commonGeolocationIP,
+       commonGeolocationPlace,
        /* EVENT */
        commonEvent,
        /* INIT */

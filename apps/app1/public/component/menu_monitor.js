@@ -50,14 +50,14 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  *                      app_id:number,
  *                      common_app_id:number,
  *                      iam_user_id: number,
+ *                      user_locale:string,
  *                      client_latitude:string,
  *                      client_longitude:string,
  *                      client_place:string},
  *          methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow, 
- *                      map_update:CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update'],
- *                      commonModuleLeafletInit:CommonModuleCommon['commonModuleLeafletInit'],
  *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
+ *                      commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
  *                      commonMiscInputControl:CommonModuleCommon['commonMiscInputControl'],
  *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
  *                      commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
@@ -65,8 +65,8 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  *                      commonLovClose:CommonModuleCommon['commonLovClose'],
  *                      commonLovShow:CommonModuleCommon['commonLovShow'],
  *                      commonFFB:CommonModuleCommon['commonFFB'],
- *                      commonMicroserviceGeolocationIp:CommonModuleCommon['commonMicroserviceGeolocationIp'],
- *                      commonMicroserviceGeolocationPlace:CommonModuleCommon['commonMicroserviceGeolocationPlace']}}} props 
+ *                      commonGeolocationIP:CommonModuleCommon['commonGeolocationIP'],
+ *                      commonGeolocationPlace:CommonModuleCommon['commonGeolocationPlace']}}} props 
  * @returns {Promise.<{ lifecycle:  CommonComponentLifecycle, 
  *                      data:       null,
  *                      methods:    {monitorShow:                monitorShow,
@@ -78,6 +78,7 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  *                      template:   string}>}
  */
 const component = async props => {
+
     /**
      * Page navigation
      * @param {string} item 
@@ -176,7 +177,6 @@ const component = async props => {
                         },
             methods:    {
                         monitorShow:monitorShow,
-                        map_update:props.methods.map_update,
                         appSecureDialogueSendBroadcastShow:props.methods.appSecureDialogueSendBroadcastShow,
                         commonMiscElementRow:props.methods.commonMiscElementRow,
                         commonLovClose:props.methods.commonLovClose,
@@ -186,8 +186,8 @@ const component = async props => {
                         commonWindowUserAgentPlatform:props.methods.commonWindowUserAgentPlatform,
                         commonMiscRoundOff:props.methods.commonMiscRoundOff,
                         commonFFB:props.methods.commonFFB,
-                        commonMicroserviceGeolocationIp:props.methods.commonMicroserviceGeolocationIp,
-                        commonMicroserviceGeolocationPlace:props.methods.commonMicroserviceGeolocationPlace
+                        commonGeolocationIP:props.methods.commonGeolocationIP,
+                        commonGeolocationPlace:props.methods.commonGeolocationPlace
                         },
             path:       '/component/menu_monitor_detail.js'})
             .then(result=>{
@@ -306,12 +306,20 @@ const component = async props => {
                 path:'/common/component/common_select.js'});
 
         //mount the map
-        props.methods.commonModuleLeafletInit({mount_div:'menu_monitor_mapid',
+        props.methods.commonComponentRender({
+            mountDiv:   'menu_monitor_mapid',
+            data:       {   
                         longitude:props.data.client_longitude,
                         latitude:props.data.client_latitude,
-                        place:props.data.client_place,
-                        doubleclick_event:null,
-                        update_map:true});
+                        user_locale:props.data.user_locale
+                        },
+            methods:    {
+                        commonComponentRender:props.methods.commonComponentRender,
+                        commonMiscElementRow:props.methods.commonMiscElementRow,
+                        commonMiscElementId:props.methods.commonMiscElementId,
+                        commonFFB:props.methods.commonFFB
+                        },
+            path:       '/common/component/common_map.js'});
     };
 
     return {

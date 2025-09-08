@@ -4,14 +4,14 @@
  */
 
 /**
- * @import {CommonMicroserviceWorldcitiesRecordType, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonWorldcitiesRecordType, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{records:CommonMicroserviceWorldcitiesRecordType[]}
+ * @param {{records:CommonWorldcitiesRecordType[]}
  *          } props 
  * @returns {string}
  */

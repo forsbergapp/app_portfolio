@@ -33,15 +33,13 @@
  *  CommonProfileSearchRecord
  *  CommonMasterObjectType
  *  CommonMessageType
+ *  CommonWorldcitiesRecordType
  * 
  * Common module types
  *  CommonModuleLeafletEvent
  *  CommonModuleLeafletMapData
  *  CommonModuleLeafletMethods
  *  CommonModuleLeafletMapLayer
- * 
- * Common Microservice types
- *  CommonMicroserviceWorldcitiesRecordType
  * 
  * Common Module files types 
  *  CommonModuleCommon
@@ -98,28 +96,9 @@
  *              querySelectorAll:function,
  *              title:string}} COMMON_DOCUMENT
  */
-
 /**
- * @description Type CommonAppEvent
- * 
- * events only used on DOM, third party libraries might use events on window in BOM
- * 
- * @typedef {object}    CommonAppEvent
- * @property {object}   clipboardData
- * @property {function} clipboardData.getData 
- * @property {string}   code
- * @property {string}   key
- * @property {boolean}  altKey
- * @property {boolean}  ctrlKey
- * @property {boolean}  shiftKey
- * @property {function} preventDefault
- * @property {function} stopPropagation
- * @property {string}   type
- * @property {number}   layerX
- * @property {[*]}       touches
- * @property {number}   clientX
- * @property {number}   clientY
- * @property {{ id:                 string,
+ * @description Type target
+ * @typedef {{  id:                 string,
  *              blur:               function,
  *              href:               string,
  *              focus:              function,
@@ -142,10 +121,35 @@
  *                                      parentNode:{style:{display:string}},
  *                                      style:{display:string},
  *                                      querySelector: function
+ *                                      remove: function
  *                                  },
  *              setAttribute:       function,
- *              value:              string,
- *            }}  target
+ *              value:              string
+ *            }} commonTarget
+ */
+/**
+ * @description Type CommonAppEvent
+ * 
+ * events only used on DOM, third party libraries might use events on window in BOM
+ * 
+ * @typedef {object}        CommonAppEvent
+ * @property {object}       clipboardData
+ * @property {function}     clipboardData.getData 
+ * @property {string}       code
+ * @property {string}       key
+ * @property {boolean}      altKey
+ * @property {boolean}      ctrlKey
+ * @property {boolean}      shiftKey
+ * @property {function}     preventDefault
+ * @property {function}     stopPropagation
+ * @property {string}       type
+ * @property {number}       layerX
+ * @property {[*]}          touches
+ * @property {number}       clientX
+ * @property {number}       clientY
+ * @property {number}       deltaY
+ * @property {commonTarget} target
+ * @property {commonTarget} currentTarget
  */
 
 /**
@@ -338,6 +342,41 @@
  *                  TouchCancel?:function|null,
  *                  TouchMove?:function|null},
  *              lifeCycle:{onMounted:function|null}}} commonMetadata
+ */
+
+/**
+ * @description geoJSON Popup
+ * @typedef {{   
+ *            id: string,
+ *            type:'Feature',
+ *            properties:{  x:number,
+ *                          y:number,
+ *                          countrycode:string,
+ *                          country:string,
+ *                          region:string,
+ *                          city:string,
+ *                          timezone_text:string},
+ *                          geometry:{
+ *                                      type:'Point',
+ *                                      coordinates:[number, number][]
+ *                          }
+ *          }} commonGeoJSONPopup
+ */
+/**
+ * @description geoJSON Polyline
+ * @typedef {{   
+ *            id: string,
+ *            type:'Feature',
+ *            properties:{offsetX?:number,
+ *                        offsetY?:number,
+ *                        title:string,
+ *                        color:string,
+ *                        width:number},
+ *            geometry:{
+ *                       type:'MultiLineString'|'LineString',
+ *                       coordinates:[number, number][]
+ *            }
+ *          }} commonGeoJSONPolyline
  */
 /**
  * @description Type CommonRESTAPIMethod
@@ -595,8 +634,8 @@
  */
 
 /**
- * @description Type CommonMicroserviceWorldcitiesRecordType
- * @typedef {{id:number, city:string, admin_name:string, country:string, lat:string, lng:string}} CommonMicroserviceWorldcitiesRecordType
+ * @description Type CommonWorldcitiesRecordType
+ * @typedef {{id:number, city:string, admin_name:string, country:string, lat:string, lng:string}} CommonWorldcitiesRecordType
  */
     
 /**
