@@ -363,6 +363,22 @@
  *          }} commonGeoJSONPopup
  */
 /**
+ * @description geoJSON tile
+ * @typedef {{   
+*            id: string,
+*            type:'Feature',
+*            properties:{  left:number,
+*                          top:number,                        
+*                          tileSize:number,
+*                          url:string},
+*                          geometry:{
+*                                      type:'Point',
+*                                      coordinates:null
+*                          }
+*          }} commonGeoJSONTile
+*/
+
+/**
  * @description geoJSON Polyline
  * @typedef {{   
  *            id: string,
