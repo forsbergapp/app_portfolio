@@ -60,6 +60,8 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  *                      commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
  *                      commonMiscInputControl:CommonModuleCommon['commonMiscInputControl'],
  *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
+ *                      commonComponentRemove:CommonModuleCommon['commonComponentRemove'],
+ *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
  *                      commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
  *                      commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
  *                      commonLovClose:CommonModuleCommon['commonLovClose'],
@@ -308,13 +310,16 @@ const component = async props => {
         //mount the map
         props.methods.commonComponentRender({
             mountDiv:   'menu_monitor_mapid',
-            data:       {   
+            data:       { 
+                        data_app_id :props.data.common_app_id,
                         longitude:props.data.client_longitude,
                         latitude:props.data.client_latitude,
                         user_locale:props.data.user_locale
                         },
             methods:    {
                         commonComponentRender:props.methods.commonComponentRender,
+                        commonComponentRemove:props.methods.commonComponentRemove,
+                        commonWindowFromBase64:props.methods.commonWindowFromBase64,
                         commonMiscElementRow:props.methods.commonMiscElementRow,
                         commonMiscElementId:props.methods.commonMiscElementId,
                         commonFFB:props.methods.commonFFB

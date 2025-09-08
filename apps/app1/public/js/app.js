@@ -132,6 +132,8 @@ const appSecureMenuShow = menu => {
                             commonMiscElementId:common.commonMiscElementId,
                             commonMiscInputControl:common.commonMiscInputControl,
                             commonComponentRender:common.commonComponentRender,
+                            commonComponentRemove:common.commonComponentRemove,
+                            commonWindowFromBase64:common.commonWindowFromBase64,
                             commonWindowUserAgentPlatform:common.commonWindowUserAgentPlatform,
                             commonMiscRoundOff:common.commonMiscRoundOff,
                             commonLovClose:common.commonLovClose,
