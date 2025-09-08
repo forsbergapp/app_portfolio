@@ -4,20 +4,39 @@
 
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle, CommonAppEvent,
- *          commonGeoJSONPopup, commonGeoJSONPolyline}  from '../../../common_types.js'
+ *          commonMapLayers, commonGeoJSONPopup, commonGeoJSONPolyline}  from '../../../common_types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
+ * @param {{longitude:number|null,
+ *          latitude:number|null}} props
  * @returns {string}
  */
-const template = () =>`  
+const template = props =>`  
                             <div id="common_map">
-                                <div id="common_map_measure"></div>
-                                <div id="common_map_tiles" style="position:absolute;top:0;left:0;"></div>
-                                <svg id="common_map_lines"></svg>
+                                <div id='common_map_control'>
+                                    <div id='common_map_control_zoomin' class='common_map_control_button common_icon'></div>
+                                    <div id='common_map_control_zoomout' class='common_map_control_button common_icon'></div>
+                                    <div id='common_map_control_search_container' class='common_map_control_button'>
+                                        <div id='common_map_control_search' class='common_map_control_button common_icon'></div>
+                                        <div id='common_map_control_expand_search' class='common_map_control_expand'></div>
+                                    </div>
+                                    <div id='common_map_control_fullscreen' class='common_map_control_button common_icon'></div>
+                                    ${(props.longitude == null && props.latitude==null)?'':
+                                        `<div id='common_map_control_my_location' class='common_map_control_button common_icon'>
+                                        </div>`
+                                    }
+                                    <div id='common_map_control_layer_container' class='common_map_control_button'>
+                                        <div id='common_map_control_layer' class='common_map_control_button common_icon'></div>
+                                        <div id='common_map_control_expand_layer' class='common_map_control_expand'></div>
+                                    </div>
+                                </div>
+                                <div id='common_map_measure'></div>
+                                <div id='common_map_tiles' style='position:absolute;top:0;left:0;'></div>
+                                <svg id='common_map_lines'></svg>
                                 <div id='common_map_popups'></div>
                             </div>`;
 /**
@@ -26,13 +45,15 @@ const template = () =>`
 * @function
 * @param {{data:       {
 *                      commonMountdiv:string,
-*                      app_id:number,
-*                      longitude:number,
-*                      latitude:number,
+*                      data_app_id:number,
+*                      longitude:number|null,
+*                      latitude:number|null,
 *                      user_locale:string},
 *          methods:    {
 *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
 *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
+*                      commonComponentRemove:CommonModuleCommon['commonComponentRemove'],
+*                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
 *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
 *                      commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
 *                      commonFFB:CommonModuleCommon['commonFFB']
@@ -49,6 +70,7 @@ const template = () =>`
 */
 const component = async props => {
 
+    /**@type{commonMapLayers[]} */
     const  MAP_LAYERS = [{
         title: 'OpenStreetMap_Mapnik',
         value: 'OpenStreetMap_Mapnik',
@@ -60,7 +82,7 @@ const component = async props => {
         title: 'Esri.WorldImagery',
         value: 'Esri.WorldImagery',
         url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png',
-        max_zzom: null,
+        max_zoom: null,
         attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
     }];
 
@@ -166,6 +188,16 @@ const component = async props => {
                 .then(component=>lines.innerHTML += component.template);            
         }
     };
+    /**
+     * @description get popup for given GPS
+     * @function
+     * @param {number} longitude
+     * @param {number} latitude
+     */
+    const getPopup = (longitude, latitude) =>
+        Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('.common_map_popup'))
+        .filter(popup=> Number(popup.querySelectorAll('.common_map_popup_sub_title_gps')[0].getAttribute('data-longitude'))==longitude && 
+                        Number(popup.querySelectorAll('.common_map_popup_sub_title_gps')[0].getAttribute('data-latitude'))==latitude);
     /**
      * @name updatePopups
      * @description Draw layer popups
@@ -315,6 +347,38 @@ const component = async props => {
         };
 
     /**
+     * @description zoom control
+     * @param {{deltaY:number,
+     *          x:Number,
+     *          y:number}} parameters
+     */
+    const getZoom = parameters => {
+        const zoomDelta = parameters.deltaY < 0 ? 1 : -1;
+        const newZ = Math.min(Math.max(z + zoomDelta, 1), 19);
+    
+        if (newZ === z) return;
+    
+        // Mouse position relative to map
+        const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
+        const mouseX = parameters.x - rect.left;
+        const mouseY = parameters.y - rect.top;
+    
+        // World coordinates before zoom
+        const worldXBefore = (mouseX - offsetX);
+        const worldYBefore = (mouseY - offsetY);
+    
+        // Scale factor between zoom levels
+        const scale = 2 ** (newZ - z);
+    
+        // Adjust offsets so zoom centers on mouse
+        offsetX = mouseX - worldXBefore * scale;
+        offsetY = mouseY - worldYBefore * scale;
+    
+        z = newZ;
+        draw();
+        updateDistance();
+    };
+    /**
      * @descption Events for map
      * @param {string} event_type
      * @param {CommonAppEvent|null} event
@@ -343,11 +407,53 @@ const component = async props => {
                     }
                     case 'click':{
                         switch (true){
+                            case event_target_id=='common_map_control_zoomin':{
+                                getZoom({deltaY:-1, x:event.clientX, y:event.clientY});
+                                break;
+                            }
+                            case event_target_id=='common_map_control_zoomout':{
+                                getZoom({deltaY:1, x:event.clientX, y:event.clientY});
+                                break;
+                            }
+                            case event_target_id=='common_map_control_layer':
+                            case event_target_id=='common_map_control_search':{
+                                const expand_type = event_target_id.split('_')[3];
+                                if (props.methods.COMMON_DOCUMENT.querySelector(`#common_map_control_expand_${expand_type}`).innerHTML !='')
+                                    props.methods.commonComponentRemove(`common_map_control_expand_${expand_type}`);
+                                else
+                                    props.methods.commonComponentRender({
+                                        mountDiv:   `common_map_control_expand_${expand_type}`,
+                                        data:       {  
+                                                    data_app_id:props.data.data_app_id,
+                                                    expand_type:expand_type,
+                                                    user_locale:props.data.user_locale,
+                                                    map_layers:MAP_LAYERS
+                                                    },
+                                        methods:    {commonWindowFromBase64:props.methods.commonWindowFromBase64,
+                                                     commonFFB:props.methods.commonFFB,
+                                                     commonComponentRender:props.methods.commonComponentRender
+                                        },
+                                        path:       '/common/component/common_map_control_expand.js'});    
+                                
+                                break;
+                            }
+                            case event_target_id=='common_map_control_fullscreen':{
+                                if (props.methods.COMMON_DOCUMENT.fullscreenElement)
+                                    props.methods.COMMON_DOCUMENT.exitFullscreen();
+                                else
+                                    props.methods.COMMON_DOCUMENT.querySelector('#common_map').requestFullscreen();
+                                break;
+                            }
+                            case event_target_id=='common_map_control_my_location':{
+                                if (props.data.longitude && props.data.latitude)
+                                    goTo(+props.data.longitude, +props.data.latitude);
+                                break;
+                                }
                             case event.target.classList.contains('common_map_popup_close'):{
                                 event.target.parentNode.remove();
                                 break;
                             }
-                            case event_target_id=='common_map_select_mapstyle':{
+                            case event_target_id=='common_map_control_select_mapstyle':{
                                 setLayer(event.target?.getAttribute('data-value'));
                                 break;
                             }
@@ -400,30 +506,7 @@ const component = async props => {
                             case event.target.classList.contains('common_map_tile'):
                             case event.target.classList.contains('common_map_line'):{
                                 event.preventDefault();
-                                const zoomDelta = event.deltaY < 0 ? 1 : -1;
-                                const newZ = Math.min(Math.max(z + zoomDelta, 1), 19);
-                            
-                                if (newZ === z) return;
-                            
-                                // Mouse position relative to map
-                                const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
-                                const mouseX = event.clientX - rect.left;
-                                const mouseY = event.clientY - rect.top;
-                            
-                                // World coordinates before zoom
-                                const worldXBefore = (mouseX - offsetX);
-                                const worldYBefore = (mouseY - offsetY);
-                            
-                                // Scale factor between zoom levels
-                                const scale = 2 ** (newZ - z);
-                            
-                                // Adjust offsets so zoom centers on mouse
-                                offsetX = mouseX - worldXBefore * scale;
-                                offsetY = mouseY - worldYBefore * scale;
-                            
-                                z = newZ;
-                                draw();
-                                updateDistance();
+                                getZoom({deltaY:event.deltaY, x:event.clientX, y:event.clientY});
                                 break;
                             }
                         }
@@ -489,7 +572,8 @@ const component = async props => {
         const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
         offsetX = ((window.innerWidth / 2) - wx - (rect.left/2));
         offsetY = ((window.innerHeight / 2) - wy - (rect.top/2));
-        await addPopupLat(longitude, latitude);
+        if (getPopup(longitude, latitude).length==0)
+            await addPopupLat(longitude, latitude);
         draw();
         updateDistance();
     };
@@ -502,7 +586,8 @@ const component = async props => {
         events('mousemove');
         events('mouseleave');
         events('wheel');
-        goTo(+props.data.longitude, +props.data.latitude);
+        if (props.data.longitude && props.data.latitude)
+            goTo(+props.data.longitude, +props.data.latitude);
     };    
     return {
         lifecycle:  {onMounted:onMounted},
@@ -513,7 +598,8 @@ const component = async props => {
                     goTo:goTo,
                     drawVectors
         },
-        template:   template()
+        template:   template({  longitude:props.data.longitude?+props.data.longitude:null, 
+                                latitude:props.data.latitude?+props.data.latitude:null})
     };    
 };
 export default component;

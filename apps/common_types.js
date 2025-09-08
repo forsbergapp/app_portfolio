@@ -377,7 +377,14 @@
 *                          }
 *          }} commonGeoJSONTile
 */
-
+/**
+ * @description commonMapLayers
+ * @typedef {{  title:string,
+ *              value:string,
+ *              url:string,
+ *              max_zoom:number|null
+ *              attribution:string}} commonMapLayers
+ */
 /**
  * @description geoJSON Polyline
  * @typedef {{   
