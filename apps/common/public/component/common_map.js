@@ -86,12 +86,28 @@ const component = async props => {
         attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
     }];
 
+    /**
+     * @name ZOOM_LEVEL_GOTO
+     * @description Constant for zoom level for goto
+     * @constant
+     */
+    const ZOOM_LEVEL_GOTO = 5;
+    /**
+     * @name MEASURE_DISTANCE_PIXEL
+     * @description Constant for distance pixels
+     * @constant
+     */
+    const MEASURE_DISTANCE_PIXEL = 100;
+    /**
+     * @name TILE_SIZE
+     * @description Constant for map tile size
+     * @constant
+     */
+    const TILE_SIZE = 256;
+
     //set default layer
     let TILE_URL = MAP_LAYERS[0].url;
-
-    let z = 3; // zoom level
-    z = Math.max(0, Math.min(19, z));
-    const tileSize = 256;
+    let zoom_level = 3;
     let offsetX = 0, offsetY = 0;
     let dragging = false;
     /**@type{number} */
@@ -99,21 +115,6 @@ const component = async props => {
     /**@type{number} */
     let startY;
 
-    /**
-     * @name project
-     * @description Convert GPS to world pixel coords at zoom z
-     * @function
-     * @param {number} lon
-     * @param {number} lat
-     * @returns {[number, number]}
-     */
-    const project = (lon, lat) =>{
-        const rad = Math.PI / 180;
-        const n = 2 ** z;
-        const x = (lon + 180) / 360 * n * tileSize;
-        const y = (1 - Math.log(Math.tan(lat * rad) + 1 / Math.cos(lat * rad)) / Math.PI) / 2 * n * tileSize;
-        return [x, y];
-    };
     /**
      * @name drawTiles
      * @description Draw layer tiles
@@ -123,10 +124,10 @@ const component = async props => {
     const drawTiles = async () => {
         const tilesDiv =    props.methods.COMMON_DOCUMENT.querySelector('#common_map_tiles');
         tilesDiv.innerHTML = '';
-        const cols =        Math.ceil(window.innerWidth / tileSize) + 2;
-        const rows =        Math.ceil(window.innerHeight / tileSize) + 2;
-        const startTileX =  Math.floor(-offsetX / tileSize);
-        const startTileY =  Math.floor(-offsetY / tileSize);
+        const cols =        Math.ceil(window.innerWidth / TILE_SIZE) + 2;
+        const rows =        Math.ceil(window.innerHeight / TILE_SIZE) + 2;
+        const startTileX =  Math.floor(-offsetX / TILE_SIZE);
+        const startTileY =  Math.floor(-offsetY / TILE_SIZE);
         for (let x = startTileX; x < startTileX + cols; x++) {
             for (let y = startTileY; y < startTileY + rows; y++) {
                 await props.methods.commonComponentRender({
@@ -134,13 +135,13 @@ const component = async props => {
                     data:       {  
                                 geoJSON:{   id:  'common_map_point_tile_' + Date.now(),
                                             type:'Feature',
-                                            properties:{left:       x * tileSize + offsetX,
-                                                        top:        y * tileSize + offsetY,
-                                                        tileSize:   tileSize,
+                                            properties:{left:       x * TILE_SIZE + offsetX,
+                                                        top:        y * TILE_SIZE + offsetY,
+                                                        tileSize:   TILE_SIZE,
                                                         url:        TILE_URL
                                                                         .replace('{x}', x.toString())
                                                                         .replace('{y}', y.toString())
-                                                                        .replace('{z}', z.toString())},
+                                                                        .replace('{z}', zoom_level.toString())},
                                             geometry:{
                                                         type:'Point',
                                                         coordinates:null
@@ -189,10 +190,12 @@ const component = async props => {
         }
     };
     /**
+     * @name getPopup
      * @description get popup for given GPS
      * @function
      * @param {number} longitude
      * @param {number} latitude
+     * @returns {HTMLElement[]}
      */
     const getPopup = (longitude, latitude) =>
         Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('.common_map_popup'))
@@ -213,14 +216,13 @@ const component = async props => {
         }
     };
     /**
-     * @descripts add the popup for given lat, long,x and y
+     * @name addPopup
+     * @description Add geoJSON type Point with a popup and geolocation data for given lat, long,x and y
+     * @function
      * @param {{lat: number, long:number, x:number, y:number}} parameters
      * @returns {Promise.<void>}
      */
     const addPopup = async parameters =>{
-        const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
-        const divX = parameters.x - rect.left;
-        const divY = parameters.y - rect.top;
         /**
          * @type{{place:       string,
          *        countryCode: string,
@@ -238,8 +240,8 @@ const component = async props => {
         /**@type{commonGeoJSONPopup} */
         const geoJSON = {   id:  'common_map_point_popup_' + Date.now(),
             type:'Feature',
-            properties:{x:divX, 
-                        y:divY,
+            properties:{x:parameters.x, 
+                        y:parameters.y,
                         countrycode:place.countryCode,
                         country:place.country,
                         region:place.region,
@@ -261,27 +263,19 @@ const component = async props => {
             //Add to existing component
             .then(component=>props.methods.COMMON_DOCUMENT.querySelector('#common_map_popups').innerHTML += component.template);
     };
+    
     /**
-     * @description Adds a popup for given GPS
-     * @param {number} long
-     * @param {number} lat
-     * @returns {Promise.<void>}
-     */
-    const addPopupLat = async (long, lat) =>{
-        const points = project(long, lat);
-        //popup.style.left = `${(wx+offsetX)-100}px`;
-        //popup.style.top  = `${(wy+offsetY)-60}px`;
-        await addPopup({long:long, lat:lat, x:points[0], y:points[1]});
-    };
-    /**
+     * @name addPopupPos
      * @description Adds a popup for given x and y
+     * @function
      * @param {number} x
      * @param {number} y
      * @returns {Promise.<void>}
      */
     const addPopupPos =  async (x, y) =>{
         const gps = getGPS(x,y);
-        addPopup({long:gps.long, lat:gps.lat, x:x, y:y});
+        const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
+        addPopup({long:gps.long, lat:gps.lat, x:x- rect.left, y:y-rect.top});
     };
     
     /**
@@ -294,20 +288,34 @@ const component = async props => {
         drawTiles();
         updatePopups();
     };
-    
+
+    /**
+     * @name project
+     * @description Convert GPS to world pixel coords at zoom z
+     * @function
+     * @param {number} lon
+     * @param {number} lat
+     * @returns {[number, number]}
+     */
+    const project = (lon, lat) =>{
+        const rad = Math.PI / 180;
+        const n = 2 ** zoom_level;
+        const x = (lon + 180) / 360 * n * TILE_SIZE;
+        const y = (1 - Math.log(Math.tan(lat * rad) + 1 / Math.cos(lat * rad)) / Math.PI) / 2 * n * TILE_SIZE;
+        return [x, y];
+    };
+
     /**
      * @name unproject
      * @description convert position to GPS
      * @function
      * @param {number} px
      * @param {number} py
-     * @param {number} z
      */
-    const unproject = (px, py, z) => {
-        const tileSize = 256;
-        const n = 2 ** z;
-        const lon = px / (n * tileSize) * 360 - 180;
-        const latRad = Math.atan(Math.sinh(Math.PI * (1 - 2 * py / (n * tileSize))));
+    const unproject = (px, py) => {
+        const n = 2 ** zoom_level;
+        const lon = px / (n * TILE_SIZE) * 360 - 180;
+        const latRad = Math.atan(Math.sinh(Math.PI * (1 - 2 * py / (n * TILE_SIZE))));
         const lat = latRad * 180 / Math.PI;
         return [lon, lat];
     };
@@ -329,34 +337,53 @@ const component = async props => {
         const worldY = mouseY - offsetY;
     
         // Get GPS coordinates
-        const [lon, lat] = unproject(worldX, worldY, z);
+        const [lon, lat] = unproject(worldX, worldY);
         return {long:lon, lat:lat};
     };
-    
+    /**
+     * @name updateDistance
+     * @description Update distance in measure
+     * @function
+     */
     const updateDistance = () => {
         // Approximate meters per pixel at equator
-        const metersPerPixel = 156543.03392 / Math.pow(2, z);
+        const metersPerPixel = 156543.03392 / Math.pow(2, zoom_level);
     
-        // Example: 100 pixels on screen
-        const meters = metersPerPixel * 100;
+        const meters = metersPerPixel * MEASURE_DISTANCE_PIXEL;
         const km = (meters / 1000).toFixed(2);
         const miles = (meters / 1609.344).toFixed(2);
     
-        //Zoom ${z}, 
         props.methods.COMMON_DOCUMENT.querySelector('#common_map_measure').innerHTML = `${km} km / ${miles} mi`;
-        };
+    };
 
     /**
+     * @name setZoom
+     * @descriptionm Sets zoom level
+     * @function
+     * @param {number} level
+     */
+    const setZoom = level =>{
+        if (MAP_LAYERS.some(row=>row.url==TILE_URL && (row.max_zoom !=null &&  row.max_zoom< level)))
+            zoom_level = MAP_LAYERS.filter(row=>row.url==TILE_URL)[0].max_zoom ?? 0;
+        else
+            if (level<0)
+                zoom_level = 0;
+            else
+                zoom_level = level;
+    };
+    /**
+     * @name getZoom
      * @description zoom control
+     * @function
      * @param {{deltaY:number,
      *          x:Number,
      *          y:number}} parameters
      */
     const getZoom = parameters => {
         const zoomDelta = parameters.deltaY < 0 ? 1 : -1;
-        const newZ = Math.min(Math.max(z + zoomDelta, 1), 19);
+        const newZ = Math.min(Math.max(zoom_level + zoomDelta, 1), 19);
     
-        if (newZ === z) return;
+        if (newZ === zoom_level) return;
     
         // Mouse position relative to map
         const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
@@ -368,18 +395,21 @@ const component = async props => {
         const worldYBefore = (mouseY - offsetY);
     
         // Scale factor between zoom levels
-        const scale = 2 ** (newZ - z);
+        const scale = 2 ** (newZ - zoom_level);
     
         // Adjust offsets so zoom centers on mouse
         offsetX = mouseX - worldXBefore * scale;
         offsetY = mouseY - worldYBefore * scale;
     
-        z = newZ;
+        setZoom(newZ);
+        
         draw();
         updateDistance();
     };
     /**
+     * @name events
      * @descption Events for map
+     * @function
      * @param {string} event_type
      * @param {CommonAppEvent|null} event
      */
@@ -518,7 +548,9 @@ const component = async props => {
     };
 
     /**
+     * @name setLayer
      * @descripton Set map layer
+     * @function
      * @param {string} value
      * @return {void}
      */
@@ -527,6 +559,9 @@ const component = async props => {
         draw();
     };
     /**
+     * @name add LineString
+     * @description Adds geoJSON type Linestring
+     * @function
      * @param {{title:string,
      *          from_longitude:number,
      *          from_latitude:number,
@@ -535,6 +570,7 @@ const component = async props => {
      *          class:string,
      *          color:string,
      *          width:number}} parameters
+     * @returns {Promise.<void>}
      */
     const addLineString = parameters =>
         //text size, color, size and width should be in CSS
@@ -563,21 +599,29 @@ const component = async props => {
             .then(component=>props.methods.COMMON_DOCUMENT.querySelector('#common_map_lines').innerHTML += component.template);
 
     /**
+     * @name goTo
      * @description Go to given gps and display popup
+     * @function
      * @param {number} longitude
      * @param {number} latitude
+     * @returns {Promise.<void>}
      */
     const goTo = async (longitude, latitude) =>{
+        setZoom(ZOOM_LEVEL_GOTO);
         const [wx, wy] = project(longitude, latitude);
         const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
-        offsetX = ((window.innerWidth / 2) - wx - (rect.left/2));
-        offsetY = ((window.innerHeight / 2) - wy - (rect.top/2));
-        if (getPopup(longitude, latitude).length==0)
-            await addPopupLat(longitude, latitude);
+        offsetX = ((window.innerWidth-rect.left) / 2) - wx -100;
+        offsetY = ((window.innerHeight-rect.top) / 2) - wy;
         draw();
+        if (getPopup(longitude, latitude).length==0)
+            await addPopup({long:longitude, lat:latitude, x:wx+offsetX, y:wy+offsetY});
         updateDistance();
     };
-
+    /**
+     * @name onMounted
+     * @description onMounted
+     * @returns {void}
+     */
     const onMounted = ()=>{
         events('click');
         events('dblclick');
