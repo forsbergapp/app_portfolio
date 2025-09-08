@@ -96,20 +96,39 @@ const component = async props => {
      * @name drawTiles
      * @description Draw layer tiles
      * @function
-     * @returns {void}
+     * @returns {Promise.<void>}
      */
-    const drawTiles = () => {
-        const tilesDiv = props.methods.COMMON_DOCUMENT.querySelector('#common_map_tiles');
+    const drawTiles = async () => {
+        const tilesDiv =    props.methods.COMMON_DOCUMENT.querySelector('#common_map_tiles');
         tilesDiv.innerHTML = '';
-        const cols = Math.ceil(window.innerWidth / tileSize) + 2;
-        const rows = Math.ceil(window.innerHeight / tileSize) + 2;
-        const startTileX = Math.floor(-offsetX / tileSize);
-        const startTileY = Math.floor(-offsetY / tileSize);
+        const cols =        Math.ceil(window.innerWidth / tileSize) + 2;
+        const rows =        Math.ceil(window.innerHeight / tileSize) + 2;
+        const startTileX =  Math.floor(-offsetX / tileSize);
+        const startTileY =  Math.floor(-offsetY / tileSize);
         for (let x = startTileX; x < startTileX + cols; x++) {
             for (let y = startTileY; y < startTileY + rows; y++) {
-                const url = TILE_URL.replace('{x}', x.toString()).replace('{y}', y.toString()).replace('{z}',z.toString());
-                tilesDiv.innerHTML += ` <div class='common_map_tile' style='left:${(x * tileSize + offsetX)}px;top:${(y * tileSize + offsetY)}px;width:${tileSize}px;height:${tileSize}px;background-image:url(${url})'>
-                                        </div`;
+                await props.methods.commonComponentRender({
+                    mountDiv:   null,
+                    data:       {  
+                                geoJSON:{   id:  'common_map_point_tile_' + Date.now(),
+                                            type:'Feature',
+                                            properties:{left:       x * tileSize + offsetX,
+                                                        top:        y * tileSize + offsetY,
+                                                        tileSize:   tileSize,
+                                                        url:        TILE_URL
+                                                                        .replace('{x}', x.toString())
+                                                                        .replace('{y}', y.toString())
+                                                                        .replace('{z}', z.toString())},
+                                            geometry:{
+                                                        type:'Point',
+                                                        coordinates:null
+                                                    }
+                                            }
+                                },
+                    methods:    {project:project},
+                    path:       '/common/component/common_map_tile.js'})
+                    //Add to existing component
+                    .then(component=>tilesDiv.innerHTML += component.template);
             }
         }
     };
@@ -128,7 +147,7 @@ const component = async props => {
             await props.methods.commonComponentRender({
                 mountDiv:   null,
                 data:       {  
-                            geoJSON:{   id:  'common_map_Linestring_' + Date.now(),
+                            geoJSON:{   id:  'common_map_linestring_' + Date.now(),
                                         type:'Feature',
                                         properties:{offsetX:offsetX, 
                                                     offsetY:offsetY,
@@ -185,7 +204,7 @@ const component = async props => {
                             method:'GET', 
                             authorization_type:'APP_ID'}).then(result=>JSON.parse(result).rows);
         /**@type{commonGeoJSONPopup} */
-        const geoJSON = {   id:  'common_map_Point_' + Date.now(),
+        const geoJSON = {   id:  'common_map_point_popup_' + Date.now(),
             type:'Feature',
             properties:{x:divX, 
                         y:divY,
