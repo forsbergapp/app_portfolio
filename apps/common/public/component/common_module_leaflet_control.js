@@ -64,7 +64,7 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *                      commonMiscImport:CommonModuleCommon['commonMiscImport'],
  *                      commonMiscImportmap:CommonModuleCommon['commonMiscImportmap'],
  *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                      commonMicroserviceGeolocationPlace:CommonModuleCommon['commonMicroserviceGeolocationPlace'],
+ *                      commonGeolocationPlace:CommonModuleCommon['commonGeolocationPlace'],
  *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
  *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
  *                      commonFFB:CommonModuleCommon['commonFFB'],
@@ -128,7 +128,7 @@ const component = async props => {
                 const lng = e.latlng.lng;
                 const lat = e.latlng.lat;
                 //Update GPS position
-                props.methods.commonMicroserviceGeolocationPlace(lng, lat).then((/**@type{string}*/gps_place) => {
+                props.methods.commonGeolocationPlace(lng, lat).then((/**@type{string}*/gps_place) => {
                     map_update({longitude:lng,
                                 latitude:lat,
                                 zoomvalue:null,//do not change zoom 

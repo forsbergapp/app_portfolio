@@ -115,25 +115,21 @@ const appSecureMenuShow = menu => {
         }
         //MONITOR
         case 4:{
-            /**
-             * @param {*} parameters
-             */
-            const map_update = (...parameters) =>common.COMMON_GLOBAL.moduleLeaflet.methods.map_update(...parameters);
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id, 
                             common_app_id:common.COMMON_GLOBAL.app_common_app_id,
                             iam_user_id: common.COMMON_GLOBAL.iam_user_id,
+                            user_locale:common.COMMON_GLOBAL.user_locale,
                             client_latitude:common.COMMON_GLOBAL.client_latitude,
                             client_longitude:common.COMMON_GLOBAL.client_longitude,
                             client_place:common.COMMON_GLOBAL.client_place
                             },
                 methods:    {
                             appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow,
-                            map_update:map_update,
-                            commonModuleLeafletInit:common.commonModuleLeafletInit,
                             commonMiscElementRow:common.commonMiscElementRow,
+                            commonMiscElementId:common.commonMiscElementId,
                             commonMiscInputControl:common.commonMiscInputControl,
                             commonComponentRender:common.commonComponentRender,
                             commonWindowUserAgentPlatform:common.commonWindowUserAgentPlatform,
@@ -141,8 +137,8 @@ const appSecureMenuShow = menu => {
                             commonLovClose:common.commonLovClose,
                             commonLovShow:common.commonLovShow,
                             commonFFB:common.commonFFB,
-                            commonMicroserviceGeolocationIp:common.commonMicroserviceGeolocationIp,
-                            commonMicroserviceGeolocationPlace:common.commonMicroserviceGeolocationPlace
+                            commonGeolocationIP:common.commonGeolocationIP,
+                            commonGeolocationPlace:common.commonGeolocationPlace
                             },
                 path:       '/component/menu_monitor.js'})
             .then(result=>{

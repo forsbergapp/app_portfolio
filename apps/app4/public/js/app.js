@@ -892,7 +892,7 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
                 
                 common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
 
-                common.commonMicroserviceGeolocationPlace(gps_long_input.textContent, gps_lat_input.textContent).then((/**@type{string}*/gps_place) => {
+                common.commonGeolocationPlace(gps_long_input.textContent, gps_lat_input.textContent).then((/**@type{string}*/gps_place) => {
                     //Update map
                     COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = gps_place;
                     appModuleLeafletMapUpdate({longitude:gps_long_input.textContent,
