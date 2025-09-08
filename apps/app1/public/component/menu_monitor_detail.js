@@ -204,8 +204,8 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *                       commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
  *                       commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
  *                       commonFFB:CommonModuleCommon['commonFFB'],
- *                       commonMicroserviceGeolocationIp:CommonModuleCommon['commonMicroserviceGeolocationIp'],
- *                       commonMicroserviceGeolocationPlace:CommonModuleCommon['commonMicroserviceGeolocationPlace']
+ *                       commonGeolocationIP:CommonModuleCommon['commonGeolocationIP'],
+ *                       commonGeolocationPlace:CommonModuleCommon['commonGeolocationPlace']
  *                       },
  *           lifecycle:  null}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -384,7 +384,7 @@ const component = async props => {
     const monitorDetailClickItem = async (item_type, data) => {
         if (item_type=='GPS'){
             if (data['ip']){
-                props.methods.commonMicroserviceGeolocationIp(data['ip'] != '::1'?data['ip']:null)
+                props.methods.commonGeolocationIP(data['ip'] != '::1'?data['ip']:null)
                 .then(result=>{
                     props.methods.map_update({  longitude:result.longitude,
                                                 latitude:result.latitude,
@@ -399,7 +399,7 @@ const component = async props => {
             else{
                 props.methods.map_update({  longitude:data['longitude'],
                                             latitude:data['latitude'],
-                                            text_place: await props.methods.commonMicroserviceGeolocationPlace(data['longitude'], data['latitude']),
+                                            text_place: await props.methods.commonGeolocationPlace(data['longitude'], data['latitude']),
                                             country:'',
                                             city:'',
                                             timezone_text :null

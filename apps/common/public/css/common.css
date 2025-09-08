@@ -94,7 +94,7 @@
     --common_app_icon_checkbox_checked:     '\f14a';
     --common_app_icon_checkbox_empty:       '\f0c8';
     --common_app_icon_info:                 '\f05a';
-    --common_app_icon_close:                '\f058';
+    --common_app_icon_close:                '\f410';
     --common_app_icon_online:               '\f111';
     --common_app_icon_search:               '\f002';
     --common_app_icon_menu_open:            '☰';
@@ -110,6 +110,7 @@
     --common_app_icon_align_center:         '\f037';
     --common_app_icon_align_right:          '\f038';
     --common_app_icon_cancel:               '\f057';
+    --common_app_icon_ok:                   '\f058';
     --common_app_icon_zoomout:              '\f010';
     --common_app_icon_zoomin:               '\f00e';
     --common_app_icon_left:                 '\f359';
@@ -370,7 +371,7 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 .common_app_data_display_button_delete::before{							        content:var(--common_app_icon_delete)}
 .common_app_data_display_button_print::before{							        content:var(--common_app_icon_print)}
 .common_data_display_icon_cancel::before{								        content:var(--common_app_icon_cancel) !important}
-.common_data_display_icon_ok::before{									        content:var(--common_app_icon_close) !important}
+.common_data_display_icon_ok::before{									        content:var(--common_app_icon_ok) !important}
 
 /*Icons app*/
 #common_app_toolbar_start::before{									            content:var(--common_app_icon_start)}
@@ -514,6 +515,9 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 #common_module_leaflet_control_layer_button::before{					        content:var(--common_app_icon_map_layer)}
 
 /*Icons module leaflet popup*/
+.common_map_popup_close::before{											    content:var(--common_app_icon_close)}
+.common_map_popup_sub_title_timezone_icon::before{							    content:var(--common_app_icon_regional_timezone)}
+.common_map_popup_sub_title_gps_icon::before{							        content:var(--common_app_icon_gps_position)}
 .common_module_leaflet_popup_sub_title::before{							        content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_gps_position)}
 
 /*Icons profile search*/
@@ -2022,6 +2026,107 @@ body.rtl{
     font-size: 0.7em !important;
 	text-align: start;
 	border-top: 0.5px solid;
+}
+/* Map*/
+#common_map {
+    width: 100%;
+    height: 100%;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+}
+#common_map_measure{
+    width:100px;
+    height:1.5em;
+    display:inline-block;
+    position:absolute;
+    bottom:1em;
+    background-color:white;
+    color:black;
+    z-index:10;
+    font-size:9px;
+    inset-inline-start: calc(50% - 50px);
+    text-align: center;
+} 
+#common_map_tiles,#common_map_lines, #common_map_popups{
+    pointer-events: none;
+    width:0;
+    height:0;
+    z-index:0;
+}
+#common_map{
+    z-index:0;
+}
+.common_map_tile{
+    z-index:1;
+    pointer-events:auto;
+}
+#common_map_measure, .common_map_line, .common_map_popup{
+    z-index: 2;
+    pointer-events:auto;
+}
+#common_map_tiles, #common_map_lines, #common_map_popups {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+} 
+.common_map_tile {
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.common_map_polyline {
+    position:absolute;
+}
+.common_map_popup {
+    position:absolute;
+    width:200px;
+    height: calc(7em - 10px);
+    background-color:white;
+    color:black;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+    font-size:11px;
+    text-align: center;
+    display:block;
+    border-radius:4px;
+}
+.common_map_popup_close{
+    position: absolute;
+    top: 0.2em;
+    margin-inline-start: -0.2em;
+    text-align: end;
+    font-size: 1.5em;
+}
+.common_map_popup div{
+    display:inline-block;
+    width:100%;
+}
+.common_map_popup_title,
+.common_map_popup_sub_title,
+.common_map_popup_sub_title_timezone,
+.common_map_popup_sub_title_gps{
+	font-weight: bold;
+	text-align: center;
+	display: block;
+}
+.common_map_popup_sub_title_timezone_icon,
+.common_map_popup_sub_title_gps_icon{
+    width: 2em !important;
+}
+.common_map_popup_tip_container{
+    overflow: hidden;
+    margin-top: -3px;
+}
+.common_map_popup_tip{
+    width: 10px !important;
+    height: 10px !important;
+    margin-top: -4px;
+    padding: 3px;
+    transform: rotate(45deg);
+    background-color: white;
+    text-align:center;
 }
 
 /*Module leaflet, dynamically created popup*/

@@ -90,12 +90,12 @@ const getIP = parameters =>{
  *          ip:string,
  *          locale:string}} parameters
  * @returns {server_server_response & {result?:{place:      string,
- *                                              countryCode: string,
- *                                              region:      string,
- *                                              county:      string,
- *                                              latitude:    string,
- *                                              longitude:   string,
- *                                              timezone:    string}|null}}
+ *                                              countryCode:string,
+ *                                              country:    string,
+ *                                              region:     string,
+ *                                              latitude:   string,
+ *                                              longitude:  string,
+ *                                              timezone:   string}|null}}
  */
 const getPlace = parameters =>{
    /**
@@ -148,7 +148,6 @@ const getPlace = parameters =>{
                                                         countries:[key:string]}}*/row)=>
                                             row.locale == formatLocale(parameters.locale))[0].countries[geolocation_place.split(';')[0]],
                         region:geolocation_place.split(';')[1],
-                        county:geolocation_place.split(';')[1],
                         latitude:geolocation_place.split(';')[3],
                         longitude:geolocation_place.split(';')[4],
                         timezone:   getTimezone(geolocation_place.split(';')[3], 
@@ -159,7 +158,6 @@ const getPlace = parameters =>{
                 countryCode:'?',
                 country:'?',
                 region:'?',
-                county:'?',
                 latitude:'?',
                 longitude:'?',
                 timezone:   '?'}, type:'JSON'};
