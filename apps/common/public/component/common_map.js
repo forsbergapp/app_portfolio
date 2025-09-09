@@ -376,8 +376,9 @@ const component = async props => {
      * @description zoom control
      * @function
      * @param {{deltaY:number,
-     *          x:Number,
-     *          y:number}} parameters
+     *          x:number,
+     *          y:number,
+     *          control?:boolean|false}} parameters
      */
     const getZoom = parameters => {
         const zoomDelta = parameters.deltaY < 0 ? 1 : -1;
@@ -387,8 +388,15 @@ const component = async props => {
     
         // Mouse position relative to map
         const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
-        const mouseX = parameters.x - rect.left;
-        const mouseY = parameters.y - rect.top;
+
+        const mouseX =  parameters.control?
+                            rect.left + (rect.width/2):
+                                (parameters.x - rect.left);
+                                
+        const mouseY =  parameters.control?
+                            (rect.height / 2):
+                                (parameters.y - rect.top);
+                                
     
         // World coordinates before zoom
         const worldXBefore = (mouseX - offsetX);
@@ -438,11 +446,11 @@ const component = async props => {
                     case 'click':{
                         switch (true){
                             case event_target_id=='common_map_control_zoomin':{
-                                getZoom({deltaY:-1, x:event.clientX, y:event.clientY});
+                                getZoom({deltaY:-1, x:event.clientX, y:event.clientY,control:true});
                                 break;
                             }
                             case event_target_id=='common_map_control_zoomout':{
-                                getZoom({deltaY:1, x:event.clientX, y:event.clientY});
+                                getZoom({deltaY:1, x:event.clientX, y:event.clientY, control:true});
                                 break;
                             }
                             case event_target_id=='common_map_control_layer':
