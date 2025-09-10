@@ -2746,29 +2746,6 @@ const commonGeolocationPlace = async (longitude, latitude) => {
     });
 };
 /**
- * @name commonGeolocationIP
- * @description Microservice Geolocation: Get GPS from given ip or current user
- * @function
- * @param {string|null} ip
- * @returns {Promise.<{latitude:String, longitude:string, place:string}>}
- */
-const commonGeolocationIP = async ip => {
-    return commonFFB({path:'/geolocation/ip', query:`ip=${ip}`, method:'GET', authorization_type:'APP_ID'})
-        .then(result=>{
-            return {
-                latitude:JSON.parse(result).rows.latitude,
-                longitude: JSON.parse(result).rows.longitude,
-                place: `${JSON.parse(result).rows.place}`
-            };
-        })
-        .catch(()=>{return {
-            latitude:'',
-            longitude: '',
-            place: ''
-        };});
-
-};
-/**
  * @name commonMicroserviceWorldcitiesSearch
  * @description Microservice Geolocation: Worldcities - Search
  * @function
@@ -4144,7 +4121,6 @@ const commonGet = () =>{
         commonSocketConnectOnline:commonSocketConnectOnline,
         commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck,
         /* GEOLOCATION */
-        commonGeolocationIP:commonGeolocationIP,
         commonGeolocationPlace:commonGeolocationPlace,
         /* EVENT */
         commonEvent:commonEvent,
@@ -4316,7 +4292,6 @@ export{/* GLOBALS*/
        commonSocketConnectOnline,
        commonSocketConnectOnlineCheck,
        /* GEOLOCATION */
-       commonGeolocationIP,
        commonGeolocationPlace,
        /* EVENT */
        commonEvent,

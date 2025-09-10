@@ -6,7 +6,6 @@
 
 /**
  * @import {CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @import {appSecureDialogueSendBroadcastShow} from '../js/app.js'
  */
 
 /**
@@ -194,8 +193,6 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *           methods:    {
  *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                       monitorShow:function,
- *                       map_update:CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update'],
- *                       appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow,
  *                       commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
  *                       commonLovClose:CommonModuleCommon['commonLovClose'],
  *                       commonLovShow:CommonModuleCommon['commonLovShow'],
@@ -203,9 +200,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *                       commonComponentRender:CommonModuleCommon['commonComponentRender'],
  *                       commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
  *                       commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
- *                       commonFFB:CommonModuleCommon['commonFFB'],
- *                       commonGeolocationIP:CommonModuleCommon['commonGeolocationIP'],
- *                       commonGeolocationPlace:CommonModuleCommon['commonGeolocationPlace']
+ *                       commonFFB:CommonModuleCommon['commonFFB']
  *                       },
  *           lifecycle:  null}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -214,8 +209,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *                               monitorDetailPage:function,
  *                               monitorDetailShowServerLog:function,
  *                               monitorDetailShowLogDir:function,
- *                               monitorDetailClickSort:function,
- *                               monitorDetailClickItem:function
+ *                               monitorDetailClickSort:function
  *                               },
  *                      template:string}>}
  */
@@ -372,46 +366,6 @@ const component = async props => {
             }
         }
     };
-    /**
-     * List item click
-     * @param {string} item_type 
-     * @param {{ip:string,
-     *          latitude:string,
-     *          longitude:string,
-     *          id:number}} data 
-     * @returns {Promise.<void>}
-     */
-    const monitorDetailClickItem = async (item_type, data) => {
-        if (item_type=='GPS'){
-            if (data['ip']){
-                props.methods.commonGeolocationIP(data['ip'] != '::1'?data['ip']:null)
-                .then(result=>{
-                    props.methods.map_update({  longitude:result.longitude,
-                                                latitude:result.latitude,
-                                                text_place: result.place,
-                                                country:'',
-                                                city:'',
-                                                timezone_text :null
-                                            });
-                })
-                .catch(()=>null);
-            }
-            else{
-                props.methods.map_update({  longitude:data['longitude'],
-                                            latitude:data['latitude'],
-                                            text_place: await props.methods.commonGeolocationPlace(data['longitude'], data['latitude']),
-                                            country:'',
-                                            city:'',
-                                            timezone_text :null
-                                        });
-            }
-        }
-        else
-            if (item_type=='CHAT'){
-                props.methods.appSecureDialogueSendBroadcastShow('CHAT', data['id']);
-            }
-        
-    };
 
     /**
      * Show existing logfiles
@@ -520,8 +474,7 @@ const component = async props => {
         methods:    {monitorDetailPage:monitorDetailPage,
                     monitorDetailShowServerLog:monitorDetailShowServerLog,
                     monitorDetailShowLogDir:monitorDetailShowLogDir,
-                    monitorDetailClickSort:monitorDetailClickSort,
-                    monitorDetailClickItem:monitorDetailClickItem
+                    monitorDetailClickSort:monitorDetailClickSort
         },
         template:   template({  iam_user_id:props.data.iam_user_id,
                                 monitor_detail:props.data.monitor_detail,

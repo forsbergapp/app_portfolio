@@ -1435,6 +1435,17 @@
  */
 
 /**
+ * @description geolocation place
+ * @typedef{{   place:string, 
+ *              countryCode:string, 
+ *              country:string, 
+ *              region:string,
+ *              latitude:string,
+ *              longitude:string,
+ *              timezone:string}} server_geolocation_place
+ */
+
+/**
  * @description SECURITY server_security_jwt_payload
  * @typedef {{  
  *              iss:string, 
