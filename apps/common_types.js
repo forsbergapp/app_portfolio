@@ -15,6 +15,7 @@
  *  CommonAppMenu
  *  CommonDocumentType
  *  CommonMetadata
+ *  CommonEventType
  * 
  * Common REST API types
  *  CommonRESTAPIMethod
@@ -244,28 +245,9 @@
  *                                  content:*, 
  *                                  content_type:string}[]|[],
  *              component_import:{app_id:number, url:string,component:*}[]|[],
- *              component:{
- *                          common_dialogue_iam_verify:{
- *                              methods:{
- *                                  commonUserVerifyCheckInput:function
- *                              }
- *                          },
- *                          common_dialogue_info:{
- *                              methods:{
- *                                  eventClickSend:function
- *                              }
- *                          }
- *                          common_dialogue_user_menu:{
- *                              methods:{
- *                                  eventClickPagination: function,
- *                                  eventClickMessage: function,
- *                                  eventClickMessageDelete: function,
- *                                  eventClickNavMessages:function,
- *                                  eventClickNavIamUser:function,
- *                                  eventClickNavIamUserApp:function,
- *                              }
- *                          }
- *              },
+ *              component:Object.<string,   {
+ *                                          methods?:Object.<string,function>|null, 
+ *                                          events?:(arg0:commonEventType, arg1:CommonAppEvent)=>void|null}>,
  *              moduleLeaflet: {methods:{
  *                                          eventClickCountry:          function, 
  *                                          eventClickCity:             function,
@@ -296,8 +278,9 @@
 /**
  * @description Type CommonComponentResult
  * @typedef  {{ lifecycle?:CommonComponentLifecycle,
- *              data:*,
- *              methods:*,
+ *              data?:*,
+ *              methods?:Object.<string,function>|null,
+ *              events?:(arg0:commonEventType, arg1:CommonAppEvent)=>void|null,
  *              template:string|null}} CommonComponentResult
  */
 
@@ -343,7 +326,28 @@
  *                  TouchMove?:function|null},
  *              lifeCycle:{onMounted:function|null}}} commonMetadata
  */
-
+/**
+ * @description commonEventType
+ * @typedef {   'click'|
+ *              'dblclick'|
+ *              'change'|
+ *              'keydown'|
+ *              'keyup'|
+ *              'focus'|
+ *              'input'|
+ *              'mousedown'|
+ *              'mouseup'|
+ *              'mousemove'|
+ *              'mouseleave'|
+ *              'wheel'|
+ *              'touchstart'|
+ *              'touchend'|
+ *              'touchcancel'|
+ *              'touchmove'|
+ *              'copy'|
+ *              'paste'|
+ *              'cut'} commonEventType
+ */
 /**
  * @description geoJSON Popup
  * @typedef {{   
