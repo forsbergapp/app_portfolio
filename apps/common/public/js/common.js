@@ -93,28 +93,7 @@ const COMMON_GLOBAL = {
     user_arabic_script:'',
     resource_import:[],
     component_import:[],
-    component:{
-        common_dialogue_iam_verify:{
-            methods:{
-                commonUserVerifyCheckInput:()=>null
-            }
-        },
-        common_dialogue_info:{
-            methods:{
-                eventClickSend:()=>null
-            }
-        },
-        common_dialogue_user_menu:{
-            methods:{
-                eventClickPagination:()=>null,
-                eventClickMessage:()=>null,
-                eventClickMessageDelete:()=>null,
-                eventClickNavMessages:()=>null,
-                eventClickNavIamUser:()=>null,
-                eventClickNavIamUserApp:()=>null
-            }
-        }
-    },
+    component:{},
     moduleLeaflet:{methods:{eventClickCountry:          ()=>null, 
                             eventClickCity:             ()=>null,
                             eventClickMapLayer:         ()=>null,
@@ -1351,11 +1330,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                                     commonUserAuthenticateCode: commonUserAuthenticateCode,
                                     commonUserSessionCountdown: commonUserSessionCountdown
                                 },
-                    path:       '/common/component/common_dialogue_iam_verify.js'})
-                    .then((/**@type{{   data:null,
-                                        methods:{   commonUserVerifyCheckInput:     function}}}*/component)=>{
-                            COMMON_GLOBAL.component.common_dialogue_iam_verify.methods.commonUserVerifyCheckInput =  component.methods.commonUserVerifyCheckInput;
-                    });
+                    path:       '/common/component/common_dialogue_iam_verify.js'});
                 commonComponentRemove('common_dialogue_iam_start');
                 break;
             }
@@ -2955,8 +2930,7 @@ const commonEvent = async (event_type,event=null) =>{
                                         commonFFB:commonFFB,
                                         commonMessageShow:commonMessageShow
                                         },
-                            path:       '/common/component/common_dialogue_info.js'})
-                            .then(component=>COMMON_GLOBAL.component.common_dialogue_info.methods = component.methods);
+                            path:       '/common/component/common_dialogue_info.js'});
                             break;
                         }            
                         case 'common_dialogue_apps_list':
@@ -2966,7 +2940,7 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         //Dialogue info
                         case 'common_dialogue_info_contact_message_send':{
-                            COMMON_GLOBAL.component.common_dialogue_info.methods.eventClickSend();
+                            COMMON_GLOBAL.component.common_dialogue_info?.methods?.eventClickSend();
                             break;
                         }
                         case 'common_dialogue_info_app_link':{
@@ -3102,8 +3076,7 @@ const commonEvent = async (event_type,event=null) =>{
                                             commonMesssageNotAuthorized:commonMesssageNotAuthorized,
                                             commonUserMessageShowStat:commonUserMessageShowStat
                                             },
-                                path:       '/common/component/common_dialogue_user_menu.js'})
-                                .then(component=>COMMON_GLOBAL.component.common_dialogue_user_menu.methods = component.methods);
+                                path:       '/common/component/common_dialogue_user_menu.js'});
                             break;
                         }
                         case 'common_dialogue_user_menu_username':{
@@ -3115,27 +3088,27 @@ const commonEvent = async (event_type,event=null) =>{
                         case 'common_dialogue_user_menu_messages_pagination_previous':
                         case 'common_dialogue_user_menu_messages_pagination_next':
                         case 'common_dialogue_user_menu_messages_pagination_last':{
-                            COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickPagination(event_target_id);
+                            COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickPagination(event_target_id);
                             break;
                         }
                         case 'common_dialogue_user_menu_nav_messages_count':
                         case 'common_dialogue_user_menu_nav_messages':{
                             COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                            await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickNavMessages();
+                            await COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickNavMessages();
                             break;
                         }
                         case (event.target.classList.contains('common_dialogue_user_menu_messages_col_delete') && event_target_id != 'common_dialogue_user_menu_messages_col_delete')?
                                 event_target_id:
                                     '':{
                             //clicked on delete on row, not the title
-                            COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickMessageDelete( commonMiscElementRow(event.target));
+                            COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickMessageDelete( commonMiscElementRow(event.target));
                             break;
                         }
                         case 'common_dialogue_user_menu_nav_iam_user_app':{
                             COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                            await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickNavIamUserApp(COMMON_GLOBAL.user_locale,
+                            await COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickNavIamUserApp(COMMON_GLOBAL.user_locale,
                                                                                                                     COMMON_GLOBAL.user_timezone,
                                                                                                                     COMMON_GLOBAL.user_direction,
                                                                                                                     COMMON_GLOBAL.user_arabic_script);
@@ -3144,11 +3117,11 @@ const commonEvent = async (event_type,event=null) =>{
                         case 'common_dialogue_user_menu_nav_iam_user':{
                             COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
                             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                            await COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickNavIamUser();
+                            await COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickNavIamUser();
                             break;
                         }
                         case 'common_dialogue_user_menu_messages_list':{
-                            COMMON_GLOBAL.component.common_dialogue_user_menu.methods.eventClickMessage( commonMiscElementRow(event.target));
+                            COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickMessage( commonMiscElementRow(event.target));
                             break;
                         }
                         case 'common_dialogue_user_menu_close':{
@@ -3403,12 +3376,12 @@ const commonEvent = async (event_type,event=null) =>{
                         case 'common_dialogue_iam_verify_verification_char3':
                         case 'common_dialogue_iam_verify_verification_char4':
                         case 'common_dialogue_iam_verify_verification_char5':{
-                            COMMON_GLOBAL.component.common_dialogue_iam_verify.methods.commonUserVerifyCheckInput( COMMON_DOCUMENT.querySelector(`#${event.target.id}`), 
+                            COMMON_GLOBAL.component.common_dialogue_iam_verify?.methods?.commonUserVerifyCheckInput( COMMON_DOCUMENT.querySelector(`#${event.target.id}`), 
                                                             'common_dialogue_iam_verify_verification_char' + (Number(event.target.id.substring(event.target.id.length-1))+1));
                             break;
                         }
                         case 'common_dialogue_iam_verify_verification_char6':{
-                            COMMON_GLOBAL.component.common_dialogue_iam_verify.methods.commonUserVerifyCheckInput(COMMON_DOCUMENT.querySelector(`#${event.target.id}`), '');
+                            COMMON_GLOBAL.component.common_dialogue_iam_verify?.methods?.commonUserVerifyCheckInput(COMMON_DOCUMENT.querySelector(`#${event.target.id}`), '');
                             break;
                         }
                         //module leaflet
