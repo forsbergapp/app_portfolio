@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle, CommonAppEvent,
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle, CommonAppEvent,commonEventType,
  *          commonMapLayers, commonGeoJSONPopup, commonGeoJSONPolyline}  from '../../../common_types.js'
  */
 
@@ -61,11 +61,11 @@ const template = props =>`
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:   null,
 *                      methods:{
-*                               events:function,
 *                               addLineString:function,
 *                               goTo:function,
 *                               drawVectors:function
 *                              },
+*                      events:  function       
 *                      template:string}>}
 */
 const component = async props => {
@@ -414,147 +414,7 @@ const component = async props => {
         draw();
         updateDistance();
     };
-    /**
-     * @name events
-     * @descption Events for map
-     * @function
-     * @param {string} event_type
-     * @param {CommonAppEvent|null} event
-     */
-    const events = async (event_type, event=null) =>{
-        
-        if (event==null)
-            props.methods.COMMON_DOCUMENT.querySelector('#common_map').addEventListener(event_type, (/**@type{CommonAppEvent}*/event) => {
-                events(event_type, event);
-            });
-        else{
-            //only events for map
-            if (event.currentTarget.id == 'common_map'){
-                const event_target_id = props.methods.commonMiscElementId(event.target);
-                switch (event_type){
-                    case 'dblclick':{
-                        switch (true){
-                            case event.target.classList.contains('common_map_tile'):
-                            case event.target.classList.contains('common_map_line'):{
-                                await addPopupPos(event.clientX, event.clientY);
-                                break;
-                            }
-                        }
-                        break;
-                        
-                    }
-                    case 'click':{
-                        switch (true){
-                            case event_target_id=='common_map_control_zoomin':{
-                                getZoom({deltaY:-1, x:event.clientX, y:event.clientY,control:true});
-                                break;
-                            }
-                            case event_target_id=='common_map_control_zoomout':{
-                                getZoom({deltaY:1, x:event.clientX, y:event.clientY, control:true});
-                                break;
-                            }
-                            case event_target_id=='common_map_control_layer':
-                            case event_target_id=='common_map_control_search':{
-                                const expand_type = event_target_id.split('_')[3];
-                                if (props.methods.COMMON_DOCUMENT.querySelector(`#common_map_control_expand_${expand_type}`).innerHTML !='')
-                                    props.methods.commonComponentRemove(`common_map_control_expand_${expand_type}`);
-                                else
-                                    props.methods.commonComponentRender({
-                                        mountDiv:   `common_map_control_expand_${expand_type}`,
-                                        data:       {  
-                                                    data_app_id:props.data.data_app_id,
-                                                    expand_type:expand_type,
-                                                    user_locale:props.data.user_locale,
-                                                    map_layers:MAP_LAYERS
-                                                    },
-                                        methods:    {commonWindowFromBase64:props.methods.commonWindowFromBase64,
-                                                     commonFFB:props.methods.commonFFB,
-                                                     commonComponentRender:props.methods.commonComponentRender
-                                        },
-                                        path:       '/common/component/common_map_control_expand.js'});    
-                                
-                                break;
-                            }
-                            case event_target_id=='common_map_control_fullscreen':{
-                                if (props.methods.COMMON_DOCUMENT.fullscreenElement)
-                                    props.methods.COMMON_DOCUMENT.exitFullscreen();
-                                else
-                                    props.methods.COMMON_DOCUMENT.querySelector('#common_map').requestFullscreen();
-                                break;
-                            }
-                            case event_target_id=='common_map_control_my_location':{
-                                if (props.data.longitude && props.data.latitude)
-                                    goTo(+props.data.longitude, +props.data.latitude);
-                                break;
-                                }
-                            case event.target.classList.contains('common_map_popup_close'):{
-                                event.target.parentNode.remove();
-                                break;
-                            }
-                            case event_target_id=='common_map_control_select_mapstyle':{
-                                setLayer(event.target?.getAttribute('data-value'));
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case 'mousedown':{
-                        switch (true){
-                            case event_target_id=='common_map_measure':
-                            case event.target.classList.contains('common_map_tile'):
-                            case event.target.classList.contains('common_map_line'):{
-                                dragging = true;
-                                startX = event.clientX - offsetX;
-                                startY = event.clientY - offsetY;
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case 'mouseup':
-                    case 'mouseleave':{
-                        switch (true){
-                            case event_target_id=='common_map_measure':
-                            case event.target.classList.contains('common_map_tile'):
-                            case event.target.classList.contains('common_map_line'):{
-                                dragging = false;
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case 'mousemove':{
-                        switch (true){
-                            case event_target_id=='common_map_measure':
-                            case event.target.classList.contains('common_map_tile'):
-                            case event.target.classList.contains('common_map_line'):{
-                                if (!dragging) return;
-                                offsetX = event.clientX - startX;
-                                offsetY = event.clientY - startY;
-                                draw();
-                                break;
-                            }
-                        }
-                        break;
-                        
-                    }
-                    case 'wheel':{
-                        switch (true){
-                            case event_target_id=='common_map_measure':
-                            case event.target.classList.contains('common_map_tile'):
-                            case event.target.classList.contains('common_map_line'):{
-                                event.preventDefault();
-                                getZoom({deltaY:event.deltaY, x:event.clientX, y:event.clientY});
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-    };
-
+    
     /**
      * @name setLayer
      * @descripton Set map layer
@@ -575,7 +435,6 @@ const component = async props => {
      *          from_latitude:number,
      *          to_longitude:number,
      *          to_latitude:number,
-     *          class:string,
      *          color:string,
      *          width:number}} parameters
      * @returns {Promise.<void>}
@@ -591,7 +450,6 @@ const component = async props => {
                                     properties:{offsetX:offsetX, 
                                                 offsetY:offsetY,
                                                 title:parameters.title,
-                                                class: parameters.class,
                                                 color:parameters.color,
                                                 width:parameters.width},
                                     geometry:{
@@ -626,18 +484,141 @@ const component = async props => {
         updateDistance();
     };
     /**
+     * @name events
+     * @descption Events for map
+     * @function
+     * @param {commonEventType} event_type
+     * @param {CommonAppEvent} event
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.commonMiscElementId(event.target);
+        switch (event_type){
+            case 'dblclick':{
+                switch (true){
+                    case event.target.classList.contains('common_map_tile'):
+                    case event.target.classList.contains('common_map_line'):{
+                        await addPopupPos(event.clientX, event.clientY);
+                        break;
+                    }
+                }
+                break;
+                
+            }
+            case 'click':{
+                switch (true){
+                    case event_target_id=='common_map_control_zoomin':{
+                        getZoom({deltaY:-1, x:event.clientX, y:event.clientY,control:true});
+                        break;
+                    }
+                    case event_target_id=='common_map_control_zoomout':{
+                        getZoom({deltaY:1, x:event.clientX, y:event.clientY, control:true});
+                        break;
+                    }
+                    case event_target_id=='common_map_control_layer':
+                    case event_target_id=='common_map_control_search':{
+                        const expand_type = event_target_id.split('_')[3];
+                        if (props.methods.COMMON_DOCUMENT.querySelector(`#common_map_control_expand_${expand_type}`).innerHTML !='')
+                            props.methods.commonComponentRemove(`common_map_control_expand_${expand_type}`);
+                        else
+                            props.methods.commonComponentRender({
+                                mountDiv:   `common_map_control_expand_${expand_type}`,
+                                data:       {  
+                                            data_app_id:props.data.data_app_id,
+                                            expand_type:expand_type,
+                                            user_locale:props.data.user_locale,
+                                            map_layers:MAP_LAYERS
+                                            },
+                                methods:    {commonWindowFromBase64:props.methods.commonWindowFromBase64,
+                                                commonFFB:props.methods.commonFFB,
+                                                commonComponentRender:props.methods.commonComponentRender
+                                },
+                                path:       '/common/component/common_map_control_expand.js'});    
+                        
+                        break;
+                    }
+                    case event_target_id=='common_map_control_fullscreen':{
+                        if (props.methods.COMMON_DOCUMENT.fullscreenElement)
+                            props.methods.COMMON_DOCUMENT.exitFullscreen();
+                        else
+                            props.methods.COMMON_DOCUMENT.querySelector('#common_map').requestFullscreen();
+                        break;
+                    }
+                    case event_target_id=='common_map_control_my_location':{
+                        if (props.data.longitude && props.data.latitude)
+                            goTo(+props.data.longitude, +props.data.latitude);
+                        break;
+                        }
+                    case event.target.classList.contains('common_map_popup_close'):{
+                        event.target.parentNode.remove();
+                        break;
+                    }
+                    case event_target_id=='common_map_control_select_mapstyle':{
+                        setLayer(event.target?.getAttribute('data-value'));
+                        break;
+                    }
+                }
+                break;
+            }
+            case 'mousedown':{
+                switch (true){
+                    case event_target_id=='common_map_measure':
+                    case event.target.classList.contains('common_map_tile'):
+                    case event.target.classList.contains('common_map_line'):{
+                        dragging = true;
+                        startX = event.clientX - offsetX;
+                        startY = event.clientY - offsetY;
+                        break;
+                    }
+                }
+                break;
+            }
+            case 'mouseup':
+            case 'mouseleave':{
+                switch (true){
+                    case event_target_id=='common_map_measure':
+                    case event.target.classList.contains('common_map_tile'):
+                    case event.target.classList.contains('common_map_line'):{
+                        dragging = false;
+                        break;
+                    }
+                }
+                break;
+            }
+            case 'mousemove':{
+                switch (true){
+                    case event_target_id=='common_map_measure':
+                    case event.target.classList.contains('common_map_tile'):
+                    case event.target.classList.contains('common_map_line'):{
+                        if (!dragging) return;
+                        offsetX = event.clientX - startX;
+                        offsetY = event.clientY - startY;
+                        draw();
+                        break;
+                    }
+                }
+                break;
+                
+            }
+            case 'wheel':{
+                switch (true){
+                    case event_target_id=='common_map_measure':
+                    case event.target.classList.contains('common_map_tile'):
+                    case event.target.classList.contains('common_map_line'):{
+                        event.preventDefault();
+                        getZoom({deltaY:event.deltaY, x:event.clientX, y:event.clientY});
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    };
+    /**
      * @name onMounted
      * @description onMounted
      * @returns {void}
      */
     const onMounted = ()=>{
-        events('click');
-        events('dblclick');
-        events('mousedown');
-        events('mouseup');
-        events('mousemove');
-        events('mouseleave');
-        events('wheel');
         if (props.data.longitude && props.data.latitude)
             goTo(+props.data.longitude, +props.data.latitude);
     };    
@@ -645,11 +626,11 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    {
-                    events:events,
                     addLineString:addLineString,
                     goTo:goTo,
                     drawVectors
         },
+        events:     events,
         template:   template({  longitude:props.data.longitude?+props.data.longitude:null, 
                                 latitude:props.data.latitude?+props.data.latitude:null})
     };    

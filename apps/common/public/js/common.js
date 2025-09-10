@@ -3,7 +3,7 @@
  */
 
 /** @import {   COMMON_WINDOW, COMMON_DOCUMENT, CommonGlobal,
- *              CommonAppEvent,CommonRESTAPIMethod,CommonRESTAPIAuthorizationType,CommonComponentResult,
+ *              CommonAppEvent,commonEventType, CommonRESTAPIMethod,CommonRESTAPIAuthorizationType,CommonComponentResult,
  *              CommonModuleLeafletMethods,CommonModuleVue,CommonModuleReact,CommonModuleReactDOM,
  *              commonAppInit, commonMetadata, CommonModuleCommon} from '../../../common_types.js' 
  */
@@ -1127,6 +1127,65 @@ const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
         return null;
 };
 /**
+ * @name commonComponentMutationObserver
+ * @description Tracks removed elements using MutationObserver on app root
+ *              and uses Immediately Invoked Function Expression (IIFE)
+ *              so only one MutationObserver is running and always on app root
+ *              contains track() and untrack() methods
+ * @function
+ * @returns {void}
+ */
+const commonComponentMutationObserver = (() =>{
+    /**@type{Object.<string,*>} */
+    const tracked= {};
+    const observer = new MutationObserver(() => {
+                        Object.keys(tracked).forEach(div_id => {
+                            //check if removed
+                            if (!COMMON_DOCUMENT.querySelector(`#${div_id}`)) {
+                                //remove shared component including methods and events
+                                if (COMMON_GLOBAL.component[tracked[div_id].componentName])
+                                    delete COMMON_GLOBAL.component[tracked[div_id].componentName];
+                                if (tracked[div_id].onUnmounted){
+                                    tracked[div_id].onUnmounted();
+                                }
+                                //remove from tracked
+                                delete tracked[div_id];
+                            }
+                        });
+                    });
+
+    observer.observe(document.body, {
+        childList:true,
+        subtree: true
+    });
+
+    return {
+        /**
+         * @name track
+         * @description used by commonComponentRender to track components
+         * @method
+         * @param {{div:HTMLElement, componentName:string, onUnmounted:function|null|undefined}} component
+         */
+        track (component){
+            if (component.div instanceof HTMLElement)
+                tracked[component.div.id] = { componentName:component.componentName, 
+                                              onUnmounted:component.onUnmounted};
+            
+        },
+        /**
+         * @name untrack
+         * @description used by commonComponentRender to untrack components 
+         *              when component is empty
+         * @method
+         * @param {{div:HTMLElement, componentName:string, onUnmounted:function|null|undefined}} component
+         */
+        untrack (component){
+            delete tracked[component.div.id];
+        }
+        
+    };
+})();
+/**
  * @name commonComponentRender
  * @description Renders component
  *              Components use analogic Vue SFC structure
@@ -1140,19 +1199,19 @@ const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
  * @param {{mountDiv:string|null,
  *          data:{}|null,
  *          methods:{}|null,
- *          path:string}} commonComponentRender
+ *          path:string}} parameters
  * @returns {Promise.<{data:*, methods:*, template:string|null}>}
  */
-const commonComponentRender = async commonComponentRender => {    
-    const {default:ComponentCreate} = await commonMiscImport(commonComponentRender.path);
-    if (commonComponentRender.mountDiv)
-        COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`).innerHTML = '<div class=\'css_spinner\'></div>';
+const commonComponentRender = async parameters => {
+    const {default:ComponentCreate} = await commonMiscImport(parameters.path);
+    if (parameters.mountDiv)
+        COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`).innerHTML = '<div class=\'css_spinner\'></div>';
 
     /**@type{CommonComponentResult}*/
-    const component = await ComponentCreate({   data:       {...commonComponentRender.data,       ...{commonMountdiv:commonComponentRender.mountDiv}},
-                                                methods:    {...commonComponentRender.methods,    ...{COMMON_DOCUMENT:COMMON_DOCUMENT}}})
+    const component = await ComponentCreate({   data:       {...parameters.data,       ...{commonMountdiv:parameters.mountDiv}},
+                                                methods:    {...parameters.methods,    ...{COMMON_DOCUMENT:COMMON_DOCUMENT}}})
                                                 .catch((/**@type{Error}*/error)=>{
-                                                    commonComponentRender.mountDiv?commonComponentRemove(commonComponentRender.mountDiv, true):null;
+                                                    parameters.mountDiv?commonComponentRemove(parameters.mountDiv, true):null;
                                                     commonException(COMMON_GLOBAL.app_function_exception, error);
                                                     return null;
                                                 });
@@ -1163,42 +1222,72 @@ const commonComponentRender = async commonComponentRender => {
         
         //component can be mounted inside a third party component
         //and div and template can be empty in this case    
-        if (commonComponentRender.mountDiv && component.template)
+        if (parameters.mountDiv && component.template)
             switch (COMMON_GLOBAL.app_framework){
                 case 2:{
                     //Vue
-                    await commonFrameworkMount(2, component.template, {}, commonComponentRender.mountDiv, true);
+                    await commonFrameworkMount(2, component.template, {}, parameters.mountDiv, true);
                     break;
                 }
                 case 3:{
-                    await commonFrameworkMount(3, component.template, {}, commonComponentRender.mountDiv, true);
+                    await commonFrameworkMount(3, component.template, {}, parameters.mountDiv, true);
                     break;
                 }
                 case 1:
                 default:{
                     //Default Javascript
-                    COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`).innerHTML = component.template;
+                    COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`).innerHTML = component.template;
                 }
             }
-        COMMON_DOCUMENT.querySelectorAll(`#${commonComponentRender.mountDiv} link`).forEach((/**@type{HTMLElement}*/link) =>
+        //fetch resources using secure REST API if any
+        COMMON_DOCUMENT.querySelectorAll(`#${parameters.mountDiv} link`).forEach((/**@type{HTMLElement}*/link) =>
             (link.getAttribute('data-href')==''||link.getAttribute('data-href')==null)?
                 null:
                     commonMiscResourceFetch(link.getAttribute('data-href')??'', link,'text/css'));
-        if (component.lifecycle?.onUnmounted){
+        //set component name from filename without .js
+        const componentName = parameters.path.split('/').reverse()[0].split('.')[0];
+        //use Vue.createApp and data() return pattern and React.createRef() + current key pattern to share methods
+        //share methods
+        if (parameters.path.startsWith('/common/component/') && component.methods){
+            if (!COMMON_GLOBAL.component[componentName])
+                COMMON_GLOBAL.component[componentName]={};
+            COMMON_GLOBAL.component[componentName].methods = component.methods;
+        }
+        //share events to event delegation in commonEvent()
+        if (parameters.path.startsWith('/common/component/') && component.events){
+            if (!COMMON_GLOBAL.component[componentName])
+                COMMON_GLOBAL.component[componentName]={};
+            COMMON_GLOBAL.component[componentName].events = component.events;
+        }
+        //manage onUnMounted
+        if (component.lifecycle?.onUnmounted || COMMON_GLOBAL.component[componentName]){
+            /**@type{{div:HTMLElement, componentName:string, onUnmounted:function|null|undefined}} */
+            const trackObject = {
+                div:COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`),
+                componentName:componentName,
+                onUnmounted:component.lifecycle?.onUnmounted};
+
             const Unmounted = () =>{
-                                    if (!COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`) || 
-                                        COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`).textContent==''){
-                                            if (component.lifecycle?.onUnmounted){
-                                                ComponentHook.disconnect();
-                                                component.lifecycle.onUnmounted();
-                                            }
-                                        }
-                                    };
+                if (COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`).textContent==''){
+                    //remove shared component including methods and events
+                    if (COMMON_GLOBAL.component[componentName])
+                        delete COMMON_GLOBAL.component[componentName];
+                    if (component.lifecycle?.onUnmounted){
+                        ComponentHook.disconnect();
+                        component.lifecycle.onUnmounted();
+                    }
+                    //component is empty, remove tracking of removed element
+                    commonComponentMutationObserver.untrack(trackObject);
+                }
+            };
+            //track mounted div if removed
+            commonComponentMutationObserver.track(trackObject);
+            //Observe mounted div if empty
             const ComponentHook = new MutationObserver(Unmounted);
-            ComponentHook.observe(COMMON_DOCUMENT.querySelector(`#${commonComponentRender.mountDiv}`).parentNode, {attributes:true, subtree:true});
+            ComponentHook.observe(COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`), {characterData: true});
         }
 
-        //run onMounted function after component is mounted
+        //manage onMounted
         if (component.lifecycle?.onMounted){
             await component.lifecycle.onMounted();
         }
@@ -1232,7 +1321,6 @@ const commonComponentRemove = (div, remove_modal=false) => {
     }
     
 };
-
 /**
  * @name commonDialogueShow
  * @description Show common dialogue
@@ -2786,9 +2874,10 @@ const commonEventSelectAction = async (event_target_id, target) =>{
 };
 /**
  * @name commonEvent
- * @description Common events
+ * @description Central event delegation on app root
+ *              order of events: 1 common, 2 app, 3 module
  * @function
- * @param {string} event_type 
+ * @param {commonEventType} event_type 
  * @param {CommonAppEvent|null} event 
  * @returns {Promise.<void>}
  */
@@ -3418,6 +3507,11 @@ const commonEvent = async (event_type,event=null) =>{
                 break;
             }
         }    
+        //fire component events defined in each component in COMMON_GLOBAL.component[component].events key
+        Object.values(COMMON_GLOBAL.component).forEach(component=>
+            component.events?
+                component.events(event_type, event):
+                    null);
     }
     
 };
@@ -3656,7 +3750,7 @@ const commonFrameworkSet = async (framework) => {
     commonEvent('mouseup', null);
     commonEvent('mousemove', null);
     commonEvent('mouseleave', null);
-    commonEvent('wheeel', null);
+    commonEvent('wheel', null);
 
     commonEvent('touchstart', null);
     commonEvent('touchend', null);
@@ -4221,7 +4315,7 @@ export{/* GLOBALS*/
        commonSocketSSEShow, 
        commonSocketConnectOnline,
        commonSocketConnectOnlineCheck,
-       /* MICROSERVICE GEOLOCATION */
+       /* GEOLOCATION */
        commonGeolocationIP,
        commonGeolocationPlace,
        /* EVENT */
