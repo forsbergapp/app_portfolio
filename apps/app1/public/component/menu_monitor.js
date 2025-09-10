@@ -64,6 +64,7 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  *                      commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
  *                      commonLovClose:CommonModuleCommon['commonLovClose'],
  *                      commonLovShow:CommonModuleCommon['commonLovShow'],
+ *                      commonUserLocale:CommonModuleCommon['commonUserLocale'],
  *                      commonFFB:CommonModuleCommon['commonFFB']}}} props 
  * @returns {Promise.<{ lifecycle:  CommonComponentLifecycle, 
  *                      data:       null,
@@ -283,8 +284,7 @@ const component = async props => {
             data:       { 
                         data_app_id :props.data.common_app_id,
                         longitude:props.data.client_longitude,
-                        latitude:props.data.client_latitude,
-                        user_locale:props.data.user_locale
+                        latitude:props.data.client_latitude
                         },
             methods:    {
                         commonComponentRender:props.methods.commonComponentRender,
@@ -292,6 +292,7 @@ const component = async props => {
                         commonWindowFromBase64:props.methods.commonWindowFromBase64,
                         commonMiscElementRow:props.methods.commonMiscElementRow,
                         commonMiscElementId:props.methods.commonMiscElementId,
+                        commonUserLocale:props.methods.commonUserLocale,
                         commonFFB:props.methods.commonFFB
                         },
             path:       '/common/component/common_map.js'});

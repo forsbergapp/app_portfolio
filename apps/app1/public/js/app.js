@@ -134,6 +134,7 @@ const appSecureMenuShow = menu => {
                             commonMiscRoundOff:common.commonMiscRoundOff,
                             commonLovClose:common.commonLovClose,
                             commonLovShow:common.commonLovShow,
+                            commonUserLocale:common.commonUserLocale,
                             commonFFB:common.commonFFB
                             },
                 path:       '/component/menu_monitor.js'})
