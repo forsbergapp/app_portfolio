@@ -1244,6 +1244,7 @@ const commonComponentRender = async parameters => {
             (link.getAttribute('data-href')==''||link.getAttribute('data-href')==null)?
                 null:
                     commonMiscResourceFetch(link.getAttribute('data-href')??'', link,'text/css'));
+        
         //set component name from filename without .js
         const componentName = parameters.path.split('/').reverse()[0].split('.')[0];
         //use Vue.createApp and data() return pattern and React.createRef() + current key pattern to share methods
@@ -1259,14 +1260,17 @@ const commonComponentRender = async parameters => {
                 COMMON_GLOBAL.component[componentName]={};
             COMMON_GLOBAL.component[componentName].events = component.events;
         }
-        //manage onUnMounted
-        if (component.lifecycle?.onUnmounted || COMMON_GLOBAL.component[componentName]){
-            /**@type{{div:HTMLElement, componentName:string, onUnmounted:function|null|undefined}} */
-            const trackObject = {
-                div:COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`),
-                componentName:componentName,
-                onUnmounted:component.lifecycle?.onUnmounted};
-
+        /**@type{{div:HTMLElement, componentName:string, onUnmounted:function|null|undefined}} */
+        const trackObject = {
+            div:COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`),
+            componentName:componentName,
+            onUnmounted:component.lifecycle?.onUnmounted};
+        if (parameters.path.startsWith('/common/component/'))
+            //track mounted div if removed
+            commonComponentMutationObserver.track(trackObject);
+        //A component must be mounted to a div to use onUnMounted or can only be tracked on app root
+        if (parameters.mountDiv!=null && parameters.mountDiv!='' && component.lifecycle?.onUnmounted){
+            //manage onUnMounted
             const Unmounted = () =>{
                 if (COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`).textContent==''){
                     //remove shared component including methods and events
@@ -1276,21 +1280,21 @@ const commonComponentRender = async parameters => {
                         ComponentHook.disconnect();
                         component.lifecycle.onUnmounted();
                     }
-                    //component is empty, remove tracking of removed element
-                    commonComponentMutationObserver.untrack(trackObject);
+                    if (parameters.path.startsWith('/common/component/'))
+                        //component is empty, remove tracking of removed element
+                        commonComponentMutationObserver.untrack(trackObject);
                 }
             };
-            //track mounted div if removed
-            commonComponentMutationObserver.track(trackObject);
+            
             //Observe mounted div if empty
             const ComponentHook = new MutationObserver(Unmounted);
             ComponentHook.observe(COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`), {characterData: true});
         }
-
         //manage onMounted
         if (component.lifecycle?.onMounted){
             await component.lifecycle.onMounted();
         }
+        
     }
     //return data and methods from component to be used in apps
     return {data:component?component.data:null, methods:component?component.methods:null, template:component?.template??null};
