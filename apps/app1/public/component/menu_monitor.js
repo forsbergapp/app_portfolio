@@ -5,7 +5,6 @@
 
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @import {appSecureDialogueSendBroadcastShow} from '../js/app.js'
  */
 
 /**
@@ -55,7 +54,6 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  *                      client_longitude:string,
  *                      client_place:string},
  *          methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow, 
  *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
  *                      commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
  *                      commonMiscInputControl:CommonModuleCommon['commonMiscInputControl'],
@@ -66,17 +64,14 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  *                      commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
  *                      commonLovClose:CommonModuleCommon['commonLovClose'],
  *                      commonLovShow:CommonModuleCommon['commonLovShow'],
- *                      commonFFB:CommonModuleCommon['commonFFB'],
- *                      commonGeolocationIP:CommonModuleCommon['commonGeolocationIP'],
- *                      commonGeolocationPlace:CommonModuleCommon['commonGeolocationPlace']}}} props 
+ *                      commonFFB:CommonModuleCommon['commonFFB']}}} props 
  * @returns {Promise.<{ lifecycle:  CommonComponentLifecycle, 
  *                      data:       null,
  *                      methods:    {monitorShow:                monitorShow,
  *                                   monitorDetailShowLogDir:    monitorDetailShowLogDir,
  *                                   monitorDetailShowServerLog: monitorDetailShowServerLog,
  *                                   monitorDetailPage:          monitorDetailPage,
- *                                   monitorDetailClickSort:     monitorDetailClickSort,
- *                                   monitorDetailClickItem:     monitorDetailClickItem},
+ *                                   monitorDetailClickSort:     monitorDetailClickSort},
  *                      template:   string}>}
  */
 const component = async props => {
@@ -107,18 +102,7 @@ const component = async props => {
      * @returns {void}
      */
     let monitorDetailClickSortDetail = (list, sortcolumn, order_by) => {list;sortcolumn;order_by;};
-    /**
-     * List item click
-     * @param {string} item_type 
-     * @param {{ip:string,
-     *          latitude:string,
-     *          longitude:string,
-     *          id:number}} data 
-     * @returns {void}
-     */
-    let monitorDetailClickItemDetail = (item_type, data) => {item_type;data;};
-
-       
+    
     /**
      * Get log parameters
      * @returns {Promise.<{ parameters:{ 
@@ -179,7 +163,6 @@ const component = async props => {
                         },
             methods:    {
                         monitorShow:monitorShow,
-                        appSecureDialogueSendBroadcastShow:props.methods.appSecureDialogueSendBroadcastShow,
                         commonMiscElementRow:props.methods.commonMiscElementRow,
                         commonLovClose:props.methods.commonLovClose,
                         commonLovShow:props.methods.commonLovShow,
@@ -187,9 +170,7 @@ const component = async props => {
                         commonComponentRender:props.methods.commonComponentRender,
                         commonWindowUserAgentPlatform:props.methods.commonWindowUserAgentPlatform,
                         commonMiscRoundOff:props.methods.commonMiscRoundOff,
-                        commonFFB:props.methods.commonFFB,
-                        commonGeolocationIP:props.methods.commonGeolocationIP,
-                        commonGeolocationPlace:props.methods.commonGeolocationPlace
+                        commonFFB:props.methods.commonFFB
                         },
             path:       '/component/menu_monitor_detail.js'})
             .then(result=>{
@@ -197,7 +178,6 @@ const component = async props => {
                 monitorDetailShowServerLogDetail = result.methods.monitorDetailShowServerLog;
                 monitorDetailShowLogDirDetail = result.methods.monitorDetailShowLogDir;
                 monitorDetailClickSortDetail = result.methods.monitorDetailClickSort;
-                monitorDetailClickItemDetail = result.methods.monitorDetailClickItem;
  
             });
     };
@@ -229,17 +209,7 @@ const component = async props => {
      * @param {string} order_by 
      * @returns {void}
      */    
-    const monitorDetailClickSort = (list, sortcolumn, order_by) => monitorDetailClickSortDetail(list, sortcolumn, order_by);
-    /**
-     * List item click
-     * @param {string} item_type 
-     * @param {{ip:string,
-    *          latitude:string,
-    *          longitude:string,
-    *          id:number}} data 
-    * @returns {void}
-    */
-    const monitorDetailClickItem = (item_type, data) => monitorDetailClickItemDetail(item_type, data);
+    const monitorDetailClickSort = (list, sortcolumn, order_by) => monitorDetailClickSortDetail(list, sortcolumn, order_by);    
 
     const onMounted = async () =>{
         //mount select
@@ -335,8 +305,7 @@ const component = async props => {
                         monitorDetailShowLogDir:    monitorDetailShowLogDir,
                         monitorDetailShowServerLog: monitorDetailShowServerLog,
                         monitorDetailPage:          monitorDetailPage,
-                        monitorDetailClickSort:     monitorDetailClickSort,
-                        monitorDetailClickItem:     monitorDetailClickItem
+                        monitorDetailClickSort:     monitorDetailClickSort
                     },
         template:   template()
     };

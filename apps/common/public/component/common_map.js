@@ -4,7 +4,7 @@
 
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle, CommonAppEvent,commonEventType,
- *          commonMapLayers, commonGeoJSONPopup, commonGeoJSONPolyline}  from '../../../common_types.js'
+ *          commonMapLayers, commonGeoJSONPopup, commonGeoJSONPolyline, commonMapPlace}  from '../../../common_types.js'
  */
 
 /**
@@ -219,38 +219,24 @@ const component = async props => {
      * @name addPopup
      * @description Add geoJSON type Point with a popup and geolocation data for given lat, long,x and y
      * @function
-     * @param {{lat: number, long:number, x:number, y:number}} parameters
+     * @param {{place:commonMapPlace, x:number, y:number}} parameters
      * @returns {Promise.<void>}
      */
     const addPopup = async parameters =>{
-        /**
-         * @type{{place:       string,
-         *        countryCode: string,
-         *        region:      string,
-         *        country:     string,
-         *        latitude:    string,
-         *        longitude:   string,
-         *        timezone:    string}}
-         */
-        const place = await props.methods.commonFFB({
-                            path:'/geolocation/place', 
-                            query:`longitude=${parameters.long}&latitude=${parameters.lat}`, 
-                            method:'GET', 
-                            authorization_type:'APP_ID'}).then(result=>JSON.parse(result).rows);
         /**@type{commonGeoJSONPopup} */
         const geoJSON = {   id:  'common_map_point_popup_' + Date.now(),
             type:'Feature',
             properties:{x:parameters.x, 
                         y:parameters.y,
-                        countrycode:place.countryCode,
-                        country:place.country,
-                        region:place.region,
-                        city:place.place,
-                        timezone_text:place.timezone
+                        countrycode:parameters.place.countryCode,
+                        country:parameters.place.country,
+                        region:parameters.place.region,
+                        city:parameters.place.place,
+                        timezone_text:parameters.place.timezone
                         },
             geometry:{
                         type:'Point',
-                        coordinates:[[parameters.lat, parameters.long]]
+                        coordinates:[[+parameters.place.latitude, +parameters.place.longitude]]
                     }
             };
         await props.methods.commonComponentRender({
@@ -263,7 +249,18 @@ const component = async props => {
             //Add to existing component
             .then(component=>props.methods.COMMON_DOCUMENT.querySelector('#common_map_popups').innerHTML += component.template);
     };
-    
+    /**
+     * @description get place for gps
+     * @param {{longitude:number,
+     *          latitude:number}} parameters
+     * @returns {Promise.<commonMapPlace>}
+     */
+    const getPlace = async parameters =>
+        await props.methods.commonFFB({
+            path:'/geolocation/place', 
+            query:`longitude=${parameters.longitude}&latitude=${parameters.latitude}`, 
+            method:'GET', 
+            authorization_type:'APP_ID'}).then(result=>JSON.parse(result).rows);
     /**
      * @name addPopupPos
      * @description Adds a popup for given x and y
@@ -275,7 +272,7 @@ const component = async props => {
     const addPopupPos =  async (x, y) =>{
         const gps = getGPS(x,y);
         const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
-        addPopup({long:gps.long, lat:gps.lat, x:x- rect.left, y:y-rect.top});
+        addPopup({place:await getPlace({longitude:gps.long, latitude:gps.lat}), x:x- rect.left, y:y-rect.top});
     };
     
     /**
@@ -397,7 +394,6 @@ const component = async props => {
                             (rect.height / 2):
                                 (parameters.y - rect.top);
                                 
-    
         // World coordinates before zoom
         const worldXBefore = (mouseX - offsetX);
         const worldYBefore = (mouseY - offsetY);
@@ -441,7 +437,6 @@ const component = async props => {
      */
     const addLineString = parameters =>
         //text size, color, size and width should be in CSS
-        
         props.methods.commonComponentRender({
             mountDiv:   null,
             data:       {  
@@ -463,25 +458,43 @@ const component = async props => {
             path:       '/common/component/common_map_line.js'})
             //Add to existing component
             .then(component=>props.methods.COMMON_DOCUMENT.querySelector('#common_map_lines').innerHTML += component.template);
-
+    
     /**
      * @name goTo
      * @description Go to given gps and display popup
      * @function
-     * @param {number} longitude
-     * @param {number} latitude
+     * @param {{ip:string|null,
+     *          longitude:string|null,
+     *          latitude:string|null}} parameters
      * @returns {Promise.<void>}
      */
-    const goTo = async (longitude, latitude) =>{
-        setZoom(ZOOM_LEVEL_GOTO);
-        const [wx, wy] = project(longitude, latitude);
-        const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
-        offsetX = ((window.innerWidth-rect.left) / 2) - wx -100;
-        offsetY = ((window.innerHeight-rect.top) / 2) - wy;
-        draw();
-        if (getPopup(longitude, latitude).length==0)
-            await addPopup({long:longitude, lat:latitude, x:wx+offsetX, y:wy+offsetY});
-        updateDistance();
+    const goTo = async parameters =>{
+        /** @type{commonMapPlace}*/
+        const place =  parameters.ip?
+                            await props.methods.commonFFB({ path:'/geolocation/ip', 
+                                                            query:`ip=${parameters.ip}`, 
+                                                            method:'GET', 
+                                                            authorization_type:'APP_ID'})
+                            .then(result=>JSON.parse(result).rows):
+                                (parameters.longitude!='' && parameters.latitude!='' &&
+                                 parameters.longitude!=null && parameters.latitude!=null
+                                )?
+                                    await getPlace({longitude:+parameters.longitude, 
+                                                    latitude:+parameters.latitude}):
+                                        null;
+        const longitude =   place?+place.longitude:parameters.longitude;
+        const latitude  =   place?+place.latitude:parameters.latitude;
+        if (longitude && latitude){
+            setZoom(ZOOM_LEVEL_GOTO);
+            const [wx, wy] = project(+longitude, +latitude);
+            const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
+            offsetX = ((window.innerWidth-rect.left) / 2) - wx -100;
+            offsetY = ((window.innerHeight-rect.top) / 2) - wy;
+            draw();
+            if (getPopup(+longitude, +latitude).length==0)
+                await addPopup({place:place, x:wx+offsetX, y:wy+offsetY});
+            updateDistance();
+        }
     };
     /**
      * @name events
@@ -545,7 +558,9 @@ const component = async props => {
                     }
                     case event_target_id=='common_map_control_my_location':{
                         if (props.data.longitude && props.data.latitude)
-                            goTo(+props.data.longitude, +props.data.latitude);
+                            goTo({  ip:null, 
+                                    longitude:+props.data.longitude, 
+                                    latitude:+props.data.latitude});
                         break;
                         }
                     case event.target.classList.contains('common_map_popup_close'):{
@@ -620,7 +635,9 @@ const component = async props => {
      */
     const onMounted = ()=>{
         if (props.data.longitude && props.data.latitude)
-            goTo(+props.data.longitude, +props.data.latitude);
+            goTo({  ip:null,
+                    longitude:+props.data.longitude, 
+                    latitude:+props.data.latitude});
     };    
     return {
         lifecycle:  {onMounted:onMounted},
