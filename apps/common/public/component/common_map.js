@@ -61,8 +61,8 @@ const template = props =>`
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:   null,
 *                      methods:{
-*                               addLineString:function,
 *                               goTo:function,
+*                               addLineString:function,
 *                               drawVectors:function
 *                              },
 *                      events:  function       
@@ -157,7 +157,7 @@ const component = async props => {
     };
     /**
      * @name drawVectors
-     * @description Draw layer vectors
+     * @description Adds array of geoJSON type Linestring
      * @function
      * @param {commonGeoJSONPolyline[]}vectorLinesgeoJSON
      * @returns {Promise.<void>}
@@ -174,7 +174,7 @@ const component = async props => {
                                         type:'Feature',
                                         properties:{offsetX:offsetX, 
                                                     offsetY:offsetY,
-                                                    title:'Vector',
+                                                    title:line.properties.title,
                                                     color:line.properties.color,
                                                     width:line.properties.width},
                                         geometry:{
@@ -424,7 +424,7 @@ const component = async props => {
     };
     /**
      * @name add LineString
-     * @description Adds geoJSON type Linestring
+     * @description Adds one Linestring that sends geoJSON to drawVectors()
      * @function
      * @param {{title:string,
      *          from_longitude:number,
@@ -436,29 +436,19 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const addLineString = parameters =>
-        //text size, color, size and width should be in CSS
-        props.methods.commonComponentRender({
-            mountDiv:   null,
-            data:       {  
-                        geoJSON:{   id:  'Linestring_' + Date.now(),
-                                    type:'Feature',
-                                    properties:{offsetX:offsetX, 
-                                                offsetY:offsetY,
-                                                title:parameters.title,
-                                                color:parameters.color,
-                                                width:parameters.width},
-                                    geometry:{
-                                                type:'Linestring',
-                                                coordinates:[   [parameters.from_longitude, parameters.from_latitude],
-                                                                [parameters.to_longitude, parameters.to_latitude]]
-                                            }
-                                    }
-                        },
-            methods:    null,
-            path:       '/common/component/common_map_line.js'})
-            //Add to existing component
-            .then(component=>props.methods.COMMON_DOCUMENT.querySelector('#common_map_lines').innerHTML += component.template);
-    
+        drawVectors([{  id:  'common_map_linestring_' + Date.now(),
+                        type:'Feature',
+                        properties:{offsetX:offsetX, 
+                                    offsetY:offsetY,
+                                    title:parameters.title,
+                                    color:parameters.color,
+                                    width:parameters.width},
+                        geometry:{
+                                    type:'LineString',
+                                    coordinates:[   [parameters.from_longitude, parameters.from_latitude],
+                                                    [parameters.to_longitude, parameters.to_latitude]]
+                                }
+                    }]);
     /**
      * @name goTo
      * @description Go to given gps and display popup
@@ -648,9 +638,9 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    {
-                    addLineString:addLineString,
                     goTo:goTo,
-                    drawVectors
+                    addLineString:addLineString,
+                    drawVectors:drawVectors
         },
         events:     events,
         template:   template({  longitude:props.data.longitude?+props.data.longitude:null, 
