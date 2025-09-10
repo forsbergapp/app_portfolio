@@ -382,6 +382,17 @@
 *          }} commonGeoJSONTile
 */
 /**
+ * @description commonMapPlace
+ * @typedef {{  place:       string,
+ *              countryCode: string,
+ *              region:      string,
+ *              country:     string,
+ *              latitude:    string,
+ *              longitude:   string,
+ *              timezone:    string}} commonMapPlace
+ */
+
+/**
  * @description commonMapLayers
  * @typedef {{  title:string,
  *              value:string,
