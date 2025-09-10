@@ -17,8 +17,7 @@ let common;
  *                                     monitorDetailShowLogDir:    function,
  *                                     monitorDetailShowServerLog: function,
  *                                     monitorDetailPage:          function,
- *                                     monitorDetailClickSort:     function,
- *                                     monitorDetailClickItem:     function
+ *                                     monitorDetailClickSort:     function
  *                                  },
  *                      MENU_REPORT:{  updateMetadata:             function, 
  *                                     reportRun:                  function, 
@@ -33,8 +32,7 @@ const APP_SECURE_GLOBAL = {
                                 monitorDetailShowLogDir:    ()=>null,
                                 monitorDetailShowServerLog: ()=>null,
                                 monitorDetailPage:          ()=>null,
-                                monitorDetailClickSort:     ()=>null,
-                                monitorDetailClickItem:     ()=>null
+                                monitorDetailClickSort:     ()=>null
                             },
                 MENU_REPORT : { updateMetadata:             ()=>null,
                                 reportRun:                  ()=>null,
@@ -57,8 +55,7 @@ const appSecureGlobalDelete = () => {
                                                     monitorDetailShowLogDir:    ()=>null,
                                                     monitorDetailShowServerLog: ()=>null,
                                                     monitorDetailPage:          ()=>null,
-                                                    monitorDetailClickSort:     ()=>null,
-                                                    monitorDetailClickItem:     ()=>null
+                                                    monitorDetailClickSort:     ()=>null
                                                 },
                                     MENU_REPORT: {  updateMetadata:             ()=>null,
                                                     reportRun:                  ()=>null,
@@ -127,7 +124,6 @@ const appSecureMenuShow = menu => {
                             client_place:common.COMMON_GLOBAL.client_place
                             },
                 methods:    {
-                            appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow,
                             commonMiscElementRow:common.commonMiscElementRow,
                             commonMiscElementId:common.commonMiscElementId,
                             commonMiscInputControl:common.commonMiscInputControl,
@@ -138,9 +134,7 @@ const appSecureMenuShow = menu => {
                             commonMiscRoundOff:common.commonMiscRoundOff,
                             commonLovClose:common.commonLovClose,
                             commonLovShow:common.commonLovShow,
-                            commonFFB:common.commonFFB,
-                            commonGeolocationIP:common.commonGeolocationIP,
-                            commonGeolocationPlace:common.commonGeolocationPlace
+                            commonFFB:common.commonFFB
                             },
                 path:       '/component/menu_monitor.js'})
             .then(result=>{
@@ -775,23 +769,18 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     break;
                 }
                 case event.target.classList.contains('gps_click')?event_target_id:'':{
-                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailClickItem('GPS',
-                                    {
-                                        latitude:   event.target.getAttribute('data-latitude') ?? '',
-                                        longitude:  event.target.getAttribute('data-longitude') ?? '',
-                                        ip:         event.target.getAttribute('data-ip') ?? '',
-                                        id:         0
-                                    });
+                    common.COMMON_GLOBAL.component.common_map?.methods?.goTo?
+                        common.COMMON_GLOBAL.component.common_map.methods.goTo({
+                            latitude:   event.target.getAttribute('data-latitude') ?? '',
+                            longitude:  event.target.getAttribute('data-longitude') ?? '',
+                            ip:         event.target.getAttribute('data-ip') ?? ''
+                        }):
+                        null;
+                    
                     break;
                 }
                 case event.target.classList.contains('chat_click')?event_target_id:'':{
-                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailClickItem('CHAT', 
-                                    {   
-                                        latitude:'',
-                                        longitude:'',
-                                        ip:'',
-                                        id: Number(event.target.getAttribute('data-id'))
-                                    });
+                    appSecureDialogueSendBroadcastShow('CHAT', Number(event.target.getAttribute('data-id')));
                     break;
                 }
                 case 'dialogue_send_broadcast_send':{
@@ -1117,5 +1106,5 @@ const appMetadata = () =>{
         lifeCycle:{onMounted:null}
     };
 };
-export { appCommonInit, appSecureDialogueSendBroadcastShow, appMetadata }; 
+export { appCommonInit, appMetadata }; 
 export default appCommonInit;
