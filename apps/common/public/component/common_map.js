@@ -47,8 +47,7 @@ const template = props =>`
 *                      commonMountdiv:string,
 *                      data_app_id:number,
 *                      longitude:number|null,
-*                      latitude:number|null,
-*                      user_locale:string},
+*                      latitude:number|null},
 *          methods:    {
 *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
 *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
@@ -56,6 +55,7 @@ const template = props =>`
 *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
 *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
 *                      commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
+*                      commonUserLocale:CommonModuleCommon['commonUserLocale'],
 *                      commonFFB:CommonModuleCommon['commonFFB']
 *                      }}} props
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -533,13 +533,16 @@ const component = async props => {
                                 data:       {  
                                             data_app_id:props.data.data_app_id,
                                             expand_type:expand_type,
-                                            user_locale:props.data.user_locale,
                                             map_layers:MAP_LAYERS
                                             },
-                                methods:    {commonWindowFromBase64:props.methods.commonWindowFromBase64,
-                                                commonFFB:props.methods.commonFFB,
-                                                commonComponentRender:props.methods.commonComponentRender
-                                },
+                                methods:    {
+                                            goTo:goTo,
+                                            commonWindowFromBase64:props.methods.commonWindowFromBase64,
+                                            commonUserLocale:props.methods.commonUserLocale,
+                                            commonFFB:props.methods.commonFFB,
+                                            commonMiscElementId:props.methods.commonMiscElementId,
+                                            commonComponentRender:props.methods.commonComponentRender
+                                            },
                                 path:       '/common/component/common_map_control_expand.js'});    
                         
                         break;

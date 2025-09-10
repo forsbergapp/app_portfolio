@@ -511,7 +511,7 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 #common_map_control_zoomout::before{						                    content:var(--common_app_icon_zoomout)}
 #common_map_control_zoomin::before{							                    content:var(--common_app_icon_zoomin)}
 #common_map_control_search::before{					                            content:var(--common_app_icon_search)}
-#common_map_control_search_icon::before{								        content:var(--common_app_icon_search)}
+#common_map_control_expand_search_icon::before{								    content:var(--common_app_icon_search)}
 #common_map_control_fullscreen::before{					                        content:var(--common_app_icon_fullscreen)}
 #common_map_control_my_location::before{					                    content:var(--common_app_icon_map_my_location)}
 #common_map_control_layer::before{					                            content:var(--common_app_icon_map_layer)}
@@ -2077,27 +2077,24 @@ body.rtl{
     top: 60px;
     background-color: white;
 }
-#common_map_control_select_country, #common_map_control_select_city, #common_map_control_select_mapstyle{
+#common_map_control_expand_select_country, #common_map_control_expand_select_city, 
+#common_map_control_select_mapstyle{
 	width:95%;
 	line-height: 1.5em;
 }
-#common_map_control_input_row{
-	position: fixed;
-	margin-inline-start: calc(50% - 140px);
-}
-#common_map_control_search_input{
+#common_map_control_expand_search_input{
 	width:90% !important;
 }
-#common_map_control_search_icon{
+#common_map_control_expand_search_icon{
 	display: inline-block;
 	cursor: pointer;
 }
-#common_map_control_search_list_wrap{
+#common_map_control_expand_search_list_wrap{
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 }
-#common_map_control_search_list{
+#common_map_control_expand_search_list{
 	margin-inline-start: 10px;
 	overflow-y: auto;
     overflow-x: hidden;
@@ -2105,24 +2102,24 @@ body.rtl{
 	display:inline-block;
 	line-height: unset !important;
 }
-#common_map_control_search_list .common_link {
+#common_map_control_expand_search_list .common_link {
 	width: unset;
 	text-align: unset;
 	background-color:unset;
 }
-.common_map_control_search_list_row{
+.common_map_control_expand_search_list_row{
 	text-align: start;
 	display: inline-block;
   	width: 100%;
 }
-.common_map_control_search_list_col{
+.common_map_control_expand_search_list_col{
 	display:block;
 	width: calc(100% - 2px);
 	height: 2em;
 }
-.common_map_control_search_list_col:nth-child(1),
-.common_map_control_search_list_col:nth-child(4),
-.common_map_control_search_list_col:nth-child(5){
+.common_map_control_expand_search_list_col:nth-child(1),
+.common_map_control_expand_search_list_col:nth-child(4),
+.common_map_control_expand_search_list_col:nth-child(5){
 	display: none !important;
 }
 

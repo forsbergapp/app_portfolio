@@ -2270,7 +2270,13 @@ const commonUserUpdateAvatar = (login, avatar) =>{
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_message_count_text').textContent = '';
     }
 };
-
+/**
+ * @name commonUserLocale
+ * @description get user locale
+ * @function
+ * @returns {string}
+ */
+const commonUserLocale =() =>COMMON_GLOBAL.user_locale;
 
 /**
  * @name commonUserPreferenceSave
@@ -4115,6 +4121,7 @@ const commonGet = () =>{
         commonUserAuthenticateCode:commonUserAuthenticateCode,
         commonUserMessageShowStat:commonUserMessageShowStat,
         commonUserUpdateAvatar:commonUserUpdateAvatar,
+        commonUserLocale:commonUserLocale,
         /* MODULE LEAFLET  */
         commonModuleLeafletInit:commonModuleLeafletInit, 
         /* FFB */
@@ -4286,6 +4293,7 @@ export{/* GLOBALS*/
        commonUserAuthenticateCode,
        commonUserMessageShowStat,
        commonUserUpdateAvatar,
+       commonUserLocale,
        /* MODULE LEAFLET  */
        commonModuleLeafletInit, 
        /* FFB */
