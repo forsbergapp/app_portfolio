@@ -3,12 +3,44 @@
  */
 
 /**
- * @import {server_db_document_ConfigServer, server_server_response} from '../../../../server/types.js'
+ * @import {server_db_document_ConfigServer, server_server_response,
+ *          server_geolocation_place} from '../../../../server/types.js'
  */
 const {formatLocale} = await import('./common_locale.js');
 const {getData} = await import('./common_data.js');
 const {server} = await import('../../../../server/server.js');
 const { getTimezone } = await import ('../../public/modules/regional/regional.js');
+
+/**
+ * @description Returns place in common format
+ * @param {{locale:string,
+ *          place:string}} parameters
+ * @returns {server_server_response & {result?:server_geolocation_place}}
+ */
+const returnPlace = parameters =>{
+    if (parameters.place)
+        return {result:{place:parameters.place.split(';')[2],
+                countryCode:parameters.place.split(';')[0],
+                country:getData('COUNTRY')
+                            .filter((/**@type {{locale:string,
+                                                countries:[key:string]}}*/row)=>
+                                    row.locale == formatLocale(parameters.locale))[0].countries[parameters.place.split(';')[0]],
+                region:     parameters.place.split(';')[1],
+                latitude:   parameters.place.split(';')[3],
+                longitude:  parameters.place.split(';')[4],
+                timezone:   getTimezone(parameters.place.split(';')[3], 
+                                        parameters.place.split(';')[4])},
+                type: 'JSON'}; 
+    else
+        return {result:{place:'?',
+                        countryCode:'?',
+                        country:'?',
+                        region:'?',
+                        latitude:'?',
+                        longitude:'?',
+                        timezone:   '?'}, 
+                type:'JSON'};
+};
 /**
  * @name getIP
  * @description Server function for geolocation IP
@@ -17,10 +49,7 @@ const { getTimezone } = await import ('../../public/modules/regional/regional.js
  *          data:{  ip:string},
  *          ip:string,
  *          locale:string}} parameters
- * @returns {server_server_response & {result?:{latitude:    string,
- *                                              longitude:   string,
- *                                              place :      string,
- *                                              timezone:    string}|null}}
+ * @returns {server_server_response & {result?:server_geolocation_place|null}}
  */
 const getIP = parameters =>{
     /**
@@ -63,20 +92,13 @@ const getIP = parameters =>{
                             row.split(';')[3] == lat &&
                             row.split(';')[4] == long
                         )[0];
-        return {result:{latitude:   geolocation_ip.split(';')[2],
-                        longitude:  geolocation_ip.split(';')[3],
-                        place :     place?.split(';')[2] + ', ' +
-                                    place?.split(';')[1] + ', ' +
-                                    getData('COUNTRY')
-                                    .filter((/**@type {{locale:string,
-                                                        countries:[key:string]}}*/row)=>
-                                            row.locale == formatLocale(parameters.locale))[0].countries[place.split(';')[0]],
-                        timezone:   getTimezone(geolocation_ip.split(';')[2], 
-                                                geolocation_ip.split(';')[3])},
-                type:'JSON'};
+                        
+
+        return returnPlace({locale:parameters.locale,
+                                    place:place});
     }
     else
-            return {result:null, type:'JSON'};
+        return {result:null, type:'JSON'};
 };
 /**
  * @name getPlace
@@ -89,13 +111,7 @@ const getIP = parameters =>{
  *                  longitude:string},
  *          ip:string,
  *          locale:string}} parameters
- * @returns {server_server_response & {result?:{place:      string,
- *                                              countryCode:string,
- *                                              country:    string,
- *                                              region:     string,
- *                                              latitude:   string,
- *                                              longitude:  string,
- *                                              timezone:   string}|null}}
+ * @returns {server_server_response & {result?:server_geolocation_place}}
  */
 const getPlace = parameters =>{
    /**
@@ -140,26 +156,8 @@ const getPlace = parameters =>{
         getData('GEOLOCATION_PLACE')[parameters.data.latitude.split('.')[0]].filter((/**@type{string}*/row)=>
             check_aprox(row.split(';')[3], parameters.data.latitude, 0.9) && 
             check_aprox(row.split(';')[4], parameters.data.longitude, 0.9))[0];
-    if (geolocation_place)
-        return {result:{place:geolocation_place.split(';')[2],
-                        countryCode:geolocation_place.split(';')[0],
-                        country:getData('COUNTRY')
-                                    .filter((/**@type {{locale:string,
-                                                        countries:[key:string]}}*/row)=>
-                                            row.locale == formatLocale(parameters.locale))[0].countries[geolocation_place.split(';')[0]],
-                        region:geolocation_place.split(';')[1],
-                        latitude:geolocation_place.split(';')[3],
-                        longitude:geolocation_place.split(';')[4],
-                        timezone:   getTimezone(geolocation_place.split(';')[3], 
-                                                geolocation_place.split(';')[4])},
-                type:'JSON'};
-    else
-        return {result:{place:'?',
-                countryCode:'?',
-                country:'?',
-                region:'?',
-                latitude:'?',
-                longitude:'?',
-                timezone:   '?'}, type:'JSON'};
+    return returnPlace({locale:parameters.locale,
+                                place:geolocation_place});
+        
 };
 export {getIP, getPlace};
