@@ -136,7 +136,7 @@ const component = async props => {
                 await props.methods.commonComponentRender({
                     mountDiv:   null,
                     data:       {  
-                                geoJSON:{   id:  'common_map_point_tile_' + Date.now(),
+                                geoJSON:{   id:  'common_map_tiles_point_' + Date.now(),
                                             type:'Feature',
                                             properties:{left:       x * TILE_SIZE + offsetX,
                                                         top:        y * TILE_SIZE + offsetY,
@@ -227,7 +227,7 @@ const component = async props => {
      */
     const addPopup = async parameters =>{
         /**@type{commonGeoJSONPopup} */
-        const geoJSON = {   id:  'common_map_point_popup_' + Date.now(),
+        const geoJSON = {   id:  'common_map_popups_point_' + Date.now(),
             type:'Feature',
             properties:{x:parameters.x, 
                         y:parameters.y,
@@ -512,9 +512,15 @@ const component = async props => {
                     case event_target_id=='common_map_control_layer':
                     case event_target_id=='common_map_control_search':{
                         const expand_type = event_target_id.split('_')[3];
-                        if (props.methods.COMMON_DOCUMENT.querySelector(`#common_map_control_expand_${expand_type}`).innerHTML !='')
-                            props.methods.commonComponentRemove(`common_map_control_expand_${expand_type}`);
-                        else
+                        const expand = props.methods.COMMON_DOCUMENT
+                                        .querySelector(`#common_map_control_expand_${expand_type}`)
+                                        .innerHTML =='';
+                        if (props.methods.COMMON_DOCUMENT.querySelector('#common_map_control_expand_search').innerHTML !='' ||
+                            props.methods.COMMON_DOCUMENT.querySelector('#common_map_control_expand_layer').innerHTML !=''){
+                            props.methods.commonComponentRemove('common_map_control_expand_search');
+                            props.methods.commonComponentRemove('common_map_control_expand_layer');
+                        }
+                        if (expand)
                             props.methods.commonComponentRender({
                                 mountDiv:   `common_map_control_expand_${expand_type}`,
                                 data:       {  
@@ -524,6 +530,7 @@ const component = async props => {
                                             },
                                 methods:    {
                                             goTo:goTo,
+                                            setLayer:setLayer,
                                             commonWindowFromBase64:props.methods.commonWindowFromBase64,
                                             commonMiscListKeyEvent:props.methods.commonMiscListKeyEvent,
                                             commonUserLocale:props.methods.commonUserLocale,
@@ -570,10 +577,6 @@ const component = async props => {
                     }
                     case event.target.classList.contains('common_map_popup_close'):{
                         event.target.parentNode.remove();
-                        break;
-                    }
-                    case event_target_id=='common_map_control_select_mapstyle':{
-                        setLayer(event.target?.getAttribute('data-value'));
                         break;
                     }
                 }
