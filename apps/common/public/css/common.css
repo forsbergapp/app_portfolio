@@ -646,7 +646,7 @@ body.rtl{
 	width: calc(100% - 25px);
 	min-height: 1em;
 	overflow: hidden;
-	line-height: 1em;
+	line-height: 1.25em;
 }
 .common_select_dropdown_icon::after{
 	content: var(--common_app_icon_select);
@@ -2053,14 +2053,13 @@ body.rtl{
     position:absolute;
     top:0.5em;
     margin-inline-start:0.5em;
-    background-color:white;
 }
 .common_map_control_button {
 	text-align: center;
-	height: 30px;
-	width: 30px;
+	height: 2.5em;
+	width: 2.5em;
 	display: block;
-	line-height: 30px;
+	line-height: 2.5em;
 	cursor:var(--common_app_icon_arrow_pointer);
 	padding-top: unset;
     padding-bottom: unset;
@@ -2068,22 +2067,23 @@ body.rtl{
 .common_map_control_expand{
     width: 0;
 	position: absolute;
-	inset-inline-start: 30px;
+	inset-inline-start: 2.5em;
     transition: width 0.5s ease;
 }
 .common_map_control_expand:not(:empty){
     width: 60vw;
 }
 #common_map_control_expand_layer{
-	bottom: 30px;
+	bottom: 2.5em;
     background-color: white;
 }
 #common_map_control_expand_search{
-    top: 60px;
+    top: 5em;
     background-color: white;
 }
-#common_map_control_expand_select_country, #common_map_control_expand_select_city, 
-#common_map_control_select_mapstyle{
+#common_map_control_expand_select_country, 
+#common_map_control_expand_select_city,
+#common_map_control_expand_select_mapstyle{
 	width:95%;
 	line-height: 1.5em;
 }

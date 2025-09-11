@@ -1411,14 +1411,17 @@ body{
 .common_input_error{
 	border: 2px solid var(--app_theme_input_error_color) !important;
 }
-.common_module_leaflet_control_button,
-.leaflet-control-zoom-in, 
-.leaflet-control-zoom-out{
+.common_map_control_expand{
+	background-color: var(--app_theme_main_branding_color2) !important;
+}
+.common_map_control_button{
 	background-color: var(--app_theme_main_branding_color2);
 }
-.common_module_leaflet_control_expand{
-	background-color: var(--app_theme_main_branding_color2);
+.common_map_popup{
+	background-color: var(--app_theme_dialogue_background_color) !important;
+	color: var(--app_theme_text_color) !important;
 }
-#common_module_leaflet_search_list_wrap{
-	background-color: var(--app_theme_dialogue_background_color);
+.common_map_control_expand_search_list_row:hover,
+.common_map_control_expand_search_list_row:active {
+	background-color: var(--common_app_color_white3);
 }
