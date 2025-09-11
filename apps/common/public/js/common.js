@@ -44,7 +44,6 @@ const COMMON_GLOBAL = {
     app_requesttimeout_admin_minutes:60,
     app_typewatch:[],
     app_metadata:{  events:{click:null,
-                            dblclick:null,
                             change:null,
                             keydown:null,
                             keyup:null,
@@ -3925,7 +3924,6 @@ const commonMountApp = async (app_id) =>{
     const appdata = appMetadata();
     //add metadata using tree shaking pattern
     COMMON_GLOBAL.app_metadata.events.change = appdata.events.change;
-    COMMON_GLOBAL.app_metadata.events.dblclick = appdata.events.dblclick;
     COMMON_GLOBAL.app_metadata.events.click = appdata.events.click;
     COMMON_GLOBAL.app_metadata.events.focus = appdata.events.focus;
     COMMON_GLOBAL.app_metadata.events.input = appdata.events.input;

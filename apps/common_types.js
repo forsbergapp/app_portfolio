@@ -314,7 +314,6 @@
 /**
  * @description commonEventType
  * @typedef {   'click'|
- *              'dblclick'|
  *              'change'|
  *              'keydown'|
  *              'keyup'|

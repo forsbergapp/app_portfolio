@@ -33,9 +33,11 @@ const template = props =>`
                                         <div id='common_map_control_layer' class='common_map_control_button common_icon'></div>
                                         <div id='common_map_control_expand_layer' class='common_map_control_expand'></div>
                                     </div>
+                                    <div id='common_map_control_query' class='common_map_control_button common_icon'></div>
                                 </div>
+                                <div id='common_map_cursor' class='common_icon'></div>
                                 <div id='common_map_measure'></div>
-                                <div id='common_map_tiles' style='position:absolute;top:0;left:0;'></div>
+                                <div id='common_map_tiles'></div>
                                 <svg id='common_map_lines'></svg>
                                 <div id='common_map_popups'></div>
                             </div>`;
@@ -497,17 +499,6 @@ const component = async props => {
     const events = async (event_type, event) =>{
         const event_target_id = props.methods.commonMiscElementId(event.target);
         switch (event_type){
-            case 'dblclick':{
-                switch (true){
-                    case event.target.classList.contains('common_map_tile'):
-                    case event.target.classList.contains('common_map_line'):{
-                        await addPopupPos(event.clientX, event.clientY);
-                        break;
-                    }
-                }
-                break;
-                
-            }
             case 'click':{
                 switch (true){
                     case event_target_id=='common_map_control_zoomin':{
@@ -559,6 +550,24 @@ const component = async props => {
                                     latitude:+props.data.latitude});
                         break;
                         }
+                    case event_target_id=='common_map_control_query':{
+                        //update button
+                        event.target.classList.contains('common_map_control_active')?
+                            event.target.classList.remove('common_map_control_active'):
+                                event.target.classList.add('common_map_control_active');
+                        //add or remove class on map to change cursor
+                        props.methods.COMMON_DOCUMENT.querySelector('#common_map').classList.contains('common_map_control_active')?
+                            props.methods.COMMON_DOCUMENT.querySelector('#common_map').classList.remove('common_map_control_active'):
+                                props.methods.COMMON_DOCUMENT.querySelector('#common_map').classList.add('common_map_control_active');
+                        break;
+                    }
+                    case event.target.classList.contains('common_map_tile'):
+                    case event.target.classList.contains('common_map_line'):{
+                        props.methods.COMMON_DOCUMENT.querySelector('#common_map_control_query').classList.contains('common_map_control_active')?
+                            await addPopupPos(event.clientX, event.clientY):
+                                null;
+                        break;
+                    }
                     case event.target.classList.contains('common_map_popup_close'):{
                         event.target.parentNode.remove();
                         break;
@@ -596,6 +605,10 @@ const component = async props => {
                 break;
             }
             case 'mousemove':{
+                if (event_target_id.startsWith('common_map')){
+                    props.methods.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.left = `${event.clientX}px`;
+                    props.methods.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.top = `${event.clientY}px`;
+                }
                 switch (true){
                     case event_target_id=='common_map_measure':
                     case event.target.classList.contains('common_map_tile'):
@@ -606,6 +619,7 @@ const component = async props => {
                         draw();
                         break;
                     }
+
                 }
                 break;
                 
