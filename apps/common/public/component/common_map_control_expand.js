@@ -43,6 +43,7 @@ const template = props => props.expand_type=='search'?
 *                       goTo:(arg0:{ip:string|null,
 *                                   longitude:string|number|null,
 *                                   latitude:string|number|null})=>void,
+*                       setLayer:(arg0:string)=>void,
 *                       commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
 *                       commonMiscListKeyEvent:CommonModuleCommon['commonMiscListKeyEvent'],
 *                       commonUserLocale:CommonModuleCommon['commonUserLocale'],
@@ -229,7 +230,10 @@ const component = async props => {
                                 .textContent);
                         break;
                     }
-
+                    case event_target_id=='common_map_control_expand_select_mapstyle':{
+                        props.methods.setLayer(event.target?.getAttribute('data-value'));
+                        break;
+                    }
                 }
                 break;
             }
