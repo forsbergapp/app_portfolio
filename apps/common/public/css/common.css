@@ -755,7 +755,7 @@ body.rtl{
 .common_list_lov_row{
 	display:inline-block;
 }
-.common_list_lov_row_hide{
+.common_row_hide{
 	display:none !important;
 }
 .common_list_lov_click{

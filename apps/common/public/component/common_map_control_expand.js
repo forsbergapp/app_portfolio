@@ -62,13 +62,14 @@ const component = async props => {
      * @returns {Promise.<{value:string, text:string}[]>}
      */
    const map_country = async locale =>  
-    [{value:'', text:'...'}].concat(await props.methods.commonFFB({
-                                                                    path:'/app-common-module/COMMON_COUNTRY', 
-                                                                    query:`locale=${locale}`,
-                                                                    method:'POST', 
-                                                                    authorization_type:'APP_ID', 
-                                                                    body:{type:'FUNCTION',IAM_data_app_id:props.data.data_app_id}
-                                                                })
+        [{value:'', text:'...'}]
+        .concat(await props.methods.commonFFB({
+                                                path:'/app-common-module/COMMON_COUNTRY', 
+                                                query:`locale=${locale}`,
+                                                method:'POST', 
+                                                authorization_type:'APP_ID', 
+                                                body:{type:'FUNCTION',IAM_data_app_id:props.data.data_app_id}
+                                            })
         .then((/**@type{*}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)))
         .then((/**@type{{id:number, country_code:string, flag_emoji:string, group_name:string, text:string}[]}*/result)=>
             result.map(country=>{

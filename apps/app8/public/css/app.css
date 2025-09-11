@@ -209,7 +209,7 @@ body {
 .common_toolbar_button{
 	color: var(--common_app_color_black) !important;
 }
-.common_list_row_selected,
+.common_row_selected,
 .common_list_lov_row:hover,
 .common_list_lov_row:active,
 .common_dialogue_button:hover,
