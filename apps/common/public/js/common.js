@@ -43,23 +43,26 @@ const COMMON_GLOBAL = {
     app_requesttimeout_seconds:5,
     app_requesttimeout_admin_minutes:60,
     app_typewatch:[],
-    app_metadata:{  events:{
-                            Change: null,
-                            Click:  null,
-                            Focus:  null,
-                            Input:  null,
-                            KeyDown:null,
-                            KeyUp:  null,
-                            MouseDown:null,
-                            MouseUp:null,
-                            MouseMove:null,
-                            MouseLeave:null,
-                            Wheel:null,
-                            TouchStart:null,
-                            TouchEnd:null,
-                            TouchCancel:null,
-                            TouchMove:null
-                        },
+    app_metadata:{  events:{click:null,
+                            dblclick:null,
+                            change:null,
+                            keydown:null,
+                            keyup:null,
+                            focus:null,
+                            input:null,
+                            mousedown:null,
+                            mouseup:null,
+                            mousemove:null,
+                            mouseleave:null,
+                            wheel:null,
+                            touchstart:null,
+                            touchend:null,
+                            touchcancel:null,
+                            touchmove:null,
+                            copy:null,
+                            paste:null,
+                            cut:null
+    },
                     lifeCycle:{
                         onMounted:()=>null
                     }
@@ -2833,7 +2836,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
 /**
  * @name commonEvent
  * @description Central event delegation on app root
- *              order of events: 1 common, 2 app, 3 module
+ *              order of events: 1 common, 2 module, 3 app 
  * @function
  * @param {commonEventType} event_type 
  * @param {CommonAppEvent|null} event 
@@ -2846,6 +2849,7 @@ const commonEvent = async (event_type,event=null) =>{
         });
     }
     else{
+        //1 common events
         switch (event_type){
             case 'click':{
                 //close all open div selects except current target
@@ -3327,20 +3331,7 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                     }
-                }   
-                COMMON_GLOBAL.app_metadata.events.Click?COMMON_GLOBAL.app_metadata.events.Click(event):null;
-                break;
-            }
-            case 'change':{
-                COMMON_GLOBAL.app_metadata.events.Change?COMMON_GLOBAL.app_metadata.events.Change(event):null;
-                break;
-            }
-            case 'focus':{
-                COMMON_GLOBAL.app_metadata.events.Focus?COMMON_GLOBAL.app_metadata.events.Focus(event):null;
-                break;
-            }
-            case 'input':{
-                COMMON_GLOBAL.app_metadata.events.Input?COMMON_GLOBAL.app_metadata.events.Input(event):null;
+                }
                 break;
             }
             case 'keydown':{
@@ -3360,7 +3351,6 @@ const commonEvent = async (event_type,event=null) =>{
                     ){
                         event.preventDefault();
                 }
-                COMMON_GLOBAL.app_metadata.events.KeyDown?COMMON_GLOBAL.app_metadata.events.KeyDown(event):null;
                 break;                
             }
             case 'keyup':{
@@ -3413,49 +3403,16 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                     }
-                COMMON_GLOBAL.app_metadata.events.KeyUp?COMMON_GLOBAL.app_metadata.events.KeyUp(event):null;
                 break;
             }
             case 'mousedown':{
                 //common event only
                 commonEventCopyPasteCutDisable(event);
-                //app event
-                COMMON_GLOBAL.app_metadata.events.MouseDown?COMMON_GLOBAL.app_metadata.events.MouseDown(event):null;
-                break;
-            }
-            case 'mouseup':{
-                COMMON_GLOBAL.app_metadata.events.MouseUp?COMMON_GLOBAL.app_metadata.events.MouseUp(event):null;
-                break;
-            }
-            case 'mousemove':{
-                COMMON_GLOBAL.app_metadata.events.MouseMove?COMMON_GLOBAL.app_metadata.events.MouseMove(event):null;
-                break;
-            }
-            case 'mouseleave':{
-                COMMON_GLOBAL.app_metadata.events.MouseLeave?COMMON_GLOBAL.app_metadata.events.MouseLeave(event):null;
-                break;
-            }
-            case 'wheel':{
-                COMMON_GLOBAL.app_metadata.events.Wheel?COMMON_GLOBAL.app_metadata.events.Wheel(event):null;
                 break;
             }
             case 'touchstart':{
                 //common event only
                 commonEventInputDisable(event);
-                //app event
-                COMMON_GLOBAL.app_metadata.events.TouchStart?COMMON_GLOBAL.app_metadata.events.TouchStart(event):null;
-                break;
-            }
-            case 'touchend':{
-                COMMON_GLOBAL.app_metadata.events.TouchEnd?COMMON_GLOBAL.app_metadata.events.TouchEnd(event):null;
-                break;
-            }
-            case 'touchcancel':{
-                COMMON_GLOBAL.app_metadata.events.TouchCancel?COMMON_GLOBAL.app_metadata.events.TouchCancel(event):null;
-                break;
-            }
-            case 'touchmove':{
-                COMMON_GLOBAL.app_metadata.events.TouchMove?COMMON_GLOBAL.app_metadata.events.TouchMove(event):null;
                 break;
             }
             case 'copy':{
@@ -3477,13 +3434,15 @@ const commonEvent = async (event_type,event=null) =>{
                 break;
             }
         }    
+        //2 component events
         //fire component events defined in each component in COMMON_GLOBAL.component[component].events key
         Object.values(COMMON_GLOBAL.component).forEach(component=>
             component.events?
                 component.events(event_type, event):
                     null);
+        //3 app events
+        COMMON_GLOBAL.app_metadata.events[event_type]?COMMON_GLOBAL.app_metadata.events[event_type](event):null;    
     }
-    
 };
 /**
  * @name commonEventCopyPasteCutDisable
@@ -3989,21 +3948,21 @@ const commonMountApp = async (app_id) =>{
     /**@type{commonMetadata} */
     const appdata = appMetadata();
     //add metadata using tree shaking pattern
-    COMMON_GLOBAL.app_metadata.events.Change = appdata.events.Change;
-    COMMON_GLOBAL.app_metadata.events.Click = appdata.events.Click;
-    COMMON_GLOBAL.app_metadata.events.Focus = appdata.events.Focus;
-    COMMON_GLOBAL.app_metadata.events.Input = appdata.events.Input;
-    COMMON_GLOBAL.app_metadata.events.KeyDown = appdata.events.KeyDown;
-    COMMON_GLOBAL.app_metadata.events.KeyUp = appdata.events.KeyUp;
-    COMMON_GLOBAL.app_metadata.events.MouseDown = appdata.events.MouseDown;
-    COMMON_GLOBAL.app_metadata.events.MouseUp = appdata.events.MouseUp;
-    COMMON_GLOBAL.app_metadata.events.MouseMove = appdata.events.MouseMove;
-    COMMON_GLOBAL.app_metadata.events.MouseLeave = appdata.events.MouseLeave;
-    COMMON_GLOBAL.app_metadata.events.Wheel = appdata.events.Wheel;
-    COMMON_GLOBAL.app_metadata.events.TouchStart = appdata.events.TouchStart;
-    COMMON_GLOBAL.app_metadata.events.TouchEnd = appdata.events.TouchEnd;
-    COMMON_GLOBAL.app_metadata.events.TouchCancel = appdata.events.TouchCancel;
-    COMMON_GLOBAL.app_metadata.events.TouchMove = appdata.events.TouchMove;
+    COMMON_GLOBAL.app_metadata.events.change = appdata.events.change;
+    COMMON_GLOBAL.app_metadata.events.click = appdata.events.click;
+    COMMON_GLOBAL.app_metadata.events.focus = appdata.events.focus;
+    COMMON_GLOBAL.app_metadata.events.input = appdata.events.input;
+    COMMON_GLOBAL.app_metadata.events.keydown = appdata.events.keydown;
+    COMMON_GLOBAL.app_metadata.events.keyup = appdata.events.keyup;
+    COMMON_GLOBAL.app_metadata.events.mousedown = appdata.events.mousedown;
+    COMMON_GLOBAL.app_metadata.events.mouseup = appdata.events.mouseup;
+    COMMON_GLOBAL.app_metadata.events.mousemove = appdata.events.mousemove;
+    COMMON_GLOBAL.app_metadata.events.mouseleave = appdata.events.mouseleave;
+    COMMON_GLOBAL.app_metadata.events.wheel = appdata.events.wheel;
+    COMMON_GLOBAL.app_metadata.events.touchstart = appdata.events.touchstart;
+    COMMON_GLOBAL.app_metadata.events.touchend = appdata.events.touchend;
+    COMMON_GLOBAL.app_metadata.events.touchcancel = appdata.events.touchcancel;
+    COMMON_GLOBAL.app_metadata.events.touchmove = appdata.events.touchmove;
     COMMON_GLOBAL.app_metadata.lifeCycle.onMounted = appdata.lifeCycle?.onMounted;
     
     await AppInit(commonGet(), CommonAppInit.AppParameter);
