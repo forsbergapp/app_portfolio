@@ -355,8 +355,8 @@ const appCommonInit = async (commonLib, parameters) => {
 const appMetadata = () =>{
     return { 
         events:{  
-            Click:   appEventClick,
-            KeyUp:   appEventKeyUp},
+            click:   appEventClick,
+            keyup:   appEventKeyUp},
         lifeCycle:{onMounted:null}
     };
 };
