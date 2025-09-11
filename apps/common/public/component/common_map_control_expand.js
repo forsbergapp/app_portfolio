@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/common_map_search
+ * @module apps/common/component/common_map_control_expand
  */
 
 /**
@@ -44,9 +44,11 @@ const template = props => props.expand_type=='search'?
 *                                   longitude:string|number|null,
 *                                   latitude:string|number|null})=>void,
 *                       commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
+*                       commonMiscListKeyEvent:CommonModuleCommon['commonMiscListKeyEvent'],
 *                       commonUserLocale:CommonModuleCommon['commonUserLocale'],
 *                       commonFFB:CommonModuleCommon['commonFFB'],
 *                       commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
+*                       commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
 *                       commonComponentRender:CommonModuleCommon['commonComponentRender']
 *                       }}} props
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -162,6 +164,27 @@ const component = async props => {
         props.methods.goTo({ip:null, longitude:city.longitude, latitude:city.latitude});
     };
     /**
+     * @description get result for search string > 2 characters
+     * @function
+     * @param {string} search
+     */
+    const eventKeyUpSearch = search=>{
+        if (typeof search=='string' && search !='' && search !=null && search.length >2)
+            props.methods.commonComponentRender({
+                mountDiv:   'common_map_control_expand_search_list_wrap',
+                data:       {
+                            data_app_id:props.data.data_app_id,
+                            search:	search
+                            },
+                methods:    {
+                            commonFFB:props.methods.commonFFB,
+                            goTo:props.methods.goTo,
+                            commonMiscElementId:props.methods.commonMiscElementId,
+                            commonMiscElementRow:props.methods.commonMiscElementRow
+                            },
+                path:       '/common/component/common_map_control_expand_search_city.js'});
+    };
+    /**
      * @name events
      * @descption Events for map
      * @function
@@ -180,6 +203,32 @@ const component = async props => {
                     case event_target_id== 'common_map_control_expand_select_city' && 
                         event.target.classList.contains('common_select_option'):{
                         eventClickCity(event_target_id);
+                        break;
+                    }
+                    case event_target_id=='common_map_control_expand_search_icon':{
+                        props.methods.COMMON_DOCUMENT
+                            .querySelector('#common_map_control_expand_search_input')
+                            .focus();
+                        props.methods.COMMON_DOCUMENT
+                            .querySelector('#common_map_control_expand_search_input')
+                            .dispatchEvent(new KeyboardEvent('keyup'));
+                        break;
+                    }
+
+                }
+                break;
+            }
+            case 'keyup':{
+                switch (true){
+                    case event_target_id=='common_map_control_expand_search_input':{
+                        props.methods.commonMiscListKeyEvent({
+                            event:event,
+                            event_function:eventKeyUpSearch,
+                            event_parameters:props.methods.COMMON_DOCUMENT
+                                            .querySelector('#common_map_control_expand_search_input')
+                                            .textContent,
+                            rows_element:'common_map_control_expand_search_list',
+                            search_input:'common_map_control_expand_search_input'});
                         break;
                     }
                 }
