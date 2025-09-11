@@ -2066,16 +2066,19 @@ body.rtl{
     padding-bottom: unset;
 }
 .common_map_control_expand{
+    width: 0;
 	position: absolute;
 	inset-inline-start: 30px;
+    transition: width 0.5s ease;
+}
+.common_map_control_expand:not(:empty){
+    width: 60vw;
 }
 #common_map_control_expand_layer{
-	width: 60vw;
-	bottom: 0px;
+	bottom: 30px;
     background-color: white;
 }
 #common_map_control_expand_search{
-	width: 60vw;
     top: 60px;
     background-color: white;
 }
