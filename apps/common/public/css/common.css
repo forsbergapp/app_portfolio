@@ -151,6 +151,8 @@
     --common_app_icon_javascript:           '\f3b9';
 	--common_app_icon_run:					'\f1d8';
 	--common_app_icon_preview:				'\f002';
+    --common_app_icon_arrow_pointer:    	'\f245';
+    --common_app_icon_arrow_pointer_query:   var(--common_app_icon_arrow_pointer) ' ?';
 
 	--common_app_icon_user:                     '\f007';
     --common_app_icon_username:                 '\41\42\43';
@@ -515,7 +517,7 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 #common_map_control_fullscreen::before{					                        content:var(--common_app_icon_fullscreen)}
 #common_map_control_my_location::before{					                    content:var(--common_app_icon_map_my_location)}
 #common_map_control_layer::before{					                            content:var(--common_app_icon_map_layer)}
-
+#common_map_control_query::before{					                            content:var(--common_app_icon_arrow_pointer_query)}
 #common_module_leaflet_control_search_button::before{					        content:var(--common_app_icon_search)}
 #common_module_leaflet_search_icon::before{								        content:var(--common_app_icon_search)}
 #common_module_leaflet_control_fullscreen_id::before{					        content:var(--common_app_icon_fullscreen)}
@@ -2059,7 +2061,7 @@ body.rtl{
 	width: 30px;
 	display: block;
 	line-height: 30px;
-	cursor: pointer;
+	cursor:var(--common_app_icon_arrow_pointer);
 	padding-top: unset;
     padding-bottom: unset;
 }
@@ -2146,6 +2148,20 @@ body.rtl{
 .common_map_tile{
     z-index:1;
     pointer-events:auto;
+}
+#common_map.common_map_control_active #common_map_lines,
+#common_map.common_map_control_active #common_map_tiles{
+    cursor:none;
+}
+#common_map.common_map_control_active #common_map_cursor{
+    position: fixed;
+    pointer-events: none;
+    z-index: 100;
+    user-select: none;
+}
+#common_map.common_map_control_active #common_map_cursor::before,
+#common_map.common_map_control_active #common_map_cursor::before{
+    content:var(--common_app_icon_arrow_pointer_query)
 }
 #common_map_measure, .common_map_line, .common_map_popup{
     z-index: 2;
