@@ -95,7 +95,7 @@ body{
 	background-color: var(--app_theme_main_branding_color1);
     border-radius: 50%;
 }
-.common_list_row_selected{
+.common_row_selected{
 	background-color: var(--app_theme_selected_background_color);
 }
 #common_app_toolbar{

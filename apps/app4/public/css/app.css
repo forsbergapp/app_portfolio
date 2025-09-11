@@ -1044,7 +1044,7 @@ body,
 .common_switch.checked::before {
 	background-color: var(--app_theme_switch_checked_before_background_color);
 }
-.common_list_row_selected{
+.common_row_selected{
 	background-color: var(--app_theme_selected_background_color);
 }
 .common_list_scrollbar{

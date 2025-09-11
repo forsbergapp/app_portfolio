@@ -408,66 +408,65 @@ const commonMiscInputControl = (dialogue, validate_items) =>{
  * @name commonMiscListKeyEvent
  * @description List key event
  * @function
- * @param {CommonAppEvent} event 
- * @param {string} module 
- * @param {function|null} event_function 
+ * @param {{event:CommonAppEvent,
+ *          event_function:function,
+ *          event_parameters:*,
+ *          rows_element:string,
+ *          search_input:string}} parameters
  * @returns {void}
  */
-const commonMiscListKeyEvent = (event, module, event_function=null) => {
-    const list_name = module=='lov'?'list_' + 'lov':module + '_search';
-    const search_input = module + '_search';
-    switch (event.code){
+const commonMiscListKeyEvent = parameters => {
+    switch (parameters.event.code){
         case 'ArrowLeft':
         case 'ArrowRight':{
             break;
         }
         case 'ArrowUp':
         case 'ArrowDown':{
-            const rows = module=='lov'? COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_row:not(.common_${list_name}_row_hide)`):
-                                        COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_list_row`);
+            const rows = COMMON_DOCUMENT.querySelectorAll(`#${parameters.rows_element} .common_row:not(.common_row_hide)`);
             /**
              * Focus item
              * @param {HTMLElement} element 
              */
             const focus_item = (element) =>{
                 element.focus();
-                COMMON_DOCUMENT.querySelector(`#common_${search_input}_input`).focus();
+                COMMON_DOCUMENT.querySelector(`#${parameters.search_input}`).focus();
             };
-            if (Object.entries(rows).filter(row=>row[1].classList.contains('common_list_row_selected')).length>0){
+            if (Object.entries(rows).filter(row=>row[1].classList.contains('common_row_selected')).length>0){
                 let i=0;
                 for (const row of rows) {
-                    if (row.classList.contains('common_list_row_selected'))
+                    if (row.classList.contains('common_row_selected'))
                         //if up and first or
                         //if down and last
-                        if ((event.code=='ArrowUp' && i == 0)||
-                            (event.code=='ArrowDown' && i == rows.length -1)){
-                            if(event.code=='ArrowUp'){
+                        if ((parameters.event.code=='ArrowUp' && i == 0)||
+                            (parameters.event.code=='ArrowDown' && i == rows.length -1)){
+                            if(parameters.event.code=='ArrowUp'){
                                 //if the first, set the last
-                                row.classList.remove ('common_list_row_selected');
-                                rows[rows.length -1].classList.add ('common_list_row_selected');
+                                row.classList.remove ('common_row_selected');
+                                rows[rows.length -1].classList.add ('common_row_selected');
                                 focus_item(rows[rows.length -1]);
                             }
                             else{
                                 //down
                                 //if the last, set the first
-                                row.classList.remove ('common_list_row_selected');
-                                rows[0].classList.add ('common_list_row_selected');
+                                row.classList.remove ('common_row_selected');
+                                rows[0].classList.add ('common_row_selected');
                                 focus_item(rows[0]);
                             }
                             break;
                         }
                         else{
-                            if(event.code=='ArrowUp'){
+                            if(parameters.event.code=='ArrowUp'){
                                 //remove highlight, highlight previous
-                                row.classList.remove ('common_list_row_selected');
-                                rows[i-1].classList.add ('common_list_row_selected');
+                                row.classList.remove ('common_row_selected');
+                                rows[i-1].classList.add ('common_row_selected');
                                 focus_item(rows[i-1]);
                             }
                             else{
                                 //down
                                 //remove highlight, highlight next
-                                row.classList.remove ('common_list_row_selected');
-                                rows[i+1].classList.add ('common_list_row_selected');
+                                row.classList.remove ('common_row_selected');
+                                rows[i+1].classList.add ('common_row_selected');
                                 focus_item(rows[i+1]);
                             }
                             break;
@@ -477,52 +476,24 @@ const commonMiscListKeyEvent = (event, module, event_function=null) => {
             }
             else{
                 //no highlight found, highlight first
-                rows[0].classList.add ('common_list_row_selected');
+                rows[0].classList.add ('common_row_selected');
                 focus_item(rows[0]);
             }
             break;
         }
         case 'Enter':{
-            //enter
-            if (module == 'lov'){
-                const rows = COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_row`);
-                for (const row of rows) {
-                    if (row.classList.contains('common_list_row_selected')){
-                        //event on row is set in app when calling lov, dispatch it!
-                        row.click();
-                        row.classList.remove ('common_list_row_selected');
-                    }
-                }   
-            }
-            else{
-                const rows = COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_list_row`);
-                for (let i = 0; i <= rows.length -1; i++) {
-                    if (rows[i].classList.contains('common_list_row_selected')){
-                        if (module=='profile'){
-                            //dispatch same event as clicked
-                            rows[i].querySelectorAll('.common_profile_search_list_username')[0].click();
-                        }
-                        else{
-                            rows[i].querySelectorAll('.common_module_leaflet_search_list_city')[0].click();
-                        }   
-                        rows[i].classList.remove ('common_list_row_selected');
-                    }
+            const rows = COMMON_DOCUMENT.querySelectorAll(`#${parameters.rows_element} .common_row`);
+            for (const row of rows) {
+                if (row.classList.contains('common_row_selected')){
+                    //dispatch click event on row
+                    row.click();
+                    row.classList.remove ('common_row_selected');
                 }
             }
             break;
         }
         default:{
-            if (module=='lov'){
-                //if db call will be implemented, add delay
-                //commonMiscTypewatch(commonLovFilter, COMMON_DOCUMENT.querySelector(`#common_${search_input}_input`).textContent); 
-                commonLovFilter(COMMON_DOCUMENT.querySelector(`#common_${search_input}_input`).textContent); 
-            }
-            else
-                if (module=='profile')
-                    commonMiscTypewatch(commonProfileSearch, event_function==null?null:event_function); 
-                else{
-                    commonMiscTypewatch(commonMicroserviceWorldcitiesSearch, event_function==null?null:event_function); 
-                }
+            commonMiscTypewatch(parameters.event_function, parameters.event_parameters); 
             break;
         }            
     }
@@ -1555,17 +1526,17 @@ const commonLovShow = parameters => {
 const commonLovFilter = text_filter => {
     const rows = COMMON_DOCUMENT.querySelectorAll('.common_list_lov_row');
     for (const row of rows) {
-        row.classList.remove ('common_list_lov_row_hide');
-        row.classList.remove ('common_list_row_selected');
+        row.classList.remove ('common_row_hide');
+        row.classList.remove ('common_row_selected');
     }
     for (const row of rows) {
         if (row.children[0].children[0].textContent.toUpperCase().indexOf(text_filter.toUpperCase()) > -1 ||
             row.children[1].children[0].textContent.toUpperCase().indexOf(text_filter.toUpperCase()) > -1){
-                row.classList.remove ('common_list_lov_row_hide');
+                row.classList.remove ('common_row_hide');
             }
         else{
-            row.classList.remove ('common_list_lov_row_hide');
-            row.classList.add ('common_list_lov_row_hide');
+            row.classList.remove ('common_row_hide');
+            row.classList.add ('common_row_hide');
         }
     }
 };
@@ -3373,11 +3344,19 @@ const commonEvent = async (event_type,event=null) =>{
                 else
                     switch (event.target.id){
                         case 'common_profile_search_input':{
-                            commonMiscListKeyEvent(event, 'profile', commonProfileShow);
+                            commonMiscListKeyEvent({event:event,
+                                                    event_function:commonProfileSearch,
+                                                    event_parameters:commonProfileShow,
+                                                    rows_element:'common_profile_search_list',
+                                                    search_input:'common_profile_search_input'});
                             break;
                         }        
                         case 'common_lov_search_input':{
-                            commonMiscListKeyEvent(event, 'lov');
+                            commonMiscListKeyEvent({event:event,
+                                                    event_function:commonLovFilter,
+                                                    event_parameters:COMMON_DOCUMENT.querySelector('#common_lov_search_input').textContent,
+                                                    rows_element:'common_lov_list',
+                                                    search_input:'common_lov_search_input'});
                             break;
                         }
                         //dialogue verify
@@ -3396,7 +3375,11 @@ const commonEvent = async (event_type,event=null) =>{
                         }
                         //module leaflet
                         case 'common_module_leaflet_search_input':{
-                            commonMiscListKeyEvent(event, 'module_leaflet', event.target['data-function']); 
+                            commonMiscListKeyEvent({event:event,
+                                                    event_function:commonMicroserviceWorldcitiesSearch,
+                                                    event_parameters:event.target['data-function'],
+                                                    rows_element:'common_module_leaflet_search_list',
+                                                    search_input:'common_module_leaflet_search_input'});
                             break;
                         }
                         default:{

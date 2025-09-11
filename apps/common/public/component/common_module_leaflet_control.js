@@ -233,9 +233,8 @@ const component = async props => {
      * @param {CommonAppEvent['target']} target
      */
     const eventClickSearchList = async target =>{
-        //execute function from inparameter or use default when not specified
-        if (target.classList.contains('common_module_leaflet_click_city')){
-            const row = props.methods.commonMiscElementRow(target);
+        const row = props.methods.commonMiscElementRow(target);
+        if (row.classList.contains('common_module_leaflet_search_list_row')){
             const data = {  city:       row.getAttribute('data-city') ?? '',
                             country:    row.getAttribute('data-country') ??'',
                             latitude:   row.getAttribute('data-latitude') ?? '',
