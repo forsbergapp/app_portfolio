@@ -88,12 +88,24 @@ const appInit = async () =>{
         data:       null,
         methods:    null,
         path:       '/component/app.js'});
-    common.commonModuleLeafletInit({mount_div:'mapid',
-                                    latitude:common.COMMON_GLOBAL.client_latitude??'',
-                                    longitude:common.COMMON_GLOBAL.client_longitude??'',
-                                    place:common.COMMON_GLOBAL.client_place??'',
-                                    doubleclick_event:null, 
-                                    update_map:true});
+        common.commonComponentRender({
+            mountDiv:   'mapid',
+            data:       { 
+                        data_app_id :common.COMMON_GLOBAL.app_common_app_id,
+                        longitude:common.COMMON_GLOBAL.client_longitude,
+                        latitude:common.COMMON_GLOBAL.client_latitude
+                        },
+            methods:    {
+                        commonComponentRender:common.commonComponentRender,
+                        commonComponentRemove:common.commonComponentRemove,
+                        commonWindowFromBase64:common.commonWindowFromBase64,
+                        commonMiscListKeyEvent:common.commonMiscListKeyEvent,
+                        commonMiscElementRow:common.commonMiscElementRow,
+                        commonMiscElementId:common.commonMiscElementId,
+                        commonUserLocale:common.commonUserLocale,
+                        commonFFB:common.commonFFB
+                        },
+            path:       '/common/component/common_map.js'});
 };
 /**
  * @name appCommonInit
