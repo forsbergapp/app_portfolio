@@ -189,7 +189,7 @@ body {
 	width: 100% !important;
 	text-align: center;
 }
-.common_list_row_selected{
+.common_row_selected{
 	background-color: var(--common_app_color_white3);
 }
 .common_input{

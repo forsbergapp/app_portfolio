@@ -724,7 +724,7 @@ border-left: 12px solid var(--app_theme_sun_color);
 #common_profile_search >.css_spinner::before{
 	background-color:var(--app_theme_spinner_background_color);
 }
-.common_list_row_selected{
+.common_row_selected{
 	background-color: var(--app_theme_list_selected_background_color);
 }
 .common_toolbar_selected{

@@ -1385,7 +1385,7 @@ body{
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
 /*SECURE*/
-.common_list_row_selected{
+.common_row_selected{
 	background-color: var(--app_theme_list_selected_background_color) !important;
 }
 .common_switch {
