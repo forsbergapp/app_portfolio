@@ -246,14 +246,14 @@ const appCommonInit = async (commonLib, parameters) => {
 const appMetadata = () =>{
     return { 
         events:{  
-            Click:      appEventClick,
-            MouseDown:  appEventMouseDown,
-            MouseUp:    appEventMouseUp,
-            MouseMove:  appEventMouseMove,
-            TouchMove:  appEventMouseMove,
-            TouchEnd:   appEventMouseUp,
-            TouchCancel:appEventMouseUp,
-            TouchStart: appEventMouseDown},
+            click:      appEventClick,
+            mousedown:  appEventMouseDown,
+            mouseup:    appEventMouseUp,
+            mousemove:  appEventMouseMove,
+            touchmove:  appEventMouseMove,
+            touchend:   appEventMouseUp,
+            touchcancel:appEventMouseUp,
+            touchstart: appEventMouseDown},
         lifeCycle:{onMounted:null}
     };
 };
