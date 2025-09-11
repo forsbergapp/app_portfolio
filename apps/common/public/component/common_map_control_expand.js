@@ -164,6 +164,20 @@ const component = async props => {
         props.methods.goTo({ip:null, longitude:city.longitude, latitude:city.latitude});
     };
     /**
+     * @description delay search result using delay type watch pattern
+     * @function
+     * @param {CommonAppEvent} event
+     * @param {string} search
+     */
+    const eventKeyUpDispatch = (event,search)=>{
+        props.methods.commonMiscListKeyEvent({
+            event:event,
+            event_function:eventKeyUpSearch,
+            event_parameters:search,
+            rows_element:'common_map_control_expand_search_list',
+            search_input:'common_map_control_expand_search_input'});
+    };
+    /**
      * @description get result for search string > 2 characters
      * @function
      * @param {string} search
@@ -209,9 +223,10 @@ const component = async props => {
                         props.methods.COMMON_DOCUMENT
                             .querySelector('#common_map_control_expand_search_input')
                             .focus();
-                        props.methods.COMMON_DOCUMENT
-                            .querySelector('#common_map_control_expand_search_input')
-                            .dispatchEvent(new KeyboardEvent('keyup'));
+                        eventKeyUpDispatch( event, 
+                                props.methods.COMMON_DOCUMENT
+                                .querySelector('#common_map_control_expand_search_input')
+                                .textContent);
                         break;
                     }
 
@@ -221,14 +236,10 @@ const component = async props => {
             case 'keyup':{
                 switch (true){
                     case event_target_id=='common_map_control_expand_search_input':{
-                        props.methods.commonMiscListKeyEvent({
-                            event:event,
-                            event_function:eventKeyUpSearch,
-                            event_parameters:props.methods.COMMON_DOCUMENT
+                        eventKeyUpDispatch( event, 
+                                            props.methods.COMMON_DOCUMENT
                                             .querySelector('#common_map_control_expand_search_input')
-                                            .textContent,
-                            rows_element:'common_map_control_expand_search_list',
-                            search_input:'common_map_control_expand_search_input'});
+                                            .textContent);
                         break;
                     }
                 }
