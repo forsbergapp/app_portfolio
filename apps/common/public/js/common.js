@@ -2850,15 +2850,18 @@ const commonEvent = async (event_type,event=null) =>{
     }
     else{
         //1 common events
-        switch (event_type){
-            case 'click':{
-                //close all open div selects except current target
-                if (typeof event.target.className=='string' && event.target.className.indexOf('common_select')>-1){
-                    Array.from(COMMON_DOCUMENT.querySelectorAll(`#${COMMON_GLOBAL.app_root} .common_select_options`))
-                        .filter((/**@type{HTMLElement}*/element)=>commonMiscElementId(element) != commonMiscElementId(event.target))
-                        .forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
-                }
+        //uses IIFE and waits until finished
+        await (async ()=>{
+            switch (event_type){
+                case 'click':{
+                    //close all open div selects except current target
+                    if (typeof event.target.className=='string' && event.target.className.indexOf('common_select')>-1){
+                        Array.from(COMMON_DOCUMENT.querySelectorAll(`#${COMMON_GLOBAL.app_root} .common_select_options`))
+                            .filter((/**@type{HTMLElement}*/element)=>commonMiscElementId(element) != commonMiscElementId(event.target))
+                            .forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
+                    }
 
+<<<<<<< HEAD
                 if (event.target.classList.contains('common_switch')){
                     if (event.target.classList.contains('checked'))
                         event.target.classList.remove('checked');
@@ -2962,131 +2965,90 @@ const commonEvent = async (event_type,event=null) =>{
                         case 'common_dialogue_info_info_link1':{
                             commonComponentRender({
                                 mountDiv:   'common_window_info',
+=======
+                    if (event.target.classList.contains('common_switch')){
+                        if (event.target.classList.contains('checked'))
+                            event.target.classList.remove('checked');
+                        else
+                            event.target.classList.add('checked');
+                    }
+                    else{
+                        const event_target_id = commonMiscElementId(event.target);
+                        switch(event_target_id){
+                            case event.target.parentNode.classList.contains('common_select_dropdown_value')?event_target_id:'':
+                            case event.target.parentNode.classList.contains('common_select_dropdown_icon')?event_target_id:'':
+                            case event.target.classList.contains('common_select_dropdown_value')?event_target_id:'':
+                            case event.target.classList.contains('common_select_dropdown_icon')?event_target_id:'':{
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display = 
+                                    COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
+                                break;
+                            }
+                            case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
+                                //select can show HTML, use innerHTML
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
+                                event.target.parentNode.parentNode.style.display = 'none';
+                                await commonEventSelectAction(event_target_id, event.target.parentNode);
+                                break;
+                            }
+                            case event.target.classList.contains('common_select_option')?event_target_id:'':{
+                                //select can show HTML, use innerHTML
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
+                                event.target.parentNode.style.display = 'none';
+                                await commonEventSelectAction(event_target_id, event.target);
+                                break;
+                            }
+                            // dialogue login/signup
+                            case 'common_dialogue_iam_start_login':
+                            case 'common_dialogue_iam_start_signup':{
+                                commonDialogueShow(event_target_id.substring('common_dialogue_iam_start_'.length).toUpperCase());
+                                break;
+                            }
+                            case 'common_dialogue_iam_start_close':{
+                                commonComponentRemove('common_dialogue_iam_start', true);
+                                break;
+                            }
+                            case 'common_dialogue_iam_start_signup_button':{
+                                commonUserSignup();
+                                break;
+                            }
+                            //dialogue message
+                            case 'common_message_close':{
+                                if (COMMON_DOCUMENT.querySelector('#common_message_close')['data-function'])
+                                    COMMON_DOCUMENT.querySelector('#common_message_close')['data-function']();
+                                commonComponentRemove('common_dialogue_message',true);
+                                break;
+                            }
+                            case 'common_message_cancel':{
+                                commonComponentRemove('common_dialogue_message',true);
+                                break;
+                            }
+                            
+                            case 'common_profile_search_icon':{
+                                COMMON_DOCUMENT.querySelector('#common_profile_search_input').focus();
+                                COMMON_DOCUMENT.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                                break;
+                            }
+                            //Dialogue apps
+                            case 'common_dialogue_apps_list_title_col_info':{
+                                commonComponentRender({
+                                mountDiv:   'common_dialogue_info',
+>>>>>>> 1054f6ff (AP-110 adds await for common, component and app events in commonEvent() and dblclick in commonMountApp() in common.js, implements city search in common_map_control_expand.js and adds common_map_control_expand_search_city.js component)
                                 data:       {
-                                            info:'URL',
-                                            path:'/app-resource/' + COMMON_GLOBAL.info_link_policy_url,
-                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
-                                            method:'GET',
-                                            authorization:'APP_ID'
-                                            },
-                                methods:    {commonFFB:commonFFB},
-                                path:       '/common/component/common_window_info.js'});
-                            break;
-                        }
-                        case 'common_dialogue_info_info_link2':{
-                            commonComponentRender({
-                                mountDiv:   'common_window_info',
-                                data:       {
-                                            info:'URL',
-                                            path:'/app-resource/' + COMMON_GLOBAL.info_link_disclaimer_url,
-                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
-                                            method:'GET',
-                                            authorization:'APP_ID'
-                                            },
-                                methods:    {commonFFB:commonFFB},
-                                path:       '/common/component/common_window_info.js'});
-                            break;
-                        }
-                        case 'common_dialogue_info_info_link3':{
-                            commonComponentRender({
-                                mountDiv:   'common_window_info',
-                                data:       {
-                                            info:'URL',
-                                            path:'/app-resource/' + COMMON_GLOBAL.info_link_terms_url,
-                                            query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
-                                            method:'GET',
-                                            authorization:'APP_ID'
-                                            },
-                                methods:    {commonFFB:commonFFB},
-                                path:       '/common/component/common_window_info.js'});
-                            break;
-                        }
-                        case 'common_dialogue_info_close':{
-                            commonComponentRemove('common_dialogue_info', true);
-                            break;
-                        }
-                        //dialogue app_data_display
-                        case event.target.classList.contains('common_app_data_display_button_print')?event_target_id:'':
-                        case event.target.classList.contains('common_app_data_display_button_update')?event_target_id:'':
-                        case event.target.classList.contains('common_app_data_display_button_post')?event_target_id:'':
-                        case event.target.classList.contains('common_app_data_display_button_delete')?event_target_id:'':{
-                            if (COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function'])
-                                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function']();
-                            break;
-                        }
-                        //window info
-                        case 'common_window_info_btn_close':{
-                            commonWindoInfoClose();
-                            break;
-                        }
-                        case 'common_window_info_info_img':{
-                            commonWindoInfoToolbarShowHide();
-                            break;
-                        }
-                        case 'common_window_info_toolbar_btn_zoomout':{
-                            commonZoomInfo(-1);
-                            break;
-                        }
-                        case 'common_window_info_toolbar_btn_zoomin':{
-                            commonZoomInfo(1);
-                            break;
-                        }
-                        case 'common_window_info_toolbar_btn_left':{
-                            commonMoveInfo(-1,0);
-                            break;
-                        }
-                        case 'common_window_info_toolbar_btn_right':{
-                            commonMoveInfo(1,0);
-                            break;
-                        }
-                        case 'common_window_info_toolbar_btn_up':{
-                            commonMoveInfo(0,-1);
-                            break;
-                        }
-                        case 'common_window_info_toolbar_btn_down':{
-                            commonMoveInfo(0,1);
-                            break;
-                        }
-                        case 'common_window_info_toolbar_btn_fullscreen':{
-                            if (COMMON_DOCUMENT.fullscreenElement)
-                                COMMON_DOCUMENT.exitFullscreen();
-                            else
-                                COMMON_DOCUMENT.body.requestFullscreen();
-                            break;
-                        }
-                        /* Dialogue user menu*/
-                        case 'common_iam_avatar':
-                        case 'common_iam_avatar_logged_in':
-                        case 'common_iam_avatar_avatar':
-                        case 'common_iam_avatar_avatar_img':
-                        case 'common_iam_avatar_logged_out':
-                        case 'common_iam_avatar_default_avatar':{
-                            await commonComponentRender({
-                                mountDiv:   'common_dialogue_user_menu',
-                                data:       {
-                                            app_id:COMMON_GLOBAL.app_id,
-                                            iam_user_id:COMMON_GLOBAL.iam_user_id,
-                                            iam_user_username:COMMON_GLOBAL.iam_user_username,
                                             common_app_id:COMMON_GLOBAL.app_common_app_id,
-                                            admin_app_id:COMMON_GLOBAL.app_admin_app_id,
-                                            token_exp:COMMON_GLOBAL.token_exp,
-                                            token_iat:COMMON_GLOBAL.token_iat,
-                                            user_locale:COMMON_GLOBAL.user_locale,
-                                            user_timezone:COMMON_GLOBAL.user_timezone,
-                                            user_direction:COMMON_GLOBAL.user_direction,
-                                            user_arabic_script:COMMON_GLOBAL.user_arabic_script
+                                            app_copyright:COMMON_GLOBAL.app_copyright,
+                                            app_link_url:COMMON_GLOBAL.app_link_url,
+                                            app_link_title:COMMON_GLOBAL.app_link_title,
+                                            info_link_policy_name:COMMON_GLOBAL.info_link_policy_name,
+                                            info_link_disclaimer_name:COMMON_GLOBAL.info_link_disclaimer_name,
+                                            info_link_terms_name:COMMON_GLOBAL.info_link_terms_name
                                             },
                                 methods:    {
-                                            commonMiscFormatJsonDate:commonMiscFormatJsonDate,
-                                            commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
-                                            commonWindowFromBase64:commonWindowFromBase64,
                                             commonFFB:commonFFB,
-                                            commonComponentRender:commonComponentRender,
-                                            commonUserSessionCountdown:commonUserSessionCountdown,
-                                            commonMessageShow:commonMessageShow,
-                                            commonMesssageNotAuthorized:commonMesssageNotAuthorized,
-                                            commonUserMessageShowStat:commonUserMessageShowStat
+                                            commonMessageShow:commonMessageShow
                                             },
+<<<<<<< HEAD
                                 path:       '/common/component/common_dialogue_user_menu.js'})
                                 .then(component=>COMMON_GLOBAL.component.common_dialogue_user_menu.methods = component.methods);
                             break;
@@ -3311,45 +3273,404 @@ const commonEvent = async (event_type,event=null) =>{
                         //markdown document tags
                         case event.target.classList.contains('common_markdown_image')?event_target_id:'':{
                             if (event.target.getAttribute('data-url_link'))
+=======
+                                path:       '/common/component/common_dialogue_info.js'});
+                                break;
+                            }            
+                            case 'common_dialogue_apps_list':
+                                if (event.target.classList.contains('common_dialogue_apps_app_logo')){
+                                    commonMountApp(event.target.getAttribute('data-app_id'));
+                                }
+                                break;
+                            //Dialogue info
+                            case 'common_dialogue_info_contact_message_send':{
+                                COMMON_GLOBAL.component.common_dialogue_info?.methods?.eventClickSend();
+                                break;
+                            }
+                            case 'common_dialogue_info_app_link':{
+                                if (COMMON_GLOBAL.app_link_url)
+                                    COMMON_WINDOW.open(COMMON_GLOBAL.app_link_url,'_blank','');
+                                break;
+                            }
+                            case 'common_dialogue_info_info_link1':{
+>>>>>>> 1054f6ff (AP-110 adds await for common, component and app events in commonEvent() and dblclick in commonMountApp() in common.js, implements city search in common_map_control_expand.js and adds common_map_control_expand_search_city.js component)
                                 commonComponentRender({
                                     mountDiv:   'common_window_info',
                                     data:       {
-                                                info:'IMAGE',
-                                                url:event.target.getAttribute('data-url_link'),
+                                                info:'URL',
+                                                path:'/app-resource/' + COMMON_GLOBAL.info_link_policy_url,
+                                                query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
+                                                method:'GET',
+                                                authorization:'APP_ID'
                                                 },
                                     methods:    {commonFFB:commonFFB},
                                     path:       '/common/component/common_window_info.js'});
-                            break;
-                        }        
-                        default:{
-                            if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in')){
-                                COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlZoomIn();
+                                break;
                             }
-                            if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out')){
-                                COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlZoomOut();
+                            case 'common_dialogue_info_info_link2':{
+                                commonComponentRender({
+                                    mountDiv:   'common_window_info',
+                                    data:       {
+                                                info:'URL',
+                                                path:'/app-resource/' + COMMON_GLOBAL.info_link_disclaimer_url,
+                                                query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
+                                                method:'GET',
+                                                authorization:'APP_ID'
+                                                },
+                                    methods:    {commonFFB:commonFFB},
+                                    path:       '/common/component/common_window_info.js'});
+                                break;
                             }
-                            break;
+                            case 'common_dialogue_info_info_link3':{
+                                commonComponentRender({
+                                    mountDiv:   'common_window_info',
+                                    data:       {
+                                                info:'URL',
+                                                path:'/app-resource/' + COMMON_GLOBAL.info_link_terms_url,
+                                                query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
+                                                method:'GET',
+                                                authorization:'APP_ID'
+                                                },
+                                    methods:    {commonFFB:commonFFB},
+                                    path:       '/common/component/common_window_info.js'});
+                                break;
+                            }
+                            case 'common_dialogue_info_close':{
+                                commonComponentRemove('common_dialogue_info', true);
+                                break;
+                            }
+                            //dialogue app_data_display
+                            case event.target.classList.contains('common_app_data_display_button_print')?event_target_id:'':
+                            case event.target.classList.contains('common_app_data_display_button_update')?event_target_id:'':
+                            case event.target.classList.contains('common_app_data_display_button_post')?event_target_id:'':
+                            case event.target.classList.contains('common_app_data_display_button_delete')?event_target_id:'':{
+                                if (COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function'])
+                                        COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function']();
+                                break;
+                            }
+                            //window info
+                            case 'common_window_info_btn_close':{
+                                commonWindoInfoClose();
+                                break;
+                            }
+                            case 'common_window_info_info_img':{
+                                commonWindoInfoToolbarShowHide();
+                                break;
+                            }
+                            case 'common_window_info_toolbar_btn_zoomout':{
+                                commonZoomInfo(-1);
+                                break;
+                            }
+                            case 'common_window_info_toolbar_btn_zoomin':{
+                                commonZoomInfo(1);
+                                break;
+                            }
+                            case 'common_window_info_toolbar_btn_left':{
+                                commonMoveInfo(-1,0);
+                                break;
+                            }
+                            case 'common_window_info_toolbar_btn_right':{
+                                commonMoveInfo(1,0);
+                                break;
+                            }
+                            case 'common_window_info_toolbar_btn_up':{
+                                commonMoveInfo(0,-1);
+                                break;
+                            }
+                            case 'common_window_info_toolbar_btn_down':{
+                                commonMoveInfo(0,1);
+                                break;
+                            }
+                            case 'common_window_info_toolbar_btn_fullscreen':{
+                                if (COMMON_DOCUMENT.fullscreenElement)
+                                    COMMON_DOCUMENT.exitFullscreen();
+                                else
+                                    COMMON_DOCUMENT.body.requestFullscreen();
+                                break;
+                            }
+                            /* Dialogue user menu*/
+                            case 'common_iam_avatar':
+                            case 'common_iam_avatar_logged_in':
+                            case 'common_iam_avatar_avatar':
+                            case 'common_iam_avatar_avatar_img':
+                            case 'common_iam_avatar_logged_out':
+                            case 'common_iam_avatar_default_avatar':{
+                                await commonComponentRender({
+                                    mountDiv:   'common_dialogue_user_menu',
+                                    data:       {
+                                                app_id:COMMON_GLOBAL.app_id,
+                                                iam_user_id:COMMON_GLOBAL.iam_user_id,
+                                                iam_user_username:COMMON_GLOBAL.iam_user_username,
+                                                common_app_id:COMMON_GLOBAL.app_common_app_id,
+                                                admin_app_id:COMMON_GLOBAL.app_admin_app_id,
+                                                token_exp:COMMON_GLOBAL.token_exp,
+                                                token_iat:COMMON_GLOBAL.token_iat,
+                                                user_locale:COMMON_GLOBAL.user_locale,
+                                                user_timezone:COMMON_GLOBAL.user_timezone,
+                                                user_direction:COMMON_GLOBAL.user_direction,
+                                                user_arabic_script:COMMON_GLOBAL.user_arabic_script
+                                                },
+                                    methods:    {
+                                                commonMiscFormatJsonDate:commonMiscFormatJsonDate,
+                                                commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
+                                                commonWindowFromBase64:commonWindowFromBase64,
+                                                commonFFB:commonFFB,
+                                                commonComponentRender:commonComponentRender,
+                                                commonUserSessionCountdown:commonUserSessionCountdown,
+                                                commonMessageShow:commonMessageShow,
+                                                commonMesssageNotAuthorized:commonMesssageNotAuthorized,
+                                                commonUserMessageShowStat:commonUserMessageShowStat
+                                                },
+                                    path:       '/common/component/common_dialogue_user_menu.js'});
+                                break;
+                            }
+                            case 'common_dialogue_user_menu_username':{
+                                commonComponentRemove('common_dialogue_user_menu');
+                                await commonProfileShow();
+                                break;
+                            }
+                            case 'common_dialogue_user_menu_messages_pagination_first':
+                            case 'common_dialogue_user_menu_messages_pagination_previous':
+                            case 'common_dialogue_user_menu_messages_pagination_next':
+                            case 'common_dialogue_user_menu_messages_pagination_last':{
+                                COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickPagination(event_target_id);
+                                break;
+                            }
+                            case 'common_dialogue_user_menu_nav_messages_count':
+                            case 'common_dialogue_user_menu_nav_messages':{
+                                COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
+                                await COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickNavMessages();
+                                break;
+                            }
+                            case (event.target.classList.contains('common_dialogue_user_menu_messages_col_delete') && event_target_id != 'common_dialogue_user_menu_messages_col_delete')?
+                                    event_target_id:
+                                        '':{
+                                //clicked on delete on row, not the title
+                                COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickMessageDelete( commonMiscElementRow(event.target));
+                                break;
+                            }
+                            case 'common_dialogue_user_menu_nav_iam_user_app':{
+                                COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
+                                await COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickNavIamUserApp(COMMON_GLOBAL.user_locale,
+                                                                                                                        COMMON_GLOBAL.user_timezone,
+                                                                                                                        COMMON_GLOBAL.user_direction,
+                                                                                                                        COMMON_GLOBAL.user_arabic_script);
+                                break;
+                            }
+                            case 'common_dialogue_user_menu_nav_iam_user':{
+                                COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
+                                await COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickNavIamUser();
+                                break;
+                            }
+                            case 'common_dialogue_user_menu_messages_list':{
+                                COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickMessage( commonMiscElementRow(event.target));
+                                break;
+                            }
+                            case 'common_dialogue_user_menu_close':{
+                                commonComponentRemove('common_dialogue_user_menu', true);
+                                break;
+                            }
+                            case 'common_dialogue_user_menu_log_in':{
+                                commonComponentRemove('common_dialogue_user_menu');
+                                commonDialogueShow('LOGIN');
+                                break;
+                            }      
+                            case 'common_dialogue_user_menu_signup':{
+                                commonComponentRemove('common_dialogue_user_menu');
+                                commonDialogueShow('SIGNUP');
+                                break;
+                            }
+                            //dialogue user edit
+                            case 'common_dialogue_user_menu_iam_user_btn_user_update':{
+                                await commonUserUpdate();
+                                break;
+                            }
+                            case 'common_dialogue_user_menu_iam_user_btn_user_delete_account':{
+                                const function_delete_user_account = () => { 
+                                    commonIamUserAppDelete(1, null);
+                                };
+                                await commonIamUserAppDelete(null, function_delete_user_account);
+                                
+                                break;
+                            }        
+                            //dialogue verify
+                            case 'common_dialogue_iam_verify_cancel':{
+                                if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_btn_user_update')==null)
+                                    commonUserSessionClear();
+                                commonComponentRemove('common_dialogue_iam_verify', true);
+                                break;
+                            }
+                            //search list
+                            case 'common_profile_detail_list':
+                            case 'common_profile_search_list':
+                            case 'common_profile_stat_list':{
+                                await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
+                                break;
+                            }
+                            //dialogue button stat
+                            case 'common_profile_btn_top':{
+                                await commonProfileStat(1, null);
+                                break;
+                            }
+                            //dialogue profile
+                            case 'common_dialogue_profile_home':{
+                                commonComponentRemove('common_dialogue_user_menu');
+                                await commonProfileStat(1, null);
+                                break;
+                            }
+                            case 'common_dialogue_profile_close':{
+                                commonComponentRemove('common_dialogue_profile', true);
+                                break;
+                            }
+                            //dialogue profile stat
+                            case 'common_profile_stat_row1_1':{
+                                await commonProfileStat(1, null);
+                                break;
+                            }
+                            case 'common_profile_stat_row1_2':{
+                                await commonProfileStat(2, null);
+                                break;
+                            }
+                            case 'common_profile_stat_row1_3':{
+                                await commonProfileStat(3, null);
+                                break;
+                            }
+                            //dialogue profile info
+                            case 'common_profile_main_btn_following':{
+                                COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                                commonProfileDetail(1);
+                                break;
+                            }
+                            case 'common_profile_main_btn_followed':{
+                                COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                                commonProfileDetail(2);
+                                break;
+                            }
+                            case 'common_profile_main_btn_likes':{
+                                COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                                commonProfileDetail(3);
+                                break;
+                            }
+                            case 'common_profile_main_btn_liked':
+                            case 'common_profile_main_btn_liked_heart':
+                            case 'common_profile_main_btn_liked_users':{
+                                commonProfileDetail(4);
+                                COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                                break;
+                            }
+                            
+                            //broadcast
+                            case 'common_broadcast_close':{
+                                commonComponentRemove('common_broadcast');
+                                break;
+                            }
+                            //markdown show/hide details
+                            case (event.target.classList.contains('common_markdown_table_row_master_method')||event.target.classList.contains('common_markdown_table_row_master_path'))?event_target_id:null:{
+                                if (commonMiscElementRow(event.target, 'common_markdown_table_row').querySelector('.common_markdown_table_row_detail_master')?.classList?.contains('show'))
+                                    commonMiscElementRow(event.target, 'common_markdown_table_row').querySelector('.common_markdown_table_row_detail_master')?.classList?.remove('show');
+                                else
+                                    commonMiscElementRow(event.target, 'common_markdown_table_row').querySelector('.common_markdown_table_row_detail_master')?.classList?.add('show');
+                                break;
+                            }
+                            //module leaflet
+                            case 'common_module_leaflet_search_icon':{
+                                COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').focus();
+                                COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                                break;
+                            }
+                            case 'common_module_leaflet_control_search_button':{
+                                COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlSearch(COMMON_GLOBAL.user_locale);
+                                break;
+                            }
+                            case 'common_module_leaflet_control_fullscreen_id':{
+                                COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlFullscreen();
+                                break;
+                            }
+                            case 'common_module_leaflet_control_my_location_id':{
+                                COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlLocation(COMMON_GLOBAL.client_latitude, COMMON_GLOBAL.client_longitude, COMMON_GLOBAL.client_place);
+                                
+                                break;
+                            }
+                            case 'common_module_leaflet_control_layer_button':{
+                                COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlLayer();
+                                break;
+                            }
+                            case 'common_module_leaflet_search_list':{
+                                await COMMON_GLOBAL.moduleLeaflet.methods.eventClickSearchList(event.target);
+                                break;
+                            }
+                            // common app toolbar
+                            case 'common_app_toolbar_start':{
+                                commonMountApp(COMMON_GLOBAL.app_start_app_id);
+                                break;
+                            }
+                            case 'common_app_toolbar_framework_js':
+                            case 'common_app_toolbar_framework_vue':
+                            case 'common_app_toolbar_framework_react':{
+                                COMMON_DOCUMENT.querySelectorAll('#common_app_toolbar .common_toolbar_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_toolbar_selected'));
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
+                                if (event_target_id=='common_app_toolbar_framework_js')
+                                    await commonFrameworkSet(1);
+                                if (event_target_id=='common_app_toolbar_framework_vue')
+                                    await commonFrameworkSet(2);
+                                if (event_target_id=='common_app_toolbar_framework_react')
+                                    await commonFrameworkSet(3);
+                                break;
+                            }    
+                            //dialogue lov
+                            case event.target.classList.contains('common_list_lov_click') && event.target.getAttribute('data-lov')?event_target_id:'':{
+                                commonLovEvent(event, event.target.getAttribute('data-lov'));
+                                break;
+                            }
+                            case 'common_lov_search_icon':{
+                                commonLovFilter(COMMON_DOCUMENT.querySelector('#common_lov_search_input').textContent);
+                                break;
+                            }
+                            case 'common_lov_close':{
+                                commonLovClose();
+                                break;
+                            }
+                            case 'common_lov_list':{
+                                COMMON_DOCUMENT.querySelector('#common_lov_list')['data-function'](event);
+                                break;
+                            }
+                            //markdown document tags
+                            case event.target.classList.contains('common_markdown_image')?event_target_id:'':{
+                                if (event.target.getAttribute('data-url_link'))
+                                    commonComponentRender({
+                                        mountDiv:   'common_window_info',
+                                        data:       {
+                                                    info:'IMAGE',
+                                                    url:event.target.getAttribute('data-url_link'),
+                                                    },
+                                        methods:    {commonFFB:commonFFB},
+                                        path:       '/common/component/common_window_info.js'});
+                                break;
+                            }        
+                            default:{
+                                if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in')){
+                                    COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlZoomIn();
+                                }
+                                if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out')){
+                                    COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlZoomOut();
+                                }
+                                break;
+                            }
                         }
                     }
+                    break;
                 }
-                break;
-            }
-            case 'keydown':{
-                if (event.code=='Enter')
-                    event.preventDefault();
-                if (commonTextEditingDisabled() &&
-                    event.target.classList.contains('common_input') && 
-                        (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
-                        (event.shiftKey ==true && (event.code=='ArrowLeft' || 
-                                                    event.code=='ArrowRight' || 
-                                                    event.code=='ArrowUp' || 
-                                                    event.code=='ArrowDown'|| 
-                                                    event.code=='Home'|| 
-                                                    event.code=='End'|| 
-                                                    event.code=='PageUp'|| 
-                                                    event.code=='PageDown') ) )
-                    ){
+                case 'keydown':{
+                    if (event.code=='Enter')
                         event.preventDefault();
+<<<<<<< HEAD
                 }
                 break;                
             }
@@ -3402,46 +3723,114 @@ const commonEvent = async (event_type,event=null) =>{
                         default:{
                             break;
                         }
+=======
+                    if (commonTextEditingDisabled() &&
+                        event.target.classList.contains('common_input') && 
+                            (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
+                            (event.shiftKey ==true && (event.code=='ArrowLeft' || 
+                                                        event.code=='ArrowRight' || 
+                                                        event.code=='ArrowUp' || 
+                                                        event.code=='ArrowDown'|| 
+                                                        event.code=='Home'|| 
+                                                        event.code=='End'|| 
+                                                        event.code=='PageUp'|| 
+                                                        event.code=='PageDown') ) )
+                        ){
+                            event.preventDefault();
+>>>>>>> 1054f6ff (AP-110 adds await for common, component and app events in commonEvent() and dblclick in commonMountApp() in common.js, implements city search in common_map_control_expand.js and adds common_map_control_expand_search_city.js component)
                     }
-                break;
+                    break;                
+                }
+                case 'keyup':{
+                    if (event.target.classList.contains('common_password')){   
+                        COMMON_DOCUMENT.querySelector(`#${event.target.id}_mask`).textContent = 
+                            event.target.textContent.replace(event.target.textContent, '*'.repeat(commonMiscLengthWithoutDiacrites(event.target.textContent)));
+                    }
+                    else
+                        switch (event.target.id){
+                            case 'common_profile_search_input':{
+                                commonMiscListKeyEvent({event:event,
+                                                        event_function:commonProfileSearch,
+                                                        event_parameters:commonProfileShow,
+                                                        rows_element:'common_profile_search_list',
+                                                        search_input:'common_profile_search_input'});
+                                break;
+                            }        
+                            case 'common_lov_search_input':{
+                                commonMiscListKeyEvent({event:event,
+                                                        event_function:commonLovFilter,
+                                                        event_parameters:COMMON_DOCUMENT.querySelector('#common_lov_search_input').textContent,
+                                                        rows_element:'common_lov_list',
+                                                        search_input:'common_lov_search_input'});
+                                break;
+                            }
+                            //dialogue verify
+                            case 'common_dialogue_iam_verify_verification_char1':
+                            case 'common_dialogue_iam_verify_verification_char2':
+                            case 'common_dialogue_iam_verify_verification_char3':
+                            case 'common_dialogue_iam_verify_verification_char4':
+                            case 'common_dialogue_iam_verify_verification_char5':{
+                                COMMON_GLOBAL.component.common_dialogue_iam_verify?.methods?.commonUserVerifyCheckInput( COMMON_DOCUMENT.querySelector(`#${event.target.id}`), 
+                                                                'common_dialogue_iam_verify_verification_char' + (Number(event.target.id.substring(event.target.id.length-1))+1));
+                                break;
+                            }
+                            case 'common_dialogue_iam_verify_verification_char6':{
+                                COMMON_GLOBAL.component.common_dialogue_iam_verify?.methods?.commonUserVerifyCheckInput(COMMON_DOCUMENT.querySelector(`#${event.target.id}`), '');
+                                break;
+                            }
+                            //module leaflet
+                            case 'common_module_leaflet_search_input':{
+                                commonMiscListKeyEvent({event:event,
+                                                        event_function:commonMicroserviceWorldcitiesSearch,
+                                                        event_parameters:event.target['data-function'],
+                                                        rows_element:'common_module_leaflet_search_list',
+                                                        search_input:'common_module_leaflet_search_input'});
+                                break;
+                            }
+                            default:{
+                                break;
+                            }
+                        }
+                    break;
+                }
+                case 'mousedown':{
+                    //common event only
+                    commonEventCopyPasteCutDisable(event);
+                    break;
+                }
+                case 'touchstart':{
+                    //common event only
+                    commonEventInputDisable(event);
+                    break;
+                }
+                case 'copy':{
+                    //common event only
+                    commonEventCopyPasteCutDisable(event);
+                    break;
+                }
+                case 'paste':{
+                    //common event only
+                    commonEventCopyPasteCutDisable(event);
+                    break;
+                }
+                case 'cut':{
+                    //common event only
+                    commonEventCopyPasteCutDisable(event);
+                    break;
+                }
+                default:{
+                    break;
+                }
             }
-            case 'mousedown':{
-                //common event only
-                commonEventCopyPasteCutDisable(event);
-                break;
-            }
-            case 'touchstart':{
-                //common event only
-                commonEventInputDisable(event);
-                break;
-            }
-            case 'copy':{
-                //common event only
-                commonEventCopyPasteCutDisable(event);
-                break;
-            }
-            case 'paste':{
-                //common event only
-                commonEventCopyPasteCutDisable(event);
-                break;
-            }
-            case 'cut':{
-                //common event only
-                commonEventCopyPasteCutDisable(event);
-                break;
-            }
-            default:{
-                break;
-            }
-        }    
+        })();
         //2 component events
         //fire component events defined in each component in COMMON_GLOBAL.component[component].events key
-        Object.values(COMMON_GLOBAL.component).forEach(component=>
+        for (const component of Object.values(COMMON_GLOBAL.component))
             component.events?
-                component.events(event_type, event):
-                    null);
+                await component.events(event_type, event):
+                    null;
         //3 app events
-        COMMON_GLOBAL.app_metadata.events[event_type]?COMMON_GLOBAL.app_metadata.events[event_type](event):null;    
+        COMMON_GLOBAL.app_metadata.events[event_type]?await COMMON_GLOBAL.app_metadata.events[event_type](event):null;
     }
 };
 /**
@@ -3949,6 +4338,7 @@ const commonMountApp = async (app_id) =>{
     const appdata = appMetadata();
     //add metadata using tree shaking pattern
     COMMON_GLOBAL.app_metadata.events.change = appdata.events.change;
+    COMMON_GLOBAL.app_metadata.events.dblclick = appdata.events.dblclick;
     COMMON_GLOBAL.app_metadata.events.click = appdata.events.click;
     COMMON_GLOBAL.app_metadata.events.focus = appdata.events.focus;
     COMMON_GLOBAL.app_metadata.events.input = appdata.events.input;

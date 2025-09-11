@@ -53,6 +53,7 @@ const template = props =>`
 *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
 *                      commonComponentRemove:CommonModuleCommon['commonComponentRemove'],
 *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
+*                      commonMiscListKeyEvent:CommonModuleCommon['commonMiscListKeyEvent'],
 *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
 *                      commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
 *                      commonUserLocale:CommonModuleCommon['commonUserLocale'],
@@ -538,9 +539,11 @@ const component = async props => {
                                 methods:    {
                                             goTo:goTo,
                                             commonWindowFromBase64:props.methods.commonWindowFromBase64,
+                                            commonMiscListKeyEvent:props.methods.commonMiscListKeyEvent,
                                             commonUserLocale:props.methods.commonUserLocale,
                                             commonFFB:props.methods.commonFFB,
                                             commonMiscElementId:props.methods.commonMiscElementId,
+                                            commonMiscElementRow:props.methods.commonMiscElementRow,
                                             commonComponentRender:props.methods.commonComponentRender
                                             },
                                 path:       '/common/component/common_map_control_expand.js'});    
