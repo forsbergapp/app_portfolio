@@ -88,15 +88,14 @@ body{
 }
 
 /*APP THEME COMMON*/
-.common_dialogue_iam_start_selected {
-	background-color: var(--app_theme_selected_background_color);
-}
 #common_iam_avatar_avatar{
 	background-color: var(--app_theme_main_branding_color1);
     border-radius: 50%;
 }
+.common_dialogue_iam_start_selected,
+.common_map_control_active,
 .common_row_selected{
-	background-color: var(--app_theme_selected_background_color);
+	background-color: var(--app_theme_selected_background_color) !important;
 }
 #common_app_toolbar{
 	color: var(--app_theme_main_branding_color3);
@@ -118,23 +117,17 @@ body{
 	background-color:var(--app_theme_background_color) !important;
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }
-
-.common_module_leaflet_control_button,
-.leaflet-control-zoom-in, 
-.leaflet-control-zoom-out{
+.common_map_control_expand{
+	background-color: var(--app_theme_main_branding_color2) !important;
+}
+.common_map_control_button{
 	background-color: var(--app_theme_main_branding_color2);
 }
-.common_module_leaflet_control_expand{
-	background-color: var(--app_theme_main_branding_color2);
-}
-#common_module_leaflet_search_list_wrap{
-	background-color: var(--app_theme_dialogue_background_color);
-}
-.leaflet-popup-content-wrapper{
+.common_map_popup{
 	background-color: var(--app_theme_dialogue_background_color) !important;
 	color: var(--app_theme_text_color) !important;
 }
-.common_module_leaflet_search_list_row:hover,
-.common_module_leaflet_search_list_row:active {
+.common_map_control_expand_search_list_row:hover,
+.common_map_control_expand_search_list_row:active {
 	background-color: var(--common_app_color_white3);
 }
