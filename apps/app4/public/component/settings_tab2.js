@@ -30,6 +30,7 @@ const template = () => `<div id='mapid'>
  *                      commonMiscListKeyEvent:CommonModuleCommon['commonMiscListKeyEvent'],
  *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
  *                      commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
+ *                      commonMiscImport:CommonModuleCommon['commonMiscImport'],
  *                      commonComponentRender:CommonModuleCommon['commonComponentRender'], 
  *                      commonComponentRemove:CommonModuleCommon['commonComponentRemove'], 
  *                      commonFFB:CommonModuleCommon['commonFFB'],
@@ -64,6 +65,7 @@ const component = async props => {
                         commonMiscListKeyEvent:props.methods.commonMiscListKeyEvent,
                         commonMiscElementRow:props.methods.commonMiscElementRow,
                         commonMiscElementId:props.methods.commonMiscElementId,
+                        commonMiscImport:props.methods.commonMiscImport,
                         commonUserLocale:props.methods.commonUserLocale,
                         commonFFB:props.methods.commonFFB
                         },
