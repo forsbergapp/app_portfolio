@@ -102,6 +102,7 @@ const appInit = async () =>{
                         commonMiscListKeyEvent:common.commonMiscListKeyEvent,
                         commonMiscElementRow:common.commonMiscElementRow,
                         commonMiscElementId:common.commonMiscElementId,
+                        commonMiscImport:common.commonMiscImport,
                         commonUserLocale:common.commonUserLocale,
                         commonFFB:common.commonFFB
                         },

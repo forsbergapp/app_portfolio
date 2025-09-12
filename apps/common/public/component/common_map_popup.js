@@ -61,7 +61,7 @@ const component = async props => {
        data:       null,
        methods:    null,
        template:   template({
-                        id:             props.data.geoJSON.id,
+                        id:             props.data.geoJSON.id??'',
                         x:              props.data.geoJSON.properties.x,
                         y:              props.data.geoJSON.properties.y,
                         countrycode:    props.data.geoJSON.properties.countrycode,

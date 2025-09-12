@@ -677,6 +677,7 @@ const SettingShow = async (tab_selected) => {
                             commonMiscListKeyEvent:common.commonMiscListKeyEvent,
                             commonMiscElementRow:common.commonMiscElementRow,
                             commonMiscElementId:common.commonMiscElementId,
+                            commonMiscImport:common.commonMiscImport,
                             commonComponentRender:common.commonComponentRender,
                             commonComponentRemove:common.commonComponentRemove,
                             commonFFB:common.commonFFB,

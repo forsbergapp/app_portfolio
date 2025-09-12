@@ -20,7 +20,7 @@
 const template = props => ` <div id='${props.id}' 
                                  class='common_map_tile' 
                                  style='left:${(props.left)}px;top:${(props.top)}px;width:${props.tileSize}px;height:${props.tileSize}px;background-image:url(${props.url})'>
-                            </div`;
+                            </div>`;
 /**
 * @name component
 * @description Component
