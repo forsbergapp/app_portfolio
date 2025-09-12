@@ -12,6 +12,7 @@ Comparison tables with solutions are presented in the Presentation app and Apps 
 - Stripe payment process
 - Pix Brazil
 - Vue/React
+- Leaflet
 - Polyfill
 - JSON Web token
 - Express
