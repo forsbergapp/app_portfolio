@@ -288,8 +288,6 @@ const commonClientLocale = accept_language =>{
  *                      makes ECMAScript module adding export
  *                  /modules/react/react.development.js
  *                      makes ECMAScript module adding export
- *                  /modules/leaflet/leaflet-src.esm.js
- *                      removes sourceMappingURL
  *              .html files
  *              .webp files
  *              .png files
@@ -311,33 +309,6 @@ const commonResourceFile = async parameters =>{
         case parameters.content_type == 'text/css' && parameters.resource_id=='/common/css/font/fonts.css':{
             //loaded at server start with font url replaced with secure url and about 1700 IamEncryption records
             return {result:{resource:server.commonCssFonts.css}, type:'JSON'};
-        }
-        case parameters.content_type == 'text/css' && parameters.resource_id == '/common/modules/leaflet/leaflet.css':{
-            /**
-             * @description Remove third party fonts
-             * @param {string} file
-             */
-            const modify = file =>{
-                return  file
-                        .replaceAll('\r','\n')
-                        .split('\n')
-                        .map(row=> {
-                            const match = /font-family:[\s\S]*?;/g.exec(row);
-                            if (match)
-                                return row.replace(match[0], '');
-                            else
-                                return row;
-                        })
-                        .join('\n');
-            };
-            return {type:'JSON', 
-                    result:{
-                            resource:await commonGetFile({  app_id:parameters.app_id, 
-                                                            path:`${resource_directory}${resource_path}`, 
-                                                            content_type:'text/css',
-                                                            modify:modify})
-                            }
-                    };
         }
         case parameters.content_type == 'text/css':
         case parameters.content_type == 'application/json':
@@ -374,23 +345,6 @@ const commonResourceFile = async parameters =>{
                             file = file + 'export {React}';
                         }  
                         return file;
-                    };
-                    return {type:'JSON', 
-                            result:{
-                                    resource:await commonGetFile({  app_id:parameters.app_id, 
-                                                                    path:`${resource_directory}${resource_path}`, 
-                                                                    content_type:parameters.content_type,
-                                                                    modify:modify})
-                                    }
-                            };
-                }
-                case '/modules/leaflet/leaflet-src.esm.js':{
-                    /**
-                     * @description Replace sourceMappingUrl
-                     * @param {string} file
-                     */
-                    const modify = file =>{
-                        return file.replace(  '//# sourceMappingURL=','//');
                     };
                     return {type:'JSON', 
                             result:{
@@ -1078,7 +1032,6 @@ const commonAppError = async () =>serverError({data:null, methods:null});
  *		            filename in /apps/app[app_id]|common/public/images
  *		            filename in /apps/app[app_id]|common/public/js
  *                  filename in /apps/app[app_id]|common/public/modules/react
- *                  filename in /apps/app[app_id]|common/public/modules/leaflet
  *                  filename in /apps/app[app_id]|common/public/modules/vue
  * @function
  * @param {{app_id:number|null,

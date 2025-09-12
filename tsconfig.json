@@ -12,7 +12,6 @@
     "include": ["server", "apps", "microservice", "test"],
     "exclude":[ "apps/common/public/modules/easy.qrcode", 
                 "apps/common/public/modules/fontawesome", 
-                "apps/common/public/modules/leaflet", 
                 "apps/common/public/modules/react",
                 "apps/common/public/modules/vue",
                 "apps/default"]

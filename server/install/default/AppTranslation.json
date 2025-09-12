@@ -181,12 +181,23 @@
         "text": "",
         "json_data":{"name":"Maps", 
                     "screenshot_start":"[![Maps](/common/documents/screenshot_app7_small.webp)](/common/documents/screenshot_app7.webp)",
-                    "description":"World map that integrates with microservices", 
+                    "description":"World map that integrates with local world geolocation database", 
                     "pattern":"", 
-                    "technology":"Leaflet", 
-                    "reference":"OpenStreetMap, simplemaps, Leaflet", 
+                    "technology":"GeoJSON, GPS", 
+                    "reference":"OpenStreetMap, GeoJSON, RFC 7946", 
                     "security":"OWASP",
-                    "comparison":[],
+                    "comparison":[  
+                        [   ["Leaflet",                                             "App Portfolio"], 
+                            ["event on each tiles, document and windows",           "Event delegation on app root only"], 
+                            ["uses GeoJson RFC 7946",                               "uses GeoJson Point and Linestring RFC 7946"],
+                            ["not all layers use GeoJSON ",                         "all layers use GeoJSON"],
+                            ["mixes HTML and Javascript",                           "Vue SFC pattern"],
+                            ["obscure event management",                            "standard Javascript events"],
+                            ["needs API to get GPS from map",                       "Javascript event properties and 'simple' GPS calculation"],
+                            ["semantic HTML",                                       "pure divs"],
+                            ["DOM API for HTML",                                    "Vue SFC pattern and template strings, no DOM API for HTML"]
+                        ]
+        ],
                     "screenshot_end":[""]}
     },
     {

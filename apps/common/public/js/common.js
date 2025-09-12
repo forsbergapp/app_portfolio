@@ -4,7 +4,7 @@
 
 /** @import {   COMMON_WINDOW, COMMON_DOCUMENT, CommonGlobal,
  *              CommonAppEvent,commonEventType, CommonRESTAPIMethod,CommonRESTAPIAuthorizationType,CommonComponentResult,
- *              CommonModuleLeafletMethods,CommonModuleVue,CommonModuleReact,CommonModuleReactDOM,
+ *              CommonModuleVue,CommonModuleReact,CommonModuleReactDOM,
  *              commonAppInit, commonMetadata, CommonModuleCommon} from '../../../common_types.js' 
  */
 
@@ -34,7 +34,7 @@ const COMMON_GLOBAL = {
     app_div:'app',
     app_console:{warn:COMMON_WINDOW.console.warn, info:COMMON_WINDOW.console.info, error:COMMON_WINDOW.console.error},
     app_createElement:{original:COMMON_DOCUMENT.createElement,custom:()=>null},
-    app_eventListeners:{original: HTMLElement.prototype.addEventListener, LEAFLET:[], REACT:[], VUE:[], OTHER:[]},
+    app_eventListeners:{original: HTMLElement.prototype.addEventListener, REACT:[], VUE:[], OTHER:[]},
     app_function_exception:null,
     app_function_session_expired:null,
     app_function_sse:null,
@@ -95,24 +95,7 @@ const COMMON_GLOBAL = {
     user_arabic_script:'',
     resource_import:[],
     component_import:[],
-    component:{},
-    moduleLeaflet:{methods:{eventClickCountry:          ()=>null, 
-                            eventClickCity:             ()=>null,
-                            eventClickMapLayer:         ()=>null,
-                            eventClickControlZoomIn:    ()=>null,
-                            eventClickControlZoomOut:   ()=>null,
-                            eventClickControlSearch:    ()=>null,
-                            eventClickControlFullscreen:()=>null,
-                            eventClickControlLocation:  ()=>null,
-                            eventClickControlLayer:     ()=>null,
-                            eventClickSearchList:       ()=>null,
-                            eventKeyUpSearch:           ()=>null,
-                            map_toolbar_reset:          ()=>null,
-                            map_line_removeall:         ()=>null,
-                            map_line_create:            ()=>null,
-                            map_update:                 ()=>null
-                        }
-                    }
+    component:{}
 };
 Object.seal(COMMON_GLOBAL);
 
@@ -243,12 +226,11 @@ const commonMiscImport = async (url, content=null) =>{
  * @description Importmap that return file path for given file
  *              to solve importmap not working for some browsers
  * @function
- * @param {'leaflet'|'React'|'ReactDOM'|'regional'|'Vue'} file
+ * @param {'React'|'ReactDOM'|'regional'|'Vue'} file
  * @returns {string}
  */
 const commonMiscImportmap = file =>{
     return {
-        leaflet	        : '/common/modules/leaflet/leaflet-src.esm.js',
         React 		    : '/common/modules/react/react.development.js',
         ReactDOM 	    : '/common/modules/react/react-dom.development.js',
         regional  	    : '/common/modules/regional/regional.js',
@@ -1011,14 +993,9 @@ const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
 
             //rename attributes used
             const rename_attributes =  [
-                                    //Leaflet SVG:
-                                    ['stroke-opacity',  'strokeOpacity'],
+                                    //Map SVG:
                                     ['stroke-width',    'strokeWidth'],
-                                    ['stroke-linecap',  'strokeLinecap'],
-                                    ['stroke-linejoin', 'strokeLinejoin'],
-                                    ['pointer-events',  'pointerEvents'],
                                     //other used SVG attributes:
-                                    ['shape-rendering', 'shapeRendering'],
                                     ['xmlns:xlink',     'xmlnsXlink'],
                                     //other attributes
                                     ['charset',         'charSet'],
@@ -2281,73 +2258,6 @@ const commonUserPreferencesGlobalSetDefault = (preference) => {
 };
 
 /**
- * @name commonModuleLeafletInit
- * @description Module Leaflet init
- * @function
- * @param {{mount_div:string,
- *          longitude:string,
- *          latitude:string,
- *          place:String,
- *          doubleclick_event:function|null,
- *          update_map?:boolean|null
- *          }} parameters
- * @returns {Promise.<void>}
- */
-const commonModuleLeafletInit = async parameters => {  
-    /**
-     * 
-     * @type {{ data:null,
-     *          methods:CommonModuleLeafletMethods}}
-     */
-    const module_leaflet = await commonComponentRender({
-                            mountDiv:   parameters.mount_div,
-                            data:       {   
-                                        longitude:parameters.longitude,
-                                        latitude:parameters.latitude,
-                                        app_eventListeners:COMMON_GLOBAL.app_eventListeners
-                                        },
-                            methods:    {
-                                        commonMiscImport:commonMiscImport,
-                                        commonMiscImportmap:commonMiscImportmap
-                                        },
-                            path:       '/common/component/common_module_leaflet.js'})
-    .catch(error=>{throw error;});
-
-    const module_leaflet_control = await commonComponentRender({
-        mountDiv:   null, 
-        data:       {   
-                    data_app_id:COMMON_GLOBAL.app_common_app_id,
-                    user_locale:COMMON_GLOBAL.user_locale,
-                    locale:COMMON_GLOBAL.user_locale,
-                    longitude:parameters.longitude,
-                    latitude:parameters.latitude
-                    },
-        methods:    {
-                    function_event_doubleclick: parameters.doubleclick_event,
-                    commonMiscImport:commonMiscImport,
-                    commonMiscImportmap:commonMiscImportmap,
-                    commonComponentRender:commonComponentRender,
-                    commonGeolocationPlace:commonGeolocationPlace,
-                    commonMiscElementRow:commonMiscElementRow,
-                    commonWindowFromBase64:commonWindowFromBase64,
-                    commonFFB:commonFFB,
-                    moduleLeafletContainer:module_leaflet.methods.leafletContainer,
-                    moduleLeafletLibrary:module_leaflet.methods.leafletLibrary
-                    },
-        path:       '/common/component/common_module_leaflet_control.js'});
-        
-        COMMON_GLOBAL.moduleLeaflet.methods = module_leaflet_control.methods;
-        if (parameters.update_map)
-            COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:parameters.longitude,
-                latitude:parameters.latitude,
-                text_place:parameters.place,
-                country:'',
-                city:'',
-                timezone_text :null
-            });
-};
-
-/**
  * @description Receives server side event from BFF, decrypts message using start uuid and delegates message
  * @param {{socket:*, 
  *          uuid:string|null, 
@@ -2704,26 +2614,6 @@ const commonGeolocationPlace = async (longitude, latitude) => {
     });
 };
 /**
- * @name commonMicroserviceWorldcitiesSearch
- * @description Microservice Geolocation: Worldcities - Search
- * @function
- * @param {function} event_function 
- * @returns {Promise.<void>}
- */
-const commonMicroserviceWorldcitiesSearch = async (event_function) =>{
-    commonComponentRender({
-        mountDiv:   'common_module_leaflet_search_list_wrap',
-        data:       {
-                    data_app_id:COMMON_GLOBAL.app_common_app_id,
-                    search:COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').textContent
-                    },
-        methods:    {
-                    click_function:event_function,
-                   commonFFB:commonFFB
-                    },
-        path:       '/common/component/common_module_leaflet_search_city.js'});
-};
-/**
  * @name commonTextEditingDisabled
  * @description Check if textediting is disabled
  * @function
@@ -2741,14 +2631,6 @@ const commonTextEditingDisabled = () =>COMMON_GLOBAL.app_text_edit=='0';
  * @returns {Promise.<void>}
  */
 const commonEventSelectAction = async (event_target_id, target) =>{
-   //module leaflet events
-   if(event_target_id== 'common_module_leaflet_select_country')
-       COMMON_GLOBAL.moduleLeaflet.methods.eventClickCountry(event_target_id);
-   if (event_target_id== 'common_module_leaflet_select_city')
-       await COMMON_GLOBAL.moduleLeaflet.methods.eventClickCity(event_target_id);
-   if(event_target_id == 'common_module_leaflet_select_mapstyle')
-       COMMON_GLOBAL.moduleLeaflet.methods.eventClickMapLayer(target);
-
    //dialogue user menu events
    if (event_target_id == 'common_dialogue_user_menu_app_theme'){
        COMMON_DOCUMENT.body.className = 'app_theme' + COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
@@ -3220,33 +3102,6 @@ const commonEvent = async (event_type,event=null) =>{
                                     commonMiscElementRow(event.target, 'common_markdown_table_row').querySelector('.common_markdown_table_row_detail_master')?.classList?.add('show');
                                 break;
                             }
-                            //module leaflet
-                            case 'common_module_leaflet_search_icon':{
-                                COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').focus();
-                                COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
-                                break;
-                            }
-                            case 'common_module_leaflet_control_search_button':{
-                                COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlSearch(COMMON_GLOBAL.user_locale);
-                                break;
-                            }
-                            case 'common_module_leaflet_control_fullscreen_id':{
-                                COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlFullscreen();
-                                break;
-                            }
-                            case 'common_module_leaflet_control_my_location_id':{
-                                COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlLocation(COMMON_GLOBAL.client_latitude, COMMON_GLOBAL.client_longitude, COMMON_GLOBAL.client_place);
-                                
-                                break;
-                            }
-                            case 'common_module_leaflet_control_layer_button':{
-                                COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlLayer();
-                                break;
-                            }
-                            case 'common_module_leaflet_search_list':{
-                                await COMMON_GLOBAL.moduleLeaflet.methods.eventClickSearchList(event.target);
-                                break;
-                            }
                             // common app toolbar
                             case 'common_app_toolbar_start':{
                                 commonMountApp(COMMON_GLOBAL.app_start_app_id);
@@ -3293,15 +3148,6 @@ const commonEvent = async (event_type,event=null) =>{
                                                     },
                                         methods:    {commonFFB:commonFFB},
                                         path:       '/common/component/common_window_info.js'});
-                                break;
-                            }        
-                            default:{
-                                if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in')){
-                                    COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlZoomIn();
-                                }
-                                if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out')){
-                                    COMMON_GLOBAL.moduleLeaflet.methods.eventClickControlZoomOut();
-                                }
                                 break;
                             }
                         }
@@ -3362,15 +3208,6 @@ const commonEvent = async (event_type,event=null) =>{
                             }
                             case 'common_dialogue_iam_verify_verification_char6':{
                                 COMMON_GLOBAL.component.common_dialogue_iam_verify?.methods?.commonUserVerifyCheckInput(COMMON_DOCUMENT.querySelector(`#${event.target.id}`), '');
-                                break;
-                            }
-                            //module leaflet
-                            case 'common_module_leaflet_search_input':{
-                                commonMiscListKeyEvent({event:event,
-                                                        event_function:commonMicroserviceWorldcitiesSearch,
-                                                        event_parameters:event.target['data-function'],
-                                                        rows_element:'common_module_leaflet_search_list',
-                                                        search_input:'common_module_leaflet_search_input'});
                                 break;
                             }
                             default:{
@@ -3602,9 +3439,7 @@ const commonFrameworkSet = async (framework) => {
             data_function.push({id:element.id, element_function:element['data-function']});
         }
     });
-    //save Leaflet containers with special event management and saved objects on elements if any Leaflet container used
-    const leaflet_containers = COMMON_DOCUMENT.querySelectorAll('.leaflet-container');
-
+    
     COMMON_GLOBAL.app_eventListeners.OTHER = [];
 
     //remove all listeners in app and app root divs including all objects saved on elements
@@ -3666,12 +3501,6 @@ const commonFrameworkSet = async (framework) => {
     commonEvent('paste', null);
     commonEvent('cut', null);
 
-    //replace Leaflet containers with the saved ones containing Leaflet objects and events if any Leaflet container used
-    let index= 0;
-    for (const leaflet_container of leaflet_containers){
-        COMMON_DOCUMENT.querySelectorAll('.leaflet-container')[index].replaceWith(leaflet_container);
-        index++;
-    }
     //update all elements with data-function since copying outerHTML does not include data-function
     data_function.forEach(element =>COMMON_DOCUMENT.querySelector(`#${element.id}`)['data-function'] = element.element_function);
     
@@ -3689,98 +3518,32 @@ const commonFrameworkSet = async (framework) => {
 /**
  * @name custom_framework
  * @description Set custom framework functionality:
- *              replace image src and alt attributes
  *              replace createElement with temporary element
  *              block debugger calling createElement
- *              block Leaflet request to create canvas not used
  *              show only console messages if app_framework_messages == 1
  *              save info about events created
  * @function
  * @returns {void}
  */
 const custom_framework = () => {
-    Object.defineProperty(HTMLImageElement.prototype,'src',{set:()=>{null;}});
-    //Replace image src request path and remove replace alt text with ' '
-    const originalSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
-
-    //Replace Leaflet img src replaced with div and CSS url with external request
-    Object.defineProperties(HTMLDivElement.prototype, {
-        src: {
-            set: function(value) {    
-                    if (value.indexOf('marker-')>-1)
-                        commonMiscResourceFetch('/common/modules/leaflet/images/' + value, this, 'image/png');
-                    else{
-                        this.style.backgroundImage = `url('${value}')`;
-                        this.style.backgroundSize = 'cover';
-                    }
-                    this.style.visibility = 'inherit';
-                    return;
-                  }
-          }
-    });
-    //Replace Leaflet innerHTML 
-    const originalinnerHTMLDescriptor = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
-    Object.defineProperties(Element.prototype, {
-        innerHTML: {
-            set: function(value) {    
-                if (module(Error()?.stack)=='LEAFLET')
-                    originalinnerHTMLDescriptor?.set?.call(this, value
-                                                                .replaceAll((value.indexOf('<a href')>-1 &&
-                                                                             value.indexOf('Leaflet')>-1)?
-                                                                                value:
-                                                                                    null,'<div>Leaflet</div>')
-                                                                .replaceAll('<span','<div')
-                                                                .replaceAll('/span','/div'));
-                else
-                    originalinnerHTMLDescriptor?.set?.call(this, value);
-                }
-          }
-    });
-    //Replace Leaflet src with CSS and custom request syntax
-    Object.defineProperties(HTMLImageElement.prototype, {
-        src: {
-          get: function() {
-            return originalSrcDescriptor?.get;
-          },
-          set: function(value) {    
-                    if (value.indexOf('marker-')>-1 && module(Error()?.stack)=='LEAFLET'){
-                        if (!this.id)
-                            this.id = 'Leaflet_img_' + Date.now();
-                        commonMiscResourceFetch(value, this, 'image/png');
-                    }
-                    else
-                        originalSrcDescriptor?.set?.call(this, value);
-                    return;
-                }
-        },
-        alt: {
-            //replace all value with ' '
-            set: function() { this.setAttribute('alt', ' '); },
-        }
-      });
-
     /**
      * @description replaces createElement with temporary element
      *              so debugger does not create any element
      * @param {string} element
      */
     const customCreateElement = element => {
-        if (element.toLowerCase() == 'canvas' && module(Error()?.stack)=='LEAFLET')
-            return {getContext:true};
+        /**@ts-ignore */
+        if (new Error().stack?.split('\n')[1].indexOf('debugger')>-1 ){
+            null;
+        }
         else{
-            /**@ts-ignore */
-            if (new Error().stack?.split('\n')[1].indexOf('debugger')>-1 ){
-                null;
-            }
-            else{
-                const id = 'temp_' + Date.now().toString();
-                //replace a, span and img with div
-                COMMON_DOCUMENT.querySelector('#common_app').innerHTML += `<${(element=='a' ||element=='img' ||element=='span')?'div':element} id='${id}'></${element}>`;
-                const new_element = COMMON_DOCUMENT.querySelector(`#common_app #${id}`);
-                COMMON_DOCUMENT.querySelector(`#common_app #${id}`).remove();
-                new_element.removeAttribute('id');
-                return new_element;
-            }
+            const id = 'temp_' + Date.now().toString();
+            //replace a, span and img with div
+            COMMON_DOCUMENT.querySelector('#common_app').innerHTML += `<${(element=='a' ||element=='img' ||element=='span')?'div':element} id='${id}'></${element}>`;
+            const new_element = COMMON_DOCUMENT.querySelector(`#common_app #${id}`);
+            COMMON_DOCUMENT.querySelector(`#common_app #${id}`).remove();
+            new_element.removeAttribute('id');
+            return new_element;
         }
     };
     COMMON_GLOBAL.app_createElement.custom = COMMON_DOCUMENT.createElement;
@@ -3791,20 +3554,16 @@ const custom_framework = () => {
     /**
      * 
      * @param {*} stack 
-     * @returns {'LEAFLET'|'REACT'|'VUE'|'OTHER'}
+     * @returns {'REACT'|'VUE'|'OTHER'}
      */
     const module = (stack) => {
-        if (stack.toLowerCase().indexOf('leaflet')>-1)
-            return 'LEAFLET';
+        if (stack.toLowerCase().indexOf('react')>-1)
+            return 'REACT';
         else {
-            if (stack.toLowerCase().indexOf('react')>-1)
-                return 'REACT';
-            else {
-                if (stack.toLowerCase().indexOf('vue')>-1)
-                    return 'VUE';
-                else
-                    return 'OTHER';
-            }
+            if (stack.toLowerCase().indexOf('vue')>-1)
+                return 'VUE';
+            else
+                return 'OTHER';
         }
     };
     /**
@@ -3812,7 +3571,6 @@ const custom_framework = () => {
      * No event is created for React
      * Disables test of passive listener that tries to create test event on windows objects that
      * affects touch events on mobile and on scroll divs inside third party divs
-     * Leaflet tries to create 'testPassiveEventSupport' on window object
      * React tries to create 'test' on windows object
      * @param {string} scope
      * @param {*} object
@@ -4039,8 +3797,6 @@ const commonGet = () =>{
         commonUserMessageShowStat:commonUserMessageShowStat,
         commonUserUpdateAvatar:commonUserUpdateAvatar,
         commonUserLocale:commonUserLocale,
-        /* MODULE LEAFLET  */
-        commonModuleLeafletInit:commonModuleLeafletInit, 
         /* FFB */
         common_FFBSSE,
         commonFFB:commonFFB,
@@ -4211,8 +3967,6 @@ export{/* GLOBALS*/
        commonUserMessageShowStat,
        commonUserUpdateAvatar,
        commonUserLocale,
-       /* MODULE LEAFLET  */
-       commonModuleLeafletInit, 
        /* FFB */
        common_FFBSSE,
        commonFFB,

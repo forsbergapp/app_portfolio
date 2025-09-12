@@ -45,7 +45,7 @@ const component = async props => {
         data:       null,
         methods:    null,
         template:   template({
-                        id:     props.data.geoJSON.id,
+                        id:     props.data.geoJSON.id??'',
                         left:   props.data.geoJSON.properties.left,
                         top:    props.data.geoJSON.properties.top,
                         tileSize:  props.data.geoJSON.properties.tileSize,

@@ -12,12 +12,19 @@
  * @function
  * @param {{id:string,
  *          points:string,
+ *          gps_array_string:string,
  *          title:string,
  *          color:string,
  *          width:number}} props 
  * @returns {string}
  */
-const template = props => ` <polyline id='${props.id}' class='common_map_line' points='${props.points}' fill='none' stroke='${props.color}' stroke-width='${props.width}'>
+const template = props => ` <polyline id='${props.id}' 
+                                class='common_map_line' 
+                                points='${props.points}' 
+                                data-gps='${props.gps_array_string}'
+                                fill='none' 
+                                stroke='${props.color}' 
+                                stroke-width='${props.width}'>
                             </polyline>`;
 /**
 * @name component
@@ -43,13 +50,14 @@ const component = async props => {
        data:       null,
        methods:    null,
        template:   template({
-                        id:     props.data.geoJSON.id,
+                        id:     props.data.geoJSON.id??'',
                         points: props.data.geoJSON.geometry.coordinates
                                 .map(([lon, lat]) => {
-                                    const [wx, wy] = props.methods.project(lon, lat);
+                                    const [wx, wy] = props.methods.project(+lon, +lat);
                                     return `${wx + props.data.geoJSON.properties.offsetX},${wy + props.data.geoJSON.properties.offsetY}`;
                                 })
                                 .join(' '),
+                        gps_array_string:JSON.stringify(props.data.geoJSON.geometry.coordinates),
                         title:  props.data.geoJSON.properties.title,
                         color:  props.data.geoJSON.properties.color,
                         width:  props.data.geoJSON.properties.width

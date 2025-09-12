@@ -3,8 +3,10 @@
  * @module apps/app4/app
  */
 /**
- * @import {commonMetadata, CommonAppEvent, CommonRESTAPIMethod, CommonComponentResult, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
- * @import {APP_PARAMETERS, APP_user_setting_data, APP_user_setting_record, APP_REPORT_day_user_account_app_data_posts, APP_REPORT_settings, APP_GLOBAL, 
+ * @import {commonMetadata, CommonAppEvent, CommonRESTAPIMethod, CommonComponentResult, CommonModuleCommon, COMMON_DOCUMENT,
+ *          commonGeoJSONPolyline} from '../../../common_types.js'
+ * @import {APP_PARAMETERS, APP_user_setting_data, APP_user_setting_record, APP_REPORT_day_user_account_app_data_posts, 
+ *          APP_REPORT_settings, APP_GLOBAL, 
  *          APP_user_setting} from './types.js'
  */
 
@@ -28,7 +30,6 @@ const APP_USER_SETTINGS_EMPTY = {current_id:0,
                                                 regional_arabic_script: '',
                                                 regional_calendar_type: 'GREGORIAN',
                                                 regional_calendar_hijri_type: '',
-                                                gps_popular_place_id: null,
                                                 gps_lat_text: null,
                                                 gps_long_text: null,
                 
@@ -84,21 +85,20 @@ const APP_GLOBAL = {
     regional_default_calendartype:'GREGORIAN',
     regional_default_calendar_hijri_type:'',
 
-    gps_default_place_id:0,
-    gps_module_leaflet_qibbla_title:'',
-    gps_module_leaflet_qibbla_text_size:0,
-    gps_module_leaflet_qibbla_lat:0,
-    gps_module_leaflet_qibbla_long:0,
-    gps_module_leaflet_qibbla_color:'',
-    gps_module_leaflet_qibbla_width:0,
-    gps_module_leaflet_qibbla_opacity:0,
-    gps_module_leaflet_qibbla_old_title:'',
-    gps_module_leaflet_qibbla_old_text_size:0,
-    gps_module_leaflet_qibbla_old_lat:0,
-    gps_module_leaflet_qibbla_old_long:0,
-    gps_module_leaflet_qibbla_old_color:'',
-    gps_module_leaflet_qibbla_old_width:0,
-    gps_module_leaflet_qibbla_old_opacity:0,
+    gps_qibbla_title:'',
+    gps_qibbla_text_size:0,
+    gps_qibbla_lat:0,
+    gps_qibbla_long:0,
+    gps_qibbla_color:'',
+    gps_qibbla_width:0,
+    gps_qibbla_opacity:0,
+    gps_qibbla_old_title:'',
+    gps_qibbla_old_text_size:0,
+    gps_qibbla_old_lat:0,
+    gps_qibbla_old_long:0,
+    gps_qibbla_old_color:'',
+    gps_qibbla_old_width:0,
+    gps_qibbla_old_opacity:0,
 
     design_default_theme_day:'',
     design_default_theme_month:'',
@@ -136,7 +136,6 @@ const APP_GLOBAL = {
     prayer_default_show_midnight:false,
     prayer_default_show_fast_start_end:0,
     timetable_type:0,
-    places:null,
     user_settings:APP_USER_SETTINGS_EMPTY,
     themes: {data:[{type:'', value:'', text:''}]},
     //profile_info functions
@@ -175,7 +174,6 @@ const appReportTimetablePrint = async () => {
  */
 const appReportTimetableSettings = () => {
     const setting_global = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data;
-    const place = APP_GLOBAL.places?APP_GLOBAL.places.filter(place=>place.id==setting_global.gps_popular_place_id)[0]:null;
     return {    locale              	: setting_global.regional_language_locale,
                 timezone            	: setting_global.regional_timezone,
                 number_system       	: setting_global.regional_number_system,
@@ -185,7 +183,7 @@ const appReportTimetableSettings = () => {
                 calendartype        	: setting_global.regional_calendar_type,
                 calendar_hijri_type 	: setting_global.regional_calendar_hijri_type,
 
-                place               	: place?place.text:setting_global.description ??'',
+                place               	: setting_global.description ??'',
                 gps_lat             	: setting_global.gps_lat_text??0,
                 gps_long            	: setting_global.gps_long_text??0,
 
@@ -671,19 +669,19 @@ const SettingShow = async (tab_selected) => {
             common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
-                            app_id:common.COMMON_GLOBAL.app_id,
+                            common_app_id:common.COMMON_GLOBAL.app_common_app_id,
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
                             },
                 methods:    {
-                            lib_timetable_APP_REPORT_GLOBAL:APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL,
                             appComponentSettingUpdate:appComponentSettingUpdate,
-                            getTimezone:(await common.commonMiscImport(common.commonMiscImportmap('regional'))).getTimezone,
+                            commonMiscListKeyEvent:common.commonMiscListKeyEvent,
+                            commonMiscElementRow:common.commonMiscElementRow,
+                            commonMiscElementId:common.commonMiscElementId,
                             commonComponentRender:common.commonComponentRender,
+                            commonComponentRemove:common.commonComponentRemove,
                             commonFFB:common.commonFFB,
-                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
-                            commonMiscTimezoneDate:common.commonMiscTimezoneDate,
-                            commonModuleLeafletInit:common.commonModuleLeafletInit,
-                            commonWindowFromBase64:common.commonWindowFromBase64
+                            commonWindowFromBase64:common.commonWindowFromBase64,
+                            commonUserLocale:common.commonUserLocale
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
@@ -804,109 +802,24 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
                 settingsTimesShow();
                 break;
             }
-        case 'GPS_MAP':
-            {
-                const gps_lat_input = COMMON_DOCUMENT.querySelector('#setting_input_lat');
-                const gps_long_input = COMMON_DOCUMENT.querySelector('#setting_input_long');
-                appModuleLeafletMapUpdate({longitude:gps_long_input.textContent,
-                                latitude:gps_lat_input.textContent,
-                                text_place:COMMON_DOCUMENT.querySelector('#setting_input_place').textContent,
-                                country:'',
-                                city:'',
-                                timezone_text :null
-                            });
-                break;
-            }
         case 'GPS_CITY':
             {                    
-                //read from Leaflet module and custom code
                 //read from latest popup
-                const popup = COMMON_DOCUMENT.querySelectorAll('.common_module_leaflet_popup_sub_title_gps')[COMMON_DOCUMENT.querySelectorAll('.common_module_leaflet_popup_sub_title_gps').length - 1 ];
-                const country = popup.getAttribute('data-country');
-                const city = popup.getAttribute('data-city');
-                const timezone = popup.getAttribute('data-timezone');
-                const latitude = popup.getAttribute('data-latitude');
-                const longitude = popup.getAttribute('data-longitude');
-                
-                //update value in app
-                
-                
-                const gps_lat_input = COMMON_DOCUMENT.querySelector('#setting_input_lat');
-                const gps_long_input = COMMON_DOCUMENT.querySelector('#setting_input_long');
-                gps_long_input.textContent = longitude;
-                gps_lat_input.textContent = latitude;
-
-                if (city=='' && country==''){
-                    //Set place from city + country from popup title
-                    COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = 
-                        COMMON_DOCUMENT.querySelectorAll('.common_module_leaflet_popup_title')[COMMON_DOCUMENT.querySelectorAll('.common_module_leaflet_popup_title').length - 1 ].textContent;
-                }
-                else{
-                    //Set place from city + country from data attributes
-                    COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = city + ', ' + country;
-                }
-                //display empty popular place select
-                common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
-                appModuleLeafletMapQibblaShow();
-                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone;
-                APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(timezone);
-                appUserSettingUpdate('GPS');    
-                break;
-            }
-        case 'GPS_POPULAR_PLACES':
-            {
-                
-                const select_place = JSON.parse(COMMON_DOCUMENT.querySelector('#setting_select_popular_place .common_select_dropdown_value').getAttribute('data-value'));
-                const gps_lat_input = COMMON_DOCUMENT.querySelector('#setting_input_lat');
-                const gps_long_input = COMMON_DOCUMENT.querySelector('#setting_input_long');
-                
-                //set GPS and timezone
-                const longitude_selected = select_place.longitude;
-                const latitude_selected = select_place.latitude;
-                const timezone_selected = select_place.timezone;
-
-                gps_long_input.textContent = longitude_selected;
-                gps_lat_input.textContent = latitude_selected;
-
-                    //Update map
-                    appModuleLeafletMapUpdate({longitude:      longitude_selected,
-                                    latitude:       latitude_selected,
-                                    text_place:     COMMON_DOCUMENT.querySelector('#setting_select_popular_place .common_select_dropdown_value').textContent,
-                                    country:        '',
-                                    city:           '',
-                                    timezone_text : timezone_selected
-                                });
-                    
-                    common.COMMON_GLOBAL.moduleLeaflet.methods.map_toolbar_reset();
-                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone_selected;
-                const title = COMMON_DOCUMENT.querySelector('#setting_select_popular_place .common_select_dropdown_value').textContent;
-                COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = title;
-                appUserSettingUpdate('GPS');
-                break;
-            }
-        case 'GPS_POSITION':
-            {
-                
-                const gps_lat_input = COMMON_DOCUMENT.querySelector('#setting_input_lat');
-                const gps_long_input = COMMON_DOCUMENT.querySelector('#setting_input_long');
-                
-                common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
-
-                common.commonGeolocationPlace(gps_long_input.textContent, gps_lat_input.textContent).then((/**@type{string}*/gps_place) => {
-                    //Update map
-                    COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = gps_place;
-                    appModuleLeafletMapUpdate({longitude:gps_long_input.textContent,
-                                    latitude:gps_lat_input.textContent,
-                                    text_place:gps_place,
-                                    country:'',
-                                    city:'',
-                                    timezone_text :null})
-                    .then((timezone_text) => {
-                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone_text ?? '';
-                    });
-                    common.COMMON_GLOBAL.moduleLeaflet.methods.map_toolbar_reset();
+                const popup = COMMON_DOCUMENT.querySelectorAll('.common_map_popup_sub_title_gps')[COMMON_DOCUMENT.querySelectorAll('.common_map_popup_sub_title_gps').length - 1 ];
+                if (popup.getAttribute('data-latitude') && popup.getAttribute('data-longitude') &&
+                    popup.getAttribute('data-latitude')!='' && popup.getAttribute('data-longitude')!='' &&
+                    popup.getAttribute('data-timezone')!='?'){
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description = 
+                    COMMON_DOCUMENT.querySelectorAll('.common_map_popup_title')[COMMON_DOCUMENT.querySelectorAll('.common_map_popup_title').length - 1 ].textContent;
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text =
+                        popup.getAttribute('data-latitude');
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text = 
+                        popup.getAttribute('data-longitude');
+                    appMapQibblaShow();
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = popup.getAttribute('data-timezone');
+                    APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(popup.getAttribute('data-timezone'));
                     appUserSettingUpdate('GPS');
-                });
+                }
                 break;
             }
         case 'DESIGN_PAPER':
@@ -1120,7 +1033,6 @@ const appUserSettingsGet = async () => {
                     regional_arabic_script:setting.regional_arabic_script,
                     regional_calendar_type:setting.regional_calendar_type,
                     regional_calendar_hijri_type:setting.regional_calendar_hijri_type,
-                    gps_popular_place_id: setting.gps_popular_place_id,
                     gps_lat_text:typeof setting.gps_lat_text== 'string'?appCommonFixFloat(setting.gps_lat_text):setting.gps_lat_text,
                     gps_long_text:typeof setting.gps_long_text=='string'?appCommonFixFloat(setting.gps_long_text):setting.gps_long_text,
                     design_theme_day_id:setting.design_theme_day_id,
@@ -1358,20 +1270,15 @@ const appUserSettingDefaultSet = async () => {
         regional_timezone:                  (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?
                                                 (await common.commonMiscImport(common.commonMiscImportmap('regional')))
                                                     .getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude):
-                                                    (APP_GLOBAL.places?APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data4:
-                                                        Intl.DateTimeFormat().resolvedOptions().timeZone),
+                                                        Intl.DateTimeFormat().resolvedOptions().timeZone,
         regional_number_system:             Intl.NumberFormat().resolvedOptions().numberingSystem,
         regional_layout_direction:          APP_GLOBAL.regional_default_direction,
         regional_second_language_locale:    APP_GLOBAL.regional_default_locale_second,
         regional_arabic_script:             APP_GLOBAL.regional_default_arabic_script,
         regional_calendar_type:             APP_GLOBAL.regional_default_calendartype,
         regional_calendar_hijri_type:       APP_GLOBAL.regional_default_calendar_hijri_type,
-        gps_popular_place_id:               (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?null:
-                                                APP_GLOBAL.gps_default_place_id,
-        gps_lat_text:                       (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?appCommonFixFloat(common.COMMON_GLOBAL.client_latitude):
-                                                (APP_GLOBAL.places?appCommonFixFloat(APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data2):0),
-        gps_long_text:                      (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?appCommonFixFloat(common.COMMON_GLOBAL.client_longitude):
-                                                (APP_GLOBAL.places?appCommonFixFloat(APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data3):0),
+        gps_lat_text:                       appCommonFixFloat(common.COMMON_GLOBAL.client_latitude??''),
+        gps_long_text:                      appCommonFixFloat(common.COMMON_GLOBAL.client_longitude??''),
         design_theme_day_id:                APP_GLOBAL.design_default_theme_day,
         design_theme_month_id:              APP_GLOBAL.design_default_theme_month,
         design_theme_year_id:               APP_GLOBAL.design_default_theme_year,
@@ -1431,8 +1338,7 @@ const appCommonFixFloat = value =>  (value==''||value==null)?null:parseFloat(val
  */
 const appUserSettingUpdate = setting_tab => {
 
-    const json_data = { description:                        setting_tab=='GPS'?COMMON_DOCUMENT.querySelector('#setting_input_place').textContent:
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
+    const json_data = { description:                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
                         regional_language_locale:           setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_locale .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_language_locale,
                         regional_timezone:                  setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_timezone .common_select_dropdown_value').getAttribute('data-value'):
@@ -1449,12 +1355,8 @@ const appUserSettingUpdate = setting_tab => {
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_type,
                         regional_calendar_hijri_type:       setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_calendar_hijri_type .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_hijri_type,
-                        gps_popular_place_id:               setting_tab=='GPS'?JSON.parse(COMMON_DOCUMENT.querySelector('#setting_select_popular_place .common_select_dropdown_value').getAttribute('data-value')).id:
-                                                                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_popular_place_id,
-                        gps_lat_text:                       setting_tab=='GPS'?appCommonFixFloat(COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text,
-                        gps_long_text:                      setting_tab=='GPS'?appCommonFixFloat(COMMON_DOCUMENT.querySelector('#setting_input_long').textContent):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text,
+                        gps_lat_text:                       APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text,
+                        gps_long_text:                      APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text,
                         design_theme_day_id:                setting_tab=='DESIGN'?appSettingThemeId('day'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_day_id,
                         design_theme_month_id:              setting_tab=='DESIGN'?appSettingThemeId('month'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_month_id,
                         design_theme_year_id:               setting_tab=='DESIGN'?appSettingThemeId('year'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_year_id,
@@ -1633,9 +1535,10 @@ const appEventClick = event => {
                 appUserSettingUpdate('REGIONAL');
             }
             //settings gps
-            if(event_target_id=='setting_select_popular_place'){
+            if (event_target_id == 'common_map_control_expand_select_country')
                 appUserSettingUpdate('GPS');
-                appComponentSettingUpdate('GPS', 'POPULAR_PLACES');
+            if(event_target_id == 'common_map_control_expand_select_city'){
+                appComponentSettingUpdate('GPS', 'CITY');
             }
             //settings design
             if(event_target_id == 'setting_select_report_papersize'){
@@ -1644,16 +1547,6 @@ const appEventClick = event => {
             }
             if(event_target_id== 'setting_select_report_highlight_row')
                 appUserSettingUpdate('DESIGN');
-            //module leaflet
-            if (event_target_id == 'common_module_leaflet_select_country')
-                appUserSettingUpdate('GPS');
-            if(event_target_id == 'common_module_leaflet_select_city'){
-                //popular place not on map is read when saving
-                appComponentSettingUpdate('GPS', 'CITY');
-            }
-            if (event_target_id == 'common_module_leaflet_select_mapstyle')
-                appComponentSettingUpdate('GPS', 'MAP');
-
             //settings prayer
             if (event_target_id == 'setting_select_method'){
                 appComponentSettingUpdate('PRAYER', 'METHOD');
@@ -2024,28 +1917,19 @@ const appEventClick = event => {
             break;
         }
 
-        //module leaflet
-        case 'common_module_leaflet_search_list':{
+        //map
+        case event.target.classList.contains('common_map_tile')?event_target_id:'':
+        case event.target.classList.contains('common_map_line')?event_target_id:'':{
+            COMMON_DOCUMENT.querySelector('#common_map_control_query').classList.contains('common_map_control_active')?
+                appComponentSettingUpdate('GPS', 'CITY'):
+                    null;
+            break;
+        }
+        case 'common_map_control_my_location_id':
+        case 'common_map_control_expand_search_list':{
             appComponentSettingUpdate('GPS', 'CITY');
             break;
         }
-        case 'common_module_leaflet_control_my_location_id':{
-            common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
-            COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = common.COMMON_GLOBAL.client_place;
-            COMMON_DOCUMENT.querySelector('#setting_input_long').textContent = common.COMMON_GLOBAL.client_longitude;
-            COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent = common.COMMON_GLOBAL.client_latitude;
-            //update timezone
-            common.commonMiscImport(common.commonMiscImportmap('regional'))
-                .then(({getTimezone})=>{
-                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone =
-                        getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
-                    //set qibbla
-                    appModuleLeafletMapQibblaShow();
-                    APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
-                    appUserSettingUpdate('GPS');
-                });
-            break;
-        }       
     }
 };
 /**
@@ -2058,18 +1942,6 @@ const appEventClick = event => {
 const appEventKeyUp = event => {
     const event_target_id = common.commonMiscElementId(event.target);
     switch(event_target_id){
-        //settings gps
-        case 'setting_input_place':{
-            common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
-            appUserSettingUpdate('GPS');
-            break;
-        }
-        case 'setting_input_long':
-        case 'setting_input_lat':{
-            appUserSettingUpdate('GPS');
-            common.commonMiscTypewatch(appComponentSettingUpdate, 'GPS', 'POSITION');
-            break;
-        }
         //settings text
         case 'setting_input_reportheader1':
         case 'setting_input_reportheader2':
@@ -2093,61 +1965,72 @@ const appEventKeyUp = event => {
 };
 
 /**
- * @name appModuleLeafletMapQibblaShow
+ * @name appMapQibblaShow
  * @description Map show qibbla
  * @function
  * @returns {void}
  */
-const appModuleLeafletMapQibblaShow = () => {
-    common.COMMON_GLOBAL.moduleLeaflet.methods.map_line_removeall();
-    common.COMMON_GLOBAL.moduleLeaflet.methods.map_line_create('qibbla', 
-                    APP_GLOBAL.gps_module_leaflet_qibbla_title,
-                    APP_GLOBAL.gps_module_leaflet_qibbla_text_size,
-                    APP_GLOBAL.gps_module_leaflet_qibbla_long,
-                    APP_GLOBAL.gps_module_leaflet_qibbla_lat,
-                    COMMON_DOCUMENT.querySelector('#setting_input_long').textContent,
-                    COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent,
-                    APP_GLOBAL.gps_module_leaflet_qibbla_color,
-                    APP_GLOBAL.gps_module_leaflet_qibbla_width,
-                    APP_GLOBAL.gps_module_leaflet_qibbla_opacity);
-    common.COMMON_GLOBAL.moduleLeaflet.methods.map_line_create('qibbla_old', 
-                    APP_GLOBAL.gps_module_leaflet_qibbla_old_title,
-                    APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size,
-                    APP_GLOBAL.gps_module_leaflet_qibbla_old_long,
-                    APP_GLOBAL.gps_module_leaflet_qibbla_old_lat,
-                    COMMON_DOCUMENT.querySelector('#setting_input_long').textContent,
-                    COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent,
-                    APP_GLOBAL.gps_module_leaflet_qibbla_old_color,
-                    APP_GLOBAL.gps_module_leaflet_qibbla_old_width,
-                    APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity);
-};
-/**
- * @name appModuleLeafletMapUpdate
- * @description Map update
- * @function
- * @param {{longitude:string,
- *          latitude:string,
- *          text_place:string,
- *          country:string,
- *          city:string,
- *          timezone_text :string|null
- *          }} parameters
- * @returns {Promise.<string|null>}
- */
-const appModuleLeafletMapUpdate = async (parameters) => {
-    return new Promise((resolve) => {
-        appModuleLeafletMapQibblaShow();
-        common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:parameters.longitude,
-                                                                latitude:parameters.latitude,
-                                                                text_place:parameters.text_place,
-                                                                country:'',
-                                                                city:'',
-                                                                timezone_text :parameters.timezone_text,
-                                                                to_method:1
-                                                            }).then((/**@type{string}*/timezonetext)=> {
-            resolve(timezonetext);
-        });
-    });
+const appMapQibblaShow = () => {
+    common.COMMON_GLOBAL.component.common_map?.methods?.removeVectors?
+        common.COMMON_GLOBAL.component.common_map?.methods?.removeVectors():
+            null;
+    if (APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text  &&
+        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text ){
+        /**@type{commonGeoJSONPolyline}*/
+        const geoJSONQibbla = 
+        {
+            type: 'Feature',
+            properties: {
+                title: APP_GLOBAL.gps_qibbla_title,
+                color: APP_GLOBAL.gps_qibbla_color,
+                width: APP_GLOBAL.gps_qibbla_width,
+                opacity:APP_GLOBAL.gps_qibbla_opacity
+            },
+            geometry: {
+                type: 'LineString',
+                coordinates: [  
+                    [
+                        APP_GLOBAL.gps_qibbla_long, 
+                        APP_GLOBAL.gps_qibbla_lat
+                    ],
+                    [
+                        /**@ts-ignore */
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text, 
+                        /**@ts-ignore */
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text
+                    ]
+                ]
+            }
+        };
+        common.COMMON_GLOBAL.component.common_map?.methods?.drawVectors([geoJSONQibbla]);
+        /**@type{commonGeoJSONPolyline}*/
+        const geoJSONQibblaOld = 
+        {
+            type: 'Feature',
+            properties: {
+                title: APP_GLOBAL.gps_qibbla_old_title,
+                color: APP_GLOBAL.gps_qibbla_old_color,
+                width: APP_GLOBAL.gps_qibbla_old_width,
+                opacity:APP_GLOBAL.gps_qibbla_old_opacity
+            },
+            geometry: {
+                type: 'LineString',
+                coordinates: [  
+                    [
+                        APP_GLOBAL.gps_qibbla_old_long, 
+                        APP_GLOBAL.gps_qibbla_old_lat
+                    ],
+                    [
+                        /**@ts-ignore */
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text, 
+                        /**@ts-ignore */
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text
+                    ]
+                ]
+            }
+        };
+        common.COMMON_GLOBAL.component.common_map?.methods?.drawVectors([geoJSONQibblaOld]);
+    }
 };
 
 /**
@@ -2207,21 +2090,20 @@ const appInit = async parameters => {
     APP_GLOBAL.regional_default_arabic_script = parameters.app_regional_default_arabic_script.value;
     APP_GLOBAL.regional_default_calendartype = parameters.app_regional_default_calendartype.value;
     APP_GLOBAL.regional_default_calendar_hijri_type = parameters.app_regional_default_calendar_hijri_type.value;
-    APP_GLOBAL.gps_default_place_id = parseInt(parameters.app_gps_default_place_id.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_title = parameters.app_gps_module_leaflet_qibbla_title.value;
-    APP_GLOBAL.gps_module_leaflet_qibbla_text_size = parseFloat(parameters.app_gps_module_leaflet_qibbla_text_size.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_lat = parseFloat(parameters.app_gps_module_leaflet_qibbla_lat.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_long = parseFloat(parameters.app_gps_module_leaflet_qibbla_long.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_color = parameters.app_gps_module_leaflet_qibbla_color.value;
-    APP_GLOBAL.gps_module_leaflet_qibbla_width = parseFloat(parameters.app_gps_module_leaflet_qibbla_width.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_opacity = parseFloat(parameters.app_gps_module_leaflet_qibbla_opacity.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_title = parameters.app_gps_module_leaflet_qibbla_old_title.value;
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size = parseFloat(parameters.app_gps_module_leaflet_qibbla_old_text_size.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_lat = parseFloat(parameters.app_gps_module_leaflet_qibbla_old_lat.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_long = parseFloat(parameters.app_gps_module_leaflet_qibbla_old_long.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_color = parameters.app_gps_module_leaflet_qibbla_old_color.value;
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_width = parseFloat(parameters.app_gps_module_leaflet_qibbla_old_width.value);
-    APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity = parseFloat(parameters.app_gps_module_leaflet_qibbla_old_opacity.value);
+    APP_GLOBAL.gps_qibbla_title = parameters.app_gps_qibbla_title.value;
+    APP_GLOBAL.gps_qibbla_text_size = parseFloat(parameters.app_gps_qibbla_text_size.value);
+    APP_GLOBAL.gps_qibbla_lat = parseFloat(parameters.app_gps_qibbla_lat.value);
+    APP_GLOBAL.gps_qibbla_long = parseFloat(parameters.app_gps_qibbla_long.value);
+    APP_GLOBAL.gps_qibbla_color = parameters.app_gps_qibbla_color.value;
+    APP_GLOBAL.gps_qibbla_width = parseFloat(parameters.app_gps_qibbla_width.value);
+    APP_GLOBAL.gps_qibbla_opacity = parseFloat(parameters.app_gps_qibbla_opacity.value);
+    APP_GLOBAL.gps_qibbla_old_title = parameters.app_gps_qibbla_old_title.value;
+    APP_GLOBAL.gps_qibbla_old_text_size = parseFloat(parameters.app_gps_qibbla_old_text_size.value);
+    APP_GLOBAL.gps_qibbla_old_lat = parseFloat(parameters.app_gps_qibbla_old_lat.value);
+    APP_GLOBAL.gps_qibbla_old_long = parseFloat(parameters.app_gps_qibbla_old_long.value);
+    APP_GLOBAL.gps_qibbla_old_color = parameters.app_gps_qibbla_old_color.value;
+    APP_GLOBAL.gps_qibbla_old_width = parseFloat(parameters.app_gps_qibbla_old_width.value);
+    APP_GLOBAL.gps_qibbla_old_opacity = parseFloat(parameters.app_gps_qibbla_old_opacity.value);
     APP_GLOBAL.design_default_theme_day = parameters.app_design_default_theme_day.value;
     APP_GLOBAL.design_default_theme_month = parameters.app_design_default_theme_month.value;
     APP_GLOBAL.design_default_theme_year = parameters.app_design_default_theme_year.value;

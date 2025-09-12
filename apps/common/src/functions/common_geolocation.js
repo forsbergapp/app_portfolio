@@ -14,7 +14,7 @@ const { getTimezone } = await import ('../../public/modules/regional/regional.js
 /**
  * @description Returns place in common format
  * @param {{locale:string,
- *          place:string}} parameters
+ *          place:string|null}} parameters
  * @returns {server_server_response & {result?:server_geolocation_place}}
  */
 const returnPlace = parameters =>{
@@ -136,28 +136,17 @@ const getPlace = parameters =>{
      */
     const check_aprox = (number_row, number_search, precision) =>
         (+number_row >= +number_search - precision) && (+number_row <= +number_search + precision);
-    //Find place in ordered aproximity 0.02, 0.05, 0.1, 0.5  and 0.9 in partioned key using first part of latitude
-    const geolocation_place = getData('GEOLOCATION_PLACE')[parameters.data.latitude.split('.')[0]].filter((/**@type{string}*/row)=>
-        check_aprox(row.split(';')[3], parameters.data.latitude, 0.02) && 
-        check_aprox(row.split(';')[4], parameters.data.longitude, 0.02))[0]
-        ??
-        getData('GEOLOCATION_PLACE')[parameters.data.latitude.split('.')[0]].filter((/**@type{string}*/row)=>
-        check_aprox(row.split(';')[3], parameters.data.latitude, 0.05) && 
-        check_aprox(row.split(';')[4], parameters.data.longitude, 0.05))[0]
-        ??
-        getData('GEOLOCATION_PLACE')[parameters.data.latitude.split('.')[0]].filter((/**@type{string}*/row)=>
-            check_aprox(row.split(';')[3], parameters.data.latitude, 0.1) && 
-            check_aprox(row.split(';')[4], parameters.data.longitude, 0.1))[0]
-        ??
-        getData('GEOLOCATION_PLACE')[parameters.data.latitude.split('.')[0]].filter((/**@type{string}*/row)=>
-            check_aprox(row.split(';')[3], parameters.data.latitude, 0.5) && 
-            check_aprox(row.split(';')[4], parameters.data.longitude, 0.5))[0]
-        ??
-        getData('GEOLOCATION_PLACE')[parameters.data.latitude.split('.')[0]].filter((/**@type{string}*/row)=>
-            check_aprox(row.split(';')[3], parameters.data.latitude, 0.9) && 
-            check_aprox(row.split(';')[4], parameters.data.longitude, 0.9))[0];
+    //Find place in ordered aproximity in partioned key using first part of latitude
+    for (const aproximity of [0.02, 0.05, 0.1, 0.5, 1, 5, 10]){
+        const result = (getData('GEOLOCATION_PLACE')[parameters.data.latitude.split('.')[0]]??[])
+                        .filter((/**@type{string}*/row)=>
+                        check_aprox(row.split(';')[3], parameters.data.latitude, aproximity) && 
+                        check_aprox(row.split(';')[4], parameters.data.longitude, aproximity))[0];
+        if (result)
+            return returnPlace({locale:parameters.locale,
+                                place:result});
+    }    
     return returnPlace({locale:parameters.locale,
-                                place:geolocation_place});
-        
+                        place:null});        
 };
 export {getIP, getPlace};
