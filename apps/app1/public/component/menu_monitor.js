@@ -63,6 +63,7 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  *                      commonMiscListKeyEvent:CommonModuleCommon['commonMiscListKeyEvent'],
  *                      commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
  *                      commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
+ *                      commonMiscImport:CommonModuleCommon['commonMiscImport'],
  *                      commonLovClose:CommonModuleCommon['commonLovClose'],
  *                      commonLovShow:CommonModuleCommon['commonLovShow'],
  *                      commonUserLocale:CommonModuleCommon['commonUserLocale'],
@@ -294,6 +295,7 @@ const component = async props => {
                         commonMiscListKeyEvent:props.methods.commonMiscListKeyEvent,
                         commonMiscElementRow:props.methods.commonMiscElementRow,
                         commonMiscElementId:props.methods.commonMiscElementId,
+                        commonMiscImport:props.methods.commonMiscImport,
                         commonUserLocale:props.methods.commonUserLocale,
                         commonFFB:props.methods.commonFFB
                         },

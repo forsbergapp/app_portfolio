@@ -58,6 +58,7 @@ const template = props =>`
 *                      commonMiscListKeyEvent:CommonModuleCommon['commonMiscListKeyEvent'],
 *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
 *                      commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
+*                      commonMiscImport:CommonModuleCommon['commonMiscImport'],
 *                      commonUserLocale:CommonModuleCommon['commonUserLocale'],
 *                      commonFFB:CommonModuleCommon['commonFFB']
 *                      }}} props
@@ -107,6 +108,18 @@ const component = async props => {
      */
     const TILE_SIZE = 256;
 
+    //Elements
+    /**@type{Object.<string,HTMLElement>} */
+    const elements = {};
+        
+    // calculate the radian measure of one degree (π/180)
+    const RAD = Math.PI / 180;
+
+    //import components without returned lifecycle, data or methods once for high speed performance
+    const {default:common_map_popup} = await props.methods.commonMiscImport('/common/component/common_map_popup.js');
+    const {default:common_map_line} = await props.methods.commonMiscImport('/common/component/common_map_line.js');
+    const {default:common_map_tile} = await props.methods.commonMiscImport('/common/component/common_map_tile.js');
+
     //set default layer
     let TILE_URL = MAP_LAYERS[0].url;
     let zoom_level = 3;
@@ -124,38 +137,42 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const drawTiles = async () => {
-        const tilesDiv =    props.methods.COMMON_DOCUMENT.querySelector('#common_map_tiles');
-        tilesDiv.innerHTML = '';
+        elements.tilesDiv.innerHTML = '';
         const cols =        Math.ceil(window.innerWidth / TILE_SIZE) + 2;
         const rows =        Math.ceil(window.innerHeight / TILE_SIZE) + 2;
         const startTileX =  Math.floor(-offsetX / TILE_SIZE);
         const startTileY =  Math.floor(-offsetY / TILE_SIZE);
+        //save result in variable for highest performance
+        let tiles = '';
         for (let x = startTileX; x < startTileX + cols; x++) {
             for (let y = startTileY; y < startTileY + rows; y++) {
-                await props.methods.commonComponentRender({
-                    mountDiv:   null,
-                    data:       {  
-                                geoJSON:{   id:  'common_map_tiles_point_' + Date.now(),
-                                            type:'Feature',
-                                            properties:{left:       x * TILE_SIZE + offsetX,
-                                                        top:        y * TILE_SIZE + offsetY,
-                                                        tileSize:   TILE_SIZE,
-                                                        url:        TILE_URL
-                                                                        .replace('{x}', x.toString())
-                                                                        .replace('{y}', y.toString())
-                                                                        .replace('{z}', zoom_level.toString())},
-                                            geometry:{
-                                                        type:'Point',
-                                                        coordinates:null
-                                                    }
-                                            }
-                                },
-                    methods:    {project:project},
-                    path:       '/common/component/common_map_tile.js'})
-                    //Add to existing component
-                    .then(component=>tilesDiv.innerHTML += component.template);
+                //direct component execution for best performance
+                const component = await common_map_tile({
+                                data:       {
+                                                commonMountdiv:'',
+                                                geoJSON:{   id:  'common_map_tiles_point_' + Date.now(),
+                                                type:'Feature',
+                                                properties:{left:       x * TILE_SIZE + offsetX,
+                                                            top:        y * TILE_SIZE + offsetY,
+                                                            tileSize:   TILE_SIZE,
+                                                            url:        TILE_URL
+                                                                            .replace('{x}', x.toString())
+                                                                            .replace('{y}', y.toString())
+                                                                            .replace('{z}', zoom_level.toString())},
+                                                geometry:{
+                                                            type:'Point',
+                                                            coordinates:null
+                                                        }
+                                                }
+                                            },
+                                methods:    {
+                                            COMMON_DOCUMENT:props.methods.COMMON_DOCUMENT,
+                                            project:project,
+                                            }});
+                tiles +=component.template;
             }
         }
+        elements.tilesDiv.innerHTML = tiles;
     };
     /**
      * @name drawVectors
@@ -166,36 +183,40 @@ const component = async props => {
      */
     const drawVectors = async vectorLinesgeoJSON => {
         vectorLinesgeoJSON.map(row=>{row.properties.offsetX=offsetX;row.properties.offsetY=offsetY;});
-        const lines = props.methods.COMMON_DOCUMENT.querySelector('#common_map_lines');
-        lines.innerHTML = '';
+        
+        elements.linesDiv.innerHTML = '';
+        //save result in variable for highest performance
+        let lines = '';
         for (const line of vectorLinesgeoJSON) {
-            await props.methods.commonComponentRender({
-                mountDiv:   null,
-                data:       {  
-                            geoJSON:{   id:  'common_map_linestring_' + Date.now(),
-                                        type:'Feature',
-                                        properties:{offsetX:offsetX, 
-                                                    offsetY:offsetY,
-                                                    title:line.properties.title,
-                                                    color:line.properties.color,
-                                                    width:line.properties.width},
-                                        geometry:{
-                                                    type:'Linestring',
-                                                    //WGS 84 format
-                                                    //[ [longitude (start) decimal period '.', 
-                                                    //  latitude (start) decimal period '.', (altitude in meters)],
-                                                    //  [longitude (end) decimal period '.', 
-                                                    //  latitude (end) decimal period '.', (altitude in meters)],
-                                                    //  ...]
-                                                    coordinates:line.geometry.coordinates
+            //direct component execution for best performance
+            lines += (await common_map_line({
+                                data:        {
+                                                commonMountdiv:'',
+                                                geoJSON:{   id:  'common_map_lines_linestring_' + Date.now(),
+                                                type:'Feature',
+                                                properties:{offsetX:offsetX, 
+                                                            offsetY:offsetY,
+                                                            title:line.properties.title,
+                                                            color:line.properties.color,
+                                                            width:line.properties.width},
+                                                geometry:{
+                                                            type:'Linestring',
+                                                            //WGS 84 format
+                                                            //[ [longitude (start) decimal period '.', 
+                                                            //  latitude (start) decimal period '.', (altitude in meters)],
+                                                            //  [longitude (end) decimal period '.', 
+                                                            //  latitude (end) decimal period '.', (altitude in meters)],
+                                                            //  ...]
+                                                            coordinates:line.geometry.coordinates
+                                                        }
                                                 }
-                                        }
-                            },
-                methods:    {project:project},
-                path:       '/common/component/common_map_line.js'})
-                //Add to existing component
-                .then(component=>lines.innerHTML += component.template);            
+                                            },
+                                methods:    {
+                                            COMMON_DOCUMENT:props.methods.COMMON_DOCUMENT,
+                                            project:project,
+                                            }})).template;
         }
+        elements.linesDiv.innerHTML = lines;
     };
     /**
      * @name updateVectors
@@ -265,15 +286,15 @@ const component = async props => {
                         coordinates:[[+parameters.place.latitude, +parameters.place.longitude]]
                     }
             };
-        await props.methods.commonComponentRender({
-            mountDiv:   null,
-            data:       {  
-                        geoJSON:geoJSON
-                        },
-            methods:    null,
-            path:       '/common/component/common_map_popup.js'})
-            //Add to existing component
-            .then(component=>props.methods.COMMON_DOCUMENT.querySelector('#common_map_popups').innerHTML += component.template);
+        //direct component execution for best performance
+        elements.popupsDiv.innerHTML += (await common_map_popup({
+                                        data:   {
+                                                commonMountdiv:'',
+                                                geoJSON:geoJSON,
+                                                },
+                                        methods:{
+                                                COMMON_DOCUMENT:props.methods.COMMON_DOCUMENT
+                                                }})).template;
     };
     /**
      * @description get place for gps
@@ -297,7 +318,7 @@ const component = async props => {
      */
     const addPopupPos =  async (x, y) =>{
         const gps = getGPS(x,y);
-        const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
+        const rect = elements.commonMapDiv.getBoundingClientRect();
         await addPopup({place:await getPlace({longitude:gps.long, latitude:gps.lat}), x:x- rect.left, y:y-rect.top});
     };
     
@@ -322,10 +343,9 @@ const component = async props => {
      * @returns {[number, number]}
      */
     const project = (lon, lat) =>{
-        const rad = Math.PI / 180;
         const n = 2 ** zoom_level;
         const x = (lon + 180) / 360 * n * TILE_SIZE;
-        const y = (1 - Math.log(Math.tan(lat * rad) + 1 / Math.cos(lat * rad)) / Math.PI) / 2 * n * TILE_SIZE;
+        const y = (1 - Math.log(Math.tan(lat * RAD) + 1 / Math.cos(lat * RAD)) / Math.PI) / 2 * n * TILE_SIZE;
         return [x, y];
     };
 
@@ -352,7 +372,7 @@ const component = async props => {
      */
     const getGPS = (x,y) =>{
         // Mouse position relative to the map container
-        const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
+        const rect = elements.commonMapDiv.getBoundingClientRect();
         const mouseX = x - rect.left;
         const mouseY = y - rect.top;
     
@@ -377,7 +397,7 @@ const component = async props => {
         const km = (meters / 1000).toFixed(2);
         const miles = (meters / 1609.344).toFixed(2);
     
-        props.methods.COMMON_DOCUMENT.querySelector('#common_map_measure').innerHTML = `${km} km / ${miles} mi`;
+        elements.measureDiv.innerHTML = `${km} km / ${miles} mi`;
     };
 
     /**
@@ -411,7 +431,7 @@ const component = async props => {
         if (newZ === zoom_level) return;
     
         // Mouse position relative to map
-        const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
+        const rect = elements.commonMapDiv.getBoundingClientRect();
 
         const mouseX =  parameters.control?
                             rect.left + (rect.width/2):
@@ -483,7 +503,7 @@ const component = async props => {
         if (longitude && latitude){
             setZoom(ZOOM_LEVEL_GOTO);
             const [wx, wy] = project(+longitude, +latitude);
-            const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
+            const rect = elements.commonMapDiv.getBoundingClientRect();
             offsetX = ((window.innerWidth-rect.left) / 2) - wx -100;
             offsetY = ((window.innerHeight-rect.top) / 2) - wy;
             draw();
@@ -550,7 +570,7 @@ const component = async props => {
                         if (props.methods.COMMON_DOCUMENT.fullscreenElement)
                             props.methods.COMMON_DOCUMENT.exitFullscreen();
                         else
-                            props.methods.COMMON_DOCUMENT.querySelector('#common_map').requestFullscreen();
+                            elements.commonMapDiv.requestFullscreen();
                         break;
                     }
                     case event_target_id=='common_map_control_my_location':{
@@ -566,9 +586,9 @@ const component = async props => {
                             event.target.classList.remove('common_map_control_active'):
                                 event.target.classList.add('common_map_control_active');
                         //add or remove class on map to change cursor
-                        props.methods.COMMON_DOCUMENT.querySelector('#common_map').classList.contains('common_map_control_active')?
-                            props.methods.COMMON_DOCUMENT.querySelector('#common_map').classList.remove('common_map_control_active'):
-                                props.methods.COMMON_DOCUMENT.querySelector('#common_map').classList.add('common_map_control_active');
+                        elements.commonMapDiv.classList.contains('common_map_control_active')?
+                            elements.commonMapDiv.classList.remove('common_map_control_active'):
+                                elements.commonMapDiv.classList.add('common_map_control_active');
                         break;
                     }
                     case event.target.classList.contains('common_map_tile'):
@@ -612,8 +632,8 @@ const component = async props => {
             }
             case 'mousemove':{
                 if (event_target_id.startsWith('common_map')){
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.left = `${event.clientX}px`;
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.top = `${event.clientY}px`;
+                    elements.cursorDiv.style.left = `${event.clientX}px`;
+                    elements.cursorDiv.style.top = `${event.clientY}px`;
                 }
                 switch (true){
                     case event_target_id=='common_map_measure':
@@ -650,6 +670,13 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const onMounted = async ()=>{
+        elements.commonMapDiv   = props.methods.COMMON_DOCUMENT.querySelector('#common_map');
+        elements.tilesDiv       = props.methods.COMMON_DOCUMENT.querySelector('#common_map_tiles');
+        elements.linesDiv       = props.methods.COMMON_DOCUMENT.querySelector('#common_map_lines');
+        elements.popupsDiv      = props.methods.COMMON_DOCUMENT.querySelector('#common_map_popups');
+        elements.cursorDiv      = props.methods.COMMON_DOCUMENT.querySelector('#common_map_cursor');
+        elements.measureDiv     = props.methods.COMMON_DOCUMENT.querySelector('#common_map_measure');
+        
         if (props.data.longitude && props.data.latitude)
             await goTo({  ip:null,
                     longitude:+props.data.longitude, 
