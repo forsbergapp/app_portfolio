@@ -6,8 +6,8 @@ NO;Troms;Hatteng;69.2707;19.9594
 NO;Finnmark;Bjørnevatn;69.6674;29.9872
 NO;Troms;Gryllefjord;69.363;17.0528
 RU;Murmansk;Nikel;69.4128;30.222
-NO;"Troms og Finnmark";Tromsø;69.6704;18.9733
-NO;"Troms og Finnmark";Tromsø;69.6492;18.9553
+NO;Troms og Finnmark;Tromsø;69.6704;18.9733
+NO;Troms og Finnmark;Tromsø;69.6492;18.9553
 NO;Troms;Holt;69.017;19.4133
 NO;Troms;Tromsø;69.6489;18.9551
 US;Alaska;Sagwon;69.3731;-148.701
@@ -16,28 +16,28 @@ NO;Troms;Hansnes;69.967;19.6275
 NO;Troms;Tromsø;69.6486;18.9439
 NO;Troms;Olderdalen;69.6041;20.5327
 NO;Troms;Lyngseidet;69.5763;20.2189
-NO;Troms;"Tromsø (Stalheim)";69.6556;18.9298
+NO;Troms;Tromsø (Stalheim);69.6556;18.9298
 GL;Avannaata;Ilulissat;69.2198;-51.0986
-RU;"Krasnoyarsk Krai";Noril'sk;69.3569;88.1679
+RU;Krasnoyarsk Krai;Noril'sk;69.3569;88.1679
 NO;Troms;Storslett;69.7678;21.0247
-NO;"Troms og Finnmark";Tomasjorda;69.6548;19.0107
+NO;Troms og Finnmark;Tomasjorda;69.6548;19.0107
 NO;Troms;Moen;69.1304;18.6123
 NO;Troms;Andselv;69.0655;18.5155
-NO;"Troms og Finnmark";Bardufoss;69.0655;18.5154
-NO;"Troms og Finnmark";Silsand;69.2474;17.9547
-NO;"Troms og Finnmark";Tromsø;69.6514;18.9553
-NO;"Troms og Finnmark";Finnsnes;69.232;17.9809
-NO;"Troms og Finnmark";Storsteinnes;69.2408;19.2344
-NO;"Troms og Finnmark";Lyngseidet;69.5763;20.2159
-NO;"Troms og Finnmark";Moen;69.1304;18.6123
-NO;"Troms og Finnmark";Hatteng;69.2707;19.9594
-NO;"Troms og Finnmark";Lyngseidet;69.5724;20.2236
-NO;"Troms og Finnmark";Tromsø;69.6498;18.9841
-NO;"Troms og Finnmark";Tromsø;69.6618;19.0187
-NO;"Troms og Finnmark";Sørkjosen;69.7922;20.9412
+NO;Troms og Finnmark;Bardufoss;69.0655;18.5154
+NO;Troms og Finnmark;Silsand;69.2474;17.9547
+NO;Troms og Finnmark;Tromsø;69.6514;18.9553
+NO;Troms og Finnmark;Finnsnes;69.232;17.9809
+NO;Troms og Finnmark;Storsteinnes;69.2408;19.2344
+NO;Troms og Finnmark;Lyngseidet;69.5763;20.2159
+NO;Troms og Finnmark;Moen;69.1304;18.6123
+NO;Troms og Finnmark;Hatteng;69.2707;19.9594
+NO;Troms og Finnmark;Lyngseidet;69.5724;20.2236
+NO;Troms og Finnmark;Tromsø;69.6498;18.9841
+NO;Troms og Finnmark;Tromsø;69.6618;19.0187
+NO;Troms og Finnmark;Sørkjosen;69.7922;20.9412
 NO;Troms;Sørkjosen;69.7922;20.9412
-NO;"Troms og Finnmark";Rossfjordstraumen;69.3632;18.3136
-NO;"Troms og Finnmark";Alta;69.9687;23.2715
+NO;Troms og Finnmark;Rossfjordstraumen;69.3632;18.3136
+NO;Troms og Finnmark;Alta;69.9687;23.2715
 NO;Troms;Burfjord;69.938;22.052
 RU;Murmansk;Severomorsk;69.0694;33.4081
 NO;Nordland;Andenes;69.3143;16.1194
@@ -45,62 +45,62 @@ NO;Finnmark;Kirkenes;69.7271;30.0458
 CA;Nunavut;Igloolik;69.3777;-81.7999
 NO;Troms;Sørreisa;69.1453;18.1529
 NO;Finnmark;Karasjok;69.4719;25.5112
-NO;Finnmark;"Alta (Bossekop)";69.96;23.2303
+NO;Finnmark;Alta (Bossekop);69.96;23.2303
 RU;Murmansk;Lodeynoye;69.1871;35.1166
-NO;"Troms og Finnmark";Alta;69.9717;23.2877
+NO;Troms og Finnmark;Alta;69.9717;23.2877
 NO;Finnmark;Alta;69.9717;23.2877
-RU;"Krasnoyarsk Krai";Kayyerkan;69.3786;87.7439
+RU;Krasnoyarsk Krai;Kayyerkan;69.3786;87.7439
 FI;Lapland;Utsjoki;69.9086;27.0284
-NO;"Troms og Finnmark";Alta;69.9667;23.276
-NO;"Troms og Finnmark";Alta;69.9668;23.2754
+NO;Troms og Finnmark;Alta;69.9667;23.276
+NO;Troms og Finnmark;Alta;69.9668;23.2754
 RU;Krasnoyarskiy;Noril'sk;69.3558;88.1893
-NO;"Troms og Finnmark";Svanvik;69.4538;30.0498
-NO;Troms;"Tromsø (Stalheim)";69.6579;18.9256
-NO;Troms;"Tromsø (Tromsdalen)";69.65;19.0167
-NO;"Troms og Finnmark";Alta;69.9668;23.2755
-RU;"Krasnoyarsk Krai";Noril'sk;69.3558;88.1893
-RU;"Krasnoyarsk Krai";Dudinka;69.4058;86.1778
+NO;Troms og Finnmark;Svanvik;69.4538;30.0498
+NO;Troms;Tromsø (Stalheim);69.6579;18.9256
+NO;Troms;Tromsø (Tromsdalen);69.65;19.0167
+NO;Troms og Finnmark;Alta;69.9668;23.2755
+RU;Krasnoyarsk Krai;Noril'sk;69.3558;88.1893
+RU;Krasnoyarsk Krai;Dudinka;69.4058;86.1778
 NO;Troms;Tromsø;69.6492;18.9553
 NO;Troms;Tomasjorda;69.6548;19.0107
 NO;Troms;Brøstadbotn;69.0887;17.6949
 NO;Finnmark;Kautokeino;69.0125;23.0412
 NO;Troms;Tromsø;69.6704;18.9733
-NO;"Troms og Finnmark";Tromsø;69.683;18.9825
-RU;"Krasnoyarsk Krai";Noril'sk;69.3535;88.2027
-NO;"Troms og Finnmark";Tromsø;69.6775;18.9343
+NO;Troms og Finnmark;Tromsø;69.683;18.9825
+RU;Krasnoyarsk Krai;Noril'sk;69.3535;88.2027
+NO;Troms og Finnmark;Tromsø;69.6775;18.9343
 RU;Krasnoyarskiy;Noril'sk;69.3333;88.2167
 NO;Troms;Tromsø;69.647;18.9407
 NO;Nordland;Myre;69.1059;15.9631
 NO;Troms;Vangsvik;69.1706;17.7342
 NO;Troms;Sørkjosen;69.7838;20.9528
-CA;"Northwest Territories";Tuktoyaktuk;69.4447;-133.034
+CA;Northwest Territories;Tuktoyaktuk;69.4447;-133.034
 NO;Troms;Skaland;69.4446;17.2983
 NO;Troms;Tromsø;69.6815;18.9876
-NO;"Troms og Finnmark";Tromsø;69.6794;18.99
-NO;"Troms og Finnmark";Tromsø;69.6781;18.9823
+NO;Troms og Finnmark;Tromsø;69.6794;18.99
+NO;Troms og Finnmark;Tromsø;69.6781;18.9823
 NO;Troms;Storslett;69.7677;21.0369
 RU;Krasnoyarskiy;Dudinka;69.4065;86.1764
-NO;"Troms og Finnmark";Sørkjosen;69.7838;20.9526
+NO;Troms og Finnmark;Sørkjosen;69.7838;20.9526
 NO;Troms;Tromsø;69.6638;18.9138
-NO;"Troms og Finnmark";Tromsø;69.6638;18.9138
-NO;"Troms og Finnmark";Tromsø;69.6655;18.969
+NO;Troms og Finnmark;Tromsø;69.6638;18.9138
+NO;Troms og Finnmark;Tromsø;69.6655;18.969
 NO;Finnmark;Alta;69.9649;23.2795
 NO;Troms;Tomasjorda;69.6554;19.0199
 FI;Lapland;Utsjoki;69.909;27.0285
 NO;Troms;Tromsø;69.662;18.9418
 NO;Troms;Tromsø;69.6623;18.9416
 NO;Troms;Tromsø;69.6398;18.9383
-NO;"Troms og Finnmark";Tromsø;69.6437;18.9486
-NO;"Troms og Finnmark";Tromsø;69.6809;18.9872
+NO;Troms og Finnmark;Tromsø;69.6437;18.9486
+NO;Troms og Finnmark;Tromsø;69.6809;18.9872
 NO;Troms;Tromsø;69.6858;18.9931
 NO;Troms;Tromsø;69.6445;18.9454
-NO;"Troms og Finnmark";Tromsø;69.6663;18.9162
-NO;"Troms og Finnmark";Tromsø;69.6664;18.9162
+NO;Troms og Finnmark;Tromsø;69.6663;18.9162
+NO;Troms og Finnmark;Tromsø;69.6664;18.9162
 FI;Lapland;Enontekiö;69.2985;23.5654
 GL;Avannaata;Ilulissat;69.2199;-51.0979
-CA;Nunavut;"Cambridge Bay";69.1169;-105.06
+CA;Nunavut;Cambridge Bay;69.1169;-105.06
 NO;Finnmark;Alta;69.9668;23.2755
 NO;Finnmark;Alta;69.9667;23.276
-NO;"Troms og Finnmark";Alta;69.9665;23.2754
+NO;Troms og Finnmark;Alta;69.9665;23.2754
 CA;Nunavut;Igloolik;69.3787;-81.7993
 CA;Nunavut;Igloolik;69.3725;-81.8247

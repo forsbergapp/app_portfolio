@@ -1,30 +1,30 @@
-RU;"Bashkortostan Republic";Ufa;54.7348;55.9579
-GB;"Northern Ireland";Londonderry;54.9981;-7.30934
+RU;Bashkortostan Republic;Ufa;54.7348;55.9579
+GB;Northern Ireland;Londonderry;54.9981;-7.30934
 GB;England;Wallsend;54.9911;-1.53397
 GB;England;Chopwell;54.918;-1.82013
 GB;England;Benwell;54.973;-1.66926
-GB;England;"Barrow in Furness";54.1109;-3.22758
-GB;"Northern Ireland";Ballinamallard;54.4;-7.58333
+GB;England;Barrow in Furness;54.1109;-3.22758
+GB;Northern Ireland;Ballinamallard;54.4;-7.58333
 GB;England;Filey;54.21;-0.28917
-GB;England;"New Marske";54.5785;-1.04224
+GB;England;New Marske;54.5785;-1.04224
 GB;England;Thornaby;54.5333;-1.3
 GB;England;Sunderland;54.9047;-1.38222
-GB;"Northern Ireland";Annahilt;54.4333;-6
+GB;Northern Ireland;Annahilt;54.4333;-6
 GB;England;Bedale;54.2881;-1.59181
 GB;England;Sleights;54.4551;-0.66484
 GB;England;Scotby;54.89;-2.87464
-GB;England;"The Boldons";54.9426;-1.45349
+GB;England;The Boldons;54.9426;-1.45349
 GB;England;Brandon;54.75;-1.61667
 GB;England;Nawton;54.2554;-0.99169
 GB;England;Scarborough;54.2797;-0.40443
 GB;England;Easington;54.5535;-0.85058
-GB;"Northern Ireland";Magheralin;54.4669;-6.2598
+GB;Northern Ireland;Magheralin;54.4669;-6.2598
 GB;England;Richmond;54.4036;-1.73434
-GB;"Northern Ireland";Comber;54.5494;-5.74379
-GB;"Northern Ireland";Castlereagh;54.5735;-5.88472
+GB;Northern Ireland;Comber;54.5494;-5.74379
+GB;Northern Ireland;Castlereagh;54.5735;-5.88472
 GB;England;Appleby-in-Westmorland;54.577;-2.48978
 GB;England;Felling;54.953;-1.57152
-GB;"Northern Ireland";Kilrea;54.9509;-6.55695
+GB;Northern Ireland;Kilrea;54.9509;-6.55695
 GB;England;Chester-le-Street;54.8586;-1.57408
 GB;England;Cockfield;54.6137;-1.80897
 GB;England;Blaydon;54.9646;-1.71392
@@ -34,20 +34,20 @@ GB;England;Stockton-on-Tees;54.5685;-1.3187
 GB;England;Kendal;54.3268;-2.74757
 LT;Vilnius;Vilnius;54.6872;25.2797
 GB;England;Carnforth;54.1274;-2.76811
-GB;England;"Newcastle upon Tyne";54.9783;-1.61778
-GB;"Northern Ireland";Lisburn;54.5097;-6.09065
-GB;"Northern Ireland";Hillsborough;54.4635;-6.07664
-RU;"Omsk Oblast";Omsk;54.9911;73.3731
-RU;"Omsk Oblast";Novoomskiy;54.8415;73.3017
-RU;"Omsk Oblast";Omsk;54.9924;73.3686
-RU;"Khakasiya Republic";Sorsk;54.0013;90.2515
+GB;England;Newcastle upon Tyne;54.9783;-1.61778
+GB;Northern Ireland;Lisburn;54.5097;-6.09065
+GB;Northern Ireland;Hillsborough;54.4635;-6.07664
+RU;Omsk Oblast;Omsk;54.9911;73.3731
+RU;Omsk Oblast;Novoomskiy;54.8415;73.3017
+RU;Omsk Oblast;Omsk;54.9924;73.3686
+RU;Khakasiya Republic;Sorsk;54.0013;90.2515
 RU;Kuzbass;Leninsk-Kuznetsky;54.6567;86.1737
-KZ;"North Kazakhstan";Petropavl;54.8667;69.15
-RU;"Tula Oblast";Tula;54.2048;37.6185
-RU;"Kaluga Oblast";Kaluga;54.5136;36.2637
-RU;"Kaliningrad Oblast";Kaliningrad;54.7104;20.4522
+KZ;North Kazakhstan;Petropavl;54.8667;69.15
+RU;Tula Oblast;Tula;54.2048;37.6185
+RU;Kaluga Oblast;Kaluga;54.5136;36.2637
+RU;Kaliningrad Oblast;Kaliningrad;54.7104;20.4522
 GB;England;Middlesbrough;54.5762;-1.23483
-GB;England;"Great Ayton";54.4915;-1.13623
+GB;England;Great Ayton;54.4915;-1.13623
 GB;England;Guisborough;54.5348;-1.05606
 GB;England;Stokesley;54.47;-1.1933
 GB;England;Nunthorpe;54.5288;-1.18438
@@ -57,16 +57,16 @@ GB;England;Houghton-Le-Spring;54.8403;-1.46427
 GB;England;Newburn;54.9876;-1.74415
 GB;England;Darlington;54.5243;-1.55039
 GB;England;Hebburn;54.973;-1.51546
-GB;England;"South Hetton";54.7991;-1.40671
+GB;England;South Hetton;54.7991;-1.40671
 GB;England;Peterlee;54.7603;-1.33649
 GB;England;Gateshead;54.9621;-1.60168
-GB;England;"Heddon on the Wall";54.9969;-1.79386
+GB;England;Heddon on the Wall;54.9969;-1.79386
 GB;England;Lancaster;54.0465;-2.79988
 GB;England;Northallerton;54.339;-1.43243
 GB;England;Swainby;54.4126;-1.26669
 GB;England;Whickham;54.9456;-1.67635
 GB;England;Shildon;54.63;-1.64295
-GB;England;"West Rainton";54.8167;-1.5
+GB;England;West Rainton;54.8167;-1.5
 GB;England;Ripon;54.1358;-1.52826
 GB;England;Burniston;54.3238;-0.44813
 GB;England;Skelton;54;-1.13333
@@ -80,25 +80,25 @@ GB;England;Brampton;54.95;-2.73333
 GB;England;Morecambe;54.0684;-2.86108
 GB;England;Prudhoe;54.9615;-1.85168
 GB;England;Cockermouth;54.6621;-3.36086
-GB;"Northern Ireland";Belfast;54.5973;-5.93012
-GB;England;"High Etherley";54.6539;-1.74363
-GB;England;"Ushaw Moor";54.778;-1.6472
+GB;Northern Ireland;Belfast;54.5973;-5.93012
+GB;England;High Etherley;54.6539;-1.74363
+GB;England;Ushaw Moor;54.778;-1.6472
 GB;England;Thirsk;54.233;-1.34411
-GB;England;"Newcastle upon Tyne";54.9733;-1.61396
+GB;England;Newcastle upon Tyne;54.9733;-1.61396
 GB;England;Seaham;54.839;-1.34575
-GB;England;"East Boldon";54.9445;-1.42815
-GB;"Northern Ireland";Newtownards;54.5924;-5.69092
-GB;"Northern Ireland";Belfast;54.5968;-5.92541
-GB;"Northern Ireland";Larne;54.85;-5.81667
-GB;"Northern Ireland";Lisburn;54.5234;-6.03527
-GB;"Northern Ireland";Greenisland;54.7008;-5.87479
-GB;"Northern Ireland";Moira;54.4802;-6.22822
-GB;"Northern Ireland";Templepatrick;54.6833;-6.08333
-GB;"Northern Ireland";Crossmaglen;54.0833;-6.6
-GB;"Northern Ireland";Dundonald;54.592;-5.79803
+GB;England;East Boldon;54.9445;-1.42815
+GB;Northern Ireland;Newtownards;54.5924;-5.69092
+GB;Northern Ireland;Belfast;54.5968;-5.92541
+GB;Northern Ireland;Larne;54.85;-5.81667
+GB;Northern Ireland;Lisburn;54.5234;-6.03527
+GB;Northern Ireland;Greenisland;54.7008;-5.87479
+GB;Northern Ireland;Moira;54.4802;-6.22822
+GB;Northern Ireland;Templepatrick;54.6833;-6.08333
+GB;Northern Ireland;Crossmaglen;54.0833;-6.6
+GB;Northern Ireland;Dundonald;54.592;-5.79803
 GB;England;Dalton;54.1833;-1.35
 GB;England;Hartlepool;54.6855;-1.21028
-GB;England;"Kirkby Malzeard";54.1644;-1.64633
+GB;England;Kirkby Malzeard;54.1644;-1.64633
 GB;England;Eaglescliffe;54.5252;-1.35043
 GB;England;Ferryhill;54.6833;-1.55
 GB;England;Brotton;54.5666;-0.93929
@@ -107,34 +107,34 @@ GB;England;Shap;54.5315;-2.67551
 GB;England;Caton;54.0762;-2.71903
 GB;England;Warton;54.1471;-2.76435
 DK;Zealand;Nagelsti;54.7476;11.845
-DK;"South Denmark";Dybbøl;54.9108;9.73601
-DK;Zealand;"Nykøbing Falster";54.7691;11.8743
+DK;South Denmark;Dybbøl;54.9108;9.73601
+DK;Zealand;Nykøbing Falster;54.7691;11.8743
 DK;Zealand;Holeby;54.7115;11.4642
-DK;"South Denmark";Rudkøbing;54.9364;10.7102
-DK;"South Denmark";Ærøskøbing;54.888;10.4112
+DK;South Denmark;Rudkøbing;54.9364;10.7102
+DK;South Denmark;Ærøskøbing;54.888;10.4112
 DK;Zealand;Væggerløse;54.7124;11.9255
-DK;"South Denmark";Padborg;54.8266;9.36247
-DK;"South Denmark";Kruså;54.851;9.40129
-DK;"South Denmark";Tranekær;54.9976;10.8438
+DK;South Denmark;Padborg;54.8266;9.36247
+DK;South Denmark;Kruså;54.851;9.40129
+DK;South Denmark;Tranekær;54.9976;10.8438
 DK;Zealand;Eskilstrup;54.8557;11.8867
-GB;"Northern Ireland";Ballynahinch;54.4023;-5.89717
+GB;Northern Ireland;Ballynahinch;54.4023;-5.89717
 GB;England;Whitburn;54.9533;-1.36861
-GB;"Northern Ireland";Carnmoney;54.6833;-5.95
-GB;"Northern Ireland";Banbridge;54.35;-6.28333
-GB;"Northern Ireland";Newry;54.1784;-6.33739
-GB;"Northern Ireland";Craigavon;54.4471;-6.387
-GB;"Northern Ireland";Carrickfergus;54.7158;-5.8058
-GB;"Northern Ireland";Newtownabbey;54.6598;-5.90858
-GB;"Northern Ireland";Bangor;54.6608;-5.66802
-GB;England;"East Ayton";54.2548;-0.47483
+GB;Northern Ireland;Carnmoney;54.6833;-5.95
+GB;Northern Ireland;Banbridge;54.35;-6.28333
+GB;Northern Ireland;Newry;54.1784;-6.33739
+GB;Northern Ireland;Craigavon;54.4471;-6.387
+GB;Northern Ireland;Carrickfergus;54.7158;-5.8058
+GB;Northern Ireland;Newtownabbey;54.6598;-5.90858
+GB;Northern Ireland;Bangor;54.6608;-5.66802
+GB;England;East Ayton;54.2548;-0.47483
 GB;England;Hunmanby;54.1796;-0.32007
-GB;England;"Langley Park";54.7998;-1.67005
+GB;England;Langley Park;54.7998;-1.67005
 GB;England;Durham;54.7768;-1.57566
-GB;"Northern Ireland";Coalisland;54.5418;-6.70166
+GB;Northern Ireland;Coalisland;54.5418;-6.70166
 GB;England;Nafferton;54.0196;-0.3919
-GB;"Northern Ireland";Holywood;54.6386;-5.82473
-KZ;"North Kazakhstan";Smīrnovo;54.5148;69.4273
-KZ;"North Kazakhstan";Petropavl;54.8732;69.1506
+GB;Northern Ireland;Holywood;54.6386;-5.82473
+KZ;North Kazakhstan;Smīrnovo;54.5148;69.4273
+KZ;North Kazakhstan;Petropavl;54.8732;69.1506
 DE;Schleswig-Holstein;Preetz;54.2357;10.2793
 DE;Mecklenburg-Vorpommern;Mölschow;54.077;13.8323
 DE;Schleswig-Holstein;Scharbeutz;54.0239;10.7521
@@ -143,9 +143,9 @@ DE;Mecklenburg-Vorpommern;Rostock;54.0887;12.1405
 DE;Schleswig-Holstein;Jevenstedt;54.2346;9.66413
 DE;Mecklenburg-Vorpommern;Bentwisch;54.115;12.2046
 DE;Schleswig-Holstein;Langstedt;54.6167;9.38333
-DE;Mecklenburg-Vorpommern;"Bad Doberan";54.1071;11.9005
+DE;Mecklenburg-Vorpommern;Bad Doberan;54.1071;11.9005
 DE;Mecklenburg-Vorpommern;Lühmannsdorf;54.0047;13.6338
-DE;Mecklenburg-Vorpommern;"Groß Kiesow";54.0126;13.4785
+DE;Mecklenburg-Vorpommern;Groß Kiesow;54.0126;13.4785
 DE;Mecklenburg-Vorpommern;Bastorf;54.1254;11.6974
 DE;Schleswig-Holstein;Nebel;54.6508;8.35373
 DE;Mecklenburg-Vorpommern;Lambrechtshagen;54.1021;12.0164
@@ -154,13 +154,13 @@ DE;Mecklenburg-Vorpommern;Ribnitz-Damgarten;54.2422;12.4567
 DE;Schleswig-Holstein;Borgstedt;54.3327;9.70954
 DE;Schleswig-Holstein;Neumünster;54.074;9.98456
 DE;Schleswig-Holstein;Eckernförde;54.4685;9.83824
-DE;Mecklenburg-Vorpommern;"Ostseebad Dierhagen";54.2924;12.358
+DE;Mecklenburg-Vorpommern;Ostseebad Dierhagen;54.2924;12.358
 DE;Schleswig-Holstein;Sankelmark;54.7206;9.43709
 DE;Schleswig-Holstein;Böhnhusen;54.2221;10.0638
 DE;Schleswig-Holstein;Harrislee;54.8;9.38333
 DE;Schleswig-Holstein;Husum;54.4858;9.05239
-DE;Schleswig-Holstein;"Schashagen (Krummbek)";54.129;10.8603
-DE;Mecklenburg-Vorpommern;"Rostock (Mitte)";54.0891;12.1299
+DE;Schleswig-Holstein;Schashagen (Krummbek);54.129;10.8603
+DE;Mecklenburg-Vorpommern;Rostock (Mitte);54.0891;12.1299
 DE;Mecklenburg-Vorpommern;Lüssow;54.2818;13.031
 DE;Schleswig-Holstein;Wittorf;54.0565;9.96701
 DE;Schleswig-Holstein;Faldera;54.0613;9.94838
@@ -169,67 +169,67 @@ DE;Schleswig-Holstein;Laboe;54.4032;10.2265
 DE;Mecklenburg-Vorpommern;Roggentin;54.0707;12.2042
 GB;England;Pickering;54.25;-0.76667
 GB;England;Malton;54.137;-0.7996
-GB;"Northern Ireland";Ballyclare;54.7509;-5.99944
-GB;"Northern Ireland";Newcastle;54.218;-5.88979
-GB;"Northern Ireland";Rostrevor;54.1;-6.2
-GB;"Northern Ireland";Enniskillen;54.3461;-7.64133
-GB;"Northern Ireland";Omagh;54.6;-7.3
-GB;England;"Great Corby";54.8817;-2.82452
+GB;Northern Ireland;Ballyclare;54.7509;-5.99944
+GB;Northern Ireland;Newcastle;54.218;-5.88979
+GB;Northern Ireland;Rostrevor;54.1;-6.2
+GB;Northern Ireland;Enniskillen;54.3461;-7.64133
+GB;Northern Ireland;Omagh;54.6;-7.3
+GB;England;Great Corby;54.8817;-2.82452
 GB;England;Arlecdon;54.554;-3.47022
 GB;England;Arnside;54.2018;-2.83374
 GB;England;Lanchester;54.8211;-1.74256
 GB;England;Driffield;54.006;-0.443377
-GB;England;"South Shields";54.9986;-1.4323
+GB;England;South Shields;54.9986;-1.4323
 GB;England;Jarrow;54.9804;-1.48423
-GB;England;"Annfield Plain";54.8575;-1.73827
-DE;Mecklenburg-Vorpommern;"Schliemannstadt Neubukow";54.0323;11.6733
-DE;Schleswig-Holstein;"Neustadt in Holstein";54.1071;10.8145
+GB;England;Annfield Plain;54.8575;-1.73827
+DE;Mecklenburg-Vorpommern;Schliemannstadt Neubukow;54.0323;11.6733
+DE;Schleswig-Holstein;Neustadt in Holstein;54.1071;10.8145
 DE;Mecklenburg-Vorpommern;Retschow;54.0455;11.8778
 DE;Mecklenburg-Vorpommern;Elmenhorst/Lichtenhagen;54.1558;12.0108
 DE;Schleswig-Holstein;Malente;54.1723;10.5597
 DE;Schleswig-Holstein;Tönning;54.3173;8.94096
 DE;Schleswig-Holstein;Heikendorf;54.3667;10.2
 DE;Schleswig-Holstein;Mönkeberg;54.3487;10.1952
-DE;Mecklenburg-Vorpommern;"Ostseebad Kühlungsborn";54.1476;11.7432
+DE;Mecklenburg-Vorpommern;Ostseebad Kühlungsborn;54.1476;11.7432
 DE;Schleswig-Holstein;Nordhastedt;54.173;9.1811
-DE;Mecklenburg-Vorpommern;"Ostseebad Binz";54.3999;13.6105
+DE;Mecklenburg-Vorpommern;Ostseebad Binz;54.3999;13.6105
 DE;Mecklenburg-Vorpommern;Wiek;54.6217;13.2916
 DE;Mecklenburg-Vorpommern;Stralsund;54.3091;13.0818
 DE;Mecklenburg-Vorpommern;Sellin;54.3785;13.6939
 GB;England;Washington;54.9;-1.51667
-GB;"Northern Ireland";Moy;54.45;-6.66667
-RU;"Ryazan Oblast";Ryazan;54.6095;39.7126
+GB;Northern Ireland;Moy;54.45;-6.66667
+RU;Ryazan Oblast;Ryazan;54.6095;39.7126
 RU;Ulyanovsk;Ulyanovsk;54.3282;48.3866
 RU;Ulyanovsk;Mirnyy;54.3991;48.6246
 RU;Ulyanovsk;Dimitrovgrad;54.2139;49.6184
-RU;"Ryazan Oblast";Ryazan;54.613;39.743
-RU;"Novosibirsk Oblast";Novosibirsk;54.9833;82.8964
-RU;"Kaliningrad Oblast";Khrabrovo;54.8824;20.5856
-RU;"Kaliningrad Oblast";Kaliningrad;54.7065;20.511
-RU;"Bashkortostan Republic";Ufa;54.7447;55.9795
+RU;Ryazan Oblast;Ryazan;54.613;39.743
+RU;Novosibirsk Oblast;Novosibirsk;54.9833;82.8964
+RU;Kaliningrad Oblast;Khrabrovo;54.8824;20.5856
+RU;Kaliningrad Oblast;Kaliningrad;54.7065;20.511
+RU;Bashkortostan Republic;Ufa;54.7447;55.9795
 LT;Vilnius;Vilnius;54.7022;25.26
 LT;Vilnius;Vilnius;54.702;25.2609
 LT;Vilnius;Vilnius;54.6892;25.2798
-LT;"Marijampolė County";Marijampolė;54.5599;23.3541
+LT;Marijampolė County;Marijampolė;54.5599;23.3541
 LT;Alytus;Alytus;54.3964;24.0414
-LT;Vilnius;"Baltoji Vokė";54.6;25.1932
+LT;Vilnius;Baltoji Vokė;54.6;25.1932
 LT;Vilnius;Elektrėnai;54.7854;24.663
 GB;England;Gateshead;54.9518;-1.55219
-RU;"Kaluga Oblast";Kaluga;54.5293;36.2754
-RU;"Ryazan Oblast";Ryazan;54.5977;39.7194
-RU;"Ryazan Oblast";Ryazan;54.6088;39.7183
-RU;"Ryazan Oblast";Polyany;54.718;39.8293
-GB;England;"Gateshead (Dunston)";54.9573;-1.65621
+RU;Kaluga Oblast;Kaluga;54.5293;36.2754
+RU;Ryazan Oblast;Ryazan;54.5977;39.7194
+RU;Ryazan Oblast;Ryazan;54.6088;39.7183
+RU;Ryazan Oblast;Polyany;54.718;39.8293
+GB;England;Gateshead (Dunston);54.9573;-1.65621
 GB;England;Gateshead;54.9568;-1.65615
-RU;"Moscow Oblast";Lukhovitsy;54.9418;39.025
-RU;"Novosibirsk Oblast";Berdsk;54.7535;83.0962
-RU;"Ryazan Oblast";Sasovo;54.3441;41.921
-PL;"West Pomerania";Darłowo;54.4217;16.4096
-PL;"West Pomerania";Darłowo;54.421;16.4107
-RU;"Kaliningrad Oblast";"Maloye Isakovo";54.7338;20.5869
-RU;"Kaliningrad Oblast";Zelenogradsk;54.9589;20.4767
-RU;"Kaliningrad Oblast";Baltiysk;54.6545;19.9093
-RU;"Kaliningrad Oblast";Obruchevo;54.9486;21.7283
+RU;Moscow Oblast;Lukhovitsy;54.9418;39.025
+RU;Novosibirsk Oblast;Berdsk;54.7535;83.0962
+RU;Ryazan Oblast;Sasovo;54.3441;41.921
+PL;West Pomerania;Darłowo;54.4217;16.4096
+PL;West Pomerania;Darłowo;54.421;16.4107
+RU;Kaliningrad Oblast;Maloye Isakovo;54.7338;20.5869
+RU;Kaliningrad Oblast;Zelenogradsk;54.9589;20.4767
+RU;Kaliningrad Oblast;Baltiysk;54.6545;19.9093
+RU;Kaliningrad Oblast;Obruchevo;54.9486;21.7283
 GB;England;Galgate;54.0056;-2.78477
 GB;England;Lancaster;54.0635;-2.78741
 IM;Douglas;Douglas;54.1481;-4.50243
@@ -238,8 +238,8 @@ GB;England;Lowca;54.5807;-3.56987
 GB;England;Dalston;54.8421;-2.98459
 GB;England;Hartlepool;54.6917;-1.21293
 GB;England;Penrith;54.6658;-2.75757
-GB;England;"Wold Newton";54.1428;-0.39993
-GB;England;"Witton Gilbert";54.8057;-1.63686
+GB;England;Wold Newton;54.1428;-0.39993
+GB;England;Witton Gilbert;54.8057;-1.63686
 GB;England;Thornley;54.75;-1.43333
 GB;England;Whitehaven;54.549;-3.58412
 GB;England;Wetheral;54.884;-2.83327
@@ -247,12 +247,12 @@ GB;England;Thwing;54.1155;-0.3895
 GB;Scotland;Gretna;54.9938;-3.06594
 GB;England;Backbarrow;54.2555;-2.9882
 GB;England;Thursby;54.8426;-3.0509
-GB;Scotland;"Gatehouse of Fleet";54.882;-4.18428
-GB;"Northern Ireland";Portavogie;54.4592;-5.44304
-GB;"Northern Ireland";Magherafelt;54.7536;-6.60656
-GB;"Northern Ireland";Donaghadee;54.6413;-5.53591
-GB;"Northern Ireland";Broughshane;54.8926;-6.20899
-GB;"Northern Ireland";Waringstown;54.4343;-6.29929
+GB;Scotland;Gatehouse of Fleet;54.882;-4.18428
+GB;Northern Ireland;Portavogie;54.4592;-5.44304
+GB;Northern Ireland;Magherafelt;54.7536;-6.60656
+GB;Northern Ireland;Donaghadee;54.6413;-5.53591
+GB;Northern Ireland;Broughshane;54.8926;-6.20899
+GB;Northern Ireland;Waringstown;54.4343;-6.29929
 RU;Chelyabinsk;Zaural'skiy;54.7855;61.2421
 RU;Chelyabinsk;Yemanzhelinsk;54.7547;61.3208
 GB;England;Danby;54.4661;-0.91073
@@ -260,20 +260,20 @@ GB;England;Spennymoor;54.6988;-1.60229
 GB;England;Cloughton;54.3383;-0.44862
 GB;England;Kirkleatham;54.5885;-1.08181
 GB;England;Lancaster;54.0113;-2.68573
-GB;England;"High Bentham";54.1182;-2.51199
-GB;England;"Burton in Lonsdale";54.1444;-2.53372
+GB;England;High Bentham;54.1182;-2.51199
+GB;England;Burton in Lonsdale;54.1444;-2.53372
 BY;Minsk;Krasnoarmeyskaya;54.1109;26.7629
-RU;"Tatarstan Republic";Bilyarsk;54.9836;50.3867
+RU;Tatarstan Republic;Bilyarsk;54.9836;50.3867
 DK;Zealand;Horslunde;54.9118;11.2165
 DK;Zealand;Kettinge;54.6967;11.7283
-DK;Zealand;"Nørre Alslev";54.8978;11.8841
-RU;"Novosibirsk Oblast";"Verkhnyaya Tula";54.8839;82.7762
-RU;"Novosibirsk Oblast";Krasnoobsk;54.9198;82.9909
-RU;"Novosibirsk Oblast";Novolugovoye;54.9792;83.1138
-RU;"Novosibirsk Oblast";Elitnyy;54.9118;82.9539
-RU;"Novosibirsk Oblast";Ob';54.9888;82.7134
-RU;"Novosibirsk Oblast";Kol'tsovo;54.942;83.1919
-PL;Pomerania;"Gdansk (Letnica)";54.3839;18.639
+DK;Zealand;Nørre Alslev;54.8978;11.8841
+RU;Novosibirsk Oblast;Verkhnyaya Tula;54.8839;82.7762
+RU;Novosibirsk Oblast;Krasnoobsk;54.9198;82.9909
+RU;Novosibirsk Oblast;Novolugovoye;54.9792;83.1138
+RU;Novosibirsk Oblast;Elitnyy;54.9118;82.9539
+RU;Novosibirsk Oblast;Ob';54.9888;82.7134
+RU;Novosibirsk Oblast;Kol'tsovo;54.942;83.1919
+PL;Pomerania;Gdansk (Letnica);54.3839;18.639
 PL;Pomerania;Gdansk;54.352;18.6466
 GB;England;Carlisle;54.93;-2.95668
 GB;England;Carlisle;54.8925;-2.93293
@@ -281,49 +281,49 @@ LT;Vilnius;Nemėžis;54.6338;25.3535
 LT;Vilnius;Vilnius;54.6694;25.2709
 LT;Vilnius;Vilnius;54.7004;25.2112
 GB;England;Walworth;54.5667;-1.65
-RU;"Novosibirsk Oblast";Zdvinsk;54.7047;78.6703
+RU;Novosibirsk Oblast;Zdvinsk;54.7047;78.6703
 RU;Chelyabinsk;Trekhgornyy;54.8172;58.4475
-RU;"Tula Oblast";"Yasnaya Polyana";54.0686;37.5244
-RU;"Kaliningrad Oblast";Svetlyy;54.675;20.1347
-RU;"Kaliningrad Oblast";"Bol'shoe Isakovo";54.7177;20.6028
-RU;"Kaliningrad Oblast";Nizov'ye;54.7021;20.7376
-RU;"Omsk Oblast";Irtyshskiy;54.8143;73.5872
-RU;"Kaluga Oblast";Kirov;54.0689;34.2989
-RU;"Ryazan Oblast";Ryazan;54.6594;39.7624
-RU;"Ryazan Oblast";Ryazan;54.6269;39.6916
-RU;"Smolenskaya Oblast’";Smolensk;54.7995;32.0298
-RU;"Smolensk Oblast";Smolensk;54.7902;32.0486
-RU;"Smolensk Oblast";Smolensk;54.7794;32.0437
-GB;England;"Newcastle upon Tyne";54.9655;-1.61649
-GB;England;"South Shields";54.988;-1.44018
-GB;England;"Newcastle upon Tyne";54.9659;-1.61761
+RU;Tula Oblast;Yasnaya Polyana;54.0686;37.5244
+RU;Kaliningrad Oblast;Svetlyy;54.675;20.1347
+RU;Kaliningrad Oblast;Bol'shoe Isakovo;54.7177;20.6028
+RU;Kaliningrad Oblast;Nizov'ye;54.7021;20.7376
+RU;Omsk Oblast;Irtyshskiy;54.8143;73.5872
+RU;Kaluga Oblast;Kirov;54.0689;34.2989
+RU;Ryazan Oblast;Ryazan;54.6594;39.7624
+RU;Ryazan Oblast;Ryazan;54.6269;39.6916
+RU;Smolenskaya Oblast’;Smolensk;54.7995;32.0298
+RU;Smolensk Oblast;Smolensk;54.7902;32.0486
+RU;Smolensk Oblast;Smolensk;54.7794;32.0437
+GB;England;Newcastle upon Tyne;54.9655;-1.61649
+GB;England;South Shields;54.988;-1.44018
+GB;England;Newcastle upon Tyne;54.9659;-1.61761
 GB;England;Wetheral;54.902;-2.81523
-RU;"Tula Oblast";Tula;54.1931;37.6111
-RU;"Tula Oblast";Tula;54.1961;37.6182
-RU;"Omsk Oblast";Omsk;54.9817;73.3876
-RU;"Ryazan Oblast";Ryazan;54.6146;39.7098
-RU;"Ryazan Oblast";Ryazan;54.6164;39.7211
-GB;"Northern Ireland";Cookstown;54.6431;-6.74595
+RU;Tula Oblast;Tula;54.1931;37.6111
+RU;Tula Oblast;Tula;54.1961;37.6182
+RU;Omsk Oblast;Omsk;54.9817;73.3876
+RU;Ryazan Oblast;Ryazan;54.6146;39.7098
+RU;Ryazan Oblast;Ryazan;54.6164;39.7211
+GB;Northern Ireland;Cookstown;54.6431;-6.74595
 PL;Pomerania;Kartuzy;54.3342;18.1973
 PL;Pomerania;Miłoradz;54.0139;18.9185
 PL;Warmia-Masuria;Miłakowo;54.0092;20.0713
 PL;Warmia-Masuria;Węgorzewo;54.2157;21.7372
 PL;Pomerania;Pępowo;54.3718;18.387
 PL;Warmia-Masuria;Korsze;54.17;21.1392
-PL;"West Pomerania";Skwierzynka;54.2307;16.206
+PL;West Pomerania;Skwierzynka;54.2307;16.206
 PL;Pomerania;Zduny;54.0122;18.6261
-PL;"West Pomerania";Kołobrzeg;54.1757;15.5834
+PL;West Pomerania;Kołobrzeg;54.1757;15.5834
 PL;Pomerania;Drewnica;54.2876;18.9566
-RU;"Omsk Oblast";Omsk;54.957;73.3223
-RU;"Kaliningrad Oblast";Kaliningrad;54.6113;20.4295
+RU;Omsk Oblast;Omsk;54.957;73.3223
+RU;Kaliningrad Oblast;Kaliningrad;54.6113;20.4295
 DE;Schleswig-Holstein;Handewitt;54.7703;9.32451
 PL;Pomerania;Kobylnica;54.4398;16.9978
 PL;Pomerania;Słupsk;54.4641;17.0287
 PL;Pomerania;Słupsk;54.4641;17.0285
 PL;Pomerania;Stegna;54.3268;19.1125
-PL;Warmia-Masuria;"Lidzbark Warmiński";54.1259;20.5795
+PL;Warmia-Masuria;Lidzbark Warmiński;54.1259;20.5795
 PL;Warmia-Masuria;Frombork;54.3577;19.6803
-PL;Warmia-Masuria;"Gronowo Górne";54.1386;19.4599
+PL;Warmia-Masuria;Gronowo Górne;54.1386;19.4599
 PL;Warmia-Masuria;Kruklanki;54.0886;21.9223
 PL;Warmia-Masuria;Giżycko;54.0381;21.7644
 PL;Pomerania;Malbork;54.0359;19.0266
@@ -337,82 +337,82 @@ PL;Pomerania;Leba;54.761;17.5555
 PL;Pomerania;Jastarnia;54.6983;18.6773
 PL;Pomerania;Borzytuchom;54.2002;17.368
 PL;Pomerania;Kokoszki;54.3556;18.491
-PL;Pomerania;"Nowa Karczma";54.1333;18.2022
-PL;Pomerania;"Wzgórze Mickiewicza";54.3432;18.6077
-PL;Pomerania;"Gdańsk (Letnica)";54.3837;18.6403
+PL;Pomerania;Nowa Karczma;54.1333;18.2022
+PL;Pomerania;Wzgórze Mickiewicza;54.3432;18.6077
+PL;Pomerania;Gdańsk (Letnica);54.3837;18.6403
 LT;Vilnius;Vilnius;54.6759;25.2674
-DK;"South Denmark";Soenderborg;54.9239;9.78621
-DK;"South Denmark";Soenderborg;54.9237;9.78729
-PL;Pomerania;"Gdansk (Oliwa)";54.4008;18.5752
-RU;"Nizhny Novgorod Oblast";Sarov;54.948;43.3152
-DE;Schleswig-Holstein;"Flensburg (Jürgensby)";54.7887;9.45402
-IM;Braddan;"Kirk Braddan";54.1667;-4.51667
+DK;South Denmark;Soenderborg;54.9239;9.78621
+DK;South Denmark;Soenderborg;54.9237;9.78729
+PL;Pomerania;Gdansk (Oliwa);54.4008;18.5752
+RU;Nizhny Novgorod Oblast;Sarov;54.948;43.3152
+DE;Schleswig-Holstein;Flensburg (Jürgensby);54.7887;9.45402
+IM;Braddan;Kirk Braddan;54.1667;-4.51667
 IM;Douglas;Douglas;54.1525;-4.48012
 IE;Ulster;Killygordon;54.8;-7.68333
 IE;Connacht;Sligo;54.2697;-8.46943
-GB;England;"Middleton in Teesdale";54.6251;-2.08234
-GB;England;"Newton Aycliffe";54.6184;-1.5719
+GB;England;Middleton in Teesdale;54.6251;-2.08234
+GB;England;Newton Aycliffe;54.6184;-1.5719
 GB;England;Elwick;54.6846;-1.29559
 GB;England;Workington;54.6425;-3.54413
 GB;England;Durham;54.7752;-1.58485
-GB;"Northern Ireland";Belfast;54.6557;-6.21686
+GB;Northern Ireland;Belfast;54.6557;-6.21686
 GB;England;Gateshead;54.9527;-1.60341
-GB;"Northern Ireland";Kilkeel;54.062;-6.00308
-CA;Alberta;"Cold Lake (Cold Lake South)";54.4136;-110.195
+GB;Northern Ireland;Kilkeel;54.062;-6.00308
+CA;Alberta;Cold Lake (Cold Lake South);54.4136;-110.195
 CA;Alberta;Athabasca;54.7169;-113.285
 GB;England;Horsley;54.9833;-1.85
-CA;"British Columbia";"Prince Rupert";54.3139;-130.323
+CA;British Columbia;Prince Rupert;54.3139;-130.323
 CA;Alberta;Barrhead;54.1285;-114.394
-CA;"British Columbia";"Burns Lake";54.227;-125.761
+CA;British Columbia;Burns Lake;54.227;-125.761
 CA;Manitoba;Thompson;54.6517;-97.7682
 DE;Schleswig-Holstein;Westerland;54.9079;8.30326
-CA;Manitoba;"Flin Flon";54.767;-101.874
+CA;Manitoba;Flin Flon;54.767;-101.874
 DE;Mecklenburg-Vorpommern;Rostock;54.0924;12.0991
 CA;Alberta;Bonnyville;54.2668;-110.735
-CA;Alberta;"Cold Lake South";54.4163;-110.213
-CA;Alberta;"Cold Lake";54.4643;-110.173
+CA;Alberta;Cold Lake South;54.4163;-110.213
+CA;Alberta;Cold Lake;54.4643;-110.173
 CA;Alberta;Westlock;54.1502;-113.869
-CA;"British Columbia";Smithers;54.7804;-127.174
-CA;"British Columbia";Terrace;54.5163;-128.603
-CA;"British Columbia";Kitimat;54.0524;-128.653
-PL;Pomerania;"Pruszcz Gdański";54.2622;18.6362
-PL;Pomerania;"Gmina Łęczyce";54.5941;17.8593
+CA;British Columbia;Smithers;54.7804;-127.174
+CA;British Columbia;Terrace;54.5163;-128.603
+CA;British Columbia;Kitimat;54.0524;-128.653
+PL;Pomerania;Pruszcz Gdański;54.2622;18.6362
+PL;Pomerania;Gmina Łęczyce;54.5941;17.8593
 PL;Pomerania;Lębork;54.5392;17.7501
 GB;England;Ripon;54.1339;-1.51607
 PL;Pomerania;Skarszewy;54.0691;18.4442
 PL;Warmia-Masuria;Pasłęk;54.0616;19.6593
-PL;Pomerania;"Gdynia (Śródmieście)";54.5254;18.5397
-PL;Pomerania;"Gdynia (Śródmieście)";54.5254;18.5398
+PL;Pomerania;Gdynia (Śródmieście);54.5254;18.5397
+PL;Pomerania;Gdynia (Śródmieście);54.5254;18.5398
 PL;Pomerania;Puck;54.7179;18.4084
 PL;Pomerania;Wejherowo;54.6057;18.2356
 PL;Pomerania;Reda;54.6053;18.3472
 PL;Pomerania;Wejherowo;54.6092;18.2207
 IE;Connacht;Knocknalower;54.2413;-9.82198
 IE;Connacht;Belmullet;54.225;-9.99083
-IE;Connaught;"Ross Port";54.2853;-9.7968
+IE;Connaught;Ross Port;54.2853;-9.7968
 IE;Connacht;Inishcrone;54.2159;-9.09197
-RU;"Bashkortostan Republic";Ufa;54.7267;55.948
-RU;"Bashkortostan Republic";Sharan;54.8211;53.9922
-RU;"Bashkortostan Republic";Ufa;54.7431;55.9678
-RU;"Bashkortostan Republic";Ufa;54.7388;55.9721
-RU;"Bashkortostan Republic";Belebey;54.1077;54.1174
-RU;"Bashkortostan Republic";Aksakovo;54.0333;54.15
-RU;"Bashkortostan Republic";Iskino;54.5191;55.911
+RU;Bashkortostan Republic;Ufa;54.7267;55.948
+RU;Bashkortostan Republic;Sharan;54.8211;53.9922
+RU;Bashkortostan Republic;Ufa;54.7431;55.9678
+RU;Bashkortostan Republic;Ufa;54.7388;55.9721
+RU;Bashkortostan Republic;Belebey;54.1077;54.1174
+RU;Bashkortostan Republic;Aksakovo;54.0333;54.15
+RU;Bashkortostan Republic;Iskino;54.5191;55.911
 GB;England;Lamesley;54.9157;-1.60945
-PL;Pomerania;"Gdynia (Orłowo)";54.4783;18.5538
-PL;Pomerania;"Borkowo Łostowickie";54.2991;18.5954
+PL;Pomerania;Gdynia (Orłowo);54.4783;18.5538
+PL;Pomerania;Borkowo Łostowickie;54.2991;18.5954
 PL;Pomerania;Ujeścisko-Łostowice;54.3243;18.6027
-PL;Pomerania;"Orunia-Św. Wojciech-Lipce";54.3147;18.6369
+PL;Pomerania;Orunia-Św. Wojciech-Lipce;54.3147;18.6369
 PL;Pomerania;Chełm;54.3405;18.6192
 PL;Warmia-Masuria;Elblag;54.1522;19.4088
 PL;Warmia-Masuria;Gołdap;54.3063;22.3036
 PL;Podlasie;Suwałki;54.1118;22.9309
 LT;Vilnius;Vilnius;54.7091;25.2971
-DE;Schleswig-Holstein;"Kiel (Ravensberg/Brunswik/Düsternbrook)";54.3426;10.1551
+DE;Schleswig-Holstein;Kiel (Ravensberg/Brunswik/Düsternbrook);54.3426;10.1551
 DE;Schleswig-Holstein;Buedelsdorf;54.3182;9.67301
 DE;Mecklenburg-Vorpommern;Kritzmow;54.0524;12.0531
-DE;Mecklenburg-Vorpommern;"Ostseebad Prerow";54.4447;12.5768
-DE;Schleswig-Holstein;"Sankt Peter-Ording";54.3036;8.64138
+DE;Mecklenburg-Vorpommern;Ostseebad Prerow;54.4447;12.5768
+DE;Schleswig-Holstein;Sankt Peter-Ording;54.3036;8.64138
 DE;Mecklenburg-Vorpommern;Kramerhof;54.3537;13.0541
 DE;Schleswig-Holstein;Schleswig;54.5202;9.56829
 DE;Schleswig-Holstein;Arnis;54.6306;9.93203
@@ -424,111 +424,111 @@ DE;Schleswig-Holstein;Tastrup;54.7667;9.48333
 DE;Schleswig-Holstein;Kappeln;54.6612;9.9313
 DE;Schleswig-Holstein;Bordesholm;54.1761;10.0315
 DE;Schleswig-Holstein;Rendsburg;54.3018;9.67175
-GB;England;"Newcastle upon Tyne";54.961;-1.63216
-GB;England;"Newcastle upon Tyne";54.9609;-1.62632
+GB;England;Newcastle upon Tyne;54.961;-1.63216
+GB;England;Newcastle upon Tyne;54.9609;-1.62632
 GB;England;Harrogate;54.0014;-1.49532
-GB;England;"Bishop Monkton";54.093;-1.49572
+GB;England;Bishop Monkton;54.093;-1.49572
 DE;Schleswig-Holstein;Fockbek;54.305;9.59884
-RU;"Moscow Oblast";Serpukhov;54.918;37.423
-RU;"Moscow Oblast";Serpukhov;54.937;37.4064
-PL;"West Pomerania";Koszalin;54.2036;16.1972
-PL;"West Pomerania";Koszalin;54.2055;16.1978
-PL;"West Pomerania";Koszalin;54.2036;16.1974
-RU;"Smolensk Oblast";Pridneprovskaya;54.7476;32.5117
-RU;"Tatarstan Republic";Al'met'yevsk;54.8982;52.283
-RU;"Ryazan Oblast";Ryazan;54.6444;39.6638
+RU;Moscow Oblast;Serpukhov;54.918;37.423
+RU;Moscow Oblast;Serpukhov;54.937;37.4064
+PL;West Pomerania;Koszalin;54.2036;16.1972
+PL;West Pomerania;Koszalin;54.2055;16.1978
+PL;West Pomerania;Koszalin;54.2036;16.1974
+RU;Smolensk Oblast;Pridneprovskaya;54.7476;32.5117
+RU;Tatarstan Republic;Al'met'yevsk;54.8982;52.283
+RU;Ryazan Oblast;Ryazan;54.6444;39.6638
 LT;Vilnius;Vilnius;54.7159;25.2887
-GB;"Northern Ireland";Saintfield;54.4605;-5.83065
-GB;England;"Kirkby Stephen";54.4723;-2.34865
+GB;Northern Ireland;Saintfield;54.4605;-5.83065
+GB;England;Kirkby Stephen;54.4723;-2.34865
 GB;England;Corbridge;54.9737;-2.01798
 GB;England;Windermere;54.3809;-2.90709
-GB;"Northern Ireland";Antrim;54.7175;-6.211
+GB;Northern Ireland;Antrim;54.7175;-6.211
 GB;England;Boroughbridge;54.0895;-1.4011
-GB;England;"Thornton Dale";54.2353;-0.72016
-GB;England;"Low Etherley";54.6535;-1.74315
+GB;England;Thornton Dale;54.2353;-0.72016
+GB;England;Low Etherley;54.6535;-1.74315
 GB;England;Hurworth;54.4901;-1.53294
 GB;England;Keswick;54.5995;-3.13256
-GB;"Northern Ireland";Newtownards;54.5914;-5.69317
+GB;Northern Ireland;Newtownards;54.5914;-5.69317
 PL;Warmia-Masuria;Bisztynek;54.0863;20.9019
 PL;Warmia-Masuria;Tolkmicko;54.3204;19.527
 PL;Pomerania;Ustka;54.5805;16.8619
-PL;Pomerania;"Przymorze Wielkie";54.4117;18.5984
-GB;"Northern Ireland";Portadown;54.423;-6.44434
+PL;Pomerania;Przymorze Wielkie;54.4117;18.5984
+GB;Northern Ireland;Portadown;54.423;-6.44434
 GB;England;Ulverston;54.1959;-3.09626
 GB;England;Coniston;54.3688;-3.07505
-GB;"Northern Ireland";Aughnacloy;54.4142;-6.97551
-GB;"Northern Ireland";Warrenpoint;54.1015;-6.25731
+GB;Northern Ireland;Aughnacloy;54.4142;-6.97551
+GB;Northern Ireland;Warrenpoint;54.1015;-6.25731
 GB;England;Wigginton;54.0172;-1.0831
 GB;England;Loftus;54.5554;-0.89459
-GB;"Northern Ireland";Greyabbey;54.5348;-5.56028
+GB;Northern Ireland;Greyabbey;54.5348;-5.56028
 GB;England;Melsonby;54.4725;-1.69481
 GB;England;Swarthmoor;54.1847;-3.11707
 GB;England;Bagby;54.2179;-1.28993
-GB;England;"Askam in Furness";54.1872;-3.20467
+GB;England;Askam in Furness;54.1872;-3.20467
 GB;England;Stanley;54.868;-1.69846
-GB;England;"Barnard Castle";54.5415;-1.919
+GB;England;Barnard Castle;54.5415;-1.919
 GB;England;Maryport;54.7143;-3.49509
-GB;England;"Sheriff Hutton";54.089;-1.00639
+GB;England;Sheriff Hutton;54.089;-1.00639
 GB;Scotland;Wigtown;54.8678;-4.44489
 GB;England;Haxby;54.0142;-1.07121
 GB;England;Consett;54.854;-1.8316
 GB;Scotland;Annan;54.9884;-3.25647
 GB;England;Gosforth;54.4172;-3.43366
-GB;England;"Sutton on the Forest";54.0751;-1.10284
-GB;"Northern Ireland";Whitehead;54.7537;-5.70933
+GB;England;Sutton on the Forest;54.0751;-1.10284
+GB;Northern Ireland;Whitehead;54.7537;-5.70933
 GB;England;Sherburn;54.7761;-1.50474
-GB;"Northern Ireland";Maghera;54.8439;-6.67145
+GB;Northern Ireland;Maghera;54.8439;-6.67145
 GB;England;Silloth;54.8687;-3.38448
 GB;England;Grindon;54.6167;-1.38333
-GB;"Northern Ireland";Strabane;54.8237;-7.46916
-GB;"Northern Ireland";Dungiven;54.9333;-6.91667
-GB;"Northern Ireland";"New Buildings";54.9603;-7.35581
-GB;"Northern Ireland";Lisnaskea;54.25;-7.45
+GB;Northern Ireland;Strabane;54.8237;-7.46916
+GB;Northern Ireland;Dungiven;54.9333;-6.91667
+GB;Northern Ireland;New Buildings;54.9603;-7.35581
+GB;Northern Ireland;Lisnaskea;54.25;-7.45
 GB;England;Greatham;54.6418;-1.23806
-GB;"Northern Ireland";Newtownhamilton;54.1907;-6.57632
+GB;Northern Ireland;Newtownhamilton;54.1907;-6.57632
 GB;England;Aspatria;54.7657;-3.32783
-GB;"Northern Ireland";Newtownstewart;54.7178;-7.37886
-GB;England;"Bolton le Sands";54.0963;-2.80017
+GB;Northern Ireland;Newtownstewart;54.7178;-7.37886
+GB;England;Bolton le Sands;54.0963;-2.80017
 GB;England;Redcar;54.6166;-1.05999
-RU;"Mordoviya Republic";Ruzayevka;54.06;44.9492
+RU;Mordoviya Republic;Ruzayevka;54.06;44.9492
 PL;Pomerania;Sztutowo;54.3268;19.1792
-PL;Pomerania;"Nowy Dwór Gdański";54.2131;19.1177
-PL;Pomerania;"Nowy Port";54.4016;18.6677
+PL;Pomerania;Nowy Dwór Gdański;54.2131;19.1177
+PL;Pomerania;Nowy Port;54.4016;18.6677
 PL;Pomerania;Olszynka;54.3375;18.6673
-LT;"Marijampolė County";Marijampolė;54.568;23.3528
-RU;"Chuvash Republic";Alatyr';54.8383;46.5819
+LT;Marijampolė County;Marijampolė;54.568;23.3528
+RU;Chuvash Republic;Alatyr';54.8383;46.5819
 RU;Kuzbass;Kiselyovsk;54.0055;86.6498
 RU;Chelyabinsk;Pervomayskiy;54.8664;61.1703
-IE;Leinster;"Dundalk (Townparks)";54.0079;-6.38992
+IE;Leinster;Dundalk (Townparks);54.0079;-6.38992
 IE;Ulster;Castleblaney;54.1167;-6.73333
 IE;Leinster;Carlingford;54.04;-6.18833
 IE;Connacht;Manorhamilton;54.3064;-8.17611
 IE;Ulster;Emyvale;54.3406;-6.95917
-PL;"West Pomerania";Białogard;54.007;15.9875
-RU;"Kaluga Oblast";Kremenki;54.8863;37.1195
+PL;West Pomerania;Białogard;54.007;15.9875
+RU;Kaluga Oblast;Kremenki;54.8863;37.1195
 PL;Pomerania;Rumia;54.5709;18.388
 PL;Pomerania;Żabianka-Wejhera-Jelitkowo-Tysiąclecia;54.4231;18.5744
 PL;Pomerania;Gdynia;54.5189;18.5319
-PL;Pomerania;"Wielki Kack";54.4675;18.4881
+PL;Pomerania;Wielki Kack;54.4675;18.4881
 PL;Pomerania;Środmieście;54.3505;18.6556
-PL;"West Pomerania";Sarbinowo;54.2488;15.9587
-PL;"West Pomerania";Mrzeżyno;54.1438;15.2914
-DK;"South Denmark";Soenderborg;54.9236;9.78637
+PL;West Pomerania;Sarbinowo;54.2488;15.9587
+PL;West Pomerania;Mrzeżyno;54.1438;15.2914
+DK;South Denmark;Soenderborg;54.9236;9.78637
 GB;England;Bishopton;54.5833;-1.43333
 GB;England;Coundon;54.6628;-1.62688
 LT;Vilnius;Vilnius;54.7185;25.2972
-RU;"Kaliningrad Oblast";"Maloye Isakovo";54.7327;20.5841
+RU;Kaliningrad Oblast;Maloye Isakovo;54.7327;20.5841
 LT;Vilnius;Vilnius;54.7013;25.2601
 IE;Connacht;Ballina;54.1167;-9.16667
 IE;Connacht;Drumshanbo;54.05;-8.03333
 IE;Connacht;Crossmolina;54.1;-9.31667
 IE;Connacht;Dromahair;54.2333;-8.3
 RU;Chelyabinsk;Chebarkul';54.9776;60.3658
-DE;Schleswig-Holstein;"Flensburg (Nordstadt)";54.8047;9.43405
+DE;Schleswig-Holstein;Flensburg (Nordstadt);54.8047;9.43405
 RU;Tula;Tula;54.1833;37.6074
 GB;England;Crook;54.7125;-1.7497
 DE;Schleswig-Holstein;Schleswig;54.525;9.56085
-GB;England;"Temple Sowerby";54.6347;-2.60187
+GB;England;Temple Sowerby;54.6347;-2.60187
 LT;Kaunas;Prienai;54.636;23.9459
 LT;Alytus;Veisiejai;54.1011;23.6961
 LT;Alytus;Druskininkai;54.0157;23.987
@@ -544,76 +544,76 @@ IM;Onchan;Onchan;54.1733;-4.45324
 IM;Peel;Peel;54.2221;-4.69099
 IM;Douglas;Douglas;54.15;-4.48333
 IM;Michael;Kirkmichael;54.2361;-4.54806
-RU;"Bashkortostan Republic";Kandry;54.5667;54.1167
+RU;Bashkortostan Republic;Kandry;54.5667;54.1167
 RU;Kuzbass;Karagaylinskiy;54.172;86.5521
 IM;Douglas;Douglas;54.151;-4.47462
 IM;Malew;Ballasalla;54.0959;-4.62962
 PL;Pomerania;Gdańsk;54.352;18.6466
-RU;"Mordoviya Republic";Saransk;54.2;45.1745
-PL;"West Pomerania";Budzistowo;54.1598;15.5817
-PL;Pomerania;"Wrzeszcz Dolny";54.3847;18.6127
-PL;"West Pomerania";Dziwnów;54.0282;14.7669
+RU;Mordoviya Republic;Saransk;54.2;45.1745
+PL;West Pomerania;Budzistowo;54.1598;15.5817
+PL;Pomerania;Wrzeszcz Dolny;54.3847;18.6127
+PL;West Pomerania;Dziwnów;54.0282;14.7669
 PL;Pomerania;Zaspa-Młyniec;54.3913;18.5985
 PL;Pomerania;Pszczółki;54.173;18.6979
 PL;Pomerania;Gdansk;54.3523;18.6491
-RU;"Smolensk Oblast";Smolensk;54.7995;32.0298
-RU;"Smolensk Oblast";Smolensk;54.7903;32.0504
+RU;Smolensk Oblast;Smolensk;54.7995;32.0298
+RU;Smolensk Oblast;Smolensk;54.7903;32.0504
 BY;Grodnenskaya;Smarhon';54.4798;26.3957
 BY;Vitebsk;Orsha;54.5136;30.4037
-BY;Vitebsk;"Horad Orsha";54.5153;30.4053
+BY;Vitebsk;Horad Orsha;54.5153;30.4053
 BY;Minsk;Bal’shavik;54.0036;27.5669
-PL;Pomerania;"Cedry Wielkie";54.2471;18.8457
-PL;Pomerania;"Gmina Przywidz";54.1952;18.3212
-PL;Pomerania;"Gmina Studzienice";54.0926;17.5758
+PL;Pomerania;Cedry Wielkie;54.2471;18.8457
+PL;Pomerania;Gmina Przywidz;54.1952;18.3212
+PL;Pomerania;Gmina Studzienice;54.0926;17.5758
 PL;Pomerania;Somonino;54.2756;18.1989
 PL;Pomerania;Strzyża;54.3865;18.5865
-PL;Pomerania;"Grabowo Kościerskie";54.1682;18.1469
+PL;Pomerania;Grabowo Kościerskie;54.1682;18.1469
 PL;Pomerania;Suchanino;54.3549;18.6041
 PL;Pomerania;Sulęczyno;54.233;17.7733
 PL;Pomerania;Choczewo;54.7399;17.8918
 PL;Pomerania;Miastko;54.0028;16.9826
 PL;Pomerania;Pogórze;54.5644;18.4821
 PL;Pomerania;Szemud;54.4871;18.2228
-PL;Pomerania;"Przymorze Małe";54.4098;18.5784
-RU;"Omsk Oblast";Omsk;54.9914;73.3645
+PL;Pomerania;Przymorze Małe;54.4098;18.5784
+RU;Omsk Oblast;Omsk;54.9914;73.3645
 LT;Vilnius;Vilnius;54.6893;25.2753
-IE;Ulster;"Letterkenny (Ballyraine)";54.9514;-7.71884
-RU;"Mordoviya Republic";Saransk;54.145;45.1473
+IE;Ulster;Letterkenny (Ballyraine);54.9514;-7.71884
+RU;Mordoviya Republic;Saransk;54.145;45.1473
 GB;England;Kirkbymoorside;54.2701;-0.93218
 GB;England;Hampsthwaite;54.0237;-1.60616
 RU;Chelyabinsk;Roza;54.9163;61.4586
 DE;Mecklenburg-Vorpommern;Glowe;54.5691;13.4655
 DE;Mecklenburg-Vorpommern;Poseritz;54.2992;13.2746
-DE;Mecklenburg-Vorpommern;"Bergen auf Rügen";54.4182;13.4335
+DE;Mecklenburg-Vorpommern;Bergen auf Rügen;54.4182;13.4335
 DE;Schleswig-Holstein;Wobbenbüll;54.5333;9
 DE;Schleswig-Holstein;Stoltebüll;54.7007;9.87763
 DE;Schleswig-Holstein;Fehmarn;54.4378;11.1935
 DE;Schleswig-Holstein;Kiel;54.3213;10.1349
-DK;"South Denmark";Tinglev;54.9379;9.25547
+DK;South Denmark;Tinglev;54.9379;9.25547
 DK;Zealand;Stege;54.987;12.2846
 DK;Zealand;Maribo;54.7766;11.5002
 DK;Zealand;Stubbekøbing;54.8887;12.041
 DK;Zealand;Marielyst;54.6922;11.9641
 DK;Zealand;Rødby;54.695;11.3889
-DK;"South Denmark";Soenderborg;54.9138;9.79218
+DK;South Denmark;Soenderborg;54.9138;9.79218
 PL;Pomerania;Tczew;54.0924;18.7779
 PL;Warmia-Masuria;Pieniężno;54.2365;20.1283
-RU;"Bashkortostan Republic";Avdon;54.6667;55.7167
-RU;"Bashkortostan Republic";Rayevskiy;54.064;54.9338
-PL;Pomerania;"Gdynia (Chylonia)";54.5487;18.4672
+RU;Bashkortostan Republic;Avdon;54.6667;55.7167
+RU;Bashkortostan Republic;Rayevskiy;54.064;54.9338
+PL;Pomerania;Gdynia (Chylonia);54.5487;18.4672
 PL;Warmia-Masuria;Elblag;54.1625;19.392
 PL;Pomerania;Gdansk;54.3427;18.6625
-PL;Pomerania;"Gdynia (Redłowo)";54.4894;18.5462
+PL;Pomerania;Gdynia (Redłowo);54.4894;18.5462
 PL;Pomerania;Sopot;54.4423;18.5602
-DK;"South Denmark";Tønder;54.9331;8.86674
+DK;South Denmark;Tønder;54.9331;8.86674
 PL;Pomerania;Reda;54.6078;18.346
 PL;Pomerania;Zaspa-Rozstaje;54.3967;18.613
 RU;Chelyabinsk;Yuzhnoural'sk;54.4484;61.2643
-KZ;"North Kazakhstan";Petropavl;54.8891;69.1388
+KZ;North Kazakhstan;Petropavl;54.8891;69.1388
 LT;Vilnius;Vilnius;54.6794;25.2579
 LT;Vilnius;Vilnius;54.6875;25.2609
-RU;"Novosibirsk Oblast";Iskitim;54.6426;83.3035
-RU;"Novosibirsk Oblast";Tolmachëvo;54.9824;82.7363
+RU;Novosibirsk Oblast;Iskitim;54.6426;83.3035
+RU;Novosibirsk Oblast;Tolmachëvo;54.9824;82.7363
 PL;Warmia-Masuria;Barciany;54.2199;21.3535
 BY;Vitebsk;Lyepyel';54.8814;28.699
 BY;Vitebsk;Mezhëvo;54.6259;30.3087
@@ -638,25 +638,25 @@ BY;Minsk;Zaslawye;54.0114;27.2695
 BY;Minsk;Budsław;54.7985;27.4132
 BY;Minsk;Chyst’;54.2698;27.1067
 GB;England;Masham;54.2227;-1.65718
-RU;"Kaliningrad Oblast";Kaliningrad;54.7456;20.4843
+RU;Kaliningrad Oblast;Kaliningrad;54.7456;20.4843
 DE;Schleswig-Holstein;Glücksburg;54.835;9.55218
 DE;Schleswig-Holstein;Enge-Sande;54.74;8.95432
-PL;"West Pomerania";Mielno;54.2609;16.0621
+PL;West Pomerania;Mielno;54.2609;16.0621
 PL;Pomerania;Gdansk;54.3466;18.6877
-PL;"West Pomerania";Karlino;54.0351;15.8774
-PL;"West Pomerania";Pobierowo;54.061;14.9328
-PL;"West Pomerania";Koszalin;54.1944;16.1722
+PL;West Pomerania;Karlino;54.0351;15.8774
+PL;West Pomerania;Pobierowo;54.061;14.9328
+PL;West Pomerania;Koszalin;54.1944;16.1722
 PL;Pomerania;Sopot;54.2944;18.1531
-CA;Manitoba;"Cross Lake 19A";54.6513;-97.7685
+CA;Manitoba;Cross Lake 19A;54.6513;-97.7685
 LT;Kaunas;Kaunas;54.9039;23.9722
 IM;Laxey;Laxey;54.2302;-4.39985
 IM;Andreas;Andreas;54.3667;-4.43333
 LT;Vilnius;Vilnius;54.6374;25.268
 LT;Vilnius;Vilnius;54.6907;25.2682
-RU;"Novosibirsk Oblast";Sel'skaya;54.7164;83.2019
+RU;Novosibirsk Oblast;Sel'skaya;54.7164;83.2019
 DE;Schleswig-Holstein;Grömitz;54.1453;10.9647
 LT;Vilnius;Vilnius;54.7349;25.247
-DE;Schleswig-Holstein;"Kiel (Mettenhof)";54.3232;10.0506
+DE;Schleswig-Holstein;Kiel (Mettenhof);54.3232;10.0506
 GB;England;Whickham;54.9498;-1.67372
 LT;Vilnius;Vilnius;54.74;25.2201
 GB;England;Wingate;54.7324;-1.37896
@@ -664,22 +664,22 @@ RU;Tula;Aleksin;54.5031;37.0753
 LT;Vilnius;Vilnius;54.6694;25.271
 LT;Kaunas;Kaunas;54.9059;24.0072
 LT;Vilnius;Vilnius;54.6916;25.2874
-DE;Schleswig-Holstein;"Schwentinental (Klausdorf)";54.2958;10.2022
-DE;Mecklenburg-Vorpommern;"Rostock (Mitte)";54.0851;12.1373
+DE;Schleswig-Holstein;Schwentinental (Klausdorf);54.2958;10.2022
+DE;Mecklenburg-Vorpommern;Rostock (Mitte);54.0851;12.1373
 LT;Vilnius;Vilnius;54.7277;25.2362
-PL;"West Pomerania";Międzywodzie;54.0047;14.6968
+PL;West Pomerania;Międzywodzie;54.0047;14.6968
 LT;Vilnius;Vilnius;54.6823;25.289
-GB;"Northern Ireland";Armagh;54.35;-6.66667
+GB;Northern Ireland;Armagh;54.35;-6.66667
 GB;England;Lancaster;54.0055;-2.78523
-RU;"Tula Oblast";Aleksin;54.5051;37.0673
+RU;Tula Oblast;Aleksin;54.5051;37.0673
 DE;Schleswig-Holstein;Flensburg;54.7937;9.447
-RU;"Kaliningrad Oblast";Kaliningrad;54.7245;20.4865
+RU;Kaliningrad Oblast;Kaliningrad;54.7245;20.4865
 LT;Kaunas;Kaunas;54.8985;23.9036
 IE;Connacht;Sligo;54.2766;-8.47609
 IE;Connacht;Ballina;54.1149;-9.15507
-RU;"Kaluga Oblast";"Nikola Lenivets";54.7494;35.6013
-RU;"Mordoviya Republic";Lukhovka;54.1484;45.2573
-RU;"Novosibirsk Oblast";Berdsk;54.758;83.1134
+RU;Kaluga Oblast;Nikola Lenivets;54.7494;35.6013
+RU;Mordoviya Republic;Lukhovka;54.1484;45.2573
+RU;Novosibirsk Oblast;Berdsk;54.758;83.1134
 PL;Pomerania;Luzino;54.566;18.1091
 PL;Pomerania;Orle;54.6402;18.1706
 PL;Pomerania;Bolszewo;54.618;18.1758
@@ -689,14 +689,14 @@ IM;Marown;Crosby;54.1833;-4.56667
 IM;Douglas;Douglas;54.1628;-4.49145
 IM;Ballaugh;Ballaugh;54.3119;-4.54456
 IM;Ramsey;Ramsey;54.3227;-4.38526
-DK;"South Denmark";Soenderborg;54.909;9.78917
-DK;"South Denmark";Høruphav;54.9102;9.89872
-DK;"South Denmark";Broager;54.8894;9.67465
+DK;South Denmark;Soenderborg;54.909;9.78917
+DK;South Denmark;Høruphav;54.9102;9.89872
+DK;South Denmark;Broager;54.8894;9.67465
 GB;England;Osmotherley;54.3684;-1.29916
 GB;England;Langton;54.0972;-0.78544
 DE;Schleswig-Holstein;Stapel;54.3604;9.249
 BY;Minsk;Valozhyn;54.0891;26.5273
-BY;Mogilev;"Kamyennyya Lavy";54.0898;30.2962
+BY;Mogilev;Kamyennyya Lavy;54.0898;30.2962
 BY;Minsk;Sloboda;54.0087;27.8866
 BY;Mogilev;Mscislau;54.0185;31.7217
 BY;Grodnenskaya;Astravyets;54.6138;25.9554
@@ -704,10 +704,10 @@ BY;Minsk;Borovlyany;54.0022;27.6754
 GB;England;Coxhoe;54.7147;-1.50356
 GB;England;Sacriston;54.8177;-1.6241
 GB;England;Willington;54.7167;-1.7
-GB;"Northern Ireland";Crossgar;54.3968;-5.76061
-RU;"Novosibirsk Oblast";Novosibirsk;54.9992;82.8646
+GB;Northern Ireland;Crossgar;54.3968;-5.76061
+RU;Novosibirsk Oblast;Novosibirsk;54.9992;82.8646
 PL;Pomerania;Chłapowo;54.8036;18.3735
-PL;Pomerania;"Kąty Rybackie";54.3399;19.2298
+PL;Pomerania;Kąty Rybackie;54.3399;19.2298
 PL;Warmia-Masuria;Bartoszyce;54.2535;20.8082
 DE;Mecklenburg-Vorpommern;Tessin;54.0276;12.4652
 DE;Mecklenburg-Vorpommern;Zingst;54.4357;12.6888
@@ -718,7 +718,7 @@ DE;Schleswig-Holstein;Bösdorf;54.1404;10.4906
 DE;Schleswig-Holstein;Behrensdorf;54.3504;10.6049
 DE;Schleswig-Holstein;Hohwacht;54.3208;10.6702
 PL;Warmia-Masuria;Kętrzyn;54.0768;21.3753
-DE;Schleswig-Holstein;"Kiel (Ravensberg - Brunswik - Düsternbrook)";54.3291;10.1336
+DE;Schleswig-Holstein;Kiel (Ravensberg - Brunswik - Düsternbrook);54.3291;10.1336
 DE;Schleswig-Holstein;Hemmingstedt;54.1547;9.08063
 PL;Pomerania;Reda;54.5978;18.3614
 PL;Pomerania;Ostrowo;54.8253;18.2441
@@ -728,42 +728,42 @@ PL;Podlasie;Krasnopol;54.1161;23.2048
 GB;England;Carlisle;54.9301;-2.95622
 DE;Mecklenburg-Vorpommern;Wolgast;54.052;13.7711
 DE;Mecklenburg-Vorpommern;Wolgast;54.0544;13.7705
-PL;Pomerania;"Nowa Kiszewa";54.0352;18.0435
+PL;Pomerania;Nowa Kiszewa;54.0352;18.0435
 PL;Pomerania;Ustka;54.5978;16.9217
 PL;Pomerania;Lubowidz;54.5425;17.8152
 PL;Warmia-Masuria;Giżycko;54.0217;21.8099
 PL;Pomerania;Banino;54.3922;18.4062
 PL;Warmia-Masuria;Srokowo;54.2136;21.5206
-PL;"West Pomerania";Sławno;54.3626;16.6784
+PL;West Pomerania;Sławno;54.3626;16.6784
 PL;Pomerania;Dzierzążno;54.3158;18.2683
 PL;Pomerania;Gdynia;54.5189;18.5305
 PL;Pomerania;Malbork;54.0361;19.038
 PL;Pomerania;Stegna;54.3263;19.1123
-PL;"West Pomerania";Koszalin;54.1943;16.1715
+PL;West Pomerania;Koszalin;54.1943;16.1715
 PL;Pomerania;Sopot;54.4416;18.5601
 PL;Pomerania;Tczew;54.0919;18.7773
 PL;Pomerania;Banino;54.3933;18.4083
 PL;Pomerania;Lębork;54.5446;17.7533
 PL;Pomerania;Mierzeszyn;54.2021;18.4173
 PL;Podlasie;Suwałki;54.1115;22.9308
-RU;"Bashkortostan Republic";Ufa;54.7547;56.01
-PL;Pomerania;"Gdynia (Wzgórze Świętego Maksymiliana)";54.5033;18.5371
-DE;Schleswig-Holstein;"Flensburg (Westliche Höhe)";54.7806;9.39547
+RU;Bashkortostan Republic;Ufa;54.7547;56.01
+PL;Pomerania;Gdynia (Wzgórze Świętego Maksymiliana);54.5033;18.5371
+DE;Schleswig-Holstein;Flensburg (Westliche Höhe);54.7806;9.39547
 DE;Mecklenburg-Vorpommern;Stralsund;54.3368;13.069
-RU;"Bashkortostan Republic";Ufa;54.741;55.9891
-RU;"Bashkortostan Republic";Inzer;54.2167;57.5556
-RU;"Bashkortostan Republic";Oktyabrsky;54.4815;53.471
-GB;"Northern Ireland";Ahoghill;54.8667;-6.36667
-GB;England;"Broughton in Furness";54.2771;-3.21118
+RU;Bashkortostan Republic;Ufa;54.741;55.9891
+RU;Bashkortostan Republic;Inzer;54.2167;57.5556
+RU;Bashkortostan Republic;Oktyabrsky;54.4815;53.471
+GB;Northern Ireland;Ahoghill;54.8667;-6.36667
+GB;England;Broughton in Furness;54.2771;-3.21118
 GB;England;Bempton;54.1304;-0.17853
 BY;Minsk;Pyatryshki;54.0686;27.2179
 IM;Arbory;Ballabeg;54.1;-4.68333
 IM;Castletown;Castletown;54.0745;-4.65365
-PL;Pomerania;"Borkowo Łostowickie";54.3016;18.5789
-PL;Pomerania;"Gdansk (Zaspa-Rozstaje)";54.3996;18.6074
+PL;Pomerania;Borkowo Łostowickie;54.3016;18.5789
+PL;Pomerania;Gdansk (Zaspa-Rozstaje);54.3996;18.6074
 PL;Pomerania;Gdansk;54.4052;18.5831
 PL;Pomerania;Kosakowo;54.5893;18.4848
-RU;"Omsk Oblast";Vkhodnoy;54.9518;73.1711
+RU;Omsk Oblast;Vkhodnoy;54.9518;73.1711
 PL;Pomerania;Gdansk;54.3574;18.4809
 PL;Pomerania;Gdansk;54.3575;18.4809
 LT;Vilnius;Vilnius;54.737;25.2685
@@ -772,14 +772,14 @@ DE;Schleswig-Holstein;Wittdün;54.6269;8.38935
 LT;Vilnius;Vilnius;54.6869;25.2597
 DE;Schleswig-Holstein;Westerholz;54.4902;9.27293
 CA;Quebec;Kawawachikamach;54.8669;-66.7652
-CA;"British Columbia";Terrace;54.5171;-128.584
-CA;"British Columbia";Kitimat;54.0543;-128.636
+CA;British Columbia;Terrace;54.5171;-128.584
+CA;British Columbia;Kitimat;54.0543;-128.636
 CA;Alberta;Westlock;54.1544;-113.86
 GB;England;Carnforth;54.1316;-2.76914
 GB;England;Heversham;54.2422;-2.7742
 GB;England;Kendal;54.328;-2.74629
 GB;England;Hexham;54.9699;-2.104
-GB;"Northern Ireland";Carnlough;54.9919;-5.99038
+GB;Northern Ireland;Carnlough;54.9919;-5.99038
 GB;Scotland;Dalbeattie;54.9328;-3.82271
 GB;England;Snainton;54.2276;-0.58659
 GB;England;Alston;54.809;-2.43931
@@ -792,11 +792,11 @@ IE;Ulster;Donegal;54.6538;-8.11134
 IE;Ulster;Ballyhaise;54.05;-7.31667
 IE;Leinster;Dundalk;54;-6.41667
 IE;Ulster;Letterkenny;54.95;-7.73333
-PL;Pomerania;"Gdynia (Orłowo)";54.4865;18.5386
+PL;Pomerania;Gdynia (Orłowo);54.4865;18.5386
 GB;England;Flookburgh;54.1741;-2.97214
-GB;"Northern Ireland";Benburb;54.4123;-6.74561
+GB;Northern Ireland;Benburb;54.4123;-6.74561
 GB;England;Ryhope;54.8714;-1.37
-GB;England;"Byers Green";54.6998;-1.65348
+GB;England;Byers Green;54.6998;-1.65348
 GB;England;Catterick;54.3754;-1.63328
 GB;England;Lazonby;54.7475;-2.70384
 IE;Ulster;Monaghan;54.25;-6.96667
@@ -813,43 +813,43 @@ IE;Connacht;Ballymote;54.0833;-8.51667
 IE;Ulster;Ballybofey;54.8;-7.78333
 GB;England;Stillington;54.6053;-1.42191
 GB;England;Knaresborough;54.0091;-1.46851
-GB;"Northern Ireland";Belfast;54.5929;-5.91053
+GB;Northern Ireland;Belfast;54.5929;-5.91053
 GB;England;Stainton;54.6455;-2.801
-GB;England;"Cleator Moor";54.5214;-3.5159
-GB;England;"Stockton-on-Tees (Wynyard)";54.6324;-1.31464
+GB;England;Cleator Moor;54.5214;-3.5159
+GB;England;Stockton-on-Tees (Wynyard);54.6324;-1.31464
 CA;Alberta;Bonnyville;54.2679;-110.74
 CA;Alberta;Whitecourt;54.1274;-115.665
 CA;Alberta;Whitecourt;54.1502;-115.685
 PL;Pomerania;Gdansk;54.352;18.5083
 IE;Ulster;Letterkenny;54.9558;-7.73428
 LT;Kaunas;Kaunas;54.9274;23.9797
-RU;"Tula Oblast";Aleksin;54.5031;37.0753
-GB;"Northern Ireland";Moira;54.481;-6.22584
+RU;Tula Oblast;Aleksin;54.5031;37.0753
+GB;Northern Ireland;Moira;54.481;-6.22584
 GB;England;Greenhead;54.9667;-2.51667
-GB;"Northern Ireland";Belfast;54.5839;-5.94411
+GB;Northern Ireland;Belfast;54.5839;-5.94411
 GB;England;Gateshead;54.9596;-1.56923
-GB;"Northern Ireland";Belfast;54.5917;-5.93882
+GB;Northern Ireland;Belfast;54.5917;-5.93882
 GB;England;Sunderland;54.9069;-1.3838
 GB;England;Jarrow;54.9803;-1.48276
-GB;England;"Newcastle upon Tyne (Benwell)";54.9699;-1.65682
+GB;England;Newcastle upon Tyne (Benwell);54.9699;-1.65682
 GB;England;Stockton-on-Tees;54.5705;-1.32898
-RU;"Mordoviya Republic";Saransk;54.1933;45.188
-RU;"Ryazan Oblast";Ryazan;54.6438;39.6164
-RU;"Bashkortostan Republic";Mikhaylovka;54.7952;55.9424
-RU;"Kaliningrad Oblast";Kaliningrad;54.6975;20.4923
-RU;"Tula Oblast";Tula;54.1736;37.6109
+RU;Mordoviya Republic;Saransk;54.1933;45.188
+RU;Ryazan Oblast;Ryazan;54.6438;39.6164
+RU;Bashkortostan Republic;Mikhaylovka;54.7952;55.9424
+RU;Kaliningrad Oblast;Kaliningrad;54.6975;20.4923
+RU;Tula Oblast;Tula;54.1736;37.6109
 RU;Kuzbass;Belovo;54.4221;86.3035
 GB;England;Billingham;54.6031;-1.27046
 GB;Scotland;Annan;54.9681;-3.27557
 GB;England;Lancaster;54.0448;-2.79452
 GB;England;Washington;54.8997;-1.48462
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 5)";54.0981;12.0917
-DE;Mecklenburg-Vorpommern;"Rostock (Peez)";54.1439;12.1098
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 8)";54.1173;12.147
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 5);54.0981;12.0917
+DE;Mecklenburg-Vorpommern;Rostock (Peez);54.1439;12.1098
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 8);54.1173;12.147
 DE;Mecklenburg-Vorpommern;Stralsund;54.2932;13.1038
-DE;Mecklenburg-Vorpommern;"Rostock (Südstadt)";54.0748;12.116
-GB;"Northern Ireland";Tandragee;54.3549;-6.41396
-GB;"Northern Ireland";Dungannon;54.5034;-6.76723
+DE;Mecklenburg-Vorpommern;Rostock (Südstadt);54.0748;12.116
+GB;Northern Ireland;Tandragee;54.3549;-6.41396
+GB;Northern Ireland;Dungannon;54.5034;-6.76723
 DK;Zealand;Nakskov;54.8304;11.1357
 DK;Zealand;Stensved;54.9971;12.0298
 DE;Schleswig-Holstein;Altenholz;54.3979;10.1279
@@ -857,67 +857,67 @@ DE;Schleswig-Holstein;Grömitz;54.145;10.9633
 IM;Santon;Santon;54.1167;-4.58333
 GB;England;Kendal;54.3391;-2.74956
 GB;England;Kendal;54.3392;-2.74951
-RU;"Bashkortostan Republic";Ulukulevo;54.6135;56.3706
-RU;"Kaluga Oblast";Sukhinichi;54.0999;35.3425
-RU;"Kaluga Oblast";Kaluga;54.5149;36.2499
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 1)";54.1769;12.0645
+RU;Bashkortostan Republic;Ulukulevo;54.6135;56.3706
+RU;Kaluga Oblast;Sukhinichi;54.0999;35.3425
+RU;Kaluga Oblast;Kaluga;54.5149;36.2499
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 1);54.1769;12.0645
 DK;Zealand;Rødbyhavn;54.6594;11.355
-PL;"West Pomerania";Manowo;54.1261;16.3012
+PL;West Pomerania;Manowo;54.1261;16.3012
 GB;England;Peterlee;54.7624;-1.32895
-DE;Schleswig-Holstein;"Kiel (Mitte)";54.3232;10.1266
+DE;Schleswig-Holstein;Kiel (Mitte);54.3232;10.1266
 LT;Vilnius;Vilnius;54.6967;25.279
-PL;Pomerania;"Gdynia (Chwarzno - Wiczlino)";54.5037;18.4548
+PL;Pomerania;Gdynia (Chwarzno - Wiczlino);54.5037;18.4548
 GB;England;Sunderland;54.9023;-1.41101
-GB;England;"Newcastle upon Tyne";54.9903;-1.56177
+GB;England;Newcastle upon Tyne;54.9903;-1.56177
 GB;England;Middlesbrough;54.5353;-1.205
 GB;England;Middlesbrough;54.5564;-1.15314
 GB;England;Whitehaven;54.5302;-3.56317
 GB;England;Durham;54.7989;-1.6105
-RU;"Bashkortostan Republic";Ufa;54.739;55.958
-RU;"Bashkortostan Republic";Tuymazy;54.6064;53.7118
-RU;"Bashkortostan Republic";Kabakovo;54.5369;56.1517
-RU;"Moscow Oblast";Stupino;54.917;38.0845
-RU;"Kaliningrad Oblast";Donskoye;54.9384;19.9682
+RU;Bashkortostan Republic;Ufa;54.739;55.958
+RU;Bashkortostan Republic;Tuymazy;54.6064;53.7118
+RU;Bashkortostan Republic;Kabakovo;54.5369;56.1517
+RU;Moscow Oblast;Stupino;54.917;38.0845
+RU;Kaliningrad Oblast;Donskoye;54.9384;19.9682
 DE;Schleswig-Holstein;Grossenbrode;54.3833;11.0833
-RU;"Kaluga Oblast";Kozel'sk;54.0366;35.7709
+RU;Kaluga Oblast;Kozel'sk;54.0366;35.7709
 DE;Schleswig-Holstein;Sehestedt;54.3652;9.79291
 DE;Schleswig-Holstein;Hohenwestedt;54.0828;9.65083
 DE;Schleswig-Holstein;Heide;54.1973;9.113
 DE;Mecklenburg-Vorpommern;Kröslin;54.1166;13.7507
-DE;Schleswig-Holstein;"Schönberg (Schönberg in Holstein)";54.3869;10.3776
+DE;Schleswig-Holstein;Schönberg (Schönberg in Holstein);54.3869;10.3776
 DE;Schleswig-Holstein;Neumünster;54.0434;9.97781
-GB;"Northern Ireland";Donaghadee;54.639;-5.53938
-RU;"Moscow Oblast";Pushchino;54.8324;37.6211
-RU;"Moscow Oblast";Pushchino;54.8337;37.6114
-PL;Pomerania;"Gdansk (Młyniska)";54.3709;18.6352
-GB;England;"South Shields";54.9869;-1.44002
-GB;England;"Newcastle upon Tyne";54.9632;-1.63641
+GB;Northern Ireland;Donaghadee;54.639;-5.53938
+RU;Moscow Oblast;Pushchino;54.8324;37.6211
+RU;Moscow Oblast;Pushchino;54.8337;37.6114
+PL;Pomerania;Gdansk (Młyniska);54.3709;18.6352
+GB;England;South Shields;54.9869;-1.44002
+GB;England;Newcastle upon Tyne;54.9632;-1.63641
 GB;England;Darlington;54.5253;-1.50411
-GB;England;"Newcastle upon Tyne";54.9677;-1.61474
+GB;England;Newcastle upon Tyne;54.9677;-1.61474
 GB;England;Kendal;54.3295;-2.73795
-GB;"Northern Ireland";Belfast;54.5971;-5.9249
+GB;Northern Ireland;Belfast;54.5971;-5.9249
 GB;England;Thornaby;54.5616;-1.30473
 LT;Vilnius;Vilnius;54.7159;25.2888
 DK;Zealand;Sakskøbing;54.7997;11.626
 DK;Zealand;Toreby;54.7536;11.7866
-GB;England;"Newton Aycliffe";54.616;-1.57558
+GB;England;Newton Aycliffe;54.616;-1.57558
 DE;Schleswig-Holstein;Neumünster;54.0713;9.96172
 LT;Vilnius;Vilnius;54.6779;25.2625
-LT;Kaunas;"Akademija (Kaunas)";54.8964;23.8241
+LT;Kaunas;Akademija (Kaunas);54.8964;23.8241
 LT;Vilnius;Vilnius;54.6776;25.2631
 LT;Vilnius;Vilnius;54.6777;25.2631
-DE;Schleswig-Holstein;"Flensburg (Altstadt)";54.7811;9.43386
+DE;Schleswig-Holstein;Flensburg (Altstadt);54.7811;9.43386
 DE;Schleswig-Holstein;Neumünster;54.0476;9.98707
 DE;Schleswig-Holstein;Husum;54.4765;9.05042
 DE;Schleswig-Holstein;Neumünster;54.0609;10.0101
-DE;Schleswig-Holstein;"Flensburg (Nordstadt)";54.8102;9.4336
-DE;Schleswig-Holstein;"Flensburg (Neustadt)";54.7905;9.42916
+DE;Schleswig-Holstein;Flensburg (Nordstadt);54.8102;9.4336
+DE;Schleswig-Holstein;Flensburg (Neustadt);54.7905;9.42916
 DE;Schleswig-Holstein;Rendsburg;54.3091;9.70654
-DE;Schleswig-Holstein;"Kiel (Mitte)";54.32;10.1321
-DE;Schleswig-Holstein;"Flensburg (Neustadt)";54.797;9.4287
-DE;Schleswig-Holstein;"Mildstedt (Rosendahl)";54.4777;9.10252
-DE;Mecklenburg-Vorpommern;"Seeheilbad Graal-Müritz";54.2512;12.2514
-DE;Schleswig-Holstein;"Kiel (Gaarden)";54.3073;10.1402
+DE;Schleswig-Holstein;Kiel (Mitte);54.32;10.1321
+DE;Schleswig-Holstein;Flensburg (Neustadt);54.797;9.4287
+DE;Schleswig-Holstein;Mildstedt (Rosendahl);54.4777;9.10252
+DE;Mecklenburg-Vorpommern;Seeheilbad Graal-Müritz;54.2512;12.2514
+DE;Schleswig-Holstein;Kiel (Gaarden);54.3073;10.1402
 DE;Schleswig-Holstein;Wesseln;54.2099;9.07644
 DE;Schleswig-Holstein;Büsum;54.134;8.85756
 DE;Schleswig-Holstein;Neuenkirchen;54.2365;8.99151
@@ -926,31 +926,31 @@ DE;Schleswig-Holstein;Albersdorf;54.145;9.28686
 GB;England;Billingham;54.5888;-1.29034
 GB;England;Lindale;54.2172;-2.89601
 GB;England;Reeth;54.3875;-1.94475
-DK;"South Denmark";Padborg;54.8326;9.34412
+DK;South Denmark;Padborg;54.8326;9.34412
 GB;England;Middlesbrough;54.5742;-1.23496
 CA;Quebec;Schefferville;54.8633;-66.7624
-CA;Manitoba;"Snow Lake";54.879;-100.037
+CA;Manitoba;Snow Lake;54.879;-100.037
 IE;Ulster;Bundoran;54.4778;-8.28094
 LT;Vilnius;Vilnius;54.6717;25.2561
 CA;Alberta;Whitecourt;54.1318;-115.667
 LT;Vilnius;Vilnius;54.6882;25.2638
 CA;Alberta;Bonnyville;54.2693;-110.759
-CA;"British Columbia";Vanderhoof;54.0166;-124.02
-CA;"British Columbia";"Burns Lake";54.2297;-125.761
+CA;British Columbia;Vanderhoof;54.0166;-124.02
+CA;British Columbia;Burns Lake;54.2297;-125.761
 GB;England;Dearham;54.7118;-3.44364
-CA;Saskatchewan;"Meadow Lake";54.1335;-108.435
-IM;Braddan;"Kirk Braddan";54.1539;-4.53561
+CA;Saskatchewan;Meadow Lake;54.1335;-108.435
+IM;Braddan;Kirk Braddan;54.1539;-4.53561
 CA;Alberta;Whitecourt;54.1276;-115.68
 CA;Alberta;Barrhead;54.1334;-114.402
-GB;England;"Newcastle upon Tyne";54.9612;-1.64439
+GB;England;Newcastle upon Tyne;54.9612;-1.64439
 CA;Alberta;Bonnyville;54.2682;-110.72
-CA;"British Columbia";"Prince Rupert";54.3151;-130.321
-CA;"British Columbia";"Prince Rupert";54.3138;-130.323
-CA;"British Columbia";"Prince Rupert";54.2721;-130.284
+CA;British Columbia;Prince Rupert;54.3151;-130.321
+CA;British Columbia;Prince Rupert;54.3138;-130.323
+CA;British Columbia;Prince Rupert;54.2721;-130.284
 CA;Alberta;Whitecourt;54.1411;-115.678
-CA;Alberta;"Smoky Lake";54.1169;-112.469
-CA;Alberta;"Lac La Biche";54.7669;-111.969
-CA;"British Columbia";Smithers;54.7817;-127.169
+CA;Alberta;Smoky Lake;54.1169;-112.469
+CA;Alberta;Lac La Biche;54.7669;-111.969
+CA;British Columbia;Smithers;54.7817;-127.169
 CA;Alberta;Whitecourt;54.1426;-115.683
 CA;Alberta;Bonnyville;54.2688;-110.741
 GB;England;Flamborough;54.1139;-0.123578
@@ -968,72 +968,72 @@ DE;Schleswig-Holstein;Ottendorf;54.3409;10.0493
 DE;Schleswig-Holstein;Melsdorf;54.3165;10.0296
 DK;Zealand;Gedser;54.5764;11.93
 DK;Zealand;Horbelev;54.823;12.0584
-DK;Zealand;"Store Damme";54.9151;12.1631
+DK;Zealand;Store Damme;54.9151;12.1631
 DK;Zealand;Sundby;54.7671;11.8498
 DK;Zealand;Nysted;54.6651;11.7343
-RU;"Omsk Oblast";Omsk;54.9892;73.297
+RU;Omsk Oblast;Omsk;54.9892;73.297
 DE;Schleswig-Holstein;Sterup;54.7265;9.73572
-RU;"Kaliningrad Oblast";Gribki;54.5901;20.9518
+RU;Kaliningrad Oblast;Gribki;54.5901;20.9518
 GB;Scotland;Stranraer;54.9023;-5.02731
-GB;"Northern Ireland";Doagh;54.75;-6.08333
+GB;Northern Ireland;Doagh;54.75;-6.08333
 GB;England;Ambleside;54.4326;-2.96167
-PL;"West Pomerania";Królewo;54.5167;16.6565
-PL;"West Pomerania";"Ustronie Morskie";54.2152;15.7557
-PL;"West Pomerania";Skibno;54.2447;16.2945
+PL;West Pomerania;Królewo;54.5167;16.6565
+PL;West Pomerania;Ustronie Morskie;54.2152;15.7557
+PL;West Pomerania;Skibno;54.2447;16.2945
 DE;Schleswig-Holstein;Nehmten;54.1;10.4
-RU;"Moscow Oblast";Stupino;54.8974;38.068
-RU;"Moscow Oblast";Serpukhov;54.9198;37.4162
+RU;Moscow Oblast;Stupino;54.8974;38.068
+RU;Moscow Oblast;Serpukhov;54.9198;37.4162
 PL;Podlasie;Suwałki;54.1015;22.9311
-DK;"South Denmark";Marstal;54.8562;10.5173
+DK;South Denmark;Marstal;54.8562;10.5173
 DE;Schleswig-Holstein;Oeversee;54.7002;9.43323
-DE;Schleswig-Holstein;"Flensburg (Mürwik)";54.8142;9.4661
-RU;"Novosibirsk Oblast";Novosibirsk;54.9789;82.8709
-RU;"Moscow Oblast";Serpukhov;54.914;37.4461
+DE;Schleswig-Holstein;Flensburg (Mürwik);54.8142;9.4661
+RU;Novosibirsk Oblast;Novosibirsk;54.9789;82.8709
+RU;Moscow Oblast;Serpukhov;54.914;37.4461
 LT;Kaunas;Kaunas;54.9209;23.9139
-GB;"Northern Ireland";Belfast;54.6003;-5.94841
-RU;"Bashkortostan Republic";Chesnokovka;54.6124;55.9458
-RU;"Bashkortostan Republic";Buzdyak;54.5692;54.5308
-RU;"Bashkortostan Republic";Iglino;54.8269;56.4121
+GB;Northern Ireland;Belfast;54.6003;-5.94841
+RU;Bashkortostan Republic;Chesnokovka;54.6124;55.9458
+RU;Bashkortostan Republic;Buzdyak;54.5692;54.5308
+RU;Bashkortostan Republic;Iglino;54.8269;56.4121
 RU;Kamchatka;Mil'kovo;54.6947;158.619
 PL;Pomerania;Oliwa;54.4072;18.5536
 GB;England;Stockton-on-Tees;54.576;-1.27342
-LT;"Marijampolė County";Vilkaviškis;54.6517;23.0322
-LT;"Marijampolė County";Kalvarija;54.417;23.223
+LT;Marijampolė County;Vilkaviškis;54.6517;23.0322
+LT;Marijampolė County;Kalvarija;54.417;23.223
 IM;Onchan;Onchan;54.1672;-4.4508
-PL;"West Pomerania";Koszalin;54.209;16.1889
-PL;"West Pomerania";Koszalin;54.2091;16.1882
-PL;"West Pomerania";"Stare Bielice";54.1767;16.116
-PL;"West Pomerania";Sianów;54.2265;16.2913
-PL;"West Pomerania";Jamno;54.2456;16.1695
+PL;West Pomerania;Koszalin;54.209;16.1889
+PL;West Pomerania;Koszalin;54.2091;16.1882
+PL;West Pomerania;Stare Bielice;54.1767;16.116
+PL;West Pomerania;Sianów;54.2265;16.2913
+PL;West Pomerania;Jamno;54.2456;16.1695
 LT;Vilnius;Vilnius;54.7217;25.3474
 LT;Vilnius;Vilnius;54.6617;25.3514
 LT;Vilnius;Vilnius;54.6779;25.2499
 LT;Vilnius;Liepiškės;54.6279;25.452
 GB;England;Sunderland;54.9206;-1.46687
 GB;England;Sunderland;54.919;-1.4664
-GB;England;"Newcastle upon Tyne";54.9901;-1.65196
-GB;England;"East Boldon";54.9432;-1.42272
-IE;Connaught;"Sligo (Abbeyquarter North)";54.2705;-8.47726
-IE;Connacht;"Sligo (Abbeyquarter North)";54.2705;-8.47726
-GB;England;"High Coniscliffe";54.5333;-1.65
+GB;England;Newcastle upon Tyne;54.9901;-1.65196
+GB;England;East Boldon;54.9432;-1.42272
+IE;Connaught;Sligo (Abbeyquarter North);54.2705;-8.47726
+IE;Connacht;Sligo (Abbeyquarter North);54.2705;-8.47726
+GB;England;High Coniscliffe;54.5333;-1.65
 DK;Zealand;Borre;54.9959;12.4463
-DK;"South Denmark";Guderup;54.9898;9.87174
-DK;"South Denmark";Gråsten;54.9192;9.59523
-DK;"South Denmark";Humble;54.8297;10.6996
+DK;South Denmark;Guderup;54.9898;9.87174
+DK;South Denmark;Gråsten;54.9192;9.59523
+DK;South Denmark;Humble;54.8297;10.6996
 RU;Omsk;Omsk;54.9914;73.3645
 RU;Omsk;Omsk;54.9883;73.2921
 RU;Omsk;Omsk;54.9667;73.3833
 RU;Omsk;Omsk;54.9789;73.4072
 RU;Chelyabinsk;Plast;54.3691;60.8136
-DE;Schleswig-Holstein;"Flensburg (Neustadt)";54.7967;9.42827
+DE;Schleswig-Holstein;Flensburg (Neustadt);54.7967;9.42827
 RU;Ulyanovsk;Ulyanovsk;54.3187;48.3978
 LT;Vilnius;Vilnius;54.6994;25.262
 LT;Vilnius;Vilnius;54.6965;25.2759
 LT;Kaunas;Kaunas;54.9134;23.8425
 LT;Vilnius;Vilnius;54.7412;25.2213
 LT;Vilnius;Vilnius;54.6694;25.2708
-DE;Schleswig-Holstein;"Flensburg (Südstadt)";54.7621;9.44458
-DE;Schleswig-Holstein;"Flensburg (Südstadt)";54.7628;9.44558
+DE;Schleswig-Holstein;Flensburg (Südstadt);54.7621;9.44458
+DE;Schleswig-Holstein;Flensburg (Südstadt);54.7628;9.44558
 DE;Schleswig-Holstein;Holtsee;54.401;9.85577
 PL;Pomerania;Gdynia;54.5184;18.5292
 PL;Warmia-Masuria;Braniewo;54.3797;19.8196
@@ -1043,17 +1043,17 @@ PL;Pomerania;Bytów;54.1402;17.4461
 PL;Pomerania;Sopot;54.4337;18.5836
 PL;Pomerania;Gdansk;54.3473;18.685
 PL;Pomerania;Gdansk;54.3473;18.6856
-IM;Braddan;"Kirk Braddan";54.1852;-4.48914
+IM;Braddan;Kirk Braddan;54.1852;-4.48914
 PL;Pomerania;Bytów;54.1706;17.4919
-RU;"Ryazan Oblast";Ryazan;54.6083;39.7242
+RU;Ryazan Oblast;Ryazan;54.6083;39.7242
 PL;Pomerania;Tczew;54.0983;18.7595
 LT;Kaunas;Garliava;54.8321;23.8765
 LT;Kaunas;Garliava;54.8214;23.8713
 LT;Kaunas;Kaunas;54.9027;23.9096
-RU;"Kaliningrad Oblast";Pionerskiy;54.9508;20.2275
+RU;Kaliningrad Oblast;Pionerskiy;54.9508;20.2275
 RU;Kaliningrad;Kaliningrad;54.7195;20.4755
 GB;England;Gateshead;54.9666;-1.59532
-GB;England;"Newcastle upon Tyne";54.9703;-1.60493
+GB;England;Newcastle upon Tyne;54.9703;-1.60493
 LT;Vilnius;Vievis;54.7726;24.8113
 LT;Vilnius;Nemėžis;54.6363;25.3545
 LT;Kaunas;Jieznas;54.5994;24.1759
@@ -1062,113 +1062,113 @@ LT;Vilnius;Lentvaris;54.6436;25.0516
 LT;Kaunas;Ežerėlis;54.8831;23.604
 LT;Kaunas;Birštonas;54.608;24.034
 LT;Kaunas;Ramučiai;54.9483;24.0305
-LT;"Marijampolė County";Šakiai;54.9534;23.0478
+LT;Marijampolė County;Šakiai;54.9534;23.0478
 LT;Alytus;Matuizos;54.2753;24.68
 LT;Kaunas;Karmėlava;54.9706;24.0618
 LT;Kaunas;Linksmakalnis;54.7579;23.9285
-LT;"Marijampolė County";"Kazlų Rūda";54.749;23.49
-LT;"Marijampolė County";Virbalis;54.6286;22.8227
+LT;Marijampolė County;Kazlų Rūda;54.749;23.49
+LT;Marijampolė County;Virbalis;54.6286;22.8227
 LT;Kaunas;Noreikiškės;54.8874;23.8477
 LT;Vilnius;Rūdiškės;54.5161;24.8308
 LT;Vilnius;Skaidiškės;54.614;25.3957
-LT;"Marijampolė County";Kybartai;54.6386;22.7632
+LT;Marijampolė County;Kybartai;54.6386;22.7632
 LT;Vilnius;Lavoriškės;54.706;25.643
 LT;Vilnius;Pabradė;54.981;25.761
-RU;"Kaliningrad Oblast";Gusev;54.5922;22.1997
+RU;Kaliningrad Oblast;Gusev;54.5922;22.1997
 PL;Warmia-Masuria;Elblag;54.1561;19.4045
 PL;Pomerania;Gdansk;54.4008;18.6117
 PL;Pomerania;Kowale;54.3098;18.5615
-RU;"Tula Oblast";Novomoskovsk;54.011;38.2908
+RU;Tula Oblast;Novomoskovsk;54.011;38.2908
 GB;England;Middlesbrough;54.5542;-1.25439
-PL;Pomerania;"Gdansk (Środmieście)";54.3594;18.6456
+PL;Pomerania;Gdansk (Środmieście);54.3594;18.6456
 PL;Pomerania;Wejherowo;54.6024;18.2371
 PL;Pomerania;Gdynia;54.5502;18.5402
 PL;Warmia-Masuria;Elblag;54.1579;19.3935
 PL;Pomerania;Gdansk;54.3625;18.458
-PL;Pomerania;"Pruszcz Gdański";54.2621;18.6362
+PL;Pomerania;Pruszcz Gdański;54.2621;18.6362
 IE;Ulster;Ballyshannon;54.5;-8.18333
 IE;Ulster;Belturbet;54.1;-7.45
 IE;Leinster;Dundalk;54.0045;-6.3753
-RU;"Tatarstan Republic";Al'met'yevsk;54.9044;52.3154
-GB;"Northern Ireland";Castlewellan;54.2569;-5.94446
-GB;"Northern Ireland";Glenavy;54.5923;-6.21371
-GB;"Northern Ireland";Fintona;54.5;-7.31667
-GB;Scotland;"Castle Douglas";54.9409;-3.92784
-GB;"Northern Ireland";Ballygowan;54.5017;-5.79168
+RU;Tatarstan Republic;Al'met'yevsk;54.9044;52.3154
+GB;Northern Ireland;Castlewellan;54.2569;-5.94446
+GB;Northern Ireland;Glenavy;54.5923;-6.21371
+GB;Northern Ireland;Fintona;54.5;-7.31667
+GB;Scotland;Castle Douglas;54.9409;-3.92784
+GB;Northern Ireland;Ballygowan;54.5017;-5.79168
 GB;England;Hetton-Le-Hole;54.8167;-1.45
 GB;England;Grassington;54.0714;-1.99822
-GB;"Northern Ireland";Bellaghy;54.8087;-6.51918
-GB;"Northern Ireland";Downpatrick;54.3281;-5.71529
-GB;"Northern Ireland";Ardglass;54.2631;-5.60981
-GB;"Northern Ireland";Draperstown;54.8;-6.76667
-GB;"Northern Ireland";Jordanstown;54.6833;-5.9
+GB;Northern Ireland;Bellaghy;54.8087;-6.51918
+GB;Northern Ireland;Downpatrick;54.3281;-5.71529
+GB;Northern Ireland;Ardglass;54.2631;-5.60981
+GB;Northern Ireland;Draperstown;54.8;-6.76667
+GB;Northern Ireland;Jordanstown;54.6833;-5.9
 GB;England;Boosbeck;54.5426;-0.98139
 RU;Kaliningrad;Kaliningrad;54.7259;20.4832
 RU;Kaliningrad;Kaliningrad;54.7104;20.4522
-IE;Ulster;"Newtown Cunningham";54.9964;-7.51917
+IE;Ulster;Newtown Cunningham;54.9964;-7.51917
 LT;Vilnius;Vilnius;54.7154;25.2879
 LT;Vilnius;Vilnius;54.7167;25.291
 LT;Vilnius;Vilnius;54.7161;25.2913
 LT;Vilnius;Vilnius;54.7335;25.2433
 PL;Pomerania;Żukowo;54.3422;18.3648
-PL;Pomerania;"Gmina Stężyca";54.2059;17.9557
+PL;Pomerania;Gmina Stężyca;54.2059;17.9557
 GB;England;Murton;54.8181;-1.39036
-GB;"Northern Ireland";Belfast;54.6045;-5.92931
-GB;"Northern Ireland";Belfast;54.6047;-5.92894
-GB;"Northern Ireland";Belfast;54.604;-5.93079
+GB;Northern Ireland;Belfast;54.6045;-5.92931
+GB;Northern Ireland;Belfast;54.6047;-5.92894
+GB;Northern Ireland;Belfast;54.604;-5.93079
 RU;Ulyanovsk;Ulyanovsk;54.3072;48.3564
 LT;Kaunas;Kaunas;54.8976;23.9204
-RU;"Omsk Oblast";Omsk;54.9586;73.374
-RU;"Omsk Oblast";Omsk;54.9654;73.3845
+RU;Omsk Oblast;Omsk;54.9586;73.374
+RU;Omsk Oblast;Omsk;54.9654;73.3845
 LT;Vilnius;Vilnius;54.6778;25.2501
-PL;"West Pomerania";Białogard;54.0121;15.988
-RU;"Irkutsk Oblast";Nizhneudinsk;54.9072;99.034
+PL;West Pomerania;Białogard;54.0121;15.988
+RU;Irkutsk Oblast;Nizhneudinsk;54.9072;99.034
 PL;Pomerania;Łapalice;54.3459;18.129
-PL;"West Pomerania";Trzebiatów;54.0615;15.2647
+PL;West Pomerania;Trzebiatów;54.0615;15.2647
 IM;Douglas;Douglas;54.1495;-4.48134
-GB;England;"Stockton-on-Tees (Preston Farm Industrial Estate)";54.543;-1.32343
+GB;England;Stockton-on-Tees (Preston Farm Industrial Estate);54.543;-1.32343
 GB;England;Easingwold;54.1201;-1.1939
-RU;"Kaliningrad Oblast";Kaliningrad;54.7248;20.5286
-GB;"Northern Ireland";Belfast;54.5956;-5.93268
-PL;Warmia-Masuria;"Banie Mazurskie";54.2466;22.0362
+RU;Kaliningrad Oblast;Kaliningrad;54.7248;20.5286
+GB;Northern Ireland;Belfast;54.5956;-5.93268
+PL;Warmia-Masuria;Banie Mazurskie;54.2466;22.0362
 PL;Podlasie;Wiżajny;54.3677;22.8684
 PL;Warmia-Masuria;Neuhof;54.1164;20.5441
 PL;Podlasie;Puńsk;54.2511;23.1812
 PL;Podlasie;Jeleniewo;54.2057;22.9124
 PL;Pomerania;Kolbudy;54.2699;18.4664
-PL;Pomerania;"Trąbki Wielkie";54.1706;18.54
+PL;Pomerania;Trąbki Wielkie;54.1706;18.54
 PL;Pomerania;Kołczygłowy;54.2389;17.2315
 PL;Pomerania;Bojano;54.4712;18.3841
-PL;Pomerania;"Dębnica Kaszubska";54.3783;17.1612
-PL;Pomerania;"Gmina Główczyce";54.6194;17.3723
-PL;Pomerania;"Gmina Chmielno";54.3254;18.0986
+PL;Pomerania;Dębnica Kaszubska;54.3783;17.1612
+PL;Pomerania;Gmina Główczyce;54.6194;17.3723
+PL;Pomerania;Gmina Chmielno;54.3254;18.0986
 PL;Pomerania;Letnica;54.3921;18.6475
 PL;Pomerania;Strzelno;54.7856;18.3251
 PL;Warmia-Masuria;Kętrzyn;54.0766;21.375
-PL;Pomerania;"Jastrzębia Góra";54.8312;18.3129
+PL;Pomerania;Jastrzębia Góra;54.8312;18.3129
 PL;Pomerania;Przodkowo;54.3817;18.2912
-PL;"West Pomerania";Pogorzelica;54.1025;15.1151
+PL;West Pomerania;Pogorzelica;54.1025;15.1151
 PL;Pomerania;Puck;54.718;18.4086
 PL;Pomerania;Kobysewo;54.3591;18.2643
-PL;Warmia-Masuria;"Górowo Iławeckie";54.2853;20.493
-PL;"West Pomerania";Rewal;54.0804;15.0195
+PL;Warmia-Masuria;Górowo Iławeckie;54.2853;20.493
+PL;West Pomerania;Rewal;54.0804;15.0195
 PL;Pomerania;Rumia;54.5626;18.3935
-PL;"West Pomerania";Niechorze;54.0948;15.0766
-PL;"West Pomerania";Sianów;54.2265;16.2916
+PL;West Pomerania;Niechorze;54.0948;15.0766
+PL;West Pomerania;Sianów;54.2265;16.2916
 PL;Warmia-Masuria;Olecko;54.0337;22.5069
 PL;Pomerania;Kolbudy;54.2708;18.4722
-PL;Pomerania;"Krynica Morska";54.3805;19.4441
-PL;"West Pomerania";Białogard;54.0029;15.9921
-PL;"West Pomerania";Trzebiatów;54.0612;15.2647
+PL;Pomerania;Krynica Morska;54.3805;19.4441
+PL;West Pomerania;Białogard;54.0029;15.9921
+PL;West Pomerania;Trzebiatów;54.0612;15.2647
 PL;Pomerania;Mezowo;54.3087;18.2426
-PL;Pomerania;"Mokry Dwór";54.2914;18.7153
+PL;Pomerania;Mokry Dwór;54.2914;18.7153
 PL;Pomerania;Kościerzyna;54.1222;17.9813
-PL;"West Pomerania";Sarbinowo;54.2498;15.9558
+PL;West Pomerania;Sarbinowo;54.2498;15.9558
 PL;Pomerania;Miechucino;54.3412;18.0243
 PL;Pomerania;Kartuzy;54.3343;18.1972
-PL;Pomerania;"Czarna Dąbrówka";54.3562;17.5647
-PL;Pomerania;"Mały Bukowiec";54.0059;18.6955
-PL;"West Pomerania";Pieszcz;54.4595;16.7782
+PL;Pomerania;Czarna Dąbrówka;54.3562;17.5647
+PL;Pomerania;Mały Bukowiec;54.0059;18.6955
+PL;West Pomerania;Pieszcz;54.4595;16.7782
 PL;Pomerania;Luzino;54.566;18.1038
 DE;Mecklenburg-Vorpommern;Born;54.3854;12.5305
 DE;Mecklenburg-Vorpommern;Pruchten;54.3784;12.6744
@@ -1198,7 +1198,7 @@ DE;Schleswig-Holstein;Breiholz;54.2055;9.52371
 DE;Schleswig-Holstein;Taarstedt;54.569;9.68782
 DE;Schleswig-Holstein;Kropp;54.4122;9.50848
 DE;Schleswig-Holstein;Busdorf;54.4911;9.54997
-DE;Schleswig-Holstein;"Klein Rheide";54.4496;9.47569
+DE;Schleswig-Holstein;Klein Rheide;54.4496;9.47569
 DE;Schleswig-Holstein;Neuberend;54.5503;9.52797
 DE;Mecklenburg-Vorpommern;Bartenshagen-Parkentin;54.0812;11.9785
 DE;Mecklenburg-Vorpommern;Biendorf;54.0759;11.7022
@@ -1214,29 +1214,29 @@ DE;Schleswig-Holstein;Süderbrarup;54.637;9.77486
 DE;Schleswig-Holstein;Scheggerott;54.6691;9.81977
 DE;Schleswig-Holstein;Tetenhusen;54.3503;9.49943
 GB;England;Marske;54.5919;-1.01971
-GB;England;"South Bank";54.5667;-1.15
+GB;England;South Bank;54.5667;-1.15
 GB;England;Eston;54.5593;-1.1434
-GB;"Northern Ireland";Carryduff;54.518;-5.88713
-GB;"Northern Ireland";Londonderry;54.9966;-7.30857
-GB;"Northern Ireland";"Sion Mills";54.7875;-7.47276
-GB;"Northern Ireland";Cullybackey;54.8887;-6.34701
-GB;"Northern Ireland";Glengormley;54.6798;-5.95939
+GB;Northern Ireland;Carryduff;54.518;-5.88713
+GB;Northern Ireland;Londonderry;54.9966;-7.30857
+GB;Northern Ireland;Sion Mills;54.7875;-7.47276
+GB;Northern Ireland;Cullybackey;54.8887;-6.34701
+GB;Northern Ireland;Glengormley;54.6798;-5.95939
 GB;England;Pelton;54.8731;-1.6095
 GB;Scotland;Kirkcudbright;54.8383;-4.04908
 GB;England;Bowburn;54.7385;-1.52521
 GB;England;Milnthorpe;54.2279;-2.76939
 GB;England;Startforth;54.5385;-1.93016
-GB;"Northern Ireland";Ballymena;54.8636;-6.27628
-GB;England;"Moor Row";54.5151;-3.53725
+GB;Northern Ireland;Ballymena;54.8636;-6.27628
+GB;England;Moor Row;54.5151;-3.53725
 GB;England;Croxdale;54.7284;-1.58585
-PL;Warmia-Masuria;"Gmina Olecko";54.0427;22.5004
-PL;Warmia-Masuria;"Lidzbark Warmiński";54.1288;20.6001
+PL;Warmia-Masuria;Gmina Olecko;54.0427;22.5004
+PL;Warmia-Masuria;Lidzbark Warmiński;54.1288;20.6001
 PL;Warmia-Masuria;Bartoszyce;54.2536;20.8003
 PL;Pomerania;Gdansk;54.3942;18.5703
-PL;Pomerania;"Pruszcz Gdański";54.2611;18.6294
-PL;Warmia-Masuria;"Lidzbark Warmiński";54.128;20.5738
-PL;Pomerania;"Stare Pole";54.0567;19.2087
-PL;"West Pomerania";Darłówko;54.4352;16.3773
+PL;Pomerania;Pruszcz Gdański;54.2611;18.6294
+PL;Warmia-Masuria;Lidzbark Warmiński;54.128;20.5738
+PL;Pomerania;Stare Pole;54.0567;19.2087
+PL;West Pomerania;Darłówko;54.4352;16.3773
 PL;Warmia-Masuria;Giżycko;54.0358;21.7678
 PL;Pomerania;Gdansk;54.409;18.5964
 PL;Podlasie;Suwałki;54.097;22.937
@@ -1246,37 +1246,37 @@ PL;Pomerania;Linia;54.4514;17.9345
 PL;Pomerania;Dziemiany;54.0058;17.7764
 PL;Pomerania;Wejherowo;54.6003;18.233
 PL;Pomerania;Smołdzino;54.663;17.2141
-PL;"West Pomerania";Gościno;54.0523;15.6517
+PL;West Pomerania;Gościno;54.0523;15.6517
 PL;Pomerania;Lniska;54.3373;18.4034
 PL;Warmia-Masuria;Tolkmicko;54.3202;19.5273
 PL;Pomerania;Straszyn;54.2714;18.5806
 PL;Pomerania;Warcz;54.2091;18.4884
 PL;Pomerania;Żukowo;54.342;18.365
-PL;"West Pomerania";Kołobrzeg;54.1759;15.5833
+PL;West Pomerania;Kołobrzeg;54.1759;15.5833
 PL;Podlasie;Suwałki;54.101;22.9435
-PL;Warmia-Masuria;"Gmina Olecko";54.0358;22.5046
-PL;Warmia-Masuria;"Lidzbark Warmiński";54.1283;20.5735
+PL;Warmia-Masuria;Gmina Olecko;54.0358;22.5046
+PL;Warmia-Masuria;Lidzbark Warmiński;54.1283;20.5735
 PL;Warmia-Masuria;Olecko;54.0385;22.4966
-PL;Warmia-Masuria;"Lidzbark Warmiński";54.1249;20.586
+PL;Warmia-Masuria;Lidzbark Warmiński;54.1249;20.586
 PL;Pomerania;Bytów;54.1706;17.4916
 PL;Pomerania;Skoszewo;54.0281;17.6204
-DK;"South Denmark";Soenderborg;54.9287;9.8067
+DK;South Denmark;Soenderborg;54.9287;9.8067
 IM;Lezayre;Lezayre;54.3167;-4.41667
 IM;Douglas;Douglas;54.153;-4.53272
-RU;"Omsk Oblast";Omsk;54.9366;73.3317
-GB;"Northern Ireland";Belfast;54.5954;-5.92209
+RU;Omsk Oblast;Omsk;54.9366;73.3317
+GB;Northern Ireland;Belfast;54.5954;-5.92209
 GB;Scotland;Whithorn;54.1509;-4.48652
 GB;England;Flamborough;54.117;-0.12364
-RU;"Novosibirsk Oblast";"Ob' (Gorodskoy Okrug Gorod Ob)";54.9967;82.6921
-RU;"Ryazan Oblast";Ryazan;54.6157;39.761
-RU;"Ryazan Oblast";Ryazan;54.6403;39.6661
-RU;"Kemerovo Oblast";Belovo;54.4382;86.3108
+RU;Novosibirsk Oblast;Ob' (Gorodskoy Okrug Gorod Ob);54.9967;82.6921
+RU;Ryazan Oblast;Ryazan;54.6157;39.761
+RU;Ryazan Oblast;Ryazan;54.6403;39.6661
+RU;Kemerovo Oblast;Belovo;54.4382;86.3108
 RU;Kuzbass;Belovo;54.4382;86.3108
-GB;"Northern Ireland";Antrim;54.7312;-6.23602
-GB;"Northern Ireland";Belfast;54.6307;-5.89327
-GB;"Northern Ireland";Belfast;54.6022;-5.90859
-GB;"Northern Ireland";Belfast;54.6294;-5.89526
-GB;"Northern Ireland";Belfast;54.631;-5.89475
+GB;Northern Ireland;Antrim;54.7312;-6.23602
+GB;Northern Ireland;Belfast;54.6307;-5.89327
+GB;Northern Ireland;Belfast;54.6022;-5.90859
+GB;Northern Ireland;Belfast;54.6294;-5.89526
+GB;Northern Ireland;Belfast;54.631;-5.89475
 LT;Vilnius;Vilnius;54.6289;25.105
 RU;Tula;Tula;54.1666;37.5871
 RU;Tula;Tula;54.1628;37.5888
@@ -1285,186 +1285,186 @@ RU;Tula;Tula;54.1696;37.5916
 RU;Tula;Tula;54.2048;37.6185
 RU;Tula;Tula;54.1891;37.6133
 GB;England;Frosterley;54.7261;-1.95879
-RU;"Omsk Oblast";Omsk;54.9694;73.3844
-RU;"Novosibirsk Oblast";Novosibirsk;54.8371;83.117
+RU;Omsk Oblast;Omsk;54.9694;73.3844
+RU;Novosibirsk Oblast;Novosibirsk;54.8371;83.117
 DE;Schleswig-Holstein;Hennstedt;54.2859;9.16204
 DE;Schleswig-Holstein;Klausdorf;54.309;10.2137
 DE;Mecklenburg-Vorpommern;Boiensdorf;54.0172;11.5611
 DE;Mecklenburg-Vorpommern;Börgerende-Rethwisch;54.1418;11.9253
 DE;Mecklenburg-Vorpommern;Loddin;54.0225;14.0075
 DE;Schleswig-Holstein;Flensburg;54.7586;9.41668
-DE;Schleswig-Holstein;"Kiel (Wellsee - Rönne)";54.283;10.153
+DE;Schleswig-Holstein;Kiel (Wellsee - Rönne);54.283;10.153
 DE;Mecklenburg-Vorpommern;Hanshagen;54.0454;13.5431
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 8)";54.1264;12.1581
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 8);54.1264;12.1581
 DE;Schleswig-Holstein;Neumünster;54.077;9.99195
-DE;Mecklenburg-Vorpommern;"Rostock (Südstadt)";54.0727;12.1073
-DE;Mecklenburg-Vorpommern;"Ostseebad Göhren";54.3414;13.7382
-DE;Mecklenburg-Vorpommern;"Hinrichshagen Hof Eins";54.0708;13.339
-DE;Mecklenburg-Vorpommern;"Ostseebad Zinnowitz";54.0756;13.909
+DE;Mecklenburg-Vorpommern;Rostock (Südstadt);54.0727;12.1073
+DE;Mecklenburg-Vorpommern;Ostseebad Göhren;54.3414;13.7382
+DE;Mecklenburg-Vorpommern;Hinrichshagen Hof Eins;54.0708;13.339
+DE;Mecklenburg-Vorpommern;Ostseebad Zinnowitz;54.0756;13.909
 DE;Mecklenburg-Vorpommern;Gelbensande;54.2027;12.3017
 DE;Mecklenburg-Vorpommern;Koserow;54.0519;14.002
-DE;Mecklenburg-Vorpommern;"Grimmen (Groß Lehmhagen)";54.1263;13.0539
-DE;Schleswig-Holstein;"Kiel (Ravensberg - Brunswik - Düsternbrook)";54.3405;10.143
+DE;Mecklenburg-Vorpommern;Grimmen (Groß Lehmhagen);54.1263;13.0539
+DE;Schleswig-Holstein;Kiel (Ravensberg - Brunswik - Düsternbrook);54.3405;10.143
 DE;Mecklenburg-Vorpommern;Katzow;54.0471;13.6774
 DE;Mecklenburg-Vorpommern;Brünzow;54.1045;13.5649
 DE;Mecklenburg-Vorpommern;Lubmin;54.1351;13.6169
 DE;Mecklenburg-Vorpommern;Wusterhusen;54.1131;13.6161
-DE;Schleswig-Holstein;"Kiel (Wellsee - Rönne)";54.2831;10.1529
+DE;Schleswig-Holstein;Kiel (Wellsee - Rönne);54.2831;10.1529
 DK;Zealand;Guldborg;54.8679;11.7392
-DK;"South Denmark";Soenderborg;54.9287;9.80419
-DK;"South Denmark";Soenderborg;54.9176;9.81006
-DK;"South Denmark";Broager;54.8925;9.681
-DK;Zealand;"Nykøbing Falster";54.7663;11.8738
-DK;"South Denmark";Marstal;54.8512;10.51
+DK;South Denmark;Soenderborg;54.9287;9.80419
+DK;South Denmark;Soenderborg;54.9176;9.81006
+DK;South Denmark;Broager;54.8925;9.681
+DK;Zealand;Nykøbing Falster;54.7663;11.8738
+DK;South Denmark;Marstal;54.8512;10.51
 GB;England;Darlington;54.5236;-1.55946
 GB;England;Ripon;54.1374;-1.52243
-GB;England;"South Shields";54.9967;-1.43435
+GB;England;South Shields;54.9967;-1.43435
 GB;England;Tanfield;54.8929;-1.71316
-GB;"Northern Ireland";Dromore;54.5133;-7.45886
-GB;"Northern Ireland";Kircubbin;54.4874;-5.53385
-DK;"South Denmark";Tønder;54.9355;8.87093
-DK;"South Denmark";Ærøskøbing;54.8956;10.2903
+GB;Northern Ireland;Dromore;54.5133;-7.45886
+GB;Northern Ireland;Kircubbin;54.4874;-5.53385
+DK;South Denmark;Tønder;54.9355;8.87093
+DK;South Denmark;Ærøskøbing;54.8956;10.2903
 DK;Zealand;Sundby;54.864;11.793
-DK;"South Denmark";Guderup;54.9921;9.86566
-DK;"South Denmark";Ulkebøl;54.9282;9.81743
+DK;South Denmark;Guderup;54.9921;9.86566
+DK;South Denmark;Ulkebøl;54.9282;9.81743
 DK;Zealand;Idestrup;54.7431;11.9567
 DK;Zealand;Søllested;54.8102;11.2712
-PL;Pomerania;"Gdynia (Redłowo)";54.4926;18.5395
+PL;Pomerania;Gdynia (Redłowo);54.4926;18.5395
 GB;England;Hunwick;54.6879;-1.70539
-GB;England;"Great Habton";54.1784;-0.84166
+GB;England;Great Habton;54.1784;-0.84166
 GB;England;Millom;54.2107;-3.272
-GB;"Northern Ireland";Aldergrove;54.6652;-6.2078
-RU;"Kaliningrad Oblast";Kaliningrad;54.7438;20.5099
+GB;Northern Ireland;Aldergrove;54.6652;-6.2078
+RU;Kaliningrad Oblast;Kaliningrad;54.7438;20.5099
 RU;Chelyabinsk;Yuzhnoural'sk;54.4421;61.2606
 PL;Pomerania;Sycewice;54.4223;16.8633
 LT;Vilnius;Vilnius;54.6781;25.2493
-RU;"Tatarstan Republic";Al'met'yevsk;54.8684;52.3205
+RU;Tatarstan Republic;Al'met'yevsk;54.8684;52.3205
 PL;Pomerania;Gdynia;54.5249;18.5383
-GB;"Northern Ireland";Jonesborough;54.1056;-6.37256
+GB;Northern Ireland;Jonesborough;54.1056;-6.37256
 RU;Kaliningrad;Kaliningrad;54.7248;20.5286
 RU;Ulyanovsk;Ulyanovsk;54.3037;48.3674
-RU;"Moscow Oblast";Protvino;54.8754;37.2053
-RU;"Omsk Oblast";Omsk;54.9729;73.3847
-RU;"Novosibirsk Oblast";Kol'tsovo;54.8454;83.1515
-RU;"Omsk Oblast";Omsk;54.9789;73.4072
-PL;"West Pomerania";Mrzeżyno;54.526;15.2551
-RU;"Novosibirsk Oblast";Novosibirsk;54.9907;82.9877
-RU;"Omsk Oblast";Omsk;54.9817;73.3938
-LT;Vilnius;"Vilnius (Šnipiškės)";54.6967;25.2791
+RU;Moscow Oblast;Protvino;54.8754;37.2053
+RU;Omsk Oblast;Omsk;54.9729;73.3847
+RU;Novosibirsk Oblast;Kol'tsovo;54.8454;83.1515
+RU;Omsk Oblast;Omsk;54.9789;73.4072
+PL;West Pomerania;Mrzeżyno;54.526;15.2551
+RU;Novosibirsk Oblast;Novosibirsk;54.9907;82.9877
+RU;Omsk Oblast;Omsk;54.9817;73.3938
+LT;Vilnius;Vilnius (Šnipiškės);54.6967;25.2791
 LT;Vilnius;Elektrėnai;54.7877;24.6755
 LT;Vilnius;Vilnius;54.689;25.2513
 PL;Pomerania;Gdynia;54.5334;18.4933
-RU;"Moscow Oblast";Pushchino;54.8329;37.6367
+RU;Moscow Oblast;Pushchino;54.8329;37.6367
 LT;Vilnius;Vilnius;54.6916;25.2877
 LT;Vilnius;Vilnius;54.6925;25.285
 IM;Malew;Ballasalla;54.0897;-4.63022
-RU;"Bashkortostan Republic";Ufa;54.7483;55.9481
+RU;Bashkortostan Republic;Ufa;54.7483;55.9481
 BY;Vitebsk;Orsha;54.5004;30.4294
 GB;England;Greystoke;54.6691;-2.87275
 IM;Malew;Ballasalla;54.0976;-4.63109
-PL;Pomerania;"Gdansk (Wrzeszcz)";54.3756;18.6113
+PL;Pomerania;Gdansk (Wrzeszcz);54.3756;18.6113
 PL;Pomerania;Gdansk;54.3742;18.6099
-PL;Pomerania;"Gdańsk (Matarnia)";54.3859;18.4725
-PL;Pomerania;"Gdańsk (Wrzeszcz)";54.3751;18.6105
+PL;Pomerania;Gdańsk (Matarnia);54.3859;18.4725
+PL;Pomerania;Gdańsk (Wrzeszcz);54.3751;18.6105
 GB;England;Skelton;54.5606;-0.98825
 GB;England;Marske;54.5915;-1.01959
 GB;England;Yarm;54.5036;-1.35793
-GB;"Northern Ireland";Glengormley;54.678;-5.963
-GB;"Northern Ireland";Lisburn;54.5162;-6.05801
-GB;England;"Bishop Auckland";54.6555;-1.67706
-GB;"Northern Ireland";Ballymagorry;54.8593;-7.42943
-GB;England;"East Rainton";54.8251;-1.48036
+GB;Northern Ireland;Glengormley;54.678;-5.963
+GB;Northern Ireland;Lisburn;54.5162;-6.05801
+GB;England;Bishop Auckland;54.6555;-1.67706
+GB;Northern Ireland;Ballymagorry;54.8593;-7.42943
+GB;England;East Rainton;54.8251;-1.48036
 GB;England;Portinscale;54.6011;-3.16209
-GB;"Northern Ireland";Gilford;54.3726;-6.36126
-GB;"Northern Ireland";Antrim;54.7344;-6.24481
-GB;"Northern Ireland";Castledawson;54.7772;-6.56227
-GB;"Northern Ireland";Garvagh;54.9833;-6.66667
+GB;Northern Ireland;Gilford;54.3726;-6.36126
+GB;Northern Ireland;Antrim;54.7344;-6.24481
+GB;Northern Ireland;Castledawson;54.7772;-6.56227
+GB;Northern Ireland;Garvagh;54.9833;-6.66667
 GB;England;Workington;54.6471;-3.55128
-GB;England;"Newcastle upon Tyne";54.9906;-1.57689
+GB;England;Newcastle upon Tyne;54.9906;-1.57689
 GB;England;Filey;54.2118;-0.294916
-GB;"Northern Ireland";Belfast;54.5971;-5.92425
+GB;Northern Ireland;Belfast;54.5971;-5.92425
 GB;Scotland;Eastriggs;54.986;-3.18051
 GB;England;Leyburn;54.31;-1.83041
-GB;"Northern Ireland";Crumlin;54.6205;-6.21414
+GB;Northern Ireland;Crumlin;54.6205;-6.21414
 GB;England;Heighington;54.5959;-1.61791
 GB;England;Sharow;54.1411;-1.50517
-GB;England;"Kirkby Thore";54.6254;-2.56205
+GB;England;Kirkby Thore;54.6254;-2.56205
 GB;England;Langwathby;54.6963;-2.66882
-RU;"Kaluga Oblast";Kudinovo;54.9994;36.2533
+RU;Kaluga Oblast;Kudinovo;54.9994;36.2533
 PL;Warmia-Masuria;Orneta;54.1148;20.1333
-GB;"Northern Ireland";Rathfriland;54.25;-6.16667
+GB;Northern Ireland;Rathfriland;54.25;-6.16667
 GB;England;Slaley;54.9137;-2.03711
 GB;Scotland;Whithorn;54.7323;-4.41559
-RU;"Novosibirsk Oblast";Novosibirsk;54.972;82.8961
-RU;"Novosibirsk Oblast";Novosibirsk;54.9765;82.8913
+RU;Novosibirsk Oblast;Novosibirsk;54.972;82.8961
+RU;Novosibirsk Oblast;Novosibirsk;54.9765;82.8913
 RU;Omsk;Omsk;54.9911;73.3731
 RU;Omsk;Omsk;54.9236;73.4089
 RU;Omsk;Omsk;54.9885;73.3242
 RU;Omsk;Omsk;54.9928;73.3631
 RU;Omsk;Omsk;54.981;73.3971
 RU;Omsk;Omsk;54.994;73.3719
-RU;"Novosibirsk Oblast";Novosibirsk;54.9568;82.9005
-RU;"Smolenskaya Oblast’";Smolensk;54.7791;32.0624
+RU;Novosibirsk Oblast;Novosibirsk;54.9568;82.9005
+RU;Smolenskaya Oblast’;Smolensk;54.7791;32.0624
 GB;England;Strensall;54.04;-1.03512
 GB;England;Northallerton;54.354;-1.44888
 GB;England;Consett;54.8532;-1.83376
 GB;England;Stockton-on-Tees;54.6619;-1.44849
 GB;England;Whickham;54.9453;-1.67083
 PL;Pomerania;Chwaszczyno;54.4438;18.4188
-RU;"Moscow Oblast";"Bol'shoye Gryzlovo";54.8003;37.6394
+RU;Moscow Oblast;Bol'shoye Gryzlovo;54.8003;37.6394
 PL;Pomerania;Sopot;54.4442;18.5581
 PL;Pomerania;Tczew;54.0903;18.7727
 GB;England;Castleside;54.8343;-1.87849
-GB;England;"Coatham Mundeville";54.58;-1.55645
+GB;England;Coatham Mundeville;54.58;-1.55645
 GB;England;Lingdale;54.5379;-0.95864
 IM;Malew;Ballasalla;54.0987;-4.63146
 DE;Mecklenburg-Vorpommern;Semlow;54.1812;12.6566
-DE;Mecklenburg-Vorpommern;"Ostseebad Ahrenshoop";54.3835;12.4242
-DE;Mecklenburg-Vorpommern;"Bad Sülze";54.1108;12.6605
+DE;Mecklenburg-Vorpommern;Ostseebad Ahrenshoop;54.3835;12.4242
+DE;Mecklenburg-Vorpommern;Bad Sülze;54.1108;12.6605
 DE;Schleswig-Holstein;Kiel;54.3233;10.1228
 DE;Schleswig-Holstein;Viöl;54.5705;9.17959
 DE;Schleswig-Holstein;Altenholz;54.3896;10.1059
-DE;Schleswig-Holstein;"Kiel (Wik)";54.3664;10.1076
-GB;"Northern Ireland";Carrickfergus;54.7137;-5.80818
-GB;England;"Washington (Crowther)";54.9;-1.55564
+DE;Schleswig-Holstein;Kiel (Wik);54.3664;10.1076
+GB;Northern Ireland;Carrickfergus;54.7137;-5.80818
+GB;England;Washington (Crowther);54.9;-1.55564
 GB;England;Gateshead;54.9431;-1.62293
-DE;Schleswig-Holstein;"Flensburg (Jürgensby)";54.7916;9.43928
+DE;Schleswig-Holstein;Flensburg (Jürgensby);54.7916;9.43928
 LT;Vilnius;Vilnius;54.6869;25.2748
-LT;"Marijampolė County";Marijampolė;54.5415;23.3461
+LT;Marijampolė County;Marijampolė;54.5415;23.3461
 LT;Vilnius;Vilnius;54.7008;25.2598
 LT;Kaunas;Kaunas;54.9091;23.9534
 LT;Kaunas;Kaunas;54.9097;23.8498
 LT;Vilnius;Vilnius;54.7228;25.2357
-LT;"Marijampolė County";Kybartai;54.6443;22.7573
+LT;Marijampolė County;Kybartai;54.6443;22.7573
 LT;Vilnius;Vilnius;54.6506;25.2186
 LT;Vilnius;Alesninkai;54.7918;24.7754
 LT;Vilnius;Vilnius;54.7144;25.297
-RU;"Novosibirsk Oblast";Novosibirsk;54.8426;83.0893
+RU;Novosibirsk Oblast;Novosibirsk;54.8426;83.0893
 DE;Schleswig-Holstein;Schleswig;54.5362;9.58443
 DE;Schleswig-Holstein;Flensburg;54.8023;9.42128
 LT;Vilnius;Vilnius;54.6871;25.2148
 IE;Ulster;Monaghan;54.2448;-6.98724
-IE;Connaught;"Rosses Point";54.3048;-8.56402
+IE;Connaught;Rosses Point;54.3048;-8.56402
 PL;Pomerania;Goręczyno;54.279;18.1656
-PL;Pomerania;"Gdynia (Działki Leśne)";54.5169;18.5318
+PL;Pomerania;Gdynia (Działki Leśne);54.5169;18.5318
 PL;Pomerania;Miastko;54.0034;16.9733
 PL;Pomerania;Słupsk;54.4622;17.0174
-PL;Pomerania;"Wielki Klińcz";54.1036;18.0605
-PL;Pomerania;"Gmina Wicko";54.6703;17.6168
-PL;Pomerania;"Gmina Stężyca";54.2075;17.9493
-DK;"South Denmark";Gråsten;54.9212;9.59591
-PL;Pomerania;"Gdynia (Chwarzno - Wiczlino)";54.5038;18.4548
+PL;Pomerania;Wielki Klińcz;54.1036;18.0605
+PL;Pomerania;Gmina Wicko;54.6703;17.6168
+PL;Pomerania;Gmina Stężyca;54.2075;17.9493
+DK;South Denmark;Gråsten;54.9212;9.59591
+PL;Pomerania;Gdynia (Chwarzno - Wiczlino);54.5038;18.4548
 PL;Warmia-Masuria;Braniewo;54.3847;19.8267
-PL;Warmia-Masuria;"Kamiennik Wielki";54.185;19.5455
+PL;Warmia-Masuria;Kamiennik Wielki;54.185;19.5455
 PL;Pomerania;Gdansk;54.3564;18.6501
 PL;Warmia-Masuria;Bartoszyce;54.2503;20.8091
 PL;Warmia-Masuria;Kadyny;54.298;19.4876
-RU;"Novosibirsk Oblast";Novosibirsk;54.8532;83.105
-RU;"Ryazan Oblast";Ryazan;54.6133;39.7236
-RU;"Omsk Oblast";Omsk;54.9779;73.4415
-RU;"Omsk Oblast";Omsk;54.9746;73.3881
-RU;"Novosibirsk Oblast";Novosibirsk;54.9936;82.9765
-KZ;"North Kazakhstan";Petropavl;54.8849;69.145
+RU;Novosibirsk Oblast;Novosibirsk;54.8532;83.105
+RU;Ryazan Oblast;Ryazan;54.6133;39.7236
+RU;Omsk Oblast;Omsk;54.9779;73.4415
+RU;Omsk Oblast;Omsk;54.9746;73.3881
+RU;Novosibirsk Oblast;Novosibirsk;54.9936;82.9765
+KZ;North Kazakhstan;Petropavl;54.8849;69.145
 DE;Schleswig-Holstein;Beringstedt;54.1167;9.53333
 DE;Schleswig-Holstein;Brinjahe;54.1667;9.63333
 DE;Schleswig-Holstein;Seefeld;54.0998;9.4931
@@ -1472,59 +1472,59 @@ DE;Schleswig-Holstein;Remmels;54.1167;9.65
 DE;Schleswig-Holstein;Hohenwestedt;54.0889;9.65359
 DE;Schleswig-Holstein;Nienborstel;54.1333;9.61667
 DE;Schleswig-Holstein;Lütjenwestedt;54.1333;9.48333
-RU;"Nizhny Novgorod Oblast";Pervomaysk;54.8719;43.8014
+RU;Nizhny Novgorod Oblast;Pervomaysk;54.8719;43.8014
 PL;Pomerania;Sitno;54.3384;18.2952
 PL;Pomerania;Wiślinka;54.3305;18.8011
-PL;Pomerania;"Nowy Dwór Gdański";54.208;19.1175
-PL;Pomerania;"Gmina Sierakowice";54.3461;17.8925
-PL;"West Pomerania";Dźwirzyno;54.1593;15.4112
-PL;Pomerania;"Gmina Wicko";54.6708;17.6176
+PL;Pomerania;Nowy Dwór Gdański;54.208;19.1175
+PL;Pomerania;Gmina Sierakowice;54.3461;17.8925
+PL;West Pomerania;Dźwirzyno;54.1593;15.4112
+PL;Pomerania;Gmina Wicko;54.6708;17.6176
 PL;Pomerania;Brętowo;54.3701;18.5711
 PL;Pomerania;Borowina;54.1589;18.3001
-PL;Pomerania;"Gmina Wicko";54.6576;17.591
+PL;Pomerania;Gmina Wicko;54.6576;17.591
 PL;Pomerania;Łęgowo;54.2255;18.6433
 PL;Pomerania;Bolszewo;54.6166;18.1764
 PL;Warmia-Masuria;Pasłęk;54.0619;19.6641
-PL;Warmia-Masuria;"Gronowo Elbląskie";54.0859;19.306
+PL;Warmia-Masuria;Gronowo Elbląskie;54.0859;19.306
 PL;Pomerania;Władysławowo;54.7909;18.4009
 PL;Pomerania;Góra;54.6325;18.1161
 PL;Pomerania;Subkowy;54.0023;18.7693
 PL;Pomerania;Kmiecin;54.189;19.1484
 PL;Pomerania;Matarnia;54.3856;18.4728
-PL;Pomerania;"Jastrzębia Góra";54.8313;18.313
+PL;Pomerania;Jastrzębia Góra;54.8313;18.313
 PL;Pomerania;Gnieżdżewo;54.7474;18.3794
 PL;Pomerania;Kępice;54.2411;16.8897
-PL;Pomerania;"Czarna Dąbrówka";54.3563;17.5646
+PL;Pomerania;Czarna Dąbrówka;54.3563;17.5646
 PL;Pomerania;Straszyn;54.2721;18.5811
 PL;Pomerania;Karwia;54.8289;18.2102
-PL;"West Pomerania";Rewal;54.0812;15.0147
-PL;"West Pomerania";Sławno;54.3628;16.6789
-PL;"West Pomerania";"Gmina Malechowo";54.308;16.5155
-PL;"West Pomerania";Drzonowo;54.0965;15.436
-PL;"West Pomerania";Polanów;54.1193;16.6851
-PL;Warmia-Masuria;"Komorowo Żuławskie";54.1078;19.5078
+PL;West Pomerania;Rewal;54.0812;15.0147
+PL;West Pomerania;Sławno;54.3628;16.6789
+PL;West Pomerania;Gmina Malechowo;54.308;16.5155
+PL;West Pomerania;Drzonowo;54.0965;15.436
+PL;West Pomerania;Polanów;54.1193;16.6851
+PL;Warmia-Masuria;Komorowo Żuławskie;54.1078;19.5078
 PL;Pomerania;Objazda;54.6074;17.0439
 PL;Pomerania;Rowy;54.6647;17.052
 PL;Pomerania;Bukowina;54.4228;17.8432
-PL;Pomerania;"Suchy Dwór";54.5749;18.4698
+PL;Pomerania;Suchy Dwór;54.5749;18.4698
 PL;Pomerania;Pszczółki;54.1714;18.6995
 PL;Pomerania;Reda;54.6054;18.3472
 PL;Warmia-Masuria;Pozezdrze;54.1411;21.8601
-PL;"West Pomerania";Biesiekierz;54.1326;16.0387
-PL;Pomerania;"Gmina Sierakowice";54.3484;17.8948
-PL;"West Pomerania";Świeszyno;54.1214;16.1686
-PL;Pomerania;"Krynica Morska";54.38;19.4441
+PL;West Pomerania;Biesiekierz;54.1326;16.0387
+PL;Pomerania;Gmina Sierakowice;54.3484;17.8948
+PL;West Pomerania;Świeszyno;54.1214;16.1686
+PL;Pomerania;Krynica Morska;54.38;19.4441
 PL;Warmia-Masuria;Bartoszyce;54.2533;20.8081
-PL;Pomerania;"Cedry Wielkie";54.2478;18.8467
-PL;Warmia-Masuria;"Dąbrówka Polska";54.2167;21.9833
-PL;"West Pomerania";Mrzeżyno;54.1393;15.281
+PL;Pomerania;Cedry Wielkie;54.2478;18.8467
+PL;Warmia-Masuria;Dąbrówka Polska;54.2167;21.9833
+PL;West Pomerania;Mrzeżyno;54.1393;15.281
 PL;Warmia-Masuria;Węgorzewo;54.2136;21.7416
 PL;Warmia-Masuria;Korsze;54.1697;21.1391
 PL;Podlasie;Sejny;54.1081;23.3469
 PL;Pomerania;Tuchomie;54.1153;17.3367
 PL;Warmia-Masuria;Braniewo;54.3797;19.8201
 PL;Warmia-Masuria;Giżycko;54.0364;21.7667
-PL;"West Pomerania";Mielno;54.26;16.0622
+PL;West Pomerania;Mielno;54.26;16.0622
 PL;Pomerania;Kobylnica;54.4404;17.0099
 PL;Warmia-Masuria;Gołdap;54.3069;22.3034
 PL;Pomerania;Lubiana;54.114;17.8701
@@ -1539,106 +1539,106 @@ PL;Pomerania;Garcz;54.3476;18.1017
 PL;Pomerania;Łęgowo;54.2264;18.6428
 PL;Pomerania;Trzebielino;54.2;17.0873
 PL;Pomerania;Damnica;54.5003;17.2715
-PL;"West Pomerania";Dygowo;54.1303;15.7199
-PL;"West Pomerania";Ostrowiec;54.2757;16.6708
+PL;West Pomerania;Dygowo;54.1303;15.7199
+PL;West Pomerania;Ostrowiec;54.2757;16.6708
 PL;Pomerania;Lublewo;54.2846;18.5039
-PL;Pomerania;"Gmina Potęgowo";54.4828;17.4862
+PL;Pomerania;Gmina Potęgowo;54.4828;17.4862
 PL;Pomerania;Łupawa;54.4187;17.4146
-PL;"West Pomerania";Niechorze;54.096;15.0806
+PL;West Pomerania;Niechorze;54.096;15.0806
 PL;Pomerania;Siedlce;54.3469;18.6169
-PL;"West Pomerania";Gostyń;54.0283;14.9472
+PL;West Pomerania;Gostyń;54.0283;14.9472
 PL;Warmia-Masuria;Sępopol;54.269;21.0145
 PL;Pomerania;Wiślinka;54.3355;18.7962
 PL;Pomerania;Mikoszewo;54.3334;18.9668
 PL;Pomerania;Żelistrzewo;54.6777;18.4174
 PL;Pomerania;Mrzezino;54.6538;18.4303
 PL;Pomerania;Lisewo;54.0966;18.8293
-PL;"West Pomerania";Gościno;54.0512;15.6526
+PL;West Pomerania;Gościno;54.0512;15.6526
 PL;Warmia-Masuria;Janikowo;54.2224;20.4607
 PL;Warmia-Masuria;Lubomino;54.0668;20.2396
-PL;Warmia-Masuria;"Kowale Oleckie";54.1635;22.4167
+PL;Warmia-Masuria;Kowale Oleckie;54.1635;22.4167
 IE;Ulster;Letterkenny;54.9533;-7.71621
-IE;Connacht;"Sligo (Abbeyquarter North)";54.2723;-8.47391
-DK;"South Denmark";Soenderborg;54.9234;9.80476
-DK;"South Denmark";Aabenraa;54.9538;9.41712
-DK;"South Denmark";Rudkøbing;54.9363;10.71
-DK;"South Denmark";Soenderborg;54.913;9.77928
-DK;"South Denmark";Tønder;54.9405;8.85624
+IE;Connacht;Sligo (Abbeyquarter North);54.2723;-8.47391
+DK;South Denmark;Soenderborg;54.9234;9.80476
+DK;South Denmark;Aabenraa;54.9538;9.41712
+DK;South Denmark;Rudkøbing;54.9363;10.71
+DK;South Denmark;Soenderborg;54.913;9.77928
+DK;South Denmark;Tønder;54.9405;8.85624
 GB;England;Gateshead;54.9518;-1.55216
-GB;"Northern Ireland";Enniskillen;54.3438;-7.63153
+GB;Northern Ireland;Enniskillen;54.3438;-7.63153
 GB;England;Danby;54.4685;-0.909386
-GB;"Northern Ireland";Cookstown;54.6418;-6.74439
-GB;England;"Burton Agnes";54.0479;-0.3119
+GB;Northern Ireland;Cookstown;54.6418;-6.74439
+GB;England;Burton Agnes;54.0479;-0.3119
 GB;England;Catterick;54.3807;-1.63197
-GB;"Northern Ireland";Moneymore;54.6923;-6.66956
-DE;Schleswig-Holstein;"Nordstrand (Osterdeich)";54.4988;8.8522
-PL;Pomerania;"Swichowo (Świchówko)";54.666;17.8427
-PL;"West Pomerania";Koszalin;54.1846;16.1728
-PL;"West Pomerania";Unieście;54.2723;16.0981
+GB;Northern Ireland;Moneymore;54.6923;-6.66956
+DE;Schleswig-Holstein;Nordstrand (Osterdeich);54.4988;8.8522
+PL;Pomerania;Swichowo (Świchówko);54.666;17.8427
+PL;West Pomerania;Koszalin;54.1846;16.1728
+PL;West Pomerania;Unieście;54.2723;16.0981
 RU;Chelyabinsk;Trekhgornyy;54.8176;58.4455
-RU;"Kaluga Oblast";Detchino;54.8092;36.3075
-RU;"Ryazan Oblast";Shatsk;54.0237;41.717
-RU;"Ryazan Oblast";Murmino;54.6043;40.0549
+RU;Kaluga Oblast;Detchino;54.8092;36.3075
+RU;Ryazan Oblast;Shatsk;54.0237;41.717
+RU;Ryazan Oblast;Murmino;54.6043;40.0549
 LT;Kaunas;Kaunas;54.899;23.9128
 LT;Kaunas;Kaunas;54.9052;23.9564
 LT;Kaunas;Kaunas;54.8985;23.9035
 LT;Kaunas;Kaunas;54.905;23.9567
-RU;"Kaliningrad Oblast";Ladushkin;54.5703;20.171
+RU;Kaliningrad Oblast;Ladushkin;54.5703;20.171
 LT;Vilnius;Vilnius;54.6732;25.2686
-RU;"Bashkortostan Republic";Ufa;54.7262;55.9558
+RU;Bashkortostan Republic;Ufa;54.7262;55.9558
 LT;Kaunas;Kaišiadorys;54.8653;24.4681
 LT;Vilnius;Nemenčinė;54.8478;25.4699
 LT;Vilnius;Šalčininkai;54.3086;25.3868
 LT;Alytus;Daugai;54.3667;24.3333
 RU;Ulyanovsk;Ulyanovsk;54.3654;48.4171
 IM;Malew;Ballasalla;54.0871;-4.64107
-IM;"Port Erin";"Port Erin";54.0849;-4.75099
+IM;Port Erin;Port Erin;54.0849;-4.75099
 RU;Kaliningrad;Kaliningrad;54.6703;20.4965
 RU;Kaliningrad;Kaliningrad;54.7215;20.4788
-RU;"Omsk Oblast";Omsk;54.9843;73.3698
+RU;Omsk Oblast;Omsk;54.9843;73.3698
 RU;Chelyabinsk;Ust'-Katav;54.9289;58.1556
-RU;"Tula Oblast";Yasnogorsk;54.4808;37.6941
-RU;"Bashkortostan Republic";Ufa;54.731;55.9449
-RU;"Mordoviya Republic";Saransk;54.1838;45.1749
+RU;Tula Oblast;Yasnogorsk;54.4808;37.6941
+RU;Bashkortostan Republic;Ufa;54.731;55.9449
+RU;Mordoviya Republic;Saransk;54.1838;45.1749
 GB;England;Seascale;54.3983;-3.47961
-GB;England;"Haydon Bridge";54.9749;-2.2468
-GB;England;"Witton le Wear";54.6757;-1.77387
-RU;"Tatarstan Republic";Cheremshan;54.6667;51.5
-RU;"Tatarstan Republic";Aznakayevo;54.85;53.1
-RU;"Tatarstan Republic";Bavly;54.393;53.2602
-GB;"Northern Ireland";Belfast;54.5942;-5.92451
-GB;"Northern Ireland";Belfast;54.5974;-5.92461
+GB;England;Haydon Bridge;54.9749;-2.2468
+GB;England;Witton le Wear;54.6757;-1.77387
+RU;Tatarstan Republic;Cheremshan;54.6667;51.5
+RU;Tatarstan Republic;Aznakayevo;54.85;53.1
+RU;Tatarstan Republic;Bavly;54.393;53.2602
+GB;Northern Ireland;Belfast;54.5942;-5.92451
+GB;Northern Ireland;Belfast;54.5974;-5.92461
 LT;Vilnius;Vilnius;54.6356;25.2639
 GB;England;Lancaster;54.0452;-2.79588
 DE;Schleswig-Holstein;Flensburg;54.7915;9.43943
-DE;Schleswig-Holstein;"Flensburg (Sudstadt)";54.7623;9.44562
-GB;"Northern Ireland";Belfast;54.6274;-5.89447
+DE;Schleswig-Holstein;Flensburg (Sudstadt);54.7623;9.44562
+GB;Northern Ireland;Belfast;54.6274;-5.89447
 LT;Vilnius;Vilnius;54.6673;25.2549
 LT;Vilnius;Vilnius;54.6681;25.2559
-LT;"Marijampolė County";Marijampolė;54.5678;23.353
+LT;Marijampolė County;Marijampolė;54.5678;23.353
 LT;Vilnius;Vilnius;54.7215;25.3449
 LT;Vilnius;Vilnius;54.672;25.2627
 LT;Alytus;Alytus;54.3961;24.0461
 PL;Pomerania;Gdansk;54.3874;18.6264
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 4)";54.1255;12.082
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 4);54.1255;12.082
 PL;Warmia-Masuria;Młynary;54.1869;19.7215
-RU;"Tula Oblast";Tula;54.2471;37.6075
+RU;Tula Oblast;Tula;54.2471;37.6075
 LT;Kaunas;Kaunas;54.8977;23.9206
 LT;Kaunas;Mastaiciai;54.8237;23.8466
-LT;"Marijampolė County";Kalvarija;54.4062;23.2285
+LT;Marijampolė County;Kalvarija;54.4062;23.2285
 DE;Schleswig-Holstein;Wittbek;54.4732;9.20603
 DE;Schleswig-Holstein;Bargenstedt;54.0951;9.14997
-DE;Schleswig-Holstein;"Büsumer Deichhausen";54.1371;8.89127
+DE;Schleswig-Holstein;Büsumer Deichhausen;54.1371;8.89127
 DE;Schleswig-Holstein;Tellingstedt;54.2201;9.28291
 GB;England;Beckermet;54.45;-3.51667
-GB;England;"Kirkby Fleetham";54.3462;-1.5657
-GB;"Northern Ireland";Ballywalter;54.5433;-5.48475
+GB;England;Kirkby Fleetham;54.3462;-1.5657
+GB;Northern Ireland;Ballywalter;54.5433;-5.48475
 GB;England;Wolsingham;54.7309;-1.88319
 DE;Schleswig-Holstein;Brachenfeld-Ruthenberg;54.0715;10.0092
 DE;Schleswig-Holstein;Hörnum;54.7573;8.28833
 DE;Schleswig-Holstein;Kampen;54.9541;8.34171
 DE;Schleswig-Holstein;Tinnum;54.8993;8.33476
-DE;Schleswig-Holstein;"Wyk auf Föhr";54.6914;8.56702
+DE;Schleswig-Holstein;Wyk auf Föhr;54.6914;8.56702
 DE;Schleswig-Holstein;Niebüll;54.7866;8.82854
 DE;Schleswig-Holstein;Leck;54.7667;8.98333
 DE;Schleswig-Holstein;Grube;54.2304;11.0372
@@ -1653,7 +1653,7 @@ DE;Schleswig-Holstein;Padenstedt;54.0491;9.91993
 DE;Schleswig-Holstein;Lütjenburg;54.2919;10.5894
 DE;Schleswig-Holstein;Helmstorf;54.2833;10.6
 DE;Schleswig-Holstein;Friedrichsort;54.394;10.176
-DE;Mecklenburg-Vorpommern;"Klein Kussewitz";54.1344;12.2433
+DE;Mecklenburg-Vorpommern;Klein Kussewitz;54.1344;12.2433
 DE;Mecklenburg-Vorpommern;Mönchhagen;54.1515;12.2167
 DE;Schleswig-Holstein;Ahrensbök;54.0086;10.5743
 DE;Schleswig-Holstein;Bosau;54.0979;10.4357
@@ -1666,7 +1666,7 @@ DE;Schleswig-Holstein;Süderlügum;54.8739;8.91111
 DE;Schleswig-Holstein;Wennbüttel;54.1333;9.33333
 DE;Schleswig-Holstein;Hanerau-Hademarschen;54.1333;9.41667
 DE;Mecklenburg-Vorpommern;Dersekow;54.0458;13.2924
-DE;Schleswig-Holstein;"Oldenburg in Holstein";54.295;10.8904
+DE;Schleswig-Holstein;Oldenburg in Holstein;54.295;10.8904
 DE;Schleswig-Holstein;Manhagen;54.1954;10.9145
 DE;Schleswig-Holstein;Lensahn;54.2165;10.8833
 DE;Schleswig-Holstein;Gönnebek;54.049;10.1969
@@ -1685,67 +1685,67 @@ DE;Mecklenburg-Vorpommern;Samtens;54.3548;13.2931
 DE;Mecklenburg-Vorpommern;Sehlen;54.3797;13.3891
 DE;Mecklenburg-Vorpommern;Putbus;54.3508;13.4817
 DE;Schleswig-Holstein;Felde;54.3011;9.93613
-IE;Connacht;"Rosses Point";54.3092;-8.56611
-RU;"Novosibirsk Oblast";Novosibirsk;54.8514;83.1029
-RU;"Novosibirsk Oblast";Novosibirsk;54.8423;83.1111
-RU;"Novosibirsk Oblast";Novosibirsk;54.8332;83.1076
-RU;"Novosibirsk Oblast";Akademgorodok;54.8454;83.1515
-RU;"Novosibirsk Oblast";Novosibirsk;54.8431;83.1137
+IE;Connacht;Rosses Point;54.3092;-8.56611
+RU;Novosibirsk Oblast;Novosibirsk;54.8514;83.1029
+RU;Novosibirsk Oblast;Novosibirsk;54.8423;83.1111
+RU;Novosibirsk Oblast;Novosibirsk;54.8332;83.1076
+RU;Novosibirsk Oblast;Akademgorodok;54.8454;83.1515
+RU;Novosibirsk Oblast;Novosibirsk;54.8431;83.1137
 IM;Douglas;Douglas;54.1489;-4.48329
 IM;Douglas;Douglas;54.1481;-4.48047
 IM;Douglas;Douglas;54.1484;-4.48049
-RU;"Omsk Oblast";Poltavka;54.3631;71.7621
-RU;"Kaliningrad Oblast";Kaliningrad;54.7175;20.5005
-RU;"Bashkortostan Republic";Bulgakovo;54.4968;55.8843
-GB;"Northern Ireland";Belfast;54.596;-5.92092
-GB;"Northern Ireland";Irvinestown;54.4667;-7.63333
-GB;"Northern Ireland";Lisburn;54.5099;-6.08907
-GB;"Northern Ireland";Lisburn;54.5104;-6.08815
-GB;England;"Kirby Underdale";54.0172;-0.77102
+RU;Omsk Oblast;Poltavka;54.3631;71.7621
+RU;Kaliningrad Oblast;Kaliningrad;54.7175;20.5005
+RU;Bashkortostan Republic;Bulgakovo;54.4968;55.8843
+GB;Northern Ireland;Belfast;54.596;-5.92092
+GB;Northern Ireland;Irvinestown;54.4667;-7.63333
+GB;Northern Ireland;Lisburn;54.5099;-6.08907
+GB;Northern Ireland;Lisburn;54.5104;-6.08815
+GB;England;Kirby Underdale;54.0172;-0.77102
 GB;England;Barmston;54.0141;-0.22857
-GB;England;"Huttons Ambo";54.1032;-0.84741
-RU;"Mordoviya Republic";Saransk;54.1826;45.1828
-RU;"Mordoviya Republic";Lyambir';54.2799;45.1222
-RU;"Mordoviya Republic";Krasnoslobodsk;54.4255;43.7856
+GB;England;Huttons Ambo;54.1032;-0.84741
+RU;Mordoviya Republic;Saransk;54.1826;45.1828
+RU;Mordoviya Republic;Lyambir';54.2799;45.1222
+RU;Mordoviya Republic;Krasnoslobodsk;54.4255;43.7856
 PL;Pomerania;Gdansk;54.3839;18.5928
 RU;Kaliningrad;Kaliningrad;54.7141;20.5047
-RU;"Kaliningrad Oblast";Kaliningrad;54.6892;20.4838
+RU;Kaliningrad Oblast;Kaliningrad;54.6892;20.4838
 RU;Chelyabinsk;Trëkhgornyy;54.8176;58.4455
-PL;Pomerania;"Gdansk (Matarnia)";54.3808;18.4763
-PL;Pomerania;"Gdańsk (Matarnia)";54.3808;18.4763
+PL;Pomerania;Gdansk (Matarnia);54.3808;18.4763
+PL;Pomerania;Gdańsk (Matarnia);54.3808;18.4763
 GB;England;Stockton-on-Tees;54.5427;-1.32312
 GB;England;Stockton-on-Tees;54.5427;-1.32326
 DE;Mecklenburg-Vorpommern;Greifswald;54.0958;13.3852
-GB;England;"Yealand Conyers";54.1667;-2.75698
+GB;England;Yealand Conyers;54.1667;-2.75698
 PL;Pomerania;Gdansk;54.3788;18.4681
 IE;Ulster;Cootehill;54.0725;-7.08194
-RU;"Kaluga Oblast";Kaluga;54.5519;36.2851
-RU;"Mordoviya Republic";Saransk;54.1846;45.1766
-RU;"Bashkortostan Republic";Ufa;54.7303;55.9427
-DE;Mecklenburg-Vorpommern;"Rostock (Lütten Klein)";54.1374;12.0593
+RU;Kaluga Oblast;Kaluga;54.5519;36.2851
+RU;Mordoviya Republic;Saransk;54.1846;45.1766
+RU;Bashkortostan Republic;Ufa;54.7303;55.9427
+DE;Mecklenburg-Vorpommern;Rostock (Lütten Klein);54.1374;12.0593
 DE;Mecklenburg-Vorpommern;Patzig;54.4648;13.3956
-DE;Mecklenburg-Vorpommern;"Ostseebad Baabe";54.3602;13.7038
+DE;Mecklenburg-Vorpommern;Ostseebad Baabe;54.3602;13.7038
 LT;Kaunas;Kaunas;54.9098;23.8775
-PL;"West Pomerania";Koszalin;54.1906;16.2011
+PL;West Pomerania;Koszalin;54.1906;16.2011
 PL;Pomerania;Gdansk;54.3875;18.6239
-PL;Pomerania;"Gdansk (Brętowo)";54.3741;18.563
+PL;Pomerania;Gdansk (Brętowo);54.3741;18.563
 PL;Pomerania;Żukowo;54.3521;18.3706
 PL;Pomerania;Gdansk;54.3907;18.6013
 PL;Pomerania;Gdansk;54.3824;18.5967
-PL;Pomerania;"Wrzeszcz Górny";54.3798;18.5954
-GB;England;"Yealand Conyers";54.1656;-2.75495
+PL;Pomerania;Wrzeszcz Górny;54.3798;18.5954
+GB;England;Yealand Conyers;54.1656;-2.75495
 PL;Pomerania;Hel;54.6038;18.8035
 PL;Pomerania;Rybno;54.6838;18.0858
 PL;Pomerania;Gniewino;54.7171;18.0166
-RU;"Samara Oblast";Isakly;54.1333;51.5333
+RU;Samara Oblast;Isakly;54.1333;51.5333
 LT;Kaunas;Kaunas;54.9066;23.9339
 LT;Vilnius;Vilnius;54.7412;25.2216
-GB;England;"Rowlands Gill";54.9192;-1.74489
+GB;England;Rowlands Gill;54.9192;-1.74489
 GB;England;Wylam;54.9765;-1.82187
 GB;England;Wigton;54.8248;-3.16114
 GB;England;Sedgefield;54.6533;-1.44952
 GB;England;Trimdon;54.6988;-1.42881
-GB;England;"Trimdon Grange";54.7141;-1.42611
+GB;England;Trimdon Grange;54.7141;-1.42611
 GB;England;Skinningrove;54.5691;-0.89869
 LT;Vilnius;Vilnius;54.6717;25.2562
 LT;Kaunas;Kaunas;54.9004;23.926
@@ -1757,13 +1757,13 @@ IE;Ulster;Shercock;54;-6.9
 IE;Ulster;Raphoe;54.8747;-7.59833
 IE;Connacht;Kinlough;54.45;-8.28333
 IE;Connacht;Killala;54.2117;-9.2201
-DK;"South Denmark";Tinglev;54.9538;9.18793
-DE;Schleswig-Holstein;"Kiel (Wik)";54.3657;10.1071
+DK;South Denmark;Tinglev;54.9538;9.18793
+DE;Schleswig-Holstein;Kiel (Wik);54.3657;10.1071
 DE;Schleswig-Holstein;Kronshagen;54.3373;10.0821
-DE;Schleswig-Holstein;"Klein Bennebek";54.401;9.45049
+DE;Schleswig-Holstein;Klein Bennebek;54.401;9.45049
 DE;Schleswig-Holstein;Stakendorf;54.3887;10.4234
 DE;Schleswig-Holstein;Brodersdorf;54.3858;10.2503
-DE;Schleswig-Holstein;"Kiel (Wik)";54.3676;10.1083
+DE;Schleswig-Holstein;Kiel (Wik);54.3676;10.1083
 DE;Schleswig-Holstein;Kirchnüchel;54.2041;10.6797
 DE;Schleswig-Holstein;Hoffeld;54.1897;9.99128
 DE;Schleswig-Holstein;Wattenbek;54.1639;10.0541
@@ -1772,48 +1772,48 @@ GB;England;Richmond;54.3772;-1.69031
 PL;Pomerania;Gdansk;54.3415;18.5186
 RU;Kaluga;Kaluga;54.5128;36.271
 RU;Kaluga;Kaluga;54.5112;36.2744
-RU;"Ryazan Oblast";Ryazan;54.6286;39.7381
-GB;England;"Saint Bees";54.4918;-3.58987
-GB;England;"Burgh by Sands";54.9218;-3.05671
+RU;Ryazan Oblast;Ryazan;54.6286;39.7381
+GB;England;Saint Bees;54.4918;-3.58987
+GB;England;Burgh by Sands;54.9218;-3.05671
 GB;England;Overton;54.0153;-2.86065
 GB;England;Northallerton;54.3378;-1.431
 GB;England;Stocksfield;54.9403;-1.90398
-GB;"Northern Ireland";Randalstown;54.75;-6.3
+GB;Northern Ireland;Randalstown;54.75;-6.3
 GB;England;Hawthorn;54.8;-1.35
-GB;"Northern Ireland";Connor;54.8;-6.2
+GB;Northern Ireland;Connor;54.8;-6.2
 GB;England;Fimber;54.035;-0.63133
 GB;England;Ebchester;54.8926;-1.84188
 GB;England;Burnopfield;54.9062;-1.72486
 GB;England;Gainford;54.5472;-1.73601
 GB;England;Grange-over-Sands;54.1851;-2.92488
-GB;England;"Tow Law";54.7446;-1.81434
-GB;England;"Kirk Merrington";54.6764;-1.59754
+GB;England;Tow Law;54.7446;-1.81434
+GB;England;Kirk Merrington;54.6764;-1.59754
 GB;England;Ingleton;54.1539;-2.46849
-GB;Scotland;"Newton Stewart";54.9578;-4.48315
+GB;Scotland;Newton Stewart;54.9578;-4.48315
 GB;England;Warden;54.9833;-2.13333
-GB;"Northern Ireland";Annalong;54.1082;-5.89966
+GB;Northern Ireland;Annalong;54.1082;-5.89966
 GB;England;Middleham;54.2859;-1.80838
 GB;England;Bridlington;54.0823;-0.189503
-DK;Zealand;"Nykøbing Falster";54.7654;11.8755
-DK;"South Denmark";Augustenborg;54.952;9.87216
-DK;"South Denmark";Højer;54.9634;8.69853
-DK;"South Denmark";Bagenkop;54.7489;10.6758
+DK;Zealand;Nykøbing Falster;54.7654;11.8755
+DK;South Denmark;Augustenborg;54.952;9.87216
+DK;South Denmark;Højer;54.9634;8.69853
+DK;South Denmark;Bagenkop;54.7489;10.6758
 GB;England;Egremont;54.4794;-3.52756
-GB;"Northern Ireland";Killyleagh;54.4013;-5.648
-GB;England;"Linton upon Ouse";54.0464;-1.2492
+GB;Northern Ireland;Killyleagh;54.4013;-5.648
+GB;England;Linton upon Ouse;54.0464;-1.2492
 RU;Ulyanovsk;Ulyanovsk;54.2854;48.3031
 RU;Ulyanovsk;Ulyanovsk;54.341;48.3975
 GB;England;Hexham;54.9727;-2.11214
-GB;England;"Barrow in Furness";54.109;-3.21889
+GB;England;Barrow in Furness;54.109;-3.21889
 GB;England;Hamsterley;54.6836;-1.82018
 GB;England;Workington;54.6436;-3.54275
 GB;England;Morecambe;54.0742;-2.86497
-GB;England;"Newcastle upon Tyne (Walkergate)";54.9827;-1.55478
+GB;England;Newcastle upon Tyne (Walkergate);54.9827;-1.55478
 RU;Kuzbass;Promyshlennaya;54.9144;85.6397
-PL;Pomerania;"Gdansk (Środmieście)";54.3537;18.6546
-GB;England;"Green Hammerton";54.0051;-1.30134
+PL;Pomerania;Gdansk (Środmieście);54.3537;18.6546
+GB;England;Green Hammerton;54.0051;-1.30134
 GB;England;Hawes;54.3039;-2.19605
-RU;"Mordoviya Republic";"Bol'shiye Berezniki";54.1748;45.967
+RU;Mordoviya Republic;Bol'shiye Berezniki;54.1748;45.967
 DE;Schleswig-Holstein;Ostenfeld;54.3148;9.78156
 DE;Schleswig-Holstein;Borgdorf-Seedorf;54.1733;9.88001
 DE;Schleswig-Holstein;Nordhackstedt;54.7333;9.16667
@@ -1824,12 +1824,12 @@ DE;Schleswig-Holstein;Stelle-Wittenwurth;54.2667;9.05
 DE;Schleswig-Holstein;Dänischenhagen;54.4277;10.126
 DE;Schleswig-Holstein;Almdorf;54.5827;9.01508
 DE;Schleswig-Holstein;Schönkirchen;54.3333;10.2333
-DE;Mecklenburg-Vorpommern;"Ribnitz-Damgarten (Ribnitz)";54.2429;12.4421
+DE;Mecklenburg-Vorpommern;Ribnitz-Damgarten (Ribnitz);54.2429;12.4421
 DE;Mecklenburg-Vorpommern;Kavelstorf;54.0067;12.1949
 DE;Mecklenburg-Vorpommern;Weitenhagen;54.0537;13.41
 DE;Mecklenburg-Vorpommern;Mesekenhagen;54.1485;13.3184
 DE;Schleswig-Holstein;Schafstedt;54.0822;9.29719
-DE;Mecklenburg-Vorpommern;"Seebad Zempin";54.0648;13.9532
+DE;Mecklenburg-Vorpommern;Seebad Zempin;54.0648;13.9532
 DE;Mecklenburg-Vorpommern;Fuhlendorf;54.3605;12.6019
 DE;Mecklenburg-Vorpommern;Barth;54.3635;12.7249
 DE;Mecklenburg-Vorpommern;Dummerstorf;54.0148;12.2282
@@ -1840,18 +1840,18 @@ DE;Schleswig-Holstein;Högel;54.65;9.06667
 DE;Schleswig-Holstein;Struckum;54.5833;9
 DE;Mecklenburg-Vorpommern;Klausdorf;54.4042;13.0133
 DE;Schleswig-Holstein;Dersau;54.118;10.3337
-DE;Schleswig-Holstein;"Sylt (Tinnum)";54.9028;8.31653
-PL;Pomerania;"Nowa Wieś Lęborska";54.5588;17.7276
+DE;Schleswig-Holstein;Sylt (Tinnum);54.9028;8.31653
+PL;Pomerania;Nowa Wieś Lęborska;54.5588;17.7276
 PL;Pomerania;Pierwoszyno;54.5968;18.5
 RU;Tula;Tula;54.1672;37.5874
 RU;Tula;Tula;54.1833;37.5729
 RU;Tula;Tula;54.1799;37.6037
-RU;"Tula Oblast";Tula;54.1833;37.5729
-RU;"Tula Oblast";Tula;54.1672;37.5874
+RU;Tula Oblast;Tula;54.1833;37.5729
+RU;Tula Oblast;Tula;54.1672;37.5874
 LT;Kaunas;Kaunas;54.905;23.9177
-RU;"Irkutsk Oblast";Tulun;54.5618;100.579
+RU;Irkutsk Oblast;Tulun;54.5618;100.579
 RU;Omsk;Omsk;54.9366;73.3317
-IM;"Port St Mary";"Port Saint Mary";54.0741;-4.73858
+IM;Port St Mary;Port Saint Mary;54.0741;-4.73858
 IM;Patrick;Patrick;54.2045;-4.69417
 DE;Schleswig-Holstein;Schacht-Audorf;54.3128;9.71586
 DE;Schleswig-Holstein;Böel;54.6497;9.71814
@@ -1863,12 +1863,12 @@ DE;Schleswig-Holstein;Glücksburg;54.8357;9.5548
 GB;England;Kirkby-in-Furness;54.2327;-3.17951
 GB;England;Penrith;54.6641;-2.75271
 GB;England;Sedbergh;54.3212;-2.52514
-GB;England;"Kirkby Lonsdale";54.2026;-2.59827
+GB;England;Kirkby Lonsdale;54.2026;-2.59827
 GB;England;Sedbergh;54.3236;-2.52827
 GB;England;Burneside;54.3527;-2.76151
 GB;England;Levens;54.2691;-2.78735
-GB;England;"Allendale Town";54.8973;-2.25653
-GB;England;"Sherburn Hill";54.7727;-1.47985
+GB;England;Allendale Town;54.8973;-2.25653
+GB;England;Sherburn Hill;54.7727;-1.47985
 LT;Vilnius;Paluknys;54.5013;24.9855
 LT;Vilnius;Vilnius;54.712;25.3013
 LT;Vilnius;Vilnius;54.713;25.2902
@@ -1876,8 +1876,8 @@ LT;Kaunas;Kaunas;54.9326;23.9009
 LT;Vilnius;Vilnius;54.6868;25.2785
 LT;Vilnius;Vilnius;54.7152;25.2485
 RU;Smolensk;Smolensk;54.7749;32.1054
-RU;"Smolensk Oblast";Smolensk;54.7711;32.1009
-PL;Pomerania;"Gdansk (Osowa)";54.402;18.4967
+RU;Smolensk Oblast;Smolensk;54.7711;32.1009
+PL;Pomerania;Gdansk (Osowa);54.402;18.4967
 RU;Chelyabinsk;Troitsk;54.0922;61.5676
 DE;Schleswig-Holstein;Mucheln;54.2481;10.4424
 LT;Kaunas;Prienai;54.6394;23.9486
@@ -1885,11 +1885,11 @@ PL;Warmia-Masuria;Bartoszyce;54.2503;20.8089
 PL;Warmia-Masuria;Olecko;54.0337;22.507
 PL;Podlasie;Suwałki;54.0985;22.9581
 PL;Podlasie;Filipów;54.1804;22.6208
-DE;Schleswig-Holstein;"Kiel (Gaarden)";54.3117;10.1372
-DE;Schleswig-Holstein;"Husum (Schobüll)";54.5029;9.04263
+DE;Schleswig-Holstein;Kiel (Gaarden);54.3117;10.1372
+DE;Schleswig-Holstein;Husum (Schobüll);54.5029;9.04263
 DE;Schleswig-Holstein;Kronshagen;54.3324;10.0851
 DE;Schleswig-Holstein;Kiel;54.3579;10.1211
-GB;England;"Catterick Garrison";54.3771;-1.69082
+GB;England;Catterick Garrison;54.3771;-1.69082
 LT;Vilnius;Vilnius;54.6797;25.301
 IM;Douglas;Douglas;54.1461;-4.47993
 DE;Schleswig-Holstein;Neumünster;54.0821;9.98794
@@ -1909,8 +1909,8 @@ DE;Schleswig-Holstein;Tungendorf;54.0988;9.9966
 DE;Schleswig-Holstein;Schmalensee;54.083;10.2705
 DE;Schleswig-Holstein;Hochdonn;54.0266;9.27624
 DE;Schleswig-Holstein;Einfeld;54.1211;9.98902
-DE;Schleswig-Holstein;"Schülp bei Nortorf";54.1636;9.88599
-DE;Schleswig-Holstein;"Groß Kummerfeld";54.0493;10.0762
+DE;Schleswig-Holstein;Schülp bei Nortorf;54.1636;9.88599
+DE;Schleswig-Holstein;Groß Kummerfeld;54.0493;10.0762
 DE;Schleswig-Holstein;Aukrug;54.0833;9.78333
 DE;Schleswig-Holstein;Seedorf;54.0507;10.4094
 DE;Schleswig-Holstein;Glasau;54.05;10.5167
@@ -1928,7 +1928,7 @@ DE;Schleswig-Holstein;Mühbrook;54.1568;10.0124
 DE;Schleswig-Holstein;Lehe;54.3414;9.02374
 DE;Schleswig-Holstein;Norddeich;54.2169;8.89807
 DE;Schleswig-Holstein;Stein;54.4159;10.2709
-DE;Schleswig-Holstein;"Kiel (Wellsee - Rönne)";54.2742;10.147
+DE;Schleswig-Holstein;Kiel (Wellsee - Rönne);54.2742;10.147
 DE;Schleswig-Holstein;Rabenholz;54.7212;9.90324
 DE;Schleswig-Holstein;Achtrup;54.7905;9.02848
 DE;Schleswig-Holstein;Steinberg;54.7555;9.78159
@@ -1936,72 +1936,72 @@ DE;Schleswig-Holstein;Elsdorf-Westermühlen;54.2667;9.51667
 DE;Schleswig-Holstein;Neukirchen;54.8667;8.73333
 DE;Schleswig-Holstein;Drelsdorf;54.6055;9.04449
 DE;Schleswig-Holstein;Risum-Lindholm;54.758;8.86906
-DE;Schleswig-Holstein;"Schülp bei Rendsburg";54.2594;9.63118
+DE;Schleswig-Holstein;Schülp bei Rendsburg;54.2594;9.63118
 DE;Schleswig-Holstein;Gelting;54.7453;9.89702
 DE;Schleswig-Holstein;Buedelsdorf;54.3231;9.69479
 PL;Pomerania;Rudniki;54.3452;18.712
 GB;England;Sunderland;54.8624;-1.42955
 IM;Douglas;Douglas;54.1479;-4.48083
-GB;"Northern Ireland";Omagh;54.6036;-7.32434
-RU;"Tula Oblast";Tula;54.1891;37.6133
-RU;"Moscow Oblast";Ozherel'ye;54.792;38.2656
+GB;Northern Ireland;Omagh;54.6036;-7.32434
+RU;Tula Oblast;Tula;54.1891;37.6133
+RU;Moscow Oblast;Ozherel'ye;54.792;38.2656
 LT;Vilnius;Vilnius;54.6873;25.2147
-IE;Ulster;"Monaghan (Coolshannagh)";54.2587;-6.96078
-PL;Podlasie;"Gmina Bakałarzewo";54.094;22.6522
-PL;Pomerania;"Gmina Sierakowice";54.357;17.9001
+IE;Ulster;Monaghan (Coolshannagh);54.2587;-6.96078
+PL;Podlasie;Gmina Bakałarzewo;54.094;22.6522
+PL;Pomerania;Gmina Sierakowice;54.357;17.9001
 PL;Pomerania;Gdansk;54.4234;18.5796
-GB;"Northern Ireland";Belfast;54.6052;-5.92172
-GB;"Northern Ireland";Belfast;54.5885;-5.92433
+GB;Northern Ireland;Belfast;54.6052;-5.92172
+GB;Northern Ireland;Belfast;54.5885;-5.92433
 LT;Vilnius;Vilnius;54.7318;25.2634
-RU;"Kaliningrad Oblast";Kaliningrad;54.7193;20.5097
-RU;"Kaliningrad Oblast";Yuzhnyy;54.5484;20.5984
+RU;Kaliningrad Oblast;Kaliningrad;54.7193;20.5097
+RU;Kaliningrad Oblast;Yuzhnyy;54.5484;20.5984
 RU;Kaliningrad;Kaliningrad;54.7193;20.5097
 PL;Pomerania;Gdansk;54.3717;18.6163
-RU;"Tatarstan Republic";Bugulma;54.5378;52.7985
-IE;Leinster;"Dundalk (Townparks)";54.0079;-6.38995
+RU;Tatarstan Republic;Bugulma;54.5378;52.7985
+IE;Leinster;Dundalk (Townparks);54.0079;-6.38995
 PL;Pomerania;Gdansk;54.3547;18.5936
 GB;England;Sharow;54.141;-1.50399
 GB;England;Ripon;54.1271;-1.49159
 GB;Scotland;Creetown;54.9024;-4.3799
 GB;England;Hellifield;54.0049;-2.22302
-PL;"West Pomerania";Darłowo;54.4211;16.4106
-PL;Pomerania;"Gdansk (Osowa)";54.4143;18.4843
+PL;West Pomerania;Darłowo;54.4211;16.4106
+PL;Pomerania;Gdansk (Osowa);54.4143;18.4843
 PL;Warmia-Masuria;Giżycko;54.0403;21.7716
-PL;"West Pomerania";Grzybowo;54.1589;15.4856
+PL;West Pomerania;Grzybowo;54.1589;15.4856
 RU;Ulyanovsk;Veshkayma;54.0472;47.13
 RU;Ulyanovsk;Yazykovo;54.2922;47.3891
 RU;Ulyanovsk;Ulyanovsk;54.3116;48.39
 DE;Schleswig-Holstein;Schuby;54.5156;9.4753
-DE;Schleswig-Holstein;"Kiel (Wik)";54.3636;10.1338
+DE;Schleswig-Holstein;Kiel (Wik);54.3636;10.1338
 DE;Schleswig-Holstein;Dörnick;54.1636;10.3596
 LT;Vilnius;Vilnius;54.7108;25.294
 RU;Ulyanovsk;Mayna;54.1135;47.6231
-RU;Ulyanovsk;"Novaya Mayna";54.15;49.75
+RU;Ulyanovsk;Novaya Mayna;54.15;49.75
 RU;Ulyanovsk;Isheyevka;54.4279;48.2668
-RU;"Novosibirsk Oblast";Novosibirsk;54.872;83.1062
+RU;Novosibirsk Oblast;Novosibirsk;54.872;83.1062
 LT;Alytus;Lazdijai;54.2333;23.5147
 LT;Vilnius;Trakai;54.6378;24.9343
 RU;Chelyabinsk;Katav-Ivanovsk;54.7526;58.2014
-GB;"Northern Ireland";Belfast;54.6149;-5.89847
-GB;"Northern Ireland";Belfast;54.6153;-5.89976
-GB;"Northern Ireland";Belfast;54.6152;-5.89962
-GB;"Northern Ireland";Belfast;54.604;-5.91206
-DE;Mecklenburg-Vorpommern;"Ostseebad Nienhagen";54.1601;11.9602
+GB;Northern Ireland;Belfast;54.6149;-5.89847
+GB;Northern Ireland;Belfast;54.6153;-5.89976
+GB;Northern Ireland;Belfast;54.6152;-5.89962
+GB;Northern Ireland;Belfast;54.604;-5.91206
+DE;Mecklenburg-Vorpommern;Ostseebad Nienhagen;54.1601;11.9602
 GB;England;Evenwood;54.6221;-1.76133
 GB;England;Halton;54.0789;-2.758
-GB;England;"Great Broughton";54.4476;-1.15689
-GB;"Northern Ireland";Castlederg;54.707;-7.59336
+GB;England;Great Broughton;54.4476;-1.15689
+GB;Northern Ireland;Castlederg;54.707;-7.59336
 GB;England;Stanhope;54.75;-2.01667
 GB;England;Carlton;54.59;-1.39117
-GB;England;"Easington Colliery";54.7879;-1.32819
+GB;England;Easington Colliery;54.7879;-1.32819
 GB;England;Cornforth;54.7029;-1.51938
-GB;England;"Angram Grange";54.1857;-1.2124
+GB;England;Angram Grange;54.1857;-1.2124
 DE;Schleswig-Holstein;Boksee;54.2428;10.1269
 DE;Mecklenburg-Vorpommern;Glewitz;54.0203;12.9246
 DE;Mecklenburg-Vorpommern;Niepars;54.3145;12.9245
 DE;Mecklenburg-Vorpommern;Lohme;54.5831;13.6107
 DE;Mecklenburg-Vorpommern;Altenkirchen;54.6362;13.3433
-DE;Mecklenburg-Vorpommern;"Groß Mohrdorf";54.388;12.9485
+DE;Mecklenburg-Vorpommern;Groß Mohrdorf;54.388;12.9485
 DE;Schleswig-Holstein;Sierksdorf;54.0663;10.7704
 DE;Schleswig-Holstein;Gremersdorf;54.3324;10.9349
 DE;Schleswig-Holstein;Friedrichskoog;54.0085;8.88467
@@ -2018,151 +2018,151 @@ IM;Douglas;Douglas;54.1476;-4.50284
 LT;Vilnius;Vilnius;54.7024;25.2172
 GB;England;Glaisdale;54.4407;-0.80862
 GB;England;Stockton-on-Tees;54.5619;-1.33863
-RU;"Irkutsk Oblast";Tulun;54.5676;100.577
-RU;"Irkutsk Oblast";Sayansk;54.1129;102.178
-RU;"Bashkortostan Republic";Karmaskaly;54.3656;56.1713
-RU;"Tula Oblast";Tula;54.1558;37.639
-PL;Pomerania;"Gdynia (Śródmieście)";54.5124;18.5382
-RU;"Mordoviya Republic";Saransk;54.1852;45.1556
-PL;Pomerania;"Sopot (Dolny Sopot)";54.4401;18.5649
-RU;"Novosibirsk Oblast";Krasnoobsk;54.9191;82.9903
-RU;"Novosibirsk Oblast";Novosibirsk;54.8469;83.1083
+RU;Irkutsk Oblast;Tulun;54.5676;100.577
+RU;Irkutsk Oblast;Sayansk;54.1129;102.178
+RU;Bashkortostan Republic;Karmaskaly;54.3656;56.1713
+RU;Tula Oblast;Tula;54.1558;37.639
+PL;Pomerania;Gdynia (Śródmieście);54.5124;18.5382
+RU;Mordoviya Republic;Saransk;54.1852;45.1556
+PL;Pomerania;Sopot (Dolny Sopot);54.4401;18.5649
+RU;Novosibirsk Oblast;Krasnoobsk;54.9191;82.9903
+RU;Novosibirsk Oblast;Novosibirsk;54.8469;83.1083
 LT;Vilnius;Vilnius;54.6902;25.2691
 PL;Pomerania;Sopot;54.4313;18.5862
 LT;Vilnius;Vilnius;54.7284;25.2364
-RU;"Novosibirsk Oblast";Novosibirsk;54.8586;83.1035
-PL;Pomerania;"Gdansk (Letnica)";54.3841;18.6396
+RU;Novosibirsk Oblast;Novosibirsk;54.8586;83.1035
+PL;Pomerania;Gdansk (Letnica);54.3841;18.6396
 PL;Pomerania;Gdansk;54.3589;18.6465
-PL;Pomerania;"Gdansk (Oliwa)";54.4033;18.5716
-RU;"Ryazan Oblast";Ryazan;54.629;39.7533
+PL;Pomerania;Gdansk (Oliwa);54.4033;18.5716
+RU;Ryazan Oblast;Ryazan;54.629;39.7533
 DE;Schleswig-Holstein;Neumünster;54.0818;9.99032
-RU;"Tula Oblast";Tula;54.1926;37.5932
+RU;Tula Oblast;Tula;54.1926;37.5932
 LT;Vilnius;Vilnius;54.7197;25.2835
 LT;Vilnius;Vilnius;54.6602;25.2856
 PL;Pomerania;Gdansk;54.2797;18.6323
-RU;"Kaliningrad Oblast";Kaliningrad;54.6989;20.5133
-GB;England;"Durham (Pity Me)";54.8046;-1.58228
-RU;"Kaliningrad Oblast";Kaliningrad;54.7178;20.4939
-PL;Pomerania;"7th Manor House";54.393;18.5743
+RU;Kaliningrad Oblast;Kaliningrad;54.6989;20.5133
+GB;England;Durham (Pity Me);54.8046;-1.58228
+RU;Kaliningrad Oblast;Kaliningrad;54.7178;20.4939
+PL;Pomerania;7th Manor House;54.393;18.5743
 DE;Schleswig-Holstein;Neumünster;54.0743;9.99488
 LT;Vilnius;Vilnius;54.7347;25.3324
-PL;Pomerania;"Gdansk (Żabianka-Wejhera-Jelitkowo-Tysiąclecia)";54.419;18.5755
-RU;"Ryazan Oblast";Ryazan;54.6187;39.7471
-RU;"Ryazan Oblast";Ryazan;54.6223;39.7566
+PL;Pomerania;Gdansk (Żabianka-Wejhera-Jelitkowo-Tysiąclecia);54.419;18.5755
+RU;Ryazan Oblast;Ryazan;54.6187;39.7471
+RU;Ryazan Oblast;Ryazan;54.6223;39.7566
 PL;Pomerania;Koleczkowo;54.4806;18.3525
 GB;England;Driffield;54.0272;-0.312494
 GB;England;Sunderland;54.8636;-1.44123
 PL;Warmia-Masuria;Elblag;54.1667;19.4068
-PL;Pomerania;"Pruszcz Gdański";54.2535;18.6341
-RU;"Novosibirsk Oblast";Novosibirsk;54.998;82.8549
-PL;Pomerania;"Gdynia (Dąbrowa)";54.4557;18.4468
-PL;Pomerania;"Gdynia (Wielki Kack)";54.4665;18.4995
-DE;Schleswig-Holstein;"Enge-Sande (Sande)";54.7409;8.95666
+PL;Pomerania;Pruszcz Gdański;54.2535;18.6341
+RU;Novosibirsk Oblast;Novosibirsk;54.998;82.8549
+PL;Pomerania;Gdynia (Dąbrowa);54.4557;18.4468
+PL;Pomerania;Gdynia (Wielki Kack);54.4665;18.4995
+DE;Schleswig-Holstein;Enge-Sande (Sande);54.7409;8.95666
 PL;Podlasie;Giby;54.0426;23.3564
-RU;"Nizhny Novgorod Oblast";Pervomaysk;54.8662;43.8021
+RU;Nizhny Novgorod Oblast;Pervomaysk;54.8662;43.8021
 LT;Vilnius;Vilnius;54.7417;25.2221
 LT;Vilnius;Vilnius;54.6988;25.2169
 GB;England;Durham;54.7892;-1.5885
 LT;Vilnius;Vilnius;54.7417;25.2224
-RU;"Mordoviya Republic";Lukhovka;54.1475;45.2218
-PL;Pomerania;"Gdansk (Osowa)";54.4153;18.4838
-GB;England;"Long Preston";54.0194;-2.25678
+RU;Mordoviya Republic;Lukhovka;54.1475;45.2218
+PL;Pomerania;Gdansk (Osowa);54.4153;18.4838
+GB;England;Long Preston;54.0194;-2.25678
 PL;Pomerania;Gdynia;54.5497;18.54
 DE;Schleswig-Holstein;Eckernförde;54.4506;9.84249
-RU;"Novosibirsk Oblast";Novosibirsk;54.9991;82.8903
+RU;Novosibirsk Oblast;Novosibirsk;54.9991;82.8903
 PL;Pomerania;Gdansk;54.3562;18.6504
 PL;Pomerania;Słupsk;54.4223;17.0422
-DE;Mecklenburg-Vorpommern;"Rostock (Stadtmitte)";54.0934;12.1439
-PL;Pomerania;"Rumia (Janowo)";54.5661;18.4164
+DE;Mecklenburg-Vorpommern;Rostock (Stadtmitte);54.0934;12.1439
+PL;Pomerania;Rumia (Janowo);54.5661;18.4164
 PL;Pomerania;Sopot;54.426;18.565
 PL;Pomerania;Gdansk;54.3765;18.5215
 PL;Pomerania;Cieplewo;54.2342;18.6524
 PL;Pomerania;Sopot;54.4344;18.5773
 PL;Pomerania;Koleczkowo;54.4863;18.3437
 LT;Kaunas;Kaunas;54.9101;23.9326
-PL;Pomerania;"Gdynia (Śródmieście)";54.5281;18.5237
-PL;"West Pomerania";Karlino;54.0376;15.8803
-RU;"Omsk Oblast";Omsk;54.9847;73.3913
-RU;"Kaluga Oblast";Корь;54.7256;35.234
+PL;Pomerania;Gdynia (Śródmieście);54.5281;18.5237
+PL;West Pomerania;Karlino;54.0376;15.8803
+RU;Omsk Oblast;Omsk;54.9847;73.3913
+RU;Kaluga Oblast;Корь;54.7256;35.234
 PL;Pomerania;Gdansk;54.4009;18.5887
-RU;"Novosibirsk Oblast";Novosibirsk;54.971;82.9316
+RU;Novosibirsk Oblast;Novosibirsk;54.971;82.9316
 LT;Alytus;Varėna;54.2121;24.5698
 LT;Alytus;Varėna;54.2155;24.5754
 PL;Warmia-Masuria;Elblag;54.1611;19.4085
-RU;"Novosibirsk Oblast";Novosibirsk;54.975;82.8777
+RU;Novosibirsk Oblast;Novosibirsk;54.975;82.8777
 PL;Podlasie;Suwałki;54.1035;22.9368
-GB;"Northern Ireland";Dundonald;54.5848;-5.79806
+GB;Northern Ireland;Dundonald;54.5848;-5.79806
 LT;Alytus;Alytus;54.3942;24.0298
-PL;Pomerania;"Gdynia (Karwiny)";54.4713;18.4986
-RU;"Irkutsk Oblast";Sayansk;54.1078;102.162
+PL;Pomerania;Gdynia (Karwiny);54.4713;18.4986
+RU;Irkutsk Oblast;Sayansk;54.1078;102.162
 RU;Ulyanovsk;Ulyanovsk;54.3107;48.3821
 GB;England;Yarm;54.5111;-1.35609
 RU;Chelyabinsk;Yuzhnoural'sk;54.4237;61.2819
 RU;Chelyabinsk;Yuzhnoural'sk;54.4421;61.2693
 RU;Ulyanovsk;Ulyanovsk;54.3089;48.3293
 LT;Vilnius;Vilnius;54.6921;25.2639
-PL;Pomerania;"Gdynia (Śródmieście)";54.5218;18.5489
+PL;Pomerania;Gdynia (Śródmieście);54.5218;18.5489
 IE;Ulster;Belturbet;54.1118;-7.44344
 PL;Warmia-Masuria;Elblag;54.1559;19.4184
 PL;Pomerania;Gdansk;54.3514;18.6391
-RU;"Kaliningrad Oblast";Kaliningrad;54.7242;20.5373
-RU;"Omsk Oblast";Omsk;54.9951;73.3508
+RU;Kaliningrad Oblast;Kaliningrad;54.7242;20.5373
+RU;Omsk Oblast;Omsk;54.9951;73.3508
 RU;Ulyanovsk;Dimitrovgrad;54.1761;49.5918
-RU;"Kaluga Oblast";Kaluga;54.5144;36.2714
+RU;Kaluga Oblast;Kaluga;54.5144;36.2714
 GB;England;Billingham;54.6019;-1.26185
 PL;Pomerania;Gdansk;54.4051;18.5774
 LT;Vilnius;Vilnius;54.7399;25.22
 PL;Pomerania;Gdansk;54.3455;18.668
-RU;"Kaliningrad Oblast";Kaliningrad;54.6745;20.5908
-RU;"Kaluga Oblast";Kaluga;54.5371;36.2704
-RU;"Tula Oblast";Rozhdestvenskiy;54.2967;37.5723
+RU;Kaliningrad Oblast;Kaliningrad;54.6745;20.5908
+RU;Kaluga Oblast;Kaluga;54.5371;36.2704
+RU;Tula Oblast;Rozhdestvenskiy;54.2967;37.5723
 LT;Vilnius;Vilnius;54.6288;25.1049
-GB;England;"Dalton in Furness";54.158;-3.17977
+GB;England;Dalton in Furness;54.158;-3.17977
 GB;England;Frizington;54.5419;-3.4946
 GB;England;Kelloe;54.7189;-1.47495
 GB;England;Distington;54.5973;-3.5388
 GB;England;Haswell;54.7833;-1.41667
-RU;"Nizhny Novgorod Oblast";"Imeni Stepana Razina";54.8926;44.296
+RU;Nizhny Novgorod Oblast;Imeni Stepana Razina;54.8926;44.296
 GB;England;Shotton;54.7833;-1.36667
 GB;England;Brigham;54.6589;-3.41648
 PL;Pomerania;Luzino;54.5838;18.111
 DE;Schleswig-Holstein;Heide;54.1946;9.09842
-DE;Schleswig-Holstein;"Wangels (Weissenhäuser Strand)";54.3103;10.8018
+DE;Schleswig-Holstein;Wangels (Weissenhäuser Strand);54.3103;10.8018
 DE;Mecklenburg-Vorpommern;Stralsund;54.315;13.098
-DE;Mecklenburg-Vorpommern;"Rostock (Mitte)";54.0865;12.143
-PL;"West Pomerania";Sławno;54.3614;16.6803
-RU;"Kaluga Oblast";Kaluga;54.5346;36.2578
-RU;"Omsk Oblast";Sherbakul';54.6308;72.3968
+DE;Mecklenburg-Vorpommern;Rostock (Mitte);54.0865;12.143
+PL;West Pomerania;Sławno;54.3614;16.6803
+RU;Kaluga Oblast;Kaluga;54.5346;36.2578
+RU;Omsk Oblast;Sherbakul';54.6308;72.3968
 GB;England;Otterburn;54.0161;-2.17958
 DE;Mecklenburg-Vorpommern;Hohendorf;54.029;13.7308
 DE;Schleswig-Holstein;Rickling;54.0053;10.1698
 DE;Schleswig-Holstein;Stocksee;54.0899;10.3417
 GB;England;Middlesbrough;54.5724;-1.23204
 DE;Mecklenburg-Vorpommern;Franzburg;54.1856;12.8823
-RU;"Smolenskaya Oblast’";Smolensk;54.795;32.0464
-RU;"Smolenskaya Oblast’";Smolensk;54.7903;32.0504
-RU;"Smolensk Oblast";Smolensk;54.7948;32.0465
+RU;Smolenskaya Oblast’;Smolensk;54.795;32.0464
+RU;Smolenskaya Oblast’;Smolensk;54.7903;32.0504
+RU;Smolensk Oblast;Smolensk;54.7948;32.0465
 RU;Smolensk;Smolensk;54.795;32.0464
-RU;"Bashkortostan Republic";Chishmy;54.5901;55.382
+RU;Bashkortostan Republic;Chishmy;54.5901;55.382
 RU;Ulyanovsk;Cherdakly;54.3594;48.845
 RU;Ulyanovsk;Ulyanovsk;54.3182;48.3838
 BY;Mogilev;Shklow;54.213;30.2872
-PL;"West Pomerania";Kołobrzeg;54.1803;15.5996
-RU;"Ryazan Oblast";"Ryazan (Sovetskiy Rayon)";54.6245;39.7607
+PL;West Pomerania;Kołobrzeg;54.1803;15.5996
+RU;Ryazan Oblast;Ryazan (Sovetskiy Rayon);54.6245;39.7607
 LT;Vilnius;Vilnius;54.7138;25.2939
 PL;Pomerania;Władysławowo;54.7907;18.403
 LT;Kaunas;Kaunas;54.88;23.9295
 BY;Minsk;Zhodzina;54.1016;28.3471
 DE;Schleswig-Holstein;Stedesand;54.7386;8.92755
 PL;Pomerania;Hel;54.6051;18.8033
-RU;"Tula Oblast";Zaokskiy;54.7303;37.3973
-RU;"Moscow Oblast";"Serebryanyye Prudy";54.4748;38.7279
-RU;"Moscow Oblast";"Serebryanyye Prudy";54.4741;38.727
+RU;Tula Oblast;Zaokskiy;54.7303;37.3973
+RU;Moscow Oblast;Serebryanyye Prudy;54.4748;38.7279
+RU;Moscow Oblast;Serebryanyye Prudy;54.4741;38.727
 RU;Ulyanovsk;Cherdakly;54.4142;48.7986
-DE;Schleswig-Holstein;"Flensburg (Sudstadt)";54.7621;9.44458
+DE;Schleswig-Holstein;Flensburg (Sudstadt);54.7621;9.44458
 RU;Kaluga;Kaluga;54.5493;36.2679
-RU;"Bashkortostan Republic";Ufa;54.7025;55.9962
-RU;"Bashkortostan Republic";Ufa;54.7043;55.9893
+RU;Bashkortostan Republic;Ufa;54.7025;55.9962
+RU;Bashkortostan Republic;Ufa;54.7043;55.9893
 DE;Schleswig-Holstein;Schafflund;54.7584;9.18329
 DE;Schleswig-Holstein;Hörup;54.7427;9.10242
 DE;Mecklenburg-Vorpommern;Lieblingshof;54.03;12.3292
@@ -2171,16 +2171,16 @@ DE;Schleswig-Holstein;Tensbüttel-Röst;54.1;9.23333
 DE;Mecklenburg-Vorpommern;Marlow;54.1544;12.5726
 DE;Schleswig-Holstein;Schülldorf;54.3007;9.73043
 DE;Schleswig-Holstein;Erfde;54.3085;9.3185
-GB;"Northern Ireland";Dundrum;54.2575;-5.84455
+GB;Northern Ireland;Dundrum;54.2575;-5.84455
 GB;England;Scarborough;54.2831;-0.399752
-RU;"Kaluga Oblast";Pyatovskiy;54.6891;36.0563
-RU;"Tula Oblast";Shchyokino;54.0073;37.5065
-RU;"Tula Oblast";Suvorov;54.1223;36.4966
-GB;"Northern Ireland";Newtownabbey;54.6643;-5.93217
+RU;Kaluga Oblast;Pyatovskiy;54.6891;36.0563
+RU;Tula Oblast;Shchyokino;54.0073;37.5065
+RU;Tula Oblast;Suvorov;54.1223;36.4966
+GB;Northern Ireland;Newtownabbey;54.6643;-5.93217
 PL;Pomerania;Gdansk;54.3602;18.5812
-PL;Pomerania;"Strzebielino (Strzebielino-Osiedle)";54.5659;18.0391
-PL;"West Pomerania";Koszalin;54.2066;16.1939
-RU;"Bashkortostan Republic";Mikhaylovka;54.805;55.8919
+PL;Pomerania;Strzebielino (Strzebielino-Osiedle);54.5659;18.0391
+PL;West Pomerania;Koszalin;54.2066;16.1939
+RU;Bashkortostan Republic;Mikhaylovka;54.805;55.8919
 GB;England;Bowburn;54.7339;-1.52282
 DE;Schleswig-Holstein;Heide;54.1946;9.09848
 DE;Schleswig-Holstein;Schwesing;54.4954;9.1359
@@ -2189,134 +2189,134 @@ LT;Kaunas;Kaunas;54.8995;23.9212
 RU;Ulyanovsk;Mirnyy;54.3661;48.7294
 GB;Scotland;Portpatrick;54.8414;-5.11705
 RU;Ulyanovsk;Dimitrovgrad;54.2554;49.5283
-RU;"Bashkortostan Republic";Ufa;54.75;55.9667
-RU;"Bashkortostan Republic";Ufa;54.7203;55.9762
-RU;"Smolenskaya Oblast’";Smolensk;54.7686;32.0215
-RU;"Smolensk Oblast";Smolensk;54.7686;32.0215
+RU;Bashkortostan Republic;Ufa;54.75;55.9667
+RU;Bashkortostan Republic;Ufa;54.7203;55.9762
+RU;Smolenskaya Oblast’;Smolensk;54.7686;32.0215
+RU;Smolensk Oblast;Smolensk;54.7686;32.0215
 RU;Ulyanovsk;Ulyanovsk;54.3791;48.5942
-RU;"Ryazan Oblast";Ryazan;54.6202;39.7271
-RU;"Mordoviya Republic";Saransk;54.1828;45.1744
-RU;"Mordoviya Republic";Saransk;54.184;45.1918
-RU;"Mordoviya Republic";Zykovo;54.0685;45.0863
+RU;Ryazan Oblast;Ryazan;54.6202;39.7271
+RU;Mordoviya Republic;Saransk;54.1828;45.1744
+RU;Mordoviya Republic;Saransk;54.184;45.1918
+RU;Mordoviya Republic;Zykovo;54.0685;45.0863
 LT;Vilnius;Šalčininkai;54.307;25.3855
-RU;"Kaluga Oblast";Sosenskiy;54.059;35.9623
-PL;"West Pomerania";Biesiekierz;54.1331;16.0391
-PL;"West Pomerania";Postomino;54.4938;16.7138
-RU;"Kaluga Oblast";Vorotynsk;54.4283;36.0465
-RU;"Tula Oblast";Aleksin;54.5048;37.067
-RU;"Smolensk Oblast";Kardymovo;54.8901;32.4318
-RU;"Novosibirsk Oblast";Berdsk;54.7064;83.0382
-PL;"West Pomerania";"Ustronie Morskie";54.202;15.7499
+RU;Kaluga Oblast;Sosenskiy;54.059;35.9623
+PL;West Pomerania;Biesiekierz;54.1331;16.0391
+PL;West Pomerania;Postomino;54.4938;16.7138
+RU;Kaluga Oblast;Vorotynsk;54.4283;36.0465
+RU;Tula Oblast;Aleksin;54.5048;37.067
+RU;Smolensk Oblast;Kardymovo;54.8901;32.4318
+RU;Novosibirsk Oblast;Berdsk;54.7064;83.0382
+PL;West Pomerania;Ustronie Morskie;54.202;15.7499
 PL;Pomerania;Dębogórze;54.5909;18.4586
-PL;Pomerania;"Gdansk (Osowa)";54.4187;18.4794
-PL;"West Pomerania";Grzybowo;54.1615;15.4955
-PL;"West Pomerania";Międzywodzie;54.0046;14.6969
-PL;Pomerania;"Gmina Chmielno";54.337;18.0634
-PL;"West Pomerania";Manowo;54.1333;16.2833
+PL;Pomerania;Gdansk (Osowa);54.4187;18.4794
+PL;West Pomerania;Grzybowo;54.1615;15.4955
+PL;West Pomerania;Międzywodzie;54.0046;14.6969
+PL;Pomerania;Gmina Chmielno;54.337;18.0634
+PL;West Pomerania;Manowo;54.1333;16.2833
 PL;Pomerania;Liniewo;54.0759;18.2262
 PL;Pomerania;Gościcino;54.6017;18.1555
 PL;Warmia-Masuria;Bisztynek;54.0858;20.9039
-PL;Pomerania;"Parchowo (Frydrychowo)";54.2083;17.7167
+PL;Pomerania;Parchowo (Frydrychowo);54.2083;17.7167
 PL;Pomerania;Lubieszyn;54.1073;18.2371
-RU;"Kaliningrad Oblast";Kaliningrad;54.6987;20.5071
-KZ;"North Kazakhstan";Petropavl;54.8833;69.1667
-KZ;"North Kazakhstan";Petropavl;54.8745;69.1405
-RU;"Samara Oblast";Kamyshla;54.1169;52.1426
+RU;Kaliningrad Oblast;Kaliningrad;54.6987;20.5071
+KZ;North Kazakhstan;Petropavl;54.8833;69.1667
+KZ;North Kazakhstan;Petropavl;54.8745;69.1405
+RU;Samara Oblast;Kamyshla;54.1169;52.1426
 RU;Ulyanovsk;Ulyanovsk;54.3122;48.3947
 RU;Ulyanovsk;Novoul'yanovsk;54.1496;48.3891
-RU;"Moscow Oblast";Zaraysk;54.7585;38.8818
-RU;"Moscow Oblast";Kashira;54.835;38.1508
-RU;"Moscow Oblast";Lukhovitsy;54.9402;39.028
-RU;"Moscow Oblast";Stupino;54.8868;38.0782
+RU;Moscow Oblast;Zaraysk;54.7585;38.8818
+RU;Moscow Oblast;Kashira;54.835;38.1508
+RU;Moscow Oblast;Lukhovitsy;54.9402;39.028
+RU;Moscow Oblast;Stupino;54.8868;38.0782
 LT;Vilnius;Vilnius;54.6751;25.2672
-RU;"Mordoviya Republic";Nikolayevka;54.1451;45.1444
-RU;"Mordoviya Republic";Torbeyevo;54.0774;43.2499
-RU;"Mordoviya Republic";Romodanovo;54.4201;45.3404
-RU;"Ryazan Oblast";Oktyabr'skiy;54.2267;38.894
-RU;"Ryazan Oblast";Kasimov;54.9438;41.4034
+RU;Mordoviya Republic;Nikolayevka;54.1451;45.1444
+RU;Mordoviya Republic;Torbeyevo;54.0774;43.2499
+RU;Mordoviya Republic;Romodanovo;54.4201;45.3404
+RU;Ryazan Oblast;Oktyabr'skiy;54.2267;38.894
+RU;Ryazan Oblast;Kasimov;54.9438;41.4034
 DE;Schleswig-Holstein;Friedrichstadt;54.3757;9.08672
-RU;"Moscow Oblast";Stupino;54.8773;38.1408
+RU;Moscow Oblast;Stupino;54.8773;38.1408
 PL;Pomerania;Gdynia;54.5458;18.4561
 PL;Pomerania;Gdańsk;54.3739;18.6097
-GB;"Northern Ireland";Ballygawley;54.4624;-7.02782
-RU;"Novosibirsk Oblast";Novosibirsk;54.988;82.913
+GB;Northern Ireland;Ballygawley;54.4624;-7.02782
+RU;Novosibirsk Oblast;Novosibirsk;54.988;82.913
 PL;Pomerania;Gdansk;54.3541;18.7173
-RU;"Smolensk Oblast";Smolensk;54.7815;32.0436
-RU;"Smolensk Oblast";Krasnyy;54.5663;31.4316
+RU;Smolensk Oblast;Smolensk;54.7815;32.0436
+RU;Smolensk Oblast;Krasnyy;54.5663;31.4316
 RU;Smolensk;Smolensk;54.7815;32.0436
 PL;Pomerania;Gdansk;54.383;18.6172
 PL;Pomerania;Gdansk;54.4025;18.6338
-DK;"South Denmark";Soenderborg;54.9022;9.80706
-RU;"Novosibirsk Oblast";Novosibirsk;54.8587;83.114
-RU;"Novosibirsk Oblast";Novosibirsk;54.9771;82.8789
-RU;"Novosibirsk Oblast";Novosibirsk;54.9773;82.8961
+DK;South Denmark;Soenderborg;54.9022;9.80706
+RU;Novosibirsk Oblast;Novosibirsk;54.8587;83.114
+RU;Novosibirsk Oblast;Novosibirsk;54.9771;82.8789
+RU;Novosibirsk Oblast;Novosibirsk;54.9773;82.8961
 RU;Kuzbass;Vishnevka;54.4123;86.3973
-RU;"Moscow Oblast";Ozyory;54.8664;38.5517
+RU;Moscow Oblast;Ozyory;54.8664;38.5517
 RU;Ulyanovsk;Ulyanovsk;54.3127;48.3935
-RU;"Krasnoyarsk Krai";Novoselovo;54.9996;90.9731
+RU;Krasnoyarsk Krai;Novoselovo;54.9996;90.9731
 RU;Kuzbass;Belovo;54.4212;86.2991
-RU;"Kaliningrad Oblast";Yantarnyy;54.871;19.9402
+RU;Kaliningrad Oblast;Yantarnyy;54.871;19.9402
 DE;Schleswig-Holstein;Eggebek;54.6167;9.36667
 DE;Schleswig-Holstein;Wanderup;54.6833;9.33333
 IM;Douglas;Douglas;54.1484;-4.48078
-CA;Alberta;"Cold Lake";54.4652;-110.182
-DE;Schleswig-Holstein;"Klein Rheide";54.4497;9.47464
+CA;Alberta;Cold Lake;54.4652;-110.182
+DE;Schleswig-Holstein;Klein Rheide;54.4497;9.47464
 US;Alaska;Akutan;54.1343;-165.775
 DE;Schleswig-Holstein;Goldelund;54.6833;9.1
-GB;England;"North Shields";54.9961;-1.46446
-PL;Pomerania;"Gdansk (Piecki-Migowo)";54.3605;18.5807
+GB;England;North Shields;54.9961;-1.46446
+PL;Pomerania;Gdansk (Piecki-Migowo);54.3605;18.5807
 DE;Schleswig-Holstein;Warnau;54.1885;10.1592
 GB;England;Kilham;54.0641;-0.38057
 GB;England;Staindrop;54.581;-1.80708
-GB;"Northern Ireland";Belfast;54.5903;-5.93371
-GB;England;"Great Ouseburn";54.05;-1.31667
-RU;"Novosibirsk Oblast";Novosibirsk;54.8719;83.1057
-GB;England;"Middleton Tyas";54.4474;-1.64975
-RU;"Nizhny Novgorod Oblast";Pervomaysk;54.8686;43.8035
-RU;"Bashkortostan Republic";Yermekeyevo;54.0726;53.6749
-RU;"Novosibirsk Oblast";Berdsk;54.7684;83.1078
-RU;"Novosibirsk Oblast";Linevo;54.4506;83.3773
+GB;Northern Ireland;Belfast;54.5903;-5.93371
+GB;England;Great Ouseburn;54.05;-1.31667
+RU;Novosibirsk Oblast;Novosibirsk;54.8719;83.1057
+GB;England;Middleton Tyas;54.4474;-1.64975
+RU;Nizhny Novgorod Oblast;Pervomaysk;54.8686;43.8035
+RU;Bashkortostan Republic;Yermekeyevo;54.0726;53.6749
+RU;Novosibirsk Oblast;Berdsk;54.7684;83.1078
+RU;Novosibirsk Oblast;Linevo;54.4506;83.3773
 RU;Ulyanovsk;Ulyanovsk;54.2706;48.2851
 LT;Vilnius;Vilnius;54.6798;25.2732
 PL;Pomerania;Tczew;54.091;18.7625
 RU;Kaliningrad;Yuzhnyy;54.6084;20.5754
-RU;"Kaluga Oblast";Mstikhino;54.5595;36.1278
-RU;"Kaluga Oblast";Vysokinichi;54.9093;36.9315
+RU;Kaluga Oblast;Mstikhino;54.5595;36.1278
+RU;Kaluga Oblast;Vysokinichi;54.9093;36.9315
 DE;Mecklenburg-Vorpommern;Karlshagen;54.1111;13.8319
 DE;Mecklenburg-Vorpommern;Trassenheide;54.0846;13.8648
 DE;Schleswig-Holstein;Buedelsdorf;54.3178;9.68
-DE;Schleswig-Holstein;"Flensburg (Neustadt)";54.7994;9.4239
+DE;Schleswig-Holstein;Flensburg (Neustadt);54.7994;9.4239
 RU;Kaliningrad;Kaliningrad;54.7214;20.4718
 RU;Kaliningrad;Kaliningrad;54.7245;20.4865
-RU;"Kaluga Oblast";Tarusa;54.7228;37.1648
-RU;"Tula Oblast";Leninskiy;54.2879;37.4607
+RU;Kaluga Oblast;Tarusa;54.7228;37.1648
+RU;Tula Oblast;Leninskiy;54.2879;37.4607
 GB;England;Flamborough;54.1163;-0.124833
 PL;Pomerania;Goręczyno;54.2657;18.1625
 IM;Douglas;Douglas;54.1497;-4.4854
-GB;England;"Gateshead (Dunston)";54.9574;-1.65621
-GB;England;"Newcastle upon Tyne";54.9797;-1.61318
-DK;"South Denmark";Soenderborg;54.9092;9.79022
+GB;England;Gateshead (Dunston);54.9574;-1.65621
+GB;England;Newcastle upon Tyne;54.9797;-1.61318
+DK;South Denmark;Soenderborg;54.9092;9.79022
 GB;England;Durham;54.7682;-1.57107
 LT;Vilnius;Vilnius;54.6176;25.1166
 CA;Alberta;Athabasca;54.7155;-113.308
-RU;"Kemerovo Oblast";Polysayevo;54.6067;86.2959
+RU;Kemerovo Oblast;Polysayevo;54.6067;86.2959
 RU;Kuzbass;Krasnobrodskiy;54.1581;86.4486
-GB;England;"Newcastle upon Tyne";54.9654;-1.61644
-GB;England;"South Shields";54.9892;-1.44078
-DE;Schleswig-Holstein;"Kiel (Ravensberg - Brunswik - Düsternbrook)";54.3461;10.1147
-CA;"British Columbia";"Fort St. James";54.456;-124.263
-IE;Ulster;"Lifford (Townparks)";54.8279;-7.48629
+GB;England;Newcastle upon Tyne;54.9654;-1.61644
+GB;England;South Shields;54.9892;-1.44078
+DE;Schleswig-Holstein;Kiel (Ravensberg - Brunswik - Düsternbrook);54.3461;10.1147
+CA;British Columbia;Fort St. James;54.456;-124.263
+IE;Ulster;Lifford (Townparks);54.8279;-7.48629
 RU;Ulyanovsk;Ulyanovsk;54.3748;48.5808
 GB;England;Kirkby-in-Furness;54.2324;-3.18741
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 7)";54.0774;12.1064
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 7);54.0774;12.1064
 GB;England;Lancaster;54.0446;-2.79716
 DE;Mecklenburg-Vorpommern;Greifswald;54.0903;13.4074
 LT;Kaunas;Kaunas;54.9072;24.0019
 LT;Vilnius;Vilnius;54.6532;25.2233
-GB;"Northern Ireland";Belfast;54.5817;-5.93765
-DE;Schleswig-Holstein;"Kiel (Russee - Hammer)";54.313;10.0984
-GB;"Northern Ireland";Belfast;54.5971;-5.82767
-DE;Schleswig-Holstein;"Trappenkamp (Gärtnersiedlung)";54.0414;10.2099
+GB;Northern Ireland;Belfast;54.5817;-5.93765
+DE;Schleswig-Holstein;Kiel (Russee - Hammer);54.313;10.0984
+GB;Northern Ireland;Belfast;54.5971;-5.82767
+DE;Schleswig-Holstein;Trappenkamp (Gärtnersiedlung);54.0414;10.2099
 DK;Zealand;Alholm;54.6648;11.723
 GB;England;Malton;54.1368;-0.797897
 BY;Minsk;Usiazh;54.076;28.007
@@ -2327,32 +2327,32 @@ IM;Malew;Ballasalla;54.0899;-4.63135
 BY;Vitebsk;Dokshytsy;54.8962;27.7636
 GB;England;Settle;54.0686;-2.2772
 GB;England;Galgate;54.0105;-2.78691
-GB;England;"Over Kellet";54.1228;-2.73203
+GB;England;Over Kellet;54.1228;-2.73203
 GB;England;Silverdale;54.1667;-2.81667
 GB;England;Lamesley;54.9157;-1.60817
-GB;"Northern Ireland";Castlereagh;54.5757;-5.88827
+GB;Northern Ireland;Castlereagh;54.5757;-5.88827
 GB;England;Wallsend;54.9915;-1.52937
-GB;England;"Newcastle upon Tyne";54.9749;-1.64428
-DE;Schleswig-Holstein;"Kiel (Gaarden)";54.3171;10.1518
-GB;"Northern Ireland";Fivemiletown;54.3833;-7.3
-GB;"Northern Ireland";Portaferry;54.3809;-5.54569
-GB;"Northern Ireland";Belfast;54.5927;-5.92806
+GB;England;Newcastle upon Tyne;54.9749;-1.64428
+DE;Schleswig-Holstein;Kiel (Gaarden);54.3171;10.1518
+GB;Northern Ireland;Fivemiletown;54.3833;-7.3
+GB;Northern Ireland;Portaferry;54.3809;-5.54569
+GB;Northern Ireland;Belfast;54.5927;-5.92806
 BY;Vitebsk;Novolukoml’;54.6619;29.1502
-GB;"Northern Ireland";Ballycarry;54.7734;-5.75643
-GB;"Northern Ireland";Belfast;54.5955;-5.93398
+GB;Northern Ireland;Ballycarry;54.7734;-5.75643
+GB;Northern Ireland;Belfast;54.5955;-5.93398
 DE;Mecklenburg-Vorpommern;Güstow;54.0111;11.5534
 GB;England;Middlesbrough;54.5726;-1.23303
-PL;Pomerania;"Gdansk (Oliwa)";54.3995;18.5696
+PL;Pomerania;Gdansk (Oliwa);54.3995;18.5696
 PL;Pomerania;Gdansk;54.3713;18.6191
 PL;Pomerania;Gdansk;54.3464;18.666
 DE;Schleswig-Holstein;Waabs;54.5316;9.99094
 DE;Schleswig-Holstein;Dörphof;54.6095;9.98683
 LT;Kaunas;Kaunas;54.9383;23.902
-GB;England;"Newcastle upon Tyne";54.9611;-1.63179
+GB;England;Newcastle upon Tyne;54.9611;-1.63179
 GB;England;Guisborough;54.5381;-1.05487
 GB;England;Washington;54.8995;-1.53557
 GB;England;Sunderland;54.9044;-1.3916
-GB;England;"Newcastle upon Tyne";54.9613;-1.64509
+GB;England;Newcastle upon Tyne;54.9613;-1.64509
 LT;Vilnius;Vilnius;54.6946;25.2652
 LT;Kaunas;Kaunas;54.8992;23.9165
 LT;Kaunas;Kaunas;54.8991;23.9148
@@ -2362,59 +2362,59 @@ DE;Schleswig-Holstein;Oersberg;54.6754;9.84358
 GB;England;Washington;54.8974;-1.51737
 GB;England;Murton;54.8146;-1.38712
 GB;England;Winterburn;54.0223;-2.10525
-GB;England;"East Rainton";54.8251;-1.48042
+GB;England;East Rainton;54.8251;-1.48042
 GB;England;Milnthorpe;54.2269;-2.77316
 GB;England;Haswell;54.7638;-1.39391
-CA;"British Columbia";Terrace;54.5129;-128.588
+CA;British Columbia;Terrace;54.5129;-128.588
 GB;England;Fishburn;54.683;-1.43631
 US;Alaska;Akutan;54.5983;-164.922
 LT;Vilnius;Vilnius;54.7235;25.338
-RU;"Mordoviya Republic";Ruzayevka;54.0675;44.9348
+RU;Mordoviya Republic;Ruzayevka;54.0675;44.9348
 IE;Leinster;Dundalk;54.0175;-6.43534
 PL;Pomerania;Gdansk;54.3461;18.6453
-CA;"British Columbia";"Prince Rupert";54.2254;-130.29
-CA;"British Columbia";"Fraser Lake";54.0581;-124.85
-GB;England;"Newcastle upon Tyne";54.9692;-1.6084
+CA;British Columbia;Prince Rupert;54.2254;-130.29
+CA;British Columbia;Fraser Lake;54.0581;-124.85
+GB;England;Newcastle upon Tyne;54.9692;-1.6084
 DK;Zealand;Søllested;54.81;11.2727
-GB;"Northern Ireland";Millisle;54.6064;-5.52973
+GB;Northern Ireland;Millisle;54.6064;-5.52973
 RU;Chelyabinsk;Berlin;54.1787;61.006
-RU;"Nizhny Novgorod Oblast";Pochinki;54.7015;44.8576
-RU;"Omsk Oblast";Azovo;54.7046;73.0238
-RU;"Omsk Oblast";Moskalënki;54.9382;71.9358
+RU;Nizhny Novgorod Oblast;Pochinki;54.7015;44.8576
+RU;Omsk Oblast;Azovo;54.7046;73.0238
+RU;Omsk Oblast;Moskalënki;54.9382;71.9358
 BY;Vitebsk;Senno;54.8117;29.7006
 GB;England;Hartlepool;54.6856;-1.21414
 RU;Omsk;Omsk;54.9898;73.4134
-RU;"Nizhny Novgorod Oblast";Sarov;54.9343;43.3252
-PL;"West Pomerania";Koszalin;54.1902;16.181
+RU;Nizhny Novgorod Oblast;Sarov;54.9343;43.3252
+PL;West Pomerania;Koszalin;54.1902;16.181
 PL;Pomerania;Słupsk;54.4612;16.9934
-RU;"Novosibirsk Oblast";Novosibirsk;54.8682;83.0972
-RU;"Ryazan Oblast";Ryazan;54.6072;39.7228
-RU;"Moscow Oblast";Kashira;54.8308;38.2476
-RU;"Moscow Oblast";Kashira;54.8476;38.1821
+RU;Novosibirsk Oblast;Novosibirsk;54.8682;83.0972
+RU;Ryazan Oblast;Ryazan;54.6072;39.7228
+RU;Moscow Oblast;Kashira;54.8308;38.2476
+RU;Moscow Oblast;Kashira;54.8476;38.1821
 PL;Pomerania;Lębork;54.537;17.7498
-RU;"Kaliningrad Oblast";Kaliningrad;54.7199;20.5014
-RU;"Mordoviya Republic";Ruzayevka;54.06;44.949
-RU;"Ryazan Oblast";Ryazan;54.6297;39.6475
+RU;Kaliningrad Oblast;Kaliningrad;54.7199;20.5014
+RU;Mordoviya Republic;Ruzayevka;54.06;44.949
+RU;Ryazan Oblast;Ryazan;54.6297;39.6475
 RU;Kuzbass;Staropesterevo;54.5001;86.4094
-RU;"Omsk Oblast";Luzino;54.9481;73.0353
-RU;"Irkutsk Oblast";Ikey;54.1919;100.081
+RU;Omsk Oblast;Luzino;54.9481;73.0353
+RU;Irkutsk Oblast;Ikey;54.1919;100.081
 DE;Schleswig-Holstein;Keitum;54.8933;8.37083
 DE;Schleswig-Holstein;Boren;54.6151;9.82113
 DE;Mecklenburg-Vorpommern;Rostock;54.1522;12.0663
-DE;Mecklenburg-Vorpommern;"Rostock (Mitte)";54.0819;12.1401
+DE;Mecklenburg-Vorpommern;Rostock (Mitte);54.0819;12.1401
 IM;Douglas;Douglas;54.1553;-4.48378
-PL;Pomerania;"Gdansk (Oliwa)";54.3975;18.5792
+PL;Pomerania;Gdansk (Oliwa);54.3975;18.5792
 PL;Pomerania;Gdansk;54.3971;18.6057
 DE;Schleswig-Holstein;Buedelsdorf;54.3128;9.67766
-PL;Pomerania;"Gdansk (Oliwa)";54.4128;18.5628
+PL;Pomerania;Gdansk (Oliwa);54.4128;18.5628
 GB;England;Slingsby;54.1643;-0.93444
 LT;Vilnius;Vilnius;54.6924;25.2774
 DE;Schleswig-Holstein;Mildstedt;54.464;9.09861
 LT;Vilnius;Vilnius;54.6894;25.2753
-RU;"Kaliningrad Oblast";Vzmorye;54.6961;20.2361
-RU;"Ryazan Oblast";Starozhilovo;54.233;39.9093
-RU;"Kaliningrad Oblast";Pravdinsk;54.4429;21.0179
-RU;"Kaluga Oblast";Kaluga;54.5112;36.2744
+RU;Kaliningrad Oblast;Vzmorye;54.6961;20.2361
+RU;Ryazan Oblast;Starozhilovo;54.233;39.9093
+RU;Kaliningrad Oblast;Pravdinsk;54.4429;21.0179
+RU;Kaluga Oblast;Kaluga;54.5112;36.2744
 BY;Grodnenskaya;Soly;54.513;26.1938
 BY;Minsk;Krivichi;54.7132;27.2886
 BY;Minsk;Pleshchenitsy;54.4235;27.8301
@@ -2423,95 +2423,95 @@ BY;Vitebsk;Dokshytsy;54.891;27.7665
 BY;Vitebsk;Baran';54.4774;30.3094
 BY;Grodnenskaya;Vishnevo;54.7102;26.5228
 BY;Minsk;Zhodzina;54.0919;28.311
-RU;"Tatarstan Republic";Buinsk;54.9712;48.2918
-RU;"Tatarstan Republic";Leninogorsk;54.6026;52.4609
-RU;"Tatarstan Republic";Bolgar;54.9742;49.0308
-RU;"Tatarstan Republic";Shugurovo;54.5083;52.1326
+RU;Tatarstan Republic;Buinsk;54.9712;48.2918
+RU;Tatarstan Republic;Leninogorsk;54.6026;52.4609
+RU;Tatarstan Republic;Bolgar;54.9742;49.0308
+RU;Tatarstan Republic;Shugurovo;54.5083;52.1326
 PL;Pomerania;Gdansk;54.3805;18.596
 PL;Pomerania;Siemianice;54.5031;17.0653
 IM;Douglas;Douglas;54.1493;-4.47742
-PL;Pomerania;"Nowy Staw";54.1361;19.0091
+PL;Pomerania;Nowy Staw;54.1361;19.0091
 PL;Pomerania;Malbork;54.034;19.0321
-RU;"Kaliningrad Oblast";Kaliningrad;54.7259;20.4832
-GB;"Northern Ireland";Belfast;54.5808;-5.94917
-GB;"Northern Ireland";Belfast;54.5958;-5.92338
-RU;"Tula Oblast";Novomoskovsk;54.0186;38.2936
-RU;"Ryazan Oblast";Ryazan;54.6203;39.7537
-GB;England;"Newcastle upon Tyne (Cowgate)";54.9899;-1.65294
+RU;Kaliningrad Oblast;Kaliningrad;54.7259;20.4832
+GB;Northern Ireland;Belfast;54.5808;-5.94917
+GB;Northern Ireland;Belfast;54.5958;-5.92338
+RU;Tula Oblast;Novomoskovsk;54.0186;38.2936
+RU;Ryazan Oblast;Ryazan;54.6203;39.7537
+GB;England;Newcastle upon Tyne (Cowgate);54.9899;-1.65294
 PL;Pomerania;Gdansk;54.3386;18.5593
-RU;"Moscow Oblast";Serpukhov;54.9019;37.4026
-GB;England;"Peterlee (North East Industrial Estate)";54.7707;-1.33273
+RU;Moscow Oblast;Serpukhov;54.9019;37.4026
+GB;England;Peterlee (North East Industrial Estate);54.7707;-1.33273
 GB;England;Peterlee;54.7707;-1.33273
 DE;Schleswig-Holstein;Harrislee;54.8076;9.39436
 DE;Schleswig-Holstein;Tarp;54.6653;9.39561
-GB;"Northern Ireland";Belfast;54.5965;-5.91984
-RU;"Ryazan Oblast";Rybnoye;54.7253;39.5131
-GB;England;"Catterick Garrison";54.3766;-1.6895
-RU;"Kaliningrad Oblast";Kaliningrad;54.6967;20.4946
-RU;"Kaliningrad Oblast";Chernyakhovsk;54.6334;21.8156
-RU;"Kaliningrad Oblast";Gvardeysk;54.6477;21.0651
+GB;Northern Ireland;Belfast;54.5965;-5.91984
+RU;Ryazan Oblast;Rybnoye;54.7253;39.5131
+GB;England;Catterick Garrison;54.3766;-1.6895
+RU;Kaliningrad Oblast;Kaliningrad;54.6967;20.4946
+RU;Kaliningrad Oblast;Chernyakhovsk;54.6334;21.8156
+RU;Kaliningrad Oblast;Gvardeysk;54.6477;21.0651
 DE;Schleswig-Holstein;Eckernförde;54.4529;9.83245
-RU;"Omsk Oblast";Omsk;54.9991;73.3797
+RU;Omsk Oblast;Omsk;54.9991;73.3797
 PL;Warmia-Masuria;Elblag;54.1981;19.4161
 PL;Pomerania;Rumia;54.5737;18.4167
 DE;Schleswig-Holstein;Schwesing;54.4967;9.12994
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 4)";54.1137;12.0886
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 4)";54.1118;12.0856
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 4);54.1137;12.0886
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 4);54.1118;12.0856
 RU;Tula;Tula;54.185;37.6125
-GB;"Northern Ireland";Crossmaglen;54.0774;-6.60876
-RU;"Kaluga Oblast";Kaluga;54.5149;36.2589
+GB;Northern Ireland;Crossmaglen;54.0774;-6.60876
+RU;Kaluga Oblast;Kaluga;54.5149;36.2589
 PL;Pomerania;Gdansk;54.4051;18.578
 LT;Vilnius;Vilnius;54.6993;25.2709
 LT;Kaunas;Kaunas;54.9099;23.9336
-DE;Schleswig-Holstein;"Kiel (Ravensberg - Brunswik - Düsternbrook)";54.3415;10.1254
-DE;Schleswig-Holstein;"Kiel (Ravensberg - Brunswik - Düsternbrook)";54.3416;10.1253
+DE;Schleswig-Holstein;Kiel (Ravensberg - Brunswik - Düsternbrook);54.3415;10.1254
+DE;Schleswig-Holstein;Kiel (Ravensberg - Brunswik - Düsternbrook);54.3416;10.1253
 IM;Douglas;Douglas;54.1537;-4.47882
-RU;"Bashkortostan Republic";Ufa;54.8151;56.0943
+RU;Bashkortostan Republic;Ufa;54.8151;56.0943
 PL;Podlasie;Suwałki;54.1094;22.9246
 GB;Scotland;Douglas;54.154;-4.53397
-RU;"Bashkortostan Republic";Ufa;54.738;55.9661
+RU;Bashkortostan Republic;Ufa;54.738;55.9661
 LT;Vilnius;Vilnius;54.6867;25.2833
 LT;Vilnius;Vilnius;54.7418;25.223
-RU;"Moscow Oblast";Lukhovitsy;54.9542;39.0196
-RU;"Moscow Oblast";Lukhovitsy;54.9476;39.0173
+RU;Moscow Oblast;Lukhovitsy;54.9542;39.0196
+RU;Moscow Oblast;Lukhovitsy;54.9476;39.0173
 LT;Vilnius;Vilnius;54.6738;25.2686
 LT;Vilnius;Vilnius;54.7237;25.3009
 BY;Vitebsk;Orsha;54.5085;30.4172
 LT;Vilnius;Vilnius;54.6601;25.2853
-DE;Schleswig-Holstein;"Heide (Hohenheide)";54.1751;9.09312
+DE;Schleswig-Holstein;Heide (Hohenheide);54.1751;9.09312
 LT;Vilnius;Vilnius;54.6747;25.2675
-IE;Leinster;"Dundalk (Marshes Lower)";54.0073;-6.38871
-GB;England;"Stockton-on-Tees (Wynyard)";54.6318;-1.31641
+IE;Leinster;Dundalk (Marshes Lower);54.0073;-6.38871
+GB;England;Stockton-on-Tees (Wynyard);54.6318;-1.31641
 LT;Vilnius;Vilnius;54.7185;25.297
 IM;Douglas;Douglas;54.1668;-4.46994
-DE;Schleswig-Holstein;"Flensburg (Westliche Höhe)";54.7778;9.39145
-DE;Mecklenburg-Vorpommern;"Rostock (Kröpeliner-Tor-Vorstadt)";54.0979;12.1051
+DE;Schleswig-Holstein;Flensburg (Westliche Höhe);54.7778;9.39145
+DE;Mecklenburg-Vorpommern;Rostock (Kröpeliner-Tor-Vorstadt);54.0979;12.1051
 LT;Vilnius;Vilnius;54.7023;25.2875
 DE;Schleswig-Holstein;Eutin;54.1417;10.6115
-IE;Connacht;"Aclare (Lislea)";54.0365;-8.89665
-DE;Schleswig-Holstein;"Flensburg (Weiche)";54.7587;9.41567
-RU;"Novosibirsk Oblast";Novosibirsk;54.9626;83.0519
-RU;"Novosibirsk Oblast";Novosibirsk;54.8595;83.1142
+IE;Connacht;Aclare (Lislea);54.0365;-8.89665
+DE;Schleswig-Holstein;Flensburg (Weiche);54.7587;9.41567
+RU;Novosibirsk Oblast;Novosibirsk;54.9626;83.0519
+RU;Novosibirsk Oblast;Novosibirsk;54.8595;83.1142
 RU;Kaliningrad;Gusev;54.6026;22.181
 LT;Vilnius;Vilnius;54.6991;25.2712
-GB;England;"Sunderland (Roker)";54.9143;-1.37325
+GB;England;Sunderland (Roker);54.9143;-1.37325
 GB;England;Carlisle;54.9359;-2.98037
 GB;England;Rockcliffe;54.937;-2.9827
-RU;"Bashkortostan Republic";Davlekanovo;54.1721;55.2749
-DE;Schleswig-Holstein;"Kiel (Wik)";54.3674;10.1049
+RU;Bashkortostan Republic;Davlekanovo;54.1721;55.2749
+DE;Schleswig-Holstein;Kiel (Wik);54.3674;10.1049
 PL;Pomerania;Gdansk;54.3738;18.6099
 LT;Vilnius;Vilnius;54.6818;25.288
-DE;Mecklenburg-Vorpommern;"Bergen auf Rügen";54.403;13.4279
+DE;Mecklenburg-Vorpommern;Bergen auf Rügen;54.403;13.4279
 DE;Mecklenburg-Vorpommern;Sagard;54.5256;13.5539
 IE;Ulster;Belturbet;54.1009;-7.44404
-GB;England;"Newcastle upon Tyne";54.9707;-1.61297
-GB;England;"Newcastle upon Tyne";54.9704;-1.61362
-GB;England;"Newcastle upon Tyne";54.9742;-1.61709
-RU;"Novosibirsk Oblast";Novosibirsk;54.9769;82.9097
+GB;England;Newcastle upon Tyne;54.9707;-1.61297
+GB;England;Newcastle upon Tyne;54.9704;-1.61362
+GB;England;Newcastle upon Tyne;54.9742;-1.61709
+RU;Novosibirsk Oblast;Novosibirsk;54.9769;82.9097
 DK;Zealand;Holeby;54.7088;11.4753
-PL;Warmia-Masuria;"Górowo Iławeckie";54.2856;20.4889
+PL;Warmia-Masuria;Górowo Iławeckie;54.2856;20.4889
 PL;Warmia-Masuria;Tłokowo;54.0057;20.7445
-DE;Schleswig-Holstein;"Flensburg (Klues)";54.805;9.4303
+DE;Schleswig-Holstein;Flensburg (Klues);54.805;9.4303
 LT;Vilnius;Vilnius;54.7612;25.2851
 LT;Kaunas;Kaunas;54.929;23.9634
 LT;Vilnius;Vilnius;54.6866;25.2597
@@ -2519,51 +2519,51 @@ IE;Connaught;Sligo;54.2766;-8.47609
 RU;Kaliningrad;Kaliningrad;54.7214;20.5071
 RU;Kaliningrad;Kaliningrad;54.746;20.5018
 LT;Vilnius;Vilnius;54.6734;25.2694
-RU;"Tatarstan Republic";Al'met'yevsk;54.8684;52.2762
-RU;"Tatarstan Republic";"Nizhnyaya Maktama";54.8636;52.4281
-GB;England;"Lancaster (Scotforth)";54.0448;-2.79454
+RU;Tatarstan Republic;Al'met'yevsk;54.8684;52.2762
+RU;Tatarstan Republic;Nizhnyaya Maktama;54.8636;52.4281
+GB;England;Lancaster (Scotforth);54.0448;-2.79454
 GB;England;Darlington;54.5467;-1.57172
 LT;Vilnius;Vilnius;54.6487;25.2735
 LT;Vilnius;Vilnius;54.7132;25.2902
-RU;"Moscow Oblast";Zaraysk;54.7689;38.8702
-DK;"South Denmark";Tønder;54.9513;8.86976
-RU;"Ryazan Oblast";Mikhaylov;54.2323;39.0291
-GB;England;"Catterick Garrison";54.3775;-1.68987
+RU;Moscow Oblast;Zaraysk;54.7689;38.8702
+DK;South Denmark;Tønder;54.9513;8.86976
+RU;Ryazan Oblast;Mikhaylov;54.2323;39.0291
+GB;England;Catterick Garrison;54.3775;-1.68987
 LT;Kaunas;Kaunas;54.9294;23.8975
-RU;"Tula Oblast";Tula;54.1666;37.5871
+RU;Tula Oblast;Tula;54.1666;37.5871
 GB;England;Middlesbrough;54.575;-1.18706
 DE;Schleswig-Holstein;Rendswühren;54.0833;10.1833
 LT;Kaunas;Kaunas;54.9316;23.8986
 DE;Mecklenburg-Vorpommern;Blowatz;54.008;11.4581
 DE;Mecklenburg-Vorpommern;Roggentin;54.0769;12.197
-RU;"Novosibirsk Oblast";Novosibirsk;54.9879;82.913
+RU;Novosibirsk Oblast;Novosibirsk;54.9879;82.913
 IM;Douglas;Douglas;54.1541;-4.53444
 IM;Douglas;Douglas;54.1493;-4.47802
 LT;Vilnius;Vilnius;54.695;25.292
 IE;Connacht;Ardkeeran;54.1246;-8.40653
-GB;"Northern Ireland";Londonderry;54.9965;-7.31014
+GB;Northern Ireland;Londonderry;54.9965;-7.31014
 LT;Vilnius;Vilnius;54.6989;25.2167
 LT;Vilnius;Vilnius;54.6685;25.2125
 GB;England;Kendal;54.3463;-2.73577
 GB;England;Melling;54.1381;-2.61219
 LT;Vilnius;Vilnius;54.6814;25.2727
 LT;Vilnius;Vilnius;54.6814;25.2726
-GB;"Northern Ireland";Belfast;54.5956;-5.91823
+GB;Northern Ireland;Belfast;54.5956;-5.91823
 RU;Tula;Tula;54.1895;37.6223
 DE;Schleswig-Holstein;Damp;54.5847;10.0178
-GB;"Northern Ireland";Whitehead;54.7582;-5.71155
+GB;Northern Ireland;Whitehead;54.7582;-5.71155
 LT;Vilnius;Vilnius;54.7121;25.2607
 GB;England;Carlisle;54.8177;-2.85035
-PL;Pomerania;"Gdansk (Młyniska)";54.3722;18.647
+PL;Pomerania;Gdansk (Młyniska);54.3722;18.647
 GB;England;Gateshead;54.9404;-1.51834
 LT;Vilnius;Vilnius;54.6813;25.2719
 PL;Pomerania;Liniewo;54.0766;18.2267
 DE;Schleswig-Holstein;Harrislee;54.7968;9.38062
 PL;Pomerania;Choczewo;54.7406;17.8917
 PL;Warmia-Masuria;Olecko;54.0373;22.5003
-GB;England;"High Bentham";54.1137;-2.5175
+GB;England;High Bentham;54.1137;-2.5175
 PL;Pomerania;Kowale;54.3092;18.5612
-GB;England;"Newcastle upon Tyne";54.9743;-1.60925
+GB;England;Newcastle upon Tyne;54.9743;-1.60925
 LT;Vilnius;Vilnius;54.6979;25.3107
 LT;Vilnius;Vilnius;54.6934;25.2693
 GB;England;Haverigg;54.1997;-3.29263
@@ -2571,57 +2571,57 @@ LT;Vilnius;Vilnius;54.7002;25.2575
 LT;Vilnius;Vilnius;54.678;25.2625
 GB;England;Stockton-on-Tees;54.5774;-1.28586
 DE;Mecklenburg-Vorpommern;Greifswald;54.1025;13.389
-DE;Schleswig-Holstein;"Kronshagen (Ravensberg - Brunswik - Düsternbrook)";54.3413;10.1024
+DE;Schleswig-Holstein;Kronshagen (Ravensberg - Brunswik - Düsternbrook);54.3413;10.1024
 PL;Pomerania;Gdansk;54.3447;18.6235
 DE;Schleswig-Holstein;Wallsbüll;54.7762;9.23936
 PL;Pomerania;Mosty;54.6119;18.4963
 PL;Pomerania;Miastko;54.0048;16.9828
-PL;Warmia-Masuria;"Gronowo Górne";54.1277;19.4541
+PL;Warmia-Masuria;Gronowo Górne;54.1277;19.4541
 RU;Kuzbass;Belogorsk;54.6507;88.7112
-RU;"Tula Oblast";Novomoskovsk;54.0109;38.2963
-DK;"South Denmark";Humble;54.8257;10.6943
-RU;"Tula Oblast";Tula;54.1743;37.5948
-GB;England;"Catterick Garrison";54.3772;-1.69031
-RU;"Omsk Oblast";Cherlak;54.1544;74.8089
-CA;Manitoba;"Flin Flon";54.7769;-101.845
+RU;Tula Oblast;Novomoskovsk;54.0109;38.2963
+DK;South Denmark;Humble;54.8257;10.6943
+RU;Tula Oblast;Tula;54.1743;37.5948
+GB;England;Catterick Garrison;54.3772;-1.69031
+RU;Omsk Oblast;Cherlak;54.1544;74.8089
+CA;Manitoba;Flin Flon;54.7769;-101.845
 IM;Douglas;Douglas;54.1508;-4.48133
-DK;Zealand;"Nykøbing Falster";54.7639;11.8674
+DK;Zealand;Nykøbing Falster;54.7639;11.8674
 DE;Schleswig-Holstein;Leck;54.7734;8.96848
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 7)";54.0776;12.1067
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 7);54.0776;12.1067
 GB;England;Keswick;54.5993;-3.11603
-RU;"Novosibirsk Oblast";Novosibirsk;54.9859;82.8507
-GB;England;"Newcastle upon Tyne";54.9804;-1.61592
-DE;Mecklenburg-Vorpommern;"Greifswald (Riems)";54.1827;13.3604
-DE;Mecklenburg-Vorpommern;"Ostseebad Kühlungsborn";54.1169;11.772
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 1)";54.1799;12.0814
+RU;Novosibirsk Oblast;Novosibirsk;54.9859;82.8507
+GB;England;Newcastle upon Tyne;54.9804;-1.61592
+DE;Mecklenburg-Vorpommern;Greifswald (Riems);54.1827;13.3604
+DE;Mecklenburg-Vorpommern;Ostseebad Kühlungsborn;54.1169;11.772
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 1);54.1799;12.0814
 DE;Schleswig-Holstein;Böklund;54.6049;9.58976
 GB;England;Darlington;54.5199;-1.50955
-GB;England;"Newcastle upon Tyne";54.9656;-1.61639
+GB;England;Newcastle upon Tyne;54.9656;-1.61639
 RU;Chelyabinsk;Yemanzhelinsk;54.7504;61.3201
-GB;England;"Newcastle upon Tyne";54.9777;-1.6075
-GB;"Northern Ireland";Newtownabbey;54.6873;-5.88274
-CA;"British Columbia";Houston;54.398;-126.648
+GB;England;Newcastle upon Tyne;54.9777;-1.6075
+GB;Northern Ireland;Newtownabbey;54.6873;-5.88274
+CA;British Columbia;Houston;54.398;-126.648
 IE;Ulster;Letterkenny;54.9524;-7.72089
 IE;Connacht;Sligo;54.2783;-8.46162
 GB;England;Gateshead;54.9571;-1.65598
 LT;Vilnius;Vilnius;54.7021;25.2877
-PL;Pomerania;"Gdynia (Mały Kack)";54.4941;18.5335
-PL;Pomerania;"Gdańsk (Strzyża)";54.3897;18.587
+PL;Pomerania;Gdynia (Mały Kack);54.4941;18.5335
+PL;Pomerania;Gdańsk (Strzyża);54.3897;18.587
 GB;England;Thirsk;54.2326;-1.32924
 LT;Vilnius;Avižieniai;54.7706;25.1983
 LT;Vilnius;Vilnius;54.6995;25.2619
-RU;"Smolenskaya Oblast’";Smolensk;54.7755;32.0444
-GB;"Northern Ireland";Belfast;54.6148;-5.89868
+RU;Smolenskaya Oblast’;Smolensk;54.7755;32.0444
+GB;Northern Ireland;Belfast;54.6148;-5.89868
 LT;Vilnius;Vilnius;54.7161;25.2463
 LT;Kaunas;Kaunas;54.8747;23.917
-RU;"Tula Oblast";Tula;54.1952;37.6098
+RU;Tula Oblast;Tula;54.1952;37.6098
 PL;Pomerania;Gdansk;54.3932;18.6132
 PL;Pomerania;Otomin;54.3223;18.5089
 LT;Vilnius;Vilnius;54.6877;25.4264
 RU;Omsk;Omsk;54.9847;73.3913
 PL;Pomerania;Gdansk;54.3565;18.6501
-PL;"West Pomerania";Koszalin;54.1827;16.1934
-GB;England;"Newcastle upon Tyne";54.9737;-1.61116
+PL;West Pomerania;Koszalin;54.1827;16.1934
+GB;England;Newcastle upon Tyne;54.9737;-1.61116
 RU;Chelyabinsk;Korkino;54.8812;61.3963
 RU;Chelyabinsk;Yuzhnoural'sk;54.4545;61.2638
 RU;Kaliningrad;Kaliningrad;54.7097;20.5538
@@ -2633,73 +2633,73 @@ LT;Vilnius;Vilnius;54.7027;25.2844
 PL;Pomerania;Młyniska;54.3797;18.6392
 PL;Pomerania;Sopot;54.4336;18.5624
 GB;England;Durham;54.765;-1.5782
-GB;"Northern Ireland";Newtownabbey;54.6868;-5.88269
+GB;Northern Ireland;Newtownabbey;54.6868;-5.88269
 GB;England;Thornaby;54.5322;-1.29605
 GB;England;Guisborough;54.5327;-1.05443
 GB;England;Lancaster;54.0368;-2.78897
 GB;England;Sunderland;54.9258;-1.40965
-RU;"Bashkortostan Republic";Ufa;54.738;55.9797
+RU;Bashkortostan Republic;Ufa;54.738;55.9797
 DK;Zealand;Nakskov;54.8314;11.1494
-DK;Zealand;"Nykøbing Falster";54.7835;11.8651
+DK;Zealand;Nykøbing Falster;54.7835;11.8651
 PL;Pomerania;Gdansk;54.4004;18.592
-RU;"Novosibirsk Oblast";Novosibirsk;54.9646;82.8449
+RU;Novosibirsk Oblast;Novosibirsk;54.9646;82.8449
 DE;Schleswig-Holstein;Neumünster;54.0853;9.99676
-DE;Mecklenburg-Vorpommern;"Lambrechtshagen (Sievershagen)";54.1088;12.0239
-DE;Schleswig-Holstein;"Kiel (Suchsdorf)";54.3512;10.0853
-DE;Schleswig-Holstein;"Kiel (Suchsdorf)";54.3497;10.089
+DE;Mecklenburg-Vorpommern;Lambrechtshagen (Sievershagen);54.1088;12.0239
+DE;Schleswig-Holstein;Kiel (Suchsdorf);54.3512;10.0853
+DE;Schleswig-Holstein;Kiel (Suchsdorf);54.3497;10.089
 DE;Schleswig-Holstein;Osterrönfeld;54.2978;9.70956
-DE;Schleswig-Holstein;"Flensburg (Nordstadt)";54.8038;9.42048
+DE;Schleswig-Holstein;Flensburg (Nordstadt);54.8038;9.42048
 PL;Pomerania;Gdansk;54.3582;18.6464
 RU;Ulyanovsk;Ulyanovsk;54.3822;48.5922
-LT;Vilnius;"Vilnius (Šeškinės sen.)";54.7144;25.2503
+LT;Vilnius;Vilnius (Šeškinės sen.);54.7144;25.2503
 PL;Pomerania;Gdynia;54.4777;18.547
 LT;Vilnius;Vilnius;54.7122;25.3147
-PL;Pomerania;"Gdansk (Stogi)";54.3817;18.7132
+PL;Pomerania;Gdansk (Stogi);54.3817;18.7132
 LT;Vilnius;Vilnius;54.724;25.2974
 PL;Pomerania;Sopot;54.4356;18.5685
 PL;Pomerania;Przeróbka;54.3667;18.6833
 LT;Vilnius;Vilnius;54.7236;25.2396
 LT;Vilnius;Vilnius;54.6959;25.2737
-GB;"Northern Ireland";Belfast;54.5986;-5.93059
+GB;Northern Ireland;Belfast;54.5986;-5.93059
 IE;Leinster;Dundalk;54.0008;-6.38144
 GB;England;Eastfield;54.2379;-0.41037
-GB;"Northern Ireland";Belfast;54.6052;-5.92096
-GB;England;"Washington (Crowther)";54.8989;-1.55658
+GB;Northern Ireland;Belfast;54.6052;-5.92096
+GB;England;Washington (Crowther);54.8989;-1.55658
 GB;England;Morecambe;54.0587;-2.83375
 GB;England;Hartlepool;54.7012;-1.20525
 GB;England;Lamesley;54.9336;-1.61567
-GB;England;"Newcastle upon Tyne";54.9709;-1.59907
+GB;England;Newcastle upon Tyne;54.9709;-1.59907
 GB;England;York;54.0169;-0.970721
-GB;England;"Newcastle upon Tyne";54.9676;-1.62119
+GB;England;Newcastle upon Tyne;54.9676;-1.62119
 LT;Kaunas;Kaunas;54.8908;23.9525
 RU;Chelyabinsk;Yuzhnoural'sk;54.4424;61.2731
-DE;Schleswig-Holstein;"Kiel (Schreventeich - Hasseldieksdamm de Schreventeich)";54.3121;10.1292
-GB;England;"East Ayton";54.2515;-0.479254
-PL;Pomerania;"Gdansk (Letnica)";54.3837;18.6403
+DE;Schleswig-Holstein;Kiel (Schreventeich - Hasseldieksdamm de Schreventeich);54.3121;10.1292
+GB;England;East Ayton;54.2515;-0.479254
+PL;Pomerania;Gdansk (Letnica);54.3837;18.6403
 PL;Pomerania;Gdansk;54.3513;18.509
-RU;"Novosibirsk Oblast";Iskitim;54.6545;83.2873
+RU;Novosibirsk Oblast;Iskitim;54.6545;83.2873
 PL;Pomerania;Gdańsk;54.3473;18.6856
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 8)";54.1346;12.1128
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 8);54.1346;12.1128
 DE;Schleswig-Holstein;Eckernförde;54.4448;9.83607
 LT;Kaunas;Kaunas;54.899;23.8976
 GB;England;Carlisle;54.8927;-2.93038
-PL;"West Pomerania";Cisowo;54.4472;16.4366
-DE;Schleswig-Holstein;"Kronshagen (Ravensberg - Brunswik - Düsternbrook)";54.3394;10.0986
-DE;Schleswig-Holstein;"Kiel (Ravensberg - Brunswik - Düsternbrook)";54.3298;10.1481
+PL;West Pomerania;Cisowo;54.4472;16.4366
+DE;Schleswig-Holstein;Kronshagen (Ravensberg - Brunswik - Düsternbrook);54.3394;10.0986
+DE;Schleswig-Holstein;Kiel (Ravensberg - Brunswik - Düsternbrook);54.3298;10.1481
 DE;Schleswig-Holstein;Flensburg;54.7742;9.44939
 DE;Mecklenburg-Vorpommern;Greifswald;54.0916;13.402
-DE;Schleswig-Holstein;"Flensburg (Sandberg)";54.7742;9.44939
+DE;Schleswig-Holstein;Flensburg (Sandberg);54.7742;9.44939
 PL;Pomerania;Malbork;54.0357;19.0303
 PL;Pomerania;Gdańsk;54.3565;18.6501
 DE;Schleswig-Holstein;Wallsbüll;54.776;9.23707
-GB;"Northern Ireland";Belfast;54.5869;-5.9327
-GB;England;"Sunderland (Southwick)";54.915;-1.40851
+GB;Northern Ireland;Belfast;54.5869;-5.9327
+GB;England;Sunderland (Southwick);54.915;-1.40851
 GB;England;Sutton-on-the-Forest;54.0851;-1.10909
 GB;Scotland;Annan;54.9902;-3.25977
 GB;England;Consett;54.8401;-1.86661
 GB;England;Coniston;54.4609;-3.08863
 PL;Pomerania;Skowarcz;54.1913;18.6726
-RU;"Novosibirsk Oblast";Elitnyy;54.8663;82.9854
+RU;Novosibirsk Oblast;Elitnyy;54.8663;82.9854
 LT;Vilnius;Vilnius;54.7412;25.2217
 LT;Vilnius;Vilnius;54.6727;25.2657
 LT;Vilnius;Vilnius;54.6863;25.2833
@@ -2709,104 +2709,104 @@ LT;Kaunas;Akademija;54.8939;23.8354
 LT;Vilnius;Vilnius;54.7224;25.3311
 IM;Douglas;Douglas;54.1527;-4.53559
 LT;Kaunas;Kaunas;54.92;23.9842
-GB;England;"Stockton-on-Tees (Wynyard)";54.6366;-1.32827
+GB;England;Stockton-on-Tees (Wynyard);54.6366;-1.32827
 LT;Vilnius;Vilnius;54.7294;25.376
 LT;Vilnius;Vilnius;54.6799;25.2705
 PL;Pomerania;Gdansk;54.3451;18.7238
-RU;"Novosibirsk Oblast";Novosibirsk;54.989;83.0076
-RU;"Novosibirsk Oblast";Novosibirsk;54.8689;83.0782
-RU;"Novosibirsk Oblast";"Verkhnyaya Tula";54.82;82.8553
-RU;"Kaliningrad Oblast";Svetlogorsk;54.9395;20.1585
+RU;Novosibirsk Oblast;Novosibirsk;54.989;83.0076
+RU;Novosibirsk Oblast;Novosibirsk;54.8689;83.0782
+RU;Novosibirsk Oblast;Verkhnyaya Tula;54.82;82.8553
+RU;Kaliningrad Oblast;Svetlogorsk;54.9395;20.1585
 PL;Pomerania;Sopot;54.437;18.5676
 PL;Pomerania;Słupsk;54.4647;17.0267
-RU;"Mordoviya Republic";Saransk;54.1846;45.1924
-PL;Pomerania;"Gdańsk (Oliwa)";54.4028;18.5715
-GB;England;"Newcastle upon Tyne";54.97;-1.61375
+RU;Mordoviya Republic;Saransk;54.1846;45.1924
+PL;Pomerania;Gdańsk (Oliwa);54.4028;18.5715
+GB;England;Newcastle upon Tyne;54.97;-1.61375
 RU;Kaliningrad;Svetlyy;54.6567;20.1695
 LT;Vilnius;Vilnius;54.7103;25.2874
-LT;Vilnius;"Vilnius (Vilkpėdės sen.)";54.6721;25.2373
+LT;Vilnius;Vilnius (Vilkpėdės sen.);54.6721;25.2373
 GB;England;Meadowfield;54.7497;-1.61629
 GB;England;Gateshead;54.9313;-1.6171
 GB;England;Acomb;54.9923;-2.11229
-PL;"West Pomerania";Kołobrzeg;54.1804;15.5996
+PL;West Pomerania;Kołobrzeg;54.1804;15.5996
 DE;Schleswig-Holstein;Wöhrden;54.1672;9.00146
 PL;Pomerania;Słupsk;54.4619;17.0418
 PL;Pomerania;Słupsk;54.4691;17.0279
 PL;Pomerania;Słupsk;54.4631;17.0303
 GB;England;Ulverston;54.1951;-3.09267
 LT;Vilnius;Vilnius;54.6878;25.261
-DE;Schleswig-Holstein;"Kiel (Russee - Hammer)";54.3059;10.1207
-RU;"Mordoviya Republic";Saransk;54.1871;45.181
+DE;Schleswig-Holstein;Kiel (Russee - Hammer);54.3059;10.1207
+RU;Mordoviya Republic;Saransk;54.1871;45.181
 IM;Ramsey;Ramsey;54.321;-4.38078
-GB;England;"Newcastle upon Tyne";54.9677;-1.61579
-GB;England;"Newcastle upon Tyne";54.9755;-1.61338
+GB;England;Newcastle upon Tyne;54.9677;-1.61579
+GB;England;Newcastle upon Tyne;54.9755;-1.61338
 GB;England;Windermere;54.3792;-2.90177
-GB;England;"Lindal in Furness";54.1686;-3.14334
-GB;"Northern Ireland";Belfast;54.5859;-5.95946
-RU;"Novosibirsk Oblast";Linevo;54.4556;83.3799
+GB;England;Lindal in Furness;54.1686;-3.14334
+GB;Northern Ireland;Belfast;54.5859;-5.95946
+RU;Novosibirsk Oblast;Linevo;54.4556;83.3799
 GB;England;Yorkshire;54.0876;-1.39595
-GB;"Northern Ireland";Belfast;54.5962;-5.92468
+GB;Northern Ireland;Belfast;54.5962;-5.92468
 GB;England;Glasshouses;54.0751;-1.73886
-GB;"Northern Ireland";Castlereagh;54.5773;-5.88224
+GB;Northern Ireland;Castlereagh;54.5773;-5.88224
 GB;England;Portinscale;54.6026;-3.1557
 GB;England;Gateshead;54.9651;-1.60237
 GB;England;Sunderland;54.8976;-1.38032
 GB;England;Thirsk;54.1722;-1.36213
-GB;England;"Newcastle upon Tyne";54.9725;-1.6048
+GB;England;Newcastle upon Tyne;54.9725;-1.6048
 GB;England;Galgate;54.007;-2.78527
-GB;"Northern Ireland";Belfast;54.5733;-5.93525
+GB;Northern Ireland;Belfast;54.5733;-5.93525
 GB;England;Durham;54.7958;-1.59513
 GB;England;Gateshead;54.9444;-1.63142
 GB;England;Scarborough;54.2633;-0.393028
 GB;England;Durham;54.786;-1.66252
-GB;"Northern Ireland";Craigavon;54.4309;-6.42197
+GB;Northern Ireland;Craigavon;54.4309;-6.42197
 GB;England;Lancaster;54.0399;-2.78765
 RU;Ulyanovsk;Ulyanovsk;54.3192;48.3977
-RU;"Bashkortostan Republic";Oktyabr'skiy;54.4772;53.4895
-RU;"Novosibirsk Oblast";Novosibirsk;54.9904;83.0042
-RU;"Novosibirsk Oblast";Novosibirsk;54.8637;83.0995
-RU;"Novosibirsk Oblast";Novosibirsk;54.8579;83.1077
-RU;"Moscow Oblast";Serpukhov;54.9547;37.4409
-RU;"Kaluga Oblast";Kaluga;54.5156;36.2491
+RU;Bashkortostan Republic;Oktyabr'skiy;54.4772;53.4895
+RU;Novosibirsk Oblast;Novosibirsk;54.9904;83.0042
+RU;Novosibirsk Oblast;Novosibirsk;54.8637;83.0995
+RU;Novosibirsk Oblast;Novosibirsk;54.8579;83.1077
+RU;Moscow Oblast;Serpukhov;54.9547;37.4409
+RU;Kaluga Oblast;Kaluga;54.5156;36.2491
 PL;Pomerania;Gdansk;54.4002;18.6774
-DE;Mecklenburg-Vorpommern;"Rostock (Warnemünde)";54.1799;12.0812
+DE;Mecklenburg-Vorpommern;Rostock (Warnemünde);54.1799;12.0812
 DE;Mecklenburg-Vorpommern;Stralsund;54.339;13.0714
-DE;Schleswig-Holstein;"Kiel (Ravensberg - Brunswik - Düsternbrook)";54.3279;10.1413
-DE;Mecklenburg-Vorpommern;"Greifswald (Groß Schönwalde)";54.0741;13.4243
-DE;Schleswig-Holstein;"Kiel (Mitte)";54.3276;10.1295
-DE;Schleswig-Holstein;"Kiel (Gaarden)";54.3145;10.139
+DE;Schleswig-Holstein;Kiel (Ravensberg - Brunswik - Düsternbrook);54.3279;10.1413
+DE;Mecklenburg-Vorpommern;Greifswald (Groß Schönwalde);54.0741;13.4243
+DE;Schleswig-Holstein;Kiel (Mitte);54.3276;10.1295
+DE;Schleswig-Holstein;Kiel (Gaarden);54.3145;10.139
 DE;Schleswig-Holstein;Buedelsdorf;54.3231;9.6944
-PL;Pomerania;"Gdansk (Oliwa)";54.4;18.5755
-DE;Schleswig-Holstein;"Kiel (Hassee)";54.3127;10.0989
-GB;England;"Newcastle upon Tyne";54.9706;-1.60888
+PL;Pomerania;Gdansk (Oliwa);54.4;18.5755
+DE;Schleswig-Holstein;Kiel (Hassee);54.3127;10.0989
+GB;England;Newcastle upon Tyne;54.9706;-1.60888
 GB;England;Carlisle;54.8964;-2.95739
 RU;Kaliningrad;Kaliningrad;54.7382;20.4811
 RU;Kaliningrad;Kaliningrad;54.7243;20.5275
 IE;Connacht;Cleavry;54.0783;-8.38347
-DE;Schleswig-Holstein;"Schönberg (Schönberg in Holstein)";54.3872;10.3794
-RU;"Mordoviya Republic";Chamzinka;54.4007;45.7894
+DE;Schleswig-Holstein;Schönberg (Schönberg in Holstein);54.3872;10.3794
+RU;Mordoviya Republic;Chamzinka;54.4007;45.7894
 LT;Vilnius;Vilnius;54.7154;25.2781
 GB;England;Gateshead;54.9336;-1.61555
 GB;England;Sunderland;54.9127;-1.48773
 GB;England;Houghton-Le-Spring;54.8338;-1.4909
 GB;England;Richmond;54.454;-1.75369
-GB;"Northern Ireland";Antrim;54.718;-6.22641
-GB;"Northern Ireland";Enniskillen;54.4143;-7.60177
-RU;"Novosibirsk Oblast";Novosibirsk;54.8464;83.1041
+GB;Northern Ireland;Antrim;54.718;-6.22641
+GB;Northern Ireland;Enniskillen;54.4143;-7.60177
+RU;Novosibirsk Oblast;Novosibirsk;54.8464;83.1041
 GB;England;Knaresborough;54.0002;-1.44378
 GB;England;Whitehaven;54.5304;-3.56333
 GB;England;Sunderland;54.883;-1.42384
 GB;England;Carlisle;54.8927;-2.89454
 GB;England;Malton;54.1375;-0.84052
 GB;England;Stanley;54.8689;-1.69884
-GB;England;"South Stainley";54.0641;-1.56467
+GB;England;South Stainley;54.0641;-1.56467
 PL;Pomerania;Gdańsk;54.3468;18.6454
-DE;Schleswig-Holstein;"Kiel (Pries - Friedrichsort)";54.3928;10.1801
+DE;Schleswig-Holstein;Kiel (Pries - Friedrichsort);54.3928;10.1801
 DE;Schleswig-Holstein;Neumünster;54.0447;10.0144
 DE;Schleswig-Holstein;Neumünster;54.049;9.97883
 DE;Schleswig-Holstein;Neumünster;54.1006;9.98005
-DE;Schleswig-Holstein;"Kiel (Mitte)";54.3186;10.1258
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 1)";54.1715;12.0811
+DE;Schleswig-Holstein;Kiel (Mitte);54.3186;10.1258
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 1);54.1715;12.0811
 LT;Vilnius;Vilnius;54.6983;25.2715
 GB;England;Stockton-on-Tees;54.5775;-1.28576
 GB;England;Stockton-on-Tees;54.5775;-1.28584
@@ -2814,92 +2814,92 @@ PL;Pomerania;Gdynia;54.5485;18.4574
 PL;Pomerania;Gdańsk;54.3749;18.6045
 PL;Pomerania;Gdansk;54.3985;18.6745
 PL;Pomerania;Gdansk;54.3518;18.6842
-PL;Pomerania;"Gdynia (Redłowo)";54.4959;18.5383
+PL;Pomerania;Gdynia (Redłowo);54.4959;18.5383
 PL;Pomerania;Gdansk;54.3457;18.5862
-PL;Pomerania;"Gdansk (Letnica)";54.3825;18.642
-RU;"Tula Oblast";Tula;54.2015;37.6449
+PL;Pomerania;Gdansk (Letnica);54.3825;18.642
+RU;Tula Oblast;Tula;54.2015;37.6449
 GB;England;Middlesbrough;54.5481;-1.25968
 GB;England;Wolsingham;54.7294;-1.88116
-RU;"Moscow Oblast";Protvino;54.8682;37.2158
-DK;"South Denmark";Soenderborg;54.9141;9.77011
-DK;"South Denmark";Søby;54.9366;10.2599
+RU;Moscow Oblast;Protvino;54.8682;37.2158
+DK;South Denmark;Soenderborg;54.9141;9.77011
+DK;South Denmark;Søby;54.9366;10.2599
 GB;England;Eastfield;54.2385;-0.404714
-GB;"Northern Ireland";Belfast;54.6024;-5.93253
+GB;Northern Ireland;Belfast;54.6024;-5.93253
 GB;England;Darlington;54.5288;-1.54985
 GB;England;Washington;54.9088;-1.50171
-GB;England;"South Shields";54.988;-1.44009
-GB;England;"South Bank";54.5801;-1.17604
+GB;England;South Shields;54.988;-1.44009
+GB;England;South Bank;54.5801;-1.17604
 GB;England;Scarborough;54.2586;-0.387727
 GB;England;Gateshead;54.932;-1.61948
-GB;"Northern Ireland";Belfast;54.6062;-5.91927
-RU;"Kaluga Oblast";Kaluga;54.5201;36.25
-GB;England;"South Shields";54.9888;-1.41915
-DK;"South Denmark";Augustenborg;54.9458;9.87284
-DE;Schleswig-Holstein;"Kiel (Ravensberg - Brunswik - Düsternbrook)";54.3351;10.1513
-GB;England;"North Shields";54.9978;-1.4587
-DE;Schleswig-Holstein;"Kiel (Pries - Friedrichsort)";54.3925;10.1815
+GB;Northern Ireland;Belfast;54.6062;-5.91927
+RU;Kaluga Oblast;Kaluga;54.5201;36.25
+GB;England;South Shields;54.9888;-1.41915
+DK;South Denmark;Augustenborg;54.9458;9.87284
+DE;Schleswig-Holstein;Kiel (Ravensberg - Brunswik - Düsternbrook);54.3351;10.1513
+GB;England;North Shields;54.9978;-1.4587
+DE;Schleswig-Holstein;Kiel (Pries - Friedrichsort);54.3925;10.1815
 GB;England;Eastfield;54.2387;-0.389471
 DE;Schleswig-Holstein;Buedelsdorf;54.3231;9.69428
-GB;"Northern Ireland";Belfast;54.5965;-5.91842
+GB;Northern Ireland;Belfast;54.5965;-5.91842
 GB;England;Stainton;54.5772;-2.79748
 GB;England;Washington;54.8862;-1.47858
 LT;Vilnius;Pabradė;54.9832;25.7574
 LT;Vilnius;Vilnius;54.6931;25.2831
 LT;Vilnius;Vilnius;54.6862;25.2666
 LT;Vilnius;Vilnius;54.6924;25.2647
-RU;"Kaluga Oblast";Kaluga;54.6204;36.3909
+RU;Kaluga Oblast;Kaluga;54.6204;36.3909
 PL;Pomerania;Gdansk;54.3522;18.6707
 GB;England;Gateshead;54.9639;-1.60583
-DE;Mecklenburg-Vorpommern;"Rostock (Kröpeliner-Tor-Vorstadt)";54.0938;12.1109
-DE;Schleswig-Holstein;"Kiel (Mitte)";54.3277;10.1293
+DE;Mecklenburg-Vorpommern;Rostock (Kröpeliner-Tor-Vorstadt);54.0938;12.1109
+DE;Schleswig-Holstein;Kiel (Mitte);54.3277;10.1293
 DE;Schleswig-Holstein;Ostrohe;54.2163;9.12537
-DE;Mecklenburg-Vorpommern;"Ostseebad Kühlungsborn";54.1469;11.742
+DE;Mecklenburg-Vorpommern;Ostseebad Kühlungsborn;54.1469;11.742
 DE;Mecklenburg-Vorpommern;Dummerstorf;54.013;12.2278
-DK;"South Denmark";Soenderborg;54.9155;9.80658
-DK;"South Denmark";Soenderborg;54.9107;9.79054
-DK;"South Denmark";Soenderborg;54.9087;9.78888
+DK;South Denmark;Soenderborg;54.9155;9.80658
+DK;South Denmark;Soenderborg;54.9107;9.79054
+DK;South Denmark;Soenderborg;54.9087;9.78888
 DE;Schleswig-Holstein;Nübel;54.5626;9.58553
-LT;Vilnius;"Vilnius (Senamiestis)";54.6818;25.292
-PL;Pomerania;"Gdansk (Nowy Port)";54.4009;18.6766
+LT;Vilnius;Vilnius (Senamiestis);54.6818;25.292
+PL;Pomerania;Gdansk (Nowy Port);54.4009;18.6766
 RU;Chelyabinsk;Yetkul';54.8231;61.5838
-GB;England;"Sunderland (Monkwearmouth)";54.912;-1.377
-GB;"Northern Ireland";Belfast;54.5771;-5.95215
+GB;England;Sunderland (Monkwearmouth);54.912;-1.377
+GB;Northern Ireland;Belfast;54.5771;-5.95215
 PL;Pomerania;Gdansk;54.3473;18.661
-RU;"Novosibirsk Oblast";Novosibirsk;54.9836;82.8921
-RU;"Novosibirsk Oblast";Novosibirsk;54.9879;82.9157
-RU;"Novosibirsk Oblast";Novosibirsk;54.935;82.9299
+RU;Novosibirsk Oblast;Novosibirsk;54.9836;82.8921
+RU;Novosibirsk Oblast;Novosibirsk;54.9879;82.9157
+RU;Novosibirsk Oblast;Novosibirsk;54.935;82.9299
 PL;Pomerania;Gdansk;54.3949;18.616
 GB;England;Durham;54.7783;-1.54212
-RU;"Novosibirsk Oblast";Novosibirsk;54.996;82.9081
+RU;Novosibirsk Oblast;Novosibirsk;54.996;82.9081
 PL;Pomerania;Gdansk;54.348;18.64
-RU;"Bashkortostan Republic";Ufa;54.7631;55.9737
-GB;England;"Sunderland (City Centre)";54.9083;-1.38602
+RU;Bashkortostan Republic;Ufa;54.7631;55.9737
+GB;England;Sunderland (City Centre);54.9083;-1.38602
 GB;England;Boroughbridge;54.09;-1.40624
 PL;Pomerania;Żukowo;54.352;18.3719
 GB;England;Stockton-on-Tees;54.577;-1.28436
-GB;England;"Pateley Bridge";54.0862;-1.75981
+GB;England;Pateley Bridge;54.0862;-1.75981
 GB;England;Gateshead;54.938;-1.61618
 GB;England;Carlisle;54.9263;-2.95054
 GB;England;Lancaster;54.0496;-2.76981
 GB;England;Kendal;54.3065;-2.73239
-GB;England;"Barrow in Furness";54.1228;-3.21671
+GB;England;Barrow in Furness;54.1228;-3.21671
 GB;England;Sunderland;54.9026;-1.40884
 GB;England;Lancaster;54.0426;-2.80026
 GB;England;Kendal;54.3242;-2.75496
 GB;England;Sunderland;54.8864;-1.42111
-GB;England;"Newcastle upon Tyne";54.9814;-1.60542
+GB;England;Newcastle upon Tyne;54.9814;-1.60542
 GB;England;Darlington;54.5303;-1.56436
 GB;England;Carlisle;54.8726;-2.88495
 GB;England;Northallerton;54.3424;-1.43082
-GB;England;"Sunderland (Ryhope)";54.8603;-1.371
+GB;England;Sunderland (Ryhope);54.8603;-1.371
 GB;England;Carlisle;54.8965;-2.95465
 GB;England;Gateshead;54.9386;-1.58219
 GB;England;Durham;54.7989;-1.61051
-GB;England;"Newcastle upon Tyne";54.9689;-1.71037
+GB;England;Newcastle upon Tyne;54.9689;-1.71037
 GB;England;Kendal;54.3055;-2.73303
-PL;Pomerania;"Gdynia (Działki Leśne)";54.5152;18.5343
+PL;Pomerania;Gdynia (Działki Leśne);54.5152;18.5343
 PL;Pomerania;Gdansk;54.3905;18.5932
-PL;"West Pomerania";Niekanin;54.1542;15.6196
+PL;West Pomerania;Niekanin;54.1542;15.6196
 PL;Pomerania;Tragamin;54.0762;19.0478
 PL;Warmia-Masuria;Pasłęk;54.0601;19.669
 PL;Pomerania;Gdynia;54.5521;18.4521
@@ -2909,37 +2909,37 @@ PL;Pomerania;Gdansk;54.3516;18.5254
 PL;Pomerania;Gościcino;54.6035;18.1624
 PL;Pomerania;Gdansk;54.3333;18.6515
 PL;Pomerania;Słupsk;54.4539;17.0188
-GB;"Northern Ireland";Belfast;54.597;-5.92519
+GB;Northern Ireland;Belfast;54.597;-5.92519
 GB;England;Jarrow;54.9769;-1.46372
 DE;Schleswig-Holstein;Blunk;54.0094;10.3139
-DE;Mecklenburg-Vorpommern;"Rostock (Mitte)";54.0871;12.1393
+DE;Mecklenburg-Vorpommern;Rostock (Mitte);54.0871;12.1393
 PL;Pomerania;Bytów;54.1852;17.4856
-PL;Warmia-Masuria;"Lidzbark Warmiński";54.1278;20.5739
+PL;Warmia-Masuria;Lidzbark Warmiński;54.1278;20.5739
 PL;Warmia-Masuria;Reszel;54.0504;21.1458
-PL;"West Pomerania";Koszalin;54.1987;16.2155
+PL;West Pomerania;Koszalin;54.1987;16.2155
 PL;Pomerania;Gdansk;54.3772;18.6073
-PL;Pomerania;"Gdansk (Osowa)";54.4142;18.4576
+PL;Pomerania;Gdansk (Osowa);54.4142;18.4576
 DE;Mecklenburg-Vorpommern;Kavelstorf;54.0143;12.2048
-DE;Schleswig-Holstein;"Kiel (Ravensberg - Brunswik - Düsternbrook)";54.345;10.1479
-DE;Mecklenburg-Vorpommern;"Rostock (Mitte)";54.098;12.1044
-DE;Schleswig-Holstein;"Flensburg (Weiche)";54.7598;9.41946
+DE;Schleswig-Holstein;Kiel (Ravensberg - Brunswik - Düsternbrook);54.345;10.1479
+DE;Mecklenburg-Vorpommern;Rostock (Mitte);54.098;12.1044
+DE;Schleswig-Holstein;Flensburg (Weiche);54.7598;9.41946
 RU;Ulyanovsk;Ulyanovsk;54.305;48.317
 GB;England;Gateshead;54.9575;-1.55962
-GB;"Northern Ireland";Portadown;54.4275;-6.44311
-GB;"Northern Ireland";Belfast;54.6311;-5.89209
+GB;Northern Ireland;Portadown;54.4275;-6.44311
+GB;Northern Ireland;Belfast;54.6311;-5.89209
 IM;Douglas;Douglas;54.1531;-4.48894
-GB;England;"Houghton-Le-Spring (Fencehouses)";54.8456;-1.50409
+GB;England;Houghton-Le-Spring (Fencehouses);54.8456;-1.50409
 RU;Omsk;Omsk;54.9944;73.3676
 PL;Pomerania;Gdansk;54.3825;18.6073
 GB;England;Ripon;54.1342;-1.51688
 DE;Schleswig-Holstein;Oeversee;54.7175;9.43841
 LT;Vilnius;Vilnius;54.7176;25.2908
-GB;"Northern Ireland";Lisburn;54.5141;-6.04967
+GB;Northern Ireland;Lisburn;54.5141;-6.04967
 GB;England;Spennymoor;54.6977;-1.58552
 LT;Vilnius;Vilnius;54.6833;25.2861
 LT;Vilnius;Vilnius;54.6884;25.278
 LT;Kaunas;Kaunas;54.8982;23.9063
-GB;England;"Newcastle upon Tyne";54.962;-1.64087
+GB;England;Newcastle upon Tyne;54.962;-1.64087
 GB;England;Beetham;54.2122;-2.77206
 PL;Pomerania;Gdansk;54.3584;18.6465
 GB;England;Darlington;54.5257;-1.56536
@@ -2951,84 +2951,84 @@ PL;Pomerania;Gdynia;54.5051;18.5214
 PL;Pomerania;Słupsk;54.4661;17.0264
 PL;Pomerania;Rozgórze;54.6101;17.6492
 RU;Kaluga;Kaluga;54.5446;36.2526
-RU;"Novosibirsk Oblast";Novosibirsk;54.9643;82.9231
-RU;"Tula Oblast";Tula;54.1907;37.592
-RU;"Novosibirsk Oblast";Novosibirsk;54.9895;83.0062
-PL;Pomerania;"Gdynia (Śródmieście)";54.5247;18.541
+RU;Novosibirsk Oblast;Novosibirsk;54.9643;82.9231
+RU;Tula Oblast;Tula;54.1907;37.592
+RU;Novosibirsk Oblast;Novosibirsk;54.9895;83.0062
+PL;Pomerania;Gdynia (Śródmieście);54.5247;18.541
 GB;Scotland;Glenluce;54.8788;-4.81037
-DK;Zealand;"Nørre Alslev";54.9043;11.8881
-DK;"South Denmark";Søgård;54.9309;9.44585
+DK;Zealand;Nørre Alslev;54.9043;11.8881
+DK;South Denmark;Søgård;54.9309;9.44585
 LT;Vilnius;Vilnius;54.6991;25.2137
 GB;England;Dovenby;54.687;-3.40669
-DE;Schleswig-Holstein;"Kiel (Gaarden)";54.3102;10.1364
+DE;Schleswig-Holstein;Kiel (Gaarden);54.3102;10.1364
 GB;Scotland;Cairnryan;54.971;-5.01982
 DE;Schleswig-Holstein;Breklum;54.6078;8.98098
 DE;Schleswig-Holstein;Harrislee;54.7947;9.3804
-RU;"Mordoviya Republic";Saransk;54.2297;45.2107
-RU;"Novosibirsk Oblast";Novosibirsk;54.9954;82.8955
+RU;Mordoviya Republic;Saransk;54.2297;45.2107
+RU;Novosibirsk Oblast;Novosibirsk;54.9954;82.8955
 PL;Podlasie;Przerośl;54.2518;22.6578
 DE;Schleswig-Holstein;Twedt;54.5971;9.6757
 PL;Pomerania;Rumia;54.5719;18.3874
-RU;"Novosibirsk Oblast";Novosibirsk;54.9407;82.8241
-GB;England;"Stockton-on-Tees (Port Clarence)";54.5865;-1.22574
+RU;Novosibirsk Oblast;Novosibirsk;54.9407;82.8241
+GB;England;Stockton-on-Tees (Port Clarence);54.5865;-1.22574
 CA;Alberta;Whitecourt;54.1403;-115.712
-CA;Alberta;"Fox Creek";54.4001;-116.802
-GB;England;"Sunderland (Southwick)";54.9164;-1.40803
-CA;"British Columbia";"Prince Rupert";54.313;-130.297
+CA;Alberta;Fox Creek;54.4001;-116.802
+GB;England;Sunderland (Southwick);54.9164;-1.40803
+CA;British Columbia;Prince Rupert;54.313;-130.297
 CA;Alberta;Athabasca;54.7198;-113.284
-CA;"British Columbia";Smithers;54.7824;-127.169
+CA;British Columbia;Smithers;54.7824;-127.169
 CA;Alberta;Bonnyville;54.269;-110.777
 CA;Alberta;Whitecourt;54.1168;-115.645
 CA;Alberta;Barrhead;54.1165;-114.403
-CA;Alberta;"Cold Lake (Medley)";54.4132;-110.214
+CA;Alberta;Cold Lake (Medley);54.4132;-110.214
 CA;Alberta;Westlock;54.1464;-113.853
-CA;Saskatchewan;"Meadow Lake";54.1212;-108.43
+CA;Saskatchewan;Meadow Lake;54.1212;-108.43
 CA;Alberta;Whitecourt;54.1424;-115.685
-CA;"British Columbia";"Prince Rupert";54.3189;-130.305
-CA;"British Columbia";Vanderhoof;54.014;-124.013
-CA;Alberta;"Cold Lake (Cold Lake South)";54.422;-110.21
+CA;British Columbia;Prince Rupert;54.3189;-130.305
+CA;British Columbia;Vanderhoof;54.014;-124.013
+CA;Alberta;Cold Lake (Cold Lake South);54.422;-110.21
 CA;Alberta;Westlock;54.151;-113.869
-CA;"British Columbia";"Sinclair Mills";54.0154;-121.671
-CA;"British Columbia";Kitimat;54.0526;-128.693
-CA;"British Columbia";Smithers;54.7748;-127.162
+CA;British Columbia;Sinclair Mills;54.0154;-121.671
+CA;British Columbia;Kitimat;54.0526;-128.693
+CA;British Columbia;Smithers;54.7748;-127.162
 GB;England;Washington;54.8829;-1.55633
-CA;Alberta;"Swan Hills";54.723;-115.403
-CA;Alberta;"Lac La Biche";54.7742;-111.966
-CA;"British Columbia";Masset;54.0124;-132.145
-CA;"British Columbia";"Fort St. James";54.4423;-124.252
-CA;Alberta;"Cold Lake";54.4295;-110.205
-CA;"Newfoundland and Labrador";"Happy Valley-Goose Bay";54.2731;-61.7388
-CA;"British Columbia";Granisle;54.886;-126.208
+CA;Alberta;Swan Hills;54.723;-115.403
+CA;Alberta;Lac La Biche;54.7742;-111.966
+CA;British Columbia;Masset;54.0124;-132.145
+CA;British Columbia;Fort St. James;54.4423;-124.252
+CA;Alberta;Cold Lake;54.4295;-110.205
+CA;Newfoundland and Labrador;Happy Valley-Goose Bay;54.2731;-61.7388
+CA;British Columbia;Granisle;54.886;-126.208
 CA;Alberta;Westlock;54.1522;-113.851
 CA;Alberta;Athabasca;54.7189;-113.253
 IM;Douglas;Douglas;54.1479;-4.48434
-CA;Alberta;"Swan Hills";54.7168;-115.402
-CA;"British Columbia";Telkwa;54.6907;-127.056
-CA;"British Columbia";Terrace;54.5187;-128.642
-CA;"British Columbia";Smithers;54.781;-127.173
+CA;Alberta;Swan Hills;54.7168;-115.402
+CA;British Columbia;Telkwa;54.6907;-127.056
+CA;British Columbia;Terrace;54.5187;-128.642
+CA;British Columbia;Smithers;54.781;-127.173
 GB;England;Bowes;54.5164;-2.01599
-CA;"British Columbia";"Fraser Lake";54.0557;-124.852
-CA;"British Columbia";"McLeod Lake";54.9931;-123.044
-CA;"British Columbia";"Prince Rupert";54.319;-130.32
+CA;British Columbia;Fraser Lake;54.0557;-124.852
+CA;British Columbia;McLeod Lake;54.9931;-123.044
+CA;British Columbia;Prince Rupert;54.319;-130.32
 GB;England;Durham;54.7821;-1.57326
-RU;"Smolensk Oblast";Dorogobuzh;54.9151;33.2988
+RU;Smolensk Oblast;Dorogobuzh;54.9151;33.2988
 DE;Schleswig-Holstein;Schleswig;54.5148;9.56
 GB;England;Stockton-on-Tees;54.6334;-1.31656
 DE;Schleswig-Holstein;Windbergen;54.0471;9.11942
 LT;Kaunas;Kaunas;54.9295;23.8981
 DE;Schleswig-Holstein;Rendsburg;54.3081;9.6607
-RU;"Novosibirsk Oblast";Novosibirsk;54.984;82.8805
-RU;"Novosibirsk Oblast";Novosibirsk;54.9851;82.8683
-RU;"Novosibirsk Oblast";Novosibirsk;54.9686;82.8615
+RU;Novosibirsk Oblast;Novosibirsk;54.984;82.8805
+RU;Novosibirsk Oblast;Novosibirsk;54.9851;82.8683
+RU;Novosibirsk Oblast;Novosibirsk;54.9686;82.8615
 DE;Schleswig-Holstein;Dänischenhagen;54.4298;10.1276
-RU;"Ryazan Oblast";Ryazan;54.63;39.7534
-RU;"Tula Oblast";Severo-Zadonsk;54.0348;38.4017
-RU;"Tula Oblast";Yasnogorsk;54.4809;37.6982
-DE;Schleswig-Holstein;"Kiel (Schreventeich - Hasseldieksdamm de Schreventeich)";54.3105;10.1325
-DE;Schleswig-Holstein;"Kiel (Schreventeich - Hasseldieksdamm)";54.3107;10.1321
-DE;Schleswig-Holstein;"Kiel (Schreventeich - Hasseldieksdamm de Schreventeich)";54.3108;10.1323
+RU;Ryazan Oblast;Ryazan;54.63;39.7534
+RU;Tula Oblast;Severo-Zadonsk;54.0348;38.4017
+RU;Tula Oblast;Yasnogorsk;54.4809;37.6982
+DE;Schleswig-Holstein;Kiel (Schreventeich - Hasseldieksdamm de Schreventeich);54.3105;10.1325
+DE;Schleswig-Holstein;Kiel (Schreventeich - Hasseldieksdamm);54.3107;10.1321
+DE;Schleswig-Holstein;Kiel (Schreventeich - Hasseldieksdamm de Schreventeich);54.3108;10.1323
 DE;Schleswig-Holstein;Mönkeberg;54.3483;10.1874
-DE;Schleswig-Holstein;"Molfsee (Rammsee)";54.281;10.0713
+DE;Schleswig-Holstein;Molfsee (Rammsee);54.281;10.0713
 DE;Schleswig-Holstein;Flensburg;54.7955;9.43141
 DE;Schleswig-Holstein;Bargum;54.7;8.95
 LT;Kaunas;Kaunas;54.9374;23.8812
@@ -3036,109 +3036,109 @@ LT;Vilnius;Vilnius;54.69;25.2891
 LT;Vilnius;Vilnius;54.6794;25.2882
 LT;Vilnius;Vilnius;54.7016;25.2622
 PL;Pomerania;Gdańsk;54.3696;18.6082
-GB;"Northern Ireland";Belfast;54.5961;-5.92502
-GB;"Northern Ireland";Holywood;54.6402;-5.83732
+GB;Northern Ireland;Belfast;54.5961;-5.92502
+GB;Northern Ireland;Holywood;54.6402;-5.83732
 DE;Schleswig-Holstein;Wallsbüll;54.7762;9.23946
 GB;England;Bolton-le-Sands;54.1066;-2.79082
-GB;"Northern Ireland";Banbridge;54.3104;-6.29894
-GB;England;"East Boldon";54.9418;-1.43284
-DK;"South Denmark";Soenderborg;54.9255;9.79082
-GB;"Northern Ireland";Newtownabbey;54.6468;-5.92651
+GB;Northern Ireland;Banbridge;54.3104;-6.29894
+GB;England;East Boldon;54.9418;-1.43284
+DK;South Denmark;Soenderborg;54.9255;9.79082
+GB;Northern Ireland;Newtownabbey;54.6468;-5.92651
 GB;England;Darlington;54.5322;-1.55709
 GB;England;Exelby;54.2775;-1.54929
 GB;England;Darlington;54.5216;-1.55331
 GB;England;Ambleside;54.4342;-2.96335
 GB;England;Carlisle;54.8838;-2.89394
-GB;England;"Newcastle upon Tyne";54.9792;-1.61466
-GB;England;"Newcastle upon Tyne";54.9684;-1.61215
-IE;Leinster;"Ravensdale (Drumnacarra)";54.0567;-6.33877
-GB;England;"Newcastle upon Tyne";54.9728;-1.63602
+GB;England;Newcastle upon Tyne;54.9792;-1.61466
+GB;England;Newcastle upon Tyne;54.9684;-1.61215
+IE;Leinster;Ravensdale (Drumnacarra);54.0567;-6.33877
+GB;England;Newcastle upon Tyne;54.9728;-1.63602
 GB;England;Hartlepool;54.7014;-1.22601
 PL;Pomerania;Sopot;54.4604;18.5558
 PL;Pomerania;Chwaszczyno;54.4438;18.4101
-PL;Pomerania;"Czarna Dąbrówka";54.3349;17.6221
-PL;Pomerania;"Gdansk (Strzyża)";54.3894;18.5897
-PL;"West Pomerania";Koszalin;54.1772;16.202
-RU;"Mordoviya Republic";Lyambir';54.2865;45.1258
-GB;"Northern Ireland";Omagh;54.5992;-7.30845
+PL;Pomerania;Czarna Dąbrówka;54.3349;17.6221
+PL;Pomerania;Gdansk (Strzyża);54.3894;18.5897
+PL;West Pomerania;Koszalin;54.1772;16.202
+RU;Mordoviya Republic;Lyambir';54.2865;45.1258
+GB;Northern Ireland;Omagh;54.5992;-7.30845
 GB;England;Keswick;54.6086;-3.14697
-GB;"Northern Ireland";Downpatrick;54.331;-5.71872
+GB;Northern Ireland;Downpatrick;54.331;-5.71872
 GB;England;Chilton;54.6589;-1.5569
 GB;England;Stanley;54.8599;-1.69524
-GB;England;"Boldon Colliery";54.9521;-1.4714
+GB;England;Boldon Colliery;54.9521;-1.4714
 RU;Ulyanovsk;Ulyanovsk;54.3819;48.5936
 DE;Schleswig-Holstein;Hohenwestedt;54.0922;9.66157
 DE;Schleswig-Holstein;Heide;54.1972;9.12514
-DE;Mecklenburg-Vorpommern;"Wendorf (Groß Lüdershagen)";54.2813;13.0556
-RU;"Bashkortostan Republic";Ufa;54.7665;56.0168
-GB;"Northern Ireland";Belfast;54.5975;-5.92412
+DE;Mecklenburg-Vorpommern;Wendorf (Groß Lüdershagen);54.2813;13.0556
+RU;Bashkortostan Republic;Ufa;54.7665;56.0168
+GB;Northern Ireland;Belfast;54.5975;-5.92412
 GB;England;Durham;54.7989;-1.61135
 DE;Mecklenburg-Vorpommern;Stoltenhagen;54.1574;13.0788
 DE;Mecklenburg-Vorpommern;Prohn;54.369;13.0237
 GB;England;Windermere;54.3825;-2.9081
 GB;England;Chester-le-Street;54.8481;-1.57195
 DE;Mecklenburg-Vorpommern;Sassnitz;54.4889;13.5876
-GB;England;"South Shields";54.9714;-1.42777
+GB;England;South Shields;54.9714;-1.42777
 GB;England;Middlesbrough;54.5573;-1.24758
-GB;"Northern Ireland";Newry;54.1751;-6.34023
-GB;England;"Newcastle upon Tyne";54.9803;-1.61573
-PL;"West Pomerania";Koszalin;54.1892;16.1925
-PL;Warmia-Masuria;"Lidzbark Warmiński";54.1343;20.5878
+GB;Northern Ireland;Newry;54.1751;-6.34023
+GB;England;Newcastle upon Tyne;54.9803;-1.61573
+PL;West Pomerania;Koszalin;54.1892;16.1925
+PL;Warmia-Masuria;Lidzbark Warmiński;54.1343;20.5878
 PL;Pomerania;Słupsk;54.4683;17.0276
 PL;Podlasie;Suwałki;54.1037;22.9375
 PL;Pomerania;Gdansk;54.3985;18.6743
 PL;Pomerania;Puck;54.7195;18.4031
-GB;"Northern Ireland";Portglenone;54.8715;-6.47146
+GB;Northern Ireland;Portglenone;54.8715;-6.47146
 PL;Pomerania;Kartoszyno;54.7436;18.0943
 PL;Pomerania;Gdansk;54.4025;18.5832
 PL;Pomerania;Strzebielino;54.5675;18.0423
-DE;Mecklenburg-Vorpommern;"Rostock (Lütten Klein)";54.1373;12.0584
+DE;Mecklenburg-Vorpommern;Rostock (Lütten Klein);54.1373;12.0584
 RU;Ulyanovsk;Mirnyy;54.3508;48.6201
 PL;Pomerania;Słupsk;54.4553;16.9855
-PL;"West Pomerania";"Ustronie Morskie";54.2013;15.7454
+PL;West Pomerania;Ustronie Morskie;54.2013;15.7454
 PL;Pomerania;Gdansk;54.3549;18.5947
-RU;"Bashkortostan Republic";Ufa;54.7352;55.9694
-GB;England;"Newcastle upon Tyne";54.97;-1.61694
-DE;Schleswig-Holstein;"Kiel (Schreventeich - Hasseldieksdamm de Schreventeich)";54.3258;10.1055
-DE;Schleswig-Holstein;"Kiel (Russee - Hammer)";54.3121;10.0674
+RU;Bashkortostan Republic;Ufa;54.7352;55.9694
+GB;England;Newcastle upon Tyne;54.97;-1.61694
+DE;Schleswig-Holstein;Kiel (Schreventeich - Hasseldieksdamm de Schreventeich);54.3258;10.1055
+DE;Schleswig-Holstein;Kiel (Russee - Hammer);54.3121;10.0674
 PL;Pomerania;Gdansk;54.3959;18.5886
-DE;Mecklenburg-Vorpommern;"Rostock (Mitte)";54.088;12.1408
-RU;"Ryazan Oblast";Spassk-Ryazanskiy;54.4084;40.3766
-RU;"Bashkortostan Republic";Ufa;54.761;56.0096
-IE;Ulster;"Letterkenny (Ballyraine)";54.9533;-7.71621
+DE;Mecklenburg-Vorpommern;Rostock (Mitte);54.088;12.1408
+RU;Ryazan Oblast;Spassk-Ryazanskiy;54.4084;40.3766
+RU;Bashkortostan Republic;Ufa;54.761;56.0096
+IE;Ulster;Letterkenny (Ballyraine);54.9533;-7.71621
 GB;England;Healey;54.9167;-1.96667
-GB;"Northern Ireland";Belfast;54.5963;-5.92008
+GB;Northern Ireland;Belfast;54.5963;-5.92008
 DE;Mecklenburg-Vorpommern;Tribsees;54.0913;12.7602
 IM;Jurby;Jurby;54.3594;-4.52199
-RU;"Smolensk Oblast";Desnogorsk;54.1508;33.2815
-RU;"Ryazan Oblast";Ryazan;54.6086;39.7914
-RU;"Ryazan Oblast";Ryazan;54.6302;39.7429
+RU;Smolensk Oblast;Desnogorsk;54.1508;33.2815
+RU;Ryazan Oblast;Ryazan;54.6086;39.7914
+RU;Ryazan Oblast;Ryazan;54.6302;39.7429
 DE;Schleswig-Holstein;Rendsburg;54.3107;9.6371
 DE;Schleswig-Holstein;Heide;54.1952;9.1019
 DE;Schleswig-Holstein;Fahrdorf;54.503;9.60257
 RU;Kaliningrad;Kaliningrad;54.676;20.4948
-RU;"Kurgan Oblast";Tselinnoye;54.5039;63.6765
+RU;Kurgan Oblast;Tselinnoye;54.5039;63.6765
 LT;Vilnius;Vilnius;54.7235;25.2496
-GB;"Northern Ireland";Belfast;54.5904;-5.92355
-GB;"Northern Ireland";Belfast;54.5905;-5.92363
-GB;"Northern Ireland";Belfast;54.5823;-5.83908
+GB;Northern Ireland;Belfast;54.5904;-5.92355
+GB;Northern Ireland;Belfast;54.5905;-5.92363
+GB;Northern Ireland;Belfast;54.5823;-5.83908
 LT;Kaunas;Lapės;54.9742;24.0062
 PL;Pomerania;Gdańsk;54.3717;18.6163
-PL;Pomerania;"Gdansk (Oliwa)";54.4153;18.5569
+PL;Pomerania;Gdansk (Oliwa);54.4153;18.5569
 PL;Pomerania;Gdańsk;54.3589;18.6465
 PL;Pomerania;Gdansk;54.3715;18.6191
 PL;Pomerania;Gdańsk;54.3715;18.6191
 PL;Pomerania;Gdansk;54.3576;18.4646
-PL;Pomerania;"Gdynia (Śródmieście)";54.5282;18.5312
+PL;Pomerania;Gdynia (Śródmieście);54.5282;18.5312
 LT;Vilnius;Vilnius;54.7002;25.2113
-PL;Pomerania;"Gdynia (Działki Leśne)";54.5153;18.5343
+PL;Pomerania;Gdynia (Działki Leśne);54.5153;18.5343
 LT;Vilnius;Vilnius;54.6861;25.286
 LT;Vilnius;Vilnius;54.6959;25.3127
 LT;Vilnius;Vilnius;54.6716;25.2562
 LT;Vilnius;Vilnius;54.7253;25.2974
-GB;England;"Boldon Colliery";54.9439;-1.4694
+GB;England;Boldon Colliery;54.9439;-1.4694
 PL;Pomerania;Gdansk;54.3486;18.6532
-PL;Pomerania;"Gdansk (Oliwa)";54.403;18.5716
+PL;Pomerania;Gdansk (Oliwa);54.403;18.5716
 GB;England;Lartington;54.5541;-1.97239
 GB;England;Northallerton;54.2504;-1.47086
 LT;Vilnius;Vilnius;54.6934;25.2972
@@ -3146,9 +3146,9 @@ LT;Vilnius;Vilnius;54.7801;25.3471
 LT;Vilnius;Vilnius;54.6712;25.2578
 LT;Vilnius;Vilnius;54.6929;25.2836
 CA;Alberta;Athabasca;54.7214;-113.286
-GB;"Northern Ireland";Belfast;54.5962;-5.92559
+GB;Northern Ireland;Belfast;54.5962;-5.92559
 DE;Mecklenburg-Vorpommern;Roggentin;54.0763;12.197
-DE;Schleswig-Holstein;"Süsel (Middelburg)";54.0821;10.6839
+DE;Schleswig-Holstein;Süsel (Middelburg);54.0821;10.6839
 DE;Schleswig-Holstein;Eutin;54.1248;10.6314
 GB;England;Kendal;54.3292;-2.74282
 GB;England;Kendal;54.3292;-2.74297
@@ -3159,51 +3159,51 @@ IM;Douglas;Douglas;54.1552;-4.53448
 IM;Castletown;Castletown;54.0757;-4.65373
 GB;England;Tanfield;54.8856;-1.70211
 GB;England;Consett;54.8585;-1.83181
-GB;England;"Newton Aycliffe";54.6114;-1.57965
-GB;"Northern Ireland";Belfast;54.596;-5.92088
+GB;England;Newton Aycliffe;54.6114;-1.57965
+GB;Northern Ireland;Belfast;54.596;-5.92088
 GB;England;Stockton-on-Tees;54.5977;-1.27985
-GB;"Northern Ireland";Antrim;54.7877;-6.49231
+GB;Northern Ireland;Antrim;54.7877;-6.49231
 GB;England;Ampleforth;54.1996;-1.10691
-DE;Schleswig-Holstein;"Kiel (Wik)";54.3663;10.1075
-RU;"Moscow Oblast";Pushchino;54.8396;37.6259
-RU;"Novosibirsk Oblast";Novosibirsk;54.8515;83.1027
-RU;"Novosibirsk Oblast";Novosibirsk;54.8488;83.1112
+DE;Schleswig-Holstein;Kiel (Wik);54.3663;10.1075
+RU;Moscow Oblast;Pushchino;54.8396;37.6259
+RU;Novosibirsk Oblast;Novosibirsk;54.8515;83.1027
+RU;Novosibirsk Oblast;Novosibirsk;54.8488;83.1112
 DE;Schleswig-Holstein;Hemmingstedt;54.164;9.09278
 DE;Schleswig-Holstein;Heide;54.1938;9.08618
 DE;Schleswig-Holstein;Wankendorf;54.1122;10.2055
-PL;"West Pomerania";Koszalin;54.1853;16.2049
+PL;West Pomerania;Koszalin;54.1853;16.2049
 PL;Warmia-Masuria;Bartoszyce;54.2501;20.8151
-PL;Pomerania;"Gdansk (Oliwa)";54.4081;18.5674
+PL;Pomerania;Gdansk (Oliwa);54.4081;18.5674
 PL;Pomerania;Duninowo;54.5433;16.849
 PL;Pomerania;Gdansk;54.3868;18.6184
-PL;"West Pomerania";Gościno;54.05;15.6539
+PL;West Pomerania;Gościno;54.05;15.6539
 PL;Pomerania;Bierkowo;54.4777;16.9319
 PL;Pomerania;Damnica;54.5017;17.2685
 PL;Warmia-Masuria;Frombork;54.3575;19.6801
-PL;Pomerania;"Wyspa Sobieszewska";54.3326;18.8906
+PL;Pomerania;Wyspa Sobieszewska;54.3326;18.8906
 RU;Ulyanovsk;Ulyanovsk;54.2676;48.2993
 RU;Ulyanovsk;Ulyanovsk;54.3603;48.5479
 GB;England;Galgate;54.0056;-2.78479
 GB;England;Galgate;54.0064;-2.78408
-DE;Schleswig-Holstein;"Kiel (Meimersdorf - Moorsee)";54.2817;10.1155
+DE;Schleswig-Holstein;Kiel (Meimersdorf - Moorsee);54.2817;10.1155
 LT;Alytus;Druskininkai;54.0049;23.9864
 LT;Vilnius;Lentvaris;54.6474;25.0435
-DE;Schleswig-Holstein;"Kiel (Wellsee - Rönne)";54.2829;10.1529
+DE;Schleswig-Holstein;Kiel (Wellsee - Rönne);54.2829;10.1529
 RU;Omsk;Omsk;54.9356;73.3711
 RU;Omsk;Omsk;54.994;73.3716
 RU;Omsk;Omsk;54.9951;73.3508
-RU;"Omsk Oblast";Omsk;54.9889;73.3174
+RU;Omsk Oblast;Omsk;54.9889;73.3174
 PL;Pomerania;Gdansk;54.3779;18.5967
 GB;England;Marske;54.5944;-1.01974
 RU;Kaliningrad;Kaliningrad;54.7172;20.4627
 PL;Pomerania;Krokowa;54.7792;18.1616
-RU;"Bashkortostan Republic";Ufa;54.7729;56.0241
+RU;Bashkortostan Republic;Ufa;54.7729;56.0241
 GB;England;Middlesbrough;54.5761;-1.23402
-RU;"Moscow Oblast";Lukhovitsy;54.9445;39.035
+RU;Moscow Oblast;Lukhovitsy;54.9445;39.035
 GB;England;Kirkbymoorside;54.2526;-0.935943
-GB;England;"Peterlee (North West Industrial Estate)";54.7677;-1.36572
+GB;England;Peterlee (North West Industrial Estate);54.7677;-1.36572
 GB;England;Sunderland;54.909;-1.37904
-GB;"Northern Ireland";Antrim;54.7136;-6.21428
+GB;Northern Ireland;Antrim;54.7136;-6.21428
 GB;England;Middlesbrough;54.5696;-1.23545
 DE;Schleswig-Holstein;Koldenbüttel;54.3833;9.06667
 DE;Schleswig-Holstein;Stapel;54.3553;9.23031
@@ -3211,6 +3211,6 @@ DE;Schleswig-Holstein;Wagersrott;54.6647;9.79474
 DE;Schleswig-Holstein;Karby;54.6237;9.97323
 DE;Schleswig-Holstein;Morsum;54.8699;8.43939
 DE;Schleswig-Holstein;Süderende;54.7261;8.43853
-DE;Mecklenburg-Vorpommern;"Rostock (Ortsamt 8)";54.1287;12.1637
-DE;Mecklenburg-Vorpommern;"Stralsund (Andershof)";54.2841;13.0863
+DE;Mecklenburg-Vorpommern;Rostock (Ortsamt 8);54.1287;12.1637
+DE;Mecklenburg-Vorpommern;Stralsund (Andershof);54.2841;13.0863
 DE;Schleswig-Holstein;Neumünster;54.0929;9.98586

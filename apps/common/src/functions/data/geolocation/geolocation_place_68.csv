@@ -16,7 +16,7 @@ RU;Murmansk;Murmansk;68.9733;33.0856
 RU;Murmansk;Murmansk;68.974;33.0975
 RU;Murmansk;Murmansk;68.9712;33.0766
 FI;Lapland;Inari;68.906;27.0288
-RU;"Krasnoyarsk Krai";Snezhnogorsk;68.0931;87.74
+RU;Krasnoyarsk Krai;Snezhnogorsk;68.0931;87.74
 RU;Murmansk;Olenegorsk;68.1432;33.2529
 RU;Murmansk;Olenegorsk;68.1405;33.2706
 NO;Nordland;Stokmarknes;68.6671;14.9467
@@ -29,7 +29,7 @@ NO;Nordland;Stamsund;68.1301;13.8493
 NO;Nordland;Myre;68.914;15.0784
 NO;Troms;Evenskjer;68.5828;16.572
 NO;Troms;Harstad;68.7986;16.5415
-NO;"Troms og Finnmark";Tennevoll;68.7465;17.8061
+NO;Troms og Finnmark;Tennevoll;68.7465;17.8061
 NO;Troms;Hol;68.549;16.3922
 NO;Nordland;Narvik;68.4384;17.4272
 NO;Troms;Setermoen;68.861;18.3486
@@ -39,8 +39,8 @@ NO;Nordland;Narvik;68.4385;17.4273
 NO;Nordland;Narvik;68.4478;17.4505
 NO;Troms;Gratangen;68.65;17.6833
 FI;Lapland;Saariselka;68.4222;27.4111
-US;Alaska;"Point Hope";68.3478;-166.808
-US;Alaska;"Arctic Village";68.1271;-145.538
+US;Alaska;Point Hope;68.3478;-166.808
+US;Alaska;Arctic Village;68.1271;-145.538
 RU;Murmansk;Murmansk;68.9969;33.163
 RU;Murmansk;Murmansk;68.9691;33.0954
 NO;Nordland;Sortland;68.6955;15.4142
@@ -62,7 +62,7 @@ RU;Murmansk;Murmansk;68.9715;33.0786
 RU;Murmansk;Molochnyy;68.8539;33.0205
 RU;Murmansk;Murmansk;68.9516;33.0812
 RU;Murmansk;Murmansk;68.954;33.0647
-RU;Sakha;"Belaya Gora";68.5382;146.185
+RU;Sakha;Belaya Gora;68.5382;146.185
 RU;Murmansk;Roslyakovo;68.9969;33.163
 NO;Nordland;Svolvær;68.2343;14.5682
 NO;Nordland;Stokmarknes;68.5697;14.9088
@@ -75,15 +75,15 @@ FI;Lapland;Enontekiö;68.3839;23.6333
 GL;;Kangaatsiaq;68.3065;-53.4641
 FI;Lapland;Inari;68.9062;27.0278
 FI;Lapland;Ivalo;68.6575;27.545
-CA;"Northwest Territories";Inuvik;68.3628;-133.725
-CA;"Northwest Territories";Inuvik;68.3627;-133.725
-CA;"Northwest Territories";Inuvik;68.3617;-133.728
+CA;Northwest Territories;Inuvik;68.3628;-133.725
+CA;Northwest Territories;Inuvik;68.3627;-133.725
+CA;Northwest Territories;Inuvik;68.3617;-133.728
 US;Alaska;Fairbanks;68.4617;-149.421
 RU;Murmansk;Murmansk;68.9667;33.0817
 RU;Murmansk;Murmansk;68.9762;33.0935
 RU;Murmansk;Murmansk;68.96;33.0676
 RU;Murmansk;Murmansk;68.9675;33.0713
-CA;"Northwest Territories";Inuvik;68.3591;-133.728
-CA;"Northwest Territories";Inuvik;68.3584;-133.724
-CA;Nunavut;"Hall Beach";68.7727;-81.2352
+CA;Northwest Territories;Inuvik;68.3591;-133.728
+CA;Northwest Territories;Inuvik;68.3584;-133.724
+CA;Nunavut;Hall Beach;68.7727;-81.2352
 CA;Nunavut;Kugaaruk;68.5347;-89.825

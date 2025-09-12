@@ -1,28 +1,28 @@
-TH;"Chiang Rai";"Wiang Kaen";20.113;100.513
-TH;"Chiang Rai";"Mae Chan";20.1467;99.8526
-TH;"Chiang Rai";"Doi Luang";20.1178;100.099
-TH;"Chiang Rai";"Wiang Chiang Rung";20.0133;100.056
+TH;Chiang Rai;Wiang Kaen;20.113;100.513
+TH;Chiang Rai;Mae Chan;20.1467;99.8526
+TH;Chiang Rai;Doi Luang;20.1178;100.099
+TH;Chiang Rai;Wiang Chiang Rung;20.0133;100.056
 IN;Gujarat;Navsari;20.9424;72.9247
 IN;Odisha;Bhubaneswar;20.2724;85.8338
 IN;Odisha;Dhenkānāl;20.6574;85.5969
-VN;Hanoi;"Hà Đông";20.9714;105.779
-VN;Hanoi;"Thanh Xuân";20.9947;105.8
-VN;"Hà Nam Province";"Hòa Mạc";20.6417;105.989
-VN;Haiphong;"An Dương";20.8638;106.613
-VN;Hanoi;"Kim Bài";20.8526;105.77
-VN;Hanoi;"Xuân Mai";20.9;105.583
-VN;"Hòa Bình Province";"Kỳ Sơn";20.8867;105.352
-VN;Hanoi;"Văn Điển";20.9463;105.845
-VN;"Nam Định Province";"Cổ Lễ";20.3234;106.266
-VN;"Nam Định Province";"Nam Định";20.4339;106.177
+VN;Hanoi;Hà Đông;20.9714;105.779
+VN;Hanoi;Thanh Xuân;20.9947;105.8
+VN;Hà Nam Province;Hòa Mạc;20.6417;105.989
+VN;Haiphong;An Dương;20.8638;106.613
+VN;Hanoi;Kim Bài;20.8526;105.77
+VN;Hanoi;Xuân Mai;20.9;105.583
+VN;Hòa Bình Province;Kỳ Sơn;20.8867;105.352
+VN;Hanoi;Văn Điển;20.9463;105.845
+VN;Nam Định Province;Cổ Lễ;20.3234;106.266
+VN;Nam Định Province;Nam Định;20.4339;106.177
 VN;Haiphong;Haiphong;20.8648;106.683
-SA;"'Asir Region";Bisha;20.0005;42.6052
-SA;"Al Bahah Region";"Al Bahah";20.0129;41.4677
-MX;Querétaro;"Querétaro City";20.5888;-100.39
-SA;"Al Bahah Region";"Al Mindak";20.1588;41.2834
-MX;Querétaro;"Santa Catarina";20.7768;-100.452
-SA;"Riyadh Region";"As Sulayyil";20.4607;45.5779
-MX;Jalisco;"Jesús María";20.6074;-102.22
+SA;'Asir Region;Bisha;20.0005;42.6052
+SA;Al Bahah Region;Al Bahah;20.0129;41.4677
+MX;Querétaro;Querétaro City;20.5888;-100.39
+SA;Al Bahah Region;Al Mindak;20.1588;41.2834
+MX;Querétaro;Santa Catarina;20.7768;-100.452
+SA;Riyadh Region;As Sulayyil;20.4607;45.5779
+MX;Jalisco;Jesús María;20.6074;-102.22
 US;Hawaii;Lahaina;20.9198;-156.695
 US;Hawaii;Lahaina;20.9678;-156.675
 US;Hawaii;Waimea;20.0204;-155.669
@@ -30,99 +30,99 @@ IN;Odisha;Angul;20.8409;85.1019
 IN;Maharashtra;Buldāna;20.5292;76.1842
 IN;Maharashtra;Wardha;20.7643;78.5884
 IN;Odisha;Jatani;20.1597;85.7074
-VN;Hanoi;"Quốc Oai";20.9902;105.641
-VN;Hanoi;"Vân Đình";20.7351;105.772
-VN;"Thái Bình Province";"Thanh Nê";20.3881;106.438
-VN;Hanoi;"Chúc Sơn";20.9237;105.702
-VN;"Hải Dương Province";"Kinh Môn";20.9896;106.555
-VN;"Thanh Hóa Province";"Quan Hóa";20.3848;105.1
-VN;"Hải Dương Province";"Ninh Giang";20.7308;106.398
-VN;Haiphong;"Tiên Lãng";20.7246;106.554
-VN;"Thanh Hóa Province";"Hà Trung";20.0128;105.853
-VN;"Ninh Bình Province";"Ninh Bình";20.2581;105.98
-VN;Haiphong;"Đố Sơn";20.7136;106.789
-VN;"Thái Bình Province";"Quỳnh Côi";20.6619;106.327
-VN;"Hải Dương Province";"Hải Dương";20.941;106.333
-VN;"Hải Dương Province";"Tứ Kỳ";20.8191;106.407
-VN;"Nam Định Province";Gôi;20.3333;106.078
-VN;"Quảng Ninh";"Ha Long";20.9505;107.073
-VN;Haiphong;"An Lão";20.8229;106.556
-VN;"Ninh Bình Province";"Tam Điệp";20.1563;105.917
-VN;"Hưng Yên Province";"Văn Giang";20.943;105.931
-VN;"Thanh Hóa Province";"Cẩm Thủy";20.2087;105.469
-VN;"Hòa Bình Province";"Hòa Bình";20.8172;105.338
-VN;"Thái Bình Province";"Tiền Hải";20.4056;106.504
-VN;"Hà Nam Province";"Thanh Lưu";20.474;105.953
-VN;"Hà Nam Province";"Vĩnh Trụ";20.5602;106.028
-VN;"Hưng Yên Province";"Như Quỳnh";20.9817;105.985
-VN;"Ninh Bình Province";Me;20.347;105.836
-VN;"Thanh Hóa Province";"Quan Sơn";20.2591;104.945
-VN;"Hải Dương Province";"Thanh Miện";20.7871;106.246
-VN;"Hòa Bình Province";"Vụ Bản";20.4642;105.443
-VN;"Nam Định Province";"Nam Giang";20.3332;106.178
-VN;"Hà Nam Province";"Phủ Lý";20.5453;105.912
-VN;"Thanh Hóa Province";"Vĩnh Lộc";20.0544;105.616
-VN;"Hưng Yên Province";"Hưng Yên";20.6464;106.051
-VN;"Hải Dương Province";"Gia Lộc";20.8678;106.3
-VN;"Nam Định Province";"Xuân Trường";20.2923;106.333
-VN;Hanoi;"Đại Nghĩa";20.6867;105.745
-VN;"Ninh Bình Province";"Thiên Tồn";20.299;105.952
-VN;"Hòa Bình Province";"Cao Phong";20.7045;105.321
-VN;"Thanh Hóa Province";"Ngọc Lặc";20.0919;105.368
-VN;Haiphong;"Núi Đối";20.7508;106.669
-VN;"Nam Định Province";"Yên Định";20.2015;106.296
-VN;Hanoi;"Thường Tín";20.8687;105.861
-VN;Hanoi;"Phú Xuyên";20.7455;105.914
-VN;"Sơn La Province";"Mộc Châu";20.852;104.622
-VN;"Hải Dương Province";"Lai Cách";20.9325;106.248
-VN;"Thái Bình Province";"Đông Hưng";20.5565;106.355
-VN;"Thái Bình Province";"Thái Bình";20.45;106.34
-VN;"Ninh Bình Province";"Phát Diệm";20.0905;106.083
-VN;"Thanh Hóa Province";"Nga Sơn";20.0072;105.97
-VN;Haiphong;"Núi Đèo";20.9157;106.674
-VN;"Hòa Bình Province";Bo;20.6726;105.536
-VN;"Thanh Hóa Province";"Bỉm Sơn";20.0781;105.86
-VN;"Hải Dương Province";"Phú Thái";20.9628;106.509
-VN;"Hưng Yên Province";"Khoái Châu";20.8391;105.978
-VN;"Thái Bình Province";"Vũ Thư";20.4367;106.291
-VN;"Hòa Bình Province";"Hàng Trạm";20.3947;105.622
-VN;"Hưng Yên Province";"Ân Thi";20.8183;106.091
-VN;"Hưng Yên Province";"Trần Cao";20.7295;106.18
-VN;"Ninh Bình Province";"Yên Ninh";20.184;106.061
-VN;"Nam Định Province";"Mỹ Lộc";20.4411;106.102
-VN;"Hà Nam Province";"Bình Mỹ";20.4912;106.01
-VN;"Ninh Bình Province";"Yên Thịnh";20.1625;106.007
-VN;Haiphong;"Cát Bà";20.7278;107.048
-VN;"Hà Nam Province";Quế;20.5806;105.873
-VN;"Thái Bình Province";"Hưng Hà";20.5904;106.224
-VN;"Thái Bình Province";"Diêm Điền";20.5583;106.569
-VN;"Nam Định Province";"Ngô Đồng";20.283;106.443
+VN;Hanoi;Quốc Oai;20.9902;105.641
+VN;Hanoi;Vân Đình;20.7351;105.772
+VN;Thái Bình Province;Thanh Nê;20.3881;106.438
+VN;Hanoi;Chúc Sơn;20.9237;105.702
+VN;Hải Dương Province;Kinh Môn;20.9896;106.555
+VN;Thanh Hóa Province;Quan Hóa;20.3848;105.1
+VN;Hải Dương Province;Ninh Giang;20.7308;106.398
+VN;Haiphong;Tiên Lãng;20.7246;106.554
+VN;Thanh Hóa Province;Hà Trung;20.0128;105.853
+VN;Ninh Bình Province;Ninh Bình;20.2581;105.98
+VN;Haiphong;Đố Sơn;20.7136;106.789
+VN;Thái Bình Province;Quỳnh Côi;20.6619;106.327
+VN;Hải Dương Province;Hải Dương;20.941;106.333
+VN;Hải Dương Province;Tứ Kỳ;20.8191;106.407
+VN;Nam Định Province;Gôi;20.3333;106.078
+VN;Quảng Ninh;Ha Long;20.9505;107.073
+VN;Haiphong;An Lão;20.8229;106.556
+VN;Ninh Bình Province;Tam Điệp;20.1563;105.917
+VN;Hưng Yên Province;Văn Giang;20.943;105.931
+VN;Thanh Hóa Province;Cẩm Thủy;20.2087;105.469
+VN;Hòa Bình Province;Hòa Bình;20.8172;105.338
+VN;Thái Bình Province;Tiền Hải;20.4056;106.504
+VN;Hà Nam Province;Thanh Lưu;20.474;105.953
+VN;Hà Nam Province;Vĩnh Trụ;20.5602;106.028
+VN;Hưng Yên Province;Như Quỳnh;20.9817;105.985
+VN;Ninh Bình Province;Me;20.347;105.836
+VN;Thanh Hóa Province;Quan Sơn;20.2591;104.945
+VN;Hải Dương Province;Thanh Miện;20.7871;106.246
+VN;Hòa Bình Province;Vụ Bản;20.4642;105.443
+VN;Nam Định Province;Nam Giang;20.3332;106.178
+VN;Hà Nam Province;Phủ Lý;20.5453;105.912
+VN;Thanh Hóa Province;Vĩnh Lộc;20.0544;105.616
+VN;Hưng Yên Province;Hưng Yên;20.6464;106.051
+VN;Hải Dương Province;Gia Lộc;20.8678;106.3
+VN;Nam Định Province;Xuân Trường;20.2923;106.333
+VN;Hanoi;Đại Nghĩa;20.6867;105.745
+VN;Ninh Bình Province;Thiên Tồn;20.299;105.952
+VN;Hòa Bình Province;Cao Phong;20.7045;105.321
+VN;Thanh Hóa Province;Ngọc Lặc;20.0919;105.368
+VN;Haiphong;Núi Đối;20.7508;106.669
+VN;Nam Định Province;Yên Định;20.2015;106.296
+VN;Hanoi;Thường Tín;20.8687;105.861
+VN;Hanoi;Phú Xuyên;20.7455;105.914
+VN;Sơn La Province;Mộc Châu;20.852;104.622
+VN;Hải Dương Province;Lai Cách;20.9325;106.248
+VN;Thái Bình Province;Đông Hưng;20.5565;106.355
+VN;Thái Bình Province;Thái Bình;20.45;106.34
+VN;Ninh Bình Province;Phát Diệm;20.0905;106.083
+VN;Thanh Hóa Province;Nga Sơn;20.0072;105.97
+VN;Haiphong;Núi Đèo;20.9157;106.674
+VN;Hòa Bình Province;Bo;20.6726;105.536
+VN;Thanh Hóa Province;Bỉm Sơn;20.0781;105.86
+VN;Hải Dương Province;Phú Thái;20.9628;106.509
+VN;Hưng Yên Province;Khoái Châu;20.8391;105.978
+VN;Thái Bình Province;Vũ Thư;20.4367;106.291
+VN;Hòa Bình Province;Hàng Trạm;20.3947;105.622
+VN;Hưng Yên Province;Ân Thi;20.8183;106.091
+VN;Hưng Yên Province;Trần Cao;20.7295;106.18
+VN;Ninh Bình Province;Yên Ninh;20.184;106.061
+VN;Nam Định Province;Mỹ Lộc;20.4411;106.102
+VN;Hà Nam Province;Bình Mỹ;20.4912;106.01
+VN;Ninh Bình Province;Yên Thịnh;20.1625;106.007
+VN;Haiphong;Cát Bà;20.7278;107.048
+VN;Hà Nam Province;Quế;20.5806;105.873
+VN;Thái Bình Province;Hưng Hà;20.5904;106.224
+VN;Thái Bình Province;Diêm Điền;20.5583;106.569
+VN;Nam Định Province;Ngô Đồng;20.283;106.443
 IN;Gujarat;Kaliawadi;20.9514;72.9458
-VN;"Thanh Hóa Province";"Lang Chánh";20.1561;105.242
-VN;"Hải Dương Province";"Nam Sách";20.9921;106.336
-VN;"Hưng Yên Province";"Bẩn Yên Nhân";20.9365;106.057
-VN;"Hưng Yên Province";"Yên Mỹ";20.8856;106.036
+VN;Thanh Hóa Province;Lang Chánh;20.1561;105.242
+VN;Hải Dương Province;Nam Sách;20.9921;106.336
+VN;Hưng Yên Province;Bẩn Yên Nhân;20.9365;106.057
+VN;Hưng Yên Province;Yên Mỹ;20.8856;106.036
 VN;Hanoi;Hanoi;20.3277;106.012
-VN;"Hòa Bình Province";"Chi Nê";20.4906;105.778
-VN;"Hưng Yên Province";"Lương Bằng";20.74;106.06
-VN;"Thanh Hóa Province";"Cành Nàng";20.348;105.229
-VN;"Quảng Ninh";"Quảng Yên";20.9421;106.803
-VN;"Hải Dương Province";"Thanh Hà";20.8982;106.426
+VN;Hòa Bình Province;Chi Nê;20.4906;105.778
+VN;Hưng Yên Province;Lương Bằng;20.74;106.06
+VN;Thanh Hóa Province;Cành Nàng;20.348;105.229
+VN;Quảng Ninh;Quảng Yên;20.9421;106.803
+VN;Hải Dương Province;Thanh Hà;20.8982;106.426
 VN;Haiphong;Haiphong;20.8449;106.688
-MX;Guanajuato;"San Cristóbal";20.5671;-100.256
+MX;Guanajuato;San Cristóbal;20.5671;-100.256
 IN;Odisha;Bhubaneswar;20.296;85.8246
 MX;Jalisco;Guadalajara;20.6597;-103.35
-VN;"Thái Bình Province";"Đông Hưng (An Vũ)";20.6164;106.396
+VN;Thái Bình Province;Đông Hưng (An Vũ);20.6164;106.396
 US;Hawaii;Kahului;20.8733;-156.463
-US;Hawaii;"Kīhei (Wailea)";20.6836;-156.441
+US;Hawaii;Kīhei (Wailea);20.6836;-156.441
 US;Hawaii;Lahaina;20.913;-156.692
 US;Hawaii;Lahaina;20.9418;-156.691
-US;Hawaii;"Lahaina (Vistana)";20.9392;-156.691
+US;Hawaii;Lahaina (Vistana);20.9392;-156.691
 US;Hawaii;Kīhei;20.7399;-156.454
 US;Hawaii;Lahaina;20.9323;-156.692
-IN;Odisha;"Bhubaneswar (NALCO Nagar)";20.3178;85.8164
-IN;Odisha;"Bhubaneswar (Patia)";20.3583;85.8287
-IN;"Dadra and Nagar Haveli and Daman and Diu";Silvassa;20.2739;72.9967
+IN;Odisha;Bhubaneswar (NALCO Nagar);20.3178;85.8164
+IN;Odisha;Bhubaneswar (Patia);20.3583;85.8287
+IN;Dadra and Nagar Haveli and Daman and Diu;Silvassa;20.2739;72.9967
 IN;Odisha;Jājpur;20.8485;86.3373
 IN;Odisha;Balāngīr;20.7042;83.4903
 IN;Odisha;Paradip;20.3164;86.6085
@@ -130,8 +130,8 @@ IN;Gujarat;Balitha;20.3893;72.9135
 IN;Gujarat;Parnera;20.561;72.9485
 IN;Gujarat;Nanakwada;20.6029;72.922
 IN;Gujarat;Delvāda;20.7754;71.0465
-VN;"Hải Dương Province";"Kẻ Sặt";20.9101;106.148
-VN;"Nam Định Province";"Liễu Đề";20.2209;106.187
+VN;Hải Dương Province;Kẻ Sặt;20.9101;106.148
+VN;Nam Định Province;Liễu Đề;20.2209;106.187
 IN;Maharashtra;Bhīmnagar;20.7243;78.5844
 IN;Maharashtra;Ghātanji;20.1418;78.3133
 IN;Maharashtra;Wardha;20.7393;78.5978
@@ -139,242 +139,242 @@ IN;Maharashtra;Amravati;20.9333;77.75
 IN;Maharashtra;Hinganghāt;20.5487;78.8398
 IN;Maharashtra;Wardha;20.7453;78.6022
 IN;Maharashtra;Sindi;20.8051;78.8875
-MX;Guanajuato;"Apaseo el Grande";20.5447;-100.684
-MX;Querétaro;"Santa Rosa Jáuregui";20.7415;-100.447
+MX;Guanajuato;Apaseo el Grande;20.5447;-100.684
+MX;Querétaro;Santa Rosa Jáuregui;20.7415;-100.447
 MX;Guanajuato;Irapuato;20.917;-101.162
-MX;Querétaro;"Querétaro City (Parque Industrial)";20.5644;-100.254
-MX;Querétaro;"Querétaro City (Carrillo)";20.6173;-100.422
-MX;Jalisco;"Zapopan (Jardines del Valle)";20.7411;-103.446
+MX;Querétaro;Querétaro City (Parque Industrial);20.5644;-100.254
+MX;Querétaro;Querétaro City (Carrillo);20.6173;-100.422
+MX;Jalisco;Zapopan (Jardines del Valle);20.7411;-103.446
 MX;Jalisco;Guadalajara;20.6752;-103.347
 MX;Jalisco;Zapopan2;20.7167;-103.4
 CN;Hainan;Haikou;20.0442;110.2
 CN;Hainan;Xiuying;20.0007;110.294
-VN;"Nam Định Province";"Liễu Đề";20.2172;106.188
+VN;Nam Định Province;Liễu Đề;20.2172;106.188
 CN;Hainan;Qiongshan;20.0086;110.354
-IN;"Dadra and Nagar Haveli and Daman and Diu";Dunetha;20.4294;72.851
-MM;"Mandalay Region";Meiktila;20.8778;95.8584
-MM;"Shan State";Taunggyi;20.7892;97.0378
-MM;"Mandalay Region";Yawnghwe;20.6608;96.9341
-SA;"Riyadh Region";"Wadi ad-Dawasir";20.4917;45.1567
+IN;Dadra and Nagar Haveli and Daman and Diu;Dunetha;20.4294;72.851
+MM;Mandalay Region;Meiktila;20.8778;95.8584
+MM;Shan State;Taunggyi;20.7892;97.0378
+MM;Mandalay Region;Yawnghwe;20.6608;96.9341
+SA;Riyadh Region;Wadi ad-Dawasir;20.4917;45.1567
 MX;Guanajuato;Cortazar;20.4836;-100.962
-MX;Jalisco;"Nuevo México";20.7565;-103.443
-MX;Jalisco;"La Purísima";20.7012;-103.032
-MX;Michoacán;"La Rinconoda";20.0436;-102.288
-MX;Jalisco;"Guadalajara (Jardines Plaza del Sol)";20.6592;-103.397
-MX;Jalisco;"Paseos del Valle [Fraccionamiento]";20.5222;-103.333
-MX;Jalisco;"Santa Rosa (Real Tulipanes) [Fraccionamiento]";20.5728;-103.376
+MX;Jalisco;Nuevo México;20.7565;-103.443
+MX;Jalisco;La Purísima;20.7012;-103.032
+MX;Michoacán;La Rinconoda;20.0436;-102.288
+MX;Jalisco;Guadalajara (Jardines Plaza del Sol);20.6592;-103.397
+MX;Jalisco;Paseos del Valle [Fraccionamiento];20.5222;-103.333
+MX;Jalisco;Santa Rosa (Real Tulipanes) [Fraccionamiento];20.5728;-103.376
 MX;Jalisco;Zapotlanejo;20.6227;-103.068
 MX;Jalisco;Oconahua;20.7422;-104.165
-MX;Jalisco;"La Paz";20.5406;-103.052
-MX;Jalisco;"Guadalajara (Lafayette)";20.6726;-103.369
-MX;Jalisco;"El Salto";20.5178;-103.183
-MX;Jalisco;"Atotonilco el Alto";20.5508;-102.508
-MX;Querétaro;"Querétaro City (San Pablo)";20.6192;-100.414
-MX;Jalisco;"Santa María del Valle";20.8786;-102.38
+MX;Jalisco;La Paz;20.5406;-103.052
+MX;Jalisco;Guadalajara (Lafayette);20.6726;-103.369
+MX;Jalisco;El Salto;20.5178;-103.183
+MX;Jalisco;Atotonilco el Alto;20.5508;-102.508
+MX;Querétaro;Querétaro City (San Pablo);20.6192;-100.414
+MX;Jalisco;Santa María del Valle;20.8786;-102.38
 MX;Jalisco;Arandas;20.7055;-102.345
-MX;Querétaro;"San Juan del Río";20.3951;-99.9856
-MX;Querétaro;"La Cañada";20.6114;-100.329
-MX;Querétaro;"La Providencia (Las Norbertas)";20.6581;-99.8864
-MX;Querétaro;"El Tejocote";20.6198;-100.034
+MX;Querétaro;San Juan del Río;20.3951;-99.9856
+MX;Querétaro;La Cañada;20.6114;-100.329
+MX;Querétaro;La Providencia (Las Norbertas);20.6581;-99.8864
+MX;Querétaro;El Tejocote;20.6198;-100.034
 MX;Jalisco;Degollado;20.467;-102.15
-MX;Jalisco;"Los Fresnos";20.4137;-102.077
-MX;Guanajuato;"La Laja";20.5295;-100.762
+MX;Jalisco;Los Fresnos;20.4137;-102.077
+MX;Guanajuato;La Laja;20.5295;-100.762
 MX;Guanajuato;Ameche;20.5526;-100.584
-MX;Guanajuato;"San Antonio Calichar";20.4967;-100.518
-MX;Hidalgo;"Llano Blanco";20.7151;-99.3528
+MX;Guanajuato;San Antonio Calichar;20.4967;-100.518
+MX;Hidalgo;Llano Blanco;20.7151;-99.3528
 MX;Veracruz;Chintipán;20.6599;-98.1851
 MX;Guanajuato;Comonfort;20.7228;-100.759
-MX;Guanajuato;"La Mocha";20.4058;-100.998
+MX;Guanajuato;La Mocha;20.4058;-100.998
 MX;Hidalgo;Acayuca;20.0257;-98.8411
-MX;Hidalgo;"La Cruz";20.2208;-99.1061
+MX;Hidalgo;La Cruz;20.2208;-99.1061
 MX;Guanajuato;Jerécuaro;20.1547;-100.509
-MX;Guanajuato;"Apaseo el Alto";20.458;-100.621
-MX;Hidalgo;"Munitepec de Madero";20.1286;-99.1995
-MX;Guanajuato;"Hacienda de Márquez";20.7804;-101.36
+MX;Guanajuato;Apaseo el Alto;20.458;-100.621
+MX;Hidalgo;Munitepec de Madero;20.1286;-99.1995
+MX;Guanajuato;Hacienda de Márquez;20.7804;-101.36
 MX;Querétaro;Bravo;20.3998;-100.424
 MX;Hidalgo;Presas;20.1595;-99.2524
-MX;Hidalgo;"San José Boxay";20.2624;-99.1009
-MX;Hidalgo;"Santa María Xigui";20.4611;-99.345
-MX;Hidalgo;"El Buena";20.6339;-99.145
-MX;Guanajuato;"La Carroza";20.5658;-101.593
-MX;Guanajuato;"San Jerónimo";20.9908;-101.875
-MX;Querétaro;"San Antonio la Galera";20.5242;-100.239
-MX;Guanajuato;"San Andrés Enguaro";20.1947;-101.236
-MM;"Mandalay Region";Yamethin;20.4319;96.1387
-TH;"Chiang Rai";"Ban Ho Mae Salong";20.1667;99.6333
-MX;Guanajuato;"Valle de Santiago";20.3914;-101.192
-MX;Guanajuato;"San Diego de las Trasquilas";20.9343;-100.394
-MX;Guanajuato;"La Norita";20.5541;-100.517
+MX;Hidalgo;San José Boxay;20.2624;-99.1009
+MX;Hidalgo;Santa María Xigui;20.4611;-99.345
+MX;Hidalgo;El Buena;20.6339;-99.145
+MX;Guanajuato;La Carroza;20.5658;-101.593
+MX;Guanajuato;San Jerónimo;20.9908;-101.875
+MX;Querétaro;San Antonio la Galera;20.5242;-100.239
+MX;Guanajuato;San Andrés Enguaro;20.1947;-101.236
+MM;Mandalay Region;Yamethin;20.4319;96.1387
+TH;Chiang Rai;Ban Ho Mae Salong;20.1667;99.6333
+MX;Guanajuato;Valle de Santiago;20.3914;-101.192
+MX;Guanajuato;San Diego de las Trasquilas;20.9343;-100.394
+MX;Guanajuato;La Norita;20.5541;-100.517
 MX;Querétaro;Galindo;20.3972;-100.098
 MX;Guanajuato;Taretán;20.7788;-101.335
-MX;Guanajuato;"Rancho Nuevo";20.5297;-100.743
+MX;Guanajuato;Rancho Nuevo;20.5297;-100.743
 MX;Hidalgo;Actopan;20.2696;-98.9438
-MX;Jalisco;"Campestre las Palomas [Fraccionamiento]";20.8178;-103.452
+MX;Jalisco;Campestre las Palomas [Fraccionamiento];20.8178;-103.452
 MX;Guanajuato;Obrajuelo;20.5937;-100.559
-MX;Querétaro;"Lomas de Menchaca";20.6372;-100.384
+MX;Querétaro;Lomas de Menchaca;20.6372;-100.384
 MX;Hidalgo;Tenzabhí;20.505;-99.6381
-MX;Hidalgo;"El Mezquital";20.3731;-99.0211
-MX;Guanajuato;"Piedra Larga";20.2615;-100.334
-MX;Guanajuato;"San Vicente de Garma (Garma)";20.4272;-101.211
-MX;Querétaro;"Tlacote el Bajo";20.6614;-100.508
-MX;Querétaro;"Lázaro Cárdenas (1ra. Sección del Rodeo)";20.3583;-99.9814
-MX;Querétaro;"El Carmen";20.5744;-100.288
+MX;Hidalgo;El Mezquital;20.3731;-99.0211
+MX;Guanajuato;Piedra Larga;20.2615;-100.334
+MX;Guanajuato;San Vicente de Garma (Garma);20.4272;-101.211
+MX;Querétaro;Tlacote el Bajo;20.6614;-100.508
+MX;Querétaro;Lázaro Cárdenas (1ra. Sección del Rodeo);20.3583;-99.9814
+MX;Querétaro;El Carmen;20.5744;-100.288
 MX;Querétaro;Jofre;20.8509;-100.42
-MX;"Quintana Roo";"Playa del Carmen";20.6274;-87.0799
-MX;"Quintana Roo";"Las Fincas";20.4981;-86.9161
-MX;Querétaro;"La Tortuga";20.567;-99.9232
-MX;Querétaro;"San Juan del Río";20.3889;-99.9958
+MX;Quintana Roo;Playa del Carmen;20.6274;-87.0799
+MX;Quintana Roo;Las Fincas;20.4981;-86.9161
+MX;Querétaro;La Tortuga;20.567;-99.9232
+MX;Querétaro;San Juan del Río;20.3889;-99.9958
 MX;Michoacán;Yurécuaro;20.3361;-102.284
-MX;Guanajuato;"Juventino Rosas";20.6434;-100.993
-MX;Querétaro;"Presa de Bravo";20.4283;-100.425
+MX;Guanajuato;Juventino Rosas;20.6434;-100.993
+MX;Querétaro;Presa de Bravo;20.4283;-100.425
 MX;Querétaro;Bernal;20.7403;-99.9413
 MX;Yucatán;Tixcacal;20.9436;-89.7139
-MX;Querétaro;"Puerto de Aguirre";20.8263;-100.433
+MX;Querétaro;Puerto de Aguirre;20.8263;-100.433
 MX;Jalisco;Zapopan;20.7211;-103.387
-MX;Jalisco;"Guadalajara (Vallarta Poniente)";20.6736;-103.39
-MX;Querétaro;"San Joaquín";20.9156;-99.5652
-MX;Jalisco;"San Andrés";20.3384;-102.747
-MX;Jalisco;"Santa Cruz de las Flores";20.4806;-103.503
-MX;Jalisco;"Altus Bosques";20.5681;-103.372
-MX;Jalisco;"Sendero Real";20.5281;-103.352
-MX;Jalisco;"Las Pintas de Arriba";20.5757;-103.324
-MX;Jalisco;"Galaxia Bonito Jalisco";20.505;-103.205
-MX;Jalisco;"Galaxia la Noria";20.4572;-103.419
-MX;Hidalgo;"Bosques del Mineral";20.0583;-98.775
+MX;Jalisco;Guadalajara (Vallarta Poniente);20.6736;-103.39
+MX;Querétaro;San Joaquín;20.9156;-99.5652
+MX;Jalisco;San Andrés;20.3384;-102.747
+MX;Jalisco;Santa Cruz de las Flores;20.4806;-103.503
+MX;Jalisco;Altus Bosques;20.5681;-103.372
+MX;Jalisco;Sendero Real;20.5281;-103.352
+MX;Jalisco;Las Pintas de Arriba;20.5757;-103.324
+MX;Jalisco;Galaxia Bonito Jalisco;20.505;-103.205
+MX;Jalisco;Galaxia la Noria;20.4572;-103.419
+MX;Hidalgo;Bosques del Mineral;20.0583;-98.775
 MX;Hidalgo;Pachuca;20.117;-98.7333
-MX;Hidalgo;"San Nicolás Tecomatlán";20.1794;-99.0364
+MX;Hidalgo;San Nicolás Tecomatlán;20.1794;-99.0364
 MX;Hidalgo;Teofani;20.3228;-99.043
 MX;Hidalgo;Tepatepec;20.2451;-99.0905
-MX;Veracruz;"Túxpam de Rodríguez Cano";20.9561;-97.4063
-MX;Veracruz;"El Guayabal";20.1714;-96.8744
+MX;Veracruz;Túxpam de Rodríguez Cano;20.9561;-97.4063
+MX;Veracruz;El Guayabal;20.1714;-96.8744
 MX;Yucatán;Kanasín;20.9441;-89.5639
-MX;Jalisco;"Guadalajara (Circunvalación Vallarta)";20.6801;-103.384
-MX;Guanajuato;"Fraccionamiento Praderas de la Venta";20.5361;-101
+MX;Jalisco;Guadalajara (Circunvalación Vallarta);20.6801;-103.384
+MX;Guanajuato;Fraccionamiento Praderas de la Venta;20.5361;-101
 MX;Hidalgo;Pozuelos;20.4927;-99.0597
-MX;Hidalgo;"San Marcos";20.0306;-99.3355
-MX;Guanajuato;"Monte Grande";20.9981;-101.863
+MX;Hidalgo;San Marcos;20.0306;-99.3355
+MX;Guanajuato;Monte Grande;20.9981;-101.863
 MX;Hidalgo;Zimapan;20.7381;-99.3818
-MX;Hidalgo;"Colonia San Juan";20.1903;-99.2828
-MX;Hidalgo;"El Barrido";20.4503;-99.1908
-MX;Guanajuato;"Los Miranda (El Xoconoxtle de Abajo)";20.6389;-101.138
+MX;Hidalgo;Colonia San Juan;20.1903;-99.2828
+MX;Hidalgo;El Barrido;20.4503;-99.1908
+MX;Guanajuato;Los Miranda (El Xoconoxtle de Abajo);20.6389;-101.138
 MX;Hidalgo;Cardonal;20.614;-99.1172
-MX;Guanajuato;"Fraccionamiento los Mezquites";20.5319;-100.886
-MX;Michoacán;"Epitacio Huerta";20.1349;-100.293
-MX;Guanajuato;"San Miguel";20.0398;-100.647
-MX;Guanajuato;"La Luisiada";20.4263;-100.597
-MX;Hidalgo;"Francisco I. Madero";20.7319;-99.3195
-MX;"Quintana Roo";Akumal;20.3969;-87.3144
-MX;"Quintana Roo";"Puerto Aventuras";20.5007;-87.2265
-MX;"Quintana Roo";"Puerto Aventuras";20.5111;-87.2256
+MX;Guanajuato;Fraccionamiento los Mezquites;20.5319;-100.886
+MX;Michoacán;Epitacio Huerta;20.1349;-100.293
+MX;Guanajuato;San Miguel;20.0398;-100.647
+MX;Guanajuato;La Luisiada;20.4263;-100.597
+MX;Hidalgo;Francisco I. Madero;20.7319;-99.3195
+MX;Quintana Roo;Akumal;20.3969;-87.3144
+MX;Quintana Roo;Puerto Aventuras;20.5007;-87.2265
+MX;Quintana Roo;Puerto Aventuras;20.5111;-87.2256
 MX;Hidalgo;Acaxochitlán;20.1545;-98.2022
-MX;Querétaro;"Noria Nueva";20.5556;-100.126
+MX;Querétaro;Noria Nueva;20.5556;-100.126
 MX;Yucatán;Mérida;20.9674;-89.5926
 MX;Yucatán;Valladolid;20.6881;-88.1994
-MX;Hidalgo;"La Providencia";20.0611;-98.7182
+MX;Hidalgo;La Providencia;20.0611;-98.7182
 MX;Guanajuato;Huanímaro;20.367;-101.497
 MX;Campeche;Tenabo;20.0398;-90.2257
 US;Hawaii;Lahaina;20.9427;-156.689
 US;Hawaii;Lahaina;20.9216;-156.695
 MR;Dakhlet-Nouadhibou;Nouadhibou;20.9419;-17.0384
-VN;"Ninh Bình Province";"Yên Phúc";20.9689;105.786
+VN;Ninh Bình Province;Yên Phúc;20.9689;105.786
 IN;Gujarat;Vijalpor;20.9221;72.9094
 IN;Gujarat;Bilimora;20.7696;72.9613
-IN;"Dadra and Nagar Haveli and Daman and Diu";Naroli;20.2735;72.9417
+IN;Dadra and Nagar Haveli and Daman and Diu;Naroli;20.2735;72.9417
 IN;Maharashtra;Walwadi;20.9209;74.7611
 IN;Gujarat;Una;20.8232;71.0379
-IN;Gujarat;"Valsād (Government Colony)";20.6093;72.9234
-IN;Gujarat;"Valsād (Government Colony)";20.6093;72.9233
+IN;Gujarat;Valsād (Government Colony);20.6093;72.9234
+IN;Gujarat;Valsād (Government Colony);20.6093;72.9233
 CN;Hainan;Qiongshan;20.02;110.349
-IN;Gujarat;"Valsād (Kapadia Chal)";20.61;72.9289
-IN;Gujarat;"Bilimora (Navjivan Colony)";20.77;72.9808
+IN;Gujarat;Valsād (Kapadia Chal);20.61;72.9289
+IN;Gujarat;Bilimora (Navjivan Colony);20.77;72.9808
 IN;Maharashtra;Yeola;20.0432;74.484
-IN;Gujarat;"Valsād (Kapadia Chal)";20.6101;72.9288
-IN;Gujarat;"Vapi INA";20.3601;72.9311
+IN;Gujarat;Valsād (Kapadia Chal);20.6101;72.9288
+IN;Gujarat;Vapi INA;20.3601;72.9311
 IN;Gujarat;Vapi;20.3717;72.9049
 MX;Querétaro;Escolasticas;20.4281;-100.212
-MX;Querétaro;"San Francisco";20.3534;-99.9585
-MX;Querétaro;"Santa Cruz Escandón";20.416;-99.9556
-MX;Hidalgo;"Río Seco Puente de Doria";20.2109;-98.5008
-MX;Hidalgo;"San Miguel Regla";20.2195;-98.5608
-MX;Hidalgo;"Huasca de Ocampo";20.2035;-98.5757
+MX;Querétaro;San Francisco;20.3534;-99.9585
+MX;Querétaro;Santa Cruz Escandón;20.416;-99.9556
+MX;Hidalgo;Río Seco Puente de Doria;20.2109;-98.5008
+MX;Hidalgo;San Miguel Regla;20.2195;-98.5608
+MX;Hidalgo;Huasca de Ocampo;20.2035;-98.5757
 MM;Magway;Yenangyaung;20.465;94.8712
-IN;Odisha;"Cuttack (Durga Bazar)";20.4713;85.8755
-IN;Maharashtra;"Chikhli (Jijau Nagar)";20.348;76.2538
+IN;Odisha;Cuttack (Durga Bazar);20.4713;85.8755
+IN;Maharashtra;Chikhli (Jijau Nagar);20.348;76.2538
 IN;Maharashtra;Chikhli;20.3505;76.2577
 IN;Maharashtra;Wāshīm;20.1113;77.133
 IN;Gujarat;Dehari;20.1533;72.7414
 VN;Haiphong;Haiphong;20.8379;106.7
 IN;Maharashtra;Wāshīm;20.1112;77.1303
-VN;"Bắc Ninh Province";"Phúc Lai (Phúc La)";20.9652;105.79
+VN;Bắc Ninh Province;Phúc Lai (Phúc La);20.9652;105.79
 IN;Gujarat;Orvad;20.4527;72.9202
-MX;Guanajuato;"Caleras de Obrajuelo";20.5687;-100.557
-MX;Jalisco;"Zapopan (Granja)";20.6934;-103.454
-MX;Querétaro;"La Pradera";20.6589;-100.342
+MX;Guanajuato;Caleras de Obrajuelo;20.5687;-100.557
+MX;Jalisco;Zapopan (Granja);20.6934;-103.454
+MX;Querétaro;La Pradera;20.6589;-100.342
 MX;Yucatán;Ticul;20.3983;-89.5354
-MX;Querétaro;"Cerro Prieto";20.6495;-100.29
-MX;Jalisco;"Guadalajara (Vallarta)";20.6729;-103.387
-MX;Jalisco;"Puerto Vallarta";20.617;-105.23
+MX;Querétaro;Cerro Prieto;20.6495;-100.29
+MX;Jalisco;Guadalajara (Vallarta);20.6729;-103.387
+MX;Jalisco;Puerto Vallarta;20.617;-105.23
 MX;Jalisco;Ayutla;20.1291;-104.347
 MX;Nayarit;Tondoroque;20.7453;-105.294
 MX;Yucatán;Mérida;20.967;-89.6232
-MX;Querétaro;"Querétaro City (Centro)";20.5847;-100.4
-MX;Querétaro;"Santa Bárbara";20.7475;-99.8001
-MX;Querétaro;"La Estancia";20.4212;-100.066
-MX;Querétaro;"Paso de Mata";20.3423;-99.9271
-MX;Guanajuato;"La Labor";20.5339;-100.702
+MX;Querétaro;Querétaro City (Centro);20.5847;-100.4
+MX;Querétaro;Santa Bárbara;20.7475;-99.8001
+MX;Querétaro;La Estancia;20.4212;-100.066
+MX;Querétaro;Paso de Mata;20.3423;-99.9271
+MX;Guanajuato;La Labor;20.5339;-100.702
 MX;Guanajuato;Tarandacuao;20.0009;-100.519
 MX;Michoacán;Puruándiro;20.0889;-101.516
 MX;Puebla;Tacuapan;20.0831;-97.477
-MX;Hidalgo;"Estación de Apulco";20.2861;-98.3475
-MX;Hidalgo;"San Bartolo";20.2522;-98.4639
-MX;Hidalgo;"San Mateo";20.1827;-98.2466
+MX;Hidalgo;Estación de Apulco;20.2861;-98.3475
+MX;Hidalgo;San Bartolo;20.2522;-98.4639
+MX;Hidalgo;San Mateo;20.1827;-98.2466
 MX;Hidalgo;Huehuetla;20.4605;-98.0763
-MX;Guanajuato;"El Mezquitillo";20.9621;-101.809
-MX;Hidalgo;"Progreso de Alvaro Obregon";20.2493;-99.1899
+MX;Guanajuato;El Mezquitillo;20.9621;-101.809
+MX;Hidalgo;Progreso de Alvaro Obregon;20.2493;-99.1899
 MX;Hidalgo;Tepatepec;20.2457;-99.0898
-MX;Hidalgo;"Déxtho de Victoria";20.3253;-99.0239
-MX;Michoacán;"El Capulín";20.2279;-102.49
-MX;Querétaro;"El Rodeo";20.3506;-99.9772
-MX;Querétaro;"Pedro Escobedo";20.4996;-100.143
-MX;Veracruz;"El Naranjal";20.7296;-98.165
-MX;"Quintana Roo";"San Miguel de Cozumel (Centro)";20.5052;-86.9573
-MX;Veracruz;"Filomeno Mata";20.2;-97.7039
+MX;Hidalgo;Déxtho de Victoria;20.3253;-99.0239
+MX;Michoacán;El Capulín;20.2279;-102.49
+MX;Querétaro;El Rodeo;20.3506;-99.9772
+MX;Querétaro;Pedro Escobedo;20.4996;-100.143
+MX;Veracruz;El Naranjal;20.7296;-98.165
+MX;Quintana Roo;San Miguel de Cozumel (Centro);20.5052;-86.9573
+MX;Veracruz;Filomeno Mata;20.2;-97.7039
 MX;Jalisco;Jamay;20.2948;-102.709
-MX;Jalisco;"Los Pocitos";20.5377;-103.938
-MX;"Quintana Roo";"Nuevo Xcán";20.8692;-87.6031
-MX;Querétaro;"Fraccionamiento del Parque Residencial";20.5842;-100.337
+MX;Jalisco;Los Pocitos;20.5377;-103.938
+MX;Quintana Roo;Nuevo Xcán;20.8692;-87.6031
+MX;Querétaro;Fraccionamiento del Parque Residencial;20.5842;-100.337
 MX;Jalisco;Guadalajara;20.6774;-103.347
 MX;Guanajuato;Irapuato;20.6787;-101.354
-MX;Jalisco;"Los Ruiseñores";20.7108;-103.691
+MX;Jalisco;Los Ruiseñores;20.7108;-103.691
 MX;Jalisco;Etzatlán;20.7665;-104.079
-MX;Jalisco;"Guadalajara (Providencia)";20.7023;-103.376
-MX;Jalisco;"Puente Grande";20.5683;-103.156
+MX;Jalisco;Guadalajara (Providencia);20.7023;-103.376
+MX;Jalisco;Puente Grande;20.5683;-103.156
 MX;Jalisco;Coyula;20.6614;-103.228
-MX;Jalisco;"Zapopan (Ciudad del Sol)";20.6521;-103.404
-MX;Jalisco;"Pueblos de la Barranca (El Maestranzo)";20.5853;-103.137
+MX;Jalisco;Zapopan (Ciudad del Sol);20.6521;-103.404
+MX;Jalisco;Pueblos de la Barranca (El Maestranzo);20.5853;-103.137
 MX;Jalisco;Tlaquepaque;20.6412;-103.293
-MX;Querétaro;"El Salitre";20.666;-100.423
-MX;Jalisco;"Rancho Contento";20.7125;-103.478
-MX;Jalisco;"Zapopan (Puerta de Hierro)";20.7074;-103.415
-MX;Jalisco;"La Alameda";20.4953;-103.248
-MX;"Quintana Roo";Tulum;20.2117;-87.4632
-MX;Jalisco;"Guadalajara (Colinas de San Javier)";20.7059;-103.403
-MX;Jalisco;"La Tijera";20.5817;-103.441
-MX;"Quintana Roo";"Playa del Carmen (Ejidal)";20.6416;-87.086
-MX;Jalisco;"Tepatitlán de Morelos";20.8169;-102.763
-MX;Jalisco;"Capilla de Guadalupe";20.8272;-102.591
+MX;Querétaro;El Salitre;20.666;-100.423
+MX;Jalisco;Rancho Contento;20.7125;-103.478
+MX;Jalisco;Zapopan (Puerta de Hierro);20.7074;-103.415
+MX;Jalisco;La Alameda;20.4953;-103.248
+MX;Quintana Roo;Tulum;20.2117;-87.4632
+MX;Jalisco;Guadalajara (Colinas de San Javier);20.7059;-103.403
+MX;Jalisco;La Tijera;20.5817;-103.441
+MX;Quintana Roo;Playa del Carmen (Ejidal);20.6416;-87.086
+MX;Jalisco;Tepatitlán de Morelos;20.8169;-102.763
+MX;Jalisco;Capilla de Guadalupe;20.8272;-102.591
 IN;Gujarat;Chikhli;20.761;73.0631
-IN;Gujarat;"Valsad INA";20.6228;72.9709
-IN;Odisha;"Bhubaneswar (Lingipur)";20.2218;85.8451
-SA;"Mecca Region";"Al Līth";20.148;40.2722
-CN;Hainan;"Haikou (Longhua Qu)";20.0282;110.318
+IN;Gujarat;Valsad INA;20.6228;72.9709
+IN;Odisha;Bhubaneswar (Lingipur);20.2218;85.8451
+SA;Mecca Region;Al Līth;20.148;40.2722
+CN;Hainan;Haikou (Longhua Qu);20.0282;110.318
 IN;Odisha;Angul;20.9517;85.0985
 IN;Odisha;Baud;20.8418;84.32
 IN;Maharashtra;Yavatmal;20.3932;78.132
-IN;Maharashtra;"Khadki Buzurg";20.6676;77.0223
+IN;Maharashtra;Khadki Buzurg;20.6676;77.0223
 IN;Gujarat;Vānsada;20.7582;73.3639
 IN;Gujarat;Bhilad;20.2768;72.8856
-IN;"Dadra and Nagar Haveli and Daman and Diu";"Khali Kachigam";20.3833;72.8667
+IN;Dadra and Nagar Haveli and Daman and Diu;Khali Kachigam;20.3833;72.8667
 IN;Chhattisgarh;Nagri;20.3465;81.96
 IN;Odisha;Cuttack;20.465;85.8793
 IN;Odisha;Nayāgarh;20.1288;85.0963
@@ -386,11 +386,11 @@ IN;Odisha;Tarabha;20.7325;83.6744
 IN;Odisha;Tālcher;20.9493;85.2335
 IN;Odisha;Pipili;20.1136;85.8315
 IN;Odisha;Bhuban;20.882;85.8333
-IN;Gujarat;"Pardi Parnera";20.5709;72.9506
-MX;Querétaro;"Querétaro City (Arboledas)";20.6134;-100.385
-MX;Jalisco;"Guadalajara (Ladron De Guevara)";20.677;-103.38
+IN;Gujarat;Pardi Parnera;20.5709;72.9506
+MX;Querétaro;Querétaro City (Arboledas);20.6134;-100.385
+MX;Jalisco;Guadalajara (Ladron De Guevara);20.677;-103.38
 IN;Odisha;Bhubaneswar;20.2961;85.8245
-IN;Gujarat;"Pardi Sondhpur";20.6199;72.94
+IN;Gujarat;Pardi Sondhpur;20.6199;72.94
 IN;Gujarat;Abrama;20.8587;72.9065
 IN;Maharashtra;Bhadravati;20.1001;79.1144
 IN;Maharashtra;Mūl;20.0699;79.6783
@@ -402,16 +402,16 @@ IN;Maharashtra;Sakri;20.991;74.3148
 IN;Maharashtra;Dhule;20.9013;74.7774
 IN;Maharashtra;Chalisgaon;20.4578;75.016
 IN;Chhattisgarh;Kurud;20.8307;81.7221
-CN;Hainan;"Haikou (Longhua Qu)";20.0289;110.325
+CN;Hainan;Haikou (Longhua Qu);20.0289;110.325
 IN;Maharashtra;Dyāne;20.5674;74.5285
-TH;"Chiang Rai";"Chiang Khong";20.2612;100.405
-CN;Guangdong;"Zhanjiang (Xuwen Xian)";20.3276;110.18
-CN;Hainan;"Haikou (Meilan Qu)";20.0475;110.342
-CN;Hainan;"Haikou (Meilan Qu)";20.0174;110.349
+TH;Chiang Rai;Chiang Khong;20.2612;100.405
+CN;Guangdong;Zhanjiang (Xuwen Xian);20.3276;110.18
+CN;Hainan;Haikou (Meilan Qu);20.0475;110.342
+CN;Hainan;Haikou (Meilan Qu);20.0174;110.349
 US;Hawaii;Lahaina;20.9241;-156.694
 US;Hawaii;Lahaina;20.9318;-156.692
 US;Hawaii;Lahaina;20.8798;-156.678
-US;Hawaii;"Kīhei (Wailea)";20.6755;-156.442
+US;Hawaii;Kīhei (Wailea);20.6755;-156.442
 US;Hawaii;Waimea;20.0223;-155.67
 US;Hawaii;Kahului;20.8886;-156.449
 US;Hawaii;Lanai;20.8278;-156.916
@@ -424,13 +424,13 @@ US;Hawaii;Wailuku;20.8913;-156.506
 US;Hawaii;Wailea;20.6897;-156.442
 US;Hawaii;Hana;20.7557;-155.988
 US;Hawaii;Kahului;20.8931;-156.46
-US;Hawaii;"Kīhei (Wailea)";20.6802;-156.442
+US;Hawaii;Kīhei (Wailea);20.6802;-156.442
 US;Hawaii;Kahului;20.8884;-156.45
 US;Hawaii;Lahaina;20.8824;-156.682
 US;Hawaii;Kahului;20.8882;-156.459
 MX;Jalisco;Zapopan;20.6712;-103.438
-MX;Querétaro;"Santa Rosa Jauregui";20.5917;-100.398
-MX;Querétaro;"Querétaro City (Centro)";20.592;-100.392
+MX;Querétaro;Santa Rosa Jauregui;20.5917;-100.398
+MX;Querétaro;Querétaro City (Centro);20.592;-100.392
 MX;Querétaro;Venceremos;20.5508;-100.398
 MM;Magway;Magway;20.1496;94.9325
 US;Hawaii;Kahului;20.8669;-156.496
@@ -438,261 +438,261 @@ US;Hawaii;Huelo;20.9048;-156.225
 US;Hawaii;Kahului;20.8895;-156.474
 US;Hawaii;Kīhei;20.7646;-156.446
 US;Hawaii;Waihee-Waiehu;20.9302;-156.505
-US;Hawaii;"Kaanapali Landing";20.9309;-156.688
-US;Hawaii;"Wailea-Makena (Wailea)";20.6869;-156.44
+US;Hawaii;Kaanapali Landing;20.9309;-156.688
+US;Hawaii;Wailea-Makena (Wailea);20.6869;-156.44
 US;Hawaii;Kā‘anapali;20.9288;-156.694
 US;Hawaii;Kapaau;20.2277;-155.792
-MX;Guanajuato;"Apaseo el Alto";20.4603;-100.622
+MX;Guanajuato;Apaseo el Alto;20.4603;-100.622
 MX;Querétaro;Cadereyta;20.697;-99.8162
 MX;Jalisco;Degollado;20.4489;-102.132
-MX;Michoacán;"El Fortín";20.18;-102.601
+MX;Michoacán;El Fortín;20.18;-102.601
 MX;Jalisco;Milpillas;20.5014;-102.534
-MX;Querétaro;"La Cañada";20.5978;-100.33
+MX;Querétaro;La Cañada;20.5978;-100.33
 IN;Maharashtra;Nashik;20.0077;73.6623
 IN;Maharashtra;Nagpur;20.5937;78.9629
 US;Hawaii;Kahului;20.885;-156.475
 US;Hawaii;Lahaina;20.9486;-156.69
 US;Hawaii;Lahaina;20.8769;-156.68
 US;Hawaii;Waikapu;20.8581;-156.507
-LA;Oudômxai;"Muang Xay";20.6923;101.984
-VN;Hanoi;"Thanh Xuân";20.9987;105.82
-IN;"Dadra and Nagar Haveli and Daman and Diu";"Silvassa (Samarvarni)";20.2686;73.0064
-MM;"Shan State";Tachilek;20.4521;99.8989
-VN;Hanoi;"Hà Đông";20.9571;105.77
-VN;Hanoi;"Hà Đông";20.9824;105.777
-VN;Hanoi;"Hai BàTrưng";20.9949;105.862
-VN;Hanoi;"Văn Điển";20.9665;105.866
-VN;Hanoi;"Hà Đông (Duong Noi)";20.9799;105.744
-VN;Hanoi;"Hà Đông";20.9558;105.756
-VN;Hanoi;"Thanh Xuân";20.9981;105.809
-VN;Hanoi;"Thanh Xuân";20.9875;105.812
-VN;Hanoi;"Ô Chợ Dừa";20.9992;105.825
+LA;Oudômxai;Muang Xay;20.6923;101.984
+VN;Hanoi;Thanh Xuân;20.9987;105.82
+IN;Dadra and Nagar Haveli and Daman and Diu;Silvassa (Samarvarni);20.2686;73.0064
+MM;Shan State;Tachilek;20.4521;99.8989
+VN;Hanoi;Hà Đông;20.9571;105.77
+VN;Hanoi;Hà Đông;20.9824;105.777
+VN;Hanoi;Hai BàTrưng;20.9949;105.862
+VN;Hanoi;Văn Điển;20.9665;105.866
+VN;Hanoi;Hà Đông (Duong Noi);20.9799;105.744
+VN;Hanoi;Hà Đông;20.9558;105.756
+VN;Hanoi;Thanh Xuân;20.9981;105.809
+VN;Hanoi;Thanh Xuân;20.9875;105.812
+VN;Hanoi;Ô Chợ Dừa;20.9992;105.825
 IN;Gujarat;Chikhli;20.7575;73.0627
 VN;Haiphong;Haiphong;20.8519;106.722
-VN;Haiphong;"Haiphong (Đằng Lâm)";20.8272;106.721
+VN;Haiphong;Haiphong (Đằng Lâm);20.8272;106.721
 VN;Haiphong;Haiphong;20.8253;106.683
-VN;Hanoi;"Minh Khai";20.9948;105.862
+VN;Hanoi;Minh Khai;20.9948;105.862
 IN;Odisha;Padampur;20.9993;83.0632
-MM;"Shan State";Tachilek;20.4475;99.8808
-MM;"Shan State";Tachilek;20.6625;99.9465
-VN;Hanoi;"Thanh Xuân";20.9999;105.796
-VN;Hanoi;"Cầu Diễn (An Khánh)";20.9895;105.719
-IN;Odisha;"Bhubaneswar (ESIC Quarters)";20.2895;85.8096
-IN;Odisha;"Bhubaneswar (District Center)";20.3251;85.8197
+MM;Shan State;Tachilek;20.4475;99.8808
+MM;Shan State;Tachilek;20.6625;99.9465
+VN;Hanoi;Thanh Xuân;20.9999;105.796
+VN;Hanoi;Cầu Diễn (An Khánh);20.9895;105.719
+IN;Odisha;Bhubaneswar (ESIC Quarters);20.2895;85.8096
+IN;Odisha;Bhubaneswar (District Center);20.3251;85.8197
 IN;Gujarat;Chanod;20.3467;72.9283
-IN;Gujarat;"Vapi (Balitha)";20.3929;72.9267
-IN;Odisha;"Angul (Kandsar)";20.8437;85.1317
-VN;Hanoi;"Hai BàTrưng";20.9803;105.851
-IN;Gujarat;"Umbergaon INA";20.1657;72.7777
-VN;Hanoi;"Hai BàTrưng";20.9958;105.843
-VN;Hanoi;"Thanh Xuân";20.9791;105.816
-IN;Maharashtra;"Akola (Nimwadi)";20.7083;76.9968
+IN;Gujarat;Vapi (Balitha);20.3929;72.9267
+IN;Odisha;Angul (Kandsar);20.8437;85.1317
+VN;Hanoi;Hai BàTrưng;20.9803;105.851
+IN;Gujarat;Umbergaon INA;20.1657;72.7777
+VN;Hanoi;Hai BàTrưng;20.9958;105.843
+VN;Hanoi;Thanh Xuân;20.9791;105.816
+IN;Maharashtra;Akola (Nimwadi);20.7083;76.9968
 IN;Maharashtra;Akola;20.7096;76.9981
 VN;Haiphong;Haiphong;20.8378;106.7
 IN;Maharashtra;Sangmeshwār;20.5499;74.5283
-IN;"Dadra and Nagar Haveli and Daman and Diu";Āmli;20.2833;73.0167
-VN;"Hải Dương Province";"Hải Dương";20.9373;106.315
+IN;Dadra and Nagar Haveli and Daman and Diu;Āmli;20.2833;73.0167
+VN;Hải Dương Province;Hải Dương;20.9373;106.315
 IN;Maharashtra;Pāloti;20.7139;78.5741
 MM;Rakhine;Sittwe;20.1528;92.8677
-VN;Hanoi;"Hà Đông";20.9577;105.783
-VN;Hanoi;"Thanh Xuân";20.9995;105.807
-IN;Maharashtra;"Chikhli (Gandhi Nagar)";20.3476;76.2581
-VN;Hanoi;"Thanh Xuân";20.9919;105.819
+VN;Hanoi;Hà Đông;20.9577;105.783
+VN;Hanoi;Thanh Xuân;20.9995;105.807
+IN;Maharashtra;Chikhli (Gandhi Nagar);20.3476;76.2581
+VN;Hanoi;Thanh Xuân;20.9919;105.819
 IN;Odisha;Kantābānji;20.5835;82.9838
-IN;Odisha;"Bhubaneswar (Unit-2)";20.2649;85.8346
+IN;Odisha;Bhubaneswar (Unit-2);20.2649;85.8346
 IN;Odisha;Kantilo;20.3615;85.1921
-IN;"Dadra and Nagar Haveli and Daman and Diu";"Silvassa (Bavisa Faliya)";20.2762;73.0025
-VN;Hanoi;"Thanh Xuân";20.9888;105.792
-VN;Hanoi;"Văn Quán";20.9796;105.792
+IN;Dadra and Nagar Haveli and Daman and Diu;Silvassa (Bavisa Faliya);20.2762;73.0025
+VN;Hanoi;Thanh Xuân;20.9888;105.792
+VN;Hanoi;Văn Quán;20.9796;105.792
 IN;Maharashtra;Walwadi;20.9212;74.7536
-IN;Maharashtra;"Nashik (Kausalya Nagar)";20.0106;73.7816
-VN;Hanoi;"Hai BàTrưng";20.995;105.862
+IN;Maharashtra;Nashik (Kausalya Nagar);20.0106;73.7816
+VN;Hanoi;Hai BàTrưng;20.995;105.862
 IN;Maharashtra;Lāsalgaon;20.1427;74.2395
 MM;Magway;Chauk;20.8992;94.8178
-IN;Odisha;"Bhubaneswar (Laxmi Nagar)";20.3146;85.8421
+IN;Odisha;Bhubaneswar (Laxmi Nagar);20.3146;85.8421
 IN;Maharashtra;Ozar;20.0947;73.9282
-IN;Gujarat;"Valsād (Kapadia Chal)";20.6045;72.9265
-IN;Odisha;"Bhubaneswar (District Center)";20.3225;85.8195
-IN;Gujarat;"Valsād (Government Colony)";20.6092;72.9234
-IN;Odisha;"Bhubaneswar (Arya Vihar Colony)";20.3315;85.8145
-IN;Maharashtra;"Amravati (Parvati Nagar)";20.9106;77.7341
+IN;Gujarat;Valsād (Kapadia Chal);20.6045;72.9265
+IN;Odisha;Bhubaneswar (District Center);20.3225;85.8195
+IN;Gujarat;Valsād (Government Colony);20.6092;72.9234
+IN;Odisha;Bhubaneswar (Arya Vihar Colony);20.3315;85.8145
+IN;Maharashtra;Amravati (Parvati Nagar);20.9106;77.7341
 IN;Maharashtra;Satānā;20.5948;74.203
 IN;Gujarat;Vapi;20.3788;72.9156
-IN;"Dadra and Nagar Haveli and Daman and Diu";Daman;20.4143;72.8324
+IN;Dadra and Nagar Haveli and Daman and Diu;Daman;20.4143;72.8324
 IN;Maharashtra;Wani;20.0608;78.9571
 IN;Maharashtra;Pawni;20.7923;79.6364
-VN;"Nam Định Province";"Nam Định";20.4463;106.183
-IN;Gujarat;"Vapi (GIDC Housing Board Colony)";20.3748;72.923
-IN;Gujarat;"Navsari (Asha Nagar)";20.9501;72.9212
-VN;Hanoi;"Trung Văn";20.9892;105.784
-IN;Maharashtra;"Nashik (Canada Corner)";20.0049;73.7712
-VN;Hanoi;"Thanh Xuân";20.9996;105.809
+VN;Nam Định Province;Nam Định;20.4463;106.183
+IN;Gujarat;Vapi (GIDC Housing Board Colony);20.3748;72.923
+IN;Gujarat;Navsari (Asha Nagar);20.9501;72.9212
+VN;Hanoi;Trung Văn;20.9892;105.784
+IN;Maharashtra;Nashik (Canada Corner);20.0049;73.7712
+VN;Hanoi;Thanh Xuân;20.9996;105.809
 IN;Maharashtra;Buldāna;20.5293;76.1846
 IN;Maharashtra;Umarsera;20.3714;78.1234
-IN;Gujarat;"Vapi (Housing Sector)";20.3748;72.9191
-VN;Hanoi;"Thanh Xuân";20.9935;105.802
+IN;Gujarat;Vapi (Housing Sector);20.3748;72.9191
+VN;Hanoi;Thanh Xuân;20.9935;105.802
 IN;Maharashtra;Shegaon;20.793;76.691
-IN;Maharashtra;"Dhule (Deopur)";20.9157;74.7682
-IN;Odisha;"Bhubaneswar (Soubhagya Nagar)";20.2682;85.8083
+IN;Maharashtra;Dhule (Deopur);20.9157;74.7682
+IN;Odisha;Bhubaneswar (Soubhagya Nagar);20.2682;85.8083
 IN;Maharashtra;Nashik;20.046;73.8058
-IN;Gujarat;"Vapi (Imran Nagar)";20.363;72.9172
-IN;Maharashtra;"Wardha (Sudampuri)";20.7452;78.5979
-MX;Guanajuato;"Cortazar (Centro)";20.4802;-100.963
+IN;Gujarat;Vapi (Imran Nagar);20.363;72.9172
+IN;Maharashtra;Wardha (Sudampuri);20.7452;78.5979
+MX;Guanajuato;Cortazar (Centro);20.4802;-100.963
 IN;Gujarat;Amalsad;20.8231;72.9516
-VN;Hanoi;"Hà Đông";20.9947;105.759
+VN;Hanoi;Hà Đông;20.9947;105.759
 VN;Haiphong;Haiphong;20.8522;106.685
-IN;Maharashtra;"Akola (Ashary Nagar)";20.7112;76.9756
-VN;"Quảng Ninh";"Ha Long";20.9531;107.105
-VN;Hanoi;"Thanh Xuân";20.9945;105.817
-IN;Maharashtra;"Jalgaon (Shivram Nagar)";20.9987;75.5537
-VN;Hanoi;"Thanh Xuân";20.9936;105.786
-VN;Hanoi;"Thanh Xuân";20.9995;105.803
-VN;Hanoi;"Tây Mỗ";20.9999;105.742
-IN;Gujarat;"Vapi (Anukul Society)";20.3739;72.9135
-VN;Hanoi;"Hai BàTrưng (Trương Định)";20.9966;105.847
-VN;Hanoi;"Hai BàTrưng";20.993;105.87
-VN;"Hải Dương Province";"Hải Dương";20.9329;106.319
-VN;Hanoi;"Ô Chợ Dừa";20.9994;105.822
-VN;"Hưng Yên Province";"Văn Giang (Lĩnh Nam)";20.977;105.897
-VN;Hanoi;"Hà Đông (Mộ Lao)";20.9834;105.784
+IN;Maharashtra;Akola (Ashary Nagar);20.7112;76.9756
+VN;Quảng Ninh;Ha Long;20.9531;107.105
+VN;Hanoi;Thanh Xuân;20.9945;105.817
+IN;Maharashtra;Jalgaon (Shivram Nagar);20.9987;75.5537
+VN;Hanoi;Thanh Xuân;20.9936;105.786
+VN;Hanoi;Thanh Xuân;20.9995;105.803
+VN;Hanoi;Tây Mỗ;20.9999;105.742
+IN;Gujarat;Vapi (Anukul Society);20.3739;72.9135
+VN;Hanoi;Hai BàTrưng (Trương Định);20.9966;105.847
+VN;Hanoi;Hai BàTrưng;20.993;105.87
+VN;Hải Dương Province;Hải Dương;20.9329;106.319
+VN;Hanoi;Ô Chợ Dừa;20.9994;105.822
+VN;Hưng Yên Province;Văn Giang (Lĩnh Nam);20.977;105.897
+VN;Hanoi;Hà Đông (Mộ Lao);20.9834;105.784
 IN;Odisha;Mālīpadar;20.3006;85.759
 IN;Maharashtra;Borkherī;20.9479;79.0151
-VN;Hanoi;"Hà Đông (Cự Khê)";20.9287;105.789
-VN;Hanoi;"Thanh Xuân";20.9996;105.803
-VN;Hanoi;"Thanh Xuân (Khuong Trung)";20.9972;105.822
+VN;Hanoi;Hà Đông (Cự Khê);20.9287;105.789
+VN;Hanoi;Thanh Xuân;20.9996;105.803
+VN;Hanoi;Thanh Xuân (Khuong Trung);20.9972;105.822
 IN;Maharashtra;Ārvi;20.9958;78.2291
-VN;Hanoi;"Thanh Xuân";20.9979;105.795
+VN;Hanoi;Thanh Xuân;20.9979;105.795
 VN;Haiphong;Haiphong;20.832;106.703
-IN;Maharashtra;"Akola (Malipura)";20.7124;76.9963
-VN;Hanoi;"Hà Đông";20.9913;105.763
+IN;Maharashtra;Akola (Malipura);20.7124;76.9963
+VN;Hanoi;Hà Đông;20.9913;105.763
 IN;Gujarat;Pārdi;20.517;72.935
-VN;Hanoi;"Yên Xá";20.9668;105.795
+VN;Hanoi;Yên Xá;20.9668;105.795
 MM;Rakhine;Sittwe;20.145;92.9
-VN;Hanoi;"Hà Đông";20.9665;105.778
-IN;Maharashtra;"Jalgaon (Yashwant Nagar)";20.9895;75.5529
-IN;Maharashtra;"Malegaon (Nayapura)";20.5519;74.5355
-IN;Odisha;"Titlāgarh (Nilachakra Nagar)";20.2896;83.1576
-VN;"Bắc Ninh Province";"Phúc Lai (Phúc La)";20.962;105.792
+VN;Hanoi;Hà Đông;20.9665;105.778
+IN;Maharashtra;Jalgaon (Yashwant Nagar);20.9895;75.5529
+IN;Maharashtra;Malegaon (Nayapura);20.5519;74.5355
+IN;Odisha;Titlāgarh (Nilachakra Nagar);20.2896;83.1576
+VN;Bắc Ninh Province;Phúc Lai (Phúc La);20.962;105.792
 IN;Odisha;Balāngīr;20.7011;83.4846
 IN;Maharashtra;Khāmgaon;20.7132;76.5651
-VN;"Hà Nam Province";"Động Tam (Đồng Tâm)";20.9968;105.843
+VN;Hà Nam Province;Động Tam (Đồng Tâm);20.9968;105.843
 VN;Haiphong;Haiphong;20.8379;106.662
-IN;Odisha;"Bhubaneswar (Doordarshan Colony)";20.3003;85.8309
-IN;Odisha;"Bhubaneswar (Dharam Vihar)";20.2607;85.7937
-VN;Hanoi;"Thanh Xuân";20.9878;105.814
-VN;"Thái Bình Province";"Thái Bình";20.4466;106.33
-VN;Hanoi;"Phú Lâm (Phường Phú Lãm)";20.9388;105.756
-IN;Chhattisgarh;"Daundi Lohara";20.7911;81.0556
-IN;"Dadra and Nagar Haveli and Daman and Diu";Silvassa;20.123;72.9164
-VN;Hanoi;"Thanh Xuân";20.9979;105.817
-VN;Hanoi;"Thanh Xuân";20.9988;105.798
-VN;Hanoi;"Hà Đông";20.9838;105.768
-IN;Odisha;"Bhubaneswar (Saheednagar)";20.2866;85.8535
-IN;Maharashtra;"Amravati (Sāinagar)";20.8832;77.7326
+IN;Odisha;Bhubaneswar (Doordarshan Colony);20.3003;85.8309
+IN;Odisha;Bhubaneswar (Dharam Vihar);20.2607;85.7937
+VN;Hanoi;Thanh Xuân;20.9878;105.814
+VN;Thái Bình Province;Thái Bình;20.4466;106.33
+VN;Hanoi;Phú Lâm (Phường Phú Lãm);20.9388;105.756
+IN;Chhattisgarh;Daundi Lohara;20.7911;81.0556
+IN;Dadra and Nagar Haveli and Daman and Diu;Silvassa;20.123;72.9164
+VN;Hanoi;Thanh Xuân;20.9979;105.817
+VN;Hanoi;Thanh Xuân;20.9988;105.798
+VN;Hanoi;Hà Đông;20.9838;105.768
+IN;Odisha;Bhubaneswar (Saheednagar);20.2866;85.8535
+IN;Maharashtra;Amravati (Sāinagar);20.8832;77.7326
 IN;Odisha;Bhubaneswar;20.2623;85.8529
-IN;Odisha;"Bhubaneswar (Patia)";20.3515;85.8229
-VN;"Quảng Ninh";"Yên Nghĩa";20.9457;105.722
+IN;Odisha;Bhubaneswar (Patia);20.3515;85.8229
+VN;Quảng Ninh;Yên Nghĩa;20.9457;105.722
 IN;Maharashtra;Wani;20.0559;78.9562
-VN;Hanoi;"Thanh Xuân";20.9888;105.813
-IN;Odisha;"Bhubaneswar (Ashok Nagar)";20.2651;85.8391
-VN;Hanoi;"Thanh Xuân";20.9933;105.787
+VN;Hanoi;Thanh Xuân;20.9888;105.813
+IN;Odisha;Bhubaneswar (Ashok Nagar);20.2651;85.8391
+VN;Hanoi;Thanh Xuân;20.9933;105.787
 VN;Haiphong;Haiphong;20.8476;106.722
-IN;Maharashtra;"Wardha (Mahadevpura)";20.7395;78.6013
-MM;"Shan State";Heho;20.7232;96.8228
+IN;Maharashtra;Wardha (Mahadevpura);20.7395;78.6013
+MM;Shan State;Heho;20.7232;96.8228
 VN;Haiphong;Haiphong;20.8294;106.715
 IN;Maharashtra;Hinganghāt;20.5517;78.8418
 BD;Chittagong;Teknāf;20.8583;92.2977
 IN;Gujarat;Jalalpore;20.949;72.8983
-VN;Hanoi;"Thanh Xuân";20.9924;105.802
-IN;Maharashtra;"Dhule (Shivaji nagar)";20.9255;74.7562
+VN;Hanoi;Thanh Xuân;20.9924;105.802
+IN;Maharashtra;Dhule (Shivaji nagar);20.9255;74.7562
 IN;Odisha;Tālcher;20.9462;85.2212
-VN;Hanoi;"Văn Điển";20.9669;105.868
-VN;Hanoi;"Thanh Xuân";20.9956;105.795
+VN;Hanoi;Văn Điển;20.9669;105.868
+VN;Hanoi;Thanh Xuân;20.9956;105.795
 IN;Odisha;Dhenkānāl;20.6765;85.5854
-VN;Hanoi;"Phụng Nghia";20.9861;105.768
-IN;Gujarat;"Valsād (Kapadia Chal)";20.6064;72.9281
-VN;Hanoi;"Hà Đông";20.9701;105.767
+VN;Hanoi;Phụng Nghia;20.9861;105.768
+IN;Gujarat;Valsād (Kapadia Chal);20.6064;72.9281
+VN;Hanoi;Hà Đông;20.9701;105.767
 IN;Gujarat;Gandevi;20.754;72.9927
-IN;"Dadra and Nagar Haveli and Daman and Diu";Vānsda;20.7754;73.3583
+IN;Dadra and Nagar Haveli and Daman and Diu;Vānsda;20.7754;73.3583
 IN;Gujarat;Vapi;20.286;72.8575
-IN;Gujarat;"Sarigam INA";20.2885;72.8503
-IN;Maharashtra;"Akola (Kirti Nagar)";20.694;77.0149
+IN;Gujarat;Sarigam INA;20.2885;72.8503
+IN;Maharashtra;Akola (Kirti Nagar);20.694;77.0149
 IN;Maharashtra;Pimpalgaon;20.4128;78.1282
 IN;Maharashtra;Vāghāpur;20.3954;78.1106
 IN;Maharashtra;Soyāgaon;20.5525;74.5069
-IN;Maharashtra;"Nashik (Adgaon)";20.0335;73.8636
+IN;Maharashtra;Nashik (Adgaon);20.0335;73.8636
 IN;Gujarat;Dharampur;20.5364;73.1733
-VN;Hanoi;"Thanh Xuân";20.991;105.818
-VN;Hanoi;"Hà Đông";20.962;105.783
-VN;Hanoi;"Hai BàTrưng";20.9972;105.868
-VN;Hanoi;"Thanh Xuân";20.998;105.822
-VN;Hanoi;"Hà Đông";20.9702;105.775
-VN;"Hải Dương Province";"Hải Dương";20.9295;106.314
-VN;Hanoi;"Đinh Công Hạ";20.9773;105.834
-VN;"Phú Thọ Province";"Xuân Trùng";20.2904;106.361
-IN;Odisha;"Bhubaneswar (Gandamunda)";20.246;85.8083
-VN;Hanoi;"Thanh Xuân";20.9986;105.82
+VN;Hanoi;Thanh Xuân;20.991;105.818
+VN;Hanoi;Hà Đông;20.962;105.783
+VN;Hanoi;Hai BàTrưng;20.9972;105.868
+VN;Hanoi;Thanh Xuân;20.998;105.822
+VN;Hanoi;Hà Đông;20.9702;105.775
+VN;Hải Dương Province;Hải Dương;20.9295;106.314
+VN;Hanoi;Đinh Công Hạ;20.9773;105.834
+VN;Phú Thọ Province;Xuân Trùng;20.2904;106.361
+IN;Odisha;Bhubaneswar (Gandamunda);20.246;85.8083
+VN;Hanoi;Thanh Xuân;20.9986;105.82
 IN;Odisha;Paradip;20.3039;86.6407
-IN;"Dadra and Nagar Haveli and Daman and Diu";Samarvarni;20.2563;73.008
+IN;Dadra and Nagar Haveli and Daman and Diu;Samarvarni;20.2563;73.008
 IN;Gujarat;Vapi;20.3893;72.9106
-IN;Odisha;"Bhubaneswar (Rail Vihar)";20.3113;85.8133
-IN;Odisha;"Bhubaneswar (Unit 4)";20.291;85.834
-VN;Hanoi;"Hai BàTrưng";20.9959;105.869
-VN;Hanoi;"Hai BàTrưng";20.9833;105.842
+IN;Odisha;Bhubaneswar (Rail Vihar);20.3113;85.8133
+IN;Odisha;Bhubaneswar (Unit 4);20.291;85.834
+VN;Hanoi;Hai BàTrưng;20.9959;105.869
+VN;Hanoi;Hai BàTrưng;20.9833;105.842
 IN;Odisha;Nuapada;20.806;82.5361
 IN;Gujarat;Pārdi;20.5115;72.9594
-IN;Gujarat;"Vapi (Phase 2)";20.3676;72.9242
+IN;Gujarat;Vapi (Phase 2);20.3676;72.9242
 IN;Gujarat;Valsād;20.6101;72.9343
-VN;Hanoi;"Hai BàTrưng";20.9978;105.837
+VN;Hanoi;Hai BàTrưng;20.9978;105.837
 IN;Odisha;Jagatsinghapur;20.2549;86.1706
 IN;Odisha;Patāmundai;20.5781;86.5606
 IN;Gujarat;Gandevi;20.8121;72.9981
-IN;Odisha;"Bhubaneswar (Bhoi Nagar)";20.2944;85.8412
+IN;Odisha;Bhubaneswar (Bhoi Nagar);20.2944;85.8412
 VN;Haiphong;Haiphong;20.8358;106.684
 IN;Maharashtra;Tākalghāt;20.9152;78.9469
 IN;Maharashtra;Yeola;20.0424;74.4894
-IN;Gujarat;"Bilimora (Sankalp Society)";20.7657;72.973
+IN;Gujarat;Bilimora (Sankalp Society);20.7657;72.973
 IN;Maharashtra;Bhokardan;20.2583;75.77
-IN;Gujarat;"Umbergaon INA";20.1691;72.775
+IN;Gujarat;Umbergaon INA;20.1691;72.775
 MM;Shan;Tachilek;20.6625;99.9465
-VN;Hanoi;"Đinh Công Hạ";20.9826;105.828
+VN;Hanoi;Đinh Công Hạ;20.9826;105.828
 IN;Gujarat;Bhagdawada;20.4334;72.9135
-IN;"Dadra and Nagar Haveli and Daman and Diu";Dabhel;20.4095;72.8834
-VN;Hanoi;"Thanh Xuân";20.9872;105.82
-VN;Hanoi;"Thanh Xuân";20.9995;105.796
-IN;Odisha;"Bhubaneswar (Saheednagar)";20.2917;85.8467
-MX;Querétaro;"Querétaro City (Mariano Escobedo)";20.5917;-100.398
+IN;Dadra and Nagar Haveli and Daman and Diu;Dabhel;20.4095;72.8834
+VN;Hanoi;Thanh Xuân;20.9872;105.82
+VN;Hanoi;Thanh Xuân;20.9995;105.796
+IN;Odisha;Bhubaneswar (Saheednagar);20.2917;85.8467
+MX;Querétaro;Querétaro City (Mariano Escobedo);20.5917;-100.398
 IN;Maharashtra;Pāchora;20.6589;75.3492
 IN;Gujarat;Chhiri;20.3778;72.9411
 IN;Maharashtra;Daryāpur;20.9249;77.3264
 IN;Maharashtra;Malegaon;20.5497;74.5346
 IN;Gujarat;Atul;20.5436;72.9411
-IN;"Dadra and Nagar Haveli and Daman and Diu";Diu;20.7141;70.9822
-IN;"Dadra and Nagar Haveli and Daman and Diu";Mashāt;20.2451;73.0084
-IN;Maharashtra;"Naigaon Dattapur";20.244;76.5748
+IN;Dadra and Nagar Haveli and Daman and Diu;Diu;20.7141;70.9822
+IN;Dadra and Nagar Haveli and Daman and Diu;Mashāt;20.2451;73.0084
+IN;Maharashtra;Naigaon Dattapur;20.244;76.5748
 IN;Gujarat;Antaliya;20.7653;72.9907
 IN;Odisha;Sonepur;20.8333;83.9167
 IN;Maharashtra;Warora;20.2288;79.0028
 IN;Odisha;Kendrāparha;20.5035;86.4199
 MX;Hidalgo;Tlanchinol;20.9919;-98.6572
-TH;"Chiang Rai";"Mae Sai";20.4335;99.8762
-TH;"Chiang Rai";"Chiang Saen";20.2751;100.087
+TH;Chiang Rai;Mae Sai;20.4335;99.8762
+TH;Chiang Rai;Chiang Saen;20.2751;100.087
 IN;Maharashtra;Māldhe;20.5216;74.5534
 CN;Hainan;Haixiu;20.011;110.276
-VN;"Hòa Bình Province";"Mường Khến";20.6144;105.279
-VN;"Nam Định Province";"Nam Định";20.4388;106.162
-VN;"Thái Bình Province";"Thái Bình";20.4463;106.337
-VN;"Quảng Ninh";"Ha Long";20.9712;107.045
-VN;"Hưng Yên Province";"Hưng Yên";20.6547;106.058
-VN;"Ninh Bình Province";"Nho Quan";20.3228;105.752
-VN;"Thanh Hóa Province";"Kim Tân";20.1305;105.675
-VN;Hanoi;"Thanh Xuân";20.9954;105.805
+VN;Hòa Bình Province;Mường Khến;20.6144;105.279
+VN;Nam Định Province;Nam Định;20.4388;106.162
+VN;Thái Bình Province;Thái Bình;20.4463;106.337
+VN;Quảng Ninh;Ha Long;20.9712;107.045
+VN;Hưng Yên Province;Hưng Yên;20.6547;106.058
+VN;Ninh Bình Province;Nho Quan;20.3228;105.752
+VN;Thanh Hóa Province;Kim Tân;20.1305;105.675
+VN;Hanoi;Thanh Xuân;20.9954;105.805
 IN;Gujarat;Karvad;20.3563;72.9549
-IN;Gujarat;"Pārdi (Valsadi Zampa)";20.5118;72.9472
-LA;Houaphan;"Xam Nua";20.4164;104.045
-VN;"Hòa Bình Province";"Lương Sơn";20.8715;105.526
-VN;"Hưng Yên Province";"Mỹ Hào";20.9167;106.083
-VN;"Hưng Yên Province";Vương;20.7011;106.118
+IN;Gujarat;Pārdi (Valsadi Zampa);20.5118;72.9472
+LA;Houaphan;Xam Nua;20.4164;104.045
+VN;Hòa Bình Province;Lương Sơn;20.8715;105.526
+VN;Hưng Yên Province;Mỹ Hào;20.9167;106.083
+VN;Hưng Yên Province;Vương;20.7011;106.118
 CN;Hainan;Haikou;20.0342;110.347
 IN;Gujarat;Valsād;20.5992;72.9342
 MM;Magway;Minbu;20.1806;94.876
@@ -710,405 +710,405 @@ IN;Maharashtra;Nāndgaon;20.3068;74.655
 IN;Maharashtra;Deogiri;20.3188;77.796
 IN;Maharashtra;Kāranja;20.4827;77.4886
 IN;Maharashtra;Mahindāle;20.9054;74.7475
-IN;Odisha;"Bhubaneswar (Bhoinagar)";20.2944;85.8412
-IN;Odisha;"Bhubaneswar (Unit 4)";20.2734;85.8332
-IN;Maharashtra;"Bālāpur (Pūras)";20.7179;76.7964
-IN;Odisha;"Cuttack (Gandarpur)";20.463;85.9065
-IN;"Dadra and Nagar Haveli and Daman and Diu";Silvassa;20.2642;73.0202
-IN;Maharashtra;"Nashik (Pandit Colony)";20.0019;73.7756
-TH;"Chiang Mai";"Mae Ai";20.0288;99.2983
-IN;Gujarat;"Vapi (Phase 2)";20.3649;72.9241
-IN;Gujarat;"Vapi (Gidc)";20.3635;72.9401
-CN;Guangdong;"Zhanjiang (Wushizhen)";20.5573;109.856
-CN;Guangdong;"Zhanjiang (Xuwen County)";20.3265;110.175
-IN;Odisha;"Bhubaneswar (Infocity)";20.3412;85.8066
-IN;Gujarat;"Valsād (Kapadia Chal)";20.6112;72.9299
+IN;Odisha;Bhubaneswar (Bhoinagar);20.2944;85.8412
+IN;Odisha;Bhubaneswar (Unit 4);20.2734;85.8332
+IN;Maharashtra;Bālāpur (Pūras);20.7179;76.7964
+IN;Odisha;Cuttack (Gandarpur);20.463;85.9065
+IN;Dadra and Nagar Haveli and Daman and Diu;Silvassa;20.2642;73.0202
+IN;Maharashtra;Nashik (Pandit Colony);20.0019;73.7756
+TH;Chiang Mai;Mae Ai;20.0288;99.2983
+IN;Gujarat;Vapi (Phase 2);20.3649;72.9241
+IN;Gujarat;Vapi (Gidc);20.3635;72.9401
+CN;Guangdong;Zhanjiang (Wushizhen);20.5573;109.856
+CN;Guangdong;Zhanjiang (Xuwen County);20.3265;110.175
+IN;Odisha;Bhubaneswar (Infocity);20.3412;85.8066
+IN;Gujarat;Valsād (Kapadia Chal);20.6112;72.9299
 IN;Odisha;Nayāgarh;20.1654;85.0233
 IN;Odisha;Jagatsinghapur;20.2498;86.5975
 IN;Odisha;Bhubaneswar;20.2387;85.782
 IN;Odisha;Jājpur;20.8341;86.3326
 IN;Gujarat;Vapi;20.3454;72.937
-IN;Odisha;"Bhubaneswar (Baramunda Housing Board Colony)";20.2774;85.7958
+IN;Odisha;Bhubaneswar (Baramunda Housing Board Colony);20.2774;85.7958
 IN;Odisha;Tālcher;20.8625;85.3359
-IN;Odisha;"Bhubaneswar (Jayadev Vihar)";20.2997;85.8173
-IN;Odisha;"Pattamundai (Beltal)";20.5783;86.554
-IN;Odisha;"Bhubaneswar (Unit 4)";20.2736;85.8302
-IN;Odisha;"Bhubaneswar (Baramunda)";20.279;85.7993
+IN;Odisha;Bhubaneswar (Jayadev Vihar);20.2997;85.8173
+IN;Odisha;Pattamundai (Beltal);20.5783;86.554
+IN;Odisha;Bhubaneswar (Unit 4);20.2736;85.8302
+IN;Odisha;Bhubaneswar (Baramunda);20.279;85.7993
 IN;Odisha;Nimāparha;20.0775;85.9445
-IN;Gujarat;"Chhiri (Housing Sector)";20.3776;72.9281
-VN;Hanoi;"Văn Điển";20.9565;105.845
-VN;Hanoi;"Ô Chợ Dừa";20.9991;105.828
+IN;Gujarat;Chhiri (Housing Sector);20.3776;72.9281
+VN;Hanoi;Văn Điển;20.9565;105.845
+VN;Hanoi;Ô Chợ Dừa;20.9991;105.828
 VN;Haiphong;Haiphong;20.8641;106.679
 IN;Maharashtra;Dindori;20.2042;73.8272
-IN;"Dadra and Nagar Haveli and Daman and Diu";Sāili;20.2531;73.0482
+IN;Dadra and Nagar Haveli and Daman and Diu;Sāili;20.2531;73.0482
 IN;Maharashtra;Yavatmal;20.3899;78.1307
-IN;Gujarat;"Vapi (Selvas)";20.3718;72.9159
+IN;Gujarat;Vapi (Selvas);20.3718;72.9159
 IN;Odisha;Paradip;20.3166;86.6114
-IN;"Dadra and Nagar Haveli and Daman and Diu";"Daman (Bhimpur)";20.4606;72.8624
-IN;Odisha;"Bhubaneswar (Rail Vihar)";20.3106;85.8197
-CN;Guangdong;"Zhanjiang (Longxing)";20.3149;110.241
+IN;Dadra and Nagar Haveli and Daman and Diu;Daman (Bhimpur);20.4606;72.8624
+IN;Odisha;Bhubaneswar (Rail Vihar);20.3106;85.8197
+CN;Guangdong;Zhanjiang (Longxing);20.3149;110.241
 IN;Maharashtra;Buldhana;20.5379;76.1855
 IN;Chhattisgarh;Kānker;20.2675;81.4927
-SA;"Al Bahah Region";"Al Bahah";20.0217;41.4713
-MX;Querétaro;"Ninguno [CERESO]";20.6736;-100.36
-MX;Jalisco;"El Refugio";20.5269;-103.289
-MX;Jalisco;"Santa Rosa";20.4151;-103.235
-IN;"Dadra and Nagar Haveli and Daman and Diu";Daman;20.3974;72.8328
-MX;Querétaro;"Rancho Largo";20.7028;-100.44
-MX;Hidalgo;"Rinconadas de San Francisco";20.0661;-98.7681
-MX;Querétaro;"Querétaro City";20.5881;-100.388
-MM;"Shan State";Indein;20.461;96.8415
-MX;Jalisco;"Guadalajara (Americana)";20.67;-103.359
-MX;Guanajuato;"San Miguel del Brete";20.5519;-101.439
-MX;Guanajuato;"Fraccionamiento las Liebres";20.6475;-101.396
-MX;Guanajuato;"Irapuato (Españita)";20.6985;-101.366
-MX;Michoacán;"Santa Ana Maya";20.0069;-101.022
-MX;Guanajuato;"San Cristóbal";20.5039;-100.615
-MX;Guanajuato;"San Miguel del Arenal";20.9908;-101.486
-MX;Hidalgo;"El Cajón";20.3869;-99.6267
-MX;Querétaro;"San Martín";20.7228;-99.9752
-MX;Querétaro;"Villa Nueva";20.6697;-99.82
-MX;Michoacán;"Sahuayo de Morelos (Las Brisas)";20.0582;-102.716
-MX;Jalisco;"Guadalajara (Del Fresno)";20.6511;-103.367
+SA;Al Bahah Region;Al Bahah;20.0217;41.4713
+MX;Querétaro;Ninguno [CERESO];20.6736;-100.36
+MX;Jalisco;El Refugio;20.5269;-103.289
+MX;Jalisco;Santa Rosa;20.4151;-103.235
+IN;Dadra and Nagar Haveli and Daman and Diu;Daman;20.3974;72.8328
+MX;Querétaro;Rancho Largo;20.7028;-100.44
+MX;Hidalgo;Rinconadas de San Francisco;20.0661;-98.7681
+MX;Querétaro;Querétaro City;20.5881;-100.388
+MM;Shan State;Indein;20.461;96.8415
+MX;Jalisco;Guadalajara (Americana);20.67;-103.359
+MX;Guanajuato;San Miguel del Brete;20.5519;-101.439
+MX;Guanajuato;Fraccionamiento las Liebres;20.6475;-101.396
+MX;Guanajuato;Irapuato (Españita);20.6985;-101.366
+MX;Michoacán;Santa Ana Maya;20.0069;-101.022
+MX;Guanajuato;San Cristóbal;20.5039;-100.615
+MX;Guanajuato;San Miguel del Arenal;20.9908;-101.486
+MX;Hidalgo;El Cajón;20.3869;-99.6267
+MX;Querétaro;San Martín;20.7228;-99.9752
+MX;Querétaro;Villa Nueva;20.6697;-99.82
+MX;Michoacán;Sahuayo de Morelos (Las Brisas);20.0582;-102.716
+MX;Jalisco;Guadalajara (Del Fresno);20.6511;-103.367
 MX;Querétaro;Viborillas;20.6088;-100.186
-MX;Querétaro;"Sergio Villaseñor";20.645;-100.421
+MX;Querétaro;Sergio Villaseñor;20.645;-100.421
 IN;Maharashtra;Sindi;20.7424;78.5871
-MX;Jalisco;"San José del Castillo";20.5117;-103.237
+MX;Jalisco;San José del Castillo;20.5117;-103.237
 US;Hawaii;Lanai;20.8276;-156.924
-MX;Jalisco;"Zapopan (Jardines Plaza del Sol)";20.6571;-103.398
-MX;Querétaro;"Querétaro City (Vista Dorada)";20.5943;-100.366
+MX;Jalisco;Zapopan (Jardines Plaza del Sol);20.6571;-103.398
+MX;Querétaro;Querétaro City (Vista Dorada);20.5943;-100.366
 US;Hawaii;Waimea;20.0232;-155.673
-MX;Querétaro;"Querétaro City (Galindas)";20.5872;-100.417
-MX;Jalisco;"Tlaquepaque (Santa María Tequepexpan)";20.6073;-103.415
+MX;Querétaro;Querétaro City (Galindas);20.5872;-100.417
+MX;Jalisco;Tlaquepaque (Santa María Tequepexpan);20.6073;-103.415
 MX;Jalisco;Nextipac;20.7669;-103.526
 MX;Jalisco;Mascuala;20.7691;-103.277
-MX;Jalisco;"El Salto";20.5185;-103.182
-MX;Hidalgo;"Santiago Tlapacoya";20.1092;-98.8304
-MX;Yucatán;"Mérida (Centro)";20.9696;-89.623
-MX;Guanajuato;"Salamanca (Bella Vista de Santa María)";20.5787;-101.2
+MX;Jalisco;El Salto;20.5185;-103.182
+MX;Hidalgo;Santiago Tlapacoya;20.1092;-98.8304
+MX;Yucatán;Mérida (Centro);20.9696;-89.623
+MX;Guanajuato;Salamanca (Bella Vista de Santa María);20.5787;-101.2
 MX;Guanajuato;Salamanca;20.572;-101.192
-MX;Guanajuato;"Ex-Hacienda del Copal";20.7408;-101.335
+MX;Guanajuato;Ex-Hacienda del Copal;20.7408;-101.335
 MX;Guanajuato;Marfil;20.9916;-101.284
-MX;Querétaro;"Querétaro City (Centro Universitario)";20.5929;-100.409
-MX;Querétaro;"La Purísima";20.6297;-100.35
-MX;Querétaro;"San José Itho";20.1654;-100.127
+MX;Querétaro;Querétaro City (Centro Universitario);20.5929;-100.409
+MX;Querétaro;La Purísima;20.6297;-100.35
+MX;Querétaro;San José Itho;20.1654;-100.127
 MX;Querétaro;Amazcala;20.7034;-100.265
-MX;Querétaro;"El Pueblito";20.5335;-100.446
-MX;Querétaro;"Querétaro City (Industria del Hierro)";20.6121;-100.395
+MX;Querétaro;El Pueblito;20.5335;-100.446
+MX;Querétaro;Querétaro City (Industria del Hierro);20.6121;-100.395
 MX;Jalisco;Tlaquepaque;20.6025;-103.336
-MX;Nayarit;"Corral del Risco (Punta de Mita)";20.7736;-105.517
-MX;Querétaro;"La Versolilla";20.8731;-100.379
-MX;Veracruz;"Colonia México Lindo";20.9506;-97.4606
-MX;Nayarit;"San Vicente";20.7488;-105.25
-MX;Querétaro;"Rancho Bellavista [Fraccionamiento]";20.6067;-100.45
-MX;Querétaro;"Laguna de Vaquerías";20.3539;-100.135
-MX;Querétaro;"Casa Blanca";20.3866;-100.02
-MX;Yucatán;"San Pedro Chimay";20.865;-89.5797
+MX;Nayarit;Corral del Risco (Punta de Mita);20.7736;-105.517
+MX;Querétaro;La Versolilla;20.8731;-100.379
+MX;Veracruz;Colonia México Lindo;20.9506;-97.4606
+MX;Nayarit;San Vicente;20.7488;-105.25
+MX;Querétaro;Rancho Bellavista [Fraccionamiento];20.6067;-100.45
+MX;Querétaro;Laguna de Vaquerías;20.3539;-100.135
+MX;Querétaro;Casa Blanca;20.3866;-100.02
+MX;Yucatán;San Pedro Chimay;20.865;-89.5797
 MX;Guanajuato;Salamanca;20.5739;-101.196
-MX;"Quintana Roo";"Las Fincas";20.423;-86.9223
+MX;Quintana Roo;Las Fincas;20.423;-86.9223
 MX;Jalisco;Tonalá;20.6237;-103.241
 MX;Hidalgo;Guerrero;20.3703;-99.0088
-MX;Jalisco;"Zapopan (Chapalita)";20.6649;-103.397
-MX;Hidalgo;"Tula de Allende";20.0536;-99.3396
-MX;Jalisco;"Zapopan (Uag)";20.6913;-103.415
-MX;Jalisco;"Guadalajara (La Guadalupana)";20.7;-103.348
+MX;Jalisco;Zapopan (Chapalita);20.6649;-103.397
+MX;Hidalgo;Tula de Allende;20.0536;-99.3396
+MX;Jalisco;Zapopan (Uag);20.6913;-103.415
+MX;Jalisco;Guadalajara (La Guadalupana);20.7;-103.348
 MX;Jalisco;Ajijic;20.2976;-103.239
-MX;Guanajuato;"Irapuato (Estrella)";20.6998;-101.359
-MX;Hidalgo;"Tulancingo (Jardines del Sur 4ta Sección)";20.0739;-98.3759
-MX;Querétaro;"San Cristobal (El Colorado)";20.5564;-100.253
-MX;Jalisco;"Zapopan (Los Cajetes)";20.587;-103.426
+MX;Guanajuato;Irapuato (Estrella);20.6998;-101.359
+MX;Hidalgo;Tulancingo (Jardines del Sur 4ta Sección);20.0739;-98.3759
+MX;Querétaro;San Cristobal (El Colorado);20.5564;-100.253
+MX;Jalisco;Zapopan (Los Cajetes);20.587;-103.426
 MX;Jalisco;Guadalajara;20.7005;-103.388
-MX;Hidalgo;"Pachuca (Acueducto)";20.1101;-98.7247
-MX;Jalisco;"Puerto Vallarta (Valentín Gómez Farias)";20.6308;-105.223
-MX;Jalisco;"Puerto Vallarta (Díaz Ordaz)";20.6404;-105.233
+MX;Hidalgo;Pachuca (Acueducto);20.1101;-98.7247
+MX;Jalisco;Puerto Vallarta (Valentín Gómez Farias);20.6308;-105.223
+MX;Jalisco;Puerto Vallarta (Díaz Ordaz);20.6404;-105.233
 MX;Jalisco;Zapopan;20.7225;-103.492
-MX;Jalisco;"Zapopan (El Campanario)";20.5944;-103.439
-MX;Querétaro;"El Paraíso";20.564;-100.216
-MX;Jalisco;"Guadalajara (Arcos Vallarta)";20.6733;-103.38
+MX;Jalisco;Zapopan (El Campanario);20.5944;-103.439
+MX;Querétaro;El Paraíso;20.564;-100.216
+MX;Jalisco;Guadalajara (Arcos Vallarta);20.6733;-103.38
 MX;Guanajuato;Mexicanos;20.529;-101.071
-MX;Veracruz;"Francisco Sarabia";20.3608;-97.5114
-MX;Yucatán;"Santa Cruz Palomeque";20.8802;-89.6535
-MX;Querétaro;"Santa María Magdalena";20.5969;-100.447
-MX;Jalisco;"El Cortijo";20.4692;-103.422
-MX;Jalisco;"Zapopan (Francisco Sarabia)";20.6094;-103.432
-MX;Querétaro;"Querétaro City (Arboledas)";20.6132;-100.384
-MX;Puebla;"Vicente Guerrero";20.1232;-97.6542
-MX;Jalisco;"Guadalajara (Mexicaltzingo)";20.6654;-103.353
-MX;Guanajuato;"Purísima del Progreso";20.7933;-101.33
-MX;"Quintana Roo";"Leona Vicario";20.9897;-87.2022
-MX;Yucatán;"Leona Vicario";20.9094;-89.6011
-MX;Querétaro;"Cumbres del Cimatario";20.5467;-100.35
+MX;Veracruz;Francisco Sarabia;20.3608;-97.5114
+MX;Yucatán;Santa Cruz Palomeque;20.8802;-89.6535
+MX;Querétaro;Santa María Magdalena;20.5969;-100.447
+MX;Jalisco;El Cortijo;20.4692;-103.422
+MX;Jalisco;Zapopan (Francisco Sarabia);20.6094;-103.432
+MX;Querétaro;Querétaro City (Arboledas);20.6132;-100.384
+MX;Puebla;Vicente Guerrero;20.1232;-97.6542
+MX;Jalisco;Guadalajara (Mexicaltzingo);20.6654;-103.353
+MX;Guanajuato;Purísima del Progreso;20.7933;-101.33
+MX;Quintana Roo;Leona Vicario;20.9897;-87.2022
+MX;Yucatán;Leona Vicario;20.9094;-89.6011
+MX;Querétaro;Cumbres del Cimatario;20.5467;-100.35
 MX;Yucatán;X-Can;20.8571;-87.6692
-MX;Jalisco;"Las Pintas de Arriba";20.5652;-103.317
-MX;Jalisco;"Guadalajara (Lafayette)";20.6753;-103.369
-MX;Jalisco;"Guadalajara (Colón Industrial)";20.6375;-103.367
-MX;Hidalgo;"Pachuca (Zona Plateada)";20.0964;-98.7699
-MX;Guanajuato;"San Isidro del Llanito";20.5313;-100.509
-MX;Jalisco;"Zapopan (Univa)";20.6601;-103.419
-MX;Jalisco;"Tlaquepaque (Jardines de Santa María)";20.605;-103.399
-MX;Jalisco;"Guadalajara (Moderna)";20.6665;-103.374
-MX;Jalisco;"La Barca";20.2899;-102.542
-MX;Guanajuato;"El Carrizalito";20.7037;-101.324
-MX;Guanajuato;"Fraccionamiento Campestre las Flores";20.7258;-101.346
+MX;Jalisco;Las Pintas de Arriba;20.5652;-103.317
+MX;Jalisco;Guadalajara (Lafayette);20.6753;-103.369
+MX;Jalisco;Guadalajara (Colón Industrial);20.6375;-103.367
+MX;Hidalgo;Pachuca (Zona Plateada);20.0964;-98.7699
+MX;Guanajuato;San Isidro del Llanito;20.5313;-100.509
+MX;Jalisco;Zapopan (Univa);20.6601;-103.419
+MX;Jalisco;Tlaquepaque (Jardines de Santa María);20.605;-103.399
+MX;Jalisco;Guadalajara (Moderna);20.6665;-103.374
+MX;Jalisco;La Barca;20.2899;-102.542
+MX;Guanajuato;El Carrizalito;20.7037;-101.324
+MX;Guanajuato;Fraccionamiento Campestre las Flores;20.7258;-101.346
 MX;Jalisco;Tlaquepaque;20.5785;-103.366
 MX;Querétaro;Coyotillos;20.5994;-100.209
 IN;Gujarat;Bhalpara;20.9137;70.387
-IN;Odisha;"Bhubaneswar (Balianta)";20.3085;85.8866
-IN;Odisha;"Bhubaneswar (Bapuji Nagar)";20.2538;85.8333
+IN;Odisha;Bhubaneswar (Balianta);20.3085;85.8866
+IN;Odisha;Bhubaneswar (Bapuji Nagar);20.2538;85.8333
 IN;Maharashtra;Bhadgaon;20.6691;75.2294
 IN;Maharashtra;Tākli;20.4707;75.0244
 IN;Chhattisgarh;Balod;20.7308;81.2058
 IN;Gujarat;Daheli;20.2697;72.8788
 IN;Odisha;Āthagarh;20.52;85.6296
-CU;"Holguín Province";"Holguín (Casco Histórico)";20.8933;-76.2615
-CU;"Holguín Province";Antilla;20.831;-75.7357
-CU;"Santiago de Cuba Province";"Santiago de Cuba";20.0229;-75.8217
-CU;"Guantánamo Province";Guantánamo;20.1474;-75.2081
-CU;"Granma Province";Jiguaní;20.3678;-76.4274
-CU;"Las Tunas Province";"Las Tunas";20.9613;-76.9519
-CU;"Holguín Province";"San Germán";20.6001;-76.1336
-CU;"Guantánamo Province";"San Antonio del Sur";20.0576;-74.8105
-CU;"Holguín Province";Holguín;20.8872;-76.2631
-CU;"Guantánamo Province";Guantánamo;20.1444;-75.2092
-CU;"Holguín Province";Holguín;20.8732;-76.2475
-CU;"Santiago de Cuba Province";"Santiago de Cuba";20.0169;-75.8302
-CU;"Las Tunas Province";Jobabo;20.9075;-77.2819
-MX;Guanajuato;"El Castillo";20.5807;-100.493
-MX;Veracruz;"La Martinica";20.0547;-96.8628
-MX;Puebla;"La Pahua";20.6118;-97.8536
+CU;Holguín Province;Holguín (Casco Histórico);20.8933;-76.2615
+CU;Holguín Province;Antilla;20.831;-75.7357
+CU;Santiago de Cuba Province;Santiago de Cuba;20.0229;-75.8217
+CU;Guantánamo Province;Guantánamo;20.1474;-75.2081
+CU;Granma Province;Jiguaní;20.3678;-76.4274
+CU;Las Tunas Province;Las Tunas;20.9613;-76.9519
+CU;Holguín Province;San Germán;20.6001;-76.1336
+CU;Guantánamo Province;San Antonio del Sur;20.0576;-74.8105
+CU;Holguín Province;Holguín;20.8872;-76.2631
+CU;Guantánamo Province;Guantánamo;20.1444;-75.2092
+CU;Holguín Province;Holguín;20.8732;-76.2475
+CU;Santiago de Cuba Province;Santiago de Cuba;20.0169;-75.8302
+CU;Las Tunas Province;Jobabo;20.9075;-77.2819
+MX;Guanajuato;El Castillo;20.5807;-100.493
+MX;Veracruz;La Martinica;20.0547;-96.8628
+MX;Puebla;La Pahua;20.6118;-97.8536
 MX;Puebla;Ameluca;20.5634;-97.8257
-MX;Michoacán;"Canindo y Pedregal";20.1186;-100.294
+MX;Michoacán;Canindo y Pedregal;20.1186;-100.294
 MX;Querétaro;Arcila;20.4104;-100.11
-LA;Loungnamtha;"Luang Namtha";20.9486;101.402
+LA;Loungnamtha;Luang Namtha;20.9486;101.402
 US;Hawaii;Wailuku;20.8881;-156.489
-MX;Querétaro;"La Estacada";20.8215;-100.408
+MX;Querétaro;La Estacada;20.8215;-100.408
 VN;Haiphong;Haiphong;20.8567;106.699
-IN;Gujarat;"Vapi (Mahavir Nagar)";20.3685;72.9197
-VN;"Thanh Hóa Province";"Vân Cổn (Vân Côn)";20.9917;105.679
-IN;"Dadra and Nagar Haveli and Daman and Diu";"Silvassa (Amli Ind. Estate)";20.2873;73.0007
-VN;Hanoi;"Trâu Quỳ";20.9948;105.946
-IN;Maharashtra;"Mangrūl Pīr";20.3138;77.3418
+IN;Gujarat;Vapi (Mahavir Nagar);20.3685;72.9197
+VN;Thanh Hóa Province;Vân Cổn (Vân Côn);20.9917;105.679
+IN;Dadra and Nagar Haveli and Daman and Diu;Silvassa (Amli Ind. Estate);20.2873;73.0007
+VN;Hanoi;Trâu Quỳ;20.9948;105.946
+IN;Maharashtra;Mangrūl Pīr;20.3138;77.3418
 IN;Chhattisgarh;Dhamtari;20.7072;81.5487
 IN;Odisha;Bālugaon;20.1784;85.1133
-VN;Hanoi;"Triều Khúc";20.9806;105.802
-MX;Jalisco;"San Isidro";20.7911;-103.351
-MX;Querétaro;"Rancho Largo";20.6977;-100.445
-VN;"Hòa Bình Province";Bo;20.7724;105.635
-VN;Hanoi;"Thanh Xuân";20.9859;105.814
-IN;"Dadra and Nagar Haveli and Daman and Diu";"Daman (Moti Daman)";20.408;72.8343
-VN;Hanoi;"Hai BàTrưng";20.9922;105.855
-VN;"Thanh Hóa Province";"Giai Uan (Sở Dầu)";20.8684;106.656
+VN;Hanoi;Triều Khúc;20.9806;105.802
+MX;Jalisco;San Isidro;20.7911;-103.351
+MX;Querétaro;Rancho Largo;20.6977;-100.445
+VN;Hòa Bình Province;Bo;20.7724;105.635
+VN;Hanoi;Thanh Xuân;20.9859;105.814
+IN;Dadra and Nagar Haveli and Daman and Diu;Daman (Moti Daman);20.408;72.8343
+VN;Hanoi;Hai BàTrưng;20.9922;105.855
+VN;Thanh Hóa Province;Giai Uan (Sở Dầu);20.8684;106.656
 IN;Gujarat;Saputara;20.5784;73.7507
 MM;Magway;Myothit;20.2006;95.445
 IN;Chhattisgarh;Rājim;20.9635;81.8799
-VN;Hanoi;"Đinh Công Hạ";20.9824;105.83
-VN;Hanoi;"Mai Đọng";20.986;105.873
-IN;Odisha;"Bhubaneswar (Arya Vihar Colony)";20.3335;85.8103
-VN;Hanoi;"Văn Điển";20.9344;105.846
+VN;Hanoi;Đinh Công Hạ;20.9824;105.83
+VN;Hanoi;Mai Đọng;20.986;105.873
+IN;Odisha;Bhubaneswar (Arya Vihar Colony);20.3335;85.8103
+VN;Hanoi;Văn Điển;20.9344;105.846
 IN;Odisha;Angul;20.8444;85.1511
-VN;"Quảng Ninh";"Ha Long";20.9862;106.996
-VN;Hanoi;"Thanh Xuân";20.9971;105.804
-VN;"Quảng Ninh";"Ha Long";20.9769;107.022
-VN;"Quảng Ninh";"Ha Long (Giếng Đáy)";20.9815;107.021
-VN;Haiphong;"Đố Sơn (Minh Đức)";20.7319;106.75
-VN;Hanoi;"Thanh Xuân";20.9995;105.801
-VN;Hanoi;"Vãn Phú (Vạn Phúc)";20.8802;105.879
-VN;"Ninh Bình Province";"Tam Điệp (Nam Son Ward)";20.13;105.882
+VN;Quảng Ninh;Ha Long;20.9862;106.996
+VN;Hanoi;Thanh Xuân;20.9971;105.804
+VN;Quảng Ninh;Ha Long;20.9769;107.022
+VN;Quảng Ninh;Ha Long (Giếng Đáy);20.9815;107.021
+VN;Haiphong;Đố Sơn (Minh Đức);20.7319;106.75
+VN;Hanoi;Thanh Xuân;20.9995;105.801
+VN;Hanoi;Vãn Phú (Vạn Phúc);20.8802;105.879
+VN;Ninh Bình Province;Tam Điệp (Nam Son Ward);20.13;105.882
 MX;Jalisco;Zapopan;20.6554;-103.449
-IN;Odisha;"Bhubaneswar (Old Nayapalli)";20.2738;85.8246
-VN;Hanoi;"Hai BàTrưng";20.9821;105.875
-VN;Hanoi;"Thanh Xuân";20.9947;105.804
+IN;Odisha;Bhubaneswar (Old Nayapalli);20.2738;85.8246
+VN;Hanoi;Hai BàTrưng;20.9821;105.875
+VN;Hanoi;Thanh Xuân;20.9947;105.804
 MX;Hidalgo;Tulancingo;20.0905;-98.3691
-VN;"Nam Định Province";"Nam Định";20.4448;106.184
-IN;Odisha;"Dhenkānāl (Gudianali)";20.6528;85.6043
-VN;Hanoi;"Hai BàTrưng";20.9961;105.88
-VN;Hanoi;"Vạn Phúc";20.9787;105.772
-IN;Odisha;"Bhubaneswar (Bhoi Nagar)";20.2969;85.8299
-VN;Hanoi;"Hà Đông (Dương Nội)";20.9904;105.74
-VN;Hanoi;"Thanh Xuân";20.9959;105.795
-VN;Hanoi;"Đinh Công Hạ";20.9819;105.838
-MX;Querétaro;"Querétaro City (Jurica)";20.6714;-100.438
-MX;Jalisco;"San Francisco Tesistán";20.7973;-103.477
-MX;Querétaro;"San Rafael";20.4528;-100.394
-MX;Guanajuato;"La Isla";20.4492;-101.108
+VN;Nam Định Province;Nam Định;20.4448;106.184
+IN;Odisha;Dhenkānāl (Gudianali);20.6528;85.6043
+VN;Hanoi;Hai BàTrưng;20.9961;105.88
+VN;Hanoi;Vạn Phúc;20.9787;105.772
+IN;Odisha;Bhubaneswar (Bhoi Nagar);20.2969;85.8299
+VN;Hanoi;Hà Đông (Dương Nội);20.9904;105.74
+VN;Hanoi;Thanh Xuân;20.9959;105.795
+VN;Hanoi;Đinh Công Hạ;20.9819;105.838
+MX;Querétaro;Querétaro City (Jurica);20.6714;-100.438
+MX;Jalisco;San Francisco Tesistán;20.7973;-103.477
+MX;Querétaro;San Rafael;20.4528;-100.394
+MX;Guanajuato;La Isla;20.4492;-101.108
 MX;Puebla;Metlaltoyuca;20.7356;-97.8519
-MX;Jalisco;"La Loma (Loma de Enmedio)";20.7981;-102.739
-MX;Guanajuato;"Querétaro City (Benito Juárez)";20.6255;-100.426
-MX;"Quintana Roo";"Playa del Carmen (Centro)";20.6266;-87.0787
-MX;Jalisco;"Zapopan (Rinconada del Sol)";20.6564;-103.398
+MX;Jalisco;La Loma (Loma de Enmedio);20.7981;-102.739
+MX;Guanajuato;Querétaro City (Benito Juárez);20.6255;-100.426
+MX;Quintana Roo;Playa del Carmen (Centro);20.6266;-87.0787
+MX;Jalisco;Zapopan (Rinconada del Sol);20.6564;-103.398
 MX;Querétaro;Visthá;20.4467;-99.9767
-MX;México;"Los Pilares";20.0063;-99.7195
-MX;Jalisco;"Pinar de la Venta";20.7189;-103.524
+MX;México;Los Pilares;20.0063;-99.7195
+MX;Jalisco;Pinar de la Venta;20.7189;-103.524
 MX;Guanajuato;Irapuato;20.6768;-101.356
 MX;Querétaro;Esperanza;20.6461;-100.111
-MX;Querétaro;"Los Quiotes (San José los Quiotes)";20.7519;-100.051
-MX;Guanajuato;"El Vicarlo";20.5821;-100.671
-MX;Jalisco;"Zapotitán de Hidalgo";20.3253;-103.479
-MX;Guanajuato;"San José de Bernalejo (El Guayabo)";20.64;-101.401
-MX;Guanajuato;"Corral de Piedras de Arriba";20.9758;-100.595
+MX;Querétaro;Los Quiotes (San José los Quiotes);20.7519;-100.051
+MX;Guanajuato;El Vicarlo;20.5821;-100.671
+MX;Jalisco;Zapotitán de Hidalgo;20.3253;-103.479
+MX;Guanajuato;San José de Bernalejo (El Guayabo);20.64;-101.401
+MX;Guanajuato;Corral de Piedras de Arriba;20.9758;-100.595
 MX;Guanajuato;Celaya;20.528;-100.811
-MX;Jalisco;"San José de los Pozos";20.3497;-103.57
+MX;Jalisco;San José de los Pozos;20.3497;-103.57
 IN;Odisha;Jagatsinghapur;20.2557;86.1711
-TH;"Chiang Rai";"Mae Fa Luang";20.2663;99.7985
+TH;Chiang Rai;Mae Fa Luang;20.2663;99.7985
 US;Hawaii;Kula;20.782;-156.326
-US;Hawaii;"Kīhei (Wailea)";20.6748;-156.441
+US;Hawaii;Kīhei (Wailea);20.6748;-156.441
 US;Hawaii;Lanai;20.7419;-156.889
-US;Hawaii;"Kīhei (Wailea)";20.6934;-156.441
+US;Hawaii;Kīhei (Wailea);20.6934;-156.441
 US;Hawaii;Kahului;20.8851;-156.463
 US;Hawaii;Wailuku;20.8893;-156.495
-MX;Jalisco;"Tonalá (Cerro del Jagüey)";20.6133;-103.266
+MX;Jalisco;Tonalá (Cerro del Jagüey);20.6133;-103.266
 US;Hawaii;Kapalua;20.9997;-156.658
-MX;Querétaro;"Querétaro City (Carrillo)";20.6172;-100.423
+MX;Querétaro;Querétaro City (Carrillo);20.6172;-100.423
 US;Hawaii;Spreckelsville;20.8969;-156.415
-MX;Jalisco;"Guadalajara (Del Fresno)";20.651;-103.367
+MX;Jalisco;Guadalajara (Del Fresno);20.651;-103.367
 MX;Guanajuato;Acámbaro;20.0308;-100.722
-MX;Guanajuato;"San Miguel de Allende";20.9144;-100.745
-MX;Jalisco;"San Agustín";20.5477;-103.467
-MX;Michoacán;"Fraccionamiento San Miguel";20.0711;-102.687
-MX;Michoacán;"Colonia Niños Héroes";20.0375;-102.714
-MX;Michoacán;"Sahuayo de Morelos";20.0586;-102.716
-MX;Michoacán;"Ojo de Rana";20.0483;-102.893
-MX;Michoacán;"Rincón de San Andrés";20.066;-102.75
+MX;Guanajuato;San Miguel de Allende;20.9144;-100.745
+MX;Jalisco;San Agustín;20.5477;-103.467
+MX;Michoacán;Fraccionamiento San Miguel;20.0711;-102.687
+MX;Michoacán;Colonia Niños Héroes;20.0375;-102.714
+MX;Michoacán;Sahuayo de Morelos;20.0586;-102.716
+MX;Michoacán;Ojo de Rana;20.0483;-102.893
+MX;Michoacán;Rincón de San Andrés;20.066;-102.75
 MX;Jalisco;Tala;20.6527;-103.701
-MX;Jalisco;"San Juan de los Arcos";20.6048;-103.719
-MX;Jalisco;"La Venta del Astillero";20.7265;-103.546
+MX;Jalisco;San Juan de los Arcos;20.6048;-103.719
+MX;Jalisco;La Venta del Astillero;20.7265;-103.546
 MX;Jalisco;Ameca;20.5478;-104.046
-MX;Jalisco;"Santa Cruz del Astillero";20.7466;-103.643
-MX;Jalisco;"El Arenal";20.7763;-103.693
+MX;Jalisco;Santa Cruz del Astillero;20.7466;-103.643
+MX;Jalisco;El Arenal;20.7763;-103.693
 MX;Jalisco;Atengo;20.275;-104.238
-MX;Jalisco;"La Estancita";20.7369;-103.998
+MX;Jalisco;La Estancita;20.7369;-103.998
 MX;Jalisco;Ahuisculco;20.5684;-103.702
-MX;Guanajuato;"San Miguel de Allende";20.9153;-100.744
-MX;Guanajuato;"Lomas de San José";20.9539;-100.769
-MX;Guanajuato;"San Isidro";20.4635;-101.494
+MX;Guanajuato;San Miguel de Allende;20.9153;-100.744
+MX;Guanajuato;Lomas de San José;20.9539;-100.769
+MX;Guanajuato;San Isidro;20.4635;-101.494
 MX;Guanajuato;Pénjamo;20.4311;-101.723
-MX;Guanajuato;"San José de Mendoza";20.6896;-101.214
+MX;Guanajuato;San José de Mendoza;20.6896;-101.214
 MX;Guanajuato;Cuerámaro;20.6255;-101.672
-MX;Guanajuato;"La Luz";20.5539;-101.181
-MX;Michoacán;"Fraccionamiento 18 de Marzo";20.0042;-102.72
-MX;Veracruz;"Salvador Díaz Mirón";20.1757;-97.0455
+MX;Guanajuato;La Luz;20.5539;-101.181
+MX;Michoacán;Fraccionamiento 18 de Marzo;20.0042;-102.72
+MX;Veracruz;Salvador Díaz Mirón;20.1757;-97.0455
 MX;Veracruz;Coapeche;20.0853;-96.9023
 MX;Guanajuato;Silao;20.9436;-101.427
 MX;Guanajuato;Abasolo;20.45;-101.531
-MX;Guanajuato;"San Juan de Razos";20.5547;-101.228
+MX;Guanajuato;San Juan de Razos;20.5547;-101.228
 MX;Yucatán;Peto;20.1278;-88.9228
-MX;Nayarit;"Ursulo Galván";20.9523;-105.341
+MX;Nayarit;Ursulo Galván;20.9523;-105.341
 MX;Jalisco;Palomar;20.5925;-103.461
-MX;Hidalgo;"El Refugio";20.0048;-99.1883
+MX;Hidalgo;El Refugio;20.0048;-99.1883
 MX;Querétaro;Ajuchitlán;20.7071;-100.02
 MX;Puebla;Mazatepec;20.017;-97.4189
-MX;Hidalgo;"Unidad Habitacional Antonio Osorio de León (Bojay)";20.0439;-99.2447
+MX;Hidalgo;Unidad Habitacional Antonio Osorio de León (Bojay);20.0439;-99.2447
 MX;Jalisco;Tonalá;20.6226;-103.242
 MX;Guanajuato;Romita;20.8713;-101.517
-MX;Jalisco;"Acatlán de Juárez";20.4224;-103.591
-MX;Jalisco;"La Fortuna [Fraccionamiento]";20.4847;-103.396
-MX;Jalisco;"Nuevo Israel";20.6983;-103.267
-MX;Jalisco;"El Mirador";20.5758;-103.273
-MX;Jalisco;"Jardines de San Sebastián";20.5189;-103.422
+MX;Jalisco;Acatlán de Juárez;20.4224;-103.591
+MX;Jalisco;La Fortuna [Fraccionamiento];20.4847;-103.396
+MX;Jalisco;Nuevo Israel;20.6983;-103.267
+MX;Jalisco;El Mirador;20.5758;-103.273
+MX;Jalisco;Jardines de San Sebastián;20.5189;-103.422
 MX;Querétaro;Tequisquiapan;20.5225;-99.8917
-MX;Querétaro;"El Pueblito";20.54;-100.438
-MX;Querétaro;"Colinas de Santa Cruz Segunda Sección";20.6236;-100.467
-MX;Jalisco;"Lomas de San Agustín";20.5275;-103.468
+MX;Querétaro;El Pueblito;20.54;-100.438
+MX;Querétaro;Colinas de Santa Cruz Segunda Sección;20.6236;-100.467
+MX;Jalisco;Lomas de San Agustín;20.5275;-103.468
 MX;Querétaro;Tonatiú;20.6119;-100.451
-MX;Querétaro;"Valle Dorado Dos Mil";20.5289;-100.471
-MX;Querétaro;"Paseos del Pedregal";20.6642;-100.398
+MX;Querétaro;Valle Dorado Dos Mil;20.5289;-100.471
+MX;Querétaro;Paseos del Pedregal;20.6642;-100.398
 MX;Guanajuato;Plancarte;20.5868;-100.796
-MX;Hidalgo;"Tula de Allende";20.0516;-99.344
-MX;"Quintana Roo";"Ciudad Chemuyil";20.3486;-87.3531
-MX;"Quintana Roo";"San Miguel de Cozumel";20.5004;-86.9427
+MX;Hidalgo;Tula de Allende;20.0516;-99.344
+MX;Quintana Roo;Ciudad Chemuyil;20.3486;-87.3531
+MX;Quintana Roo;San Miguel de Cozumel;20.5004;-86.9427
 MX;Yucatán;Acanceh;20.7099;-89.0943
-MX;Veracruz;"Plan de Ayala";20.5489;-97.4713
-MX;Veracruz;"Villa de las Flores";20.5764;-97.4336
-MX;Veracruz;"Escolín de Olarte";20.4984;-97.4234
+MX;Veracruz;Plan de Ayala;20.5489;-97.4713
+MX;Veracruz;Villa de las Flores;20.5764;-97.4336
+MX;Veracruz;Escolín de Olarte;20.4984;-97.4234
 MX;Veracruz;Coatzintla;20.487;-97.4682
-MX;Veracruz;"Poza Rica";20.5331;-97.4595
+MX;Veracruz;Poza Rica;20.5331;-97.4595
 MX;Jalisco;Ocotlán;20.3512;-102.768
-MX;Jalisco;"Cuitzeo (La Estancia)";20.3428;-102.784
-MX;Veracruz;"Arroyo del Maíz Uno";20.5367;-97.4153
-MX;Veracruz;"San Miguel Mecatepec";20.529;-97.4874
-MX;Michoacán;"Santa Fe";20.2036;-101.827
+MX;Jalisco;Cuitzeo (La Estancia);20.3428;-102.784
+MX;Veracruz;Arroyo del Maíz Uno;20.5367;-97.4153
+MX;Veracruz;San Miguel Mecatepec;20.529;-97.4874
+MX;Michoacán;Santa Fe;20.2036;-101.827
 MX;Guanajuato;Celaya;20.5235;-100.816
-MX;Querétaro;"Puerto de Aguirre";20.8065;-100.432
+MX;Querétaro;Puerto de Aguirre;20.8065;-100.432
 MX;Veracruz;Polutla;20.528;-97.2588
-MX;Veracruz;"Papantla de Olarte";20.4466;-97.3249
-MX;Veracruz;"Serafín Olarte";20.3736;-97.3339
-MX;Veracruz;"Martínez de la Torre";20.0708;-97.0608
-MX;Veracruz;"Congregación el Tajín";20.4305;-97.3818
+MX;Veracruz;Papantla de Olarte;20.4466;-97.3249
+MX;Veracruz;Serafín Olarte;20.3736;-97.3339
+MX;Veracruz;Martínez de la Torre;20.0708;-97.0608
+MX;Veracruz;Congregación el Tajín;20.4305;-97.3818
 MX;Jalisco;Amacueca;20.0116;-103.6
 MX;Jalisco;Estipac;20.3624;-103.723
-MX;Querétaro;"Patria Nueva";20.6322;-100.477
-MX;Hidalgo;"Colonia Morelos (El Nueve)";20.225;-99.1411
-MX;Guanajuato;"Colonia la Calzada (La Olla)";20.5028;-100.959
-MX;Jalisco;"Villa Morelos";20.056;-103.146
-MX;Querétaro;"El Paraíso";20.5322;-100.395
-MX;Jalisco;"Colonia Cuisillos (Huaxtla de Orendain)";20.7242;-103.655
+MX;Querétaro;Patria Nueva;20.6322;-100.477
+MX;Hidalgo;Colonia Morelos (El Nueve);20.225;-99.1411
+MX;Guanajuato;Colonia la Calzada (La Olla);20.5028;-100.959
+MX;Jalisco;Villa Morelos;20.056;-103.146
+MX;Querétaro;El Paraíso;20.5322;-100.395
+MX;Jalisco;Colonia Cuisillos (Huaxtla de Orendain);20.7242;-103.655
 MX;Guanajuato;Alcocer;20.8687;-100.705
-MX;Guanajuato;"Palmita de Landeta";20.9172;-100.703
-MX;Querétaro;"El Pozo";20.6375;-100.333
+MX;Guanajuato;Palmita de Landeta;20.9172;-100.703
+MX;Querétaro;El Pozo;20.6375;-100.333
 MX;Querétaro;Lourdes;20.5127;-100.476
-MX;Jalisco;"La Laja";20.5802;-103.122
-MX;Querétaro;"El Colorado";20.5618;-100.245
-MX;Jalisco;"Cruz Vieja";20.4947;-103.573
-MX;Jalisco;"Paseo de las Cañadas";20.6214;-103.198
-MX;Veracruz;"Laja del Tubo";20.7667;-97.3833
+MX;Jalisco;La Laja;20.5802;-103.122
+MX;Querétaro;El Colorado;20.5618;-100.245
+MX;Jalisco;Cruz Vieja;20.4947;-103.573
+MX;Jalisco;Paseo de las Cañadas;20.6214;-103.198
+MX;Veracruz;Laja del Tubo;20.7667;-97.3833
 MX;Guanajuato;Moroleón;20.1257;-101.192
 MX;Guanajuato;Uriangato;20.1409;-101.183
-MX;Michoacán;"Ario de Rayón";20.0265;-102.348
-MX;Michoacán;"La Piedad";20.3424;-102.031
-MX;Guanajuato;"Colonia Morelos";20.3683;-101.899
-MX;Querétaro;"Segundo Barrio de Dolores";20.6067;-100.319
-MX;Querétaro;"La Trinidad";20.6333;-100.295
-MX;Jalisco;"Colinas del Roble";20.5042;-103.398
-MX;Jalisco;"Los Amiales";20.6142;-103.231
-MX;Guanajuato;"Loza de Barrera";20.9846;-101.53
+MX;Michoacán;Ario de Rayón;20.0265;-102.348
+MX;Michoacán;La Piedad;20.3424;-102.031
+MX;Guanajuato;Colonia Morelos;20.3683;-101.899
+MX;Querétaro;Segundo Barrio de Dolores;20.6067;-100.319
+MX;Querétaro;La Trinidad;20.6333;-100.295
+MX;Jalisco;Colinas del Roble;20.5042;-103.398
+MX;Jalisco;Los Amiales;20.6142;-103.231
+MX;Guanajuato;Loza de Barrera;20.9846;-101.53
 MX;Jalisco;Capulín;20.478;-103.269
-MX;Guanajuato;"La Tinaja";20.4903;-101.216
+MX;Guanajuato;La Tinaja;20.4903;-101.216
 MX;Jalisco;Acatic;20.7808;-102.911
 MX;Jalisco;Tequila;20.882;-103.836
 MX;Jalisco;Chapala;20.2925;-103.19
-MX;Jalisco;"Las Juntas";20.7003;-105.243
+MX;Jalisco;Las Juntas;20.7003;-105.243
 MX;Nayarit;Mezcales;20.7307;-105.283
 MX;Nayarit;Bucerías;20.7563;-105.334
 MX;Jalisco;Ixtapa;20.716;-105.205
-MX;Nayarit;"San José del Valle";20.7638;-105.228
-MX;Jalisco;"Zapopan (Villas de San Javier)";20.6798;-103.409
-MX;Querétaro;"Cerro Gordo";20.3733;-99.9138
-MX;Guanajuato;"La Candelaria (El Rodete)";20.6544;-101.391
-MX;Guanajuato;"San Francisco de la Charca (El Nido)";20.6747;-101.391
+MX;Nayarit;San José del Valle;20.7638;-105.228
+MX;Jalisco;Zapopan (Villas de San Javier);20.6798;-103.409
+MX;Querétaro;Cerro Gordo;20.3733;-99.9138
+MX;Guanajuato;La Candelaria (El Rodete);20.6544;-101.391
+MX;Guanajuato;San Francisco de la Charca (El Nido);20.6747;-101.391
 MX;Yucatán;Tzucacab;20.0724;-89.0502
-MX;Jalisco;"Zapopan (Aves del Paraíso)";20.7357;-103.384
+MX;Jalisco;Zapopan (Aves del Paraíso);20.7357;-103.384
 MX;Yucatán;Pixoy;20.7164;-88.2643
-CU;"Guantánamo Province";Guantánamo;20.14;-75.2129
-CU;"Holguín Province";Holguín;20.8795;-76.2595
-CU;"Las Tunas Province";"Las Tunas";20.9579;-76.9528
-CU;"Holguín Province";Moa;20.6575;-74.9501
+CU;Guantánamo Province;Guantánamo;20.14;-75.2129
+CU;Holguín Province;Holguín;20.8795;-76.2595
+CU;Las Tunas Province;Las Tunas;20.9579;-76.9528
+CU;Holguín Province;Moa;20.6575;-74.9501
 IN;Odisha;Jānla;20.2162;85.7128
 IN;Odisha;Cuttack;20.4625;85.883
 IN;Maharashtra;Amravati;20.932;77.7523
 IN;Odisha;Dhenkānāl;20.6505;85.5981
-IN;Maharashtra;"Akola (Midc)";20.676;77.0801
+IN;Maharashtra;Akola (Midc);20.676;77.0801
 IN;Maharashtra;Nashik;20.0109;73.7615
 IN;Odisha;Jagatsinghapur;20.3294;86.1714
-IN;Maharashtra;"Amravati (Amrawati Tahsil)";20.932;77.7523
+IN;Maharashtra;Amravati (Amrawati Tahsil);20.932;77.7523
 IN;Odisha;Tālabāhāli;20.8104;85.2585
-VN;Hanoi;"Thanh Xuân";20.997;105.804
-MX;Veracruz;"La Reforma";20.8656;-97.6558
-MX;Nayarit;"San Clemente de Lima";20.7372;-105.271
-MX;Hidalgo;"Real de Oriente";20.1061;-98.725
-MX;Hidalgo;"Privadas de San Javier";20.0981;-98.72
-MX;Hidalgo;"Santa María la Calera";20.0307;-98.7193
-MX;Yucatán;"Paseos de Itzincab";20.9164;-89.6982
+VN;Hanoi;Thanh Xuân;20.997;105.804
+MX;Veracruz;La Reforma;20.8656;-97.6558
+MX;Nayarit;San Clemente de Lima;20.7372;-105.271
+MX;Hidalgo;Real de Oriente;20.1061;-98.725
+MX;Hidalgo;Privadas de San Javier;20.0981;-98.72
+MX;Hidalgo;Santa María la Calera;20.0307;-98.7193
+MX;Yucatán;Paseos de Itzincab;20.9164;-89.6982
 MX;Hidalgo;Huichapan;20.3759;-99.6487
 MX;Hidalgo;Tetepango;20.1017;-99.1511
-MX;Hidalgo;"El Boxtha";20.2597;-98.9742
-MX;Querétaro;"Querétaro City (Palmares)";20.6594;-100.427
+MX;Hidalgo;El Boxtha;20.2597;-98.9742
+MX;Querétaro;Querétaro City (Palmares);20.6594;-100.427
 MX;Yucatán;Temozón;20.8039;-88.2016
-MX;Hidalgo;"Pachuca (Revolución)";20.1186;-98.7402
+MX;Hidalgo;Pachuca (Revolución);20.1186;-98.7402
 MX;Hidalgo;Lindavista;20.0261;-98.7978
 MX;Guanajuato;Roque;20.5823;-100.837
-MX;Nayarit;"Nuevo Vallarta";20.7017;-105.294
-MX;Nayarit;"Las Jarretaderas";20.6925;-105.274
-MX;Jalisco;"Las Pintitas";20.5644;-103.302
+MX;Nayarit;Nuevo Vallarta;20.7017;-105.294
+MX;Nayarit;Las Jarretaderas;20.6925;-105.274
+MX;Jalisco;Las Pintitas;20.5644;-103.302
 MX;Campeche;Hecelchakán;20.1773;-90.1336
 MX;Campeche;Calkiní;20.369;-90.0512
 MX;Yucatán;Opichén;20.9495;-89.6795
@@ -1120,805 +1120,805 @@ MX;Yucatán;Muna;20.4879;-89.7139
 MX;Yucatán;Maxcanú;20.5846;-90.001
 MX;Yucatán;Bolón;20.8501;-89.8319
 MX;Jalisco;Atotonilquillo;20.392;-103.124
-MX;Jalisco;"San José del Quince";20.5417;-103.284
-MX;Jalisco;"Hacienda Santa Fe";20.5181;-103.381
-MX;Jalisco;"Rancho Alegre [Fraccionamiento]";20.4736;-103.258
-MX;Jalisco;"Valle Dorado Inn";20.5244;-103.362
-MX;Jalisco;"La Arbolada Plus";20.5369;-103.364
-MX;Jalisco;"Hacienda los Fresnos";20.5194;-103.393
-MX;Jalisco;"Villas de la Hacienda [Fraccionamiento]";20.5311;-103.383
-MX;Jalisco;"Paseo Puente Viejo";20.5692;-103.191
-MX;Jalisco;"Centro de Readaptación Social";20.5544;-103.194
-MX;Jalisco;"Los Olivos";20.4392;-103.238
+MX;Jalisco;San José del Quince;20.5417;-103.284
+MX;Jalisco;Hacienda Santa Fe;20.5181;-103.381
+MX;Jalisco;Rancho Alegre [Fraccionamiento];20.4736;-103.258
+MX;Jalisco;Valle Dorado Inn;20.5244;-103.362
+MX;Jalisco;La Arbolada Plus;20.5369;-103.364
+MX;Jalisco;Hacienda los Fresnos;20.5194;-103.393
+MX;Jalisco;Villas de la Hacienda [Fraccionamiento];20.5311;-103.383
+MX;Jalisco;Paseo Puente Viejo;20.5692;-103.191
+MX;Jalisco;Centro de Readaptación Social;20.5544;-103.194
+MX;Jalisco;Los Olivos;20.4392;-103.238
 MX;Jalisco;Juanacatlán;20.5087;-103.168
-MX;Jalisco;"San Nicolás de Ibarra";20.3296;-103.13
-MX;Jalisco;"Ixtlahuacán de los Membrillos";20.3487;-103.192
-MX;Jalisco;"Valle de los Girasoles [Fraccionamiento]";20.4267;-103.199
-MX;Jalisco;"Real del Valle (El Paraíso) [Fraccionamiento]";20.5456;-103.37
+MX;Jalisco;San Nicolás de Ibarra;20.3296;-103.13
+MX;Jalisco;Ixtlahuacán de los Membrillos;20.3487;-103.192
+MX;Jalisco;Valle de los Girasoles [Fraccionamiento];20.4267;-103.199
+MX;Jalisco;Real del Valle (El Paraíso) [Fraccionamiento];20.5456;-103.37
 MX;Jalisco;Atequiza;20.3952;-103.139
-MX;Jalisco;"San José el Verde";20.5554;-103.278
+MX;Jalisco;San José el Verde;20.5554;-103.278
 MX;Jalisco;Jocotepec;20.2857;-103.429
-MX;Jalisco;"San Luis Soyatlán";20.1969;-103.306
+MX;Jalisco;San Luis Soyatlán;20.1969;-103.306
 MX;Jalisco;Cocula;20.3652;-103.822
-MX;Jalisco;"La Unión del Cuatro";20.5299;-103.37
-MX;Jalisco;"Residencias el Prado (Jardines del Prado)";20.6847;-103.219
+MX;Jalisco;La Unión del Cuatro;20.5299;-103.37
+MX;Jalisco;Residencias el Prado (Jardines del Prado);20.6847;-103.219
 MX;Guanajuato;Yuriria;20.2108;-101.132
 MX;Guanajuato;Salvatierra;20.2132;-100.88
-MX;Guanajuato;"La Noria de Gallegos";20.3359;-100.785
+MX;Guanajuato;La Noria de Gallegos;20.3359;-100.785
 MX;Guanajuato;Estrada;20.5292;-100.866
-MX;Guanajuato;"La Trinidad";20.5633;-100.784
-MX;Guanajuato;"La Cruz del Palmar";20.9697;-100.844
-MX;Guanajuato;"Puerta del Monte (Elguera)";20.5622;-100.886
-MX;Guanajuato;"Don Diego";20.6979;-100.902
-MX;Guanajuato;"San Juan Viejo";20.0942;-100.749
-MX;Guanajuato;"La Huerta";20.8219;-100.83
-MX;Guanajuato;"La Cieneguita";20.9463;-100.79
+MX;Guanajuato;La Trinidad;20.5633;-100.784
+MX;Guanajuato;La Cruz del Palmar;20.9697;-100.844
+MX;Guanajuato;Puerta del Monte (Elguera);20.5622;-100.886
+MX;Guanajuato;Don Diego;20.6979;-100.902
+MX;Guanajuato;San Juan Viejo;20.0942;-100.749
+MX;Guanajuato;La Huerta;20.8219;-100.83
+MX;Guanajuato;La Cieneguita;20.9463;-100.79
 MX;Guanajuato;Insurgentes;20.9392;-100.738
 MX;Guanajuato;Cañajo;20.8911;-100.676
-MX;Guanajuato;"San Juan del Llanito";20.5137;-100.54
-MX;Guanajuato;"Los Dulces Nombres";20.6481;-100.965
-MX;Guanajuato;"Salto de Peña";20.3072;-100.615
-MX;Guanajuato;"Cañada del Agua";20.7019;-100.917
-MX;Guanajuato;"La Gavia";20.3943;-100.881
-MX;Guanajuato;"Gaytán del Refugio";20.1483;-100.667
+MX;Guanajuato;San Juan del Llanito;20.5137;-100.54
+MX;Guanajuato;Los Dulces Nombres;20.6481;-100.965
+MX;Guanajuato;Salto de Peña;20.3072;-100.615
+MX;Guanajuato;Cañada del Agua;20.7019;-100.917
+MX;Guanajuato;La Gavia;20.3943;-100.881
+MX;Guanajuato;Gaytán del Refugio;20.1483;-100.667
 MX;Guanajuato;Villagrán;20.5145;-100.997
 MX;Guanajuato;Barrón;20.6767;-101.084
-MX;Guanajuato;"Gervasio Mendoza";20.2885;-101.145
+MX;Guanajuato;Gervasio Mendoza;20.2885;-101.145
 MX;Guanajuato;Urireo;20.2131;-100.842
-MX;Guanajuato;"El Pocito (El Pocito de la Virgen)";20.4014;-100.625
-MX;Guanajuato;"San José de Agua Azul";20.4866;-100.656
-MX;Guanajuato;"Ojo de Agua de García";20.7895;-100.937
-MX;Guanajuato;"El Jaralillo";20.6651;-100.977
-MX;Guanajuato;"San Antonio de Romerillo";20.6078;-100.949
-MX;Puebla;"San Isidro";20.2501;-97.9613
+MX;Guanajuato;El Pocito (El Pocito de la Virgen);20.4014;-100.625
+MX;Guanajuato;San José de Agua Azul;20.4866;-100.656
+MX;Guanajuato;Ojo de Agua de García;20.7895;-100.937
+MX;Guanajuato;El Jaralillo;20.6651;-100.977
+MX;Guanajuato;San Antonio de Romerillo;20.6078;-100.949
+MX;Puebla;San Isidro;20.2501;-97.9613
 MX;Yucatán;Sahé;20.9221;-89.4624
-MX;Campeche;"Santa Cruz";20.2034;-90.1177
-MX;Veracruz;"Túxpam de Rodríguez Cano";20.9578;-97.4081
-MX;Jalisco;"San Esteban (San Miguel Tateposco)";20.7989;-103.374
-MX;Jalisco;"Santiaguito (Santiaguito de Velázquez)";20.7253;-102.237
+MX;Campeche;Santa Cruz;20.2034;-90.1177
+MX;Veracruz;Túxpam de Rodríguez Cano;20.9578;-97.4081
+MX;Jalisco;San Esteban (San Miguel Tateposco);20.7989;-103.374
+MX;Jalisco;Santiaguito (Santiaguito de Velázquez);20.7253;-102.237
 MX;Jalisco;Guadalajara;20.7015;-103.318
 MX;Jalisco;Zapopan;20.672;-103.417
-MX;Jalisco;"Banus Vallarta (Verde Vallarta)";20.7161;-105.223
+MX;Jalisco;Banus Vallarta (Verde Vallarta);20.7161;-105.223
 MX;Nayarit;Sayulita;20.8701;-105.44
-MX;Nayarit;"San Ignacio";20.8464;-105.421
-MX;Jalisco;"Llano Grande";20.0364;-104.874
-MX;Nayarit;"Higuera Blanca";20.7975;-105.467
+MX;Nayarit;San Ignacio;20.8464;-105.421
+MX;Jalisco;Llano Grande;20.0364;-104.874
+MX;Nayarit;Higuera Blanca;20.7975;-105.467
 MX;Nayarit;Mezcalitos;20.7131;-105.282
-MX;Jalisco;"Santiago de Pinos";20.8063;-104.832
+MX;Jalisco;Santiago de Pinos;20.8063;-104.832
 MX;Jalisco;Tebelchia;20.8613;-105.132
-MX;Jalisco;"El Tuito";20.3196;-105.324
+MX;Jalisco;El Tuito;20.3196;-105.324
 MX;Jalisco;Mismaloya;20.5293;-105.287
-MX;Nayarit;"San Francisco";20.902;-105.413
-MX;Jalisco;"Boca de Tomatlán";20.512;-105.314
-MX;Jalisco;"Los Ocotes";20.4226;-104.851
-MX;Nayarit;"La Cruz de Huanacaxtle";20.7542;-105.377
-MX;Nayarit;"Amatlán de Cañas";20.807;-104.404
-MX;Jalisco;"Puerta del Llano";20.7853;-103.461
+MX;Nayarit;San Francisco;20.902;-105.413
+MX;Jalisco;Boca de Tomatlán;20.512;-105.314
+MX;Jalisco;Los Ocotes;20.4226;-104.851
+MX;Nayarit;La Cruz de Huanacaxtle;20.7542;-105.377
+MX;Nayarit;Amatlán de Cañas;20.807;-104.404
+MX;Jalisco;Puerta del Llano;20.7853;-103.461
 MX;Jalisco;Tenamaxtlán;20.2174;-104.164
 MX;Jalisco;Colotitlán;20.0957;-104.153
-MX;Jalisco;"Soyatlán del Oro";20.3019;-104.281
-MX;Jalisco;"San Clemente";20.0844;-104.251
+MX;Jalisco;Soyatlán del Oro;20.3019;-104.281
+MX;Jalisco;San Clemente;20.0844;-104.251
 MX;Querétaro;Tolimán;20.9084;-99.9304
 MX;Querétaro;Diezmeros;20.8753;-99.9519
-MX;Querétaro;"Sabino de San Ambrosio";20.9186;-99.97
-MX;Querétaro;"Santiago Mexquititlán Barrio 4to.";20.0631;-100.068
-MX;Querétaro;"El Cerrito Parado";20.9244;-99.9613
+MX;Querétaro;Sabino de San Ambrosio;20.9186;-99.97
+MX;Querétaro;Santiago Mexquititlán Barrio 4to.;20.0631;-100.068
+MX;Querétaro;El Cerrito Parado;20.9244;-99.9613
 MX;Querétaro;Pathé;20.5998;-99.7012
-MX;Querétaro;"Santa Matilde";20.4327;-100.026
-MX;Querétaro;"Barrio de Casas Viejas";20.9145;-99.9194
+MX;Querétaro;Santa Matilde;20.4327;-100.026
+MX;Querétaro;Barrio de Casas Viejas;20.9145;-99.9194
 MX;Querétaro;Vaquerías;20.3575;-100.119
-MX;Querétaro;"San Isidro Miranda";20.5702;-100.324
-MX;Querétaro;"Horno de Cal";20.8997;-99.9189
-MX;Querétaro;"La Ladera";20.1338;-100.062
-MX;Querétaro;"San Pedro Mártir";20.618;-100.47
+MX;Querétaro;San Isidro Miranda;20.5702;-100.324
+MX;Querétaro;Horno de Cal;20.8997;-99.9189
+MX;Querétaro;La Ladera;20.1338;-100.062
+MX;Querétaro;San Pedro Mártir;20.618;-100.47
 MX;Querétaro;Buenavista;20.329;-100.027
-MX;México;"Polotitlán de la Ilustración";20.2253;-99.8154
-MX;Querétaro;"Sabino Chicho";20.3383;-100.023
-MX;Querétaro;"Los Juárez";20.8687;-99.6504
-MX;Querétaro;"Nahui Ollin [Fraccionamiento]";20.505;-99.8892
-MX;Querétaro;"Los Olvera";20.5343;-100.408
-MX;Querétaro;"Puerto de Nieto";20.8897;-100.538
+MX;México;Polotitlán de la Ilustración;20.2253;-99.8154
+MX;Querétaro;Sabino Chicho;20.3383;-100.023
+MX;Querétaro;Los Juárez;20.8687;-99.6504
+MX;Querétaro;Nahui Ollin [Fraccionamiento];20.505;-99.8892
+MX;Querétaro;Los Olvera;20.5343;-100.408
+MX;Querétaro;Puerto de Nieto;20.8897;-100.538
 MX;Querétaro;Sombrerete;20.7902;-99.6676
-MX;Querétaro;"Ezequiel Montes";20.6648;-99.8996
-MX;Querétaro;"La Piedad";20.5789;-100.256
-MX;Querétaro;"Santa Rosa Jáuregui";20.7412;-100.448
+MX;Querétaro;Ezequiel Montes;20.6648;-99.8996
+MX;Querétaro;La Piedad;20.5789;-100.256
+MX;Querétaro;Santa Rosa Jáuregui;20.7412;-100.448
 MX;Yucatán;Halachó;20.4777;-90.081
 MX;Campeche;Pomuch;20.1373;-90.1749
-MX;Yucatán;"Santo Domingo";20.6;-90.1167
+MX;Yucatán;Santo Domingo;20.6;-90.1167
 MX;Yucatán;Kochol;20.6187;-90.1591
 MX;Yucatán;Umán;20.8814;-89.7473
 MX;Yucatán;Timucuy;20.8109;-89.5135
 MX;Yucatán;Pencuyut;20.2941;-89.2895
 MX;Yucatán;Kinchil;20.917;-89.9473
-MX;Yucatán;"San Rafael";20.7032;-90.1584
+MX;Yucatán;San Rafael;20.7032;-90.1584
 MX;Yucatán;Mani;20.3877;-89.3919
-MX;Yucatán;"Santa Elena";20.3289;-89.6436
+MX;Yucatán;Santa Elena;20.3289;-89.6436
 MX;Yucatán;Pocoboch;20.9749;-88.1148
 MX;Yucatán;Akil;20.2655;-89.3479
 MX;Yucatán;Ebtun;20.6644;-88.2596
 MX;Yucatán;Tixhualactún;20.644;-88.1431
-MX;"Quintana Roo";Tihosuco;20.1964;-88.3736
+MX;Quintana Roo;Tihosuco;20.1964;-88.3736
 MX;Yucatán;Oxkutzcab;20.3073;-89.4181
 MX;Yucatán;Teabo;20.4006;-89.2832
-MX;"Quintana Roo";Zacalaca;20.0624;-88.5961
+MX;Quintana Roo;Zacalaca;20.0624;-88.5961
 MX;Puebla;Huauchinango;20.1738;-98.0549
-MX;Hidalgo;"Santa María Asunción";20.1551;-98.2704
+MX;Hidalgo;Santa María Asunción;20.1551;-98.2704
 MX;Hidalgo;Ventoquipa;20.0336;-98.3378
 MX;Hidalgo;Zacualtipán;20.65;-98.6563
-MX;Puebla;"Las Colonias de Hidalgo";20.1961;-97.9767
+MX;Puebla;Las Colonias de Hidalgo;20.1961;-97.9767
 MX;Veracruz;Huayacocotla;20.5367;-98.4808
-MX;"Quintana Roo";"Barceló Maya";20.4875;-87.2461
-MX;Veracruz;"Villa Independencia";20.0552;-97.0521
+MX;Quintana Roo;Barceló Maya;20.4875;-87.2461
+MX;Veracruz;Villa Independencia;20.0552;-97.0521
 MX;Querétaro;Juriquilla;20.7128;-100.456
-MX;Guanajuato;"La Cantera";20.9775;-100.414
-MX;Querétaro;"Villas Fontana [Fraccionamiento]";20.6592;-100.407
-MX;México;"San Pedro Denxhi Centro";20.2503;-99.9673
-MX;Querétaro;"Guadalupe el Terrero";20.1188;-100.147
-MX;Querétaro;"La Cañada";20.608;-100.333
-MX;Querétaro;"El Nabo";20.6939;-100.48
-MX;Querétaro;"San Ildefonso Tultepec";20.1438;-99.9595
-MX;Querétaro;"La Purísima";20.6744;-99.9136
+MX;Guanajuato;La Cantera;20.9775;-100.414
+MX;Querétaro;Villas Fontana [Fraccionamiento];20.6592;-100.407
+MX;México;San Pedro Denxhi Centro;20.2503;-99.9673
+MX;Querétaro;Guadalupe el Terrero;20.1188;-100.147
+MX;Querétaro;La Cañada;20.608;-100.333
+MX;Querétaro;El Nabo;20.6939;-100.48
+MX;Querétaro;San Ildefonso Tultepec;20.1438;-99.9595
+MX;Querétaro;La Purísima;20.6744;-99.9136
 MX;Hidalgo;Ahuehuetitla;20.0844;-98.4167
-MX;Hidalgo;"Fraccionamiento del Magisterio Tulancinguense";20.0764;-98.3997
+MX;Hidalgo;Fraccionamiento del Magisterio Tulancinguense;20.0764;-98.3997
 MX;Hidalgo;Jaltepec;20.1155;-98.4171
 MX;Hidalgo;Tulancingo;20.0835;-98.3629
-MX;Hidalgo;"Parque Urbano Napateco";20.1428;-98.3408
+MX;Hidalgo;Parque Urbano Napateco;20.1428;-98.3408
 MX;Yucatán;Chapab;20.4591;-89.4569
 MX;Yucatán;Kopomá;20.6491;-89.8999
 MX;Yucatán;Dzan;20.3889;-89.4686
 MX;Yucatán;Tecoh;20.7436;-89.4741
 MX;Yucatán;Tixcuytun;20.2092;-89.2043
-MX;Yucatán;"Cuch Holoch";20.4356;-90.0981
-MX;Yucatán;"Santa María Acú";20.5464;-90.1637
+MX;Yucatán;Cuch Holoch;20.4356;-90.0981
+MX;Yucatán;Santa María Acú;20.5464;-90.1637
 MX;Yucatán;Chichimila;20.6318;-88.2169
 MX;Campeche;Nunkiní;20.4005;-90.148
-MX;Campeche;"Isla Arena";20.6911;-90.4525
-MX;Veracruz;"El Palmar";20.4484;-97.2451
-MX;Veracruz;"Santiago de la Peña";20.9451;-97.4049
-MX;Yucatán;"Chichen Itza";20.6667;-88.5667
-MX;Veracruz;"La Ceiba";20.7705;-97.2756
+MX;Campeche;Isla Arena;20.6911;-90.4525
+MX;Veracruz;El Palmar;20.4484;-97.2451
+MX;Veracruz;Santiago de la Peña;20.9451;-97.4049
+MX;Yucatán;Chichen Itza;20.6667;-88.5667
+MX;Veracruz;La Ceiba;20.7705;-97.2756
 MX;Puebla;Duraznotla;20.2622;-97.9769
 MX;Puebla;Cutzontipa;20.1114;-97.9044
 MX;Puebla;Amixtlán;20.0478;-97.7992
 MX;Puebla;Tzahuinco;20.2021;-97.998
-MX;Hidalgo;"San Nicolás el Chico";20.0958;-98.3878
+MX;Hidalgo;San Nicolás el Chico;20.0958;-98.3878
 MX;Puebla;Necaxaltépetl;20.235;-97.9963
 MX;Puebla;Icxotitla;20.2425;-98.1007
 MX;Hidalgo;Calnali;20.8969;-98.5851
 MX;Hidalgo;Nonoalco;20.7162;-98.7007
-MX;Puebla;"Villa Avila Camacho";20.3859;-97.8799
-MX;Michoacán;"Pastor Ortíz";20.3055;-101.596
-MX;Hidalgo;"Santiago Jaltepec";20.1097;-98.7111
-MX;Guanajuato;"Puente del Carmen";20.8866;-100.641
-MX;Jalisco;"San Isidro Mazatepec";20.5224;-103.613
-MX;Guanajuato;"Noria de Mosqueda";20.4783;-101.345
+MX;Puebla;Villa Avila Camacho;20.3859;-97.8799
+MX;Michoacán;Pastor Ortíz;20.3055;-101.596
+MX;Hidalgo;Santiago Jaltepec;20.1097;-98.7111
+MX;Guanajuato;Puente del Carmen;20.8866;-100.641
+MX;Jalisco;San Isidro Mazatepec;20.5224;-103.613
+MX;Guanajuato;Noria de Mosqueda;20.4783;-101.345
 MX;Guanajuato;Calderones;20.9897;-101.226
-MX;Guanajuato;"Monte del Coecillo";20.979;-101.435
-MX;Nayarit;"El Porvenir";20.7538;-105.242
-MX;Nayarit;"San Juan de Abajo";20.8167;-105.192
-MX;"Quintana Roo";"Francisco Uh May";20.3647;-87.5903
-MX;"Quintana Roo";"Macario Gómez";20.3512;-87.5757
-MX;Jalisco;"Los Gavilanes";20.5695;-103.454
+MX;Guanajuato;Monte del Coecillo;20.979;-101.435
+MX;Nayarit;El Porvenir;20.7538;-105.242
+MX;Nayarit;San Juan de Abajo;20.8167;-105.192
+MX;Quintana Roo;Francisco Uh May;20.3647;-87.5903
+MX;Quintana Roo;Macario Gómez;20.3512;-87.5757
+MX;Jalisco;Los Gavilanes;20.5695;-103.454
 MX;Veracruz;Tihuatlan;20.7145;-97.5333
-MX;Veracruz;"La Isla (Kilómetro 10)";20.6081;-97.5014
-MX;Veracruz;"Nuevo Progreso";20.6182;-97.5076
+MX;Veracruz;La Isla (Kilómetro 10);20.6081;-97.5014
+MX;Veracruz;Nuevo Progreso;20.6182;-97.5076
 MX;Hidalgo;Pachuquilla;20.071;-98.6957
-MX;Hidalgo;"Rincones de la Hacienda";20.12;-98.4017
-MX;Hidalgo;"San Antonio Farías (Colonia Camino Real)";20.0886;-98.3939
-MX;Hidalgo;"Las Flores";20.0494;-98.7631
-MX;Hidalgo;"Colinas de Plata";20.0783;-98.7267
-MX;Jalisco;"La Calerilla";20.5651;-103.41
-MX;Jalisco;"La Calera";20.4511;-103.253
+MX;Hidalgo;Rincones de la Hacienda;20.12;-98.4017
+MX;Hidalgo;San Antonio Farías (Colonia Camino Real);20.0886;-98.3939
+MX;Hidalgo;Las Flores;20.0494;-98.7631
+MX;Hidalgo;Colinas de Plata;20.0783;-98.7267
+MX;Jalisco;La Calerilla;20.5651;-103.41
+MX;Jalisco;La Calera;20.4511;-103.253
 MX;Jalisco;Ajijic;20.2999;-103.261
-MX;Hidalgo;"Los Tuzos";20.0539;-98.7564
-MX;Hidalgo;"Santa Gertrudis (Colonia Santa Gertrudis)";20.0867;-98.8069
-MX;Jalisco;"Hacienda Vieja del Castillo (Castillo Viejo)";20.54;-103.244
-MX;Veracruz;"Llanos de San Lorenzo";20.2737;-97.1301
-MX;Hidalgo;"El Mirador";20.03;-98.8106
-MX;Hidalgo;"El Álamo";20.0947;-98.7111
-MX;Guanajuato;"Los Ángeles";20.5536;-100.942
-MX;Hidalgo;"Cerro Colorado";20.4075;-98.7181
+MX;Hidalgo;Los Tuzos;20.0539;-98.7564
+MX;Hidalgo;Santa Gertrudis (Colonia Santa Gertrudis);20.0867;-98.8069
+MX;Jalisco;Hacienda Vieja del Castillo (Castillo Viejo);20.54;-103.244
+MX;Veracruz;Llanos de San Lorenzo;20.2737;-97.1301
+MX;Hidalgo;El Mirador;20.03;-98.8106
+MX;Hidalgo;El Álamo;20.0947;-98.7111
+MX;Guanajuato;Los Ángeles;20.5536;-100.942
+MX;Hidalgo;Cerro Colorado;20.4075;-98.7181
 MX;Puebla;Pantepec;20.5218;-97.9387
-MX;Jalisco;"El Colorado";20.77;-105.156
-MX;Querétaro;"Bosques de la Hacienda";20.6519;-100.417
-MX;Querétaro;"El Romeral";20.5374;-100.495
+MX;Jalisco;El Colorado;20.77;-105.156
+MX;Querétaro;Bosques de la Hacienda;20.6519;-100.417
+MX;Querétaro;El Romeral;20.5374;-100.495
 MX;Hidalgo;Banús;20.1314;-98.8064
-MX;Hidalgo;"La Heredad";20.513;-99.2319
-MX;Nayarit;"El Rosario";20.892;-104.468
+MX;Hidalgo;La Heredad;20.513;-99.2319
+MX;Nayarit;El Rosario;20.892;-104.468
 MX;Jalisco;Tecolotlán;20.2014;-104.048
-MX;Veracruz;"Vega de Alatorre";20.0282;-96.6475
-MX;Guanajuato;"Purísima de Covarrubias";20.6193;-101.483
-MX;Guanajuato;"La Soledad";20.6079;-101.416
-MX;Guanajuato;"La Zahúrda";20.6375;-101.365
-MX;Guanajuato;"Palo Alto de Abajo";20.3673;-101.808
-MX;Guanajuato;"Carrizal Grande";20.7063;-101.306
-MX;Guanajuato;"El Tambor";20.4977;-101.302
-MX;Querétaro;"La Llave";20.4663;-99.9937
-MX;Querétaro;"San José del Jagüey";20.7372;-99.9244
+MX;Veracruz;Vega de Alatorre;20.0282;-96.6475
+MX;Guanajuato;Purísima de Covarrubias;20.6193;-101.483
+MX;Guanajuato;La Soledad;20.6079;-101.416
+MX;Guanajuato;La Zahúrda;20.6375;-101.365
+MX;Guanajuato;Palo Alto de Abajo;20.3673;-101.808
+MX;Guanajuato;Carrizal Grande;20.7063;-101.306
+MX;Guanajuato;El Tambor;20.4977;-101.302
+MX;Querétaro;La Llave;20.4663;-99.9937
+MX;Querétaro;San José del Jagüey;20.7372;-99.9244
 MX;Querétaro;Amealco;20.1876;-100.145
-MX;México;"Las Lajas";20.1064;-99.7511
-MX;Querétaro;"Acequia Blanca";20.7193;-100.467
+MX;México;Las Lajas;20.1064;-99.7511
+MX;Querétaro;Acequia Blanca;20.7193;-100.467
 MX;México;Celayita;20.2411;-99.8614
-MX;Guanajuato;"Las Gallinas";20.7501;-100.71
-MX;Querétaro;"San Antonio la D";20.4214;-100.163
-MX;Michoacán;"La Barranca";20.0792;-101.443
-MX;Jalisco;"Talpa de Allende";20.3808;-104.822
+MX;Guanajuato;Las Gallinas;20.7501;-100.71
+MX;Querétaro;San Antonio la D;20.4214;-100.163
+MX;Michoacán;La Barranca;20.0792;-101.443
+MX;Jalisco;Talpa de Allende;20.3808;-104.822
 MX;Jalisco;Teuchitlán;20.6848;-103.849
-MX;Jalisco;"Ahualulco de Mercado";20.7014;-103.975
+MX;Jalisco;Ahualulco de Mercado;20.7014;-103.975
 MX;Jalisco;Magdalena;20.9069;-103.977
-MX;Jalisco;"Zacoalco de Torres";20.2263;-103.57
-MX;Jalisco;"Los Volcanes";20.3251;-104.539
-MX;Querétaro;"Querétaro City (Obrera)";20.6202;-100.425
-MX;Querétaro;"Huertas la Joya [Fraccionamiento Campestre]";20.6231;-100.502
-MX;Jalisco;"Colonia Guadalupana";20.5667;-103.219
+MX;Jalisco;Zacoalco de Torres;20.2263;-103.57
+MX;Jalisco;Los Volcanes;20.3251;-104.539
+MX;Querétaro;Querétaro City (Obrera);20.6202;-100.425
+MX;Querétaro;Huertas la Joya [Fraccionamiento Campestre];20.6231;-100.502
+MX;Jalisco;Colonia Guadalupana;20.5667;-103.219
 MX;Jalisco;Juchitlán;20.0843;-104.098
 MX;Jalisco;Juanacatlán;20.1913;-104.254
 MX;Jalisco;Atoyac;20.0094;-103.517
-MX;Jalisco;"San Nicolás";20.5602;-104.108
-MX;Jalisco;"San Marcos";20.7927;-104.197
+MX;Jalisco;San Nicolás;20.5602;-104.108
+MX;Jalisco;San Marcos;20.7927;-104.197
 MX;Jalisco;Texcalame;20.4552;-104.072
-MX;Jalisco;"La Laja";20.5861;-104.526
+MX;Jalisco;La Laja;20.5861;-104.526
 MX;Jalisco;Guachinango;20.5758;-104.382
-MX;Jalisco;"El Nacimiento";20.5396;-102.549
-MX;Jalisco;"Rancho Viejo del Refugio";20.4507;-102.639
-MX;Jalisco;"La Concepción";20.3512;-102.33
+MX;Jalisco;El Nacimiento;20.5396;-102.549
+MX;Jalisco;Rancho Viejo del Refugio;20.4507;-102.639
+MX;Jalisco;La Concepción;20.3512;-102.33
 MX;Jalisco;Ayotlán;20.5294;-102.328
-MX;Michoacán;"Paso de Hidalgo (Paso de Álamos)";20.2728;-102.545
-MX;Jalisco;"San Agustín";20.2857;-102.633
-MX;Jalisco;"San Miguel de la Paz";20.3705;-102.663
+MX;Michoacán;Paso de Hidalgo (Paso de Álamos);20.2728;-102.545
+MX;Jalisco;San Agustín;20.2857;-102.633
+MX;Jalisco;San Miguel de la Paz;20.3705;-102.663
 MX;Jalisco;Buenavista;20.3849;-103.215
-MX;Jalisco;"El Muey";20.5028;-103.221
-MX;Jalisco;"San Miguel Zapotitlán";20.3911;-102.994
+MX;Jalisco;El Muey;20.5028;-103.221
+MX;Jalisco;San Miguel Zapotitlán;20.3911;-102.994
 MX;Jalisco;Poncitlán;20.3811;-102.924
-MX;Jalisco;"La Puerta de Guamúchil";20.3274;-102.542
-MX;Jalisco;"San Francisco de Asís";20.5969;-102.564
+MX;Jalisco;La Puerta de Guamúchil;20.3274;-102.542
+MX;Jalisco;San Francisco de Asís;20.5969;-102.564
 MX;Jalisco;Atenguillo;20.4149;-104.493
 MX;Jalisco;Mixtlán;20.4397;-104.409
 MX;Jalisco;Mascota;20.5254;-104.785
-MX;"Quintana Roo";"Playa del Carmen";20.6296;-87.0739
-MX;Veracruz;"Ixhuatlán de Madero";20.6888;-98.0118
-MX;Guanajuato;"La Purísima";20.5144;-100.673
+MX;Quintana Roo;Playa del Carmen;20.6296;-87.0739
+MX;Veracruz;Ixhuatlán de Madero;20.6888;-98.0118
+MX;Guanajuato;La Purísima;20.5144;-100.673
 MX;Guanajuato;Uruétaro;20.5174;-101.181
-MX;Guanajuato;"San Gabriel y San Ignacio";20.4403;-101.608
-MX;Jalisco;"Santa Cruz de la Loma (Tepetates)";20.4881;-103.55
-MX;Jalisco;"San Isidro";20.572;-102.715
-MX;Jalisco;"Capilla de Guadalupe";20.844;-102.604
-MX;Guanajuato;"Tortugas (Las Conchas)";20.9278;-101.813
-MX;Guanajuato;"Guadalupe de Ramales";20.9267;-101.485
-MX;Guanajuato;"La Sauceda";20.8983;-101.191
-MX;Jalisco;"El Refugio";20.6719;-103.738
-MX;Jalisco;"San Martín de Hidalgo";20.4354;-103.929
-MX;Jalisco;"El Portezuelo";20.6;-104.046
+MX;Guanajuato;San Gabriel y San Ignacio;20.4403;-101.608
+MX;Jalisco;Santa Cruz de la Loma (Tepetates);20.4881;-103.55
+MX;Jalisco;San Isidro;20.572;-102.715
+MX;Jalisco;Capilla de Guadalupe;20.844;-102.604
+MX;Guanajuato;Tortugas (Las Conchas);20.9278;-101.813
+MX;Guanajuato;Guadalupe de Ramales;20.9267;-101.485
+MX;Guanajuato;La Sauceda;20.8983;-101.191
+MX;Jalisco;El Refugio;20.6719;-103.738
+MX;Jalisco;San Martín de Hidalgo;20.4354;-103.929
+MX;Jalisco;El Portezuelo;20.6;-104.046
 MX;Jalisco;Amatitán;20.8342;-103.73
-MX;Jalisco;"El Medineño";20.8672;-103.779
+MX;Jalisco;El Medineño;20.8672;-103.779
 MX;Jalisco;Huáscato;20.4797;-102.247
-MX;Jalisco;"Tepatitlán de Morelos";20.8098;-102.765
-MX;Jalisco;"Rinconada de los Vázquez [Fraccionamiento]";20.7133;-102.372
-MX;Jalisco;"Campo Real";20.7872;-103.443
-MX;Jalisco;"San Juan del Monte";20.9164;-103.127
-MX;Jalisco;"La Cuchilla (Extramuros de Tesistán)";20.78;-103.462
-MX;Jalisco;"Los Magueyes (Fraccionamiento el Sereno)";20.5706;-103.438
-MX;Guanajuato;"Medio Sitio";20.8695;-101.357
-MX;Guanajuato;"Ciudad Manuel Doblado";20.7289;-101.952
+MX;Jalisco;Tepatitlán de Morelos;20.8098;-102.765
+MX;Jalisco;Rinconada de los Vázquez [Fraccionamiento];20.7133;-102.372
+MX;Jalisco;Campo Real;20.7872;-103.443
+MX;Jalisco;San Juan del Monte;20.9164;-103.127
+MX;Jalisco;La Cuchilla (Extramuros de Tesistán);20.78;-103.462
+MX;Jalisco;Los Magueyes (Fraccionamiento el Sereno);20.5706;-103.438
+MX;Guanajuato;Medio Sitio;20.8695;-101.357
+MX;Guanajuato;Ciudad Manuel Doblado;20.7289;-101.952
 MX;Hidalgo;Tolago;20.9783;-98.7283
-MX;Hidalgo;"San Agustín Tlaxiaca";20.1151;-98.8864
-MX;México;"San Martín Tuchicuitlapilco";20.094;-99.6467
-MX;Hidalgo;"Colonia Sesenta y Dos";20.0053;-99.3458
-MX;Guanajuato;"Colonia Fraccionamiento el Puente";20.5236;-100.897
+MX;Hidalgo;San Agustín Tlaxiaca;20.1151;-98.8864
+MX;México;San Martín Tuchicuitlapilco;20.094;-99.6467
+MX;Hidalgo;Colonia Sesenta y Dos;20.0053;-99.3458
+MX;Guanajuato;Colonia Fraccionamiento el Puente;20.5236;-100.897
 MX;Guanajuato;Michinelas;20.4786;-100.81
-MX;Jalisco;"San Antonio de Fernández";20.5525;-102.618
-MX;Jalisco;"El Tule";20.7167;-102.441
+MX;Jalisco;San Antonio de Fernández;20.5525;-102.618
+MX;Jalisco;El Tule;20.7167;-102.441
 MX;Jalisco;Pegueros;20.9533;-102.668
-MX;Jalisco;"Paseo del Prado";20.5644;-103.389
+MX;Jalisco;Paseo del Prado;20.5644;-103.389
 MX;Hidalgo;Molango;20.7869;-98.7288
-MX;Hidalgo;"Santiago Tulantepec";20.0362;-98.3556
-MX;Hidalgo;"El Tepeyac";20.0507;-98.3106
+MX;Hidalgo;Santiago Tulantepec;20.0362;-98.3556
+MX;Hidalgo;El Tepeyac;20.0507;-98.3106
 MX;Veracruz;Álamo;20.9115;-97.6755
-MX;Veracruz;"Gutiérrez Zamora";20.4535;-97.0859
-MX;Campeche;"Bolonchén de Rejón";20.0039;-89.7466
+MX;Veracruz;Gutiérrez Zamora;20.4535;-97.0859
+MX;Campeche;Bolonchén de Rejón;20.0039;-89.7466
 MX;Campeche;Tankuché;20.5074;-90.2416
 MX;Hidalgo;Ixmiquilpan;20.4784;-99.217
 MX;Hidalgo;Alfajayucan;20.4081;-99.349
-MX;Hidalgo;"Tezontepec de Aldama";20.1907;-99.2743
+MX;Hidalgo;Tezontepec de Aldama;20.1907;-99.2743
 MX;Hidalgo;Ajacuba;20.0917;-99.1225
 MX;Hidalgo;Plomosas;20.9121;-99.1696
-MX;Hidalgo;"El Tephé";20.4486;-99.175
-MX;Hidalgo;"Dios Padre";20.4647;-99.2013
-MX;México;"Santiago Oxthoc";20.116;-99.5442
-MX;Hidalgo;"Xiteje de la Reforma";20.1423;-99.4849
-MX;Hidalgo;"Unidad Habitacional Dina-Sidena Chacón";20.0836;-98.7389
-MX;Hidalgo;"El Meje";20.259;-98.9165
-MX;Hidalgo;"San Antonio Zaragoza";20.255;-98.9983
+MX;Hidalgo;El Tephé;20.4486;-99.175
+MX;Hidalgo;Dios Padre;20.4647;-99.2013
+MX;México;Santiago Oxthoc;20.116;-99.5442
+MX;Hidalgo;Xiteje de la Reforma;20.1423;-99.4849
+MX;Hidalgo;Unidad Habitacional Dina-Sidena Chacón;20.0836;-98.7389
+MX;Hidalgo;El Meje;20.259;-98.9165
+MX;Hidalgo;San Antonio Zaragoza;20.255;-98.9983
 MX;Hidalgo;Daxtha;20.2799;-98.9796
 MX;Hidalgo;Arambó;20.2381;-99.0808
-MX;Hidalgo;"Colonia Nueva Tlaxiaca";20.0278;-98.8528
+MX;Hidalgo;Colonia Nueva Tlaxiaca;20.0278;-98.8528
 MX;Hidalgo;Epazoyucan;20.018;-98.6362
-MX;Hidalgo;"El Paraíso";20.0617;-98.7417
-MX;Hidalgo;"Benito Juárez";20.1605;-98.8261
-MX;Hidalgo;"Rinconada de los Ángeles";20.0261;-98.7114
-MX;Hidalgo;"Guadalupe Minerva";20.1258;-98.7139
-MX;Hidalgo;"San Juan Solís";20.1583;-98.9315
-MX;Hidalgo;"El Rosario";20.2484;-99.0254
-MX;Guanajuato;"Santa Teresa";20.9597;-101.316
-MX;Hidalgo;"La Providencia Siglo XXI";20.0642;-98.7172
-MX;Hidalgo;"Mixquiahuala de Juarez";20.2303;-99.214
-MX;Hidalgo;"Privada Quinta Bonita";20.0644;-98.7706
+MX;Hidalgo;El Paraíso;20.0617;-98.7417
+MX;Hidalgo;Benito Juárez;20.1605;-98.8261
+MX;Hidalgo;Rinconada de los Ángeles;20.0261;-98.7114
+MX;Hidalgo;Guadalupe Minerva;20.1258;-98.7139
+MX;Hidalgo;San Juan Solís;20.1583;-98.9315
+MX;Hidalgo;El Rosario;20.2484;-99.0254
+MX;Guanajuato;Santa Teresa;20.9597;-101.316
+MX;Hidalgo;La Providencia Siglo XXI;20.0642;-98.7172
+MX;Hidalgo;Mixquiahuala de Juarez;20.2303;-99.214
+MX;Hidalgo;Privada Quinta Bonita;20.0644;-98.7706
 MX;Hidalgo;Chicavasco;20.1971;-98.9539
-MX;Hidalgo;"Villas de San Marcos";20.0292;-98.7875
-MX;Hidalgo;"Atotonilco el Grande";20.2863;-98.6685
-MX;Hidalgo;"PRI Chacón";20.0814;-98.7369
-MX;Hidalgo;"Lázaro Cárdenas";20.2249;-99.0951
+MX;Hidalgo;Villas de San Marcos;20.0292;-98.7875
+MX;Hidalgo;Atotonilco el Grande;20.2863;-98.6685
+MX;Hidalgo;PRI Chacón;20.0814;-98.7369
+MX;Hidalgo;Lázaro Cárdenas;20.2249;-99.0951
 MX;Hidalgo;Lagunilla;20.3431;-99.0274
 MX;Hidalgo;Atecoxco;20.508;-98.5882
-MX;Hidalgo;"Mineral del Monte";20.1383;-98.6736
-MX;Hidalgo;"Huasca de Ocampo";20.2036;-98.576
-MX;Hidalgo;"El Mandhó";20.502;-99.2383
+MX;Hidalgo;Mineral del Monte;20.1383;-98.6736
+MX;Hidalgo;Huasca de Ocampo;20.2036;-98.576
+MX;Hidalgo;El Mandhó;20.502;-99.2383
 MX;Hidalgo;Metztitlán;20.595;-98.7629
 MX;Hidalgo;Fontezuelas;20.4885;-98.8716
-MX;Hidalgo;"Cuautepec de Hinojosa";20.0356;-98.3102
+MX;Hidalgo;Cuautepec de Hinojosa;20.0356;-98.3102
 MX;Hidalgo;Cipreses;20.0589;-98.7675
-MX;Hidalgo;"Pueblo Nuevo";20.1732;-98.6906
+MX;Hidalgo;Pueblo Nuevo;20.1732;-98.6906
 MX;Hidalgo;Palmillas;20.2186;-99.1984
-MX;Hidalgo;"Campestre Villas del Álamo";20.1017;-98.7072
-MX;Hidalgo;"San Miguel Nopalapa";20.0156;-98.7125
-MX;Hidalgo;"Los Filtros";20.2189;-99.0886
+MX;Hidalgo;Campestre Villas del Álamo;20.1017;-98.7072
+MX;Hidalgo;San Miguel Nopalapa;20.0156;-98.7125
+MX;Hidalgo;Los Filtros;20.2189;-99.0886
 MX;Hidalgo;Dajiedi;20.3111;-98.9401
 MX;Hidalgo;Carboneras;20.09;-98.7053
 MX;Hidalgo;Tulipanes;20.0603;-98.7672
-MX;Hidalgo;"Bothi Bají";20.2424;-98.9456
-MX;Guanajuato;"San Juan Bautista Cacalote";20.3481;-100.788
+MX;Hidalgo;Bothi Bají;20.2424;-98.9456
+MX;Guanajuato;San Juan Bautista Cacalote;20.3481;-100.788
 MX;Guanajuato;Yerbabuena;20.9632;-101.274
-MX;Guanajuato;"El Maluco";20.9361;-101.289
-MX;Guanajuato;"Capulín de Bustos";20.8824;-101.307
-MX;Querétaro;"Las Lajitas";20.8036;-100.401
+MX;Guanajuato;El Maluco;20.9361;-101.289
+MX;Guanajuato;Capulín de Bustos;20.8824;-101.307
+MX;Querétaro;Las Lajitas;20.8036;-100.401
 MX;Querétaro;Montenegro;20.7633;-100.429
-MX;Querétaro;"Jardines de Azucenas (La Floresta)";20.6325;-100.482
-MX;Querétaro;"Hacienda Santa Rosa [Fraccionamiento]";20.7667;-100.438
+MX;Querétaro;Jardines de Azucenas (La Floresta);20.6325;-100.482
+MX;Querétaro;Hacienda Santa Rosa [Fraccionamiento];20.7667;-100.438
 MX;Guanajuato;Silao;20.9521;-101.428
-MX;Guanajuato;"La Estrella";20.3905;-101.921
-MX;Veracruz;"Alto Lucero";20.9536;-97.4419
-MX;Hidalgo;"El Saucillo (Fraccionamiento)";20.0678;-98.7319
-MX;Guanajuato;"Paso de Pirules";20.9503;-101.3
-MX;Jalisco;"San Sebastián el Grande";20.5328;-103.429
-MX;Guanajuato;"San Juan de la Puerta";20.7305;-101.714
+MX;Guanajuato;La Estrella;20.3905;-101.921
+MX;Veracruz;Alto Lucero;20.9536;-97.4419
+MX;Hidalgo;El Saucillo (Fraccionamiento);20.0678;-98.7319
+MX;Guanajuato;Paso de Pirules;20.9503;-101.3
+MX;Jalisco;San Sebastián el Grande;20.5328;-103.429
+MX;Guanajuato;San Juan de la Puerta;20.7305;-101.714
 MX;Hidalgo;Yahualica;20.954;-98.3805
-MX;Querétaro;"Querétaro City (Arboledas)";20.6164;-100.389
-MX;Hidalgo;"San Jerónimo";20.2347;-98.8464
-MX;Veracruz;"El Mollejon";20.5422;-97.4111
-MX;Veracruz;"Residencial Tajín";20.5981;-97.4169
-MX;Veracruz;"Poza Rica (Obras Sociales)";20.5338;-97.4574
-MX;Querétaro;"Fray Junípero Serra [Fraccionamiento]";20.6597;-100.37
+MX;Querétaro;Querétaro City (Arboledas);20.6164;-100.389
+MX;Hidalgo;San Jerónimo;20.2347;-98.8464
+MX;Veracruz;El Mollejon;20.5422;-97.4111
+MX;Veracruz;Residencial Tajín;20.5981;-97.4169
+MX;Veracruz;Poza Rica (Obras Sociales);20.5338;-97.4574
+MX;Querétaro;Fray Junípero Serra [Fraccionamiento];20.6597;-100.37
 MX;Querétaro;Corea;20.8017;-100.45
-MX;Guanajuato;"Ojo de Agua del Potrero";20.7747;-100.664
-MX;Querétaro;"El Picacho";20.117;-100.112
-MX;Querétaro;"Mesa de Ramírez";20.929;-99.9906
-MX;México;"El Álamo";20.208;-99.7944
-MX;Guanajuato;"El Pinito";20.9992;-100.397
-MX;Querétaro;"Cerro de la Cruz";20.8147;-100.501
-MX;Guanajuato;"Arenal de Abajo";20.9743;-100.45
+MX;Guanajuato;Ojo de Agua del Potrero;20.7747;-100.664
+MX;Querétaro;El Picacho;20.117;-100.112
+MX;Querétaro;Mesa de Ramírez;20.929;-99.9906
+MX;México;El Álamo;20.208;-99.7944
+MX;Guanajuato;El Pinito;20.9992;-100.397
+MX;Querétaro;Cerro de la Cruz;20.8147;-100.501
+MX;Guanajuato;Arenal de Abajo;20.9743;-100.45
 MX;Guanajuato;Maravillas;20.7451;-101.906
-MX;Guanajuato;"Los Medranos";20.8828;-101.436
-MX;Guanajuato;"Las Liebres";20.8353;-101.471
-MX;Puebla;"Tenango de las Flores";20.2058;-97.9881
-MX;Hidalgo;"Paseo de las Reynas";20.0861;-98.71
-MX;Hidalgo;"Privada del Álamo";20.0983;-98.7003
-MX;Puebla;"Tlamaya Grande";20.1469;-97.8031
-MX;Hidalgo;"San Juan Tepa";20.2158;-99.0659
-MX;Michoacán;"La Sauceda";20.0939;-102.345
-MX;Jalisco;"Tizapán el Alto";20.1594;-103.045
-MX;Guanajuato;"Santa Ana Pacueco";20.3472;-102.016
-MX;Michoacán;"El Colesio";20.1481;-102.301
-MX;Jalisco;"La Ribera";20.3478;-102.279
-MX;Michoacán;"Tanhuato de Guerrero";20.2855;-102.331
-MX;Michoacán;"Vista Hermosa de Negrete";20.2717;-102.475
-MX;Michoacán;"Ixtlán de los Hervores";20.1689;-102.395
-MX;Guanajuato;"Quesera de Cortés";20.398;-102.019
-MX;Michoacán;"El Fuerte";20.3722;-102.067
-MX;Michoacán;"El Cerrito de Catipuato (Cerrito de Ortiz)";20.0314;-102.282
+MX;Guanajuato;Los Medranos;20.8828;-101.436
+MX;Guanajuato;Las Liebres;20.8353;-101.471
+MX;Puebla;Tenango de las Flores;20.2058;-97.9881
+MX;Hidalgo;Paseo de las Reynas;20.0861;-98.71
+MX;Hidalgo;Privada del Álamo;20.0983;-98.7003
+MX;Puebla;Tlamaya Grande;20.1469;-97.8031
+MX;Hidalgo;San Juan Tepa;20.2158;-99.0659
+MX;Michoacán;La Sauceda;20.0939;-102.345
+MX;Jalisco;Tizapán el Alto;20.1594;-103.045
+MX;Guanajuato;Santa Ana Pacueco;20.3472;-102.016
+MX;Michoacán;El Colesio;20.1481;-102.301
+MX;Jalisco;La Ribera;20.3478;-102.279
+MX;Michoacán;Tanhuato de Guerrero;20.2855;-102.331
+MX;Michoacán;Vista Hermosa de Negrete;20.2717;-102.475
+MX;Michoacán;Ixtlán de los Hervores;20.1689;-102.395
+MX;Guanajuato;Quesera de Cortés;20.398;-102.019
+MX;Michoacán;El Fuerte;20.3722;-102.067
+MX;Michoacán;El Cerrito de Catipuato (Cerrito de Ortiz);20.0314;-102.282
 MX;Michoacán;Numarán;20.2558;-101.95
-MX;México;"Aculco de Espinoza";20.0987;-99.8276
-MX;México;"Santa María Nativitas";20.0918;-99.7984
-MX;México;"La Soledad Ejido";20.0867;-99.8539
+MX;México;Aculco de Espinoza;20.0987;-99.8276
+MX;México;Santa María Nativitas;20.0918;-99.7984
+MX;México;La Soledad Ejido;20.0867;-99.8539
 MX;Querétaro;Santillán;20.6007;-99.9395
-MX;México;"San Martín Ejido";20.0716;-99.6939
-MX;Querétaro;"La Lira";20.4755;-100.161
+MX;México;San Martín Ejido;20.0716;-99.6939
+MX;Querétaro;La Lira;20.4755;-100.161
 MX;Querétaro;Higuerillas;20.9163;-99.7656
-MX;México;"El Bonxhi";20.0756;-99.7399
-MX;Querétaro;"La Soledad";20.1694;-100.191
+MX;México;El Bonxhi;20.0756;-99.7399
+MX;Querétaro;La Soledad;20.1694;-100.191
 MX;Querétaro;Apapátaro;20.4681;-100.369
 MX;Querétaro;Palmillas;20.3363;-99.9404
-MX;Querétaro;"Villa Progreso";20.6423;-99.835
-MX;Querétaro;"San Miguel Dehetí";20.2144;-100.116
-MX;Querétaro;"La Negreta";20.5265;-100.451
-MX;Querétaro;"Santa Cruz";20.7118;-100.304
-MX;Hidalgo;"San Francisco";20.4741;-99.7327
-MX;Querétaro;"San Miguel";20.8685;-99.9626
-MX;Querétaro;"Colonia los Ángeles";20.5352;-100.488
+MX;Querétaro;Villa Progreso;20.6423;-99.835
+MX;Querétaro;San Miguel Dehetí;20.2144;-100.116
+MX;Querétaro;La Negreta;20.5265;-100.451
+MX;Querétaro;Santa Cruz;20.7118;-100.304
+MX;Hidalgo;San Francisco;20.4741;-99.7327
+MX;Querétaro;San Miguel;20.8685;-99.9626
+MX;Querétaro;Colonia los Ángeles;20.5352;-100.488
 MX;Puebla;Apapantilla;20.4036;-97.8466
 MX;Hidalgo;Tianguistengo;20.728;-98.6321
-MX;Hidalgo;"San José Palma Gorda";20.0223;-98.751
-MX;Hidalgo;"El Arenal";20.2226;-98.9096
+MX;Hidalgo;San José Palma Gorda;20.0223;-98.751
+MX;Hidalgo;El Arenal;20.2226;-98.9096
 MX;Hidalgo;Tecozautla;20.5336;-99.6345
 MX;Hidalgo;Dengantzha;20.2721;-99.121
-MX;Hidalgo;"Forjadores de Pachuca";20.055;-98.7633
-MX;Hidalgo;"Poxindeje de Morelos";20.2692;-98.9962
-MX;Veracruz;"Colonias Pedernales";20.0458;-97.0514
-MX;Veracruz;"Progreso de Zaragoza";20.2749;-97.7116
+MX;Hidalgo;Forjadores de Pachuca;20.055;-98.7633
+MX;Hidalgo;Poxindeje de Morelos;20.2692;-98.9962
+MX;Veracruz;Colonias Pedernales;20.0458;-97.0514
+MX;Veracruz;Progreso de Zaragoza;20.2749;-97.7116
 MX;Veracruz;Chicontepec;20.9721;-98.1724
-MX;Veracruz;"Las Higueras";20.0369;-96.622
-MX;Guanajuato;"Villas de Guadalupe";20.9494;-101.404
-MX;Guanajuato;"La Arcina";20.9414;-101.614
-MX;Guanajuato;"Santa Catarina de Cuevas (El Tinaco)";20.9378;-101.298
+MX;Veracruz;Las Higueras;20.0369;-96.622
+MX;Guanajuato;Villas de Guadalupe;20.9494;-101.404
+MX;Guanajuato;La Arcina;20.9414;-101.614
+MX;Guanajuato;Santa Catarina de Cuevas (El Tinaco);20.9378;-101.298
 MX;Guanajuato;Coyote;20.8592;-101.245
-MX;Guanajuato;"San Isidro Ojo de Agua";20.7782;-101.659
-MX;Guanajuato;"Rancho Nuevo de Atotonilquillo";20.675;-101.896
+MX;Guanajuato;San Isidro Ojo de Agua;20.7782;-101.659
+MX;Guanajuato;Rancho Nuevo de Atotonilquillo;20.675;-101.896
 MX;Yucatán;Acanceh;20.8129;-89.4533
-MX;Guanajuato;"San Roque de Torres";20.9714;-101.853
-MX;Guanajuato;"San José de Cervera";20.9678;-101.302
-MX;Jalisco;"Ixtlahuacán del Río";20.8639;-103.239
-MX;Jalisco;"El Amarillo";20.6312;-103.894
+MX;Guanajuato;San Roque de Torres;20.9714;-101.853
+MX;Guanajuato;San José de Cervera;20.9678;-101.302
+MX;Jalisco;Ixtlahuacán del Río;20.8639;-103.239
+MX;Jalisco;El Amarillo;20.6312;-103.894
 MX;Puebla;Pochálcatl;20.003;-97.8541
-MX;Guanajuato;"Guadalupe de Tambula";20.8664;-100.576
+MX;Guanajuato;Guadalupe de Tambula;20.8664;-100.576
 MX;Guanajuato;Tarimoro;20.2834;-100.755
-MX;Guanajuato;"San Marcos de Begoña";20.8422;-100.805
-MX;Guanajuato;"Tenería del Santuario";20.5996;-100.798
+MX;Guanajuato;San Marcos de Begoña;20.8422;-100.805
+MX;Guanajuato;Tenería del Santuario;20.5996;-100.798
 MX;Guanajuato;Huapango;20.3653;-100.684
-MX;Guanajuato;"Apaseo el Grande";20.545;-100.685
-MX;Jalisco;"La Vega";20.5835;-103.859
-MX;Jalisco;"Buenos Aires";20.5811;-104.031
-MX;Jalisco;"El Salitre";20.5089;-103.857
-MX;Jalisco;"San Antonio de los Vázquez";20.8165;-103.146
-MX;Jalisco;"San Martín de las Cañas";20.9461;-103.857
+MX;Guanajuato;Apaseo el Grande;20.545;-100.685
+MX;Jalisco;La Vega;20.5835;-103.859
+MX;Jalisco;Buenos Aires;20.5811;-104.031
+MX;Jalisco;El Salitre;20.5089;-103.857
+MX;Jalisco;San Antonio de los Vázquez;20.8165;-103.146
+MX;Jalisco;San Martín de las Cañas;20.9461;-103.857
 MX;Yucatán;Ekmul;20.9654;-89.3488
-MX;Yucatán;"San Antonio Tedzidz";20.8356;-89.9758
+MX;Yucatán;San Antonio Tedzidz;20.8356;-89.9758
 MX;Yucatán;Celestún;20.8597;-90.399
 MX;Yucatán;Chochoh;20.9941;-89.4668
 MX;Campeche;Dzitbalché;20.3186;-90.0561
 MX;Yucatán;Opichén;20.5512;-89.8572
-MX;Campeche;"San Antonio Sahcabchén";20.307;-90.1378
-MX;Jalisco;"San Sebastián del Oeste";20.7618;-104.853
-MX;Jalisco;"San Felipe de Híjar";20.9012;-104.722
-MX;Guanajuato;"San Felipe (El Chilarillo)";20.5156;-101.982
-MX;Querétaro;"Joaquín Herrera";20.483;-100.439
-MX;Querétaro;"El Ciervo";20.6183;-99.8724
-MX;Querétaro;"Bordo Blanco";20.4963;-99.9286
+MX;Campeche;San Antonio Sahcabchén;20.307;-90.1378
+MX;Jalisco;San Sebastián del Oeste;20.7618;-104.853
+MX;Jalisco;San Felipe de Híjar;20.9012;-104.722
+MX;Guanajuato;San Felipe (El Chilarillo);20.5156;-101.982
+MX;Querétaro;Joaquín Herrera;20.483;-100.439
+MX;Querétaro;El Ciervo;20.6183;-99.8724
+MX;Querétaro;Bordo Blanco;20.4963;-99.9286
 MX;Querétaro;Colón;20.7832;-100.051
-MX;Querétaro;"Los Benitos";20.685;-99.9561
-MX;Querétaro;"El Sitio";20.3649;-99.8561
-MX;Querétaro;"El Mirador";20.4411;-99.951
-MX;Querétaro;"Hacienda la Cruz [Fraccionamiento]";20.6333;-100.263
-MX;Querétaro;"Los González";20.9367;-99.9694
-MX;Querétaro;"Barrio de García";20.8689;-99.9686
-MX;Querétaro;"El Saúz";20.4777;-100.115
-MX;Querétaro;"Vista Hermosa (Cuasinada)";20.3686;-100.012
-MX;Querétaro;"Hacienda Blanca";20.2715;-100.102
-MX;Querétaro;"La Griega";20.6664;-100.24
-MX;Querétaro;"San Pablo";20.857;-99.8998
+MX;Querétaro;Los Benitos;20.685;-99.9561
+MX;Querétaro;El Sitio;20.3649;-99.8561
+MX;Querétaro;El Mirador;20.4411;-99.951
+MX;Querétaro;Hacienda la Cruz [Fraccionamiento];20.6333;-100.263
+MX;Querétaro;Los González;20.9367;-99.9694
+MX;Querétaro;Barrio de García;20.8689;-99.9686
+MX;Querétaro;El Saúz;20.4777;-100.115
+MX;Querétaro;Vista Hermosa (Cuasinada);20.3686;-100.012
+MX;Querétaro;Hacienda Blanca;20.2715;-100.102
+MX;Querétaro;La Griega;20.6664;-100.24
+MX;Querétaro;San Pablo;20.857;-99.8998
 MX;Querétaro;Panales;20.8762;-99.9965
-MX;Jalisco;"Santa Anita";20.5501;-103.443
-MX;Jalisco;"San Juan Cosalá";20.2876;-103.341
-MX;Jalisco;"Santa Cruz del Valle";20.5333;-103.433
-MX;Jalisco;"Tlajomulco de Zúñiga";20.4742;-103.447
-MX;Jalisco;"Lomas del Sur";20.4925;-103.418
-MX;Jalisco;"San Miguel Cuyutlán";20.4174;-103.389
+MX;Jalisco;Santa Anita;20.5501;-103.443
+MX;Jalisco;San Juan Cosalá;20.2876;-103.341
+MX;Jalisco;Santa Cruz del Valle;20.5333;-103.433
+MX;Jalisco;Tlajomulco de Zúñiga;20.4742;-103.447
+MX;Jalisco;Lomas del Sur;20.4925;-103.418
+MX;Jalisco;San Miguel Cuyutlán;20.4174;-103.389
 MX;Puebla;Zoquiopan;20.009;-97.5961
-MX;Veracruz;"Manuel María Contreras";20.4462;-97.4833
-MX;Veracruz;"Villa Hermosa";20.9582;-97.5861
-MX;Veracruz;"Chapopote Núñez";20.9317;-97.6827
-MX;Guanajuato;"San Roque";20.5997;-101.342
-MX;Guanajuato;"San José Temascatío";20.6918;-101.26
+MX;Veracruz;Manuel María Contreras;20.4462;-97.4833
+MX;Veracruz;Villa Hermosa;20.9582;-97.5861
+MX;Veracruz;Chapopote Núñez;20.9317;-97.6827
+MX;Guanajuato;San Roque;20.5997;-101.342
+MX;Guanajuato;San José Temascatío;20.6918;-101.26
 MX;Guanajuato;Valencianita;20.747;-101.302
-MX;Guanajuato;"Colonia Morelos de Guadalupe de Rivera";20.5956;-101.448
-MX;Guanajuato;"Providencia de Pérez";20.6057;-101.426
-MX;Guanajuato;"San Javier";20.6673;-101.429
-MX;Guanajuato;"Estación Pénjamo";20.3947;-101.692
-MX;Guanajuato;"La Trinidad";20.5839;-101.487
-MX;Guanajuato;"El Carmen";20.6401;-101.373
-MX;Guanajuato;"Corralejo de Hidalgo";20.5061;-101.631
-MX;Guanajuato;"La Lobera";20.3582;-101.54
-MX;Guanajuato;"Loma de la Esperanza";20.6593;-101.557
-MX;Guanajuato;"San Rafael de Horta";20.6264;-101.543
-MX;Guanajuato;"Estación Joaquín";20.5608;-101.52
-MX;Guanajuato;"San Agustín el Alto (La Araña)";20.5978;-101.375
-MX;Guanajuato;"San Antonio el Chico";20.628;-101.284
+MX;Guanajuato;Colonia Morelos de Guadalupe de Rivera;20.5956;-101.448
+MX;Guanajuato;Providencia de Pérez;20.6057;-101.426
+MX;Guanajuato;San Javier;20.6673;-101.429
+MX;Guanajuato;Estación Pénjamo;20.3947;-101.692
+MX;Guanajuato;La Trinidad;20.5839;-101.487
+MX;Guanajuato;El Carmen;20.6401;-101.373
+MX;Guanajuato;Corralejo de Hidalgo;20.5061;-101.631
+MX;Guanajuato;La Lobera;20.3582;-101.54
+MX;Guanajuato;Loma de la Esperanza;20.6593;-101.557
+MX;Guanajuato;San Rafael de Horta;20.6264;-101.543
+MX;Guanajuato;Estación Joaquín;20.5608;-101.52
+MX;Guanajuato;San Agustín el Alto (La Araña);20.5978;-101.375
+MX;Guanajuato;San Antonio el Chico;20.628;-101.284
 MX;Guanajuato;Aldama;20.8164;-101.315
 MX;Nayarit;Monteón;20.9911;-105.3
-MX;Jalisco;"El Plan";20.4181;-103.607
-MX;Jalisco;"Villa Corona";20.4156;-103.664
-MX;Jalisco;"Juan Gil Preciado";20.3727;-103.728
+MX;Jalisco;El Plan;20.4181;-103.607
+MX;Jalisco;Villa Corona;20.4156;-103.664
+MX;Jalisco;Juan Gil Preciado;20.3727;-103.728
 MX;Jalisco;Bellavista;20.4336;-103.637
 MX;Jalisco;Cajititlán;20.4306;-103.309
 MX;Querétaro;Fuentezuelas;20.5559;-99.9821
 MX;Hidalgo;Tunititlán;20.2494;-99.2443
-MX;Guanajuato;"Fraccionamiento Villas de Guanajuato";20.9603;-101.298
-MX;Querétaro;"Santa Fe Libertadores";20.6642;-100.261
-MX;Guanajuato;"La Ordeña";20.6899;-101.118
-MX;Jalisco;"Puerto Vallarta";20.6534;-105.225
+MX;Guanajuato;Fraccionamiento Villas de Guanajuato;20.9603;-101.298
+MX;Querétaro;Santa Fe Libertadores;20.6642;-100.261
+MX;Guanajuato;La Ordeña;20.6899;-101.118
+MX;Jalisco;Puerto Vallarta;20.6534;-105.225
 MX;Hidalgo;Mangas;20.1865;-99.248
-MX;Hidalgo;"La Loma";20.1775;-99.2633
-MX;Guanajuato;"El Nuevo Refugio";20.8975;-101.396
+MX;Hidalgo;La Loma;20.1775;-99.2633
+MX;Guanajuato;El Nuevo Refugio;20.8975;-101.396
 MX;Veracruz;Tampamachoco;20.9697;-97.3249
-MX;Michoacán;"Angamacutiro de la Unión";20.15;-101.711
+MX;Michoacán;Angamacutiro de la Unión;20.15;-101.711
 MX;México;Soyaniquilpan;20.0149;-99.5302
-MX;Jalisco;"Puerta del Sol [Fraccionamiento]";20.4311;-103.237
+MX;Jalisco;Puerta del Sol [Fraccionamiento];20.4311;-103.237
 MX;Hidalgo;Taxadho;20.4333;-99.1493
-MX;Guanajuato;"San Cristóbal";20.9778;-101.7
-MX;Querétaro;"San Ildefonso";20.5675;-100.173
-MX;Guanajuato;"Purísima de Ramírez (Los Oriones)";20.4331;-101.64
-MX;Guanajuato;"Sabino Seco";20.0273;-100.486
-MX;Guanajuato;"Fraccionamiento Villa Jardín";20.9917;-101.852
-MX;Querétaro;"Querétaro City (Casa Blanca La Corregidora)";20.579;-100.401
+MX;Guanajuato;San Cristóbal;20.9778;-101.7
+MX;Querétaro;San Ildefonso;20.5675;-100.173
+MX;Guanajuato;Purísima de Ramírez (Los Oriones);20.4331;-101.64
+MX;Guanajuato;Sabino Seco;20.0273;-100.486
+MX;Guanajuato;Fraccionamiento Villa Jardín;20.9917;-101.852
+MX;Querétaro;Querétaro City (Casa Blanca La Corregidora);20.579;-100.401
 MX;Guanajuato;Cárdenas;20.6301;-101.22
-MX;Jalisco;"Guadalajara (Del Fresno)";20.6609;-103.368
+MX;Jalisco;Guadalajara (Del Fresno);20.6609;-103.368
 MX;Yucatán;Mérida;20.9636;-89.6251
-MX;Veracruz;"Montana de Zaragoza";20.3495;-97.1757
+MX;Veracruz;Montana de Zaragoza;20.3495;-97.1757
 MX;Hidalgo;Jalapa;20.6731;-98.5159
-MX;Querétaro;"Jesús María";20.6227;-100.256
-MX;Guanajuato;"Colonia Emiliano Zapata (El Cerrito)";20.9844;-101.459
-MX;Jalisco;"Guadalajara (Monraz)";20.6848;-103.399
-MX;Jalisco;"Guadalajara (Jardines del Bosque)";20.6556;-103.389
-MX;Querétaro;"Querétaro City (Jardines de la Hacienda)";20.5703;-100.41
-MX;Querétaro;"Querétaro City (La Pastora)";20.5925;-100.379
-MX;"Quintana Roo";"Playa del Carmen (Gonzalo Guerrero)";20.6375;-87.0706
-MX;Jalisco;"Zapopan (Belenes Norte)";20.739;-103.401
+MX;Querétaro;Jesús María;20.6227;-100.256
+MX;Guanajuato;Colonia Emiliano Zapata (El Cerrito);20.9844;-101.459
+MX;Jalisco;Guadalajara (Monraz);20.6848;-103.399
+MX;Jalisco;Guadalajara (Jardines del Bosque);20.6556;-103.389
+MX;Querétaro;Querétaro City (Jardines de la Hacienda);20.5703;-100.41
+MX;Querétaro;Querétaro City (La Pastora);20.5925;-100.379
+MX;Quintana Roo;Playa del Carmen (Gonzalo Guerrero);20.6375;-87.0706
+MX;Jalisco;Zapopan (Belenes Norte);20.739;-103.401
 MX;Hidalgo;Pachuca;20.0525;-98.7747
-MX;Yucatán;"Texan de Palomeque";20.9375;-89.8333
+MX;Yucatán;Texan de Palomeque;20.9375;-89.8333
 MX;Yucatán;Izamal;20.9354;-89.018
-MX;Veracruz;"Castillo de Teayo";20.7493;-97.6303
-MX;Veracruz;"Miguel Hidalgo";20.5532;-97.502
-MX;Veracruz;"La Isla Km 10";20.6068;-97.4995
+MX;Veracruz;Castillo de Teayo;20.7493;-97.6303
+MX;Veracruz;Miguel Hidalgo;20.5532;-97.502
+MX;Veracruz;La Isla Km 10;20.6068;-97.4995
 MX;Veracruz;Totolapa;20.558;-97.4764
-MX;Hidalgo;"Tula de Allende";20.0558;-99.3424
+MX;Hidalgo;Tula de Allende;20.0558;-99.3424
 MX;Hidalgo;Progreso;20.0197;-99.2386
 MX;Hidalgo;Tasquillo;20.5484;-99.3135
-MX;Hidalgo;"Residencial Arboledas";20.0644;-99.3017
+MX;Hidalgo;Residencial Arboledas;20.0644;-99.3017
 MX;Hidalgo;Teocalco;20.0858;-99.2829
-MX;Hidalgo;"Nopala de Villagran";20.252;-99.6454
-MX;Hidalgo;"San Sebastián Tenochtitlán";20.2799;-99.6888
-MX;Hidalgo;"San Gabriel";20.1715;-99.335
+MX;Hidalgo;Nopala de Villagran;20.252;-99.6454
+MX;Hidalgo;San Sebastián Tenochtitlán;20.2799;-99.6888
+MX;Hidalgo;San Gabriel;20.1715;-99.335
 MX;Hidalgo;Bomintzha;20.014;-99.2728
-MX;Hidalgo;"Álvaro Obregón";20.7066;-99.3732
-MX;Hidalgo;"La Candelaria";20.5657;-99.3086
-MX;Hidalgo;"San Isidro";20.5461;-99.3236
-MX;Hidalgo;"San Juan Achichilco";20.1787;-99.3146
-MX;Hidalgo;"San José Atlán";20.3383;-99.674
+MX;Hidalgo;Álvaro Obregón;20.7066;-99.3732
+MX;Hidalgo;La Candelaria;20.5657;-99.3086
+MX;Hidalgo;San Isidro;20.5461;-99.3236
+MX;Hidalgo;San Juan Achichilco;20.1787;-99.3146
+MX;Hidalgo;San José Atlán;20.3383;-99.674
 MX;Hidalgo;Panuaya;20.195;-99.2708
 MX;Hidalgo;Tepetitlan;20.1872;-99.3805
-MX;Hidalgo;"Santa María Batha";20.2241;-99.2517
-MX;Hidalgo;"Atotonilco de Tula";20.0077;-99.218
-MX;Guanajuato;"Villa de Guadalupe";20.5664;-101.382
-MX;Guanajuato;"Jaral del Progreso";20.3724;-101.062
-MX;Guanajuato;"El Divisador";20.5772;-101.158
+MX;Hidalgo;Santa María Batha;20.2241;-99.2517
+MX;Hidalgo;Atotonilco de Tula;20.0077;-99.218
+MX;Guanajuato;Villa de Guadalupe;20.5664;-101.382
+MX;Guanajuato;Jaral del Progreso;20.3724;-101.062
+MX;Guanajuato;El Divisador;20.5772;-101.158
 MX;Guanajuato;Arandas;20.7247;-101.373
 MX;Yucatán;Yaxunah;20.5412;-88.676
 MX;Yucatán;Xohuayan;20.188;-89.3832
 MX;Yucatán;Telchaquillo;20.6469;-89.4637
-MX;Campeche;"Santa Cruz Pueblo";20.3336;-90.1034
-MX;Guanajuato;"San Isidro del Arenal";20.9047;-101.439
-MX;Guanajuato;"Los Rodríguez";20.9362;-101.363
+MX;Campeche;Santa Cruz Pueblo;20.3336;-90.1034
+MX;Guanajuato;San Isidro del Arenal;20.9047;-101.439
+MX;Guanajuato;Los Rodríguez;20.9362;-101.363
 MX;Jalisco;Allende;20.7205;-102.084
-MX;Guanajuato;"Cañada de Negros";20.9264;-101.921
-MX;Guanajuato;"El Saucillo";20.6951;-101.71
-MX;Guanajuato;"El Maguey";20.9804;-101.847
-MX;Guanajuato;"San Carlos del Jagüey";20.91;-101.636
-MX;Guanajuato;"San Ignacio";20.9149;-101.359
-MX;Guanajuato;"La Ladera";20.7603;-101.992
-MX;Guanajuato;"Arroyo Seco";20.9985;-101.814
+MX;Guanajuato;Cañada de Negros;20.9264;-101.921
+MX;Guanajuato;El Saucillo;20.6951;-101.71
+MX;Guanajuato;El Maguey;20.9804;-101.847
+MX;Guanajuato;San Carlos del Jagüey;20.91;-101.636
+MX;Guanajuato;San Ignacio;20.9149;-101.359
+MX;Guanajuato;La Ladera;20.7603;-101.992
+MX;Guanajuato;Arroyo Seco;20.9985;-101.814
 MX;Yucatán;Piste;20.6997;-88.5889
 MX;Yucatán;Tahdzibichén;20.886;-89.5976
-CU;"Holguín Province";Holguín;20.8829;-76.2641
-MX;Yucatán;"Mérida (Centro)";20.9726;-89.6417
-CU;"Las Tunas Province";"Las Tunas";20.9531;-76.9423
-CU;"Holguín Province";Holguín;20.8226;-76.2779
-CU;"Granma Province";Bayamo;20.3719;-76.6297
-MX;Jalisco;"Zapopan (Santa Ana Tepetitlán)";20.6253;-103.451
+CU;Holguín Province;Holguín;20.8829;-76.2641
+MX;Yucatán;Mérida (Centro);20.9726;-89.6417
+CU;Las Tunas Province;Las Tunas;20.9531;-76.9423
+CU;Holguín Province;Holguín;20.8226;-76.2779
+CU;Granma Province;Bayamo;20.3719;-76.6297
+MX;Jalisco;Zapopan (Santa Ana Tepetitlán);20.6253;-103.451
 US;Hawaii;Kīhei;20.7484;-156.438
-MX;Jalisco;"Guadalajara (Bosques de La Victoria)";20.6462;-103.389
-MX;Guanajuato;"Salamanca (Bella Vista de Santa María)";20.5829;-101.193
-MX;Jalisco;"Guadalajara (Americana)";20.6746;-103.354
+MX;Jalisco;Guadalajara (Bosques de La Victoria);20.6462;-103.389
+MX;Guanajuato;Salamanca (Bella Vista de Santa María);20.5829;-101.193
+MX;Jalisco;Guadalajara (Americana);20.6746;-103.354
 US;Hawaii;Kīhei;20.7487;-156.44
 US;Hawaii;Wailuku;20.8867;-156.504
 US;Hawaii;Kīhei;20.7407;-156.455
 US;Hawaii;Kīhei;20.75;-156.44
 US;Hawaii;Wailea;20.558;-156.606
-MX;Jalisco;"Guadalajara (Ferrocarril)";20.6556;-103.348
-MX;Jalisco;"Guadalajara (Ladrón de Guevara)";20.6841;-103.373
+MX;Jalisco;Guadalajara (Ferrocarril);20.6556;-103.348
+MX;Jalisco;Guadalajara (Ladrón de Guevara);20.6841;-103.373
 MX;Querétaro;Ajuchitlancito;20.5047;-100.215
-CU;"Holguín Province";"Holguín (Piedra Blanca)";20.8956;-76.2396
+CU;Holguín Province;Holguín (Piedra Blanca);20.8956;-76.2396
 MX;Jalisco;Zapopan;20.6573;-103.418
-MX;Jalisco;"Guadalajara (Circunvalación Vallarta)";20.6838;-103.383
-MX;Jalisco;"Guadalajara (Americana)";20.6754;-103.359
-MX;Querétaro;"Querétaro City (Constituyentes Fovissste)";20.5982;-100.408
+MX;Jalisco;Guadalajara (Circunvalación Vallarta);20.6838;-103.383
+MX;Jalisco;Guadalajara (Americana);20.6754;-103.359
+MX;Querétaro;Querétaro City (Constituyentes Fovissste);20.5982;-100.408
 MX;Guanajuato;Celaya;20.539;-100.82
-MX;Yucatán;"Mérida (Internacional)";20.9365;-89.6638
-MX;Querétaro;"Querétaro City (San Javier)";20.6003;-100.38
-MX;Guanajuato;"San Cristóbal (San Fco. del Rincón)";20.9782;-101.697
-MX;Jalisco;"Guadalajara (Miraflores)";20.6939;-103.347
-MX;"Quintana Roo";"Barceló Maya";20.4991;-87.2602
-MX;Yucatán;"Mérida (Díaz Ordaz)";20.9993;-89.5959
+MX;Yucatán;Mérida (Internacional);20.9365;-89.6638
+MX;Querétaro;Querétaro City (San Javier);20.6003;-100.38
+MX;Guanajuato;San Cristóbal (San Fco. del Rincón);20.9782;-101.697
+MX;Jalisco;Guadalajara (Miraflores);20.6939;-103.347
+MX;Quintana Roo;Barceló Maya;20.4991;-87.2602
+MX;Yucatán;Mérida (Díaz Ordaz);20.9993;-89.5959
 MX;Guanajuato;Moroleón;20.1265;-101.193
-MX;Jalisco;"Zapopan (Valle de San Nicolás)";20.6279;-103.46
-MX;Jalisco;"Guadalajara (Lomas de Providencia)";20.6942;-103.385
-MX;Jalisco;"Guadalajara (Vallarta Poniente)";20.6736;-103.389
-MX;Jalisco;"Tlaquepaque (Lomas de Tlaquepaque)";20.6279;-103.3
-MX;Querétaro;"Querétaro City (Jurica)";20.6498;-100.43
-MX;Jalisco;"Guadalajara (Santa Teresita)";20.679;-103.368
-MX;Jalisco;"Zapopan (Chapalita Oriente)";20.6681;-103.409
+MX;Jalisco;Zapopan (Valle de San Nicolás);20.6279;-103.46
+MX;Jalisco;Guadalajara (Lomas de Providencia);20.6942;-103.385
+MX;Jalisco;Guadalajara (Vallarta Poniente);20.6736;-103.389
+MX;Jalisco;Tlaquepaque (Lomas de Tlaquepaque);20.6279;-103.3
+MX;Querétaro;Querétaro City (Jurica);20.6498;-100.43
+MX;Jalisco;Guadalajara (Santa Teresita);20.679;-103.368
+MX;Jalisco;Zapopan (Chapalita Oriente);20.6681;-103.409
 MX;Jalisco;Ajijic;20.2997;-103.239
-MX;Jalisco;"Guadalajara (Las Conchas)";20.6621;-103.345
-MX;Jalisco;"Guadalajara (Americana)";20.674;-103.368
-MX;Querétaro;"Querétaro City";20.589;-100.401
-MX;Hidalgo;"Javier Rojo Gómez";20.0751;-98.4221
-MX;Jalisco;"Guadalajara (Miravalle)";20.6172;-103.352
-MX;Guanajuato;"Irapuato (Unidad Modelo del IMSS)";20.6766;-101.371
-CU;"Holguín Province";"Holguín (Casco Histórico)";20.8923;-76.261
-CU;"Holguín Province";"Holguín (Casco Histórico)";20.8827;-76.2565
-CU;"Holguín Province";Antilla;20.828;-75.7393
-MX;Jalisco;"Guadalajara (Verde Valle)";20.6529;-103.392
+MX;Jalisco;Guadalajara (Las Conchas);20.6621;-103.345
+MX;Jalisco;Guadalajara (Americana);20.674;-103.368
+MX;Querétaro;Querétaro City;20.589;-100.401
+MX;Hidalgo;Javier Rojo Gómez;20.0751;-98.4221
+MX;Jalisco;Guadalajara (Miravalle);20.6172;-103.352
+MX;Guanajuato;Irapuato (Unidad Modelo del IMSS);20.6766;-101.371
+CU;Holguín Province;Holguín (Casco Histórico);20.8923;-76.261
+CU;Holguín Province;Holguín (Casco Histórico);20.8827;-76.2565
+CU;Holguín Province;Antilla;20.828;-75.7393
+MX;Jalisco;Guadalajara (Verde Valle);20.6529;-103.392
 MX;Yucatán;Tetiz;20.9629;-89.9337
-MX;Guanajuato;"San Antonio Texas";20.9856;-101.49
-MX;"Quintana Roo";"San Miguel de Cozumel (10 de Abril)";20.5079;-86.9436
+MX;Guanajuato;San Antonio Texas;20.9856;-101.49
+MX;Quintana Roo;San Miguel de Cozumel (10 de Abril);20.5079;-86.9436
 MX;Jalisco;Zapopan;20.7111;-103.436
-MX;Hidalgo;"Pachuca (El Atorón)";20.1283;-98.7345
+MX;Hidalgo;Pachuca (El Atorón);20.1283;-98.7345
 MX;Jalisco;Tequila;20.8819;-103.832
-MX;Guanajuato;"Estación la Piedad";20.3675;-101.998
-MX;Querétaro;"Querétaro City (Jardines de la Hacienda)";20.5746;-100.413
-MX;Veracruz;"Túxpam de Rodríguez Cano (Zapote Gordo)";20.9509;-97.4205
-MX;Veracruz;"Calichar Palma Sola";20.4415;-97.551
-MX;Jalisco;"Guadalajara (Chapultepec Country)";20.6926;-103.371
-MX;Guanajuato;"San Vicente de Flores";20.6217;-101.253
-MX;Guanajuato;"El Chinaco (El Pujido)";20.5222;-100.92
-MX;Hidalgo;"Pachuca (El Tezontle)";20.089;-98.7732
-MX;Querétaro;"Puerto de Carroza";20.8986;-100.412
+MX;Guanajuato;Estación la Piedad;20.3675;-101.998
+MX;Querétaro;Querétaro City (Jardines de la Hacienda);20.5746;-100.413
+MX;Veracruz;Túxpam de Rodríguez Cano (Zapote Gordo);20.9509;-97.4205
+MX;Veracruz;Calichar Palma Sola;20.4415;-97.551
+MX;Jalisco;Guadalajara (Chapultepec Country);20.6926;-103.371
+MX;Guanajuato;San Vicente de Flores;20.6217;-101.253
+MX;Guanajuato;El Chinaco (El Pujido);20.5222;-100.92
+MX;Hidalgo;Pachuca (El Tezontle);20.089;-98.7732
+MX;Querétaro;Puerto de Carroza;20.8986;-100.412
 MX;Puebla;Huehuetla;20.1058;-97.6252
-MX;Jalisco;"Guadalajara (Observatorio)";20.6964;-103.349
-MX;Querétaro;"San José el Alto";20.6534;-100.382
+MX;Jalisco;Guadalajara (Observatorio);20.6964;-103.349
+MX;Querétaro;San José el Alto;20.6534;-100.382
 MX;Guanajuato;Puentecillas;20.9319;-101.279
-MX;Guanajuato;"San Nicolás Quiriceo";20.4539;-101.287
-MX;Querétaro;"El Cazadero";20.3001;-99.8719
-MX;Querétaro;"Querétaro City (Plazas del Sol 1ra Sección)";20.5769;-100.376
-MX;Guanajuato;"Colonia Pedro María Anaya";20.5261;-100.878
+MX;Guanajuato;San Nicolás Quiriceo;20.4539;-101.287
+MX;Querétaro;El Cazadero;20.3001;-99.8719
+MX;Querétaro;Querétaro City (Plazas del Sol 1ra Sección);20.5769;-100.376
+MX;Guanajuato;Colonia Pedro María Anaya;20.5261;-100.878
 MX;Puebla;Morelos;20.2585;-97.9421
-MX;Yucatán;"Mérida (Jesús Carranza)";20.9833;-89.6112
-MX;Hidalgo;"Patria Nueva";20.3715;-99.0517
-MX;Jalisco;"Cima del Sol (Fraccionamiento Cima del Sol)";20.4689;-103.417
-MX;Veracruz;"Lima Vieja";20.7878;-97.6314
-MX;Veracruz;"La Victoria (La Peñita)";20.9369;-97.3725
-MX;Puebla;"Coronel Tito Hernández";20.4564;-97.7361
-MX;Veracruz;"Enrique Rodríguez Cano (Zapotalillo)";20.6597;-97.5489
-MX;Veracruz;"El Chote";20.4017;-97.3439
-MX;Veracruz;"Francisco Villa";20.3639;-97.3319
-MX;Puebla;"Villa Lázaro Cárdenas";20.4619;-97.7002
-MX;Puebla;"Venustiano Carranza";20.5067;-97.6681
+MX;Yucatán;Mérida (Jesús Carranza);20.9833;-89.6112
+MX;Hidalgo;Patria Nueva;20.3715;-99.0517
+MX;Jalisco;Cima del Sol (Fraccionamiento Cima del Sol);20.4689;-103.417
+MX;Veracruz;Lima Vieja;20.7878;-97.6314
+MX;Veracruz;La Victoria (La Peñita);20.9369;-97.3725
+MX;Puebla;Coronel Tito Hernández;20.4564;-97.7361
+MX;Veracruz;Enrique Rodríguez Cano (Zapotalillo);20.6597;-97.5489
+MX;Veracruz;El Chote;20.4017;-97.3439
+MX;Veracruz;Francisco Villa;20.3639;-97.3319
+MX;Puebla;Villa Lázaro Cárdenas;20.4619;-97.7002
+MX;Puebla;Venustiano Carranza;20.5067;-97.6681
 MX;Veracruz;Banderas;20.9908;-97.3936
-MX;Veracruz;"La Granadilla";20.8344;-97.5694
-MX;Veracruz;"El Panorama";20.2892;-97.6355
+MX;Veracruz;La Granadilla;20.8344;-97.5694
+MX;Veracruz;El Panorama;20.2892;-97.6355
 MX;Veracruz;Entabladero;20.2752;-97.5511
 MX;Veracruz;Citlaltépetl;20.8642;-97.6078
 MX;Veracruz;Ahuica;20.9311;-98.1772
-MX;Veracruz;"Loma Bonita";20.9386;-97.6775
-MX;Veracruz;"Macedonio Alonso";20.2742;-97.6919
-MX;Veracruz;"Fraccionamiento la Florida";20.5867;-97.4283
-MX;Puebla;"Ayotoxco de Guerrero";20.0959;-97.4096
+MX;Veracruz;Loma Bonita;20.9386;-97.6775
+MX;Veracruz;Macedonio Alonso;20.2742;-97.6919
+MX;Veracruz;Fraccionamiento la Florida;20.5867;-97.4283
+MX;Puebla;Ayotoxco de Guerrero;20.0959;-97.4096
 MX;Puebla;Caxhuacán;20.0636;-97.6069
 MX;Puebla;Nanacatlán;20.0037;-97.6758
-MX;Veracruz;"Ejido Vega de San Marcos";20.2003;-96.9386
-MX;Veracruz;"Puente de Piedra";20.6055;-97.196
+MX;Veracruz;Ejido Vega de San Marcos;20.2003;-96.9386
+MX;Veracruz;Puente de Piedra;20.6055;-97.196
 MX;Puebla;Cuetzalan;20.0177;-97.5228
-MX;Veracruz;"Puntilla Aldama";20.1891;-96.9069
-MX;Veracruz;"San Rafael";20.1886;-96.8674
-MX;Puebla;"Santiago Yancuictlalpan";20.0609;-97.4722
-MX;Veracruz;"Barra de Palmas";20.1619;-96.727
-MX;Veracruz;"Cazones de Herrera";20.7042;-97.3099
+MX;Veracruz;Puntilla Aldama;20.1891;-96.9069
+MX;Veracruz;San Rafael;20.1886;-96.8674
+MX;Puebla;Santiago Yancuictlalpan;20.0609;-97.4722
+MX;Veracruz;Barra de Palmas;20.1619;-96.727
+MX;Veracruz;Cazones de Herrera;20.7042;-97.3099
 MX;Veracruz;Hueycuatitla;20.8678;-98.1755
 MX;Puebla;Mecapalapa;20.5268;-97.8564
-MX;Veracruz;"Barrio Acosta Lagunes";20.6947;-97.3144
-MX;Veracruz;"Buenos Aires (San Isidro)";20.8403;-97.6014
+MX;Veracruz;Barrio Acosta Lagunes;20.6947;-97.3144
+MX;Veracruz;Buenos Aires (San Isidro);20.8403;-97.6014
 MX;Veracruz;Sasaltitla;20.9352;-98.197
-MX;Veracruz;"Anclón y Arenal";20.4351;-97.1165
+MX;Veracruz;Anclón y Arenal;20.4351;-97.1165
 MX;Hidalgo;Xoxoteco;20.5152;-98.6251
-MX;Puebla;"Xicotepec de Juárez";20.2761;-97.9611
+MX;Puebla;Xicotepec de Juárez;20.2761;-97.9611
 MX;Hidalgo;Tizapán;20.6516;-98.5975
 MX;Puebla;Cuaxicala;20.2389;-98.0268
 MX;Hidalgo;Acaxochitlán;20.1579;-98.2017
-MX;Hidalgo;"San Juan";20.0507;-98.6654
-MX;Guanajuato;"San Francisco Puerta Grande";20.8759;-101.484
+MX;Hidalgo;San Juan;20.0507;-98.6654
+MX;Guanajuato;San Francisco Puerta Grande;20.8759;-101.484
 MX;Michoacán;Cuamio;20.0339;-101.152
-MX;Michoacán;"Romero de Torres";20.0243;-102.253
-MX;Querétaro;"Vista Real y Country Club";20.5222;-100.402
-MX;Jalisco;"Guadalajara (Zona Centro)";20.6758;-103.346
-MX;Jalisco;"Guadalajara (Vallarta Sur)";20.6707;-103.392
-MX;Jalisco;"Tlaquepaque (Sin Nombre)";20.6161;-103.421
-MX;Jalisco;"Guadalajara (Jardines Plaza del Sol)";20.6573;-103.398
-MX;Jalisco;"Guadalajara (Jardines Plaza del Sol)";20.6576;-103.398
-MX;Veracruz;"Martínez de la Torre";20.0615;-97.0545
-MX;Jalisco;"San Joaquín Zorrillos";20.6212;-103.017
-MX;Guanajuato;"Aguas Buenas";20.9703;-101.372
-MX;Jalisco;"San Ignacio Cerro Gordo";20.7432;-102.537
-MX;Guanajuato;"San José Cuaracurio";20.1031;-101.158
+MX;Michoacán;Romero de Torres;20.0243;-102.253
+MX;Querétaro;Vista Real y Country Club;20.5222;-100.402
+MX;Jalisco;Guadalajara (Zona Centro);20.6758;-103.346
+MX;Jalisco;Guadalajara (Vallarta Sur);20.6707;-103.392
+MX;Jalisco;Tlaquepaque (Sin Nombre);20.6161;-103.421
+MX;Jalisco;Guadalajara (Jardines Plaza del Sol);20.6573;-103.398
+MX;Jalisco;Guadalajara (Jardines Plaza del Sol);20.6576;-103.398
+MX;Veracruz;Martínez de la Torre;20.0615;-97.0545
+MX;Jalisco;San Joaquín Zorrillos;20.6212;-103.017
+MX;Guanajuato;Aguas Buenas;20.9703;-101.372
+MX;Jalisco;San Ignacio Cerro Gordo;20.7432;-102.537
+MX;Guanajuato;San José Cuaracurio;20.1031;-101.158
 MX;Hidalgo;Tlaxcoapan;20.0916;-99.2204
 MX;Hidalgo;Actopan;20.2743;-98.9521
-MX;Hidalgo;"La Estancia";20.3143;-98.9055
-MX;Hidalgo;"San Miguel Cerezo (El Cerezo)";20.1591;-98.7285
-MX;Jalisco;"Los Guajes";20.0856;-104.025
-MX;Veracruz;"La Defensa";20.6681;-97.7183
+MX;Hidalgo;La Estancia;20.3143;-98.9055
+MX;Hidalgo;San Miguel Cerezo (El Cerezo);20.1591;-98.7285
+MX;Jalisco;Los Guajes;20.0856;-104.025
+MX;Veracruz;La Defensa;20.6681;-97.7183
 MX;Yucatán;Teya;20.9365;-89.5204
-MX;Guanajuato;"Caleras de Ameche";20.5613;-100.56
-MX;Hidalgo;"El Huixmí";20.0757;-98.8197
-MX;Jalisco;"La Desembocada";20.7286;-105.156
+MX;Guanajuato;Caleras de Ameche;20.5613;-100.56
+MX;Hidalgo;El Huixmí;20.0757;-98.8197
+MX;Jalisco;La Desembocada;20.7286;-105.156
 MX;Puebla;Joloapan;20.2385;-97.2779
-MX;Guanajuato;"Primera Fracción de Crespo";20.4964;-100.852
-MX;Guanajuato;"San Ignacio de Rivera (Ojo de Agua)";20.5593;-101.461
-MX;Puebla;"San José Acateno";20.1307;-97.21
+MX;Guanajuato;Primera Fracción de Crespo;20.4964;-100.852
+MX;Guanajuato;San Ignacio de Rivera (Ojo de Agua);20.5593;-101.461
+MX;Puebla;San José Acateno;20.1307;-97.21
 MX;Querétaro;Buenavista;20.8237;-100.47
-MX;Querétaro;"San Rafael";20.7525;-100.286
-MX;México;"El Rosal";20.1013;-99.6855
-MX;Michoacán;"El Platanal";20.062;-102.578
+MX;Querétaro;San Rafael;20.7525;-100.286
+MX;México;El Rosal;20.1013;-99.6855
+MX;Michoacán;El Platanal;20.062;-102.578
 MX;Michoacán;Morelos;20.1492;-102.622
-MX;Jalisco;"Guadalajara (Jardines Plaza del Sol)";20.6574;-103.399
-MX;Jalisco;"Guadalajara (Moderna)";20.6649;-103.356
-MX;Querétaro;"La Laja";20.5747;-99.9807
-MX;Querétaro;"Querétaro City (Lomas de Satelite)";20.6395;-100.446
+MX;Jalisco;Guadalajara (Jardines Plaza del Sol);20.6574;-103.399
+MX;Jalisco;Guadalajara (Moderna);20.6649;-103.356
+MX;Querétaro;La Laja;20.5747;-99.9807
+MX;Querétaro;Querétaro City (Lomas de Satelite);20.6395;-100.446
 MX;Querétaro;Calamanda;20.5467;-100.186
-MX;Guanajuato;"Vista Hermosa";20.7531;-101.517
-MX;Veracruz;"La Piedad";20.6733;-97.3519
-MX;Jalisco;"Benito Juárez";20.2837;-103.601
-MX;Veracruz;"Francisco Sarabia";20.0184;-96.9715
-MX;Michoacán;"Los Guajes";20.2611;-102.142
-MX;Guanajuato;"Tierra Fría";20.4615;-101.039
-MX;Guanajuato;"El Coecillo";20.9765;-101.45
-MX;Jalisco;"La Trinidad";20.6753;-102.481
-MX;Jalisco;"Los Guerrero";20.4423;-103.898
+MX;Guanajuato;Vista Hermosa;20.7531;-101.517
+MX;Veracruz;La Piedad;20.6733;-97.3519
+MX;Jalisco;Benito Juárez;20.2837;-103.601
+MX;Veracruz;Francisco Sarabia;20.0184;-96.9715
+MX;Michoacán;Los Guajes;20.2611;-102.142
+MX;Guanajuato;Tierra Fría;20.4615;-101.039
+MX;Guanajuato;El Coecillo;20.9765;-101.45
+MX;Jalisco;La Trinidad;20.6753;-102.481
+MX;Jalisco;Los Guerrero;20.4423;-103.898
 MX;Yucatán;Sitilpech;20.9405;-88.9568
-VN;"Hưng Yên Province";"Minh Khai";20.8635;106.679
-IN;"Dadra and Nagar Haveli and Daman and Diu";"Silvassa (Pramukh Vihar)";20.275;72.9974
-CN;Guangdong;"Zhanjiang (Leizhou Shi)";20.9142;110.097
-PH;"Cagayan Valley";Basco;20.4485;121.971
-IN;Gujarat;"Atul (Atul Plant Area)";20.5368;72.9406
+VN;Hưng Yên Province;Minh Khai;20.8635;106.679
+IN;Dadra and Nagar Haveli and Daman and Diu;Silvassa (Pramukh Vihar);20.275;72.9974
+CN;Guangdong;Zhanjiang (Leizhou Shi);20.9142;110.097
+PH;Cagayan Valley;Basco;20.4485;121.971
+IN;Gujarat;Atul (Atul Plant Area);20.5368;72.9406
 MM;Rakhine;Sittwe;20.1462;92.8984
-IN;Maharashtra;"Amravati (Rāhātgaon)";20.9662;77.7867
-VN;"Hải Dương Province";"Lai Cách";20.9479;106.229
-VN;Hanoi;"Thanh Xuân";20.9911;105.802
+IN;Maharashtra;Amravati (Rāhātgaon);20.9662;77.7867
+VN;Hải Dương Province;Lai Cách;20.9479;106.229
+VN;Hanoi;Thanh Xuân;20.9911;105.802
 IN;Maharashtra;Ner;20.4897;77.8663
 IN;Maharashtra;Sultanpur;20.087;76.5187
-VN;"Nam Định Province";"Yên Định";20.0723;106.238
+VN;Nam Định Province;Yên Định;20.0723;106.238
 US;Hawaii;Waimea;20.0298;-155.699
-US;Hawaii;"Haiku-Pauwela (Haiku)";20.8998;-156.306
+US;Hawaii;Haiku-Pauwela (Haiku);20.8998;-156.306
 US;Hawaii;Kīhei;20.7499;-156.44
 MX;Michoacán;Yurécuaro;20.3298;-102.283
 US;Hawaii;Kīhei;20.738;-156.449
-MX;Michoacán;"Los Charcos";20.2646;-102.408
-MX;Querétaro;"Querétaro City (Jurica)";20.6375;-100.428
+MX;Michoacán;Los Charcos;20.2646;-102.408
+MX;Querétaro;Querétaro City (Jurica);20.6375;-100.428
 US;Hawaii;Kahului;20.8901;-156.433
 MX;Querétaro;Lagunillas;20.4588;-100.295
 MX;Hidalgo;Caltimacan;20.5367;-99.37
-MX;Yucatán;"Mérida (Centro)";20.9686;-89.6232
-MX;Jalisco;"Puerto Vallarta (Olímpica)";20.6288;-105.229
-MX;Querétaro;"Querétaro City (Carretas)";20.5941;-100.376
+MX;Yucatán;Mérida (Centro);20.9686;-89.6232
+MX;Jalisco;Puerto Vallarta (Olímpica);20.6288;-105.229
+MX;Querétaro;Querétaro City (Carretas);20.5941;-100.376
 US;Hawaii;Kīhei;20.7505;-156.438
-MX;Guanajuato;"Las Ánimas";20.3971;-101.8
+MX;Guanajuato;Las Ánimas;20.3971;-101.8
 US;Hawaii;Waimea;20.0203;-155.67
-CN;Hainan;"Haikou (Meilan Qu)";20.0245;110.339
-CN;Hainan;"Haikou (Meilan Qu)";20.0228;110.336
-CN;Hainan;"Haikou (Longhua District, Haikou)";20.0289;110.306
-CN;Hainan;"Haikou (Meilan Qu)";20.0335;110.347
-CN;Hainan;"Haikou (Longhua Qu)";20.0289;110.306
-CN;Hainan;"Haikou (Meilan Qu)";20.0335;110.352
-CN;Hainan;"Haikou (Meilan Qu)";20.0258;110.339
-CN;Hainan;"Haikou (Meilan Qu)";20.0664;110.333
-IN;Gujarat;"Valsād (Nankwada)";20.6037;72.9231
-IN;Maharashtra;"Akola (Aadarsh Colony)";20.6914;77.0122
+CN;Hainan;Haikou (Meilan Qu);20.0245;110.339
+CN;Hainan;Haikou (Meilan Qu);20.0228;110.336
+CN;Hainan;Haikou (Longhua District, Haikou);20.0289;110.306
+CN;Hainan;Haikou (Meilan Qu);20.0335;110.347
+CN;Hainan;Haikou (Longhua Qu);20.0289;110.306
+CN;Hainan;Haikou (Meilan Qu);20.0335;110.352
+CN;Hainan;Haikou (Meilan Qu);20.0258;110.339
+CN;Hainan;Haikou (Meilan Qu);20.0664;110.333
+IN;Gujarat;Valsād (Nankwada);20.6037;72.9231
+IN;Maharashtra;Akola (Aadarsh Colony);20.6914;77.0122
 IN;Maharashtra;Dhule;20.9065;74.789
-IN;Odisha;"Cuttack (Maachhua Bazar)";20.4783;85.8793
+IN;Odisha;Cuttack (Maachhua Bazar);20.4783;85.8793
 US;Hawaii;Kīhei;20.7485;-156.438
-MX;Yucatán;"Mérida (García Ginerés)";20.985;-89.6391
-CN;Guangdong;"Zhanjiang (Leizhou Shi)";20.9085;110.015
-IN;Odisha;"Bhubaneswar (Koushalyagang)";20.1861;85.8564
+MX;Yucatán;Mérida (García Ginerés);20.985;-89.6391
+CN;Guangdong;Zhanjiang (Leizhou Shi);20.9085;110.015
+IN;Odisha;Bhubaneswar (Koushalyagang);20.1861;85.8564
 IN;Odisha;Nalco;20.8653;85.1842
-CN;Guangdong;"Zhanjiang (Wushizhen)";20.5552;109.847
-CN;Guangdong;"Zhanjiang (Hai'an, Xuwen County)";20.2707;110.226
-CN;Guangdong;"Zhanjiang (Shenglicun)";20.3708;110.462
-VN;"Hòa Bình Province";"Đà Bắc";20.8771;105.254
+CN;Guangdong;Zhanjiang (Wushizhen);20.5552;109.847
+CN;Guangdong;Zhanjiang (Hai'an, Xuwen County);20.2707;110.226
+CN;Guangdong;Zhanjiang (Shenglicun);20.3708;110.462
+VN;Hòa Bình Province;Đà Bắc;20.8771;105.254
 IN;Odisha;Kendrāparha;20.5017;86.4223
 IN;Chhattisgarh;Visrampuree;20.0791;81.7719
 IN;Odisha;Chāndbāli;20.7752;86.7414
