@@ -10,23 +10,23 @@ NO;Trøndelag;Hegra;63.4638;11.1152
 NO;Trøndelag;Stjørdal;63.468;10.9178
 NO;Trøndelag;Hell;63.4458;10.9009
 NO;Trøndelag;Tanem;63.3167;10.45
-NO;"Møre og Romsdal";Aure;63.2679;8.52913
+NO;Møre og Romsdal;Aure;63.2679;8.52913
 NO;Trøndelag;Krokstadøra;63.401;9.50062
 NO;Trøndelag;Brekstad;63.687;9.66541
-NO;"Møre og Romsdal";Rensvik;63.0984;7.82026
+NO;Møre og Romsdal;Rensvik;63.0984;7.82026
 NO;Trøndelag;Meråker;63.4141;11.743
 NO;Trøndelag;Skaun;63.2515;10.0524
 SE;Jämtland;Östersund;63.1767;14.6361
 SE;Jämtland;Strömsund;63.8521;15.5558
 SE;Västerbotten;Obbola;63.7;20.3167
 SE;Västerbotten;Röbäck;63.8088;20.189
-US;Alaska;"McKinley Park";63.6546;-148.834
+US;Alaska;McKinley Park;63.6546;-148.834
 RU;Sakha;Vilyuysk;63.7433;121.666
 RU;Yamalo-Nenets;Noyabrsk;63.197;75.4424
 RU;Komi;Ukhta;63.569;53.6914
-NO;"Møre og Romsdal";Kristiansund;63.111;7.79516
-NO;"Møre og Romsdal";Kristiansund;63.1105;7.72795
-NO;"Møre og Romsdal";Hopen;63.4654;8.01437
+NO;Møre og Romsdal;Kristiansund;63.111;7.79516
+NO;Møre og Romsdal;Kristiansund;63.1105;7.72795
+NO;Møre og Romsdal;Hopen;63.4654;8.01437
 RU;Yamalo-Nenets;Noyabrsk;63.1842;75.4478
 NO;Trøndelag;Trondheim;63.434;10.4137
 NO;Trøndelag;Trondheim;63.431;10.4089
@@ -36,10 +36,10 @@ SE;Västerbotten;Umeå;63.8258;20.263
 NO;Trøndelag;Tanem;63.3256;10.3735
 US;Alaska;Stebbins;63.5185;-162.284
 FI;Ostrobothnia;Jakobstad;63.6749;22.7026
-US;Alaska;"Fort Greely";63.98;-145.742
+US;Alaska;Fort Greely;63.98;-145.742
 US;Alaska;Tok;63.3367;-142.986
 SE;Jämtland;Ås;63.25;14.5667
-IS;"Southern Peninsula";Njardvik;63.9546;-22.4702
+IS;Southern Peninsula;Njardvik;63.9546;-22.4702
 NO;Trøndelag;Selbu;63.2175;11.0402
 NO;Trøndelag;Selbu;63.2192;11.0413
 SE;Västerbotten;Ersmark;63.8833;20.3167
@@ -50,63 +50,63 @@ SE;Västerbotten;Vännäs;63.9068;19.7571
 SE;Västernorrland;Köpmanholmen;63.1667;18.5667
 IS;South;Selfoss;63.9331;-20.9971
 IS;South;Vik;63.4194;-19.0097
-IS;"Southern Peninsula";Reykjanesbaer;63.9981;-22.5611
+IS;Southern Peninsula;Reykjanesbaer;63.9981;-22.5611
 SE;Jämtland;Krokom;63.3259;14.4488
 NO;Trøndelag;Fillan;63.6064;8.96961
 FI;Ostrobothnia;Vähäkyrö;63.0564;22.1058
-FI;"North Savo";Maaninka;63.1552;27.2994
+FI;North Savo;Maaninka;63.1552;27.2994
 FI;Ostrobothnia;Vaasa;63.096;21.6158
-FI;"North Savo";Iisalmi;63.5592;27.1907
-FI;"South Ostrobothnia";Alahärmä;63.2483;22.8549
-FI;"North Savo";Sonkajärvi;63.6667;27.5167
-FI;"North Savo";Siilinjärvi;63.0833;27.6667
-FI;"North Karelia";Lieksa;63.3167;30.0167
+FI;North Savo;Iisalmi;63.5592;27.1907
+FI;South Ostrobothnia;Alahärmä;63.2483;22.8549
+FI;North Savo;Sonkajärvi;63.6667;27.5167
+FI;North Savo;Siilinjärvi;63.0833;27.6667
+FI;North Karelia;Lieksa;63.3167;30.0167
 RU;Yamalo-Nenets;Noyabrsk;63.1931;75.4373
 RU;Khanty-Mansia;Beryozovo;63.9381;65.0419
-FI;"North Ostrobothnia";Sievi;63.9;24.5
-FI;"Central Ostrobothnia";Kannus;63.9;23.9
-FI;"North Ostrobothnia";Nivala;63.9167;24.9667
+FI;North Ostrobothnia;Sievi;63.9;24.5
+FI;Central Ostrobothnia;Kannus;63.9;23.9
+FI;North Ostrobothnia;Nivala;63.9167;24.9667
 SE;Västernorrland;Ås;63.3667;16.5833
 NO;Trøndelag;Å;63.9607;10.2247
-FI;"Central Ostrobothnia";Kokkola;63.8415;23.125
-FI;"North Ostrobothnia";Pyhäsalmi;63.6833;25.9833
-FI;"North Ostrobothnia";Kärsämäki;63.9667;25.7667
-FI;"North Ostrobothnia";Sievi;63.9066;24.5214
-IS;"Southern Peninsula";Reykjanesbaer;63.9998;-22.5583
-FI;"North Ostrobothnia";Nivala;63.9235;24.9759
+FI;Central Ostrobothnia;Kokkola;63.8415;23.125
+FI;North Ostrobothnia;Pyhäsalmi;63.6833;25.9833
+FI;North Ostrobothnia;Kärsämäki;63.9667;25.7667
+FI;North Ostrobothnia;Sievi;63.9066;24.5214
+IS;Southern Peninsula;Reykjanesbaer;63.9998;-22.5583
+FI;North Ostrobothnia;Nivala;63.9235;24.9759
 NO;Trøndelag;Saupstad;63.3661;10.3426
 NO;Trøndelag;Orkanger;63.3067;9.85025
 NO;Trøndelag;Verdal;63.7933;11.4817
-NO;"Møre og Romsdal";Bruhagen;63.0526;7.63416
+NO;Møre og Romsdal;Bruhagen;63.0526;7.63416
 NO;Trøndelag;Sistranda;63.7252;8.83318
 NO;Trøndelag;Botngård;63.7648;9.80863
-FI;"North Savo";Lapinlahti;63.3667;27.4
+FI;North Savo;Lapinlahti;63.3667;27.4
 RU;Komi;Ukhta;63.5667;53.7
 NO;Trøndelag;Aas;63.05;11.65
 SE;Västerbotten;Sävar;63.9038;20.5501
 SE;Västerbotten;Nordmaling;63.5685;19.5024
 SE;Västernorrland;Grundtjärn;63.4276;17.7292
-SE;Västernorrland;"Kramfors Kommun";63.4276;17.7292
+SE;Västernorrland;Kramfors Kommun;63.4276;17.7292
 NO;Trøndelag;Lundamo;63.1522;10.2856
 NO;Trøndelag;Melhus;63.2855;10.2781
 SE;Västernorrland;Gimåt;63.3167;18.7167
-FI;"North Savo";Rautavaara;63.4833;28.3
-FI;"North Savo";Vieremä;63.75;27.0167
-FI;"North Savo";Varpaisjärvi;63.3593;27.7551
+FI;North Savo;Rautavaara;63.4833;28.3
+FI;North Savo;Vieremä;63.75;27.0167
+FI;North Savo;Varpaisjärvi;63.3593;27.7551
 CA;Nunavut;Iqaluit;63.747;-68.5173
-NO;Trøndelag;"Trondheim (Tyholt)";63.4246;10.4375
-NO;Trøndelag;"Trondheim (Lade)";63.4463;10.4435
+NO;Trøndelag;Trondheim (Tyholt);63.4246;10.4375
+NO;Trøndelag;Trondheim (Lade);63.4463;10.4435
 NO;Trøndelag;Trondheim;63.4369;10.464
-NO;Trøndelag;"Trondheim (Ranheim)";63.4167;10.5167
-NO;Trøndelag;"Trondheim (Nidarvoll)";63.3987;10.4073
+NO;Trøndelag;Trondheim (Ranheim);63.4167;10.5167
+NO;Trøndelag;Trondheim (Nidarvoll);63.3987;10.4073
 SE;Jämtland;Brunflo;63.0759;14.832
-SE;Västerbotten;"Umeå (Centrala Stan)";63.8261;20.255
-FI;"North Savo";Lapinlahti;63.3636;27.3816
+SE;Västerbotten;Umeå (Centrala Stan);63.8261;20.255
+FI;North Savo;Lapinlahti;63.3636;27.3816
 FI;Ostrobothnia;Jakobstad;63.6742;22.7126
 FI;Ostrobothnia;Nykarleby;63.5228;22.5307
 FI;Ostrobothnia;Sandsund;63.6476;22.7298
 FI;Ostrobothnia;Pedersore;63.65;22.6833
-FI;"Central Ostrobothnia";Kokkola;63.8385;23.1307
+FI;Central Ostrobothnia;Kokkola;63.8385;23.1307
 FI;Ostrobothnia;Nykarleby;63.3883;22.6277
 FI;Ostrobothnia;Vaasa;63.095;21.6164
 FI;Ostrobothnia;Oravais;63.3013;22.3782
@@ -115,35 +115,35 @@ FI;Ostrobothnia;Vaasa;63.083;21.6144
 NO;Trøndelag;Trondheim;63.3961;10.3971
 NO;Trøndelag;Trondheim;63.4243;10.4132
 NO;Trøndelag;Hommelvik;63.4108;10.7942
-NO;"Møre og Romsdal";Kristiansund;63.1107;7.79429
+NO;Møre og Romsdal;Kristiansund;63.1107;7.79429
 NO;Trøndelag;Trondheim;63.4001;10.4028
 NO;Trøndelag;Brekstad;63.6871;9.66433
 SE;Jämtland;Backe;63.8167;16.4
-SE;Jämtland;"Östersund (Frösö)";63.1834;14.6182
+SE;Jämtland;Östersund (Frösö);63.1834;14.6182
 RU;Komi;Vodnyy;63.5046;53.4095
 NO;Trøndelag;Støren;63.0391;10.285
 NO;Trøndelag;Rindal;63.0555;9.21151
-FI;"North Ostrobothnia";Pyhäjärvi;63.6813;25.9812
-FI;"North Ostrobothnia";Haapajärvi;63.75;25.3333
-FI;"North Savo";Iisalmi;63.5571;27.1877
-FI;"North Savo";Keitele;63.176;26.338
-FI;"North Savo";Rantatoivala;63.0065;27.7972
+FI;North Ostrobothnia;Pyhäjärvi;63.6813;25.9812
+FI;North Ostrobothnia;Haapajärvi;63.75;25.3333
+FI;North Savo;Iisalmi;63.5571;27.1877
+FI;North Savo;Keitele;63.176;26.338
+FI;North Savo;Rantatoivala;63.0065;27.7972
 FI;Ostrobothnia;Vaasa;63.098;21.6175
 FI;Ostrobothnia;Vaasa;63.0951;21.6165
-FI;"Central Ostrobothnia";Kälviä;63.8607;23.4529
-FI;"Central Finland";Kinnula;63.3667;24.9667
+FI;Central Ostrobothnia;Kälviä;63.8607;23.4529
+FI;Central Finland;Kinnula;63.3667;24.9667
 US;Alaska;Tok;63.6615;-144.067
-US;Alaska;"Fort Greely";63.9538;-145.742
+US;Alaska;Fort Greely;63.9538;-145.742
 US;Alaska;Tanacross;63.3776;-143.357
 US;Alaska;Savoonga;63.6942;-170.479
 US;Alaska;Talkeetna;63.1148;-151.193
 NO;Trøndelag;Straumen;63.8716;11.2962
-SE;Västerbotten;"Umeå (Centrala Stan)";63.8222;20.2729
-SE;Västerbotten;"Umeå (Centrala Stan)";63.8257;20.2572
+SE;Västerbotten;Umeå (Centrala Stan);63.8222;20.2729
+SE;Västerbotten;Umeå (Centrala Stan);63.8257;20.2572
 SE;Västerbotten;Umeå;63.8259;20.2561
-FI;"North Savo";Iisalmi;63.5592;27.1903
-FI;"North Savo";Iisalmi;63.5593;27.1903
-SE;Västernorrland;"Örnsköldsvik (Staden)";63.2905;18.7131
+FI;North Savo;Iisalmi;63.5592;27.1903
+FI;North Savo;Iisalmi;63.5593;27.1903
+SE;Västernorrland;Örnsköldsvik (Staden);63.2905;18.7131
 SE;Jämtland;Stugun;63.1667;15.6
 SE;Västernorrland;Fors;63.4167;18.5833
 SE;Jämtland;Hållsta;63;14.9667
@@ -154,19 +154,19 @@ SE;Jämtland;Mörsil;63.3091;13.6636
 SE;Jämtland;Åre;63.3991;13.08
 NO;Trøndelag;Trondheim;63.4154;10.4065
 RU;Komi;Ukhta;63.5673;53.7472
-SE;Västerbotten;"Umeå (Centrala Stan)";63.829;20.2579
-SE;Västerbotten;"Umeå (Centrala Stan)";63.8231;20.2766
+SE;Västerbotten;Umeå (Centrala Stan);63.829;20.2579
+SE;Västerbotten;Umeå (Centrala Stan);63.8231;20.2766
 SE;Västerbotten;Nordmaling;63.5781;19.4876
 SE;Västerbotten;Vännäs;63.908;19.753
-SE;Västerbotten;"Umeå (Centrala Stan)";63.8275;20.2566
+SE;Västerbotten;Umeå (Centrala Stan);63.8275;20.2566
 NO;Trøndelag;Børsa;63.3267;10.0692
 SE;Jämtland;Nälden;63.35;14.25
-FI;"Central Finland";Pihtipudas;63.3833;25.5667
-NO;Trøndelag;"Trondheim (Elgeseter)";63.4154;10.397
+FI;Central Finland;Pihtipudas;63.3833;25.5667
+NO;Trøndelag;Trondheim (Elgeseter);63.4154;10.397
 NO;Trøndelag;Trondheim;63.4058;10.3981
 SE;Västerbotten;Umeå;63.8381;20.264
 SE;Västerbotten;Djäkneböle;63.7679;20.0502
-SE;Västerbotten;"Sävar (Umeå NO)";63.9032;20.5555
+SE;Västerbotten;Sävar (Umeå NO);63.9032;20.5555
 SE;Västerbotten;Umeå;63.7958;19.8547
 SE;Västerbotten;Umeå;63.6812;20.0026
 SE;Västerbotten;Nordmaling;63.5703;19.5197
@@ -174,34 +174,34 @@ SE;Västerbotten;Bjurholm;63.9293;19.2116
 SE;Västerbotten;Bjurholm;63.9346;19.2097
 SE;Västerbotten;Umeå;63.8331;20.2248
 SE;Västerbotten;Rundvik;63.5333;19.4333
-SE;Västerbotten;"Sävar (Umeå NO)";63.9081;20.5638
+SE;Västerbotten;Sävar (Umeå NO);63.9081;20.5638
 SE;Västerbotten;Umeå;63.8047;20.3225
-SE;Västerbotten;"Umeå (Västerslätt)";63.8339;20.2621
+SE;Västerbotten;Umeå (Västerslätt);63.8339;20.2621
 IS;South;Vestmannaeyjar;63.4427;-20.2734
-SE;Västerbotten;"Umeå (Centrala Stan)";63.825;20.2641
-FI;"South Ostrobothnia";Kauhava;63.1015;23.0597
-FI;"Southern Ostrobothnia";Kauhava;63.1015;23.0597
-FI;"North Savo";Siilinjärvi;63.0714;27.6626
+SE;Västerbotten;Umeå (Centrala Stan);63.825;20.2641
+FI;South Ostrobothnia;Kauhava;63.1015;23.0597
+FI;Southern Ostrobothnia;Kauhava;63.1015;23.0597
+FI;North Savo;Siilinjärvi;63.0714;27.6626
 FI;Ostrobothnia;Korsholm;63.1142;21.6822
 FI;Ostrobothnia;Teeriniemi;63.097;21.6959
 FI;Ostrobothnia;Ristinummi;63.0919;21.723
 FI;Ostrobothnia;Vörå;63.1361;22.2522
 SE;Jämtland;Hammarstrand;63.1104;16.3538
-FI;"North Karelia";Nurmes;63.542;29.1397
+FI;North Karelia;Nurmes;63.542;29.1397
 NO;Trøndelag;Trondheim;63.4302;10.3939
 NO;Trøndelag;Melhus;63.2856;10.2781
 NO;Trøndelag;Trondheim;63.4016;10.3326
-NO;"Møre og Romsdal";Lesund;63.3368;8.48674
+NO;Møre og Romsdal;Lesund;63.3368;8.48674
 NO;Trøndelag;Levanger;63.7464;11.2996
 SE;Västerbotten;Umeå;63.825;20.2637
-NO;Trøndelag;"Løkken Verk";63.1258;9.70518
+NO;Trøndelag;Løkken Verk;63.1258;9.70518
 NO;Trøndelag;Malvik;63.4333;10.6833
 NO;Trøndelag;Mebonden;63.2303;11.031
 RU;Komi;Sosnogorsk;63.5967;53.8918
 SE;Västernorrland;Junsele;63.6959;16.8826
 SE;Jämtland;Björnänge;63.3833;13.1333
 SE;Västernorrland;Långsele;63.1833;17.0667
-FI;"North Savo";Iisalmi;63.5694;27.1826
+FI;North Savo;Iisalmi;63.5694;27.1826
 SE;Västernorrland;Mellansel;63.4251;18.3155
 NO;Trøndelag;Skogn;63.7037;11.1926
 NO;Trøndelag;Klæbu;63.2976;10.4826
@@ -211,23 +211,23 @@ NO;Trøndelag;Trondheim;63.4114;10.4024
 NO;Trøndelag;Rissa;63.5837;9.95989
 NO;Trøndelag;Hovin;63.1055;10.2238
 NO;Trøndelag;Frosta;63.5891;10.7423
-SE;Västerbotten;"Umeå (Centrala Stan)";63.825;20.2585
+SE;Västerbotten;Umeå (Centrala Stan);63.825;20.2585
 SE;Västerbotten;Umeå;63.825;20.2585
-FI;"North Karelia";Juuka;63.2333;29.25
-FI;"South Ostrobothnia";Kauhava;63.103;23.0713
-FI;"North Savo";Nilsiä;63.2075;28.0822
-FI;"Central Ostrobothnia";Perho;63.2167;24.4167
+FI;North Karelia;Juuka;63.2333;29.25
+FI;South Ostrobothnia;Kauhava;63.103;23.0713
+FI;North Savo;Nilsiä;63.2075;28.0822
+FI;Central Ostrobothnia;Perho;63.2167;24.4167
 RU;Yamalo-Nenets;Noyabrsk;63.1981;75.4205
 SE;Västerbotten;Umeå;63.857;20.3003
-SE;Västernorrland;"Domsjö (Hörnett-Sund)";63.2728;18.7025
+SE;Västernorrland;Domsjö (Hörnett-Sund);63.2728;18.7025
 SE;Västernorrland;Bredbyn;63.4465;18.1102
-SE;Västernorrland;"Örnsköldsvik (Staden)";63.2872;18.7248
-SE;Västernorrland;"Örnsköldsvik (Staden)";63.283;18.7333
-NO;"Møre og Romsdal";Kristiansund;63.1103;7.72808
+SE;Västernorrland;Örnsköldsvik (Staden);63.2872;18.7248
+SE;Västernorrland;Örnsköldsvik (Staden);63.283;18.7333
+NO;Møre og Romsdal;Kristiansund;63.1103;7.72808
 FI;Ostrobothnia;Lepplax;63.6703;22.8932
 NO;Trøndelag;Sparbu;63.919;11.4329
 IS;South;Vestmannaeyjar;63.4423;-20.2724
-FI;"Central Ostrobothnia";Kaustinen;63.5488;23.6884
+FI;Central Ostrobothnia;Kaustinen;63.5488;23.6884
 FI;Ostrobothnia;Kronoby;63.7286;23.0339
 FI;Ostrobothnia;Smedsby;63.1167;21.7
 FI;Ostrobothnia;Replot;63.2288;21.4169
@@ -243,37 +243,37 @@ FI;Ostrobothnia;Ytteresse;63.6221;22.9946
 FI;Ostrobothnia;Edsevö;63.6355;22.8574
 FI;Ostrobothnia;Bennäs;63.6;22.8
 FI;Ostrobothnia;Vaasa;63.0955;21.6507
-SE;Västerbotten;"Umeå (Ersboda)";63.8525;20.3042
-SE;Västerbotten;"Vännäs (Vännäs socken)";63.9058;19.8288
-SE;Västerbotten;"Vännäs (Vännäs socken)";63.9371;19.8575
-SE;Västerbotten;"Umeå (Ersboda)";63.8533;20.3056
+SE;Västerbotten;Umeå (Ersboda);63.8525;20.3042
+SE;Västerbotten;Vännäs (Vännäs socken);63.9058;19.8288
+SE;Västerbotten;Vännäs (Vännäs socken);63.9371;19.8575
+SE;Västerbotten;Umeå (Ersboda);63.8533;20.3056
 NO;Trøndelag;Hommelvik;63.4169;10.76
 NO;Trøndelag;Selbu;63.2175;11.0404
 SE;Västerbotten;Lögdeå;63.5489;19.3874
 NO;Trøndelag;Verdal;63.7934;11.4816
-FI;"North Savo";Pielavesi;63.2333;26.75
-FI;"Central Ostrobothnia";Veteli;63.4784;23.7829
-FI;"Central Finland";Kinnula;63.3833;24.95
+FI;North Savo;Pielavesi;63.2333;26.75
+FI;Central Ostrobothnia;Veteli;63.4784;23.7829
+FI;Central Finland;Kinnula;63.3833;24.95
 RU;Arkhangelskaya;Pole;63.6229;39.2449
 SE;Västernorrland;Bjästa;63.2;18.5
 NO;Trøndelag;Meldal;63.0472;9.71337
-SE;Västernorrland;"Örnsköldsvik (Staden)";63.3048;18.7214
+SE;Västernorrland;Örnsköldsvik (Staden);63.3048;18.7214
 IS;South;Hella;63.8348;-20.4008
 RU;Yamalo-Nenets;Noyabrsk;63.2035;75.4655
 IS;South;Thorlakshofn;63.8559;-21.3834
-FI;"Central Ostrobothnia";Lestijärvi;63.5251;24.6651
-FI;"Central Ostrobothnia";Toholampi;63.7667;24.25
-FI;"Central Ostrobothnia";Veteli;63.4799;23.7864
-FI;"Central Ostrobothnia";Lestijärvi;63.5272;24.6581
-FI;"Central Ostrobothnia";Ullava;63.6;24.0833
+FI;Central Ostrobothnia;Lestijärvi;63.5251;24.6651
+FI;Central Ostrobothnia;Toholampi;63.7667;24.25
+FI;Central Ostrobothnia;Veteli;63.4799;23.7864
+FI;Central Ostrobothnia;Lestijärvi;63.5272;24.6581
+FI;Central Ostrobothnia;Ullava;63.6;24.0833
 SE;Västernorrland;Överhörnäs;63.2876;18.5812
 SE;Jämtland;Järpen;63.3462;13.4657
 SE;Västernorrland;Ramsele;63.5395;16.4679
-FI;"South Ostrobothnia";Ylihärmä;63.15;22.7833
+FI;South Ostrobothnia;Ylihärmä;63.15;22.7833
 RU;Yamalo-Nenets;Muravlenko;63.7935;74.5257
 NO;Trøndelag;Sluppen;63.3981;10.4031
 RU;Karelia;Segezha;63.7382;34.3149
-SE;Västerbotten;"Umeå (Centrala Stan)";63.8292;20.2527
+SE;Västerbotten;Umeå (Centrala Stan);63.8292;20.2527
 NO;Trøndelag;Trondheim;63.4418;10.403
 NO;Trøndelag;Trondheim;63.4312;10.3973
 NO;Trøndelag;Trondheim;63.4416;10.4031
@@ -290,203 +290,203 @@ NO;Trøndelag;Leksvik;63.6723;10.6212
 NO;Trøndelag;Årnes;63.9611;10.226
 CA;Nunavut;Iqaluit;63.7467;-68.517
 SE;Västerbotten;Umeå;63.8202;20.3054
-FI;"North Savo";Juankoski;63.0648;28.3292
-FI;"North Ostrobothnia";Pyhäjärvi;63.6803;25.9733
+FI;North Savo;Juankoski;63.0648;28.3292
+FI;North Ostrobothnia;Pyhäjärvi;63.6803;25.9733
 NO;Trøndelag;Hegra;63.464;11.1138
-FI;"Central Ostrobothnia";Kokkola;63.8351;23.1263
-IS;"Southern Peninsula";Grindavik;63.8385;-22.4393
-FI;"Central Ostrobothnia";Halsua;63.4667;24.1667
+FI;Central Ostrobothnia;Kokkola;63.8351;23.1263
+IS;Southern Peninsula;Grindavik;63.8385;-22.4393
+FI;Central Ostrobothnia;Halsua;63.4667;24.1667
 RU;Komi;Ukhta;63.5683;53.6576
 RU;Komi;Ukhta;63.5651;53.6721
 IS;South;Hvolsvollur;63.7507;-20.2245
 NO;Trøndelag;Stjørdal;63.4599;10.9631
-NO;"Møre og Romsdal";Kristiansund;63.1108;7.79429
+NO;Møre og Romsdal;Kristiansund;63.1108;7.79429
 NO;Trøndelag;Trondheim;63.4163;10.3964
 NO;Trøndelag;Trondheim;63.4191;10.3788
-FI;"North Savo";Siilinjärvi;63.0757;27.6597
+FI;North Savo;Siilinjärvi;63.0757;27.6597
 NO;Trøndelag;Trondheim;63.3962;10.3969
-IS;"Southern Peninsula";Reykjanesbaer;63.9758;-22.5711
-FI;"North Savo";Kiuruvesi;63.65;26.6167
-FI;"Central Finland";Kivijärvi;63.1198;25.0784
+IS;Southern Peninsula;Reykjanesbaer;63.9758;-22.5711
+FI;North Savo;Kiuruvesi;63.65;26.6167
+FI;Central Finland;Kivijärvi;63.1198;25.0784
 IS;South;Selfoss;63.9358;-21.0081
-IS;"Southern Peninsula";Keflavik;63.9928;-22.5602
-IS;"Southern Peninsula";Reykjanesbaer;63.9937;-22.5494
+IS;Southern Peninsula;Keflavik;63.9928;-22.5602
+IS;Southern Peninsula;Reykjanesbaer;63.9937;-22.5494
 NO;Trøndelag;Trondheim;63.4333;10.3954
-FI;"Central Ostrobothnia";Lestijärvi;63.525;24.665
+FI;Central Ostrobothnia;Lestijärvi;63.525;24.665
 SE;Jämtland;Frösö;63.1678;14.5985
-SE;Jämtland;"Östersund (Odenslund-Odenskog)";63.1675;14.6859
+SE;Jämtland;Östersund (Odenslund-Odenskog);63.1675;14.6859
 NO;Trøndelag;Trondheim;63.4281;10.3968
-FI;"North Savo";Iisalmi;63.5567;27.188
+FI;North Savo;Iisalmi;63.5567;27.188
 NO;Trøndelag;Stjørdal;63.4609;10.9749
-IS;"Southern Peninsula";Njardvik;63.9747;-22.5202
-FI;"North Ostrobothnia";Nivala;63.931;24.9579
+IS;Southern Peninsula;Njardvik;63.9747;-22.5202
+FI;North Ostrobothnia;Nivala;63.931;24.9579
 FI;Ostrobothnia;Vaasa;63.1064;21.5923
-SE;Västerbotten;"Umeå (Ersboda)";63.8571;20.3003
+SE;Västerbotten;Umeå (Ersboda);63.8571;20.3003
 SE;Västernorrland;Örnsköldsvik;63.29;18.7166
-FI;"Central Ostrobothnia";Kaustinen;63.5546;23.718
+FI;Central Ostrobothnia;Kaustinen;63.5546;23.718
 FI;Ostrobothnia;Vaasa;63.0566;21.7331
 FI;Ostrobothnia;Vaasa;63.0927;21.6322
 FI;Ostrobothnia;Vaasa;63.1001;21.6053
-SE;Västerbotten;"Umeå (Västerslätt)";63.8372;20.2612
-SE;Västernorrland;"Själevad (Myckling-Själevad)";63.2863;18.6059
+SE;Västerbotten;Umeå (Västerslätt);63.8372;20.2612
+SE;Västernorrland;Själevad (Myckling-Själevad);63.2863;18.6059
 SE;Västerbotten;Nordmaling;63.5671;19.505
 SE;Jämtland;Ringsta;63.401;14.7478
 NO;Trøndelag;Trondheim;63.432;10.4038
-FI;"Central Ostrobothnia";Kokkola;63.8286;23.039
-FI;"Central Ostrobothnia";Kaustinen;63.5482;23.6952
-SE;Jämtland;"Östersund (Staden)";63.177;14.6384
-SE;Västerbotten;"Umeå (Teg)";63.8222;20.2514
+FI;Central Ostrobothnia;Kokkola;63.8286;23.039
+FI;Central Ostrobothnia;Kaustinen;63.5482;23.6952
+SE;Jämtland;Östersund (Staden);63.177;14.6384
+SE;Västerbotten;Umeå (Teg);63.8222;20.2514
 SE;Västernorrland;Sollefteå;63.1761;17.2691
 NO;Trøndelag;Trondheim;63.4225;10.395
 NO;Trøndelag;Trondheim;63.4317;10.4671
-NO;"Møre og Romsdal";Kristiansund;63.1091;7.7311
+NO;Møre og Romsdal;Kristiansund;63.1091;7.7311
 NO;Trøndelag;Trondheim;63.433;10.3927
 NO;Trøndelag;Levanger;63.7532;11.2969
 NO;Trøndelag;Trondheim;63.4364;10.3995
 NO;Trøndelag;Trondheim;63.4352;10.4627
-FI;"South Ostrobothnia";Kauhava;63.1012;23.0586
+FI;South Ostrobothnia;Kauhava;63.1012;23.0586
 NO;Trøndelag;Trondheim;63.4155;10.3958
 NO;Trøndelag;Trondheim;63.4446;10.4389
 NO;Trøndelag;Heimdal;63.3495;10.3586
 NO;Trøndelag;Liabøen;63.2583;8.14054
 FI;Ostrobothnia;Vaasa;63.1069;21.5917
 FI;Ostrobothnia;Vaasa;63.0963;21.6031
-FI;Ostrobothnia;"Vaasa (Gamla hamnen)";63.0878;21.5573
-FI;"Central Ostrobothnia";Kokkola;63.8097;23.0981
-SE;Västerbotten;"Umeå (Västerslätt)";63.84;20.2404
-SE;Västerbotten;"Umeå (Backen)";63.842;20.1323
-SE;Västerbotten;"Umeå (Centrala Stan)";63.8272;20.2483
-SE;Västerbotten;"Obbola (Umeå SO)";63.7024;20.3204
-SE;Västerbotten;"Umeå (Ålidhem)";63.8078;20.3109
+FI;Ostrobothnia;Vaasa (Gamla hamnen);63.0878;21.5573
+FI;Central Ostrobothnia;Kokkola;63.8097;23.0981
+SE;Västerbotten;Umeå (Västerslätt);63.84;20.2404
+SE;Västerbotten;Umeå (Backen);63.842;20.1323
+SE;Västerbotten;Umeå (Centrala Stan);63.8272;20.2483
+SE;Västerbotten;Obbola (Umeå SO);63.7024;20.3204
+SE;Västerbotten;Umeå (Ålidhem);63.8078;20.3109
 FI;Ostrobothnia;Smedsby;63.4152;21.7927
-FI;"North Savo";Vieremä;63.818;27.0625
+FI;North Savo;Vieremä;63.818;27.0625
 FI;Ostrobothnia;Vaasa;63.1042;21.6119
-FI;"North Savo";Kuopio;63.2029;28.0867
+FI;North Savo;Kuopio;63.2029;28.0867
 FI;Ostrobothnia;Nykarleby;63.3908;22.6294
 FI;Ostrobothnia;Jakobstad;63.6845;22.7061
 FI;Ostrobothnia;Vaasa;63.0966;21.6148
-FI;"Central Finland";Viitasaari;63.0865;25.8558
+FI;Central Finland;Viitasaari;63.0865;25.8558
 FI;Ostrobothnia;Vaasa;63.094;21.6117
-FI;"Central Finland";Pihtipudas;63.3697;25.5751
+FI;Central Finland;Pihtipudas;63.3697;25.5751
 FI;Ostrobothnia;Terjärv;63.5459;23.5133
-FI;"Central Ostrobothnia";Kokkola;63.8339;23.1605
-FI;"Central Ostrobothnia";Kokkola;63.8339;23.1589
+FI;Central Ostrobothnia;Kokkola;63.8339;23.1605
+FI;Central Ostrobothnia;Kokkola;63.8339;23.1589
 FI;Ostrobothnia;Kållby;63.6292;22.895
 FI;Ostrobothnia;Vaasa;63.0934;21.6055
-FI;"Central Ostrobothnia";Kälviä;63.6772;23.3721
-FI;"North Ostrobothnia";Pyhäjärvi;63.6816;25.988
+FI;Central Ostrobothnia;Kälviä;63.6772;23.3721
+FI;North Ostrobothnia;Pyhäjärvi;63.6816;25.988
 NO;Trøndelag;Trondheim;63.4416;10.4393
 SE;Västerbotten;Umeå;63.8176;20.3133
-FI;"North Savo";Siilinjärvi;63.0188;27.6655
+FI;North Savo;Siilinjärvi;63.0188;27.6655
 NO;Trøndelag;Trondheim;63.4328;10.3921
 FI;Ostrobothnia;Vaasa;63.0744;21.7005
-FI;"North Savo";Sonkajärvi;63.6989;27.4192
-FI;"South Ostrobothnia";Vimpeli;63.1469;23.8488
+FI;North Savo;Sonkajärvi;63.6989;27.4192
+FI;South Ostrobothnia;Vimpeli;63.1469;23.8488
 FI;Ostrobothnia;Vaasa;63.0967;21.618
 FI;Ostrobothnia;Vaasa;63.1373;21.5165
-FI;"North Savo";Iisalmi;63.5578;27.1917
+FI;North Savo;Iisalmi;63.5578;27.1917
 FI;Ostrobothnia;Vaasa;63.096;21.6199
 FI;Ostrobothnia;Vaasa;63.0608;21.7296
 FI;Ostrobothnia;Vaasa;63.0855;21.6427
 FI;Ostrobothnia;Vaasa;63.1001;21.6249
-FI;"North Savo";Kiuruvesi;63.6538;26.6211
-FI;"North Savo";Pielavesi;63.2324;26.7557
+FI;North Savo;Kiuruvesi;63.6538;26.6211
+FI;North Savo;Pielavesi;63.2324;26.7557
 SE;Västerbotten;Bjurholm;63.9304;19.2192
-FI;"Central Ostrobothnia";Kokkola;63.8329;23.105
-FI;"Central Ostrobothnia";Kälviä;63.6907;23.3434
+FI;Central Ostrobothnia;Kokkola;63.8329;23.105
+FI;Central Ostrobothnia;Kälviä;63.6907;23.3434
 FI;Ostrobothnia;Vaasa;63.0852;21.6163
 FI;Ostrobothnia;Vaasa;63.0954;21.6236
-FI;"North Savo";Siilinjärvi;63.0737;27.6619
-FI;"North Savo";Nilsiä;63.2038;28.0865
-FI;"North Ostrobothnia";Pyhäsalmi;63.661;26.0403
-FI;"Central Finland";Viitasaari;63.0788;25.8697
+FI;North Savo;Siilinjärvi;63.0737;27.6619
+FI;North Savo;Nilsiä;63.2038;28.0865
+FI;North Ostrobothnia;Pyhäsalmi;63.661;26.0403
+FI;Central Finland;Viitasaari;63.0788;25.8697
 NO;Trøndelag;Trondheim;63.426;10.4684
 FI;Ostrobothnia;Vaasa;63.0601;21.735
 FI;Ostrobothnia;Vaasa;63.0864;21.645
-FI;"South Ostrobothnia";Vimpeli;63.1427;23.8548
+FI;South Ostrobothnia;Vimpeli;63.1427;23.8548
 FI;Ostrobothnia;Vaasa;63.0918;21.6304
 FI;Ostrobothnia;Jakobstad;63.6776;22.7048
 FI;Ostrobothnia;Kvevlax;63.1606;21.8419
 FI;Ostrobothnia;Nykarleby;63.3685;22.6061
-FI;"North Ostrobothnia";Nivala;63.9284;24.9642
-FI;"North Savo";Iisalmi;63.5619;27.1892
+FI;North Ostrobothnia;Nivala;63.9284;24.9642
+FI;North Savo;Iisalmi;63.5619;27.1892
 FI;Ostrobothnia;Korsholm;63.1109;21.6783
-FI;"North Savo";Iisalmi;63.5589;27.1922
+FI;North Savo;Iisalmi;63.5589;27.1922
 NO;Trøndelag;Lundamo;63.152;10.2845
 NO;Trøndelag;Trondheim;63.4337;10.4577
 FI;Ostrobothnia;Vaasa;63.1043;21.5936
 FI;Ostrobothnia;Vaasa;63.1074;21.5967
-FI;"Central Finland";Kyyjärvi;63.041;24.5819
+FI;Central Finland;Kyyjärvi;63.041;24.5819
 FI;Ostrobothnia;Vaasa;63.0969;21.6146
 NO;Trøndelag;Trondheim;63.4096;10.4432
-NO;"Møre og Romsdal";Kristiansund;63.1234;7.7612
+NO;Møre og Romsdal;Kristiansund;63.1234;7.7612
 NO;Trøndelag;Trondheim;63.4325;10.3976
 FI;Ostrobothnia;Vaasa;63.0921;21.5596
 FI;Ostrobothnia;Vaasa;63.0986;21.6007
 NO;Trøndelag;Trondheim;63.4116;10.4445
 FI;Ostrobothnia;Vaasa;63.1162;21.6182
-SE;Jämtland;"Östersund (Staden)";63.1777;14.6415
-SE;Jämtland;"Östersund (Västra Odensala)";63.1601;14.7018
-SE;Jämtland;"Östersund (Staden)";63.1826;14.6384
+SE;Jämtland;Östersund (Staden);63.1777;14.6415
+SE;Jämtland;Östersund (Västra Odensala);63.1601;14.7018
+SE;Jämtland;Östersund (Staden);63.1826;14.6384
 SE;Jämtland;Lit;63.3168;14.8453
 SE;Västernorrland;Sollefteå;63.1654;17.2771
 SE;Jämtland;Lit;63.3171;14.8459
-SE;Jämtland;"Östersund (Odenslund-Odenskog)";63.1706;14.6416
+SE;Jämtland;Östersund (Odenslund-Odenskog);63.1706;14.6416
 NO;Trøndelag;Trondheim;63.4349;10.4126
 NO;Trøndelag;Trondheim;63.4332;10.4018
-FI;"Central Ostrobothnia";Kaarlela;63.8337;23.1609
+FI;Central Ostrobothnia;Kaarlela;63.8337;23.1609
 FI;Ostrobothnia;Vörå;63.1299;22.2515
 FI;Ostrobothnia;Vaasa;63.1046;21.5979
-FI;"North Savo";Juankoski;63.0691;28.338
-FI;"South Ostrobothnia";Tervajoki;63.0069;22.1622
-FI;"Central Finland";Kyyjärvi;63.0333;24.5667
+FI;North Savo;Juankoski;63.0691;28.338
+FI;South Ostrobothnia;Tervajoki;63.0069;22.1622
+FI;Central Finland;Kyyjärvi;63.0333;24.5667
 NO;Trøndelag;Trondheim;63.4357;10.4572
 SE;Västerbotten;Umeå;63.8253;20.2603
-FI;"North Savo";Iisalmi;63.5487;27.1885
+FI;North Savo;Iisalmi;63.5487;27.1885
 FI;Ostrobothnia;Korsholm;63.1141;21.6822
-FI;"North Ostrobothnia";Kärsämäki;63.9786;25.7587
+FI;North Ostrobothnia;Kärsämäki;63.9786;25.7587
 FI;Ostrobothnia;Vaasa;63.0999;21.6244
 SE;Västerbotten;Umeå;63.8205;20.3037
-FI;"North Savo";Nilsiä;63.2162;28.0585
+FI;North Savo;Nilsiä;63.2162;28.0585
 NO;Trøndelag;Trondheim;63.433;10.392
-FI;"South Ostrobothnia";Älajärvi;63.0001;23.8159
-FI;"South Ostrobothnia";Älajärvi;63.0003;23.8159
-FI;"South Ostrobothnia";Vimpeli;63.1619;23.8192
-FI;"Northern Savonia";Iisalmi;63.5738;27.1805
-FI;"North Savo";Siilinjärvi;63.076;27.6609
+FI;South Ostrobothnia;Älajärvi;63.0001;23.8159
+FI;South Ostrobothnia;Älajärvi;63.0003;23.8159
+FI;South Ostrobothnia;Vimpeli;63.1619;23.8192
+FI;Northern Savonia;Iisalmi;63.5738;27.1805
+FI;North Savo;Siilinjärvi;63.076;27.6609
 FI;Ostrobothnia;Vaasa;63.0854;21.6125
-FI;"North Savo";Tahkovuori;63.2927;28.0378
-FI;"Northern Savonia";Nilsiä;63.2038;28.0865
+FI;North Savo;Tahkovuori;63.2927;28.0378
+FI;Northern Savonia;Nilsiä;63.2038;28.0865
 SE;Västerbotten;Täfteå;63.8397;20.4786
 FI;Kainuu;Sotkamo;63.9803;28.6749
-FI;"North Karelia";Juuka;63.1762;29.4392
-FI;"North Savo";Sonkajärvi;63.6658;27.5233
-FI;"North Savo";Juankoski;63.0661;28.3308
-SE;Västerbotten;"Umeå (Backen)";63.8385;20.1577
-FI;"South Ostrobothnia";Kauhava;63.1012;23.065
+FI;North Karelia;Juuka;63.1762;29.4392
+FI;North Savo;Sonkajärvi;63.6658;27.5233
+FI;North Savo;Juankoski;63.0661;28.3308
+SE;Västerbotten;Umeå (Backen);63.8385;20.1577
+FI;South Ostrobothnia;Kauhava;63.1012;23.065
 SE;Västernorrland;Nyland;63.7365;19.9159
-SE;Jämtland;"Östersund (Odenslund-Odenskog)";63.1721;14.6615
+SE;Jämtland;Östersund (Odenslund-Odenskog);63.1721;14.6615
 SE;Västernorrland;Näsåker;63.4438;16.9024
 FI;Ostrobothnia;Vaasa;63.0964;21.617
-FI;"North Karelia";Koli;63.096;29.8058
-FI;"Central Ostrobothnia";Kokkola;63.8368;23.1325
+FI;North Karelia;Koli;63.096;29.8058
+FI;Central Ostrobothnia;Kokkola;63.8368;23.1325
 FI;Ostrobothnia;Terjärv;63.569;23.5015
-SE;Jämtland;"Östersund (Staden)";63.1851;14.6408
+SE;Jämtland;Östersund (Staden);63.1851;14.6408
 SE;Västernorrland;Sollefteå;63.1768;17.2702
-SE;Jämtland;"Östersund (Odenslund-Odenskog)";63.1658;14.6423
-SE;Västerbotten;"Umeå (Marieområdet)";63.8481;20.3093
+SE;Jämtland;Östersund (Odenslund-Odenskog);63.1658;14.6423
+SE;Västerbotten;Umeå (Marieområdet);63.8481;20.3093
 FI;Kainuu;Vuokatti;63.9752;28.0115
-NO;"Møre og Romsdal";Averøy;63.0156;7.45029
-CA;"Northwest Territories";Behchokǫ̀;63.5888;-115.507
+NO;Møre og Romsdal;Averøy;63.0156;7.45029
+CA;Northwest Territories;Behchokǫ̀;63.5888;-115.507
 CA;Nunavut;Iqaluit;63.7492;-68.5139
-CA;Nunavut;"Chesterfield Inlet";63.3465;-90.7368
+CA;Nunavut;Chesterfield Inlet;63.3465;-90.7368
 US;Alaska;Healy;63.8569;-148.966
 NO;Trøndelag;Støren;63.031;10.2964
 NO;Trøndelag;Støren;63.0309;10.2963
-NO;Trøndelag;"Trondheim (Jakobsli)";63.4227;10.4884
+NO;Trøndelag;Trondheim (Jakobsli);63.4227;10.4884
 SE;Jämtland;Frösö;63.1629;14.6113
-SE;Jämtland;"Östersund (Frösö)";63.168;14.5985
-SE;Jämtland;"Östersund (Frösö)";63.1682;14.6005
+SE;Jämtland;Östersund (Frösö);63.168;14.5985
+SE;Jämtland;Östersund (Frösö);63.1682;14.6005
 SE;Jämtland;Undersåker;63.3172;13.2485
 SE;Jämtland;Dvärsätt;63.3167;14.4667
 US;Alaska;Kotlik;63.0333;-163.546

@@ -1,1135 +1,1135 @@
-AU;"Western Australia";"Tom Price";-22.6939;117.793
-BR;"Rio de Janeiro";"Rio de Janeiro";-22.9068;-43.1729
-AU;"Western Australia";Learmonth;-22.2399;114.094
-BR;"São Paulo";Campinas;-22.9051;-47.0613
-BR;"Rio de Janeiro";"Nova Iguaçu";-22.7592;-43.4511
-BR;"São Paulo";Campinas;-22.9056;-47.0608
-BR;"Rio de Janeiro";Rocinha;-22.9889;-43.2493
-BR;"Rio de Janeiro";"Vila Sarapui";-22.7518;-43.2988
-BR;"Rio de Janeiro";"Rio de Janeiro";-22.9064;-43.1822
-BR;"Minas Gerais";Extrema;-22.8547;-46.3183
-BR;"Minas Gerais";"Pouso Alegre";-22.23;-45.9364
-BR;"Rio de Janeiro";"São Pedro";-22.4231;-42.9661
-BR;"Rio de Janeiro";Queimados;-22.7161;-43.5553
-BR;"São Paulo";"Rio Claro";-22.4114;-47.5614
-BR;"Rio de Janeiro";Macaé;-22.3848;-41.7832
-BR;"Rio de Janeiro";Itaboraí;-22.7444;-42.8594
-BR;"São Paulo";"Teodoro Sampaio";-22.5325;-52.1675
-BR;"Rio de Janeiro";Jacarepaguá;-22.9682;-43.3907
-BR;"Rio de Janeiro";"São José do Vale do Rio Preto";-22.1695;-42.9493
-BR;"Rio de Janeiro";"Vaz Lobo";-22.8594;-43.3291
-BR;"Rio de Janeiro";"São Gonçalo";-22.8269;-43.0539
+AU;Western Australia;Tom Price;-22.6939;117.793
+BR;Rio de Janeiro;Rio de Janeiro;-22.9068;-43.1729
+AU;Western Australia;Learmonth;-22.2399;114.094
+BR;São Paulo;Campinas;-22.9051;-47.0613
+BR;Rio de Janeiro;Nova Iguaçu;-22.7592;-43.4511
+BR;São Paulo;Campinas;-22.9056;-47.0608
+BR;Rio de Janeiro;Rocinha;-22.9889;-43.2493
+BR;Rio de Janeiro;Vila Sarapui;-22.7518;-43.2988
+BR;Rio de Janeiro;Rio de Janeiro;-22.9064;-43.1822
+BR;Minas Gerais;Extrema;-22.8547;-46.3183
+BR;Minas Gerais;Pouso Alegre;-22.23;-45.9364
+BR;Rio de Janeiro;São Pedro;-22.4231;-42.9661
+BR;Rio de Janeiro;Queimados;-22.7161;-43.5553
+BR;São Paulo;Rio Claro;-22.4114;-47.5614
+BR;Rio de Janeiro;Macaé;-22.3848;-41.7832
+BR;Rio de Janeiro;Itaboraí;-22.7444;-42.8594
+BR;São Paulo;Teodoro Sampaio;-22.5325;-52.1675
+BR;Rio de Janeiro;Jacarepaguá;-22.9682;-43.3907
+BR;Rio de Janeiro;São José do Vale do Rio Preto;-22.1695;-42.9493
+BR;Rio de Janeiro;Vaz Lobo;-22.8594;-43.3291
+BR;Rio de Janeiro;São Gonçalo;-22.8269;-43.0539
 AU;Queensland;Longreach;-22.5752;144.085
-NC;"South Province";Noumea;-22.2717;166.44
-BR;"Rio de Janeiro";Botafogo;-22.9572;-43.1762
-BR;"Rio de Janeiro";"Porto Real";-22.418;-44.2956
-BR;"São Paulo";"Hortolândia (Chácaras Assay)";-22.8996;-47.201
-BR;"Rio de Janeiro";"São Cristóvão";-22.905;-43.2179
-BR;"Rio de Janeiro";"Volta Redonda";-22.5231;-44.1042
-BR;"Rio de Janeiro";"Vicente de Carvalho";-22.8558;-43.3157
-BR;"Rio de Janeiro";Piabetá;-22.6063;-43.1728
-BR;"Rio de Janeiro";Cosmos;-22.9021;-43.6059
-BR;"Rio de Janeiro";"Arraial do Cabo";-22.9661;-42.0278
-BR;"Rio de Janeiro";Niterói;-22.8807;-43.1014
-BR;"Rio de Janeiro";"Duque de Caxias";-22.7856;-43.3117
-BR;"São Paulo";Piracicaba;-22.7253;-47.6492
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9012;-43.1792
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9071;-43.1819
-BR;"São Paulo";"Regente Feijó";-22.2214;-51.3028
-BR;"São Paulo";"São Carlos";-22.0175;-47.8908
-BR;"São Paulo";Sumaré;-22.8219;-47.2669
-BR;"São Paulo";Hortolândia;-22.8533;-47.2147
-BR;"São Paulo";"Santa Bárbara d'Oeste (Parque Olaria)";-22.769;-47.4129
-BR;"Rio de Janeiro";"Barra da Tijuca";-22.9984;-43.3655
-BR;"São Paulo";Holambra;-22.6274;-47.0494
-BR;"São Paulo";Martinópolis;-22.1458;-51.1708
-BR;"Rio de Janeiro";"São João de Meriti";-22.8039;-43.3722
-BR;"Rio de Janeiro";"Duque de Caxias (Engenho do Porto)";-22.7911;-43.3166
-BR;"Rio de Janeiro";Jacarepaguá;-22.9682;-43.3909
-PY;"Amambay Department";"Pedro Juan Caballero";-22.5492;-55.7387
-BR;"Rio de Janeiro";Itaipava;-22.382;-43.1322
-BR;"Minas Gerais";Extrema;-22.8565;-46.326
+NC;South Province;Noumea;-22.2717;166.44
+BR;Rio de Janeiro;Botafogo;-22.9572;-43.1762
+BR;Rio de Janeiro;Porto Real;-22.418;-44.2956
+BR;São Paulo;Hortolândia (Chácaras Assay);-22.8996;-47.201
+BR;Rio de Janeiro;São Cristóvão;-22.905;-43.2179
+BR;Rio de Janeiro;Volta Redonda;-22.5231;-44.1042
+BR;Rio de Janeiro;Vicente de Carvalho;-22.8558;-43.3157
+BR;Rio de Janeiro;Piabetá;-22.6063;-43.1728
+BR;Rio de Janeiro;Cosmos;-22.9021;-43.6059
+BR;Rio de Janeiro;Arraial do Cabo;-22.9661;-42.0278
+BR;Rio de Janeiro;Niterói;-22.8807;-43.1014
+BR;Rio de Janeiro;Duque de Caxias;-22.7856;-43.3117
+BR;São Paulo;Piracicaba;-22.7253;-47.6492
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9012;-43.1792
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9071;-43.1819
+BR;São Paulo;Regente Feijó;-22.2214;-51.3028
+BR;São Paulo;São Carlos;-22.0175;-47.8908
+BR;São Paulo;Sumaré;-22.8219;-47.2669
+BR;São Paulo;Hortolândia;-22.8533;-47.2147
+BR;São Paulo;Santa Bárbara d'Oeste (Parque Olaria);-22.769;-47.4129
+BR;Rio de Janeiro;Barra da Tijuca;-22.9984;-43.3655
+BR;São Paulo;Holambra;-22.6274;-47.0494
+BR;São Paulo;Martinópolis;-22.1458;-51.1708
+BR;Rio de Janeiro;São João de Meriti;-22.8039;-43.3722
+BR;Rio de Janeiro;Duque de Caxias (Engenho do Porto);-22.7911;-43.3166
+BR;Rio de Janeiro;Jacarepaguá;-22.9682;-43.3909
+PY;Amambay Department;Pedro Juan Caballero;-22.5492;-55.7387
+BR;Rio de Janeiro;Itaipava;-22.382;-43.1322
+BR;Minas Gerais;Extrema;-22.8565;-46.326
 BR;Paraná;Loanda;-22.9231;-53.1372
-BR;"São Paulo";Iracemápolis;-22.5806;-47.5186
-BR;"Rio de Janeiro";"Universidade Rural";-22.7664;-43.6914
-BR;"Rio de Janeiro";"Duque de Caxias";-22.7869;-43.3131
-BR;"Rio de Janeiro";"Queimados (Citrópolis)";-22.6822;-43.6051
-BR;"Mato Grosso do Sul";"Dourados (Centro)";-22.2306;-54.8168
-BR;"Rio de Janeiro";Teresópolis;-22.4167;-42.9782
-BR;"Rio de Janeiro";"Vila São Luís";-22.7702;-43.2857
-BR;"Rio de Janeiro";Itaguaí;-22.8522;-43.7753
-BR;"São Paulo";"Rio das Pedras";-22.8433;-47.6061
-BR;"Rio de Janeiro";Bonsucesso;-22.8627;-43.254
+BR;São Paulo;Iracemápolis;-22.5806;-47.5186
+BR;Rio de Janeiro;Universidade Rural;-22.7664;-43.6914
+BR;Rio de Janeiro;Duque de Caxias;-22.7869;-43.3131
+BR;Rio de Janeiro;Queimados (Citrópolis);-22.6822;-43.6051
+BR;Mato Grosso do Sul;Dourados (Centro);-22.2306;-54.8168
+BR;Rio de Janeiro;Teresópolis;-22.4167;-42.9782
+BR;Rio de Janeiro;Vila São Luís;-22.7702;-43.2857
+BR;Rio de Janeiro;Itaguaí;-22.8522;-43.7753
+BR;São Paulo;Rio das Pedras;-22.8433;-47.6061
+BR;Rio de Janeiro;Bonsucesso;-22.8627;-43.254
 ZA;Limpopo;Alldays;-22.6639;29.0934
 ZA;Limpopo;Thohoyandou;-22.9456;30.485
 ZA;Limpopo;Thohoyandou;-22.8785;30.4818
-NA;"Khomas Region";"Windhoek (Suiderhof)";-22.6035;17.1003
-NA;Khomas;"Windhoek (Suiderhof)";-22.6035;17.1003
-NA;"Erongo Region";"Walvis Bay";-22.9575;14.5053
-NA;"Khomas Region";Windhoek;-22.5594;17.0832
-NA;"Khomas Region";Windhoek;-22.5649;17.0842
+NA;Khomas Region;Windhoek (Suiderhof);-22.6035;17.1003
+NA;Khomas;Windhoek (Suiderhof);-22.6035;17.1003
+NA;Erongo Region;Walvis Bay;-22.9575;14.5053
+NA;Khomas Region;Windhoek;-22.5594;17.0832
+NA;Khomas Region;Windhoek;-22.5649;17.0842
 ZA;Limpopo;Thohoyandou;-22.9513;30.4855
-NA;"Erongo Region";Swakopmund;-22.6784;14.5266
+NA;Erongo Region;Swakopmund;-22.6784;14.5266
 ZA;Limpopo;Tshituni;-22.9038;30.0349
 ZA;Limpopo;Phaweni;-22.8818;30.7788
 ZA;Limpopo;Musina;-22.3488;30.0407
 ZA;Limpopo;Ha-Mavhunga;-22.9249;30.1168
-ZW;"Matabeleland South Province";Beitbridge;-22.2167;30
-NA;"Khomas Region";"Groot Aub";-22.9385;17.1953
-NA;"Omaheke Region";Gobabis;-22.4534;18.9716
-NA;"Omaheke Region";Witvlei;-22.4104;18.4936
+ZW;Matabeleland South Province;Beitbridge;-22.2167;30
+NA;Khomas Region;Groot Aub;-22.9385;17.1953
+NA;Omaheke Region;Gobabis;-22.4534;18.9716
+NA;Omaheke Region;Witvlei;-22.4104;18.4936
 MG;Ihorombe;Ranohira;-22.4833;45.4
-NA;"Khomas Region";"Windhoek (Klein Windhoek)";-22.5755;17.0902
-BW;Ghanzi;"Charles Hill";-22.2764;20.0928
+NA;Khomas Region;Windhoek (Klein Windhoek);-22.5755;17.0902
+BW;Ghanzi;Charles Hill;-22.2764;20.0928
 NA;Khomas;Windhoek;-22.5609;17.0658
-NA;"Khomas Region";"Windhoek (Prosperita Industrial)";-22.6208;17.0804
-NA;Khomas;"Windhoek (Suiderhof)";-22.6032;17.1004
-NC;"South Province";"Noumea (Baie Des Citrons)";-22.2911;166.438
-NC;"South Province";Noumea;-22.2741;166.449
-NC;"South Province";Noumea;-22.2735;166.448
-BR;"Rio de Janeiro";Tijuca;-22.9324;-43.2411
-BR;"São Paulo";Socorro;-22.5914;-46.5289
-BR;"Rio de Janeiro";"Barra do Piraí";-22.47;-43.8256
-BR;"Rio de Janeiro";Valença;-22.2456;-43.7003
-BR;"São Paulo";Hortolândia;-22.8573;-47.2211
-BR;"Mato Grosso do Sul";Ivinhema;-22.3013;-53.8287
-BR;"Mato Grosso do Sul";"Novo Horizonte do Sul";-22.6722;-53.8606
-BR;"São Paulo";Botucatu;-22.8858;-48.445
-BR;"Mato Grosso do Sul";Angélica;-22.1599;-53.7722
-BR;"Mato Grosso do Sul";"Dourados (Jardim Brasilia)";-22.2246;-54.768
-BR;"Mato Grosso do Sul";Dourados;-22.2211;-54.8056
-BR;"Rio de Janeiro";"Barra da Tijuca";-22.9884;-43.3642
-BR;"Rio de Janeiro";Nilópolis;-22.8075;-43.4139
-BR;"São Paulo";Areiópolis;-22.6681;-48.665
-BR;"São Paulo";"Areiópolis (Nucleo Habitacional Comendador Jose Zillo)";-22.6784;-48.669
-BR;"São Paulo";"Bragança Paulista";-22.9532;-46.5423
-BR;"São Paulo";"Mogi Guaçu";-22.3677;-46.9455
-BR;"São Paulo";"Bauru (Jardim Auri Verde)";-22.3314;-49.046
-BR;"São Paulo";"Espírito Santo do Pinhal";-22.1158;-46.6828
-BR;"Rio de Janeiro";"Belford Roxo";-22.7642;-43.3994
-BR;"Rio de Janeiro";Maricá;-22.9194;-42.8186
-BR;"Rio de Janeiro";Niterói;-22.8833;-43.1036
-BR;"Mato Grosso do Sul";Dourados;-22.2236;-54.8125
-BR;"Mato Grosso do Sul";"Laguna Carapã";-22.5464;-55.1497
-BR;"São Paulo";Pompéia;-22.1086;-50.1717
-BR;"São Paulo";Pompéia;-22.1061;-50.1737
-BR;"Rio de Janeiro";"São Pedro da Aldeia";-22.8392;-42.1028
-BR;"São Paulo";"Teodoro Sampaio";-22.5314;-52.1734
-BR;"São Paulo";Hortolândia;-22.8583;-47.22
-BR;"São Paulo";Paulínia;-22.7611;-47.1542
-BR;Paraná;"Nova Londrina";-22.7658;-52.985
-BR;Paraná;"Nova Londrina";-22.7634;-52.9922
-BR;"Rio de Janeiro";Macaé;-22.3837;-41.7828
-BR;"Minas Gerais";"São Lourenço";-22.1177;-45.0528
-BR;"Minas Gerais";"Passa Quatro";-22.3903;-44.9667
-BR;Paraná;"Centenário do Sul";-22.8211;-51.5953
-NC;"South Province";"Noumea (Faubourg Blanchot)";-22.2764;166.448
-BR;"São Paulo";"São Pedro";-22.5486;-47.9139
-BR;"São Paulo";Araras;-22.3604;-47.3798
-BR;"São Paulo";"Águas de São Pedro";-22.5994;-47.8761
-BR;"Rio de Janeiro";Itaguaí;-22.8632;-43.7779
-BR;"Rio de Janeiro";Mangaratiba;-22.9597;-44.0406
-BR;"Rio de Janeiro";"São Gonçalo (Miriambi)";-22.8195;-42.983
-BR;"São Paulo";Valinhos;-22.9706;-46.9958
-BR;"Rio de Janeiro";"Gardênia Azul";-22.9598;-43.3508
-BR;"São Paulo";"São Carlos (Jardim Sao Paulo)";-22.0323;-47.8768
-BR;"São Paulo";Brotas;-22.2842;-48.1267
-BR;"Rio de Janeiro";Resende;-22.4723;-44.4649
-BR;"Rio de Janeiro";Jacarepaguá;-22.9393;-43.336
-BR;"Rio de Janeiro";"Volta Redonda (Vila Santa Cecília)";-22.5142;-44.1153
-BR;"São Paulo";Pindamonhangaba;-22.9239;-45.4617
-BR;"Rio de Janeiro";"Petrópolis (Rio Imbariê)";-22.6272;-43.2257
-BR;"Rio de Janeiro";Glória;-22.9242;-43.1731
-BR;"Rio de Janeiro";"Santa Cruz";-22.8884;-43.7473
-BR;"São Paulo";"Santa Cruz do Rio Pardo";-22.8989;-49.6325
-BR;"Rio de Janeiro";Taquara;-22.9126;-43.3929
-BR;"São Paulo";"Euclides da Cunha Paulista";-22.5572;-52.5897
-BR;"Rio de Janeiro";"Nova Iguaçu";-22.7595;-43.4495
-BR;"São Paulo";"Ribeirão do Sul";-22.785;-49.9313
-BR;"São Paulo";Alvinlândia;-22.4442;-49.7631
-BR;"São Paulo";"Campos Novos Paulista";-22.6031;-50.0025
-BR;"São Paulo";Quatá;-22.2475;-50.6983
-BR;"São Paulo";"Paraguaçu Paulista";-22.4128;-50.5758
-BR;"São Paulo";"Paraguaçu Paulista";-22.4137;-50.577
-BR;"Minas Gerais";Cambuí;-22.6122;-46.0575
-BR;"Minas Gerais";"Bueno Brandão";-22.4408;-46.3508
-PY;"Amambay Department";"Pedro Juan Caballero (Vila Militar II)";-22.5557;-55.7266
-BR;"Rio de Janeiro";"Silva Jardim";-22.6508;-42.3917
-BR;"Rio de Janeiro";Araruama;-22.8728;-42.3414
-BR;"São Paulo";"Bragança Paulista";-22.9527;-46.5442
-BR;"São Paulo";"Bauru (Vila Camargo)";-22.3171;-49.0756
-BR;"São Paulo";Bauru;-22.3147;-49.0606
-BR;"São Paulo";Anhembi;-22.7894;-48.1272
-BR;"Rio de Janeiro";"Cachoeiras de Macacu";-22.464;-42.6528
-BR;"Rio de Janeiro";"Pedra de Guaratiba";-22.9967;-43.6261
-BR;"São Paulo";"Santa Bárbara d'Oeste";-22.7536;-47.4136
-BR;"Rio de Janeiro";"São Gonçalo";-22.8235;-43.0478
-BR;"Rio de Janeiro";Botafogo;-22.9574;-43.1766
-BR;"São Paulo";Ourinhos;-22.9797;-49.8666
-BR;"Rio de Janeiro";"Cabo Frio";-22.8872;-42.0262
-BR;"Rio de Janeiro";Tanguá;-22.7303;-42.7142
-BR;"Rio de Janeiro";"Rio das Ostras";-22.5269;-41.945
-BR;"Mato Grosso do Sul";Anaurilândia;-22.1875;-52.7178
-BR;"Mato Grosso do Sul";Ivinhema;-22.308;-53.8262
-BR;"Rio de Janeiro";"Trajano de Morais";-22.0633;-42.0664
-BR;"Rio de Janeiro";Valença;-22.2449;-43.7023
-BR;"Minas Gerais";"Borda da Mata";-22.2742;-46.1653
-BR;"São Paulo";Pindamonhangaba;-22.9264;-45.462
-BR;"São Paulo";"Cândido Mota";-22.7464;-50.3869
-BR;"São Paulo";Tarumã;-22.7467;-50.5772
-BR;"São Paulo";"Cândido Mota";-22.7467;-50.3881
-BR;"Rio de Janeiro";"Nova Friburgo";-22.2819;-42.5311
-BR;"São Paulo";Piracicaba;-22.7344;-47.648
-BR;"Rio de Janeiro";Pinheiral;-22.5128;-44.0006
-BR;"Rio de Janeiro";Quatis;-22.4072;-44.2581
-BR;"Mato Grosso do Sul";"Aral Moreira";-22.9339;-55.6353
-BR;"São Paulo";"Campos Novos Paulista";-22.6024;-49.9992
-BR;"Minas Gerais";"Monte Verde";-22.8642;-46.035
-BR;"Minas Gerais";Camanducaia;-22.7553;-46.1447
-BR;"São Paulo";"Mogi Mirim";-22.4319;-46.9578
-BR;"São Paulo";"Nova Odessa";-22.7775;-47.2958
-BR;"São Paulo";Americana;-22.738;-47.334
-BR;"Rio de Janeiro";Olaria;-22.8411;-43.2563
-BR;"São Paulo";"Campinas (Swiss Park)";-22.9537;-47.0624
-BR;"Rio de Janeiro";"Barra Mansa";-22.5442;-44.1714
-BR;"Rio de Janeiro";Cordeiro;-22.0286;-42.3608
-BR;"Mato Grosso do Sul";"Ponta Porã";-22.5361;-55.7256
-BR;"São Paulo";Cruzeiro;-22.5732;-44.9711
-BR;"São Paulo";Areias;-22.5797;-44.6969
-BR;"São Paulo";"Campinas (Jardim Ipaussurama)";-22.9211;-47.1208
-BR;"Rio de Janeiro";Itatiaia;-22.4961;-44.5633
+NA;Khomas Region;Windhoek (Prosperita Industrial);-22.6208;17.0804
+NA;Khomas;Windhoek (Suiderhof);-22.6032;17.1004
+NC;South Province;Noumea (Baie Des Citrons);-22.2911;166.438
+NC;South Province;Noumea;-22.2741;166.449
+NC;South Province;Noumea;-22.2735;166.448
+BR;Rio de Janeiro;Tijuca;-22.9324;-43.2411
+BR;São Paulo;Socorro;-22.5914;-46.5289
+BR;Rio de Janeiro;Barra do Piraí;-22.47;-43.8256
+BR;Rio de Janeiro;Valença;-22.2456;-43.7003
+BR;São Paulo;Hortolândia;-22.8573;-47.2211
+BR;Mato Grosso do Sul;Ivinhema;-22.3013;-53.8287
+BR;Mato Grosso do Sul;Novo Horizonte do Sul;-22.6722;-53.8606
+BR;São Paulo;Botucatu;-22.8858;-48.445
+BR;Mato Grosso do Sul;Angélica;-22.1599;-53.7722
+BR;Mato Grosso do Sul;Dourados (Jardim Brasilia);-22.2246;-54.768
+BR;Mato Grosso do Sul;Dourados;-22.2211;-54.8056
+BR;Rio de Janeiro;Barra da Tijuca;-22.9884;-43.3642
+BR;Rio de Janeiro;Nilópolis;-22.8075;-43.4139
+BR;São Paulo;Areiópolis;-22.6681;-48.665
+BR;São Paulo;Areiópolis (Nucleo Habitacional Comendador Jose Zillo);-22.6784;-48.669
+BR;São Paulo;Bragança Paulista;-22.9532;-46.5423
+BR;São Paulo;Mogi Guaçu;-22.3677;-46.9455
+BR;São Paulo;Bauru (Jardim Auri Verde);-22.3314;-49.046
+BR;São Paulo;Espírito Santo do Pinhal;-22.1158;-46.6828
+BR;Rio de Janeiro;Belford Roxo;-22.7642;-43.3994
+BR;Rio de Janeiro;Maricá;-22.9194;-42.8186
+BR;Rio de Janeiro;Niterói;-22.8833;-43.1036
+BR;Mato Grosso do Sul;Dourados;-22.2236;-54.8125
+BR;Mato Grosso do Sul;Laguna Carapã;-22.5464;-55.1497
+BR;São Paulo;Pompéia;-22.1086;-50.1717
+BR;São Paulo;Pompéia;-22.1061;-50.1737
+BR;Rio de Janeiro;São Pedro da Aldeia;-22.8392;-42.1028
+BR;São Paulo;Teodoro Sampaio;-22.5314;-52.1734
+BR;São Paulo;Hortolândia;-22.8583;-47.22
+BR;São Paulo;Paulínia;-22.7611;-47.1542
+BR;Paraná;Nova Londrina;-22.7658;-52.985
+BR;Paraná;Nova Londrina;-22.7634;-52.9922
+BR;Rio de Janeiro;Macaé;-22.3837;-41.7828
+BR;Minas Gerais;São Lourenço;-22.1177;-45.0528
+BR;Minas Gerais;Passa Quatro;-22.3903;-44.9667
+BR;Paraná;Centenário do Sul;-22.8211;-51.5953
+NC;South Province;Noumea (Faubourg Blanchot);-22.2764;166.448
+BR;São Paulo;São Pedro;-22.5486;-47.9139
+BR;São Paulo;Araras;-22.3604;-47.3798
+BR;São Paulo;Águas de São Pedro;-22.5994;-47.8761
+BR;Rio de Janeiro;Itaguaí;-22.8632;-43.7779
+BR;Rio de Janeiro;Mangaratiba;-22.9597;-44.0406
+BR;Rio de Janeiro;São Gonçalo (Miriambi);-22.8195;-42.983
+BR;São Paulo;Valinhos;-22.9706;-46.9958
+BR;Rio de Janeiro;Gardênia Azul;-22.9598;-43.3508
+BR;São Paulo;São Carlos (Jardim Sao Paulo);-22.0323;-47.8768
+BR;São Paulo;Brotas;-22.2842;-48.1267
+BR;Rio de Janeiro;Resende;-22.4723;-44.4649
+BR;Rio de Janeiro;Jacarepaguá;-22.9393;-43.336
+BR;Rio de Janeiro;Volta Redonda (Vila Santa Cecília);-22.5142;-44.1153
+BR;São Paulo;Pindamonhangaba;-22.9239;-45.4617
+BR;Rio de Janeiro;Petrópolis (Rio Imbariê);-22.6272;-43.2257
+BR;Rio de Janeiro;Glória;-22.9242;-43.1731
+BR;Rio de Janeiro;Santa Cruz;-22.8884;-43.7473
+BR;São Paulo;Santa Cruz do Rio Pardo;-22.8989;-49.6325
+BR;Rio de Janeiro;Taquara;-22.9126;-43.3929
+BR;São Paulo;Euclides da Cunha Paulista;-22.5572;-52.5897
+BR;Rio de Janeiro;Nova Iguaçu;-22.7595;-43.4495
+BR;São Paulo;Ribeirão do Sul;-22.785;-49.9313
+BR;São Paulo;Alvinlândia;-22.4442;-49.7631
+BR;São Paulo;Campos Novos Paulista;-22.6031;-50.0025
+BR;São Paulo;Quatá;-22.2475;-50.6983
+BR;São Paulo;Paraguaçu Paulista;-22.4128;-50.5758
+BR;São Paulo;Paraguaçu Paulista;-22.4137;-50.577
+BR;Minas Gerais;Cambuí;-22.6122;-46.0575
+BR;Minas Gerais;Bueno Brandão;-22.4408;-46.3508
+PY;Amambay Department;Pedro Juan Caballero (Vila Militar II);-22.5557;-55.7266
+BR;Rio de Janeiro;Silva Jardim;-22.6508;-42.3917
+BR;Rio de Janeiro;Araruama;-22.8728;-42.3414
+BR;São Paulo;Bragança Paulista;-22.9527;-46.5442
+BR;São Paulo;Bauru (Vila Camargo);-22.3171;-49.0756
+BR;São Paulo;Bauru;-22.3147;-49.0606
+BR;São Paulo;Anhembi;-22.7894;-48.1272
+BR;Rio de Janeiro;Cachoeiras de Macacu;-22.464;-42.6528
+BR;Rio de Janeiro;Pedra de Guaratiba;-22.9967;-43.6261
+BR;São Paulo;Santa Bárbara d'Oeste;-22.7536;-47.4136
+BR;Rio de Janeiro;São Gonçalo;-22.8235;-43.0478
+BR;Rio de Janeiro;Botafogo;-22.9574;-43.1766
+BR;São Paulo;Ourinhos;-22.9797;-49.8666
+BR;Rio de Janeiro;Cabo Frio;-22.8872;-42.0262
+BR;Rio de Janeiro;Tanguá;-22.7303;-42.7142
+BR;Rio de Janeiro;Rio das Ostras;-22.5269;-41.945
+BR;Mato Grosso do Sul;Anaurilândia;-22.1875;-52.7178
+BR;Mato Grosso do Sul;Ivinhema;-22.308;-53.8262
+BR;Rio de Janeiro;Trajano de Morais;-22.0633;-42.0664
+BR;Rio de Janeiro;Valença;-22.2449;-43.7023
+BR;Minas Gerais;Borda da Mata;-22.2742;-46.1653
+BR;São Paulo;Pindamonhangaba;-22.9264;-45.462
+BR;São Paulo;Cândido Mota;-22.7464;-50.3869
+BR;São Paulo;Tarumã;-22.7467;-50.5772
+BR;São Paulo;Cândido Mota;-22.7467;-50.3881
+BR;Rio de Janeiro;Nova Friburgo;-22.2819;-42.5311
+BR;São Paulo;Piracicaba;-22.7344;-47.648
+BR;Rio de Janeiro;Pinheiral;-22.5128;-44.0006
+BR;Rio de Janeiro;Quatis;-22.4072;-44.2581
+BR;Mato Grosso do Sul;Aral Moreira;-22.9339;-55.6353
+BR;São Paulo;Campos Novos Paulista;-22.6024;-49.9992
+BR;Minas Gerais;Monte Verde;-22.8642;-46.035
+BR;Minas Gerais;Camanducaia;-22.7553;-46.1447
+BR;São Paulo;Mogi Mirim;-22.4319;-46.9578
+BR;São Paulo;Nova Odessa;-22.7775;-47.2958
+BR;São Paulo;Americana;-22.738;-47.334
+BR;Rio de Janeiro;Olaria;-22.8411;-43.2563
+BR;São Paulo;Campinas (Swiss Park);-22.9537;-47.0624
+BR;Rio de Janeiro;Barra Mansa;-22.5442;-44.1714
+BR;Rio de Janeiro;Cordeiro;-22.0286;-42.3608
+BR;Mato Grosso do Sul;Ponta Porã;-22.5361;-55.7256
+BR;São Paulo;Cruzeiro;-22.5732;-44.9711
+BR;São Paulo;Areias;-22.5797;-44.6969
+BR;São Paulo;Campinas (Jardim Ipaussurama);-22.9211;-47.1208
+BR;Rio de Janeiro;Itatiaia;-22.4961;-44.5633
 BR;Paraná;Florestópolis;-22.8666;-51.3907
 BR;Paraná;Florestópolis;-22.8633;-51.3872
-BR;"Minas Gerais";"Borda da Mata";-22.2723;-46.1635
-BR;"Mato Grosso do Sul";"Bela Vista";-22.1081;-56.5325
-BR;"Rio de Janeiro";Petrópolis;-22.5112;-43.1779
-BR;"Rio de Janeiro";Petrópolis;-22.505;-43.1786
-BR;"Minas Gerais";"Pouso Alegre";-22.2271;-45.9394
-BR;"Rio de Janeiro";"Conceição de Macabu";-22.084;-41.8672
-BR;"São Paulo";Bauru;-22.3155;-49.0708
-BR;"São Paulo";Palmital;-22.7889;-50.2175
-BR;"São Paulo";"Álvaro de Carvalho";-22.0892;-49.7189
-BR;"São Paulo";"Marília (Boa Vista)";-22.2248;-49.9506
-BR;"São Paulo";"Barra Bonita";-22.4947;-48.5581
-BR;"Rio de Janeiro";"Mendes (Centro)";-22.5252;-43.7307
-BR;"Rio de Janeiro";Mendes;-22.5267;-43.7328
-BR;"Rio de Janeiro";"São João de Meriti";-22.7908;-43.3699
-BR;"São Paulo";Sumaré;-22.8244;-47.2708
-BR;"São Paulo";Araras;-22.3569;-47.3842
-BR;"São Paulo";"Engenheiro Coelho";-22.4912;-47.2118
-BR;"São Paulo";Conchal;-22.3303;-47.1725
-BR;"São Paulo";"Monte Mor";-22.9489;-47.3162
-BR;"Minas Gerais";Jacutinga;-22.2856;-46.6122
-BR;"Minas Gerais";Camanducaia;-22.7564;-46.1479
-BR;"São Paulo";"Parque dos Jatobá (Parque Jatobá)";-22.8175;-47.2368
-BR;"Minas Gerais";Paraisópolis;-22.5542;-45.78
-BR;"Rio de Janeiro";Paciência;-22.9148;-43.6529
-BR;"Minas Gerais";Itajubá;-22.4256;-45.4528
-BR;"Rio de Janeiro";Resende;-22.4689;-44.4467
-BR;"Rio de Janeiro";"Miguel Pereira";-22.455;-43.4706
-BR;"Rio de Janeiro";Araruama;-22.8728;-42.3431
-BR;"São Paulo";Maracaí;-22.6106;-50.6672
-BR;"Mato Grosso do Sul";Caarapó;-22.6342;-54.8222
-BR;"Mato Grosso do Sul";Juti;-22.8606;-54.6028
-BR;"Mato Grosso do Sul";Caarapó;-22.6361;-54.8257
-PY;Concepción;"Yby Yaú";-22.9661;-56.5407
-BR;"Rio de Janeiro";Itaboraí;-22.7472;-42.8584
-BR;"São Paulo";"Campos do Jordão";-22.7394;-45.5914
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9031;-43.1833
-PY;"Amambay Department";"Pedro Juan Caballero";-22.5436;-55.7295
-BR;"Rio de Janeiro";Saracuruna;-22.6745;-43.257
-BR;"São Paulo";Joanópolis;-22.9303;-46.2756
-BR;"Rio de Janeiro";Quissamã;-22.1067;-41.4722
-BR;"Minas Gerais";"Camanducaia (Centro)";-22.7518;-46.1387
-BR;"Rio de Janeiro";"Rio das Flores";-22.1675;-43.5856
-BR;"São Paulo";"Espírito Santo do Pinhal (Vila Sao Pedro)";-22.2024;-46.7605
-BR;"São Paulo";Charqueada;-22.5132;-47.7736
-BR;"São Paulo";Charqueada;-22.5097;-47.7781
-BR;"São Paulo";Lorena;-22.7349;-45.1184
-BR;"São Paulo";"Marília (Centro)";-22.22;-49.9479
-BR;"São Paulo";Marília;-22.2139;-49.9458
-BR;"Rio de Janeiro";Maricá;-22.9161;-42.8192
-BR;"Rio de Janeiro";Pechincha;-22.931;-43.3531
-BR;"São Paulo";Itapuí;-22.2333;-48.7192
-BR;"São Paulo";Boracéia;-22.1931;-48.7789
-BR;"Mato Grosso do Sul";"Ivinhema (Centro)";-22.3045;-53.8241
-BR;Paraná;"Bela Vista do Paraíso";-22.9967;-51.1906
-BR;"Rio de Janeiro";Queimados;-22.7111;-43.5691
-BR;"Rio de Janeiro";Japeri;-22.6431;-43.6533
-BR;"Rio de Janeiro";"Barra Mansa (Vila Ursulino)";-22.5293;-44.2063
-BR;"São Paulo";Leme;-22.1856;-47.3903
-BR;"São Paulo";Leme;-22.1889;-47.3968
-BR;"Mato Grosso do Sul";Douradina;-22.0403;-54.6128
-BR;"Mato Grosso do Sul";Itaporã;-22.0789;-54.7894
-BR;"Rio de Janeiro";Guapimirim;-22.5372;-42.9819
-BR;"São Paulo";Canas;-22.7036;-45.0553
-BR;"São Paulo";Canas;-22.6645;-45.0093
-BR;"Rio de Janeiro";Saquarema;-22.8989;-42.4698
-BR;"Rio de Janeiro";"São João de Meriti";-22.7759;-43.3608
-BR;"Mato Grosso do Sul";Deodápolis;-22.2756;-54.165
-BR;"São Paulo";"Bauru (Vila Pacifico)";-22.3247;-49.0942
-BR;"São Paulo";"Águas de Lindóia";-22.4764;-46.6328
-BR;"São Paulo";Conchal;-22.334;-47.1724
-BR;"São Paulo";"Santa Gertrudes";-22.4567;-47.5303
-BR;"Mato Grosso do Sul";"Nova Andradina";-22.2333;-53.3431
-BR;"Mato Grosso do Sul";Batayporã;-22.2953;-53.2711
-BR;"São Paulo";"Santa Bárbara d'Oeste";-22.7561;-47.4154
-BR;"São Paulo";Americana;-22.7392;-47.3314
+BR;Minas Gerais;Borda da Mata;-22.2723;-46.1635
+BR;Mato Grosso do Sul;Bela Vista;-22.1081;-56.5325
+BR;Rio de Janeiro;Petrópolis;-22.5112;-43.1779
+BR;Rio de Janeiro;Petrópolis;-22.505;-43.1786
+BR;Minas Gerais;Pouso Alegre;-22.2271;-45.9394
+BR;Rio de Janeiro;Conceição de Macabu;-22.084;-41.8672
+BR;São Paulo;Bauru;-22.3155;-49.0708
+BR;São Paulo;Palmital;-22.7889;-50.2175
+BR;São Paulo;Álvaro de Carvalho;-22.0892;-49.7189
+BR;São Paulo;Marília (Boa Vista);-22.2248;-49.9506
+BR;São Paulo;Barra Bonita;-22.4947;-48.5581
+BR;Rio de Janeiro;Mendes (Centro);-22.5252;-43.7307
+BR;Rio de Janeiro;Mendes;-22.5267;-43.7328
+BR;Rio de Janeiro;São João de Meriti;-22.7908;-43.3699
+BR;São Paulo;Sumaré;-22.8244;-47.2708
+BR;São Paulo;Araras;-22.3569;-47.3842
+BR;São Paulo;Engenheiro Coelho;-22.4912;-47.2118
+BR;São Paulo;Conchal;-22.3303;-47.1725
+BR;São Paulo;Monte Mor;-22.9489;-47.3162
+BR;Minas Gerais;Jacutinga;-22.2856;-46.6122
+BR;Minas Gerais;Camanducaia;-22.7564;-46.1479
+BR;São Paulo;Parque dos Jatobá (Parque Jatobá);-22.8175;-47.2368
+BR;Minas Gerais;Paraisópolis;-22.5542;-45.78
+BR;Rio de Janeiro;Paciência;-22.9148;-43.6529
+BR;Minas Gerais;Itajubá;-22.4256;-45.4528
+BR;Rio de Janeiro;Resende;-22.4689;-44.4467
+BR;Rio de Janeiro;Miguel Pereira;-22.455;-43.4706
+BR;Rio de Janeiro;Araruama;-22.8728;-42.3431
+BR;São Paulo;Maracaí;-22.6106;-50.6672
+BR;Mato Grosso do Sul;Caarapó;-22.6342;-54.8222
+BR;Mato Grosso do Sul;Juti;-22.8606;-54.6028
+BR;Mato Grosso do Sul;Caarapó;-22.6361;-54.8257
+PY;Concepción;Yby Yaú;-22.9661;-56.5407
+BR;Rio de Janeiro;Itaboraí;-22.7472;-42.8584
+BR;São Paulo;Campos do Jordão;-22.7394;-45.5914
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9031;-43.1833
+PY;Amambay Department;Pedro Juan Caballero;-22.5436;-55.7295
+BR;Rio de Janeiro;Saracuruna;-22.6745;-43.257
+BR;São Paulo;Joanópolis;-22.9303;-46.2756
+BR;Rio de Janeiro;Quissamã;-22.1067;-41.4722
+BR;Minas Gerais;Camanducaia (Centro);-22.7518;-46.1387
+BR;Rio de Janeiro;Rio das Flores;-22.1675;-43.5856
+BR;São Paulo;Espírito Santo do Pinhal (Vila Sao Pedro);-22.2024;-46.7605
+BR;São Paulo;Charqueada;-22.5132;-47.7736
+BR;São Paulo;Charqueada;-22.5097;-47.7781
+BR;São Paulo;Lorena;-22.7349;-45.1184
+BR;São Paulo;Marília (Centro);-22.22;-49.9479
+BR;São Paulo;Marília;-22.2139;-49.9458
+BR;Rio de Janeiro;Maricá;-22.9161;-42.8192
+BR;Rio de Janeiro;Pechincha;-22.931;-43.3531
+BR;São Paulo;Itapuí;-22.2333;-48.7192
+BR;São Paulo;Boracéia;-22.1931;-48.7789
+BR;Mato Grosso do Sul;Ivinhema (Centro);-22.3045;-53.8241
+BR;Paraná;Bela Vista do Paraíso;-22.9967;-51.1906
+BR;Rio de Janeiro;Queimados;-22.7111;-43.5691
+BR;Rio de Janeiro;Japeri;-22.6431;-43.6533
+BR;Rio de Janeiro;Barra Mansa (Vila Ursulino);-22.5293;-44.2063
+BR;São Paulo;Leme;-22.1856;-47.3903
+BR;São Paulo;Leme;-22.1889;-47.3968
+BR;Mato Grosso do Sul;Douradina;-22.0403;-54.6128
+BR;Mato Grosso do Sul;Itaporã;-22.0789;-54.7894
+BR;Rio de Janeiro;Guapimirim;-22.5372;-42.9819
+BR;São Paulo;Canas;-22.7036;-45.0553
+BR;São Paulo;Canas;-22.6645;-45.0093
+BR;Rio de Janeiro;Saquarema;-22.8989;-42.4698
+BR;Rio de Janeiro;São João de Meriti;-22.7759;-43.3608
+BR;Mato Grosso do Sul;Deodápolis;-22.2756;-54.165
+BR;São Paulo;Bauru (Vila Pacifico);-22.3247;-49.0942
+BR;São Paulo;Águas de Lindóia;-22.4764;-46.6328
+BR;São Paulo;Conchal;-22.334;-47.1724
+BR;São Paulo;Santa Gertrudes;-22.4567;-47.5303
+BR;Mato Grosso do Sul;Nova Andradina;-22.2333;-53.3431
+BR;Mato Grosso do Sul;Batayporã;-22.2953;-53.2711
+BR;São Paulo;Santa Bárbara d'Oeste;-22.7561;-47.4154
+BR;São Paulo;Americana;-22.7392;-47.3314
 BR;Paraná;Porecatu;-22.7558;-51.3792
-BR;"São Paulo";"Presidente Prudente";-22.1206;-51.3874
-BR;"Mato Grosso do Sul";"Glória de Dourados";-22.4156;-54.23
-BR;"Mato Grosso do Sul";"Pôrto Barra do Ivinheima";-22.9667;-53.6667
-BR;"Mato Grosso do Sul";"Fátima do Sul";-22.3742;-54.5139
-BR;"São Paulo";Ourinhos;-22.9789;-49.8706
-BR;"Rio de Janeiro";"São Pedro da Aldeia";-22.8376;-42.1033
-BR;"Rio de Janeiro";"Iguaba Grande";-22.8392;-42.2289
-BR;"Rio de Janeiro";Magé;-22.6528;-43.0406
-BR;"São Paulo";Taciba;-22.3899;-51.2884
-BR;"São Paulo";Anhumas;-22.2953;-51.3872
-BR;"Minas Gerais";"São Lourenço";-22.1164;-45.0544
-BR;"Rio de Janeiro";"Valença (Centro)";-22.2465;-43.7055
-BR;"São Paulo";Amparo;-22.7011;-46.7644
-BR;"São Paulo";Lorena;-22.7308;-45.1247
-BR;"Rio de Janeiro";"Volta Redonda";-22.5078;-44.0946
-BR;"São Paulo";"Espírito Santo do Pinhal (Vila Pinhal Jardim)";-22.1922;-46.7415
-BR;"Rio de Janeiro";"Niterói (Venda da Cruz)";-22.8642;-43.0865
-BR;"Rio de Janeiro";Magé;-22.6547;-43.0382
-BR;"São Paulo";Holambra;-22.6331;-47.0556
-BR;"São Paulo";"Santo Antônio de Posse";-22.6061;-46.9194
-BR;"São Paulo";Limeira;-22.5647;-47.4017
-BR;"São Paulo";Limeira;-22.5838;-47.4098
-BR;"São Paulo";"Valinhos (Vila Martina)";-22.9661;-47.0016
-BR;"Rio de Janeiro";"Barra Mansa";-22.5409;-44.1773
-BR;"São Paulo";Marília;-22.2181;-49.9458
-PY;"Boquerón Department";Filadelfia;-22.3394;-60.0316
-PY;"Boquerón Department";"Colonia Menno";-22.3667;-59.8167
-BR;"Rio de Janeiro";"Nilópolis (Centro)";-22.8122;-43.4304
-BR;"São Paulo";"Monte Mor";-22.9467;-47.3158
-BR;"São Paulo";Aguaí;-22.0594;-46.9786
+BR;São Paulo;Presidente Prudente;-22.1206;-51.3874
+BR;Mato Grosso do Sul;Glória de Dourados;-22.4156;-54.23
+BR;Mato Grosso do Sul;Pôrto Barra do Ivinheima;-22.9667;-53.6667
+BR;Mato Grosso do Sul;Fátima do Sul;-22.3742;-54.5139
+BR;São Paulo;Ourinhos;-22.9789;-49.8706
+BR;Rio de Janeiro;São Pedro da Aldeia;-22.8376;-42.1033
+BR;Rio de Janeiro;Iguaba Grande;-22.8392;-42.2289
+BR;Rio de Janeiro;Magé;-22.6528;-43.0406
+BR;São Paulo;Taciba;-22.3899;-51.2884
+BR;São Paulo;Anhumas;-22.2953;-51.3872
+BR;Minas Gerais;São Lourenço;-22.1164;-45.0544
+BR;Rio de Janeiro;Valença (Centro);-22.2465;-43.7055
+BR;São Paulo;Amparo;-22.7011;-46.7644
+BR;São Paulo;Lorena;-22.7308;-45.1247
+BR;Rio de Janeiro;Volta Redonda;-22.5078;-44.0946
+BR;São Paulo;Espírito Santo do Pinhal (Vila Pinhal Jardim);-22.1922;-46.7415
+BR;Rio de Janeiro;Niterói (Venda da Cruz);-22.8642;-43.0865
+BR;Rio de Janeiro;Magé;-22.6547;-43.0382
+BR;São Paulo;Holambra;-22.6331;-47.0556
+BR;São Paulo;Santo Antônio de Posse;-22.6061;-46.9194
+BR;São Paulo;Limeira;-22.5647;-47.4017
+BR;São Paulo;Limeira;-22.5838;-47.4098
+BR;São Paulo;Valinhos (Vila Martina);-22.9661;-47.0016
+BR;Rio de Janeiro;Barra Mansa;-22.5409;-44.1773
+BR;São Paulo;Marília;-22.2181;-49.9458
+PY;Boquerón Department;Filadelfia;-22.3394;-60.0316
+PY;Boquerón Department;Colonia Menno;-22.3667;-59.8167
+BR;Rio de Janeiro;Nilópolis (Centro);-22.8122;-43.4304
+BR;São Paulo;Monte Mor;-22.9467;-47.3158
+BR;São Paulo;Aguaí;-22.0594;-46.9786
 BR;Paraná;Porecatu;-22.7803;-51.2322
-BR;"São Paulo";"Artur Nogueira";-22.5731;-47.1725
-BR;"Rio de Janeiro";Teresópolis;-22.4162;-42.972
-BR;"Rio de Janeiro";"Casimiro de Abreu";-22.4806;-42.2042
-BR;"Minas Gerais";"Pouso Alegre (Medicina)";-22.2208;-45.9314
+BR;São Paulo;Artur Nogueira;-22.5731;-47.1725
+BR;Rio de Janeiro;Teresópolis;-22.4162;-42.972
+BR;Rio de Janeiro;Casimiro de Abreu;-22.4806;-42.2042
+BR;Minas Gerais;Pouso Alegre (Medicina);-22.2208;-45.9314
 CL;Antofagasta;Calama;-22.4567;-68.9237
-BR;"Rio de Janeiro";Mesquita;-22.7832;-43.4302
-BR;"Rio de Janeiro";Japeri;-22.6468;-43.6548
-BR;"Rio de Janeiro";"Nova Iguaçu (Ponto Chic)";-22.7248;-43.4683
-BR;"São Paulo";Pindamonhangaba;-22.9284;-45.4596
-BR;"São Paulo";"Campinas (Centro)";-22.9042;-47.0606
-BR;"São Paulo";"Álvares Machado";-22.0794;-51.4719
-BR;"Rio de Janeiro";"Vila Sarapui (Vila Canaan)";-22.6279;-43.2829
-BR;"Rio de Janeiro";"Niterói (Centro)";-22.8979;-43.1174
-BR;"Minas Gerais";Congonhal;-22.1523;-46.0416
-BR;"Minas Gerais";"Cachoeira de Minas";-22.3543;-45.7794
-BR;"Rio de Janeiro";"São José do Vale do Rio Preto";-22.1521;-42.9234
-BR;"Rio de Janeiro";"Cancela Preta";-22.3961;-41.796
-BR;"Rio de Janeiro";"Maricá (Jardim Atlântico Oeste)";-22.9617;-42.9627
-BR;"São Paulo";"Mogi Mirim";-22.4314;-46.9569
-BR;"São Paulo";Agudos;-22.4692;-48.9875
-BR;"São Paulo";Agudos;-22.4713;-48.9791
-BR;"São Paulo";"Campinas (Jardim Nilópolis)";-22.847;-47.0407
-BR;"Rio de Janeiro";"Resende (Polo Industrial)";-22.4386;-44.3823
-BR;"Rio de Janeiro";"Duque de Caxias (Centro)";-22.7912;-43.3066
-BR;"Rio de Janeiro";Areal;-22.2306;-43.1056
-BR;"Rio de Janeiro";"Duas Barras";-22.0542;-42.5236
-BR;"Rio de Janeiro";"Barra da Tijuca";-22.9055;-43.385
-BR;"São Paulo";"Rio Claro";-22.4108;-47.5596
-BR;"São Paulo";"Campinas (Parque Taquaral)";-22.8702;-47.0546
-BR;"São Paulo";"Campinas (Parque Taquaral)";-22.8692;-47.0623
-BR;"São Paulo";"Limeira (Jardim Residencial Village)";-22.5707;-47.4489
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.8998;-43.1796
-BR;"São Paulo";"Rio Claro (Jardim Brasília II)";-22.4325;-47.5788
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9095;-43.1691
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9038;-43.1958
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9064;-43.1772
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9078;-43.1745
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9061;-43.1769
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9094;-43.1688
-BR;"Rio de Janeiro";"São José do Vale do Rio Preto";-22.1784;-42.966
-BR;"Rio de Janeiro";Botafogo;-22.9487;-43.1827
+BR;Rio de Janeiro;Mesquita;-22.7832;-43.4302
+BR;Rio de Janeiro;Japeri;-22.6468;-43.6548
+BR;Rio de Janeiro;Nova Iguaçu (Ponto Chic);-22.7248;-43.4683
+BR;São Paulo;Pindamonhangaba;-22.9284;-45.4596
+BR;São Paulo;Campinas (Centro);-22.9042;-47.0606
+BR;São Paulo;Álvares Machado;-22.0794;-51.4719
+BR;Rio de Janeiro;Vila Sarapui (Vila Canaan);-22.6279;-43.2829
+BR;Rio de Janeiro;Niterói (Centro);-22.8979;-43.1174
+BR;Minas Gerais;Congonhal;-22.1523;-46.0416
+BR;Minas Gerais;Cachoeira de Minas;-22.3543;-45.7794
+BR;Rio de Janeiro;São José do Vale do Rio Preto;-22.1521;-42.9234
+BR;Rio de Janeiro;Cancela Preta;-22.3961;-41.796
+BR;Rio de Janeiro;Maricá (Jardim Atlântico Oeste);-22.9617;-42.9627
+BR;São Paulo;Mogi Mirim;-22.4314;-46.9569
+BR;São Paulo;Agudos;-22.4692;-48.9875
+BR;São Paulo;Agudos;-22.4713;-48.9791
+BR;São Paulo;Campinas (Jardim Nilópolis);-22.847;-47.0407
+BR;Rio de Janeiro;Resende (Polo Industrial);-22.4386;-44.3823
+BR;Rio de Janeiro;Duque de Caxias (Centro);-22.7912;-43.3066
+BR;Rio de Janeiro;Areal;-22.2306;-43.1056
+BR;Rio de Janeiro;Duas Barras;-22.0542;-42.5236
+BR;Rio de Janeiro;Barra da Tijuca;-22.9055;-43.385
+BR;São Paulo;Rio Claro;-22.4108;-47.5596
+BR;São Paulo;Campinas (Parque Taquaral);-22.8702;-47.0546
+BR;São Paulo;Campinas (Parque Taquaral);-22.8692;-47.0623
+BR;São Paulo;Limeira (Jardim Residencial Village);-22.5707;-47.4489
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.8998;-43.1796
+BR;São Paulo;Rio Claro (Jardim Brasília II);-22.4325;-47.5788
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9095;-43.1691
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9038;-43.1958
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9064;-43.1772
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9078;-43.1745
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9061;-43.1769
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9094;-43.1688
+BR;Rio de Janeiro;São José do Vale do Rio Preto;-22.1784;-42.966
+BR;Rio de Janeiro;Botafogo;-22.9487;-43.1827
 ZA;Limpopo;Malamulele;-22.9711;30.6736
-NA;Khomas;"Windhoek (Suiderhof)";-22.5937;17.0874
-NA;"Khomas Region";"Windhoek (Suiderhof)";-22.5936;17.0877
+NA;Khomas;Windhoek (Suiderhof);-22.5937;17.0874
+NA;Khomas Region;Windhoek (Suiderhof);-22.5936;17.0877
 BW;Central;Palapye;-22.546;27.1251
 ZA;Limpopo;Tshandama;-22.7457;30.5093
-NA;"Khomas Region";"Windhoek (Eros)";-22.5493;17.0923
-NA;Khomas;"Windhoek (Eros)";-22.5517;17.0882
-NA;"Khomas Region";"Windhoek (Eros)";-22.5439;17.0877
-NC;"South Province";"Noumea (Vallée des Colons)";-22.2692;166.455
-NC;"South Province";"Noumea (Magenta)";-22.2707;166.464
-NC;"South Province";"Noumea (Zone Industrielle de Ducos)";-22.2444;166.453
-NC;"South Province";Noumea;-22.2744;166.444
-NC;"South Province";"Noumea (6éme Km)";-22.2477;166.47
+NA;Khomas Region;Windhoek (Eros);-22.5493;17.0923
+NA;Khomas;Windhoek (Eros);-22.5517;17.0882
+NA;Khomas Region;Windhoek (Eros);-22.5439;17.0877
+NC;South Province;Noumea (Vallée des Colons);-22.2692;166.455
+NC;South Province;Noumea (Magenta);-22.2707;166.464
+NC;South Province;Noumea (Zone Industrielle de Ducos);-22.2444;166.453
+NC;South Province;Noumea;-22.2744;166.444
+NC;South Province;Noumea (6éme Km);-22.2477;166.47
 AU;Queensland;Moranbah;-22.0001;148.047
-NC;"South Province";"Noumea (4éme Km)";-22.2464;166.461
-NA;"Khomas Region";"Windhoek (Olympia)";-22.6201;17.0933
-BR;"São Paulo";"Araras (Centro)";-22.3564;-47.3866
-NC;"South Province";Noumea;-22.2657;166.473
-NC;"South Province";Dumbéa;-22.1576;166.457
-NC;"South Province";"Noumea (Magenta)";-22.2692;166.461
-NC;"South Province";Païta;-22.1311;166.357
-BR;"Rio de Janeiro";Botafogo;-22.9548;-43.1946
-NC;"South Province";"Noumea (Magenta)";-22.2703;166.462
-BR;"Rio de Janeiro";Seropédica;-22.7439;-43.7075
-BR;"Rio de Janeiro";"Jardim Botanico";-22.9661;-43.2199
-BR;"Rio de Janeiro";"Três Rios";-22.1167;-43.2092
-BR;"Rio de Janeiro";"Cabo Frio";-22.8869;-42.0267
-BR;"Rio de Janeiro";"Armação dos Búzios";-22.7469;-41.8817
-BR;"São Paulo";"Campinas (Loteamento Alphaville Campinas)";-22.8202;-47.0355
-BR;"São Paulo";Pirapozinho;-22.2753;-51.5
-BR;"São Paulo";"Mirante do Paranapanema";-22.2919;-51.9064
-BR;"Rio de Janeiro";"Miguel Pereira";-22.4539;-43.4689
-BR;"Rio de Janeiro";Vassouras;-22.4039;-43.6625
-BR;"Minas Gerais";Ipuiúna;-22.0987;-46.1899
-BR;"Minas Gerais";"Ibitiúra de Minas";-22.0623;-46.4398
-BR;"Minas Gerais";Andradas;-22.0681;-46.5692
-BR;"São Paulo";Aparecida;-22.8469;-45.2297
-BR;"São Paulo";Guaratinguetá;-22.8164;-45.1925
-BR;"São Paulo";"Presidente Prudente";-22.1256;-51.3889
-BR;"São Paulo";Arealva;-22.0286;-48.9111
-BR;"São Paulo";Jaguariúna;-22.7056;-46.9858
-BR;"São Paulo";Jaguariúna;-22.7042;-46.9849
-BR;"Rio de Janeiro";Resende;-22.4681;-44.4479
-BR;"Rio de Janeiro";Piraí;-22.6292;-43.8981
-BR;"Mato Grosso do Sul";Dourados;-22.2375;-54.7987
-AR;Salta;"General Mosconi";-22.7864;-63.7695
-BR;"São Paulo";Marília;-22.2176;-49.9487
-BR;"Mato Grosso do Sul";Jateí;-22.4819;-54.3025
-BR;"Mato Grosso do Sul";Vicentina;-22.4092;-54.4356
-BR;"Rio de Janeiro";"Porto Real";-22.4197;-44.2903
-BR;"Rio de Janeiro";Seropédica;-22.7472;-43.6996
-BR;"São Paulo";Itapira;-22.4361;-46.8217
-BR;"Minas Gerais";"Santa Rita do Sapucaí";-22.2523;-45.7036
-BR;"São Paulo";Jaú;-22.2964;-48.5578
-BR;"São Paulo";Morungaba;-22.8791;-46.7957
-BR;Paraná;"Nova Londrina";-22.6571;-52.8612
-BR;"Rio de Janeiro";"Paty do Alferes";-22.4286;-43.4186
-BR;"Mato Grosso do Sul";Caracol;-22.0139;-57.0244
-BR;"São Paulo";Duartina;-22.4144;-49.4039
-BR;"Minas Gerais";"Santa Rita do Sapucaí";-22.2522;-45.7033
-BR;"São Paulo";Pederneiras;-22.3517;-48.775
-BR;"São Paulo";"Limeira (Vila Fior)";-22.5706;-47.4193
-BR;"Rio de Janeiro";"Campo Grande";-22.8604;-43.5483
-BR;"Rio de Janeiro";"Conceição de Macabu";-22.0853;-41.8683
-BR;"Rio de Janeiro";Camboinhas;-22.9585;-43.0545
-BR;"Rio de Janeiro";"Rio Bonito";-22.7086;-42.6097
-BR;"Mato Grosso do Sul";Itaporã;-22.0807;-54.7935
-BR;"Minas Gerais";"Monte Sião";-22.4325;-46.5725
-BR;"Rio de Janeiro";"Nova Iguaçu (Parque Saudade)";-22.6813;-43.4456
-BR;"Rio de Janeiro";"Cachoeiras de Macacu";-22.4625;-42.6531
-BR;"São Paulo";Pedreira;-22.7419;-46.9014
-BR;"São Paulo";"Serra Negra";-22.6122;-46.7006
-BR;"São Paulo";Assis;-22.6617;-50.4122
-BR;"Rio de Janeiro";"São José do Vale do Rio Preto (Centro)";-22.1532;-42.9245
-BR;"São Paulo";"Presidente Bernardes";-22.0061;-51.5531
-BR;"Minas Gerais";"Bueno Brandão";-22.4406;-46.3491
-BR;"São Paulo";Capivari;-22.995;-47.5078
-BR;"Rio de Janeiro";"Belford Roxo";-22.7606;-43.4037
-BR;"Rio de Janeiro";"Vila Sarapui (Parque Baia Branca)";-22.7128;-43.1719
-BR;"São Paulo";"Maracaí (Conjunto Habitacional Tiemann)";-22.6115;-50.6653
-BR;"São Paulo";Piracicaba;-22.7343;-47.6481
-BR;"São Paulo";Itirapina;-22.2528;-47.8228
-BR;"São Paulo";Analândia;-22.1264;-47.6631
+NC;South Province;Noumea (4éme Km);-22.2464;166.461
+NA;Khomas Region;Windhoek (Olympia);-22.6201;17.0933
+BR;São Paulo;Araras (Centro);-22.3564;-47.3866
+NC;South Province;Noumea;-22.2657;166.473
+NC;South Province;Dumbéa;-22.1576;166.457
+NC;South Province;Noumea (Magenta);-22.2692;166.461
+NC;South Province;Païta;-22.1311;166.357
+BR;Rio de Janeiro;Botafogo;-22.9548;-43.1946
+NC;South Province;Noumea (Magenta);-22.2703;166.462
+BR;Rio de Janeiro;Seropédica;-22.7439;-43.7075
+BR;Rio de Janeiro;Jardim Botanico;-22.9661;-43.2199
+BR;Rio de Janeiro;Três Rios;-22.1167;-43.2092
+BR;Rio de Janeiro;Cabo Frio;-22.8869;-42.0267
+BR;Rio de Janeiro;Armação dos Búzios;-22.7469;-41.8817
+BR;São Paulo;Campinas (Loteamento Alphaville Campinas);-22.8202;-47.0355
+BR;São Paulo;Pirapozinho;-22.2753;-51.5
+BR;São Paulo;Mirante do Paranapanema;-22.2919;-51.9064
+BR;Rio de Janeiro;Miguel Pereira;-22.4539;-43.4689
+BR;Rio de Janeiro;Vassouras;-22.4039;-43.6625
+BR;Minas Gerais;Ipuiúna;-22.0987;-46.1899
+BR;Minas Gerais;Ibitiúra de Minas;-22.0623;-46.4398
+BR;Minas Gerais;Andradas;-22.0681;-46.5692
+BR;São Paulo;Aparecida;-22.8469;-45.2297
+BR;São Paulo;Guaratinguetá;-22.8164;-45.1925
+BR;São Paulo;Presidente Prudente;-22.1256;-51.3889
+BR;São Paulo;Arealva;-22.0286;-48.9111
+BR;São Paulo;Jaguariúna;-22.7056;-46.9858
+BR;São Paulo;Jaguariúna;-22.7042;-46.9849
+BR;Rio de Janeiro;Resende;-22.4681;-44.4479
+BR;Rio de Janeiro;Piraí;-22.6292;-43.8981
+BR;Mato Grosso do Sul;Dourados;-22.2375;-54.7987
+AR;Salta;General Mosconi;-22.7864;-63.7695
+BR;São Paulo;Marília;-22.2176;-49.9487
+BR;Mato Grosso do Sul;Jateí;-22.4819;-54.3025
+BR;Mato Grosso do Sul;Vicentina;-22.4092;-54.4356
+BR;Rio de Janeiro;Porto Real;-22.4197;-44.2903
+BR;Rio de Janeiro;Seropédica;-22.7472;-43.6996
+BR;São Paulo;Itapira;-22.4361;-46.8217
+BR;Minas Gerais;Santa Rita do Sapucaí;-22.2523;-45.7036
+BR;São Paulo;Jaú;-22.2964;-48.5578
+BR;São Paulo;Morungaba;-22.8791;-46.7957
+BR;Paraná;Nova Londrina;-22.6571;-52.8612
+BR;Rio de Janeiro;Paty do Alferes;-22.4286;-43.4186
+BR;Mato Grosso do Sul;Caracol;-22.0139;-57.0244
+BR;São Paulo;Duartina;-22.4144;-49.4039
+BR;Minas Gerais;Santa Rita do Sapucaí;-22.2522;-45.7033
+BR;São Paulo;Pederneiras;-22.3517;-48.775
+BR;São Paulo;Limeira (Vila Fior);-22.5706;-47.4193
+BR;Rio de Janeiro;Campo Grande;-22.8604;-43.5483
+BR;Rio de Janeiro;Conceição de Macabu;-22.0853;-41.8683
+BR;Rio de Janeiro;Camboinhas;-22.9585;-43.0545
+BR;Rio de Janeiro;Rio Bonito;-22.7086;-42.6097
+BR;Mato Grosso do Sul;Itaporã;-22.0807;-54.7935
+BR;Minas Gerais;Monte Sião;-22.4325;-46.5725
+BR;Rio de Janeiro;Nova Iguaçu (Parque Saudade);-22.6813;-43.4456
+BR;Rio de Janeiro;Cachoeiras de Macacu;-22.4625;-42.6531
+BR;São Paulo;Pedreira;-22.7419;-46.9014
+BR;São Paulo;Serra Negra;-22.6122;-46.7006
+BR;São Paulo;Assis;-22.6617;-50.4122
+BR;Rio de Janeiro;São José do Vale do Rio Preto (Centro);-22.1532;-42.9245
+BR;São Paulo;Presidente Bernardes;-22.0061;-51.5531
+BR;Minas Gerais;Bueno Brandão;-22.4406;-46.3491
+BR;São Paulo;Capivari;-22.995;-47.5078
+BR;Rio de Janeiro;Belford Roxo;-22.7606;-43.4037
+BR;Rio de Janeiro;Vila Sarapui (Parque Baia Branca);-22.7128;-43.1719
+BR;São Paulo;Maracaí (Conjunto Habitacional Tiemann);-22.6115;-50.6653
+BR;São Paulo;Piracicaba;-22.7343;-47.6481
+BR;São Paulo;Itirapina;-22.2528;-47.8228
+BR;São Paulo;Analândia;-22.1264;-47.6631
 BR;Paraná;Colorado;-22.8375;-51.9731
-BR;"São Paulo";"Artur Nogueira";-22.574;-47.1714
-BR;"São Paulo";"Bauru (Distrito Industrial Domingos Biancardi)";-22.3122;-49.0296
-BR;"São Paulo";"Vila de Nossa Senhora Aparecida (Vila Nossa Senhora Aparecida)";-22.6078;-46.0562
-BR;"São Paulo";"Lençóis Paulista";-22.5986;-48.8003
-BR;"São Paulo";Macatuba;-22.5022;-48.7114
-BR;Paraná;"Terra Rica";-22.7094;-52.6169
-BR;"Minas Gerais";Gonçalves;-22.6593;-45.8545
-BR;"Rio de Janeiro";"Bom Jardim";-22.1519;-42.4194
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.8974;-43.1803
-BR;"São Paulo";Piquete;-22.6136;-45.1761
-BR;"Rio de Janeiro";Pavuna;-22.8063;-43.3632
-BR;"Rio de Janeiro";"Macaé (Centro)";-22.3734;-41.7786
-NC;"South Province";Mont-Dore;-22.2629;166.569
-NC;"South Province";"Noumea (Vallée des Colons)";-22.2702;166.453
-BR;"Mato Grosso do Sul";"Antônio João";-22.1911;-55.9475
-BR;"São Paulo";Assis;-22.6617;-50.4184
-BR;"Rio de Janeiro";"Campo Grande";-22.9078;-43.5356
-BR;"São Paulo";Cordeirópolis;-22.4819;-47.4567
-BR;"Rio de Janeiro";Guapimirim;-22.5212;-42.9795
-BR;"São Paulo";Rancharia;-22.2292;-50.8931
-BR;"Rio de Janeiro";"São Gonçalo";-22.8234;-43.0462
-BR;"Rio de Janeiro";"Santa Cruz";-22.9535;-43.6487
-BR;"Minas Gerais";Itanhandu;-22.2958;-44.9347
-BR;"São Paulo";Arealva;-22.0298;-48.9124
-BR;"São Paulo";"Campinas (Loteamento Alphaville Campinas)";-22.8235;-47.0359
-BR;"Rio de Janeiro";"Nilópolis (Centro)";-22.8033;-43.427
-BR;"Rio de Janeiro";"Boa Vista";-22.4674;-42.648
-BR;"Rio de Janeiro";"Carlos Guinle";-22.4562;-42.9767
-BR;"Rio de Janeiro";Quitandinha;-22.5299;-43.2172
-BR;"Rio de Janeiro";"Rio de Janeiro (Cidade Universitária da Universidade Federal do Rio de Janeiro)";-22.8625;-43.2235
-BR;"Rio de Janeiro";"Jardim Botanico";-22.9655;-43.2378
-PF;"Îles Australes";Avera;-22.4781;-151.351
-BR;"São Paulo";Americana;-22.8844;-47.1729
-BR;"São Paulo";"Jardim São Francisco";-22.7636;-47.3944
-BR;"São Paulo";"Cidade Universitária";-22.8177;-47.0622
-BR;"Rio de Janeiro";Urca;-22.9541;-43.1737
+BR;São Paulo;Artur Nogueira;-22.574;-47.1714
+BR;São Paulo;Bauru (Distrito Industrial Domingos Biancardi);-22.3122;-49.0296
+BR;São Paulo;Vila de Nossa Senhora Aparecida (Vila Nossa Senhora Aparecida);-22.6078;-46.0562
+BR;São Paulo;Lençóis Paulista;-22.5986;-48.8003
+BR;São Paulo;Macatuba;-22.5022;-48.7114
+BR;Paraná;Terra Rica;-22.7094;-52.6169
+BR;Minas Gerais;Gonçalves;-22.6593;-45.8545
+BR;Rio de Janeiro;Bom Jardim;-22.1519;-42.4194
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.8974;-43.1803
+BR;São Paulo;Piquete;-22.6136;-45.1761
+BR;Rio de Janeiro;Pavuna;-22.8063;-43.3632
+BR;Rio de Janeiro;Macaé (Centro);-22.3734;-41.7786
+NC;South Province;Mont-Dore;-22.2629;166.569
+NC;South Province;Noumea (Vallée des Colons);-22.2702;166.453
+BR;Mato Grosso do Sul;Antônio João;-22.1911;-55.9475
+BR;São Paulo;Assis;-22.6617;-50.4184
+BR;Rio de Janeiro;Campo Grande;-22.9078;-43.5356
+BR;São Paulo;Cordeirópolis;-22.4819;-47.4567
+BR;Rio de Janeiro;Guapimirim;-22.5212;-42.9795
+BR;São Paulo;Rancharia;-22.2292;-50.8931
+BR;Rio de Janeiro;São Gonçalo;-22.8234;-43.0462
+BR;Rio de Janeiro;Santa Cruz;-22.9535;-43.6487
+BR;Minas Gerais;Itanhandu;-22.2958;-44.9347
+BR;São Paulo;Arealva;-22.0298;-48.9124
+BR;São Paulo;Campinas (Loteamento Alphaville Campinas);-22.8235;-47.0359
+BR;Rio de Janeiro;Nilópolis (Centro);-22.8033;-43.427
+BR;Rio de Janeiro;Boa Vista;-22.4674;-42.648
+BR;Rio de Janeiro;Carlos Guinle;-22.4562;-42.9767
+BR;Rio de Janeiro;Quitandinha;-22.5299;-43.2172
+BR;Rio de Janeiro;Rio de Janeiro (Cidade Universitária da Universidade Federal do Rio de Janeiro);-22.8625;-43.2235
+BR;Rio de Janeiro;Jardim Botanico;-22.9655;-43.2378
+PF;Îles Australes;Avera;-22.4781;-151.351
+BR;São Paulo;Americana;-22.8844;-47.1729
+BR;São Paulo;Jardim São Francisco;-22.7636;-47.3944
+BR;São Paulo;Cidade Universitária;-22.8177;-47.0622
+BR;Rio de Janeiro;Urca;-22.9541;-43.1737
 CL;Antofagasta;Tocopilla;-22.092;-70.1979
-CL;Antofagasta;"Sierra Gorda";-22.8906;-69.3196
-CL;Antofagasta;"San Pedro de Atacama";-22.9111;-68.2011
-BR;"Rio de Janeiro";Botafogo;-22.9458;-43.1823
-BR;"São Paulo";Garça;-22.2106;-49.6561
-BR;"São Paulo";Avaí;-22.1467;-49.3331
-BR;"São Paulo";Tremembé;-22.9583;-45.5494
-BR;"São Paulo";"Dois Córregos";-22.3661;-48.3803
-BR;"Rio de Janeiro";"Paraíba do Sul";-22.1585;-43.2932
-BR;"São Paulo";Cosmópolis;-22.6458;-47.1961
-NA;"Khomas Region";"Windhoek (Windhoek Central)";-22.5559;17.0845
-BR;"Rio de Janeiro";Manguinhos;-22.8772;-43.2436
+CL;Antofagasta;Sierra Gorda;-22.8906;-69.3196
+CL;Antofagasta;San Pedro de Atacama;-22.9111;-68.2011
+BR;Rio de Janeiro;Botafogo;-22.9458;-43.1823
+BR;São Paulo;Garça;-22.2106;-49.6561
+BR;São Paulo;Avaí;-22.1467;-49.3331
+BR;São Paulo;Tremembé;-22.9583;-45.5494
+BR;São Paulo;Dois Córregos;-22.3661;-48.3803
+BR;Rio de Janeiro;Paraíba do Sul;-22.1585;-43.2932
+BR;São Paulo;Cosmópolis;-22.6458;-47.1961
+NA;Khomas Region;Windhoek (Windhoek Central);-22.5559;17.0845
+BR;Rio de Janeiro;Manguinhos;-22.8772;-43.2436
 MG;Atsimo-Atsinanana;Farafangana;-22.8174;47.818
-BR;"São Paulo";"Bragança Paulista (Residencial Colinas de Sao Francisco)";-22.9696;-46.5284
-BR;"Rio de Janeiro";Paracambi;-22.6083;-43.7095
-BR;"Rio de Janeiro";"Engenheiro Paulo de Frontin";-22.5497;-43.6783
-NA;"Khomas Region";"Windhoek (Prosperita Industrial)";-22.6207;17.0828
-BR;"Rio de Janeiro";"Rio de Janeiro (Cidade Universitária da Universidade Federal do Rio de Janeiro)";-22.8524;-43.2355
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9094;-43.1794
-BR;"Rio de Janeiro";Carapebus;-22.1872;-41.6611
-NA;Erongo;"Walvis Bay";-22.9592;14.4993
-BR;"São Paulo";"Campinas (Jardim Madalena)";-22.8651;-47.0222
-BR;"Rio de Janeiro";"Comendador Soares";-22.7527;-43.5187
-BR;"Rio de Janeiro";"Casimiro de Abreu (Centro)";-22.4808;-42.202
-BR;"Rio de Janeiro";Sumidouro;-22.0497;-42.6747
-BR;"São Paulo";Duartina;-22.4158;-49.4133
-BR;"Rio de Janeiro";Xerém;-22.5885;-43.3047
-BR;"Minas Gerais";Itamonte;-22.283;-44.8699
-BR;"Rio de Janeiro";Tanguá;-22.7428;-42.7206
-BR;"São Paulo";"Terra Preta";-22.6333;-47.05
-BR;"Rio de Janeiro";"Trajano de Morais";-22.064;-42.0602
-BR;"São Paulo";"Pedrinhas Paulista";-22.8151;-50.7924
-BR;"Minas Gerais";"Bueno Brandão";-22.2819;-46.3701
-BR;"São Paulo";Hortolândia;-22.9013;-47.2001
-BR;"Rio de Janeiro";Lagoa;-22.9793;-43.221
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9082;-43.1761
-BR;"Rio de Janeiro";"Barra da Tijuca";-22.9715;-43.3824
-BR;"São Paulo";"Itirapina (Vila Cianeli)";-22.2552;-47.8189
-BR;"Rio de Janeiro";"Nova Friburgo";-22.2887;-42.5341
-BR;"Rio de Janeiro";Saquarema;-22.8935;-42.4683
-BR;"Rio de Janeiro";"Silva Jardim";-22.6509;-42.3905
-BR;"Rio de Janeiro";"Maricá (Cordeirinho)";-22.9569;-42.7598
-BR;"Rio de Janeiro";Inhaúma;-22.8714;-43.2713
-BR;"Rio de Janeiro";"Nova Cidade";-22.5091;-41.9557
-BR;"Minas Gerais";"Wenceslau Braz";-22.5349;-45.3625
-BR;"Rio de Janeiro";"Três Rios";-22.1091;-43.2114
-BR;"São Paulo";"Jaguariúna (Chácara Primavera)";-22.6803;-47.0056
-BR;"Rio de Janeiro";"Barra da Tijuca";-22.997;-43.4181
-BR;"São Paulo";Bariri;-22.0744;-48.7403
-BR;"São Paulo";Bariri;-22.0759;-48.7391
-BR;"Rio de Janeiro";"Boa Sorte";-22.5569;-44.1558
-BR;"Rio de Janeiro";"São Miguel";-22.7136;-43.7207
-BR;"Rio de Janeiro";"Duas Barras";-22.0511;-42.5217
-BR;"São Paulo";"São Manuel (Centro)";-22.7332;-48.5691
-BR;"São Paulo";"São Manuel";-22.7311;-48.5706
-BR;"Minas Gerais";Itajubá;-22.4247;-45.4601
-BR;"Mato Grosso do Sul";"Dourados (Canaã I)";-22.2076;-54.7694
-BR;"Minas Gerais";"Cambuí (Centro)";-22.6108;-46.0575
-BR;"São Paulo";"Ribeirão Bonito";-22.0667;-48.1761
-BR;"São Paulo";Duartina;-22.4155;-49.4179
-BR;"Rio de Janeiro";"Itaboraí (Caluge)";-22.7666;-42.8528
-BR;"Rio de Janeiro";"Rio das Ostras (Verdes Mares)";-22.4973;-41.9195
-BR;"Minas Gerais";"São Gonçalo do Sapucaí";-22.067;-45.543
-BR;"São Paulo";"Campinas (Parque Via Norte)";-22.8983;-47.1129
-BR;"Mato Grosso do Sul";"Ponta Porã";-22.5373;-55.7282
-BR;"Rio de Janeiro";"Petrópolis (Vila Inhomirim)";-22.5954;-43.1875
-BR;"São Paulo";Ribeirão;-22.7099;-46.7722
-BR;"Rio de Janeiro";"Vila Rosario";-22.7355;-43.322
-BR;"Mato Grosso do Sul";Dourados;-22.2119;-54.6507
-NC;"South Province";Mont-Dore;-22.2626;166.566
-BR;"São Paulo";"Morada do Sol";-22.6986;-47.358
-BR;"Minas Gerais";Extrema;-22.8542;-46.3189
-BR;"Minas Gerais";Paraisópolis;-22.5531;-45.781
-BR;"Rio de Janeiro";"Vila Sarapui (Vila Operaria)";-22.6143;-43.3
-BR;"São Paulo";"Jardim das Bandeiras";-22.9542;-47.0921
+BR;São Paulo;Bragança Paulista (Residencial Colinas de Sao Francisco);-22.9696;-46.5284
+BR;Rio de Janeiro;Paracambi;-22.6083;-43.7095
+BR;Rio de Janeiro;Engenheiro Paulo de Frontin;-22.5497;-43.6783
+NA;Khomas Region;Windhoek (Prosperita Industrial);-22.6207;17.0828
+BR;Rio de Janeiro;Rio de Janeiro (Cidade Universitária da Universidade Federal do Rio de Janeiro);-22.8524;-43.2355
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9094;-43.1794
+BR;Rio de Janeiro;Carapebus;-22.1872;-41.6611
+NA;Erongo;Walvis Bay;-22.9592;14.4993
+BR;São Paulo;Campinas (Jardim Madalena);-22.8651;-47.0222
+BR;Rio de Janeiro;Comendador Soares;-22.7527;-43.5187
+BR;Rio de Janeiro;Casimiro de Abreu (Centro);-22.4808;-42.202
+BR;Rio de Janeiro;Sumidouro;-22.0497;-42.6747
+BR;São Paulo;Duartina;-22.4158;-49.4133
+BR;Rio de Janeiro;Xerém;-22.5885;-43.3047
+BR;Minas Gerais;Itamonte;-22.283;-44.8699
+BR;Rio de Janeiro;Tanguá;-22.7428;-42.7206
+BR;São Paulo;Terra Preta;-22.6333;-47.05
+BR;Rio de Janeiro;Trajano de Morais;-22.064;-42.0602
+BR;São Paulo;Pedrinhas Paulista;-22.8151;-50.7924
+BR;Minas Gerais;Bueno Brandão;-22.2819;-46.3701
+BR;São Paulo;Hortolândia;-22.9013;-47.2001
+BR;Rio de Janeiro;Lagoa;-22.9793;-43.221
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9082;-43.1761
+BR;Rio de Janeiro;Barra da Tijuca;-22.9715;-43.3824
+BR;São Paulo;Itirapina (Vila Cianeli);-22.2552;-47.8189
+BR;Rio de Janeiro;Nova Friburgo;-22.2887;-42.5341
+BR;Rio de Janeiro;Saquarema;-22.8935;-42.4683
+BR;Rio de Janeiro;Silva Jardim;-22.6509;-42.3905
+BR;Rio de Janeiro;Maricá (Cordeirinho);-22.9569;-42.7598
+BR;Rio de Janeiro;Inhaúma;-22.8714;-43.2713
+BR;Rio de Janeiro;Nova Cidade;-22.5091;-41.9557
+BR;Minas Gerais;Wenceslau Braz;-22.5349;-45.3625
+BR;Rio de Janeiro;Três Rios;-22.1091;-43.2114
+BR;São Paulo;Jaguariúna (Chácara Primavera);-22.6803;-47.0056
+BR;Rio de Janeiro;Barra da Tijuca;-22.997;-43.4181
+BR;São Paulo;Bariri;-22.0744;-48.7403
+BR;São Paulo;Bariri;-22.0759;-48.7391
+BR;Rio de Janeiro;Boa Sorte;-22.5569;-44.1558
+BR;Rio de Janeiro;São Miguel;-22.7136;-43.7207
+BR;Rio de Janeiro;Duas Barras;-22.0511;-42.5217
+BR;São Paulo;São Manuel (Centro);-22.7332;-48.5691
+BR;São Paulo;São Manuel;-22.7311;-48.5706
+BR;Minas Gerais;Itajubá;-22.4247;-45.4601
+BR;Mato Grosso do Sul;Dourados (Canaã I);-22.2076;-54.7694
+BR;Minas Gerais;Cambuí (Centro);-22.6108;-46.0575
+BR;São Paulo;Ribeirão Bonito;-22.0667;-48.1761
+BR;São Paulo;Duartina;-22.4155;-49.4179
+BR;Rio de Janeiro;Itaboraí (Caluge);-22.7666;-42.8528
+BR;Rio de Janeiro;Rio das Ostras (Verdes Mares);-22.4973;-41.9195
+BR;Minas Gerais;São Gonçalo do Sapucaí;-22.067;-45.543
+BR;São Paulo;Campinas (Parque Via Norte);-22.8983;-47.1129
+BR;Mato Grosso do Sul;Ponta Porã;-22.5373;-55.7282
+BR;Rio de Janeiro;Petrópolis (Vila Inhomirim);-22.5954;-43.1875
+BR;São Paulo;Ribeirão;-22.7099;-46.7722
+BR;Rio de Janeiro;Vila Rosario;-22.7355;-43.322
+BR;Mato Grosso do Sul;Dourados;-22.2119;-54.6507
+NC;South Province;Mont-Dore;-22.2626;166.566
+BR;São Paulo;Morada do Sol;-22.6986;-47.358
+BR;Minas Gerais;Extrema;-22.8542;-46.3189
+BR;Minas Gerais;Paraisópolis;-22.5531;-45.781
+BR;Rio de Janeiro;Vila Sarapui (Vila Operaria);-22.6143;-43.3
+BR;São Paulo;Jardim das Bandeiras;-22.9542;-47.0921
 BR;Paraná;Colorado;-22.6972;-51.7916
-BR;"Minas Gerais";"Passa Quatro";-22.3829;-44.9666
-BR;"São Paulo";"Bauru (Vila Noemy)";-22.331;-49.0701
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9095;-43.169
-BR;"Rio de Janeiro";Botafogo;-22.9538;-43.1811
-BR;"Rio de Janeiro";Cinelândia;-22.9105;-43.1763
-BR;"São Paulo";Paulicéia;-22.7485;-47.6459
-BR;"Rio de Janeiro";Taquara;-22.922;-43.373
+BR;Minas Gerais;Passa Quatro;-22.3829;-44.9666
+BR;São Paulo;Bauru (Vila Noemy);-22.331;-49.0701
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9095;-43.169
+BR;Rio de Janeiro;Botafogo;-22.9538;-43.1811
+BR;Rio de Janeiro;Cinelândia;-22.9105;-43.1763
+BR;São Paulo;Paulicéia;-22.7485;-47.6459
+BR;Rio de Janeiro;Taquara;-22.922;-43.373
 BR;Paraná;Porecatu;-22.7511;-51.3805
-BR;"São Paulo";"Santa Cruz";-22.5507;-47.9099
-BR;"São Paulo";"São Carlos";-22.0123;-47.8908
-BR;"São Paulo";Campinas;-22.9099;-47.0626
-BR;"São Paulo";"Campinas (Jardim das Paineiras)";-22.9021;-47.0333
-BR;"Minas Gerais";Cambuí;-22.9014;-47.0538
-BR;"Rio de Janeiro";"Nova Iguaçu (Parque Ambai)";-22.7008;-43.4377
-BR;"Rio de Janeiro";"Nova Iguaçu (Centro)";-22.7623;-43.4501
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9017;-43.1845
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.8992;-43.1807
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9093;-43.1819
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9049;-43.1763
-BR;"São Paulo";"Marília (Alto Cafezal)";-22.2237;-49.9587
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.8981;-43.1788
-BR;"Minas Gerais";"Ouro Fino";-22.2798;-46.3722
-BR;"São Paulo";"Campos do Jordão";-22.7408;-45.5944
-BR;"Mato Grosso do Sul";Douradina;-22.0401;-54.6083
-BR;"São Paulo";"Ourinhos (Vila Moraes)";-22.9849;-49.8648
-BR;"Rio de Janeiro";"Petrópolis (Centro)";-22.5114;-43.1777
-BR;"Rio de Janeiro";"Santo Cristo";-22.8996;-43.2014
-BR;"Rio de Janeiro";Botafogo;-22.9505;-43.1808
-BR;"São Paulo";"Espírito Santo do Pinhal";-22.1969;-46.7492
-BR;"São Paulo";"Jardim Fortaleza";-22.7528;-47.157
-BR;"Rio de Janeiro";"Santo Antônio";-22.7431;-45.1327
-BR;"Rio de Janeiro";"Vila Sarapui (Parque Martinho)";-22.7121;-43.3275
-BR;"São Paulo";"Jardim São Marcos";-22.8477;-47.115
-BR;"Rio de Janeiro";"Comendador Levy Gasparian";-22.0286;-43.205
-BR;"São Paulo";Arapeí;-22.6739;-44.4478
-BR;"São Paulo";"Hortolândia (Techno Park)";-22.8509;-47.1541
-BR;"Rio de Janeiro";"Rio das Ostras";-22.5273;-41.9464
-BR;"São Paulo";"Hortolândia (Chácaras Assay)";-22.8962;-47.2049
-BR;"São Paulo";Agudos;-22.5365;-48.9154
-BR;"São Paulo";Socorro;-22.5935;-46.5274
-BR;"São Paulo";"Bauru (Vila Falcao)";-22.3258;-49.0893
-BR;"São Paulo";"Bauru (Vila Cardia)";-22.3217;-49.0464
-BR;"São Paulo";"Rio Claro (Vila Operaria)";-22.3984;-47.5663
-BR;"Rio de Janeiro";"Rio Claro";-22.7231;-44.1356
-BR;"São Paulo";Bananal;-22.6836;-44.3233
-BR;"São Paulo";"Regente Feijó";-22.2189;-51.3064
-BR;"Mato Grosso do Sul";Taquarussu;-22.4878;-53.3514
-BR;"São Paulo";"Igaraçu do Tietê";-22.5092;-48.5578
-BR;"Rio de Janeiro";Quissamã;-22.1105;-41.471
-BR;"Rio de Janeiro";"Rio Comprido";-22.928;-43.2084
-BR;"São Paulo";"Monte Mor";-22.9256;-47.2538
-BR;"São Paulo";"Mogi Guaçu (Parque Cidade Nova)";-22.3499;-46.9467
-BR;"Minas Gerais";"Maria da Fé";-22.308;-45.3735
-BR;"Rio de Janeiro";Tijuca;-22.9251;-43.2322
-BR;"São Paulo";"Piracicaba (Centro)";-22.7276;-47.6519
-BR;"Rio de Janeiro";"Padre Miguel";-22.8781;-43.4483
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.91;-43.2009
-BR;"São Paulo";"Águas de Santa Bárbara";-22.8806;-49.2389
-BR;"São Paulo";"Garça (Centro)";-22.2155;-49.6539
-BR;"Rio de Janeiro";"Vila Isabel";-22.9154;-43.2544
-BR;"Rio de Janeiro";Pechincha;-22.9272;-43.3451
-BR;"São Paulo";"Lorena (Parque das Rodovias)";-22.7311;-45.0924
-BR;"São Paulo";Guaratinguetá;-22.8037;-45.1859
-BR;"São Paulo";"Presidente Prudente (Vila Liberdade)";-22.1333;-51.4031
-BR;"Rio de Janeiro";Benfica;-22.8949;-43.2385
-BR;"Rio de Janeiro";"Jardim Esperança";-22.8372;-42.0275
-BR;"Rio de Janeiro";"Penha Circular";-22.8194;-43.2702
-BR;"São Paulo";"Rio Claro (Jardim Mirassol)";-22.418;-47.5775
-BR;"Rio de Janeiro";Trindade;-22.8088;-43.0165
-BR;"Rio de Janeiro";"Rio de Janeiro";-22.9234;-43.2132
-BR;"Rio de Janeiro";"Campo Grande";-22.9254;-43.571
-BR;"Rio de Janeiro";"Barra da Tijuca";-22.9982;-43.3532
-BR;"Rio de Janeiro";"Rio das Flores (Centro)";-22.167;-43.5858
-BR;"Rio de Janeiro";Pacheco;-22.8193;-42.9674
-BR;"Rio de Janeiro";Maricá;-22.8935;-42.8297
-BR;"Rio de Janeiro";"Macaé (Centro)";-22.3747;-41.7768
-BR;"São Paulo";Sertãozinho;-22.7399;-47.5703
-BR;"Rio de Janeiro";Maracanã;-22.9158;-43.218
-BR;"Rio de Janeiro";"Santo Antônio";-22.6156;-43.2836
-BR;"São Paulo";"Pirassununga (Centro)";-22.0035;-47.4217
-BR;"Rio de Janeiro";"Vargem Alegre";-22.5079;-43.935
-BR;"Rio de Janeiro";Pinheiral;-22.518;-44.0001
-BR;"São Paulo";"Vila Nova";-22.8752;-47.0789
-BR;"Minas Gerais";Sapucaí-Mirim;-22.7472;-45.7432
-BR;"São Paulo";"Campinas (Vila Saltinho)";-22.9818;-47.0769
-BR;"Rio de Janeiro";"Santa Cruz";-22.8875;-43.7315
-BR;"Rio de Janeiro";Botafogo;-22.9411;-43.179
-BO;"Tarija Department";Yacuiba;-22.0164;-63.6775
-BR;"Rio de Janeiro";"São Cristóvão";-22.9027;-43.2194
-BR;"Rio de Janeiro";"Volta Redonda (Boa Vista II)";-22.5477;-44.1215
-BR;"São Paulo";"Bauru (Vila Universitaria)";-22.3377;-49.0536
-BR;"Minas Gerais";"Cambuí (Olaria)";-22.5513;-45.935
-BR;"Rio de Janeiro";Carapebus;-22.1901;-41.6617
-AR;Salta;"Tartagal (Centro)";-22.5202;-63.8049
+BR;São Paulo;Santa Cruz;-22.5507;-47.9099
+BR;São Paulo;São Carlos;-22.0123;-47.8908
+BR;São Paulo;Campinas;-22.9099;-47.0626
+BR;São Paulo;Campinas (Jardim das Paineiras);-22.9021;-47.0333
+BR;Minas Gerais;Cambuí;-22.9014;-47.0538
+BR;Rio de Janeiro;Nova Iguaçu (Parque Ambai);-22.7008;-43.4377
+BR;Rio de Janeiro;Nova Iguaçu (Centro);-22.7623;-43.4501
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9017;-43.1845
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.8992;-43.1807
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9093;-43.1819
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9049;-43.1763
+BR;São Paulo;Marília (Alto Cafezal);-22.2237;-49.9587
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.8981;-43.1788
+BR;Minas Gerais;Ouro Fino;-22.2798;-46.3722
+BR;São Paulo;Campos do Jordão;-22.7408;-45.5944
+BR;Mato Grosso do Sul;Douradina;-22.0401;-54.6083
+BR;São Paulo;Ourinhos (Vila Moraes);-22.9849;-49.8648
+BR;Rio de Janeiro;Petrópolis (Centro);-22.5114;-43.1777
+BR;Rio de Janeiro;Santo Cristo;-22.8996;-43.2014
+BR;Rio de Janeiro;Botafogo;-22.9505;-43.1808
+BR;São Paulo;Espírito Santo do Pinhal;-22.1969;-46.7492
+BR;São Paulo;Jardim Fortaleza;-22.7528;-47.157
+BR;Rio de Janeiro;Santo Antônio;-22.7431;-45.1327
+BR;Rio de Janeiro;Vila Sarapui (Parque Martinho);-22.7121;-43.3275
+BR;São Paulo;Jardim São Marcos;-22.8477;-47.115
+BR;Rio de Janeiro;Comendador Levy Gasparian;-22.0286;-43.205
+BR;São Paulo;Arapeí;-22.6739;-44.4478
+BR;São Paulo;Hortolândia (Techno Park);-22.8509;-47.1541
+BR;Rio de Janeiro;Rio das Ostras;-22.5273;-41.9464
+BR;São Paulo;Hortolândia (Chácaras Assay);-22.8962;-47.2049
+BR;São Paulo;Agudos;-22.5365;-48.9154
+BR;São Paulo;Socorro;-22.5935;-46.5274
+BR;São Paulo;Bauru (Vila Falcao);-22.3258;-49.0893
+BR;São Paulo;Bauru (Vila Cardia);-22.3217;-49.0464
+BR;São Paulo;Rio Claro (Vila Operaria);-22.3984;-47.5663
+BR;Rio de Janeiro;Rio Claro;-22.7231;-44.1356
+BR;São Paulo;Bananal;-22.6836;-44.3233
+BR;São Paulo;Regente Feijó;-22.2189;-51.3064
+BR;Mato Grosso do Sul;Taquarussu;-22.4878;-53.3514
+BR;São Paulo;Igaraçu do Tietê;-22.5092;-48.5578
+BR;Rio de Janeiro;Quissamã;-22.1105;-41.471
+BR;Rio de Janeiro;Rio Comprido;-22.928;-43.2084
+BR;São Paulo;Monte Mor;-22.9256;-47.2538
+BR;São Paulo;Mogi Guaçu (Parque Cidade Nova);-22.3499;-46.9467
+BR;Minas Gerais;Maria da Fé;-22.308;-45.3735
+BR;Rio de Janeiro;Tijuca;-22.9251;-43.2322
+BR;São Paulo;Piracicaba (Centro);-22.7276;-47.6519
+BR;Rio de Janeiro;Padre Miguel;-22.8781;-43.4483
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.91;-43.2009
+BR;São Paulo;Águas de Santa Bárbara;-22.8806;-49.2389
+BR;São Paulo;Garça (Centro);-22.2155;-49.6539
+BR;Rio de Janeiro;Vila Isabel;-22.9154;-43.2544
+BR;Rio de Janeiro;Pechincha;-22.9272;-43.3451
+BR;São Paulo;Lorena (Parque das Rodovias);-22.7311;-45.0924
+BR;São Paulo;Guaratinguetá;-22.8037;-45.1859
+BR;São Paulo;Presidente Prudente (Vila Liberdade);-22.1333;-51.4031
+BR;Rio de Janeiro;Benfica;-22.8949;-43.2385
+BR;Rio de Janeiro;Jardim Esperança;-22.8372;-42.0275
+BR;Rio de Janeiro;Penha Circular;-22.8194;-43.2702
+BR;São Paulo;Rio Claro (Jardim Mirassol);-22.418;-47.5775
+BR;Rio de Janeiro;Trindade;-22.8088;-43.0165
+BR;Rio de Janeiro;Rio de Janeiro;-22.9234;-43.2132
+BR;Rio de Janeiro;Campo Grande;-22.9254;-43.571
+BR;Rio de Janeiro;Barra da Tijuca;-22.9982;-43.3532
+BR;Rio de Janeiro;Rio das Flores (Centro);-22.167;-43.5858
+BR;Rio de Janeiro;Pacheco;-22.8193;-42.9674
+BR;Rio de Janeiro;Maricá;-22.8935;-42.8297
+BR;Rio de Janeiro;Macaé (Centro);-22.3747;-41.7768
+BR;São Paulo;Sertãozinho;-22.7399;-47.5703
+BR;Rio de Janeiro;Maracanã;-22.9158;-43.218
+BR;Rio de Janeiro;Santo Antônio;-22.6156;-43.2836
+BR;São Paulo;Pirassununga (Centro);-22.0035;-47.4217
+BR;Rio de Janeiro;Vargem Alegre;-22.5079;-43.935
+BR;Rio de Janeiro;Pinheiral;-22.518;-44.0001
+BR;São Paulo;Vila Nova;-22.8752;-47.0789
+BR;Minas Gerais;Sapucaí-Mirim;-22.7472;-45.7432
+BR;São Paulo;Campinas (Vila Saltinho);-22.9818;-47.0769
+BR;Rio de Janeiro;Santa Cruz;-22.8875;-43.7315
+BR;Rio de Janeiro;Botafogo;-22.9411;-43.179
+BO;Tarija Department;Yacuiba;-22.0164;-63.6775
+BR;Rio de Janeiro;São Cristóvão;-22.9027;-43.2194
+BR;Rio de Janeiro;Volta Redonda (Boa Vista II);-22.5477;-44.1215
+BR;São Paulo;Bauru (Vila Universitaria);-22.3377;-49.0536
+BR;Minas Gerais;Cambuí (Olaria);-22.5513;-45.935
+BR;Rio de Janeiro;Carapebus;-22.1901;-41.6617
+AR;Salta;Tartagal (Centro);-22.5202;-63.8049
 AR;Salta;Tartagal;-22.5168;-63.8056
-BR;"Rio de Janeiro";"Engenheiro Pedreira";-22.6752;-43.5992
-BR;"São Paulo";"Guaratinguetá (Campo do Galvão)";-22.8119;-45.1984
-BR;"Rio de Janeiro";"Bom Jardim";-22.1632;-42.4258
-BR;"Rio de Janeiro";"Coelho Neto";-22.8319;-43.344
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9013;-43.1774
-BR;"Minas Gerais";Marmelópolis;-22.4493;-45.165
-PY;"Boquerón Department";"Loma Plata";-22.3745;-59.8295
-BR;"Rio de Janeiro";"Rio Bonito";-22.7099;-42.6263
-BR;"Rio de Janeiro";"Vila Sarapui (Parque Santa Lucia)";-22.667;-43.2851
-BR;"São Paulo";"Iracemápolis (Segundo Distrito Industrial)";-22.5826;-47.5071
-BR;"Rio de Janeiro";Benfica;-22.8947;-43.2366
-BR;"Rio de Janeiro";"Nova Friburgo";-22.2774;-42.534
-BR;"Rio de Janeiro";"Nova Friburgo (Duas Pedras)";-22.2623;-42.5317
-PY;Concepción;"San Lázaro";-22.1074;-57.9622
-AR;Salta;"Tartagal (Centro)";-22.516;-63.8034
-CL;Antofagasta;"María Elena";-22.3445;-69.6618
-BR;"São Paulo";"Lençóis Paulista";-22.5989;-48.7923
-BR;"São Paulo";"Rio das Pedras";-22.8426;-47.6063
-BR;"Mato Grosso do Sul";"Bataiporã (Novo Parque Industrial)";-22.2743;-53.3693
-AR;Salta;"General Mosconi";-22.5962;-63.811
-BR;"Minas Gerais";Andradas;-22.071;-46.5734
-BR;"Minas Gerais";"Extrema (Jardim São Cristóvão)";-22.8613;-46.3269
-BR;"Rio de Janeiro";"Três Rios";-22.1082;-43.2108
-BR;"Rio de Janeiro";Jacarepaguá;-22.9372;-43.3806
-BR;"São Paulo";"Bauru (Centro)";-22.3242;-49.0708
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9017;-43.1775
-BR;"Rio de Janeiro";"Cabo Frio (Recanto das Dunas)";-22.9049;-42.0473
-BR;"Rio de Janeiro";"Macaé (Granja dos Cavaleiros)";-22.3858;-41.8229
-BR;"São Paulo";"Valinhos (Macuco)";-22.9988;-47.0337
-BR;"Minas Gerais";Extrema;-22.8551;-46.3169
-BR;"Mato Grosso do Sul";"Novo Horizonte do Sul";-22.6549;-53.8587
-BR;"Mato Grosso do Sul";"Douradina (Centro)";-22.0396;-54.608
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.8999;-43.1773
-BR;"Rio de Janeiro";Prata;-22.7538;-43.4312
-BR;"Rio de Janeiro";"Duque de Caxias (Centro)";-22.7876;-43.3101
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9046;-43.1781
-BR;"Rio de Janeiro";"São Domingos";-22.8985;-43.1303
-BR;"Rio de Janeiro";Tijuca;-22.9355;-43.2471
-BR;"Rio de Janeiro";"Jardim Carioca";-22.8111;-43.1915
-BR;"Rio de Janeiro";"Cabo Frio (Centro)";-22.8799;-42.0197
-BR;"Rio de Janeiro";"Petrópolis (Centro)";-22.511;-43.1782
-BR;"São Paulo";"Presidente Prudente (Vila Sao Jorge)";-22.131;-51.3902
-BR;"São Paulo";Cruzeiro;-22.5768;-44.9592
-BR;"São Paulo";Palmital;-22.7879;-50.22
-BR;"São Paulo";Pirapozinho;-22.2764;-51.4997
-BR;"Rio de Janeiro";Cinelândia;-22.9113;-43.1761
-BR;"Rio de Janeiro";"Barra da Tijuca";-22.998;-43.3289
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9063;-43.1848
-BR;"Rio de Janeiro";Saúde;-22.8977;-43.1856
-BR;"Rio de Janeiro";"Água Santa";-22.9067;-43.3101
-BR;"Rio de Janeiro";Copacabana;-22.981;-43.1901
-BR;"Rio de Janeiro";Maré;-22.8754;-43.242
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9042;-43.1777
-BR;"Rio de Janeiro";"Barra da Tijuca";-22.987;-43.3591
-BR;"Rio de Janeiro";Copacabana;-22.9758;-43.1896
-BR;"Rio de Janeiro";"Rio Comprido";-22.9225;-43.2112
-BR;"Rio de Janeiro";Botafogo;-22.9545;-43.1773
-BR;"Rio de Janeiro";Leblon;-22.9851;-43.2264
-BR;"São Paulo";"Campinas (Loteamento Alphaville Campinas)";-22.8192;-47.0351
-BR;"Rio de Janeiro";Botafogo;-22.955;-43.1889
-BR;"Rio de Janeiro";Icaraí;-22.9058;-43.112
-BR;"Rio de Janeiro";Xerém;-22.5843;-43.3054
-BR;"São Paulo";"Itapira (Centro)";-22.4392;-46.8219
-BR;"Rio de Janeiro";"Barra da Tijuca";-22.9915;-43.3647
-BR;"São Paulo";Cordeirópolis;-22.4802;-47.4577
-BR;"São Paulo";"Piracicaba (Cidade Alta)";-22.7361;-47.6473
-BR;"Rio de Janeiro";Nilópolis;-22.8099;-43.4194
-BR;"Rio de Janeiro";"Porto Real (Polo Urbano Agro Industrial)";-22.4235;-44.3142
-BR;"São Paulo";"Americana (Gleba B)";-22.7397;-47.3502
-BR;"Rio de Janeiro";Cantagalo;-22.1215;-43.219
-BR;"São Paulo";"Jardim Santo Antônio";-22.9844;-46.9963
-BR;"São Paulo";"Lorena (Jardim Vista Alegre)";-22.7808;-45.1399
-BR;"São Paulo";"Campinas (Fazenda Santa Cândida)";-22.8446;-47.0539
-BR;"São Paulo";"Botucatu (Vila dos Lavradores)";-22.874;-48.4457
-BR;"São Paulo";"Presidente Prudente (Vila Euclides)";-22.1311;-51.4001
-BR;"Rio de Janeiro";"Vasco da Gama";-22.8944;-43.2225
-BR;"Rio de Janeiro";"Ilha do Governador";-22.7975;-43.1899
-BR;"Rio de Janeiro";Tijuca;-22.9287;-43.2352
-BR;"Rio de Janeiro";"Armação dos Búzios (Vila Luiza)";-22.7747;-41.9344
-BR;"Rio de Janeiro";"Vila Valqueire";-22.887;-43.3664
-BR;"Rio de Janeiro";"Arraial do Cabo";-22.9668;-42.0278
-BR;"São Paulo";Valinhos;-22.9691;-46.9958
-BR;"Rio de Janeiro";"Vargem Pequena";-22.9874;-43.4561
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9043;-43.1777
-BR;"Rio de Janeiro";"Três Rios";-22.1138;-43.2123
-BR;"São Paulo";"Campinas (Jardim do Lago II)";-22.9479;-47.0885
-BR;"Rio de Janeiro";Freguesia;-22.9441;-43.3525
-BR;"São Paulo";"Campinas (Loteamento Alphaville Campinas)";-22.8228;-47.0364
-BR;"São Paulo";"São Pedro (Centro)";-22.5508;-47.913
-BR;"São Paulo";"Assis (Centro)";-22.6619;-50.4176
-BR;"São Paulo";Garça;-22.2132;-49.6555
-BR;"São Paulo";"Garça (Centro)";-22.2122;-49.6542
-BR;"São Paulo";"Ourinhos (Centro)";-22.9811;-49.8659
-BR;"Rio de Janeiro";Tijuca;-22.9214;-43.2347
-BR;"Rio de Janeiro";Barreto;-22.8656;-43.1092
-BR;"São Paulo";"Marília (Cascata)";-22.2098;-49.9366
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.903;-43.1831
-BR;"São Paulo";"Boracéia (Jardim Floresta)";-22.1999;-48.7769
-BR;"Rio de Janeiro";"Armação dos Búzios";-22.7553;-41.8833
-BR;"Rio de Janeiro";"Cabo Frio";-22.8835;-42.0253
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9016;-43.1749
-BR;"Rio de Janeiro";Várzea;-22.4179;-42.971
-BR;"São Paulo";"Bauru (Novo Jardim Pagani)";-22.2955;-49.0671
-BR;"Rio de Janeiro";Guadalupe;-22.8448;-43.3723
-BR;"São Paulo";Agudos;-22.4715;-48.979
-BR;"São Paulo";"Espírito Santo do Pinhal (Jardim Universitário)";-22.2018;-46.7462
-BR;"São Paulo";"Rancharia (Centro)";-22.2322;-50.8932
-BR;"São Paulo";"Jardim Primavera";-22.7762;-47.168
-BR;"São Paulo";"Pindamonhangaba (Nossa Senhora do Perpetuo Socorro)";-22.9517;-45.4839
-BR;"São Paulo";"Botucatu (Centro)";-22.8821;-48.448
-BR;Paraná;"Terra Rica";-22.7266;-52.6202
-BR;"São Paulo";"Campinas (Jardim do Trevo)";-22.9243;-47.0678
-BR;"Rio de Janeiro";"Cidade Nova";-22.9101;-43.2044
-BR;"São Paulo";"Presidente Prudente (Uep8-S.2)";-22.145;-51.4194
-BR;"São Paulo";"Campinas (Jardim Nossa Senhora Auxiliadora)";-22.8752;-47.0676
-BR;"Minas Gerais";Cambuí;-22.9878;-47.0455
-BR;"Rio de Janeiro";Charitas;-22.9263;-43.0927
-BR;"São Paulo";Paulínia;-22.7985;-47.1243
-BR;"Rio de Janeiro";"Duque de Caxias (Cavalcante)";-22.8699;-43.3161
-BR;"São Paulo";"Nova Odessa (Parque Industrial Harmonia)";-22.7731;-47.3153
-BR;"São Paulo";Conceição;-22.9066;-47.0581
-BR;"São Paulo";"Bauru (Centro)";-22.3285;-49.0703
-BR;"São Paulo";"Botucatu (Distrito Industrial)";-22.8801;-48.4743
-BR;"São Paulo";"Presidente Prudente";-22.1208;-51.3873
-BR;"São Paulo";"Jardim Bela Vista";-22.8044;-47.259
-BR;"Rio de Janeiro";Jacarepaguá;-22.9827;-43.3629
-BR;"São Paulo";Figueira;-22.7186;-46.786
-BR;"Rio de Janeiro";"São Cristóvão";-22.8943;-43.222
-BR;"Rio de Janeiro";Saúde;-22.8968;-43.1842
-BR;"Rio de Janeiro";Urca;-22.9542;-43.1709
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.8997;-43.1818
-BR;"São Paulo";"Jardim do Lago";-22.9318;-47.0873
-BR;"São Paulo";Iracemápolis;-22.6142;-47.479
-BR;"Rio de Janeiro";"Resende (Polo Industrial)";-22.4287;-44.3871
-BR;"Rio de Janeiro";"Resende (Parque Indústrial)";-22.4478;-44.3764
-BR;"Minas Gerais";"São Lourenço";-22.1169;-45.0565
-BR;"São Paulo";"Piracicaba (Centro)";-22.7242;-47.6522
-BR;"São Paulo";"Limeira (Centro)";-22.5728;-47.4092
-BR;"São Paulo";"Arealva (Vila Sao Pedro)";-22.0235;-48.9155
-BR;"São Paulo";"São Carlos (Jardim Nova Sao Carlos)";-22.0425;-47.8738
-BR;"Rio de Janeiro";"Agostinho Porto";-22.7898;-43.3859
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9118;-43.1748
-BR;"Rio de Janeiro";Ramos;-22.8566;-43.2494
-BR;"Rio de Janeiro";Jacarepaguá;-22.9664;-43.386
-BR;"Rio de Janeiro";"Engenho Novo";-22.9035;-43.2646
-BR;"Rio de Janeiro";"Niterói (Centro)";-22.8948;-43.1224
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.909;-43.1701
-BR;"Rio de Janeiro";Cordovil;-22.8189;-43.2938
-BR;"Rio de Janeiro";"São João de Meriti";-22.8279;-43.3576
-BR;"Rio de Janeiro";"Rio Douro (Rio do Ouro)";-22.8863;-42.9945
-BR;"Rio de Janeiro";Glória;-22.915;-43.1767
-BR;"Rio de Janeiro";"Vila Sarapui (Campos Elíseos)";-22.7116;-43.279
-BR;"Rio de Janeiro";"Rio de Janeiro (Center Town)";-22.9112;-43.1735
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9098;-43.1692
-BR;"Rio de Janeiro";Leblon;-22.9831;-43.2172
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9019;-43.1865
-BR;"Rio de Janeiro";"Campo Grande";-22.9037;-43.5542
-BR;"Rio de Janeiro";Gávea;-22.9781;-43.2332
-BR;"Rio de Janeiro";Itaipuaçu;-22.9586;-42.9825
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9053;-43.1779
-BR;"São Paulo";"Campinas (Bosque das Palmeiras)";-22.8116;-47.0481
-BR;"Rio de Janeiro";"Nova Friburgo (Centro)";-22.2859;-42.5343
-BR;"Rio de Janeiro";"Volta Redonda (Conforto)";-22.5208;-44.1157
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9089;-43.168
-BR;"Rio de Janeiro";Bonsucesso;-22.8644;-43.269
-BR;"Rio de Janeiro";Copacabana;-22.9774;-43.1892
-BR;"São Paulo";"Bariri (Jardim Santa Rosa)";-22.0798;-48.745
-BR;"São Paulo";Pedreira;-22.7167;-46.8857
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9021;-43.1835
-BR;"Rio de Janeiro";"Lins de Vasconcelos";-22.9119;-43.2826
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9109;-43.1837
-BR;"Rio de Janeiro";"Macaé (Granja dos Cavaleiros)";-22.3988;-41.8135
-BR;"Rio de Janeiro";"São Cristóvão";-22.8915;-43.2204
-BR;"Rio de Janeiro";Botafogo;-22.9416;-43.18
-BR;"São Paulo";"Pederneiras (Jd Pacaembú)";-22.3462;-48.7945
-BR;"São Paulo";"Jardim São Judas Tadeu (Jardim Sao Judas Tadeu)";-22.8448;-47.1703
-BR;"Rio de Janeiro";Gávea;-22.9731;-43.2265
-BR;"Rio de Janeiro";"Barra da Tijuca";-22.9932;-43.3623
-BR;"São Paulo";"Campinas (Parque da Figueira)";-22.9464;-47.0638
-BR;"São Paulo";Barbosa;-22.2258;-49.9612
-BR;"Rio de Janeiro";Copacabana;-22.9647;-43.1744
-BR;"Rio de Janeiro";Gamboa;-22.8962;-43.1923
-BR;"Rio de Janeiro";"São João de Meriti (Centro)";-22.8022;-43.3718
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9126;-43.1771
-BR;"Rio de Janeiro";Vassouras;-22.4088;-43.6702
-BR;"São Paulo";"Paulínia (Vila Jose Paulino Nogueira)";-22.7692;-47.1642
-BR;"São Paulo";"Campinas (Parque Industrial)";-22.9228;-47.0866
-BR;"São Paulo";Paulínia;-22.7411;-47.1743
-BR;"São Paulo";"Rancharia (Vila Regina)";-22.2349;-50.895
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9015;-43.175
-BR;"São Paulo";Campinas;-22.9329;-47.0738
-BR;"Rio de Janeiro";"Santa Cruz";-22.8866;-43.6659
-BR;"Rio de Janeiro";Copacabana;-22.9722;-43.1858
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9089;-43.1772
-BR;"Rio de Janeiro";"Macaé (Gja Cavaleir)";-22.3995;-41.8178
-BR;"São Paulo";Pinhalzinho;-22.7824;-46.5906
-BR;"Minas Gerais";"Bueno Brandão";-22.282;-46.3698
-BR;"Rio de Janeiro";"Casimiro de Abreu";-22.4798;-42.2029
-BR;"Rio de Janeiro";"Macaé (Granja dos Cavaleiros)";-22.3857;-41.8163
-BR;"Rio de Janeiro";Lagoa;-22.9621;-43.2077
-PY;Concepción;"San Carlos del Apa";-22.246;-57.2885
-BR;"Mato Grosso do Sul";"Nova Andradina";-22.2478;-53.3481
-PY;"Boquerón Department";"Colonia Neuland";-22.6667;-60.1167
-AR;Jujuy;"Abra Pampa";-22.7227;-65.6969
-BR;"Minas Gerais";"Bueno Brandão";-22.2785;-46.3712
-BR;"São Paulo";"Santo Antônio de Posse (Centro)";-22.6061;-46.92
-BR;"Rio de Janeiro";Itatiaia;-22.4913;-44.5721
+BR;Rio de Janeiro;Engenheiro Pedreira;-22.6752;-43.5992
+BR;São Paulo;Guaratinguetá (Campo do Galvão);-22.8119;-45.1984
+BR;Rio de Janeiro;Bom Jardim;-22.1632;-42.4258
+BR;Rio de Janeiro;Coelho Neto;-22.8319;-43.344
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9013;-43.1774
+BR;Minas Gerais;Marmelópolis;-22.4493;-45.165
+PY;Boquerón Department;Loma Plata;-22.3745;-59.8295
+BR;Rio de Janeiro;Rio Bonito;-22.7099;-42.6263
+BR;Rio de Janeiro;Vila Sarapui (Parque Santa Lucia);-22.667;-43.2851
+BR;São Paulo;Iracemápolis (Segundo Distrito Industrial);-22.5826;-47.5071
+BR;Rio de Janeiro;Benfica;-22.8947;-43.2366
+BR;Rio de Janeiro;Nova Friburgo;-22.2774;-42.534
+BR;Rio de Janeiro;Nova Friburgo (Duas Pedras);-22.2623;-42.5317
+PY;Concepción;San Lázaro;-22.1074;-57.9622
+AR;Salta;Tartagal (Centro);-22.516;-63.8034
+CL;Antofagasta;María Elena;-22.3445;-69.6618
+BR;São Paulo;Lençóis Paulista;-22.5989;-48.7923
+BR;São Paulo;Rio das Pedras;-22.8426;-47.6063
+BR;Mato Grosso do Sul;Bataiporã (Novo Parque Industrial);-22.2743;-53.3693
+AR;Salta;General Mosconi;-22.5962;-63.811
+BR;Minas Gerais;Andradas;-22.071;-46.5734
+BR;Minas Gerais;Extrema (Jardim São Cristóvão);-22.8613;-46.3269
+BR;Rio de Janeiro;Três Rios;-22.1082;-43.2108
+BR;Rio de Janeiro;Jacarepaguá;-22.9372;-43.3806
+BR;São Paulo;Bauru (Centro);-22.3242;-49.0708
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9017;-43.1775
+BR;Rio de Janeiro;Cabo Frio (Recanto das Dunas);-22.9049;-42.0473
+BR;Rio de Janeiro;Macaé (Granja dos Cavaleiros);-22.3858;-41.8229
+BR;São Paulo;Valinhos (Macuco);-22.9988;-47.0337
+BR;Minas Gerais;Extrema;-22.8551;-46.3169
+BR;Mato Grosso do Sul;Novo Horizonte do Sul;-22.6549;-53.8587
+BR;Mato Grosso do Sul;Douradina (Centro);-22.0396;-54.608
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.8999;-43.1773
+BR;Rio de Janeiro;Prata;-22.7538;-43.4312
+BR;Rio de Janeiro;Duque de Caxias (Centro);-22.7876;-43.3101
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9046;-43.1781
+BR;Rio de Janeiro;São Domingos;-22.8985;-43.1303
+BR;Rio de Janeiro;Tijuca;-22.9355;-43.2471
+BR;Rio de Janeiro;Jardim Carioca;-22.8111;-43.1915
+BR;Rio de Janeiro;Cabo Frio (Centro);-22.8799;-42.0197
+BR;Rio de Janeiro;Petrópolis (Centro);-22.511;-43.1782
+BR;São Paulo;Presidente Prudente (Vila Sao Jorge);-22.131;-51.3902
+BR;São Paulo;Cruzeiro;-22.5768;-44.9592
+BR;São Paulo;Palmital;-22.7879;-50.22
+BR;São Paulo;Pirapozinho;-22.2764;-51.4997
+BR;Rio de Janeiro;Cinelândia;-22.9113;-43.1761
+BR;Rio de Janeiro;Barra da Tijuca;-22.998;-43.3289
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9063;-43.1848
+BR;Rio de Janeiro;Saúde;-22.8977;-43.1856
+BR;Rio de Janeiro;Água Santa;-22.9067;-43.3101
+BR;Rio de Janeiro;Copacabana;-22.981;-43.1901
+BR;Rio de Janeiro;Maré;-22.8754;-43.242
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9042;-43.1777
+BR;Rio de Janeiro;Barra da Tijuca;-22.987;-43.3591
+BR;Rio de Janeiro;Copacabana;-22.9758;-43.1896
+BR;Rio de Janeiro;Rio Comprido;-22.9225;-43.2112
+BR;Rio de Janeiro;Botafogo;-22.9545;-43.1773
+BR;Rio de Janeiro;Leblon;-22.9851;-43.2264
+BR;São Paulo;Campinas (Loteamento Alphaville Campinas);-22.8192;-47.0351
+BR;Rio de Janeiro;Botafogo;-22.955;-43.1889
+BR;Rio de Janeiro;Icaraí;-22.9058;-43.112
+BR;Rio de Janeiro;Xerém;-22.5843;-43.3054
+BR;São Paulo;Itapira (Centro);-22.4392;-46.8219
+BR;Rio de Janeiro;Barra da Tijuca;-22.9915;-43.3647
+BR;São Paulo;Cordeirópolis;-22.4802;-47.4577
+BR;São Paulo;Piracicaba (Cidade Alta);-22.7361;-47.6473
+BR;Rio de Janeiro;Nilópolis;-22.8099;-43.4194
+BR;Rio de Janeiro;Porto Real (Polo Urbano Agro Industrial);-22.4235;-44.3142
+BR;São Paulo;Americana (Gleba B);-22.7397;-47.3502
+BR;Rio de Janeiro;Cantagalo;-22.1215;-43.219
+BR;São Paulo;Jardim Santo Antônio;-22.9844;-46.9963
+BR;São Paulo;Lorena (Jardim Vista Alegre);-22.7808;-45.1399
+BR;São Paulo;Campinas (Fazenda Santa Cândida);-22.8446;-47.0539
+BR;São Paulo;Botucatu (Vila dos Lavradores);-22.874;-48.4457
+BR;São Paulo;Presidente Prudente (Vila Euclides);-22.1311;-51.4001
+BR;Rio de Janeiro;Vasco da Gama;-22.8944;-43.2225
+BR;Rio de Janeiro;Ilha do Governador;-22.7975;-43.1899
+BR;Rio de Janeiro;Tijuca;-22.9287;-43.2352
+BR;Rio de Janeiro;Armação dos Búzios (Vila Luiza);-22.7747;-41.9344
+BR;Rio de Janeiro;Vila Valqueire;-22.887;-43.3664
+BR;Rio de Janeiro;Arraial do Cabo;-22.9668;-42.0278
+BR;São Paulo;Valinhos;-22.9691;-46.9958
+BR;Rio de Janeiro;Vargem Pequena;-22.9874;-43.4561
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9043;-43.1777
+BR;Rio de Janeiro;Três Rios;-22.1138;-43.2123
+BR;São Paulo;Campinas (Jardim do Lago II);-22.9479;-47.0885
+BR;Rio de Janeiro;Freguesia;-22.9441;-43.3525
+BR;São Paulo;Campinas (Loteamento Alphaville Campinas);-22.8228;-47.0364
+BR;São Paulo;São Pedro (Centro);-22.5508;-47.913
+BR;São Paulo;Assis (Centro);-22.6619;-50.4176
+BR;São Paulo;Garça;-22.2132;-49.6555
+BR;São Paulo;Garça (Centro);-22.2122;-49.6542
+BR;São Paulo;Ourinhos (Centro);-22.9811;-49.8659
+BR;Rio de Janeiro;Tijuca;-22.9214;-43.2347
+BR;Rio de Janeiro;Barreto;-22.8656;-43.1092
+BR;São Paulo;Marília (Cascata);-22.2098;-49.9366
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.903;-43.1831
+BR;São Paulo;Boracéia (Jardim Floresta);-22.1999;-48.7769
+BR;Rio de Janeiro;Armação dos Búzios;-22.7553;-41.8833
+BR;Rio de Janeiro;Cabo Frio;-22.8835;-42.0253
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9016;-43.1749
+BR;Rio de Janeiro;Várzea;-22.4179;-42.971
+BR;São Paulo;Bauru (Novo Jardim Pagani);-22.2955;-49.0671
+BR;Rio de Janeiro;Guadalupe;-22.8448;-43.3723
+BR;São Paulo;Agudos;-22.4715;-48.979
+BR;São Paulo;Espírito Santo do Pinhal (Jardim Universitário);-22.2018;-46.7462
+BR;São Paulo;Rancharia (Centro);-22.2322;-50.8932
+BR;São Paulo;Jardim Primavera;-22.7762;-47.168
+BR;São Paulo;Pindamonhangaba (Nossa Senhora do Perpetuo Socorro);-22.9517;-45.4839
+BR;São Paulo;Botucatu (Centro);-22.8821;-48.448
+BR;Paraná;Terra Rica;-22.7266;-52.6202
+BR;São Paulo;Campinas (Jardim do Trevo);-22.9243;-47.0678
+BR;Rio de Janeiro;Cidade Nova;-22.9101;-43.2044
+BR;São Paulo;Presidente Prudente (Uep8-S.2);-22.145;-51.4194
+BR;São Paulo;Campinas (Jardim Nossa Senhora Auxiliadora);-22.8752;-47.0676
+BR;Minas Gerais;Cambuí;-22.9878;-47.0455
+BR;Rio de Janeiro;Charitas;-22.9263;-43.0927
+BR;São Paulo;Paulínia;-22.7985;-47.1243
+BR;Rio de Janeiro;Duque de Caxias (Cavalcante);-22.8699;-43.3161
+BR;São Paulo;Nova Odessa (Parque Industrial Harmonia);-22.7731;-47.3153
+BR;São Paulo;Conceição;-22.9066;-47.0581
+BR;São Paulo;Bauru (Centro);-22.3285;-49.0703
+BR;São Paulo;Botucatu (Distrito Industrial);-22.8801;-48.4743
+BR;São Paulo;Presidente Prudente;-22.1208;-51.3873
+BR;São Paulo;Jardim Bela Vista;-22.8044;-47.259
+BR;Rio de Janeiro;Jacarepaguá;-22.9827;-43.3629
+BR;São Paulo;Figueira;-22.7186;-46.786
+BR;Rio de Janeiro;São Cristóvão;-22.8943;-43.222
+BR;Rio de Janeiro;Saúde;-22.8968;-43.1842
+BR;Rio de Janeiro;Urca;-22.9542;-43.1709
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.8997;-43.1818
+BR;São Paulo;Jardim do Lago;-22.9318;-47.0873
+BR;São Paulo;Iracemápolis;-22.6142;-47.479
+BR;Rio de Janeiro;Resende (Polo Industrial);-22.4287;-44.3871
+BR;Rio de Janeiro;Resende (Parque Indústrial);-22.4478;-44.3764
+BR;Minas Gerais;São Lourenço;-22.1169;-45.0565
+BR;São Paulo;Piracicaba (Centro);-22.7242;-47.6522
+BR;São Paulo;Limeira (Centro);-22.5728;-47.4092
+BR;São Paulo;Arealva (Vila Sao Pedro);-22.0235;-48.9155
+BR;São Paulo;São Carlos (Jardim Nova Sao Carlos);-22.0425;-47.8738
+BR;Rio de Janeiro;Agostinho Porto;-22.7898;-43.3859
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9118;-43.1748
+BR;Rio de Janeiro;Ramos;-22.8566;-43.2494
+BR;Rio de Janeiro;Jacarepaguá;-22.9664;-43.386
+BR;Rio de Janeiro;Engenho Novo;-22.9035;-43.2646
+BR;Rio de Janeiro;Niterói (Centro);-22.8948;-43.1224
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.909;-43.1701
+BR;Rio de Janeiro;Cordovil;-22.8189;-43.2938
+BR;Rio de Janeiro;São João de Meriti;-22.8279;-43.3576
+BR;Rio de Janeiro;Rio Douro (Rio do Ouro);-22.8863;-42.9945
+BR;Rio de Janeiro;Glória;-22.915;-43.1767
+BR;Rio de Janeiro;Vila Sarapui (Campos Elíseos);-22.7116;-43.279
+BR;Rio de Janeiro;Rio de Janeiro (Center Town);-22.9112;-43.1735
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9098;-43.1692
+BR;Rio de Janeiro;Leblon;-22.9831;-43.2172
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9019;-43.1865
+BR;Rio de Janeiro;Campo Grande;-22.9037;-43.5542
+BR;Rio de Janeiro;Gávea;-22.9781;-43.2332
+BR;Rio de Janeiro;Itaipuaçu;-22.9586;-42.9825
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9053;-43.1779
+BR;São Paulo;Campinas (Bosque das Palmeiras);-22.8116;-47.0481
+BR;Rio de Janeiro;Nova Friburgo (Centro);-22.2859;-42.5343
+BR;Rio de Janeiro;Volta Redonda (Conforto);-22.5208;-44.1157
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9089;-43.168
+BR;Rio de Janeiro;Bonsucesso;-22.8644;-43.269
+BR;Rio de Janeiro;Copacabana;-22.9774;-43.1892
+BR;São Paulo;Bariri (Jardim Santa Rosa);-22.0798;-48.745
+BR;São Paulo;Pedreira;-22.7167;-46.8857
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9021;-43.1835
+BR;Rio de Janeiro;Lins de Vasconcelos;-22.9119;-43.2826
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9109;-43.1837
+BR;Rio de Janeiro;Macaé (Granja dos Cavaleiros);-22.3988;-41.8135
+BR;Rio de Janeiro;São Cristóvão;-22.8915;-43.2204
+BR;Rio de Janeiro;Botafogo;-22.9416;-43.18
+BR;São Paulo;Pederneiras (Jd Pacaembú);-22.3462;-48.7945
+BR;São Paulo;Jardim São Judas Tadeu (Jardim Sao Judas Tadeu);-22.8448;-47.1703
+BR;Rio de Janeiro;Gávea;-22.9731;-43.2265
+BR;Rio de Janeiro;Barra da Tijuca;-22.9932;-43.3623
+BR;São Paulo;Campinas (Parque da Figueira);-22.9464;-47.0638
+BR;São Paulo;Barbosa;-22.2258;-49.9612
+BR;Rio de Janeiro;Copacabana;-22.9647;-43.1744
+BR;Rio de Janeiro;Gamboa;-22.8962;-43.1923
+BR;Rio de Janeiro;São João de Meriti (Centro);-22.8022;-43.3718
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9126;-43.1771
+BR;Rio de Janeiro;Vassouras;-22.4088;-43.6702
+BR;São Paulo;Paulínia (Vila Jose Paulino Nogueira);-22.7692;-47.1642
+BR;São Paulo;Campinas (Parque Industrial);-22.9228;-47.0866
+BR;São Paulo;Paulínia;-22.7411;-47.1743
+BR;São Paulo;Rancharia (Vila Regina);-22.2349;-50.895
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9015;-43.175
+BR;São Paulo;Campinas;-22.9329;-47.0738
+BR;Rio de Janeiro;Santa Cruz;-22.8866;-43.6659
+BR;Rio de Janeiro;Copacabana;-22.9722;-43.1858
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9089;-43.1772
+BR;Rio de Janeiro;Macaé (Gja Cavaleir);-22.3995;-41.8178
+BR;São Paulo;Pinhalzinho;-22.7824;-46.5906
+BR;Minas Gerais;Bueno Brandão;-22.282;-46.3698
+BR;Rio de Janeiro;Casimiro de Abreu;-22.4798;-42.2029
+BR;Rio de Janeiro;Macaé (Granja dos Cavaleiros);-22.3857;-41.8163
+BR;Rio de Janeiro;Lagoa;-22.9621;-43.2077
+PY;Concepción;San Carlos del Apa;-22.246;-57.2885
+BR;Mato Grosso do Sul;Nova Andradina;-22.2478;-53.3481
+PY;Boquerón Department;Colonia Neuland;-22.6667;-60.1167
+AR;Jujuy;Abra Pampa;-22.7227;-65.6969
+BR;Minas Gerais;Bueno Brandão;-22.2785;-46.3712
+BR;São Paulo;Santo Antônio de Posse (Centro);-22.6061;-46.92
+BR;Rio de Janeiro;Itatiaia;-22.4913;-44.5721
 BR;Paraná;Colorado;-22.8382;-51.9727
-BR;"Rio de Janeiro";"Vista Alegre";-22.812;-42.9712
-BR;"São Paulo";"Jardim Leonor";-22.9698;-46.8231
-BR;"Rio de Janeiro";Flamengo;-22.9324;-43.1748
-BR;"Rio de Janeiro";"São João de Meriti (Parque Barreto)";-22.7961;-43.3532
-BR;"São Paulo";"Bom Retiro";-22.9631;-46.5261
-BR;"Rio de Janeiro";"Vasco da Gama";-22.8959;-43.225
-BR;"São Paulo";Tarumã;-22.7479;-50.5822
-BR;"São Paulo";"Limeira (Jardim Campo Verde)";-22.6024;-47.3857
-BR;"São Paulo";"Lençóis Paulista (Distrito Industrial II Luiz Trecenti)";-22.5676;-48.8178
-BR;"Rio de Janeiro";Niterói;-22.8993;-43.1079
-NA;"Khomas Region";"Windhoek (Suiderhof)";-22.6032;17.1004
-NA;"Khomas Region";Windhoek;-22.5609;17.0658
-NA;"Khomas Region";"Windhoek (Windhoek West)";-22.5608;17.0657
+BR;Rio de Janeiro;Vista Alegre;-22.812;-42.9712
+BR;São Paulo;Jardim Leonor;-22.9698;-46.8231
+BR;Rio de Janeiro;Flamengo;-22.9324;-43.1748
+BR;Rio de Janeiro;São João de Meriti (Parque Barreto);-22.7961;-43.3532
+BR;São Paulo;Bom Retiro;-22.9631;-46.5261
+BR;Rio de Janeiro;Vasco da Gama;-22.8959;-43.225
+BR;São Paulo;Tarumã;-22.7479;-50.5822
+BR;São Paulo;Limeira (Jardim Campo Verde);-22.6024;-47.3857
+BR;São Paulo;Lençóis Paulista (Distrito Industrial II Luiz Trecenti);-22.5676;-48.8178
+BR;Rio de Janeiro;Niterói;-22.8993;-43.1079
+NA;Khomas Region;Windhoek (Suiderhof);-22.6032;17.1004
+NA;Khomas Region;Windhoek;-22.5609;17.0658
+NA;Khomas Region;Windhoek (Windhoek West);-22.5608;17.0657
 ZA;Limpopo;Thohoyandou;-22.9735;30.4487
-MZ;"Inhambane Province";Vilankulo;-22;35.3167
-NA;"Khomas Region";Windhoek;-22.5647;17.078
-NA;"Khomas Region";"Windhoek (Windhoek Central)";-22.5656;17.0854
-NA;"Khomas Region";"Windhoek (Windhoek West)";-22.5686;17.0771
-NA;"Khomas Region";"Windhoek (Southern Industrial Area)";-22.585;17.0792
-NA;"Khomas Region";"Windhoek (Windhoek Central)";-22.5647;17.0845
-NA;"Khomas Region";Windhoek;-22.6039;17.0742
-NA;"Erongo Region";"Henties Bay";-22.1161;14.2839
-NA;"Khomas Region";"Windhoek (Klein Windhoek)";-22.5568;17.0859
-NA;"Khomas Region";"Windhoek (Windhoek Central)";-22.5548;17.0843
-MZ;"Gaza Province";Chicualacuala;-22.0792;31.6786
-NA;"Khomas Region";"Windhoek (Windhoek Central)";-22.5811;17.0942
-BR;"Rio de Janeiro";Resende;-22.471;-44.4654
-BR;"São Paulo";Ourinhos;-22.9494;-49.8752
-BR;"São Paulo";"Hortolândia (Parque da Amizade)";-22.8245;-47.1769
-BR;"Rio de Janeiro";"Rio de Janeiro (Cidade Universitária da Universidade Federal do Rio de Janeiro)";-22.8426;-43.2331
-BR;"Rio de Janeiro";Maracanã;-22.9125;-43.2248
-BR;"São Paulo";"Marília (Mirante)";-22.2336;-49.9652
-BR;"Rio de Janeiro";"Seropédica (Zona Rural)";-22.769;-43.687
-BR;"Minas Gerais";"Pinheirinhos (Pinheirinho)";-22.4128;-45.4498
-BR;"São Paulo";"Campinas (Vila Nogueira)";-22.8649;-47.0382
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9107;-43.1772
-BR;"Rio de Janeiro";"Santa Alice";-22.5891;-43.2822
-BR;"Rio de Janeiro";Botafogo;-22.9539;-43.1809
-BR;"São Paulo";Limeira;-22.583;-47.4461
-BR;"São Paulo";"Campinas (Parque Taquaral)";-22.8661;-47.0528
-BR;"Rio de Janeiro";Flamengo;-22.9398;-43.1764
-BR;"São Paulo";"João Ramalho";-22.2491;-50.7673
-BO;"Tarija Department";Bermejo;-22.7321;-64.3372
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9093;-43.1692
-BR;"São Paulo";"Campinas (Nova Campinas)";-22.8977;-47.0467
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.906;-43.1779
-BR;"São Paulo";"Piracicaba (Paulista)";-22.7379;-47.659
-BR;"Minas Gerais";Inconfidentes;-22.3174;-46.3255
-BR;"Rio de Janeiro";"Todos os Santos";-22.8874;-43.2848
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9123;-43.1921
-BR;"Rio de Janeiro";Copacabana;-22.9789;-43.1912
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9123;-43.1872
-BR;"São Paulo";"Marília (Jardim Dirceu)";-22.2244;-49.9453
-BR;"Rio de Janeiro";Tanque;-22.9186;-43.3677
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9052;-43.1762
-BR;"São Paulo";Sumaré;-22.8245;-47.2704
-BR;"São Paulo";Jaguariúna;-22.6898;-46.9803
-BR;"São Paulo";"Limeira (Jardim Nova Limeira)";-22.5491;-47.3729
-BR;"São Paulo";Tarumã;-22.7497;-50.5793
-BR;"São Paulo";"Pederneiras (Jd Vista Alegre)";-22.3546;-48.7784
-BR;"Rio de Janeiro";"Petrópolis (Bingen)";-22.5135;-43.2155
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9123;-43.1852
-BR;"Rio de Janeiro";Catete;-22.9308;-43.1772
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9189;-43.1756
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9051;-43.1783
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9008;-43.1864
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9114;-43.1745
-BR;"Rio de Janeiro";Botafogo;-22.9513;-43.1831
-BR;"São Paulo";Aparecida;-22.8469;-45.2316
-BR;"São Paulo";Pedreira;-22.7349;-46.8888
-BR;"São Paulo";"Santa Bárbara d'Oeste (Candido Bertine)";-22.7334;-47.377
-BR;"São Paulo";"Rio Claro (Distrito Industrial)";-22.3628;-47.5573
-BR;"Rio de Janeiro";Botafogo;-22.9426;-43.1828
-BR;"Rio de Janeiro";Botafogo;-22.9527;-43.1884
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9037;-43.1779
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9129;-43.1772
-BR;"Rio de Janeiro";Botafogo;-22.8994;-43.1784
-BR;"Rio de Janeiro";Icaraí;-22.9048;-43.1095
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9027;-43.1782
-BR;"Rio de Janeiro";Cascadura;-22.8829;-43.3214
-BR;"São Paulo";"São José do Barreiro";-22.645;-44.5778
-BR;"São Paulo";"Campinas (Centro)";-22.9098;-47.0601
-BR;"São Paulo";"Campinas (Centro)";-22.9074;-47.0559
-BR;"São Paulo";"Americana (Vila Santa Catarina)";-22.747;-47.3279
-BR;"Rio de Janeiro";Tijuca;-22.9216;-43.2133
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9083;-43.1741
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9002;-43.1787
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9107;-43.173
-BR;"São Paulo";"Valinhos (Jardim Ribeiro)";-22.9713;-47.0005
-BR;"Minas Gerais";Cambuí;-22.9047;-47.0573
-BR;"São Paulo";"Jardim Guanabara";-22.8859;-47.0607
-BR;"Rio de Janeiro";Taquara;-22.9333;-43.3812
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9042;-43.1752
-BR;"Rio de Janeiro";Botafogo;-22.9552;-43.1791
-BR;"Rio de Janeiro";"Marechal Hermes";-22.8758;-43.3718
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9016;-43.1787
-BR;"Rio de Janeiro";Gávea;-22.9791;-43.227
-BR;"Rio de Janeiro";Bonsucesso;-22.8623;-43.2505
-BR;"São Paulo";"Campinas (Vila Itapura)";-22.8926;-47.0641
-BR;"São Paulo";"São Manuel";-22.7412;-48.5742
-BR;"São Paulo";"Cosmópolis (Damiano)";-22.6422;-47.1923
-BR;"Rio de Janeiro";"Rio de Janeiro";-22.9212;-43.2163
-BR;"São Paulo";"Campinas (Jardim Nova America)";-22.9973;-47.1061
-BR;"São Paulo";"Bauru (Jardim Guadalajara)";-22.3164;-49.0443
-BR;"São Paulo";"Pindamonhangaba (Água Preta)";-22.9152;-45.4253
-BR;"São Paulo";"Bauru (Centro)";-22.3272;-49.0658
-BR;"São Paulo";"Cidade Jardim";-22.92;-47.0961
-BR;"São Paulo";"Barão Geraldo";-22.8026;-47.0468
-BR;"Rio de Janeiro";Galeão;-22.809;-43.2594
-BR;"São Paulo";"Bauru (Jardim Petropolis)";-22.3048;-49.0956
-BR;"São Paulo";"Piracicaba (Distrito Industrial Uninorte)";-22.6637;-47.6069
-BR;"São Paulo";"Campinas (Centro)";-22.9066;-47.0559
-BR;"São Paulo";"Pederneiras (Jd Anchieta)";-22.3412;-48.7699
-BR;"São Paulo";"Ourinhos (Distrito Industrial Doutor Helio Silva)";-22.9707;-49.9151
-BR;"Rio de Janeiro";"Volta Redonda (Centro)";-22.513;-44.0925
-BR;"Rio de Janeiro";Ramos;-22.8559;-43.256
-BR;"Rio de Janeiro";"São João de Meriti (Parque Barreto)";-22.7974;-43.3541
-BR;"Rio de Janeiro";Penha;-22.833;-43.2737
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9012;-43.1801
-BR;"Rio de Janeiro";Caju;-22.8764;-43.2138
-BR;"São Paulo";"Campinas (Fazenda Santa Cândida)";-22.8438;-47.0549
-BR;"São Paulo";Botucatu;-22.8981;-48.4914
-BR;"São Paulo";"Americana (Jardim Girassol)";-22.741;-47.3371
-BR;"Rio de Janeiro";Botafogo;-22.9439;-43.1825
-BR;"São Paulo";"Campinas (Alphaville Empresarial)";-22.8213;-47.0364
-BR;"São Paulo";"São Carlos";-22.0191;-47.9143
-BR;"Rio de Janeiro";"Padre Miguel";-22.8663;-43.4467
-BR;"Rio de Janeiro";"São Gonçalo";-22.8273;-43.0638
-BR;"Rio de Janeiro";"Santa Cruz";-22.8835;-43.7311
-BR;"São Paulo";"Bauru (Centro)";-22.3159;-49.0691
-BR;"Rio de Janeiro";Ipanema;-22.9838;-43.2078
-BR;"Rio de Janeiro";"São Cristóvão";-22.8982;-43.2242
-BR;"Rio de Janeiro";"Rio Comprido";-22.9238;-43.2066
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.8998;-43.1806
-BR;"Rio de Janeiro";Santíssimo;-22.8791;-43.5046
-BR;"Rio de Janeiro";"Rio de Janeiro (Cidade Universitária da Universidade Federal do Rio de Janeiro)";-22.865;-43.2179
-BR;"Rio de Janeiro";Botafogo;-22.957;-43.176
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.906;-43.1781
-BR;"São Paulo";"Campinas (Swiss Park)";-22.9536;-47.0615
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9101;-43.1737
-BR;"São Paulo";"Engenheiro Coelho";-22.4885;-47.2127
-BR;"Rio de Janeiro";Icaraí;-22.9048;-43.1096
-BR;"Rio de Janeiro";Flamengo;-22.9269;-43.1736
-BR;"Rio de Janeiro";"Rio de Janeiro";-22.9027;-43.1854
-BR;"São Paulo";Valinhos;-22.966;-46.9999
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9106;-43.1733
-BR;"Rio de Janeiro";"Santa Teresa";-22.9137;-43.1787
-BR;"Rio de Janeiro";"Petrópolis (Centro)";-22.5114;-43.1778
-BR;"Rio de Janeiro";Tanguá;-22.735;-42.7202
-BR;"Rio de Janeiro";Gamboa;-22.8938;-43.1962
-BR;"Rio de Janeiro";Saúde;-22.8952;-43.1869
-BR;"Rio de Janeiro";Botafogo;-22.9425;-43.1814
-BR;"Rio de Janeiro";Botafogo;-22.9445;-43.1825
-BR;"Rio de Janeiro";"Bento Ribeiro";-22.8663;-43.3629
-BR;"Rio de Janeiro";Jacarepaguá;-22.9761;-43.336
-BR;"Rio de Janeiro";Resende;-22.4714;-44.4534
-BR;"Rio de Janeiro";Jacarepaguá;-22.9643;-43.4073
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9377;-43.3533
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9025;-43.1798
-BR;"Minas Gerais";"Boa Vista";-22.2379;-45.7088
-BR;"São Paulo";"Americana (Vila Cordenonsi)";-22.73;-47.3218
-BR;"São Paulo";"Teodoro Sampaio";-22.5315;-52.1734
-BR;"São Paulo";Jundiaí;-22.7626;-47.8427
-BR;"São Paulo";"Presidente Prudente";-22.1211;-51.393
-BR;"Rio de Janeiro";"Macaé (Granja dos Cavaleiros)";-22.3879;-41.8158
-BR;"São Paulo";"Botucatu (Vila Rodrigues Alves)";-22.8916;-48.4357
-BR;"São Paulo";"Serra Negra (Estância Suíça)";-22.6111;-46.6999
-BR;"São Paulo";"Teodoro Sampaio";-22.5309;-52.1732
-BR;"São Paulo";"Dois Córregos";-22.3694;-48.3845
-BR;"São Paulo";Pompéia;-22.1052;-50.1735
-BR;"São Paulo";"Americana (Vila Medon)";-22.7501;-47.334
-BR;"São Paulo";"Jaguariúna (Centro)";-22.7034;-46.9943
-BR;"Rio de Janeiro";Leblon;-22.9847;-43.2275
-BR;"São Paulo";Valinhos;-22.9273;-46.9809
-BR;"São Paulo";"Americana (Centro)";-22.7416;-47.3322
-BR;"São Paulo";"Presidente Prudente (Centro)";-22.123;-51.3832
-BR;"São Paulo";Botucatu;-22.8873;-48.4447
-BR;"São Paulo";"Bauru (Vila Nova Cidade Universitaria)";-22.3408;-49.0525
-BR;"Rio de Janeiro";Botafogo;-22.947;-43.183
-BR;"São Paulo";"Presidente Prudente (Vila Maria)";-22.1723;-51.4022
-BR;"Rio de Janeiro";Botafogo;-22.9564;-43.1983
-BR;"Rio de Janeiro";Méier;-22.9003;-43.2813
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9078;-43.1826
-BR;"São Paulo";"Presidente Prudente (Jd. das Rosas)";-22.1157;-51.4082
-BR;"São Paulo";"Lençóis Paulista";-22.5988;-48.7924
-BR;"Rio de Janeiro";Ramos;-22.8527;-43.2541
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.91;-43.1931
-BR;"Rio de Janeiro";Maracanã;-22.9141;-43.2171
-BR;"Rio de Janeiro";"Vila São Luís";-22.7754;-43.286
-BR;"Mato Grosso do Sul";"Fátima do Sul";-22.3763;-54.5153
-BR;"Rio de Janeiro";"São Geraldo";-22.612;-43.1629
-BR;"Rio de Janeiro";Barreto;-22.8677;-43.1108
-BR;"Rio de Janeiro";"Araruama (Centro)";-22.8753;-42.3401
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9109;-43.1741
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9088;-43.1712
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9091;-43.1784
-BR;"São Paulo";"Assis (Vila Nova Santana)";-22.6439;-50.421
-BR;"São Paulo";"Campinas (Loteamento Alphaville Campinas)";-22.8201;-47.0357
-BR;"São Paulo";"Jardim Campinas Barro Branco (Jardim Campinas)";-22.8794;-47.046
-BR;"São Paulo";"Hortolândia (Conjunto Habitacional Padre Anchieta)";-22.8576;-47.1568
-BR;"Rio de Janeiro";"Barra da Tijuca";-22.9874;-43.37
-BR;"Rio de Janeiro";Niterói;-22.8859;-43.1152
-BR;"Rio de Janeiro";Leblon;-22.9826;-43.2156
-BR;"Rio de Janeiro";"Macaé (Centro)";-22.3703;-41.7808
-BR;"Rio de Janeiro";"Porto Real (Tecnopolo)";-22.4201;-44.3464
-BR;"Rio de Janeiro";"Campo Grande";-22.9501;-43.5627
-BR;"Rio de Janeiro";"Vila Sarapui (Vila Santa Alice)";-22.6068;-43.2875
-BR;"Rio de Janeiro";"Cidade Nova";-22.903;-43.1831
-BR;"São Paulo";"Rio Claro (Jardim Claret)";-22.4138;-47.5728
-BR;"São Paulo";"Rio das Pedras (Conjunto Habitacional Vitoria Perim Cezarino)";-22.8448;-47.5958
-BR;"São Paulo";"Bauru (Jardim Infante Dom Henrique)";-22.3424;-49.0509
-BR;"São Paulo";"Paulínia (Centro Industrial)";-22.7301;-47.1555
-BR;"São Paulo";"Bauru (Vila Rocha)";-22.3305;-49.1124
-BR;"Rio de Janeiro";Copacabana;-22.9765;-43.1906
-BR;"Minas Gerais";"São Lourenço (Centro)";-22.1152;-45.0531
-BR;"Rio de Janeiro";Botafogo;-22.9505;-43.1806
-BR;"Rio de Janeiro";Galeão;-22.8135;-43.2473
-BR;"Rio de Janeiro";Glória;-22.9204;-43.1745
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9056;-43.1676
-BR;"Rio de Janeiro";Pavuna;-22.8127;-43.375
-BR;"Rio de Janeiro";"São Cristóvão";-22.9003;-43.2174
-BR;"Rio de Janeiro";"Penha Circular";-22.8133;-43.2761
-BR;"Rio de Janeiro";Bonsucesso;-22.8623;-43.2526
-BR;"Rio de Janeiro";"Rio de Janeiro";-22.9125;-43.2054
-BR;"Rio de Janeiro";"Rio de Janeiro (Torre)";-22.9504;-43.1806
-BR;"Rio de Janeiro";"Maricá (Centro)";-22.9243;-42.8189
-BR;"São Paulo";"Piracicaba (Unileste)";-22.7374;-47.5901
-BR;"São Paulo";"Piracicaba (Unileste)";-22.7353;-47.5975
-BR;"Rio de Janeiro";"Niterói (Vital Brasil)";-22.9045;-43.095
-BR;"Rio de Janeiro";Saquarema;-22.9324;-42.4867
-BR;"Rio de Janeiro";"Duque de Caxias";-22.7863;-43.3053
-BR;"Rio de Janeiro";Bonsucesso;-22.864;-43.2492
-BR;"Rio de Janeiro";Botafogo;-22.9551;-43.1938
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9113;-43.1761
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9032;-43.1893
-BR;"Rio de Janeiro";"Vila Sarapui (Chácaras Rio-Petrópolis)";-22.6766;-43.2938
-BR;"Rio de Janeiro";Pendotiba;-22.9123;-43.0593
-BR;"Rio de Janeiro";"Penha Circular";-22.8473;-43.3017
-BR;"Mato Grosso do Sul";"Ponta Porã (Centro)";-22.5422;-55.7257
-BR;"São Paulo";"Assis (Vila Boa Vista)";-22.6572;-50.4174
-BR;"São Paulo";"Jardim Guanabara";-22.8863;-47.0665
-BR;"São Paulo";"Cosmópolis (Vila Josekalil Aun)";-22.6491;-47.1844
-BR;"São Paulo";"Nova Odessa";-22.7853;-47.3007
-BR;"São Paulo";Botafogo;-22.8921;-47.0648
-BR;"São Paulo";"Paulínia (Parque Brasil 500)";-22.7973;-47.1347
-BR;"São Paulo";"Iracemápolis (Jardim Senador Vergueiro)";-22.6125;-47.4797
-BR;"Rio de Janeiro";Realengo;-22.8654;-43.4342
-BR;"Rio de Janeiro";"Macaé (Novo Cavaleiros)";-22.3981;-41.8127
-BR;"São Paulo";Herculândia;-22.0044;-50.3871
-BR;"São Paulo";Aparecida;-22.7647;-45.3513
-BR;"São Paulo";"Presidente Prudente (Vila Santa Helena)";-22.1199;-51.4
-BR;"Rio de Janeiro";"Cachoeiras de Macacu";-22.3534;-42.7076
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9;-43.1768
-BR;"Rio de Janeiro";"Petrópolis (Quarteirão Ingelhein)";-22.5071;-43.1885
-BR;"Rio de Janeiro";Meudon;-22.4342;-42.9435
-BR;"Rio de Janeiro";"Vargem Grande";-22.9675;-43.4936
-BR;"Rio de Janeiro";"Boa Viagem";-22.9078;-43.1259
-BR;"Rio de Janeiro";"Praia da Bandeira (Praia da Bandeira)";-22.8111;-43.1815
-BR;"Rio de Janeiro";Flamengo;-22.9388;-43.1783
-BR;"Rio de Janeiro";Olaria;-22.8476;-43.2657
-BR;"Rio de Janeiro";Barreto;-22.866;-43.1077
-BR;"Rio de Janeiro";Bangu;-22.8665;-43.4717
-BR;"São Paulo";"Vila Real do Moinho Velho (Vila Real)";-22.7687;-47.6438
-BR;"Rio de Janeiro";"Barra Mansa (Barbará)";-22.5467;-44.1551
-BR;"São Paulo";"Lençóis Paulista (Jardim Itamaraty)";-22.6211;-48.797
-BR;"Rio de Janeiro";Bangu;-22.8807;-43.4804
-BR;"Rio de Janeiro";"Senador Vasconcelos";-22.8933;-43.5327
-BR;"Rio de Janeiro";Copacabana;-22.9761;-43.1931
-BR;"Rio de Janeiro";Freguesia;-22.9315;-43.3255
-BR;"Rio de Janeiro";"Macaé (Imboassica)";-22.4171;-41.8756
-BR;"São Paulo";"Bauru (Jardim Brasil)";-22.3277;-49.0532
-BR;"São Paulo";"Mogi Mirim (Jardim Flamboyant)";-22.4021;-46.9697
-BR;"São Paulo";Pindamonhangaba;-22.976;-45.4708
-BR;"Rio de Janeiro";Niterói;-22.8738;-43.126
-BR;"São Paulo";"Piracicaba (Chácara Nazaré)";-22.7287;-47.6645
-BR;"Minas Gerais";"São José";-22.2495;-45.4638
-BR;"São Paulo";"Bauru (Vila Engler)";-22.3315;-49.0474
-NC;"South Province";"Noumea (Anse Vata)";-22.3027;166.444
+MZ;Inhambane Province;Vilankulo;-22;35.3167
+NA;Khomas Region;Windhoek;-22.5647;17.078
+NA;Khomas Region;Windhoek (Windhoek Central);-22.5656;17.0854
+NA;Khomas Region;Windhoek (Windhoek West);-22.5686;17.0771
+NA;Khomas Region;Windhoek (Southern Industrial Area);-22.585;17.0792
+NA;Khomas Region;Windhoek (Windhoek Central);-22.5647;17.0845
+NA;Khomas Region;Windhoek;-22.6039;17.0742
+NA;Erongo Region;Henties Bay;-22.1161;14.2839
+NA;Khomas Region;Windhoek (Klein Windhoek);-22.5568;17.0859
+NA;Khomas Region;Windhoek (Windhoek Central);-22.5548;17.0843
+MZ;Gaza Province;Chicualacuala;-22.0792;31.6786
+NA;Khomas Region;Windhoek (Windhoek Central);-22.5811;17.0942
+BR;Rio de Janeiro;Resende;-22.471;-44.4654
+BR;São Paulo;Ourinhos;-22.9494;-49.8752
+BR;São Paulo;Hortolândia (Parque da Amizade);-22.8245;-47.1769
+BR;Rio de Janeiro;Rio de Janeiro (Cidade Universitária da Universidade Federal do Rio de Janeiro);-22.8426;-43.2331
+BR;Rio de Janeiro;Maracanã;-22.9125;-43.2248
+BR;São Paulo;Marília (Mirante);-22.2336;-49.9652
+BR;Rio de Janeiro;Seropédica (Zona Rural);-22.769;-43.687
+BR;Minas Gerais;Pinheirinhos (Pinheirinho);-22.4128;-45.4498
+BR;São Paulo;Campinas (Vila Nogueira);-22.8649;-47.0382
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9107;-43.1772
+BR;Rio de Janeiro;Santa Alice;-22.5891;-43.2822
+BR;Rio de Janeiro;Botafogo;-22.9539;-43.1809
+BR;São Paulo;Limeira;-22.583;-47.4461
+BR;São Paulo;Campinas (Parque Taquaral);-22.8661;-47.0528
+BR;Rio de Janeiro;Flamengo;-22.9398;-43.1764
+BR;São Paulo;João Ramalho;-22.2491;-50.7673
+BO;Tarija Department;Bermejo;-22.7321;-64.3372
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9093;-43.1692
+BR;São Paulo;Campinas (Nova Campinas);-22.8977;-47.0467
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.906;-43.1779
+BR;São Paulo;Piracicaba (Paulista);-22.7379;-47.659
+BR;Minas Gerais;Inconfidentes;-22.3174;-46.3255
+BR;Rio de Janeiro;Todos os Santos;-22.8874;-43.2848
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9123;-43.1921
+BR;Rio de Janeiro;Copacabana;-22.9789;-43.1912
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9123;-43.1872
+BR;São Paulo;Marília (Jardim Dirceu);-22.2244;-49.9453
+BR;Rio de Janeiro;Tanque;-22.9186;-43.3677
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9052;-43.1762
+BR;São Paulo;Sumaré;-22.8245;-47.2704
+BR;São Paulo;Jaguariúna;-22.6898;-46.9803
+BR;São Paulo;Limeira (Jardim Nova Limeira);-22.5491;-47.3729
+BR;São Paulo;Tarumã;-22.7497;-50.5793
+BR;São Paulo;Pederneiras (Jd Vista Alegre);-22.3546;-48.7784
+BR;Rio de Janeiro;Petrópolis (Bingen);-22.5135;-43.2155
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9123;-43.1852
+BR;Rio de Janeiro;Catete;-22.9308;-43.1772
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9189;-43.1756
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9051;-43.1783
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9008;-43.1864
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9114;-43.1745
+BR;Rio de Janeiro;Botafogo;-22.9513;-43.1831
+BR;São Paulo;Aparecida;-22.8469;-45.2316
+BR;São Paulo;Pedreira;-22.7349;-46.8888
+BR;São Paulo;Santa Bárbara d'Oeste (Candido Bertine);-22.7334;-47.377
+BR;São Paulo;Rio Claro (Distrito Industrial);-22.3628;-47.5573
+BR;Rio de Janeiro;Botafogo;-22.9426;-43.1828
+BR;Rio de Janeiro;Botafogo;-22.9527;-43.1884
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9037;-43.1779
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9129;-43.1772
+BR;Rio de Janeiro;Botafogo;-22.8994;-43.1784
+BR;Rio de Janeiro;Icaraí;-22.9048;-43.1095
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9027;-43.1782
+BR;Rio de Janeiro;Cascadura;-22.8829;-43.3214
+BR;São Paulo;São José do Barreiro;-22.645;-44.5778
+BR;São Paulo;Campinas (Centro);-22.9098;-47.0601
+BR;São Paulo;Campinas (Centro);-22.9074;-47.0559
+BR;São Paulo;Americana (Vila Santa Catarina);-22.747;-47.3279
+BR;Rio de Janeiro;Tijuca;-22.9216;-43.2133
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9083;-43.1741
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9002;-43.1787
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9107;-43.173
+BR;São Paulo;Valinhos (Jardim Ribeiro);-22.9713;-47.0005
+BR;Minas Gerais;Cambuí;-22.9047;-47.0573
+BR;São Paulo;Jardim Guanabara;-22.8859;-47.0607
+BR;Rio de Janeiro;Taquara;-22.9333;-43.3812
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9042;-43.1752
+BR;Rio de Janeiro;Botafogo;-22.9552;-43.1791
+BR;Rio de Janeiro;Marechal Hermes;-22.8758;-43.3718
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9016;-43.1787
+BR;Rio de Janeiro;Gávea;-22.9791;-43.227
+BR;Rio de Janeiro;Bonsucesso;-22.8623;-43.2505
+BR;São Paulo;Campinas (Vila Itapura);-22.8926;-47.0641
+BR;São Paulo;São Manuel;-22.7412;-48.5742
+BR;São Paulo;Cosmópolis (Damiano);-22.6422;-47.1923
+BR;Rio de Janeiro;Rio de Janeiro;-22.9212;-43.2163
+BR;São Paulo;Campinas (Jardim Nova America);-22.9973;-47.1061
+BR;São Paulo;Bauru (Jardim Guadalajara);-22.3164;-49.0443
+BR;São Paulo;Pindamonhangaba (Água Preta);-22.9152;-45.4253
+BR;São Paulo;Bauru (Centro);-22.3272;-49.0658
+BR;São Paulo;Cidade Jardim;-22.92;-47.0961
+BR;São Paulo;Barão Geraldo;-22.8026;-47.0468
+BR;Rio de Janeiro;Galeão;-22.809;-43.2594
+BR;São Paulo;Bauru (Jardim Petropolis);-22.3048;-49.0956
+BR;São Paulo;Piracicaba (Distrito Industrial Uninorte);-22.6637;-47.6069
+BR;São Paulo;Campinas (Centro);-22.9066;-47.0559
+BR;São Paulo;Pederneiras (Jd Anchieta);-22.3412;-48.7699
+BR;São Paulo;Ourinhos (Distrito Industrial Doutor Helio Silva);-22.9707;-49.9151
+BR;Rio de Janeiro;Volta Redonda (Centro);-22.513;-44.0925
+BR;Rio de Janeiro;Ramos;-22.8559;-43.256
+BR;Rio de Janeiro;São João de Meriti (Parque Barreto);-22.7974;-43.3541
+BR;Rio de Janeiro;Penha;-22.833;-43.2737
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9012;-43.1801
+BR;Rio de Janeiro;Caju;-22.8764;-43.2138
+BR;São Paulo;Campinas (Fazenda Santa Cândida);-22.8438;-47.0549
+BR;São Paulo;Botucatu;-22.8981;-48.4914
+BR;São Paulo;Americana (Jardim Girassol);-22.741;-47.3371
+BR;Rio de Janeiro;Botafogo;-22.9439;-43.1825
+BR;São Paulo;Campinas (Alphaville Empresarial);-22.8213;-47.0364
+BR;São Paulo;São Carlos;-22.0191;-47.9143
+BR;Rio de Janeiro;Padre Miguel;-22.8663;-43.4467
+BR;Rio de Janeiro;São Gonçalo;-22.8273;-43.0638
+BR;Rio de Janeiro;Santa Cruz;-22.8835;-43.7311
+BR;São Paulo;Bauru (Centro);-22.3159;-49.0691
+BR;Rio de Janeiro;Ipanema;-22.9838;-43.2078
+BR;Rio de Janeiro;São Cristóvão;-22.8982;-43.2242
+BR;Rio de Janeiro;Rio Comprido;-22.9238;-43.2066
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.8998;-43.1806
+BR;Rio de Janeiro;Santíssimo;-22.8791;-43.5046
+BR;Rio de Janeiro;Rio de Janeiro (Cidade Universitária da Universidade Federal do Rio de Janeiro);-22.865;-43.2179
+BR;Rio de Janeiro;Botafogo;-22.957;-43.176
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.906;-43.1781
+BR;São Paulo;Campinas (Swiss Park);-22.9536;-47.0615
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9101;-43.1737
+BR;São Paulo;Engenheiro Coelho;-22.4885;-47.2127
+BR;Rio de Janeiro;Icaraí;-22.9048;-43.1096
+BR;Rio de Janeiro;Flamengo;-22.9269;-43.1736
+BR;Rio de Janeiro;Rio de Janeiro;-22.9027;-43.1854
+BR;São Paulo;Valinhos;-22.966;-46.9999
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9106;-43.1733
+BR;Rio de Janeiro;Santa Teresa;-22.9137;-43.1787
+BR;Rio de Janeiro;Petrópolis (Centro);-22.5114;-43.1778
+BR;Rio de Janeiro;Tanguá;-22.735;-42.7202
+BR;Rio de Janeiro;Gamboa;-22.8938;-43.1962
+BR;Rio de Janeiro;Saúde;-22.8952;-43.1869
+BR;Rio de Janeiro;Botafogo;-22.9425;-43.1814
+BR;Rio de Janeiro;Botafogo;-22.9445;-43.1825
+BR;Rio de Janeiro;Bento Ribeiro;-22.8663;-43.3629
+BR;Rio de Janeiro;Jacarepaguá;-22.9761;-43.336
+BR;Rio de Janeiro;Resende;-22.4714;-44.4534
+BR;Rio de Janeiro;Jacarepaguá;-22.9643;-43.4073
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9377;-43.3533
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9025;-43.1798
+BR;Minas Gerais;Boa Vista;-22.2379;-45.7088
+BR;São Paulo;Americana (Vila Cordenonsi);-22.73;-47.3218
+BR;São Paulo;Teodoro Sampaio;-22.5315;-52.1734
+BR;São Paulo;Jundiaí;-22.7626;-47.8427
+BR;São Paulo;Presidente Prudente;-22.1211;-51.393
+BR;Rio de Janeiro;Macaé (Granja dos Cavaleiros);-22.3879;-41.8158
+BR;São Paulo;Botucatu (Vila Rodrigues Alves);-22.8916;-48.4357
+BR;São Paulo;Serra Negra (Estância Suíça);-22.6111;-46.6999
+BR;São Paulo;Teodoro Sampaio;-22.5309;-52.1732
+BR;São Paulo;Dois Córregos;-22.3694;-48.3845
+BR;São Paulo;Pompéia;-22.1052;-50.1735
+BR;São Paulo;Americana (Vila Medon);-22.7501;-47.334
+BR;São Paulo;Jaguariúna (Centro);-22.7034;-46.9943
+BR;Rio de Janeiro;Leblon;-22.9847;-43.2275
+BR;São Paulo;Valinhos;-22.9273;-46.9809
+BR;São Paulo;Americana (Centro);-22.7416;-47.3322
+BR;São Paulo;Presidente Prudente (Centro);-22.123;-51.3832
+BR;São Paulo;Botucatu;-22.8873;-48.4447
+BR;São Paulo;Bauru (Vila Nova Cidade Universitaria);-22.3408;-49.0525
+BR;Rio de Janeiro;Botafogo;-22.947;-43.183
+BR;São Paulo;Presidente Prudente (Vila Maria);-22.1723;-51.4022
+BR;Rio de Janeiro;Botafogo;-22.9564;-43.1983
+BR;Rio de Janeiro;Méier;-22.9003;-43.2813
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9078;-43.1826
+BR;São Paulo;Presidente Prudente (Jd. das Rosas);-22.1157;-51.4082
+BR;São Paulo;Lençóis Paulista;-22.5988;-48.7924
+BR;Rio de Janeiro;Ramos;-22.8527;-43.2541
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.91;-43.1931
+BR;Rio de Janeiro;Maracanã;-22.9141;-43.2171
+BR;Rio de Janeiro;Vila São Luís;-22.7754;-43.286
+BR;Mato Grosso do Sul;Fátima do Sul;-22.3763;-54.5153
+BR;Rio de Janeiro;São Geraldo;-22.612;-43.1629
+BR;Rio de Janeiro;Barreto;-22.8677;-43.1108
+BR;Rio de Janeiro;Araruama (Centro);-22.8753;-42.3401
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9109;-43.1741
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9088;-43.1712
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9091;-43.1784
+BR;São Paulo;Assis (Vila Nova Santana);-22.6439;-50.421
+BR;São Paulo;Campinas (Loteamento Alphaville Campinas);-22.8201;-47.0357
+BR;São Paulo;Jardim Campinas Barro Branco (Jardim Campinas);-22.8794;-47.046
+BR;São Paulo;Hortolândia (Conjunto Habitacional Padre Anchieta);-22.8576;-47.1568
+BR;Rio de Janeiro;Barra da Tijuca;-22.9874;-43.37
+BR;Rio de Janeiro;Niterói;-22.8859;-43.1152
+BR;Rio de Janeiro;Leblon;-22.9826;-43.2156
+BR;Rio de Janeiro;Macaé (Centro);-22.3703;-41.7808
+BR;Rio de Janeiro;Porto Real (Tecnopolo);-22.4201;-44.3464
+BR;Rio de Janeiro;Campo Grande;-22.9501;-43.5627
+BR;Rio de Janeiro;Vila Sarapui (Vila Santa Alice);-22.6068;-43.2875
+BR;Rio de Janeiro;Cidade Nova;-22.903;-43.1831
+BR;São Paulo;Rio Claro (Jardim Claret);-22.4138;-47.5728
+BR;São Paulo;Rio das Pedras (Conjunto Habitacional Vitoria Perim Cezarino);-22.8448;-47.5958
+BR;São Paulo;Bauru (Jardim Infante Dom Henrique);-22.3424;-49.0509
+BR;São Paulo;Paulínia (Centro Industrial);-22.7301;-47.1555
+BR;São Paulo;Bauru (Vila Rocha);-22.3305;-49.1124
+BR;Rio de Janeiro;Copacabana;-22.9765;-43.1906
+BR;Minas Gerais;São Lourenço (Centro);-22.1152;-45.0531
+BR;Rio de Janeiro;Botafogo;-22.9505;-43.1806
+BR;Rio de Janeiro;Galeão;-22.8135;-43.2473
+BR;Rio de Janeiro;Glória;-22.9204;-43.1745
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9056;-43.1676
+BR;Rio de Janeiro;Pavuna;-22.8127;-43.375
+BR;Rio de Janeiro;São Cristóvão;-22.9003;-43.2174
+BR;Rio de Janeiro;Penha Circular;-22.8133;-43.2761
+BR;Rio de Janeiro;Bonsucesso;-22.8623;-43.2526
+BR;Rio de Janeiro;Rio de Janeiro;-22.9125;-43.2054
+BR;Rio de Janeiro;Rio de Janeiro (Torre);-22.9504;-43.1806
+BR;Rio de Janeiro;Maricá (Centro);-22.9243;-42.8189
+BR;São Paulo;Piracicaba (Unileste);-22.7374;-47.5901
+BR;São Paulo;Piracicaba (Unileste);-22.7353;-47.5975
+BR;Rio de Janeiro;Niterói (Vital Brasil);-22.9045;-43.095
+BR;Rio de Janeiro;Saquarema;-22.9324;-42.4867
+BR;Rio de Janeiro;Duque de Caxias;-22.7863;-43.3053
+BR;Rio de Janeiro;Bonsucesso;-22.864;-43.2492
+BR;Rio de Janeiro;Botafogo;-22.9551;-43.1938
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9113;-43.1761
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9032;-43.1893
+BR;Rio de Janeiro;Vila Sarapui (Chácaras Rio-Petrópolis);-22.6766;-43.2938
+BR;Rio de Janeiro;Pendotiba;-22.9123;-43.0593
+BR;Rio de Janeiro;Penha Circular;-22.8473;-43.3017
+BR;Mato Grosso do Sul;Ponta Porã (Centro);-22.5422;-55.7257
+BR;São Paulo;Assis (Vila Boa Vista);-22.6572;-50.4174
+BR;São Paulo;Jardim Guanabara;-22.8863;-47.0665
+BR;São Paulo;Cosmópolis (Vila Josekalil Aun);-22.6491;-47.1844
+BR;São Paulo;Nova Odessa;-22.7853;-47.3007
+BR;São Paulo;Botafogo;-22.8921;-47.0648
+BR;São Paulo;Paulínia (Parque Brasil 500);-22.7973;-47.1347
+BR;São Paulo;Iracemápolis (Jardim Senador Vergueiro);-22.6125;-47.4797
+BR;Rio de Janeiro;Realengo;-22.8654;-43.4342
+BR;Rio de Janeiro;Macaé (Novo Cavaleiros);-22.3981;-41.8127
+BR;São Paulo;Herculândia;-22.0044;-50.3871
+BR;São Paulo;Aparecida;-22.7647;-45.3513
+BR;São Paulo;Presidente Prudente (Vila Santa Helena);-22.1199;-51.4
+BR;Rio de Janeiro;Cachoeiras de Macacu;-22.3534;-42.7076
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9;-43.1768
+BR;Rio de Janeiro;Petrópolis (Quarteirão Ingelhein);-22.5071;-43.1885
+BR;Rio de Janeiro;Meudon;-22.4342;-42.9435
+BR;Rio de Janeiro;Vargem Grande;-22.9675;-43.4936
+BR;Rio de Janeiro;Boa Viagem;-22.9078;-43.1259
+BR;Rio de Janeiro;Praia da Bandeira (Praia da Bandeira);-22.8111;-43.1815
+BR;Rio de Janeiro;Flamengo;-22.9388;-43.1783
+BR;Rio de Janeiro;Olaria;-22.8476;-43.2657
+BR;Rio de Janeiro;Barreto;-22.866;-43.1077
+BR;Rio de Janeiro;Bangu;-22.8665;-43.4717
+BR;São Paulo;Vila Real do Moinho Velho (Vila Real);-22.7687;-47.6438
+BR;Rio de Janeiro;Barra Mansa (Barbará);-22.5467;-44.1551
+BR;São Paulo;Lençóis Paulista (Jardim Itamaraty);-22.6211;-48.797
+BR;Rio de Janeiro;Bangu;-22.8807;-43.4804
+BR;Rio de Janeiro;Senador Vasconcelos;-22.8933;-43.5327
+BR;Rio de Janeiro;Copacabana;-22.9761;-43.1931
+BR;Rio de Janeiro;Freguesia;-22.9315;-43.3255
+BR;Rio de Janeiro;Macaé (Imboassica);-22.4171;-41.8756
+BR;São Paulo;Bauru (Jardim Brasil);-22.3277;-49.0532
+BR;São Paulo;Mogi Mirim (Jardim Flamboyant);-22.4021;-46.9697
+BR;São Paulo;Pindamonhangaba;-22.976;-45.4708
+BR;Rio de Janeiro;Niterói;-22.8738;-43.126
+BR;São Paulo;Piracicaba (Chácara Nazaré);-22.7287;-47.6645
+BR;Minas Gerais;São José;-22.2495;-45.4638
+BR;São Paulo;Bauru (Vila Engler);-22.3315;-49.0474
+NC;South Province;Noumea (Anse Vata);-22.3027;166.444
 AU;Queensland;Moranbah;-22.0016;148.047
-NA;"Khomas Region";"Windhoek (Windhoek Central)";-22.5534;17.0851
-BR;"Rio de Janeiro";"Rio de Janeiro (Centro)";-22.9006;-43.1881
-BR;"Rio de Janeiro";Bonsucesso;-22.8638;-43.251
-BR;"Rio de Janeiro";"Del Castilho";-22.8804;-43.269
-BR;"Rio de Janeiro";"Del Castilho";-22.8714;-43.2731
-BR;"Rio de Janeiro";Tijuca;-22.9277;-43.2425
-BR;"Rio de Janeiro";Tijuca;-22.9276;-43.2426
+NA;Khomas Region;Windhoek (Windhoek Central);-22.5534;17.0851
+BR;Rio de Janeiro;Rio de Janeiro (Centro);-22.9006;-43.1881
+BR;Rio de Janeiro;Bonsucesso;-22.8638;-43.251
+BR;Rio de Janeiro;Del Castilho;-22.8804;-43.269
+BR;Rio de Janeiro;Del Castilho;-22.8714;-43.2731
+BR;Rio de Janeiro;Tijuca;-22.9277;-43.2425
+BR;Rio de Janeiro;Tijuca;-22.9276;-43.2426

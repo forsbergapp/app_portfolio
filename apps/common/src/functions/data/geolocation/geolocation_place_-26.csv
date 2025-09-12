@@ -1,33 +1,33 @@
 AU;Queensland;Gympie;-26.1836;152.662
-AU;Queensland;"Alexandra Headland";-26.6715;153.101
+AU;Queensland;Alexandra Headland;-26.6715;153.101
 AU;Queensland;Curra;-26.0667;152.583
-AU;Queensland;"Yandina Creek";-26.5387;153.039
+AU;Queensland;Yandina Creek;-26.5387;153.039
 AU;Queensland;Noosa;-26.3943;153.09
 AU;Queensland;Gympie;-26.1898;152.665
-AU;Queensland;"Sunshine Coast";-26.6568;153.08
+AU;Queensland;Sunshine Coast;-26.6568;153.08
 AU;Queensland;Caloundra;-26.8035;153.122
-AU;Queensland;"Sunshine Beach";-26.4058;153.108
+AU;Queensland;Sunshine Beach;-26.4058;153.108
 AU;Queensland;Charleville;-26.4054;146.243
 AU;Queensland;Goomeri;-26.1838;152.069
-ZA;Gauteng;"Kempton Park (Isando)";-26.1393;28.2088
+ZA;Gauteng;Kempton Park (Isando);-26.1393;28.2088
 ZA;Gauteng;Johannesburg;-26.2041;28.0473
 ZA;Gauteng;Johannesburg;-26.2056;28.0337
-BR;"Santa Catarina";"São Bento do Sul";-26.2503;-49.3786
+BR;Santa Catarina;São Bento do Sul;-26.2503;-49.3786
 ZA;Gauteng;Edenvale;-26.1409;28.1525
 ZA;Gauteng;Boksburg;-26.212;28.2596
-AU;Queensland;"Mt Coolum";-26.5658;153.091
-AU;Queensland;"Twin Waters";-26.6342;153.081
-BR;"Santa Catarina";Salto;-26.8879;-49.1133
-PY;"Misiones Department";"San Miguel";-26.536;-57.0393
+AU;Queensland;Mt Coolum;-26.5658;153.091
+AU;Queensland;Twin Waters;-26.6342;153.081
+BR;Santa Catarina;Salto;-26.8879;-49.1133
+PY;Misiones Department;San Miguel;-26.536;-57.0393
 PY;Caazapá;Yuty;-26.6141;-56.2473
-BR;"Santa Catarina";Timbó;-26.8255;-49.2726
-BR;"Santa Catarina";"Joinville (Centro)";-26.3015;-48.848
-BR;"Santa Catarina";Timbó;-26.8233;-49.2717
-BR;"Santa Catarina";Indaial;-26.8978;-49.2317
-AR;Tucuman;"San Miguel de Tucumán";-26.8083;-65.2176
-AR;Tucuman;"Banda del Río Salí";-26.8403;-65.1628
+BR;Santa Catarina;Timbó;-26.8255;-49.2726
+BR;Santa Catarina;Joinville (Centro);-26.3015;-48.848
+BR;Santa Catarina;Timbó;-26.8233;-49.2717
+BR;Santa Catarina;Indaial;-26.8978;-49.2317
+AR;Tucuman;San Miguel de Tucumán;-26.8083;-65.2176
+AR;Tucuman;Banda del Río Salí;-26.8403;-65.1628
 ZA;Gauteng;Benoni;-26.1885;28.3208
-BR;"Santa Catarina";Timbó;-26.9286;-49.3653
+BR;Santa Catarina;Timbó;-26.9286;-49.3653
 ZA;Gauteng;Modderfontein;-26.0891;28.1653
 ZA;Gauteng;Randburg;-26.0941;28.0012
 ZA;Gauteng;Roodepoort;-26.1625;27.8725
@@ -37,7 +37,7 @@ ZA;Gauteng;Vereeniging;-26.6731;27.9261
 ZA;Gauteng;Tokoza;-26.36;28.129
 ZA;Gauteng;Riverlea;-26.2119;27.9732
 ZA;Gauteng;Meyerton;-26.5599;28.0195
-ZA;"North West";Potchefstroom;-26.7167;27.1
+ZA;North West;Potchefstroom;-26.7167;27.1
 ZA;Gauteng;Germiston;-26.2348;28.1766
 ZA;Mpumalanga;Warburton;-26.2291;30.4764
 ZA;Gauteng;Springs;-26.2584;28.4717
@@ -47,16 +47,16 @@ ZA;Gauteng;Randfontein;-26.1844;27.702
 ZA;Gauteng;Etwatwa;-26.1252;28.4547
 ZA;Gauteng;Krugersdorp;-26.0858;27.7752
 ZA;Mpumalanga;Kriel;-26.25;29.26
-ZA;"Free State";Sasolburg;-26.8136;27.8169
+ZA;Free State;Sasolburg;-26.8136;27.8169
 ZA;Mpumalanga;Trichardt;-26.4916;29.2288
 ZA;Mpumalanga;Delmas;-26.1466;28.6832
-ZA;"North West";Stilfontein;-26.8449;26.7683
+ZA;North West;Stilfontein;-26.8449;26.7683
 ZA;Gauteng;Walkerville;-26.4209;27.9525
 ZA;Mpumalanga;Evander;-26.4706;29.1097
 ZA;Mpumalanga;Ermelo;-26.5333;29.9833
-ZA;"North West";Klerksdorp;-26.8521;26.6667
+ZA;North West;Klerksdorp;-26.8521;26.6667
 ZA;Mpumalanga;Secunda;-26.55;29.1667
-ZA;"North West";Ottosdal;-26.8091;26.0054
+ZA;North West;Ottosdal;-26.8091;26.0054
 ZA;Gauteng;Brakpan;-26.2366;28.3694
 ZA;Mpumalanga;Standerton;-26.9337;29.2415
 ZA;Gauteng;Soweto;-26.2678;27.8585
@@ -64,68 +64,68 @@ ZA;Gauteng;Poortje;-26.4595;27.7673
 ZA;Gauteng;Heidelberg;-26.5048;28.3592
 ZA;Gauteng;Carletonville;-26.3609;27.3977
 ZA;Mpumalanga;Breyten;-26.3018;29.987
-ZA;"Free State";Deneysville;-26.8908;28.0971
+ZA;Free State;Deneysville;-26.8908;28.0971
 ZA;Gauteng;Nigel;-26.4314;28.4771
-ZA;"North West";Orkney;-26.9802;26.6727
-ZA;"Free State";"Bertha Shaft Village";-26.7549;27.9391
-ZA;"North West";Lichtenburg;-26.152;26.1597
+ZA;North West;Orkney;-26.9802;26.6727
+ZA;Free State;Bertha Shaft Village;-26.7549;27.9391
+ZA;North West;Lichtenburg;-26.152;26.1597
 ZA;Gauteng;Randvaal;-26.4336;28.0927
-ZA;"North West";Vryburg;-26.9566;24.7284
-ZA;Gauteng;"Western Areas";-26.35;27.7
+ZA;North West;Vryburg;-26.9566;24.7284
+ZA;Gauteng;Western Areas;-26.35;27.7
 ZA;Mpumalanga;eMbalenhle;-26.5333;29.0667
-ZA;"Free State";Parys;-26.9033;27.4573
+ZA;Free State;Parys;-26.9033;27.4573
 ZA;Gauteng;Evaton;-26.5333;27.85
-ZA;"North West";Ganyesa;-26.5961;24.1761
-ZA;Gauteng;"Sandton (Sandhurst)";-26.1125;28.04
+ZA;North West;Ganyesa;-26.5961;24.1761
+ZA;Gauteng;Sandton (Sandhurst);-26.1125;28.04
 ZA;Mpumalanga;Eloff;-26.1662;28.607
 ZA;Mpumalanga;Ogies;-26.0488;29.0639
 ZA;Gauteng;Mamello;-26.8721;28.2534
-ZA;Gauteng;"Sandton (Vorna Valley)";-26.0123;28.1118
-ZA;Gauteng;"Kempton Park (Isando)";-26.1379;28.1975
-ZA;Gauteng;"Sandton (Bryanston)";-26.0505;28.0249
+ZA;Gauteng;Sandton (Vorna Valley);-26.0123;28.1118
+ZA;Gauteng;Kempton Park (Isando);-26.1379;28.1975
+ZA;Gauteng;Sandton (Bryanston);-26.0505;28.0249
 ZA;Gauteng;Krugersdorp;-26.0963;27.8077
-ZA;Gauteng;"Sandton (Simba)";-26.1006;28.0697
-ZA;Gauteng;"Randburg (Randpark Ridge)";-26.1041;27.9467
-ZA;Gauteng;"Midrand (Halfway House)";-26.0051;28.1269
-ZA;Gauteng;"Johannesburg (Dunkeld West)";-26.1339;28.0359
-ZA;Gauteng;"Randburg (Dunkeld West)";-26.1341;28.0355
-ZA;Gauteng;"Johannesburg (Houghton Estate)";-26.1694;28.0771
-ZA;Gauteng;"Sandton (Edenburg)";-26.0461;28.0599
-ZA;Gauteng;"Sandton (Magaliessig)";-26.027;28.0139
-ZA;Gauteng;"Midrand (Waterval City)";-26.0114;28.1031
-ZA;Gauteng;"Johannesburg (Bedfordview)";-26.1689;28.1581
-ZA;Gauteng;"Johannesburg (Bedfordview)";-26.1692;28.158
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1464;28.037
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1432;28.0384
-ZA;Gauteng;"Johannesburg (Stafford)";-26.2323;28.0434
+ZA;Gauteng;Sandton (Simba);-26.1006;28.0697
+ZA;Gauteng;Randburg (Randpark Ridge);-26.1041;27.9467
+ZA;Gauteng;Midrand (Halfway House);-26.0051;28.1269
+ZA;Gauteng;Johannesburg (Dunkeld West);-26.1339;28.0359
+ZA;Gauteng;Randburg (Dunkeld West);-26.1341;28.0355
+ZA;Gauteng;Johannesburg (Houghton Estate);-26.1694;28.0771
+ZA;Gauteng;Sandton (Edenburg);-26.0461;28.0599
+ZA;Gauteng;Sandton (Magaliessig);-26.027;28.0139
+ZA;Gauteng;Midrand (Waterval City);-26.0114;28.1031
+ZA;Gauteng;Johannesburg (Bedfordview);-26.1689;28.1581
+ZA;Gauteng;Johannesburg (Bedfordview);-26.1692;28.158
+ZA;Gauteng;Johannesburg (Rosebank);-26.1464;28.037
+ZA;Gauteng;Johannesburg (Rosebank);-26.1432;28.0384
+ZA;Gauteng;Johannesburg (Stafford);-26.2323;28.0434
 SZ;Hhohho;Mbabane;-26.3277;31.142
-SZ;"Hhohho Region";Mbabane;-26.3054;31.1367
+SZ;Hhohho Region;Mbabane;-26.3054;31.1367
 SZ;Hhohho;Mbabane;-26.3233;31.1314
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1469;28.0356
-ZA;Gauteng;"Roodepoort (Allen's Nek)";-26.1299;27.9079
-ZA;Gauteng;"Roodepoort (Allen's Nek)";-26.13;27.9077
-ZA;Gauteng;"Sandton (Sandown)";-26.1082;28.0591
-ZA;Gauteng;"Sandton (Woodmead)";-26.0561;28.0696
-ZA;Gauteng;"Sandton (Bryanston)";-26.0532;28.0063
-ZA;Gauteng;"Johannesburg (Bryanston)";-26.0537;28.0065
-ZA;Gauteng;"Johannesburg (Houghton Estate)";-26.1649;28.0625
-ZA;Gauteng;"Sandton (Bryanston)";-26.0564;28.0245
-ZA;Gauteng;"Edenvale (Dunvegan)";-26.1566;28.154
-ZA;Gauteng;"Randburg (Parkview)";-26.1643;28.0213
-ZA;Gauteng;"Randburg (Emmarentia)";-26.1679;28.0098
-SZ;"Hhohho Region";Mbabane;-26.3298;31.1398
-SZ;"Manzini Region";Kwaluseni;-26.4767;31.3327
-SZ;"Manzini Region";Manzini;-26.4988;31.38
-SZ;"Hhohho Region";Mbabane;-26.3261;31.1448
-SZ;"Hhohho Region";Lobamba;-26.4667;31.2
-SZ;"Lubombo Region";"Big Bend Sugar Estate";-26.8205;31.9505
-SZ;"Hhohho Region";Mbabane;-26.3167;31.1333
-ZA;Gauteng;"Johannesburg (Newtown)";-26.2022;28.0402
-ZA;Gauteng;"Sandton (Woodlands)";-26.0622;28.0849
-ZA;Gauteng;"Sandton (Sunninghill)";-26.0327;28.068
-ZA;Gauteng;"Sandton (Bryanston)";-26.0441;28.0217
+ZA;Gauteng;Johannesburg (Rosebank);-26.1469;28.0356
+ZA;Gauteng;Roodepoort (Allen's Nek);-26.1299;27.9079
+ZA;Gauteng;Roodepoort (Allen's Nek);-26.13;27.9077
+ZA;Gauteng;Sandton (Sandown);-26.1082;28.0591
+ZA;Gauteng;Sandton (Woodmead);-26.0561;28.0696
+ZA;Gauteng;Sandton (Bryanston);-26.0532;28.0063
+ZA;Gauteng;Johannesburg (Bryanston);-26.0537;28.0065
+ZA;Gauteng;Johannesburg (Houghton Estate);-26.1649;28.0625
+ZA;Gauteng;Sandton (Bryanston);-26.0564;28.0245
+ZA;Gauteng;Edenvale (Dunvegan);-26.1566;28.154
+ZA;Gauteng;Randburg (Parkview);-26.1643;28.0213
+ZA;Gauteng;Randburg (Emmarentia);-26.1679;28.0098
+SZ;Hhohho Region;Mbabane;-26.3298;31.1398
+SZ;Manzini Region;Kwaluseni;-26.4767;31.3327
+SZ;Manzini Region;Manzini;-26.4988;31.38
+SZ;Hhohho Region;Mbabane;-26.3261;31.1448
+SZ;Hhohho Region;Lobamba;-26.4667;31.2
+SZ;Lubombo Region;Big Bend Sugar Estate;-26.8205;31.9505
+SZ;Hhohho Region;Mbabane;-26.3167;31.1333
+ZA;Gauteng;Johannesburg (Newtown);-26.2022;28.0402
+ZA;Gauteng;Sandton (Woodlands);-26.0622;28.0849
+ZA;Gauteng;Sandton (Sunninghill);-26.0327;28.068
+ZA;Gauteng;Sandton (Bryanston);-26.0441;28.0217
 ZA;Gauteng;Randburg;-26.0917;27.9601
-ZA;Gauteng;"Randburg (Newlands)";-26.175;27.963
+ZA;Gauteng;Randburg (Newlands);-26.175;27.963
 ZA;Mpumalanga;Nthrowane;-26.7478;28.7502
 ZA;Mpumalanga;Lukwatini;-26.055;30.8229
 ZA;Gauteng;Devon;-26.3558;28.7784
@@ -137,834 +137,834 @@ ZA;Mpumalanga;Camden;-26.6007;30.0893
 ZA;Mpumalanga;Iswepe;-26.8406;30.5351
 ZA;Mpumalanga;Komati;-26.0955;29.4608
 ZA;Mpumalanga;Bethal;-26.4579;29.4655
-ZA;"North West";Stella;-26.553;24.8668
-ZA;"North West";Hartbeesfontein;-26.7657;26.4202
-ZA;Gauteng;"Leeudoorn Mine";-26.4424;27.5728
-ZA;Mpumalanga;"Pullens Hope";-26.0204;29.5949
+ZA;North West;Stella;-26.553;24.8668
+ZA;North West;Hartbeesfontein;-26.7657;26.4202
+ZA;Gauteng;Leeudoorn Mine;-26.4424;27.5728
+ZA;Mpumalanga;Pullens Hope;-26.0204;29.5949
 ZA;Mpumalanga;Grootvlei;-26.7625;28.4838
 ZA;Mpumalanga;Redhill;-26.2607;30.8255
 ZA;Gauteng;Sandton;-26.1077;28.0581
-ZA;Gauteng;"Midrand (Halfway House)";-26.0111;28.1194
+ZA;Gauteng;Midrand (Halfway House);-26.0111;28.1194
 ZA;Mpumalanga;Hendrina;-26.1588;29.7153
-ZA;Gauteng;"Randburg (Fairland)";-26.149;27.9301
-NA;"Karas Region";Lüderitz;-26.6481;15.1538
-NA;"Karas Region";Keetmanshoop;-26.5765;18.1336
-NA;"Karas Region";Bethanie;-26.4996;17.1599
-ZA;Gauteng;"Randburg (Ferndale)";-26.0963;28.0031
-ZA;Gauteng;"Sandton (Wierda Valley)";-26.1124;28.0581
-ZA;Gauteng;"Midrand (Vorna Valley)";-26.0122;28.1148
+ZA;Gauteng;Randburg (Fairland);-26.149;27.9301
+NA;Karas Region;Lüderitz;-26.6481;15.1538
+NA;Karas Region;Keetmanshoop;-26.5765;18.1336
+NA;Karas Region;Bethanie;-26.4996;17.1599
+ZA;Gauteng;Randburg (Ferndale);-26.0963;28.0031
+ZA;Gauteng;Sandton (Wierda Valley);-26.1124;28.0581
+ZA;Gauteng;Midrand (Vorna Valley);-26.0122;28.1148
 ZA;Gauteng;Midrand;-26.0095;28.1144
-ZA;Gauteng;"Johannesburg (Waverley)";-26.1362;28.0704
-ZA;Gauteng;"Johannesburg (Waverley)";-26.1363;28.0704
-ZA;Gauteng;"Sandton (Sandown)";-26.1064;28.0566
-ZA;Gauteng;"Randburg (Fairland)";-26.1506;27.9321
-ZA;Gauteng;"Sandton (Sunninghill)";-26.0197;28.0664
-ZA;Gauteng;"Sandton (Sunninghill)";-26.0197;28.0665
-ZA;Gauteng;"Randburg (Dunkeld West)";-26.1328;28.0351
-ZA;Gauteng;"Boksburg (Witkoppie 64-Ir)";-26.1634;28.2128
+ZA;Gauteng;Johannesburg (Waverley);-26.1362;28.0704
+ZA;Gauteng;Johannesburg (Waverley);-26.1363;28.0704
+ZA;Gauteng;Sandton (Sandown);-26.1064;28.0566
+ZA;Gauteng;Randburg (Fairland);-26.1506;27.9321
+ZA;Gauteng;Sandton (Sunninghill);-26.0197;28.0664
+ZA;Gauteng;Sandton (Sunninghill);-26.0197;28.0665
+ZA;Gauteng;Randburg (Dunkeld West);-26.1328;28.0351
+ZA;Gauteng;Boksburg (Witkoppie 64-Ir);-26.1634;28.2128
 SZ;Hhohho;Mbabane;-26.3054;31.1367
 SZ;Hhohho;Mbabane;-26.3238;31.1386
-SZ;"Hhohho Region";Mbabane;-26.3238;31.1386
-ZA;Gauteng;"Sandton (Fourways)";-26.03;28.0102
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1471;28.0386
-ZA;Gauteng;"Sandton (Sandown)";-26.1033;28.0573
-ZA;Gauteng;"Benoni (Rynfield)";-26.1446;28.3365
-ZA;Gauteng;"Sandton (Bryanston)";-26.0506;28.0245
-SZ;"Lubombo Region";Ezulwini;-26.4136;31.1864
-SZ;"Manzini Region";Sidvokodvo;-26.6282;31.4202
+SZ;Hhohho Region;Mbabane;-26.3238;31.1386
+ZA;Gauteng;Sandton (Fourways);-26.03;28.0102
+ZA;Gauteng;Johannesburg (Rosebank);-26.1471;28.0386
+ZA;Gauteng;Sandton (Sandown);-26.1033;28.0573
+ZA;Gauteng;Benoni (Rynfield);-26.1446;28.3365
+ZA;Gauteng;Sandton (Bryanston);-26.0506;28.0245
+SZ;Lubombo Region;Ezulwini;-26.4136;31.1864
+SZ;Manzini Region;Sidvokodvo;-26.6282;31.4202
 SZ;Hhohho;Mbabane;-26.3261;31.1448
-ZA;Gauteng;"Randburg (Blackheath)";-26.132;27.9733
-ZA;Gauteng;"Midrand (Halfway House)";-26.0089;28.1222
-ZA;Gauteng;"Johannesburg (Bagleyston)";-26.15;28.0868
+ZA;Gauteng;Randburg (Blackheath);-26.132;27.9733
+ZA;Gauteng;Midrand (Halfway House);-26.0089;28.1222
+ZA;Gauteng;Johannesburg (Bagleyston);-26.15;28.0868
 ZA;Gauteng;Sandton;-26.1317;28.0691
-ZA;Gauteng;"Kempton Park (Serengeti Golf and Wildlife Estate)";-26.0529;28.2933
-ZA;Gauteng;"Springs (Casseldale)";-26.2586;28.4683
+ZA;Gauteng;Kempton Park (Serengeti Golf and Wildlife Estate);-26.0529;28.2933
+ZA;Gauteng;Springs (Casseldale);-26.2586;28.4683
 ZA;Mpumalanga;Kinross;-26.4166;29.0867
-ZA;Gauteng;"Kempton Park";-26.1;28.2333
+ZA;Gauteng;Kempton Park;-26.1;28.2333
 AU;Queensland;Wondai;-26.3168;151.872
-AR;Misiones;"San Antonio";-26.0584;-53.7427
-AR;Tucuman;"San Miguel de Tucumán";-26.816;-65.2105
-AR;Tucuman;"Tafí Viejo";-26.7333;-65.2615
-BR;"Santa Catarina";"Balneário Camboriú";-26.9906;-48.6347
-BR;"Santa Catarina";"Balneário Camboriú";-26.998;-48.6326
-BR;"Santa Catarina";Modelo;-26.7767;-53.0543
-BR;"Santa Catarina";"São Lourenço do Oeste";-26.3592;-52.8511
-BR;"Santa Catarina";Xaxim;-26.9617;-52.5347
-BR;"Santa Catarina";Caçador;-26.783;-50.9981
-BR;"Santa Catarina";"Jaraguá do Sul";-26.4861;-49.0667
-BR;"Santa Catarina";Xanxerê;-26.8774;-52.4046
-BR;"Santa Catarina";Xanxerê;-26.8769;-52.4042
-BR;"Santa Catarina";"Salto Veloso";-26.9065;-51.4063
-BR;"Santa Catarina";Gaspar;-26.9314;-48.9589
-BR;"Santa Catarina";"Jaraguá do Sul";-26.4814;-49.0842
-AR;Chaco;"General José de San Martín";-26.5364;-59.3414
-AR;Formosa;"El Colorado";-26.309;-59.3723
-AR;Chaco;"Las Garcitas";-26.618;-59.8013
-BR;"Santa Catarina";"Porto União";-26.2381;-51.0783
-BR;Paraná;"União da Vitória";-26.23;-51.0864
-BR;"Santa Catarina";Caçador;-26.6165;-50.6737
-BR;"Santa Catarina";Caçador;-26.7753;-51.015
-BR;"Santa Catarina";"Residência Fuck";-26.7094;-50.2958
+AR;Misiones;San Antonio;-26.0584;-53.7427
+AR;Tucuman;San Miguel de Tucumán;-26.816;-65.2105
+AR;Tucuman;Tafí Viejo;-26.7333;-65.2615
+BR;Santa Catarina;Balneário Camboriú;-26.9906;-48.6347
+BR;Santa Catarina;Balneário Camboriú;-26.998;-48.6326
+BR;Santa Catarina;Modelo;-26.7767;-53.0543
+BR;Santa Catarina;São Lourenço do Oeste;-26.3592;-52.8511
+BR;Santa Catarina;Xaxim;-26.9617;-52.5347
+BR;Santa Catarina;Caçador;-26.783;-50.9981
+BR;Santa Catarina;Jaraguá do Sul;-26.4861;-49.0667
+BR;Santa Catarina;Xanxerê;-26.8774;-52.4046
+BR;Santa Catarina;Xanxerê;-26.8769;-52.4042
+BR;Santa Catarina;Salto Veloso;-26.9065;-51.4063
+BR;Santa Catarina;Gaspar;-26.9314;-48.9589
+BR;Santa Catarina;Jaraguá do Sul;-26.4814;-49.0842
+AR;Chaco;General José de San Martín;-26.5364;-59.3414
+AR;Formosa;El Colorado;-26.309;-59.3723
+AR;Chaco;Las Garcitas;-26.618;-59.8013
+BR;Santa Catarina;Porto União;-26.2381;-51.0783
+BR;Paraná;União da Vitória;-26.23;-51.0864
+BR;Santa Catarina;Caçador;-26.6165;-50.6737
+BR;Santa Catarina;Caçador;-26.7753;-51.015
+BR;Santa Catarina;Residência Fuck;-26.7094;-50.2958
 BR;Paraná;Barracão;-26.2525;-53.6376
-AR;Misiones;"San Vicente";-26.6167;-54.1333
-AR;Misiones;"San Vicente";-26.9962;-54.4849
-BR;"Santa Catarina";Maravilha;-26.7606;-53.175
+AR;Misiones;San Vicente;-26.6167;-54.1333
+AR;Misiones;San Vicente;-26.9962;-54.4849
+BR;Santa Catarina;Maravilha;-26.7606;-53.175
 AU;Queensland;Caloundra;-26.8034;153.07
-ZA;Gauteng;"Kempton Park";-26.0944;28.2293
-AR;Misiones;"Bernardo de Irigoyen";-26.2554;-53.6468
-BR;"Santa Catarina";Blumenau;-26.9194;-49.0661
-BR;"Santa Catarina";Gaspar;-26.9318;-48.955
-BR;"Santa Catarina";"Passos Maia";-26.7803;-52.0606
-BR;"Santa Catarina";"Balneário Camboriú (Nações)";-26.9859;-48.6426
-BR;"Santa Catarina";"Caçador (Centro)";-26.7785;-51.0138
-BR;"Santa Catarina";Guaramirim;-26.4731;-49.0028
-BR;Paraná;"União da Vitória";-26.0174;-51.3499
-BR;"Santa Catarina";Canoinhas;-26.1772;-50.39
-BR;"Santa Catarina";"Três Barras";-26.1064;-50.3222
-BR;"Santa Catarina";Itajaí;-26.9078;-48.6619
-BR;"Santa Catarina";Itapoá;-26.0695;-48.6174
-BR;"Santa Catarina";Joinville;-26.3044;-48.8456
-AR;Tucuman;"Yerba Buena";-26.813;-65.2954
-AR;Tucuman;"Yerba Buena";-26.812;-65.3014
-BR;"Santa Catarina";"Balneário Barra do Sul";-26.4626;-48.6132
-BR;"Santa Catarina";Joinville;-26.3044;-48.8464
-BR;"Santa Catarina";Salete;-26.979;-50.0052
+ZA;Gauteng;Kempton Park;-26.0944;28.2293
+AR;Misiones;Bernardo de Irigoyen;-26.2554;-53.6468
+BR;Santa Catarina;Blumenau;-26.9194;-49.0661
+BR;Santa Catarina;Gaspar;-26.9318;-48.955
+BR;Santa Catarina;Passos Maia;-26.7803;-52.0606
+BR;Santa Catarina;Balneário Camboriú (Nações);-26.9859;-48.6426
+BR;Santa Catarina;Caçador (Centro);-26.7785;-51.0138
+BR;Santa Catarina;Guaramirim;-26.4731;-49.0028
+BR;Paraná;União da Vitória;-26.0174;-51.3499
+BR;Santa Catarina;Canoinhas;-26.1772;-50.39
+BR;Santa Catarina;Três Barras;-26.1064;-50.3222
+BR;Santa Catarina;Itajaí;-26.9078;-48.6619
+BR;Santa Catarina;Itapoá;-26.0695;-48.6174
+BR;Santa Catarina;Joinville;-26.3044;-48.8456
+AR;Tucuman;Yerba Buena;-26.813;-65.2954
+AR;Tucuman;Yerba Buena;-26.812;-65.3014
+BR;Santa Catarina;Balneário Barra do Sul;-26.4626;-48.6132
+BR;Santa Catarina;Joinville;-26.3044;-48.8464
+BR;Santa Catarina;Salete;-26.979;-50.0052
 PY;Itapúa;Pirapó;-26.8584;-55.5441
 AR;Chaco;Quitilipi;-26.872;-60.2212
 AR;Chaco;Quitilipi;-26.8708;-60.2154
-BR;"Santa Catarina";"Formosa do Sul";-26.6487;-52.7964
-BR;"Santa Catarina";"Coronel Martins";-26.5112;-52.6668
+BR;Santa Catarina;Formosa do Sul;-26.6487;-52.7964
+BR;Santa Catarina;Coronel Martins;-26.5112;-52.6668
 AR;Formosa;Formosa;-26.1849;-58.1731
-BR;"Santa Catarina";Corupá;-26.4253;-49.2431
-BR;"Santa Catarina";"São Francisco do Sul";-26.2433;-48.6381
-BR;"Santa Catarina";Blumenau;-26.9166;-49.0717
-AR;Misiones;"Puerto Esperanza";-26.0227;-54.6136
-BR;"Santa Catarina";"Iporã do Oeste";-26.988;-53.5346
-BR;"Santa Catarina";"Joinville (Zona Industrial Tupy)";-26.2884;-48.8108
-BR;Paraná;"Rio Negro";-26.1058;-49.7975
-BR;"Santa Catarina";Papanduva;-26.4079;-50.1399
-BR;"Santa Catarina";"Dona Emma";-26.9866;-49.7226
-BR;"Santa Catarina";Penha;-26.7694;-48.6458
-BR;"Santa Catarina";"Navegantes (Centro)";-26.8946;-48.6601
-BR;"Santa Catarina";"Rio Negrinho";-26.2544;-49.5183
-BR;"Santa Catarina";Xaxim;-26.9619;-52.5327
-BR;Paraná;"Santo Antônio do Sudoeste";-26.0736;-53.7253
-BR;Paraná;"Santo Antônio do Sudoeste";-26.0742;-53.7256
-BR;"Santa Catarina";Mafra;-26.1114;-49.8053
-BR;"Santa Catarina";"Mafra (Lucena)";-26.3652;-49.9094
+BR;Santa Catarina;Corupá;-26.4253;-49.2431
+BR;Santa Catarina;São Francisco do Sul;-26.2433;-48.6381
+BR;Santa Catarina;Blumenau;-26.9166;-49.0717
+AR;Misiones;Puerto Esperanza;-26.0227;-54.6136
+BR;Santa Catarina;Iporã do Oeste;-26.988;-53.5346
+BR;Santa Catarina;Joinville (Zona Industrial Tupy);-26.2884;-48.8108
+BR;Paraná;Rio Negro;-26.1058;-49.7975
+BR;Santa Catarina;Papanduva;-26.4079;-50.1399
+BR;Santa Catarina;Dona Emma;-26.9866;-49.7226
+BR;Santa Catarina;Penha;-26.7694;-48.6458
+BR;Santa Catarina;Navegantes (Centro);-26.8946;-48.6601
+BR;Santa Catarina;Rio Negrinho;-26.2544;-49.5183
+BR;Santa Catarina;Xaxim;-26.9619;-52.5327
+BR;Paraná;Santo Antônio do Sudoeste;-26.0736;-53.7253
+BR;Paraná;Santo Antônio do Sudoeste;-26.0742;-53.7256
+BR;Santa Catarina;Mafra;-26.1114;-49.8053
+BR;Santa Catarina;Mafra (Lucena);-26.3652;-49.9094
 BR;Paraná;Clevelândia;-26.4047;-52.3511
-AR;Chaco;"Presidencia Roque Sáenz Peña";-26.5858;-60.954
-ZA;Gauteng;"Sandton (Bryanston)";-26.0448;28.0195
-ZA;Gauteng;"Sandton (Fourways)";-26.0286;28.0024
-ZA;Gauteng;"Sandton (Fourways)";-26.0286;28.0027
-ZA;Gauteng;"Johannesburg (Norwood)";-26.1623;28.072
-ZA;Gauteng;"Randburg (Hoogland)";-26.0371;27.9558
-ZA;Gauteng;"Boksburg (Witfield)";-26.1818;28.2204
-AR;Catamarca;"Antofagasta de la Sierra";-26.0595;-67.4065
-BR;"Santa Catarina";"Joinville (Zona Industrial Norte)";-26.2532;-48.8719
-AR;Formosa;"El Colorado";-26.3055;-59.3713
-AR;Chaco;"Presidencia Roque Sáenz Peña";-26.791;-60.4413
+AR;Chaco;Presidencia Roque Sáenz Peña;-26.5858;-60.954
+ZA;Gauteng;Sandton (Bryanston);-26.0448;28.0195
+ZA;Gauteng;Sandton (Fourways);-26.0286;28.0024
+ZA;Gauteng;Sandton (Fourways);-26.0286;28.0027
+ZA;Gauteng;Johannesburg (Norwood);-26.1623;28.072
+ZA;Gauteng;Randburg (Hoogland);-26.0371;27.9558
+ZA;Gauteng;Boksburg (Witfield);-26.1818;28.2204
+AR;Catamarca;Antofagasta de la Sierra;-26.0595;-67.4065
+BR;Santa Catarina;Joinville (Zona Industrial Norte);-26.2532;-48.8719
+AR;Formosa;El Colorado;-26.3055;-59.3713
+AR;Chaco;Presidencia Roque Sáenz Peña;-26.791;-60.4413
 AR;Chaco;Machagai;-26.9262;-60.0485
-AR;Misiones;"Bernardo de Irigoyen";-26.263;-53.6475
-BR;"Santa Catarina";"Itajaí (Fazenda)";-26.9198;-48.6499
-BR;"Santa Catarina";"Jaraguá do Sul (Centro)";-26.4895;-49.0784
-BR;"Santa Catarina";Pomerode;-26.7406;-49.1769
-AR;Chaco;"Presidencia Roque Sáenz Peña";-26.7822;-60.4411
-BR;Paraná;"Bom Sucesso do Sul";-26.0749;-52.8339
+AR;Misiones;Bernardo de Irigoyen;-26.263;-53.6475
+BR;Santa Catarina;Itajaí (Fazenda);-26.9198;-48.6499
+BR;Santa Catarina;Jaraguá do Sul (Centro);-26.4895;-49.0784
+BR;Santa Catarina;Pomerode;-26.7406;-49.1769
+AR;Chaco;Presidencia Roque Sáenz Peña;-26.7822;-60.4411
+BR;Paraná;Bom Sucesso do Sul;-26.0749;-52.8339
 AR;Tucuman;Alderetes;-26.8179;-65.142
-BR;"Santa Catarina";Itajaí;-26.9083;-48.6775
-AR;Chaco;"Pampa del Infierno";-26.5035;-61.1765
-BR;Paraná;"Francisco Beltrão";-26.0811;-53.055
-BR;Paraná;"Pato Branco (Centro)";-26.2192;-52.6782
-BR;Paraná;"Pato Branco";-26.2286;-52.6706
-BR;"Santa Catarina";Navegantes;-26.8989;-48.6542
-BR;"Santa Catarina";Navegantes;-26.8954;-48.6569
-BR;"Santa Catarina";"Caçador (Centro)";-26.7781;-51.0072
-AR;Chaco;"General Vedia";-26.9324;-58.6592
-BR;"Santa Catarina";"São Francisco do Sul";-26.2492;-48.6356
-AU;Queensland;"The Palms";-26.205;152.586
+BR;Santa Catarina;Itajaí;-26.9083;-48.6775
+AR;Chaco;Pampa del Infierno;-26.5035;-61.1765
+BR;Paraná;Francisco Beltrão;-26.0811;-53.055
+BR;Paraná;Pato Branco (Centro);-26.2192;-52.6782
+BR;Paraná;Pato Branco;-26.2286;-52.6706
+BR;Santa Catarina;Navegantes;-26.8989;-48.6542
+BR;Santa Catarina;Navegantes;-26.8954;-48.6569
+BR;Santa Catarina;Caçador (Centro);-26.7781;-51.0072
+AR;Chaco;General Vedia;-26.9324;-58.6592
+BR;Santa Catarina;São Francisco do Sul;-26.2492;-48.6356
+AU;Queensland;The Palms;-26.205;152.586
 AU;Queensland;Blackbutt;-26.8863;152.102
 AU;Queensland;Maleny;-26.76;152.849
-AU;"Western Australia";Meekatharra;-26.5952;118.494
+AU;Western Australia;Meekatharra;-26.5952;118.494
 ZA;Gauteng;Sandton;-26.0324;28.0742
 AU;Queensland;Wandoan;-26.1229;149.96
 AU;Queensland;Kilcoy;-26.943;152.565
 AU;Queensland;Kingaroy;-26.5399;151.837
-AU;"South Australia";Pukatja;-26.2782;132.133
-ZA;Gauteng;"Randburg (Victory Park)";-26.131;28.0113
-ZA;Gauteng;"Sandton (Sandhurst)";-26.1074;28.0517
-ZA;Gauteng;"Johannesburg (Melrose)";-26.138;28.0512
-ZA;Gauteng;"Sandton (Strathavon)";-26.0967;28.0813
-ZA;Gauteng;"Sandton (Lone Hill)";-26.0151;28.0274
+AU;South Australia;Pukatja;-26.2782;132.133
+ZA;Gauteng;Randburg (Victory Park);-26.131;28.0113
+ZA;Gauteng;Sandton (Sandhurst);-26.1074;28.0517
+ZA;Gauteng;Johannesburg (Melrose);-26.138;28.0512
+ZA;Gauteng;Sandton (Strathavon);-26.0967;28.0813
+ZA;Gauteng;Sandton (Lone Hill);-26.0151;28.0274
 ZA;Gauteng;Sandton;-26.0134;28.0276
-ZA;Gauteng;"Johannesburg (Marshalltown)";-26.2079;28.0404
+ZA;Gauteng;Johannesburg (Marshalltown);-26.2079;28.0404
 ZA;Gauteng;Randburg;-26.007;27.982
-ZA;Gauteng;"Germiston (Wadeville)";-26.2675;28.1913
+ZA;Gauteng;Germiston (Wadeville);-26.2675;28.1913
 ZA;Gauteng;Johannesburg;-26.2038;28.0366
-ZA;Gauteng;"Krugersdorp (Wentworth Park)";-26.1171;27.7999
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1479;28.044
+ZA;Gauteng;Krugersdorp (Wentworth Park);-26.1171;27.7999
+ZA;Gauteng;Johannesburg (Rosebank);-26.1479;28.044
 ZA;Gauteng;Alrode;-26.2994;28.1329
-ZA;Gauteng;"Germiston (Bedfordview)";-26.1717;28.1327
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1436;28.0385
+ZA;Gauteng;Germiston (Bedfordview);-26.1717;28.1327
+ZA;Gauteng;Johannesburg (Rosebank);-26.1436;28.0385
 ZA;Gauteng;Sandton;-26.1076;28.0567
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1481;28.0401
+ZA;Gauteng;Johannesburg (Rosebank);-26.1481;28.0401
 ZA;Gauteng;Boksburg;-26.1596;28.2103
-ZA;Gauteng;"Johannesburg (Marshalltown)";-26.2075;28.0464
-ZA;Gauteng;"Vereeniging (Duncanville)";-26.6642;27.9341
-ZA;Gauteng;"Sandton (Dennehof)";-26.1079;28.0569
-ZA;Gauteng;"Kempton Park";-26.1393;28.2088
+ZA;Gauteng;Johannesburg (Marshalltown);-26.2075;28.0464
+ZA;Gauteng;Vereeniging (Duncanville);-26.6642;27.9341
+ZA;Gauteng;Sandton (Dennehof);-26.1079;28.0569
+ZA;Gauteng;Kempton Park;-26.1393;28.2088
 ZA;Gauteng;Johannesburg;-26.1939;28.0274
-ZA;Gauteng;"Johannesburg (Sandton)";-26.0561;28.0606
-ZA;Gauteng;"Sandton (Bryanston)";-26.0486;28.0339
-ZA;Gauteng;"Johannesburg (Selby)";-26.2093;28.0394
-ZA;Gauteng;"Sandton (Rivonia)";-26.0432;28.0552
-ZA;Gauteng;"Kempton Park (Birchleigh)";-26.0574;28.238
-ZA;Gauteng;"Johannesburg South (Kibler Park)";-26.324;28.0109
-ZA;Gauteng;"Johannesburg (Industria)";-26.199;27.9784
-ZA;Gauteng;"Houghton Estate";-26.1687;28.0766
-ZA;Gauteng;"Hyde Park (Craighall Park)";-26.1227;28.0297
-ZA;Gauteng;"Johannesburg (Wemmer)";-26.2115;28.0424
-ZA;Gauteng;"Kempton Park (Isando)";-26.138;28.1975
-ZA;Gauteng;"Soweto (Bram Fischerville)";-26.1992;27.8604
-ZA;Gauteng;"Roodepoort (Honeydew)";-26.0792;27.9256
-ZA;Gauteng;"Roodepoort (Radiokop)";-26.105;27.9207
-ZA;Gauteng;"Kempton Park (Isando)";-26.1379;28.1976
+ZA;Gauteng;Johannesburg (Sandton);-26.0561;28.0606
+ZA;Gauteng;Sandton (Bryanston);-26.0486;28.0339
+ZA;Gauteng;Johannesburg (Selby);-26.2093;28.0394
+ZA;Gauteng;Sandton (Rivonia);-26.0432;28.0552
+ZA;Gauteng;Kempton Park (Birchleigh);-26.0574;28.238
+ZA;Gauteng;Johannesburg South (Kibler Park);-26.324;28.0109
+ZA;Gauteng;Johannesburg (Industria);-26.199;27.9784
+ZA;Gauteng;Houghton Estate;-26.1687;28.0766
+ZA;Gauteng;Hyde Park (Craighall Park);-26.1227;28.0297
+ZA;Gauteng;Johannesburg (Wemmer);-26.2115;28.0424
+ZA;Gauteng;Kempton Park (Isando);-26.138;28.1975
+ZA;Gauteng;Soweto (Bram Fischerville);-26.1992;27.8604
+ZA;Gauteng;Roodepoort (Honeydew);-26.0792;27.9256
+ZA;Gauteng;Roodepoort (Radiokop);-26.105;27.9207
+ZA;Gauteng;Kempton Park (Isando);-26.1379;28.1976
 SZ;Hhohho;Mbabane;-26.3298;31.1398
-ZA;Gauteng;"Sandton (Bryanston)";-26.0423;28.0238
-ZA;Gauteng;"Sandton (Woodmead)";-26.0568;28.0875
-BR;"Santa Catarina";Xanxerê;-26.8752;-52.4077
+ZA;Gauteng;Sandton (Bryanston);-26.0423;28.0238
+ZA;Gauteng;Sandton (Woodmead);-26.0568;28.0875
+BR;Santa Catarina;Xanxerê;-26.8752;-52.4077
 AU;Queensland;Amamoor;-26.3491;152.679
-ZA;Gauteng;"Benoni (Northmead)";-26.1705;28.3202
-ZA;"North West";Fochville;-26.4886;27.4939
-SZ;"Hhohho Region";Mbabane;-26.3264;31.1442
+ZA;Gauteng;Benoni (Northmead);-26.1705;28.3202
+ZA;North West;Fochville;-26.4886;27.4939
+SZ;Hhohho Region;Mbabane;-26.3264;31.1442
 ZA;Gauteng;Westonaria;-26.319;27.6486
 ZA;Gauteng;Westonaria;-26.3174;27.6482
-ZA;Gauteng;"Johannesburg South (Mulbarton)";-26.287;28.0542
-ZA;Gauteng;"Johannesburg (Amalgam)";-26.212;28.0028
+ZA;Gauteng;Johannesburg South (Mulbarton);-26.287;28.0542
+ZA;Gauteng;Johannesburg (Amalgam);-26.212;28.0028
 ZA;Mpumalanga;eMvelo;-26.6245;30.6623
-ZA;Gauteng;"Johannesburg South (Mayfield Park)";-26.3214;28.0194
+ZA;Gauteng;Johannesburg South (Mayfield Park);-26.3214;28.0194
 SZ;Hhohho;Mbabane;-26.33;31.1384
-ZA;Gauteng;"Johannesburg (Bramley)";-26.1266;28.0734
-ZA;Gauteng;"Johannesburg (Birnam)";-26.1352;28.0684
-ZA;Gauteng;"Westonaria (Libanon)";-26.3568;27.6089
-ZA;"North West";Lichtenburg;-26.1546;26.1583
-ZA;Gauteng;"Randburg (Randpark Ridge)";-26.0871;27.9316
-ZA;Gauteng;"Sandton (Bryanston)";-26.0411;28.0238
-ZA;Gauteng;"Johannesburg (Bryanston)";-26.0763;28.0102
-ZA;Gauteng;"Boksburg (Bartlett AH)";-26.1792;28.2806
-SZ;"Hhohho Region";Lobamba;-26.4213;31.1797
-ZA;Gauteng;"Randburg (Ferndale)";-26.0866;28.0033
-ZA;Gauteng;"Johannesburg (Allen's Nek)";-26.1301;27.9076
-ZA;Gauteng;"Randburg (Ferndale)";-26.0872;28.0032
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1454;28.0365
-ZA;Gauteng;"Sandton (Sandown)";-26.1086;28.0592
-ZA;Gauteng;"Sandton (Bryanston)";-26.0522;28.0225
-ZA;Gauteng;"Sandton (Woodmead)";-26.0539;28.0896
-ZA;Gauteng;"Johannesburg South (Tulisa Park)";-26.2528;28.0972
-ZA;Gauteng;"Roodepoort (Strubens Valley)";-26.1224;27.9069
-ZA;Gauteng;"Sandton (Bryanston)";-26.042;28.0234
-ZA;Gauteng;"Sandton (Sunninghill)";-26.0346;28.0624
-ZA;Gauteng;"Benoni (Brentwood Park AH)";-26.1465;28.2942
-ZA;Gauteng;"Vanderbijlpark (Vanderbijlpark S. E. 6)";-26.7269;27.8533
+ZA;Gauteng;Johannesburg (Bramley);-26.1266;28.0734
+ZA;Gauteng;Johannesburg (Birnam);-26.1352;28.0684
+ZA;Gauteng;Westonaria (Libanon);-26.3568;27.6089
+ZA;North West;Lichtenburg;-26.1546;26.1583
+ZA;Gauteng;Randburg (Randpark Ridge);-26.0871;27.9316
+ZA;Gauteng;Sandton (Bryanston);-26.0411;28.0238
+ZA;Gauteng;Johannesburg (Bryanston);-26.0763;28.0102
+ZA;Gauteng;Boksburg (Bartlett AH);-26.1792;28.2806
+SZ;Hhohho Region;Lobamba;-26.4213;31.1797
+ZA;Gauteng;Randburg (Ferndale);-26.0866;28.0033
+ZA;Gauteng;Johannesburg (Allen's Nek);-26.1301;27.9076
+ZA;Gauteng;Randburg (Ferndale);-26.0872;28.0032
+ZA;Gauteng;Johannesburg (Rosebank);-26.1454;28.0365
+ZA;Gauteng;Sandton (Sandown);-26.1086;28.0592
+ZA;Gauteng;Sandton (Bryanston);-26.0522;28.0225
+ZA;Gauteng;Sandton (Woodmead);-26.0539;28.0896
+ZA;Gauteng;Johannesburg South (Tulisa Park);-26.2528;28.0972
+ZA;Gauteng;Roodepoort (Strubens Valley);-26.1224;27.9069
+ZA;Gauteng;Sandton (Bryanston);-26.042;28.0234
+ZA;Gauteng;Sandton (Sunninghill);-26.0346;28.0624
+ZA;Gauteng;Benoni (Brentwood Park AH);-26.1465;28.2942
+ZA;Gauteng;Vanderbijlpark (Vanderbijlpark S. E. 6);-26.7269;27.8533
 ZA;Gauteng;Groenpunt;-26.8263;28.0384
-ZA;Gauteng;"Alberton (Brackenhurst)";-26.3312;28.1001
-ZA;Gauteng;"Johannesburg (Blackheath)";-26.132;27.9791
-ZA;Gauteng;"Johannesburg (Darrenwood)";-26.1281;27.9823
-ZA;Gauteng;"Johannesburg (Darrenwood)";-26.1338;27.9752
-ZA;Gauteng;"Sandton (Paulshof)";-26.037;28.0533
-ZA;Gauteng;"Sandton (Magaliessig)";-26.0268;28.0132
-ZA;Gauteng;"Sandton (Illovo)";-26.1284;28.0474
+ZA;Gauteng;Alberton (Brackenhurst);-26.3312;28.1001
+ZA;Gauteng;Johannesburg (Blackheath);-26.132;27.9791
+ZA;Gauteng;Johannesburg (Darrenwood);-26.1281;27.9823
+ZA;Gauteng;Johannesburg (Darrenwood);-26.1338;27.9752
+ZA;Gauteng;Sandton (Paulshof);-26.037;28.0533
+ZA;Gauteng;Sandton (Magaliessig);-26.0268;28.0132
+ZA;Gauteng;Sandton (Illovo);-26.1284;28.0474
 ZA;Gauteng;Midrand;-26.0124;28.1025
-ZA;Gauteng;"Sandton (Morningside)";-26.0963;28.0537
-ZA;Gauteng;"Sandton (Edenburg)";-26.0551;28.0604
-ZA;Gauteng;"Randburg (Ferndale)";-26.0967;27.9992
-ZA;Gauteng;"Sandton (Bryanston)";-26.0445;28.0185
-ZA;Gauteng;"Boksburg (Libradene)";-26.2454;28.2466
-ZA;Gauteng;"Roodepoort (Wilrow Park)";-26.1191;27.8417
-ZA;Gauteng;"Sandton (Bryanston)";-26.0499;28.0225
-ZA;Gauteng;"Sandton (Sandown)";-26.1069;28.0536
+ZA;Gauteng;Sandton (Morningside);-26.0963;28.0537
+ZA;Gauteng;Sandton (Edenburg);-26.0551;28.0604
+ZA;Gauteng;Randburg (Ferndale);-26.0967;27.9992
+ZA;Gauteng;Sandton (Bryanston);-26.0445;28.0185
+ZA;Gauteng;Boksburg (Libradene);-26.2454;28.2466
+ZA;Gauteng;Roodepoort (Wilrow Park);-26.1191;27.8417
+ZA;Gauteng;Sandton (Bryanston);-26.0499;28.0225
+ZA;Gauteng;Sandton (Sandown);-26.1069;28.0536
 ZA;Gauteng;Sandton;-26.1045;28.056
-ZA;Gauteng;"Midrand (Waterval City)";-26.0306;28.092
-ZA;Gauteng;"Randburg (Meadowhurst)";-26.06;27.9843
+ZA;Gauteng;Midrand (Waterval City);-26.0306;28.092
+ZA;Gauteng;Randburg (Meadowhurst);-26.06;27.9843
 ZA;Gauteng;Bagale;-26.0657;27.6476
-ZA;Gauteng;"Benoni (Northmead)";-26.1691;28.3274
+ZA;Gauteng;Benoni (Northmead);-26.1691;28.3274
 ZA;Gauteng;Edenvale;-26.1425;28.1561
-ZA;Gauteng;"Sandton (Riverclub)";-26.0869;28.0391
-ZA;Gauteng;"Sandton (Lone Hill)";-26.0176;28.0306
+ZA;Gauteng;Sandton (Riverclub);-26.0869;28.0391
+ZA;Gauteng;Sandton (Lone Hill);-26.0176;28.0306
 ZA;Gauteng;Bedfordview;-26.1748;28.1253
-ZA;"Free State";Oranjeville;-26.9938;28.2097
+ZA;Free State;Oranjeville;-26.9938;28.2097
 ZA;Mpumalanga;Driefontein;-26.965;30.4357
 ZA;Mpumalanga;Leslie;-26.3674;28.9189
-ZA;Gauteng;"Sandton (Woodlands)";-26.0574;28.0867
-ZA;Gauteng;"Randburg (Blackheath)";-26.1327;27.9787
-ZA;Gauteng;"Midrand (Kyalami Heights)";-26.0039;28.0731
-ZA;Gauteng;"Alberton (Meyersdal Nature Estate)";-26.2884;28.0893
-ZA;Gauteng;"Randburg (Sundowner)";-26.0759;27.9381
-ZA;Gauteng;"Johannesburg (Crown Garden)";-26.2163;28.0204
-ZA;Gauteng;"Randburg (Randpark Ridge)";-26.0901;27.9388
-ZA;Gauteng;"Sandton (Bryanston)";-26.0407;28.0173
-ZA;"North West";Geysdorp;-26.537;25.3025
-ZA;"North West";Delareyville;-26.6864;25.4591
-ZA;Gauteng;"Sandton (Rivonia)";-26.043;28.0597
-ZA;Gauteng;"Sandton (Bryanston)";-26.0514;28.0224
-ZA;Gauteng;"Roodepoort (Strubens Valley)";-26.13;27.904
-ZA;Gauteng;"Randburg (Jukskei Park)";-26.0342;27.9776
-ZA;Gauteng;"Randburg (Dunkeld West)";-26.1302;28.0314
-ZA;Gauteng;"Sandton (Bryanston)";-26.0507;28.023
-ZA;Gauteng;"Krugersdorp (Noordheuwel)";-26.0918;27.8127
-ZA;Gauteng;"Johannesburg (Illovo)";-26.133;28.0577
-ZA;"North West";Coligny;-26.3317;26.3207
-ZA;Gauteng;"Sandton (Rivonia)";-26.0412;28.0751
-ZA;Gauteng;"Johannesburg (Melrose)";-26.1457;28.048
-SZ;"Manzini Region";Manzini;-26.5082;31.3713
-ZA;Gauteng;"Johannesburg South (Rispark)";-26.3225;28.0202
-ZA;Gauteng;"Midrand (Halfway House)";-26.0068;28.1268
-ZA;Gauteng;"Johannesburg (Houghton Estate)";-26.1564;28.0581
-ZA;Gauteng;"Johannesburg (Houghton Estate)";-26.1563;28.0581
-ZA;Gauteng;"Midrand (Waterfall)";-26.0223;28.0862
-ZA;Gauteng;"Roodepoort (Randpark Ridge)";-26.1013;27.9386
-ZA;Gauteng;"Krugersdorp (Mindalore)";-26.1272;27.8349
-ZA;Gauteng;"Sandton (Witkoppen)";-26.0173;27.9894
+ZA;Gauteng;Sandton (Woodlands);-26.0574;28.0867
+ZA;Gauteng;Randburg (Blackheath);-26.1327;27.9787
+ZA;Gauteng;Midrand (Kyalami Heights);-26.0039;28.0731
+ZA;Gauteng;Alberton (Meyersdal Nature Estate);-26.2884;28.0893
+ZA;Gauteng;Randburg (Sundowner);-26.0759;27.9381
+ZA;Gauteng;Johannesburg (Crown Garden);-26.2163;28.0204
+ZA;Gauteng;Randburg (Randpark Ridge);-26.0901;27.9388
+ZA;Gauteng;Sandton (Bryanston);-26.0407;28.0173
+ZA;North West;Geysdorp;-26.537;25.3025
+ZA;North West;Delareyville;-26.6864;25.4591
+ZA;Gauteng;Sandton (Rivonia);-26.043;28.0597
+ZA;Gauteng;Sandton (Bryanston);-26.0514;28.0224
+ZA;Gauteng;Roodepoort (Strubens Valley);-26.13;27.904
+ZA;Gauteng;Randburg (Jukskei Park);-26.0342;27.9776
+ZA;Gauteng;Randburg (Dunkeld West);-26.1302;28.0314
+ZA;Gauteng;Sandton (Bryanston);-26.0507;28.023
+ZA;Gauteng;Krugersdorp (Noordheuwel);-26.0918;27.8127
+ZA;Gauteng;Johannesburg (Illovo);-26.133;28.0577
+ZA;North West;Coligny;-26.3317;26.3207
+ZA;Gauteng;Sandton (Rivonia);-26.0412;28.0751
+ZA;Gauteng;Johannesburg (Melrose);-26.1457;28.048
+SZ;Manzini Region;Manzini;-26.5082;31.3713
+ZA;Gauteng;Johannesburg South (Rispark);-26.3225;28.0202
+ZA;Gauteng;Midrand (Halfway House);-26.0068;28.1268
+ZA;Gauteng;Johannesburg (Houghton Estate);-26.1564;28.0581
+ZA;Gauteng;Johannesburg (Houghton Estate);-26.1563;28.0581
+ZA;Gauteng;Midrand (Waterfall);-26.0223;28.0862
+ZA;Gauteng;Roodepoort (Randpark Ridge);-26.1013;27.9386
+ZA;Gauteng;Krugersdorp (Mindalore);-26.1272;27.8349
+ZA;Gauteng;Sandton (Witkoppen);-26.0173;27.9894
 ZA;Mpumalanga;Thubelihle;-26.2155;29.2916
-ZA;Gauteng;"Randburg (Blairgowrie)";-26.1086;28.0114
-SZ;"Manzini Region";Bhunya;-26.5385;31.0118
-SZ;"Manzini Region";Malkerns;-26.5287;31.1919
-ZA;Gauteng;"Johannesburg (Bryanston)";-26.0732;28.032
-ZA;Gauteng;"Sandton (Sunninghill)";-26.0328;28.0777
-ZA;Gauteng;"Sandton (Magaliessig)";-26.0353;28.0149
-ZA;Gauteng;"Randburg (Ferndale)";-26.0831;27.9806
-ZA;Gauteng;"Randburg (Malanshof)";-26.0928;27.979
-ZA;Gauteng;"Krugersdorp (Monument)";-26.1066;27.8003
-ZA;Gauteng;"Kempton Park (Croydon)";-26.1288;28.2013
-ZA;Gauteng;"Johannesburg (Parktown)";-26.1806;28.0281
-ZA;Gauteng;"Sandton (Bryanston)";-26.0517;28.0109
-ZA;Gauteng;"Johannesburg (Waverley)";-26.1365;28.0706
-ZA;Gauteng;"Edenvale (Elmapark)";-26.1609;28.157
+ZA;Gauteng;Randburg (Blairgowrie);-26.1086;28.0114
+SZ;Manzini Region;Bhunya;-26.5385;31.0118
+SZ;Manzini Region;Malkerns;-26.5287;31.1919
+ZA;Gauteng;Johannesburg (Bryanston);-26.0732;28.032
+ZA;Gauteng;Sandton (Sunninghill);-26.0328;28.0777
+ZA;Gauteng;Sandton (Magaliessig);-26.0353;28.0149
+ZA;Gauteng;Randburg (Ferndale);-26.0831;27.9806
+ZA;Gauteng;Randburg (Malanshof);-26.0928;27.979
+ZA;Gauteng;Krugersdorp (Monument);-26.1066;27.8003
+ZA;Gauteng;Kempton Park (Croydon);-26.1288;28.2013
+ZA;Gauteng;Johannesburg (Parktown);-26.1806;28.0281
+ZA;Gauteng;Sandton (Bryanston);-26.0517;28.0109
+ZA;Gauteng;Johannesburg (Waverley);-26.1365;28.0706
+ZA;Gauteng;Edenvale (Elmapark);-26.1609;28.157
 ZA;Mpumalanga;Standerton;-26.9502;29.2407
-ZA;Gauteng;"Johannesburg (Waverley)";-26.1363;28.0703
-ZA;Gauteng;"Johannesburg (Rivonia)";-26.049;28.0595
-ZA;Gauteng;"Sandton (Sandown)";-26.1041;28.0532
+ZA;Gauteng;Johannesburg (Waverley);-26.1363;28.0703
+ZA;Gauteng;Johannesburg (Rivonia);-26.049;28.0595
+ZA;Gauteng;Sandton (Sandown);-26.1041;28.0532
 ZA;Gauteng;Vereeniging;-26.6731;27.9268
-ZA;Gauteng;"Sandton (Hurlingham)";-26.0965;28.0264
-ZA;Gauteng;"Roodepoort (Horison)";-26.1458;27.8796
-ZA;Gauteng;"Sandton (Morningside)";-26.1001;28.051
-ZA;Gauteng;"Sandton (Bryanston)";-26.0646;28.0152
-ZA;Gauteng;"Johannesburg (Bryanston)";-26.039;28.017
-ZA;Gauteng;"Sandton (Edenburg)";-26.0494;28.0617
-ZA;Gauteng;"Sandton (Bryanston)";-26.0455;28.0261
-ZA;Gauteng;"Vanderbijlpark (Vanderbijlpark C. W. 1)";-26.699;27.832
-ZA;Gauteng;"Vanderbijlpark (Vanderbijlpark C. W. 1)";-26.699;27.8321
-ZA;"North West";"Klerksdorp (Flamwood)";-26.8403;26.6787
-ZA;Gauteng;"Randburg (Industria North)";-26.1798;27.9489
-ZA;Gauteng;"Randburg (Ferndale)";-26.0989;28.0038
-ZA;Gauteng;"Sandton (Edenburg)";-26.0462;28.0595
-ZA;Gauteng;"Randburg (Ferndale)";-26.101;28.0021
-ZA;Gauteng;"Sandton (Bryanston)";-26.0814;28.027
+ZA;Gauteng;Sandton (Hurlingham);-26.0965;28.0264
+ZA;Gauteng;Roodepoort (Horison);-26.1458;27.8796
+ZA;Gauteng;Sandton (Morningside);-26.1001;28.051
+ZA;Gauteng;Sandton (Bryanston);-26.0646;28.0152
+ZA;Gauteng;Johannesburg (Bryanston);-26.039;28.017
+ZA;Gauteng;Sandton (Edenburg);-26.0494;28.0617
+ZA;Gauteng;Sandton (Bryanston);-26.0455;28.0261
+ZA;Gauteng;Vanderbijlpark (Vanderbijlpark C. W. 1);-26.699;27.832
+ZA;Gauteng;Vanderbijlpark (Vanderbijlpark C. W. 1);-26.699;27.8321
+ZA;North West;Klerksdorp (Flamwood);-26.8403;26.6787
+ZA;Gauteng;Randburg (Industria North);-26.1798;27.9489
+ZA;Gauteng;Randburg (Ferndale);-26.0989;28.0038
+ZA;Gauteng;Sandton (Edenburg);-26.0462;28.0595
+ZA;Gauteng;Randburg (Ferndale);-26.101;28.0021
+ZA;Gauteng;Sandton (Bryanston);-26.0814;28.027
 ZA;Mpumalanga;Balfour;-26.6633;28.5902
-ZA;Gauteng;"Johannesburg (Parktown)";-26.1826;28.0353
-ZA;Gauteng;"Johannesburg (Bryanston)";-26.0522;28.0225
-ZA;Gauteng;"Sandton (Illovo)";-26.124;28.0468
-ZA;Gauteng;"Randburg (Northgate)";-26.0542;27.9513
-ZA;Gauteng;"Sandton (Sunninghill)";-26.0321;28.0794
+ZA;Gauteng;Johannesburg (Parktown);-26.1826;28.0353
+ZA;Gauteng;Johannesburg (Bryanston);-26.0522;28.0225
+ZA;Gauteng;Sandton (Illovo);-26.124;28.0468
+ZA;Gauteng;Randburg (Northgate);-26.0542;27.9513
+ZA;Gauteng;Sandton (Sunninghill);-26.0321;28.0794
 ZA;Mpumalanga;Ermelo;-26.525;29.9944
 ZA;Gauteng;Johannesburg;-26.1079;28.062
-ZA;Gauteng;"Randburg (Randpark Ridge)";-26.0862;27.9309
-AU;Queensland;"Kings Beach";-26.7995;153.138
+ZA;Gauteng;Randburg (Randpark Ridge);-26.0862;27.9309
+AU;Queensland;Kings Beach;-26.7995;153.138
 AU;Queensland;Maroochydore;-26.6558;153.102
-AU;Queensland;"Sunshine Coast";-26.6528;153.09
-AU;Queensland;"Kawana Waters";-26.7457;153.126
+AU;Queensland;Sunshine Coast;-26.6528;153.09
+AU;Queensland;Kawana Waters;-26.7457;153.126
 AU;Queensland;Buderim;-26.6735;153.091
 AU;Queensland;Montville;-26.6882;152.892
-AU;Queensland;"Bells Creek";-26.8426;153.076
+AU;Queensland;Bells Creek;-26.8426;153.076
 AU;Queensland;Buderim;-26.6857;153.051
-AU;Queensland;"Peregian Beach";-26.4785;153.095
-AU;Queensland;"Image Flat";-26.605;152.951
+AU;Queensland;Peregian Beach;-26.4785;153.095
+AU;Queensland;Image Flat;-26.605;152.951
 AU;Queensland;Maroochydore;-26.6436;153.073
 AU;Queensland;Maleny;-26.7581;152.848
 AU;Queensland;Maroochydore;-26.6521;153.091
 AU;Queensland;Caloundra;-26.8055;153.138
-AU;Queensland;"Mt Coolum";-26.5581;153.082
+AU;Queensland;Mt Coolum;-26.5581;153.082
 AU;Queensland;Buderim;-26.685;153.053
-ZA;Gauteng;"Sandton (Sandhurst)";-26.1154;28.0475
+ZA;Gauteng;Sandton (Sandhurst);-26.1154;28.0475
 ZA;Gauteng;Alberton;-26.3224;28.124
 ZA;Gauteng;Germiston;-26.2259;28.1708
-BR;"Santa Catarina";"Pomerode (Itoupava Central)";-26.812;-49.0901
+BR;Santa Catarina;Pomerode (Itoupava Central);-26.812;-49.0901
 AU;Queensland;Nanango;-26.6716;152.002
 AU;Queensland;Roma;-26.5674;148.788
 AU;Queensland;Jandowae;-26.7841;151.112
 AU;Queensland;Taabinga;-26.5833;151.833
 AU;Queensland;Quilpie;-26.6135;144.269
-AU;Queensland;"Sunshine Coast";-26.65;153.067
+AU;Queensland;Sunshine Coast;-26.65;153.067
 AU;Queensland;Miles;-26.6584;150.188
-AU;Queensland;"South Nanango";-26.75;151.967
+AU;Queensland;South Nanango;-26.75;151.967
 AU;Queensland;Kandanga;-26.3927;152.677
-AU;Queensland;"Pie Creek";-26.2299;152.608
+AU;Queensland;Pie Creek;-26.2299;152.608
 AU;Queensland;Chinchilla;-26.7379;150.63
-ZA;Gauteng;"Sandton (Fourways)";-26.0255;28.004
-BR;"Santa Catarina";"Barra Velha";-26.6322;-48.6847
+ZA;Gauteng;Sandton (Fourways);-26.0255;28.004
+BR;Santa Catarina;Barra Velha;-26.6322;-48.6847
 ZA;Gauteng;Edenvale;-26.144;28.1564
-BR;Paraná;"Bom Jesus do Sul";-26.2491;-53.6361
-BR;"Santa Catarina";"São João do Itaperiú";-26.6189;-48.7675
-BR;"Santa Catarina";"Santa Cecília";-26.9608;-50.4269
-BR;"Santa Catarina";Araquari;-26.3754;-48.7205
-BR;"Santa Catarina";"Vitor Meireles";-26.8822;-49.8349
-BR;"Santa Catarina";"Santo Antônio";-26.2637;-48.8515
-BR;Paraná;"América de Cima (América)";-26.3021;-48.8555
-BR;"Santa Catarina";"Joinville (Distrito Industrial)";-26.2422;-48.8854
-AR;Tucuman;"San Miguel de Tucumán";-26.8271;-65.2118
-BR;"Santa Catarina";"Cunha Porã";-26.8926;-53.1715
-AR;Chaco;"Pampa del Indio";-26.0498;-59.9373
-BR;"Santa Catarina";"Guaramirim (Avaí)";-26.4709;-48.9784
+BR;Paraná;Bom Jesus do Sul;-26.2491;-53.6361
+BR;Santa Catarina;São João do Itaperiú;-26.6189;-48.7675
+BR;Santa Catarina;Santa Cecília;-26.9608;-50.4269
+BR;Santa Catarina;Araquari;-26.3754;-48.7205
+BR;Santa Catarina;Vitor Meireles;-26.8822;-49.8349
+BR;Santa Catarina;Santo Antônio;-26.2637;-48.8515
+BR;Paraná;América de Cima (América);-26.3021;-48.8555
+BR;Santa Catarina;Joinville (Distrito Industrial);-26.2422;-48.8854
+AR;Tucuman;San Miguel de Tucumán;-26.8271;-65.2118
+BR;Santa Catarina;Cunha Porã;-26.8926;-53.1715
+AR;Chaco;Pampa del Indio;-26.0498;-59.9373
+BR;Santa Catarina;Guaramirim (Avaí);-26.4709;-48.9784
 BR;Paraná;Clevelândia;-26.5665;-52.3278
 BR;Paraná;Palmas;-26.4842;-51.9906
-BR;Paraná;"Coronel Domingos Soares";-26.2286;-52.0316
-ZA;Gauteng;"Sandton (Sandown)";-26.1039;28.062
-BR;"Santa Catarina";"Guarujá do Sul";-26.3848;-53.5259
-BR;"Santa Catarina";"Blumenau (Ponta Aguda)";-26.9154;-49.066
-BR;"Santa Catarina";"Parque Industrial";-26.184;-50.3572
-BR;Paraná;"Bom Jesus do Sul";-26.1929;-53.5995
-BR;"Santa Catarina";"Luiz Alves";-26.7119;-48.9096
-BR;"Santa Catarina";Schroeder;-26.4125;-49.0731
-BR;"Santa Catarina";"Residencia Moacir PU5BHV";-26.9097;-49.3655
+BR;Paraná;Coronel Domingos Soares;-26.2286;-52.0316
+ZA;Gauteng;Sandton (Sandown);-26.1039;28.062
+BR;Santa Catarina;Guarujá do Sul;-26.3848;-53.5259
+BR;Santa Catarina;Blumenau (Ponta Aguda);-26.9154;-49.066
+BR;Santa Catarina;Parque Industrial;-26.184;-50.3572
+BR;Paraná;Bom Jesus do Sul;-26.1929;-53.5995
+BR;Santa Catarina;Luiz Alves;-26.7119;-48.9096
+BR;Santa Catarina;Schroeder;-26.4125;-49.0731
+BR;Santa Catarina;Residencia Moacir PU5BHV;-26.9097;-49.3655
 AR;Formosa;Formosa;-26.1783;-58.183
 AR;Formosa;Formosa;-26.1858;-58.1756
-BR;"Santa Catarina";Canoinhas;-26.2767;-50.464
-BR;"Santa Catarina";"Joinville (Saguaçu)";-26.2862;-48.8398
-BR;"Santa Catarina";"Pomerode (Ribeirão Areia)";-26.7201;-49.1787
+BR;Santa Catarina;Canoinhas;-26.2767;-50.464
+BR;Santa Catarina;Joinville (Saguaçu);-26.2862;-48.8398
+BR;Santa Catarina;Pomerode (Ribeirão Areia);-26.7201;-49.1787
 AR;Tucuman;Lules;-26.9282;-65.3385
-BR;"Santa Catarina";Rodeio;-26.9228;-49.3664
-BR;"Santa Catarina";Espinheiros;-26.8864;-48.7492
-ZA;"North West";Potchefstroom;-26.693;27.0917
-ZA;"North West";Potchefstroom;-26.693;27.0872
+BR;Santa Catarina;Rodeio;-26.9228;-49.3664
+BR;Santa Catarina;Espinheiros;-26.8864;-48.7492
+ZA;North West;Potchefstroom;-26.693;27.0917
+ZA;North West;Potchefstroom;-26.693;27.0872
 ZA;Gauteng;Vanderbijlpark;-26.7034;27.8077
-BR;"Santa Catarina";"São Judas Tadeu (São Judas)";-26.9097;-48.6746
+BR;Santa Catarina;São Judas Tadeu (São Judas);-26.9097;-48.6746
 ZA;Gauteng;Johannesburg;-26.1899;28.032
-ZA;Gauteng;"Johannesburg (Braamfontein)";-26.187;28.0302
+ZA;Gauteng;Johannesburg (Braamfontein);-26.187;28.0302
 ZA;Gauteng;Johannesburg;-26.1912;28.0297
-ZA;Gauteng;"Sandton (Sunninghill)";-26.0381;28.0858
-BR;"Santa Catarina";"Balneário Camboriú (Centro)";-26.9956;-48.6305
-ZA;Gauteng;"Johannesburg (Rossmore)";-26.1836;27.9977
+ZA;Gauteng;Sandton (Sunninghill);-26.0381;28.0858
+BR;Santa Catarina;Balneário Camboriú (Centro);-26.9956;-48.6305
+ZA;Gauteng;Johannesburg (Rossmore);-26.1836;27.9977
 CL;Atacama;Chañaral;-26.343;-70.6165
-ZA;Gauteng;"Randburg (Darrenwood)";-26.1328;27.9778
-ZA;Gauteng;"Randburg (Blackheath)";-26.1338;27.9753
-ZA;Gauteng;"Sandton (Norscot)";-26.0392;28.0107
-ZA;Gauteng;"Johannesburg South (Bassonia)";-26.2808;28.0682
-ZA;Gauteng;"Germiston (Bedfordview)";-26.1753;28.1339
-ZA;Gauteng;"Randburg (Cresta)";-26.13;27.9779
-ZA;Gauteng;"Sandton (Fourways)";-26.0271;27.9786
-ZA;Gauteng;"Johannesburg (Dunkeld West)";-26.1327;28.0343
-ZA;Gauteng;"Sandton (Woodlands)";-26.0584;28.0847
-ZA;Gauteng;"Sandton (Edenburg)";-26.0571;28.0621
-ZA;Gauteng;"Johannesburg South";-26.2391;28.083
-ZA;Gauteng;"Kempton Park (Pomona AH)";-26.0945;28.2604
+ZA;Gauteng;Randburg (Darrenwood);-26.1328;27.9778
+ZA;Gauteng;Randburg (Blackheath);-26.1338;27.9753
+ZA;Gauteng;Sandton (Norscot);-26.0392;28.0107
+ZA;Gauteng;Johannesburg South (Bassonia);-26.2808;28.0682
+ZA;Gauteng;Germiston (Bedfordview);-26.1753;28.1339
+ZA;Gauteng;Randburg (Cresta);-26.13;27.9779
+ZA;Gauteng;Sandton (Fourways);-26.0271;27.9786
+ZA;Gauteng;Johannesburg (Dunkeld West);-26.1327;28.0343
+ZA;Gauteng;Sandton (Woodlands);-26.0584;28.0847
+ZA;Gauteng;Sandton (Edenburg);-26.0571;28.0621
+ZA;Gauteng;Johannesburg South;-26.2391;28.083
+ZA;Gauteng;Kempton Park (Pomona AH);-26.0945;28.2604
 ZA;Gauteng;Glenharvie;-26.3899;27.6159
 ZA;Gauteng;Modderfontein;-26.0726;28.1532
-ZA;Gauteng;"Sandton (Bryanston)";-26.0516;28.0046
-ZA;Gauteng;"Sandton (Bryanston)";-26.051;28.0217
-ZA;Gauteng;"Randburg (Northriding)";-26.0365;27.9624
-ZA;Gauteng;"Kempton Park (Glenmarais)";-26.075;28.2594
-ZA;Gauteng;"Johannesburg South (Olifantsvlei 327-Iq)";-26.3153;28.002
-ZA;Gauteng;"Johannesburg (Auckland Park)";-26.1826;28.004
-ZA;Gauteng;"Johannesburg (Selby)";-26.2145;28.0372
-ZA;Gauteng;"Sandton (Wierda Valley)";-26.1119;28.057
+ZA;Gauteng;Sandton (Bryanston);-26.0516;28.0046
+ZA;Gauteng;Sandton (Bryanston);-26.051;28.0217
+ZA;Gauteng;Randburg (Northriding);-26.0365;27.9624
+ZA;Gauteng;Kempton Park (Glenmarais);-26.075;28.2594
+ZA;Gauteng;Johannesburg South (Olifantsvlei 327-Iq);-26.3153;28.002
+ZA;Gauteng;Johannesburg (Auckland Park);-26.1826;28.004
+ZA;Gauteng;Johannesburg (Selby);-26.2145;28.0372
+ZA;Gauteng;Sandton (Wierda Valley);-26.1119;28.057
 SZ;Hhohho;Lobamba;-26.4465;31.2065
-ZA;Gauteng;"Johannesburg (Park Central)";-26.2178;28.0411
-ZA;Gauteng;"Sandton (Sandown)";-26.1074;28.0548
+ZA;Gauteng;Johannesburg (Park Central);-26.2178;28.0411
+ZA;Gauteng;Sandton (Sandown);-26.1074;28.0548
 ZA;Gauteng;Lenasia;-26.3166;27.8483
 ZA;Gauteng;Lenasia;-26.3239;27.8634
-ZA;Gauteng;"Sandton (Woodlands)";-26.058;28.0852
-ZA;Gauteng;"Johannesburg (Woodmead)";-26.0575;28.0873
-ZA;Gauteng;"Johannesburg (Woodmead)";-26.057;28.0876
-BR;"Santa Catarina";"Joinville (Centro)";-26.2979;-48.8456
-ZA;Gauteng;"Sandton (Strathavon)";-26.0934;28.0805
-ZA;Gauteng;"Johannesburg (Isando)";-26.138;28.1988
-ZA;Gauteng;"Randburg (Ferndale)";-26.0925;28.0043
-ZA;Gauteng;"Germiston (Bedfordview)";-26.1766;28.1324
-ZA;Gauteng;"Germiston (Bedfordview)";-26.1663;28.1512
-ZA;Gauteng;"Johannesburg (Houghton Estate)";-26.1581;28.047
-BR;"Santa Catarina";"Salto Weissbach";-26.9008;-49.126
-ZA;"Northern Cape";Philandersbron;-26.8117;20.0948
-AR;Misiones;"El Alcázar";-26.7138;-54.8148
-AR;Misiones;"Puerto Piray";-26.4693;-54.7121
+ZA;Gauteng;Sandton (Woodlands);-26.058;28.0852
+ZA;Gauteng;Johannesburg (Woodmead);-26.0575;28.0873
+ZA;Gauteng;Johannesburg (Woodmead);-26.057;28.0876
+BR;Santa Catarina;Joinville (Centro);-26.2979;-48.8456
+ZA;Gauteng;Sandton (Strathavon);-26.0934;28.0805
+ZA;Gauteng;Johannesburg (Isando);-26.138;28.1988
+ZA;Gauteng;Randburg (Ferndale);-26.0925;28.0043
+ZA;Gauteng;Germiston (Bedfordview);-26.1766;28.1324
+ZA;Gauteng;Germiston (Bedfordview);-26.1663;28.1512
+ZA;Gauteng;Johannesburg (Houghton Estate);-26.1581;28.047
+BR;Santa Catarina;Salto Weissbach;-26.9008;-49.126
+ZA;Northern Cape;Philandersbron;-26.8117;20.0948
+AR;Misiones;El Alcázar;-26.7138;-54.8148
+AR;Misiones;Puerto Piray;-26.4693;-54.7121
 ZA;Gauteng;Midrand;-26.0143;28.1474
-ZA;Gauteng;"Johannesburg (Melrose)";-26.143;28.0442
-ZA;Gauteng;"Sandton (Sandown)";-26.1095;28.0601
+ZA;Gauteng;Johannesburg (Melrose);-26.143;28.0442
+ZA;Gauteng;Sandton (Sandown);-26.1095;28.0601
 ZA;Gauteng;Johannesburg;-26.2708;28.1123
 ZA;Gauteng;Johannesburg;-26.2041;28.0376
-ZA;Gauteng;"Johannesburg (Bedfordview)";-26.1689;28.158
-ZA;Gauteng;"Midrand (Capital Hill)";-26.0109;28.1278
+ZA;Gauteng;Johannesburg (Bedfordview);-26.1689;28.158
+ZA;Gauteng;Midrand (Capital Hill);-26.0109;28.1278
 ZA;Mpumalanga;Thuli;-26.3709;28.9152
-ZA;Gauteng;"Kempton Park (Pomona)";-26.0938;28.2613
-ZA;Gauteng;"Roodepoort (Constantia Kloof)";-26.1454;27.9169
-ZA;Gauteng;"Boksburg (Bartlett)";-26.172;28.2624
-MZ;"Maputo Province";"Bela Vista";-26.3407;32.6675
-ZA;Gauteng;"Johannesburg (Selby)";-26.2098;28.039
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1438;28.0406
-PY;Caazapá;"San Juan Nepomuceno";-26.1123;-55.9386
-PY;Itapúa;"Tomás Romero Pereira";-26.5312;-55.2605
-ZA;Gauteng;"Sandton (Rivonia)";-26.0437;28.0587
-ZA;Gauteng;"Sandton (Bryanston)";-26.042;28.0233
+ZA;Gauteng;Kempton Park (Pomona);-26.0938;28.2613
+ZA;Gauteng;Roodepoort (Constantia Kloof);-26.1454;27.9169
+ZA;Gauteng;Boksburg (Bartlett);-26.172;28.2624
+MZ;Maputo Province;Bela Vista;-26.3407;32.6675
+ZA;Gauteng;Johannesburg (Selby);-26.2098;28.039
+ZA;Gauteng;Johannesburg (Rosebank);-26.1438;28.0406
+PY;Caazapá;San Juan Nepomuceno;-26.1123;-55.9386
+PY;Itapúa;Tomás Romero Pereira;-26.5312;-55.2605
+ZA;Gauteng;Sandton (Rivonia);-26.0437;28.0587
+ZA;Gauteng;Sandton (Bryanston);-26.042;28.0233
 ZA;Gauteng;Johannesburg;-26.1913;28.037
-ZA;Gauteng;"Johannesburg (Crown)";-26.2169;28.0119
+ZA;Gauteng;Johannesburg (Crown);-26.2169;28.0119
 ZA;Gauteng;Johannesburg;-26.1917;28.027
-AR;Chaco;"Tres Isletas";-26.3407;-60.4321
-BR;Paraná;"Palmas (Centro)";-26.4862;-51.9962
-AR;Misiones;"San Pedro";-26.6218;-54.109
-ZA;Gauteng;"Johannesburg (Braamfontein)";-26.1913;28.0358
-BR;"Santa Catarina";"Joinville (Costa e Silva)";-26.2696;-48.8727
+AR;Chaco;Tres Isletas;-26.3407;-60.4321
+BR;Paraná;Palmas (Centro);-26.4862;-51.9962
+AR;Misiones;San Pedro;-26.6218;-54.109
+ZA;Gauteng;Johannesburg (Braamfontein);-26.1913;28.0358
+BR;Santa Catarina;Joinville (Costa e Silva);-26.2696;-48.8727
 ZA;Gauteng;Sandton;-26.068;28.0786
-BR;"Santa Catarina";"Itajaí (Fazenda)";-26.9198;-48.65
-BR;"Santa Catarina";"Blumenau (Victor Konder)";-26.8995;-49.0772
-ZA;Gauteng;"Johannesburg (Marshalltown)";-26.2064;28.049
-ZA;Gauteng;"Krugersdorp (Rangeview)";-26.0848;27.8065
-ZA;Gauteng;"Johannesburg (Bruma)";-26.1777;28.1108
-ZA;Gauteng;"Sandton (Paulshof)";-26.0369;28.0515
-ZA;Gauteng;"Randburg (Hoogland)";-26.0366;27.9558
-ZA;Gauteng;"Benoni (Farrarmere)";-26.1562;28.2951
-ZA;Gauteng;"Boksburg (Beyers Park)";-26.1855;28.2603
+BR;Santa Catarina;Itajaí (Fazenda);-26.9198;-48.65
+BR;Santa Catarina;Blumenau (Victor Konder);-26.8995;-49.0772
+ZA;Gauteng;Johannesburg (Marshalltown);-26.2064;28.049
+ZA;Gauteng;Krugersdorp (Rangeview);-26.0848;27.8065
+ZA;Gauteng;Johannesburg (Bruma);-26.1777;28.1108
+ZA;Gauteng;Sandton (Paulshof);-26.0369;28.0515
+ZA;Gauteng;Randburg (Hoogland);-26.0366;27.9558
+ZA;Gauteng;Benoni (Farrarmere);-26.1562;28.2951
+ZA;Gauteng;Boksburg (Beyers Park);-26.1855;28.2603
 ZA;Gauteng;Modderfontein;-26.0892;28.1655
-ZA;Gauteng;"Modderfontein (Founders Hill)";-26.0908;28.1643
+ZA;Gauteng;Modderfontein (Founders Hill);-26.0908;28.1643
 ZA;North-West;Ventersdorp;-26.3163;26.8252
 PY;Guairá;Iturbe;-26.0551;-56.4846
-BR;Paraná;"União da Vitória";-26.2219;-51.0851
-PY;"Misiones Department";"San Juan Bautista";-26.6703;-57.1407
-AR;Chaco;"Campo Largo";-26.8003;-60.839
-AR;Misiones;"Puerto Rico";-26.8063;-55.0228
-AR;Misiones;"Puerto Rico";-26.8089;-55.0215
-BR;"Santa Catarina";Itaiópolis;-26.3395;-49.9061
-AR;Chaco;"Avia Terai";-26.6866;-60.728
-AR;Catamarca;"Santa María";-26.7035;-66.0459
-AR;Catamarca;"Santa María";-26.6946;-66.048
-AR;Chaco;"Presidencia Roque Sáenz Peña";-26.7933;-60.4399
+BR;Paraná;União da Vitória;-26.2219;-51.0851
+PY;Misiones Department;San Juan Bautista;-26.6703;-57.1407
+AR;Chaco;Campo Largo;-26.8003;-60.839
+AR;Misiones;Puerto Rico;-26.8063;-55.0228
+AR;Misiones;Puerto Rico;-26.8089;-55.0215
+BR;Santa Catarina;Itaiópolis;-26.3395;-49.9061
+AR;Chaco;Avia Terai;-26.6866;-60.728
+AR;Catamarca;Santa María;-26.7035;-66.0459
+AR;Catamarca;Santa María;-26.6946;-66.048
+AR;Chaco;Presidencia Roque Sáenz Peña;-26.7933;-60.4399
 ZA;Gauteng;Randburg;-26.1505;27.9893
-BR;"Santa Catarina";"Balneário Barra do Sul";-26.4598;-48.6103
-BR;"Santa Catarina";"Itajaí (Centro)";-26.9028;-48.6665
-BR;"Santa Catarina";"Salto do Norte";-26.8755;-49.103
-BR;"Santa Catarina";"Blumenau (Victor Konder)";-26.9087;-49.0735
-BR;"Santa Catarina";"Coronel Freitas";-26.9089;-52.7032
-BR;"Santa Catarina";"Jaraguá do Sul (Rau)";-26.4692;-49.1125
-BR;"Santa Catarina";"Joinville (Centro)";-26.3056;-48.8447
-BR;Paraná;"Pato Branco";-26.2292;-52.6696
-BR;"Santa Catarina";"São Miguel do Oeste (Centro)";-26.7339;-53.5194
-BR;"Santa Catarina";Timbó;-26.7415;-49.2781
-BR;"Santa Catarina";"Joinville (Centro)";-26.299;-48.8467
-BR;"Santa Catarina";Navegantes;-26.8948;-48.6551
-BR;"Santa Catarina";"Rio Morto";-26.8928;-49.2463
-BR;"Santa Catarina";"Bairro Badenfurt";-26.8803;-49.1409
-BR;"Santa Catarina";Cordeiros;-26.8987;-48.7007
-BR;Paraná;"Pato Branco";-26.3534;-52.5467
-BR;"Santa Catarina";"União do Oeste";-26.7622;-52.8543
-BR;"Santa Catarina";"Santa Terezinha (Centro)";-26.7751;-50.0084
-BR;"Santa Catarina";"Santo Antônio";-26.2748;-48.8545
-BR;"Santa Catarina";Espinheiros;-26.8879;-48.7319
+BR;Santa Catarina;Balneário Barra do Sul;-26.4598;-48.6103
+BR;Santa Catarina;Itajaí (Centro);-26.9028;-48.6665
+BR;Santa Catarina;Salto do Norte;-26.8755;-49.103
+BR;Santa Catarina;Blumenau (Victor Konder);-26.9087;-49.0735
+BR;Santa Catarina;Coronel Freitas;-26.9089;-52.7032
+BR;Santa Catarina;Jaraguá do Sul (Rau);-26.4692;-49.1125
+BR;Santa Catarina;Joinville (Centro);-26.3056;-48.8447
+BR;Paraná;Pato Branco;-26.2292;-52.6696
+BR;Santa Catarina;São Miguel do Oeste (Centro);-26.7339;-53.5194
+BR;Santa Catarina;Timbó;-26.7415;-49.2781
+BR;Santa Catarina;Joinville (Centro);-26.299;-48.8467
+BR;Santa Catarina;Navegantes;-26.8948;-48.6551
+BR;Santa Catarina;Rio Morto;-26.8928;-49.2463
+BR;Santa Catarina;Bairro Badenfurt;-26.8803;-49.1409
+BR;Santa Catarina;Cordeiros;-26.8987;-48.7007
+BR;Paraná;Pato Branco;-26.3534;-52.5467
+BR;Santa Catarina;União do Oeste;-26.7622;-52.8543
+BR;Santa Catarina;Santa Terezinha (Centro);-26.7751;-50.0084
+BR;Santa Catarina;Santo Antônio;-26.2748;-48.8545
+BR;Santa Catarina;Espinheiros;-26.8879;-48.7319
 AR;Misiones;Eldorado;-26.4045;-54.6185
-BR;"Santa Catarina";"Boa Vista";-26.3038;-48.827
-BR;"Santa Catarina";"Rio das Antas";-26.8985;-51.075
-BR;"Santa Catarina";"Joinville (Zona Ind Tupy)";-26.294;-48.815
-BR;"Santa Catarina";"Blumenau (Asilo)";-26.8958;-49.1032
-BR;"Santa Catarina";"Bairro Badenfurt";-26.8784;-49.1749
-BR;"Santa Catarina";"São Francisco do Sul (Centro)";-26.2409;-48.6346
-BR;"Santa Catarina";"Salto do Norte";-26.8743;-49.1166
-BR;"Santa Catarina";"Timbó (Centro)";-26.8224;-49.2762
-BR;"Santa Catarina";"Santo Antônio";-26.2641;-48.8516
-BR;Paraná;"Francisco Beltrão";-26.0811;-53.0531
-BR;"Santa Catarina";"Itajaí (Centro)";-26.9177;-48.6715
-BR;"Santa Catarina";"Joinville (Guanabara)";-26.3253;-48.8352
-PY;"Ñeembucú Department";Pilar;-26.8587;-58.3064
+BR;Santa Catarina;Boa Vista;-26.3038;-48.827
+BR;Santa Catarina;Rio das Antas;-26.8985;-51.075
+BR;Santa Catarina;Joinville (Zona Ind Tupy);-26.294;-48.815
+BR;Santa Catarina;Blumenau (Asilo);-26.8958;-49.1032
+BR;Santa Catarina;Bairro Badenfurt;-26.8784;-49.1749
+BR;Santa Catarina;São Francisco do Sul (Centro);-26.2409;-48.6346
+BR;Santa Catarina;Salto do Norte;-26.8743;-49.1166
+BR;Santa Catarina;Timbó (Centro);-26.8224;-49.2762
+BR;Santa Catarina;Santo Antônio;-26.2641;-48.8516
+BR;Paraná;Francisco Beltrão;-26.0811;-53.0531
+BR;Santa Catarina;Itajaí (Centro);-26.9177;-48.6715
+BR;Santa Catarina;Joinville (Guanabara);-26.3253;-48.8352
+PY;Ñeembucú Department;Pilar;-26.8587;-58.3064
 PY;Paraguarí;Ybycuí;-26.0207;-57.0172
-PY;"Misiones Department";"Santa Rosa";-26.8873;-56.849
-PY;"Misiones Department";"San Patricio";-26.9763;-56.8269
-CL;Atacama;"Diego de Almagro";-26.3902;-70.0456
-AR;"Santiago del Estero";"Nueva Esperanza";-26.1991;-64.2379
+PY;Misiones Department;Santa Rosa;-26.8873;-56.849
+PY;Misiones Department;San Patricio;-26.9763;-56.8269
+CL;Atacama;Diego de Almagro;-26.3902;-70.0456
+AR;Santiago del Estero;Nueva Esperanza;-26.1991;-64.2379
 AR;Misiones;Montecarlo;-26.5685;-54.7579
 AR;Formosa;Herradura;-26.4898;-58.3117
 AR;Misiones;Montecarlo;-26.5688;-54.7555
-AR;Tucuman;"San Miguel de Tucumán (El Bajo)";-26.8318;-65.1998
-AR;Tucuman;"San Miguel de Tucumán";-26.822;-65.1924
-AR;Tucuman;"Tafí Viejo";-26.7637;-65.2179
-AR;Tucuman;"San Miguel de Tucumán";-26.795;-65.2181
+AR;Tucuman;San Miguel de Tucumán (El Bajo);-26.8318;-65.1998
+AR;Tucuman;San Miguel de Tucumán;-26.822;-65.1924
+AR;Tucuman;Tafí Viejo;-26.7637;-65.2179
+AR;Tucuman;San Miguel de Tucumán;-26.795;-65.2181
 AR;Misiones;Capioví;-26.9294;-55.0577
-AR;Tucuman;"San Miguel de Tucumán";-26.8298;-65.2119
-AR;Chaco;"Presidencia Roque Sáenz Peña";-26.8156;-60.4095
-AR;Tucuman;"San Miguel de Tucumán";-26.817;-65.2434
+AR;Tucuman;San Miguel de Tucumán;-26.8298;-65.2119
+AR;Chaco;Presidencia Roque Sáenz Peña;-26.8156;-60.4095
+AR;Tucuman;San Miguel de Tucumán;-26.817;-65.2434
 AR;Salta;Cafayate;-26;-66
-AR;Tucuman;"San Miguel de Tucumán";-26.8483;-65.2015
-AR;Tucuman;"San Miguel de Tucumán";-26.8261;-65.2038
+AR;Tucuman;San Miguel de Tucumán;-26.8483;-65.2015
+AR;Tucuman;San Miguel de Tucumán;-26.8261;-65.2038
 AR;Formosa;Formosa;-26.1877;-58.1886
-AR;Tucuman;"San Miguel de Tucumán";-26.8298;-65.2078
+AR;Tucuman;San Miguel de Tucumán;-26.8298;-65.2078
 AR;Formosa;Formosa;-26.1982;-58.1582
-AR;Tucuman;"San Miguel de Tucumán";-26.8147;-65.2153
-AR;Tucuman;"San Miguel de Tucumán";-26.8248;-65.1956
+AR;Tucuman;San Miguel de Tucumán;-26.8147;-65.2153
+AR;Tucuman;San Miguel de Tucumán;-26.8248;-65.1956
 AR;Tucuman;Colombres;-26.8994;-65.1032
-AR;Tucuman;"San Miguel de Tucumán";-26.8291;-65.2014
+AR;Tucuman;San Miguel de Tucumán;-26.8291;-65.2014
 PY;Itapúa;Natalio;-26.757;-55.1378
 AR;Salta;Cafayate;-26.0729;-65.9777
-AR;Misiones;"Puerto Eldorado";-26.4084;-54.6946
-AR;Tucuman;"San Miguel de Tucumán";-26.8285;-65.1959
+AR;Misiones;Puerto Eldorado;-26.4084;-54.6946
+AR;Tucuman;San Miguel de Tucumán;-26.8285;-65.1959
 AR;Tucuman;Colombres;-26.8923;-65.1315
-AR;Tucuman;"Tafí del Valle";-26.8519;-65.7107
+AR;Tucuman;Tafí del Valle;-26.8519;-65.7107
 AR;Misiones;Garuhapé;-26.8212;-54.9577
 AR;Misiones;Eldorado;-26.4075;-54.583
-AR;Tucuman;"San Miguel de Tucumán";-26.8346;-65.2186
-AR;Misiones;"Puerto Rico";-26.8062;-55.0229
-AR;Tucuman;"San Miguel de Tucumán";-26.822;-65.1962
-AR;Chaco;"Pampa del Infierno";-26.5229;-61.1437
-AR;Tucuman;"San Miguel de Tucumán";-26.8304;-65.209
-AR;Tucuman;"San Miguel de Tucumán";-26.8285;-65.2103
+AR;Tucuman;San Miguel de Tucumán;-26.8346;-65.2186
+AR;Misiones;Puerto Rico;-26.8062;-55.0229
+AR;Tucuman;San Miguel de Tucumán;-26.822;-65.1962
+AR;Chaco;Pampa del Infierno;-26.5229;-61.1437
+AR;Tucuman;San Miguel de Tucumán;-26.8304;-65.209
+AR;Tucuman;San Miguel de Tucumán;-26.8285;-65.2103
 PY;Caazapá;Caazapá;-26.1966;-56.3679
-PY;"Misiones Department";"Santa María";-26.7837;-56.9433
+PY;Misiones Department;Santa María;-26.7837;-56.9433
 PY;Itapúa;Edelira;-26.7673;-55.2787
-AR;Tucuman;"San Miguel de Tucumán";-26.8583;-65.2077
-ZA;Gauteng;"Sandton (Bryanston)";-26.0438;28.0231
-ZA;Gauteng;"Sandton (Bryanston)";-26.0412;28.0241
+AR;Tucuman;San Miguel de Tucumán;-26.8583;-65.2077
+ZA;Gauteng;Sandton (Bryanston);-26.0438;28.0231
+ZA;Gauteng;Sandton (Bryanston);-26.0412;28.0241
 ZA;Gauteng;Edenvale;-26.1303;28.1775
 ZA;Gauteng;Johannesburg;-26.2022;28.001
-AR;Misiones;"Puerto Leoni";-26.9876;-55.1657
-PY;Itapúa;"General Artigas";-26.9346;-56.2221
+AR;Misiones;Puerto Leoni;-26.9876;-55.1657
+PY;Itapúa;General Artigas;-26.9346;-56.2221
 PY;Itapúa;Fram;-26.9833;-55.8833
 AR;Formosa;Formosa;-26.1788;-58.1829
 AR;Formosa;Formosa;-26.1934;-58.1985
 AR;Formosa;Formosa;-26.1818;-58.1669
-BR;"Santa Catarina";"Balneário Camboriú (Centro)";-26.9852;-48.6382
-BR;"Santa Catarina";"Balneário Piçarras";-26.7738;-48.6797
-BR;Paraná;"União da Vitória (Centro)";-26.2305;-51.0884
-BR;"Santa Catarina";"Treze Tílias (Centro)";-26.9957;-51.4127
-BR;"Santa Catarina";Modelo;-26.7606;-53.1748
-BR;"Santa Catarina";Oxford;-26.2239;-49.4066
-BR;"Santa Catarina";"Jaraguá do Sul (Nova Brasília)";-26.479;-49.0937
-BR;Paraná;"General Carneiro";-26.424;-51.3145
-BR;Paraná;"Francisco Beltrão";-26.1489;-53.0254
-BR;"Santa Catarina";"Nossa Senhora Aparecida";-26.0823;-53.0599
-BR;"Santa Catarina";Mafra;-26.1156;-49.8105
-BR;"Santa Catarina";Pomerode;-26.7376;-49.1744
-BR;"Santa Catarina";"Salto Veloso";-26.9305;-51.3345
+BR;Santa Catarina;Balneário Camboriú (Centro);-26.9852;-48.6382
+BR;Santa Catarina;Balneário Piçarras;-26.7738;-48.6797
+BR;Paraná;União da Vitória (Centro);-26.2305;-51.0884
+BR;Santa Catarina;Treze Tílias (Centro);-26.9957;-51.4127
+BR;Santa Catarina;Modelo;-26.7606;-53.1748
+BR;Santa Catarina;Oxford;-26.2239;-49.4066
+BR;Santa Catarina;Jaraguá do Sul (Nova Brasília);-26.479;-49.0937
+BR;Paraná;General Carneiro;-26.424;-51.3145
+BR;Paraná;Francisco Beltrão;-26.1489;-53.0254
+BR;Santa Catarina;Nossa Senhora Aparecida;-26.0823;-53.0599
+BR;Santa Catarina;Mafra;-26.1156;-49.8105
+BR;Santa Catarina;Pomerode;-26.7376;-49.1744
+BR;Santa Catarina;Salto Veloso;-26.9305;-51.3345
 AR;Misiones;Eldorado;-26.4069;-54.6369
 AR;Misiones;Montecarlo;-26.5691;-54.7587
-BR;"Santa Catarina";Schroeder;-26.4202;-49.0712
-BR;"Santa Catarina";Oxford;-26.2217;-49.4042
-BR;"Santa Catarina";"Balneário Camboriú (Praia dos Amores)";-26.967;-48.6293
-ZA;Gauteng;"Kempton Park";-26.072;28.2585
-BR;"Santa Catarina";Cordeiros;-26.8889;-48.7091
-BR;"Santa Catarina";"Joinville (Zona Industrial Norte)";-26.2516;-48.8755
-BR;"Santa Catarina";"Blumenau (Centro)";-26.914;-49.0691
-BR;"Santa Catarina";"Joinville (Comasa)";-26.2835;-48.8641
-BR;"Santa Catarina";"Joinville (Centro)";-26.2993;-48.8431
-BR;"Santa Catarina";Espinheiros;-26.8887;-48.7325
-BR;"Santa Catarina";"Guaramirim (Imigrantes)";-26.4743;-49.0255
-BR;"Santa Catarina";Fortaleza;-26.86;-49.0489
-BR;"Santa Catarina";"Blumenau (Ponta Aguda)";-26.9139;-49.0667
-BR;"Santa Catarina";"Testo Salto";-26.851;-49.1505
-BR;"Santa Catarina";"Balneário Camboriú (Nações)";-26.9753;-48.6518
-BR;"Santa Catarina";Velha;-26.9182;-49.1157
-BR;"Santa Catarina";"Joinville (Costa e Silva)";-26.274;-48.8746
-BR;"Santa Catarina";"Lebon Régis (Centro)";-26.9309;-50.6953
-PY;"Misiones Department";"Villa Florida";-26.4107;-57.121
-PY;"Ñeembucú Department";Alberdi;-26.1893;-58.1352
-AR;Tucuman;"San Miguel de Tucumán";-26.8357;-65.2081
-PY;Caazapá;"Buena Vista";-26.187;-56.0833
-PY;Itapúa;"Colonia San Lorenzo";-26.4932;-54.7999
-AR;Tucuman;"San Miguel de Tucumán";-26.83;-65.2079
-AR;Tucuman;"San Miguel de Tucumán";-26.813;-65.2211
+BR;Santa Catarina;Schroeder;-26.4202;-49.0712
+BR;Santa Catarina;Oxford;-26.2217;-49.4042
+BR;Santa Catarina;Balneário Camboriú (Praia dos Amores);-26.967;-48.6293
+ZA;Gauteng;Kempton Park;-26.072;28.2585
+BR;Santa Catarina;Cordeiros;-26.8889;-48.7091
+BR;Santa Catarina;Joinville (Zona Industrial Norte);-26.2516;-48.8755
+BR;Santa Catarina;Blumenau (Centro);-26.914;-49.0691
+BR;Santa Catarina;Joinville (Comasa);-26.2835;-48.8641
+BR;Santa Catarina;Joinville (Centro);-26.2993;-48.8431
+BR;Santa Catarina;Espinheiros;-26.8887;-48.7325
+BR;Santa Catarina;Guaramirim (Imigrantes);-26.4743;-49.0255
+BR;Santa Catarina;Fortaleza;-26.86;-49.0489
+BR;Santa Catarina;Blumenau (Ponta Aguda);-26.9139;-49.0667
+BR;Santa Catarina;Testo Salto;-26.851;-49.1505
+BR;Santa Catarina;Balneário Camboriú (Nações);-26.9753;-48.6518
+BR;Santa Catarina;Velha;-26.9182;-49.1157
+BR;Santa Catarina;Joinville (Costa e Silva);-26.274;-48.8746
+BR;Santa Catarina;Lebon Régis (Centro);-26.9309;-50.6953
+PY;Misiones Department;Villa Florida;-26.4107;-57.121
+PY;Ñeembucú Department;Alberdi;-26.1893;-58.1352
+AR;Tucuman;San Miguel de Tucumán;-26.8357;-65.2081
+PY;Caazapá;Buena Vista;-26.187;-56.0833
+PY;Itapúa;Colonia San Lorenzo;-26.4932;-54.7999
+AR;Tucuman;San Miguel de Tucumán;-26.83;-65.2079
+AR;Tucuman;San Miguel de Tucumán;-26.813;-65.2211
 AR;Chaco;Quitilipi;-26.8676;-60.2208
 AR;Tucuman;Trancas;-26.2314;-65.2809
-BR;"Santa Catarina";"Blumenau (Centro)";-26.915;-49.0698
-BR;Paraná;"Pato Branco (Centro)";-26.2253;-52.674
-BR;"Santa Catarina";"Joinville (Colégio Agrícola)";-26.395;-48.7383
-BR;"Santa Catarina";"São Bento do Sul";-26.2498;-49.3839
-BR;"Santa Catarina";"Maravilha (Centro)";-26.7649;-53.1775
-BR;"Santa Catarina";"Porto União";-26.2389;-51.0817
-ZA;Gauteng;"Sandton (Wierda Valley)";-26.1129;28.055
-ZA;Gauteng;"Johannesburg (Bramley)";-26.1243;28.0815
-ZA;Gauteng;"Randburg (Ferndale)";-26.0975;28.003
-ZA;Gauteng;"Sandton (Sunninghill)";-26.0324;28.0742
-ZA;Gauteng;"Sandton (Wendywood)";-26.0806;28.0819
+BR;Santa Catarina;Blumenau (Centro);-26.915;-49.0698
+BR;Paraná;Pato Branco (Centro);-26.2253;-52.674
+BR;Santa Catarina;Joinville (Colégio Agrícola);-26.395;-48.7383
+BR;Santa Catarina;São Bento do Sul;-26.2498;-49.3839
+BR;Santa Catarina;Maravilha (Centro);-26.7649;-53.1775
+BR;Santa Catarina;Porto União;-26.2389;-51.0817
+ZA;Gauteng;Sandton (Wierda Valley);-26.1129;28.055
+ZA;Gauteng;Johannesburg (Bramley);-26.1243;28.0815
+ZA;Gauteng;Randburg (Ferndale);-26.0975;28.003
+ZA;Gauteng;Sandton (Sunninghill);-26.0324;28.0742
+ZA;Gauteng;Sandton (Wendywood);-26.0806;28.0819
 ZA;Gauteng;Sandton;-26.091;28.0855
-ZA;Gauteng;"Johannesburg (Blairgowrie)";-26.1168;28.0007
+ZA;Gauteng;Johannesburg (Blairgowrie);-26.1168;28.0007
 ZA;Gauteng;Roodepoort;-26.1473;27.901
-ZA;Gauteng;"Randburg (Craighall)";-26.1116;28.0259
-ZA;Gauteng;"Johannesburg (Cleveland)";-26.2068;28.1137
-ZA;Gauteng;"Sandton (Kelvin)";-26.0768;28.0988
+ZA;Gauteng;Randburg (Craighall);-26.1116;28.0259
+ZA;Gauteng;Johannesburg (Cleveland);-26.2068;28.1137
+ZA;Gauteng;Sandton (Kelvin);-26.0768;28.0988
 ZA;Gauteng;Boksburg;-26.2499;28.2454
-ZA;Gauteng;"Johannesburg (Doornfontein)";-26.1948;28.0561
-ZA;"North West";Sannieshof;-26.5295;25.8089
+ZA;Gauteng;Johannesburg (Doornfontein);-26.1948;28.0561
+ZA;North West;Sannieshof;-26.5295;25.8089
 ZA;Mpumalanga;Lebohang;-26.3794;28.9211
-BR;"Santa Catarina";"São Miguel do Oeste (Centro)";-26.7286;-53.519
-ZA;Gauteng;"Johannesburg (Kempton Park)";-26.1367;28.2411
-ZA;Gauteng;"Sandton (Marlboro)";-26.0959;28.0949
-ZA;Gauteng;"Randburg (Ferndale)";-26.0993;27.9988
+BR;Santa Catarina;São Miguel do Oeste (Centro);-26.7286;-53.519
+ZA;Gauteng;Johannesburg (Kempton Park);-26.1367;28.2411
+ZA;Gauteng;Sandton (Marlboro);-26.0959;28.0949
+ZA;Gauteng;Randburg (Ferndale);-26.0993;27.9988
 ZA;Gauteng;Johannesburg;-26.1436;28.0385
-ZA;Gauteng;"Sandton (Sandhurst)";-26.1088;28.0527
-ZA;Gauteng;"Johannesburg (Braampark)";-26.1893;28.0384
-ZA;Gauteng;"Sandton (Sandown)";-26.1054;28.0543
+ZA;Gauteng;Sandton (Sandhurst);-26.1088;28.0527
+ZA;Gauteng;Johannesburg (Braampark);-26.1893;28.0384
+ZA;Gauteng;Sandton (Sandown);-26.1054;28.0543
 ZA;Gauteng;Johannesburg;-26.2259;28.0045
-ZA;Gauteng;"Johannesburg (Newtown)";-26.2042;28.0358
-ZA;Gauteng;"Randburg (Dunkeld West)";-26.1264;28.0323
+ZA;Gauteng;Johannesburg (Newtown);-26.2042;28.0358
+ZA;Gauteng;Randburg (Dunkeld West);-26.1264;28.0323
 ZA;Gauteng;Randburg;-26.1117;27.9903
-ZA;Gauteng;"Randburg (Ferndale)";-26.0981;28.0014
-ZA;Gauteng;"Kempton Park";-26.1007;28.2315
-ZA;Gauteng;"Randburg (Ferndale)";-26.0976;27.9982
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1486;28.0438
-ZA;Gauteng;"Kempton Park (Isando)";-26.1271;28.223
-ZA;Gauteng;"Johannesburg (Bryanston)";-26.0452;28.0182
+ZA;Gauteng;Randburg (Ferndale);-26.0981;28.0014
+ZA;Gauteng;Kempton Park;-26.1007;28.2315
+ZA;Gauteng;Randburg (Ferndale);-26.0976;27.9982
+ZA;Gauteng;Johannesburg (Rosebank);-26.1486;28.0438
+ZA;Gauteng;Kempton Park (Isando);-26.1271;28.223
+ZA;Gauteng;Johannesburg (Bryanston);-26.0452;28.0182
 ZA;Gauteng;Vanderbijlpark;-26.704;27.8288
-ZA;Gauteng;"Johannesburg (Bryanston)";-26.0464;28.0231
+ZA;Gauteng;Johannesburg (Bryanston);-26.0464;28.0231
 ZA;Gauteng;Sandton;-26.0929;28.0508
-ZA;Gauteng;"Sandton (Sandown)";-26.0994;28.0556
+ZA;Gauteng;Sandton (Sandown);-26.0994;28.0556
 ZA;Gauteng;Edenvale;-26.1451;28.1562
-ZA;Gauteng;"Sandton (Gallo Manor)";-26.068;28.0786
+ZA;Gauteng;Sandton (Gallo Manor);-26.068;28.0786
 ZA;Gauteng;Brakpan;-26.2908;28.3228
-ZA;Gauteng;"Johannesburg (Bramley View)";-26.1196;28.1066
+ZA;Gauteng;Johannesburg (Bramley View);-26.1196;28.1066
 ZA;Gauteng;Johannesburg;-26.1953;28.0338
-ZA;Gauteng;"Roodepoort (Florida)";-26.1794;27.9161
-ZA;Gauteng;"Sandton (Sandown)";-26.1097;28.058
-ZA;Gauteng;"Sandton (Bryanston)";-26.056;28.0403
-ZA;Gauteng;"Sandton (Sandhurst)";-26.1123;28.053
-ZA;Gauteng;"Johannesburg (Parktown)";-26.1753;28.0401
-ZA;Gauteng;"Edenvale (Greenstone Hill)";-26.1176;28.1475
-ZA;Gauteng;"Sandton (Bryanston)";-26.0543;28.0211
-ZA;Gauteng;"Johannesburg (Selby South)";-26.2098;28.039
-ZA;Gauteng;"Midrand (Waterval City)";-26.0424;28.0986
-ZA;Gauteng;"Edenvale (Chloorkop)";-26.0606;28.1781
-ZA;Gauteng;"Johannesburg (Isando)";-26.138;28.1987
-ZA;Gauteng;"Kempton Park";-26.0891;28.2219
-ZA;Gauteng;"Alberton (Elandsfontein)";-26.2788;28.1349
-ZA;Gauteng;"Randburg (Maraisburg)";-26.1775;27.9398
-ZA;Gauteng;"Sandton (Bryanston)";-26.0454;28.0242
-ZA;Gauteng;"Randburg (Bromhof)";-26.0866;27.9644
-ZA;Gauteng;"Johannesburg (Houghton Estate)";-26.159;28.0391
-SZ;"Manzini Region";Kwaluseni;-26.4791;31.3068
-ZA;Gauteng;"Sandton (Edenburg)";-26.0552;28.0602
-ZA;Gauteng;"Sandton (Rivonia)";-26.0437;28.0583
-ZA;Gauteng;"Randburg (Ferndale)";-26.0887;28.0016
-ZA;Gauteng;"Boksburg (Bartlett AH)";-26.1659;28.2314
-ZA;Gauteng;"Sandton (Cramerview)";-26.0735;28.0124
-SZ;"Manzini Region";Manzini;-26.4975;31.376
-ZA;Gauteng;"Randburg (Ferndale)";-26.0876;27.9923
+ZA;Gauteng;Roodepoort (Florida);-26.1794;27.9161
+ZA;Gauteng;Sandton (Sandown);-26.1097;28.058
+ZA;Gauteng;Sandton (Bryanston);-26.056;28.0403
+ZA;Gauteng;Sandton (Sandhurst);-26.1123;28.053
+ZA;Gauteng;Johannesburg (Parktown);-26.1753;28.0401
+ZA;Gauteng;Edenvale (Greenstone Hill);-26.1176;28.1475
+ZA;Gauteng;Sandton (Bryanston);-26.0543;28.0211
+ZA;Gauteng;Johannesburg (Selby South);-26.2098;28.039
+ZA;Gauteng;Midrand (Waterval City);-26.0424;28.0986
+ZA;Gauteng;Edenvale (Chloorkop);-26.0606;28.1781
+ZA;Gauteng;Johannesburg (Isando);-26.138;28.1987
+ZA;Gauteng;Kempton Park;-26.0891;28.2219
+ZA;Gauteng;Alberton (Elandsfontein);-26.2788;28.1349
+ZA;Gauteng;Randburg (Maraisburg);-26.1775;27.9398
+ZA;Gauteng;Sandton (Bryanston);-26.0454;28.0242
+ZA;Gauteng;Randburg (Bromhof);-26.0866;27.9644
+ZA;Gauteng;Johannesburg (Houghton Estate);-26.159;28.0391
+SZ;Manzini Region;Kwaluseni;-26.4791;31.3068
+ZA;Gauteng;Sandton (Edenburg);-26.0552;28.0602
+ZA;Gauteng;Sandton (Rivonia);-26.0437;28.0583
+ZA;Gauteng;Randburg (Ferndale);-26.0887;28.0016
+ZA;Gauteng;Boksburg (Bartlett AH);-26.1659;28.2314
+ZA;Gauteng;Sandton (Cramerview);-26.0735;28.0124
+SZ;Manzini Region;Manzini;-26.4975;31.376
+ZA;Gauteng;Randburg (Ferndale);-26.0876;27.9923
 ZA;Gauteng;Vereeniging;-26.5969;27.9015
-ZA;"North West";Potchefstroom;-26.7145;27.097
-ZA;Gauteng;"Johannesburg (Craighall Park)";-26.1155;28.0204
-ZA;Gauteng;"Germiston (Bedfordview)";-26.1662;28.1421
-SZ;"Hhohho Region";Mbabane;-26.3204;31.1432
-ZA;Gauteng;"Roodepoort (Florida Park)";-26.1582;27.9003
+ZA;North West;Potchefstroom;-26.7145;27.097
+ZA;Gauteng;Johannesburg (Craighall Park);-26.1155;28.0204
+ZA;Gauteng;Germiston (Bedfordview);-26.1662;28.1421
+SZ;Hhohho Region;Mbabane;-26.3204;31.1432
+ZA;Gauteng;Roodepoort (Florida Park);-26.1582;27.9003
 ZA;Gauteng;Vanderbijlpark;-26.7173;27.8633
-ZA;Gauteng;"Johannesburg (Auckland Park)";-26.1828;28.0022
-ZA;Gauteng;"Johannesburg (Kensington)";-26.2018;28.0818
-ZA;Gauteng;"Springs (Dal Fouche)";-26.2591;28.4052
-ZA;"North West";Itsoseng;-26.0816;25.8812
-ZA;Mpumalanga;"Kriel Power ";-26.2747;29.1715
-ZA;Gauteng;"Sandton (Sunninghill)";-26.0332;28.0678
-ZA;Gauteng;"Alberton (Brackendowns)";-26.3365;28.0868
-ZA;Gauteng;"Midrand (Halfway House)";-26.0091;28.125
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.147;28.0357
-ZA;Gauteng;"Johannesburg (Bryanston)";-26.04;28.0269
+ZA;Gauteng;Johannesburg (Auckland Park);-26.1828;28.0022
+ZA;Gauteng;Johannesburg (Kensington);-26.2018;28.0818
+ZA;Gauteng;Springs (Dal Fouche);-26.2591;28.4052
+ZA;North West;Itsoseng;-26.0816;25.8812
+ZA;Mpumalanga;Kriel Power ;-26.2747;29.1715
+ZA;Gauteng;Sandton (Sunninghill);-26.0332;28.0678
+ZA;Gauteng;Alberton (Brackendowns);-26.3365;28.0868
+ZA;Gauteng;Midrand (Halfway House);-26.0091;28.125
+ZA;Gauteng;Johannesburg (Rosebank);-26.147;28.0357
+ZA;Gauteng;Johannesburg (Bryanston);-26.04;28.0269
 ZA;Gauteng;Boksburg;-26.2231;28.2497
-ZA;Gauteng;"Midrand (Waterval City)";-26.0112;28.1044
+ZA;Gauteng;Midrand (Waterval City);-26.0112;28.1044
 ZA;Gauteng;Thembisa;-26.0129;28.2233
-ZA;Gauteng;"Randburg (Robindale)";-26.1146;28
-ZA;Gauteng;"Roodepoort (Fairland)";-26.1502;27.9318
+ZA;Gauteng;Randburg (Robindale);-26.1146;28
+ZA;Gauteng;Roodepoort (Fairland);-26.1502;27.9318
 ZA;Gauteng;Johannesburg;-26.1905;28.0344
-ZA;Gauteng;"Johannesburg (City and Suburban)";-26.2073;28.0516
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1478;28.0353
-ZA;Gauteng;"Roodepoort (Horison Park)";-26.1392;27.867
-ZA;Gauteng;"Randburg (Bromhof)";-26.0857;27.9582
-ZA;Gauteng;"Boksburg (Jet Park)";-26.158;28.2197
-ZA;Gauteng;"Germiston (Bedfordview)";-26.1746;28.1403
-ZA;Gauteng;"Alberton (Meyersdal)";-26.2862;28.0982
-SZ;"Hhohho Region";Mbabane;-26.3277;31.142
-ZA;Gauteng;"Sandton (Woodmead)";-26.0441;28.0888
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1475;28.0387
-ZA;Gauteng;"Randburg (Randpark Ridge)";-26.0872;27.9618
-ZA;"North West";Ventersdorp;-26.314;26.8222
-ZA;Gauteng;"Johannesburg (Bryanston)";-26.0623;28.0215
-ZA;Gauteng;"Sandton (Gallo Manor)";-26.066;28.0801
-SZ;"Hhohho Region";Lobamba;-26.4004;31.1825
-ZA;Gauteng;"Alberton (New Redruth)";-26.2738;28.1157
+ZA;Gauteng;Johannesburg (City and Suburban);-26.2073;28.0516
+ZA;Gauteng;Johannesburg (Rosebank);-26.1478;28.0353
+ZA;Gauteng;Roodepoort (Horison Park);-26.1392;27.867
+ZA;Gauteng;Randburg (Bromhof);-26.0857;27.9582
+ZA;Gauteng;Boksburg (Jet Park);-26.158;28.2197
+ZA;Gauteng;Germiston (Bedfordview);-26.1746;28.1403
+ZA;Gauteng;Alberton (Meyersdal);-26.2862;28.0982
+SZ;Hhohho Region;Mbabane;-26.3277;31.142
+ZA;Gauteng;Sandton (Woodmead);-26.0441;28.0888
+ZA;Gauteng;Johannesburg (Rosebank);-26.1475;28.0387
+ZA;Gauteng;Randburg (Randpark Ridge);-26.0872;27.9618
+ZA;North West;Ventersdorp;-26.314;26.8222
+ZA;Gauteng;Johannesburg (Bryanston);-26.0623;28.0215
+ZA;Gauteng;Sandton (Gallo Manor);-26.066;28.0801
+SZ;Hhohho Region;Lobamba;-26.4004;31.1825
+ZA;Gauteng;Alberton (New Redruth);-26.2738;28.1157
 ZA;Gauteng;Ferndale;-26.0861;28.0024
-ZA;Gauteng;"Johannesburg (Bryanston)";-26.0817;28.0167
-ZA;"Free State";Kragbron;-26.9078;27.8873
+ZA;Gauteng;Johannesburg (Bryanston);-26.0817;28.0167
+ZA;Free State;Kragbron;-26.9078;27.8873
 ZA;Gauteng;Welverdiend;-26.3875;27.2779
-ZA;"North West";Migdol;-26.9041;25.4524
-ZA;"North West";Umzimhle;-26.935;26.7307
-ZA;"North West";Itekeng;-26.3593;25.9069
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1471;28.0387
-ZA;Gauteng;"Sandton (Sunninghill)";-26.0323;28.0782
-ZA;Gauteng;"Midrand (Vorna Valley)";-26.01;28.1168
-ZA;Gauteng;"Johannesburg (Mayfair)";-26.2022;28.0143
+ZA;North West;Migdol;-26.9041;25.4524
+ZA;North West;Umzimhle;-26.935;26.7307
+ZA;North West;Itekeng;-26.3593;25.9069
+ZA;Gauteng;Johannesburg (Rosebank);-26.1471;28.0387
+ZA;Gauteng;Sandton (Sunninghill);-26.0323;28.0782
+ZA;Gauteng;Midrand (Vorna Valley);-26.01;28.1168
+ZA;Gauteng;Johannesburg (Mayfair);-26.2022;28.0143
 ZA;Gauteng;Ennerdale;-26.4136;27.8343
-MZ;"Maputo Province";Boane;-26.0424;32.3303
+MZ;Maputo Province;Boane;-26.0424;32.3303
 ZA;Mpumalanga;Ermelo;-26.5124;29.9856
-ZA;Gauteng;"Randburg (Fairland)";-26.1366;27.9395
-AR;Tucuman;"San Miguel de Tucumán";-26.8254;-65.205
-BR;"Santa Catarina";"Jaraguá do Sul (Centro)";-26.479;-49.089
-AR;Chaco;"General José de San Martín";-26.538;-59.342
-BR;"Santa Catarina";"Mafra (Jardim do Moinho)";-26.1331;-49.8089
-BR;"Santa Catarina";"Balneário Camboriú";-26.9959;-48.6554
-BR;"Santa Catarina";"Itajaí (Centro)";-26.9161;-48.6643
-BR;"Santa Catarina";"Centro (Centro)";-26.2993;-48.8439
-BR;"Santa Catarina";"Joinville (Centro)";-26.3035;-48.8491
-BR;"Santa Catarina";"Joinville (Bucarein)";-26.3128;-48.8448
-BR;"Santa Catarina";"Joinville (Nova Brasília)";-26.3446;-48.8592
-BR;"Santa Catarina";Garcia;-26.9267;-49.0559
-BR;"Santa Catarina";"Itajaí (Salseiros)";-26.8575;-48.7242
-BR;"Santa Catarina";"Barra do Rio Cerro (Barra do Rio)";-26.891;-48.6826
-BR;"Santa Catarina";"Balneário Camboriú (Centro)";-26.999;-48.6302
-BR;"Santa Catarina";"Jaraguá do Sul (Centro)";-26.489;-49.0804
-BR;"Santa Catarina";Velha;-26.9146;-49.0879
-BR;"Santa Catarina";Modelo;-26.8926;-53.1716
-BR;"Santa Catarina";"Mafra (Centro II Alto de Mafra)";-26.1224;-49.8056
-BR;"Santa Catarina";"Xanxerê (Centro)";-26.8753;-52.4068
-BR;"Santa Catarina";"Blumenau (Centro)";-26.9216;-49.058
-BR;Paraná;"Pato Branco (Sambugaro)";-26.2246;-52.6832
-BR;"Rio Grande do Sul";Industrial;-26.132;-52.6559
-BR;Paraná;"Francisco Beltrão";-26.0779;-53.052
-BR;"Santa Catarina";Velha;-26.9062;-49.1282
-BR;"Santa Catarina";"Porto União";-26.227;-51.0582
-BR;"Santa Catarina";Modelo;-26.8806;-52.8578
-BR;"Santa Catarina";"Palma Sola (Centro)";-26.3448;-53.2778
-BR;"Santa Catarina";"Santa Cecília";-26.9574;-50.4204
-BR;"Santa Catarina";Joinville;-26.2834;-48.8452
-BR;"Santa Catarina";"Jaraguá do Sul (Vieira)";-26.4761;-49.04
-BR;"Santa Catarina";"Blumenau (Centro)";-26.9413;-49.0681
-BR;"Santa Catarina";"Blumenau (Vorstadt)";-26.9051;-49.0372
-BR;"Santa Catarina";"Balneário Camboriú (Centro)";-26.9779;-48.6368
-BR;"Santa Catarina";Coloninha;-26.9286;-48.9625
-BR;"Santa Catarina";"Bairro Badenfurt";-26.8748;-49.1321
-BR;"Santa Catarina";"Bairro Badenfurt";-26.8839;-49.1525
-BR;Paraná;"Pato Branco (Parque do Som)";-26.2317;-52.6539
-BR;"Santa Catarina";"Blumenau (Jardim Blumenau)";-26.9283;-49.0632
-BR;"Santa Catarina";"Itajaí (Vila Operaria)";-26.9116;-48.6707
-BR;"Santa Catarina";"Balneário Camboriú (Ariribá)";-26.9573;-48.643
-BR;Paraná;"Pato Branco (Centro)";-26.2308;-52.6731
-BR;"Santa Catarina";"Modelo (Baixada Pioneira)";-26.8512;-52.9911
-BR;"Santa Catarina";Xaxim;-26.731;-52.7184
-BR;"Santa Catarina";"Rio Negrinho (Industrial Norte)";-26.2336;-49.4996
-BR;"Santa Catarina";"Jaraguá do Sul (Vieira)";-26.478;-49.0383
-PY;Itapúa;"San Pedro del Paraná";-26.8339;-56.2069
-PY;"Alto Paraná Department";Iruña;-26.1107;-55.0576
-AR;Tucuman;"San Miguel de Tucumán";-26.8371;-65.208
-AU;Queensland;"East Nanango";-26.6461;152.046
+ZA;Gauteng;Randburg (Fairland);-26.1366;27.9395
+AR;Tucuman;San Miguel de Tucumán;-26.8254;-65.205
+BR;Santa Catarina;Jaraguá do Sul (Centro);-26.479;-49.089
+AR;Chaco;General José de San Martín;-26.538;-59.342
+BR;Santa Catarina;Mafra (Jardim do Moinho);-26.1331;-49.8089
+BR;Santa Catarina;Balneário Camboriú;-26.9959;-48.6554
+BR;Santa Catarina;Itajaí (Centro);-26.9161;-48.6643
+BR;Santa Catarina;Centro (Centro);-26.2993;-48.8439
+BR;Santa Catarina;Joinville (Centro);-26.3035;-48.8491
+BR;Santa Catarina;Joinville (Bucarein);-26.3128;-48.8448
+BR;Santa Catarina;Joinville (Nova Brasília);-26.3446;-48.8592
+BR;Santa Catarina;Garcia;-26.9267;-49.0559
+BR;Santa Catarina;Itajaí (Salseiros);-26.8575;-48.7242
+BR;Santa Catarina;Barra do Rio Cerro (Barra do Rio);-26.891;-48.6826
+BR;Santa Catarina;Balneário Camboriú (Centro);-26.999;-48.6302
+BR;Santa Catarina;Jaraguá do Sul (Centro);-26.489;-49.0804
+BR;Santa Catarina;Velha;-26.9146;-49.0879
+BR;Santa Catarina;Modelo;-26.8926;-53.1716
+BR;Santa Catarina;Mafra (Centro II Alto de Mafra);-26.1224;-49.8056
+BR;Santa Catarina;Xanxerê (Centro);-26.8753;-52.4068
+BR;Santa Catarina;Blumenau (Centro);-26.9216;-49.058
+BR;Paraná;Pato Branco (Sambugaro);-26.2246;-52.6832
+BR;Rio Grande do Sul;Industrial;-26.132;-52.6559
+BR;Paraná;Francisco Beltrão;-26.0779;-53.052
+BR;Santa Catarina;Velha;-26.9062;-49.1282
+BR;Santa Catarina;Porto União;-26.227;-51.0582
+BR;Santa Catarina;Modelo;-26.8806;-52.8578
+BR;Santa Catarina;Palma Sola (Centro);-26.3448;-53.2778
+BR;Santa Catarina;Santa Cecília;-26.9574;-50.4204
+BR;Santa Catarina;Joinville;-26.2834;-48.8452
+BR;Santa Catarina;Jaraguá do Sul (Vieira);-26.4761;-49.04
+BR;Santa Catarina;Blumenau (Centro);-26.9413;-49.0681
+BR;Santa Catarina;Blumenau (Vorstadt);-26.9051;-49.0372
+BR;Santa Catarina;Balneário Camboriú (Centro);-26.9779;-48.6368
+BR;Santa Catarina;Coloninha;-26.9286;-48.9625
+BR;Santa Catarina;Bairro Badenfurt;-26.8748;-49.1321
+BR;Santa Catarina;Bairro Badenfurt;-26.8839;-49.1525
+BR;Paraná;Pato Branco (Parque do Som);-26.2317;-52.6539
+BR;Santa Catarina;Blumenau (Jardim Blumenau);-26.9283;-49.0632
+BR;Santa Catarina;Itajaí (Vila Operaria);-26.9116;-48.6707
+BR;Santa Catarina;Balneário Camboriú (Ariribá);-26.9573;-48.643
+BR;Paraná;Pato Branco (Centro);-26.2308;-52.6731
+BR;Santa Catarina;Modelo (Baixada Pioneira);-26.8512;-52.9911
+BR;Santa Catarina;Xaxim;-26.731;-52.7184
+BR;Santa Catarina;Rio Negrinho (Industrial Norte);-26.2336;-49.4996
+BR;Santa Catarina;Jaraguá do Sul (Vieira);-26.478;-49.0383
+PY;Itapúa;San Pedro del Paraná;-26.8339;-56.2069
+PY;Alto Paraná Department;Iruña;-26.1107;-55.0576
+AR;Tucuman;San Miguel de Tucumán;-26.8371;-65.208
+AU;Queensland;East Nanango;-26.6461;152.046
 AU;Queensland;Yandina;-26.5533;152.962
 AU;Queensland;Maroochydore;-26.6521;153.083
 AU;Queensland;Caloundra;-26.8044;153.125
-AU;Queensland;"Coolum Beach";-26.5208;153.088
+AU;Queensland;Coolum Beach;-26.5208;153.088
 AU;Queensland;Buderim;-26.6991;153.06
-AU;Queensland;"Sippy Downs";-26.717;153.066
+AU;Queensland;Sippy Downs;-26.717;153.066
 AU;Queensland;Noosaville;-26.4005;153.065
 AU;Queensland;Maroochydore;-26.6675;153.092
-AU;"Western Australia";Wiluna;-26.5921;120.224
+AU;Western Australia;Wiluna;-26.5921;120.224
 AU;Queensland;Yandina;-26.5597;152.956
-AU;Queensland;"Coolum Beach";-26.5291;153.091
+AU;Queensland;Coolum Beach;-26.5291;153.091
 AU;Queensland;Maroochydore;-26.6504;153.091
 ZA;Gauteng;Johannesburg;-26.204;28.0634
-ZA;Gauteng;"Germiston (Saint Andrews)";-26.1583;28.1282
-ZA;Gauteng;"Edenvale (Founderview)";-26.1074;28.1741
-ZA;Gauteng;"Sandton (Epsom Downs)";-26.0427;28.013
-ZA;Gauteng;"Midrand (Vorna Valley)";-26.0096;28.1129
-ZA;Gauteng;"Sandton (Sunninghill)";-26.0345;28.0631
-ZA;Gauteng;"Johannesburg (Isando)";-26.1332;28.2068
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1479;28.04
-ZA;Gauteng;"Johannesburg (Rosebank)";-26.1478;28.0403
-ZA;Gauteng;"Alberton (Meyersdal)";-26.2859;28.0966
-ZA;Gauteng;"Sandton (Sandhurst)";-26.1076;28.0528
-ZA;"North West";"Klerksdorp (Pienaarsdorp)";-26.8642;26.6727
-ZA;Gauteng;"Johannesburg (Hillbrow)";-26.195;28.0515
+ZA;Gauteng;Germiston (Saint Andrews);-26.1583;28.1282
+ZA;Gauteng;Edenvale (Founderview);-26.1074;28.1741
+ZA;Gauteng;Sandton (Epsom Downs);-26.0427;28.013
+ZA;Gauteng;Midrand (Vorna Valley);-26.0096;28.1129
+ZA;Gauteng;Sandton (Sunninghill);-26.0345;28.0631
+ZA;Gauteng;Johannesburg (Isando);-26.1332;28.2068
+ZA;Gauteng;Johannesburg (Rosebank);-26.1479;28.04
+ZA;Gauteng;Johannesburg (Rosebank);-26.1478;28.0403
+ZA;Gauteng;Alberton (Meyersdal);-26.2859;28.0966
+ZA;Gauteng;Sandton (Sandhurst);-26.1076;28.0528
+ZA;North West;Klerksdorp (Pienaarsdorp);-26.8642;26.6727
+ZA;Gauteng;Johannesburg (Hillbrow);-26.195;28.0515

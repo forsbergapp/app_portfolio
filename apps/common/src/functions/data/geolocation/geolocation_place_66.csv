@@ -12,28 +12,28 @@ SE;Norrbotten;Korpilombolo;66.8518;23.0551
 RU;Yamalo-Nenets;Labytnangi;66.6572;66.4183
 US;Alaska;Kotzebue;66.8983;-162.597
 SE;Norrbotten;Jokkmokk;66.6067;19.8232
-RU;Yamalo-Nenets;"Novy Urengoy";66.0957;76.6563
+RU;Yamalo-Nenets;Novy Urengoy;66.0957;76.6563
 IS;Westfjords;Isafjordur;66.0528;-22.4372
 IS;Northeast;Norðurþing;66.0415;-17.3383
 SE;Norrbotten;Vuollerim;66.4304;20.6243
 RU;Yamalo-Nenets;Salekhard;66.53;66.6019
-RU;Yamalo-Nenets;"Novy Urengoy";66.0833;76.6333
+RU;Yamalo-Nenets;Novy Urengoy;66.0833;76.6333
 FI;Lapland;Kemijärvi;66.7131;27.4306
 FI;Lapland;Posio;66.1086;28.1719
 FI;Lapland;Rovaniemi;66.5;25.7167
 GL;Qeqqata;Sisimiut;66.9395;-53.6735
-NO;Nordland;"Mo i Rana";66.3128;14.1428
+NO;Nordland;Mo i Rana;66.3128;14.1428
 NO;Nordland;Korgen;66.0766;13.8216
 FI;Lapland;Rovaniemi;66.5034;25.7236
 NO;Nordland;Glomfjord;66.8137;13.9332
 US;Alaska;Allakaket;66.5644;-152.648
-NO;Nordland;"Mo i Rana";66.3112;14.14
+NO;Nordland;Mo i Rana;66.3112;14.14
 FI;Lapland;Rovaniemi;66.5021;25.7352
 US;Alaska;Shungnak;66.8879;-157.14
 US;Alaska;Kotzebue;66.8985;-162.598
 US;Alaska;Homer;66.9626;-156.881
-US;Alaska;"Prospect Creek";66.8121;-150.666
-US;Alaska;"Stevens Village";66.0064;-149.091
+US;Alaska;Prospect Creek;66.8121;-150.666
+US;Alaska;Stevens Village;66.0064;-149.091
 US;Alaska;Kotzebue;66.8987;-162.599
 NO;Nordland;Solfjellsjøen;66.1167;12.4833
 NO;Nordland;Leland;66.0641;12.9432
@@ -44,7 +44,7 @@ FI;Lapland;Pello;66.7736;23.9625
 FI;Lapland;Salla;66.8333;28.6667
 FI;Lapland;Nivavaara;66.5333;25.8333
 SE;Norrbotten;Långvik;66.1167;22.2333
-NO;Nordland;"Mo i Rana";66.3137;14.142
+NO;Nordland;Mo i Rana;66.3137;14.142
 RU;Komi;Usinsk;66.0087;57.5305
 SE;Norrbotten;Arjeplog;66.0517;17.8861
 FI;Lapland;Tervola;66.0833;24.8
@@ -53,16 +53,16 @@ NO;Nordland;Nesna;66.2002;13.012
 IS;Westfjords;Isafjordur;66.0611;-23.1889
 IS;Northeast;Olafsfjordur;66.0672;-18.644
 SE;Norrbotten;Östansjö;66.0919;17.5228
-RU;Yamalo-Nenets;"Novy Urengoy";66.0775;76.4852
+RU;Yamalo-Nenets;Novy Urengoy;66.0775;76.4852
 RU;Komi;Parma;66.3001;58.0376
-RU;Yamalo-Nenets;"Novy Urengoy";66.0653;76.9345
+RU;Yamalo-Nenets;Novy Urengoy;66.0653;76.9345
 RU;Yamalo-Nenets;Salekhard;66.5351;66.6252
 IS;Westfjords;Strandabyggð;66.0528;-22.4372
 RU;Yamalo-Nenets;Salekhard;66.533;66.6258
 RU;Chukotka;Egvekinot;66.3237;-179.122
 RU;Yamalo-Nenets;Labytnangi;66.6558;66.3898
 IS;Westfjords;Bolungarvik;66.1592;-23.2494
-NO;Nordland;"Mo i Rana";66.3094;14.1369
+NO;Nordland;Mo i Rana;66.3094;14.1369
 RU;Yamalo-Nenets;Salekhard;66.5251;66.6252
 NO;Nordland;Sandnessjøen;66.0093;12.5837
 RU;Yamalo-Nenets;Nyda;66.6247;72.9228
@@ -73,7 +73,7 @@ FI;Lapland;Rovaniemi;66.5019;25.7878
 FI;Lapland;Rovaniemi;66.497;25.7246
 FI;Lapland;Rovaniemi;66.4963;25.7249
 FI;Lapland;Rovaniemi;66.4992;25.732
-NO;Nordland;"Mo i Rana";66.3063;14.1067
+NO;Nordland;Mo i Rana;66.3063;14.1067
 FI;Lapland;Rovaniemi;66.4451;25.7406
 IS;Westfjords;Isafjordur;66.0754;-23.1211
 IS;Westfjords;Isafjordur;66.0748;-23.135
@@ -105,8 +105,8 @@ FI;Lapland;Posio;66.1101;28.168
 FI;Lapland;Ylitornio;66.3233;23.6743
 FI;Lapland;Rovaniemi;66.4974;25.7253
 FI;Lapland;Rovaniemi;66.5044;25.7217
-RU;Yamalo-Nenets;"Novy Urengoy";66.081;76.6768
-SE;Norrbotten;"Vuollerim (Jokkmokk NO)";66.4307;20.6063
+RU;Yamalo-Nenets;Novy Urengoy;66.081;76.6768
+SE;Norrbotten;Vuollerim (Jokkmokk NO);66.4307;20.6063
 FI;Lapland;Pyhäjärvi;66.9901;27.2652
 IS;Northeast;Siglufjordur;66.152;-18.9081
 FI;Lapland;Rovaniemi;66.4974;25.7256
@@ -114,7 +114,7 @@ SE;Norrbotten;Överkalix;66.3273;22.8454
 FI;Lapland;Kemijärvi;66.7136;27.4292
 FI;Lapland;Rovaniemi;66.4991;25.7323
 RU;Yamalo-Nenets;Kharp;66.8014;65.8081
-CA;"Northwest Territories";"Fort Good Hope";66.2406;-128.649
+CA;Northwest Territories;Fort Good Hope;66.2406;-128.649
 CA;Nunavut;Pangnirtung;66.1466;-65.7012
 CA;Nunavut;Naujaat;66.5283;-86.2447
 US;Alaska;Kotzebue;66.897;-162.598

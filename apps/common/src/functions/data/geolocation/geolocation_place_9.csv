@@ -1,251 +1,251 @@
-TH;Chumphon;"Lang Suan";9.94561;99.0785
-TH;"Ranong province";Ranong;9.96583;98.6348
-TH;"Phang Nga";"Khura Buri";9.19397;98.4151
-TH;"Surat Thani";"Surat Thani";9.14011;99.3331
-TH;"Surat Thani";"Ko Samui";9.53567;99.9357
-TH;"Surat Thani";"Don Sak";9.31676;99.6918
-TH;"Surat Thani";"Tha Chana";9.57203;99.1659
-PH;"Central Visayas";Dalaguete;9.7612;123.535
+TH;Chumphon;Lang Suan;9.94561;99.0785
+TH;Ranong province;Ranong;9.96583;98.6348
+TH;Phang Nga;Khura Buri;9.19397;98.4151
+TH;Surat Thani;Surat Thani;9.14011;99.3331
+TH;Surat Thani;Ko Samui;9.53567;99.9357
+TH;Surat Thani;Don Sak;9.31676;99.6918
+TH;Surat Thani;Tha Chana;9.57203;99.1659
+PH;Central Visayas;Dalaguete;9.7612;123.535
 IN;Kerala;Pathanāmthitta;9.26667;76.7833
 IN;Kerala;Palackattumala;9.74356;76.6294
 IN;Kerala;Punalūr;9.01956;76.9226
 IN;Kerala;Tripunittura;9.94283;76.3333
-VN;"Sóc Trăng Province";"Sóc Trăng";9.59995;105.972
-VN;"Hậu Giang";"Vị Thanh";9.78449;105.47
-VN;"Kiên Giang Province";"Minh Lương";9.90248;105.16
-VN;"Sóc Trăng Province";"Vĩnh Châu";9.32439;105.98
-VN;"Bạc Liêu Province";"Bạc Liêu";9.29414;105.728
-TH;"Surat Thani";"Tha Kham";9.11072;99.2321
-TH;"Surat Thani";"Surat Thani";9.1342;99.3334
-CR;"San José";"San José";9.92807;-84.0907
-CR;"San José";"San Rafael";9.92826;-84.1354
-CR;"San José";"Santa Ana";9.9326;-84.1825
-PA;Panamá;"San Miguelito";9.05032;-79.4707
+VN;Sóc Trăng Province;Sóc Trăng;9.59995;105.972
+VN;Hậu Giang;Vị Thanh;9.78449;105.47
+VN;Kiên Giang Province;Minh Lương;9.90248;105.16
+VN;Sóc Trăng Province;Vĩnh Châu;9.32439;105.98
+VN;Bạc Liêu Province;Bạc Liêu;9.29414;105.728
+TH;Surat Thani;Tha Kham;9.11072;99.2321
+TH;Surat Thani;Surat Thani;9.1342;99.3334
+CR;San José;San José;9.92807;-84.0907
+CR;San José;San Rafael;9.92826;-84.1354
+CR;San José;Santa Ana;9.9326;-84.1825
+PA;Panamá;San Miguelito;9.05032;-79.4707
 CO;Bolívar;Mompós;9.24194;-74.4267
-CR;"Cartago Province";Pejibaye;9.81253;-83.7038
-IN;"Tamil Nadu";Madurai;9.99661;78.1793
+CR;Cartago Province;Pejibaye;9.81253;-83.7038
+IN;Tamil Nadu;Madurai;9.99661;78.1793
 IN;Kerala;Punalūr;9.00556;76.7831
 IN;Kerala;Ernākulam;9.98164;76.2999
-VN;"Trà Vinh Province";"Tiểu Cần";9.81166;106.191
-VN;"Kiên Giang Province";"An Biên";9.81532;105.064
-VN;"Cà Mau Province";"Thới Bình";9.35584;105.099
-VN;"Trà Vinh Province";"Cầu Kè";9.8724;106.055
-VN;"Bạc Liêu Province";"Thị Trấn Phước Long";9.43753;105.462
-VN;"Trà Vinh Province";"Thành phố Trà Vinh";9.94719;106.342
-VN;"Bến Tre Province";"Thạnh Phú";9.94827;106.516
-VN;"Trà Vinh Province";"Duyên Hải";9.63497;106.492
-VN;"Sóc Trăng Province";"Phú Lộc";9.42838;105.741
-VN;"Hậu Giang";"Nàng Mau";9.75129;105.534
-VN;"Trà Vinh Province";"Châu Thành";9.86989;106.349
-VN;"Cà Mau Province";"Trần Văn Thời";9.07713;104.979
-VN;"Sóc Trăng Province";"Kế Sách";9.76743;105.986
-VN;"Hậu Giang";"Ngã Bảy";9.81371;105.821
-VN;"Bạc Liêu Province";"Thị Trấn Gành Hào";9.03183;105.421
-VN;"Sóc Trăng Province";"Mỹ Xuyên";9.56006;105.99
-VN;"Hậu Giang";"Long Mỹ";9.68141;105.572
-VN;"Kiên Giang Province";"Gò Quao";9.7332;105.274
-VN;"Can Tho";"Phong Điền";9.99753;105.667
-VN;"Cà Mau Province";"Cà Mau";9.17682;105.152
-VN;"Hậu Giang";"Ngã Sáu";9.92303;105.805
-VN;"Bạc Liêu Province";"Thị Trấn Hòa Bình";9.28471;105.629
-VN;"Trà Vinh Province";"Trà Cú";9.69774;106.258
-VN;"Sóc Trăng Province";"Cù Lao Dung";9.67314;106.149
-VN;"Kiên Giang Province";"Thứ Mười Một";9.61144;104.947
+VN;Trà Vinh Province;Tiểu Cần;9.81166;106.191
+VN;Kiên Giang Province;An Biên;9.81532;105.064
+VN;Cà Mau Province;Thới Bình;9.35584;105.099
+VN;Trà Vinh Province;Cầu Kè;9.8724;106.055
+VN;Bạc Liêu Province;Thị Trấn Phước Long;9.43753;105.462
+VN;Trà Vinh Province;Thành phố Trà Vinh;9.94719;106.342
+VN;Bến Tre Province;Thạnh Phú;9.94827;106.516
+VN;Trà Vinh Province;Duyên Hải;9.63497;106.492
+VN;Sóc Trăng Province;Phú Lộc;9.42838;105.741
+VN;Hậu Giang;Nàng Mau;9.75129;105.534
+VN;Trà Vinh Province;Châu Thành;9.86989;106.349
+VN;Cà Mau Province;Trần Văn Thời;9.07713;104.979
+VN;Sóc Trăng Province;Kế Sách;9.76743;105.986
+VN;Hậu Giang;Ngã Bảy;9.81371;105.821
+VN;Bạc Liêu Province;Thị Trấn Gành Hào;9.03183;105.421
+VN;Sóc Trăng Province;Mỹ Xuyên;9.56006;105.99
+VN;Hậu Giang;Long Mỹ;9.68141;105.572
+VN;Kiên Giang Province;Gò Quao;9.7332;105.274
+VN;Can Tho;Phong Điền;9.99753;105.667
+VN;Cà Mau Province;Cà Mau;9.17682;105.152
+VN;Hậu Giang;Ngã Sáu;9.92303;105.805
+VN;Bạc Liêu Province;Thị Trấn Hòa Bình;9.28471;105.629
+VN;Trà Vinh Province;Trà Cú;9.69774;106.258
+VN;Sóc Trăng Province;Cù Lao Dung;9.67314;106.149
+VN;Kiên Giang Province;Thứ Mười Một;9.61144;104.947
 IN;Kerala;Kochi;9.93123;76.2673
-CR;"San José";Desamparados;9.89697;-84.0617
-IN;Kerala;"Ernākulam (Kottakakom)";9.94899;76.3387
-IN;"Tamil Nadu";Kovilpatti;9.17167;77.8699
+CR;San José;Desamparados;9.89697;-84.0617
+IN;Kerala;Ernākulam (Kottakakom);9.94899;76.3387
+IN;Tamil Nadu;Kovilpatti;9.17167;77.8699
 IN;Kerala;Kayamkulam;9.18173;76.5009
 IN;Kerala;Kochi;9.93988;76.2602
 IN;Kerala;Puthuppally;9.55752;76.5748
 IN;Kerala;Kottayam;9.58692;76.5213
 IN;Kerala;Aroor;9.8694;76.305
 IN;Kerala;Erāttupetta;9.68747;76.7789
-PA;Panamá;"Panama City";9.01092;-79.4733
+PA;Panamá;Panama City;9.01092;-79.4733
 VE;Trujillo;Motatán;9.39182;-70.5906
-VE;Zulia;"San Timoteo";9.7901;-71.0708
-VE;Zulia;"San Carlos del Zulia";9.00189;-71.9105
-VE;Cojedes;"San Carlos";9.65989;-68.5813
+VE;Zulia;San Timoteo;9.7901;-71.0708
+VE;Zulia;San Carlos del Zulia;9.00189;-71.9105
+VE;Cojedes;San Carlos;9.65989;-68.5813
 VE;Portuguesa;Biscucuy;9.36;-69.983
-VE;Guárico;"Valle de La Pascua";9.21554;-66.0073
+VE;Guárico;Valle de La Pascua;9.21554;-66.0073
 VE;Monagas;Maturín;9.74569;-63.1832
 VE;Anzoátegui;Anaco;9.42958;-64.4643
-VE;Guárico;"Altagracia de Orituco";9.86005;-66.3814
+VE;Guárico;Altagracia de Orituco;9.86005;-66.3814
 VE;Portuguesa;Acarigua;9.55451;-69.1956
 VE;Portuguesa;Guanare;9.03934;-69.7336
 VE;Trujillo;Trujillo;9.36587;-70.4366
-VE;Zulia;"San Carlos del Zulia";9.00098;-71.9268
+VE;Zulia;San Carlos del Zulia;9.00098;-71.9268
 VE;Trujillo;Valera;9.31527;-70.6082
 VE;Trujillo;Pampán;9.44519;-70.4756
-VE;Mérida;"Nueva Bolivia";9.14007;-71.0914
+VE;Mérida;Nueva Bolivia;9.14007;-71.0914
 VE;Monagas;Maturín;9.73339;-63.1914
 VE;Guárico;Zaraza;9.35076;-65.3261
-PA;Panamá;"Panama City";9.02696;-79.4876
+PA;Panamá;Panama City;9.02696;-79.4876
 PA;Panamá;Tocumen;9.08939;-79.3831
-VE;Guárico;"San Juan de los Morros";9.91246;-67.354
+VE;Guárico;San Juan de los Morros;9.91246;-67.354
 VE;Monagas;Temblador;9.00525;-62.6449
 VE;Trujillo;Betijoque;9.38121;-70.7328
-VE;Trujillo;"Sabana de Mendoza";9.43881;-70.7704
-PA;Panamá;"Juan Díaz";9.04059;-79.4408
-PA;Panamá;"San Vicente";9.11541;-79.5993
+VE;Trujillo;Sabana de Mendoza;9.43881;-70.7704
+PA;Panamá;Juan Díaz;9.04059;-79.4408
+PA;Panamá;San Vicente;9.11541;-79.5993
 PA;Panamá;Pedregal;9.0661;-79.4258
-VE;Lara;"El Tocuyo";9.78709;-69.7929
-PA;Colón;"El Valle de la Unión";9.23804;-79.6596
+VE;Lara;El Tocuyo;9.78709;-69.7929
+PA;Colón;El Valle de la Unión;9.23804;-79.6596
 NG;FCT;Abuja;9.05626;7.49853
-CR;"San José";"San Rafael";9.93465;-84.1488
+CR;San José;San Rafael;9.93465;-84.1488
 VE;Lara;Quíbor;9.92866;-69.6201
 VE;Monagas;Quiriquire;9.9795;-63.2199
 VE;Trujillo;Boconó;9.25385;-70.2511
-VE;"Delta Amacuro";Tucupita;9.06263;-62.0521
+VE;Delta Amacuro;Tucupita;9.06263;-62.0521
 PA;Colón;Margarita;9.32603;-79.8903
-PA;Panamá;"Panama City";9.01569;-79.4739
-CR;"San José";"Daniel Flores";9.33607;-83.67
-CR;"San José";"San Isidro";9.3674;-83.6971
+PA;Panamá;Panama City;9.01569;-79.4739
+CR;San José;Daniel Flores;9.33607;-83.67
+CR;San José;San Isidro;9.3674;-83.6971
 VE;Trujillo;Valera;9.31911;-70.6033
 VE;Trujillo;Valera;9.31778;-70.6036
 VE;Portuguesa;Araure;9.58178;-69.2202
-CO;"Magdalena Department";"El Banco";9.00114;-73.9758
-VE;Trujillo;"Monte Carmelo";9.18821;-70.8123
+CO;Magdalena Department;El Banco;9.00114;-73.9758
+VE;Trujillo;Monte Carmelo;9.18821;-70.8123
 VE;Trujillo;Escuque;9.29687;-70.6719
 VE;Trujillo;Carvajal;9.3067;-70.5904
-CR;"San José";"San Pablo";9.68323;-84.0405
-CR;"San José";"San Marcos";9.60515;-84.0379
-CR;"San José";"San Ignacio";9.79853;-84.1617
+CR;San José;San Pablo;9.68323;-84.0405
+CR;San José;San Marcos;9.60515;-84.0379
+CR;San José;San Ignacio;9.79853;-84.1617
 VE;Portuguesa;Araure;9.58144;-69.2385
 PA;Colón;Gatuncillo;9.24475;-79.6459
-PA;Colón;"Río Duque";9.26117;-79.6786
-CI;"Savanes District";Ferkessédougou;9.5928;-5.19449
-NG;FCT;"Abuja (Wuse)";9.07313;7.48279
+PA;Colón;Río Duque;9.26117;-79.6786
+CI;Savanes District;Ferkessédougou;9.5928;-5.19449
+NG;FCT;Abuja (Wuse);9.07313;7.48279
 NG;FCT;Abuja;9.05785;7.49508
-NG;FCT;"Abuja (Wuse)";9.06876;7.48947
+NG;FCT;Abuja (Wuse);9.06876;7.48947
 NG;FCT;Abuja;9.06901;7.48885
-NG;FCT;"Abuja (Wuse)";9.07587;7.46141
-NG;FCT;"Abuja (Wuse)";9.0756;7.46122
+NG;FCT;Abuja (Wuse);9.07587;7.46141
+NG;FCT;Abuja (Wuse);9.0756;7.46122
 GN;Conakry;Conakry;9.64119;-13.5784
-GN;Conakry;"Conakry (Cité Chemin de Fer)";9.51481;-13.7076
-GN;Conakry;"Conakry (Dixinn Sub-Prefecture)";9.55028;-13.672
+GN;Conakry;Conakry (Cité Chemin de Fer);9.51481;-13.7076
+GN;Conakry;Conakry (Dixinn Sub-Prefecture);9.55028;-13.672
 GN;Conakry;Conakry;9.53795;-13.6773
 GN;Conakry;Conakry;9.50909;-13.7119
 GN;Conakry;Kaloum;9.50917;-13.7122
-NG;FCT;"Abuja (Wuse)";9.07093;7.48378
-NG;FCT;"Abuja (Gudu)";9.01306;7.491
-SO;"Woqooyi Galbeed";Hargeisa;9.56;44.065
+NG;FCT;Abuja (Wuse);9.07093;7.48378
+NG;FCT;Abuja (Gudu);9.01306;7.491
+SO;Woqooyi Galbeed;Hargeisa;9.56;44.065
 SO;Awdal;Borama;9.93611;43.1828
 GN;Conakry;Conakry;9.51498;-13.7107
 GN;Conakry;Camayenne;9.535;-13.6878
 GN;Conakry;Conakry;9.51088;-13.7148
 GN;Conakry;Conakry;9.53703;-13.6785
-CI;"Denguélé District";Odienné;9.50511;-7.56433
+CI;Denguélé District;Odienné;9.50511;-7.56433
 BJ;Donga;Bassila;9.00814;1.6654
 BJ;Donga;Djougou;9.70853;1.66598
 BJ;Borgou;Parakou;9.33716;2.63031
-NG;FCT;"Abuja (Maitama)";9.09385;7.49914
-NG;FCT;"Abuja (Maitama)";9.09407;7.49921
-CI;"Savanes District";Korhogo;9.45803;-5.62961
-CI;"Savanes District";Nianélékaha;9.41663;-5.60854
-CI;"Savanes District";Gozanvogo;9.49012;-5.69699
-NG;FCT;"Abuja (Wuse)";9.07005;7.48793
-NG;"Nasarawa State";Karu;9.00943;7.66147
+NG;FCT;Abuja (Maitama);9.09385;7.49914
+NG;FCT;Abuja (Maitama);9.09407;7.49921
+CI;Savanes District;Korhogo;9.45803;-5.62961
+CI;Savanes District;Nianélékaha;9.41663;-5.60854
+CI;Savanes District;Gozanvogo;9.49012;-5.69699
+NG;FCT;Abuja (Wuse);9.07005;7.48793
+NG;Nasarawa State;Karu;9.00943;7.66147
 NG;FCT;Madala;9.10444;7.21333
 NG;FCT;Bwari;9.27995;7.38045
-NG;FCT;"Abuja (Wuse)";9.06504;7.47376
-NG;FCT;"Abuja (Wuse)";9.065;7.47379
-SS;"Upper Nile";Malakal;9.53342;31.6605
-NG;FCT;"Abuja (Wuse)";9.07092;7.48381
-NG;FCT;"Abuja (Garki)";9.04574;7.4956
+NG;FCT;Abuja (Wuse);9.06504;7.47376
+NG;FCT;Abuja (Wuse);9.065;7.47379
+SS;Upper Nile;Malakal;9.53342;31.6605
+NG;FCT;Abuja (Wuse);9.07092;7.48381
+NG;FCT;Abuja (Garki);9.04574;7.4956
 GN;Conakry;Conakry;9.51101;-13.7117
 NG;FCT;Abuja;9.06667;7.48333
-NG;FCT;"Abuja (Wuse)";9.06916;7.48729
+NG;FCT;Abuja (Wuse);9.06916;7.48729
 NG;Adamawa;Yola;9.20839;12.4815
-NG;Adamawa;"Yola (Wuro Hausa)";9.19918;12.4988
+NG;Adamawa;Yola (Wuro Hausa);9.19918;12.4988
 NG;FCT;Abuja;9.07648;7.39857
 GN;Conakry;Conakry;9.57565;-13.6202
-GN;Conakry;"Conakry (Kaloum)";9.50763;-13.7122
-IN;"Tamil Nadu";Madurai;9.919;78.1195
+GN;Conakry;Conakry (Kaloum);9.50763;-13.7122
+IN;Tamil Nadu;Madurai;9.919;78.1195
 IN;Kerala;Alappuzha;9.49004;76.3264
-IN;Kerala;"Kokōtamangalam South";9.67948;76.3589
-IN;"Tamil Nadu";Madurai;9.9252;78.1198
-CR;"San José";Alajuelita;9.90294;-84.1004
-CR;"San José";"San José";9.93388;-84.0849
-CR;"San José";Colima;9.95532;-84.0824
-CR;"San José";"Santa Ana";9.93127;-84.1821
-CR;"San José";"San Juan";9.96188;-84.0788
-IN;"Tamil Nadu";Sivakasi;9.44999;77.798
-IN;Kerala;"Kochi (Pallimukku)";9.96261;76.2876
-IN;"Tamil Nadu";Rajapalayam;9.45296;77.5534
-CR;"San José";"San José (Carlos María Jiménez)";9.91601;-84.071
-CR;"Cartago Province";Cartago;9.86223;-83.9214
+IN;Kerala;Kokōtamangalam South;9.67948;76.3589
+IN;Tamil Nadu;Madurai;9.9252;78.1198
+CR;San José;Alajuelita;9.90294;-84.1004
+CR;San José;San José;9.93388;-84.0849
+CR;San José;Colima;9.95532;-84.0824
+CR;San José;Santa Ana;9.93127;-84.1821
+CR;San José;San Juan;9.96188;-84.0788
+IN;Tamil Nadu;Sivakasi;9.44999;77.798
+IN;Kerala;Kochi (Pallimukku);9.96261;76.2876
+IN;Tamil Nadu;Rajapalayam;9.45296;77.5534
+CR;San José;San José (Carlos María Jiménez);9.91601;-84.071
+CR;Cartago Province;Cartago;9.86223;-83.9214
 IN;Kerala;Changanācheri;9.46873;76.5679
 VE;Guárico;Tucupido;9.27304;-65.7715
-CR;"Guanacaste Province";Sámara;9.88147;-85.5281
-CR;"Heredia Province";Heredia;9.99872;-84.1159
-CR;"Heredia Province";Heredia;9.99814;-84.1198
-CR;"San José";"Calle Blancos";9.9453;-84.0669
-CR;"Cartago Province";Cartago;9.86371;-83.9195
-CR;"Alajuela Province";"San Antonio de Tejar";9.96913;-84.2121
-CR;"San José";"Escazú (Tena)";9.93157;-84.13
-CR;"San José";"San Pedro";9.92829;-84.0507
-CR;"San José";"San Pedro (Lourdes)";9.93261;-84.0442
-CO;"Cesar Department";Curumaní;9.2011;-73.5448
-CO;"Cesar Department";Curumaní;9.19992;-73.5427
-CR;"San José";"San José";9.94392;-84.1284
-CR;"San José";"San José (Morenos)";9.9313;-84.1029
-PA;Panamá;"Panama City";9.01109;-79.4753
-CR;"Heredia Province";"San Pablo";9.99559;-84.0966
+CR;Guanacaste Province;Sámara;9.88147;-85.5281
+CR;Heredia Province;Heredia;9.99872;-84.1159
+CR;Heredia Province;Heredia;9.99814;-84.1198
+CR;San José;Calle Blancos;9.9453;-84.0669
+CR;Cartago Province;Cartago;9.86371;-83.9195
+CR;Alajuela Province;San Antonio de Tejar;9.96913;-84.2121
+CR;San José;Escazú (Tena);9.93157;-84.13
+CR;San José;San Pedro;9.92829;-84.0507
+CR;San José;San Pedro (Lourdes);9.93261;-84.0442
+CO;Cesar Department;Curumaní;9.2011;-73.5448
+CO;Cesar Department;Curumaní;9.19992;-73.5427
+CR;San José;San José;9.94392;-84.1284
+CR;San José;San José (Morenos);9.9313;-84.1029
+PA;Panamá;Panama City;9.01109;-79.4753
+CR;Heredia Province;San Pablo;9.99559;-84.0966
 PA;Panamá;Betania;9.01156;-79.5276
-CO;"Magdalena Department";Plato;9.79029;-74.7824
+CO;Magdalena Department;Plato;9.79029;-74.7824
 VE;Trujillo;Carache;9.62857;-70.2286
 VE;Portuguesa;Acarigua;9.55036;-69.1805
 GN;Conakry;Conakry;9.60492;-13.6503
-CR;"San José";Ipís;9.96548;-84.0182
-CR;"Heredia Province";"La Asunción";9.97955;-84.1718
-CR;"San José";Montealegre;9.95526;-84.069
-CR;"San José";"San Juan de Dios";9.87812;-84.0844
-CR;"Heredia Province";"San Francisco";9.98928;-84.1623
-CR;"San José";"San Pedro (Los Yoses)";9.92777;-84.0551
-CR;"San José";Purral;9.95689;-84.0321
-CO;"Sucre Department";Coveñas;9.40254;-75.6803
+CR;San José;Ipís;9.96548;-84.0182
+CR;Heredia Province;La Asunción;9.97955;-84.1718
+CR;San José;Montealegre;9.95526;-84.069
+CR;San José;San Juan de Dios;9.87812;-84.0844
+CR;Heredia Province;San Francisco;9.98928;-84.1623
+CR;San José;San Pedro (Los Yoses);9.92777;-84.0551
+CR;San José;Purral;9.95689;-84.0321
+CO;Sucre Department;Coveñas;9.40254;-75.6803
 IN;Kerala;Thiruvankulam;9.94679;76.3666
 IN;Kerala;Kozhancheri;9.35;76.7
-IN;"Tamil Nadu";Tirupparangunram;9.88151;78.0731
-PH;Mimaropa;"Puerto Princesa City";9.73917;118.735
-PH;"Central Visayas";"San Juan";9.1603;123.493
-PH;"Central Visayas";Batuan;9.7808;124.148
-PH;"Central Visayas";Mabini;9.8649;124.521
-PH;"Central Visayas";Ayungon;9.8589;123.144
-PH;"Central Visayas";Tanjay;9.5162;123.158
-PH;"Central Visayas";Valencia;9.2815;123.245
-PH;"Central Visayas";Dumaguete;9.30646;123.308
+IN;Tamil Nadu;Tirupparangunram;9.88151;78.0731
+PH;Mimaropa;Puerto Princesa City;9.73917;118.735
+PH;Central Visayas;San Juan;9.1603;123.493
+PH;Central Visayas;Batuan;9.7808;124.148
+PH;Central Visayas;Mabini;9.8649;124.521
+PH;Central Visayas;Ayungon;9.8589;123.144
+PH;Central Visayas;Tanjay;9.5162;123.158
+PH;Central Visayas;Valencia;9.2815;123.245
+PH;Central Visayas;Dumaguete;9.30646;123.308
 PH;Mimaropa;Aborlan;9.43361;118.549
-PH;"Central Visayas";Sibulan;9.3584;123.285
+PH;Central Visayas;Sibulan;9.3584;123.285
 PH;Caraga;Ipil;9.7907;125.439
-PH;Caraga;"Surigao City";9.789;125.495
-PH;"Central Visayas";Antequera;9.7809;123.899
-PH;"Central Visayas";Tawala;9.55421;123.77
-PH;"Central Visayas";Duero;9.709;124.406
-PH;"Central Visayas";Siquijor;9.2142;123.515
-PH;"Central Visayas";"San Miguel";9.8851;124.326
-PH;"Central Visayas";Buenavista;9.84056;124.223
-PH;"Central Visayas";Tagbilaran;9.65556;123.852
-PH;"Central Visayas";Catigbian;9.8501;123.999
-PH;"Central Visayas";Tabalong;9.62157;123.812
-PH;"Central Visayas";Balilihan;9.7561;123.973
-PH;"Central Visayas";Manalongon;9.2209;122.886
+PH;Caraga;Surigao City;9.789;125.495
+PH;Central Visayas;Antequera;9.7809;123.899
+PH;Central Visayas;Tawala;9.55421;123.77
+PH;Central Visayas;Duero;9.709;124.406
+PH;Central Visayas;Siquijor;9.2142;123.515
+PH;Central Visayas;San Miguel;9.8851;124.326
+PH;Central Visayas;Buenavista;9.84056;124.223
+PH;Central Visayas;Tagbilaran;9.65556;123.852
+PH;Central Visayas;Catigbian;9.8501;123.999
+PH;Central Visayas;Tabalong;9.62157;123.812
+PH;Central Visayas;Balilihan;9.7561;123.973
+PH;Central Visayas;Manalongon;9.2209;122.886
 PH;Caraga;Cantilan;9.33361;125.978
 PH;Caraga;Madrid;9.26211;125.964
 PH;Caraga;Cabuntog;9.78375;126.157
-TH;"Surat Thani";"Koh Pha Ngan";9.75778;100.029
-CR;"San José";Curridabat;9.9155;-84.0358
-ET;"Addis Ababa";"Addis Ababa";9.01919;38.7525
-PH;"Central Visayas";Cansuje;9.92314;123.496
+TH;Surat Thani;Koh Pha Ngan;9.75778;100.029
+CR;San José;Curridabat;9.9155;-84.0358
+ET;Addis Ababa;Addis Ababa;9.01919;38.7525
+PH;Central Visayas;Cansuje;9.92314;123.496
 PH;Caraga;Tandag;9.10117;126.159
-PH;"Central Visayas";Loay;9.6006;124.014
-PH;"Central Visayas";Tagbilaran;9.67295;123.873
-IN;Kerala;"Bharanikāvu Tekku";9.18485;76.5608
+PH;Central Visayas;Loay;9.6006;124.014
+PH;Central Visayas;Tagbilaran;9.67295;123.873
+IN;Kerala;Bharanikāvu Tekku;9.18485;76.5608
 IN;Kerala;Piravam;9.86667;76.5
 IN;Kerala;Arukutti;9.86667;76.35
 IN;Kerala;Kunnumma;9.35672;76.4134
-IN;"Tamil Nadu";Rameswaram;9.2885;79.3127
+IN;Tamil Nadu;Rameswaram;9.2885;79.3127
 IN;Kerala;Kottayam;9.59157;76.5222
 IN;Kerala;Thodupuzha;9.89394;76.7222
 IN;Kerala;Kalleribhāgam;9.05396;76.558
@@ -253,675 +253,675 @@ IN;Kerala;Thodiyoor;9.07797;76.5777
 IN;Kerala;Puthencruz;9.97734;76.4105
 IN;Kerala;Muvattupuzha;9.97985;76.5738
 IN;Kerala;Paippad;9.42462;76.5848
-IN;"Tamil Nadu";Puliyankudi;9.17489;77.398
-IN;"Tamil Nadu";Sivaganga;9.8433;78.4809
-IN;Kerala;"Kottayam (Gandhi Nagar)";9.62795;76.541
+IN;Tamil Nadu;Puliyankudi;9.17489;77.398
+IN;Tamil Nadu;Sivaganga;9.8433;78.4809
+IN;Kerala;Kottayam (Gandhi Nagar);9.62795;76.541
 IN;Kerala;Rāmamangalam;9.93333;76.5
 IN;Kerala;Chingoli;9.25035;76.452
 IN;Kerala;Kandalloor;9.1756;76.4713
 IN;Kerala;Kalavoor;9.57046;76.3276
 IN;Kerala;Adūr;9.15595;76.7319
-IN;"Tamil Nadu";Tiruppālaikudi;9.54606;78.9172
-IN;"Tamil Nadu";Periyapattinam;9.27263;78.9023
-IN;"Tamil Nadu";Sivaganga;9.84701;78.4836
-IN;"Tamil Nadu";Kamuthi;9.40732;78.3734
+IN;Tamil Nadu;Tiruppālaikudi;9.54606;78.9172
+IN;Tamil Nadu;Periyapattinam;9.27263;78.9023
+IN;Tamil Nadu;Sivaganga;9.84701;78.4836
+IN;Tamil Nadu;Kamuthi;9.40732;78.3734
 TH;Chumphon;Lamae;9.77248;99.1402
-TH;"Surat Thani";"Ko Phangan";9.71945;99.9951
-IN;Kerala;"Kochi (Illath Nagar)";9.91511;76.2803
-PA;Panamá;"Nueva Esperanza";9.10538;-79.3326
-PA;Panamá;"Panama City";9.00218;-79.529
-PA;Panamá;"Panama City (City of Knowledge)";9.0014;-79.5814
+TH;Surat Thani;Ko Phangan;9.71945;99.9951
+IN;Kerala;Kochi (Illath Nagar);9.91511;76.2803
+PA;Panamá;Nueva Esperanza;9.10538;-79.3326
+PA;Panamá;Panama City;9.00218;-79.529
+PA;Panamá;Panama City (City of Knowledge);9.0014;-79.5814
 PA;Colón;Colón;9.34085;-79.8883
-PA;Panamá;"Panama City";9.00443;-79.5121
-PA;Panamá;"Panama City";9.01455;-79.511
-CR;"San José";"San Rafael";9.93071;-84.1463
-PH;"Northern Mindanao";Yumbing;9.23933;124.658
+PA;Panamá;Panama City;9.00443;-79.5121
+PA;Panamá;Panama City;9.01455;-79.511
+CR;San José;San Rafael;9.93071;-84.1463
+PH;Northern Mindanao;Yumbing;9.23933;124.658
 PH;Caraga;Bacuag;9.60806;125.639
-CR;"San José";"San Pedro (Roosevelt)";9.92857;-84.0528
-IN;Kerala;"Kochi (Kaloor)";9.99718;76.3018
-NG;FCT;"Abuja (Wuse)";9.05709;7.46366
-CR;"San José";"San José (González Lahmann)";9.93218;-84.0721
-CR;"San José";"San José (Hospital)";9.9295;-84.0752
-CR;"San José";"San José (Mántica)";9.93591;-84.0964
-PA;Panamá;"Panama City (Parque Lefevre)";9.00854;-79.4773
-CR;"San José";"San José";9.95135;-84.1125
-IN;Kerala;"Kochi (Fort Cochin)";9.96578;76.2421
+CR;San José;San Pedro (Roosevelt);9.92857;-84.0528
+IN;Kerala;Kochi (Kaloor);9.99718;76.3018
+NG;FCT;Abuja (Wuse);9.05709;7.46366
+CR;San José;San José (González Lahmann);9.93218;-84.0721
+CR;San José;San José (Hospital);9.9295;-84.0752
+CR;San José;San José (Mántica);9.93591;-84.0964
+PA;Panamá;Panama City (Parque Lefevre);9.00854;-79.4773
+CR;San José;San José;9.95135;-84.1125
+IN;Kerala;Kochi (Fort Cochin);9.96578;76.2421
 BJ;Donga;Ouaké;9.66167;1.38472
-VE;Guárico;"Las Mercedes";9.11037;-66.3961
+VE;Guárico;Las Mercedes;9.11037;-66.3961
 VE;Aragua;Barbacoas;9.47855;-66.9746
-NG;"Niger State";Minna;9.61524;6.54776
-TH;"Surat Thani";"Tha Chang";9.26418;99.1922
-NG;FCT;"Abuja (Kaura)";9.00606;7.45459
-NG;FCT;"Abuja (Maitama)";9.09961;7.48092
-NG;FCT;"Abuja (Garki)";9.03041;7.47639
+NG;Niger State;Minna;9.61524;6.54776
+TH;Surat Thani;Tha Chang;9.26418;99.1922
+NG;FCT;Abuja (Kaura);9.00606;7.45459
+NG;FCT;Abuja (Maitama);9.09961;7.48092
+NG;FCT;Abuja (Garki);9.03041;7.47639
 NG;Niger;Lapai;9.06738;6.56978
-NG;"Niger State";Lapai;9.04439;6.57089
-NG;"Plateau State";Jos;9.92849;8.89212
-SO;"Woqooyi Galbeed";"Hargeisa (26 June)";9.57292;44.0508
-SO;"Woqooyi Galbeed";Hargeisa;9.57327;44.049
-NG;"Plateau State";Jos;9.91167;8.88993
-CI;"Denguélé District";Gbéléban;9.58461;-8.13183
-CI;"Savanes District";Ouangolodougou;9.96837;-5.14882
-NG;"Plateau State";"Dan Tsofo";9.082;8.67528
-NG;FCT;"Abuja (Three Arms Zone)";9.06819;7.51105
+NG;Niger State;Lapai;9.04439;6.57089
+NG;Plateau State;Jos;9.92849;8.89212
+SO;Woqooyi Galbeed;Hargeisa (26 June);9.57292;44.0508
+SO;Woqooyi Galbeed;Hargeisa;9.57327;44.049
+NG;Plateau State;Jos;9.91167;8.88993
+CI;Denguélé District;Gbéléban;9.58461;-8.13183
+CI;Savanes District;Ouangolodougou;9.96837;-5.14882
+NG;Plateau State;Dan Tsofo;9.082;8.67528
+NG;FCT;Abuja (Three Arms Zone);9.06819;7.51105
 GH;Northern;Tamale;9.40079;-0.8393
 NG;Adamawa;Jimeta;9.27949;12.4582
 NG;Adamawa;Jimeta;9.24459;12.4556
-ET;"Addis Ababa";"Addis Ababa";9.02497;38.7469
+ET;Addis Ababa;Addis Ababa;9.02497;38.7469
 GN;Conakry;Conakry;9.51459;-13.7188
-ET;"Addis Ababa";"Addis Ababa (Kirkos)";9.01445;38.7529
-SS;"Northern Bahr al Ghazal";Winejok;9.01222;27.5708
-ET;"Addis Ababa";"Addis Ababa (Kirkos)";9.01621;38.7645
-NG;FCT;"Abuja (Wuse)";9.08045;7.46196
+ET;Addis Ababa;Addis Ababa (Kirkos);9.01445;38.7529
+SS;Northern Bahr al Ghazal;Winejok;9.01222;27.5708
+ET;Addis Ababa;Addis Ababa (Kirkos);9.01621;38.7645
+NG;FCT;Abuja (Wuse);9.08045;7.46196
 ET;Oromiya;Burayu;9.03528;38.6608
-NG;FCT;"Abuja (Gwarinpa Estate)";9.11184;7.37903
-NG;FCT;"Abuja (Jabi)";9.06411;7.42294
-NG;FCT;"Abuja (Mabushi)";9.07469;7.44899
-NG;FCT;"Abuja (Three Arms Zone)";9.06227;7.51853
-ET;"Addis Ababa";"Addis Ababa";9.02427;38.7519
-SO;"Woqooyi Galbeed";Hargeisa;9.56169;44.0614
-NG;FCT;"Abuja (Wuse)";9.07977;7.46294
+NG;FCT;Abuja (Gwarinpa Estate);9.11184;7.37903
+NG;FCT;Abuja (Jabi);9.06411;7.42294
+NG;FCT;Abuja (Mabushi);9.07469;7.44899
+NG;FCT;Abuja (Three Arms Zone);9.06227;7.51853
+ET;Addis Ababa;Addis Ababa;9.02427;38.7519
+SO;Woqooyi Galbeed;Hargeisa;9.56169;44.0614
+NG;FCT;Abuja (Wuse);9.07977;7.46294
 GN;Conakry;Conakry;9.56658;-13.6336
-NG;FCT;"Abuja (Utako)";9.0677;7.44172
-NG;FCT;"Abuja (Wuse)";9.07924;7.49499
-NG;FCT;"Abuja (Maitama)";9.1022;7.48763
-NG;FCT;"Abuja (Wuse)";9.06596;7.45498
-NG;FCT;"Abuja (Wuse)";9.07272;7.46509
-NG;FCT;"Abuja (Jabi)";9.07958;7.42985
-NG;FCT;"Abuja (Garki)";9.0403;7.49494
-NG;FCT;"Abuja (Central Business Dis)";9.05122;7.48725
-NG;FCT;"Abuja (Central Business Dis)";9.05209;7.49683
+NG;FCT;Abuja (Utako);9.0677;7.44172
+NG;FCT;Abuja (Wuse);9.07924;7.49499
+NG;FCT;Abuja (Maitama);9.1022;7.48763
+NG;FCT;Abuja (Wuse);9.06596;7.45498
+NG;FCT;Abuja (Wuse);9.07272;7.46509
+NG;FCT;Abuja (Jabi);9.07958;7.42985
+NG;FCT;Abuja (Garki);9.0403;7.49494
+NG;FCT;Abuja (Central Business Dis);9.05122;7.48725
+NG;FCT;Abuja (Central Business Dis);9.05209;7.49683
 SS;Unity;Bentiu;9.25722;29.7983
 CM;North;Garoua;9.30143;13.3977
-IN;Kerala;"Clappana (Amritapuri)";9.09369;76.4911
-IN;"Tamil Nadu";Kadayanallur;9.07277;77.3415
-PH;"Central Visayas";Valencia;9.6097;124.208
-PH;"Central Visayas";Jagna;9.6531;124.37
-VN;"Sóc Trăng Province";"Thành Phố Sóc Trăng";9.59344;105.974
+IN;Kerala;Clappana (Amritapuri);9.09369;76.4911
+IN;Tamil Nadu;Kadayanallur;9.07277;77.3415
+PH;Central Visayas;Valencia;9.6097;124.208
+PH;Central Visayas;Jagna;9.6531;124.37
+VN;Sóc Trăng Province;Thành Phố Sóc Trăng;9.59344;105.974
 IN;Kerala;Kochi;9.99741;76.3019
-PH;"Central Visayas";Dumaguete;9.31415;123.301
-PH;"Central Visayas";Dumaguete;9.31084;123.304
-IN;"Tamil Nadu";Sivakasi;9.45329;77.8024
+PH;Central Visayas;Dumaguete;9.31415;123.301
+PH;Central Visayas;Dumaguete;9.31084;123.304
+IN;Tamil Nadu;Sivakasi;9.45329;77.8024
 IN;Kerala;Ettumānūr;9.66898;76.5592
-IN;"Tamil Nadu";Tirupparangunram;9.88872;78.0495
-IN;"Tamil Nadu";Rajapalayam;9.45148;77.5543
-IN;Kerala;"Kochi (Pallimukku)";9.96354;76.2876
+IN;Tamil Nadu;Tirupparangunram;9.88872;78.0495
+IN;Tamil Nadu;Rajapalayam;9.45148;77.5543
+IN;Kerala;Kochi (Pallimukku);9.96354;76.2876
 IN;Kerala;Manakunnam;9.8857;76.3733
-IN;"Tamil Nadu";Madurai;9.93593;78.0968
-IN;"Tamil Nadu";"Madurai (Viswanathapuram)";9.94927;78.1267
-IN;"Tamil Nadu";Rajapalayam;9.4505;77.5546
-PH;"Central Visayas";"Panglao (Bingag)";9.58246;123.743
+IN;Tamil Nadu;Madurai;9.93593;78.0968
+IN;Tamil Nadu;Madurai (Viswanathapuram);9.94927;78.1267
+IN;Tamil Nadu;Rajapalayam;9.4505;77.5546
+PH;Central Visayas;Panglao (Bingag);9.58246;123.743
 IN;Kerala;Lālam;9.65658;76.722
-IN;"Tamil Nadu";Srivilliputhur;9.51272;77.6337
-PH;"Central Visayas";Dumaguete;9.29556;123.3
-PH;"Western Visayas";Kabankalan;9.99921;122.816
-PH;"Western Visayas";Kabankalan;9.9839;122.814
-IN;"Tamil Nadu";"Sivakasi (Gandhinagar)";9.46796;77.7652
-IN;"Tamil Nadu";Tirupparangunram;9.89624;78.0995
-IN;"Tamil Nadu";Kariapatti;9.67505;78.0999
-IN;"Tamil Nadu";Usilampatti;9.96936;77.7862
-IN;Kerala;"Kochi (Palluruthy)";9.92137;76.2658
+IN;Tamil Nadu;Srivilliputhur;9.51272;77.6337
+PH;Central Visayas;Dumaguete;9.29556;123.3
+PH;Western Visayas;Kabankalan;9.99921;122.816
+PH;Western Visayas;Kabankalan;9.9839;122.814
+IN;Tamil Nadu;Sivakasi (Gandhinagar);9.46796;77.7652
+IN;Tamil Nadu;Tirupparangunram;9.89624;78.0995
+IN;Tamil Nadu;Kariapatti;9.67505;78.0999
+IN;Tamil Nadu;Usilampatti;9.96936;77.7862
+IN;Kerala;Kochi (Palluruthy);9.92137;76.2658
 IN;Kerala;Kochi;9.96649;76.3005
-IN;Kerala;"Ernākulam (Kathrikadavu)";9.98611;76.292
-IN;"Tamil Nadu";"Sivakasi (Satchiyapuram)";9.46451;77.7804
-VN;"Kiên Giang Province";"Thành Phố Rạch Giá";9.98677;105.105
-VN;"Sóc Trăng Province";"Thành Phố Sóc Trăng";9.57556;105.956
-VN;"Trà Vinh Province";"Thành phố Trà Vinh (Khóm 6)";9.92743;106.331
-IN;Kerala;"Ernākulam (Kadavanthra)";9.97079;76.2999
-VN;"Cà Mau Province";"Thành Phố Cà Mau (Phường 5)";9.17583;105.152
-IN;Kerala;"Kochi (Mundamveli)";9.92469;76.2529
-IN;Kerala;"Kottayam (Collectorate)";9.58745;76.5336
+IN;Kerala;Ernākulam (Kathrikadavu);9.98611;76.292
+IN;Tamil Nadu;Sivakasi (Satchiyapuram);9.46451;77.7804
+VN;Kiên Giang Province;Thành Phố Rạch Giá;9.98677;105.105
+VN;Sóc Trăng Province;Thành Phố Sóc Trăng;9.57556;105.956
+VN;Trà Vinh Province;Thành phố Trà Vinh (Khóm 6);9.92743;106.331
+IN;Kerala;Ernākulam (Kadavanthra);9.97079;76.2999
+VN;Cà Mau Province;Thành Phố Cà Mau (Phường 5);9.17583;105.152
+IN;Kerala;Kochi (Mundamveli);9.92469;76.2529
+IN;Kerala;Kottayam (Collectorate);9.58745;76.5336
 IN;Kerala;Vaikam;9.74858;76.3964
-FM;"Yap State";Colonia;9.51444;138.129
-FM;"Yap State";Colonia;9.51638;138.122
-IN;"Tamil Nadu";"Paramakudi (Chinnakadai)";9.54314;78.5964
+FM;Yap State;Colonia;9.51444;138.129
+FM;Yap State;Colonia;9.51638;138.122
+IN;Tamil Nadu;Paramakudi (Chinnakadai);9.54314;78.5964
 PH;Caraga;Sison;9.66028;125.529
 IN;Kerala;Thanneermukkom;9.66337;76.3807
-IN;"Tamil Nadu";Kovilpatti;9.17267;77.8715
-IN;"Tamil Nadu";Paramagudi;9.54633;78.5907
+IN;Tamil Nadu;Kovilpatti;9.17267;77.8715
+IN;Tamil Nadu;Paramagudi;9.54633;78.5907
 IN;Kerala;Ochira;9.13478;76.5117
-IN;"Tamil Nadu";Madurai;9.95078;78.1465
+IN;Tamil Nadu;Madurai;9.95078;78.1465
 PH;Caraga;Tandag;9.07833;126.199
 IN;Kerala;Ponmana;9.06733;76.565
-IN;"Tamil Nadu";"Tallākulam (Mellur)";9.93209;78.1361
+IN;Tamil Nadu;Tallākulam (Mellur);9.93209;78.1361
 IN;Kerala;Palai;9.71306;76.6833
-IN;"Tamil Nadu";"Madurai (Laxmipuram)";9.91902;78.1268
-PH;"Central Visayas";Dumaguete;9.30684;123.305
+IN;Tamil Nadu;Madurai (Laxmipuram);9.91902;78.1268
+PH;Central Visayas;Dumaguete;9.30684;123.305
 IN;Kerala;Kayamkulam;9.1743;76.4944
 IN;Kerala;Alappuzha;9.68499;76.3516
-IN;Kerala;"Kochi (Giri Nagar)";9.96376;76.3016
+IN;Kerala;Kochi (Giri Nagar);9.96376;76.3016
 IN;Kerala;Chengannūr;9.31575;76.6151
-IN;Kerala;"Ernākulam (Eroor South)";9.95427;76.3441
-IN;"Tamil Nadu";"Madurai (Ponmeni)";9.92579;78.0923
+IN;Kerala;Ernākulam (Eroor South);9.95427;76.3441
+IN;Tamil Nadu;Madurai (Ponmeni);9.92579;78.0923
 IN;Kerala;Thodiyoor;9.09049;76.6239
-IN;Kerala;"Kottayam (Vellapadu)";9.70973;76.6769
-IN;Kerala;"Pāla (Vellappadu)";9.70976;76.6767
-IN;Kerala;"Kakkanad (Chittethukara)";9.99582;76.357
-IN;Kerala;"Kochi (Kaloor)";9.99581;76.2921
-IN;"Tamil Nadu";"Tirupparangunram (Thiruvalluvar Nagar)";9.90223;78.0903
+IN;Kerala;Kottayam (Vellapadu);9.70973;76.6769
+IN;Kerala;Pāla (Vellappadu);9.70976;76.6767
+IN;Kerala;Kakkanad (Chittethukara);9.99582;76.357
+IN;Kerala;Kochi (Kaloor);9.99581;76.2921
+IN;Tamil Nadu;Tirupparangunram (Thiruvalluvar Nagar);9.90223;78.0903
 IN;Kerala;Kumbalam;9.9063;76.3113
-PH;Caraga;"Los Angeles";9.0125;125.608
+PH;Caraga;Los Angeles;9.0125;125.608
 IN;Kerala;Kureekkad;9.92975;76.3746
-IN;Kerala;"Kochi (Kaloor)";9.99864;76.297
+IN;Kerala;Kochi (Kaloor);9.99864;76.297
 FM;Yap;Colonia;9.51444;138.129
-NG;"Plateau State";Bukuru;9.79399;8.86397
-NG;"Kaduna State";Kagarko;9.4911;7.69771
-NG;Bauchi;"Tafawa Balewa";9.76017;9.55172
-NG;"Gombe State";Kaltungo;9.81998;11.3087
+NG;Plateau State;Bukuru;9.79399;8.86397
+NG;Kaduna State;Kagarko;9.4911;7.69771
+NG;Bauchi;Tafawa Balewa;9.76017;9.55172
+NG;Gombe State;Kaltungo;9.81998;11.3087
 IN;Kerala;Idukki;9.85;76.9667
 IN;Kerala;Mēppādam;9.32416;76.4934
-IN;"Tamil Nadu";Aruppukkottai;9.5096;78.0959
+IN;Tamil Nadu;Aruppukkottai;9.5096;78.0959
 IN;Kerala;Pathirappally;9.53539;76.3221
-PH;"Central Visayas";Zamboanguita;9.1025;123.2
-TH;"Surat Thani";Kanchanadit;9.16611;99.4701
-IN;"Tamil Nadu";Virudunagar;9.58509;77.9579
+PH;Central Visayas;Zamboanguita;9.1025;123.2
+TH;Surat Thani;Kanchanadit;9.16611;99.4701
+IN;Tamil Nadu;Virudunagar;9.58509;77.9579
 IN;Kerala;Kanayannur;9.96667;76.2667
 IN;Kerala;Changanassery;9.44203;76.536
 IN;Kerala;Maradu;9.93653;76.3238
 IN;Kerala;Kurattissery;9.31872;76.5282
 IN;Kerala;Chennithala;9.28078;76.5185
 IN;Kerala;Nattakam;9.54533;76.5141
-LK;"Northern Province";Jaffna;9.6615;80.0255
-LK;"Northern Province";Jaffna;9.66845;80.0074
-VN;"Sóc Trăng Province";"Châu Thành";9.7007;105.902
-PH;"Central Visayas";Basdiot;9.94718;123.375
-PH;"Central Visayas";Danao;9.63333;124.2
-PH;"Central Visayas";"Santa Catalina";9.3337;122.864
-VN;"Trà Vinh Province";"Thành phố Trà Vinh";9.95133;106.335
-VN;"Cà Mau Province";"Cà Mau";9.15267;105.196
-VN;"Sóc Trăng Province";"Sóc Trăng";9.60252;105.974
-VN;"Bạc Liêu Province";"Bạc Liêu";9.294;105.722
-VN;"Kiên Giang Province";"Vĩnh Thuận";9.50802;105.257
-VN;"Bạc Liêu Province";"Thị Trấn Ngan Dừa";9.56703;105.45
-PH;"Northern Mindanao";Mambajao;9.2504;124.716
+LK;Northern Province;Jaffna;9.6615;80.0255
+LK;Northern Province;Jaffna;9.66845;80.0074
+VN;Sóc Trăng Province;Châu Thành;9.7007;105.902
+PH;Central Visayas;Basdiot;9.94718;123.375
+PH;Central Visayas;Danao;9.63333;124.2
+PH;Central Visayas;Santa Catalina;9.3337;122.864
+VN;Trà Vinh Province;Thành phố Trà Vinh;9.95133;106.335
+VN;Cà Mau Province;Cà Mau;9.15267;105.196
+VN;Sóc Trăng Province;Sóc Trăng;9.60252;105.974
+VN;Bạc Liêu Province;Bạc Liêu;9.294;105.722
+VN;Kiên Giang Province;Vĩnh Thuận;9.50802;105.257
+VN;Bạc Liêu Province;Thị Trấn Ngan Dừa;9.56703;105.45
+PH;Northern Mindanao;Mambajao;9.2504;124.716
 IN;Kerala;Chottanikkara;9.93639;76.3811
 IN;Kerala;Perumbaikad;9.61827;76.5313
-VN;"Kiên Giang Province";"Giồng Riềng";9.90974;105.314
-VN;"Sóc Trăng Province";"Long Phú";9.61025;106.119
-IN;Kerala;"Ernākulam (Udayamperoor)";9.89553;76.3681
-IN;"Tamil Nadu";Uttamapālaiyam;9.80701;77.3272
-IN;"Tamil Nadu";Kombai;9.84745;77.296
-IN;"Tamil Nadu";Cumbum;9.73647;77.2847
+VN;Kiên Giang Province;Giồng Riềng;9.90974;105.314
+VN;Sóc Trăng Province;Long Phú;9.61025;106.119
+IN;Kerala;Ernākulam (Udayamperoor);9.89553;76.3681
+IN;Tamil Nadu;Uttamapālaiyam;9.80701;77.3272
+IN;Tamil Nadu;Kombai;9.84745;77.296
+IN;Tamil Nadu;Cumbum;9.73647;77.2847
 IN;Kerala;Karungappalli;9.10422;76.537
 IN;Kerala;Cheppad;9.23458;76.4733
 IN;Kerala;Kattanam;9.17614;76.5632
 IN;Kerala;Keerikkad;9.17722;76.4855
 IN;Kerala;Haripād;9.28358;76.4552
 IN;Kerala;Thazhakara;9.25021;76.5674
-IN;"Tamil Nadu";Tallākulam;9.9377;78.1293
-IN;Kerala;"Kuttikkanam (Pīrmed)";9.58338;76.9716
-IN;Kerala;"Kochi (Ravipuram)";9.95403;76.2911
-IN;Kerala;"Kochi (Kaloor)";9.99886;76.2966
+IN;Tamil Nadu;Tallākulam;9.9377;78.1293
+IN;Kerala;Kuttikkanam (Pīrmed);9.58338;76.9716
+IN;Kerala;Kochi (Ravipuram);9.95403;76.2911
+IN;Kerala;Kochi (Kaloor);9.99886;76.2966
 IN;Kerala;Koni;9.22671;76.8497
 IN;Kerala;Kuttāttukulam;9.85978;76.5844
 IN;Kerala;Tiruvalla;9.37319;76.5846
-IN;Kerala;"Thazhakara (P.o)";9.21254;76.6424
-IN;Kerala;"Chavara (Sankaramangalam)";9.00192;76.5335
-TH;"Surat Thani";"Tha Khanon";9.0302;98.9529
-PH;"Central Visayas";Dumaguete;9.30347;123.307
-PH;"Central Visayas";Panglao;9.58823;123.772
-PH;"Central Visayas";Banilad;9.2786;123.294
-PH;"Northern Mindanao";Pandan;9.2391;124.724
-PH;"Central Visayas";Jugno;9.4683;123.204
+IN;Kerala;Thazhakara (P.o);9.21254;76.6424
+IN;Kerala;Chavara (Sankaramangalam);9.00192;76.5335
+TH;Surat Thani;Tha Khanon;9.0302;98.9529
+PH;Central Visayas;Dumaguete;9.30347;123.307
+PH;Central Visayas;Panglao;9.58823;123.772
+PH;Central Visayas;Banilad;9.2786;123.294
+PH;Northern Mindanao;Pandan;9.2391;124.724
+PH;Central Visayas;Jugno;9.4683;123.204
 IN;Kerala;Tiruvalla;9.3816;76.5749
 IN;Kerala;Lālam;9.71667;76.7
-PH;"Central Visayas";Dumaguete;9.30779;123.31
-PH;"Central Visayas";Biabas;9.8;124.467
+PH;Central Visayas;Dumaguete;9.30779;123.31
+PH;Central Visayas;Biabas;9.8;124.467
 PH;Caraga;Tago;9.02111;126.232
-PH;"Central Visayas";Tapon;9.7715;123.527
-PH;"Central Visayas";Carmen;9.8223;124.196
-IN;"Tamil Nadu";"Madurai (Madurai Main)";9.92332;78.1135
-IN;"Tamil Nadu";Kappalūr;9.83588;78.0338
-IN;"Tamil Nadu";"Tallākulam (Ramaond Reserve Line)";9.93898;78.1372
+PH;Central Visayas;Tapon;9.7715;123.527
+PH;Central Visayas;Carmen;9.8223;124.196
+IN;Tamil Nadu;Madurai (Madurai Main);9.92332;78.1135
+IN;Tamil Nadu;Kappalūr;9.83588;78.0338
+IN;Tamil Nadu;Tallākulam (Ramaond Reserve Line);9.93898;78.1372
 IN;Kerala;Thazhava;9.09872;76.5546
-PH;"Central Visayas";Cortes;9.722;123.88
-PH;"Central Visayas";Langtad;9.89094;123.604
-PH;"Central Visayas";Bayawan;9.3649;122.804
-IN;Kerala;"Tiruvalla (Thukalassery)";9.37349;76.5843
-IN;Kerala;"Ernākulam (Shenoys)";9.97663;76.2826
+PH;Central Visayas;Cortes;9.722;123.88
+PH;Central Visayas;Langtad;9.89094;123.604
+PH;Central Visayas;Bayawan;9.3649;122.804
+IN;Kerala;Tiruvalla (Thukalassery);9.37349;76.5843
+IN;Kerala;Ernākulam (Shenoys);9.97663;76.2826
 IN;Kerala;Mulamthuruthy;9.9003;76.3844
-IN;Kerala;"Kochi (Jawahar Nagar)";9.9711;76.299
-IN;Kerala;"Ernākulam (Vennala)";9.99728;76.3147
-IN;"Tamil Nadu";"Madurai (Anna Nagar)";9.92195;78.1396
-IN;Kerala;"Kochi (Kadavanthra)";9.95417;76.3024
-TH;"Surat Thani";Chaiya;9.38625;99.1986
-PH;"Central Visayas";"De la Paz";9.70004;123.864
-IN;"Tamil Nadu";Madurai;9.99167;78.2495
-CR;"San José";Escazú;9.9207;-84.1461
-NG;"Kaduna State";Kachia;9.87342;7.95407
-PH;"Central Visayas";"San Miguel";9.2239;123.285
-CR;"San José";Pozos;9.95798;-84.1961
-CR;"Heredia Province";Llorente;9.99842;-84.1581
-PH;Mimaropa;"Puerto Princesa City (Tagburos)";9.83516;118.727
-PH;"Central Visayas";Catigbian;9.83854;124.042
-PH;"Central Visayas";Biking;9.59382;123.843
+IN;Kerala;Kochi (Jawahar Nagar);9.9711;76.299
+IN;Kerala;Ernākulam (Vennala);9.99728;76.3147
+IN;Tamil Nadu;Madurai (Anna Nagar);9.92195;78.1396
+IN;Kerala;Kochi (Kadavanthra);9.95417;76.3024
+TH;Surat Thani;Chaiya;9.38625;99.1986
+PH;Central Visayas;De la Paz;9.70004;123.864
+IN;Tamil Nadu;Madurai;9.99167;78.2495
+CR;San José;Escazú;9.9207;-84.1461
+NG;Kaduna State;Kachia;9.87342;7.95407
+PH;Central Visayas;San Miguel;9.2239;123.285
+CR;San José;Pozos;9.95798;-84.1961
+CR;Heredia Province;Llorente;9.99842;-84.1581
+PH;Mimaropa;Puerto Princesa City (Tagburos);9.83516;118.727
+PH;Central Visayas;Catigbian;9.83854;124.042
+PH;Central Visayas;Biking;9.59382;123.843
 BJ;Borgou;Nikki;9.94009;3.21075
-CR;"San José";"San José (Mántica)";9.93589;-84.0966
+CR;San José;San José (Mántica);9.93589;-84.0966
 PH;Caraga;Tubod;9.5625;125.571
 CO;Bolívar;Magangué;9.24142;-74.7528
 CO;Bolívar;Magangué;9.24202;-74.7547
-CR;"Cartago Province";Tobosi;9.83837;-83.9839
-CR;"Cartago Province";Paraíso;9.83847;-83.8665
-CR;"San José";"San José";9.93302;-84.0693
-CR;"San José";"San Rafael";9.94326;-84.1509
-CR;"San José";"San José (Los Gobernantes)";9.94959;-84.0985
-PA;Panamá;"Panama City";9.02905;-79.5345
-PA;"Bocas del Toro Province";"Isla Bastimentos";9.3;-82.1333
+CR;Cartago Province;Tobosi;9.83837;-83.9839
+CR;Cartago Province;Paraíso;9.83847;-83.8665
+CR;San José;San José;9.93302;-84.0693
+CR;San José;San Rafael;9.94326;-84.1509
+CR;San José;San José (Los Gobernantes);9.94959;-84.0985
+PA;Panamá;Panama City;9.02905;-79.5345
+PA;Bocas del Toro Province;Isla Bastimentos;9.3;-82.1333
 PH;Caraga;Cabadbaran;9.12261;125.535
-PH;"Central Visayas";Baclayon;9.62639;123.894
-CR;"San José";Escazú;9.91887;-84.1399
-CR;"San José";"San Vicente";9.96194;-84.0494
-CR;"San José";Curridabat;9.9139;-84.0359
-CR;"San José";"San Pedro (Ayarco Sur)";9.90929;-84.0191
-CR;"San José";"San Pedro (Roosevelt)";9.93093;-84.0526
-PA;Panamá;"Panama City";9.04537;-79.4838
+PH;Central Visayas;Baclayon;9.62639;123.894
+CR;San José;Escazú;9.91887;-84.1399
+CR;San José;San Vicente;9.96194;-84.0494
+CR;San José;Curridabat;9.9139;-84.0359
+CR;San José;San Pedro (Ayarco Sur);9.90929;-84.0191
+CR;San José;San Pedro (Roosevelt);9.93093;-84.0526
+PA;Panamá;Panama City;9.04537;-79.4838
 GN;Conakry;Ratoma;9.60678;-13.654
 IN;Kerala;Kutiatodu;9.8;76.3333
-TH;Chumphon;"Lang Suan";9.91333;99.0571
-IN;"Tamil Nadu";Peraiyur;9.73579;77.7896
-CO;"Sucre Department";Sincelejo;9.3045;-75.3905
-CR;"Cartago Province";Pacayas;9.80737;-84.0482
-CR;"San José";"San Felipe";9.90444;-84.1062
-CR;"Puntarenas Province";Jacó;9.61497;-84.6298
-CR;"Puntarenas Province";Esparza;9.99197;-84.6663
-CR;"San José";"San Rafael (Trejos Montealegre)";9.93523;-84.1314
-CR;"San José";Guadalupe;9.94805;-84.0566
-CR;"Alajuela Province";Orotina;9.91193;-84.5234
-CR;"Alajuela Province";Desamparados;9.94727;-84.5063
-CR;"San José";Sabanilla;9.94706;-84.0341
-CR;"Puntarenas Province";Chacarita;9.98424;-84.7789
-CR;"Puntarenas Province";Puntarenas;9.97691;-84.8379
-CR;"Puntarenas Province";Quepos;9.43063;-84.1623
-CR;"Puntarenas Province";Paquera;9.82005;-84.9351
-CR;"Heredia Province";"San Francisco";9.9938;-84.1274
-CR;"Cartago Province";Cot;9.89472;-83.8745
-CR;"San José";Monterrey;9.7573;-84.1096
-CR;"San José";Aserrí;9.86142;-84.0927
-CR;"Alajuela Province";"Barrio Jesús";9.97439;-84.4217
-CR;"San José";"San Vicente de Moravia";9.96164;-84.0488
-CR;"San José";Santiago;9.84636;-84.3143
-NG;FCT;"Abuja (Wuse)";9.08206;7.49002
-CI;"Savanes District";Boundiali;9.52167;-6.48694
-SO;"Woqooyi Galbeed";Hargeisa;9.56122;44.0669
+TH;Chumphon;Lang Suan;9.91333;99.0571
+IN;Tamil Nadu;Peraiyur;9.73579;77.7896
+CO;Sucre Department;Sincelejo;9.3045;-75.3905
+CR;Cartago Province;Pacayas;9.80737;-84.0482
+CR;San José;San Felipe;9.90444;-84.1062
+CR;Puntarenas Province;Jacó;9.61497;-84.6298
+CR;Puntarenas Province;Esparza;9.99197;-84.6663
+CR;San José;San Rafael (Trejos Montealegre);9.93523;-84.1314
+CR;San José;Guadalupe;9.94805;-84.0566
+CR;Alajuela Province;Orotina;9.91193;-84.5234
+CR;Alajuela Province;Desamparados;9.94727;-84.5063
+CR;San José;Sabanilla;9.94706;-84.0341
+CR;Puntarenas Province;Chacarita;9.98424;-84.7789
+CR;Puntarenas Province;Puntarenas;9.97691;-84.8379
+CR;Puntarenas Province;Quepos;9.43063;-84.1623
+CR;Puntarenas Province;Paquera;9.82005;-84.9351
+CR;Heredia Province;San Francisco;9.9938;-84.1274
+CR;Cartago Province;Cot;9.89472;-83.8745
+CR;San José;Monterrey;9.7573;-84.1096
+CR;San José;Aserrí;9.86142;-84.0927
+CR;Alajuela Province;Barrio Jesús;9.97439;-84.4217
+CR;San José;San Vicente de Moravia;9.96164;-84.0488
+CR;San José;Santiago;9.84636;-84.3143
+NG;FCT;Abuja (Wuse);9.08206;7.49002
+CI;Savanes District;Boundiali;9.52167;-6.48694
+SO;Woqooyi Galbeed;Hargeisa;9.56122;44.0669
 SO;Togdheer;Burao;9.52213;45.5336
-SO;"Woqooyi Galbeed";Hargeisa;9.5356;44.0502
-CI;"Savanes District";Dikodougou;9.06757;-5.77222
+SO;Woqooyi Galbeed;Hargeisa;9.5356;44.0502
+CI;Savanes District;Dikodougou;9.06757;-5.77222
 VE;Zulia;Bachaquero;9.96209;-71.1238
-IN;"Tamil Nadu";Madurai;9.90706;78.0984
-IN;"Tamil Nadu";Tiruttangal;9.48333;77.8333
-IN;"Tamil Nadu";Madurai;9.9252;78.1542
-PH;"Central Visayas";Maribojoc;9.7417;123.845
-CR;"Cartago Province";Paraíso;9.83936;-83.872
-IN;Kerala;"Kochi (Vyttila)";9.96714;76.307
+IN;Tamil Nadu;Madurai;9.90706;78.0984
+IN;Tamil Nadu;Tiruttangal;9.48333;77.8333
+IN;Tamil Nadu;Madurai;9.9252;78.1542
+PH;Central Visayas;Maribojoc;9.7417;123.845
+CR;Cartago Province;Paraíso;9.83936;-83.872
+IN;Kerala;Kochi (Vyttila);9.96714;76.307
 GN;Conakry;Conakry;9.51223;-13.7128
-NG;FCT;"Abuja (Wuse)";9.0539;7.45798
-IN;Kerala;"Kottayam (Eerayil Kadavu)";9.58873;76.5306
-IN;Kerala;"Kochi (Palarivattom)";9.99981;76.3009
-CR;"San José";"San Pedro";9.93015;-84.0511
-PH;"Central Visayas";"Siquijor (Pañgi)";9.2154;123.527
-PH;"Central Visayas";"Mabini (San Roque)";9.90438;124.528
-GH;Northern;"Tamale (Dungu)";9.37455;-0.879431
-PH;"Central Visayas";Mabini;9.89691;124.531
-CR;"San José";"Santa Ana";9.92991;-84.1963
-CR;"Cartago Province";"San Diego";9.90028;-84.0017
-CR;"San José";Granadilla;9.93203;-84.0196
-CR;"San José";"San Rafael";9.93609;-84.1516
-CR;"San José";Colima;9.95579;-84.0854
-CR;"Heredia Province";"San Antonio";9.9816;-84.1859
-PA;Panamá;"Panama City";9.01453;-79.4986
-CR;"Cartago Province";"La Suiza";9.85065;-83.6169
-CR;"San José";"San José (Camelias)";9.90814;-84.0684
-CR;"San José";Colón;9.91491;-84.2417
-CR;"Puntarenas Province";Puntarenas;9.97784;-84.8294
-CR;"San José";"San Marcos";9.6601;-84.0203
-CR;"San José";"San José (Zona Industrial)";9.94067;-84.1255
-CR;"San José";"San Rafael Arriba";9.87648;-84.0748
-PA;Panamá;"Panama City (Villa de Las Fuentes)";9.01742;-79.5328
-VE;Monagas;"Maturín (San Simón)";9.74087;-63.1658
-PA;"Panamá Oeste Province";Lagarterita;9.07944;-79.9139
-TH;"Ranong province";Kapoe;9.58522;98.5961
-VN;"Bạc Liêu Province";"Thị Trấn Giá Rai";9.23789;105.455
-VN;"Bạc Liêu Province";"Ông Yến";9.483;105.346
-VN;"Hậu Giang";"Một Ngàn";9.92402;105.63
-CR;"San José";"San José (Morenos)";9.93123;-84.1021
-CR;"Alajuela Province";"Río Segundo";9.99943;-84.1936
-LK;"Northern Province";Keppapularu;9.2754;80.7553
-LK;"Northern Province";Valvettithurai;9.81667;80.1667
-PH;"Central Visayas";Dauis;9.62528;123.866
-CR;"San José";"San Miguel";9.87121;-84.0608
-CR;"Alajuela Province";Atenas;9.97489;-84.3789
-CR;"San José";Patarrá;9.88059;-84.0355
-CR;"San José";"San José (Mántica)";9.93766;-84.0978
-CR;"Heredia Province";Ángeles;9.98863;-84.0592
-CR;"San José";"San José (Sabana)";9.93572;-84.1041
-CR;"Cartago Province";"Tres Ríos";9.90692;-83.9879
-CR;"San José";"San José (Geroma)";9.95066;-84.1246
-PA;Panamá;"Panama City";9.00289;-79.5326
-CR;"San José";"San Rafael";9.93691;-84.1337
-CR;"San José";Mercedes;9.22018;-83.5707
-CO;"Cesar Department";Astrea;9.49828;-73.9759
-CO;Bolívar;"San Jacinto";9.82767;-75.1217
-CR;"Cartago Province";Capellades;9.92165;-83.7853
-CR;"San José";Salitral;9.91163;-84.1784
-CR;"Cartago Province";Concepción;9.92683;-84.0012
-CO;"Sucre Department";"Nueva Granada";9.16095;-75.0481
+NG;FCT;Abuja (Wuse);9.0539;7.45798
+IN;Kerala;Kottayam (Eerayil Kadavu);9.58873;76.5306
+IN;Kerala;Kochi (Palarivattom);9.99981;76.3009
+CR;San José;San Pedro;9.93015;-84.0511
+PH;Central Visayas;Siquijor (Pañgi);9.2154;123.527
+PH;Central Visayas;Mabini (San Roque);9.90438;124.528
+GH;Northern;Tamale (Dungu);9.37455;-0.879431
+PH;Central Visayas;Mabini;9.89691;124.531
+CR;San José;Santa Ana;9.92991;-84.1963
+CR;Cartago Province;San Diego;9.90028;-84.0017
+CR;San José;Granadilla;9.93203;-84.0196
+CR;San José;San Rafael;9.93609;-84.1516
+CR;San José;Colima;9.95579;-84.0854
+CR;Heredia Province;San Antonio;9.9816;-84.1859
+PA;Panamá;Panama City;9.01453;-79.4986
+CR;Cartago Province;La Suiza;9.85065;-83.6169
+CR;San José;San José (Camelias);9.90814;-84.0684
+CR;San José;Colón;9.91491;-84.2417
+CR;Puntarenas Province;Puntarenas;9.97784;-84.8294
+CR;San José;San Marcos;9.6601;-84.0203
+CR;San José;San José (Zona Industrial);9.94067;-84.1255
+CR;San José;San Rafael Arriba;9.87648;-84.0748
+PA;Panamá;Panama City (Villa de Las Fuentes);9.01742;-79.5328
+VE;Monagas;Maturín (San Simón);9.74087;-63.1658
+PA;Panamá Oeste Province;Lagarterita;9.07944;-79.9139
+TH;Ranong province;Kapoe;9.58522;98.5961
+VN;Bạc Liêu Province;Thị Trấn Giá Rai;9.23789;105.455
+VN;Bạc Liêu Province;Ông Yến;9.483;105.346
+VN;Hậu Giang;Một Ngàn;9.92402;105.63
+CR;San José;San José (Morenos);9.93123;-84.1021
+CR;Alajuela Province;Río Segundo;9.99943;-84.1936
+LK;Northern Province;Keppapularu;9.2754;80.7553
+LK;Northern Province;Valvettithurai;9.81667;80.1667
+PH;Central Visayas;Dauis;9.62528;123.866
+CR;San José;San Miguel;9.87121;-84.0608
+CR;Alajuela Province;Atenas;9.97489;-84.3789
+CR;San José;Patarrá;9.88059;-84.0355
+CR;San José;San José (Mántica);9.93766;-84.0978
+CR;Heredia Province;Ángeles;9.98863;-84.0592
+CR;San José;San José (Sabana);9.93572;-84.1041
+CR;Cartago Province;Tres Ríos;9.90692;-83.9879
+CR;San José;San José (Geroma);9.95066;-84.1246
+PA;Panamá;Panama City;9.00289;-79.5326
+CR;San José;San Rafael;9.93691;-84.1337
+CR;San José;Mercedes;9.22018;-83.5707
+CO;Cesar Department;Astrea;9.49828;-73.9759
+CO;Bolívar;San Jacinto;9.82767;-75.1217
+CR;Cartago Province;Capellades;9.92165;-83.7853
+CR;San José;Salitral;9.91163;-84.1784
+CR;Cartago Province;Concepción;9.92683;-84.0012
+CO;Sucre Department;Nueva Granada;9.16095;-75.0481
 PA;Colón;Gatún;9.2891;-79.768
 PA;Panamá;Paraíso;9.03315;-79.6275
-PH;"Central Visayas";Malabugas;9.3692;122.77
-PH;"Central Visayas";Boljoon;9.6281;123.479
-PH;"Central Visayas";Loboc;9.63833;124.035
-PH;"Northern Mindanao";Tupsan;9.19917;124.777
-PH;"Central Visayas";Bais;9.59111;123.123
+PH;Central Visayas;Malabugas;9.3692;122.77
+PH;Central Visayas;Boljoon;9.6281;123.479
+PH;Central Visayas;Loboc;9.63833;124.035
+PH;Northern Mindanao;Tupsan;9.19917;124.777
+PH;Central Visayas;Bais;9.59111;123.123
 PH;Caraga;Dapa;9.75606;126.052
-PH;Mimaropa;"San Jose";9.80056;118.757
+PH;Mimaropa;San Jose;9.80056;118.757
 PH;Mimaropa;Tagburos;9.82861;118.732
-VE;Portuguesa;"Villa Bruzual";9.33186;-69.1197
+VE;Portuguesa;Villa Bruzual;9.33186;-69.1197
 VE;Monagas;Caicara;9.81755;-63.6133
-VE;Cojedes;"San Carlos";9.66415;-68.5866
-VE;Anzoátegui;"Santa Ana";9.3056;-64.6548
+VE;Cojedes;San Carlos;9.66415;-68.5866
+VE;Anzoátegui;Santa Ana;9.3056;-64.6548
 VE;Anzoátegui;Clarines;9.93991;-65.1652
 VE;Guárico;Zaraza;9.35029;-65.3245
-CO;"Cesar Department";Bosconia;9.97106;-73.8882
-CO;"Sucre Department";Corozal;9.31847;-75.2933
-CO;"Magdalena Department";Guamal;9.14334;-74.2238
-CR;"San José";"San Rafael (Guachipelín)";9.95203;-84.16
-PA;Colón;"Arco Iris";9.33818;-79.8924
-PA;Panamá;"Cabra Número Uno";9.1121;-79.3345
-CR;"San José";Escazú;9.93932;-84.1426
-CR;"Heredia Province";"San Francisco";9.97288;-84.1464
-CR;"Limón Province";"Puerto Limón";9.99074;-83.036
-CR;"Guanacaste Province";Bejuco;9.85014;-85.3292
-CR;"Cartago Province";Turrialba;9.90371;-83.6836
-CR;"Cartago Province";Cartago;9.86381;-83.9162
-CR;"Heredia Province";"San Antonio";9.99991;-84.1963
-CR;"San José";"San José";9.93263;-84.0781
-CR;"Limón Province";Cahuita;9.73853;-82.841
-CR;"San José";Mercedes;9.27447;-83.5797
-CR;"San José";"San José (Sabana)";9.93523;-84.1026
-CR;"Puntarenas Province";Parrita;9.52166;-84.3229
-PA;Panamá;"Panama City";9.01298;-79.5118
-PA;Panamá;"Alcalde Díaz";9.12273;-79.5567
-PA;"Bocas del Toro Province";"Valle de Riscó";9.23118;-82.4297
-PA;Colón;"Villa Alondra";9.38912;-79.7822
-PA;Panamá;"Paso Blanco";9.12767;-79.2447
+CO;Cesar Department;Bosconia;9.97106;-73.8882
+CO;Sucre Department;Corozal;9.31847;-75.2933
+CO;Magdalena Department;Guamal;9.14334;-74.2238
+CR;San José;San Rafael (Guachipelín);9.95203;-84.16
+PA;Colón;Arco Iris;9.33818;-79.8924
+PA;Panamá;Cabra Número Uno;9.1121;-79.3345
+CR;San José;Escazú;9.93932;-84.1426
+CR;Heredia Province;San Francisco;9.97288;-84.1464
+CR;Limón Province;Puerto Limón;9.99074;-83.036
+CR;Guanacaste Province;Bejuco;9.85014;-85.3292
+CR;Cartago Province;Turrialba;9.90371;-83.6836
+CR;Cartago Province;Cartago;9.86381;-83.9162
+CR;Heredia Province;San Antonio;9.99991;-84.1963
+CR;San José;San José;9.93263;-84.0781
+CR;Limón Province;Cahuita;9.73853;-82.841
+CR;San José;Mercedes;9.27447;-83.5797
+CR;San José;San José (Sabana);9.93523;-84.1026
+CR;Puntarenas Province;Parrita;9.52166;-84.3229
+PA;Panamá;Panama City;9.01298;-79.5118
+PA;Panamá;Alcalde Díaz;9.12273;-79.5567
+PA;Bocas del Toro Province;Valle de Riscó;9.23118;-82.4297
+PA;Colón;Villa Alondra;9.38912;-79.7822
+PA;Panamá;Paso Blanco;9.12767;-79.2447
 PA;Panamá;Naranjal;9.13292;-79.229
-PA;Panamá;"Rancho Café";9.12696;-79.3749
+PA;Panamá;Rancho Café;9.12696;-79.3749
 PA;Colón;Cristóbal;9.35222;-79.9044
 CO;Córdoba;Buenavista;9.04963;-76.0028
-CR;"San José";Mercedes;9.93958;-84.0531
-CO;"Sucre Department";Sincelejo;9.30141;-75.3876
-VE;Trujillo;"Santa Isabel";9.63163;-70.8084
+CR;San José;Mercedes;9.93958;-84.0531
+CO;Sucre Department;Sincelejo;9.30141;-75.3876
+VE;Trujillo;Santa Isabel;9.63163;-70.8084
 IN;Kerala;Kottārakara;9.00359;76.7738
 IN;Kerala;Tiruvalla;9.38527;76.575
-IN;Kerala;"Kochi (Nettoor)";9.92801;76.3145
-IN;"Tamil Nadu";Virudhunagar;9.56801;77.9624
-IN;Kerala;"Ernākulam (Elamkulam)";9.96697;76.3023
-IN;"Tamil Nadu";Ramanathapuram;9.36394;78.8395
-IN;"Tamil Nadu";"Madurai (Palanganatham)";9.90442;78.0955
-IN;"Tamil Nadu";Madurai;9.93941;78.1692
-IN;"Tamil Nadu";Kadayanallur;9.07897;77.3554
-IN;"Tamil Nadu";Sivaganga;9.84796;78.4832
+IN;Kerala;Kochi (Nettoor);9.92801;76.3145
+IN;Tamil Nadu;Virudhunagar;9.56801;77.9624
+IN;Kerala;Ernākulam (Elamkulam);9.96697;76.3023
+IN;Tamil Nadu;Ramanathapuram;9.36394;78.8395
+IN;Tamil Nadu;Madurai (Palanganatham);9.90442;78.0955
+IN;Tamil Nadu;Madurai;9.93941;78.1692
+IN;Tamil Nadu;Kadayanallur;9.07897;77.3554
+IN;Tamil Nadu;Sivaganga;9.84796;78.4832
 PH;Mimaropa;Tagburos;9.83495;118.738
-CR;"San José";Pozos;9.95553;-84.1942
+CR;San José;Pozos;9.95553;-84.1942
 PA;Colón;Colón;9.36025;-79.9002
-CR;"San José";"San José (Sabana Sur)";9.9309;-84.0934
+CR;San José;San José (Sabana Sur);9.9309;-84.0934
 VE;Anzoátegui;Anaco;9.42923;-64.4674
 VE;Portuguesa;Guanare;9.03713;-69.7287
 VE;Portuguesa;Píritu;9.37083;-69.2103
-CR;"San José";"San José (Pavas)";9.94541;-84.1277
+CR;San José;San José (Pavas);9.94541;-84.1277
 CO;Córdoba;Lorica;9.23648;-75.8135
-CR;"San José";"San José (Castro Fernández)";9.93423;-84.1146
+CR;San José;San José (Castro Fernández);9.93423;-84.1146
 PA;Colón;Sabanitas;9.34521;-79.8054
-PA;Colón;"Puerto Lindo";9.60539;-79.5856
+PA;Colón;Puerto Lindo;9.60539;-79.5856
 PA;Panamá;Caimitillo;9.15912;-79.5366
-PA;"Bocas del Toro Province";Bastimentos;9.34862;-82.2109
+PA;Bocas del Toro Province;Bastimentos;9.34862;-82.2109
 PA;Colón;Salud;9.2067;-80.132
 PA;Panamá;Pacora;9.08252;-79.2896
-PA;Colón;"Río Rita";9.30854;-79.791
+PA;Colón;Río Rita;9.30854;-79.791
 PA;Colón;Cativá;9.36218;-79.8323
-PA;"Bocas del Toro Province";Guabito;9.49437;-82.6115
-PA;"Bocas del Toro Province";"El Empalme";9.41468;-82.5224
-PA;"Bocas del Toro Province";Changuinola;9.43;-82.52
-PA;Panamá;"Unión de Azuero";9.15771;-79.1678
-PA;"Bocas del Toro Province";"Bocas Town";9.34031;-82.242
+PA;Bocas del Toro Province;Guabito;9.49437;-82.6115
+PA;Bocas del Toro Province;El Empalme;9.41468;-82.5224
+PA;Bocas del Toro Province;Changuinola;9.43;-82.52
+PA;Panamá;Unión de Azuero;9.15771;-79.1678
+PA;Bocas del Toro Province;Bocas Town;9.34031;-82.242
 VE;Zulia;Bobures;9.24173;-71.1751
-VE;Trujillo;"Sabana Grande";9.4018;-70.7981
+VE;Trujillo;Sabana Grande;9.4018;-70.7981
 VE;Cojedes;Tinaquillo;9.91861;-68.3047
 VE;Cojedes;Libertad;9.35654;-68.6922
 VE;Cojedes;Cojedes;9.62232;-68.9181
-VE;Guárico;"San José de Guaribe";9.86025;-65.8131
-VE;Guárico;"El Sombrero";9.3863;-67.0582
-VE;Anzoátegui;"Aragua de Barcelona";9.45588;-64.8293
-VE;Portuguesa;"Agua Blanca";9.66205;-69.1068
-VE;Portuguesa;"San Rafael de Onoto";9.67813;-68.9728
+VE;Guárico;San José de Guaribe;9.86025;-65.8131
+VE;Guárico;El Sombrero;9.3863;-67.0582
+VE;Anzoátegui;Aragua de Barcelona;9.45588;-64.8293
+VE;Portuguesa;Agua Blanca;9.66205;-69.1068
+VE;Portuguesa;San Rafael de Onoto;9.67813;-68.9728
 VE;Cojedes;Macapo;9.82533;-68.4387
-VE;Aragua;"San Sebastián";9.94108;-67.1718
-CO;"Sucre Department";"Los Palmitos";9.37899;-75.2677
-CO;"Sucre Department";Sincelejo;9.30458;-75.3906
-PA;"Bocas del Toro Province";Almirante;9.30091;-82.4018
-CO;"Cesar Department";Becerril;9.70413;-73.2793
-CO;"Cesar Department";"La Jagua de Ibirico";9.56228;-73.3341
-CR;"Cartago Province";Tucurrique;9.85336;-83.7227
-CR;"Puntarenas Province";"Buenos Aires";9.17298;-83.3328
-CO;"Magdalena Department";"Santa Ana";9.32296;-74.5705
-PA;"Panamá Oeste Province";"Nuevo Emperador";9.00282;-79.7304
+VE;Aragua;San Sebastián;9.94108;-67.1718
+CO;Sucre Department;Los Palmitos;9.37899;-75.2677
+CO;Sucre Department;Sincelejo;9.30458;-75.3906
+PA;Bocas del Toro Province;Almirante;9.30091;-82.4018
+CO;Cesar Department;Becerril;9.70413;-73.2793
+CO;Cesar Department;La Jagua de Ibirico;9.56228;-73.3341
+CR;Cartago Province;Tucurrique;9.85336;-83.7227
+CR;Puntarenas Province;Buenos Aires;9.17298;-83.3328
+CO;Magdalena Department;Santa Ana;9.32296;-74.5705
+PA;Panamá Oeste Province;Nuevo Emperador;9.00282;-79.7304
 VE;Anzoátegui;Onoto;9.59714;-65.1935
 PA;Panamá;Chilibre;9.15403;-79.6202
-CO;"Sucre Department";Sincelejo;9.30689;-75.3986
-CR;"San José";Palmichal;9.83802;-84.204
-PA;Panamá;"Panama City";9.04021;-79.4463
-CR;"San José";"San José (Morenos)";9.93214;-84.1014
-CR;"San José";"San Rafael";9.96308;-84.2038
-CR;"San José";"San José (Colombari)";9.9193;-84.0766
-CR;"San José";"San José (Morenos)";9.93246;-84.1026
-CR;"San José";"San José (San Bosco)";9.93431;-84.0916
-CR;"Alajuela Province";"Río Segundo";9.99961;-84.1891
-CR;"Cartago Province";"Curridabat (Cipreses)";9.91906;-84.0246
-CR;"San José";"San José (Mata de Plátano)";9.93614;-84.0782
-CR;"San José";"San José (Mata de Plátano)";9.93633;-84.0781
-CR;"San José";Salitrillos;9.85373;-84.0916
-CR;"San José";"San José (Rohrmoser)";9.94169;-84.1138
+CO;Sucre Department;Sincelejo;9.30689;-75.3986
+CR;San José;Palmichal;9.83802;-84.204
+PA;Panamá;Panama City;9.04021;-79.4463
+CR;San José;San José (Morenos);9.93214;-84.1014
+CR;San José;San Rafael;9.96308;-84.2038
+CR;San José;San José (Colombari);9.9193;-84.0766
+CR;San José;San José (Morenos);9.93246;-84.1026
+CR;San José;San José (San Bosco);9.93431;-84.0916
+CR;Alajuela Province;Río Segundo;9.99961;-84.1891
+CR;Cartago Province;Curridabat (Cipreses);9.91906;-84.0246
+CR;San José;San José (Mata de Plátano);9.93614;-84.0782
+CR;San José;San José (Mata de Plátano);9.93633;-84.0781
+CR;San José;Salitrillos;9.85373;-84.0916
+CR;San José;San José (Rohrmoser);9.94169;-84.1138
 PA;Colón;Colón;9.35367;-79.8962
-PA;Panamá;"Panama City";9.02346;-79.5184
-PA;Panamá;"Panama City";9.01824;-79.5023
+PA;Panamá;Panama City;9.02346;-79.5184
+PA;Panamá;Panama City;9.01824;-79.5023
 PA;Colón;Colón;9.3593;-79.8999
-CO;"Sucre Department";Sincelejo;9.29542;-75.4046
-CO;"Magdalena Department";"Santa Bárbara de Pinto";9.43251;-74.7041
-CO;"Sucre Department";Sampués;9.18361;-75.3817
-PA;"Bocas del Toro Province";"El Silencio";9.38557;-82.5337
+CO;Sucre Department;Sincelejo;9.29542;-75.4046
+CO;Magdalena Department;Santa Bárbara de Pinto;9.43251;-74.7041
+CO;Sucre Department;Sampués;9.18361;-75.3817
+PA;Bocas del Toro Province;El Silencio;9.38557;-82.5337
 PA;Colón;Portobelo;9.55303;-79.6569
 PA;Panamá;Chepo;9.17019;-79.1008
-PA;Panamá;"La Mesa";9.17573;-79.2723
-PA;Panamá;"Las Margaritas";9.19181;-79.0867
-PA;Panamá;"Panama City (Tocumen)";9.07158;-79.3993
-PA;Panamá;"Los Lotes";9.12542;-79.291
-PA;Colón;"Puerto Pilón";9.36316;-79.7933
-CO;"Magdalena Department";"Pijiño del Carmen";9.32908;-74.453
+PA;Panamá;La Mesa;9.17573;-79.2723
+PA;Panamá;Las Margaritas;9.19181;-79.0867
+PA;Panamá;Panama City (Tocumen);9.07158;-79.3993
+PA;Panamá;Los Lotes;9.12542;-79.291
+PA;Colón;Puerto Pilón;9.36316;-79.7933
+CO;Magdalena Department;Pijiño del Carmen;9.32908;-74.453
 CO;Bolívar;Cicuco;9.27756;-74.6431
-CO;"Cesar Department";"El Paso";9.65724;-73.7468
-CO;"Sucre Department";"San Pedro";9.3956;-75.0648
-CR;"San José";"San José (Sabana)";9.93604;-84.1008
+CO;Cesar Department;El Paso;9.65724;-73.7468
+CO;Sucre Department;San Pedro;9.3956;-75.0648
+CR;San José;San José (Sabana);9.93604;-84.1008
 VE;Lara;Sarare;9.78129;-69.1633
 VE;Lara;Sanare;9.75209;-69.6524
 VE;Anzoátegui;Cantaura;9.30571;-64.3584
-VE;Monagas;"Punta de Mata";9.69131;-63.6092
+VE;Monagas;Punta de Mata;9.69131;-63.6092
 VE;Aragua;Camatagua;9.78762;-66.9062
 VE;Monagas;Aguasay;9.42489;-63.7308
 VE;Portuguesa;Ospino;9.29572;-69.4543
-CR;"San José";"Santa Ana";9.9269;-84.1831
-CR;"San José";Pozos;9.96331;-84.1984
-CR;"San José";"San Pedro (Los Yoses)";9.931;-84.0584
-PA;Panamá;"Panama City";9.01426;-79.4755
-CO;"Sucre Department";"Villa Ruby";9.31886;-75.32
-CR;"San José";"San José (Los Abogados)";9.92295;-84.0619
-CR;"San José";"San José (Lomas del Río)";9.95915;-84.1637
-CR;"Heredia Province";"San Antonio";9.97972;-84.1804
-CR;"San José";"Guadalupe (Santa Cecilia)";9.95094;-84.0495
-CR;"Cartago Province";"Tres Ríos";9.90477;-83.9943
-CR;"San José";"San Juan";9.964;-84.0775
-CR;"San José";"San José";9.93565;-84.0793
-CO;Bolívar;"San Juan Nepomuceno";9.96177;-75.0802
-CO;"Cesar Department";Curumaní;9.20106;-73.5426
-PA;Panamá;"San Miguelito";9.03028;-79.5083
+CR;San José;Santa Ana;9.9269;-84.1831
+CR;San José;Pozos;9.96331;-84.1984
+CR;San José;San Pedro (Los Yoses);9.931;-84.0584
+PA;Panamá;Panama City;9.01426;-79.4755
+CO;Sucre Department;Villa Ruby;9.31886;-75.32
+CR;San José;San José (Los Abogados);9.92295;-84.0619
+CR;San José;San José (Lomas del Río);9.95915;-84.1637
+CR;Heredia Province;San Antonio;9.97972;-84.1804
+CR;San José;Guadalupe (Santa Cecilia);9.95094;-84.0495
+CR;Cartago Province;Tres Ríos;9.90477;-83.9943
+CR;San José;San Juan;9.964;-84.0775
+CR;San José;San José;9.93565;-84.0793
+CO;Bolívar;San Juan Nepomuceno;9.96177;-75.0802
+CO;Cesar Department;Curumaní;9.20106;-73.5426
+PA;Panamá;San Miguelito;9.03028;-79.5083
 PA;Colón;Colón;9.35256;-79.8939
-CR;"San José";Curridabat;9.91455;-84.0387
-CO;"Sucre Department";Tolú;9.52392;-75.5814
-PA;Panamá;"Villa Unida";9.19176;-79.6237
-PA;Panamá;"Panama City";9.01818;-79.5151
-PA;Panamá;"Panama City";9.01126;-79.4784
-PA;Panamá;"Panama City";9.01082;-79.4746
-CR;"San José";"San José (Mata de Plátano)";9.93642;-84.078
-CR;"San José";"San José (San Sebastián)";9.91058;-84.0848
-CR;"Cartago Province";"Tres Ríos";9.90846;-83.9849
-VE;Cojedes;"El Pao";9.63926;-68.1292
-VE;Portuguesa;"Paraíso de Chabasquén";9.43326;-69.9473
-VE;Portuguesa;"El Playón";9.0944;-69.097
-PA;Colón;"Nuevo Vigía";9.2442;-79.6087
-PA;Panamá;"San Antonio";9.1729;-79.5474
-CR;"San José";"San José";9.93232;-84.0728
-CR;Cartago;"Curridabat (Cipreses)";9.91906;-84.0246
-CR;"San José";"San Marcos (Santa Cecilia)";9.66927;-84.0267
-CR;"San José";"San José (General Cañas)";9.94028;-84.1017
-CO;"Cesar Department";Becerril;9.70322;-73.2294
-CR;"San José";"San Rafael";9.94263;-84.153
-CR;"Cartago Province";Paraíso;9.74892;-83.7534
-PA;Panamá;"Panama City";9.00617;-79.499
-PA;Colón;"María Chiquita";9.44289;-79.753
-CO;"Cesar Department";Chimichagua;9.25778;-73.8123
-CO;Córdoba;"San Andrés de Sotavento";9.14475;-75.5088
+CR;San José;Curridabat;9.91455;-84.0387
+CO;Sucre Department;Tolú;9.52392;-75.5814
+PA;Panamá;Villa Unida;9.19176;-79.6237
+PA;Panamá;Panama City;9.01818;-79.5151
+PA;Panamá;Panama City;9.01126;-79.4784
+PA;Panamá;Panama City;9.01082;-79.4746
+CR;San José;San José (Mata de Plátano);9.93642;-84.078
+CR;San José;San José (San Sebastián);9.91058;-84.0848
+CR;Cartago Province;Tres Ríos;9.90846;-83.9849
+VE;Cojedes;El Pao;9.63926;-68.1292
+VE;Portuguesa;Paraíso de Chabasquén;9.43326;-69.9473
+VE;Portuguesa;El Playón;9.0944;-69.097
+PA;Colón;Nuevo Vigía;9.2442;-79.6087
+PA;Panamá;San Antonio;9.1729;-79.5474
+CR;San José;San José;9.93232;-84.0728
+CR;Cartago;Curridabat (Cipreses);9.91906;-84.0246
+CR;San José;San Marcos (Santa Cecilia);9.66927;-84.0267
+CR;San José;San José (General Cañas);9.94028;-84.1017
+CO;Cesar Department;Becerril;9.70322;-73.2294
+CR;San José;San Rafael;9.94263;-84.153
+CR;Cartago Province;Paraíso;9.74892;-83.7534
+PA;Panamá;Panama City;9.00617;-79.499
+PA;Colón;María Chiquita;9.44289;-79.753
+CO;Cesar Department;Chimichagua;9.25778;-73.8123
+CO;Córdoba;San Andrés de Sotavento;9.14475;-75.5088
 CO;Córdoba;Cotorra;9.03886;-75.7897
-CR;"San José";"San José";9.93599;-84.067
-CR;"San José";"San Rafael (Guachipelín)";9.94879;-84.162
-LK;"Northern Province";Kilinochchi;9.3961;80.3982
-NG;FCT;"Abuja (Garki)";9.0319;7.48281
-NG;FCT;"Abuja (Wuse)";9.0662;7.47423
-CR;"San José";"San Marcos (Santa Cecilia)";9.67015;-84.0268
-CR;"San José";"San José (Alameda)";9.93676;-84.0547
-CR;"San José";"San José (Pinos)";9.94756;-84.0719
-CR;"San José";"San José (Tournón)";9.94111;-84.0759
-CR;"San José";"San José (Pitahaya)";9.93636;-84.0924
-CR;"San José";"San José (Cuba)";9.92458;-84.0901
-CR;"San José";"San José (Zona Industrial)";9.9392;-84.1243
-NG;FCT;"Abuja (Wuse)";9.06672;7.49412
-NG;FCT;"Abuja (Wuse)";9.08257;7.49287
-NG;FCT;"Abuja (Central Business Dis)";9.05463;7.4904
+CR;San José;San José;9.93599;-84.067
+CR;San José;San Rafael (Guachipelín);9.94879;-84.162
+LK;Northern Province;Kilinochchi;9.3961;80.3982
+NG;FCT;Abuja (Garki);9.0319;7.48281
+NG;FCT;Abuja (Wuse);9.0662;7.47423
+CR;San José;San Marcos (Santa Cecilia);9.67015;-84.0268
+CR;San José;San José (Alameda);9.93676;-84.0547
+CR;San José;San José (Pinos);9.94756;-84.0719
+CR;San José;San José (Tournón);9.94111;-84.0759
+CR;San José;San José (Pitahaya);9.93636;-84.0924
+CR;San José;San José (Cuba);9.92458;-84.0901
+CR;San José;San José (Zona Industrial);9.9392;-84.1243
+NG;FCT;Abuja (Wuse);9.06672;7.49412
+NG;FCT;Abuja (Wuse);9.08257;7.49287
+NG;FCT;Abuja (Central Business Dis);9.05463;7.4904
 TG;Kara;Kandé;9.95778;1.04472
 TG;Kara;Kara;9.55111;1.18611
 TG;Centrale;Tchamba;9.03333;1.41667
-CI;"Savanes District";Sirasso;9.27425;-6.09897
-CI;"Zanzan District";Bouna;9.26927;-2.9951
-CI;"Savanes District";Blabokaha;9.38333;-5.56667
-ET;Amhara;"Debre Berhan";9.67954;39.5326
+CI;Savanes District;Sirasso;9.27425;-6.09897
+CI;Zanzan District;Bouna;9.26927;-2.9951
+CI;Savanes District;Blabokaha;9.38333;-5.56667
+ET;Amhara;Debre Berhan;9.67954;39.5326
 ET;Oromiya;Nek’emtē;9.08333;36.55
 ET;Oromiya;Sendafa;9.15203;39.0233
 ET;Oromiya;‘Alemaya;9.39334;42.0097
 ET;Oromiya;Genet;9.06667;38.5
-ET;"Dire Dawa";"Dire Dawa";9.59306;41.8661
+ET;Dire Dawa;Dire Dawa;9.59306;41.8661
 ET;Harari;Harar;9.31387;42.1181
 ET;Somali;Jijiga;9.35;42.8
 ET;Oromiya;Gimbi;9.17031;35.8349
-ET;Oromiya;"Funyan Bīra";9.4025;42.3175
-NG;FCT;"Abuja (Central Business District)";9.05859;7.48941
+ET;Oromiya;Funyan Bīra;9.4025;42.3175
+NG;FCT;Abuja (Central Business District);9.05859;7.48941
 GN;Conakry;Kaloum;9.54208;-13.6809
 GN;Conakry;Conakry;9.50818;-13.7153
 GN;Kindia;Dubréka;9.79111;-13.5233
-NG;"Kwara State";Jebba;9.11972;4.8236
-NG;"Gombe State";Pindiga;9.98433;10.9523
-SO;"Woqooyi Galbeed";Hargeisa;9.57327;44.0489
-CR;"San José";"San Pedro";9.93256;-84.047
-PA;Panamá;"Panama City";9.0119;-79.5085
-PA;Panamá;"Panama City";9.02439;-79.4958
-CR;"San José";"San José";9.93859;-84.0953
-CR;"San José";"San Pedro (Los Yoses)";9.92961;-84.0597
-CR;"Cartago Province";Turrialba;9.90352;-83.6835
+NG;Kwara State;Jebba;9.11972;4.8236
+NG;Gombe State;Pindiga;9.98433;10.9523
+SO;Woqooyi Galbeed;Hargeisa;9.57327;44.0489
+CR;San José;San Pedro;9.93256;-84.047
+PA;Panamá;Panama City;9.0119;-79.5085
+PA;Panamá;Panama City;9.02439;-79.4958
+CR;San José;San José;9.93859;-84.0953
+CR;San José;San Pedro (Los Yoses);9.92961;-84.0597
+CR;Cartago Province;Turrialba;9.90352;-83.6835
 VE;Portuguesa;Acarigua;9.55972;-69.2019
 VE;Monagas;Maturín;9.77602;-63.1985
-VE;Anzoátegui;"Anaco (Campo Norte)";9.45333;-64.4822
-PA;Panamá;"Panama City (Clayton)";9.00397;-79.5758
+VE;Anzoátegui;Anaco (Campo Norte);9.45333;-64.4822
+PA;Panamá;Panama City (Clayton);9.00397;-79.5758
 PA;Colón;Colón;9.35106;-79.8965
 PA;Panamá;Betania;9.01043;-79.5355
-PA;Panamá;"Panama City (Casa Blanca)";9.02357;-79.4753
-PA;Panamá;"Panama City (Clayton)";9.0014;-79.5814
-PA;Panamá;"Panama City";9.02143;-79.5297
-PA;Panamá;"Panama City";9.06612;-79.4072
-PA;Panamá;"Panama City";9.00826;-79.4766
-PA;Panamá;"Panama City";9.01662;-79.4849
-PA;Panamá;"Panama City";9.03101;-79.5181
+PA;Panamá;Panama City (Casa Blanca);9.02357;-79.4753
+PA;Panamá;Panama City (Clayton);9.0014;-79.5814
+PA;Panamá;Panama City;9.02143;-79.5297
+PA;Panamá;Panama City;9.06612;-79.4072
+PA;Panamá;Panama City;9.00826;-79.4766
+PA;Panamá;Panama City;9.01662;-79.4849
+PA;Panamá;Panama City;9.03101;-79.5181
 PA;Colón;Colón;9.34813;-79.8812
-PA;Panamá;"Panama City";9.10953;-79.5334
-PA;Panamá;"Panama City";9.06108;-79.5515
-PA;Panamá;"Panama City";9.06287;-79.4212
+PA;Panamá;Panama City;9.10953;-79.5334
+PA;Panamá;Panama City;9.06108;-79.5515
+PA;Panamá;Panama City;9.06287;-79.4212
 PA;Colón;Colón;9.35316;-79.8939
-PA;Panamá;"Panama City";9.00349;-79.5199
+PA;Panamá;Panama City;9.00349;-79.5199
 PA;Colón;Colón;9.35196;-79.8997
-PA;Panamá;"Panama City";9.00365;-79.5684
-PA;Panamá;"Panama City";9.00935;-79.5365
-PA;Panamá;"Panama City (Costa del Este)";9.01313;-79.4676
+PA;Panamá;Panama City;9.00365;-79.5684
+PA;Panamá;Panama City;9.00935;-79.5365
+PA;Panamá;Panama City (Costa del Este);9.01313;-79.4676
 PA;Colón;Colón;9.35447;-79.8947
-CR;"San José";"San José";9.96044;-84.1043
-PA;Panamá;"Panama City (Clayton)";9.00361;-79.5853
-PA;Panamá;"Panama City (Colinas de Cerro Viento)";9.05063;-79.455
-PA;Panamá;"Panama City";9.01334;-79.4821
-PA;Panamá;"Panama City";9.00298;-79.5291
-PA;Panamá;"Panamá District";9.35332;-79.8944
-PA;Panamá;"Panama City";9.00921;-79.5366
-PA;Panamá;"Panama City";9.00647;-79.5007
-CR;"San José";Colón;9.93126;-84.232
-CR;"Alajuela Province";Alajuela;9.99898;-84.2172
-CR;"Cartago Province";Cartago;9.86562;-83.9086
-CR;"San José";"Pozos (Bosques de Lindora)";9.95336;-84.1951
-PA;Panamá;"Panama City";9.00887;-79.4761
-PA;Panamá;"Panama City";9.06444;-79.4075
+CR;San José;San José;9.96044;-84.1043
+PA;Panamá;Panama City (Clayton);9.00361;-79.5853
+PA;Panamá;Panama City (Colinas de Cerro Viento);9.05063;-79.455
+PA;Panamá;Panama City;9.01334;-79.4821
+PA;Panamá;Panama City;9.00298;-79.5291
+PA;Panamá;Panamá District;9.35332;-79.8944
+PA;Panamá;Panama City;9.00921;-79.5366
+PA;Panamá;Panama City;9.00647;-79.5007
+CR;San José;Colón;9.93126;-84.232
+CR;Alajuela Province;Alajuela;9.99898;-84.2172
+CR;Cartago Province;Cartago;9.86562;-83.9086
+CR;San José;Pozos (Bosques de Lindora);9.95336;-84.1951
+PA;Panamá;Panama City;9.00887;-79.4761
+PA;Panamá;Panama City;9.06444;-79.4075
 VE;Guárico;Chaguaramas;9.33754;-66.2528
-PA;Panamá;"Panama City (San Antonio)";9.06284;-79.4437
-CR;"San José";"San Juan";9.95762;-84.0816
-PA;Panamá;"San Miguelito";9.04852;-79.5083
-PA;Panamá;"Panama City";9.00674;-79.5279
-PA;Panamá;"Panama City";9.01038;-79.514
-PA;Panamá;"Panama City";9.01878;-79.5327
-CR;"San José";"Sabanilla (La Alameda)";9.94233;-84.0225
-CR;"San José";"San Rafael Abajo";9.831;-84.2901
-CR;"San José";Tejar;9.74301;-84.2322
-CR;"San José";"San Pedro";9.93306;-84.0557
-CR;"Puntarenas Province";Esparza;9.99069;-84.6674
-CR;"San José";"Santa Ana";9.93191;-84.1802
-CR;"San José";"San Antonio";9.8989;-84.047
-CR;"Cartago Province";Orosi;9.79617;-83.8538
-CR;"Cartago Province";Cartago;9.86565;-83.9082
-CR;"Limón Province";Sixaola;9.50371;-82.612
+PA;Panamá;Panama City (San Antonio);9.06284;-79.4437
+CR;San José;San Juan;9.95762;-84.0816
+PA;Panamá;San Miguelito;9.04852;-79.5083
+PA;Panamá;Panama City;9.00674;-79.5279
+PA;Panamá;Panama City;9.01038;-79.514
+PA;Panamá;Panama City;9.01878;-79.5327
+CR;San José;Sabanilla (La Alameda);9.94233;-84.0225
+CR;San José;San Rafael Abajo;9.831;-84.2901
+CR;San José;Tejar;9.74301;-84.2322
+CR;San José;San Pedro;9.93306;-84.0557
+CR;Puntarenas Province;Esparza;9.99069;-84.6674
+CR;San José;Santa Ana;9.93191;-84.1802
+CR;San José;San Antonio;9.8989;-84.047
+CR;Cartago Province;Orosi;9.79617;-83.8538
+CR;Cartago Province;Cartago;9.86565;-83.9082
+CR;Limón Province;Sixaola;9.50371;-82.612
 VE;Mérida;Arapuey;9.25934;-70.9525
-PA;Panamá;"Panama City (Colinas de Cerro Viento)";9.05224;-79.4517
-PA;Panamá;"Panama City";9.09754;-79.5316
-PA;Panamá;"Panama City";9.03069;-79.5321
-PA;Panamá;"Panama City";9.00073;-79.524
-PA;Panamá;"Panama City (Villa Zaita)";9.07143;-79.5207
-PA;Panamá;"Panama City";9.01177;-79.4765
+PA;Panamá;Panama City (Colinas de Cerro Viento);9.05224;-79.4517
+PA;Panamá;Panama City;9.09754;-79.5316
+PA;Panamá;Panama City;9.03069;-79.5321
+PA;Panamá;Panama City;9.00073;-79.524
+PA;Panamá;Panama City (Villa Zaita);9.07143;-79.5207
+PA;Panamá;Panama City;9.01177;-79.4765
 PA;Colón;Colón;9.35308;-79.892
-PA;Panamá;"Panama City";9.00918;-79.5026
-CO;"Sucre Department";"El Roble";9.10193;-75.1951
+PA;Panamá;Panama City;9.00918;-79.5026
+CO;Sucre Department;El Roble;9.10193;-75.1951
 CO;Córdoba;Momil;9.23767;-75.6749
-PA;Panamá;"Juan Gil";9.1806;-79.2562
-CR;"Cartago Province";Cartago;9.85374;-83.912
-VE;Guárico;"Valle de La Pascua";9.22172;-65.9795
+PA;Panamá;Juan Gil;9.1806;-79.2562
+CR;Cartago Province;Cartago;9.85374;-83.912
+VE;Guárico;Valle de La Pascua;9.22172;-65.9795
 IN;Kerala;Kochi;9.97365;76.2878
-IN;Kerala;"Kochi (Ernakulam South)";9.97339;76.2875
+IN;Kerala;Kochi (Ernakulam South);9.97339;76.2875
 PH;Caraga;Luna;9.737;125.498
 PH;Caraga;Claver;9.5725;125.733
-VE;Trujillo;"Sabana de Mendoza";9.43494;-70.7749
-VE;Zulia;"Caja Seca";9.14151;-71.0674
+VE;Trujillo;Sabana de Mendoza;9.43494;-70.7749
+VE;Zulia;Caja Seca;9.14151;-71.0674
 TG;Kara;Kara;9.54701;1.19335
-CR;"San José";"Santa Ana";9.9312;-84.1807
-PA;Panamá;"Panama City";9.00328;-79.5323
-NG;FCT;"Abuja (Wuse)";9.07294;7.47548
-CR;"San José";"Santa Ana";9.93406;-84.187
-PH;Caraga;"La Union";9.08556;125.536
-IN;"Tamil Nadu";Tallākulam;9.93445;78.1312
-CR;"San José";"San José (Córdoba)";9.92233;-84.0636
-NG;FCT;"Abuja (Utako)";9.06223;7.41178
-PH;"Central Visayas";Alcoy;9.7102;123.507
-PH;"Western Visayas";Camingawan;9.8958;122.863
+CR;San José;Santa Ana;9.9312;-84.1807
+PA;Panamá;Panama City;9.00328;-79.5323
+NG;FCT;Abuja (Wuse);9.07294;7.47548
+CR;San José;Santa Ana;9.93406;-84.187
+PH;Caraga;La Union;9.08556;125.536
+IN;Tamil Nadu;Tallākulam;9.93445;78.1312
+CR;San José;San José (Córdoba);9.92233;-84.0636
+NG;FCT;Abuja (Utako);9.06223;7.41178
+PH;Central Visayas;Alcoy;9.7102;123.507
+PH;Western Visayas;Camingawan;9.8958;122.863
 PH;Caraga;Rizal;9.7804;125.464
-PH;"Central Visayas";Saavedra;9.98517;123.372
+PH;Central Visayas;Saavedra;9.98517;123.372
 IN;Kerala;Muhamma;9.60886;76.3608
-LK;"Northern Province";"Point Pedro";9.81667;80.2333
+LK;Northern Province;Point Pedro;9.81667;80.2333
 IN;Kerala;Karthikappally;9.2568;76.4487

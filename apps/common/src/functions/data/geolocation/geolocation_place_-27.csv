@@ -1,12 +1,12 @@
-AU;Queensland;"South Brisbane";-27.4767;153.017
-AU;Queensland;"South Brisbane";-27.4731;153.014
-AU;Queensland;"Mango Hill";-27.2435;153.024
+AU;Queensland;South Brisbane;-27.4767;153.017
+AU;Queensland;South Brisbane;-27.4731;153.014
+AU;Queensland;Mango Hill;-27.2435;153.024
 AU;Queensland;Brisbane;-27.4705;153.026
 AU;Queensland;Kalbar;-27.9417;152.624
 AU;Queensland;Coomera;-27.8433;153.339
 AU;Queensland;Ipswich;-27.6234;152.761
-AU;Queensland;"Logan City";-27.6392;153.109
-AU;Queensland;"Kelvin Grove";-27.4482;153.013
+AU;Queensland;Logan City;-27.6392;153.109
+AU;Queensland;Kelvin Grove;-27.4482;153.013
 AU;Queensland;Brisbane;-27.4679;153.028
 AU;Queensland;Elimbah;-27.0167;152.95
 AU;Queensland;Toowoomba;-27.5606;151.954
@@ -19,62 +19,62 @@ AU;Queensland;Woodhill;-27.9;152.967
 AU;Queensland;Capalaba;-27.5433;153.203
 AU;Queensland;Brisbane;-27.4699;153.028
 AU;Queensland;Woolloongabba;-27.4881;153.038
-BR;"Santa Catarina";Florianópolis;-27.5948;-48.5569
+BR;Santa Catarina;Florianópolis;-27.5948;-48.5569
 AU;Queensland;Chermside;-27.3858;153.031
 AU;Queensland;Carindale;-27.5198;153.113
-BR;"Santa Catarina";Brusque;-27.0979;-48.9128
-BR;"Santa Catarina";"Santa Terezinha";-27.075;-48.8881
+BR;Santa Catarina;Brusque;-27.0979;-48.9128
+BR;Santa Catarina;Santa Terezinha;-27.075;-48.8881
 AU;Queensland;Laidley;-27.6328;152.393
 AU;Queensland;Brendale;-27.3218;152.983
 AU;Queensland;Brisbane;-27.4628;153.032
-AU;Queensland;"Fortitude Valley";-27.4539;153.033
+AU;Queensland;Fortitude Valley;-27.4539;153.033
 AU;Queensland;Toowong;-27.4856;152.994
 AU;Queensland;Toowoomba;-27.5598;151.951
 AU;Queensland;Indooroopilly;-27.502;152.976
-BR;"Santa Catarina";Campinas;-27.5944;-48.6069
-AU;Queensland;"South Brisbane";-27.4748;153.017
+BR;Santa Catarina;Campinas;-27.5944;-48.6069
+AU;Queensland;South Brisbane;-27.4748;153.017
 AU;Queensland;Albion;-27.4256;153.043
 AU;Queensland;Brisbane;-27.4719;153.029
 AR;Misiones;Oberá;-27.4868;-55.1203
 AR;Misiones;Oberá;-27.4868;-55.1199
-AR;"Santiago del Estero";"Santiago del Estero";-27.8005;-64.2628
+AR;Santiago del Estero;Santiago del Estero;-27.8005;-64.2628
 AR;Catamarca;Andalgalá;-27.5819;-66.3163
-BR;"Rio Grande do Sul";Constantina;-27.7315;-52.9958
+BR;Rio Grande do Sul;Constantina;-27.7315;-52.9958
 AR;Corrientes;Corrientes;-27.4692;-58.8306
 PY;Itapúa;Obligado;-27.0555;-55.6273
 PY;Itapúa;Hohenau;-27.0732;-55.6425
 AR;Catamarca;Andalgalá;-27.5827;-66.3149
-BR;"Santa Catarina";Itacorubi;-27.5832;-48.495
-BR;"Santa Catarina";Florianópolis;-27.5967;-48.5492
-BR;"Santa Catarina";Pantanal;-27.6043;-48.5155
-BR;"Santa Catarina";"Saco Grande";-27.5375;-48.5083
+BR;Santa Catarina;Itacorubi;-27.5832;-48.495
+BR;Santa Catarina;Florianópolis;-27.5967;-48.5492
+BR;Santa Catarina;Pantanal;-27.6043;-48.5155
+BR;Santa Catarina;Saco Grande;-27.5375;-48.5083
 AU;Queensland;Brisbane;-27.4686;153.021
-ZA;"Free State";Kroonstad;-27.6504;27.2349
-ZA;"Free State";Odendaalsrus;-27.8739;26.6907
-ZA;"Free State";Welkom;-27.9774;26.7351
-ZA;"Northern Cape";Kathu;-27.6957;23.0493
+ZA;Free State;Kroonstad;-27.6504;27.2349
+ZA;Free State;Odendaalsrus;-27.8739;26.6907
+ZA;Free State;Welkom;-27.9774;26.7351
+ZA;Northern Cape;Kathu;-27.6957;23.0493
 ZA;Mpumalanga;Amersfoort;-27.0094;29.8664
 ZA;KwaZulu-Natal;Newcastle;-27.758;29.9318
 ZA;KwaZulu-Natal;Vryheid;-27.7695;30.7917
-ZA;"Free State";Frankfort;-27.2789;28.497
+ZA;Free State;Frankfort;-27.2789;28.497
 ZA;KwaZulu-Natal;eMkhuze;-27.6205;32.0339
 ZA;Mpumalanga;eMkhondo;-27.0061;30.8031
 ZA;KwaZulu-Natal;Paulpietersburg;-27.4243;30.8169
 ZA;KwaZulu-Natal;Mkuze;-27.6164;32.0386
 ZA;KwaZulu-Natal;Ngagane;-27.8402;29.9977
-ZA;"Northern Cape";Kuruman;-27.4635;23.4355
+ZA;Northern Cape;Kuruman;-27.4635;23.4355
 ZA;KwaZulu-Natal;Nongoma;-27.9097;31.6482
-ZA;"Free State";Viljoenskroon;-27.2084;26.9485
+ZA;Free State;Viljoenskroon;-27.2084;26.9485
 ZA;KwaZulu-Natal;Hlalanathi;-27.4912;32.183
-ZA;"Free State";Vrede;-27.4257;29.1658
-ZA;"North West";Schweizer-Reneke;-27.1887;25.3293
-ZA;"North West";Bloemhof;-27.6469;25.607
-ZA;"Free State";Heilbron;-27.2812;27.9709
-ZA;"Free State";Reitz;-27.8014;28.4273
+ZA;Free State;Vrede;-27.4257;29.1658
+ZA;North West;Schweizer-Reneke;-27.1887;25.3293
+ZA;North West;Bloemhof;-27.6469;25.607
+ZA;Free State;Heilbron;-27.2812;27.9709
+ZA;Free State;Reitz;-27.8014;28.4273
 ZA;Mpumalanga;Daggakraal;-27.1325;29.9764
-ZA;"Free State";Bothaville;-27.3887;26.617
-ZA;"North West";Boipelo;-27.5654;24.1849
-ZA;"Free State";Kutloanong;-27.8333;26.75
+ZA;Free State;Bothaville;-27.3887;26.617
+ZA;North West;Boipelo;-27.5654;24.1849
+ZA;Free State;Kutloanong;-27.8333;26.75
 ZA;KwaZulu-Natal;Jozini;-27.4296;32.0666
 ZA;KwaZulu-Natal;Ncotshane;-27.342;31.58
 ZA;KwaZulu-Natal;Pongola;-27.3781;31.619
@@ -82,238 +82,238 @@ ZA;KwaZulu-Natal;Utrecht;-27.6586;30.3217
 ZA;KwaZulu-Natal;Louwsburg;-27.5786;31.2894
 ZA;KwaZulu-Natal;Ingwavuma;-27.1331;31.997
 ZA;Mpumalanga;Volksrust;-27.3654;29.8818
-ZA;"Free State";Allanridge;-27.7543;26.6438
-ZA;"Free State";Koppies;-27.2418;27.5742
-ZA;"North West";Makwassie;-27.3156;25.995
+ZA;Free State;Allanridge;-27.7543;26.6438
+ZA;Free State;Koppies;-27.2418;27.5742
+ZA;North West;Makwassie;-27.3156;25.995
 ZA;KwaZulu-Natal;Hlobane;-27.7166;31.0011
-ZA;"North West";Taung;-27.5311;24.7866
-NA;"Karas Region";Grünau;-27.7337;18.3801
+ZA;North West;Taung;-27.5311;24.7866
+NA;Karas Region;Grünau;-27.7337;18.3801
 AU;Queensland;Indooroopilly;-27.4971;152.976
 AU;Queensland;Brisbane;-27.4711;153.029
-AU;Queensland;"South Brisbane";-27.473;153.014
-AU;Queensland;"Petrie Terrace";-27.4661;153.024
-AU;Queensland;"North Lakes";-27.2292;153.02
+AU;Queensland;South Brisbane;-27.473;153.014
+AU;Queensland;Petrie Terrace;-27.4661;153.024
+AU;Queensland;North Lakes;-27.2292;153.02
 AU;Queensland;Greenslopes;-27.5081;153.051
 AU;Queensland;Greenslopes;-27.5097;153.053
 AU;Queensland;Brisbane;-27.4649;153.028
-AU;Queensland;"Spring Hill";-27.462;153.024
+AU;Queensland;Spring Hill;-27.462;153.024
 AU;Queensland;Brisbane;-27.4667;153.028
 AU;Queensland;Toowong;-27.4853;152.992
-AU;"Western Australia";Leinster;-27.6728;121.628
-AU;Queensland;"South Ripley";-27.6922;152.811
+AU;Western Australia;Leinster;-27.6728;121.628
+AU;Queensland;South Ripley;-27.6922;152.811
 AU;Queensland;Jimboomba;-27.8316;153.028
-BR;"Santa Catarina";Camboriú;-27.0253;-48.6544
-BR;"Santa Catarina";Itapema;-27.0903;-48.6114
-AR;Misiones;"El Soberbio";-27.2966;-54.1981
-BR;"Rio Grande do Sul";"Três Passos";-27.456;-53.9302
-BR;"Rio Grande do Sul";Horizontina;-27.6282;-54.306
-BR;"Rio Grande do Sul";Erechim;-27.6346;-52.2754
-BR;"Rio Grande do Sul";Aratiba;-27.3942;-52.3003
-BR;"Rio Grande do Sul";"Erechim (Ceramica)";-27.6516;-52.2832
-BR;"Rio Grande do Sul";"Ametista do Sul";-27.3606;-53.1817
-BR;"Rio Grande do Sul";"Rodeio Bonito";-27.4735;-53.1701
-BR;"Rio Grande do Sul";"Cerro Grande";-27.6061;-53.1667
-BR;"Rio Grande do Sul";"Trindade do Sul";-27.521;-52.895
-BR;"Santa Catarina";Videira;-27.0083;-51.1517
+BR;Santa Catarina;Camboriú;-27.0253;-48.6544
+BR;Santa Catarina;Itapema;-27.0903;-48.6114
+AR;Misiones;El Soberbio;-27.2966;-54.1981
+BR;Rio Grande do Sul;Três Passos;-27.456;-53.9302
+BR;Rio Grande do Sul;Horizontina;-27.6282;-54.306
+BR;Rio Grande do Sul;Erechim;-27.6346;-52.2754
+BR;Rio Grande do Sul;Aratiba;-27.3942;-52.3003
+BR;Rio Grande do Sul;Erechim (Ceramica);-27.6516;-52.2832
+BR;Rio Grande do Sul;Ametista do Sul;-27.3606;-53.1817
+BR;Rio Grande do Sul;Rodeio Bonito;-27.4735;-53.1701
+BR;Rio Grande do Sul;Cerro Grande;-27.6061;-53.1667
+BR;Rio Grande do Sul;Trindade do Sul;-27.521;-52.895
+BR;Santa Catarina;Videira;-27.0083;-51.1517
 AU;Queensland;Brisbane;-27.4652;153.025
-BR;"Rio Grande do Sul";"Campo Novo";-27.6753;-53.8033
-BR;"Rio Grande do Sul";"Boa Vista do Buricá";-27.6686;-54.11
+BR;Rio Grande do Sul;Campo Novo;-27.6753;-53.8033
+BR;Rio Grande do Sul;Boa Vista do Buricá;-27.6686;-54.11
 AR;Chaco;Resistencia;-27.4519;-58.9856
-AR;Misiones;"Dos de Mayo";-27.02;-54.6846
-AU;Queensland;"Dutton Park";-27.4942;153.022
+AR;Misiones;Dos de Mayo;-27.02;-54.6846
+AU;Queensland;Dutton Park;-27.4942;153.022
 AU;Queensland;Lutwyche;-27.4238;153.034
-BR;"Santa Catarina";Chapecó;-27.0871;-52.6215
-BR;"Santa Catarina";Lagoa;-27.6049;-48.4671
-BR;"Rio Grande do Sul";áurea;-27.6972;-52.0494
-BR;"Rio Grande do Sul";"Marcelino Ramos";-27.4654;-51.9078
-BR;"Rio Grande do Sul";"Carlos Gomes";-27.7178;-51.9136
-BR;"Santa Catarina";"Campos Novos";-27.4017;-51.225
-BR;"Santa Catarina";Videira;-27.0052;-51.1544
-BR;"Rio Grande do Sul";"Três de Maio";-27.7733;-54.24
-BR;"Rio Grande do Sul";"Três de Maio (Centro)";-27.7727;-54.2358
-BR;"Rio Grande do Sul";Horizontina;-27.6258;-54.3078
-BR;"Rio Grande do Sul";"Santa Rosa";-27.8708;-54.4814
+BR;Santa Catarina;Chapecó;-27.0871;-52.6215
+BR;Santa Catarina;Lagoa;-27.6049;-48.4671
+BR;Rio Grande do Sul;áurea;-27.6972;-52.0494
+BR;Rio Grande do Sul;Marcelino Ramos;-27.4654;-51.9078
+BR;Rio Grande do Sul;Carlos Gomes;-27.7178;-51.9136
+BR;Santa Catarina;Campos Novos;-27.4017;-51.225
+BR;Santa Catarina;Videira;-27.0052;-51.1544
+BR;Rio Grande do Sul;Três de Maio;-27.7733;-54.24
+BR;Rio Grande do Sul;Três de Maio (Centro);-27.7727;-54.2358
+BR;Rio Grande do Sul;Horizontina;-27.6258;-54.3078
+BR;Rio Grande do Sul;Santa Rosa;-27.8708;-54.4814
 PY;Itapúa;Encarnación;-27.3318;-55.8666
-AR;Misiones;"Jardín América";-27.0424;-55.2269
-BR;"Santa Catarina";Brunópolis;-27.2203;-50.9783
-BR;"Rio Grande do Sul";Seberi;-27.4824;-53.4016
-BR;"Rio Grande do Sul";"Cristal do Sul";-27.4539;-53.2464
-BR;"Rio Grande do Sul";"Taquaruçu do Sul";-27.3999;-53.4675
-BR;"Rio Grande do Sul";Planalto;-27.768;-54.2307
-BR;"Santa Catarina";"Caiacanga da Barra do Sul";-27.7631;-48.5719
-BR;"Santa Catarina";"Santo Amaro da Imperatriz";-27.6881;-48.7786
-BR;"Santa Catarina";Tijucas;-27.2414;-48.6336
-BR;"Santa Catarina";"São João Batista";-27.2761;-48.8494
-BR;"Santa Catarina";"Rio do Sul";-27.2142;-49.6431
-BR;"Santa Catarina";"Otacílio Costa";-27.4831;-50.1219
+AR;Misiones;Jardín América;-27.0424;-55.2269
+BR;Santa Catarina;Brunópolis;-27.2203;-50.9783
+BR;Rio Grande do Sul;Seberi;-27.4824;-53.4016
+BR;Rio Grande do Sul;Cristal do Sul;-27.4539;-53.2464
+BR;Rio Grande do Sul;Taquaruçu do Sul;-27.3999;-53.4675
+BR;Rio Grande do Sul;Planalto;-27.768;-54.2307
+BR;Santa Catarina;Caiacanga da Barra do Sul;-27.7631;-48.5719
+BR;Santa Catarina;Santo Amaro da Imperatriz;-27.6881;-48.7786
+BR;Santa Catarina;Tijucas;-27.2414;-48.6336
+BR;Santa Catarina;São João Batista;-27.2761;-48.8494
+BR;Santa Catarina;Rio do Sul;-27.2142;-49.6431
+BR;Santa Catarina;Otacílio Costa;-27.4831;-50.1219
 PY;Itapúa;Hohenau;-27.0893;-55.6412
 PY;Itapúa;Cambyretá;-27.3586;-55.762
-BR;"Santa Catarina";"Celso Ramos";-27.633;-51.3381
+BR;Santa Catarina;Celso Ramos;-27.633;-51.3381
 AR;Chaco;Basail;-27.8854;-59.2825
-BR;"Santa Catarina";Chapecó;-27.0964;-52.6183
-BR;"Rio Grande do Sul";Erechim;-27.6347;-52.2747
-AR;Corrientes;"Paso de la Patria";-27.3166;-58.5777
-AR;Corrientes;"Paso de la Patria";-27.3174;-58.5726
+BR;Santa Catarina;Chapecó;-27.0964;-52.6183
+BR;Rio Grande do Sul;Erechim;-27.6347;-52.2747
+AR;Corrientes;Paso de la Patria;-27.3166;-58.5777
+AR;Corrientes;Paso de la Patria;-27.3174;-58.5726
 AR;Chaco;Fontana;-27.4204;-59.0373
 AR;Chaco;Resistencia;-27.4636;-58.9866
 AR;Misiones;Posadas;-27.3918;-55.9238
-BR;"Santa Catarina";"Frei Rogério";-27.1747;-50.8047
-BR;"Santa Catarina";Palhoça;-27.6453;-48.6678
-BR;"Santa Catarina";Ibirama;-27.0591;-49.5193
-BR;"Santa Catarina";Ibirama;-27.0569;-49.5178
-BR;"Rio Grande do Sul";"Santo Augusto";-27.8508;-53.7772
-BR;"Rio Grande do Sul";"Esperança do Sul";-27.363;-53.99
-BR;"Rio Grande do Sul";"Três Passos";-27.4556;-53.9319
-AR;"Santiago del Estero";Clodomira;-27.3618;-64.2425
-AR;"Santiago del Estero";"Pozo Hondo";-27.1671;-64.4908
-BR;"Rio Grande do Sul";"Barão de Cotegipe";-27.6208;-52.3797
-BR;"Santa Catarina";Acores;-27.7815;-48.5265
-BR;"Rio Grande do Sul";Alpestre;-27.2489;-53.035
-BR;"Santa Catarina";"Caxambu do Sul";-27.1603;-52.8809
-BR;"Rio Grande do Sul";"Palmeira das Missões (Centro)";-27.9031;-53.3136
-AR;Chaco;"Santa Sylvina";-27.8315;-61.136
-BR;"Rio Grande do Sul";"Frederico Westphalen";-27.3592;-53.3944
-BR;"Santa Catarina";Joaçaba;-27.1781;-51.5047
-BR;"Santa Catarina";Concórdia;-27.2342;-52.0278
+BR;Santa Catarina;Frei Rogério;-27.1747;-50.8047
+BR;Santa Catarina;Palhoça;-27.6453;-48.6678
+BR;Santa Catarina;Ibirama;-27.0591;-49.5193
+BR;Santa Catarina;Ibirama;-27.0569;-49.5178
+BR;Rio Grande do Sul;Santo Augusto;-27.8508;-53.7772
+BR;Rio Grande do Sul;Esperança do Sul;-27.363;-53.99
+BR;Rio Grande do Sul;Três Passos;-27.4556;-53.9319
+AR;Santiago del Estero;Clodomira;-27.3618;-64.2425
+AR;Santiago del Estero;Pozo Hondo;-27.1671;-64.4908
+BR;Rio Grande do Sul;Barão de Cotegipe;-27.6208;-52.3797
+BR;Santa Catarina;Acores;-27.7815;-48.5265
+BR;Rio Grande do Sul;Alpestre;-27.2489;-53.035
+BR;Santa Catarina;Caxambu do Sul;-27.1603;-52.8809
+BR;Rio Grande do Sul;Palmeira das Missões (Centro);-27.9031;-53.3136
+AR;Chaco;Santa Sylvina;-27.8315;-61.136
+BR;Rio Grande do Sul;Frederico Westphalen;-27.3592;-53.3944
+BR;Santa Catarina;Joaçaba;-27.1781;-51.5047
+BR;Santa Catarina;Concórdia;-27.2342;-52.0278
 AR;Chaco;Barranqueras;-27.4813;-58.9393
 AR;Chaco;Resistencia;-27.4515;-58.9849
 AR;Misiones;Posadas;-27.3621;-55.9009
-BR;"Santa Catarina";Capinzal;-27.3436;-51.6119
-ZA;KwaZulu-Natal;"Newcastle (Hutten Heights)";-27.74;29.9285
+BR;Santa Catarina;Capinzal;-27.3436;-51.6119
+ZA;KwaZulu-Natal;Newcastle (Hutten Heights);-27.74;29.9285
 AR;Chaco;Charata;-27.218;-61.1874
 AR;Chaco;Charata;-27.2179;-61.1874
-AR;Chaco;"Las Breñas";-27.0882;-61.0822
+AR;Chaco;Las Breñas;-27.0882;-61.0822
 AR;Chaco;Gancedo;-27.4888;-61.6754
 AR;Misiones;Apóstoles;-27.9194;-55.7606
-BR;"Rio Grande do Sul";"Palmeira das Missões";-27.8994;-53.3136
-AR;Chaco;"San Bernardo";-27.2867;-60.7129
-AR;Chaco;"San Bernardo";-27.2883;-60.716
-AR;Chaco;"La Escondida";-27.1055;-59.446
+BR;Rio Grande do Sul;Palmeira das Missões;-27.8994;-53.3136
+AR;Chaco;San Bernardo;-27.2867;-60.7129
+AR;Chaco;San Bernardo;-27.2883;-60.716
+AR;Chaco;La Escondida;-27.1055;-59.446
 AR;Chaco;Makallé;-27.2057;-59.2871
-AR;Chaco;"Presidencia de la Plaza";-27.0021;-59.8448
-AR;Misiones;"Veinticinco de Mayo";-27.378;-54.745
-AR;Misiones;"Dos de Mayo";-27.0363;-54.6756
-BR;"Santa Catarina";Itá;-27.275;-52.3385
-AR;Misiones;"San Ignacio";-27.2586;-55.539
+AR;Chaco;Presidencia de la Plaza;-27.0021;-59.8448
+AR;Misiones;Veinticinco de Mayo;-27.378;-54.745
+AR;Misiones;Dos de Mayo;-27.0363;-54.6756
+BR;Santa Catarina;Itá;-27.275;-52.3385
+AR;Misiones;San Ignacio;-27.2586;-55.539
 AR;Misiones;Mártires;-27.4226;-55.3766
-BR;"Santa Catarina";Lages;-27.8179;-50.3264
-BR;"Santa Catarina";Lages;-27.8161;-50.3261
-BR;"Rio Grande do Sul";"Barra do Guarita";-27.1919;-53.71
-BR;"Santa Catarina";"Porto Belo";-27.1578;-48.5531
+BR;Santa Catarina;Lages;-27.8179;-50.3264
+BR;Santa Catarina;Lages;-27.8161;-50.3261
+BR;Rio Grande do Sul;Barra do Guarita;-27.1919;-53.71
+BR;Santa Catarina;Porto Belo;-27.1578;-48.5531
 AR;Chaco;Resistencia;-27.458;-58.9961
-BR;"Santa Catarina";"Concórdia (Centro)";-27.2263;-52.018
-BR;"Rio Grande do Sul";Alecrim;-27.655;-54.7639
-BR;"Santa Catarina";"Major Gercino";-27.4173;-48.9524
-BR;"Santa Catarina";Chapecó;-27.0953;-52.617
-BR;"Santa Catarina";"Ribeirão da Ilha";-27.6993;-48.5322
-BR;"Rio Grande do Sul";"Itatiba do Sul";-27.385;-52.4556
-BR;"Santa Catarina";Biguaçu;-27.4942;-48.6556
-AR;Chaco;"La Leonesa";-27.0375;-58.705
-AR;Chaco;"La Leonesa";-27.0421;-58.7054
+BR;Santa Catarina;Concórdia (Centro);-27.2263;-52.018
+BR;Rio Grande do Sul;Alecrim;-27.655;-54.7639
+BR;Santa Catarina;Major Gercino;-27.4173;-48.9524
+BR;Santa Catarina;Chapecó;-27.0953;-52.617
+BR;Santa Catarina;Ribeirão da Ilha;-27.6993;-48.5322
+BR;Rio Grande do Sul;Itatiba do Sul;-27.385;-52.4556
+BR;Santa Catarina;Biguaçu;-27.4942;-48.6556
+AR;Chaco;La Leonesa;-27.0375;-58.705
+AR;Chaco;La Leonesa;-27.0421;-58.7054
 AU;Queensland;Redcliffe;-27.2302;153.11
-AU;Queensland;"Mount Tamborine";-27.9695;153.199
+AU;Queensland;Mount Tamborine;-27.9695;153.199
 AU;Queensland;Gatton;-27.5587;152.276
 AU;Queensland;Brisbane;-27.4698;153.025
 AU;Queensland;Westbrook;-27.6167;151.867
 AU;Queensland;Kleinton;-27.4333;151.95
 AU;Queensland;Minden;-27.5597;152.545
 AU;Queensland;Esk;-27.239;152.422
-AU;"Western Australia";Kalbarri;-27.7105;114.165
-AU;Queensland;"Eagle Farm";-27.4337;153.087
-AU;Queensland;"Upper Coomera";-27.8485;153.292
+AU;Western Australia;Kalbarri;-27.7105;114.165
+AU;Queensland;Eagle Farm;-27.4337;153.087
+AU;Queensland;Upper Coomera;-27.8485;153.292
 AU;Queensland;Brendale;-27.3138;152.985
-AU;"South Australia";Marla;-27.2997;133.622
+AU;South Australia;Marla;-27.2997;133.622
 AU;Queensland;Brisbane;-27.4705;153.027
 AU;Queensland;Boyland;-27.95;153.133
 AU;Queensland;Beaudesert;-27.9869;152.997
-AU;Queensland;"Murphys Creek";-27.4637;152.055
-AU;Queensland;"Fortitude Valley";-27.4578;153.036
+AU;Queensland;Murphys Creek;-27.4637;152.055
+AU;Queensland;Fortitude Valley;-27.4578;153.036
 AU;Queensland;Boonah;-27.9972;152.681
-AU;Queensland;"South Brisbane";-27.4744;153.013
+AU;Queensland;South Brisbane;-27.4744;153.013
 AU;Queensland;Oakey;-27.4442;151.723
 AU;Queensland;Toowong;-27.4843;152.984
-AU;"South Australia";Innamincka;-27.7462;140.739
-AU;Queensland;"Bald Hills";-27.3158;153.004
+AU;South Australia;Innamincka;-27.7462;140.739
+AU;Queensland;Bald Hills;-27.3158;153.004
 AU;Queensland;Brisbane;-27.4688;153.021
-AU;Queensland;"Alexandra Hills";-27.5399;153.226
-ZA;"Free State";Tweeling;-27.5551;28.5161
-AU;Queensland;"Samson Vale";-27.2667;152.85
-ZA;"Free State";Hennenman;-27.9765;27.0242
-ZA;"North West";Christiana;-27.914;25.1611
+AU;Queensland;Alexandra Hills;-27.5399;153.226
+ZA;Free State;Tweeling;-27.5551;28.5161
+AU;Queensland;Samson Vale;-27.2667;152.85
+ZA;Free State;Hennenman;-27.9765;27.0242
+ZA;North West;Christiana;-27.914;25.1611
 ZA;KwaZulu-Natal;Mondlo;-27.983;30.7177
-ZA;"Free State";Villiers;-27.0303;28.6006
-ZA;"Free State";Vredefort;-27.0081;27.3646
-ZA;"Free State";Memel;-27.6816;29.5669
-ZA;KwaZulu-Natal;"Newcastle (Hutten Heights)";-27.7385;29.9258
-ZA;"North West";Wolmaransstad;-27.1974;25.9831
-ZA;"Free State";Lindley;-27.8791;27.9135
-ZA;"Northern Cape";Kuruman;-27.4381;23.4328
-ZA;"North West";Witpoort;-27.1718;26.127
+ZA;Free State;Villiers;-27.0303;28.6006
+ZA;Free State;Vredefort;-27.0081;27.3646
+ZA;Free State;Memel;-27.6816;29.5669
+ZA;KwaZulu-Natal;Newcastle (Hutten Heights);-27.7385;29.9258
+ZA;North West;Wolmaransstad;-27.1974;25.9831
+ZA;Free State;Lindley;-27.8791;27.9135
+ZA;Northern Cape;Kuruman;-27.4381;23.4328
+ZA;North West;Witpoort;-27.1718;26.127
 ZA;Mpumalanga;Wakkerstroom;-27.3549;30.1438
-ZA;"Northern Cape";Hartswater;-27.7496;24.7971
-ZA;KwaZulu-Natal;"Newcastle (Hutten Heights)";-27.7348;29.9269
-ZA;"North West";"Jan Kempdorp";-27.9225;24.8305
-ZA;KwaZulu-Natal;"Newcastle (Newcastle CBD)";-27.7582;29.9351
+ZA;Northern Cape;Hartswater;-27.7496;24.7971
+ZA;KwaZulu-Natal;Newcastle (Hutten Heights);-27.7348;29.9269
+ZA;North West;Jan Kempdorp;-27.9225;24.8305
+ZA;KwaZulu-Natal;Newcastle (Newcastle CBD);-27.7582;29.9351
 AU;Queensland;Brisbane;-27.467;153.029
 AU;Queensland;Southport;-27.9681;153.41
 AU;Queensland;Brisbane;-27.4649;153.031
-AU;Queensland;"Bowen Hills";-27.4428;153.041
+AU;Queensland;Bowen Hills;-27.4428;153.041
 AU;Queensland;Brisbane;-27.4673;153.019
-AU;Queensland;"Acacia Ridge";-27.5788;153.013
+AU;Queensland;Acacia Ridge;-27.5788;153.013
 AU;Queensland;Brisbane;-27.4631;153.03
 AU;Queensland;Pinkenba;-27.3982;153.133
 AU;Queensland;Milton;-27.4725;153.005
 AU;Queensland;Murarrie;-27.4513;153.099
 AU;Queensland;Brisbane;-27.4706;153.023
 AU;Queensland;Wacol;-27.5863;152.922
-AU;Queensland;"Toowoomba city centre";-27.5561;151.951
+AU;Queensland;Toowoomba city centre;-27.5561;151.951
 AU;Queensland;Ipswich;-27.623;152.76
 AU;Queensland;Brisbane;-27.4711;153.024
-AU;Queensland;"Surfers Paradise";-27.9985;153.423
-AU;Queensland;"Slacks Creek";-27.6173;153.12
-AU;Queensland;"Albany Creek";-27.3455;152.968
+AU;Queensland;Surfers Paradise;-27.9985;153.423
+AU;Queensland;Slacks Creek;-27.6173;153.12
+AU;Queensland;Albany Creek;-27.3455;152.968
 AU;Queensland;Salisbury;-27.5454;153.033
 AU;Queensland;Newmarket;-27.435;153.009
 AU;Queensland;Brisbane;-27.4685;153.03
 AU;Queensland;Jindalee;-27.5373;152.935
 AU;Queensland;Woodridge;-27.629;153.109
-AU;Queensland;"Fortitude Valley";-27.4543;153.038
-AU;Queensland;"Fortitude Valley";-27.4613;153.038
-AU;Queensland;"Fortitude Valley";-27.453;153.04
+AU;Queensland;Fortitude Valley;-27.4543;153.038
+AU;Queensland;Fortitude Valley;-27.4613;153.038
+AU;Queensland;Fortitude Valley;-27.453;153.04
 AU;Queensland;Brisbane;-27.4764;153.028
-AU;Queensland;"Fortitude Valley";-27.4567;153.037
-AU;Queensland;"Fortitude Valley";-27.4546;153.038
+AU;Queensland;Fortitude Valley;-27.4567;153.037
+AU;Queensland;Fortitude Valley;-27.4546;153.038
 AU;Queensland;Brisbane;-27.4668;153.024
-AU;Queensland;"Seventeen Mile Rocks";-27.5575;152.951
-AU;Queensland;"Fortitude Valley";-27.4552;153.034
+AU;Queensland;Seventeen Mile Rocks;-27.5575;152.951
+AU;Queensland;Fortitude Valley;-27.4552;153.034
 AU;Queensland;Brisbane;-27.4663;153.03
 AU;Queensland;Paddington;-27.4617;153.003
 AU;Queensland;Albion;-27.439;153.043
 AU;Queensland;Samford;-27.3719;152.887
 AU;Queensland;Burpengary;-27.1433;152.968
-AU;Queensland;"Fortitude Valley";-27.455;153.03
+AU;Queensland;Fortitude Valley;-27.455;153.03
 AU;Queensland;Southport;-27.9696;153.393
-AU;Queensland;"Spring Hill";-27.4635;153.025
+AU;Queensland;Spring Hill;-27.4635;153.025
 AU;Queensland;Murarrie;-27.4578;153.1
-AU;Queensland;"South Brisbane";-27.4758;153.016
+AU;Queensland;South Brisbane;-27.4758;153.016
 AU;Queensland;Lawnton;-27.2791;152.952
 AU;Queensland;Tara;-27.2341;150.524
 AU;Queensland;Brisbane;-27.466;153.031
 AU;Queensland;Brisbane;-27.4692;153.03
 AU;Queensland;Milton;-27.4678;153.01
-AU;Queensland;"South Brisbane";-27.473;153.018
-AU;Queensland;"Fortitude Valley";-27.453;153.038
+AU;Queensland;South Brisbane;-27.473;153.018
+AU;Queensland;Fortitude Valley;-27.453;153.038
 AU;Queensland;Brisbane;-27.4649;153.029
-AU;Queensland;"Eight Mile Plains";-27.5775;153.095
+AU;Queensland;Eight Mile Plains;-27.5775;153.095
 AU;Queensland;Birkdale;-27.4936;153.214
 AU;Queensland;Brisbane;-27.4676;153.03
-AU;Queensland;"Eight Mile Plains";-27.5779;153.097
+AU;Queensland;Eight Mile Plains;-27.5779;153.097
 AU;Queensland;Southport;-27.9719;153.406
 AU;Queensland;Brisbane;-27.4657;153.028
 AU;Queensland;Brisbane;-27.4663;153.028
-AU;Queensland;"South Brisbane";-27.4755;153.01
-AU;Queensland;"Eight Mile Plains";-27.5786;153.097
-AU;Queensland;"Coopers Plains";-27.5612;153.035
+AU;Queensland;South Brisbane;-27.4755;153.01
+AU;Queensland;Eight Mile Plains;-27.5786;153.097
+AU;Queensland;Coopers Plains;-27.5612;153.035
 AU;Queensland;Milton;-27.4693;153.007
 AU;Queensland;Mitchelton;-27.4133;152.974
 AU;Queensland;Milton;-27.4704;153.008
@@ -323,13 +323,13 @@ AU;Queensland;Salisbury;-27.543;153.036
 AU;Queensland;Southport;-27.9705;153.414
 AU;Queensland;Boondall;-27.3521;153.064
 AU;Queensland;Geebung;-27.3663;153.047
-AU;Queensland;"Fortitude Valley";-27.4582;153.04
-AU;Queensland;"Fortitude Valley";-27.4526;153.037
-AU;Queensland;"Port of Brisbane";-27.3847;153.175
-AU;Queensland;"Coopers Plains";-27.566;153.035
-AU;Queensland;"Eight Mile Plains";-27.5724;153.093
+AU;Queensland;Fortitude Valley;-27.4582;153.04
+AU;Queensland;Fortitude Valley;-27.4526;153.037
+AU;Queensland;Port of Brisbane;-27.3847;153.175
+AU;Queensland;Coopers Plains;-27.566;153.035
+AU;Queensland;Eight Mile Plains;-27.5724;153.093
 AU;Queensland;Newstead;-27.4507;153.044
-AU;Queensland;"Spring Hill";-27.4621;153.026
+AU;Queensland;Spring Hill;-27.4621;153.026
 AU;Queensland;Morningside;-27.4548;153.086
 AU;Queensland;Milton;-27.4651;153.006
 AU;Queensland;Toowong;-27.4674;152.974
@@ -337,11 +337,11 @@ AU;Queensland;Brisbane;-27.4708;153.027
 AU;Queensland;Brisbane;-27.4683;153.03
 AU;Queensland;Caboolture;-27.0843;152.951
 AU;Queensland;Ipswich;-27.614;152.76
-AU;Queensland;"Saint Lucia";-27.4948;153.002
+AU;Queensland;Saint Lucia;-27.4948;153.002
 AU;Queensland;Brisbane;-27.4703;153.03
 AU;Queensland;Brisbane;-27.4727;153.028
 AU;Queensland;Brisbane;-27.4646;153.03
-AU;Queensland;"Mount Gravatt East";-27.5292;153.087
+AU;Queensland;Mount Gravatt East;-27.5292;153.087
 AU;Queensland;Underwood;-27.6235;153.115
 AU;Queensland;Brisbane;-27.468;153.029
 AU;Queensland;Murarrie;-27.4496;153.1
@@ -351,17 +351,17 @@ AU;Queensland;Southport;-27.9741;153.41
 AU;Queensland;Stafford;-27.4121;153.008
 AU;Queensland;Newstead;-27.444;153.043
 AU;Queensland;Newstead;-27.4507;153.043
-AU;Queensland;"Acacia Ridge";-27.5919;153.03
+AU;Queensland;Acacia Ridge;-27.5919;153.03
 AU;Queensland;Northgate;-27.3851;153.076
-AU;Queensland;"Highgate Hill";-27.4898;153.011
+AU;Queensland;Highgate Hill;-27.4898;153.011
 AU;Queensland;Albion;-27.4313;153.041
 AU;Queensland;Wacol;-27.6049;152.925
 AU;Queensland;Bundall;-27.9982;153.414
-AU;Queensland;"East Brisbane";-27.4873;153.042
+AU;Queensland;East Brisbane;-27.4873;153.042
 AU;Queensland;Brisbane;-27.4671;153.029
 AU;Queensland;Greenslopes;-27.5014;153.046
 AU;Queensland;Toowong;-27.485;152.993
-AU;Queensland;"Hope Island";-27.8814;153.333
+AU;Queensland;Hope Island;-27.8814;153.333
 AU;Queensland;Brisbane;-27.4673;153.03
 AU;Queensland;Wellcamp;-27.5563;151.798
 AU;Queensland;Greenslopes;-27.5059;153.049
@@ -369,16 +369,16 @@ AU;Queensland;Jindalee;-27.5342;152.942
 AU;Queensland;Coombabah;-27.9228;153.356
 AU;Queensland;Kippa-Ring;-27.2262;153.093
 AU;Queensland;Indooroopilly;-27.506;152.984
-AU;Queensland;"Petrie Terrace";-27.4655;153.012
-AU;Queensland;"East Brisbane";-27.4804;153.042
+AU;Queensland;Petrie Terrace;-27.4655;153.012
+AU;Queensland;East Brisbane;-27.4804;153.042
 AU;Queensland;Herston;-27.4448;153.026
 AU;Queensland;Brendale;-27.3134;152.985
 AU;Queensland;Balmoral;-27.4593;153.065
 AU;Queensland;Wilston;-27.4325;153.019
 AU;Queensland;Brisbane;-27.4697;153.029
 AU;Queensland;Brisbane;-27.4984;153.045
-AU;Queensland;"Fortitude Valley";-27.4533;153.035
-AU;Queensland;"Toowoomba city centre";-27.556;151.955
+AU;Queensland;Fortitude Valley;-27.4533;153.035
+AU;Queensland;Toowoomba city centre;-27.556;151.955
 AU;Queensland;Murarrie;-27.4534;153.103
 AU;Queensland;Brisbane;-27.4675;153.018
 AU;Queensland;Bundall;-27.9988;153.412
@@ -392,527 +392,527 @@ AU;Queensland;Harristown;-27.573;151.918
 AU;Queensland;Newstead;-27.4503;153.044
 AU;Queensland;Geebung;-27.3639;153.059
 AU;Queensland;Southport;-27.9704;153.414
-AU;Queensland;"Carina Heights";-27.516;153.093
-AU;Queensland;"Cannon Hill";-27.4666;153.092
+AU;Queensland;Carina Heights;-27.516;153.093
+AU;Queensland;Cannon Hill;-27.4666;153.092
 AU;Queensland;Woodend;-27.6057;152.752
 AU;Queensland;Brisbane;-27.4653;153.03
 AU;Queensland;Toowong;-27.4812;152.992
 AU;Queensland;Brisbane;-27.4644;153.031
-AU;Queensland;"Fortitude Valley";-27.4548;153.034
+AU;Queensland;Fortitude Valley;-27.4548;153.034
 AU;Queensland;Riverview;-27.584;152.836
 AU;Queensland;Greenslopes;-27.4984;153.045
-AU;Queensland;"Camp Hill";-27.4932;153.074
+AU;Queensland;Camp Hill;-27.4932;153.074
 AU;Queensland;Wynnum;-27.4453;153.174
 AU;Queensland;Newstead;-27.4474;153.044
 AU;Queensland;Sumner;-27.5697;152.934
 AU;Queensland;Indooroopilly;-27.4958;152.976
-AU;Queensland;"Eight Mile Plains";-27.5803;153.1
-AU;Queensland;"Fortitude Valley";-27.4584;153.037
+AU;Queensland;Eight Mile Plains;-27.5803;153.1
+AU;Queensland;Fortitude Valley;-27.4584;153.037
 AU;Queensland;Chelmer;-27.5111;152.976
-AU;Queensland;"Albany Creek";-27.3469;152.968
+AU;Queensland;Albany Creek;-27.3469;152.968
 AU;Queensland;Springwood;-27.6115;153.126
 AU;Queensland;Kenmore;-27.5095;152.938
-AU;Queensland;"Fortitude Valley";-27.4569;153.031
-AU;Queensland;"Seventeen Mile Rocks";-27.5455;152.955
+AU;Queensland;Fortitude Valley;-27.4569;153.031
+AU;Queensland;Seventeen Mile Rocks;-27.5455;152.955
 AU;Queensland;Coominya;-27.3913;152.502
-AU;Queensland;"Fortitude Valley";-27.4582;153.031
+AU;Queensland;Fortitude Valley;-27.4582;153.031
 AU;Queensland;Toowong;-27.487;152.991
 AU;Queensland;Brisbane;-27.4671;153.03
 AU;Queensland;Brisbane;-27.4671;153.024
-AU;Queensland;"Spring Hill";-27.4572;153.025
-AU;Queensland;"Fortitude Valley";-27.4549;153.038
+AU;Queensland;Spring Hill;-27.4572;153.025
+AU;Queensland;Fortitude Valley;-27.4549;153.038
 AU;Queensland;Taringa;-27.4932;152.979
 AU;Queensland;Taringa;-27.493;152.979
-AU;Queensland;"Sunnybank Hills";-27.5995;153.059
-BR;"Santa Catarina";Florianópolis;-27.5969;-48.5468
-ZA;"Free State";Cornelia;-27.2323;28.8523
+AU;Queensland;Sunnybank Hills;-27.5995;153.059
+BR;Santa Catarina;Florianópolis;-27.5969;-48.5468
+ZA;Free State;Cornelia;-27.2323;28.8523
 AU;Queensland;Gleneagle;-27.9333;152.983
-AU;Queensland;"South Brisbane";-27.4747;153.011
-AU;Queensland;"South Brisbane";-27.4801;153.022
-AU;Queensland;"Spring Hill";-27.462;153.026
+AU;Queensland;South Brisbane;-27.4747;153.011
+AU;Queensland;South Brisbane;-27.4801;153.022
+AU;Queensland;Spring Hill;-27.462;153.026
 AU;Queensland;Milton;-27.4696;153.009
 AU;Queensland;Underwood;-27.6021;153.111
-AU;Queensland;"Fortitude Valley";-27.4565;153.035
+AU;Queensland;Fortitude Valley;-27.4565;153.035
 AU;Queensland;Kenmore;-27.5097;152.938
 AU;Queensland;Brisbane;-27.4651;153.027
 AU;Queensland;Milton;-27.4684;153.009
 AU;Queensland;Lowood;-27.4655;152.576
-AU;Queensland;"Mount Nebo";-27.3904;152.78
+AU;Queensland;Mount Nebo;-27.3904;152.78
 AU;Queensland;Tara;-27.2761;150.457
-AU;Queensland;"East Brisbane";-27.482;153.051
+AU;Queensland;East Brisbane;-27.482;153.051
 AU;Queensland;Dayboro;-27.1963;152.823
 AU;Queensland;Kingsthorpe;-27.4756;151.814
 AU;Queensland;Oakey;-27.4331;151.721
 AU;Queensland;Morningside;-27.462;153.075
-AU;Queensland;"Forest Hill";-27.5926;152.356
-AU;Queensland;"Main Beach";-27.9824;153.427
-AU;Queensland;"Upper Coomera";-27.8523;153.299
+AU;Queensland;Forest Hill;-27.5926;152.356
+AU;Queensland;Main Beach;-27.9824;153.427
+AU;Queensland;Upper Coomera;-27.8523;153.299
 AU;Queensland;Pittsworth;-27.7164;151.634
 AU;Queensland;Ipswich;-27.6147;152.76
-AU;Queensland;"Fortitude Valley";-27.4553;153.032
+AU;Queensland;Fortitude Valley;-27.4553;153.032
 AU;Queensland;Clontarf;-27.2473;153.083
-AU;Queensland;"Gowrie Junction";-27.4833;151.883
+AU;Queensland;Gowrie Junction;-27.4833;151.883
 AU;Queensland;Kingsholme;-27.8219;153.245
 AU;Queensland;Murarrie;-27.4558;153.099
 AU;Queensland;Woodridge;-27.6227;153.114
 AU;Queensland;Toowong;-27.4862;152.991
-AU;Queensland;"Hope Island";-27.8534;153.362
-BR;"Rio Grande do Sul";"Santa Rosa (Centro)";-27.8687;-54.4799
+AU;Queensland;Hope Island;-27.8534;153.362
+BR;Rio Grande do Sul;Santa Rosa (Centro);-27.8687;-54.4799
 AR;Tucuman;Concepción;-27.3453;-65.5883
-BR;"Santa Catarina";Brusque;-27.099;-48.9171
-BR;"Rio Grande do Sul";"Taquaruçu do Sul";-27.4824;-53.4016
-BR;"Rio Grande do Sul";Caiçara;-27.2744;-53.4322
-BR;"Rio Grande do Sul";"Erechim (Centro)";-27.6323;-52.2834
-BR;"Rio Grande do Sul";"Barão de Cotegipe";-27.6214;-52.3748
-BR;"Rio Grande do Sul";"Santa Rosa";-27.8709;-54.4833
-BR;"Rio Grande do Sul";"Nova Candelária";-27.6105;-54.1062
-BR;"Santa Catarina";"Presidente Getúlio";-27.0416;-49.6214
-AR;Misiones;"Leandro N. Alem";-27.6038;-55.3237
+BR;Santa Catarina;Brusque;-27.099;-48.9171
+BR;Rio Grande do Sul;Taquaruçu do Sul;-27.4824;-53.4016
+BR;Rio Grande do Sul;Caiçara;-27.2744;-53.4322
+BR;Rio Grande do Sul;Erechim (Centro);-27.6323;-52.2834
+BR;Rio Grande do Sul;Barão de Cotegipe;-27.6214;-52.3748
+BR;Rio Grande do Sul;Santa Rosa;-27.8709;-54.4833
+BR;Rio Grande do Sul;Nova Candelária;-27.6105;-54.1062
+BR;Santa Catarina;Presidente Getúlio;-27.0416;-49.6214
+AR;Misiones;Leandro N. Alem;-27.6038;-55.3237
 AR;Misiones;Apóstoles;-27.9142;-55.7536
 AU;Queensland;Brisbane;-27.471;153.023
 AR;Tucuman;Simoca;-27.2629;-65.3579
-BR;"Santa Catarina";Curitibanos;-27.2828;-50.5844
-BR;"Santa Catarina";Tijucas;-27.2401;-48.6336
+BR;Santa Catarina;Curitibanos;-27.2828;-50.5844
+BR;Santa Catarina;Tijucas;-27.2401;-48.6336
 AU;Queensland;Nathan;-27.5551;153.053
-BR;"Santa Catarina";Palhoça;-27.6411;-48.679
-BR;"Rio Grande do Sul";"Ipiranga do Sul";-27.9373;-52.4262
-BR;"Rio Grande do Sul";Erebango;-27.8553;-52.3019
-BR;"Rio Grande do Sul";Erebango;-27.8884;-52.2258
+BR;Santa Catarina;Palhoça;-27.6411;-48.679
+BR;Rio Grande do Sul;Ipiranga do Sul;-27.9373;-52.4262
+BR;Rio Grande do Sul;Erebango;-27.8553;-52.3019
+BR;Rio Grande do Sul;Erebango;-27.8884;-52.2258
 AU;Queensland;Albion;-27.441;153.047
-BR;"Santa Catarina";"São Joaquim (Esquina)";-27.9901;-49.5836
-BR;"Santa Catarina";Itapema;-27.0909;-48.6151
-BR;"Rio Grande do Sul";Sarandi;-27.9439;-52.9231
-BR;"Rio Grande do Sul";"Boa Vista do Buricá (Centro)";-27.6705;-54.1105
-BR;"Santa Catarina";"Lages (Coral)";-27.8082;-50.3086
-BR;"Santa Catarina";Anitápolis;-27.9019;-49.1286
-BR;"Rio Grande do Sul";"Tiradentes do Sul";-27.3944;-54.0865
-BR;"Rio Grande do Sul";"Doutor Maurício Cardoso";-27.5058;-54.3608
-BR;"Rio Grande do Sul";Crissiumal;-27.4997;-54.1011
-BR;"Santa Catarina";"Correia Pinto";-27.5906;-50.3623
-BR;"Santa Catarina";"Correia Pinto";-27.5847;-50.3611
-BR;"Santa Catarina";Campinas;-27.5866;-48.6125
+BR;Santa Catarina;São Joaquim (Esquina);-27.9901;-49.5836
+BR;Santa Catarina;Itapema;-27.0909;-48.6151
+BR;Rio Grande do Sul;Sarandi;-27.9439;-52.9231
+BR;Rio Grande do Sul;Boa Vista do Buricá (Centro);-27.6705;-54.1105
+BR;Santa Catarina;Lages (Coral);-27.8082;-50.3086
+BR;Santa Catarina;Anitápolis;-27.9019;-49.1286
+BR;Rio Grande do Sul;Tiradentes do Sul;-27.3944;-54.0865
+BR;Rio Grande do Sul;Doutor Maurício Cardoso;-27.5058;-54.3608
+BR;Rio Grande do Sul;Crissiumal;-27.4997;-54.1011
+BR;Santa Catarina;Correia Pinto;-27.5906;-50.3623
+BR;Santa Catarina;Correia Pinto;-27.5847;-50.3611
+BR;Santa Catarina;Campinas;-27.5866;-48.6125
 PY;Itapúa;Hohenau;-27.0702;-55.6433
-BR;"Santa Catarina";Carvoeira;-27.599;-48.5262
-BR;"Santa Catarina";"Saco dos Limoes";-27.6086;-48.536
-BR;"Santa Catarina";"Bom Retiro (Centro)";-27.7967;-49.4881
+BR;Santa Catarina;Carvoeira;-27.599;-48.5262
+BR;Santa Catarina;Saco dos Limoes;-27.6086;-48.536
+BR;Santa Catarina;Bom Retiro (Centro);-27.7967;-49.4881
 AR;Misiones;Garupá;-27.446;-55.8721
 AR;Misiones;Garupá;-27.4832;-55.8292
-BR;"Santa Catarina";"Sao Jose";-27.595;-48.6138
-BR;"Santa Catarina";"São João Batista";-27.2779;-48.8523
-AR;Misiones;"Aristóbulo del Valle";-27.0956;-54.8935
-AR;Misiones;"Aristóbulo del Valle";-27.0957;-54.8934
-AR;Misiones;"Campo Grande";-27.2077;-54.9798
-BR;"Rio Grande do Sul";"Bom Progresso";-27.5436;-53.8658
-BR;"Rio Grande do Sul";"Benjamin Constant do Sul";-27.51;-52.5978
-AR;Misiones;"Campo Viera";-27.3327;-55.0565
-AR;Misiones;"Campo Grande";-27.2062;-54.9788
-BR;"Rio Grande do Sul";"Três Passos";-27.4559;-53.9302
-AU;Queensland;"Darling Heights";-27.6026;151.932
-AU;Queensland;"Centenary Heights";-27.5867;151.962
+BR;Santa Catarina;Sao Jose;-27.595;-48.6138
+BR;Santa Catarina;São João Batista;-27.2779;-48.8523
+AR;Misiones;Aristóbulo del Valle;-27.0956;-54.8935
+AR;Misiones;Aristóbulo del Valle;-27.0957;-54.8934
+AR;Misiones;Campo Grande;-27.2077;-54.9798
+BR;Rio Grande do Sul;Bom Progresso;-27.5436;-53.8658
+BR;Rio Grande do Sul;Benjamin Constant do Sul;-27.51;-52.5978
+AR;Misiones;Campo Viera;-27.3327;-55.0565
+AR;Misiones;Campo Grande;-27.2062;-54.9788
+BR;Rio Grande do Sul;Três Passos;-27.4559;-53.9302
+AU;Queensland;Darling Heights;-27.6026;151.932
+AU;Queensland;Centenary Heights;-27.5867;151.962
 AR;Tucuman;Monteros;-27.1682;-65.4989
-BR;"Santa Catarina";Carianos;-27.6609;-48.5432
-BR;"Rio Grande do Sul";Sananduva;-27.9497;-51.8067
-BR;"Rio Grande do Sul";Chiapeta;-27.9228;-53.9414
-BR;"Rio Grande do Sul";"Boa Vista das Missões";-27.6631;-53.3142
-BR;"Rio Grande do Sul";"São João da Urtiga";-27.816;-51.8307
-BR;"Rio Grande do Sul";"Barra Funda";-27.9231;-53.0392
-AU;Queensland;"East Brisbane";-27.4857;153.044
-AR;Misiones;"General Alvear";-27.4261;-55.1692
-AR;"Santiago del Estero";"La Banda";-27.7304;-64.2438
-BR;"Santa Catarina";"Santa Monica";-27.5914;-48.5076
-BR;"Santa Catarina";"Morro da Cruz";-27.5849;-48.5356
-BR;"Santa Catarina";"Corrego Grande";-27.6014;-48.5059
+BR;Santa Catarina;Carianos;-27.6609;-48.5432
+BR;Rio Grande do Sul;Sananduva;-27.9497;-51.8067
+BR;Rio Grande do Sul;Chiapeta;-27.9228;-53.9414
+BR;Rio Grande do Sul;Boa Vista das Missões;-27.6631;-53.3142
+BR;Rio Grande do Sul;São João da Urtiga;-27.816;-51.8307
+BR;Rio Grande do Sul;Barra Funda;-27.9231;-53.0392
+AU;Queensland;East Brisbane;-27.4857;153.044
+AR;Misiones;General Alvear;-27.4261;-55.1692
+AR;Santiago del Estero;La Banda;-27.7304;-64.2438
+BR;Santa Catarina;Santa Monica;-27.5914;-48.5076
+BR;Santa Catarina;Morro da Cruz;-27.5849;-48.5356
+BR;Santa Catarina;Corrego Grande;-27.6014;-48.5059
 AU;Queensland;Herston;-27.4494;153.027
 AR;Corrientes;Corrientes;-27.4678;-58.8344
 CL;Atacama;Copiapó;-27.3674;-70.3322
-BR;"Santa Catarina";Trindade;-27.5861;-48.5233
+BR;Santa Catarina;Trindade;-27.5861;-48.5233
 ZA;KwaZulu-Natal;Waterval;-27.7833;30.2667
 AU;Queensland;Yeronga;-27.5174;153.02
 AU;Queensland;Brisbane;-27.4629;153.03
-ZA;"Free State";Hoopstad;-27.8327;25.9083
+ZA;Free State;Hoopstad;-27.8327;25.9083
 ZA;North-West;Schweizer-Reneke;-27.1904;25.33
 AU;Queensland;Molendinar;-27.9672;153.361
 AU;Queensland;Booval;-27.6146;152.79
 ZA;KwaZulu-Natal;Frischgewaagd;-27.3899;30.9547
-BR;"Santa Catarina";Peritiba;-27.3745;-51.9069
+BR;Santa Catarina;Peritiba;-27.3745;-51.9069
 AU;Queensland;Warner;-27.32;152.937
 AR;Misiones;Posadas;-27.3766;-55.8958
 AU;Queensland;Plainland;-27.5667;152.417
-AU;Queensland;"Eight Mile Plains";-27.5759;153.092
-AU;Queensland;"Fortitude Valley";-27.4538;153.039
+AU;Queensland;Eight Mile Plains;-27.5759;153.092
+AU;Queensland;Fortitude Valley;-27.4538;153.039
 AU;Queensland;Brisbane;-27.465;153.029
 AU;Queensland;Kedron;-27.4153;153.039
-AR;Chaco;"Villa Ángela";-27.5768;-60.7111
-AR;Chaco;"Villa Ángela";-27.5758;-60.7137
-BR;"Santa Catarina";"São João do Oeste";-27.0991;-53.592
+AR;Chaco;Villa Ángela;-27.5768;-60.7111
+AR;Chaco;Villa Ángela;-27.5758;-60.7137
+BR;Santa Catarina;São João do Oeste;-27.0991;-53.592
 AU;Queensland;Herston;-27.449;153.022
 AU;Queensland;Herston;-27.4495;153.029
 AU;Queensland;Murarrie;-27.4512;153.108
 AU;Queensland;Brisbane;-27.469;153.028
 AU;Queensland;Brisbane;-27.4662;153.028
 AU;Queensland;Brisbane;-27.4655;153.024
-AR;"Santiago del Estero";"Santiago del Estero";-27.7834;-64.2642
-BR;"Santa Catarina";"Herval d'Oeste";-27.1752;-51.4921
-BR;"Rio Grande do Sul";"Três de Maio";-27.8495;-54.1922
-AR;Misiones;"Jardín América";-27.0435;-55.227
-AR;Misiones;"Jardín América";-27.0399;-55.2307
-BR;"Rio Grande do Sul";"Engenho Velho";-27.7081;-52.9128
-BR;"Santa Catarina";Taió;-27.116;-49.9962
-PY;Itapúa;"Bella Vista";-27.0491;-55.5717
-BR;"Santa Catarina";"Rio do Sul";-27.2163;-49.6431
-BR;"Rio Grande do Sul";"Vista Gaúcha";-27.2891;-53.703
-BR;"Santa Catarina";Itacorubi;-27.4945;-48.5055
-BR;"Santa Catarina";"Chapecó (Vila Real)";-27.0756;-52.6092
-BR;"Santa Catarina";"Ingleses do Rio Vermelho";-27.4464;-48.3791
-BR;"Santa Catarina";"Rio do Oeste (Centro)";-27.1926;-49.7991
+AR;Santiago del Estero;Santiago del Estero;-27.7834;-64.2642
+BR;Santa Catarina;Herval d'Oeste;-27.1752;-51.4921
+BR;Rio Grande do Sul;Três de Maio;-27.8495;-54.1922
+AR;Misiones;Jardín América;-27.0435;-55.227
+AR;Misiones;Jardín América;-27.0399;-55.2307
+BR;Rio Grande do Sul;Engenho Velho;-27.7081;-52.9128
+BR;Santa Catarina;Taió;-27.116;-49.9962
+PY;Itapúa;Bella Vista;-27.0491;-55.5717
+BR;Santa Catarina;Rio do Sul;-27.2163;-49.6431
+BR;Rio Grande do Sul;Vista Gaúcha;-27.2891;-53.703
+BR;Santa Catarina;Itacorubi;-27.4945;-48.5055
+BR;Santa Catarina;Chapecó (Vila Real);-27.0756;-52.6092
+BR;Santa Catarina;Ingleses do Rio Vermelho;-27.4464;-48.3791
+BR;Santa Catarina;Rio do Oeste (Centro);-27.1926;-49.7991
 AR;Catamarca;Belén;-27.6495;-67.0263
-BR;"Santa Catarina";Catanduvas;-27.0717;-51.6613
-BR;"Santa Catarina";Balneario;-27.5827;-48.5851
-BR;"Rio Grande do Sul";"Cândido Godói";-27.9519;-54.7519
-PY;Itapúa;"San Cosme y Damián";-27.3192;-56.3322
-AR;Chaco;"Las Breñas";-27.0906;-61.0887
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5853;-48.5444
-BR;"Santa Catarina";Trindade;-27.5964;-48.521
-AR;Chaco;"General Pinedo";-27.3253;-61.281
+BR;Santa Catarina;Catanduvas;-27.0717;-51.6613
+BR;Santa Catarina;Balneario;-27.5827;-48.5851
+BR;Rio Grande do Sul;Cândido Godói;-27.9519;-54.7519
+PY;Itapúa;San Cosme y Damián;-27.3192;-56.3322
+AR;Chaco;Las Breñas;-27.0906;-61.0887
+BR;Santa Catarina;Florianópolis (Centro);-27.5853;-48.5444
+BR;Santa Catarina;Trindade;-27.5964;-48.521
+AR;Chaco;General Pinedo;-27.3253;-61.281
 AR;Chaco;Charata;-27.2216;-61.1821
-BR;"Santa Catarina";"Major Gercino";-27.5727;-48.9846
-BR;"Santa Catarina";"Celso Ramos";-27.6344;-51.3364
-AR;Chaco;"Coronel Du Graty";-27.6822;-60.9044
-AR;Chaco;"Hermoso Campo";-27.6101;-61.3442
-AR;Corrientes;"San Luis del Palmar";-27.512;-58.5599
-AR;"Santiago del Estero";Tintina;-27.0269;-62.7064
-BR;"Santa Catarina";"Costeira do Pirajubae";-27.6359;-48.5212
-AR;Chaco;"Coronel Du Graty";-27.6854;-60.9086
-AR;Chaco;"Villa Berthet";-27.2857;-60.4158
-AR;"Santiago del Estero";"Santiago del Estero";-27.7933;-64.2702
-BR;"Rio Grande do Sul";"São José das Missões";-27.7773;-53.1171
+BR;Santa Catarina;Major Gercino;-27.5727;-48.9846
+BR;Santa Catarina;Celso Ramos;-27.6344;-51.3364
+AR;Chaco;Coronel Du Graty;-27.6822;-60.9044
+AR;Chaco;Hermoso Campo;-27.6101;-61.3442
+AR;Corrientes;San Luis del Palmar;-27.512;-58.5599
+AR;Santiago del Estero;Tintina;-27.0269;-62.7064
+BR;Santa Catarina;Costeira do Pirajubae;-27.6359;-48.5212
+AR;Chaco;Coronel Du Graty;-27.6854;-60.9086
+AR;Chaco;Villa Berthet;-27.2857;-60.4158
+AR;Santiago del Estero;Santiago del Estero;-27.7933;-64.2702
+BR;Rio Grande do Sul;São José das Missões;-27.7773;-53.1171
 AU;Queensland;Brisbane;-27.4655;153.03
 AU;Queensland;Southport;-27.9708;153.417
-BR;"Rio Grande do Sul";"Campina das Missões";-27.9911;-54.8405
-BR;"Rio Grande do Sul";"Cacique Doble";-27.7721;-51.5952
-BR;"Rio Grande do Sul";"Cacique Doble";-27.7703;-51.6603
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5943;-48.5587
-BR;"Santa Catarina";"Palhoça (Centro)";-27.6664;-48.6815
-BR;"Rio Grande do Sul";"Campinas do Sul";-27.7158;-52.6275
-BR;"Rio Grande do Sul";"Erval Grande";-27.3902;-52.5696
-BR;"Santa Catarina";"Rio Tavares";-27.6453;-48.4749
-BR;"Santa Catarina";Brunópolis;-27.3109;-50.8386
-BR;"Rio Grande do Sul";"Entre Rios do Sul";-27.5281;-52.7325
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5885;-48.5441
-BR;"Santa Catarina";"Brusque (Steffen)";-27.0796;-48.9096
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5915;-48.5491
-BR;"Santa Catarina";"Cantagalo (Canta Galo)";-27.1936;-49.6277
-BR;"Santa Catarina";Kobrasol;-27.5913;-48.6134
-BR;"Santa Catarina";"São Francisco";-27.0108;-51.1321
-BR;"Rio Grande do Sul";"Novo Barreiro";-27.9082;-53.1122
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5923;-48.5447
-BR;"Santa Catarina";Concórdia;-27.2304;-52.0261
-BR;"Santa Catarina";"São José (Centro)";-27.6127;-48.6268
-BR;"Santa Catarina";"Maria Goretti";-27.098;-52.6037
-BR;"Santa Catarina";"Herval d'Oeste (Centro)";-27.1262;-51.4679
-BR;"Santa Catarina";"Chapecó (Jardim Itália)";-27.0996;-52.6263
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5928;-48.5447
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5974;-48.548
-BR;"Santa Catarina";"Sertão do Maruim";-27.6011;-48.6768
-BR;"Santa Catarina";"Brusque (Jardim Maluche)";-27.1064;-48.9217
-BR;"Rio Grande do Sul";Alpestre;-27.3305;-53.057
-BR;"Rio Grande do Sul";Cruzaltense;-27.6683;-52.6478
-BR;"Rio Grande do Sul";"Dois Irmãos das Missões";-27.6592;-53.5314
-BR;"Rio Grande do Sul";"Três de Maio";-27.7841;-54.2345
-BR;"Rio Grande do Sul";"Frederico Westphalen";-27.3587;-53.3994
-BR;"Santa Catarina";Itacorubi;-27.5918;-48.4932
-BR;"Santa Catarina";Biguaçu;-27.4956;-48.6554
-BR;"Santa Catarina";Itapiranga;-27.1719;-53.713
-PY;"Ñeembucú Department";Cerrito;-27.3421;-57.6412
+BR;Rio Grande do Sul;Campina das Missões;-27.9911;-54.8405
+BR;Rio Grande do Sul;Cacique Doble;-27.7721;-51.5952
+BR;Rio Grande do Sul;Cacique Doble;-27.7703;-51.6603
+BR;Santa Catarina;Florianópolis (Centro);-27.5943;-48.5587
+BR;Santa Catarina;Palhoça (Centro);-27.6664;-48.6815
+BR;Rio Grande do Sul;Campinas do Sul;-27.7158;-52.6275
+BR;Rio Grande do Sul;Erval Grande;-27.3902;-52.5696
+BR;Santa Catarina;Rio Tavares;-27.6453;-48.4749
+BR;Santa Catarina;Brunópolis;-27.3109;-50.8386
+BR;Rio Grande do Sul;Entre Rios do Sul;-27.5281;-52.7325
+BR;Santa Catarina;Florianópolis (Centro);-27.5885;-48.5441
+BR;Santa Catarina;Brusque (Steffen);-27.0796;-48.9096
+BR;Santa Catarina;Florianópolis (Centro);-27.5915;-48.5491
+BR;Santa Catarina;Cantagalo (Canta Galo);-27.1936;-49.6277
+BR;Santa Catarina;Kobrasol;-27.5913;-48.6134
+BR;Santa Catarina;São Francisco;-27.0108;-51.1321
+BR;Rio Grande do Sul;Novo Barreiro;-27.9082;-53.1122
+BR;Santa Catarina;Florianópolis (Centro);-27.5923;-48.5447
+BR;Santa Catarina;Concórdia;-27.2304;-52.0261
+BR;Santa Catarina;São José (Centro);-27.6127;-48.6268
+BR;Santa Catarina;Maria Goretti;-27.098;-52.6037
+BR;Santa Catarina;Herval d'Oeste (Centro);-27.1262;-51.4679
+BR;Santa Catarina;Chapecó (Jardim Itália);-27.0996;-52.6263
+BR;Santa Catarina;Florianópolis (Centro);-27.5928;-48.5447
+BR;Santa Catarina;Florianópolis (Centro);-27.5974;-48.548
+BR;Santa Catarina;Sertão do Maruim;-27.6011;-48.6768
+BR;Santa Catarina;Brusque (Jardim Maluche);-27.1064;-48.9217
+BR;Rio Grande do Sul;Alpestre;-27.3305;-53.057
+BR;Rio Grande do Sul;Cruzaltense;-27.6683;-52.6478
+BR;Rio Grande do Sul;Dois Irmãos das Missões;-27.6592;-53.5314
+BR;Rio Grande do Sul;Três de Maio;-27.7841;-54.2345
+BR;Rio Grande do Sul;Frederico Westphalen;-27.3587;-53.3994
+BR;Santa Catarina;Itacorubi;-27.5918;-48.4932
+BR;Santa Catarina;Biguaçu;-27.4956;-48.6554
+BR;Santa Catarina;Itapiranga;-27.1719;-53.713
+PY;Ñeembucú Department;Cerrito;-27.3421;-57.6412
 AR;Corrientes;Corrientes;-27.464;-58.8394
 AR;Misiones;Candelaria;-27.4617;-55.7449
-AR;Misiones;"Santa Ana";-27.3692;-55.5817
+AR;Misiones;Santa Ana;-27.3692;-55.5817
 AR;Misiones;Bonpland;-27.4835;-55.4778
-BR;"Santa Catarina";"Governador Celso Ramos";-27.3159;-48.5571
-BR;"Santa Catarina";"Barra do Aririu";-27.6758;-48.6399
+BR;Santa Catarina;Governador Celso Ramos;-27.3159;-48.5571
+BR;Santa Catarina;Barra do Aririu;-27.6758;-48.6399
 AR;Catamarca;Belén;-27.6502;-67.0259
-AR;Misiones;"Campo Ramón";-27.4549;-55.0212
-AR;Misiones;"Santa María";-27.9349;-55.4074
-AR;Misiones;"Leandro N. Alem";-27.6028;-55.3237
-BR;"Santa Catarina";"Campos Novos";-27.6131;-51.0238
-BR;"Santa Catarina";Itacorubi;-27.586;-48.5024
-BR;"Santa Catarina";"Chapecó (Centro)";-27.1058;-52.6166
-BR;"Santa Catarina";"Chapecó (Centro)";-27.0944;-52.6175
-BR;"Santa Catarina";"Joaçaba (Centro)";-27.171;-51.5063
-BR;"Santa Catarina";"Palhoça (Cidade Universitária Pedra Branca)";-27.6228;-48.6755
-BR;"Santa Catarina";Trindade;-27.5843;-48.5245
+AR;Misiones;Campo Ramón;-27.4549;-55.0212
+AR;Misiones;Santa María;-27.9349;-55.4074
+AR;Misiones;Leandro N. Alem;-27.6028;-55.3237
+BR;Santa Catarina;Campos Novos;-27.6131;-51.0238
+BR;Santa Catarina;Itacorubi;-27.586;-48.5024
+BR;Santa Catarina;Chapecó (Centro);-27.1058;-52.6166
+BR;Santa Catarina;Chapecó (Centro);-27.0944;-52.6175
+BR;Santa Catarina;Joaçaba (Centro);-27.171;-51.5063
+BR;Santa Catarina;Palhoça (Cidade Universitária Pedra Branca);-27.6228;-48.6755
+BR;Santa Catarina;Trindade;-27.5843;-48.5245
 AU;Queensland;Helensvale;-27.94;153.339
 AR;Corrientes;Empedrado;-27.9518;-58.8058
-AR;"Santiago del Estero";Quimilí;-27.6462;-62.4165
-AR;"Santiago del Estero";Fernández;-27.9253;-63.8946
-AR;"Santiago del Estero";"Termas de Río Hondo";-27.4936;-64.8597
-AR;Tucuman;"Bella Vista";-27.0342;-65.302
+AR;Santiago del Estero;Quimilí;-27.6462;-62.4165
+AR;Santiago del Estero;Fernández;-27.9253;-63.8946
+AR;Santiago del Estero;Termas de Río Hondo;-27.4936;-64.8597
+AR;Tucuman;Bella Vista;-27.0342;-65.302
 AR;Tucuman;Concepción;-27.3413;-65.5964
-AR;Misiones;"Gobernador Roca";-27.1906;-55.4693
+AR;Misiones;Gobernador Roca;-27.1906;-55.4693
 AR;Catamarca;Fiambalá;-27.6723;-67.6187
 AR;Chaco;Resistencia;-27.4363;-59.0029
 AR;Tucuman;Aguilares;-27.4315;-65.6146
-AR;"Santiago del Estero";Beltrán;-27.827;-64.0585
-AR;Tucuman;"La Cocha";-27.7693;-65.5871
+AR;Santiago del Estero;Beltrán;-27.827;-64.0585
+AR;Tucuman;La Cocha;-27.7693;-65.5871
 AR;Tucuman;Graneros;-27.6489;-65.44
 AR;Misiones;Posadas;-27.3674;-55.8938
 AR;Chaco;Resistencia;-27.447;-58.9803
-AR;"Santiago del Estero";"Santiago del Estero";-27.7795;-64.2702
-AR;"Santiago del Estero";"Santiago del Estero";-27.7765;-64.2804
+AR;Santiago del Estero;Santiago del Estero;-27.7795;-64.2702
+AR;Santiago del Estero;Santiago del Estero;-27.7765;-64.2804
 AR;Corrientes;Corrientes;-27.4619;-58.7779
-AR;"Santiago del Estero";"Santiago del Estero (Centro)";-27.7896;-64.2626
+AR;Santiago del Estero;Santiago del Estero (Centro);-27.7896;-64.2626
 AR;Tucuman;Simoca;-27.2644;-65.3588
-AR;"Santiago del Estero";"Santiago del Estero";-27.8189;-64.2475
-AR;Chaco;"La Tigra";-27.1106;-60.5878
+AR;Santiago del Estero;Santiago del Estero;-27.8189;-64.2475
+AR;Chaco;La Tigra;-27.1106;-60.5878
 AR;Corrientes;Ituzaingó;-27.5801;-56.6783
 AR;Corrientes;Corrientes;-27.4838;-58.82
 AR;Tucuman;Famaillá;-27.0545;-65.4019
-AR;Tucuman;"Bella Vista";-27.033;-65.2938
+AR;Tucuman;Bella Vista;-27.033;-65.2938
 AR;Misiones;Posadas;-27.3714;-55.8959
-AR;Misiones;"Leandro N. Alem";-27.5984;-55.3219
+AR;Misiones;Leandro N. Alem;-27.5984;-55.3219
 AR;Chaco;Resistencia;-27.4479;-58.9951
-AR;Corrientes;"Corrientes (Barrio Fray José de la Quintana)";-27.4652;-58.8328
+AR;Corrientes;Corrientes (Barrio Fray José de la Quintana);-27.4652;-58.8328
 AR;Misiones;Mártires;-27.3562;-55.3355
 AR;Misiones;Posadas;-27.3865;-55.9092
-PY;Itapúa;"San Juan del Paraná";-27.3026;-55.9639
-AR;Misiones;"Santo Pipó";-27.1415;-55.4095
-AR;Chaco;"Puerto Vilelas";-27.5108;-58.9418
-AR;"Santiago del Estero";"La Banda";-27.7244;-64.2249
-PY;"Misiones Department";Ayolas;-27.3842;-56.8395
+PY;Itapúa;San Juan del Paraná;-27.3026;-55.9639
+AR;Misiones;Santo Pipó;-27.1415;-55.4095
+AR;Chaco;Puerto Vilelas;-27.5108;-58.9418
+AR;Santiago del Estero;La Banda;-27.7244;-64.2249
+PY;Misiones Department;Ayolas;-27.3842;-56.8395
 AR;Corrientes;Ituzaingó;-27.585;-56.6871
 AR;Chaco;Chorotis;-27.9163;-61.4033
 AR;Catamarca;Belén;-27.6472;-67.036
 AR;Misiones;Loreto;-27.3318;-55.525
-AR;Chaco;"Villa Ángela";-27.5762;-60.7116
-AR;"Santiago del Estero";"La Banda";-27.7646;-64.2469
+AR;Chaco;Villa Ángela;-27.5762;-60.7116
+AR;Santiago del Estero;La Banda;-27.7646;-64.2469
 AR;Misiones;Posadas;-27.4282;-55.8931
 AR;Misiones;Garupá;-27.452;-55.8656
-AR;"Santiago del Estero";"La Banda";-27.7372;-64.2505
-PY;Itapúa;"Capitán Miranda";-27.2195;-55.7984
-PY;Itapúa;"Carmen del Paraná";-27.2223;-56.1524
+AR;Santiago del Estero;La Banda;-27.7372;-64.2505
+PY;Itapúa;Capitán Miranda;-27.2195;-55.7984
+PY;Itapúa;Carmen del Paraná;-27.2223;-56.1524
 PY;Itapúa;Trinidad;-27.131;-55.7058
 AR;Chaco;Resistencia;-27.4457;-58.9823
 AR;Misiones;Posadas;-27.388;-55.9155
-BR;"Rio Grande do Sul";"Coronel Bicaco";-27.7156;-53.7014
-BR;"Rio Grande do Sul";Braga;-27.6139;-53.7394
-AR;Misiones;"San Javier";-27.874;-55.1348
-AR;Misiones;"Mojón Grande";-27.712;-55.1574
-AR;Chaco;"Margarita Belén";-27.259;-58.9716
-AR;"Santiago del Estero";"Santiago del Estero";-27.7869;-64.2599
+BR;Rio Grande do Sul;Coronel Bicaco;-27.7156;-53.7014
+BR;Rio Grande do Sul;Braga;-27.6139;-53.7394
+AR;Misiones;San Javier;-27.874;-55.1348
+AR;Misiones;Mojón Grande;-27.712;-55.1574
+AR;Chaco;Margarita Belén;-27.259;-58.9716
+AR;Santiago del Estero;Santiago del Estero;-27.7869;-64.2599
 AR;Misiones;Apóstoles;-27.9151;-55.7507
 AR;Chaco;Resistencia;-27.45;-58.9997
 AR;Corrientes;Corrientes;-27.4752;-58.8531
-BR;"Santa Catarina";Joaçaba;-27.1744;-51.5054
-BR;"Santa Catarina";"Distrito Industrial";-27.357;-51.284
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.594;-48.5522
-BR;"Santa Catarina";"Brusque (Fernandes)";-27.0965;-48.9145
-BR;"Santa Catarina";"Campinas (Picadas do Sul)";-27.6089;-48.638
-BR;"Santa Catarina";"Biguaçu (Rio Caveiras)";-27.5043;-48.6514
-BR;"Santa Catarina";"Pantano do Sul";-27.7797;-48.5086
-BR;"Santa Catarina";Pantanal;-27.6098;-48.5165
-BR;"Santa Catarina";Tapera;-27.6853;-48.5512
-BR;"Santa Catarina";"Tijucas (Centro)";-27.2414;-48.6332
-BR;"Santa Catarina";"Major Gercino";-27.4175;-48.9527
-BR;"Santa Catarina";"Porto Belo (José Amândio)";-27.1522;-48.5013
-BR;"Santa Catarina";Armação;-27.7496;-48.5071
-BR;"Santa Catarina";"Lages (Sagrado Coracao de Jesus)";-27.8111;-50.3173
-BR;"Rio Grande do Sul";Derrubadas;-27.2647;-53.8608
-BR;"Rio Grande do Sul";"Tenente Portela";-27.3718;-53.7584
-BR;"Santa Catarina";"Chapecó (Centro)";-27.0881;-52.6166
-BR;"Santa Catarina";Itapema;-27.0965;-48.6164
-BR;"Rio Grande do Sul";"Itatiba do Sul";-27.3909;-52.5697
-BR;"Santa Catarina";Palhoça;-27.6439;-48.6674
-BR;"Santa Catarina";"Sertão do Maruim";-27.6021;-48.6761
-BR;"Santa Catarina";Forquilhinhas;-27.6031;-48.6361
-BR;"Rio Grande do Sul";"Frederico Westphalen (Centro)";-27.3563;-53.3982
-BR;"Rio Grande do Sul";"Frederico Westphalen (Centro)";-27.356;-53.3965
-BR;"Santa Catarina";"Taió (Centro)";-27.1173;-50.0006
-BR;"Rio Grande do Sul";"Santa Rosa (Centro)";-27.8645;-54.4798
-BR;"Santa Catarina";"Brusque (Fernandes)";-27.0999;-48.9082
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5962;-48.5504
-BR;"Santa Catarina";"Chapecó (Santa Paulina)";-27.0769;-52.6049
-BR;"Santa Catarina";"Joao Paulo";-27.5712;-48.509
-BR;"Santa Catarina";"Lages (Centro)";-27.82;-50.3347
-BR;"Santa Catarina";"São Francisco";-27.802;-50.3371
-BR;"Santa Catarina";"Cachoeira do Bom Jesus";-27.4336;-48.4526
-BR;"Santa Catarina";"Ponte do Imaruim";-27.6375;-48.6518
-BR;"Santa Catarina";Trindade;-27.5984;-48.521
-BR;"Santa Catarina";Itacorubi;-27.5788;-48.5108
-BR;"Rio Grande do Sul";Erechim;-27.6349;-52.2738
-BR;"Santa Catarina";"Lages (Cdl)";-27.7535;-50.3371
-BR;"Santa Catarina";"Campinas (Capoeiras)";-27.5952;-48.5834
-BR;"Santa Catarina";Campinas;-27.6001;-48.6143
-BR;"Santa Catarina";"Lages (Área Industrial)";-27.8049;-50.3646
-BR;"Santa Catarina";Estreito;-27.5866;-48.5787
-BR;"Rio Grande do Sul";"Erechim (Centro)";-27.6291;-52.2732
-BR;"Santa Catarina";"Brusque (Centro 1)";-27.0874;-48.9834
-BR;"Santa Catarina";"Campinas (Capoeiras)";-27.603;-48.588
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5871;-48.5461
-BR;"Santa Catarina";"Santa Monica";-27.5899;-48.5149
-BR;"Santa Catarina";"Palhoça (Distrito Industrial)";-27.6173;-48.6473
-BR;"Santa Catarina";Biguaçu;-27.4673;-48.6689
-BR;"Santa Catarina";"Chapecó (Centro)";-27.1044;-52.6121
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5913;-48.5554
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5938;-48.557
-BR;"Santa Catarina";"Chapecó (Centro)";-27.1009;-52.6157
-BR;"Rio Grande do Sul";Sarandi;-27.941;-52.9217
-BR;"Santa Catarina";"Palhoça (Bairro Pedra Branca)";-27.6314;-48.6821
-AR;Corrientes;"Corrientes (Barrio Fray José de la Quintana)";-27.4682;-58.8383
+BR;Santa Catarina;Joaçaba;-27.1744;-51.5054
+BR;Santa Catarina;Distrito Industrial;-27.357;-51.284
+BR;Santa Catarina;Florianópolis (Centro);-27.594;-48.5522
+BR;Santa Catarina;Brusque (Fernandes);-27.0965;-48.9145
+BR;Santa Catarina;Campinas (Picadas do Sul);-27.6089;-48.638
+BR;Santa Catarina;Biguaçu (Rio Caveiras);-27.5043;-48.6514
+BR;Santa Catarina;Pantano do Sul;-27.7797;-48.5086
+BR;Santa Catarina;Pantanal;-27.6098;-48.5165
+BR;Santa Catarina;Tapera;-27.6853;-48.5512
+BR;Santa Catarina;Tijucas (Centro);-27.2414;-48.6332
+BR;Santa Catarina;Major Gercino;-27.4175;-48.9527
+BR;Santa Catarina;Porto Belo (José Amândio);-27.1522;-48.5013
+BR;Santa Catarina;Armação;-27.7496;-48.5071
+BR;Santa Catarina;Lages (Sagrado Coracao de Jesus);-27.8111;-50.3173
+BR;Rio Grande do Sul;Derrubadas;-27.2647;-53.8608
+BR;Rio Grande do Sul;Tenente Portela;-27.3718;-53.7584
+BR;Santa Catarina;Chapecó (Centro);-27.0881;-52.6166
+BR;Santa Catarina;Itapema;-27.0965;-48.6164
+BR;Rio Grande do Sul;Itatiba do Sul;-27.3909;-52.5697
+BR;Santa Catarina;Palhoça;-27.6439;-48.6674
+BR;Santa Catarina;Sertão do Maruim;-27.6021;-48.6761
+BR;Santa Catarina;Forquilhinhas;-27.6031;-48.6361
+BR;Rio Grande do Sul;Frederico Westphalen (Centro);-27.3563;-53.3982
+BR;Rio Grande do Sul;Frederico Westphalen (Centro);-27.356;-53.3965
+BR;Santa Catarina;Taió (Centro);-27.1173;-50.0006
+BR;Rio Grande do Sul;Santa Rosa (Centro);-27.8645;-54.4798
+BR;Santa Catarina;Brusque (Fernandes);-27.0999;-48.9082
+BR;Santa Catarina;Florianópolis (Centro);-27.5962;-48.5504
+BR;Santa Catarina;Chapecó (Santa Paulina);-27.0769;-52.6049
+BR;Santa Catarina;Joao Paulo;-27.5712;-48.509
+BR;Santa Catarina;Lages (Centro);-27.82;-50.3347
+BR;Santa Catarina;São Francisco;-27.802;-50.3371
+BR;Santa Catarina;Cachoeira do Bom Jesus;-27.4336;-48.4526
+BR;Santa Catarina;Ponte do Imaruim;-27.6375;-48.6518
+BR;Santa Catarina;Trindade;-27.5984;-48.521
+BR;Santa Catarina;Itacorubi;-27.5788;-48.5108
+BR;Rio Grande do Sul;Erechim;-27.6349;-52.2738
+BR;Santa Catarina;Lages (Cdl);-27.7535;-50.3371
+BR;Santa Catarina;Campinas (Capoeiras);-27.5952;-48.5834
+BR;Santa Catarina;Campinas;-27.6001;-48.6143
+BR;Santa Catarina;Lages (Área Industrial);-27.8049;-50.3646
+BR;Santa Catarina;Estreito;-27.5866;-48.5787
+BR;Rio Grande do Sul;Erechim (Centro);-27.6291;-52.2732
+BR;Santa Catarina;Brusque (Centro 1);-27.0874;-48.9834
+BR;Santa Catarina;Campinas (Capoeiras);-27.603;-48.588
+BR;Santa Catarina;Florianópolis (Centro);-27.5871;-48.5461
+BR;Santa Catarina;Santa Monica;-27.5899;-48.5149
+BR;Santa Catarina;Palhoça (Distrito Industrial);-27.6173;-48.6473
+BR;Santa Catarina;Biguaçu;-27.4673;-48.6689
+BR;Santa Catarina;Chapecó (Centro);-27.1044;-52.6121
+BR;Santa Catarina;Florianópolis (Centro);-27.5913;-48.5554
+BR;Santa Catarina;Florianópolis (Centro);-27.5938;-48.557
+BR;Santa Catarina;Chapecó (Centro);-27.1009;-52.6157
+BR;Rio Grande do Sul;Sarandi;-27.941;-52.9217
+BR;Santa Catarina;Palhoça (Bairro Pedra Branca);-27.6314;-48.6821
+AR;Corrientes;Corrientes (Barrio Fray José de la Quintana);-27.4682;-58.8383
 AR;Misiones;Posadas;-27.3612;-55.8942
-AR;Corrientes;"Corrientes (Barrio Fray José de la Quintana)";-27.4644;-58.8361
-AR;Corrientes;"Corrientes (Barrio Fray José de la Quintana)";-27.4658;-58.8336
-AR;Corrientes;"Corrientes (Barrio Fray José de la Quintana)";-27.4725;-58.8394
+AR;Corrientes;Corrientes (Barrio Fray José de la Quintana);-27.4644;-58.8361
+AR;Corrientes;Corrientes (Barrio Fray José de la Quintana);-27.4658;-58.8336
+AR;Corrientes;Corrientes (Barrio Fray José de la Quintana);-27.4725;-58.8394
 AR;Corrientes;Corrientes;-27.4763;-58.8356
-PY;Itapúa;"Capitán Meza";-27.0167;-55.5667
-AR;Corrientes;"San Luis del Palmar";-27.5077;-58.5563
+PY;Itapúa;Capitán Meza;-27.0167;-55.5667
+AR;Corrientes;San Luis del Palmar;-27.5077;-58.5563
 AR;Chaco;Samuhú;-27.5191;-60.3941
-BR;"Santa Catarina";Chapecó;-27.0954;-52.617
-BR;"Rio Grande do Sul";"Pinheirinho do Vale";-27.2114;-53.6085
-BR;"Rio Grande do Sul";Palmitinho;-27.3555;-53.5581
-PY;"Ñeembucú Department";Laureles;-27.2498;-57.4586
+BR;Santa Catarina;Chapecó;-27.0954;-52.617
+BR;Rio Grande do Sul;Pinheirinho do Vale;-27.2114;-53.6085
+BR;Rio Grande do Sul;Palmitinho;-27.3555;-53.5581
+PY;Ñeembucú Department;Laureles;-27.2498;-57.4586
 PY;Itapúa;Jesús;-27.056;-55.7413
 AR;Misiones;Oberá;-27.4887;-55.1183
-AR;Chaco;"Puerto Tirol";-27.3825;-59.0881
+AR;Chaco;Puerto Tirol;-27.3825;-59.0881
 AR;Corrientes;Riachuelo;-27.5819;-58.745
 AR;Chaco;Resistencia;-27.4452;-58.9794
 AR;Misiones;Posadas;-27.4147;-55.9123
 AR;Corrientes;Corrientes;-27.4795;-58.8086
 AR;Misiones;Posadas;-27.3933;-55.9089
-AR;Chaco;"La Tigra";-27.1105;-60.5878
-AR;Chaco;"San Bernardo";-27.2878;-60.7099
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5984;-48.549
-BR;"Rio Grande do Sul";"Santa Rosa";-27.87;-54.4797
-BR;"Santa Catarina";Florianópolis;-27.5949;-48.5482
-BR;"Santa Catarina";"Camboriú (Centro)";-27.0158;-48.6586
-BR;"Santa Catarina";"Herval d'Oeste";-27.1325;-51.4631
-BR;"Santa Catarina";Concórdia;-27.2313;-52.0239
-BR;"Santa Catarina";"Flor da Serra";-27.1673;-51.519
-AR;Chaco;"Puerto Tirol";-27.3738;-59.0893
+AR;Chaco;La Tigra;-27.1105;-60.5878
+AR;Chaco;San Bernardo;-27.2878;-60.7099
+BR;Santa Catarina;Florianópolis (Centro);-27.5984;-48.549
+BR;Rio Grande do Sul;Santa Rosa;-27.87;-54.4797
+BR;Santa Catarina;Florianópolis;-27.5949;-48.5482
+BR;Santa Catarina;Camboriú (Centro);-27.0158;-48.6586
+BR;Santa Catarina;Herval d'Oeste;-27.1325;-51.4631
+BR;Santa Catarina;Concórdia;-27.2313;-52.0239
+BR;Santa Catarina;Flor da Serra;-27.1673;-51.519
+AR;Chaco;Puerto Tirol;-27.3738;-59.0893
 AR;Corrientes;Loreto;-27.7684;-57.2753
-AR;Corrientes;"Nuestra Señora del Rosario de Caá Catí";-27.7521;-57.622
-AU;Queensland;"Fortitude Valley";-27.457;153.037
-AU;Queensland;"Eagle Farm";-27.4327;153.094
-AU;Queensland;"Kangaroo Point";-27.4757;153.039
+AR;Corrientes;Nuestra Señora del Rosario de Caá Catí;-27.7521;-57.622
+AU;Queensland;Fortitude Valley;-27.457;153.037
+AU;Queensland;Eagle Farm;-27.4327;153.094
+AU;Queensland;Kangaroo Point;-27.4757;153.039
 AR;Misiones;Posadas;-27.4346;-55.8878
 ZA;KwaZulu-Natal;Charlestown;-27.4111;29.8738
 AU;Queensland;Milton;-27.4695;153.009
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.6001;-48.5486
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.6013;-48.5467
-AU;Queensland;"North Lakes";-27.2313;153.007
-ZA;"Free State";Welkom;-27.9868;26.7558
-ZA;"Northern Cape";Pampierstad;-27.7832;24.6877
-BR;"Santa Catarina";Agronomica;-27.574;-48.5286
-BR;"Santa Catarina";"Freguesia da Lagoa";-27.3899;-51.2155
+BR;Santa Catarina;Florianópolis (Centro);-27.6001;-48.5486
+BR;Santa Catarina;Florianópolis (Centro);-27.6013;-48.5467
+AU;Queensland;North Lakes;-27.2313;153.007
+ZA;Free State;Welkom;-27.9868;26.7558
+ZA;Northern Cape;Pampierstad;-27.7832;24.6877
+BR;Santa Catarina;Agronomica;-27.574;-48.5286
+BR;Santa Catarina;Freguesia da Lagoa;-27.3899;-51.2155
 AR;Chaco;Resistencia;-27.4263;-58.9782
 AR;Misiones;Apóstoles;-27.9159;-55.7379
-BR;"Rio Grande do Sul";Constantina;-27.7347;-52.9922
-PY;"Ñeembucú Department";"Paso de Patria";-27.2433;-58.5442
-BR;"Santa Catarina";"Jardim Atlantico";-27.5813;-48.5924
+BR;Rio Grande do Sul;Constantina;-27.7347;-52.9922
+PY;Ñeembucú Department;Paso de Patria;-27.2433;-58.5442
+BR;Santa Catarina;Jardim Atlantico;-27.5813;-48.5924
 AR;Misiones;Posadas;-27.399;-55.9402
-BR;"Rio Grande do Sul";Tuparendi;-27.7604;-54.4791
-AR;"Santiago del Estero";"Santiago del Estero";-27.8095;-64.3051
-BR;"Santa Catarina";Concórdia;-27.2331;-52.0276
-BR;"Santa Catarina";Salete;-27.2183;-51.9954
-BR;"Santa Catarina";"Rio Tavares (Campeche Leste)";-27.6811;-48.493
-BR;"Santa Catarina";"Palhoça (Brejaru)";-27.6211;-48.6609
-BR;"Rio Grande do Sul";"Distrito Industrial";-27.6509;-52.245
-BR;"Santa Catarina";"Palhoça (Distrito Industrial)";-27.6236;-48.6477
-BR;"Santa Catarina";"Santo Antônio de Lisboa";-27.5081;-48.5122
-BR;"Santa Catarina";"Florianópolis (Centro)";-27.5917;-48.5545
-BR;"Santa Catarina";Penha;-27.8112;-50.2836
-BR;"Santa Catarina";"Chapecó (Passo dos Fortes)";-27.084;-52.6221
-BR;"Santa Catarina";"Chapecó (Jardim Itália)";-27.1042;-52.6249
-BR;"Santa Catarina";"Santo Antônio";-27.6806;-52.2904
-BR;"Santa Catarina";"Saco Grande";-27.5479;-48.4978
-BR;"Santa Catarina";"Saco Grande";-27.5478;-48.4994
-BR;"Santa Catarina";"Lagoa da Conceição";-27.6093;-48.4487
-BR;"Santa Catarina";Santinho;-27.4647;-48.3812
-BR;"Santa Catarina";Concórdia;-27.044;-51.9157
-BR;"Santa Catarina";"Rio das Pedras";-27.0015;-51.0804
-BR;"Santa Catarina";"Videira (Centro)";-27.0064;-51.1525
-BR;"Santa Catarina";"Videira (Centro)";-27.0072;-51.1526
-BR;"Rio Grande do Sul";"Erechim (Centro)";-27.6395;-52.2693
-BR;"Santa Catarina";Barreiros;-27.5699;-48.6088
-BR;"Santa Catarina";Barreiros;-27.5827;-48.6142
-BR;"Santa Catarina";"Cachoeira do Bom Jesus";-27.4304;-48.4442
-BR;"Santa Catarina";Joaçaba;-27.171;-51.5358
-BR;"Rio Grande do Sul";"Independência (Centro)";-27.8477;-54.1927
-BR;"Santa Catarina";Camboriú;-27.0217;-48.6516
-BR;"Rio Grande do Sul";"Frederico Westphalen (Centro)";-27.3582;-53.3971
-BR;"Rio Grande do Sul";"Erechim (Demoliner)";-27.6055;-52.2067
-BR;"Santa Catarina";"Palhoça (Cssn Fr)";-27.6542;-48.6724
-BR;"Santa Catarina";"Rio do Sul (Centro)";-27.2249;-49.6454
-BR;"Santa Catarina";"Biguaçu (Fundos)";-27.5167;-48.6556
-BR;"Santa Catarina";Estreito;-27.5872;-48.5774
-BR;"Rio Grande do Sul";Centenário;-27.7614;-51.9989
-BR;"Santa Catarina";Estreito;-27.587;-48.5779
-BR;"Santa Catarina";"Lages (Maria Luíza)";-27.7848;-50.3089
-BR;"Rio Grande do Sul";Sananduva;-27.9507;-51.8147
-BR;"Rio Grande do Sul";"Campo Novo";-27.6796;-53.8029
-AR;Chaco;"Santa Sylvina";-27.8316;-61.136
-AU;Queensland;"Fortitude Valley";-27.4527;153.038
+BR;Rio Grande do Sul;Tuparendi;-27.7604;-54.4791
+AR;Santiago del Estero;Santiago del Estero;-27.8095;-64.3051
+BR;Santa Catarina;Concórdia;-27.2331;-52.0276
+BR;Santa Catarina;Salete;-27.2183;-51.9954
+BR;Santa Catarina;Rio Tavares (Campeche Leste);-27.6811;-48.493
+BR;Santa Catarina;Palhoça (Brejaru);-27.6211;-48.6609
+BR;Rio Grande do Sul;Distrito Industrial;-27.6509;-52.245
+BR;Santa Catarina;Palhoça (Distrito Industrial);-27.6236;-48.6477
+BR;Santa Catarina;Santo Antônio de Lisboa;-27.5081;-48.5122
+BR;Santa Catarina;Florianópolis (Centro);-27.5917;-48.5545
+BR;Santa Catarina;Penha;-27.8112;-50.2836
+BR;Santa Catarina;Chapecó (Passo dos Fortes);-27.084;-52.6221
+BR;Santa Catarina;Chapecó (Jardim Itália);-27.1042;-52.6249
+BR;Santa Catarina;Santo Antônio;-27.6806;-52.2904
+BR;Santa Catarina;Saco Grande;-27.5479;-48.4978
+BR;Santa Catarina;Saco Grande;-27.5478;-48.4994
+BR;Santa Catarina;Lagoa da Conceição;-27.6093;-48.4487
+BR;Santa Catarina;Santinho;-27.4647;-48.3812
+BR;Santa Catarina;Concórdia;-27.044;-51.9157
+BR;Santa Catarina;Rio das Pedras;-27.0015;-51.0804
+BR;Santa Catarina;Videira (Centro);-27.0064;-51.1525
+BR;Santa Catarina;Videira (Centro);-27.0072;-51.1526
+BR;Rio Grande do Sul;Erechim (Centro);-27.6395;-52.2693
+BR;Santa Catarina;Barreiros;-27.5699;-48.6088
+BR;Santa Catarina;Barreiros;-27.5827;-48.6142
+BR;Santa Catarina;Cachoeira do Bom Jesus;-27.4304;-48.4442
+BR;Santa Catarina;Joaçaba;-27.171;-51.5358
+BR;Rio Grande do Sul;Independência (Centro);-27.8477;-54.1927
+BR;Santa Catarina;Camboriú;-27.0217;-48.6516
+BR;Rio Grande do Sul;Frederico Westphalen (Centro);-27.3582;-53.3971
+BR;Rio Grande do Sul;Erechim (Demoliner);-27.6055;-52.2067
+BR;Santa Catarina;Palhoça (Cssn Fr);-27.6542;-48.6724
+BR;Santa Catarina;Rio do Sul (Centro);-27.2249;-49.6454
+BR;Santa Catarina;Biguaçu (Fundos);-27.5167;-48.6556
+BR;Santa Catarina;Estreito;-27.5872;-48.5774
+BR;Rio Grande do Sul;Centenário;-27.7614;-51.9989
+BR;Santa Catarina;Estreito;-27.587;-48.5779
+BR;Santa Catarina;Lages (Maria Luíza);-27.7848;-50.3089
+BR;Rio Grande do Sul;Sananduva;-27.9507;-51.8147
+BR;Rio Grande do Sul;Campo Novo;-27.6796;-53.8029
+AR;Chaco;Santa Sylvina;-27.8316;-61.136
+AU;Queensland;Fortitude Valley;-27.4527;153.038
 AU;Queensland;Brisbane;-27.4688;153.023
-AU;Queensland;"Eight Mile Plains";-27.5793;153.099
-AU;Queensland;"Saint Lucia";-27.5021;152.997
-AU;Queensland;"Eight Mile Plains";-27.5805;153.08
+AU;Queensland;Eight Mile Plains;-27.5793;153.099
+AU;Queensland;Saint Lucia;-27.5021;152.997
+AU;Queensland;Eight Mile Plains;-27.5805;153.08
 AU;Queensland;Brisbane;-27.5194;153.016
 AU;Queensland;Brisbane;-27.4672;153.03
 AU;Queensland;Ipswich;-27.6146;152.76
-AU;Queensland;"Browns Plains";-27.6624;153.053
-AU;Queensland;"Bowen Hills";-27.447;153.03
+AU;Queensland;Browns Plains;-27.6624;153.053
+AU;Queensland;Bowen Hills;-27.447;153.03
 AU;Queensland;Clayfield;-27.4198;153.053
-AU;Queensland;"Fortitude Valley";-27.4546;153.039
+AU;Queensland;Fortitude Valley;-27.4546;153.039
 AU;Queensland;Brisbane;-27.4665;153.026
 AU;Queensland;Ormeau;-27.754;153.243
-AU;Queensland;"Eight Mile Plains";-27.5797;153.1
+AU;Queensland;Eight Mile Plains;-27.5797;153.1
 AU;Queensland;Brisbane;-27.4666;153.027
 AU;Queensland;Milton;-27.4692;153.004
-AU;Queensland;"Spring Hill";-27.4699;153.008
+AU;Queensland;Spring Hill;-27.4699;153.008
 AU;Queensland;Ipswich;-27.6168;152.758
 AU;Queensland;Leyburn;-27.9912;151.582
 AU;Queensland;Coorparoo;-27.4945;153.059
-AU;Queensland;"Redland Bay";-27.6125;153.303
-AU;Queensland;"Petrie Terrace";-27.4644;153.013
+AU;Queensland;Redland Bay;-27.6125;153.303
+AU;Queensland;Petrie Terrace;-27.4644;153.013
 AU;Queensland;Archerfield;-27.5728;153.021
 AU;Queensland;Manly;-27.4549;153.184
-AU;Queensland;"Sunnybank Hills";-27.6;153.05
+AU;Queensland;Sunnybank Hills;-27.6;153.05
 AU;Queensland;Kenmore;-27.5103;152.938
 AU;Queensland;Taringa;-27.4871;152.99
-AU;Queensland;"Park Ridge";-27.7173;153.084
+AU;Queensland;Park Ridge;-27.7173;153.084
 AU;Queensland;Paddington;-27.4587;152.999
-AU;Queensland;"Daisy Hill";-27.6472;153.158
-AU;Queensland;"Paradise Point";-27.8795;153.388
-AU;Queensland;"East Brisbane";-27.4824;153.051
-AU;Queensland;"Fortitude Valley";-27.4567;153.038
-AU;Queensland;"Cannon Hill";-27.4667;153.093
-AU;Queensland;"South Brisbane";-27.4736;153.013
-AU;Queensland;"South Brisbane";-27.4712;153.018
-AU;Queensland;"Saint Lucia";-27.4975;153.014
-AU;Queensland;"Fortitude Valley";-27.458;153.04
+AU;Queensland;Daisy Hill;-27.6472;153.158
+AU;Queensland;Paradise Point;-27.8795;153.388
+AU;Queensland;East Brisbane;-27.4824;153.051
+AU;Queensland;Fortitude Valley;-27.4567;153.038
+AU;Queensland;Cannon Hill;-27.4667;153.093
+AU;Queensland;South Brisbane;-27.4736;153.013
+AU;Queensland;South Brisbane;-27.4712;153.018
+AU;Queensland;Saint Lucia;-27.4975;153.014
+AU;Queensland;Fortitude Valley;-27.458;153.04
 AU;Queensland;Murarrie;-27.449;153.1
 AU;Queensland;Corinda;-27.5386;152.979
 AU;Queensland;Auchenflower;-27.4781;152.993
 AU;Queensland;Aspley;-27.3639;153.016
-AU;Queensland;"Daisy Hill";-27.6337;153.149
+AU;Queensland;Daisy Hill;-27.6337;153.149
 AU;Queensland;Brisbane;-27.4663;153.029
 AU;Queensland;Taringa;-27.4926;152.978
 AU;Queensland;Milton;-27.4672;153.009
 AU;Queensland;Manly;-27.4573;153.179
-AU;Queensland;"Albany Creek";-27.3408;152.97
-AU;Queensland;"Acacia Ridge";-27.5874;153.027
+AU;Queensland;Albany Creek;-27.3408;152.97
+AU;Queensland;Acacia Ridge;-27.5874;153.027
 AU;Queensland;Brisbane;-27.4645;153.029
-AU;Queensland;"Main Beach";-27.9796;153.425
-AU;Queensland;"Mount Gravatt";-27.5364;153.067
+AU;Queensland;Main Beach;-27.9796;153.425
+AU;Queensland;Mount Gravatt;-27.5364;153.067
 AU;Queensland;Ipswich;-27.5558;152.806
-AU;Queensland;"New Farm";-27.468;153.048
+AU;Queensland;New Farm;-27.468;153.048
 AU;Queensland;Brisbane;-27.4712;153.029
-AU;Queensland;"Saint Lucia";-27.4946;153.012
+AU;Queensland;Saint Lucia;-27.4946;153.012
 AU;Queensland;Bulimba;-27.4481;153.059
 AU;Queensland;Milton;-27.4688;153.01
-AU;Queensland;"New Farm";-27.4672;153.046
+AU;Queensland;New Farm;-27.4672;153.046
 AU;Queensland;Capalaba;-27.5355;153.197
 AU;Queensland;Harristown;-27.5767;151.933
-AU;Queensland;"Eight Mile Plains";-27.5775;153.094
+AU;Queensland;Eight Mile Plains;-27.5775;153.094
 AU;Queensland;Yatala;-27.7573;153.201
 AU;Queensland;Morningside;-27.4668;153.074
 AU;Queensland;Clayfield;-27.4256;153.055
@@ -923,36 +923,36 @@ AU;Queensland;Brisbane;-27.4676;153.028
 AU;Queensland;Brisbane;-27.4673;153.029
 AU;Queensland;Manly;-27.4621;153.187
 AU;Queensland;Northgate;-27.3918;153.081
-AU;Queensland;"Fortitude Valley";-27.4538;153.032
+AU;Queensland;Fortitude Valley;-27.4538;153.032
 AU;Queensland;Mansfield;-27.5354;153.113
 AU;Queensland;Milton;-27.4728;153.006
 AU;Queensland;Helensvale;-27.915;153.333
 AU;Queensland;Kippa-Ring;-27.2269;153.09
-AU;Queensland;"Bowen Hills";-27.4496;153.04
-AU;Queensland;"Eight Mile Plains";-27.5864;153.101
+AU;Queensland;Bowen Hills;-27.4496;153.04
+AU;Queensland;Eight Mile Plains;-27.5864;153.101
 AU;Queensland;Windsor;-27.4333;153.026
 AU;Queensland;Brisbane;-27.4656;153.024
-AU;Queensland;"Upper Mount Gravatt";-27.553;153.078
-AU;Queensland;"Everton Park";-27.4006;152.986
+AU;Queensland;Upper Mount Gravatt;-27.553;153.078
+AU;Queensland;Everton Park;-27.4006;152.986
 AU;Queensland;Auchenflower;-27.4779;152.998
 AU;Queensland;Wooloowin;-27.4081;153.05
 AU;Queensland;Capalaba;-27.4377;153.148
 AU;Queensland;Loganholme;-27.6908;153.178
-AU;Queensland;"Darling Heights";-27.6045;151.93
+AU;Queensland;Darling Heights;-27.6045;151.93
 AU;Queensland;Banyo;-27.3688;153.075
 AU;Queensland;Springwood;-27.6159;153.137
 AU;Queensland;Woolloongabba;-27.487;153.038
 AU;Queensland;Brisbane;-27.4737;153.026
-AU;Queensland;"Spring Hill";-27.4562;153.025
+AU;Queensland;Spring Hill;-27.4562;153.025
 AU;Queensland;Virginia;-27.3745;153.062
 AU;Queensland;Brisbane;-27.4702;153.022
-AU;Queensland;"North Ipswich";-27.6076;152.762
+AU;Queensland;North Ipswich;-27.6076;152.762
 AU;Queensland;Boondall;-27.3585;153.063
 AU;Queensland;Brisbane;-27.4674;153.026
 AU;Queensland;Brisbane;-27.4987;153.047
 AU;Queensland;Sunnybank;-27.5868;153.065
 AU;Queensland;Ashgrove;-27.4395;152.978
-AU;Queensland;"Spring Hill";-27.4612;153.027
+AU;Queensland;Spring Hill;-27.4612;153.027
 AU;Queensland;Tennyson;-27.527;153.004
 AU;Queensland;Woodend;-27.6105;152.755
 AU;Queensland;Aspley;-27.3673;153.015
@@ -961,43 +961,43 @@ AU;Queensland;Brisbane;-27.4731;153.027
 AU;Queensland;Ipswich;-27.6146;152.761
 AU;Queensland;Geebung;-27.3768;153.049
 AU;Queensland;Margate;-27.2402;153.107
-AU;Queensland;"South Brisbane";-27.4706;153.017
+AU;Queensland;South Brisbane;-27.4706;153.017
 AU;Queensland;Nundah;-27.4035;153.06
-AU;Queensland;"Carole Park";-27.6207;152.933
-AU;Queensland;"Slacks Creek";-27.6174;153.12
+AU;Queensland;Carole Park;-27.6207;152.933
+AU;Queensland;Slacks Creek;-27.6174;153.12
 AU;Queensland;Ashgrove;-27.4456;152.992
-AU;Queensland;"South Brisbane";-27.4746;153.011
+AU;Queensland;South Brisbane;-27.4746;153.011
 AU;Queensland;Oxley;-27.5534;152.975
-AU;Queensland;"Forest Lake";-27.6251;152.955
+AU;Queensland;Forest Lake;-27.6251;152.955
 AU;Queensland;Brisbane;-27.4726;153.025
 AU;Queensland;Cornubia;-27.6703;153.202
 AU;Queensland;Ashgrove;-27.4437;152.989
-AU;Queensland;"Highgate Hill";-27.4869;153.018
-AU;Queensland;"Shailer Park";-27.6531;153.167
-AU;Queensland;"Fortitude Valley";-27.4612;153.033
-AU;Queensland;"West Ipswich";-27.62;152.75
-AU;Queensland;"Logan Central";-27.6456;153.101
+AU;Queensland;Highgate Hill;-27.4869;153.018
+AU;Queensland;Shailer Park;-27.6531;153.167
+AU;Queensland;Fortitude Valley;-27.4612;153.033
+AU;Queensland;West Ipswich;-27.62;152.75
+AU;Queensland;Logan Central;-27.6456;153.101
 AU;Queensland;Caboolture;-27.085;152.952
-AU;Queensland;"Acacia Ridge";-27.5932;153.033
+AU;Queensland;Acacia Ridge;-27.5932;153.033
 AU;Queensland;Virginia;-27.3853;153.067
 AU;Queensland;Milton;-27.466;153.006
 AU;Queensland;Milton;-27.4695;153.004
-AU;Queensland;"South Brisbane";-27.4796;153.022
+AU;Queensland;South Brisbane;-27.4796;153.022
 AU;Queensland;Strathpine;-27.311;152.991
 AU;Queensland;Brisbane;-27.47;153.026
-AU;Queensland;"South Brisbane";-27.4723;153.018
+AU;Queensland;South Brisbane;-27.4723;153.018
 AU;Queensland;Newstead;-27.4423;153.043
 AU;Queensland;Petrie;-27.2695;152.976
 AU;Queensland;Toowong;-27.4873;152.991
-AU;Queensland;"Forest Lake";-27.6249;152.97
+AU;Queensland;Forest Lake;-27.6249;152.97
 AU;Queensland;Brisbane;-27.4628;153.03
 AU;Queensland;Boondall;-27.3623;153.058
 AU;Queensland;Brisbane;-27.4697;153.026
-AU;Queensland;"Port of Brisbane";-27.3837;153.168
-AU;Queensland;"Fortitude Valley";-27.459;153.035
-AU;Queensland;"Hope Island";-27.8601;153.354
+AU;Queensland;Port of Brisbane;-27.3837;153.168
+AU;Queensland;Fortitude Valley;-27.459;153.035
+AU;Queensland;Hope Island;-27.8601;153.354
 AU;Queensland;Brookfield;-27.5166;152.917
-AU;Queensland;"Waterford West";-27.7024;153.138
+AU;Queensland;Waterford West;-27.7024;153.138
 AU;Queensland;Nerang;-27.9894;153.336
 AU;Queensland;Brisbane;-27.4674;153.027
 AU;Queensland;Milton;-27.4745;153.003
@@ -1010,51 +1010,51 @@ AU;Queensland;Riverhills;-27.5604;152.909
 AU;Queensland;Brisbane;-27.4696;153.016
 AU;Queensland;Banyo;-27.3791;153.093
 AU;Queensland;Alderley;-27.4253;153.001
-AU;Queensland;"Mount Gravatt";-27.5304;153.095
+AU;Queensland;Mount Gravatt;-27.5304;153.095
 AU;Queensland;Brendale;-27.3265;152.98
-AU;Queensland;"Coopers Plains";-27.5704;153.038
-AU;Queensland;"Sunnybank Hills";-27.5939;153.041
+AU;Queensland;Coopers Plains;-27.5704;153.038
+AU;Queensland;Sunnybank Hills;-27.5939;153.041
 AU;Queensland;Brisbane;-27.4733;153.028
-AU;Queensland;"Fortitude Valley";-27.4558;153.03
-AU;Queensland;"South Brisbane";-27.4819;153.021
+AU;Queensland;Fortitude Valley;-27.4558;153.03
+AU;Queensland;South Brisbane;-27.4819;153.021
 AU;Queensland;Wilston;-27.4309;153.02
 AU;Queensland;Karalee;-27.5628;152.828
-AU;Queensland;"Fortitude Valley";-27.4568;153.031
-AU;Queensland;"Manly West";-27.4704;153.152
+AU;Queensland;Fortitude Valley;-27.4568;153.031
+AU;Queensland;Manly West;-27.4704;153.152
 AU;Queensland;Jimboomba;-27.8693;153.033
 AU;Queensland;Brisbane;-27.4709;153.026
-AU;Queensland;"West End";-27.4788;153.013
+AU;Queensland;West End;-27.4788;153.013
 AU;Queensland;Nundah;-27.4008;153.072
 AU;Queensland;Brisbane;-27.4692;153.023
 AU;Queensland;Windsor;-27.437;153.032
-AU;Queensland;"Albany Creek";-27.3632;152.978
+AU;Queensland;Albany Creek;-27.3632;152.978
 AU;Queensland;Milton;-27.4726;153.004
 AU;Queensland;Goodna;-27.6106;152.887
 AU;Queensland;Sheldon;-27.5725;153.209
-AU;"Western Australia";Leinster;-27.9203;120.697
+AU;Western Australia;Leinster;-27.9203;120.697
 AU;Queensland;Toowong;-27.487;152.988
-AU;Queensland;"The Gap";-27.4358;152.948
+AU;Queensland;The Gap;-27.4358;152.948
 AU;Queensland;Toowong;-27.4851;152.991
 AU;Queensland;Teneriffe;-27.4533;153.047
 AU;Queensland;Milton;-27.4716;153.004
 AU;Queensland;Brisbane;-27.4678;153.03
-AU;Queensland;"Bowen Hills";-27.4466;153.03
+AU;Queensland;Bowen Hills;-27.4466;153.03
 AU;Queensland;Brisbane;-27.4655;153.028
 AU;Queensland;Hendra;-27.4181;153.072
 AU;Queensland;Brisbane;-27.4727;153.026
 AU;Queensland;Brisbane;-27.4123;153.077
-AU;Queensland;"Port of Brisbane";-27.3836;153.176
+AU;Queensland;Port of Brisbane;-27.3836;153.176
 AU;Queensland;Carseldine;-27.3439;153.016
-AU;Queensland;"Highgate Hill";-27.4799;153.012
+AU;Queensland;Highgate Hill;-27.4799;153.012
 AU;Queensland;Withcott;-27.5541;152.024
 AU;Queensland;Cambooya;-27.7145;151.86
-AU;Queensland;"Shailer Park";-27.6621;153.174
+AU;Queensland;Shailer Park;-27.6621;153.174
 AU;Queensland;Kenmore;-27.519;152.938
 AU;Queensland;Crestmead;-27.6798;153.077
 AU;Queensland;Brisbane;-27.4668;153.029
-BR;"Santa Catarina";Areias;-27.5567;-48.6364
+BR;Santa Catarina;Areias;-27.5567;-48.6364
 AU;Queensland;Caboolture;-27.0823;152.981
-AU;Queensland;"Fortitude Valley";-27.4596;153.031
+AU;Queensland;Fortitude Valley;-27.4596;153.031
 AU;Queensland;Molendinar;-27.9653;153.361
 AU;Queensland;Brisbane;-27.4754;153.027
 AU;Queensland;Southport;-27.9729;153.387
@@ -1063,7 +1063,7 @@ AU;Queensland;Brisbane;-27.4672;153.019
 AU;Queensland;Taringa;-27.4917;152.98
 AU;Queensland;Hawthorne;-27.472;153.057
 AU;Queensland;Tingalpa;-27.4853;153.135
-AU;Queensland;"East Brisbane";-27.4814;153.042
+AU;Queensland;East Brisbane;-27.4814;153.042
 AU;Queensland;Rocklea;-27.5589;152.999
 AU;Queensland;Redcliffe;-27.2306;153.116
 AU;Queensland;Darra;-27.5793;152.947
@@ -1077,6 +1077,6 @@ AU;Queensland;Brisbane;-27.4643;153.031
 AU;Queensland;Brisbane;-27.469;153.026
 AU;Queensland;Brisbane;-27.4664;153.028
 AU;Queensland;Indooroopilly;-27.5052;152.983
-AU;Queensland;"Eagle Farm";-27.426;153.083
+AU;Queensland;Eagle Farm;-27.426;153.083
 AU;Queensland;Toogoolawah;-27.0866;152.376
 AU;Queensland;Wilsonton;-27.539;151.91
