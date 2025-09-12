@@ -509,7 +509,7 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 #common_dialogue_iam_verify_verification_code_icon::before{				        content:var(--common_app_icon_verification_code)}
 #common_dialogue_iam_verify_cancel::before{								        content:var(--common_app_icon_cancel)}
 
-/*Icons module leaflet control*/
+/*Icons common map control*/
 #common_map_control_zoomout::before{						                    content:var(--common_app_icon_zoomout)}
 #common_map_control_zoomin::before{							                    content:var(--common_app_icon_zoomin)}
 #common_map_control_search::before{					                            content:var(--common_app_icon_search)}
@@ -518,17 +518,11 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 #common_map_control_my_location::before{					                    content:var(--common_app_icon_map_my_location)}
 #common_map_control_layer::before{					                            content:var(--common_app_icon_map_layer)}
 #common_map_control_query::before{					                            content:var(--common_app_icon_arrow_pointer_query)}
-#common_module_leaflet_control_search_button::before{					        content:var(--common_app_icon_search)}
-#common_module_leaflet_search_icon::before{								        content:var(--common_app_icon_search)}
-#common_module_leaflet_control_fullscreen_id::before{					        content:var(--common_app_icon_fullscreen)}
-#common_module_leaflet_control_my_location_id::before{					        content:var(--common_app_icon_map_my_location)}
-#common_module_leaflet_control_layer_button::before{					        content:var(--common_app_icon_map_layer)}
 
-/*Icons module leaflet popup*/
+/*Icons common map popup*/
 .common_map_popup_close::before{											    content:var(--common_app_icon_close)}
 .common_map_popup_sub_title_timezone_icon::before{							    content:var(--common_app_icon_regional_timezone)}
 .common_map_popup_sub_title_gps_icon::before{							        content:var(--common_app_icon_gps_position)}
-.common_module_leaflet_popup_sub_title::before{							        content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_gps_position)}
 
 /*Icons profile search*/
 #common_profile_search_icon::before{									        content:var(--common_app_icon_search)}
@@ -2233,112 +2227,6 @@ body.rtl{
     text-align:center;
 }
 
-/*Module leaflet, dynamically created popup*/
-.leaflet-popup{
-    margin-bottom: 0px;
-}
-.common_module_leaflet_popup_title,
-.common_module_leaflet_popup_sub_title,
-.common_module_leaflet_popup_sub_title_timezone,
-.common_module_leaflet_popup_sub_title_gps{
-	font-weight: bold;
-	text-align: center;
-	display: block;
-}
-.leaflet-popup-content{
-	width:200px !important;
-}
-.leaflet-popup-close-button{
-    position: absolute;
-    top: 0;
-    text-align: end;
-    border: none;
-    width: calc(100% - 0.25em);
-    height: 24px;
-    text-decoration: none;
-    font-size: 2em;
-    cursor:pointer;
-}
-#common_module_leaflet_control_search .common_select_option{
-	display: inline-block;;
-}
-.common_module_leaflet_control_button,
-.leaflet-control-zoom-in, 
-.leaflet-control-zoom-out {
-	text-align: center;
-	height: 30px;
-	width: 30px;
-	display: block;
-	line-height: 30px;
-	cursor: pointer;
-	padding-top: unset;
-    padding-bottom: unset;
-}
-.common_module_leaflet_control_expand{
-	position: absolute;
-	inset-inline-start: 30px;
-}
-#common_module_leaflet_control_expand_layer{
-	display: none;
-	width: 60vw;
-	height: 30px;
-	bottom: 0px;
-}
-#common_module_leaflet_control_expand_search{
-	display: none;
-	width: 60vw;
-    top: 60px;
-}
-#common_module_leaflet_select_country, #common_module_leaflet_select_city, #common_module_leaflet_select_mapstyle{
-	width:95%;
-	line-height: 1.5em;
-}
-#common_module_leaflet_input_row{
-	position: fixed;
-	z-index: 1;
-	margin-inline-start: calc(50% - 140px);
-}
-#common_module_leaflet_search_input{
-	width:90% !important;
-}
-#common_module_leaflet_search_icon{
-	display: inline-block;
-	cursor: pointer;
-}
-#common_module_leaflet_search_list_wrap{
-	width: 100%;
-	z-index:1;
-	display: flex;
-	flex-direction: column;
-}
-#common_module_leaflet_search_list{
-	margin-inline-start: 10px;
-	overflow-y: auto;
-    overflow-x: hidden;
-	max-height: calc(10 * 3em);
-	display:inline-block;
-	line-height: unset !important;
-}
-#common_module_leaflet_search_list .common_link {
-	width: unset;
-	text-align: unset;
-	background-color:unset;
-}
-.common_module_leaflet_search_list_row{
-	text-align: start;
-	display: inline-block;
-  	width: 100%;
-}
-.common_module_leaflet_search_list_col{
-	display:block;
-	width: calc(100% - 2px);
-	height: 2em;
-}
-.common_module_leaflet_search_list_col:nth-child(1),
-.common_module_leaflet_search_list_col:nth-child(4),
-.common_module_leaflet_search_list_col:nth-child(5){
-	display: none !important;
-}
 
 /* BROADCAST */
 #common_broadcast_info {
@@ -2486,7 +2374,7 @@ body.rtl{
 	#common_message_title #common_message_info_list{
 		width: 500px;
 	}	
-	#common_module_leaflet_search_list{
+	#common_map_control_expand_search_list{
 		max-height: calc(8 * 3em);
 	}
 	.common_toolbar_button{

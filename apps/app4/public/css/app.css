@@ -31,9 +31,6 @@
 #setting_icon_regional_calendartype::before{				content:var(--common_app_icon_regional_calendar)}
 #setting_icon_regional_calendar_hijri_type::before{			content:var(--common_app_icon_regional_calendar_hijri_type)}
 
-#setting_icon_gps_popular_place::before{					content:var(--common_app_icon_gps_popular_place)}
-#setting_icon_gps_place::before{							content:var(--common_app_icon_gps_position)}
-
 #setting_design_icon_theme_day::before{						content:var(--common_app_icon_regional_day)}
 #setting_design_icon_theme_month::before{					content:var(--common_app_icon_regional_month)}
 #setting_design_icon_theme_year::before{					content:var(--common_app_icon_regional_year)}
@@ -641,11 +638,6 @@
 	display:block;
 	margin: 0 auto;
 }
-#common_module_leaflet_control_search select,
-#common_module_leaflet_control_search .common_input{
-	max-width: unset !important;
-	min-width: unset !important;
-}
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
@@ -1044,8 +1036,9 @@ body,
 .common_switch.checked::before {
 	background-color: var(--app_theme_switch_checked_before_background_color);
 }
+.common_map_control_active,
 .common_row_selected{
-	background-color: var(--app_theme_selected_background_color);
+	background-color: var(--app_theme_selected_background_color) !important;
 }
 .common_list_scrollbar{
 	scrollbar-color: var(--app_theme_scrollbar_color1) var(--app_theme_scrollbar_color2);
@@ -1065,14 +1058,17 @@ body,
 .common_unlike{
 	color: var(--common_app_color_blue1) !important;
 }
-.common_module_leaflet_control_button,
-.leaflet-control-zoom-in, 
-.leaflet-control-zoom-out{
+.common_map_control_expand{
+	background-color: var(--app_theme_main_color2) !important;
+}
+.common_map_control_button{
 	background-color: var(--app_theme_main_color2);
 }
-.common_module_leaflet_control_expand{
-	background-color: var(--app_theme_main_color2);
+.common_map_popup{
+	background-color: var(--app_theme_main_color2) !important;
+	color: var(--app_theme_text_color) !important;
 }
-#common_module_leaflet_search_list_wrap{
-	background-color: var(--app_theme_main_color1);
+.common_map_control_expand_search_list_row:hover,
+.common_map_control_expand_search_list_row:active {
+	background-color: var(--common_app_color_white3);
 }
