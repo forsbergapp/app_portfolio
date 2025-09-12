@@ -36,16 +36,9 @@
  *  CommonMessageType
  *  CommonWorldcitiesRecordType
  * 
- * Common module types
- *  CommonModuleLeafletEvent
- *  CommonModuleLeafletMapData
- *  CommonModuleLeafletMethods
- *  CommonModuleLeafletMapLayer
- * 
  * Common Module files types 
  *  CommonModuleCommon
  *  CommonModuleEasyQRCode
- *  CommonModuleLeaflet
  *  CommonModuleRegional
  *  CommonModuleReact
  *  CommonModuleReactDOM
@@ -196,8 +189,7 @@
  *              app_div:string,
  *              app_console:{warn:function, info:function, error:function},
  *              app_createElement:{original:function,custom:function},
- *              app_eventListeners:{original:function, LEAFLET:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[], 
- *                                                     REACT:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[], 
+ *              app_eventListeners:{original:function, REACT:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[], 
  *                                                     VUE:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[], 
  *                                                     OTHER:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[]},
  *              app_function_exception:function|null,
@@ -247,25 +239,8 @@
  *              component_import:{app_id:number, url:string,component:*}[]|[],
  *              component:Object.<string,   {
  *                                          methods?:Object.<string,function>|null, 
- *                                          events?:(arg0:commonEventType, arg1:CommonAppEvent)=>void|null}>,
- *              moduleLeaflet: {methods:{
- *                                          eventClickCountry:          function, 
- *                                          eventClickCity:             function,
- *                                          eventClickMapLayer:         function,
- *                                          eventClickControlZoomIn:    function,
- *                                          eventClickControlZoomOut:   function,
- *                                          eventClickControlSearch:    function,
- *                                          eventClickControlFullscreen:function,
- *                                          eventClickControlLocation:  function,
- *                                          eventClickControlLayer:     function,
- *                                          eventClickSearchList:       function,
- *                                          eventKeyUpSearch:           function,
- *                                          map_toolbar_reset:          function,
- *                                          map_line_removeall:         function,
- *                                          map_line_create:            function,
- *                                          map_update:                 function
- *                                      }
- *                              }}} CommonGlobal
+ *                                          events?:(arg0:commonEventType, arg1:CommonAppEvent)=>void|null}>
+ *      }} CommonGlobal
  */
 
 /**
@@ -335,7 +310,7 @@
 /**
  * @description geoJSON Popup
  * @typedef {{   
- *            id: string,
+ *            id?: string,
  *            type:'Feature',
  *            properties:{  x:number,
  *                          y:number,
@@ -353,18 +328,37 @@
 /**
  * @description geoJSON tile
  * @typedef {{   
-*            id: string,
-*            type:'Feature',
-*            properties:{  left:number,
-*                          top:number,                        
-*                          tileSize:number,
-*                          url:string},
-*                          geometry:{
-*                                      type:'Point',
-*                                      coordinates:null
-*                          }
-*          }} commonGeoJSONTile
-*/
+ *            id?: string,
+ *            type:'Feature',
+ *            properties:{  left:number,
+ *                          top:number,                        
+ *                          tileSize:number,
+ *                          url:string},
+ *                          geometry:{
+ *                                      type:'Point',
+ *                                      coordinates:null
+ *                          }
+ *          }} commonGeoJSONTile
+ */
+/**
+ * @description geoJSON Polyline
+ * @typedef {{   
+ *            id?: string,
+ *            type:'Feature',
+ *            properties:{offsetX?:number,
+ *                        offsetY?:number,
+ *                        title:string,
+ *                        color:string,
+ *                        width:number,
+ *                        opacity?:number
+ *                      },
+ *            geometry:{
+ *                       type:'MultiLineString'|'LineString',
+ *                       coordinates:[number, number][]
+ *            }
+ *          }} commonGeoJSONPolyline
+ */
+
 /**
  * @description commonMapPlace
  * @typedef {{  place:       string,
@@ -383,22 +377,6 @@
  *              url:string,
  *              max_zoom:number|null
  *              attribution:string}} commonMapLayers
- */
-/**
- * @description geoJSON Polyline
- * @typedef {{   
- *            id: string,
- *            type:'Feature',
- *            properties:{offsetX?:number,
- *                        offsetY?:number,
- *                        title:string,
- *                        color:string,
- *                        width:number},
- *            geometry:{
- *                       type:'MultiLineString'|'LineString',
- *                       coordinates:[number, number][]
- *            }
- *          }} commonGeoJSONPolyline
  */
 /**
  * @description Type CommonRESTAPIMethod
@@ -620,42 +598,6 @@
  */
 
 /**
- * @description Type CommonModuleLeafletEvent
- * @typedef {{  originalEvent:CommonAppEvent,
- *              latlng:{lat:string, 
- *                      lng:string}}} CommonModuleLeafletEvent
- */
-
-/**
- * @description Type CommonModuleLeafletMapData
- * @typedef {{  _container:{id:string},
- *              doubleClickZoom:{disable:function},
- *              invalidateSize:function,
- *              removeLayer:function,
- *              setView:function,
- *              flyTo:function,
- *              setZoom:function,
- *              getZoom:function,
- *              on:function}} CommonModuleLeafletMapData
- *
- */
-/**
- * @description Type CommonModuleLeafletMethods
- * @typedef {{  leafletLibrary:*,
- *              leafletContainer: function}} CommonModuleLeafletMethods
- */
-
-/**
- * @description Type CommonModuleLeafletMapLayer
- * @typedef {{  display_data: string, 
- *              value:string, 
- *              data2:string|null, 
- *              data3:string|number|null, 
- *              data4:string|null,
- *              session_map_layer:string|null}}  CommonModuleLeafletMapLayer
- */
-
-/**
  * @description Type CommonWorldcitiesRecordType
  * @typedef {{id:number, city:string, admin_name:string, country:string, lat:string, lng:string}} CommonWorldcitiesRecordType
  */
@@ -667,10 +609,6 @@
 /**
  * @description Type CommonModuleEasyQRCode
  * @typedef {{QRCode:*}} CommonModuleEasyQRCode
- */
-/**
- * @description Type CommonModuleLeaflet
- * @typedef {import('./common/public/modules/leaflet/leaflet-src.esm.js')} CommonModuleLeaflet
  */
 /**
  * @description Type CommonModuleRegional
