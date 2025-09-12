@@ -1,8 +1,8 @@
-TH;Trat;"Ko Kut";11.6586;102.542
-TH;"Prachuap Khiri Khan";"Prachuap Khiri Khan";11.821;99.7841
-TH;"Prachuap Khiri Khan";"Bang Saphan";11.2126;99.5117
-TH;"Prachuap Khiri Khan";"Bang Saphan Noi";11.0753;99.4415
-KH;"Phnom Penh";"Phnom Penh";11.5564;104.928
+TH;Trat;Ko Kut;11.6586;102.542
+TH;Prachuap Khiri Khan;Prachuap Khiri Khan;11.821;99.7841
+TH;Prachuap Khiri Khan;Bang Saphan;11.2126;99.5117
+TH;Prachuap Khiri Khan;Bang Saphan Noi;11.0753;99.4415
+KH;Phnom Penh;Phnom Penh;11.5564;104.928
 IN;Kerala;Manjeri;11.1202;76.12
 IN;Kerala;Kuruvattūr;11.3361;75.8351
 IN;Kerala;Kakkodi;11.3197;75.8015
@@ -12,554 +12,554 @@ IN;Kerala;Kalpatta;11.6087;76.0834
 IN;Kerala;Kōttakkal;11.0009;76.0062
 IN;Kerala;Irikkūr;11.9867;75.5501
 IN;Kerala;Peringottupulam;11.0268;76.0987
-VN;"Lâm Đồng Province";"Đưc Trọng";11.7356;108.373
-VN;"Ninh Thuận Province";"Phước Dân";11.527;108.93
-VN;"Lâm Đồng Province";"Bảo Lộc";11.548;107.808
-VN;"Lâm Đồng Province";"Da Lat";11.9465;108.442
+VN;Lâm Đồng Province;Đưc Trọng;11.7356;108.373
+VN;Ninh Thuận Province;Phước Dân;11.527;108.93
+VN;Lâm Đồng Province;Bảo Lộc;11.548;107.808
+VN;Lâm Đồng Province;Da Lat;11.9465;108.442
 IN;Kerala;Vengara;11.0508;75.9781
-PH;"Eastern Visayas";Tugbong;11.0167;124.6
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.5901;104.875
-IN;"Tamil Nadu";"Coimbatore (Race Course)";11.0045;76.9761
-IN;Puducherry;"Puducherry (Ilango Nagar)";11.9372;79.8231
-IN;"Tamil Nadu";Salem;11.6643;78.146
-IN;Puducherry;"Puducherry (Gorimedu)";11.9561;79.7943
+PH;Eastern Visayas;Tugbong;11.0167;124.6
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.5901;104.875
+IN;Tamil Nadu;Coimbatore (Race Course);11.0045;76.9761
+IN;Puducherry;Puducherry (Ilango Nagar);11.9372;79.8231
+IN;Tamil Nadu;Salem;11.6643;78.146
+IN;Puducherry;Puducherry (Gorimedu);11.9561;79.7943
 IN;Kerala;Thenhippalam;11.1323;75.8822
-IN;"Tamil Nadu";"Coimbatore (R.S. Puram)";11.0129;76.9417
-IN;"Tamil Nadu";Karuppur;11.7128;78.0882
+IN;Tamil Nadu;Coimbatore (R.S. Puram);11.0129;76.9417
+IN;Tamil Nadu;Karuppur;11.7128;78.0882
 IN;Puducherry;Puducherry;11.9338;79.8298
-VN;"Bình Thuận Province";"Võ Xu";11.1869;107.56
-VN;"Lâm Đồng Province";"Xã Đạ K'Nàng";11.8936;108.135
-VN;"Bình Thuận Province";"Liên Hương";11.2276;108.724
-VN;"Tây Ninh Province";"Tây Ninh";11.31;106.098
-VN;"Lâm Đồng Province";"Đạ Tẻh";11.5115;107.491
-VN;"Lâm Đồng Province";"Ma Đa Gui";11.387;107.535
-VN;"Ninh Thuận Province";"Khánh Hải";11.5911;109.041
-VN;"Tây Ninh Province";"Hòa Thành";11.287;106.129
-VN;"Bình Phước Province";"Lộc Ninh";11.8448;106.591
-VN;"Bình Dương Province";"Uyen Hung";11.0842;106.788
-VN;"Bình Phước Province";"Chơn Thành";11.4282;106.635
-VN;"Lâm Đồng Province";"Di Linh";11.5815;108.076
-VN;"Bình Phước Province";"Dong Xoai";11.535;106.883
-VN;"Tây Ninh Province";"Tân Châu";11.552;106.172
-VN;"Ninh Thuận Province";"Tân Sơn";11.7752;108.785
-VN;"Tây Ninh Province";"Dương Minh Châu";11.3841;106.231
-VN;"Bình Dương Province";"Dầu Tiếng";11.2741;106.359
-VN;"Đồng Nai Province";"Tân Phú";11.2722;107.437
-VN;"Tây Ninh Province";"Gò Dầu";11.0885;106.263
-VN;"Lâm Đồng Province";"Lam Ha District";11.8155;108.214
-VN;"Ninh Thuận Province";"Phan Rang";11.5643;108.989
-VN;"Bình Phước Province";"Tân Phú";11.4512;106.868
-VN;"Khánh Hòa Province";"Cam Ranh";11.9214;109.159
-VN;"Tây Ninh Province";"Trảng Bàng";11.0299;106.358
-VN;"Bình Phước Province";"Đức Phong";11.8135;107.244
-VN;"Bình Phước Province";"Bù Đốp";11.9549;106.8
-VN;"Tây Ninh Province";"Tân Biên";11.5444;106.012
-VN;"Tây Ninh Province";"Châu Thành";11.3117;106.03
-VN;"Lâm Đồng Province";"Đồng Nai";11.5798;107.365
-VN;"Bình Thuận Province";"Ma Lâm";11.073;108.13
-VN;"Lâm Đồng Province";"Đinh Văn";11.7862;108.243
-VN;"Bình Thuận Province";"Chợ Lầu";11.2216;108.507
-VN;"Bình Phước Province";"Bình Long";11.6471;106.606
-VN;"Bình Dương Province";"Bến Cát";11.3254;106.477
-IN;"Tamil Nadu";Coimbatore;11.0168;76.9558
+VN;Bình Thuận Province;Võ Xu;11.1869;107.56
+VN;Lâm Đồng Province;Xã Đạ K'Nàng;11.8936;108.135
+VN;Bình Thuận Province;Liên Hương;11.2276;108.724
+VN;Tây Ninh Province;Tây Ninh;11.31;106.098
+VN;Lâm Đồng Province;Đạ Tẻh;11.5115;107.491
+VN;Lâm Đồng Province;Ma Đa Gui;11.387;107.535
+VN;Ninh Thuận Province;Khánh Hải;11.5911;109.041
+VN;Tây Ninh Province;Hòa Thành;11.287;106.129
+VN;Bình Phước Province;Lộc Ninh;11.8448;106.591
+VN;Bình Dương Province;Uyen Hung;11.0842;106.788
+VN;Bình Phước Province;Chơn Thành;11.4282;106.635
+VN;Lâm Đồng Province;Di Linh;11.5815;108.076
+VN;Bình Phước Province;Dong Xoai;11.535;106.883
+VN;Tây Ninh Province;Tân Châu;11.552;106.172
+VN;Ninh Thuận Province;Tân Sơn;11.7752;108.785
+VN;Tây Ninh Province;Dương Minh Châu;11.3841;106.231
+VN;Bình Dương Province;Dầu Tiếng;11.2741;106.359
+VN;Đồng Nai Province;Tân Phú;11.2722;107.437
+VN;Tây Ninh Province;Gò Dầu;11.0885;106.263
+VN;Lâm Đồng Province;Lam Ha District;11.8155;108.214
+VN;Ninh Thuận Province;Phan Rang;11.5643;108.989
+VN;Bình Phước Province;Tân Phú;11.4512;106.868
+VN;Khánh Hòa Province;Cam Ranh;11.9214;109.159
+VN;Tây Ninh Province;Trảng Bàng;11.0299;106.358
+VN;Bình Phước Province;Đức Phong;11.8135;107.244
+VN;Bình Phước Province;Bù Đốp;11.9549;106.8
+VN;Tây Ninh Province;Tân Biên;11.5444;106.012
+VN;Tây Ninh Province;Châu Thành;11.3117;106.03
+VN;Lâm Đồng Province;Đồng Nai;11.5798;107.365
+VN;Bình Thuận Province;Ma Lâm;11.073;108.13
+VN;Lâm Đồng Province;Đinh Văn;11.7862;108.243
+VN;Bình Thuận Province;Chợ Lầu;11.2216;108.507
+VN;Bình Phước Province;Bình Long;11.6471;106.606
+VN;Bình Dương Province;Bến Cát;11.3254;106.477
+IN;Tamil Nadu;Coimbatore;11.0168;76.9558
 IN;Kerala;Kozhikode;11.2588;75.7804
 IN;Karnataka;Chamrajnagar;11.9231;76.9395
 IN;Kerala;Pūlakkōd;11.3097;75.95
-IN;"Tamil Nadu";"Kīl Bhuvanagiri";11.4422;79.6476
-IN;"Tamil Nadu";Coimbatore;11.0056;76.9661
+IN;Tamil Nadu;Kīl Bhuvanagiri;11.4422;79.6476
+IN;Tamil Nadu;Coimbatore;11.0056;76.9661
 IN;Kerala;Tikkotti;11.4833;75.6167
 IN;Kerala;Mahē;11.7017;75.5347
 IN;Kerala;Chēmanchēri;11.4048;75.7236
 IN;Kerala;Pantheeramkavu;11.2305;75.8518
 IN;Kerala;Maniyur;11.9529;75.4481
 IN;Kerala;Kuttikkāttūr;11.2626;75.8796
-VN;"Bình Thuận Province";"Ma Lâm";11.0904;108.072
-KH;"Phnom Penh";"Ruessei Kaev";11.6244;104.909
-IN;"Tamil Nadu";"Coimbatore (Lakshmi Mills Colony)";11.017;76.9789
-KH;"Phnom Penh";"Phnom Penh";11.5377;104.924
-KH;"Phnom Penh";"Phnom Penh";11.5625;104.916
-KH;"Phnom Penh";Dangkao;11.5617;104.856
-KH;"Phnom Penh";"Phnom Penh";11.5471;104.914
-KH;"Phnom Penh";"Phnom Penh";11.5346;104.916
-KH;"Phnom Penh";"Phnom Penh";11.5344;104.913
-IN;"Tamil Nadu";Thuraiyur;11.1519;78.5957
-TH;Trat;"Ban Bang Bao";11.9727;102.312
-KH;"Phnom Penh";"Phnom Penh";11.5492;104.905
-KH;"Phnom Penh";"Mean Chey";11.5326;104.937
-KH;"Kampong Speu Province";"Kampong Speu";11.4533;104.521
-KH;"Phnom Penh";"Ponhea Lueu";11.6558;104.867
+VN;Bình Thuận Province;Ma Lâm;11.0904;108.072
+KH;Phnom Penh;Ruessei Kaev;11.6244;104.909
+IN;Tamil Nadu;Coimbatore (Lakshmi Mills Colony);11.017;76.9789
+KH;Phnom Penh;Phnom Penh;11.5377;104.924
+KH;Phnom Penh;Phnom Penh;11.5625;104.916
+KH;Phnom Penh;Dangkao;11.5617;104.856
+KH;Phnom Penh;Phnom Penh;11.5471;104.914
+KH;Phnom Penh;Phnom Penh;11.5346;104.916
+KH;Phnom Penh;Phnom Penh;11.5344;104.913
+IN;Tamil Nadu;Thuraiyur;11.1519;78.5957
+TH;Trat;Ban Bang Bao;11.9727;102.312
+KH;Phnom Penh;Phnom Penh;11.5492;104.905
+KH;Phnom Penh;Mean Chey;11.5326;104.937
+KH;Kampong Speu Province;Kampong Speu;11.4533;104.521
+KH;Phnom Penh;Ponhea Lueu;11.6558;104.867
 KH;Kandal;S’ang;11.3607;105.008
-VN;"Bình Phước Province";"Dong Xoai";11.5487;106.895
-VN;"Bình Dương Province";"Thị Xã Bến Cát (Khu Phố Ba)";11.1411;106.604
-KH;"Phnom Penh";"Phnom Penh";11.5555;104.933
-KH;"Phnom Penh";"Phnom Penh";11.5556;104.933
-KH;"Phnom Penh";"Phnom Penh";11.5556;104.934
+VN;Bình Phước Province;Dong Xoai;11.5487;106.895
+VN;Bình Dương Province;Thị Xã Bến Cát (Khu Phố Ba);11.1411;106.604
+KH;Phnom Penh;Phnom Penh;11.5555;104.933
+KH;Phnom Penh;Phnom Penh;11.5556;104.933
+KH;Phnom Penh;Phnom Penh;11.5556;104.934
 VE;Falcón;Dabajuro;11.0227;-70.6777
 VE;Zulia;Sinamaica;11.0866;-71.8559
-VE;Falcón;"Punta Cardón";11.6581;-70.215
-VE;Falcón;"Punto Fijo";11.6915;-70.1992
-VE;Falcón;"Puerto Cumarebo";11.4861;-69.3532
-VE;"Nueva Esparta";"La Plaza Paraguachi";11.1078;-63.8554
-VE;"Nueva Esparta";Pampatar;11.0008;-63.793
-VE;"Nueva Esparta";"Juan Griego";11.0817;-63.9655
-VE;"Nueva Esparta";"Santa Ana";11.0683;-63.9226
-VE;"Nueva Esparta";"La Asunción";11.0333;-63.8628
-IN;"Tamil Nadu";Sīrkāzhi;11.2373;79.7358
-VE;Falcón;"Pueblo Nuevo";11.9479;-69.9231
+VE;Falcón;Punta Cardón;11.6581;-70.215
+VE;Falcón;Punto Fijo;11.6915;-70.1992
+VE;Falcón;Puerto Cumarebo;11.4861;-69.3532
+VE;Nueva Esparta;La Plaza Paraguachi;11.1078;-63.8554
+VE;Nueva Esparta;Pampatar;11.0008;-63.793
+VE;Nueva Esparta;Juan Griego;11.0817;-63.9655
+VE;Nueva Esparta;Santa Ana;11.0683;-63.9226
+VE;Nueva Esparta;La Asunción;11.0333;-63.8628
+IN;Tamil Nadu;Sīrkāzhi;11.2373;79.7358
+VE;Falcón;Pueblo Nuevo;11.9479;-69.9231
 VE;Falcón;Coro;11.4077;-69.6782
-VE;"Nueva Esparta";"San Juan Bautista";11.0124;-63.9441
+VE;Nueva Esparta;San Juan Bautista;11.0124;-63.9441
 VE;Falcón;Coro;11.3946;-69.681
 VE;Falcón;Jacura;11.0745;-68.8558
 CO;Atlántico;Barranquilla;11.0041;-74.807
-VE;Falcón;"La Vela de Coro";11.4608;-69.5657
+VE;Falcón;La Vela de Coro;11.4608;-69.5657
 VE;Falcón;Judibana;11.7591;-70.1842
-CO;"La Guajira Department";Maicao;11.3784;-72.2395
-CO;"Magdalena Department";"Santa Marta";11.2404;-74.211
-NG;"Yobe State";Potiskum;11.7139;11.0811
+CO;La Guajira Department;Maicao;11.3784;-72.2395
+CO;Magdalena Department;Santa Marta;11.2404;-74.211
+NG;Yobe State;Potiskum;11.7139;11.0811
 DJ;Tadjourah;Tadjourah;11.8251;42.5903
 DJ;Djibouti;Djibouti;11.588;43.145
 DJ;Djibouti;Djibouti;11.5936;43.1479
 DJ;Djibouti;Djibouti;11.589;43.145
 DJ;Djibouti;Djibouti;11.5721;43.1456
-CM;"Far North";Mora;11.1026;14.1769
+CM;Far North;Mora;11.1026;14.1769
 BF;Centre-Sud;Manga;11.6636;-1.07306
 SO;Bari;Bosaso;11.2842;49.1816
 SO;Bari;Bosaso;11.2755;49.1879
-VN;"Lâm Đồng Province";"Lộc Thắng";11.6284;107.835
-IN;"Tamil Nadu";Villupuram;11.9397;79.4924
-IN;"Tamil Nadu";Salem;11.6538;78.1554
+VN;Lâm Đồng Province;Lộc Thắng;11.6284;107.835
+IN;Tamil Nadu;Villupuram;11.9397;79.4924
+IN;Tamil Nadu;Salem;11.6538;78.1554
 IN;Kerala;Nilambūr;11.2727;76.2257
 IN;Kerala;Ariyallur;11.0833;75.849
 IN;Kerala;Kondotty;11.1423;75.9657
 IN;Kerala;Kannur;11.8675;75.3576
 IN;Kerala;Mattanur;11.9302;75.5715
-IN;"Tamil Nadu";Periyanayakkanpalaiyam;11.1525;76.9516
-IN;"Tamil Nadu";Erode;11.3428;77.7274
-IN;"Tamil Nadu";Avinashi;11.193;77.2686
-IN;"Tamil Nadu";Tirupur;11.1154;77.3546
+IN;Tamil Nadu;Periyanayakkanpalaiyam;11.1525;76.9516
+IN;Tamil Nadu;Erode;11.3428;77.7274
+IN;Tamil Nadu;Avinashi;11.193;77.2686
+IN;Tamil Nadu;Tirupur;11.1154;77.3546
 IN;Kerala;Kizhuparamba;11.2526;76.0244
 IN;Kerala;Panamaram;11.7401;76.0737
 IN;Kerala;Kalliyasshēri;11.9755;75.3645
 IN;Kerala;Azhiyūr;11.6935;75.5601
-IN;"Tamil Nadu";Cuddalore;11.7562;79.7669
-VN;"Lâm Đồng Province";"Thạnh Mỹ";11.7617;108.495
-VN;"Đồng Nai Province";"Vĩnh An";11.089;107.035
-VN;"Tây Ninh Province";"Phú Khương";11.2833;106.133
-IN;"Tamil Nadu";"Coimbatore (Gopalakrishnapuram)";11.0487;76.9877
-IN;"Tamil Nadu";Sirumugai;11.3214;77.0052
-KH;"Phnom Penh";"Phnom Penh";11.5785;104.888
-KH;"Phnom Penh";"Phnom Penh";11.5779;104.923
-KH;"Phnom Penh";"Phnom Penh";11.5773;104.918
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.5811;104.87
-KH;"Phnom Penh";"Phnom Penh";11.569;104.895
-KH;"Phnom Penh";"Phnom Penh";11.5563;104.922
-KH;"Phnom Penh";"Phnom Penh";11.556;104.922
-KH;"Phnom Penh";"Phnom Penh";11.5466;104.898
-IN;"Tamil Nadu";"Periyanayakkanpalaiyam (Lakshmi Mills Colony)";11.0174;76.9805
-KH;"Phnom Penh";"Anlong Kngan (Khan Sensok)";11.6303;104.856
-KH;"Phnom Penh";"Phnom Penh";11.5562;104.926
-KH;"Phnom Penh";"Phnom Penh";11.5815;104.917
-KH;"Phnom Penh";"Phnom Penh";11.5664;104.912
-NI;"Rivas Department";"San Jorge";11.4522;-85.8051
-NI;"Rivas Department";Rivas;11.4398;-85.8275
-KH;"Phnom Penh";"Phnom Penh";11.5524;104.902
-CO;"Magdalena Department";"Santa Marta";11.2386;-74.1943
-KH;"Phnom Penh";"Phnom Penh";11.5747;104.895
-KH;"Phnom Penh";"Phnom Penh";11.5612;104.902
-KH;"Koh Kong";"Botum Sakor";11.1872;103.471
-IN;"Tamil Nadu";Komarapalayam;11.4363;77.7232
-IN;"Tamil Nadu";"Coimbatore (Balaji Nagar)";11.0223;76.9797
-KH;"Phnom Penh";"Phnom Penh";11.5563;104.919
-KH;"Koh Kong";"Koh Kong";11.6153;102.984
-CO;"La Guajira Department";Riohacha;11.5444;-72.9072
-KH;"Koh Kong";"Mondul Seima";11.6241;102.95
-NI;"Managua Department";"Villa El Carmen";11.9801;-86.5057
-IN;"Tamil Nadu";Perambalur;11.2333;78.8833
-KH;"Phnom Penh";"Phnom Penh";11.5417;104.911
-IN;Puducherry;"Puducherry (Ellaipillaichavadi)";11.9392;79.8084
+IN;Tamil Nadu;Cuddalore;11.7562;79.7669
+VN;Lâm Đồng Province;Thạnh Mỹ;11.7617;108.495
+VN;Đồng Nai Province;Vĩnh An;11.089;107.035
+VN;Tây Ninh Province;Phú Khương;11.2833;106.133
+IN;Tamil Nadu;Coimbatore (Gopalakrishnapuram);11.0487;76.9877
+IN;Tamil Nadu;Sirumugai;11.3214;77.0052
+KH;Phnom Penh;Phnom Penh;11.5785;104.888
+KH;Phnom Penh;Phnom Penh;11.5779;104.923
+KH;Phnom Penh;Phnom Penh;11.5773;104.918
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.5811;104.87
+KH;Phnom Penh;Phnom Penh;11.569;104.895
+KH;Phnom Penh;Phnom Penh;11.5563;104.922
+KH;Phnom Penh;Phnom Penh;11.556;104.922
+KH;Phnom Penh;Phnom Penh;11.5466;104.898
+IN;Tamil Nadu;Periyanayakkanpalaiyam (Lakshmi Mills Colony);11.0174;76.9805
+KH;Phnom Penh;Anlong Kngan (Khan Sensok);11.6303;104.856
+KH;Phnom Penh;Phnom Penh;11.5562;104.926
+KH;Phnom Penh;Phnom Penh;11.5815;104.917
+KH;Phnom Penh;Phnom Penh;11.5664;104.912
+NI;Rivas Department;San Jorge;11.4522;-85.8051
+NI;Rivas Department;Rivas;11.4398;-85.8275
+KH;Phnom Penh;Phnom Penh;11.5524;104.902
+CO;Magdalena Department;Santa Marta;11.2386;-74.1943
+KH;Phnom Penh;Phnom Penh;11.5747;104.895
+KH;Phnom Penh;Phnom Penh;11.5612;104.902
+KH;Koh Kong;Botum Sakor;11.1872;103.471
+IN;Tamil Nadu;Komarapalayam;11.4363;77.7232
+IN;Tamil Nadu;Coimbatore (Balaji Nagar);11.0223;76.9797
+KH;Phnom Penh;Phnom Penh;11.5563;104.919
+KH;Koh Kong;Koh Kong;11.6153;102.984
+CO;La Guajira Department;Riohacha;11.5444;-72.9072
+KH;Koh Kong;Mondul Seima;11.6241;102.95
+NI;Managua Department;Villa El Carmen;11.9801;-86.5057
+IN;Tamil Nadu;Perambalur;11.2333;78.8833
+KH;Phnom Penh;Phnom Penh;11.5417;104.911
+IN;Puducherry;Puducherry (Ellaipillaichavadi);11.9392;79.8084
 IN;Puducherry;Puducherry;11.9139;79.8145
-IN;Kerala;"Abdu Rahiman Nagar";11.0698;75.9388
-IN;"Tamil Nadu";Chidambaram;11.3993;79.6914
-PH;"Bicol Region";Placer;11.8687;123.918
-PH;"Eastern Visayas";Palompon;11.0508;124.384
-PH;"Eastern Visayas";Balud;11.6167;125.433
-PH;"Eastern Visayas";Lalawigan;11.5892;125.47
-PH;"Eastern Visayas";Borongan;11.6081;125.432
-PH;"Western Visayas";Estancia;11.4551;123.152
-PH;"Western Visayas";Concepcion;11.2161;123.107
+IN;Kerala;Abdu Rahiman Nagar;11.0698;75.9388
+IN;Tamil Nadu;Chidambaram;11.3993;79.6914
+PH;Bicol Region;Placer;11.8687;123.918
+PH;Eastern Visayas;Palompon;11.0508;124.384
+PH;Eastern Visayas;Balud;11.6167;125.433
+PH;Eastern Visayas;Lalawigan;11.5892;125.47
+PH;Eastern Visayas;Borongan;11.6081;125.432
+PH;Western Visayas;Estancia;11.4551;123.152
+PH;Western Visayas;Concepcion;11.2161;123.107
 PH;Mimaropa;Coron;11.9986;120.204
-PH;"Western Visayas";Anoring;11.25;123.033
-PH;Mimaropa;"El Nido";11.1858;119.396
-PH;"Western Visayas";"Roxas City";11.5853;122.751
-PH;"Western Visayas";"President Roxas";11.431;122.928
-PH;"Central Visayas";Maño;11.0417;123.945
-PH;"Eastern Visayas";"San Jorge";11.9808;124.824
-PH;"Eastern Visayas";Tarangnan;11.9009;124.746
-PH;"Central Visayas";"San Remigio";11.0809;123.938
-PH;"Eastern Visayas";Wright;11.7703;125.022
-PH;"Eastern Visayas";"General MacArthur";11.2464;125.539
-PH;"Western Visayas";Libertad;11.7694;121.919
-PH;"Western Visayas";Gibong;11.8634;122.039
-PH;"Western Visayas";Tapas;11.2613;122.536
-KH;"Phnom Penh";"Phnom Penh";11.5346;104.918
-KH;"Phnom Penh";"Phnom Penh";11.5391;104.912
-IN;"Tamil Nadu";Tiruchirappalli;11.1271;78.6569
-IN;"Tamil Nadu";Sulur;11.0243;77.1256
+PH;Western Visayas;Anoring;11.25;123.033
+PH;Mimaropa;El Nido;11.1858;119.396
+PH;Western Visayas;Roxas City;11.5853;122.751
+PH;Western Visayas;President Roxas;11.431;122.928
+PH;Central Visayas;Maño;11.0417;123.945
+PH;Eastern Visayas;San Jorge;11.9808;124.824
+PH;Eastern Visayas;Tarangnan;11.9009;124.746
+PH;Central Visayas;San Remigio;11.0809;123.938
+PH;Eastern Visayas;Wright;11.7703;125.022
+PH;Eastern Visayas;General MacArthur;11.2464;125.539
+PH;Western Visayas;Libertad;11.7694;121.919
+PH;Western Visayas;Gibong;11.8634;122.039
+PH;Western Visayas;Tapas;11.2613;122.536
+KH;Phnom Penh;Phnom Penh;11.5346;104.918
+KH;Phnom Penh;Phnom Penh;11.5391;104.912
+IN;Tamil Nadu;Tiruchirappalli;11.1271;78.6569
+IN;Tamil Nadu;Sulur;11.0243;77.1256
 GW;Bissau;Bissau;11.8037;-15.1804
-PH;"Western Visayas";Bolo;11.5403;122.757
-KH;"Phnom Penh";"Phnom Penh";11.548;104.919
-KH;"Phnom Penh";"Phnom Penh";11.5599;104.936
-KH;Kandal;"Ta Khmau";11.4833;104.95
+PH;Western Visayas;Bolo;11.5403;122.757
+KH;Phnom Penh;Phnom Penh;11.548;104.919
+KH;Phnom Penh;Phnom Penh;11.5599;104.936
+KH;Kandal;Ta Khmau;11.4833;104.95
 IN;Kerala;Elayavur;11.8892;75.4124
 IN;Kerala;Peralassery;11.8322;75.4825
-IN;"Tamil Nadu";Komarapalayam;11.445;77.711
-IN;"Tamil Nadu";Ariyalūr;11.1385;79.0756
-IN;"Tamil Nadu";Omalur;11.741;78.0456
-IN;"Tamil Nadu";Chidambaram;11.3982;79.6954
+IN;Tamil Nadu;Komarapalayam;11.445;77.711
+IN;Tamil Nadu;Ariyalūr;11.1385;79.0756
+IN;Tamil Nadu;Omalur;11.741;78.0456
+IN;Tamil Nadu;Chidambaram;11.3982;79.6954
 IN;Kerala;Nanminda;11.4233;75.8231
 IN;Kerala;Kūttāli;11.5855;75.7666
-IN;"Tamil Nadu";Pallippatti;11.9399;78.4016
-IN;"Tamil Nadu";"Coimbatore (Gopalapuram)";11.0104;76.9819
-IN;"Tamil Nadu";"Periyanayakkanpalaiyam (Kuppakonam Pudur)";11.1588;76.9443
-IN;"Tamil Nadu";Ūttukkuli;11.1985;77.4229
-IN;"Tamil Nadu";"Viluppuram (Mandhakarai)";11.9394;79.4929
-IN;"Tamil Nadu";"Coimbatore (CHIL SEZ IT Park)";11.1026;76.9879
-IN;"Tamil Nadu";Erode;11.341;77.7172
-IN;"Tamil Nadu";"Viluppuram (Sālamedu)";11.9314;79.4955
+IN;Tamil Nadu;Pallippatti;11.9399;78.4016
+IN;Tamil Nadu;Coimbatore (Gopalapuram);11.0104;76.9819
+IN;Tamil Nadu;Periyanayakkanpalaiyam (Kuppakonam Pudur);11.1588;76.9443
+IN;Tamil Nadu;Ūttukkuli;11.1985;77.4229
+IN;Tamil Nadu;Viluppuram (Mandhakarai);11.9394;79.4929
+IN;Tamil Nadu;Coimbatore (CHIL SEZ IT Park);11.1026;76.9879
+IN;Tamil Nadu;Erode;11.341;77.7172
+IN;Tamil Nadu;Viluppuram (Sālamedu);11.9314;79.4955
 IN;Kerala;Perya;11.8333;75.8541
 IN;Kerala;Mavoor;11.2667;75.9167
-IN;"Tamil Nadu";Kallakurichi;11.7338;78.9593
-IN;"Tamil Nadu";Annāmalainagar;11.4;79.7333
-IN;"Tamil Nadu";Ootacamund;11.4134;76.6952
-IN;"Tamil Nadu";Naduvattam;11.4808;76.5436
-IN;"Tamil Nadu";Velur;11.1082;78.0011
+IN;Tamil Nadu;Kallakurichi;11.7338;78.9593
+IN;Tamil Nadu;Annāmalainagar;11.4;79.7333
+IN;Tamil Nadu;Ootacamund;11.4134;76.6952
+IN;Tamil Nadu;Naduvattam;11.4808;76.5436
+IN;Tamil Nadu;Velur;11.1082;78.0011
 IN;Kerala;Kannapuram;11.9843;75.3041
 IN;Kerala;Olavanna;11.2184;75.8325
 IN;Kerala;Cheruvannur;11.1903;75.8283
 IN;Kerala;Eravattūr;11.5801;75.7384
 IN;Kerala;Vazhayur;11.2173;75.8999
-TH;"Prachuap Khiri Khan";"Thap Sakae";11.4996;99.6217
-IN;"Tamil Nadu";"Coimbatore (Race Course)";11.0023;76.9822
-PH;"Central Visayas";Malingin;11.05;123.983
-PH;"Eastern Visayas";Naval;11.5606;124.397
-PH;"Central Visayas";Bogo;11.0517;124.006
-PH;"Eastern Visayas";Catbalogan;11.7753;124.886
-PH;"Eastern Visayas";Caraycaray;11.5551;124.415
-KH;"Phnom Penh";"Phnom Penh (Khan Dangkor)";11.4752;104.868
-TH;"Prachuap Khiri Khan";"Prachuap Khiri Khan";11.7938;99.7958
-KH;"Phnom Penh";"Phnom Penh";11.5741;104.902
-KH;"Phnom Penh";"Phnom Penh";11.5742;104.902
-KH;"Phnom Penh";"Phnom Penh";11.6165;104.898
-PH;"Western Visayas";Malabonot;11.9682;121.92
-TH;Trat;"Khlong Yai";11.7765;102.886
+TH;Prachuap Khiri Khan;Thap Sakae;11.4996;99.6217
+IN;Tamil Nadu;Coimbatore (Race Course);11.0023;76.9822
+PH;Central Visayas;Malingin;11.05;123.983
+PH;Eastern Visayas;Naval;11.5606;124.397
+PH;Central Visayas;Bogo;11.0517;124.006
+PH;Eastern Visayas;Catbalogan;11.7753;124.886
+PH;Eastern Visayas;Caraycaray;11.5551;124.415
+KH;Phnom Penh;Phnom Penh (Khan Dangkor);11.4752;104.868
+TH;Prachuap Khiri Khan;Prachuap Khiri Khan;11.7938;99.7958
+KH;Phnom Penh;Phnom Penh;11.5741;104.902
+KH;Phnom Penh;Phnom Penh;11.5742;104.902
+KH;Phnom Penh;Phnom Penh;11.6165;104.898
+PH;Western Visayas;Malabonot;11.9682;121.92
+TH;Trat;Khlong Yai;11.7765;102.886
 BF;Hauts-Bassins;Bobo-Dioulasso;11.1771;-4.2979
 BF;Hauts-Bassins;Bobo-Dioulasso;11.1649;-4.30515
-NG;"Borno State";Maiduguri;11.8469;13.1571
-NG;"Kaduna State";Zaria;11.1113;7.7227
-SD;"Blue Nile";Ad-Damazin;11.7891;34.3592
-NG;"Kano State";Kano;11.9808;8.468
-NG;"Kano State";Kumbotso;11.9332;8.45133
-NG;"Kano State";Kumbotso;11.89;8.503
+NG;Borno State;Maiduguri;11.8469;13.1571
+NG;Kaduna State;Zaria;11.1113;7.7227
+SD;Blue Nile;Ad-Damazin;11.7891;34.3592
+NG;Kano State;Kano;11.9808;8.468
+NG;Kano State;Kumbotso;11.9332;8.45133
+NG;Kano State;Kumbotso;11.89;8.503
 GW;Bissau;Bissau;11.8636;-15.5977
 GW;Bissau;Bissau;11.8645;-15.5884
-PH;"Western Visayas";"Brgy. New Buswang, Kalibo";11.7122;122.385
-PH;"Western Visayas";Altavas;11.538;122.487
-PH;"Western Visayas";Yapak;11.95;121.933
-KH;"Phnom Penh";"Phnom Penh";11.5652;104.911
-KH;"Phnom Penh";"Phnom Penh";11.5559;104.921
-KH;"Phnom Penh";"Phnom Penh";11.5543;104.934
-KH;"Phnom Penh";"Phnom Penh";11.5523;104.943
-KH;"Phnom Penh";"Phnom Penh";11.5736;104.924
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.5867;104.889
-PH;"Eastern Visayas";"Tacloban City";11.2543;124.962
-KH;"Phnom Penh";"Phnom Penh";11.56;104.918
-KH;"Phnom Penh";"Phnom Penh";11.5753;104.917
-KH;"Phnom Penh";"Phnom Penh";11.5466;104.922
-KH;"Phnom Penh";"Phnom Penh";11.5431;104.922
-IN;"Tamil Nadu";Annur;11.2362;77.1051
-KH;"Phnom Penh";"Phnom Penh";11.5719;104.919
-KH;"Phnom Penh";"Phnom Penh";11.5818;104.899
-KH;"Phnom Penh";"Phnom Penh";11.5615;104.896
-IN;"Tamil Nadu";Mayiladuthurai;11.1035;79.655
-KH;"Phnom Penh";"Phnom Penh";11.5332;104.886
-KH;"Phnom Penh";"Phnom Penh";11.5556;104.928
-IN;"Tamil Nadu";"Cuddalore (Muthaiya Nagar)";11.7456;79.7521
-IN;"Tamil Nadu";"Periyanayakkanpalaiyam (Lakshmi Mills Colony)";11.0171;76.9793
-KH;"Phnom Penh";"Phnom Penh";11.5452;104.922
-KH;"Phnom Penh";"Phnom Penh";11.5722;104.919
-KH;"Phnom Penh";"Phnom Penh";11.5629;104.898
-IN;"Tamil Nadu";"Salem (Linemedu)";11.6397;78.1512
-KH;"Phnom Penh";"Phnom Penh";11.5731;104.928
-IN;"Tamil Nadu";Namakkal;11.2828;78.2313
-IN;"Tamil Nadu";"Erode (Erode Fort)";11.344;77.7241
-KH;"Phnom Penh";"Phnom Penh (Khan Dangkor)";11.5127;104.889
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.5543;104.885
-KH;"Phnom Penh";"Phnom Penh (Khan Dangkor)";11.5131;104.882
-IN;Kerala;"Kannur (Thavakkara)";11.872;75.3703
-IN;"Tamil Nadu";Tiruchengode;11.3802;77.8944
-IN;"Tamil Nadu";"Periyanayakkanpalaiyam (Lakshmi Mills Colony)";11.017;76.9789
-KH;"Phnom Penh";"Phnom Penh";11.5688;104.925
-IN;"Tamil Nadu";Coimbatore;11.0174;76.9845
+PH;Western Visayas;Brgy. New Buswang, Kalibo;11.7122;122.385
+PH;Western Visayas;Altavas;11.538;122.487
+PH;Western Visayas;Yapak;11.95;121.933
+KH;Phnom Penh;Phnom Penh;11.5652;104.911
+KH;Phnom Penh;Phnom Penh;11.5559;104.921
+KH;Phnom Penh;Phnom Penh;11.5543;104.934
+KH;Phnom Penh;Phnom Penh;11.5523;104.943
+KH;Phnom Penh;Phnom Penh;11.5736;104.924
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.5867;104.889
+PH;Eastern Visayas;Tacloban City;11.2543;124.962
+KH;Phnom Penh;Phnom Penh;11.56;104.918
+KH;Phnom Penh;Phnom Penh;11.5753;104.917
+KH;Phnom Penh;Phnom Penh;11.5466;104.922
+KH;Phnom Penh;Phnom Penh;11.5431;104.922
+IN;Tamil Nadu;Annur;11.2362;77.1051
+KH;Phnom Penh;Phnom Penh;11.5719;104.919
+KH;Phnom Penh;Phnom Penh;11.5818;104.899
+KH;Phnom Penh;Phnom Penh;11.5615;104.896
+IN;Tamil Nadu;Mayiladuthurai;11.1035;79.655
+KH;Phnom Penh;Phnom Penh;11.5332;104.886
+KH;Phnom Penh;Phnom Penh;11.5556;104.928
+IN;Tamil Nadu;Cuddalore (Muthaiya Nagar);11.7456;79.7521
+IN;Tamil Nadu;Periyanayakkanpalaiyam (Lakshmi Mills Colony);11.0171;76.9793
+KH;Phnom Penh;Phnom Penh;11.5452;104.922
+KH;Phnom Penh;Phnom Penh;11.5722;104.919
+KH;Phnom Penh;Phnom Penh;11.5629;104.898
+IN;Tamil Nadu;Salem (Linemedu);11.6397;78.1512
+KH;Phnom Penh;Phnom Penh;11.5731;104.928
+IN;Tamil Nadu;Namakkal;11.2828;78.2313
+IN;Tamil Nadu;Erode (Erode Fort);11.344;77.7241
+KH;Phnom Penh;Phnom Penh (Khan Dangkor);11.5127;104.889
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.5543;104.885
+KH;Phnom Penh;Phnom Penh (Khan Dangkor);11.5131;104.882
+IN;Kerala;Kannur (Thavakkara);11.872;75.3703
+IN;Tamil Nadu;Tiruchengode;11.3802;77.8944
+IN;Tamil Nadu;Periyanayakkanpalaiyam (Lakshmi Mills Colony);11.017;76.9789
+KH;Phnom Penh;Phnom Penh;11.5688;104.925
+IN;Tamil Nadu;Coimbatore;11.0174;76.9845
 IN;Kerala;Malappuram;11.051;76.0711
-KH;"Phnom Penh";"Phnom Penh";11.5312;104.914
+KH;Phnom Penh;Phnom Penh;11.5312;104.914
 IN;Kerala;Parappur;11.0121;75.9947
-KH;"Phnom Penh";"Phnom Penh";11.5773;104.92
-IN;Kerala;"Kozhikode (Kuttichira)";11.2471;75.7729
-IN;"Tamil Nadu";Tirupur;11.1085;77.3411
-IN;"Tamil Nadu";Erode;11.3546;77.7107
-IN;"Tamil Nadu";"Erode (Jeeva Nagar)";11.3558;77.7281
-KH;"Phnom Penh";"Phnom Penh";11.5776;104.917
-IN;"Tamil Nadu";Salem;11.6253;78.7364
-IN;"Tamil Nadu";"Coimbatore (Siddhapudur)";11.0187;76.9752
-KH;"Phnom Penh";"Phnom Penh";11.5461;104.919
-IN;"Tamil Nadu";"Coimbatore (Sri Thiruvengadam Nagar)";11.0447;76.9776
-KH;"Phnom Penh";"Phnom Penh";11.55;104.926
-KH;"Phnom Penh";"Phnom Penh";11.5557;104.928
-IN;"Tamil Nadu";"Namakkal (Thillaipuram)";11.2156;78.1636
-IN;"Tamil Nadu";"Coimbatore (Saibaba Koil)";11.0272;76.9512
-IN;"Tamil Nadu";Coimbatore;11.0176;76.9674
+KH;Phnom Penh;Phnom Penh;11.5773;104.92
+IN;Kerala;Kozhikode (Kuttichira);11.2471;75.7729
+IN;Tamil Nadu;Tirupur;11.1085;77.3411
+IN;Tamil Nadu;Erode;11.3546;77.7107
+IN;Tamil Nadu;Erode (Jeeva Nagar);11.3558;77.7281
+KH;Phnom Penh;Phnom Penh;11.5776;104.917
+IN;Tamil Nadu;Salem;11.6253;78.7364
+IN;Tamil Nadu;Coimbatore (Siddhapudur);11.0187;76.9752
+KH;Phnom Penh;Phnom Penh;11.5461;104.919
+IN;Tamil Nadu;Coimbatore (Sri Thiruvengadam Nagar);11.0447;76.9776
+KH;Phnom Penh;Phnom Penh;11.55;104.926
+KH;Phnom Penh;Phnom Penh;11.5557;104.928
+IN;Tamil Nadu;Namakkal (Thillaipuram);11.2156;78.1636
+IN;Tamil Nadu;Coimbatore (Saibaba Koil);11.0272;76.9512
+IN;Tamil Nadu;Coimbatore;11.0176;76.9674
 IN;Kerala;Palayad;11.5505;75.6289
-KH;"Phnom Penh";"Phnom Penh";11.5503;104.903
-IN;"Tamil Nadu";"Cuddalore (Manjakuppam)";11.7537;79.7624
-IN;"Tamil Nadu";"Attur (Pungavadi Puthur)";11.5969;78.6023
-IN;"Tamil Nadu";"Coimbatore (Saravanampatti)";11.0812;76.9889
-IN;"Tamil Nadu";Mettupalayam;11.3016;76.94
-IN;"Tamil Nadu";"Salem (Udayapatti)";11.6677;78.2153
-KH;"Phnom Penh";"Phnom Penh";11.5907;104.91
-KH;Kandal;"Krong Ta Khmau (Thmei)";11.4713;104.952
-KH;"Phnom Penh";"Phnom Penh";11.548;104.914
-KH;"Phnom Penh";"Phnom Penh";11.576;104.923
-IN;"Tamil Nadu";Attur;11.5941;78.6014
-KH;"Kampong Cham";"Mean Chey";11.8319;105.065
-IN;"Tamil Nadu";"Coimbatore (Prasanna Maha Ganapathy Nagar)";11.0747;76.9177
-KH;"Phnom Penh";"Phnom Penh";11.551;104.933
-IN;"Tamil Nadu";Komarapalayam;11.4422;77.7
-IN;"Tamil Nadu";Bhavāni;11.4455;77.6822
-KH;"Phnom Penh";"Phnom Penh";11.5465;104.94
-KH;"Phnom Penh";"Phnom Penh";11.5578;104.901
-IN;"Tamil Nadu";Komarapalayam;11.4103;77.7854
-IN;"Tamil Nadu";"Coimbatore (Sukrawar Pettai)";11.0059;76.9569
-IN;"Tamil Nadu";"Coimbatore (Sukrawarpet)";11.0059;76.9569
-KH;"Phnom Penh";"Phnom Penh";11.5444;104.924
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.5606;104.888
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.5641;104.867
-KH;"Phnom Penh";"Phnom Penh";11.569;104.919
-KH;"Phnom Penh";"Phnom Penh (Khan Pou Senchey)";11.5892;104.837
-PH;"Western Visayas";Kalibo;11.7018;122.368
-PH;"Western Visayas";Balabag;11.97;121.919
-IN;"Tamil Nadu";"Coimbatore (Annapoorna Layout)";11.02;76.9747
-KH;"Phnom Penh";"Phnom Penh";11.5489;104.912
-KH;"Phnom Penh";"Phnom Penh";11.5464;104.91
-KH;"Phnom Penh";"Phnom Penh (Khan Pou Senchey)";11.5333;104.825
-IN;"Tamil Nadu";"Coimbatore (Lakshmi Mills Colony)";11.0169;76.9785
-IN;"Tamil Nadu";Rasipuram;11.4601;78.1863
-KH;"Phnom Penh";"Phnom Penh";11.5722;104.89
-IN;"Tamil Nadu";"Coimbatore (Saravanampatti)";11.0817;76.9979
-KH;"Phnom Penh";"Phnom Penh";11.5333;104.912
-IN;"Tamil Nadu";"Coimbatore (Chitra Nagar)";11.0678;77.0019
-KH;"Phnom Penh";"Phnom Penh";11.5513;104.904
-KH;"Phnom Penh";"Phnom Penh";11.5472;104.909
-KH;"Phnom Penh";"Phnom Penh";11.5498;104.906
-IN;"Tamil Nadu";"Coimbatore (Civil Aerodrome Post)";11.0318;77.0188
-VN;"Lâm Đồng Province";"Thành Phố Đà Lạt";11.9371;108.432
-IN;"Tamil Nadu";"Salem (Periya Pudur)";11.6836;78.1542
-IN;"Tamil Nadu";Sulur;11.0237;77.1219
-PH;"Western Visayas";Altavas;11.5371;122.486
-IN;"Tamil Nadu";Kumarapalayam;11.4346;77.7109
-IN;"Tamil Nadu";"Tirupur (SR Nagar)";11.0991;77.3229
-VN;"Bình Dương Province";"Thành Phố Thủ Dầu Một (Hòa Phú)";11.0723;106.68
-VN;"Bình Dương Province";"Thành Phố Thủ Dầu Một (Hòa Phú)";11.0667;106.677
-IN;"Tamil Nadu";"Coimbatore (Gopalapuram)";11.0021;76.9652
-KH;"Phnom Penh";"Phnom Penh";11.5686;104.926
-VN;"Tây Ninh Province";"Bến Cầu";11.1105;106.179
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.5721;104.869
-IN;"Tamil Nadu";"Coimbatore (Balasundaram Layout)";11.0215;76.9782
-IN;"Tamil Nadu";Coimbatore;11.0215;76.9783
-KH;"Phnom Penh";"Phnom Penh";11.5238;104.932
-IN;"Tamil Nadu";Namakkal;11.2187;78.2273
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.5902;104.882
-KH;"Phnom Penh";"Phnom Penh";11.6112;104.885
-KH;"Phnom Penh";"Phnom Penh";11.5542;104.929
-KH;"Phnom Penh";"Phnom Penh (Khan Pou Senchey)";11.5525;104.845
-KH;"Phnom Penh";"Phnom Penh";11.5737;104.928
-KH;"Phnom Penh";"Phnom Penh";11.5486;104.916
-PH;"Western Visayas";"Roxas City (Brgy 3)";11.5817;122.755
-KH;"Phnom Penh";"Phnom Penh";11.5877;104.906
-KH;"Svay Rieng";"Krong Bavet (Bavet)";11.0591;106.133
+KH;Phnom Penh;Phnom Penh;11.5503;104.903
+IN;Tamil Nadu;Cuddalore (Manjakuppam);11.7537;79.7624
+IN;Tamil Nadu;Attur (Pungavadi Puthur);11.5969;78.6023
+IN;Tamil Nadu;Coimbatore (Saravanampatti);11.0812;76.9889
+IN;Tamil Nadu;Mettupalayam;11.3016;76.94
+IN;Tamil Nadu;Salem (Udayapatti);11.6677;78.2153
+KH;Phnom Penh;Phnom Penh;11.5907;104.91
+KH;Kandal;Krong Ta Khmau (Thmei);11.4713;104.952
+KH;Phnom Penh;Phnom Penh;11.548;104.914
+KH;Phnom Penh;Phnom Penh;11.576;104.923
+IN;Tamil Nadu;Attur;11.5941;78.6014
+KH;Kampong Cham;Mean Chey;11.8319;105.065
+IN;Tamil Nadu;Coimbatore (Prasanna Maha Ganapathy Nagar);11.0747;76.9177
+KH;Phnom Penh;Phnom Penh;11.551;104.933
+IN;Tamil Nadu;Komarapalayam;11.4422;77.7
+IN;Tamil Nadu;Bhavāni;11.4455;77.6822
+KH;Phnom Penh;Phnom Penh;11.5465;104.94
+KH;Phnom Penh;Phnom Penh;11.5578;104.901
+IN;Tamil Nadu;Komarapalayam;11.4103;77.7854
+IN;Tamil Nadu;Coimbatore (Sukrawar Pettai);11.0059;76.9569
+IN;Tamil Nadu;Coimbatore (Sukrawarpet);11.0059;76.9569
+KH;Phnom Penh;Phnom Penh;11.5444;104.924
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.5606;104.888
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.5641;104.867
+KH;Phnom Penh;Phnom Penh;11.569;104.919
+KH;Phnom Penh;Phnom Penh (Khan Pou Senchey);11.5892;104.837
+PH;Western Visayas;Kalibo;11.7018;122.368
+PH;Western Visayas;Balabag;11.97;121.919
+IN;Tamil Nadu;Coimbatore (Annapoorna Layout);11.02;76.9747
+KH;Phnom Penh;Phnom Penh;11.5489;104.912
+KH;Phnom Penh;Phnom Penh;11.5464;104.91
+KH;Phnom Penh;Phnom Penh (Khan Pou Senchey);11.5333;104.825
+IN;Tamil Nadu;Coimbatore (Lakshmi Mills Colony);11.0169;76.9785
+IN;Tamil Nadu;Rasipuram;11.4601;78.1863
+KH;Phnom Penh;Phnom Penh;11.5722;104.89
+IN;Tamil Nadu;Coimbatore (Saravanampatti);11.0817;76.9979
+KH;Phnom Penh;Phnom Penh;11.5333;104.912
+IN;Tamil Nadu;Coimbatore (Chitra Nagar);11.0678;77.0019
+KH;Phnom Penh;Phnom Penh;11.5513;104.904
+KH;Phnom Penh;Phnom Penh;11.5472;104.909
+KH;Phnom Penh;Phnom Penh;11.5498;104.906
+IN;Tamil Nadu;Coimbatore (Civil Aerodrome Post);11.0318;77.0188
+VN;Lâm Đồng Province;Thành Phố Đà Lạt;11.9371;108.432
+IN;Tamil Nadu;Salem (Periya Pudur);11.6836;78.1542
+IN;Tamil Nadu;Sulur;11.0237;77.1219
+PH;Western Visayas;Altavas;11.5371;122.486
+IN;Tamil Nadu;Kumarapalayam;11.4346;77.7109
+IN;Tamil Nadu;Tirupur (SR Nagar);11.0991;77.3229
+VN;Bình Dương Province;Thành Phố Thủ Dầu Một (Hòa Phú);11.0723;106.68
+VN;Bình Dương Province;Thành Phố Thủ Dầu Một (Hòa Phú);11.0667;106.677
+IN;Tamil Nadu;Coimbatore (Gopalapuram);11.0021;76.9652
+KH;Phnom Penh;Phnom Penh;11.5686;104.926
+VN;Tây Ninh Province;Bến Cầu;11.1105;106.179
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.5721;104.869
+IN;Tamil Nadu;Coimbatore (Balasundaram Layout);11.0215;76.9782
+IN;Tamil Nadu;Coimbatore;11.0215;76.9783
+KH;Phnom Penh;Phnom Penh;11.5238;104.932
+IN;Tamil Nadu;Namakkal;11.2187;78.2273
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.5902;104.882
+KH;Phnom Penh;Phnom Penh;11.6112;104.885
+KH;Phnom Penh;Phnom Penh;11.5542;104.929
+KH;Phnom Penh;Phnom Penh (Khan Pou Senchey);11.5525;104.845
+KH;Phnom Penh;Phnom Penh;11.5737;104.928
+KH;Phnom Penh;Phnom Penh;11.5486;104.916
+PH;Western Visayas;Roxas City (Brgy 3);11.5817;122.755
+KH;Phnom Penh;Phnom Penh;11.5877;104.906
+KH;Svay Rieng;Krong Bavet (Bavet);11.0591;106.133
 IN;Kerala;Chelambra;11.1509;75.8719
-IN;Puducherry;"Puducherry (Mahaveer Nagar)";11.9621;79.8189
-KH;"Phnom Penh";"Phnom Penh";11.5737;104.892
-KH;"Phnom Penh";"Phnom Penh";11.5704;104.898
-IN;"Tamil Nadu";Ūttukkuli;11.1698;77.4514
-VN;"Tây Ninh Province";"Thành Phố Tây Ninh";11.3134;106.095
-IN;"Tamil Nadu";"Salem (Meyyanur)";11.6652;78.1319
-IN;"Tamil Nadu";"Tirupur (Oor Coundar Nadar)";11.0788;77.366
-PH;"Western Visayas";Malabor;11.2729;122.047
-IN;"Tamil Nadu";"Coimbatore (Saravanampatti)";11.0836;76.9968
-IN;Kerala;"Kozhikode (Arayidathupalam)";11.2601;75.7857
-KH;"Phnom Penh";"Phnom Penh (Khan Pou Senchey)";11.5742;104.808
-IN;Kerala;"Kozhikode (Nallalam)";11.214;75.802
-VN;"Đăk Nông Province";"Gia Nghĩa (Nghĩa Trung)";11.9795;107.69
-IN;"Tamil Nadu";"Rasipuram (V.Nagar)";11.4589;78.1939
-IN;"Tamil Nadu";Anthiyur;11.5751;77.5904
-IN;"Tamil Nadu";Coimbatore;11.1641;76.9488
-KH;"Phnom Penh";"Phnom Penh";11.5637;104.911
-IN;"Tamil Nadu";Ūttukkuli;11.1689;77.4543
+IN;Puducherry;Puducherry (Mahaveer Nagar);11.9621;79.8189
+KH;Phnom Penh;Phnom Penh;11.5737;104.892
+KH;Phnom Penh;Phnom Penh;11.5704;104.898
+IN;Tamil Nadu;Ūttukkuli;11.1698;77.4514
+VN;Tây Ninh Province;Thành Phố Tây Ninh;11.3134;106.095
+IN;Tamil Nadu;Salem (Meyyanur);11.6652;78.1319
+IN;Tamil Nadu;Tirupur (Oor Coundar Nadar);11.0788;77.366
+PH;Western Visayas;Malabor;11.2729;122.047
+IN;Tamil Nadu;Coimbatore (Saravanampatti);11.0836;76.9968
+IN;Kerala;Kozhikode (Arayidathupalam);11.2601;75.7857
+KH;Phnom Penh;Phnom Penh (Khan Pou Senchey);11.5742;104.808
+IN;Kerala;Kozhikode (Nallalam);11.214;75.802
+VN;Đăk Nông Province;Gia Nghĩa (Nghĩa Trung);11.9795;107.69
+IN;Tamil Nadu;Rasipuram (V.Nagar);11.4589;78.1939
+IN;Tamil Nadu;Anthiyur;11.5751;77.5904
+IN;Tamil Nadu;Coimbatore;11.1641;76.9488
+KH;Phnom Penh;Phnom Penh;11.5637;104.911
+IN;Tamil Nadu;Ūttukkuli;11.1689;77.4543
 IN;Kerala;Thazhecode;11.3226;75.9758
-IN;"Tamil Nadu";"Erode (Mel Thindal)";11.3186;77.6747
-IN;"Tamil Nadu";"Salem (Angammal Colony)";11.6668;78.1401
-IN;"Tamil Nadu";"Tirupur (Velampalayam)";11.1321;77.3234
-IN;"Tamil Nadu";"Coimbatore (R S Puram West)";11.007;76.9507
-IN;"Tamil Nadu";Bhavāni;11.4613;77.6839
-VN;"Ninh Thuận Province";"Thành Phố Phan Rang-Tháp Chàm";11.5653;108.995
-IN;"Tamil Nadu";"Punjai Puliyampatti";11.3551;77.1633
-IN;"Tamil Nadu";Bhavāni;11.4436;77.6926
-IN;"Tamil Nadu";Irugūr;11.0261;77.0701
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.6003;104.885
-IN;"Tamil Nadu";Gangavalli;11.4964;78.6506
-IN;"Tamil Nadu";"Tirupur (Bridge Colony)";11.1156;77.3403
-IN;"Tamil Nadu";"Salem (I Agraharam)";11.6584;78.1678
+IN;Tamil Nadu;Erode (Mel Thindal);11.3186;77.6747
+IN;Tamil Nadu;Salem (Angammal Colony);11.6668;78.1401
+IN;Tamil Nadu;Tirupur (Velampalayam);11.1321;77.3234
+IN;Tamil Nadu;Coimbatore (R S Puram West);11.007;76.9507
+IN;Tamil Nadu;Bhavāni;11.4613;77.6839
+VN;Ninh Thuận Province;Thành Phố Phan Rang-Tháp Chàm;11.5653;108.995
+IN;Tamil Nadu;Punjai Puliyampatti;11.3551;77.1633
+IN;Tamil Nadu;Bhavāni;11.4436;77.6926
+IN;Tamil Nadu;Irugūr;11.0261;77.0701
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.6003;104.885
+IN;Tamil Nadu;Gangavalli;11.4964;78.6506
+IN;Tamil Nadu;Tirupur (Bridge Colony);11.1156;77.3403
+IN;Tamil Nadu;Salem (I Agraharam);11.6584;78.1678
 IN;Kerala;Mavoor;11.3216;75.9336
-VN;"Lâm Đồng Province";"Di Linh (tt. Di Linh)";11.5748;108.066
-IN;"Tamil Nadu";Kodumudi;11.0775;77.8836
-IN;"Tamil Nadu";Kunjandiyūr;11.8178;77.8565
-KH;"Phnom Penh";"Phnom Penh";11.5673;104.926
-IN;"Tamil Nadu";"Salem (Mahendrapuri)";11.6866;78.1702
-KH;"Phnom Penh";"Phnom Penh";11.5391;104.923
-PH;"Central Visayas";Medellin;11.1286;123.962
-PH;"Central Visayas";Pajo;11.2412;124.011
-IN;"Tamil Nadu";"Coimbatore (HUDCO Colony)";11.0226;77.0068
-IN;"Tamil Nadu";"Tirupur (Town Extn)";11.0946;77.3483
-IN;"Tamil Nadu";"Periyanayakkanpalaiyam (Anna Silai)";11.0075;76.9758
-IN;"Tamil Nadu";"Tirupur (Kannipiran Colony)";11.1061;77.3453
-IN;"Tamil Nadu";"Salem (Meyyanur)";11.6717;78.1327
-IN;"Tamil Nadu";Kāramadai;11.2682;76.9762
-IN;Kerala;"Kozhikode (Palayam)";11.2476;75.7854
-IN;"Tamil Nadu";Ūttukkuli;11.1299;77.4326
-IN;Puducherry;"Puducherry (Street)";11.9381;79.8256
-IN;"Tamil Nadu";Elavanasūr;11.7144;79.186
-IN;"Tamil Nadu";Tāramangalam;11.6819;78.0028
-IN;"Tamil Nadu";"Coimbatore (B.R. Puram Industrial Estate)";11.0562;77.0021
-KH;"Phnom Penh";"Phnom Penh";11.5442;104.928
-KH;"Phnom Penh";"Phnom Penh";11.5518;104.938
-IN;"Tamil Nadu";"Singānallūr (Lakshmipuram)";11.0137;77.0238
-IN;"Tamil Nadu";"Coimbatore (Kamadhenu Nagar)";11.0275;76.982
-IN;"Tamil Nadu";Salem;11.6388;78.1519
+VN;Lâm Đồng Province;Di Linh (tt. Di Linh);11.5748;108.066
+IN;Tamil Nadu;Kodumudi;11.0775;77.8836
+IN;Tamil Nadu;Kunjandiyūr;11.8178;77.8565
+KH;Phnom Penh;Phnom Penh;11.5673;104.926
+IN;Tamil Nadu;Salem (Mahendrapuri);11.6866;78.1702
+KH;Phnom Penh;Phnom Penh;11.5391;104.923
+PH;Central Visayas;Medellin;11.1286;123.962
+PH;Central Visayas;Pajo;11.2412;124.011
+IN;Tamil Nadu;Coimbatore (HUDCO Colony);11.0226;77.0068
+IN;Tamil Nadu;Tirupur (Town Extn);11.0946;77.3483
+IN;Tamil Nadu;Periyanayakkanpalaiyam (Anna Silai);11.0075;76.9758
+IN;Tamil Nadu;Tirupur (Kannipiran Colony);11.1061;77.3453
+IN;Tamil Nadu;Salem (Meyyanur);11.6717;78.1327
+IN;Tamil Nadu;Kāramadai;11.2682;76.9762
+IN;Kerala;Kozhikode (Palayam);11.2476;75.7854
+IN;Tamil Nadu;Ūttukkuli;11.1299;77.4326
+IN;Puducherry;Puducherry (Street);11.9381;79.8256
+IN;Tamil Nadu;Elavanasūr;11.7144;79.186
+IN;Tamil Nadu;Tāramangalam;11.6819;78.0028
+IN;Tamil Nadu;Coimbatore (B.R. Puram Industrial Estate);11.0562;77.0021
+KH;Phnom Penh;Phnom Penh;11.5442;104.928
+KH;Phnom Penh;Phnom Penh;11.5518;104.938
+IN;Tamil Nadu;Singānallūr (Lakshmipuram);11.0137;77.0238
+IN;Tamil Nadu;Coimbatore (Kamadhenu Nagar);11.0275;76.982
+IN;Tamil Nadu;Salem;11.6388;78.1519
 IN;Kerala;Balussheri;11.4474;75.8294
 IN;Puducherry;Puducherry;11.9416;79.8083
-IN;Kerala;"Kozhikode (Palayam)";11.2473;75.7847
-KH;"Phnom Penh";"Phnom Penh";11.5824;104.898
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.5861;104.89
-IN;"Tamil Nadu";"Tirupur (Noyyal)";11.1029;77.3491
-IN;"Tamil Nadu";"Coimbatore (Saravana Nagar)";11.0535;76.929
-IN;"Tamil Nadu";Māttūr;11.3215;79.2025
-IN;"Tamil Nadu";"Coimbatore (Nehru Nagar West)";11.0641;77.0379
+IN;Kerala;Kozhikode (Palayam);11.2473;75.7847
+KH;Phnom Penh;Phnom Penh;11.5824;104.898
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.5861;104.89
+IN;Tamil Nadu;Tirupur (Noyyal);11.1029;77.3491
+IN;Tamil Nadu;Coimbatore (Saravana Nagar);11.0535;76.929
+IN;Tamil Nadu;Māttūr;11.3215;79.2025
+IN;Tamil Nadu;Coimbatore (Nehru Nagar West);11.0641;77.0379
 IN;Kerala;Kannur;11.9545;75.3554
 IN;Kerala;Keevallur;11.897;75.531
-IN;"Tamil Nadu";Sivagiri;11.1203;77.7881
-IN;"Tamil Nadu";Perambalur;11.2342;78.8807
-IN;"Tamil Nadu";"Coimbatore (Siddhapudur)";11.0172;76.9739
-IN;"Tamil Nadu";Erumaippatti;11.1467;78.29
-IN;"Tamil Nadu";Alagāpuram;11.887;78.9176
-IN;"Tamil Nadu";Sulur;11.0254;77.1246
-IN;"Tamil Nadu";"Coimbatore (Poosaripalayam)";11.0058;76.934
-KH;"Phnom Penh";"Phnom Penh";11.5789;104.892
-IN;"Tamil Nadu";Sulur;11.0769;77.132
-IN;"Tamil Nadu";Coimbatore;11.0264;77.0202
-IN;"Tamil Nadu";"Coimbatore (Chinniyampalayam)";11.0171;76.9635
-IN;"Tamil Nadu";Sulur;11.1261;77.1381
-IN;"Tamil Nadu";"Coimbatore (Venkitta Puram)";11.0256;76.9335
-IN;"Tamil Nadu";"Coimbatore (Kuppakonam Pudur)";11.0267;76.9341
-IN;"Tamil Nadu";Idappadi;11.5823;77.8347
-IN;"Tamil Nadu";"Coimbatore (S'Bend)";11.0267;76.9472
-IN;"Tamil Nadu";"Coimbatore (Nesavaalar Colony)";11.0259;76.9462
-IN;"Tamil Nadu";Kurinjippādi;11.5503;79.5907
-IN;"Tamil Nadu";"Coimbatore (B.K.R Nagar)";11.0227;76.9731
-IN;"Tamil Nadu";"Coimbatore (Saravanampatti)";11.0834;76.9972
+IN;Tamil Nadu;Sivagiri;11.1203;77.7881
+IN;Tamil Nadu;Perambalur;11.2342;78.8807
+IN;Tamil Nadu;Coimbatore (Siddhapudur);11.0172;76.9739
+IN;Tamil Nadu;Erumaippatti;11.1467;78.29
+IN;Tamil Nadu;Alagāpuram;11.887;78.9176
+IN;Tamil Nadu;Sulur;11.0254;77.1246
+IN;Tamil Nadu;Coimbatore (Poosaripalayam);11.0058;76.934
+KH;Phnom Penh;Phnom Penh;11.5789;104.892
+IN;Tamil Nadu;Sulur;11.0769;77.132
+IN;Tamil Nadu;Coimbatore;11.0264;77.0202
+IN;Tamil Nadu;Coimbatore (Chinniyampalayam);11.0171;76.9635
+IN;Tamil Nadu;Sulur;11.1261;77.1381
+IN;Tamil Nadu;Coimbatore (Venkitta Puram);11.0256;76.9335
+IN;Tamil Nadu;Coimbatore (Kuppakonam Pudur);11.0267;76.9341
+IN;Tamil Nadu;Idappadi;11.5823;77.8347
+IN;Tamil Nadu;Coimbatore (S'Bend);11.0267;76.9472
+IN;Tamil Nadu;Coimbatore (Nesavaalar Colony);11.0259;76.9462
+IN;Tamil Nadu;Kurinjippādi;11.5503;79.5907
+IN;Tamil Nadu;Coimbatore (B.K.R Nagar);11.0227;76.9731
+IN;Tamil Nadu;Coimbatore (Saravanampatti);11.0834;76.9972
 IN;Kerala;Kannur;11.8745;75.3704
-KH;"Phnom Penh";"Phnom Penh";11.5341;104.915
-KH;"Phnom Penh";"Phnom Penh";11.5563;104.925
-KH;"Phnom Penh";"Phnom Penh";11.5562;104.925
-KH;Kandal;"Kandal Stueng";11.5029;104.736
-IN;Kerala;"Kozhikode (Poovangal)";11.2478;75.834
-KH;"Phnom Penh";"Phnom Penh";11.5251;104.927
-IN;"Tamil Nadu";Irugūr;11.0209;77.0639
-IN;"Tamil Nadu";"Bhavāni (Vijaya Thottam)";11.4396;77.6905
-IN;"Tamil Nadu";"Vijayapuri (Pagallayur)";11.234;77.5013
-IN;"Tamil Nadu";Kumarapalayam;11.4423;77.6987
-IN;"Tamil Nadu";Komarapalayam;11.4423;77.6987
-KH;"Phnom Penh";"Phnom Penh";11.5272;104.878
+KH;Phnom Penh;Phnom Penh;11.5341;104.915
+KH;Phnom Penh;Phnom Penh;11.5563;104.925
+KH;Phnom Penh;Phnom Penh;11.5562;104.925
+KH;Kandal;Kandal Stueng;11.5029;104.736
+IN;Kerala;Kozhikode (Poovangal);11.2478;75.834
+KH;Phnom Penh;Phnom Penh;11.5251;104.927
+IN;Tamil Nadu;Irugūr;11.0209;77.0639
+IN;Tamil Nadu;Bhavāni (Vijaya Thottam);11.4396;77.6905
+IN;Tamil Nadu;Vijayapuri (Pagallayur);11.234;77.5013
+IN;Tamil Nadu;Kumarapalayam;11.4423;77.6987
+IN;Tamil Nadu;Komarapalayam;11.4423;77.6987
+KH;Phnom Penh;Phnom Penh;11.5272;104.878
 IN;Kerala;Thottada;11.8385;75.4208
 IN;Kerala;Kozhikode;11.2003;75.8561
-KH;"Phnom Penh";"Phnom Penh";11.5667;104.896
-IN;"Tamil Nadu";Panruti;11.7766;79.5527
-IN;Puducherry;"Puducherry (Naveena Garden)";11.94;79.8147
-IN;"Tamil Nadu";Salem;11.6764;78.1423
-KH;"Phnom Penh";"Phnom Penh";11.5334;104.913
-KH;"Kampong Speu Province";Odongk;11.6827;104.699
-KH;"Phnom Penh";"Phnom Penh";11.5479;104.906
-PH;"Eastern Visayas";Baras;11.1833;125.017
-PH;"Western Visayas";Ibajay;11.8199;122.162
-PH;"Western Visayas";Culasi;11.4331;122.106
-KH;"Phnom Penh";"Phnom Penh";11.5673;104.9
-IN;"Tamil Nadu";"Komarapalayam (Vijaya Thottam)";11.4396;77.6905
-KH;"Phnom Penh";"Phnom Penh";11.5691;104.895
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.5627;104.878
-IN;"Tamil Nadu";"Irugūr (N.K. Palayam)";11.0284;77.0931
-KH;"Phnom Penh";"Phnom Penh";11.5581;104.921
-IN;"Tamil Nadu";Perundurai;11.3024;77.6564
-KH;"Phnom Penh";"Phnom Penh";11.5811;104.919
-PH;"Western Visayas";"Malay (Boracay Island)";11.9586;121.929
-KH;"Phnom Penh";"Phnom Penh";11.5497;104.911
-KH;"Phnom Penh";"Phnom Penh (Boeng Kak Muoy)";11.5876;104.897
+KH;Phnom Penh;Phnom Penh;11.5667;104.896
+IN;Tamil Nadu;Panruti;11.7766;79.5527
+IN;Puducherry;Puducherry (Naveena Garden);11.94;79.8147
+IN;Tamil Nadu;Salem;11.6764;78.1423
+KH;Phnom Penh;Phnom Penh;11.5334;104.913
+KH;Kampong Speu Province;Odongk;11.6827;104.699
+KH;Phnom Penh;Phnom Penh;11.5479;104.906
+PH;Eastern Visayas;Baras;11.1833;125.017
+PH;Western Visayas;Ibajay;11.8199;122.162
+PH;Western Visayas;Culasi;11.4331;122.106
+KH;Phnom Penh;Phnom Penh;11.5673;104.9
+IN;Tamil Nadu;Komarapalayam (Vijaya Thottam);11.4396;77.6905
+KH;Phnom Penh;Phnom Penh;11.5691;104.895
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.5627;104.878
+IN;Tamil Nadu;Irugūr (N.K. Palayam);11.0284;77.0931
+KH;Phnom Penh;Phnom Penh;11.5581;104.921
+IN;Tamil Nadu;Perundurai;11.3024;77.6564
+KH;Phnom Penh;Phnom Penh;11.5811;104.919
+PH;Western Visayas;Malay (Boracay Island);11.9586;121.929
+KH;Phnom Penh;Phnom Penh;11.5497;104.911
+KH;Phnom Penh;Phnom Penh (Boeng Kak Muoy);11.5876;104.897
 GW;Bissau;Bissau;11.8817;-15.6178
 NG;Bauchi;Jama’are;11.6698;9.928
-NG;"Kaduna State";Ikara;11.1751;8.22466
-NG;"Jigawa State";Dutse;11.7562;9.33896
-NG;"Yobe State";Damaturu;11.747;11.9608
+NG;Kaduna State;Ikara;11.1751;8.22466
+NG;Jigawa State;Dutse;11.7562;9.33896
+NG;Yobe State;Damaturu;11.747;11.9608
 IN;Kerala;Muluppilagadu;11.7979;75.4511
 IN;Kerala;Thalassery;11.7481;75.4929
-IN;"Tamil Nadu";Pennādam;11.4039;79.2416
-IN;Kerala;"Kozhikode (West Nadakkave)";11.2682;75.7775
-IN;"Tamil Nadu";Srīmushnam;11.4012;79.4038
+IN;Tamil Nadu;Pennādam;11.4039;79.2416
+IN;Kerala;Kozhikode (West Nadakkave);11.2682;75.7775
+IN;Tamil Nadu;Srīmushnam;11.4012;79.4038
 IN;Kerala;Malappuram;11.042;76.0815
 IN;Kerala;Kodur;11.0153;76.0701
-IN;"Tamil Nadu";Mettur;11.788;77.8008
-IN;"Andaman and Nicobar";"Bamboo Flat";11.7;92.7167
-IN;"Andaman and Nicobar";"Port Blair";11.6661;92.7464
-IN;"Tamil Nadu";Aruvankad;11.3631;76.7579
-IN;"Tamil Nadu";Gangavalli;11.4983;78.6497
-PH;"Eastern Visayas";"Tacloban City";11.2433;125.005
-IN;"Tamil Nadu";Attur;11.5983;78.5974
-IN;"Tamil Nadu";Pallipalayam;11.367;77.7604
-IN;"Tamil Nadu";Kangayam;11.006;77.5609
-KH;"Phnom Penh";"Phnom Penh";11.5856;104.914
-KH;Kandal;"Kandal Stueng";11.4135;104.826
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.5858;104.87
+IN;Tamil Nadu;Mettur;11.788;77.8008
+IN;Andaman and Nicobar;Bamboo Flat;11.7;92.7167
+IN;Andaman and Nicobar;Port Blair;11.6661;92.7464
+IN;Tamil Nadu;Aruvankad;11.3631;76.7579
+IN;Tamil Nadu;Gangavalli;11.4983;78.6497
+PH;Eastern Visayas;Tacloban City;11.2433;125.005
+IN;Tamil Nadu;Attur;11.5983;78.5974
+IN;Tamil Nadu;Pallipalayam;11.367;77.7604
+IN;Tamil Nadu;Kangayam;11.006;77.5609
+KH;Phnom Penh;Phnom Penh;11.5856;104.914
+KH;Kandal;Kandal Stueng;11.4135;104.826
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.5858;104.87
 IN;Kerala;Ferokh;11.1799;75.8414
-PH;"Eastern Visayas";Capoocan;11.2933;124.642
-PH;"Eastern Visayas";Margen;11.0172;124.528
-PH;"Western Visayas";Bingawan;11.233;122.567
-PH;"Western Visayas";"San Miguel";11.2146;122.543
-PH;"Western Visayas";Banate;11.0022;122.817
-IN;"Tamil Nadu";Aduthurai;11.0154;79.4809
-IN;"Tamil Nadu";"Coimbatore (Lakshmi Mills Colony)";11.0171;76.9791
-VN;"Bình Thuận Province";"Tánh Linh";11.0842;107.681
-VN;"Ninh Thuận Province";"Phan Rang";11.5826;108.991
-VN;"Tây Ninh Province";"Tây Ninh";11.3352;106.11
-VN;"Bình Phước Province";"Dong Xoai";11.5344;106.89
-VN;"Lâm Đồng Province";"Xã Tân Văn";11.7754;108.225
-IN;Puducherry;"Puducherry (Ashok Nagar)";11.9522;79.8172
-PH;"Eastern Visayas";Alangalang;11.2061;124.847
-PH;"Eastern Visayas";Jaro;11.1838;124.783
-KH;"Phnom Penh";"Phnom Penh";11.5344;104.88
-KH;"Phnom Penh";"Phnom Penh";11.5619;104.926
-KH;"Phnom Penh";"Phnom Penh";11.54;104.923
-IN;"Tamil Nadu";Erode;11.3025;77.6565
+PH;Eastern Visayas;Capoocan;11.2933;124.642
+PH;Eastern Visayas;Margen;11.0172;124.528
+PH;Western Visayas;Bingawan;11.233;122.567
+PH;Western Visayas;San Miguel;11.2146;122.543
+PH;Western Visayas;Banate;11.0022;122.817
+IN;Tamil Nadu;Aduthurai;11.0154;79.4809
+IN;Tamil Nadu;Coimbatore (Lakshmi Mills Colony);11.0171;76.9791
+VN;Bình Thuận Province;Tánh Linh;11.0842;107.681
+VN;Ninh Thuận Province;Phan Rang;11.5826;108.991
+VN;Tây Ninh Province;Tây Ninh;11.3352;106.11
+VN;Bình Phước Province;Dong Xoai;11.5344;106.89
+VN;Lâm Đồng Province;Xã Tân Văn;11.7754;108.225
+IN;Puducherry;Puducherry (Ashok Nagar);11.9522;79.8172
+PH;Eastern Visayas;Alangalang;11.2061;124.847
+PH;Eastern Visayas;Jaro;11.1838;124.783
+KH;Phnom Penh;Phnom Penh;11.5344;104.88
+KH;Phnom Penh;Phnom Penh;11.5619;104.926
+KH;Phnom Penh;Phnom Penh;11.54;104.923
+IN;Tamil Nadu;Erode;11.3025;77.6565
 IN;Kerala;Villiappally;11.625;75.6288
 IN;Kerala;Māniyūr;11.5522;75.6503
-IN;"Tamil Nadu";Tirumullaivāsal;11.24;79.8371
-IN;"Tamil Nadu";Ootacamund;11.4916;76.7337
+IN;Tamil Nadu;Tirumullaivāsal;11.24;79.8371
+IN;Tamil Nadu;Ootacamund;11.4916;76.7337
 IN;Kerala;Varam;11.8996;75.4132
 IN;Kerala;Pinarāyi;11.8049;75.481
 IN;Kerala;Atholi;11.3885;75.7597
@@ -568,16 +568,16 @@ IN;Kerala;Patiriyat;11.849;75.5147
 IN;Kerala;Chelora;11.8949;75.4396
 IN;Kerala;Kannavam;11.8445;75.6627
 IN;Kerala;Koyilandy;11.4381;75.6931
-IN;"Tamil Nadu";"Tirupur (Kamatchi Amman)";11.0996;77.3465
-IN;"Tamil Nadu";"Palanikavundanpūdūr (Tamil Nadu Agricultural University)";11.0152;76.9326
-IN;Kerala;"Kozhikode (Arayidathupalam)";11.2595;75.7923
-IN;"Tamil Nadu";Kumbakonam;11.0177;79.4104
-IN;"Tamil Nadu";"Erode (B.P Agraharam)";11.3646;77.7098
-IN;"Tamil Nadu";Kotagiri;11.4213;76.8477
-IN;"Tamil Nadu";Kalpaganūr;11.6356;78.5267
-IN;Puducherry;"Puducherry (Jipmer Campus)";11.953;79.7967
-IN;"Tamil Nadu";Neyveli;11.6088;79.4994
-IN;"Tamil Nadu";Ālappākkam;11.599;79.7189
+IN;Tamil Nadu;Tirupur (Kamatchi Amman);11.0996;77.3465
+IN;Tamil Nadu;Palanikavundanpūdūr (Tamil Nadu Agricultural University);11.0152;76.9326
+IN;Kerala;Kozhikode (Arayidathupalam);11.2595;75.7923
+IN;Tamil Nadu;Kumbakonam;11.0177;79.4104
+IN;Tamil Nadu;Erode (B.P Agraharam);11.3646;77.7098
+IN;Tamil Nadu;Kotagiri;11.4213;76.8477
+IN;Tamil Nadu;Kalpaganūr;11.6356;78.5267
+IN;Puducherry;Puducherry (Jipmer Campus);11.953;79.7967
+IN;Tamil Nadu;Neyveli;11.6088;79.4994
+IN;Tamil Nadu;Ālappākkam;11.599;79.7189
 IN;Kerala;Thurayur;11.528;75.6709
 IN;Kerala;Beypore;11.1715;75.8061
 IN;Kerala;Meppāyyūr;11.5388;75.7351
@@ -587,161 +587,161 @@ IN;Kerala;Chōrōd;11.6277;75.5915
 IN;Kerala;Kadachira;11.837;75.449
 IN;Kerala;Kuttuparamba;11.8278;75.5659
 IN;Kerala;Puzhathi;11.9011;75.3892
-IN;"Tamil Nadu";Jayamkondacholapuram;11.2127;79.3637
+IN;Tamil Nadu;Jayamkondacholapuram;11.2127;79.3637
 IN;Kerala;Othukkungal;11.0259;76.0273
-IN;Kerala;"Kodur (Vadakkemanna)";11.0355;76.0678
-IN;"Tamil Nadu";Kumbakonam;11.0139;79.4083
-IN;"Andaman and Nicobar";Prothrapur;11.618;92.7244
-IN;"Andaman and Nicobar";Garacharma;11.6137;92.7036
-PH;"Eastern Visayas";"San Miguel";11.2672;124.832
-PH;"Western Visayas";Quinagaringan;11.1222;122.588
-PH;"Western Visayas";"Kalibo Town";11.7061;122.364
-IN;"Tamil Nadu";Mallasamudram;11.4933;78.0312
-IN;"Tamil Nadu";Valavanur;11.9209;79.5824
-IN;"Tamil Nadu";Gobichettipalayam;11.455;77.4422
-IN;"Tamil Nadu";Vīraganūr;11.4761;78.7355
-IN;"Tamil Nadu";Turaiyūr;11.1497;78.5987
-IN;"Tamil Nadu";Ammāpettai;11.6198;77.7426
-IN;"Tamil Nadu";Kotagiri;11.4207;76.8604
+IN;Kerala;Kodur (Vadakkemanna);11.0355;76.0678
+IN;Tamil Nadu;Kumbakonam;11.0139;79.4083
+IN;Andaman and Nicobar;Prothrapur;11.618;92.7244
+IN;Andaman and Nicobar;Garacharma;11.6137;92.7036
+PH;Eastern Visayas;San Miguel;11.2672;124.832
+PH;Western Visayas;Quinagaringan;11.1222;122.588
+PH;Western Visayas;Kalibo Town;11.7061;122.364
+IN;Tamil Nadu;Mallasamudram;11.4933;78.0312
+IN;Tamil Nadu;Valavanur;11.9209;79.5824
+IN;Tamil Nadu;Gobichettipalayam;11.455;77.4422
+IN;Tamil Nadu;Vīraganūr;11.4761;78.7355
+IN;Tamil Nadu;Turaiyūr;11.1497;78.5987
+IN;Tamil Nadu;Ammāpettai;11.6198;77.7426
+IN;Tamil Nadu;Kotagiri;11.4207;76.8604
 IN;Kerala;Kunnummal;11.6833;75.7108
-IN;"Tamil Nadu";"Coimbatore (Balaji Nagar)";11.0229;76.9807
-PH;"Western Visayas";"Roxas City";11.5811;122.753
-PH;"Western Visayas";Candelaria;11.2893;122.523
-PH;"Western Visayas";Balasan;11.4728;123.088
-PH;"Western Visayas";Alimono;11.1855;122.713
-IN;"Tamil Nadu";Irugūr;11.0178;77.0629
+IN;Tamil Nadu;Coimbatore (Balaji Nagar);11.0229;76.9807
+PH;Western Visayas;Roxas City;11.5811;122.753
+PH;Western Visayas;Candelaria;11.2893;122.523
+PH;Western Visayas;Balasan;11.4728;123.088
+PH;Western Visayas;Alimono;11.1855;122.713
+IN;Tamil Nadu;Irugūr;11.0178;77.0629
 IN;Puducherry;Puducherry;11.9263;79.7816
-IN;"Tamil Nadu";"Coimbatore (R.S. Puram)";11.0104;76.95
-IN;"Tamil Nadu";Omalur;11.7429;78.0473
-IN;"Tamil Nadu";Tiruchengode;11.379;77.8949
-IN;"Tamil Nadu";Mettupalayam;11.2973;76.9395
-IN;"Tamil Nadu";"Nellikuppam (Ward 18)";11.7773;79.664
-IN;"Andaman and Nicobar";"Port Blair (Thomas Colony)";11.6617;92.7349
-IN;"Tamil Nadu";Periyanayakkanpalaiyam;11.1721;76.9729
-KH;"Phnom Penh";"Phnom Penh";11.549;104.899
-PH;"Eastern Visayas";Maydolong;11.5002;125.498
-PH;"Western Visayas";Jamindan;11.4002;122.498
-PH;"Eastern Visayas";Palaroo;11.4056;124.483
-PH;"Central Visayas";Kabac;11.2353;123.698
-KH;"Phnom Penh";"Phnom Penh";11.5775;104.919
-IN;"Tamil Nadu";"Sīrkāzhi (Thenpathi)";11.2354;79.7353
-IN;"Tamil Nadu";"Coimbatore (Ganapathy)";11.0344;76.9664
-IN;"Tamil Nadu";"Coimbatore (Gopalapuram)";11.0026;76.9743
-IN;"Tamil Nadu";"Tirupur (PSS Colony)";11.1102;77.3412
-IN;Puducherry;"Puducherry (Karuvadikuppam)";11.9649;79.8255
-IN;"Tamil Nadu";"Tirupur (Thottam)";11.0866;77.3443
-IN;"Tamil Nadu";"Chidambaram (Vandigate)";11.4129;79.6928
-IN;Karnataka;"Chamrajnagar (Siddhartha Nagar)";11.9286;76.9537
-IN;"Tamil Nadu";Kunnathur;11.1633;77.047
-IN;"Tamil Nadu";Viluppuram;11.9401;79.4861
-IN;"Tamil Nadu";Mettur;11.7904;77.7988
-IN;"Tamil Nadu";Sulur;11.0164;77.1337
-IN;"Tamil Nadu";"Coimbatore (Ramakrishnapuram)";11.0544;76.9835
-IN;Puducherry;"Puducherry (Kuyavarpalayam)";11.936;79.8157
-PH;"Western Visayas";Kalibo;11.7083;122.367
-IN;Kerala;"Kannur (Thana)";11.8743;75.3796
-CM;"Far North";Mora;11.0461;14.1401
-NI;"Rivas Department";"San Juan del Sur";11.2529;-85.8705
-KH;"Phnom Penh";"Phnom Penh";11.5449;104.892
-PH;"Central Visayas";Logon;11.3303;124.115
+IN;Tamil Nadu;Coimbatore (R.S. Puram);11.0104;76.95
+IN;Tamil Nadu;Omalur;11.7429;78.0473
+IN;Tamil Nadu;Tiruchengode;11.379;77.8949
+IN;Tamil Nadu;Mettupalayam;11.2973;76.9395
+IN;Tamil Nadu;Nellikuppam (Ward 18);11.7773;79.664
+IN;Andaman and Nicobar;Port Blair (Thomas Colony);11.6617;92.7349
+IN;Tamil Nadu;Periyanayakkanpalaiyam;11.1721;76.9729
+KH;Phnom Penh;Phnom Penh;11.549;104.899
+PH;Eastern Visayas;Maydolong;11.5002;125.498
+PH;Western Visayas;Jamindan;11.4002;122.498
+PH;Eastern Visayas;Palaroo;11.4056;124.483
+PH;Central Visayas;Kabac;11.2353;123.698
+KH;Phnom Penh;Phnom Penh;11.5775;104.919
+IN;Tamil Nadu;Sīrkāzhi (Thenpathi);11.2354;79.7353
+IN;Tamil Nadu;Coimbatore (Ganapathy);11.0344;76.9664
+IN;Tamil Nadu;Coimbatore (Gopalapuram);11.0026;76.9743
+IN;Tamil Nadu;Tirupur (PSS Colony);11.1102;77.3412
+IN;Puducherry;Puducherry (Karuvadikuppam);11.9649;79.8255
+IN;Tamil Nadu;Tirupur (Thottam);11.0866;77.3443
+IN;Tamil Nadu;Chidambaram (Vandigate);11.4129;79.6928
+IN;Karnataka;Chamrajnagar (Siddhartha Nagar);11.9286;76.9537
+IN;Tamil Nadu;Kunnathur;11.1633;77.047
+IN;Tamil Nadu;Viluppuram;11.9401;79.4861
+IN;Tamil Nadu;Mettur;11.7904;77.7988
+IN;Tamil Nadu;Sulur;11.0164;77.1337
+IN;Tamil Nadu;Coimbatore (Ramakrishnapuram);11.0544;76.9835
+IN;Puducherry;Puducherry (Kuyavarpalayam);11.936;79.8157
+PH;Western Visayas;Kalibo;11.7083;122.367
+IN;Kerala;Kannur (Thana);11.8743;75.3796
+CM;Far North;Mora;11.0461;14.1401
+NI;Rivas Department;San Juan del Sur;11.2529;-85.8705
+KH;Phnom Penh;Phnom Penh;11.5449;104.892
+PH;Central Visayas;Logon;11.3303;124.115
 TT;Tobago;Scarborough;11.1823;-60.7352
 GW;Bissau;Bissau;11.8713;-15.6061
-NI;"Rivas Department";Altagracia;11.5661;-85.5784
-PH;"Western Visayas";"Malay (Boracay Island)";11.9587;121.929
-KH;"Phnom Penh";"Phnom Penh";11.5414;104.914
-VE;Falcón;"Punto Fijo";11.7115;-70.1813
-CO;Atlántico;"Puerto Colombia";11.001;-74.9508
+NI;Rivas Department;Altagracia;11.5661;-85.5784
+PH;Western Visayas;Malay (Boracay Island);11.9587;121.929
+KH;Phnom Penh;Phnom Penh;11.5414;104.914
+VE;Falcón;Punto Fijo;11.7115;-70.1813
+CO;Atlántico;Puerto Colombia;11.001;-74.9508
 IN;Kerala;Peringathur;11.7137;75.586
 IN;Kerala;Othukkungal;11.0283;76.029
-CO;"Magdalena Department";Ciénaga;11.007;-74.2477
-NI;"Río San Juan Department";"Boca de Sábalos";11.05;-84.4667
-NI;"Carazo Department";Jinotepe;11.8483;-86.1992
+CO;Magdalena Department;Ciénaga;11.007;-74.2477
+NI;Río San Juan Department;Boca de Sábalos;11.05;-84.4667
+NI;Carazo Department;Jinotepe;11.8483;-86.1992
 BF;Centre-Est;Zabré;11.1825;-0.63222
 DJ;Djibouti;Djibouti;11.5731;43.1609
-GH;"Upper East";Bawku;11.0593;-0.24249
+GH;Upper East;Bawku;11.0593;-0.24249
 VE;Falcón;Tocópero;11.4995;-69.259
-KH;"Phnom Penh";"Phnom Penh";11.5122;104.935
-KH;"Phnom Penh";"Phnom Penh";11.5283;104.932
-VN;"Bình Dương Province";"Bến Cát";11.1277;106.577
-IN;"Tamil Nadu";"Coimbatore (Gopalakrishnapuram)";11.0505;76.9896
+KH;Phnom Penh;Phnom Penh;11.5122;104.935
+KH;Phnom Penh;Phnom Penh;11.5283;104.932
+VN;Bình Dương Province;Bến Cát;11.1277;106.577
+IN;Tamil Nadu;Coimbatore (Gopalakrishnapuram);11.0505;76.9896
 IN;Kerala;Kandamkunnu;11.8695;75.5808
 IN;Kerala;Tirūrangādi;11.0432;75.9234
-IN;"Tamil Nadu";Vijayapuri;11.2453;77.5007
-IN;"Tamil Nadu";Wellington;11.3655;76.7844
-IN;"Tamil Nadu";Vriddhāchalam;11.5183;79.3241
+IN;Tamil Nadu;Vijayapuri;11.2453;77.5007
+IN;Tamil Nadu;Wellington;11.3655;76.7844
+IN;Tamil Nadu;Vriddhāchalam;11.5183;79.3241
 IN;Kerala;Vatakara;11.5978;75.5814
-PH;"Central Visayas";Madridejos;11.298;123.734
-PH;"Central Visayas";"Santa Fe";11.1544;123.806
-KH;"Phnom Penh";"Phnom Penh";11.5475;104.904
-PH;"Western Visayas";Passi;11.1688;122.65
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.5971;104.863
-IN;"Tamil Nadu";Anthiyur;11.5096;77.5778
-VN;"Lâm Đồng Province";"Đạ Tẻh";11.5147;107.488
-NI;"Carazo Department";"El Rosario";11.7776;-86.3737
-NI;"Carazo Department";Diriamba;11.8581;-86.2392
-NI;"Granada Department";Granada;11.9306;-85.9537
-CO;Atlántico;"Barranquilla (Norte-Centro Histórico)";11.0016;-74.8006
-VN;"Bình Phước Province";"Dong Xoai";11.8589;107.033
-PH;"Eastern Visayas";"San Vicente";11.1183;124.566
+PH;Central Visayas;Madridejos;11.298;123.734
+PH;Central Visayas;Santa Fe;11.1544;123.806
+KH;Phnom Penh;Phnom Penh;11.5475;104.904
+PH;Western Visayas;Passi;11.1688;122.65
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.5971;104.863
+IN;Tamil Nadu;Anthiyur;11.5096;77.5778
+VN;Lâm Đồng Province;Đạ Tẻh;11.5147;107.488
+NI;Carazo Department;El Rosario;11.7776;-86.3737
+NI;Carazo Department;Diriamba;11.8581;-86.2392
+NI;Granada Department;Granada;11.9306;-85.9537
+CO;Atlántico;Barranquilla (Norte-Centro Histórico);11.0016;-74.8006
+VN;Bình Phước Province;Dong Xoai;11.8589;107.033
+PH;Eastern Visayas;San Vicente;11.1183;124.566
 DJ;Djibouti;Djibouti;11.5886;43.1454
-NI;"Rivas Department";Tola;11.4393;-85.9389
-NI;"Masaya Department";Masaya;11.9732;-86.0959
-KH;"Phnom Penh";"Phnom Penh (Khan Sensok)";11.6242;104.857
-KH;"Phnom Penh";"Phnom Penh";11.5416;104.91
-NG;"Borno State";Maiduguri;11.8311;13.151
-CO;"La Guajira Department";Albania;11.1605;-72.5916
-KH;"Prey Veng";"Kampong Trabaek";11.1438;105.483
-KH;Kandal;"Ta Khmau";11.4464;104.946
-PH;"Western Visayas";"Brgy. Bachaw Norte, Kalibo";11.7181;122.378
-PH;"Western Visayas";Lalab;11.5749;122.428
-PH;"Eastern Visayas";Dolores;11.0614;124.613
-PH;"Western Visayas";"Brgy. Tinigao, Kalibo";11.7;122.367
-PH;"Western Visayas";Mambusao;11.4335;122.598
-PH;"Western Visayas";"Brgy. Bulwang, Numancia";11.7219;122.361
-PH;"Eastern Visayas";"Ormoc City";11.0064;124.607
-PH;"Eastern Visayas";Carigara;11.2981;124.679
-PH;"Central Visayas";Calape;11.1756;124.034
-PH;"Eastern Visayas";Guiuan;11.0309;125.723
-PH;"Western Visayas";Mianay;11.4716;122.701
-CR;"Guanacaste Province";"La Cruz";11.0738;-85.6327
-CO;Atlántico;"Barranquilla (Norte-Centro Histórico)";11.0025;-74.8003
-CO;Atlántico;"Barranquilla (Barrio Prado)";11.0023;-74.8004
-CO;"Magdalena Department";"Santa Marta (El Prado)";11.2374;-74.2111
-IN;"Tamil Nadu";"Coimbatore (R S Puram West)";11.0028;76.9537
-IN;"Tamil Nadu";"Coimbatore (R S Puram West)";11.0099;76.9541
-IN;"Tamil Nadu";"Coimbatore (Opposite Airtel Bharathi Center, Lakshmi Mills)";11.0147;76.9875
-IN;"Tamil Nadu";"Coimbatore (Ganapathy)";11.0361;76.9783
-IN;"Tamil Nadu";"Coimbatore (Kuppichipalayam)";11.1555;76.9489
-IN;"Tamil Nadu";"Coimbatore (Bharathi Nagar)";11.0471;76.9921
-IN;"Tamil Nadu";Kallankurichi;11.1481;79.1354
-IN;Kerala;"Manjeri (Melakkam)";11.1239;76.1178
-IN;"Tamil Nadu";Velur;11.1121;78.0039
-IN;"Tamil Nadu";Valavanur;11.9232;79.6474
-IN;"Tamil Nadu";"Erode (Sri Senthur Gardens)";11.2962;77.7263
-IN;"Tamil Nadu";Dānishpet;11.8646;78.1271
-NI;"Managua Department";Masachapa;11.7869;-86.5142
-NI;"Managua Department";"El Crucero";11.9901;-86.3095
-VE;Falcón;"San Luis";11.1203;-69.684
-VE;Falcón;"Canape Capatárida";11.1755;-70.6207
-CO;"La Guajira Department";Riohacha;11.5384;-72.9168
-CO;"La Guajira Department";Maicao;11.3801;-72.2422
+NI;Rivas Department;Tola;11.4393;-85.9389
+NI;Masaya Department;Masaya;11.9732;-86.0959
+KH;Phnom Penh;Phnom Penh (Khan Sensok);11.6242;104.857
+KH;Phnom Penh;Phnom Penh;11.5416;104.91
+NG;Borno State;Maiduguri;11.8311;13.151
+CO;La Guajira Department;Albania;11.1605;-72.5916
+KH;Prey Veng;Kampong Trabaek;11.1438;105.483
+KH;Kandal;Ta Khmau;11.4464;104.946
+PH;Western Visayas;Brgy. Bachaw Norte, Kalibo;11.7181;122.378
+PH;Western Visayas;Lalab;11.5749;122.428
+PH;Eastern Visayas;Dolores;11.0614;124.613
+PH;Western Visayas;Brgy. Tinigao, Kalibo;11.7;122.367
+PH;Western Visayas;Mambusao;11.4335;122.598
+PH;Western Visayas;Brgy. Bulwang, Numancia;11.7219;122.361
+PH;Eastern Visayas;Ormoc City;11.0064;124.607
+PH;Eastern Visayas;Carigara;11.2981;124.679
+PH;Central Visayas;Calape;11.1756;124.034
+PH;Eastern Visayas;Guiuan;11.0309;125.723
+PH;Western Visayas;Mianay;11.4716;122.701
+CR;Guanacaste Province;La Cruz;11.0738;-85.6327
+CO;Atlántico;Barranquilla (Norte-Centro Histórico);11.0025;-74.8003
+CO;Atlántico;Barranquilla (Barrio Prado);11.0023;-74.8004
+CO;Magdalena Department;Santa Marta (El Prado);11.2374;-74.2111
+IN;Tamil Nadu;Coimbatore (R S Puram West);11.0028;76.9537
+IN;Tamil Nadu;Coimbatore (R S Puram West);11.0099;76.9541
+IN;Tamil Nadu;Coimbatore (Opposite Airtel Bharathi Center, Lakshmi Mills);11.0147;76.9875
+IN;Tamil Nadu;Coimbatore (Ganapathy);11.0361;76.9783
+IN;Tamil Nadu;Coimbatore (Kuppichipalayam);11.1555;76.9489
+IN;Tamil Nadu;Coimbatore (Bharathi Nagar);11.0471;76.9921
+IN;Tamil Nadu;Kallankurichi;11.1481;79.1354
+IN;Kerala;Manjeri (Melakkam);11.1239;76.1178
+IN;Tamil Nadu;Velur;11.1121;78.0039
+IN;Tamil Nadu;Valavanur;11.9232;79.6474
+IN;Tamil Nadu;Erode (Sri Senthur Gardens);11.2962;77.7263
+IN;Tamil Nadu;Dānishpet;11.8646;78.1271
+NI;Managua Department;Masachapa;11.7869;-86.5142
+NI;Managua Department;El Crucero;11.9901;-86.3095
+VE;Falcón;San Luis;11.1203;-69.684
+VE;Falcón;Canape Capatárida;11.1755;-70.6207
+CO;La Guajira Department;Riohacha;11.5384;-72.9168
+CO;La Guajira Department;Maicao;11.3801;-72.2422
 TT;Tobago;Scarborough;11.187;-60.7302
-TT;Tobago;"Signal Hill";11.1799;-60.7592
-CO;Atlántico;"Barranquilla (Altamira)";11.0036;-74.824
+TT;Tobago;Signal Hill;11.1799;-60.7592
+CO;Atlántico;Barranquilla (Altamira);11.0036;-74.824
 CO;Atlántico;Barranquilla;11.0195;-74.8504
-CO;"La Guajira Department";Albania;11.161;-72.5924
-NI;"Río San Juan Department";"San Carlos";11.1271;-84.7779
+CO;La Guajira Department;Albania;11.161;-72.5924
+NI;Río San Juan Department;San Carlos;11.1271;-84.7779
 CO;Atlántico;Barranquilla;11.0119;-74.8238
-CO;"La Guajira Department";Dibulla;11.2725;-73.3091
-CO;Atlántico;"Barranquilla (Belo Horizonte)";11.0144;-74.7973
-CO;Atlántico;"Barranquilla (Sabanilla Montecarmelo)";11.0191;-74.8511
-NI;"Río San Juan Department";Morrito;11.6212;-85.0805
-CO;Atlántico;"Barranquilla (Torcoroma)";11.0055;-74.8198
-CO;Atlántico;"Barranquilla (Norte-Centro Histórico)";11.0037;-74.8095
-CO;"Magdalena Department";"Santa Marta";11.2258;-74.1869
-KH;"Phnom Penh";"Phnom Penh";11.5517;104.908
-NI;"Rivas Department";Potosí;11.4942;-85.8568
-NI;"Masaya Department";Catarina;11.912;-86.0738
+CO;La Guajira Department;Dibulla;11.2725;-73.3091
+CO;Atlántico;Barranquilla (Belo Horizonte);11.0144;-74.7973
+CO;Atlántico;Barranquilla (Sabanilla Montecarmelo);11.0191;-74.8511
+NI;Río San Juan Department;Morrito;11.6212;-85.0805
+CO;Atlántico;Barranquilla (Torcoroma);11.0055;-74.8198
+CO;Atlántico;Barranquilla (Norte-Centro Histórico);11.0037;-74.8095
+CO;Magdalena Department;Santa Marta;11.2258;-74.1869
+KH;Phnom Penh;Phnom Penh;11.5517;104.908
+NI;Rivas Department;Potosí;11.4942;-85.8568
+NI;Masaya Department;Catarina;11.912;-86.0738
 BF;Hauts-Bassins;Bobo-Dioulasso;11.1786;-4.30499
 GW;Bissau;Bissau;11.8562;-15.6132
 GW;Bissau;Bissau;11.8632;-15.5843
@@ -750,53 +750,53 @@ TG;Savanes;Sinkassé;11.1039;0.00944
 ET;Amhara;Dessie;11.1333;39.6333
 ET;Āfar;Logīya;11.7261;40.9797
 ET;Amhara;Weldiya;11.8277;39.5916
-ET;Amhara;"Bahir Dar";11.5936;37.3908
+ET;Amhara;Bahir Dar;11.5936;37.3908
 ET;Amhara;Injibara;11;36.9167
 DJ;Tadjourah;Tadjoura;11.7878;42.8822
-NG;"Kaduna State";Zaria;11.148;7.65228
-GN;"Labé Region";Labé;11.3182;-12.2833
-NG;"Kano State";Gwarzo;11.916;7.9337
-BF;"Boucle du Mouhoun";Boromo;11.7454;-2.93006
-IN;"Tamil Nadu";Mayiladuthurai;11.1018;79.6526
-CR;"Alajuela Province";"Los Chiles";11.0325;-84.7154
-VE;"Nueva Esparta";"Juan Griego";11.1289;-63.9165
-VE;Falcón;"Punto Fijo";11.7138;-70.1903
-CO;"Magdalena Department";"Santa Marta (Playa Salguero)";11.1881;-74.2308
-VE;"Dependencias Federales";"Los Roques";11.9484;-66.6784
-KH;"Phnom Penh";"Phnom Penh";11.5564;104.919
-IN;"Tamil Nadu";Thuraiyur;11.1415;78.5945
-KH;"Phnom Penh";"Phnom Penh";11.5444;104.925
-IN;Kerala;"Vatakara (Edodi)";11.5967;75.5934
+NG;Kaduna State;Zaria;11.148;7.65228
+GN;Labé Region;Labé;11.3182;-12.2833
+NG;Kano State;Gwarzo;11.916;7.9337
+BF;Boucle du Mouhoun;Boromo;11.7454;-2.93006
+IN;Tamil Nadu;Mayiladuthurai;11.1018;79.6526
+CR;Alajuela Province;Los Chiles;11.0325;-84.7154
+VE;Nueva Esparta;Juan Griego;11.1289;-63.9165
+VE;Falcón;Punto Fijo;11.7138;-70.1903
+CO;Magdalena Department;Santa Marta (Playa Salguero);11.1881;-74.2308
+VE;Dependencias Federales;Los Roques;11.9484;-66.6784
+KH;Phnom Penh;Phnom Penh;11.5564;104.919
+IN;Tamil Nadu;Thuraiyur;11.1415;78.5945
+KH;Phnom Penh;Phnom Penh;11.5444;104.925
+IN;Kerala;Vatakara (Edodi);11.5967;75.5934
 IN;Kerala;Mananthavady;11.8014;76.0044
-KH;"Phnom Penh";"Phnom Penh";11.5385;104.921
+KH;Phnom Penh;Phnom Penh;11.5385;104.921
 IN;Kerala;Ramanattukara;11.178;75.8689
 IN;Kerala;Dharmadam;11.7754;75.4646
-IN;"Tamil Nadu";"Coimbatore (Ganapathy)";11.0333;76.9751
-IN;"Tamil Nadu";"Palanikavundanpūdūr (Tamil Nadu Agricultural University)";11.0116;76.9371
-KH;"Phnom Penh";"Phnom Penh";11.562;104.907
-KH;"Phnom Penh";"Phnom Penh";11.5596;104.908
-IN;"Tamil Nadu";Puduppatti;11.1339;78.1599
-IN;"Tamil Nadu";"Erode (Edayankattuvalasu)";11.3418;77.7175
-KH;"Tboung Khmum";Suong;11.9118;105.658
+IN;Tamil Nadu;Coimbatore (Ganapathy);11.0333;76.9751
+IN;Tamil Nadu;Palanikavundanpūdūr (Tamil Nadu Agricultural University);11.0116;76.9371
+KH;Phnom Penh;Phnom Penh;11.562;104.907
+KH;Phnom Penh;Phnom Penh;11.5596;104.908
+IN;Tamil Nadu;Puduppatti;11.1339;78.1599
+IN;Tamil Nadu;Erode (Edayankattuvalasu);11.3418;77.7175
+KH;Tboung Khmum;Suong;11.9118;105.658
 TT;Tobago;Scarborough;11.2337;-60.6989
 IN;Kerala;Kozhikode;11.2934;75.8732
 IN;Kerala;Palayad;11.7937;75.4723
-IN;"Tamil Nadu";Salem;11.6556;78.1561
-IN;"Tamil Nadu";Ootacamund;11.3835;76.6657
-IN;"Tamil Nadu";"Gangarāmpālaiyam (Nagar)";11.9208;79.6107
-PH;"Western Visayas";Malay;11.9003;121.909
-CO;Atlántico;"Barranquilla (Paraiso)";11.0143;-74.8092
-IN;"Tamil Nadu";Sathyamangalam;11.5034;77.2444
-IN;"Tamil Nadu";"Coimbatore (Gandhipuram)";11.0192;76.9681
-PH;"Western Visayas";Pontevedra;11.4812;122.832
-IN;"Tamil Nadu";Belūr;11.7075;78.4144
-KH;"Phnom Penh";"Phnom Penh";11.5662;104.905
-IN;"Tamil Nadu";Konganāpuram;11.571;77.9004
-PH;"Central Visayas";Doong;11.0786;123.64
-PH;"Eastern Visayas";Balagui;11.4752;124.532
-PH;"Eastern Visayas";Salcedo;11.1469;125.665
-PH;"Eastern Visayas";Llorente;11.4119;125.546
-PH;"Eastern Visayas";Pagsanghan;11.9657;124.721
-PH;"Eastern Visayas";"San Sebastian";11.71;125.018
-IN;"Tamil Nadu";Tirukkoyilur;11.9662;79.2026
+IN;Tamil Nadu;Salem;11.6556;78.1561
+IN;Tamil Nadu;Ootacamund;11.3835;76.6657
+IN;Tamil Nadu;Gangarāmpālaiyam (Nagar);11.9208;79.6107
+PH;Western Visayas;Malay;11.9003;121.909
+CO;Atlántico;Barranquilla (Paraiso);11.0143;-74.8092
+IN;Tamil Nadu;Sathyamangalam;11.5034;77.2444
+IN;Tamil Nadu;Coimbatore (Gandhipuram);11.0192;76.9681
+PH;Western Visayas;Pontevedra;11.4812;122.832
+IN;Tamil Nadu;Belūr;11.7075;78.4144
+KH;Phnom Penh;Phnom Penh;11.5662;104.905
+IN;Tamil Nadu;Konganāpuram;11.571;77.9004
+PH;Central Visayas;Doong;11.0786;123.64
+PH;Eastern Visayas;Balagui;11.4752;124.532
+PH;Eastern Visayas;Salcedo;11.1469;125.665
+PH;Eastern Visayas;Llorente;11.4119;125.546
+PH;Eastern Visayas;Pagsanghan;11.9657;124.721
+PH;Eastern Visayas;San Sebastian;11.71;125.018
+IN;Tamil Nadu;Tirukkoyilur;11.9662;79.2026
 IN;Karnataka;Gundlupēt;11.81;76.6903

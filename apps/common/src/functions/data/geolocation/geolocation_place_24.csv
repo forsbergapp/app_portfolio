@@ -1,15 +1,15 @@
-CN;Fujian;"Zhangzhou (Neimeng)";24.6391;117.199
-TW;Taipei;"Sanxia District";24.9345;121.371
-TW;Taipei;"Shulin District";24.9909;121.422
-TW;Taiwan;"Bade District";24.9298;121.284
+CN;Fujian;Zhangzhou (Neimeng);24.6391;117.199
+TW;Taipei;Sanxia District;24.9345;121.371
+TW;Taipei;Shulin District;24.9909;121.422
+TW;Taiwan;Bade District;24.9298;121.284
 TW;Taiwan;Neili;24.9725;121.261
-TW;Taipei;"Xindian District";24.9601;121.539
-TW;Taiwan;"Taoyuan District";24.9896;121.319
+TW;Taipei;Xindian District;24.9601;121.539
+TW;Taiwan;Taoyuan District;24.9896;121.319
 TW;Taiwan;Taoyuan;24.9937;121.297
 TW;Taiwan;Hsinchu;24.8036;120.969
 TW;Taiwan;Zhubei;24.8383;121.008
 TW;Taiwan;Shenzhen;24.9569;121.012
-IN;Rajasthan;"Mount Abu";24.5937;72.7176
+IN;Rajasthan;Mount Abu;24.5937;72.7176
 IN;Rajasthan;Jhālāwār;24.5963;76.165
 CN;Yunnan;Haikou;24.7799;102.575
 TW;Taiwan;Daxi;24.8837;121.29
@@ -19,111 +19,111 @@ TW;Taiwan;Fengyuan;24.25;120.717
 TW;Taiwan;Buzi;24.2101;120.573
 TW;Taiwan;Xizhou;24.2767;120.689
 TW;Taiwan;Taichung;24.1469;120.684
-TW;Taiwan;"Wufeng District";24.0637;120.698
+TW;Taiwan;Wufeng District;24.0637;120.698
 TW;Taiwan;Yilan;24.757;121.753
-TW;Taipei;"Wulai District";24.864;121.551
+TW;Taipei;Wulai District;24.864;121.551
 TW;Taiwan;Changhua;24.0733;120.563
-TW;Taiwan;"Toufen Township";24.6875;120.909
-TW;Taipei;"Yingge District";24.9561;121.351
+TW;Taiwan;Toufen Township;24.6875;120.909
+TW;Taipei;Yingge District;24.9561;121.351
 TW;Fukien;Jinhu;24.4394;118.421
 TW;Fukien;Jincheng;24.4342;118.317
-IN;"Madhya Pradesh";Guna;24.6469;77.3113
-IN;"Madhya Pradesh";Rewa;24.5326;81.2923
-TW;Taipei;"Yingge District";24.9493;121.337
+IN;Madhya Pradesh;Guna;24.6469;77.3113
+IN;Madhya Pradesh;Rewa;24.5326;81.2923
+TW;Taipei;Yingge District;24.9493;121.337
 TW;Taiwan;Miaoli;24.5643;120.824
-AE;"Abu Dhabi";"Al Ain";24.1917;55.7606
-AE;"Abu Dhabi";"Musaffah City";24.3589;54.4827
-AE;"Abu Dhabi";"Bani Yas City";24.3098;54.6294
-AE;"Abu Dhabi";"Al Shamkhah City";24.3927;54.7078
-AE;"Abu Dhabi";"Abu Dhabi";24.4512;54.397
-AE;"Abu Dhabi";"Mohammed Bin Zayed City";24.3479;54.5537
-AE;"Abu Dhabi";"Masdar City";24.4321;54.6158
+AE;Abu Dhabi;Al Ain;24.1917;55.7606
+AE;Abu Dhabi;Musaffah City;24.3589;54.4827
+AE;Abu Dhabi;Bani Yas City;24.3098;54.6294
+AE;Abu Dhabi;Al Shamkhah City;24.3927;54.7078
+AE;Abu Dhabi;Abu Dhabi;24.4512;54.397
+AE;Abu Dhabi;Mohammed Bin Zayed City;24.3479;54.5537
+AE;Abu Dhabi;Masdar City;24.4321;54.6158
 AE;Dubai;Hatta;24.8007;56.1273
-AE;Dubai;"Al Lusaylī";24.9314;55.4753
-AE;"Abu Dhabi";Ruwais;24.1103;52.7306
-AE;"Abu Dhabi";"Abu Dhabi";24.4539;54.3773
+AE;Dubai;Al Lusaylī;24.9314;55.4753
+AE;Abu Dhabi;Ruwais;24.1103;52.7306
+AE;Abu Dhabi;Abu Dhabi;24.4539;54.3773
 TW;Taiwan;Laicuopou;24.1653;120.668
-SA;"Riyadh Region";Riyadh;24.7136;46.6753
-SA;"Riyadh Region";Riyadh;24.6877;46.7219
-SA;"Riyadh Region";"Ad Dir‘īyah";24.7519;46.5387
-SA;"Riyadh Region";"Al Kharj";24.1554;47.3346
-SA;"Riyadh Region";"Ad Dawādimī";24.5077;44.3924
-SA;"Medina Region";Medina;24.4686;39.6142
-SA;"Medina Region";Yanbu;24.0895;38.0618
-OM;"Al Batinah North";Saham;24.1722;56.8886
-OM;"Al Batinah North";Sohar;24.3475;56.7094
-OM;"Al Batinah North";Liwá;24.5308;56.563
-AE;"Abu Dhabi";"Khalifah A City";24.4259;54.605
-OM;"Al Buraimi";Buraimi;24.2509;55.7931
-OM;"Al Batinah North";Shināş;24.7426;56.467
-SA;"Riyadh Region";"Riyadh (Al Murabba‘)";24.6681;46.7069
-SA;"Ar Riyāḑ";"Riyadh (Al Fūţah)";24.682;46.7074
-SA;"Riyadh Region";"Riyadh (Al Murabba‘)";24.6633;46.709
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.7136;46.6753
-SA;"Ar Riyāḑ";"Riyadh (Al Olaya)";24.7136;46.6753
-AE;"Abu Dhabi";"Abu Dhabi (Sas Al Nakhl)";24.4185;54.4994
-SA;"Medina Region";Sulţānah;24.4926;39.5857
-AE;"Abu Dhabi";"Abu Dhabi (Al Maryah Island)";24.4984;54.3891
-SA;"Riyadh Region";shokhaibٍ;24.4902;46.2687
+SA;Riyadh Region;Riyadh;24.7136;46.6753
+SA;Riyadh Region;Riyadh;24.6877;46.7219
+SA;Riyadh Region;Ad Dir‘īyah;24.7519;46.5387
+SA;Riyadh Region;Al Kharj;24.1554;47.3346
+SA;Riyadh Region;Ad Dawādimī;24.5077;44.3924
+SA;Medina Region;Medina;24.4686;39.6142
+SA;Medina Region;Yanbu;24.0895;38.0618
+OM;Al Batinah North;Saham;24.1722;56.8886
+OM;Al Batinah North;Sohar;24.3475;56.7094
+OM;Al Batinah North;Liwá;24.5308;56.563
+AE;Abu Dhabi;Khalifah A City;24.4259;54.605
+OM;Al Buraimi;Buraimi;24.2509;55.7931
+OM;Al Batinah North;Shināş;24.7426;56.467
+SA;Riyadh Region;Riyadh (Al Murabba‘);24.6681;46.7069
+SA;Ar Riyāḑ;Riyadh (Al Fūţah);24.682;46.7074
+SA;Riyadh Region;Riyadh (Al Murabba‘);24.6633;46.709
+SA;Riyadh Region;Riyadh (Al Olaya);24.7136;46.6753
+SA;Ar Riyāḑ;Riyadh (Al Olaya);24.7136;46.6753
+AE;Abu Dhabi;Abu Dhabi (Sas Al Nakhl);24.4185;54.4994
+SA;Medina Region;Sulţānah;24.4926;39.5857
+AE;Abu Dhabi;Abu Dhabi (Al Maryah Island);24.4984;54.3891
+SA;Riyadh Region;shokhaibٍ;24.4902;46.2687
 AE;Dubai;Margham;24.8995;55.6255
-AE;Sharjah;"Al Madam";24.9736;55.7778
-AE;"Abu Dhabi";"Abu Dhabi (Al Ma'arid)";24.4208;54.441
-SA;"Riyadh Region";Riyadh;24.6818;46.7086
-US;Florida;"Key West";24.5622;-81.7764
-US;Florida;"Key West";24.5549;-81.7497
-US;Florida;"Key West";24.5585;-81.8054
-US;Florida;"Key West";24.5478;-81.79
-US;Florida;"Key West";24.5613;-81.7519
+AE;Sharjah;Al Madam;24.9736;55.7778
+AE;Abu Dhabi;Abu Dhabi (Al Ma'arid);24.4208;54.441
+SA;Riyadh Region;Riyadh;24.6818;46.7086
+US;Florida;Key West;24.5622;-81.7764
+US;Florida;Key West;24.5549;-81.7497
+US;Florida;Key West;24.5585;-81.8054
+US;Florida;Key West;24.5478;-81.79
+US;Florida;Key West;24.5613;-81.7519
 US;Florida;Marathon;24.7119;-81.0974
-US;Florida;"Key West";24.5604;-81.8054
-US;Florida;"Summerland Key";24.6616;-81.4545
-US;Florida;"Key West";24.5606;-81.8047
+US;Florida;Key West;24.5604;-81.8054
+US;Florida;Summerland Key;24.6616;-81.4545
+US;Florida;Key West;24.5606;-81.8047
 US;Florida;Marathon;24.7314;-81.0191
-US;Florida;"Big Coppitt Key";24.5814;-81.6914
+US;Florida;Big Coppitt Key;24.5814;-81.6914
 US;Florida;Marathon;24.7138;-81.0903
 IN;Gujarat;Pālanpur;24.1713;72.4383
 IN;Bihar;Hisua;24.8336;85.4173
-IN;Bihar;"Bodh Gaya";24.6961;84.987
+IN;Bihar;Bodh Gaya;24.6961;84.987
 IN;Bihar;Telkap;24.7048;84.0093
-IN;"Uttar Pradesh";Ghorāwal;24.7546;82.7796
-IN;Manipur;"Imphal (Pang-han Leirak)";24.8061;93.9664
-IN;Manipur;"Imphal (Takyel)";24.7987;93.9054
-IN;Rajasthan;"Udaipur (Ganapati Nagar)";24.5944;73.7318
+IN;Uttar Pradesh;Ghorāwal;24.7546;82.7796
+IN;Manipur;Imphal (Pang-han Leirak);24.8061;93.9664
+IN;Manipur;Imphal (Takyel);24.7987;93.9054
+IN;Rajasthan;Udaipur (Ganapati Nagar);24.5944;73.7318
 CN;Guangdong;Shaoguan;24.8;113.583
 CN;Guangdong;Fengcheng;24.0548;114.213
 CN;Guangdong;Chengjiang;24.2799;116.087
 CN;Guangdong;Xilian;24.7608;113.535
 PK;Sindh;Karachi;24.8608;67.0104
-PK;Sindh;"Karachi (Block 13 C)";24.9108;67.0868
-PK;Sindh;"Karachi (Block 13 C)";24.9107;67.0868
+PK;Sindh;Karachi (Block 13 C);24.9108;67.0868
+PK;Sindh;Karachi (Block 13 C);24.9107;67.0868
 CN;Yunnan;Yuxi;24.355;102.542
 CN;Yunnan;Liqi;24.3883;102.552
-CN;Yunnan;"Kunming (Guandu Qu)";24.9947;102.746
+CN;Yunnan;Kunming (Guandu Qu);24.9947;102.746
 TW;Taiwan;Taoyuan;24.9936;121.301
 CN;Fujian;Xiamen;24.4795;118.089
 CN;Yunnan;Kunming;24.8797;102.833
 TW;Taiwan;Taichung;24.163;120.675
 US;Florida;Islamorada;24.9243;-80.6278
 TW;Taiwan;Taichung;24.1477;120.674
-TW;Taiwan;"Taoyuan District";24.9945;121.311
+TW;Taiwan;Taoyuan District;24.9945;121.311
 IN;Rajasthan;Udaipur;24.5854;73.7125
-SA;"Riyadh Region";Riyadh;24.7417;46.6874
-US;Florida;"Key West";24.557;-81.8068
-PK;Sindh;"Karachi (Block 5)";24.8267;67.029
-IN;Rajasthan;"Ābu Road";24.4801;72.7819
-BD;"Sylhet Division";Sylhet;24.899;91.872
+SA;Riyadh Region;Riyadh;24.7417;46.6874
+US;Florida;Key West;24.557;-81.8068
+PK;Sindh;Karachi (Block 5);24.8267;67.029
+IN;Rajasthan;Ābu Road;24.4801;72.7819
+BD;Sylhet Division;Sylhet;24.899;91.872
 IN;Tripura;Khowai;24.0796;91.5997
 IN;Manipur;Imphal;24.8081;93.9442
-IN;"Madhya Pradesh";Khajuraho;24.8481;79.9335
-IN;"Madhya Pradesh";Manāsa;24.4776;75.141
+IN;Madhya Pradesh;Khajuraho;24.8481;79.9335
+IN;Madhya Pradesh;Manāsa;24.4776;75.141
 IN;Rajasthan;Neemuch;24.4738;74.8727
 IN;Rajasthan;Nimach;24.4595;74.8662
-IN;"Madhya Pradesh";Mandsaur;24.0718;75.0699
-IN;"Madhya Pradesh";Kukdeshwar;24.4828;75.2675
-IN;"Madhya Pradesh";Jīran;24.3087;74.8909
-IN;Assam;"Silchar Part-X";24.8172;92.8136
-IN;"Uttar Pradesh";Robertsganj;24.6886;83.0678
-IN;Jharkhand;"Jhumri Telaiya";24.4349;85.5295
+IN;Madhya Pradesh;Mandsaur;24.0718;75.0699
+IN;Madhya Pradesh;Kukdeshwar;24.4828;75.2675
+IN;Madhya Pradesh;Jīran;24.3087;74.8909
+IN;Assam;Silchar Part-X;24.8172;92.8136
+IN;Uttar Pradesh;Robertsganj;24.6886;83.0678
+IN;Jharkhand;Jhumri Telaiya;24.4349;85.5295
 IN;Jharkhand;Rasikpur;24.2855;87.2538
 IN;Jharkhand;Madhupur;24.2742;86.6393
 IN;Bihar;Nawāda;24.8867;85.5436
@@ -132,19 +132,19 @@ IN;Jharkhand;Bishrāmpur;24.253;83.925
 IN;Jharkhand;Dumka;24.2678;87.2486
 IN;Bihar;Bhardua;24.92;83.7948
 IN;Gujarat;Dhanera;24.5097;72.0234
-PK;Sindh;"Karachi (Garden East)";24.8823;67.0265
-IN;"Madhya Pradesh";Garot;24.3234;75.652
+PK;Sindh;Karachi (Garden East);24.8823;67.0265
+IN;Madhya Pradesh;Garot;24.3234;75.652
 TW;Taiwan;Taichung;24.1047;120.681
-IN;Jharkhand;"Barki Saria";24.1759;85.8894
-BD;"Mymensingh Division";Mymensingh;24.7564;90.4065
-BD;"Mymensingh Division";Jamālpur;24.9196;89.9481
-BD;"Mymensingh Division";Purbadhala;24.9408;90.6003
-BD;"Dhaka Division";Sakhipur;24.3199;90.1694
-BD;"Rajshahi Division";Rajshahi;24.374;88.6011
-BD;"Rajshahi Division";Puthia;24.3654;88.8343
-TW;Taipei;"Shiding District";24.993;121.655
-BD;"Sylhet Division";"Maulavi Bāzār";24.4889;91.7708
-BD;"Dhaka Division";Tāngāil;24.2498;89.9165
+IN;Jharkhand;Barki Saria;24.1759;85.8894
+BD;Mymensingh Division;Mymensingh;24.7564;90.4065
+BD;Mymensingh Division;Jamālpur;24.9196;89.9481
+BD;Mymensingh Division;Purbadhala;24.9408;90.6003
+BD;Dhaka Division;Sakhipur;24.3199;90.1694
+BD;Rajshahi Division;Rajshahi;24.374;88.6011
+BD;Rajshahi Division;Puthia;24.3654;88.8343
+TW;Taipei;Shiding District;24.993;121.655
+BD;Sylhet Division;Maulavi Bāzār;24.4889;91.7708
+BD;Dhaka Division;Tāngāil;24.2498;89.9165
 CN;Fujian;Xiamen;24.4798;118.082
 CN;Fujian;Houxi;24.6313;118.033
 CN;Fujian;Quanzhou;24.8741;118.676
@@ -154,40 +154,40 @@ CN;Fujian;Xingbin;24.5691;118.035
 CN;Fujian;Zhangzhou;24.5135;117.647
 CN;Fujian;Zhangzhou;24.5133;117.656
 PK;Sindh;Karachi;24.8607;67.0011
-AE;"Abu Dhabi";"Abu Dhabi";24.4775;54.3767
-SA;"Riyadh Region";"Riyadh (King Fahd)";24.7442;46.6645
-AE;"Abu Dhabi";Suwayḩān;24.4624;55.3372
-US;Florida;"Key West";24.5552;-81.7816
-BD;"Rajshahi Division";"Pār Naogaon";24.8042;88.9488
-BD;"Rajshahi Division";Mohāmmadpur;24.8984;88.5284
-TW;Taiwan;"Bade District";24.9515;121.214
+AE;Abu Dhabi;Abu Dhabi;24.4775;54.3767
+SA;Riyadh Region;Riyadh (King Fahd);24.7442;46.6645
+AE;Abu Dhabi;Suwayḩān;24.4624;55.3372
+US;Florida;Key West;24.5552;-81.7816
+BD;Rajshahi Division;Pār Naogaon;24.8042;88.9488
+BD;Rajshahi Division;Mohāmmadpur;24.8984;88.5284
+TW;Taiwan;Bade District;24.9515;121.214
 TW;Taiwan;Neili;24.9515;121.214
 CN;Fujian;Fengcheng;24.7236;116.724
 CN;Fujian;Xiamen;24.4798;118.089
-CN;Fujian;"Quanzhou (Jinjiang Shi)";24.704;118.49
-CN;Fujian;"Yongning (Shishi Shi)";24.7262;118.708
+CN;Fujian;Quanzhou (Jinjiang Shi);24.704;118.49
+CN;Fujian;Yongning (Shishi Shi);24.7262;118.708
 CN;Fujian;Jinjiang;24.8198;118.574
 CN;Fujian;Aotoucun;24.5413;118.229
 CN;Fujian;Wu’an;24.6039;117.745
 CN;Fujian;Neikeng;24.7854;118.46
 PK;Sindh;Gharo;24.7418;67.5853
-PK;Sindh;"Karachi (Civil Lines)";24.8544;67.0258
-PK;Sindh;"Karachi (Block 10)";24.9126;67.0986
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.7089;46.6751
-SA;"Riyadh Region";Riyadh;24.7533;46.6767
+PK;Sindh;Karachi (Civil Lines);24.8544;67.0258
+PK;Sindh;Karachi (Block 10);24.9126;67.0986
+SA;Riyadh Region;Riyadh (Al Olaya);24.7089;46.6751
+SA;Riyadh Region;Riyadh;24.7533;46.6767
 PK;Sindh;Islamkot;24.699;70.1798
-BD;"Mymensingh Division";Gafargaon;24.432;90.5585
-BD;"Rajshahi Division";Mahastan;24.9611;89.3428
-BD;"Rajshahi Division";Bogra;24.851;89.3711
-BD;"Rajshahi Division";Shāhzādpur;24.1769;89.5988
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.6951;46.6806
-SA;"Riyadh Region";Riyadh;24.7054;46.6834
-QA;"Al Wakrah";Musay‘īd;24.9923;51.5507
-SA;"Al-Qassim Region";Alrmtheiah;24.743;42.9553
-SA;"Medina Region";Medina;24.5247;39.5692
-AE;"Abu Dhabi";"Abu Dhabi Region";24.4419;54.6501
-AE;"Abu Dhabi";"Abu Dhabi (Airport Area)";24.4419;54.6501
-PK;Sindh;"Karachi (Sector Five F)";24.8294;67.0991
+BD;Mymensingh Division;Gafargaon;24.432;90.5585
+BD;Rajshahi Division;Mahastan;24.9611;89.3428
+BD;Rajshahi Division;Bogra;24.851;89.3711
+BD;Rajshahi Division;Shāhzādpur;24.1769;89.5988
+SA;Riyadh Region;Riyadh (Al Olaya);24.6951;46.6806
+SA;Riyadh Region;Riyadh;24.7054;46.6834
+QA;Al Wakrah;Musay‘īd;24.9923;51.5507
+SA;Al-Qassim Region;Alrmtheiah;24.743;42.9553
+SA;Medina Region;Medina;24.5247;39.5692
+AE;Abu Dhabi;Abu Dhabi Region;24.4419;54.6501
+AE;Abu Dhabi;Abu Dhabi (Airport Area);24.4419;54.6501
+PK;Sindh;Karachi (Sector Five F);24.8294;67.0991
 TW;Taipei;Tuniugou;24.9493;121.337
 PK;Sindh;Karachi;24.9005;67.1682
 PK;Sindh;Naukot;24.8582;69.4015
@@ -204,101 +204,101 @@ CN;Jiangxi;Lishi;24.7721;115.026
 CN;Fujian;Fengzhou;24.9576;118.534
 EG;Aswan;Aswān;24.0908;32.8994
 DZ;Djanet;Djanet;24.5553;9.485
-EG;Aswan;"Kom Ombo";24.4767;32.9463
-BD;"Dhaka Division";Mirzāpur;24.1029;90.0984
-IN;"Madhya Pradesh";Bīna;24.1716;78.1876
-IN;"West Bengal";"Rampur Hat";24.1774;87.7828
-IN;"Madhya Pradesh";Soyatkalan;24.1886;76.1778
-IN;"West Bengal";Baharampur;24.1047;88.2515
-IN;"West Bengal";Jangipur;24.47;88.0766
-IN;"West Bengal";Raghunandanpur;24.6508;87.9728
-IN;"Madhya Pradesh";Churhat;24.4274;81.6695
-CN;Fujian;"Xiamen (Siming Qu)";24.4456;118.083
-PK;Sindh;"Karachi (Block 2)";24.816;67.0168
-PK;Sindh;"Karachi (Block 2)";24.8161;67.0168
+EG;Aswan;Kom Ombo;24.4767;32.9463
+BD;Dhaka Division;Mirzāpur;24.1029;90.0984
+IN;Madhya Pradesh;Bīna;24.1716;78.1876
+IN;West Bengal;Rampur Hat;24.1774;87.7828
+IN;Madhya Pradesh;Soyatkalan;24.1886;76.1778
+IN;West Bengal;Baharampur;24.1047;88.2515
+IN;West Bengal;Jangipur;24.47;88.0766
+IN;West Bengal;Raghunandanpur;24.6508;87.9728
+IN;Madhya Pradesh;Churhat;24.4274;81.6695
+CN;Fujian;Xiamen (Siming Qu);24.4456;118.083
+PK;Sindh;Karachi (Block 2);24.816;67.0168
+PK;Sindh;Karachi (Block 2);24.8161;67.0168
 PK;Sindh;Karachi;24.8783;67.0633
-PK;Sindh;"Karachi (Sector Five F)";24.828;67.0993
-PK;Sindh;"Karachi (Phase 2 Commercial Area)";24.8309;67.0665
-PK;Sindh;"Karachi (Gawalior Society)";24.9668;67.1204
+PK;Sindh;Karachi (Sector Five F);24.828;67.0993
+PK;Sindh;Karachi (Phase 2 Commercial Area);24.8309;67.0665
+PK;Sindh;Karachi (Gawalior Society);24.9668;67.1204
 CN;Guangxi;Liucheng;24.6674;109.235
 CN;Guangxi;Liuzhou;24.3255;109.415
 IN;Rajasthan;Udaipur;24.5858;73.7135
-IN;Rajasthan;"Udaipur (Ganesh Ghati)";24.5774;73.7005
-IN;"West Bengal";Murshidābād;24.1839;88.2717
-CN;Guangxi;"Guilin (Road Guangzhou)";24.8065;110.472
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.4934;54.3746
-PK;Sindh;"Karachi (Block 2)";24.8676;67.0608
-IN;"West Bengal";Nalhāti;24.297;87.829
-MX;Zacatecas;"La Laguna";24.214;-103.183
+IN;Rajasthan;Udaipur (Ganesh Ghati);24.5774;73.7005
+IN;West Bengal;Murshidābād;24.1839;88.2717
+CN;Guangxi;Guilin (Road Guangzhou);24.8065;110.472
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.4934;54.3746
+PK;Sindh;Karachi (Block 2);24.8676;67.0608
+IN;West Bengal;Nalhāti;24.297;87.829
+MX;Zacatecas;La Laguna;24.214;-103.183
 EG;Aswan;Darāw;24.408;32.9232
 EG;Aswan;Edfu;24.9792;32.8772
-EG;"Red Sea";"Ar Radīsīyah Qiblī";24.9065;32.8856
-BD;"Dhaka Division";"Bhairab Upazila";24.0531;90.9929
-CN;Fujian;"Xiamen (Siming Qu)";24.4899;118.183
-PK;Sindh;"Karachi (Lalazar)";24.8488;67.0001
-IN;"West Bengal";"Baharampur (Khagra)";24.1023;88.2561
-IN;"West Bengal";"Baharampur (Khagra)";24.1022;88.256
+EG;Red Sea;Ar Radīsīyah Qiblī;24.9065;32.8856
+BD;Dhaka Division;Bhairab Upazila;24.0531;90.9929
+CN;Fujian;Xiamen (Siming Qu);24.4899;118.183
+PK;Sindh;Karachi (Lalazar);24.8488;67.0001
+IN;West Bengal;Baharampur (Khagra);24.1023;88.2561
+IN;West Bengal;Baharampur (Khagra);24.1022;88.256
 TW;Taiwan;Taichung;24.1431;120.663
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9865;55.0905
-AE;"Abu Dhabi";"Abu Dhabi (Al Rahah)";24.4411;54.5754
-MX;Durango;"Cuencamé de Ceniceros";24.8712;-103.697
+AE;Dubai;Dubai (Mina Jebel Ali);24.9865;55.0905
+AE;Abu Dhabi;Abu Dhabi (Al Rahah);24.4411;54.5754
+MX;Durango;Cuencamé de Ceniceros;24.8712;-103.697
 MX;Durango;Contreras;24.0391;-104.557
-MX;Durango;"Durango (San Ignacio de Loyola)";24.0426;-104.662
-MX;"Nuevo León";Aramberri;24.0998;-99.8173
+MX;Durango;Durango (San Ignacio de Loyola);24.0426;-104.662
+MX;Nuevo León;Aramberri;24.0998;-99.8173
 MX;Sinaloa;Culiacán;24.8444;-107.42
 MX;Sinaloa;Bellavista;24.8136;-107.461
-CN;Fujian;"Xiamen (Siming Qu)";24.4884;118.136
-AE;"Abu Dhabi";"Abu Dhabi (Al Saadiyat Island)";24.5262;54.4205
-SA;"Riyadh Region";"Riyadh (Al ‘Amal)";24.6526;46.7164
-SA;"Riyadh Region";Riyadh;24.6459;46.7128
-SA;"Riyadh Region";"Riyadh (An Nakhīl)";24.7397;46.6423
-SA;"Riyadh Region";"Riyadh (An Nakheel)";24.7477;46.6417
-SA;"Riyadh Region";Riyadh;24.777;46.6648
+CN;Fujian;Xiamen (Siming Qu);24.4884;118.136
+AE;Abu Dhabi;Abu Dhabi (Al Saadiyat Island);24.5262;54.4205
+SA;Riyadh Region;Riyadh (Al ‘Amal);24.6526;46.7164
+SA;Riyadh Region;Riyadh;24.6459;46.7128
+SA;Riyadh Region;Riyadh (An Nakhīl);24.7397;46.6423
+SA;Riyadh Region;Riyadh (An Nakheel);24.7477;46.6417
+SA;Riyadh Region;Riyadh;24.777;46.6648
 TW;Taiwan;Changhua;24.0859;120.558
-SA;"Riyadh Region";"Riyadh (Ad Dhubbat)";24.6928;46.7228
-IN;"Uttar Pradesh";Lalitpur;24.6901;78.4192
+SA;Riyadh Region;Riyadh (Ad Dhubbat);24.6928;46.7228
+IN;Uttar Pradesh;Lalitpur;24.6901;78.4192
 IN;Bihar;Gaya;24.7914;85.0002
 IN;Jharkhand;Sarauni;24.8179;87.314
 IN;Jharkhand;Basukinath;24.3945;87.0864
-IN;"Madhya Pradesh";Chhatarpur;24.9168;79.591
+IN;Madhya Pradesh;Chhatarpur;24.9168;79.591
 IN;Rajasthan;Chechat;24.7667;75.8833
-IN;"Madhya Pradesh";Satna;24.5773;80.8272
-IN;"Madhya Pradesh";Singrauli;24.1997;82.6753
+IN;Madhya Pradesh;Satna;24.5773;80.8272
+IN;Madhya Pradesh;Singrauli;24.1997;82.6753
 IN;Manipur;Kamjong;24.8585;94.5155
 IN;Bihar;Sasarām;24.9494;84.0164
-US;Florida;"Key West";24.5483;-81.7964
-US;Florida;"Key West";24.5551;-81.78
+US;Florida;Key West;24.5483;-81.7964
+US;Florida;Key West;24.5551;-81.78
 US;Florida;Tavernier;24.9958;-80.5402
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.6929;46.6816
-SA;"Riyadh Region";"Riyadh (Gharnāţah)";24.7814;46.7301
-CN;Guangxi;"Hechi (Inner Mongolia)";24.0696;108.45
+SA;Riyadh Region;Riyadh (Al Olaya);24.6929;46.6816
+SA;Riyadh Region;Riyadh (Gharnāţah);24.7814;46.7301
+CN;Guangxi;Hechi (Inner Mongolia);24.0696;108.45
 CN;Fujian;Xike;24.6734;118.15
 CN;Fujian;Zhangzhou;24.513;117.647
 CN;Fujian;Xiaoxi;24.3525;117.291
 CN;Fujian;Liuwudiancun;24.5692;118.191
-PK;Sindh;"Karachi (Civil Lines)";24.8549;67.0256
-CN;Guangxi;"Liuzhou (Chengzhong Qu)";24.3386;109.432
-BD;"Dhaka Division";Gazipur;24.2204;90.4125
-BD;"Mymensingh Division";Gafargaon;24.2204;90.4125
+PK;Sindh;Karachi (Civil Lines);24.8549;67.0256
+CN;Guangxi;Liuzhou (Chengzhong Qu);24.3386;109.432
+BD;Dhaka Division;Gazipur;24.2204;90.4125
+BD;Mymensingh Division;Gafargaon;24.2204;90.4125
 TW;Taiwan;Xinli;24.1047;120.681
-CN;Fujian;"Xiamen (Jimei)";24.5764;118.097
-CN;Fujian;"Zhangzhou (Xiangcheng Qu)";24.5129;117.662
+CN;Fujian;Xiamen (Jimei);24.5764;118.097
+CN;Fujian;Zhangzhou (Xiangcheng Qu);24.5129;117.662
 CN;Fujian;Zhangzhou;24.5271;117.614
-CN;Fujian;"Xiamen (Jimei Qu)";24.6293;118.041
-CN;Fujian;"Xiamen (Tong’an Qu)";24.7231;118.152
-CN;Fujian;"Xiamen (Siming Qu)";24.4367;118.107
-CN;Fujian;"Xiamen (Jimei Qu)";24.5769;118.092
+CN;Fujian;Xiamen (Jimei Qu);24.6293;118.041
+CN;Fujian;Xiamen (Tong’an Qu);24.7231;118.152
+CN;Fujian;Xiamen (Siming Qu);24.4367;118.107
+CN;Fujian;Xiamen (Jimei Qu);24.5769;118.092
 CN;Guangdong;Shaoguan;24.8103;113.598
 CN;Guangdong;Shaoguan;24.8104;113.597
 CN;Guangdong;Meizhou;24.2884;116.123
-CN;Guangdong;"Heyuan (Lianping Xian)";24.3689;114.489
+CN;Guangdong;Heyuan (Lianping Xian);24.3689;114.489
 CN;Fujian;Chendai;24.822;118.6
 CN;Fujian;Gangwei;24.3172;118.007
 CN;Fujian;Guzhu;24.702;116.986
 IN;Rajasthan;Sānchor;24.7536;71.7728
 IN;Rajasthan;Dariba;24.9487;74.1342
 IN;Rajasthan;Aklera;24.4129;76.5672
-PK;Sindh;"Karachi (Pakistan Security Printing Corporation)";24.8885;67.1777
+PK;Sindh;Karachi (Pakistan Security Printing Corporation);24.8885;67.1777
 PK;Sindh;Badin;24.656;68.837
 TW;Taiwan;Taoyuan;24.9554;121.23
 TW;Taiwan;Hsinchu;24.8138;120.967
@@ -306,498 +306,498 @@ TW;Taiwan;Zhubei;24.8416;121.018
 TW;Taiwan;Taichung;24.1312;120.657
 TW;Taiwan;Changhua;24.0518;120.516
 TW;Taiwan;Miaoli;24.5602;120.821
-IN;Rajasthan;"Udaipur (Savina)";24.5462;73.7051
+IN;Rajasthan;Udaipur (Savina);24.5462;73.7051
 IN;Assam;Silchar;24.8333;92.7789
-BD;"Rajshahi Division";Nawābganj;24.5903;88.2744
-IN;"Madhya Pradesh";Buxwaha;24.2511;79.2862
-IN;"Madhya Pradesh";Chhatarpur;24.9177;79.5887
+BD;Rajshahi Division;Nawābganj;24.5903;88.2744
+IN;Madhya Pradesh;Buxwaha;24.2511;79.2862
+IN;Madhya Pradesh;Chhatarpur;24.9177;79.5887
 TW;Taiwan;Taichung;24.1632;120.675
 TW;Taipei;Da’anliao;24.971;121.431
 TW;Taiwan;Hsinchu;24.7796;121.007
 TW;Taiwan;Taichung;24.1557;120.663
-TW;Taiwan;"Zhongli District";24.9679;121.241
-TW;Taipei;"Banqiao District";24.9961;121.456
+TW;Taiwan;Zhongli District;24.9679;121.241
+TW;Taipei;Banqiao District;24.9961;121.456
 TW;Taiwan;Taichung;24.1435;120.664
 TW;Taiwan;Neili;24.9607;121.211
-TW;Taipei;"Xindian District";24.9669;121.542
-TW;Taipei;"Xindian District";24.968;121.541
+TW;Taipei;Xindian District;24.9669;121.542
+TW;Taipei;Xindian District;24.968;121.541
 TW;Taiwan;Fengyuan;24.2332;120.942
 TW;Taiwan;Hsinchu;24.7825;120.999
 TW;Taiwan;Taichung;24.1709;120.694
 TW;Taiwan;Daxi;24.8683;121.215
 TW;Taiwan;Daxi;24.8151;121.351
-TW;Taipei;"Xindian District";24.9824;121.509
+TW;Taipei;Xindian District;24.9824;121.509
 TW;Taiwan;Xizhou;24.2578;120.662
 TW;Taiwan;Hsinchu;24.8002;120.968
 TW;Taiwan;Zhongliao;24.0858;120.511
-TW;Taipei;"Shulin District";24.9794;121.439
-TW;Taipei;"Shulin District";24.9696;121.437
-TW;Taipei;"Banqiao District";24.9997;121.497
-TW;Taipei;"Xindian District";24.9783;121.539
+TW;Taipei;Shulin District;24.9794;121.439
+TW;Taipei;Shulin District;24.9696;121.437
+TW;Taipei;Banqiao District;24.9997;121.497
+TW;Taipei;Xindian District;24.9783;121.539
 TW;Taiwan;Luodong;24.6756;121.771
 TW;Taiwan;Buzi;24.1848;120.631
 TW;Taiwan;Fengyuan;24.2402;120.706
 TW;Taiwan;Taichung;24.156;120.663
 TW;Taiwan;Taichung;24.1577;120.681
-TW;Taiwan;"Toufen Township";24.7093;120.925
+TW;Taiwan;Toufen Township;24.7093;120.925
 TW;Taiwan;Taichung;24.1693;120.639
 TW;Taiwan;Neili;24.9376;121.217
-TW;Taipei;"Pinglin District";24.9157;121.674
-TW;Taipei;"Banqiao District";24.9993;121.491
+TW;Taipei;Pinglin District;24.9157;121.674
+TW;Taipei;Banqiao District;24.9993;121.491
 TW;Taiwan;Buzi;24.1829;120.617
 TW;Taiwan;Miaoli;24.5499;120.815
 TW;Taiwan;Neili;24.9605;121.241
 TW;Taiwan;Buzi;24.2887;120.508
-TW;Taipei;"Yingge District";24.9622;121.331
-IN;"West Bengal";Lālgola;24.4224;88.2524
-CN;Guangdong;"Meizhou (Meijiang Qu)";24.2654;116.082
+TW;Taipei;Yingge District;24.9622;121.331
+IN;West Bengal;Lālgola;24.4224;88.2524
+CN;Guangdong;Meizhou (Meijiang Qu);24.2654;116.082
 CN;Guangdong;Meizhou;24.3509;116.694
-CN;Guangdong;"Meizhou (Sanlou)";24.2509;116.099
-CN;Guangdong;"Qingyuan (Liannan Yao Autonomous County)";24.726;112.287
+CN;Guangdong;Meizhou (Sanlou);24.2509;116.099
+CN;Guangdong;Qingyuan (Liannan Yao Autonomous County);24.726;112.287
 TW;Taiwan;Neili;24.9722;121.205
-TW;Taipei;"Banqiao District";24.9962;121.485
+TW;Taipei;Banqiao District;24.9962;121.485
 TW;Taiwan;Yilan;24.7021;121.738
 TW;Taiwan;Zhubei;24.8387;121.018
 TW;Taiwan;Changhua;24.0717;120.562
 TW;Fukien;Jincheng;24.3488;118.329
-TW;Taipei;"Banqiao District";24.9953;121.457
-US;Florida;"Key West";24.5477;-81.794
-BS;"Cat Island";"Arthur’s Town";24.6224;-75.6715
+TW;Taipei;Banqiao District;24.9953;121.457
+US;Florida;Key West;24.5477;-81.794
+BS;Cat Island;Arthur’s Town;24.6224;-75.6715
 US;Florida;Marathon;24.7148;-81.0759
-US;Florida;"Key West";24.5583;-81.7896
+US;Florida;Key West;24.5583;-81.7896
 US;Florida;Islamorada;24.9421;-80.607
-US;Florida;"Key West";24.5484;-81.8068
-US;Florida;"Key West";24.5648;-81.7675
-PK;Sindh;"Karachi (Jamshed Town)";24.8619;67.0707
+US;Florida;Key West;24.5484;-81.8068
+US;Florida;Key West;24.5648;-81.7675
+PK;Sindh;Karachi (Jamshed Town);24.8619;67.0707
 US;Florida;Plantation;24.9762;-80.5523
-US;Florida;"Big Pine Key";24.6699;-81.354
+US;Florida;Big Pine Key;24.6699;-81.354
 US;Florida;Islamorada;24.9239;-80.6307
-SA;"Riyadh Region";"Riyadh (Al Murabba‘)";24.6596;46.7104
-US;Florida;"Key West";24.5586;-81.7991
-US;Florida;"Key West";24.5553;-81.8008
+SA;Riyadh Region;Riyadh (Al Murabba‘);24.6596;46.7104
+US;Florida;Key West;24.5586;-81.7991
+US;Florida;Key West;24.5553;-81.8008
 US;Florida;Marathon;24.726;-81.0446
-US;Florida;"Key West";24.5586;-81.8078
+US;Florida;Key West;24.5586;-81.8078
 TW;Taiwan;Changhua;24.0841;120.553
-US;Florida;"Cudjoe Key";24.6715;-81.4984
-SA;"Riyadh Region";"Riyadh (Ţaybah)";24.5588;46.816
-SA;"Ar Riyāḑ";Riyadh;24.6815;46.6382
-SA;"Riyadh Region";"Riyadh (Ar Rimāyah)";24.7545;46.8533
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.7041;46.6814
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.6905;46.6842
-SA;"Riyadh Region";"Riyadh (Al Wishām)";24.6437;46.703
-AE;"Abu Dhabi";"Abu Dhabi (Tamouh)";24.4881;54.395
-SA;"Riyadh Region";"Ain Albaraha";24.7581;43.7739
-SA;"Riyadh Region";"Riyadh (An Nakheel)";24.7166;46.644
-SA;"Riyadh Region";"Riyadh (Ar Rabwah)";24.6954;46.7355
-SA;"Riyadh Region";"Riyadh (Al Malazz)";24.6718;46.7302
-AE;"Abu Dhabi";"Abu Dhabi (Masdar City)";24.4267;54.615
-SA;"Riyadh Region";Riyadh;24.7117;46.7242
-SA;"Ar Riyāḑ";"Riyadh (Al Malqā)";24.8038;46.6056
-SA;"Riyadh Region";"Riyadh (Al Malqā)";24.8038;46.6056
-SA;"Riyadh Region";Riyadh;24.7679;46.7149
-SA;"Riyadh Region";Riyadh;24.7494;46.9028
-SA;"Riyadh Region";Riyadh;24.9361;46.4717
-SA;"Riyadh Region";"Riyadh (Al Murabba‘)";24.645;46.7063
-SA;"Riyadh Region";Riyadh;24.8247;46.615
-SA;"Riyadh Region";"Riyadh (An Nakheel)";24.7453;46.6551
-SA;"Riyadh Region";"Riyadh (Almasiaf)";24.7623;46.6868
-AE;"Abu Dhabi";"Al Ain";24.1302;55.8023
-AE;"Abu Dhabi";"Abu Dhabi";24.4667;54.3667
-AE;"Abu Dhabi";"Al Ain";24.255;55.619
-AE;"Abu Dhabi";"Al Ain";24.2242;55.7695
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.4622;54.3896
-AE;"Abu Dhabi";"Abu Dhabi (Al Zahiyah)";24.4966;54.3793
-AE;"Abu Dhabi";"Abu Dhabi (Al Bateen)";24.4639;54.3356
-AE;"Abu Dhabi";"Abu Dhabi (Al Bateen)";24.4574;54.3314
-AE;"Abu Dhabi";"Abu Dhabi (Musaffah)";24.3663;54.5197
-AE;"Abu Dhabi";"Abu Dhabi (Capital District)";24.3663;54.565
-AE;"Abu Dhabi";"Abu Dhabi (Al Hosn)";24.4776;54.3502
-AE;"Abu Dhabi";"Abu Dhabi (Al Bateen)";24.4575;54.3313
-AE;Dubai;"Dubai (Green Community Village)";24.9996;55.1687
-AE;Dubai;"Dubai (Dubai Investment Park First)";24.9928;55.1496
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9564;55.0729
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.98;55.0787
-SA;"Ar Riyāḑ";Riyadh;24.7136;46.6753
-AE;"Abu Dhabi";"Al Faqaa";24.646;55.2249
-AE;"Abu Dhabi";"Al Ain";24.2232;55.7229
-SA;"Riyadh Region";Riyadh;24.7487;46.6575
-SA;"Riyadh Region";"Riyadh (Al Khuzāmá)";24.7218;46.5957
-SA;"Ar Riyāḑ";Riyadh;24.7117;46.7242
-SA;"Ar Riyāḑ";"Riyadh (Taybah)";24.5588;46.816
-SA;"Ar Riyāḑ";"Riyadh (Ţaybah)";24.5588;46.816
-SA;"Riyadh Region";"Riyadh (An Nahḑah)";24.7675;46.8316
-SA;"Riyadh Region";"Riyadh (King Fahd)";24.7311;46.6701
-SA;"Riyadh Region";"Riyadh (Almasiaf)";24.7708;46.6708
-SA;"Riyadh Region";"Riyadh (Aḑ Ḑubbāţ)";24.6795;46.7246
-AE;"Abu Dhabi";"Al Khatim";24.2561;55.0023
-AE;Dubai;"Dubai (Dubai Industrial City)";24.8449;55.069
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9845;55.0906
-SA;"Riyadh Region";"Riyadh (As Sulimaniyah)";24.6869;46.6854
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.6951;46.6805
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.6897;46.6833
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.687;46.6855
-AE;"Abu Dhabi";"Abu Dhabi (Najmat Abu Dhabi)";24.4836;54.4063
-AE;"Abu Dhabi";"Abu Dhabi (Al Mushrif)";24.4376;54.381
-SA;"Riyadh Region";"Al Kharj (An Nuzhah)";24.1632;47.3391
-SA;"Riyadh Region";Riyadh;24.7515;46.7206
-SA;"Medina Region";Yanbu;24.0232;38.19
-SA;"Riyadh Region";"Riyadh (Al Maather)";24.6688;46.673
-SA;"Riyadh Region";"Riyadh (As Sulimaniyah)";24.6801;46.7066
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.6992;46.6795
-AE;Dubai;"Discovery Gardens";24.9844;55.1876
+US;Florida;Cudjoe Key;24.6715;-81.4984
+SA;Riyadh Region;Riyadh (Ţaybah);24.5588;46.816
+SA;Ar Riyāḑ;Riyadh;24.6815;46.6382
+SA;Riyadh Region;Riyadh (Ar Rimāyah);24.7545;46.8533
+SA;Riyadh Region;Riyadh (Al Olaya);24.7041;46.6814
+SA;Riyadh Region;Riyadh (Al Olaya);24.6905;46.6842
+SA;Riyadh Region;Riyadh (Al Wishām);24.6437;46.703
+AE;Abu Dhabi;Abu Dhabi (Tamouh);24.4881;54.395
+SA;Riyadh Region;Ain Albaraha;24.7581;43.7739
+SA;Riyadh Region;Riyadh (An Nakheel);24.7166;46.644
+SA;Riyadh Region;Riyadh (Ar Rabwah);24.6954;46.7355
+SA;Riyadh Region;Riyadh (Al Malazz);24.6718;46.7302
+AE;Abu Dhabi;Abu Dhabi (Masdar City);24.4267;54.615
+SA;Riyadh Region;Riyadh;24.7117;46.7242
+SA;Ar Riyāḑ;Riyadh (Al Malqā);24.8038;46.6056
+SA;Riyadh Region;Riyadh (Al Malqā);24.8038;46.6056
+SA;Riyadh Region;Riyadh;24.7679;46.7149
+SA;Riyadh Region;Riyadh;24.7494;46.9028
+SA;Riyadh Region;Riyadh;24.9361;46.4717
+SA;Riyadh Region;Riyadh (Al Murabba‘);24.645;46.7063
+SA;Riyadh Region;Riyadh;24.8247;46.615
+SA;Riyadh Region;Riyadh (An Nakheel);24.7453;46.6551
+SA;Riyadh Region;Riyadh (Almasiaf);24.7623;46.6868
+AE;Abu Dhabi;Al Ain;24.1302;55.8023
+AE;Abu Dhabi;Abu Dhabi;24.4667;54.3667
+AE;Abu Dhabi;Al Ain;24.255;55.619
+AE;Abu Dhabi;Al Ain;24.2242;55.7695
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.4622;54.3896
+AE;Abu Dhabi;Abu Dhabi (Al Zahiyah);24.4966;54.3793
+AE;Abu Dhabi;Abu Dhabi (Al Bateen);24.4639;54.3356
+AE;Abu Dhabi;Abu Dhabi (Al Bateen);24.4574;54.3314
+AE;Abu Dhabi;Abu Dhabi (Musaffah);24.3663;54.5197
+AE;Abu Dhabi;Abu Dhabi (Capital District);24.3663;54.565
+AE;Abu Dhabi;Abu Dhabi (Al Hosn);24.4776;54.3502
+AE;Abu Dhabi;Abu Dhabi (Al Bateen);24.4575;54.3313
+AE;Dubai;Dubai (Green Community Village);24.9996;55.1687
+AE;Dubai;Dubai (Dubai Investment Park First);24.9928;55.1496
+AE;Dubai;Dubai (Mina Jebel Ali);24.9564;55.0729
+AE;Dubai;Dubai (Mina Jebel Ali);24.98;55.0787
+SA;Ar Riyāḑ;Riyadh;24.7136;46.6753
+AE;Abu Dhabi;Al Faqaa;24.646;55.2249
+AE;Abu Dhabi;Al Ain;24.2232;55.7229
+SA;Riyadh Region;Riyadh;24.7487;46.6575
+SA;Riyadh Region;Riyadh (Al Khuzāmá);24.7218;46.5957
+SA;Ar Riyāḑ;Riyadh;24.7117;46.7242
+SA;Ar Riyāḑ;Riyadh (Taybah);24.5588;46.816
+SA;Ar Riyāḑ;Riyadh (Ţaybah);24.5588;46.816
+SA;Riyadh Region;Riyadh (An Nahḑah);24.7675;46.8316
+SA;Riyadh Region;Riyadh (King Fahd);24.7311;46.6701
+SA;Riyadh Region;Riyadh (Almasiaf);24.7708;46.6708
+SA;Riyadh Region;Riyadh (Aḑ Ḑubbāţ);24.6795;46.7246
+AE;Abu Dhabi;Al Khatim;24.2561;55.0023
+AE;Dubai;Dubai (Dubai Industrial City);24.8449;55.069
+AE;Dubai;Dubai (Mina Jebel Ali);24.9845;55.0906
+SA;Riyadh Region;Riyadh (As Sulimaniyah);24.6869;46.6854
+SA;Riyadh Region;Riyadh (Al Olaya);24.6951;46.6805
+SA;Riyadh Region;Riyadh (Al Olaya);24.6897;46.6833
+SA;Riyadh Region;Riyadh (Al Olaya);24.687;46.6855
+AE;Abu Dhabi;Abu Dhabi (Najmat Abu Dhabi);24.4836;54.4063
+AE;Abu Dhabi;Abu Dhabi (Al Mushrif);24.4376;54.381
+SA;Riyadh Region;Al Kharj (An Nuzhah);24.1632;47.3391
+SA;Riyadh Region;Riyadh;24.7515;46.7206
+SA;Medina Region;Yanbu;24.0232;38.19
+SA;Riyadh Region;Riyadh (Al Maather);24.6688;46.673
+SA;Riyadh Region;Riyadh (As Sulimaniyah);24.6801;46.7066
+SA;Riyadh Region;Riyadh (Al Olaya);24.6992;46.6795
+AE;Dubai;Discovery Gardens;24.9844;55.1876
 AE;Dubai;Dubai;24.9954;55.1184
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.986;55.0908
-AE;Dubai;"Jebel Ali";24.9105;55.1188
-AE;"Abu Dhabi";"Abu Dhabi";24.4588;54.3737
-AE;"Abu Dhabi";"Abu Dhabi";24.4715;54.3476
-AE;"Abu Dhabi";"Abu Dhabi";24.5289;54.4036
-AE;"Abu Dhabi";"Abu Dhabi";24.3331;54.5239
-AE;"Abu Dhabi";"Abu Dhabi (Al Sa'Diyat)";24.5452;54.4347
-AE;"Abu Dhabi";"Abu Dhabi";24.4588;54.3217
-AE;"Abu Dhabi";"Abu Dhabi Region";24.2992;54.6973
-AE;"Abu Dhabi";"Abu Dhabi Region (Al Shawamekh)";24.3582;54.6592
-AE;"Abu Dhabi";"Abu Dhabi";24.4961;54.3832
-AE;"Abu Dhabi";"Abu Dhabi";24.4316;54.4352
-AE;"Abu Dhabi";"Abu Dhabi (Abu Dhabi Industrial City)";24.3028;54.4939
-AE;"Abu Dhabi";"Abu Dhabi";24.4551;54.3947
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9777;55.0911
-AE;"Abu Dhabi";"Abu Dhabi";24.3953;54.3994
-AE;"Abu Dhabi";"Abu Dhabi";24.4874;54.4026
-AE;"Abu Dhabi";"Abu Dhabi (Mohamed Bin Zayed City)";24.3308;54.5355
-AE;Dubai;"Dubai (Dubai Investment Park First)";24.9868;55.1491
-SA;"Riyadh Region";"Ad Dir‘īyah";24.9361;46.4717
-SA;"Riyadh Region";"Ad Dawādimī (King Fahed District)";24.5347;44.4281
-SA;"Riyadh Region";"Riyadh (Al Khuzāmá)";24.7195;46.6
-SA;"Riyadh Region";Riyadh;24.7458;46.5794
-SA;"Riyadh Region";Riyadh;24.763;46.8204
-US;Florida;"Key Colony Beach";24.721;-81.0187
-US;Florida;"Stock Island";24.5671;-81.7384
-US;Florida;"Duck Key";24.771;-80.912
-CN;Fujian;"Xiamen (Siming Qu)";24.486;118.187
-IN;"West Bengal";"Rampurhat I";24.1745;87.7793
+AE;Dubai;Dubai (Mina Jebel Ali);24.986;55.0908
+AE;Dubai;Jebel Ali;24.9105;55.1188
+AE;Abu Dhabi;Abu Dhabi;24.4588;54.3737
+AE;Abu Dhabi;Abu Dhabi;24.4715;54.3476
+AE;Abu Dhabi;Abu Dhabi;24.5289;54.4036
+AE;Abu Dhabi;Abu Dhabi;24.3331;54.5239
+AE;Abu Dhabi;Abu Dhabi (Al Sa'Diyat);24.5452;54.4347
+AE;Abu Dhabi;Abu Dhabi;24.4588;54.3217
+AE;Abu Dhabi;Abu Dhabi Region;24.2992;54.6973
+AE;Abu Dhabi;Abu Dhabi Region (Al Shawamekh);24.3582;54.6592
+AE;Abu Dhabi;Abu Dhabi;24.4961;54.3832
+AE;Abu Dhabi;Abu Dhabi;24.4316;54.4352
+AE;Abu Dhabi;Abu Dhabi (Abu Dhabi Industrial City);24.3028;54.4939
+AE;Abu Dhabi;Abu Dhabi;24.4551;54.3947
+AE;Dubai;Dubai (Mina Jebel Ali);24.9777;55.0911
+AE;Abu Dhabi;Abu Dhabi;24.3953;54.3994
+AE;Abu Dhabi;Abu Dhabi;24.4874;54.4026
+AE;Abu Dhabi;Abu Dhabi (Mohamed Bin Zayed City);24.3308;54.5355
+AE;Dubai;Dubai (Dubai Investment Park First);24.9868;55.1491
+SA;Riyadh Region;Ad Dir‘īyah;24.9361;46.4717
+SA;Riyadh Region;Ad Dawādimī (King Fahed District);24.5347;44.4281
+SA;Riyadh Region;Riyadh (Al Khuzāmá);24.7195;46.6
+SA;Riyadh Region;Riyadh;24.7458;46.5794
+SA;Riyadh Region;Riyadh;24.763;46.8204
+US;Florida;Key Colony Beach;24.721;-81.0187
+US;Florida;Stock Island;24.5671;-81.7384
+US;Florida;Duck Key;24.771;-80.912
+CN;Fujian;Xiamen (Siming Qu);24.486;118.187
+IN;West Bengal;Rampurhat I;24.1745;87.7793
 EG;Aswan;Aswān;24.0889;32.8998
-LY;"Al Kufrah";"Al Jawf";24.1989;23.2909
-CN;Fujian;"Xiamen (Siming Qu)";24.484;118.181
-BD;"Dhaka Division";Sakhipur;24.4769;90.0617
-BD;"Rajshahi Division";Natore;24.4111;88.9867
-PK;Sindh;"Karachi (City Railway Colony)";24.8485;67.0037
-PK;Sindh;"Karachi (Seari Quarters)";24.8489;66.9986
-PK;Sindh;"Karachi (Lalazar)";24.8449;66.9964
-PK;Sindh;"Karachi (New Chali)";24.8503;67.0089
-BD;"Dhaka Division";Kishorganj;24.4394;90.7742
-BD;"Dhaka Division";Kishorganj;24.4394;90.7829
-PK;Sindh;"Karachi (Sadr)";24.8561;67.0283
-BD;"Rajshahi Division";Ishwardi;24.0682;89.055
-PK;Sindh;"Karachi (Block 4)";24.8024;67.0294
-CN;Fujian;"Xiamen (Huli Qu)";24.5259;118.139
+LY;Al Kufrah;Al Jawf;24.1989;23.2909
+CN;Fujian;Xiamen (Siming Qu);24.484;118.181
+BD;Dhaka Division;Sakhipur;24.4769;90.0617
+BD;Rajshahi Division;Natore;24.4111;88.9867
+PK;Sindh;Karachi (City Railway Colony);24.8485;67.0037
+PK;Sindh;Karachi (Seari Quarters);24.8489;66.9986
+PK;Sindh;Karachi (Lalazar);24.8449;66.9964
+PK;Sindh;Karachi (New Chali);24.8503;67.0089
+BD;Dhaka Division;Kishorganj;24.4394;90.7742
+BD;Dhaka Division;Kishorganj;24.4394;90.7829
+PK;Sindh;Karachi (Sadr);24.8561;67.0283
+BD;Rajshahi Division;Ishwardi;24.0682;89.055
+PK;Sindh;Karachi (Block 4);24.8024;67.0294
+CN;Fujian;Xiamen (Huli Qu);24.5259;118.139
 TW;Taiwan;Muzha;24.9911;121.559
-PK;Sindh;"Karachi (Block 6)";24.861;67.0704
-BD;"Dhaka Division";Mirzāpur;24.1053;90.1051
+PK;Sindh;Karachi (Block 6);24.861;67.0704
+BD;Dhaka Division;Mirzāpur;24.1053;90.1051
 IN;Jharkhand;Dubrājpur;24.8318;87.2618
 IN;Bihar;Bānka;24.8809;86.9226
-BD;"Sylhet Division";Habiganj;24.3804;91.413
-BD;"Dhaka Division";Tāngāil;24.2503;89.9168
-PK;Sindh;"Karachi (Delhi Mercantile Society)";24.8777;67.0689
-PK;Sindh;"Karachi (Civil Lines)";24.8549;67.026
-BD;"Mymensingh Division";Sarishābāri;24.7513;89.8313
-PK;Sindh;"Karachi (City Railway Colony)";24.8488;67.0027
-IN;"Uttar Pradesh";Robertsganj;24.685;83.0684
-BD;"Dhaka Division";"Nagar Naluakot";24.1561;90.7728
-BD;"Dhaka Division";"Bhairab Bāzār";24.0524;90.9764
-BD;"Rajshahi Division";Pābna;24.0064;89.2372
+BD;Sylhet Division;Habiganj;24.3804;91.413
+BD;Dhaka Division;Tāngāil;24.2503;89.9168
+PK;Sindh;Karachi (Delhi Mercantile Society);24.8777;67.0689
+PK;Sindh;Karachi (Civil Lines);24.8549;67.026
+BD;Mymensingh Division;Sarishābāri;24.7513;89.8313
+PK;Sindh;Karachi (City Railway Colony);24.8488;67.0027
+IN;Uttar Pradesh;Robertsganj;24.685;83.0684
+BD;Dhaka Division;Nagar Naluakot;24.1561;90.7728
+BD;Dhaka Division;Bhairab Bāzār;24.0524;90.9764
+BD;Rajshahi Division;Pābna;24.0064;89.2372
 CN;Yunnan;Kunming;24.8801;102.833
-CN;Guangxi;"Chengzhong (Chengzhong Qu)";24.3242;109.432
-CN;Fujian;"Fashi (Fengze Qu)";24.8835;118.619
-CN;Fujian;"Xiamen (Siming Qu)";24.4631;118.074
-BD;"Rajshahi Division";Sirajganj;24.4577;89.708
-IN;"Madhya Pradesh";"Satna (Railway Colony)";24.5737;80.8359
-PK;Sindh;"Karachi (Block 14)";24.8974;67.0774
+CN;Guangxi;Chengzhong (Chengzhong Qu);24.3242;109.432
+CN;Fujian;Fashi (Fengze Qu);24.8835;118.619
+CN;Fujian;Xiamen (Siming Qu);24.4631;118.074
+BD;Rajshahi Division;Sirajganj;24.4577;89.708
+IN;Madhya Pradesh;Satna (Railway Colony);24.5737;80.8359
+PK;Sindh;Karachi (Block 14);24.8974;67.0774
 TW;Taiwan;Taichung;24.1077;120.65
-CN;Fujian;"Xiamen (Huli Qu)";24.5094;118.101
+CN;Fujian;Xiamen (Huli Qu);24.5094;118.101
 IN;Bihar;Jamūī;24.9261;86.2253
 TW;Taiwan;Taichung;24.1581;120.643
-BD;"Rajshahi Division";Kālihāti;24.3868;89.9943
-PK;Sindh;"Karachi (Umar Colony)";24.8651;67.0789
+BD;Rajshahi Division;Kālihāti;24.3868;89.9943
+PK;Sindh;Karachi (Umar Colony);24.8651;67.0789
 TW;Taiwan;Taichung;24.1078;120.638
-PK;Sindh;"Karachi (Sector Five F)";24.8448;67.1551
-BD;"Dhaka Division";Gazipur;24.0003;90.323
-BD;"Sylhet Division";"Maulavi Bāzār";24.4835;91.7798
-BD;"Mymensingh Division";Mymensingh;24.7574;90.4067
-BD;"Rajshahi Division";Ishwardi;24.1488;89.0386
-CN;Fujian;"Quanzhou (Lingxiu)";24.7295;118.615
+PK;Sindh;Karachi (Sector Five F);24.8448;67.1551
+BD;Dhaka Division;Gazipur;24.0003;90.323
+BD;Sylhet Division;Maulavi Bāzār;24.4835;91.7798
+BD;Mymensingh Division;Mymensingh;24.7574;90.4067
+BD;Rajshahi Division;Ishwardi;24.1488;89.0386
+CN;Fujian;Quanzhou (Lingxiu);24.7295;118.615
 TW;Taiwan;Hsinchu;24.7809;121.005
-BD;"Khulna Division";Bherāmāra;24.0245;88.9923
-CN;Guangxi;"Bama (Bama Yao Autonomous County)";24.1458;107.245
-CN;Fujian;"Xiamen (Jimei Qu)";24.5995;118.103
+BD;Khulna Division;Bherāmāra;24.0245;88.9923
+CN;Guangxi;Bama (Bama Yao Autonomous County);24.1458;107.245
+CN;Fujian;Xiamen (Jimei Qu);24.5995;118.103
 TW;Taiwan;Taichung;24.1573;120.683
-TW;Taipei;"Banqiao District";24.983;121.455
-BD;Chittagong;"Shahbazpur Town";24.053;91.1719
-BD;Chittagong;"Shahbazpur Town";24.0475;91.147
-PK;Sindh;"Karachi (Sardar Town Malir)";24.8765;67.1965
-BD;"Mymensingh Division";Mymensingh;24.7471;90.4203
-IN;Manipur;"Imphal (Sagolband)";24.8;93.9344
+TW;Taipei;Banqiao District;24.983;121.455
+BD;Chittagong;Shahbazpur Town;24.053;91.1719
+BD;Chittagong;Shahbazpur Town;24.0475;91.147
+PK;Sindh;Karachi (Sardar Town Malir);24.8765;67.1965
+BD;Mymensingh Division;Mymensingh;24.7471;90.4203
+IN;Manipur;Imphal (Sagolband);24.8;93.9344
 IN;Manipur;Bishnupur;24.6285;93.7618
-IN;Rajasthan;"Udaipur (Ganesh Ghati)";24.5774;73.7003
-PK;Sindh;"Karachi (Block 9)";24.8275;67.0367
+IN;Rajasthan;Udaipur (Ganesh Ghati);24.5774;73.7003
+PK;Sindh;Karachi (Block 9);24.8275;67.0367
 IN;Gujarat;Tharād;24.396;71.6258
-IN;Rajasthan;"Nimach (Neemuch Chawni)";24.4664;74.8609
-PK;Sindh;"Karachi (Block 5)";24.827;67.0292
-BD;"Rajshahi Division";Rajshahi;24.3745;88.6042
-IN;Rajasthan;"Udaipur (Goverdhan Villas)";24.5407;73.6866
-BD;"Rajshahi Division";Pābna;24.0846;89.2186
-PK;Sindh;"Karachi (Phase 1)";24.8376;67.0677
+IN;Rajasthan;Nimach (Neemuch Chawni);24.4664;74.8609
+PK;Sindh;Karachi (Block 5);24.827;67.0292
+BD;Rajshahi Division;Rajshahi;24.3745;88.6042
+IN;Rajasthan;Udaipur (Goverdhan Villas);24.5407;73.6866
+BD;Rajshahi Division;Pābna;24.0846;89.2186
+PK;Sindh;Karachi (Phase 1);24.8376;67.0677
 IN;Manipur;Imphal;24.7894;93.9214
-BD;"Dhaka Division";Tāngāil;24.2513;89.9167
-PK;Sindh;"Karachi (Block 14)";24.8974;67.0776
-BD;"Mymensingh Division";Mymensingh;24.7574;90.4024
-IN;Gujarat;"Pālanpur (Maheshwari Colony)";24.1932;72.4373
-IN;Gujarat;"Pālanpur (Dhundhiyawadi)";24.172;72.4255
-PK;Sindh;"Karachi (Zone C)";24.8293;67.0216
-PK;Sindh;"Karachi (Tariq Lines)";24.8569;67.0421
-PK;Sindh;"Karachi (Block 4)";24.8025;67.0295
-CN;Fujian;"Amoy (Huli Qu)";24.5306;118.126
-BD;"Rajshahi Division";Bogra;24.8497;89.3729
-PK;Sindh;"Karachi (Qayumabad)";24.8323;67.0809
+BD;Dhaka Division;Tāngāil;24.2513;89.9167
+PK;Sindh;Karachi (Block 14);24.8974;67.0776
+BD;Mymensingh Division;Mymensingh;24.7574;90.4024
+IN;Gujarat;Pālanpur (Maheshwari Colony);24.1932;72.4373
+IN;Gujarat;Pālanpur (Dhundhiyawadi);24.172;72.4255
+PK;Sindh;Karachi (Zone C);24.8293;67.0216
+PK;Sindh;Karachi (Tariq Lines);24.8569;67.0421
+PK;Sindh;Karachi (Block 4);24.8025;67.0295
+CN;Fujian;Amoy (Huli Qu);24.5306;118.126
+BD;Rajshahi Division;Bogra;24.8497;89.3729
+PK;Sindh;Karachi (Qayumabad);24.8323;67.0809
 CN;Jiangxi;Longnan;24.8886;114.822
-BD;"Mymensingh Division";Muktāgācha;24.7648;90.257
-IN;Rajasthan;"Udaipur (Pahada)";24.5925;73.7251
-PK;Sindh;"Karachi (Block 6)";24.8625;67.0726
+BD;Mymensingh Division;Muktāgācha;24.7648;90.257
+IN;Rajasthan;Udaipur (Pahada);24.5925;73.7251
+PK;Sindh;Karachi (Block 6);24.8625;67.0726
 TW;Taiwan;Taichung;24.1601;120.638
-PK;Sindh;"Karachi (Block 4)";24.8021;67.0298
+PK;Sindh;Karachi (Block 4);24.8021;67.0298
 PK;Sindh;Karachi;24.8072;67.077
 IN;Gujarat;Ambaji;24.3317;72.8456
-PK;Sindh;"Karachi (North Karachi)";24.9729;67.0643
-BD;"Dhaka Division";Kaliakair;24.0615;90.2284
-IN;Bihar;"Gaya (Judges Colony)";24.7887;84.9903
-PK;Sindh;"Karachi (Seari Quarters)";24.8498;67.005
-PK;Sindh;"Karachi (Seari Quarters)";24.8492;66.999
-PK;Sindh;"Karachi (Malir Cantonment)";24.8937;67.2163
+PK;Sindh;Karachi (North Karachi);24.9729;67.0643
+BD;Dhaka Division;Kaliakair;24.0615;90.2284
+IN;Bihar;Gaya (Judges Colony);24.7887;84.9903
+PK;Sindh;Karachi (Seari Quarters);24.8498;67.005
+PK;Sindh;Karachi (Seari Quarters);24.8492;66.999
+PK;Sindh;Karachi (Malir Cantonment);24.8937;67.2163
 TW;Taipei;Nanjing;24.9555;121.353
-BD;"Mymensingh Division";Netrakona;24.8835;90.729
-BD;"Rajshahi Division";Bogra;24.8422;89.3761
-BD;"Rajshahi Division";Kazipur;24.6545;89.6346
-BD;"Rajshahi Division";Bogra;24.83;89.3634
-TW;Taipei;"Banqiao District";24.9959;121.456
-BD;"Rajshahi Division";Ishwardi;24.1286;89.0657
-PK;Sindh;"Karachi (Phase 6)";24.7922;67.065
-PK;Sindh;"Karachi (Faisal  Cantonment)";24.8881;67.1574
-CN;Fujian;"Amoy (Siming Qu)";24.4835;118.142
-CN;Fujian;"Xiamen (Siming Qu)";24.4808;118.093
-CN;Fujian;"Amoy (Siming Qu)";24.4808;118.093
-PK;Sindh;"Karachi (Jamshed Quarters)";24.8775;67.0442
-PK;Sindh;"Karachi (Tauheed Commercial Area)";24.8065;67.0396
+BD;Mymensingh Division;Netrakona;24.8835;90.729
+BD;Rajshahi Division;Bogra;24.8422;89.3761
+BD;Rajshahi Division;Kazipur;24.6545;89.6346
+BD;Rajshahi Division;Bogra;24.83;89.3634
+TW;Taipei;Banqiao District;24.9959;121.456
+BD;Rajshahi Division;Ishwardi;24.1286;89.0657
+PK;Sindh;Karachi (Phase 6);24.7922;67.065
+PK;Sindh;Karachi (Faisal  Cantonment);24.8881;67.1574
+CN;Fujian;Amoy (Siming Qu);24.4835;118.142
+CN;Fujian;Xiamen (Siming Qu);24.4808;118.093
+CN;Fujian;Amoy (Siming Qu);24.4808;118.093
+PK;Sindh;Karachi (Jamshed Quarters);24.8775;67.0442
+PK;Sindh;Karachi (Tauheed Commercial Area);24.8065;67.0396
 CN;Fujian;Xiamen;24.4897;118.182
-CN;Fujian;"Amoy (Siming Qu)";24.463;118.166
-PK;Sindh;"Karachi (City Railway Colony)";24.8505;67.0172
-PK;Sindh;"Karachi (Seari Quarters)";24.8499;67.0055
-BD;"Rajshahi Division";Sirajganj;24.4579;89.7061
+CN;Fujian;Amoy (Siming Qu);24.463;118.166
+PK;Sindh;Karachi (City Railway Colony);24.8505;67.0172
+PK;Sindh;Karachi (Seari Quarters);24.8499;67.0055
+BD;Rajshahi Division;Sirajganj;24.4579;89.7061
 IN;Bihar;Nawāda;24.8867;85.5435
-BD;"Mymensingh Division";Trishal;24.5807;90.3934
+BD;Mymensingh Division;Trishal;24.5807;90.3934
 TW;Taiwan;Taichung;24.1476;120.673
-BD;"Rajshahi Division";Bogra;24.8494;89.3753
-BD;"Mymensingh Division";Mymensingh;24.7612;90.4591
+BD;Rajshahi Division;Bogra;24.8494;89.3753
+BD;Mymensingh Division;Mymensingh;24.7612;90.4591
 TW;Taiwan;Yilan;24.7022;121.794
-IN;Rajasthan;"Mount Abu";24.5926;72.7156
-BD;"Rajshahi Division";Bera;24.0782;89.6326
-BD;"Dhaka Division";Gazipur;24.029;90.3862
-BD;Chittagong;"Āshuganj City";24.0402;91.0117
-BD;"Sylhet Division";Habiganj;24.384;91.4169
-PK;Sindh;"Karachi (Sindh Industrial Trading Estate)";24.9018;67.0015
-BD;"Rajshahi Division";"Rajshahi (Rajpara)";24.3793;88.5681
+IN;Rajasthan;Mount Abu;24.5926;72.7156
+BD;Rajshahi Division;Bera;24.0782;89.6326
+BD;Dhaka Division;Gazipur;24.029;90.3862
+BD;Chittagong;Āshuganj City;24.0402;91.0117
+BD;Sylhet Division;Habiganj;24.384;91.4169
+PK;Sindh;Karachi (Sindh Industrial Trading Estate);24.9018;67.0015
+BD;Rajshahi Division;Rajshahi (Rajpara);24.3793;88.5681
 PK;Sindh;Karachi;24.836;67.0337
-BD;"Rajshahi Division";Pābna;24.0212;89.2812
+BD;Rajshahi Division;Pābna;24.0212;89.2812
 TW;Taiwan;Changhua;24.0984;120.558
 TW;Taiwan;Taichung;24.177;120.642
-TW;Taipei;"Banqiao District";24.9954;121.49
-BD;"Dhaka Division";Gazipur;24.2113;90.441
+TW;Taipei;Banqiao District;24.9954;121.49
+BD;Dhaka Division;Gazipur;24.2113;90.441
 IN;Rajasthan;Udaipur;24.5542;73.7129
 TW;Taiwan;Taichung;24.1604;120.651
-IN;Rajasthan;"Udaipur (Shakti Nagar)";24.5831;73.7094
-PK;Sindh;"Karachi (Sadr)";24.8511;67.0168
-PK;Sindh;"Karachi (Block 2)";24.8734;67.0554
-PK;Sindh;"Karachi (Block 2)";24.8735;67.0554
-PK;Sindh;"Karachi (Phase 2 Ext)";24.8289;67.0523
-PK;Sindh;"Karachi (Phase 2)";24.8317;67.0603
-PK;Sindh;"Karachi (Block 6)";24.8629;67.0656
-BD;"Rajshahi Division";"Rajshahi (Kazla)";24.3622;88.6326
-IN;Rajasthan;"Ābu Road (Sadar Bazar)";24.4825;72.783
-BD;"Rajshahi Division";"Rajshahi (Shaheb Bazar)";24.3663;88.6049
-BD;"Dhaka Division";Bhuapur;24.4622;89.8727
-BD;"Sylhet Division";Jahedpur;24.8333;91.65
+IN;Rajasthan;Udaipur (Shakti Nagar);24.5831;73.7094
+PK;Sindh;Karachi (Sadr);24.8511;67.0168
+PK;Sindh;Karachi (Block 2);24.8734;67.0554
+PK;Sindh;Karachi (Block 2);24.8735;67.0554
+PK;Sindh;Karachi (Phase 2 Ext);24.8289;67.0523
+PK;Sindh;Karachi (Phase 2);24.8317;67.0603
+PK;Sindh;Karachi (Block 6);24.8629;67.0656
+BD;Rajshahi Division;Rajshahi (Kazla);24.3622;88.6326
+IN;Rajasthan;Ābu Road (Sadar Bazar);24.4825;72.783
+BD;Rajshahi Division;Rajshahi (Shaheb Bazar);24.3663;88.6049
+BD;Dhaka Division;Bhuapur;24.4622;89.8727
+BD;Sylhet Division;Jahedpur;24.8333;91.65
 IN;Jharkhand;Dumka;24.2685;87.2488
-BD;"Mymensingh Division";"Netrokona Sadar Upazila";24.8821;90.7231
-BD;Sylhet;"Sylhet (Keya Para)";24.9036;91.8551
+BD;Mymensingh Division;Netrokona Sadar Upazila;24.8821;90.7231
+BD;Sylhet;Sylhet (Keya Para);24.9036;91.8551
 TW;Taiwan;Taichung;24.1322;120.71
-PK;Sindh;"Karachi (Sharifabad)";24.9125;67.0514
-PK;Sindh;"Karachi (Sharifabad)";24.9144;67.0521
-BD;"Mymensingh Division";Jamālpur;24.9074;89.9502
-BD;"Mymensingh Division";Jamālpur;24.927;89.948
-IN;Rajasthan;"Udaipur (Shakti Nagar)";24.5817;73.7094
-TW;Taipei;"Banqiao District";24.9979;121.486
-BD;"Dhaka Division";Nāgarpur;24.0578;89.877
-PK;Sindh;"Karachi (Port Qasim)";24.7782;67.3354
-IN;Rajasthan;"Udaipur (Central Area)";24.5708;73.7061
-BD;"Sylhet Division";"Sylhet (Charar Par)";24.8849;91.8804
-BD;Sylhet;"Sylhet (Charar Par)";24.8849;91.8804
-BD;"Rajshahi Division";Dupchānchia;24.8726;89.1782
-PK;Sindh;"Karachi (Block A)";24.8605;67.0535
-PK;Sindh;"Karachi (Modern Society)";24.8832;67.0591
+PK;Sindh;Karachi (Sharifabad);24.9125;67.0514
+PK;Sindh;Karachi (Sharifabad);24.9144;67.0521
+BD;Mymensingh Division;Jamālpur;24.9074;89.9502
+BD;Mymensingh Division;Jamālpur;24.927;89.948
+IN;Rajasthan;Udaipur (Shakti Nagar);24.5817;73.7094
+TW;Taipei;Banqiao District;24.9979;121.486
+BD;Dhaka Division;Nāgarpur;24.0578;89.877
+PK;Sindh;Karachi (Port Qasim);24.7782;67.3354
+IN;Rajasthan;Udaipur (Central Area);24.5708;73.7061
+BD;Sylhet Division;Sylhet (Charar Par);24.8849;91.8804
+BD;Sylhet;Sylhet (Charar Par);24.8849;91.8804
+BD;Rajshahi Division;Dupchānchia;24.8726;89.1782
+PK;Sindh;Karachi (Block A);24.8605;67.0535
+PK;Sindh;Karachi (Modern Society);24.8832;67.0591
 IN;Rajasthan;Rāwatbhāta;24.9306;75.5909
-BD;"Mymensingh Division";Jamālpur;24.925;89.9463
-PK;Sindh;"Karachi (Sadr)";24.855;67.0255
-BD;"Rajshahi Division";Bogra;24.86;89.3758
-PK;Sindh;"Karachi (Block 6)";24.8585;67.0648
+BD;Mymensingh Division;Jamālpur;24.925;89.9463
+PK;Sindh;Karachi (Sadr);24.855;67.0255
+BD;Rajshahi Division;Bogra;24.86;89.3758
+PK;Sindh;Karachi (Block 6);24.8585;67.0648
 PK;Sindh;Karachi;24.8817;67.1117
-BD;"Dhaka Division";Sreepur;24.1997;90.4809
-IN;Manipur;"Imphal (Sagolband)";24.7992;93.9325
-PK;Sindh;"Karachi (Lalazar)";24.8451;66.9978
-BD;"Mymensingh Division";Gafargaon;24.3345;90.3757
-PK;Sindh;"Karachi (Lalazar)";24.845;66.9965
-BD;"Mymensingh Division";Mymensingh;24.7499;90.4117
-IN;"Madhya Pradesh";Ashoknagar;24.5758;77.7312
-TW;Taipei;"Xindian District";24.9889;121.542
-BD;"Sylhet Division";"Sylhet (Zindabazar)";24.8973;91.8679
+BD;Dhaka Division;Sreepur;24.1997;90.4809
+IN;Manipur;Imphal (Sagolband);24.7992;93.9325
+PK;Sindh;Karachi (Lalazar);24.8451;66.9978
+BD;Mymensingh Division;Gafargaon;24.3345;90.3757
+PK;Sindh;Karachi (Lalazar);24.845;66.9965
+BD;Mymensingh Division;Mymensingh;24.7499;90.4117
+IN;Madhya Pradesh;Ashoknagar;24.5758;77.7312
+TW;Taipei;Xindian District;24.9889;121.542
+BD;Sylhet Division;Sylhet (Zindabazar);24.8973;91.8679
 IN;Bihar;Aurangābād;24.752;84.3742
-BD;"Rajshahi Division";Shibganj;24.685;88.1564
-BD;"Sylhet Division";"Sylhet (Mira Bazar)";24.8972;91.884
-PK;Sindh;"Karachi (Block 16 A)";24.9126;67.1184
+BD;Rajshahi Division;Shibganj;24.685;88.1564
+BD;Sylhet Division;Sylhet (Mira Bazar);24.8972;91.884
+PK;Sindh;Karachi (Block 16 A);24.9126;67.1184
 TW;Taiwan;Zhubei;24.8326;121.016
-IN;"West Bengal";Mārgrām;24.1496;87.8427
-BD;"Mymensingh Division";Mymensingh;24.7567;90.4062
-PK;Sindh;"Karachi (Tariq Lines)";24.8577;67.0456
-CN;Fujian;"Quanzhou (Houku Community)";24.7802;118.588
-PK;Sindh;"Karachi (Phase 1)";24.8419;67.0626
-CN;Fujian;"Xiamen (Siming Qu)";24.4851;118.177
+IN;West Bengal;Mārgrām;24.1496;87.8427
+BD;Mymensingh Division;Mymensingh;24.7567;90.4062
+PK;Sindh;Karachi (Tariq Lines);24.8577;67.0456
+CN;Fujian;Quanzhou (Houku Community);24.7802;118.588
+PK;Sindh;Karachi (Phase 1);24.8419;67.0626
+CN;Fujian;Xiamen (Siming Qu);24.4851;118.177
 IN;Gujarat;Deesa;24.2561;72.1793
-BD;"Dhaka Division";Mirzāpur;24.1025;90.0947
-CN;Fujian;"Amoy (Xindian)";24.6254;118.248
-CN;Fujian;"Amoy (Siming Qu)";24.4456;118.083
-TW;Taiwan;"Yangmei District";24.9576;121.08
-PK;Sindh;"Karachi (Phase 1)";24.8383;67.0665
-BD;"Dhaka Division";Mawna;24.2204;90.4125
-IN;"Madhya Pradesh";"Chhatarpur (Radio Colony)";24.8939;79.5984
-PK;Sindh;"Karachi (Lalazar)";24.8474;66.9985
-BD;"Rajshahi Division";"Naogaon District";24.8064;88.9504
-IN;Jharkhand;"Giridih (Jai Prakash Nagar)";24.1912;86.3115
+BD;Dhaka Division;Mirzāpur;24.1025;90.0947
+CN;Fujian;Amoy (Xindian);24.6254;118.248
+CN;Fujian;Amoy (Siming Qu);24.4456;118.083
+TW;Taiwan;Yangmei District;24.9576;121.08
+PK;Sindh;Karachi (Phase 1);24.8383;67.0665
+BD;Dhaka Division;Mawna;24.2204;90.4125
+IN;Madhya Pradesh;Chhatarpur (Radio Colony);24.8939;79.5984
+PK;Sindh;Karachi (Lalazar);24.8474;66.9985
+BD;Rajshahi Division;Naogaon District;24.8064;88.9504
+IN;Jharkhand;Giridih (Jai Prakash Nagar);24.1912;86.3115
 TW;Taiwan;Hsinchu;24.7862;121.019
-BD;"Rajshahi Division";Rajshahi;24.3746;88.6004
-PK;Sindh;"Karachi (New Chali)";24.8535;67.0107
-PK;Sindh;"Karachi (Shershah Colony)";24.881;66.9733
-PK;Sindh;"Karachi (Sindh Industrial Trading Estate)";24.8871;66.9791
-IN;Assam;"Silchar (Tarapur)";24.8157;92.7847
-IN;Manipur;"Moirāng (Phairembam Leikai)";24.4999;93.7782
-BD;"Sylhet Division";"Sylhet (Zindabazar)";24.8949;91.868
-IN;Jharkhand;"Hazaribagh (Hashmiya Colony)";24.0062;85.3491
-PK;Sindh;"Karachi (Sector 15 A 5)";24.9506;67.0633
-PK;Sindh;"Karachi (Shikarpur Colony)";24.8852;67.0518
-BD;"Sylhet Division";"Habiganj (05 No. Ward)";24.3808;91.4124
+BD;Rajshahi Division;Rajshahi;24.3746;88.6004
+PK;Sindh;Karachi (New Chali);24.8535;67.0107
+PK;Sindh;Karachi (Shershah Colony);24.881;66.9733
+PK;Sindh;Karachi (Sindh Industrial Trading Estate);24.8871;66.9791
+IN;Assam;Silchar (Tarapur);24.8157;92.7847
+IN;Manipur;Moirāng (Phairembam Leikai);24.4999;93.7782
+BD;Sylhet Division;Sylhet (Zindabazar);24.8949;91.868
+IN;Jharkhand;Hazaribagh (Hashmiya Colony);24.0062;85.3491
+PK;Sindh;Karachi (Sector 15 A 5);24.9506;67.0633
+PK;Sindh;Karachi (Shikarpur Colony);24.8852;67.0518
+BD;Sylhet Division;Habiganj (05 No. Ward);24.3808;91.4124
 IN;Manipur;Imphal;24.8224;93.9851
 TW;Taiwan;Hsinchu;24.7825;120.996
-BD;"Dhaka Division";Sakhipur;24.3199;90.1718
-BD;"Dhaka Division";"Monohardi Upazila";24.1453;90.6998
-PK;Sindh;"Karachi (Bin Qasim Town)";24.8596;67.4005
-PK;Sindh;"Karachi (Phase 7 Ext)";24.8311;67.0749
-BD;"Rajshahi Division";Lālpur;24.1835;88.9569
-BD;"Dhaka Division";Gazipur;24.0034;90.4258
-BD;"Rajshahi Division";"Bogra (Uposhohor)";24.8658;89.3571
-BD;"Dhaka Division";Sakhipur;24.3192;90.1753
-BD;"Sylhet Division";Baniachang;24.5186;91.3579
+BD;Dhaka Division;Sakhipur;24.3199;90.1718
+BD;Dhaka Division;Monohardi Upazila;24.1453;90.6998
+PK;Sindh;Karachi (Bin Qasim Town);24.8596;67.4005
+PK;Sindh;Karachi (Phase 7 Ext);24.8311;67.0749
+BD;Rajshahi Division;Lālpur;24.1835;88.9569
+BD;Dhaka Division;Gazipur;24.0034;90.4258
+BD;Rajshahi Division;Bogra (Uposhohor);24.8658;89.3571
+BD;Dhaka Division;Sakhipur;24.3192;90.1753
+BD;Sylhet Division;Baniachang;24.5186;91.3579
 IN;Rajasthan;Chittorgarh;24.8896;74.624
-IN;"West Bengal";Suti;24.6189;88.0285
+IN;West Bengal;Suti;24.6189;88.0285
 IN;Tripura;Kailāshahar;24.332;92.0039
-IN;"Uttar Pradesh";Chopan;24.5195;83.0229
-IN;"Madhya Pradesh";Singrauli;24.199;82.6676
+IN;Uttar Pradesh;Chopan;24.5195;83.0229
+IN;Madhya Pradesh;Singrauli;24.199;82.6676
 IN;Manipur;Imphal;24.817;93.9368
 IN;Gujarat;Bhābhar;24.0703;71.5991
 TW;Taiwan;Neili;24.8862;121.169
-PK;Sindh;"Karachi (Moinabad)";24.8923;67.1857
-BD;"Mymensingh Division";Mymensingh;24.746;90.4179
-BD;"Sylhet Division";"Sylhet (Chowhatta)";24.8995;91.8699
-BD;Chittagong;"Shahbazpur Town";24.0745;91.1113
-PK;Sindh;"Karachi (Block B)";24.8957;67.1176
-IN;"West Bengal";"Baharampur (Radharghat)";24.1009;88.2361
-BD;"Rajshahi Division";Ishurdi;24.1207;89.0626
-PK;Sindh;"Karachi (Karachi Cantonment)";24.8577;67.0456
-BD;"Dhaka Division";Sibpur;24.0394;90.739
-BD;"Mymensingh Division";Gafargaon;24.4079;90.3866
+PK;Sindh;Karachi (Moinabad);24.8923;67.1857
+BD;Mymensingh Division;Mymensingh;24.746;90.4179
+BD;Sylhet Division;Sylhet (Chowhatta);24.8995;91.8699
+BD;Chittagong;Shahbazpur Town;24.0745;91.1113
+PK;Sindh;Karachi (Block B);24.8957;67.1176
+IN;West Bengal;Baharampur (Radharghat);24.1009;88.2361
+BD;Rajshahi Division;Ishurdi;24.1207;89.0626
+PK;Sindh;Karachi (Karachi Cantonment);24.8577;67.0456
+BD;Dhaka Division;Sibpur;24.0394;90.739
+BD;Mymensingh Division;Gafargaon;24.4079;90.3866
 IN;Jharkhand;Godda;24.8005;87.209
-IN;"West Bengal";Debīpur;24.2503;88.6182
+IN;West Bengal;Debīpur;24.2503;88.6182
 TW;Taiwan;Taichung;24.1502;120.67
-BD;"Mymensingh Division";Bhaluka;24.4079;90.3866
-IN;"West Bengal";Lālgola;24.3953;88.2495
-PK;Sindh;"Karachi (Sindhi Muslim CHS)";24.8583;67.0569
-PK;Sindh;"Karachi (Jinnah Housing Society)";24.8673;67.0829
-BD;"Sylhet Division";Madhabpur;24.095;91.2887
+BD;Mymensingh Division;Bhaluka;24.4079;90.3866
+IN;West Bengal;Lālgola;24.3953;88.2495
+PK;Sindh;Karachi (Sindhi Muslim CHS);24.8583;67.0569
+PK;Sindh;Karachi (Jinnah Housing Society);24.8673;67.0829
+BD;Sylhet Division;Madhabpur;24.095;91.2887
 IN;Gujarat;Chhāpi;24.0269;72.3854
 IN;Rajasthan;Rāwatbhāta;24.9298;75.5921
 TW;Taiwan;Taichung;24.1623;120.635
-BD;"Rajshahi Division";Rajshahi;24.3702;88.6028
-BD;"Mymensingh Division";Netrakona;24.8755;90.9778
+BD;Rajshahi Division;Rajshahi;24.3702;88.6028
+BD;Mymensingh Division;Netrakona;24.8755;90.9778
 IN;Rajasthan;Bhindār;24.5063;74.1873
-IN;Rajasthan;"Udaipur (Goverdhan Villas)";24.541;73.6877
-BD;"Sylhet Division";"Sylhet (Tilagor)";24.8996;91.9038
+IN;Rajasthan;Udaipur (Goverdhan Villas);24.541;73.6877
+BD;Sylhet Division;Sylhet (Tilagor);24.8996;91.9038
 TW;Taiwan;Taichung;24.1407;120.646
-IN;"Madhya Pradesh";"Ashoknagar (Shankar Colony)";24.5795;77.7495
-BD;"Rajshahi Division";Puthia;24.526;88.8436
-BD;"Dhaka Division";"Bājitpur (Vagolpur)";24.2006;90.9161
+IN;Madhya Pradesh;Ashoknagar (Shankar Colony);24.5795;77.7495
+BD;Rajshahi Division;Puthia;24.526;88.8436
+BD;Dhaka Division;Bājitpur (Vagolpur);24.2006;90.9161
 PK;Sindh;Karachi;24.9111;67.0186
-PK;Sindh;"Karachi (Karimabad)";24.9196;67.0591
-PK;Sindh;"Karachi (Block 6)";24.8622;67.0719
-BD;"Sylhet Division";Rajnagar;24.5211;91.8551
+PK;Sindh;Karachi (Karimabad);24.9196;67.0591
+PK;Sindh;Karachi (Block 6);24.8622;67.0719
+BD;Sylhet Division;Rajnagar;24.5211;91.8551
 IN;Jharkhand;Giridih;24.1862;86.3087
 TW;Taiwan;Yilan;24.6732;121.785
-PK;Sindh;"Karachi (Commercial Area)";24.872;67.0591
-BD;"Dhaka Division";Bājitpur;24.2162;90.95
-BD;"Rajshahi Division";Bāneswar;24.3667;88.755
+PK;Sindh;Karachi (Commercial Area);24.872;67.0591
+BD;Dhaka Division;Bājitpur;24.2162;90.95
+BD;Rajshahi Division;Bāneswar;24.3667;88.755
 TW;Taiwan;Yilan;24.6831;121.786
-PK;Sindh;"Karachi (Block 7)";24.9348;67.1052
-TW;Taipei;"Xindian District";24.9834;121.542
-IN;"West Bengal";"Baharampur (Gora Bazar)";24.0903;88.2495
-IN;Rajasthan;"Udaipur (Hiran Magri)";24.5523;73.6933
-IN;"West Bengal";Raghunathganj;24.4672;88.0599
+PK;Sindh;Karachi (Block 7);24.9348;67.1052
+TW;Taipei;Xindian District;24.9834;121.542
+IN;West Bengal;Baharampur (Gora Bazar);24.0903;88.2495
+IN;Rajasthan;Udaipur (Hiran Magri);24.5523;73.6933
+IN;West Bengal;Raghunathganj;24.4672;88.0599
 IN;Jharkhand;Deoghar;24.4898;86.699
 TW;Taiwan;Hsinchu;24.7921;120.993
-PK;Sindh;"Karachi (Frere Town)";24.8362;67.0335
+PK;Sindh;Karachi (Frere Town);24.8362;67.0335
 PK;Sindh;Karachi;24.8488;66.9986
-PK;Sindh;"Karachi (Delhi Mercantile Society)";24.8782;67.0666
-IN;Manipur;"Imphal (Dewlahland)";24.8235;93.9426
-PK;Sindh;"Karachi (Civil Lines)";24.8506;67.0292
-PK;Sindh;"Karachi (Civil Lines)";24.8507;67.0295
-PK;Sindh;"Karachi (Sector 36 E)";24.8362;67.1802
-PK;Sindh;"Karachi (Sadr)";24.8537;67.0269
-BD;"Mymensingh Division";Mymensingh;24.7617;90.3939
-CN;Yunnan;"Kunming (Chenggong Xian)";24.8855;102.821
-BD;"Mymensingh Division";Mymensingh;24.7403;90.4247
-BD;Chittagong;"Āshuganj City (Char Chartola)";24.039;91.0028
-IN;Manipur;"Imphal (Sagolband)";24.8035;93.9158
-BD;"Mymensingh Division";Sarishābāri;24.7669;89.8409
-IN;"Madhya Pradesh";Naurhiya;24.1443;82.3886
+PK;Sindh;Karachi (Delhi Mercantile Society);24.8782;67.0666
+IN;Manipur;Imphal (Dewlahland);24.8235;93.9426
+PK;Sindh;Karachi (Civil Lines);24.8506;67.0292
+PK;Sindh;Karachi (Civil Lines);24.8507;67.0295
+PK;Sindh;Karachi (Sector 36 E);24.8362;67.1802
+PK;Sindh;Karachi (Sadr);24.8537;67.0269
+BD;Mymensingh Division;Mymensingh;24.7617;90.3939
+CN;Yunnan;Kunming (Chenggong Xian);24.8855;102.821
+BD;Mymensingh Division;Mymensingh;24.7403;90.4247
+BD;Chittagong;Āshuganj City (Char Chartola);24.039;91.0028
+IN;Manipur;Imphal (Sagolband);24.8035;93.9158
+BD;Mymensingh Division;Sarishābāri;24.7669;89.8409
+IN;Madhya Pradesh;Naurhiya;24.1443;82.3886
 TW;Taipei;Erbazhang;24.9967;121.487
-TW;Taipei;"Banqiao District";24.9967;121.487
-PK;Sindh;"Karachi (Bhutta Goth)";24.8222;66.9898
-TW;Taipei;"Shulin District";24.9661;121.421
-BD;"Rajshahi Division";"Bogra (Jhowtola)";24.852;89.3728
-BD;"Rajshahi Division";Bogra;24.8504;89.3729
+TW;Taipei;Banqiao District;24.9967;121.487
+PK;Sindh;Karachi (Bhutta Goth);24.8222;66.9898
+TW;Taipei;Shulin District;24.9661;121.421
+BD;Rajshahi Division;Bogra (Jhowtola);24.852;89.3728
+BD;Rajshahi Division;Bogra;24.8504;89.3729
 IN;Gujarat;Kānodar;24.0893;72.3935
-CN;Fujian;"Xiamen (Huli Qu)";24.5216;118.142
-PK;Sindh;"Karachi (Block 13 C)";24.9108;67.0867
-PK;Sindh;"Karachi (Block 1 A)";24.9319;67.1284
-BD;"Khulna Division";Bherāmāra;24.0175;88.9931
+CN;Fujian;Xiamen (Huli Qu);24.5216;118.142
+PK;Sindh;Karachi (Block 13 C);24.9108;67.0867
+PK;Sindh;Karachi (Block 1 A);24.9319;67.1284
+BD;Khulna Division;Bherāmāra;24.0175;88.9931
 IN;Rajasthan;Nīmbāhera;24.6217;74.68
-PK;Sindh;"Karachi (Block 5)";24.8141;67.0273
-TW;Taiwan;"Taichung City";24.1581;120.643
-PK;Sindh;"Karachi (Block 16)";24.9401;67.0817
+PK;Sindh;Karachi (Block 5);24.8141;67.0273
+TW;Taiwan;Taichung City;24.1581;120.643
+PK;Sindh;Karachi (Block 16);24.9401;67.0817
 TW;Taiwan;Zhubei;24.8315;121.003
-US;Florida;"Cudjoe Key";24.6246;-81.5432
+US;Florida;Cudjoe Key;24.6246;-81.5432
 CN;Jiangxi;Wenfeng;24.9647;115.634
 CN;Yunnan;Liancheng;24.0519;105.075
-IN;"Madhya Pradesh";Sidhi;24.4038;81.8795
+IN;Madhya Pradesh;Sidhi;24.4038;81.8795
 TW;Taiwan;Taichung;24.1182;120.679
 CN;Fujian;Luoyang;24.9594;118.683
 CN;Fujian;Yingcun;24.6024;118.104
-IN;"Madhya Pradesh";Naurhiya;24.2069;82.5655
-IN;"West Bengal";Farakka;24.8167;87.9
-IN;Jharkhand;"Marāi Kalān";24.0211;85.3506
+IN;Madhya Pradesh;Naurhiya;24.2069;82.5655
+IN;West Bengal;Farakka;24.8167;87.9
+IN;Jharkhand;Marāi Kalān;24.0211;85.3506
 IN;Rajasthan;Jhālrapātan;24.542;76.1724
 IN;Gujarat;Chhāpi;24.0322;72.4006
 IN;Bihar;Sherghāti;24.5595;84.7916
@@ -812,29 +812,29 @@ IN;Rajasthan;Sirohi;24.8827;72.8609
 IN;Jharkhand;Godda;24.827;87.2125
 MX;Durango;Vencedores;24.4282;-105.712
 US;Florida;Islamorada;24.9092;-80.6882
-CN;Fujian;"Quanzhou (Jinjiang Shi)";24.7814;118.552
+CN;Fujian;Quanzhou (Jinjiang Shi);24.7814;118.552
 CN;Yunnan;Yuxi;24.3473;102.527
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.4474;54.3949
-PK;Sindh;"Karachi (Block 6)";24.8611;67.0703
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.4474;54.3949
+PK;Sindh;Karachi (Block 6);24.8611;67.0703
 CN;Fujian;Shishi;24.742;118.636
-PK;Sindh;"Karachi (Sadr)";24.8127;67.0115
-IN;"Madhya Pradesh";Shāmgarh;24.1882;75.639
+PK;Sindh;Karachi (Sadr);24.8127;67.0115
+IN;Madhya Pradesh;Shāmgarh;24.1882;75.639
 CN;Guangxi;Chengzhong;24.3152;109.413
 CN;Guangxi;Liujiang;24.2573;109.322
 PK;Sindh;Mithi;24.737;69.7971
 JP;Okinawa;Ishigaki;24.3448;124.157
-IN;Manipur;"Imphal (Kabo Leika)";24.8239;93.9469
+IN;Manipur;Imphal (Kabo Leika);24.8239;93.9469
 IN;Bihar;Pahārpur;24.759;84.9681
 CN;Fujian;Chidian;24.861;118.573
 CN;Fujian;Maxiang;24.6671;118.246
 CN;Fujian;Sui’an;24.087;117.609
-CN;Guangdong;"Qingyuan (Wanglian)";24.272;112.187
+CN;Guangdong;Qingyuan (Wanglian);24.272;112.187
 CN;Guangdong;Maba;24.6841;113.598
 CN;Guangdong;Meixian;24.2838;116.07
 CN;Guangdong;Longwen;24.5946;116.347
 CN;Yunnan;Qidian;24.9603;102.947
 TW;Taiwan;Gouzikou;24.9875;121.55
-TW;Taipei;"Banqiao District";24.9978;121.486
+TW;Taipei;Banqiao District;24.9978;121.486
 TW;Taipei;Erbazhang;24.9978;121.486
 CN;Guangxi;Yufeng;24.3176;109.456
 CN;Guangxi;Yangshuo;24.7808;110.49
@@ -844,26 +844,26 @@ TW;Taiwan;Taichung;24.1373;120.646
 TW;Taiwan;Taichung;24.1245;120.679
 TW;Taiwan;Taichung;24.1706;120.658
 CN;Guangdong;Jitian;24.572;112.075
-TW;Taipei;"Xindian District";24.9723;121.517
+TW;Taipei;Xindian District;24.9723;121.517
 CN;Yunnan;Huakoulongtan;24.5013;103.413
 JP;Okinawa;Hirara;24.8038;125.302
 TW;Taipei;Erbazhang;24.9967;121.486
 CN;Guangxi;Babu;24.4167;111.517
-BD;"Mymensingh Division";Mymensingh;24.7627;90.3971
-PK;Sindh;"Karachi (Sadr)";24.8267;67.029
+BD;Mymensingh Division;Mymensingh;24.7627;90.3971
+PK;Sindh;Karachi (Sadr);24.8267;67.029
 CN;Guangdong;Xingning;24.1483;115.723
 CN;Guangxi;Hechi;24.6929;108.084
 CN;Guangdong;Yangcheng;24.4793;112.642
 TW;Taiwan;Xinli;24.1014;120.676
 CN;Yunnan;Yingjiang;24.7102;97.9367
-PK;Sindh;"Karachi (Zone A)";24.8339;67.0337
-PK;Sindh;"Karachi (Jamshed Town)";24.8778;67.0688
+PK;Sindh;Karachi (Zone A);24.8339;67.0337
+PK;Sindh;Karachi (Jamshed Town);24.8778;67.0688
 CN;Yunnan;Kuangyuan;24.9138;103.148
-PK;Sindh;"Karachi (Karachi Cantonment)";24.859;67.0522
+PK;Sindh;Karachi (Karachi Cantonment);24.859;67.0522
 CN;Fujian;Lianhecun;24.5893;118.339
-CN;Fujian;"Xiamen (Huli Qu)";24.5095;118.1
+CN;Fujian;Xiamen (Huli Qu);24.5095;118.1
 IN;Jharkhand;Medininagar;24.0397;84.0658
-IN;Assam;"Kanisail Pt I";24.8551;92.37
+IN;Assam;Kanisail Pt I;24.8551;92.37
 IN;Tripura;Kamalpur;24.1959;91.8344
 CN;Yunnan;Xianjie;24.8577;102.422
 CN;Guangxi;Luocheng;24.7806;108.898
@@ -871,37 +871,37 @@ CN;Guangxi;Liuzhou;24.3241;109.407
 CN;Guangxi;Jinxiu;24.1334;110.185
 IN;Manipur;Thoubāl;24.6388;93.9964
 IN;Assam;Hailākāndi;24.6839;92.561
-IN;"Madhya Pradesh";Jāwad;24.5992;74.8626
+IN;Madhya Pradesh;Jāwad;24.5992;74.8626
 IN;Jharkhand;Chatrā;24.2064;84.8708
 IN;Rajasthan;Sirohi;24.8884;72.8479
-IN;Rajasthan;"Nimach (Ambedkar Colony)";24.452;74.8718
-IN;Gujarat;"Bhāgal Jagāna";24.1261;72.3862
-IN;"Madhya Pradesh";"Bhawāni Mandi";24.3985;75.8171
-IN;"Madhya Pradesh";Jirapur;24.0214;76.3764
+IN;Rajasthan;Nimach (Ambedkar Colony);24.452;74.8718
+IN;Gujarat;Bhāgal Jagāna;24.1261;72.3862
+IN;Madhya Pradesh;Bhawāni Mandi;24.3985;75.8171
+IN;Madhya Pradesh;Jirapur;24.0214;76.3764
 IN;Bihar;Tekāri;24.9425;84.8427
 IN;Manipur;Wāngjing;24.6285;94.0632
 IN;Manipur;Jiribam;24.9582;93.5003
 IN;Manipur;Imphal;24.745;93.8961
-IN;Bihar;"Bodh Gaya";24.6867;84.9651
+IN;Bihar;Bodh Gaya;24.6867;84.9651
 IN;Assam;Irongmara;24.6985;92.7569
-IN;Bihar;"Sasarām (Dilia)";24.9539;84.0143
+IN;Bihar;Sasarām (Dilia);24.9539;84.0143
 IN;Rajasthan;Nīmbāhera;24.6257;74.681
-IN;"Madhya Pradesh";"Singrauli (Jayant Project)";24.1176;82.6578
-IN;"West Bengal";Balia;24.3585;88.1647
-IN;"Madhya Pradesh";Devendranagar;24.6169;80.3789
-IN;"Madhya Pradesh";Panna;24.7209;80.1877
-PK;Sindh;"Karachi (Block 3)";24.876;67.0626
-CN;Guangxi;"Liuzhou (Chengzhong Qu)";24.3416;109.432
+IN;Madhya Pradesh;Singrauli (Jayant Project);24.1176;82.6578
+IN;West Bengal;Balia;24.3585;88.1647
+IN;Madhya Pradesh;Devendranagar;24.6169;80.3789
+IN;Madhya Pradesh;Panna;24.7209;80.1877
+PK;Sindh;Karachi (Block 3);24.876;67.0626
+CN;Guangxi;Liuzhou (Chengzhong Qu);24.3416;109.432
 CN;Guangdong;Jiaocheng;24.6573;116.167
 CN;Guangdong;Ningxin;24.138;115.755
-PK;Sindh;"Keti Bandar";24.1442;67.4509
+PK;Sindh;Keti Bandar;24.1442;67.4509
 CN;Fujian;Shima;24.4465;117.812
 CN;Fujian;Quanzhou;24.9139;118.586
 CN;Fujian;Xinglin;24.5661;118.038
 CN;Fujian;Cizao;24.8203;118.488
 CN;Fujian;Dongshi;24.6651;118.456
-CN;Guangdong;"Yingcheng (Yingde Shi)";24.1839;113.416
-TW;Taipei;"Shiding District";24.9808;121.691
+CN;Guangdong;Yingcheng (Yingde Shi);24.1839;113.416
+TW;Taipei;Shiding District;24.9808;121.691
 TW;Taiwan;Zhubei;24.7775;121.09
 TW;Taiwan;Hsinchu;24.7598;120.953
 TW;Taiwan;Miaoli;24.651;120.842
@@ -911,9 +911,9 @@ TW;Taiwan;Taichung;24.1737;120.735
 TW;Taiwan;Taichung;24.2173;120.581
 TW;Taiwan;Yuanlin;24.0002;120.596
 TW;Taiwan;Taoyuan;24.9898;121.232
-TW;Taiwan;"Bade District";24.9472;121.229
-TW;Taiwan;"Bade District";24.937;121.252
-TW;Taipei;"Sanxia District";24.9438;121.371
+TW;Taiwan;Bade District;24.9472;121.229
+TW;Taiwan;Bade District;24.937;121.252
+TW;Taipei;Sanxia District;24.9438;121.371
 CN;Guangdong;Longxian;24.3452;114.136
 CN;Guangdong;Shaxi;24.6169;113.671
 CN;Guangdong;Rezhe;24.5355;115.98
@@ -921,61 +921,61 @@ CN;Guangdong;Chengdong;24.3785;116.139
 CN;Guangdong;Fucheng;24.1001;115.232
 CN;Guangdong;Lianzhou;24.7819;112.371
 CN;Guangdong;Huacheng;24.067;115.613
-CN;Guangxi;"Liuzhou (Liunan District)";24.3358;109.369
-PK;Sindh;"Karachi (Sadr)";24.8508;67.0295
+CN;Guangxi;Liuzhou (Liunan District);24.3358;109.369
+PK;Sindh;Karachi (Sadr);24.8508;67.0295
 CN;Fujian;Fashi;24.8815;118.619
-PK;Sindh;"Karachi (Sector Five A Two)";24.8873;66.8395
+PK;Sindh;Karachi (Sector Five A Two);24.8873;66.8395
 TW;Taiwan;Hsinchu;24.7706;121.019
-TW;Taiwan;"Bade District";24.9424;121.211
+TW;Taiwan;Bade District;24.9424;121.211
 TW;Taiwan;Taichung;24.181;120.584
 TW;Taiwan;Fengyuan;24.2448;120.746
-TW;Taipei;"Xindian District";24.9724;121.517
+TW;Taipei;Xindian District;24.9724;121.517
 TW;Taiwan;Hsinchu;24.8173;120.965
 IN;Manipur;Moirāng;24.4975;93.7779
-IN;Manipur;"Mayāng Imphāl";24.61;93.8887
-IN;Rajasthan;"Udaipur (Pratap Nagar)";24.5976;73.7454
-IN;"Madhya Pradesh";Ajaigarh;24.9041;80.2599
-IN;"Madhya Pradesh";Satna;24.6005;80.8322
-IN;Bihar;"Bodh Gaya";24.6958;84.9794
+IN;Manipur;Mayāng Imphāl;24.61;93.8887
+IN;Rajasthan;Udaipur (Pratap Nagar);24.5976;73.7454
+IN;Madhya Pradesh;Ajaigarh;24.9041;80.2599
+IN;Madhya Pradesh;Satna;24.6005;80.8322
+IN;Bihar;Bodh Gaya;24.6958;84.9794
 IN;Assam;Karīmganj;24.8716;92.3503
 IN;Jharkhand;Domchānch;24.4713;85.6942
-IN;Bihar;"Nawāda (Islam Nagar)";24.883;85.5361
-BD;"Rajshahi Division";Bogra;24.852;89.3732
+IN;Bihar;Nawāda (Islam Nagar);24.883;85.5361
+BD;Rajshahi Division;Bogra;24.852;89.3732
 TW;Taiwan;Taichung;24.145;120.645
-TW;Taiwan;"Toufen Township";24.7009;120.879
+TW;Taiwan;Toufen Township;24.7009;120.879
 TW;Taiwan;Miaoli;24.5633;120.818
-CN;Yunnan;"Baoshan (Xiangdaxiang)";24.444;98.7243
-CN;Yunnan;"Kunming (Anning Shi)";24.9195;102.478
-CN;Guangxi;"Hechi (Tingjiu)";24.192;107.231
-IN;Rajasthan;"Udaipur (Toran Bawri)";24.5774;73.7002
+CN;Yunnan;Baoshan (Xiangdaxiang);24.444;98.7243
+CN;Yunnan;Kunming (Anning Shi);24.9195;102.478
+CN;Guangxi;Hechi (Tingjiu);24.192;107.231
+IN;Rajasthan;Udaipur (Toran Bawri);24.5774;73.7002
 CN;Guangxi;Luorong;24.4058;109.609
 JP;Okinawa;Miyakojima;24.7902;125.311
 IN;Jharkhand;Garhwa;24.1549;83.7996
-IN;Bihar;"Gaya (Ashok Nagar)";24.795;84.9797
+IN;Bihar;Gaya (Ashok Nagar);24.795;84.9797
 IN;Rajasthan;Sirohi;24.8852;72.8575
 IN;Rajasthan;Udaipur;24.5983;73.7243
 IN;Rajasthan;Udaipur;24.4901;73.6513
-IN;Rajasthan;"Udaipur (Bhopalpura)";24.5963;73.7
-IN;Rajasthan;"Pindwāra (J K Puram)";24.6961;73.0016
-IN;"Madhya Pradesh";Rewa;24.5662;81.1751
+IN;Rajasthan;Udaipur (Bhopalpura);24.5963;73.7
+IN;Rajasthan;Pindwāra (J K Puram);24.6961;73.0016
+IN;Madhya Pradesh;Rewa;24.5662;81.1751
 IN;Rajasthan;Sānchor;24.7565;71.7667
-IN;"Madhya Pradesh";Sītāmau;24.0142;75.3528
+IN;Madhya Pradesh;Sītāmau;24.0142;75.3528
 TW;Taiwan;Daxi;24.8445;121.242
-CN;Guangdong;"Shaoguan (Xinhua)";24.9755;113.054
+CN;Guangdong;Shaoguan (Xinhua);24.9755;113.054
 JP;Okinawa;Yonakuni;24.4667;123
-AE;"Abu Dhabi";"Abu Dhabi (Āl Nahyān)";24.4633;54.3879
+AE;Abu Dhabi;Abu Dhabi (Āl Nahyān);24.4633;54.3879
 IN;Rajasthan;Kawāi;24.7585;76.7314
 IN;Jharkhand;Medininagar;24.0465;84.0768
-SA;"Riyadh Region";"Riyadh (An Nakheel)";24.7413;46.6353
-SA;"Riyadh Region";"Riyadh (New Industrial Area)";24.57;46.8753
-BS;"Central Eleuthera";"North Palmetto Point";24.2133;-75.3645
+SA;Riyadh Region;Riyadh (An Nakheel);24.7413;46.6353
+SA;Riyadh Region;Riyadh (New Industrial Area);24.57;46.8753
+BS;Central Eleuthera;North Palmetto Point;24.2133;-75.3645
 MX;Sinaloa;Culiacán;24.8021;-107.394
-CN;Fujian;"Quanzhou (Licheng District, Quanzhou)";24.9075;118.587
-CN;Fujian;"Xiamen (Siming Qu)";24.4458;118.082
+CN;Fujian;Quanzhou (Licheng District, Quanzhou);24.9075;118.587
+CN;Fujian;Xiamen (Siming Qu);24.4458;118.082
 TW;Taiwan;Taichung;24.1496;120.672
-CN;Fujian;"Quanzhou (Jinjiang Shi)";24.7817;118.552
-CN;Fujian;"Xiamen (Huli Qu)";24.4962;118.127
-PK;Sindh;"Karachi (Sadr)";24.8553;67.0261
+CN;Fujian;Quanzhou (Jinjiang Shi);24.7817;118.552
+CN;Fujian;Xiamen (Huli Qu);24.4962;118.127
+PK;Sindh;Karachi (Sadr);24.8553;67.0261
 TW;Taiwan;Taoyuan;24.9926;121.304
 TW;Taiwan;Zhubei;24.7749;121.045
 TW;Taiwan;Hsinchu;24.7826;120.996
@@ -985,372 +985,372 @@ TW;Taiwan;Daxi;24.8786;121.266
 TW;Taiwan;Taichung;24.1787;120.647
 TW;Taiwan;Neili;24.9574;121.241
 CN;Fujian;Amoy;24.4798;118.089
-BD;"Dhaka Division";Kishorganj;24.4404;90.7781
-BD;"Rajshahi Division";Rajshahi;24.369;88.5825
+BD;Dhaka Division;Kishorganj;24.4404;90.7781
+BD;Rajshahi Division;Rajshahi;24.369;88.5825
 MX;Durango;Durango;24.0203;-104.658
 MX;Sinaloa;Culiacán;24.8091;-107.394
-MX;Sinaloa;"Culiacán (Uas)";24.8316;-107.383
-MX;Sinaloa;"La Limita de Itaje";24.8194;-107.357
-MX;"Nuevo León";Linares;24.858;-99.5677
-MX;"Baja California Sur";"La Paz";24.1426;-110.313
-MX;Sinaloa;"Licenciado Benito Juárez";24.6567;-107.545
+MX;Sinaloa;Culiacán (Uas);24.8316;-107.383
+MX;Sinaloa;La Limita de Itaje;24.8194;-107.357
+MX;Nuevo León;Linares;24.858;-99.5677
+MX;Baja California Sur;La Paz;24.1426;-110.313
+MX;Sinaloa;Licenciado Benito Juárez;24.6567;-107.545
 PK;Sindh;Karachi;24.7893;67.0633
 TW;Taiwan;Zhubei;24.8347;120.993
-TW;Taipei;"Shulin District";24.9845;121.425
-AE;"Abu Dhabi";"Abu Dhabi Region (Al Shamkha)";24.379;54.7165
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.4943;54.3736
-IN;Manipur;"Imphal (Thangal Bazar)";24.8102;93.9367
-IN;"Madhya Pradesh";Bīna;24.1817;78.1899
+TW;Taipei;Shulin District;24.9845;121.425
+AE;Abu Dhabi;Abu Dhabi Region (Al Shamkha);24.379;54.7165
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.4943;54.3736
+IN;Manipur;Imphal (Thangal Bazar);24.8102;93.9367
+IN;Madhya Pradesh;Bīna;24.1817;78.1899
 IN;Jharkhand;Sirsia;24.212;86.3131
-IN;"Madhya Pradesh";Suwāsra;24.0698;75.6523
-SA;"Riyadh Region";"Riyadh (Al Qirawan)";24.8284;46.5702
-PK;Sindh;"Mirpur Sakro";24.5469;67.628
+IN;Madhya Pradesh;Suwāsra;24.0698;75.6523
+SA;Riyadh Region;Riyadh (Al Qirawan);24.8284;46.5702
+PK;Sindh;Mirpur Sakro;24.5469;67.628
 PK;Sindh;Thatta;24.7474;67.9235
-PK;Sindh;"Chuhar Jamali";24.3944;67.993
-AE;"Abu Dhabi";"Abu Dhabi (Al Ras Al Akhdar)";24.4607;54.3112
-PK;Sindh;"Karachi (Sector 35 C)";24.8264;67.1533
-BD;"Rajshahi Division";Belkuchi;24.2949;89.6972
-BD;"Mymensingh Division";Mymensingh;24.7225;90.3574
-BD;"Dhaka Division";"Bhairab Upazila";24.0522;90.9871
-BD;"Dhaka Division";Sakhipur;24.4675;90.0894
+PK;Sindh;Chuhar Jamali;24.3944;67.993
+AE;Abu Dhabi;Abu Dhabi (Al Ras Al Akhdar);24.4607;54.3112
+PK;Sindh;Karachi (Sector 35 C);24.8264;67.1533
+BD;Rajshahi Division;Belkuchi;24.2949;89.6972
+BD;Mymensingh Division;Mymensingh;24.7225;90.3574
+BD;Dhaka Division;Bhairab Upazila;24.0522;90.9871
+BD;Dhaka Division;Sakhipur;24.4675;90.0894
 TW;Taiwan;Neili;24.8984;121.157
-IN;"Madhya Pradesh";Isāgarh;24.8391;77.8827
+IN;Madhya Pradesh;Isāgarh;24.8391;77.8827
 IN;Rajasthan;Chhabra;24.6647;76.8438
 IN;Bihar;Nabīnagar;24.6068;84.1262
 IN;Jharkhand;Cherra;24.0124;85.75
 TW;Taiwan;Zhubei;24.8625;121.025
-BD;"Mymensingh Division";Netrakona;24.8624;90.7283
-IN;Jharkhand;"Deoghar (Jyoti Nagar)";24.4757;86.7137
+BD;Mymensingh Division;Netrakona;24.8624;90.7283
+IN;Jharkhand;Deoghar (Jyoti Nagar);24.4757;86.7137
 IN;Jharkhand;Madhupur;24.2801;86.6275
-TW;Taipei;"Banqiao District";24.9976;121.486
-PK;Sindh;"Karachi (Lalazar)";24.845;66.9966
-BD;"Rajshahi Division";Rajshahi;24.3882;88.6186
-IN;Jharkhand;"Jhumri Telaiya";24.4315;85.531
-BD;"Dhaka Division";Ghatail;24.4812;89.9732
+TW;Taipei;Banqiao District;24.9976;121.486
+PK;Sindh;Karachi (Lalazar);24.845;66.9966
+BD;Rajshahi Division;Rajshahi;24.3882;88.6186
+IN;Jharkhand;Jhumri Telaiya;24.4315;85.531
+BD;Dhaka Division;Ghatail;24.4812;89.9732
 TW;Taiwan;Taichung;24.1235;120.661
 TW;Taiwan;Neili;24.956;121.226
-BD;"Dhaka Division";Tāngāil;24.2514;89.9167
-BD;"Rajshahi Division";"Rajshahi (Cantonment)";24.3775;88.598
-TW;Taipei;"Banqiao District";24.9899;121.489
-BD;"Rajshahi Division";Shibganj;24.6837;88.1572
-PK;Sindh;"Karachi (Al Noor Society)";24.9501;67.0745
-BD;"Rajshahi Division";Rāikāli;24.9068;89.0838
-BD;"Mymensingh Division";Muktāgācha;24.7642;90.257
-TW;Taipei;"Shulin District";24.9684;121.438
-TW;Taiwan;"Bade District";24.9682;121.195
+BD;Dhaka Division;Tāngāil;24.2514;89.9167
+BD;Rajshahi Division;Rajshahi (Cantonment);24.3775;88.598
+TW;Taipei;Banqiao District;24.9899;121.489
+BD;Rajshahi Division;Shibganj;24.6837;88.1572
+PK;Sindh;Karachi (Al Noor Society);24.9501;67.0745
+BD;Rajshahi Division;Rāikāli;24.9068;89.0838
+BD;Mymensingh Division;Muktāgācha;24.7642;90.257
+TW;Taipei;Shulin District;24.9684;121.438
+TW;Taiwan;Bade District;24.9682;121.195
 TW;Taiwan;Hsinchu;24.8068;120.969
 TW;Taiwan;Yilan;24.7773;121.743
 TW;Taiwan;Taoyuan;24.9929;121.301
 TW;Taiwan;Taichung;24.1394;120.68
-PK;Sindh;"Karachi (Block 6)";24.861;67.0695
+PK;Sindh;Karachi (Block 6);24.861;67.0695
 TW;Taiwan;Neili;24.9627;121.163
-TW;Taipei;"Xindian District";24.9837;121.504
-BD;"Rajshahi Division";"Bogra (BSCIC Industrial Estate)";24.8725;89.366
-IN;"West Bengal";Suti;24.6172;88.0207
+TW;Taipei;Xindian District;24.9837;121.504
+BD;Rajshahi Division;Bogra (BSCIC Industrial Estate);24.8725;89.366
+IN;West Bengal;Suti;24.6172;88.0207
 TW;Taiwan;Hsinchu;24.8114;120.976
-PK;Sindh;"Karachi (Block 2)";24.8696;67.059
+PK;Sindh;Karachi (Block 2);24.8696;67.059
 IN;Jharkhand;Deoghar;24.4852;86.6948
-PK;Sindh;"Karachi (Block 3)";24.8765;67.0609
+PK;Sindh;Karachi (Block 3);24.8765;67.0609
 TW;Taiwan;Neili;24.9296;121.205
 TW;Taiwan;Fengyuan;24.2641;120.736
-BD;"Rajshahi Division";Raharpur;24.815;88.3233
-TW;Taiwan;"Taoyuan District";24.9885;121.325
-PK;Sindh;"Karachi (Block 6)";24.8633;67.0744
-BD;"Sylhet Division";Sylhet;24.8951;91.8688
+BD;Rajshahi Division;Raharpur;24.815;88.3233
+TW;Taiwan;Taoyuan District;24.9885;121.325
+PK;Sindh;Karachi (Block 6);24.8633;67.0744
+BD;Sylhet Division;Sylhet;24.8951;91.8688
 TW;Taiwan;Taoyuan;24.9934;121.297
 TW;Taiwan;Hsinchu;24.8039;120.965
 PK;Sindh;Karachi;24.8746;67.0217
 TW;Taiwan;Taoyuan;24.9925;121.306
-SA;"Riyadh Region";Riyadh;24.8919;46.7152
+SA;Riyadh Region;Riyadh;24.8919;46.7152
 AE;Dubai;Dubai;24.9822;55.4029
-PK;Sindh;"Karachi (Block 2)";24.9265;67.0895
-MX;Sinaloa;"Culiacán (Guadalupe)";24.7897;-107.396
-US;Florida;"Key West";24.5642;-81.7981
-SA;"Riyadh Region";"Riyadh (Al Misfat)";24.5137;46.8761
-MX;Durango;"San Marcos";24.296;-103.545
-MX;Zacatecas;"Concepción del Oro";24.6132;-101.42
+PK;Sindh;Karachi (Block 2);24.9265;67.0895
+MX;Sinaloa;Culiacán (Guadalupe);24.7897;-107.396
+US;Florida;Key West;24.5642;-81.7981
+SA;Riyadh Region;Riyadh (Al Misfat);24.5137;46.8761
+MX;Durango;San Marcos;24.296;-103.545
+MX;Zacatecas;Concepción del Oro;24.6132;-101.42
 IN;Jharkhand;Dhanwār;24.4107;85.9818
 MX;Sinaloa;Bacurimí;24.8114;-107.448
-MX;Sinaloa;"Culiacán (Los Pinos)";24.7975;-107.405
-IN;Assam;"Dudpatil I";24.9109;92.7904
+MX;Sinaloa;Culiacán (Los Pinos);24.7975;-107.405
+IN;Assam;Dudpatil I;24.9109;92.7904
 IN;Assam;Silchar;24.8273;92.7979
-IN;"Madhya Pradesh";Sohāgi;24.9818;81.6956
+IN;Madhya Pradesh;Sohāgi;24.9818;81.6956
 IN;Rajasthan;Khānpur;24.7324;76.396
 CN;Guangxi;Lipu;24.4987;110.393
 CN;Guangxi;Gongcheng;24.8343;110.824
 CN;Guangxi;Hezhou;24.4036;111.567
-US;Florida;"Summerland Key";24.6613;-81.4448
-SA;"Riyadh Region";"Riyadh (An Nakheel)";24.7407;46.6357
-QA;"Baladīyat ar Rayyān";"Abū Samrah";24.7437;50.8317
+US;Florida;Summerland Key;24.6613;-81.4448
+SA;Riyadh Region;Riyadh (An Nakheel);24.7407;46.6357
+QA;Baladīyat ar Rayyān;Abū Samrah;24.7437;50.8317
 AE;Ajman;Maşfūţ;24.8109;56.1066
-SA;"Riyadh Region";"Riyadh (An Nasīm ash Sharqī)";24.7323;46.8355
+SA;Riyadh Region;Riyadh (An Nasīm ash Sharqī);24.7323;46.8355
 MX;Durango;Durango;24.0248;-104.661
-MX;Durango;"Cinco de Mayo";24.1018;-104.574
-MX;Sinaloa;"Adolfo López Mateos (El Tamarindo)";24.8964;-107.633
-MX;Sinaloa;"Argentina Dos";24.7172;-107.429
-MX;Sinaloa;"El Diez";24.7239;-107.452
+MX;Durango;Cinco de Mayo;24.1018;-104.574
+MX;Sinaloa;Adolfo López Mateos (El Tamarindo);24.8964;-107.633
+MX;Sinaloa;Argentina Dos;24.7172;-107.429
+MX;Sinaloa;El Diez;24.7239;-107.452
 MX;Sinaloa;Bachimeto;24.7417;-107.744
-MX;Sinaloa;"Nuevo Centro de Población Ejidal el 30";24.61;-107.389
-MX;Durango;"Dolores Hidalgo";24.0018;-104.573
-MX;"Baja California Sur";Chametla;24.0993;-110.374
+MX;Sinaloa;Nuevo Centro de Población Ejidal el 30;24.61;-107.389
+MX;Durango;Dolores Hidalgo;24.0018;-104.573
+MX;Baja California Sur;Chametla;24.0993;-110.374
 MX;Sinaloa;Sanalona;24.8022;-107.14
-MX;Sinaloa;"Ejido el Quemadito";24.6976;-107.415
-MX;Sinaloa;"Miguel Valdez Quintero (El Corazón)";24.4942;-107.318
-TW;Taipei;"Xindian District";24.9802;121.552
+MX;Sinaloa;Ejido el Quemadito;24.6976;-107.415
+MX;Sinaloa;Miguel Valdez Quintero (El Corazón);24.4942;-107.318
+TW;Taipei;Xindian District;24.9802;121.552
 CN;Guangxi;Xilin;24.4988;105.094
 IN;Rajasthan;Udaipur;24.5092;73.7564
-PK;Sindh;"Karachi (Abysenia Lines)";24.8594;67.0488
-IN;"Uttar Pradesh";Chopan;24.5233;83.02
+PK;Sindh;Karachi (Abysenia Lines);24.8594;67.0488
+IN;Uttar Pradesh;Chopan;24.5233;83.02
 IN;Jharkhand;Chaupāran;24.3833;85.2589
 IN;Gujarat;Ambaji;24.2807;72.7038
 IN;Jharkhand;Chatrā;24.2065;84.8718
-IN;Rajasthan;"Udaipur (Madhuban)";24.5913;73.6941
+IN;Rajasthan;Udaipur (Madhuban);24.5913;73.6941
 IN;Gujarat;Pālanpur;24.1724;72.4346
 IN;Rajasthan;Chittorgarh;24.8829;74.623
-IN;"Madhya Pradesh";Panna;24.718;80.1819
-IN;"Madhya Pradesh";Jirapur;24.0205;76.3782
+IN;Madhya Pradesh;Panna;24.718;80.1819
+IN;Madhya Pradesh;Jirapur;24.0205;76.3782
 PK;Sindh;Daromehar;24.7938;68.1798
-PK;Sindh;"Tando Bago";24.7891;68.9653
+PK;Sindh;Tando Bago;24.7891;68.9653
 PK;Sindh;Bulri;24.8667;68.3333
 CN;Yunnan;Xiaobanqiao;24.9794;102.774
 CN;Guangdong;Xihe;24.8032;113.561
 CN;Yunnan;Zhongshu;24.5167;103.767
 CN;Fujian;Xindian;24.6101;118.241
-SA;"Riyadh Region";Riyadh;24.7352;46.7032
-SA;"Riyadh Region";Riyadh;24.7731;46.6663
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9392;55.052
-SA;"Riyadh Region";"Riyadh (‘Irqah)";24.6911;46.6052
-SA;"Riyadh Region";"Riyadh (Al ‘Amal)";24.6502;46.7167
-SA;"Riyadh Region";"Riyadh (Al Aarid)";24.8807;46.6015
-SA;"Medina Region";Medina;24.4934;39.5932
-AE;"Abu Dhabi";"Abu Dhabi (Zayed Military City)";24.4403;54.8263
-AE;Dubai;"Jebel Ali (Mina Jebel Ali)";24.9857;55.0273
-SA;"Riyadh Region";"Riyadh (At Taawun)";24.7666;46.7051
-AE;"Abu Dhabi";"Abu Dhabi (Musaffah City)";24.3753;54.5108
-SA;"Riyadh Region";Riyadh;24.7494;46.653
-SA;"Riyadh Region";"Al Kharj";24.1576;47.3248
-SA;"Riyadh Region";"Riyadh (Al Murabba‘)";24.6543;46.7107
-SA;"Riyadh Region";"Riyadh (Ministries Area)";24.6642;46.7114
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9708;55.0771
-SA;"Riyadh Region";"Riyadh (Tuwaiq)";24.5835;46.5374
+SA;Riyadh Region;Riyadh;24.7352;46.7032
+SA;Riyadh Region;Riyadh;24.7731;46.6663
+AE;Dubai;Dubai (Mina Jebel Ali);24.9392;55.052
+SA;Riyadh Region;Riyadh (‘Irqah);24.6911;46.6052
+SA;Riyadh Region;Riyadh (Al ‘Amal);24.6502;46.7167
+SA;Riyadh Region;Riyadh (Al Aarid);24.8807;46.6015
+SA;Medina Region;Medina;24.4934;39.5932
+AE;Abu Dhabi;Abu Dhabi (Zayed Military City);24.4403;54.8263
+AE;Dubai;Jebel Ali (Mina Jebel Ali);24.9857;55.0273
+SA;Riyadh Region;Riyadh (At Taawun);24.7666;46.7051
+AE;Abu Dhabi;Abu Dhabi (Musaffah City);24.3753;54.5108
+SA;Riyadh Region;Riyadh;24.7494;46.653
+SA;Riyadh Region;Al Kharj;24.1576;47.3248
+SA;Riyadh Region;Riyadh (Al Murabba‘);24.6543;46.7107
+SA;Riyadh Region;Riyadh (Ministries Area);24.6642;46.7114
+AE;Dubai;Dubai (Mina Jebel Ali);24.9708;55.0771
+SA;Riyadh Region;Riyadh (Tuwaiq);24.5835;46.5374
 AE;Dubai;Dubai;24.9613;55.1521
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.7052;46.6764
-SA;"Riyadh Region";"Riyadh (Al ‘Ulayyā)";24.7073;46.6794
-SA;"Riyadh Region";"Riyadh (Al Murabba‘)";24.6744;46.7035
-SA;"Riyadh Region";"Riyadh (Salahuddin)";24.731;46.6882
-SA;"Riyadh Region";Riyadh;24.7073;46.6794
-SA;"Riyadh Region";"As Sulaymānīyah (Al ‘Ulayyā)";24.7073;46.6794
-SA;"Riyadh Region";Riyadh;24.8272;46.6271
+SA;Riyadh Region;Riyadh (Al Olaya);24.7052;46.6764
+SA;Riyadh Region;Riyadh (Al ‘Ulayyā);24.7073;46.6794
+SA;Riyadh Region;Riyadh (Al Murabba‘);24.6744;46.7035
+SA;Riyadh Region;Riyadh (Salahuddin);24.731;46.6882
+SA;Riyadh Region;Riyadh;24.7073;46.6794
+SA;Riyadh Region;As Sulaymānīyah (Al ‘Ulayyā);24.7073;46.6794
+SA;Riyadh Region;Riyadh;24.8272;46.6271
 AE;Dubai;Dubai;24.9687;55.1678
-SA;"Riyadh Region";"Riyadh (Ar Rahmaniyyah)";24.7168;46.6592
-SA;"Riyadh Region";"Riyadh (As Sulimaniyah)";24.7087;46.7101
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9794;55.0507
-SA;"Riyadh Region";"Riyadh (Al Jazīrah)";24.6554;46.8038
-SA;"Riyadh Region";Riyadh;24.7562;46.7293
-SA;"Riyadh Region";Riyadh;24.6474;46.7654
-SA;"Riyadh Region";"Riyadh (Al Fūţah)";24.682;46.7074
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.7071;46.6754
-SA;"Riyadh Region";"Riyadh (Al Wizārāt)";24.6841;46.7107
-SA;"Riyadh Region";"Riyadh (King Salman Neighborhood)";24.746;46.7074
-SA;"Riyadh Region";"Ad Dir‘īyah (Ḩiţţīn)";24.7663;46.6028
-SA;"Riyadh Region";"Riyadh (Al Mursalāt)";24.7547;46.6908
-SA;"Riyadh Region";"Riyadh (King Saud University)";24.7146;46.6296
-AE;"Abu Dhabi";"Abu Dhabi";24.4255;54.4725
-SA;"Riyadh Region";"Riyadh (Al Mathar Ash Shamali)";24.7035;46.6619
-SA;"Riyadh Region";Riyadh;24.708;46.707
-AE;"Abu Dhabi";"Abu Dhabi (Zayed Military City)";24.4961;54.8951
-SA;"Riyadh Region";"Riyadh (At Taawun)";24.777;46.7081
-SA;"Riyadh Region";"Riyadh (Qurţubah)";24.8068;46.7181
-SA;"Riyadh Region";"Riyadh (Al Murūj)";24.7529;46.6551
-SA;"Riyadh Region";"Riyadh (King Abdul Aziz)";24.6998;46.7192
-SA;"Riyadh Region";"Riyadh (Al Safarat)";24.6856;46.6256
-AE;"Abu Dhabi";"Abu Dhabi (Āl Nahyān)";24.4664;54.3921
-SA;"Riyadh Region";"Riyadh (Al ‘Aqīq)";24.7636;46.6416
-SA;"Riyadh Region";"Riyadh (As Sulimaniyah)";24.7163;46.6842
-MX;Sinaloa;"Ejido Mezquitillo (Chapeteado)";24.4819;-107.44
-MX;Durango;"Durango (Manuel Buendía)";24.0015;-104.692
-MX;Zacatecas;"Juan Aldama";24.2907;-103.393
-MX;Zacatecas;"Villa Cárdenas";24.29;-103.105
-MX;Zacatecas;"Miguel Auza";24.2945;-103.451
-MX;Tamaulipas;"Nueva Villa de Padilla";24.0482;-98.9006
-MX;Tamaulipas;"Guadalupe Victoria";24.0821;-98.2334
-MX;Tamaulipas;"San Fernando";24.8471;-98.1488
-MX;"Nuevo León";"La Ascensión";24.3239;-99.9141
-MX;"Nuevo León";Galeana;24.8246;-100.076
-MX;"Nuevo León";Hualahuises;24.8829;-99.6749
-MX;"Baja California Sur";"La Paz";24.1423;-110.313
-MX;"Baja California Sur";"El Centenario";24.1025;-110.414
-MX;Sinaloa;"Campo Cinco Hermanos (Emiliano Zapata)";24.8086;-107.859
-MX;Sinaloa;"Costa Rica";24.5907;-107.39
-MX;Sinaloa;"Pueblo Nuevo";24.5936;-107.353
+SA;Riyadh Region;Riyadh (Ar Rahmaniyyah);24.7168;46.6592
+SA;Riyadh Region;Riyadh (As Sulimaniyah);24.7087;46.7101
+AE;Dubai;Dubai (Mina Jebel Ali);24.9794;55.0507
+SA;Riyadh Region;Riyadh (Al Jazīrah);24.6554;46.8038
+SA;Riyadh Region;Riyadh;24.7562;46.7293
+SA;Riyadh Region;Riyadh;24.6474;46.7654
+SA;Riyadh Region;Riyadh (Al Fūţah);24.682;46.7074
+SA;Riyadh Region;Riyadh (Al Olaya);24.7071;46.6754
+SA;Riyadh Region;Riyadh (Al Wizārāt);24.6841;46.7107
+SA;Riyadh Region;Riyadh (King Salman Neighborhood);24.746;46.7074
+SA;Riyadh Region;Ad Dir‘īyah (Ḩiţţīn);24.7663;46.6028
+SA;Riyadh Region;Riyadh (Al Mursalāt);24.7547;46.6908
+SA;Riyadh Region;Riyadh (King Saud University);24.7146;46.6296
+AE;Abu Dhabi;Abu Dhabi;24.4255;54.4725
+SA;Riyadh Region;Riyadh (Al Mathar Ash Shamali);24.7035;46.6619
+SA;Riyadh Region;Riyadh;24.708;46.707
+AE;Abu Dhabi;Abu Dhabi (Zayed Military City);24.4961;54.8951
+SA;Riyadh Region;Riyadh (At Taawun);24.777;46.7081
+SA;Riyadh Region;Riyadh (Qurţubah);24.8068;46.7181
+SA;Riyadh Region;Riyadh (Al Murūj);24.7529;46.6551
+SA;Riyadh Region;Riyadh (King Abdul Aziz);24.6998;46.7192
+SA;Riyadh Region;Riyadh (Al Safarat);24.6856;46.6256
+AE;Abu Dhabi;Abu Dhabi (Āl Nahyān);24.4664;54.3921
+SA;Riyadh Region;Riyadh (Al ‘Aqīq);24.7636;46.6416
+SA;Riyadh Region;Riyadh (As Sulimaniyah);24.7163;46.6842
+MX;Sinaloa;Ejido Mezquitillo (Chapeteado);24.4819;-107.44
+MX;Durango;Durango (Manuel Buendía);24.0015;-104.692
+MX;Zacatecas;Juan Aldama;24.2907;-103.393
+MX;Zacatecas;Villa Cárdenas;24.29;-103.105
+MX;Zacatecas;Miguel Auza;24.2945;-103.451
+MX;Tamaulipas;Nueva Villa de Padilla;24.0482;-98.9006
+MX;Tamaulipas;Guadalupe Victoria;24.0821;-98.2334
+MX;Tamaulipas;San Fernando;24.8471;-98.1488
+MX;Nuevo León;La Ascensión;24.3239;-99.9141
+MX;Nuevo León;Galeana;24.8246;-100.076
+MX;Nuevo León;Hualahuises;24.8829;-99.6749
+MX;Baja California Sur;La Paz;24.1423;-110.313
+MX;Baja California Sur;El Centenario;24.1025;-110.414
+MX;Sinaloa;Campo Cinco Hermanos (Emiliano Zapata);24.8086;-107.859
+MX;Sinaloa;Costa Rica;24.5907;-107.39
+MX;Sinaloa;Pueblo Nuevo;24.5936;-107.353
 MX;Sinaloa;Altata;24.6325;-107.93
-MX;Sinaloa;"Juan Escutia";24.9408;-107.734
-MX;Sinaloa;"Estación Rosales";24.8368;-107.58
+MX;Sinaloa;Juan Escutia;24.9408;-107.734
+MX;Sinaloa;Estación Rosales;24.8368;-107.58
 MX;Sinaloa;Eldorado;24.3244;-107.367
 MX;Sinaloa;Navolato;24.7668;-107.698
 MX;Sinaloa;Culiacancito;24.8249;-107.534
 MX;Sinaloa;Villamoros;24.6654;-107.672
 MX;Sinaloa;Quilá;24.4227;-107.221
-MX;Sinaloa;"La Palmita y Anexos (La Presita)";24.9092;-107.452
+MX;Sinaloa;La Palmita y Anexos (La Presita);24.9092;-107.452
 MX;Sinaloa;Cosalá;24.4114;-106.692
-MX;Zacatecas;"Colonia Fovissste";24.6114;-101.374
-MX;Zacatecas;"San Tiburcio";24.1461;-101.485
-MX;Sinaloa;"El Higueral";24.3103;-107.348
-MX;"Baja California Sur";"Villa Morelos";24.93;-111.628
-MX;"Baja California Sur";"Puerto San Carlos";24.7887;-112.105
-MX;Durango;"San Miguel de Cruces";24.4125;-105.842
-SA;"Riyadh Region";"Riyadh (Al Mursalāt)";24.7544;46.6905
-MX;"Nuevo León";Iturbide;24.726;-99.9041
-MX;"Nuevo León";Pablillo;24.5919;-99.9954
-MX;Durango;"Peñón Blanco";24.7929;-104.027
-MX;Durango;"Ignacio Ramírez";24.508;-104.088
-MX;Durango;"Francisco I. Madero";24.4009;-104.32
+MX;Zacatecas;Colonia Fovissste;24.6114;-101.374
+MX;Zacatecas;San Tiburcio;24.1461;-101.485
+MX;Sinaloa;El Higueral;24.3103;-107.348
+MX;Baja California Sur;Villa Morelos;24.93;-111.628
+MX;Baja California Sur;Puerto San Carlos;24.7887;-112.105
+MX;Durango;San Miguel de Cruces;24.4125;-105.842
+SA;Riyadh Region;Riyadh (Al Mursalāt);24.7544;46.6905
+MX;Nuevo León;Iturbide;24.726;-99.9041
+MX;Nuevo León;Pablillo;24.5919;-99.9954
+MX;Durango;Peñón Blanco;24.7929;-104.027
+MX;Durango;Ignacio Ramírez;24.508;-104.088
+MX;Durango;Francisco I. Madero;24.4009;-104.32
 MX;Durango;Canatlán;24.5258;-104.773
-MX;Durango;"Ignacio Allende";24.4743;-103.997
-MX;Durango;"Nuevo Ideal";24.8854;-105.076
-MX;Durango;"Luis Moya";24.5499;-103.964
-MX;Durango;"Ciudad Guadalupe Victoria";24.444;-104.122
-MX;Durango;"El Nuevo Porvenir";24.855;-104.97
-MX;Durango;"Juan Aldama";24.4672;-104.148
-MX;Durango;"San José de Gracia";24.4751;-104.742
-MX;Durango;"San José Avino";24.5233;-104.299
-MX;Durango;"La Sauceda";24.5235;-104.749
-MX;Zacatecas;"Ojitos de Santa Lucía";24.3088;-103.344
-MX;Sinaloa;"Rosa Morada";24.6725;-107.691
-MX;Sinaloa;"Las Puentes (Guadalupe Victoria)";24.5325;-107.541
-MX;Sinaloa;"Laguna Colorada";24.6821;-107.31
-MX;Sinaloa;"Las Piedritas";24.4119;-107.367
-MX;Sinaloa;"Guadalupe Victoria";24.2994;-107.271
-MX;Sinaloa;"General Ángel Flores (La Palma)";24.8192;-107.657
-MX;Sinaloa;"El Salado";24.508;-107.16
+MX;Durango;Ignacio Allende;24.4743;-103.997
+MX;Durango;Nuevo Ideal;24.8854;-105.076
+MX;Durango;Luis Moya;24.5499;-103.964
+MX;Durango;Ciudad Guadalupe Victoria;24.444;-104.122
+MX;Durango;El Nuevo Porvenir;24.855;-104.97
+MX;Durango;Juan Aldama;24.4672;-104.148
+MX;Durango;San José de Gracia;24.4751;-104.742
+MX;Durango;San José Avino;24.5233;-104.299
+MX;Durango;La Sauceda;24.5235;-104.749
+MX;Zacatecas;Ojitos de Santa Lucía;24.3088;-103.344
+MX;Sinaloa;Rosa Morada;24.6725;-107.691
+MX;Sinaloa;Las Puentes (Guadalupe Victoria);24.5325;-107.541
+MX;Sinaloa;Laguna Colorada;24.6821;-107.31
+MX;Sinaloa;Las Piedritas;24.4119;-107.367
+MX;Sinaloa;Guadalupe Victoria;24.2994;-107.271
+MX;Sinaloa;General Ángel Flores (La Palma);24.8192;-107.657
+MX;Sinaloa;El Salado;24.508;-107.16
 MX;Sinaloa;Bariometo;24.7667;-107.663
-MX;"Nuevo León";"Catarino Rodríguez";24.8454;-100.32
-MX;"Nuevo León";"Río Verde";24.9008;-99.5434
+MX;Nuevo León;Catarino Rodríguez;24.8454;-100.32
+MX;Nuevo León;Río Verde;24.9008;-99.5434
 MX;Durango;Navacoyán;24.0487;-104.55
-MX;Durango;"José Guadalupe Aguilera (Santa Lucía)";24.4542;-104.709
-MX;Durango;"Santa Clara";24.475;-103.357
-MX;Durango;"San Juan de Guadalupe";24.6327;-102.782
-MX;Tamaulipas;"San Fernando";24.8501;-98.1448
-AE;"Abu Dhabi";"Abu Dhabi (Al Mushrif)";24.4376;54.3811
+MX;Durango;José Guadalupe Aguilera (Santa Lucía);24.4542;-104.709
+MX;Durango;Santa Clara;24.475;-103.357
+MX;Durango;San Juan de Guadalupe;24.6327;-102.782
+MX;Tamaulipas;San Fernando;24.8501;-98.1448
+AE;Abu Dhabi;Abu Dhabi (Al Mushrif);24.4376;54.3811
 TW;Taiwan;Hsinchu;24.7823;121.006
-MX;"Baja California Sur";"La Paz (El Mezquitito)";24.0953;-110.308
-SA;"Riyadh Region";"Riyadh (Dhahrat Al Badi'ah)";24.5934;46.6312
+MX;Baja California Sur;La Paz (El Mezquitito);24.0953;-110.308
+SA;Riyadh Region;Riyadh (Dhahrat Al Badi'ah);24.5934;46.6312
 MX;Sinaloa;Culiacán;24.8024;-107.401
-SA;"Riyadh Region";Riyadh;24.7111;46.7036
-SA;"Ar Riyāḑ";Riyadh;24.5975;46.5503
-SA;"Riyadh Region";"Riyadh (As Sulimaniyah)";24.7053;46.7066
-AE;"Abu Dhabi";"Abu Dhabi (Al Bateen)";24.4683;54.3408
-SA;"Riyadh Region";Riyadh;24.7328;46.7647
-SA;"Riyadh Region";"Riyadh (Al Malazz)";24.6624;46.7288
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.6778;46.693
-SA;"Riyadh Region";"Riyadh (Al Mathar Ash Shamali)";24.6844;46.6755
-SA;"Ar Riyāḑ";"Riyadh (Al Malazz)";24.6718;46.7302
-SA;"Ar Riyāḑ";Riyadh;24.8205;46.6863
-SA;"Riyadh Region";Riyadh;24.8205;46.6863
-SA;"Riyadh Region";"Riyadh (Gharnāţah)";24.787;46.726
-SA;"Mecca Region";"Riyadh (Ash Shuhadā’)";24.7871;46.727
-AE;"Abu Dhabi";"Al Ain";24.2006;55.676
+SA;Riyadh Region;Riyadh;24.7111;46.7036
+SA;Ar Riyāḑ;Riyadh;24.5975;46.5503
+SA;Riyadh Region;Riyadh (As Sulimaniyah);24.7053;46.7066
+AE;Abu Dhabi;Abu Dhabi (Al Bateen);24.4683;54.3408
+SA;Riyadh Region;Riyadh;24.7328;46.7647
+SA;Riyadh Region;Riyadh (Al Malazz);24.6624;46.7288
+SA;Riyadh Region;Riyadh (Al Olaya);24.6778;46.693
+SA;Riyadh Region;Riyadh (Al Mathar Ash Shamali);24.6844;46.6755
+SA;Ar Riyāḑ;Riyadh (Al Malazz);24.6718;46.7302
+SA;Ar Riyāḑ;Riyadh;24.8205;46.6863
+SA;Riyadh Region;Riyadh;24.8205;46.6863
+SA;Riyadh Region;Riyadh (Gharnāţah);24.787;46.726
+SA;Mecca Region;Riyadh (Ash Shuhadā’);24.7871;46.727
+AE;Abu Dhabi;Al Ain;24.2006;55.676
 AE;Dubai;Dubai;24.9843;55.0907
-AE;"Abu Dhabi";"Abu Dhabi (Al Ma'arid)";24.4208;54.4408
-AE;"Abu Dhabi";"Abu Dhabi (Al Ḩişn)";24.4865;54.3513
-AE;"Abu Dhabi";"Abu Dhabi";24.4571;54.3942
-AE;"Abu Dhabi";"Al Ain ('Asharij)";24.2006;55.676
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.496;54.364
-AE;"Abu Dhabi";"Abu Dhabi";24.4196;54.4471
-AE;"Abu Dhabi";"Abu Dhabi";24.4988;54.4034
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.4922;54.3757
-AE;"Abu Dhabi";"Abu Dhabi (Al Danah)";24.4902;54.3687
-AE;"Abu Dhabi";"Abu Dhabi (Baţīn)";24.4616;54.3236
-AE;"Abu Dhabi";"Abu Dhabi";24.4811;54.3501
-AE;"Abu Dhabi";"Abu Dhabi";24.4706;54.3723
-AE;"Abu Dhabi";"Abu Dhabi (Musaffah)";24.354;54.4647
+AE;Abu Dhabi;Abu Dhabi (Al Ma'arid);24.4208;54.4408
+AE;Abu Dhabi;Abu Dhabi (Al Ḩişn);24.4865;54.3513
+AE;Abu Dhabi;Abu Dhabi;24.4571;54.3942
+AE;Abu Dhabi;Al Ain ('Asharij);24.2006;55.676
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.496;54.364
+AE;Abu Dhabi;Abu Dhabi;24.4196;54.4471
+AE;Abu Dhabi;Abu Dhabi;24.4988;54.4034
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.4922;54.3757
+AE;Abu Dhabi;Abu Dhabi (Al Danah);24.4902;54.3687
+AE;Abu Dhabi;Abu Dhabi (Baţīn);24.4616;54.3236
+AE;Abu Dhabi;Abu Dhabi;24.4811;54.3501
+AE;Abu Dhabi;Abu Dhabi;24.4706;54.3723
+AE;Abu Dhabi;Abu Dhabi (Musaffah);24.354;54.4647
 AE;Dubai;Dubai;24.9955;55.1305
-AE;"Abu Dhabi";"Abu Dhabi";24.4297;54.4313
-AE;"Abu Dhabi";"Abu Dhabi (Al Zahiyah)";24.4959;54.3832
-AE;"Abu Dhabi";"Abu Dhabi (Al Bateen)";24.4664;54.3329
-AE;"Abu Dhabi";"Abu Dhabi (Al Danah)";24.4766;54.3656
-AE;"Abu Dhabi";"Abu Dhabi (Musaffah)";24.3789;54.4975
-AE;"Abu Dhabi";"Abu Dhabi (Al Ḩişn)";24.4888;54.3527
-AE;"Abu Dhabi";"Abu Dhabi (Mohamed Bin Zayed City)";24.3305;54.5344
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9975;55.0917
-AE;"Abu Dhabi";"Abu Dhabi (Al Ras Al Akhdar)";24.4616;54.3173
-AE;"Abu Dhabi";"Abu Dhabi";24.4988;54.3675
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.4861;54.3739
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.4791;54.3702
-AE;Dubai;"Jebel Ali";24.9654;55.0804
-SA;"Riyadh Region";"Riyadh (An Narjis)";24.8243;46.6844
-SA;"Riyadh Region";"Riyadh (Alyasmin)";24.834;46.6456
-SA;"Riyadh Region";Riyadh;24.5975;46.5503
-SA;"Riyadh Region";"Riyadh (As Safarat)";24.6778;46.6223
+AE;Abu Dhabi;Abu Dhabi;24.4297;54.4313
+AE;Abu Dhabi;Abu Dhabi (Al Zahiyah);24.4959;54.3832
+AE;Abu Dhabi;Abu Dhabi (Al Bateen);24.4664;54.3329
+AE;Abu Dhabi;Abu Dhabi (Al Danah);24.4766;54.3656
+AE;Abu Dhabi;Abu Dhabi (Musaffah);24.3789;54.4975
+AE;Abu Dhabi;Abu Dhabi (Al Ḩişn);24.4888;54.3527
+AE;Abu Dhabi;Abu Dhabi (Mohamed Bin Zayed City);24.3305;54.5344
+AE;Dubai;Dubai (Mina Jebel Ali);24.9975;55.0917
+AE;Abu Dhabi;Abu Dhabi (Al Ras Al Akhdar);24.4616;54.3173
+AE;Abu Dhabi;Abu Dhabi;24.4988;54.3675
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.4861;54.3739
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.4791;54.3702
+AE;Dubai;Jebel Ali;24.9654;55.0804
+SA;Riyadh Region;Riyadh (An Narjis);24.8243;46.6844
+SA;Riyadh Region;Riyadh (Alyasmin);24.834;46.6456
+SA;Riyadh Region;Riyadh;24.5975;46.5503
+SA;Riyadh Region;Riyadh (As Safarat);24.6778;46.6223
 PK;Sindh;Karachi;24.8344;66.9742
-SA;"Riyadh Region";"Riyadh (As Sulimaniyah)";24.6926;46.7016
-SA;"Riyadh Region";"Riyadh (As Sulimaniyah)";24.6977;46.7018
-SA;"Riyadh Region";"Riyadh (Al Mathar Ash Shamali)";24.7038;46.6618
-SA;"Ar Riyāḑ";"Riyadh (An Nafal)";24.7841;46.6729
-SA;"Riyadh Region";"Riyadh (An Nafal)";24.7841;46.6729
-AE;"Abu Dhabi";"Abu Dhabi";24.432;54.4334
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.4835;54.3771
-AE;"Abu Dhabi";"Abu Dhabi (Al Bateen)";24.4549;54.3435
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9857;55.0273
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.49;54.3706
-AE;"Abu Dhabi";"Al Ain (Al Jasr)";24.2267;55.5531
-AE;"Abu Dhabi";"Abu Dhabi";24.4526;54.3629
-AE;"Abu Dhabi";"Abu Dhabi (Al Saadiyat Island)";24.5288;54.4035
-AE;"Abu Dhabi";"Abu Dhabi (Al Bateen)";24.4588;54.3218
-AE;Dubai;"Dubai (Jebel Ali Freezone Extension)";24.9713;55.0985
-AE;"Abu Dhabi";"Abu Dhabi (Zayed City)";24.3653;54.563
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.4789;54.3714
-AE;"Abu Dhabi";"Abu Dhabi (Al Sa'Diyat)";24.5303;54.4452
-AE;"Abu Dhabi";"Abu Dhabi Region (Al Bihouth)";24.2504;54.5488
-AE;Dubai;"Jebel Ali (Dubai South)";24.9106;55.119
-AE;"Abu Dhabi";"Abu Dhabi (Musaffah)";24.3541;54.4979
-AE;"Abu Dhabi";"Abu Dhabi (Al Ḩişn)";24.4828;54.3574
-AE;Dubai;"Jebel Ali";24.8366;55.0744
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.4983;54.3667
-AE;"Abu Dhabi";"Abu Dhabi (Khalifa City)";24.438;54.6143
-AE;"Abu Dhabi";"Abu Dhabi (Jazeerat Yas)";24.4893;54.6108
-AE;"Abu Dhabi";"Abu Dhabi (Al Manhal)";24.4628;54.3746
-AE;"Abu Dhabi";"Abu Dhabi (Al Bateen)";24.469;54.3376
-AE;"Abu Dhabi";"Abu Dhabi (Al Danah)";24.4819;54.3731
-AE;Dubai;"Jebel Ali";24.9834;55.1541
-AE;"Abu Dhabi";"Abu Dhabi (Āl Nahyān)";24.4584;54.3869
-AE;"Abu Dhabi";"Abu Dhabi (Āl Nahyān)";24.4691;54.377
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9997;55.0918
+SA;Riyadh Region;Riyadh (As Sulimaniyah);24.6926;46.7016
+SA;Riyadh Region;Riyadh (As Sulimaniyah);24.6977;46.7018
+SA;Riyadh Region;Riyadh (Al Mathar Ash Shamali);24.7038;46.6618
+SA;Ar Riyāḑ;Riyadh (An Nafal);24.7841;46.6729
+SA;Riyadh Region;Riyadh (An Nafal);24.7841;46.6729
+AE;Abu Dhabi;Abu Dhabi;24.432;54.4334
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.4835;54.3771
+AE;Abu Dhabi;Abu Dhabi (Al Bateen);24.4549;54.3435
+AE;Dubai;Dubai (Mina Jebel Ali);24.9857;55.0273
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.49;54.3706
+AE;Abu Dhabi;Al Ain (Al Jasr);24.2267;55.5531
+AE;Abu Dhabi;Abu Dhabi;24.4526;54.3629
+AE;Abu Dhabi;Abu Dhabi (Al Saadiyat Island);24.5288;54.4035
+AE;Abu Dhabi;Abu Dhabi (Al Bateen);24.4588;54.3218
+AE;Dubai;Dubai (Jebel Ali Freezone Extension);24.9713;55.0985
+AE;Abu Dhabi;Abu Dhabi (Zayed City);24.3653;54.563
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.4789;54.3714
+AE;Abu Dhabi;Abu Dhabi (Al Sa'Diyat);24.5303;54.4452
+AE;Abu Dhabi;Abu Dhabi Region (Al Bihouth);24.2504;54.5488
+AE;Dubai;Jebel Ali (Dubai South);24.9106;55.119
+AE;Abu Dhabi;Abu Dhabi (Musaffah);24.3541;54.4979
+AE;Abu Dhabi;Abu Dhabi (Al Ḩişn);24.4828;54.3574
+AE;Dubai;Jebel Ali;24.8366;55.0744
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.4983;54.3667
+AE;Abu Dhabi;Abu Dhabi (Khalifa City);24.438;54.6143
+AE;Abu Dhabi;Abu Dhabi (Jazeerat Yas);24.4893;54.6108
+AE;Abu Dhabi;Abu Dhabi (Al Manhal);24.4628;54.3746
+AE;Abu Dhabi;Abu Dhabi (Al Bateen);24.469;54.3376
+AE;Abu Dhabi;Abu Dhabi (Al Danah);24.4819;54.3731
+AE;Dubai;Jebel Ali;24.9834;55.1541
+AE;Abu Dhabi;Abu Dhabi (Āl Nahyān);24.4584;54.3869
+AE;Abu Dhabi;Abu Dhabi (Āl Nahyān);24.4691;54.377
+AE;Dubai;Dubai (Mina Jebel Ali);24.9997;55.0918
 AE;Dubai;Margham;24.9037;55.6273
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.965;55.0803
-SA;"Riyadh Region";"Riyadh (Al Maazer)";24.6703;46.6789
-PK;Sindh;"Karachi (Sector Five F)";24.826;67.1014
-PK;Sindh;"Karachi (Shanti Nagar)";24.8969;67.0996
-LY;"Murzuq District";"Al Qaţrūn";24.9514;14.6486
-CN;Fujian;"Quanzhou (Qingyang Residential District)";24.8173;118.572
-US;Florida;"Key West";24.5585;-81.7857
-MX;"Baja California Sur";"La Paz (Guerrero)";24.1501;-110.307
-MX;Durango;"Durango (Nueva Vizcaya)";24.0324;-104.646
-MX;Sinaloa;"Culiacán (Guadalupe)";24.7889;-107.399
+AE;Dubai;Dubai (Mina Jebel Ali);24.965;55.0803
+SA;Riyadh Region;Riyadh (Al Maazer);24.6703;46.6789
+PK;Sindh;Karachi (Sector Five F);24.826;67.1014
+PK;Sindh;Karachi (Shanti Nagar);24.8969;67.0996
+LY;Murzuq District;Al Qaţrūn;24.9514;14.6486
+CN;Fujian;Quanzhou (Qingyang Residential District);24.8173;118.572
+US;Florida;Key West;24.5585;-81.7857
+MX;Baja California Sur;La Paz (Guerrero);24.1501;-110.307
+MX;Durango;Durango (Nueva Vizcaya);24.0324;-104.646
+MX;Sinaloa;Culiacán (Guadalupe);24.7889;-107.399
 MX;Durango;Durango;24.0059;-104.683
 MX;Sinaloa;Obispo;24.3071;-107.102
-MX;Sinaloa;"La Higuera";24.5912;-107.182
+MX;Sinaloa;La Higuera;24.5912;-107.182
 MX;Sinaloa;Bachigualatito;24.7132;-107.47
-MX;Sinaloa;"Culiacán (Lomas del Boulevard)";24.7873;-107.425
+MX;Sinaloa;Culiacán (Lomas del Boulevard);24.7873;-107.425
 MX;Sinaloa;Tanques;24.0621;-107.015
 MX;Durango;Durango;24.027;-104.651
-MX;Durango;"Durango (Zona Centro)";24.0259;-104.657
-MX;Zacatecas;"Melchor Ocampo";24.8311;-101.643
+MX;Durango;Durango (Zona Centro);24.0259;-104.657
+MX;Zacatecas;Melchor Ocampo;24.8311;-101.643
 MX;Zacatecas;Cedros;24.6784;-101.772
-PK;Sindh;"Karachi (Aga Khan University Hospital)";24.892;67.0735
-TW;Taipei;"Banqiao District";24.9932;121.503
-PK;Sindh;"Karachi (Naval Officers Colony)";24.8438;67.0027
-PK;Sindh;"Karachi (Defence V)";24.8092;67.0384
-PK;Sindh;"Karachi (Block 2)";24.9265;67.0894
-IN;"West Bengal";Paikpara;24.7712;87.9225
-PK;Sindh;"Karachi (Faisal  Cantonment)";24.8945;67.1517
-BD;"Rajshahi Division";Ātāikula;24.0313;89.4068
-BD;"Rajshahi Division";Tilakpur;24.8592;88.9749
+PK;Sindh;Karachi (Aga Khan University Hospital);24.892;67.0735
+TW;Taipei;Banqiao District;24.9932;121.503
+PK;Sindh;Karachi (Naval Officers Colony);24.8438;67.0027
+PK;Sindh;Karachi (Defence V);24.8092;67.0384
+PK;Sindh;Karachi (Block 2);24.9265;67.0894
+IN;West Bengal;Paikpara;24.7712;87.9225
+PK;Sindh;Karachi (Faisal  Cantonment);24.8945;67.1517
+BD;Rajshahi Division;Ātāikula;24.0313;89.4068
+BD;Rajshahi Division;Tilakpur;24.8592;88.9749
 TW;Taiwan;Fengyuan;24.2168;120.678
 TW;Taiwan;Yilan;24.7696;121.799
 TW;Taiwan;Buzi;24.2112;120.523
 TW;Taiwan;Neili;24.9683;121.249
-TW;Taipei;"Pinglin District";24.9351;121.711
+TW;Taipei;Pinglin District;24.9351;121.711
 TW;Taiwan;Taoyuan;24.9924;121.302
 TW;Taiwan;Taichung;24.1317;120.668
 TW;Taiwan;Taichung;24.1855;120.698
@@ -1360,27 +1360,27 @@ TW;Taiwan;Zhubei;24.8728;121.023
 TW;Taiwan;Neili;24.9593;121.176
 TW;Taiwan;Hsinchu;24.7911;121.012
 CN;Guangdong;Shaoguan;24.8109;113.598
-PK;Sindh;"Karachi (Civil Lines)";24.8464;67.0244
-PK;Sindh;"Karachi (Block 2)";24.8678;67.0525
-TW;Taipei;"Banqiao District";24.9909;121.5
+PK;Sindh;Karachi (Civil Lines);24.8464;67.0244
+PK;Sindh;Karachi (Block 2);24.8678;67.0525
+TW;Taipei;Banqiao District;24.9909;121.5
 TW;Taiwan;Taichung;24.1635;120.65
 TW;Taiwan;Taichung;24.1648;120.654
-PK;Sindh;"Karachi (Clifton)";24.8243;67.0351
-PK;Sindh;"Karachi (Block 5)";24.8154;67.0217
+PK;Sindh;Karachi (Clifton);24.8243;67.0351
+PK;Sindh;Karachi (Block 5);24.8154;67.0217
 PK;Sindh;Karachi;24.7984;67.1054
-CN;Guangdong;"Heyuan (Heping County)";24.4422;114.939
+CN;Guangdong;Heyuan (Heping County);24.4422;114.939
 TW;Taiwan;Changhua;24.0288;120.562
-PK;Sindh;"Karachi (Tariq Lines)";24.8577;67.0457
+PK;Sindh;Karachi (Tariq Lines);24.8577;67.0457
 TW;Taiwan;Taichung;24.1721;120.661
 IN;Manipur;Imphal;24.799;93.9339
-TW;Taipei;"Banqiao District";24.9996;121.485
-TW;Taipei;"Xindian District";24.9636;121.523
+TW;Taipei;Banqiao District;24.9996;121.485
+TW;Taipei;Xindian District;24.9636;121.523
 CN;Guangxi;Liuzhou;24.2779;109.435
-BS;"Black Point";"Black Point";24.1703;-76.4404
+BS;Black Point;Black Point;24.1703;-76.4404
 PK;Sindh;Karachi;24.8517;67.0132
-BD;"Rajshahi Division";Bhangura;24.2153;89.3783
+BD;Rajshahi Division;Bhangura;24.2153;89.3783
 TW;Taiwan;Taichung;24.136;120.678
-TW;Taipei;"Xindian District";24.9516;121.51
+TW;Taipei;Xindian District;24.9516;121.51
 TW;Taiwan;Hsinchu;24.8031;120.967
 TW;Taiwan;Miaoli;24.5458;120.812
 TW;Taiwan;Hsinchu;24.8019;120.963
@@ -1396,15 +1396,15 @@ TW;Taiwan;Changhua;24.089;120.557
 TW;Taiwan;Hsinchu;24.8131;120.981
 TW;Taiwan;Taichung;24.1208;120.662
 TW;Taiwan;Buzi;24.2704;120.576
-TW;Taiwan;"Taoyuan District";24.9912;121.328
-TW;Taipei;"Xindian District";24.9927;121.515
+TW;Taiwan;Taoyuan District;24.9912;121.328
+TW;Taipei;Xindian District;24.9927;121.515
 TW;Taiwan;Hsinchu;24.7748;121.025
 TW;Taiwan;Taoyuan;24.9953;121.284
 TW;Taiwan;Hsinchu;24.773;121.015
-TW;Taiwan;"Hualien City";24.0079;121.613
+TW;Taiwan;Hualien City;24.0079;121.613
 TW;Taiwan;Miaoli;24.5711;120.815
 TW;Taiwan;Taichung;24.1378;120.61
-TW;Taipei;"Shulin District";24.9954;121.42
+TW;Taipei;Shulin District;24.9954;121.42
 TW;Taiwan;Taichung;24.1526;120.675
 TW;Taiwan;Muzha;24.9917;121.571
 TW;Taiwan;Taichung;24.1681;120.673
@@ -1414,66 +1414,66 @@ TW;Taiwan;Daxi;24.8481;121.245
 TW;Fukien;Jincheng;24.4482;118.323
 TW;Taiwan;Neili;24.9682;121.195
 TW;Taiwan;Buzi;24.2671;120.573
-TW;Taipei;"Yingge District";24.9501;121.34
+TW;Taipei;Yingge District;24.9501;121.34
 TW;Taiwan;Hsinchu;24.7806;120.997
 TW;Taiwan;Buzi;24.166;120.61
 TW;Taiwan;Hsinchu;24.7751;121.021
-TW;Taipei;"Banqiao District";24.996;121.456
+TW;Taipei;Banqiao District;24.996;121.456
 TW;Taiwan;Changhua;24.0785;120.54
-TW;Taiwan;"Taoyuan District";24.9957;121.314
-TW;Taipei;"Banqiao District";24.9984;121.494
+TW;Taiwan;Taoyuan District;24.9957;121.314
+TW;Taipei;Banqiao District;24.9984;121.494
 TW;Taiwan;Taoyuan;24.9874;121.291
-TW;Taiwan;"Taoyuan District";24.9802;121.323
+TW;Taiwan;Taoyuan District;24.9802;121.323
 TW;Taiwan;Zhubei;24.7658;121.108
 TW;Taiwan;Hsinchu;24.7777;121.002
 TW;Taiwan;Taichung;24.1505;120.669
 TW;Taiwan;Taichung;24.1168;120.684
-TW;Taiwan;"Wufeng District";24.0962;120.717
+TW;Taiwan;Wufeng District;24.0962;120.717
 TW;Fukien;Jincheng;24.433;118.315
-TW;Taipei;"Shulin District";24.9546;121.414
-TW;Taipei;"Yingge District";24.9476;121.34
+TW;Taipei;Shulin District;24.9546;121.414
+TW;Taipei;Yingge District;24.9476;121.34
 TW;Taiwan;Hsinchu;24.7797;121.001
 TW;Taiwan;Daxi;24.8558;121.202
-BD;"Mymensingh Division";Mymensingh;24.7556;90.4053
+BD;Mymensingh Division;Mymensingh;24.7556;90.4053
 CN;Guangxi;Liuzhou;24.3263;109.429
-PK;Sindh;"Karachi (Sadr)";24.8511;67.0132
+PK;Sindh;Karachi (Sadr);24.8511;67.0132
 CN;Fujian;Xiamen;24.4828;118.102
-CN;Fujian;"Xiamen (Siming Qu)";24.4796;118.093
-PK;Sindh;"Karachi (Block 5)";24.9218;67.0931
-PK;Sindh;"Karachi (Lalazar)";24.8453;67.0026
-PK;Sindh;"Karachi (Block 2)";24.8681;67.0519
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9595;55.0706
+CN;Fujian;Xiamen (Siming Qu);24.4796;118.093
+PK;Sindh;Karachi (Block 5);24.9218;67.0931
+PK;Sindh;Karachi (Lalazar);24.8453;67.0026
+PK;Sindh;Karachi (Block 2);24.8681;67.0519
+AE;Dubai;Dubai (Mina Jebel Ali);24.9595;55.0706
 TW;Taiwan;Yilan;24.7462;121.748
 TW;Taiwan;Yilan;24.818;121.757
 TW;Taiwan;Taoyuan;24.9938;121.291
-PK;Sindh;"Karachi (Block 6)";24.8571;67.0726
-PK;Sindh;"Karachi (Block 6)";24.8646;67.0679
-PK;Sindh;"Karachi (Block B)";24.8592;67.0575
-PK;Sindh;"Karachi (Arambagh)";24.8546;67.0131
-TW;Taipei;"Banqiao District";24.9944;121.497
-CN;Fujian;"Quanzhou (Shishi Shi)";24.7319;118.648
-US;Florida;"Key West";24.6287;-82.8732
+PK;Sindh;Karachi (Block 6);24.8571;67.0726
+PK;Sindh;Karachi (Block 6);24.8646;67.0679
+PK;Sindh;Karachi (Block B);24.8592;67.0575
+PK;Sindh;Karachi (Arambagh);24.8546;67.0131
+TW;Taipei;Banqiao District;24.9944;121.497
+CN;Fujian;Quanzhou (Shishi Shi);24.7319;118.648
+US;Florida;Key West;24.6287;-82.8732
 TW;Taipei;Fanziyuan;24.9992;121.452
-BS;"Black Point";"Black Point";24.1;-76.3833
-US;Florida;"Key West";24.5729;-81.7487
-US;Florida;"Key West";24.56;-81.7888
-US;Florida;"Key West";24.5578;-81.7922
-US;Florida;"Key West";24.5776;-81.7517
-PK;Sindh;"Karachi (Block 6)";24.8636;67.073
-PK;Sindh;"Karachi (Civil Lines)";24.8545;67.0285
-US;Florida;"Key West";24.5495;-81.7955
-CN;Fujian;"Fashi (Fengze Qu)";24.9014;118.609
-CN;Fujian;"Xiamen (Siming Qu)";24.4604;118.079
+BS;Black Point;Black Point;24.1;-76.3833
+US;Florida;Key West;24.5729;-81.7487
+US;Florida;Key West;24.56;-81.7888
+US;Florida;Key West;24.5578;-81.7922
+US;Florida;Key West;24.5776;-81.7517
+PK;Sindh;Karachi (Block 6);24.8636;67.073
+PK;Sindh;Karachi (Civil Lines);24.8545;67.0285
+US;Florida;Key West;24.5495;-81.7955
+CN;Fujian;Fashi (Fengze Qu);24.9014;118.609
+CN;Fujian;Xiamen (Siming Qu);24.4604;118.079
 CN;Fujian;Quanzhou;24.9098;118.602
-CN;Fujian;"Xiamen (Siming Qu)";24.4643;118.097
-CN;Fujian;"Xiamen (Huli Qu)";24.5114;118.103
-CN;Fujian;"Xiamen (Siming Qu)";24.455;118.079
-CN;Fujian;"Xiamen (Jimei Qu)";24.5764;118.097
-CN;Fujian;"Xiamen (Siming Qu)";24.4356;118.09
-CN;Fujian;"Xiamen (Siming Qu)";24.4394;118.09
-CN;Fujian;"Luoyang (Fengze Qu)";24.9331;118.647
-CN;Yunnan;"Yuxi (Hongta Qu)";24.3505;102.549
-CN;Fujian;"Xiamen (Siming Qu)";24.4843;118.117
+CN;Fujian;Xiamen (Siming Qu);24.4643;118.097
+CN;Fujian;Xiamen (Huli Qu);24.5114;118.103
+CN;Fujian;Xiamen (Siming Qu);24.455;118.079
+CN;Fujian;Xiamen (Jimei Qu);24.5764;118.097
+CN;Fujian;Xiamen (Siming Qu);24.4356;118.09
+CN;Fujian;Xiamen (Siming Qu);24.4394;118.09
+CN;Fujian;Luoyang (Fengze Qu);24.9331;118.647
+CN;Yunnan;Yuxi (Hongta Qu);24.3505;102.549
+CN;Fujian;Xiamen (Siming Qu);24.4843;118.117
 TW;Taiwan;Miaoli;24.604;120.887
 TW;Taiwan;Zhongliao;24.1344;120.606
 TW;Taiwan;Taichung;24.1946;120.662
@@ -1487,7 +1487,7 @@ TW;Taiwan;Taichung;24.1626;120.693
 TW;Taiwan;Taichung;24.1532;120.682
 TW;Taiwan;Taichung;24.1358;120.658
 TW;Taiwan;Hsinchu;24.7838;121.005
-TW;Taiwan;"Taoyuan District";24.9758;121.327
+TW;Taiwan;Taoyuan District;24.9758;121.327
 TW;Taiwan;Hsinchu;24.7796;121
 TW;Taiwan;Zhubei;24.8283;121.012
 TW;Taiwan;Taoyuan;24.968;121.301
@@ -1497,110 +1497,110 @@ TW;Taiwan;Taoyuan;24.9981;121.305
 TW;Taiwan;Taoyuan;24.9877;121.286
 TW;Taiwan;Hsinchu;24.7984;120.994
 TW;Taiwan;Miaoli;24.6013;120.829
-TW;Taipei;"Xindian District";24.9887;121.544
+TW;Taipei;Xindian District;24.9887;121.544
 TW;Taiwan;Muzha;24.9902;121.558
 TW;Taiwan;Taichung;24.1638;120.675
 TW;Taiwan;Hsinchu;24.7721;121.009
 TW;Taiwan;Taichung;24.1527;120.667
-IN;Assam;"Silchar (Fakiratilla)";24.7577;92.7923
-IN;Rajasthan;"Udaipur (IT Park)";24.5791;73.7398
-IN;"Madhya Pradesh";"Chhatarpur (Radio Colony)";24.895;79.6013
-IN;"Madhya Pradesh";Khurai;24.0271;78.3209
-IN;"Madhya Pradesh";Mandsaur;24.0697;75.0487
+IN;Assam;Silchar (Fakiratilla);24.7577;92.7923
+IN;Rajasthan;Udaipur (IT Park);24.5791;73.7398
+IN;Madhya Pradesh;Chhatarpur (Radio Colony);24.895;79.6013
+IN;Madhya Pradesh;Khurai;24.0271;78.3209
+IN;Madhya Pradesh;Mandsaur;24.0697;75.0487
 TW;Taiwan;Taichung;24.1426;120.672
 TW;Taiwan;Xizhou;24.2592;120.656
 TW;Taiwan;Buzi;24.2173;120.581
 TW;Taiwan;Yilan;24.865;121.818
 TW;Taiwan;Luodong;24.6747;121.771
-TW;Taipei;"Shulin District";24.9747;121.414
-TW;Taipei;"Banqiao District";24.9792;121.474
-TW;Taipei;"Banqiao District";24.9966;121.487
+TW;Taipei;Shulin District;24.9747;121.414
+TW;Taipei;Banqiao District;24.9792;121.474
+TW;Taipei;Banqiao District;24.9966;121.487
 TW;Taiwan;Hsinchu;24.7777;120.983
-TW;Taipei;"Yingge District";24.9894;121.358
+TW;Taipei;Yingge District;24.9894;121.358
 TW;Taiwan;Taichung;24.1256;120.661
 TW;Taiwan;Changhua;24.0832;120.546
 TW;Taiwan;Taichung;24.1234;120.661
 TW;Taiwan;Yilan;24.753;121.763
-TW;Taiwan;"Toufen Township";24.7059;120.913
-TW;Taipei;"Xindian District";24.9759;121.526
-TW;Taipei;"Xindian District";24.9665;121.543
+TW;Taiwan;Toufen Township;24.7059;120.913
+TW;Taipei;Xindian District;24.9759;121.526
+TW;Taipei;Xindian District;24.9665;121.543
 TW;Taiwan;Taichung;24.1059;120.681
 TW;Taiwan;Taichung;24.1707;120.657
 TW;Taiwan;Taichung;24.106;120.681
 CN;Fujian;Anhai;24.7196;118.471
-CN;Fujian;"Xiamen (Siming Qu)";24.4696;118.11
+CN;Fujian;Xiamen (Siming Qu);24.4696;118.11
 CN;Guangxi;Liuzhou;24.3036;109.349
-SA;"Riyadh Region";"Riyadh (Az Zahrā’)";24.683;46.7259
-SA;"Riyadh Region";"Riyadh (Al Raed)";24.7169;46.6433
-SA;"Riyadh Region";"Riyadh (Al Murūj)";24.7463;46.6615
-SA;"Medina Region";"Medina (Al Jamiah)";24.4807;39.5655
-SA;"Riyadh Region";Riyadh;24.7146;46.649
-SA;"Riyadh Region";"Riyadh (An Nakheel)";24.7366;46.6345
-SA;"Riyadh Region";Riyadh;24.8252;46.8861
-SA;"Riyadh Region";"Riyadh (King Abdul Aziz)";24.7124;46.7025
-SA;"Riyadh Region";"Riyadh (King Saud University)";24.7252;46.6237
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.6912;46.6824
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.7075;46.6831
-SA;"Riyadh Region";"Riyadh (Al Wurūd)";24.7193;46.6706
-SA;"Riyadh Region";Riyadh;24.609;46.6564
-SA;"Riyadh Region";"Riyadh (Al Wishām)";24.6443;46.697
-SA;"Riyadh Region";"Riyadh (Imam Muhammad Ibn Saud Islamic University)";24.8136;46.7019
-SA;"Riyadh Region";Riyadh;24.7169;46.6433
-SA;"Riyadh Region";Riyadh;24.7465;46.611
-SA;"Riyadh Region";"Riyadh (Al Mohammadiyyah)";24.735;46.6359
-SA;"Riyadh Region";Riyadh;24.6731;46.6952
-SA;"Riyadh Region";"Riyadh (Aş Şaḩāfah)";24.7956;46.6307
-SA;"Riyadh Region";"Riyadh (Al Fūţah)";24.6432;46.7111
-SA;"Riyadh Region";"Riyadh (Al ‘Aqīq)";24.7672;46.6392
-AE;Dubai;"Jebel Ali";24.9598;55.0788
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9696;55.056
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9856;55.0902
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9723;55.0864
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9541;55.0727
-AE;Dubai;"Jebel Ali";24.9773;55.0708
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9653;55.0699
-AE;Dubai;"Dubai (Mina Jebel Ali)";24.9628;55.0637
-AE;Dubai;"Jebel Ali";24.9866;55.0821
-AE;"Abu Dhabi";"Abu Dhabi (Musaffah)";24.3696;54.5021
-AE;"Abu Dhabi";"Abu Dhabi (Āl Nahyān)";24.4602;54.3919
-AE;"Abu Dhabi";"Abu Dhabi";24.4899;54.3794
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.4873;54.3578
-AE;"Abu Dhabi";"Abu Dhabi (Khalifa City)";24.4451;54.6105
-AE;"Abu Dhabi";"Abu Dhabi Region (Shakhbout City)";24.3301;54.6187
-AE;"Abu Dhabi";"Abu Dhabi (Al Zahiyah)";24.4965;54.3792
-AE;"Abu Dhabi";Suwayḩān;24.4582;55.3324
-AE;"Abu Dhabi";"Abu Dhabi (Al Zahiyah)";24.4972;54.3746
-AE;"Abu Dhabi";"Abu Dhabi (Al Maqta Area)";24.4176;54.4894
-AE;Dubai;"Jebel Ali (Ghadeer Al Tayr)";24.8849;54.8474
-AE;"Abu Dhabi";"Abu Dhabi (Musaffah)";24.3405;54.4802
-AE;"Abu Dhabi";"Abu Dhabi (Musaffah)";24.3721;54.4706
-AE;"Abu Dhabi";"Abu Dhabi (Mohamed Bin Zayed City)";24.3178;54.5547
-AE;"Abu Dhabi";"Abu Dhabi (Khor Al Maqta'a)";24.4155;54.4821
-AE;"Abu Dhabi";"Abu Dhabi (Mussafah)";24.3827;54.4975
-AE;"Abu Dhabi";"Abu Dhabi (Zone 1)";24.4976;54.3662
-AE;"Abu Dhabi";"Abu Dhabi (Al Bateen)";24.4544;54.332
-AE;"Abu Dhabi";"Abu Dhabi (Al Zahiyah)";24.4945;54.3839
-AE;"Abu Dhabi";"Abu Dhabi (Al Zahiyah)";24.5011;54.3696
-AE;"Abu Dhabi";"Abu Dhabi";24.4526;54.3922
-AE;"Abu Dhabi";"Khalifah A City";24.4144;54.5668
-AE;"Abu Dhabi";"Abu Dhabi";24.4405;54.39
-AE;"Abu Dhabi";"Abu Dhabi (Al Khubeirah)";24.4644;54.3341
-AE;"Abu Dhabi";"Abu Dhabi";24.4911;54.3714
-AE;"Abu Dhabi";"Al Ain";24.2132;55.7599
-AE;"Abu Dhabi";"Abu Dhabi (Zayed Port)";24.5184;54.3764
-SA;"Riyadh Region";"Riyadh (Al Jazīrah)";24.6642;46.7967
-SA;"Ar Riyāḑ";"Riyadh (Al Olaya)";24.6992;46.6795
-US;Florida;"Key West";24.5701;-81.7577
+SA;Riyadh Region;Riyadh (Az Zahrā’);24.683;46.7259
+SA;Riyadh Region;Riyadh (Al Raed);24.7169;46.6433
+SA;Riyadh Region;Riyadh (Al Murūj);24.7463;46.6615
+SA;Medina Region;Medina (Al Jamiah);24.4807;39.5655
+SA;Riyadh Region;Riyadh;24.7146;46.649
+SA;Riyadh Region;Riyadh (An Nakheel);24.7366;46.6345
+SA;Riyadh Region;Riyadh;24.8252;46.8861
+SA;Riyadh Region;Riyadh (King Abdul Aziz);24.7124;46.7025
+SA;Riyadh Region;Riyadh (King Saud University);24.7252;46.6237
+SA;Riyadh Region;Riyadh (Al Olaya);24.6912;46.6824
+SA;Riyadh Region;Riyadh (Al Olaya);24.7075;46.6831
+SA;Riyadh Region;Riyadh (Al Wurūd);24.7193;46.6706
+SA;Riyadh Region;Riyadh;24.609;46.6564
+SA;Riyadh Region;Riyadh (Al Wishām);24.6443;46.697
+SA;Riyadh Region;Riyadh (Imam Muhammad Ibn Saud Islamic University);24.8136;46.7019
+SA;Riyadh Region;Riyadh;24.7169;46.6433
+SA;Riyadh Region;Riyadh;24.7465;46.611
+SA;Riyadh Region;Riyadh (Al Mohammadiyyah);24.735;46.6359
+SA;Riyadh Region;Riyadh;24.6731;46.6952
+SA;Riyadh Region;Riyadh (Aş Şaḩāfah);24.7956;46.6307
+SA;Riyadh Region;Riyadh (Al Fūţah);24.6432;46.7111
+SA;Riyadh Region;Riyadh (Al ‘Aqīq);24.7672;46.6392
+AE;Dubai;Jebel Ali;24.9598;55.0788
+AE;Dubai;Dubai (Mina Jebel Ali);24.9696;55.056
+AE;Dubai;Dubai (Mina Jebel Ali);24.9856;55.0902
+AE;Dubai;Dubai (Mina Jebel Ali);24.9723;55.0864
+AE;Dubai;Dubai (Mina Jebel Ali);24.9541;55.0727
+AE;Dubai;Jebel Ali;24.9773;55.0708
+AE;Dubai;Dubai (Mina Jebel Ali);24.9653;55.0699
+AE;Dubai;Dubai (Mina Jebel Ali);24.9628;55.0637
+AE;Dubai;Jebel Ali;24.9866;55.0821
+AE;Abu Dhabi;Abu Dhabi (Musaffah);24.3696;54.5021
+AE;Abu Dhabi;Abu Dhabi (Āl Nahyān);24.4602;54.3919
+AE;Abu Dhabi;Abu Dhabi;24.4899;54.3794
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.4873;54.3578
+AE;Abu Dhabi;Abu Dhabi (Khalifa City);24.4451;54.6105
+AE;Abu Dhabi;Abu Dhabi Region (Shakhbout City);24.3301;54.6187
+AE;Abu Dhabi;Abu Dhabi (Al Zahiyah);24.4965;54.3792
+AE;Abu Dhabi;Suwayḩān;24.4582;55.3324
+AE;Abu Dhabi;Abu Dhabi (Al Zahiyah);24.4972;54.3746
+AE;Abu Dhabi;Abu Dhabi (Al Maqta Area);24.4176;54.4894
+AE;Dubai;Jebel Ali (Ghadeer Al Tayr);24.8849;54.8474
+AE;Abu Dhabi;Abu Dhabi (Musaffah);24.3405;54.4802
+AE;Abu Dhabi;Abu Dhabi (Musaffah);24.3721;54.4706
+AE;Abu Dhabi;Abu Dhabi (Mohamed Bin Zayed City);24.3178;54.5547
+AE;Abu Dhabi;Abu Dhabi (Khor Al Maqta'a);24.4155;54.4821
+AE;Abu Dhabi;Abu Dhabi (Mussafah);24.3827;54.4975
+AE;Abu Dhabi;Abu Dhabi (Zone 1);24.4976;54.3662
+AE;Abu Dhabi;Abu Dhabi (Al Bateen);24.4544;54.332
+AE;Abu Dhabi;Abu Dhabi (Al Zahiyah);24.4945;54.3839
+AE;Abu Dhabi;Abu Dhabi (Al Zahiyah);24.5011;54.3696
+AE;Abu Dhabi;Abu Dhabi;24.4526;54.3922
+AE;Abu Dhabi;Khalifah A City;24.4144;54.5668
+AE;Abu Dhabi;Abu Dhabi;24.4405;54.39
+AE;Abu Dhabi;Abu Dhabi (Al Khubeirah);24.4644;54.3341
+AE;Abu Dhabi;Abu Dhabi;24.4911;54.3714
+AE;Abu Dhabi;Al Ain;24.2132;55.7599
+AE;Abu Dhabi;Abu Dhabi (Zayed Port);24.5184;54.3764
+SA;Riyadh Region;Riyadh (Al Jazīrah);24.6642;46.7967
+SA;Ar Riyāḑ;Riyadh (Al Olaya);24.6992;46.6795
+US;Florida;Key West;24.5701;-81.7577
 PK;Sindh;Karachi;24.8554;67.0266
-PK;Sindh;"Karachi (Block 2)";24.8755;67.058
-SA;"Riyadh Region";"Riyadh (Al Olaya)";24.6784;46.6971
-CN;Guangdong;"Shaoguan (Wujiang Qu)";24.8066;113.578
-CN;Guangdong;"Shaoguan (Shaoguang)";24.2486;114.013
-CN;Guangdong;"Shaoguan (Wujiang Qu)";24.7976;113.588
+PK;Sindh;Karachi (Block 2);24.8755;67.058
+SA;Riyadh Region;Riyadh (Al Olaya);24.6784;46.6971
+CN;Guangdong;Shaoguan (Wujiang Qu);24.8066;113.578
+CN;Guangdong;Shaoguan (Shaoguang);24.2486;114.013
+CN;Guangdong;Shaoguan (Wujiang Qu);24.7976;113.588
 CN;Guangdong;Xinshao;24.8076;113.6
-CN;Guangdong;"Qingyuan (Shatoujiao)";24.1733;113.535
-CN;Guangxi;"Hezhou (Guoshui)";24.2799;111.88
-CN;Guangdong;"Shaoguan (Wengyuan County)";24.3503;114.13
+CN;Guangdong;Qingyuan (Shatoujiao);24.1733;113.535
+CN;Guangxi;Hezhou (Guoshui);24.2799;111.88
+CN;Guangdong;Shaoguan (Wengyuan County);24.3503;114.13
 TW;Taiwan;Muzha;24.989;121.579
 TW;Taiwan;Neili;24.9667;121.244
 TW;Taiwan;Zhubei;24.891;121.027
@@ -1608,11 +1608,11 @@ TW;Taiwan;Neili;24.9642;121.224
 TW;Taiwan;Neili;24.9543;121.227
 TW;Taiwan;Taoyuan;24.9666;121.298
 TW;Taiwan;Daxi;24.8886;121.212
-TW;Taiwan;"Bade District";24.909;121.242
-TW;Taipei;"Xindian District";24.983;121.541
-TW;Taipei;"Xindian District";24.983;121.536
+TW;Taiwan;Bade District;24.909;121.242
+TW;Taipei;Xindian District;24.983;121.541
+TW;Taipei;Xindian District;24.983;121.536
 TW;Taiwan;Zhubei;24.8706;121.027
-TW;Taiwan;"Taoyuan District";24.9858;121.328
+TW;Taiwan;Taoyuan District;24.9858;121.328
 TW;Taiwan;Hsinchu;24.7837;121.001
 TW;Taiwan;Zhubei;24.8496;121.091
 TW;Taiwan;Zhubei;24.8425;121.014
@@ -1622,25 +1622,25 @@ TW;Taiwan;Fengyuan;24.2187;120.7
 TW;Taiwan;Zhongliao;24.1359;120.562
 TW;Taiwan;Xizhou;24.2437;120.671
 TW;Taiwan;Taichung;24.1217;120.651
-TW;Taipei;"Banqiao District";24.9915;121.46
+TW;Taipei;Banqiao District;24.9915;121.46
 TW;Taiwan;Hsinchu;24.7907;121.007
 TW;Taiwan;Buzi;24.2697;120.529
 CN;Yunnan;Jianshui;24.4753;101.343
 CN;Guangxi;Hechi;24.6985;108.067
-PK;Sindh;"Karachi (Gulistan-e-Johar)";24.909;67.1217
-CN;Guangdong;"Qingyuan (Yingde Shi)";24.207;113.402
+PK;Sindh;Karachi (Gulistan-e-Johar);24.909;67.1217
+CN;Guangdong;Qingyuan (Yingde Shi);24.207;113.402
 CN;Fujian;Baiqi;24.8824;118.709
-CN;Guangdong;"Meizhou (Meijiang Qu)";24.3254;116.129
-CN;Guangxi;"Liuzhou (Yufeng Qu)";24.3025;109.435
-CN;Guangxi;"Yufeng (Yufeng Qu)";24.3007;109.445
-CN;Guangxi;"Babu (Babu Qu)";24.4133;111.517
+CN;Guangdong;Meizhou (Meijiang Qu);24.3254;116.129
+CN;Guangxi;Liuzhou (Yufeng Qu);24.3025;109.435
+CN;Guangxi;Yufeng (Yufeng Qu);24.3007;109.445
+CN;Guangxi;Babu (Babu Qu);24.4133;111.517
 CN;Guangdong;Datang;24.7745;113.693
 CN;Guangdong;Hengshitang;24.3471;113.367
 CN;Guangdong;Nibei;24.0809;115.814
-TW;Taipei;"Banqiao District";24.9913;121.501
+TW;Taipei;Banqiao District;24.9913;121.501
 IN;Rajasthan;Nāthdwāra;24.938;73.8239
-IN;"Madhya Pradesh";Tīkamgarh;24.7433;78.8306
-IN;Bihar;"Bodh Gaya";24.6981;84.9869
-IN;Bihar;"Tola Pairamatihana";24.6759;86.3474
-IN;"Uttar Pradesh";Obra;24.4186;82.988
+IN;Madhya Pradesh;Tīkamgarh;24.7433;78.8306
+IN;Bihar;Bodh Gaya;24.6981;84.9869
+IN;Bihar;Tola Pairamatihana;24.6759;86.3474
+IN;Uttar Pradesh;Obra;24.4186;82.988
 IN;Rajasthan;Neemuch;24.4764;74.8624

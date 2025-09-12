@@ -22,42 +22,42 @@ RU;Komi;Syktyvkar;61.6641;50.8169
 RU;Khanty-Mansia;Surgut;61.2576;73.4177
 RU;Khanty-Mansia;Khanty-Mansiysk;61.0042;69.0019
 NO;Vestland;Måløy;61.9353;5.11362
-NO;"Sogn og Fjordane";Måløy;61.9384;5.1181
+NO;Sogn og Fjordane;Måløy;61.9384;5.1181
 NO;Vestland;Måløy;61.9347;5.11248
-NO;"Sogn og Fjordane";Måløy;61.9364;5.11145
+NO;Sogn og Fjordane;Måløy;61.9364;5.11145
 US;Alaska;Gateway;61.6023;-149.199
-US;Alaska;"Anchorage (Government Hill)";61.2325;-149.874
+US;Alaska;Anchorage (Government Hill);61.2325;-149.874
 US;Alaska;Anchorage;61.2314;-149.881
 US;Alaska;Anchorage;61.2316;-149.882
 US;Alaska;Palmer;61.5873;-149.111
 US;Alaska;Anchorage;61.2481;-149.815
 US;Alaska;Anchorage;61.2327;-149.873
-US;Alaska;"Anchorage (Mountain View)";61.221;-149.824
-US;Alaska;"Anchorage (Midtown)";61.186;-149.892
-US;Alaska;"Anchorage (Russian Jack Park)";61.2037;-149.808
-US;Alaska;"Anchorage (Midtown)";61.1947;-149.881
+US;Alaska;Anchorage (Mountain View);61.221;-149.824
+US;Alaska;Anchorage (Midtown);61.186;-149.892
+US;Alaska;Anchorage (Russian Jack Park);61.2037;-149.808
+US;Alaska;Anchorage (Midtown);61.1947;-149.881
 US;Alaska;Lakes;61.6071;-149.309
-US;Alaska;"Anchorage (Downtown)";61.2183;-149.898
+US;Alaska;Anchorage (Downtown);61.2183;-149.898
 US;Alaska;Anchorage;61.1995;-149.824
 US;Alaska;Anchorage;61.2181;-149.9
-US;Alaska;"Anchorage (Midtown)";61.1863;-149.872
-US;Alaska;"Anchorage (Midtown)";61.1861;-149.872
-US;Alaska;"Anchorage (Downtown)";61.2153;-149.897
-US;Alaska;"Anchorage (Midtown)";61.1804;-149.874
-US;Alaska;"Anchorage (North Star)";61.1972;-149.878
+US;Alaska;Anchorage (Midtown);61.1863;-149.872
+US;Alaska;Anchorage (Midtown);61.1861;-149.872
+US;Alaska;Anchorage (Downtown);61.2153;-149.897
+US;Alaska;Anchorage (Midtown);61.1804;-149.874
+US;Alaska;Anchorage (North Star);61.1972;-149.878
 US;Alaska;Wasilla;61.5809;-149.441
-US;Alaska;"Eagle River";61.3214;-149.568
+US;Alaska;Eagle River;61.3214;-149.568
 US;Alaska;Valdez;61.1309;-146.35
 RU;Komi;Sedkyrkeshch;61.713;50.8814
 FI;Tampere;Tampere;61.475;23.7661
 FI;Tampere;Tampere;61.4781;23.7391
 FI;Tampere;Tampere;61.4961;23.7778
-RU;"Irkutsk Oblast";Ust-Ilimsk;61.524;105.319
+RU;Irkutsk Oblast;Ust-Ilimsk;61.524;105.319
 RU;Khanty-Mansia;Surgut;61.2546;73.3962
 SE;Gävleborg;Ljusdal;61.8288;16.0913
 SE;Gävleborg;Bergsjö;61.9825;17.0637
-FI;"South Karelia";Lappeenranta;61.055;28.1896
-FI;"South Karelia";Lappeenranta;61.055;28.1897
+FI;South Karelia;Lappeenranta;61.055;28.1896
+FI;South Karelia;Lappeenranta;61.055;28.1897
 SE;Dalarna;Älvdalen;61.2277;14.0393
 SE;Gävleborg;Harmånger;61.9276;17.2185
 FI;Satakunta;Rauma;61.1272;21.5113
@@ -82,22 +82,22 @@ FI;Satakunta;Jämijärvi;61.8167;22.7
 FI;Tampere;Hämeenkyrö;61.6391;23.1953
 FI;Tampere;Tampere;61.4806;23.7644
 FI;Tampere;Tampere;61.4781;23.7652
-FI;"South Savo";Mikkeli;61.6886;27.2723
+FI;South Savo;Mikkeli;61.6886;27.2723
 FI;Satakunta;Pori;61.4833;21.7833
 FI;Paijat-Hame;Asikkala;61.2167;25.5
 FI;Tampere;Petsamo;61.5072;23.7966
 FI;Paijat-Hame;Koski;61.0222;25.1542
-FI;"South Savo";Savonlinna;61.8699;28.88
+FI;South Savo;Savonlinna;61.8699;28.88
 SE;Gävleborg;Sandarne;61.2589;17.1528
 FI;Paijat-Hame;Heinola;61.2056;26.0381
-FI;"North Karelia";Kesälahti;61.8975;29.8349
+FI;North Karelia;Kesälahti;61.8975;29.8349
 FI;Tampere;Ylöjärvi;61.5563;23.5961
 FI;Tampere;Tampere;61.4991;23.7871
-FI;"Central Finland";Kaipola;61.8162;25.2353
+FI;Central Finland;Kaipola;61.8162;25.2353
 FI;Paijat-Hame;Hollola;61;25.5
 FI;Satakunta;Eura;61.1333;22.1333
 FI;Tampere;Akaa;61.1667;23.8667
-FI;"South Savo";Puumala;61.5273;28.1749
+FI;South Savo;Puumala;61.5273;28.1749
 FI;Satakunta;Eurajoki;61.2;21.7333
 NO;Innlandet;Tretten;61.3142;10.3007
 NO;Innlandet;Forset;61.2021;10.1438
@@ -116,7 +116,7 @@ RU;Khanty-Mansia;Langepas;61.2544;75.2124
 RU;Sakha;Yakutsk;61.995;129.773
 RU;Sakha;Mokhsogollokh;61.3962;128.938
 RU;Sakha;Pokrovsk;61.4792;129.139
-RU;Sakha;"Staraya Tabaga";61.8211;129.634
+RU;Sakha;Staraya Tabaga;61.8211;129.634
 NO;Innlandet;Otta;61.7712;9.53529
 NO;Vestland;Nordfjordeid;61.9122;5.98557
 NO;Innlandet;Bergset;61.8913;11.0777
@@ -129,18 +129,18 @@ RU;Khanty-Mansia;Surgut;61.338;73.3297
 NO;Innlandet;Dale;61.7753;9.49454
 NO;Vestland;Svelgen;61.7698;5.29544
 NO;Innlandet;Vågåmo;61.875;9.09671
-FI;"South Savo";Punkaharju;61.7588;29.3884
-FI;"South Savo";Savonlinna;61.8679;28.9389
-FI;"South Karelia";Savitaipale;61.2;27.7
-FI;"South Savo";Kerimäki;61.9107;29.2823
-FI;"South Karelia";Simpele;61.4333;29.3667
-FI;"South Karelia";Parikkala;61.55;29.5
-FI;"South Karelia";Ruokolahti;61.2833;28.8333
-FI;"South Karelia";Saarenkylä;61.6494;29.7519
-FI;"South Karelia";Kimpinen;61.0632;28.2
-FI;"South Karelia";Taipalsaari;61.15;28.05
-FI;"South Savo";Suomenniemi;61.3285;27.4478
-FI;"South Savo";Savonlinna;61.8713;28.9476
+FI;South Savo;Punkaharju;61.7588;29.3884
+FI;South Savo;Savonlinna;61.8679;28.9389
+FI;South Karelia;Savitaipale;61.2;27.7
+FI;South Savo;Kerimäki;61.9107;29.2823
+FI;South Karelia;Simpele;61.4333;29.3667
+FI;South Karelia;Parikkala;61.55;29.5
+FI;South Karelia;Ruokolahti;61.2833;28.8333
+FI;South Karelia;Saarenkylä;61.6494;29.7519
+FI;South Karelia;Kimpinen;61.0632;28.2
+FI;South Karelia;Taipalsaari;61.15;28.05
+FI;South Savo;Suomenniemi;61.3285;27.4478
+FI;South Savo;Savonlinna;61.8713;28.9476
 SE;Gävleborg;Njutånger;61.6125;17.0556
 SE;Gävleborg;Arbrå;61.4667;16.3833
 US;Alaska;Gateway;61.5728;-149.241
@@ -157,30 +157,30 @@ NO;Vestland;Hyllestad;61.1711;5.29603
 NO;Vestland;Lærdal;61.1;7.47374
 NO;Vestland;Naustdal;61.5111;5.71694
 FI;Tampere;Tampere;61.4862;23.764
-FI;"South Savo";Juva;61.8947;27.8618
+FI;South Savo;Juva;61.8947;27.8618
 FI;Satakunta;Pori;61.4877;21.7904
 FI;Tampere;Tampere;61.4857;23.7624
-FI;"South Karelia";Lappeenranta;61.0632;28.0963
+FI;South Karelia;Lappeenranta;61.0632;28.0963
 FI;Tampere;Tampere;61.4858;23.7625
 FI;Tampere;Ruovesi;61.9852;24.0719
-FI;"South Savo";Savonlinna;61.868;28.8864
+FI;South Savo;Savonlinna;61.868;28.8864
 FI;Satakunta;Rauma;61.1309;21.5059
 RU;Arkhangelskaya;Kotlas;61.2566;46.6537
 NO;Vestland;Florø;61.6005;5.02538
 SE;Gävleborg;Hudiksvall;61.7274;17.1056
-SE;Dalarna;"Mora (Noret-Morkarlby-Utmeland)";61.0081;14.5427
-SE;Dalarna;"Orsa (Orsa V)";61.0682;14.6155
+SE;Dalarna;Mora (Noret-Morkarlby-Utmeland);61.0081;14.5427
+SE;Dalarna;Orsa (Orsa V);61.0682;14.6155
 RU;Khanty-Mansia;Khanty-Mansiysk;61.0018;69.0163
 FI;Tampere;Ruovesi;61.9843;24.0692
 FI;Tampere;Ruovesi;61.9848;24.0691
 FI;Tampere;Ruovesi;61.9857;24.0571
-FI;"Central Finland";Jämsänkoski;61.919;25.1701
+FI;Central Finland;Jämsänkoski;61.919;25.1701
 FI;Tampere;Kuhmalahti;61.5046;24.5605
-FI;"Central Finland";Jämsä;61.8642;25.19
+FI;Central Finland;Jämsä;61.8642;25.19
 FI;Tampere;Vuores;61.3824;23.81
 FI;Satakunta;Pomarkku;61.6935;22.0086
 FI;Tampere;Ikaalinen;61.7568;23.0825
-SE;Gävleborg;"Bollnäs (Gärdet-Centrum)";61.3465;16.3931
+SE;Gävleborg;Bollnäs (Gärdet-Centrum);61.3465;16.3931
 FI;Tampere;Vuores;61.431;23.8118
 FI;Tampere;Tampere;61.4453;23.8494
 FI;Paijat-Hame;Vierumäki;61.1072;26.0051
@@ -188,49 +188,49 @@ FI;Satakunta;Pori;61.4926;21.7218
 FI;Tampere;Kangasala;61.468;23.9943
 FI;Satakunta;Luvia;61.3606;21.6256
 FI;Satakunta;Pori;61.4925;21.7987
-FI;"South Karelia";Lappeenranta;61.0655;28.2298
+FI;South Karelia;Lappeenranta;61.0655;28.2298
 FI;Paijat-Hame;Vierumäki;61.104;25.9366
 FI;Satakunta;Pori;61.483;21.7986
-SE;Gävleborg;"Hudiksvall (Västra Hudiksvall)";61.7272;17.1065
+SE;Gävleborg;Hudiksvall (Västra Hudiksvall);61.7272;17.1065
 FI;Tampere;Ruovesi;61.9849;24.0692
 FI;Pirkanmaa;Ruovesi;61.9852;24.0719
 FI;Pirkanmaa;Tampere;61.4979;23.7776
-FI;"South Karelia";Savitaipale;61.1969;27.6833
+FI;South Karelia;Savitaipale;61.1969;27.6833
 NO;Innlandet;Follebu;61.2158;10.285
 NO;Vestland;Farnes;61.3085;7.79694
 FI;Tampere;Tampere;61.5031;23.7751
 FI;Tampere;Tampere;61.5;23.7723
-FI;"South Savo";Kerimäki;61.9014;29.2707
-FI;"South Karelia";Imatra;61.1648;28.7498
+FI;South Savo;Kerimäki;61.9014;29.2707
+FI;South Karelia;Imatra;61.1648;28.7498
 FI;Satakunta;Harjavalta;61.3018;22.1583
-FI;"South Savo";Mikkeli;61.6812;27.2645
+FI;South Savo;Mikkeli;61.6812;27.2645
 FI;Tampere;Tampere;61.4999;23.7837
 FI;Tampere;Tampere;61.498;23.7764
 FI;Tampere;Tampere;61.5023;23.7604
 FI;Tampere;Nokia;61.4803;23.5012
 FI;Tampere;Tampere;61.4981;23.761
-FI;"South Savo";Savonlinna;61.8687;28.8851
-FI;"South Karelia";Lappeenranta;61.0587;28.1887
+FI;South Savo;Savonlinna;61.8687;28.8851
+FI;South Karelia;Lappeenranta;61.0587;28.1887
 US;Alaska;Palmer;61.5873;-149.112
 US;Alaska;Aniak;61.5828;-159.541
-US;Alaska;"Anchorage (Bayshore / Klatt)";61.1435;-149.867
+US;Alaska;Anchorage (Bayshore / Klatt);61.1435;-149.867
 US;Alaska;Palmer;61.5994;-149.115
-US;Alaska;"Farm Loop";61.6389;-149.142
-US;Alaska;"Anchorage (Midtown)";61.1782;-149.888
-US;Alaska;"Anchorage (Abbott Loop)";61.1378;-149.837
+US;Alaska;Farm Loop;61.6389;-149.142
+US;Alaska;Anchorage (Midtown);61.1782;-149.888
+US;Alaska;Anchorage (Abbott Loop);61.1378;-149.837
 US;Alaska;Knik-Fairview;61.5126;-149.6
-US;Alaska;"Anchorage (North Star)";61.1973;-149.878
-US;Alaska;"Anchorage (Fort Richardson)";61.2538;-149.692
-US;Alaska;"Anchorage (Rogers Park)";61.1925;-149.847
-US;Alaska;"Anchorage Municipality (Chugiak)";61.3889;-149.482
-US;Alaska;"Elmendorf Air Force Base";61.257;-149.631
-US;Alaska;"Anchorage (Midtown)";61.1868;-149.873
-US;Alaska;"Anchorage (Midtown)";61.1862;-149.872
-US;Alaska;"Anchorage (Taku / Campbell)";61.1704;-149.88
-US;Alaska;"Anchorage (Midtown)";61.1873;-149.885
-US;Alaska;"Meadow Lakes";61.6247;-149.601
+US;Alaska;Anchorage (North Star);61.1973;-149.878
+US;Alaska;Anchorage (Fort Richardson);61.2538;-149.692
+US;Alaska;Anchorage (Rogers Park);61.1925;-149.847
+US;Alaska;Anchorage Municipality (Chugiak);61.3889;-149.482
+US;Alaska;Elmendorf Air Force Base;61.257;-149.631
+US;Alaska;Anchorage (Midtown);61.1868;-149.873
+US;Alaska;Anchorage (Midtown);61.1862;-149.872
+US;Alaska;Anchorage (Taku / Campbell);61.1704;-149.88
+US;Alaska;Anchorage (Midtown);61.1873;-149.885
+US;Alaska;Meadow Lakes;61.6247;-149.601
 US;Alaska;Houston;61.6303;-149.818
-US;Alaska;"Anchorage (Joint Base Elmendorf-Richardson)";61.2561;-149.67
+US;Alaska;Anchorage (Joint Base Elmendorf-Richardson);61.2561;-149.67
 US;Alaska;Anchorage;61.2162;-149.767
 US;Alaska;Willow;61.7365;-150.04
 NO;Vestland;Årdalstangen;61.2358;7.7037
@@ -239,7 +239,7 @@ NO;Innlandet;Lillehammer;61.1441;10.4283
 NO;Innlandet;Lom;61.8377;8.56842
 NO;Innlandet;Lillehammer;61.1507;10.4184
 NO;Innlandet;Dovre;61.9875;9.25556
-RU;Sakha;"Nizhniy Bestyakh";61.9655;129.922
+RU;Sakha;Nizhniy Bestyakh;61.9655;129.922
 RU;Khanty-Mansia;Nefteyugansk;61.0952;72.604
 RU;Karelia;Petrozavodsk;61.7849;34.3469
 RU;Komi;Syktyvkar;61.665;50.8138
@@ -252,9 +252,9 @@ SE;Dalarna;Färnäs;61;14.6333
 SE;Dalarna;Rot;61.25;14.0333
 RU;Karelia;Shuya;61.9525;34.2327
 NO;Innlandet;Heggenes;61.1438;9.06942
-FI;"South Savo";Mikkeli;61.6912;27.2709
-FI;"South Savo";Mäntyharju;61.4167;26.8833
-NO;"Møre og Romsdal";Hornindal;61.9961;6.55209
+FI;South Savo;Mikkeli;61.6912;27.2709
+FI;South Savo;Mäntyharju;61.4167;26.8833
+NO;Møre og Romsdal;Hornindal;61.9961;6.55209
 NO;Vestland;Årdalstangen;61.2396;7.7121
 NO;Vestland;Vikøyri;61.0885;6.58047
 NO;Vestland;Sogndal;61.2299;7.10049
@@ -267,7 +267,7 @@ FI;Tampere;Nokia;61.4798;23.5178
 FI;Tampere;Tampere;61.4981;23.7585
 SE;Gävleborg;Hudiksvall;61.7275;17.117
 SE;Gävleborg;Hudiksvall;61.7274;17.1074
-SE;Gävleborg;"Hudiksvall (Västra Hudiksvall)";61.7349;17.0929
+SE;Gävleborg;Hudiksvall (Västra Hudiksvall);61.7349;17.0929
 SE;Gävleborg;Näsviken;61.7667;16.8667
 SE;Gävleborg;Sörforsa;61.7333;16.9833
 SE;Gävleborg;Delsbo;61.801;16.5557
@@ -276,18 +276,18 @@ FI;Tampere;Sastamala;61.3494;22.9093
 FI;Kanta-Häme;Parola;61.0462;24.3546
 NO;Vestland;Florø;61.5996;5.0328
 SE;Gävleborg;Bollnäs;61.3484;16.3943
-FI;"South Karelia";Tirilä;61.0577;28.2443
-FI;"South Karelia";Harapainen;61.0502;28.211
+FI;South Karelia;Tirilä;61.0577;28.2443
+FI;South Karelia;Harapainen;61.0502;28.211
 FI;Tampere;Valkeakoski;61.2642;24.0312
-FI;"South Karelia";Hakali;61.0718;28.2758
+FI;South Karelia;Hakali;61.0718;28.2758
 FI;Tampere;Pirkkala;61.4613;23.6323
 FI;Kanta-Häme;Kalvola;61.1008;24.1218
 RU;Karelia;Petrozavodsk;61.7836;34.323
 RU;Arkhangelskaya;Kuloy;61.0305;42.4925
 RU;Karelia;Sortavala;61.7045;30.6879
-SE;Gävleborg;"Hudiksvall (Östra Hudiksvall)";61.7229;17.1233
+SE;Gävleborg;Hudiksvall (Östra Hudiksvall);61.7229;17.1233
 SE;Gävleborg;Mohed;61.298;16.8139
-SE;Gävleborg;"Söderhamn (Norra Söderhamn)";61.3067;17.0532
+SE;Gävleborg;Söderhamn (Norra Söderhamn);61.3067;17.0532
 FI;Tampere;Vammala;61.3444;22.9151
 FI;Tampere;Urjala;61.0833;23.5333
 RU;Khanty-Mansia;Khanty-Mansiysk;61.0066;69.0171
@@ -299,56 +299,56 @@ FI;Tampere;Valkeakoski;61.2841;24.0222
 FI;Tampere;Tampere;61.5047;23.7436
 SE;Gävleborg;Bergvik;61.2535;16.8275
 SE;Gävleborg;Söderhamn;61.3056;17.0628
-SE;Gävleborg;"Bollnäs (Ren-Framnäs)";61.3563;16.413
+SE;Gävleborg;Bollnäs (Ren-Framnäs);61.3563;16.413
 SE;Gävleborg;Söderala;61.2833;16.9667
-SE;Gävleborg;"Söderhamn (Södra Söderhamn)";61.3046;17.0677
+SE;Gävleborg;Söderhamn (Södra Söderhamn);61.3046;17.0677
 SE;Gävleborg;Ljusne;61.2117;17.1279
 NO;Vestland;Solheim;61.6318;5.71911
-RU;"Magadan Oblast";Ust'-Omchug;61.1367;149.633
+RU;Magadan Oblast;Ust'-Omchug;61.1367;149.633
 RU;Khanty-Mansia;Khanty-Mansiysk;61.0066;69.0384
 NO;Innlandet;Lillehammer;61.1511;10.4177
-FI;"South Savo";Juva;61.9;27.85
+FI;South Savo;Juva;61.9;27.85
 FI;Tampere;Viljakkala;61.706;23.2669
 NO;Vestland;Sandane;61.7776;6.21388
 RU;Khanty-Mansia;Surgut;61.3383;73.3328
 NO;Innlandet;Lillehammer;61.1153;10.4662
 FI;Satakunta;Ulvila;61.4284;21.871
-FI;"South Savo";Mikkeli;61.6888;27.2722
-FI;"South Karelia";Lappeenranta;61.0581;28.1894
-FI;"South Karelia";Lappeenranta;61.0457;28.228
+FI;South Savo;Mikkeli;61.6888;27.2722
+FI;South Karelia;Lappeenranta;61.0581;28.1894
+FI;South Karelia;Lappeenranta;61.0457;28.228
 SE;Gävleborg;Iggesund;61.6422;17.0748
 RU;Komi;Syktyvkar;61.8027;50.7388
 FI;Satakunta;Köyliö;61.1191;22.3098
 FI;Tampere;Tampere;61.4979;23.7776
 FI;Tampere;Tampere;61.4545;23.7328
 FI;Tampere;Ylöjärvi;61.879;23.7283
-FI;"South Savo";Savonlinna;61.8636;28.937
-FI;"South Savo";Savonlinna;61.7391;28.8524
-FI;"South Savo";Juva;61.8984;27.8064
+FI;South Savo;Savonlinna;61.8636;28.937
+FI;South Savo;Savonlinna;61.7391;28.8524
+FI;South Savo;Juva;61.8984;27.8064
 FI;Kymenlaakso;Jaala;61.0525;26.4812
-FI;"South Karelia";Imatra;61.1718;28.7524
+FI;South Karelia;Imatra;61.1718;28.7524
 FI;Satakunta;Luvia;61.3638;21.6256
-SE;Dalarna;"Sälen (Malung NV)";61.1905;13.0269
+SE;Dalarna;Sälen (Malung NV);61.1905;13.0269
 SE;Dalarna;Idre;61.8582;12.714
 SE;Gävleborg;Friggesund;61.896;16.549
-RU;"Krasnoyarsk Krai";Baykit;61.6834;96.3806
+RU;Krasnoyarsk Krai;Baykit;61.6834;96.3806
 RU;Arkhangelskaya;Nyandoma;61.6667;40.2
 SE;Gävleborg;Enånger;61.5456;17.0106
 FI;Tampere;Tampere;61.4919;23.7526
-FI;"South Karelia";Rautjärvi;61.4346;29.3715
+FI;South Karelia;Rautjärvi;61.4346;29.3715
 SE;Dalarna;Särna;61.6928;13.1426
 FI;Tampere;Kiikoinen;61.4538;22.577
 FI;Tampere;Pälkäne;61.3342;24.272
-FI;"South Savo";Kangasniemi;61.9936;26.6479
+FI;South Savo;Kangasniemi;61.9936;26.6479
 FI;Tampere;Lempäälä;61.3167;23.75
-FI;"South Savo";Ristiina;61.5058;27.2464
+FI;South Savo;Ristiina;61.5058;27.2464
 FI;Paijat-Hame;Sysmä;61.5;25.6833
-FI;"South Karelia";Joutseno;61.118;28.5076
+FI;South Karelia;Joutseno;61.118;28.5076
 FI;Satakunta;Noormarkku;61.5927;21.8685
 FI;Tampere;Viiala;61.2102;23.7674
 FI;Kanta-Häme;Tuulos;61.15;24.8
-FI;"South Savo";Mikkeli;61.6887;27.2721
-FI;"South Karelia";Uus-Lavola;61.0426;28.102
+FI;South Savo;Mikkeli;61.6887;27.2721
+FI;South Karelia;Uus-Lavola;61.0426;28.102
 FI;Satakunta;Huittinen;61.1833;22.7
 FI;Satakunta;Kodisjoki;61.0293;21.7003
 SE;Dalarna;Sälen;61.1614;13.263
@@ -356,7 +356,7 @@ FI;Satakunta;Kiukainen;61.2167;22.0833
 FI;Tampere;Luopioinen;61.3629;24.6678
 FI;Satakunta;Siikainen;61.877;21.8195
 FI;Tampere;Suodenniemi;61.5581;22.7853
-FI;"Central Finland";Joutsa;61.7333;26.1167
+FI;Central Finland;Joutsa;61.7333;26.1167
 FI;Satakunta;Rauma;61.1283;21.5028
 NO;Vestland;Kaupanger;61.1845;7.24252
 NO;Innlandet;Koppang;61.5722;11.0466
@@ -365,15 +365,15 @@ FI;Satakunta;Pori;61.4944;21.8129
 FI;Satakunta;Honkajoki;61.9833;22.2667
 FI;Tampere;Tampere;61.4681;23.7557
 FI;Tampere;Tampere;61.4975;23.7686
-FI;"South Karelia";Lappeenranta;61.0527;28.1937
-NO;"Møre og Romsdal";Fiskå;61.9341;5.50194
-FI;"South Karelia";Lappeenranta;61.0545;28.1742
-FI;"South Karelia";Lappeenranta;61.0549;28.1758
+FI;South Karelia;Lappeenranta;61.0527;28.1937
+NO;Møre og Romsdal;Fiskå;61.9341;5.50194
+FI;South Karelia;Lappeenranta;61.0545;28.1742
+FI;South Karelia;Lappeenranta;61.0549;28.1758
 FI;Kanta-Häme;Hämeenlinna;61.0002;24.3535
 FI;Kanta-Häme;Lammi;61.0775;25.011
 FI;Satakunta;Nakkila;61.3667;22
 FI;Tampere;Tampere;61.4969;23.7546
-FI;"South Savo";Hirvensalmi;61.6333;26.8
+FI;South Savo;Hirvensalmi;61.6333;26.8
 NO;Vestland;Gaupne;61.4047;7.29458
 FI;Satakunta;Säkylä;61.04;22.4266
 RU;Khanty-Mansia;Nefteyugansk;61.0759;72.6129
@@ -383,7 +383,7 @@ FI;Tampere;Tampere;61.4817;23.7821
 NO;Vestland;Sogndalsfjøra;61.2257;7.10178
 NO;Vestland;Vikøyri;61.0871;6.57914
 NO;Vestland;Balestrand;61.2096;6.53608
-SE;Gävleborg;"Bollnäs (Gärdet-Centrum)";61.3501;16.3736
+SE;Gävleborg;Bollnäs (Gärdet-Centrum);61.3501;16.3736
 SE;Gävleborg;Edsbyn;61.375;15.8183
 SE;Gävleborg;Alfta;61.3467;16.075
 FI;Tampere;Vesilahti;61.3167;23.6167
@@ -398,10 +398,10 @@ RU;Khanty-Mansia;Surgut;61.2508;73.4318
 RU;Khanty-Mansia;Surgut;61.2458;73.4112
 RU;Khanty-Mansia;Surgut;61.2444;73.4099
 RU;Komi;Syktyvkar;61.6479;50.8339
-NO;"Møre og Romsdal";Hornindal;61.9692;6.52418
+NO;Møre og Romsdal;Hornindal;61.9692;6.52418
 NO;Vestland;Leikanger;61.181;6.85467
 FI;Kanta-Häme;Lammi;61.0833;25.0167
-FI;"South Karelia";Korvenkylä;61.1811;28.7004
+FI;South Karelia;Korvenkylä;61.1811;28.7004
 RU;Karelia;Petrozavodsk;61.7858;34.3256
 RU;Karelia;Sortavala;61.7065;30.6979
 FI;Satakunta;Huittinen;61.0188;22.688
@@ -413,16 +413,16 @@ RU;Karelia;Petrozavodsk;61.8072;34.4264
 FI;Satakunta;Nakkila;61.3648;22.0054
 RU;Sakha;Mayya;61.7382;130.282
 RU;Komi;Syktyvkar;61.6642;50.8174
-FI;"South Savo";Pertunmaa;61.5;26.4833
+FI;South Savo;Pertunmaa;61.5;26.4833
 FI;Satakunta;Merikarvia;61.8615;21.5159
 FI;Tampere;Tampere;61.4958;23.7768
 FI;Satakunta;Pori;61.4518;21.8539
 FI;Tampere;Tampere;61.501;23.7611
 SE;Dalarna;Selja;61.0167;14.4667
-US;Alaska;"Anchorage (Taku / Campbell)";61.1595;-149.896
-US;Alaska;"Anchorage (Midtown)";61.185;-149.888
-US;Alaska;"Anchorage (Spenard)";61.183;-149.912
-FI;"Central Finland";Jämsä;61.8633;25.1678
+US;Alaska;Anchorage (Taku / Campbell);61.1595;-149.896
+US;Alaska;Anchorage (Midtown);61.185;-149.888
+US;Alaska;Anchorage (Spenard);61.183;-149.912
+FI;Central Finland;Jämsä;61.8633;25.1678
 FI;Tampere;Pirkkala;61.4546;23.6881
 NO;Vestland;Førde;61.4536;5.84967
 FI;Tampere;Tampere;61.4543;23.7325
@@ -436,21 +436,21 @@ FI;Paijat-Hame;Hartola;61.5833;26.0167
 RU;Khanty-Mansia;Surgut;61.2491;73.4136
 RU;Khanty-Mansia;Fedorovskiy;61.6063;73.7141
 FI;Tampere;Tampere;61.4942;23.7808
-FI;"South Karelia";Lappeenranta;61.0646;28.0932
+FI;South Karelia;Lappeenranta;61.0646;28.0932
 FI;Tampere;Tampere;61.456;23.7382
-FI;"South Savo";Mikkeli;61.6894;27.2655
-US;Alaska;"Anchorage (Midtown)";61.1876;-149.885
-US;Alaska;"Anchorage (Midtown)";61.192;-149.886
+FI;South Savo;Mikkeli;61.6894;27.2655
+US;Alaska;Anchorage (Midtown);61.1876;-149.885
+US;Alaska;Anchorage (Midtown);61.192;-149.886
 FI;Tampere;Tampere;61.5014;23.8032
 FI;Tampere;Tampere;61.4807;23.7833
-US;Alaska;"Anchorage (Midtown)";61.1851;-149.897
+US;Alaska;Anchorage (Midtown);61.1851;-149.897
 RU;Khanty-Mansia;Megion;61.0286;76.1105
-US;Alaska;"Anchorage (Sand Lake)";61.1405;-149.956
+US;Alaska;Anchorage (Sand Lake);61.1405;-149.956
 SE;Dalarna;Mora;61.0049;14.537
 FI;Kanta-Häme;Hauho;61.1726;24.563
 FI;Paijat-Hame;Hollola;61.05;25.4333
-NO;Vestland;"Øvre Årdal";61.345;7.88028
-FI;"South Savo";Pertunmaa;61.4267;26.4307
+NO;Vestland;Øvre Årdal;61.345;7.88028
+FI;South Savo;Pertunmaa;61.4267;26.4307
 RU;Khanty-Mansia;Yugorsk;61.3123;63.3307
 FI;Tampere;Tampere;61.4991;23.7804
 NO;Innlandet;Lillehammer;61.1509;10.4183
@@ -460,54 +460,54 @@ FI;Tampere;Tampere;61.5014;23.7611
 FI;Tampere;Tampere;61.5015;23.7606
 FI;Satakunta;Pori;61.4927;21.7974
 FI;Satakunta;Pori;61.4926;21.7974
-RU;"Irkutsk Oblast";Yerbogachën;61.2802;108.015
+RU;Irkutsk Oblast;Yerbogachën;61.2802;108.015
 FI;Tampere;Tampere;61.4619;23.719
 FI;Satakunta;Pori;61.484;21.799
 NO;Vestland;Førde;61.4569;5.84455
-SE;Gävleborg;"Hudiksvall (Östra Hudiksvall)";61.7238;17.1264
-NO;Vestland;"Øvre Årdal";61.3084;7.81316
+SE;Gävleborg;Hudiksvall (Östra Hudiksvall);61.7238;17.1264
+NO;Vestland;Øvre Årdal;61.3084;7.81316
 RU;Arkhangelskaya;Kotlas;61.2491;46.635
 NO;Vestland;Måløy;61.9351;5.114
-RU;"Leningradskaya Oblast'";Lesogorskiy;61.0455;28.9294
+RU;Leningradskaya Oblast';Lesogorskiy;61.0455;28.9294
 NO;Vestland;Førde;61.4516;5.85795
 RU;Arkhangelskaya;Urdoma;61.7533;48.5442
 FI;Satakunta;Lappi;61.1;21.8333
-FI;"North Karelia";Kesälahti;61.8918;29.8273
+FI;North Karelia;Kesälahti;61.8918;29.8273
 FI;Tampere;Tampere;61.4929;23.7784
-US;Alaska;"Anchorage (Midtown)";61.1891;-149.874
+US;Alaska;Anchorage (Midtown);61.1891;-149.874
 FI;Satakunta;Pori;61.4922;21.722
 FI;Tampere;Tampere;61.4969;23.7573
 FI;Tampere;Tampere;61.4858;23.7629
-US;Alaska;"Anchorage (Downtown)";61.2178;-149.903
-FI;"South Karelia";Parikkala;61.5496;29.4992
+US;Alaska;Anchorage (Downtown);61.2178;-149.903
+FI;South Karelia;Parikkala;61.5496;29.4992
 FI;Satakunta;Rauma;61.1377;21.5455
 FI;Tampere;Tampere;61.4641;23.7325
 FI;Tampere;Nokia;61.4767;23.5052
-FI;"South Savo";Mikkeli;61.6855;27.1911
+FI;South Savo;Mikkeli;61.6855;27.1911
 FI;Tampere;Kylmäkoski;61.1629;23.6923
-FI;"South Savo";Mikkeli;61.6892;27.2651
-FI;"South Karelia";Imatra;61.1873;28.7626
+FI;South Savo;Mikkeli;61.6892;27.2651
+FI;South Karelia;Imatra;61.1873;28.7626
 FI;Satakunta;Harjavalta;61.3137;22.1413
-FI;"South Karelia";Lappeenranta;61.0656;28.1739
-FI;"South Savo";Mäntyharju;61.3283;26.7362
-FI;"South Karelia";Lappeenranta;61.041;28.1097
-FI;"South Karelia";Simpele;61.4351;29.3618
-FI;"South Savo";Mikkeli;61.6803;27.2594
+FI;South Karelia;Lappeenranta;61.0656;28.1739
+FI;South Savo;Mäntyharju;61.3283;26.7362
+FI;South Karelia;Lappeenranta;61.041;28.1097
+FI;South Karelia;Simpele;61.4351;29.3618
+FI;South Savo;Mikkeli;61.6803;27.2594
 FI;Tampere;Valkeakoski;61.2642;24.031
 FI;Tampere;Tampere;61.4991;23.7822
-FI;"South Karelia";Ruokolahti;61.2282;28.8327
+FI;South Karelia;Ruokolahti;61.2282;28.8327
 FI;Tampere;Tampere;61.5044;23.7616
-FI;"South Karelia";Ruokolahti;61.2218;28.8296
+FI;South Karelia;Ruokolahti;61.2218;28.8296
 FI;Kanta-Häme;Hattula;61.0554;24.3732
 FI;Tampere;Tampere;61.4994;23.7824
-US;Alaska;"Anchorage (Northeast Anchorage)";61.2018;-149.776
+US;Alaska;Anchorage (Northeast Anchorage);61.2018;-149.776
 RU;Khanty-Mansia;Megion;61.0343;76.1068
-US;Alaska;"Anchorage (Taku / Campbell)";61.168;-149.909
-FI;"South Karelia";Lappeenranta;61.0571;28.1953
+US;Alaska;Anchorage (Taku / Campbell);61.168;-149.909
+FI;South Karelia;Lappeenranta;61.0571;28.1953
 FI;Tampere;Julkujärvi;61.5611;23.5421
 FI;Tampere;Tampere;61.4961;23.7529
-US;Alaska;"Anchorage (Downtown)";61.2149;-149.899
-US;Alaska;"Anchorage (Rogers Park)";61.1886;-149.862
+US;Alaska;Anchorage (Downtown);61.2149;-149.899
+US;Alaska;Anchorage (Rogers Park);61.1886;-149.862
 US;Alaska;Palmer;61.6013;-149.104
 NO;Innlandet;Lillehammer;61.0913;10.4764
 FI;Tampere;Tampere;61.4792;23.884
@@ -520,18 +520,18 @@ FI;Satakunta;Pori;61.49;21.7876
 FI;Satakunta;Rauma;61.1401;21.485
 FI;Paijat-Hame;Vierumäki;61.1141;26.0083
 FI;Tampere;Tampere;61.4498;23.8586
-FI;"South Savo";Mikkeli;61.6894;27.263
+FI;South Savo;Mikkeli;61.6894;27.263
 FI;Tampere;Tampere;61.5032;23.8083
 FI;Tampere;Tampere;61.5041;23.8089
 RU;Khanty-Mansia;Yugorsk;61.3138;63.343
 FI;Paijat-Hame;Heinola;61.2031;26.0319
 FI;Tampere;Lempäälä;61.3172;23.7493
 FI;Tampere;Tampere;61.498;23.7698
-FI;"South Karelia";Lappeenranta;61.0575;28.1917
+FI;South Karelia;Lappeenranta;61.0575;28.1917
 FI;Tampere;Tampere;61.4971;23.7569
-FI;"South Karelia";Lappeenranta;61.1189;28.5075
+FI;South Karelia;Lappeenranta;61.1189;28.5075
 FI;Tampere;Valkeakoski;61.2643;24.0312
-FI;"South Savo";Maivala;61.8465;27.733
+FI;South Savo;Maivala;61.8465;27.733
 FI;Satakunta;Rauma;61.1103;21.4632
 FI;Satakunta;Huittinen;61.1796;22.715
 FI;Satakunta;Nakkila;61.3661;22.0085
@@ -543,97 +543,97 @@ FI;Tampere;Tampere;61.4783;23.7651
 FI;Satakunta;Pori;61.4888;21.797
 FI;Tampere;Kangasala;61.4716;23.986
 FI;Tampere;Tampere;61.4793;23.9193
-FI;"South Karelia";Lappeenranta;61.0511;28.201
-FI;"Central Finland";Jämsä;61.862;25.1802
+FI;South Karelia;Lappeenranta;61.0511;28.201
+FI;Central Finland;Jämsä;61.862;25.1802
 FI;Tampere;Tampere;61.4959;23.7777
 FI;Satakunta;Pori;61.4646;21.7074
 FI;Tampere;Tampere;61.4922;23.8167
 FI;Tampere;Toijala;61.1792;23.8655
 FI;Tampere;Tampere;61.4596;23.7427
 FI;Tampere;Pirkkala;61.4551;23.6238
-FI;"South Savo";Mikkeli;61.701;27.2818
+FI;South Savo;Mikkeli;61.701;27.2818
 FI;Satakunta;Pori;61.6052;21.7121
 FI;Tampere;Tampere;61.4933;23.7213
-FI;"South Karelia";Lappeenranta;61.0434;28.179
+FI;South Karelia;Lappeenranta;61.0434;28.179
 FI;Tampere;Tampere;61.4928;23.7716
 FI;Tampere;Tampere;61.5016;23.7609
 FI;Tampere;Valkeakoski;61.2712;24.0333
-FI;"South Karelia";Imatra;61.1544;28.8018
+FI;South Karelia;Imatra;61.1544;28.8018
 FI;Tampere;Tampere;61.4956;23.767
-FI;"South Karelia";Lappeenranta;61.0662;28.2125
+FI;South Karelia;Lappeenranta;61.0662;28.2125
 FI;Tampere;Tampere;61.4947;23.7525
 FI;Tampere;Linnavuori;61.4901;23.351
-FI;"South Karelia";Imatra;61.1714;28.7633
-NO;Innlandet;"Segalstad bru";61.2282;10.2226
+FI;South Karelia;Imatra;61.1714;28.7633
+NO;Innlandet;Segalstad bru;61.2282;10.2226
 RU;Khanty-Mansia;Surgut;61.2837;73.4618
 RU;Khanty-Mansia;Nefteyugansk;61.1137;72.5863
 RU;Karelia;Petrozavodsk;61.7713;34.3078
 FI;Tampere;Tampere;61.4587;23.7705
-FI;"South Savo";Mikkeli;61.6901;27.2971
+FI;South Savo;Mikkeli;61.6901;27.2971
 FI;Tampere;Tampere;61.4334;23.7578
 FI;Tampere;Tampere;61.4991;23.7686
 FI;Tampere;Tampere;61.5197;23.6661
 FI;Tampere;Tampere;61.4921;23.7718
 FI;Satakunta;Ulvila;61.4302;21.875
-FI;"South Savo";Harjunmaa;61.9979;26.8903
-FI;"South Savo";Mikkeli;61.6922;27.277
+FI;South Savo;Harjunmaa;61.9979;26.8903
+FI;South Savo;Mikkeli;61.6922;27.277
 FI;Satakunta;Rauma;61.1467;21.474
 NO;Vestland;Sogndalsfjøra;61.2257;7.10179
-FI;"South Savo";Mikkeli;61.6915;27.2681
+FI;South Savo;Mikkeli;61.6915;27.2681
 FI;Satakunta;Pori;61.473;21.781
-FI;"South Karelia";Imatra;61.1751;28.7607
+FI;South Karelia;Imatra;61.1751;28.7607
 FI;Satakunta;Pori;61.49;21.7962
 FI;Tampere;Valkeakoski;61.2818;23.9926
-FI;"South Karelia";Lappeenranta;61.1045;28.4534
-FI;"South Karelia";Lappeenranta;61.0583;28.1995
+FI;South Karelia;Lappeenranta;61.1045;28.4534
+FI;South Karelia;Lappeenranta;61.0583;28.1995
 FI;Tampere;Valkeakoski;61.281;23.9919
-FI;"South Savo";Pertunmaa;61.4338;26.6074
+FI;South Savo;Pertunmaa;61.4338;26.6074
 FI;Tampere;Tampere;61.4941;23.7841
 SE;Gävleborg;Vallvik;61.1847;17.1792
 FI;Satakunta;Pori;61.4801;21.8232
 FI;Tampere;Nokia;61.4781;23.5096
 FI;Tampere;Tampere;61.4775;23.8971
 FI;Tampere;Tampere;61.5006;23.7563
-FI;"South Savo";Mikkeli;61.6935;27.2193
+FI;South Savo;Mikkeli;61.6935;27.2193
 FI;Satakunta;Köyliö;61.0776;22.257
 FI;Tampere;Tampere;61.498;23.7716
 FI;Tampere;Tampere;61.5088;23.7785
-FI;"South Karelia";"Lappeenranta (Uus-Lavola)";61.0621;28.0976
-FI;"South Karelia";Lappeenranta;61.0622;28.0979
-FI;"Central Finland";Jyväskylä;61.942;25.7048
+FI;South Karelia;Lappeenranta (Uus-Lavola);61.0621;28.0976
+FI;South Karelia;Lappeenranta;61.0622;28.0979
+FI;Central Finland;Jyväskylä;61.942;25.7048
 FI;Tampere;Nokia;61.4816;23.4981
 FI;Tampere;Tampere;61.4971;23.7708
 FI;Tampere;Tampere;61.4904;23.7716
 FI;Tampere;Tampere;61.503;23.7429
-FI;"South Savo";Mäntyharju;61.4378;26.8738
+FI;South Savo;Mäntyharju;61.4378;26.8738
 FI;Tampere;Pirkkala;61.4601;23.6217
 RU;Arkhangelskaya;Oktyabr'skiy;61.0893;43.1718
 FI;Tampere;Tampere;61.4916;23.7835
-FI;"South Savo";Mäntyharju;61.4147;26.8724
+FI;South Savo;Mäntyharju;61.4147;26.8724
 FI;Tampere;Tampere;61.4987;23.7543
 FI;Kanta-Häme;Hämeenlinna;61.0144;24.4018
 FI;Satakunta;Rauma;61.1262;21.4754
 FI;Tampere;Tampere;61.5016;23.7547
 FI;Tampere;Viiala;61.2107;23.7672
-FI;"Central Finland";Jämsä;61.8628;25.197
+FI;Central Finland;Jämsä;61.8628;25.197
 FI;Satakunta;Pori;61.4503;21.8443
 FI;Satakunta;Pori;61.4936;21.7955
 FI;Tampere;Ikaalinen;61.7803;22.9882
 FI;Tampere;Kangasala;61.4786;23.9786
 FI;Satakunta;Rauma;61.1102;21.4651
-FI;"South Karelia";Lappeenranta;61.0653;28.1673
+FI;South Karelia;Lappeenranta;61.0653;28.1673
 FI;Tampere;Tampere;61.4857;23.8568
 FI;Tampere;Tampere;61.471;23.8642
-FI;"South Karelia";Savitaipale;61.1987;27.6865
+FI;South Karelia;Savitaipale;61.1987;27.6865
 FI;Tampere;Tampere;61.4426;23.7581
-FI;"South Savo";Savonlinna;61.855;28.9496
+FI;South Savo;Savonlinna;61.855;28.9496
 FI;Tampere;Tampere;61.4582;23.8489
-FI;"South Karelia";Lappeenranta;61.0653;28.1739
+FI;South Karelia;Lappeenranta;61.0653;28.1739
 FI;Tampere;Valkeakoski;61.2681;24.0295
 FI;Tampere;Tampere;61.4822;23.9151
 FI;Satakunta;Pori;61.4954;21.7381
 FI;Tampere;Tampere;61.5009;23.7679
-FI;"South Karelia";Imatra;61.1706;28.7694
+FI;South Karelia;Imatra;61.1706;28.7694
 FI;Satakunta;Pori;61.603;22.5838
 FI;Tampere;Sastamala;61.3562;22.8879
 FI;Satakunta;Rauma;61.1284;21.5042
@@ -643,89 +643,89 @@ FI;Tampere;Tampere;61.4824;23.7948
 FI;Satakunta;Pori;61.5971;21.4699
 RU;Khanty-Mansia;Nefteyugansk;61.0769;72.6144
 FI;Satakunta;Rauma;61.1432;21.5436
-FI;"South Savo";Savonlinna;61.8697;28.8806
+FI;South Savo;Savonlinna;61.8697;28.8806
 FI;Tampere;Tampere;61.4919;23.7825
 FI;Satakunta;Rauma;61.1261;21.4937
 FI;Satakunta;Kokemäki;61.2604;22.3257
 FI;Satakunta;Lavia;61.5966;22.5857
 FI;Satakunta;Rauma;61.1345;21.5277
 FI;Satakunta;Sahko;61.1736;22.6888
-FI;"South Savo";Savonlinna;61.8692;28.8819
-FI;"South Savo";Savonlinna;61.757;29.3894
+FI;South Savo;Savonlinna;61.8692;28.8819
+FI;South Savo;Savonlinna;61.757;29.3894
 RU;Khanty-Mansia;Nefteyugansk;61.0665;72.6264
-FI;"South Savo";Makkola;61.9651;28.9361
+FI;South Savo;Makkola;61.9651;28.9361
 FI;Tampere;Tampere;61.5034;23.6495
-FI;"South Savo";Mikkeli;61.7666;27.1161
-FI;"South Karelia";Korvenkylä;61.2109;28.7269
+FI;South Savo;Mikkeli;61.7666;27.1161
+FI;South Karelia;Korvenkylä;61.2109;28.7269
 FI;Tampere;Tampere;61.457;23.7658
-FI;"South Karelia";Lappeenranta;61.0479;28.2019
+FI;South Karelia;Lappeenranta;61.0479;28.2019
 FI;Tampere;Tampere;61.4599;23.7648
 FI;Tampere;Tampere;61.5024;23.5962
-FI;"South Savo";Otava;61.6435;27.0781
-FI;"South Savo";Mikkeli;61.6994;27.2493
+FI;South Savo;Otava;61.6435;27.0781
+FI;South Savo;Mikkeli;61.6994;27.2493
 FI;Satakunta;Harjavalta;61.299;22.7258
-FI;"South Karelia";Konnunsuo;61.0363;28.4203
+FI;South Karelia;Konnunsuo;61.0363;28.4203
 FI;Tampere;Tampere;61.4947;23.8079
 FI;Tampere;Tampere;61.4955;23.7644
-FI;"South Karelia";Myllymäki;61.0546;27.9341
-FI;"South Karelia";Lappeenranta;61.061;28.2617
+FI;South Karelia;Myllymäki;61.0546;27.9341
+FI;South Karelia;Lappeenranta;61.061;28.2617
 FI;Tampere;Tampere;61.5091;23.5713
 FI;Satakunta;Ulvila;61.4321;21.8609
 FI;Satakunta;Kokemäki;61.2583;22.3539
-FI;"South Karelia";Ruokolahti;61.2432;28.8915
+FI;South Karelia;Ruokolahti;61.2432;28.8915
 FI;Tampere;Tampere;61.5076;23.5852
-FI;Tampere;"Urjalan Asema";61.0735;23.5816
+FI;Tampere;Urjalan Asema;61.0735;23.5816
 FI;Tampere;Tampere;61.4919;23.7761
-FI;"South Karelia";Lappeenranta;61.1721;28.7157
-FI;"South Karelia";Lappeenranta;61.0465;28.1977
-FI;"South Karelia";Lappeenranta;61.0581;28.1899
+FI;South Karelia;Lappeenranta;61.1721;28.7157
+FI;South Karelia;Lappeenranta;61.0465;28.1977
+FI;South Karelia;Lappeenranta;61.0581;28.1899
 FI;Satakunta;Ulvila;61.4388;21.8554
 RU;Karelia;Lyaskelya;61.7632;31.0062
 FI;Tampere;Tampere;61.4866;23.7672
 FI;Tampere;Tampere;61.5018;23.7573
 SE;Gävleborg;Bergsjö;61.983;17.0592
 RU;Khanty-Mansia;Izluchinsk;61.0214;76.9351
-RU;Khanty-Mansia;"Surgut (Mikrorayon 6)";61.2611;73.3715
-FI;"Central Finland";Joutsa;61.7418;26.1894
+RU;Khanty-Mansia;Surgut (Mikrorayon 6);61.2611;73.3715
+FI;Central Finland;Joutsa;61.7418;26.1894
 FI;Paijat-Hame;Hollola;61.0622;25.4077
 FI;Tampere;Tampere;61.4466;23.857
 FI;Tampere;Tampere;61.4974;23.7805
-FI;"South Savo";Mikkeli;61.68;27.2567
-FI;"South Savo";Mikkeli;61.6807;27.2563
+FI;South Savo;Mikkeli;61.68;27.2567
+FI;South Savo;Mikkeli;61.6807;27.2563
 FI;Tampere;Kangasala;61.4692;24.0399
 FI;Satakunta;Kullaa;61.4615;22.1397
 FI;Tampere;Tampere;61.4956;23.7811
 FI;Tampere;Tampere;61.4929;23.7516
 FI;Paijat-Hame;Vierumäki;61.1081;25.9118
 FI;Satakunta;Pori;61.502;21.7222
-FI;"South Karelia";Taipalsaari;61.1593;28.0603
+FI;South Karelia;Taipalsaari;61.1593;28.0603
 FI;Tampere;Tampere;61.4955;23.7675
-FI;"South Karelia";Imatra;61.192;28.7793
-FI;"South Karelia";Ruokolahti;61.2934;28.8095
+FI;South Karelia;Imatra;61.192;28.7793
+FI;South Karelia;Ruokolahti;61.2934;28.8095
 FI;Tampere;Tampere;61.4978;23.7662
 FI;Tampere;Tampere;61.4981;23.7584
 FI;Tampere;Tampere;61.4978;23.7793
 RU;Karelia;Petrozavodsk;61.7984;34.3754
-FI;"South Karelia";Lappeenranta;61.065;28.1701
-FI;"South Savo";Mikkeli;61.6831;27.24
+FI;South Karelia;Lappeenranta;61.065;28.1701
+FI;South Savo;Mikkeli;61.6831;27.24
 FI;Tampere;Nokia;61.4753;23.5062
 FI;Tampere;Tampere;61.4526;23.9
 FI;Tampere;Tampere;61.4913;23.7533
 FI;Tampere;Valkeakoski;61.2526;24.0477
-FI;"South Savo";Mikkeli;61.7043;27.3154
+FI;South Savo;Mikkeli;61.7043;27.3154
 FI;Tampere;Vammala;61.3268;22.8923
 FI;Tampere;Hämeenkyrö;61.6411;23.1994
 FI;Tampere;Nokia;61.4815;23.4976
 FI;Kymenlaakso;Kouvola;61.0519;26.4758
-FI;"South Savo";Mäntyharju;61.4171;26.8772
-FI;"Central Finland";Jämsä;61.8655;25.1876
+FI;South Savo;Mäntyharju;61.4171;26.8772
+FI;Central Finland;Jämsä;61.8655;25.1876
 FI;Tampere;Kylmäkoski;61.063;23.6462
 FI;Tampere;Tampere;61.498;23.7598
 FI;Tampere;Tampere;61.4475;23.8583
 FI;Tampere;Tampere;61.4913;23.771
 FI;Paijat-Hame;Heinola;61.2023;26.0363
 FI;Tampere;Akaa;61.2534;23.9205
-FI;"South Savo";Savonlinna;61.8689;28.8775
+FI;South Savo;Savonlinna;61.8689;28.8775
 FI;Tampere;Ylöjärvi;61.5563;23.5671
 FI;Paijat-Hame;Heinola;61.2086;25.9798
 FI;Satakunta;Rauma;61.1005;21.5025
@@ -737,7 +737,7 @@ FI;Tampere;Vuores;61.4467;23.857
 FI;Tampere;Ruovesi;61.9825;24.0773
 FI;Satakunta;Rauma;61.135;21.4992
 FI;Satakunta;Panelia;61.2239;21.9748
-FI;"South Karelia";Ruokolahti;61.2236;28.8403
+FI;South Karelia;Ruokolahti;61.2236;28.8403
 FI;Satakunta;Ulvila;61.4349;21.9016
 FI;Satakunta;Rauma;61.1395;21.5327
 FI;Satakunta;Harjavalta;61.32;22.1329
@@ -745,51 +745,51 @@ FI;Tampere;Tampere;61.4677;23.8791
 FI;Satakunta;Huittinen;61.1826;22.7231
 FI;Kanta-Häme;Hämeenlinna;61.0102;24.4002
 FI;Tampere;Tampere;61.4932;23.7262
-FI;"South Karelia";Ruokolahti;61.2933;28.8088
-FI;"South Karelia";Lappeenranta;61.0593;28.1951
+FI;South Karelia;Ruokolahti;61.2933;28.8088
+FI;South Karelia;Lappeenranta;61.0593;28.1951
 US;Alaska;Tyonek;61.0681;-151.137
-US;Alaska;"Anchorage (Spenard)";61.1737;-149.959
-US;Alaska;"Anchorage (U-MED District)";61.1862;-149.778
-US;Alaska;"Anchorage (Government Hill)";61.2239;-149.859
-US;Alaska;"Anchorage (Midtown)";61.1912;-149.886
-US;Alaska;"Anchorage (Fairview)";61.2099;-149.873
-US;Alaska;"Anchorage (Downtown)";61.2227;-149.878
-US;Alaska;"Anchorage (U-MED District)";61.1814;-149.78
-US;Alaska;"Anchorage (Downtown)";61.2153;-149.893
-US;Alaska;"Anchorage (U-MED District)";61.1828;-149.807
-US;Alaska;"Anchorage (Downtown)";61.2153;-149.903
-US;Alaska;"Anchorage (Sand Lake)";61.1727;-149.972
-US;Alaska;"Anchorage (U-MED District)";61.1908;-149.819
-US;Alaska;"Anchorage (Airport Heights Community Council)";61.2138;-149.843
-US;Alaska;"Anchorage (U-MED District)";61.188;-149.821
-US;Alaska;"Anchorage (Government Hill)";61.2282;-149.858
-US;Alaska;"Anchorage (Abbott Loop)";61.1479;-149.822
-US;Alaska;"Anchorage (Taku / Campbell)";61.1581;-149.893
+US;Alaska;Anchorage (Spenard);61.1737;-149.959
+US;Alaska;Anchorage (U-MED District);61.1862;-149.778
+US;Alaska;Anchorage (Government Hill);61.2239;-149.859
+US;Alaska;Anchorage (Midtown);61.1912;-149.886
+US;Alaska;Anchorage (Fairview);61.2099;-149.873
+US;Alaska;Anchorage (Downtown);61.2227;-149.878
+US;Alaska;Anchorage (U-MED District);61.1814;-149.78
+US;Alaska;Anchorage (Downtown);61.2153;-149.893
+US;Alaska;Anchorage (U-MED District);61.1828;-149.807
+US;Alaska;Anchorage (Downtown);61.2153;-149.903
+US;Alaska;Anchorage (Sand Lake);61.1727;-149.972
+US;Alaska;Anchorage (U-MED District);61.1908;-149.819
+US;Alaska;Anchorage (Airport Heights Community Council);61.2138;-149.843
+US;Alaska;Anchorage (U-MED District);61.188;-149.821
+US;Alaska;Anchorage (Government Hill);61.2282;-149.858
+US;Alaska;Anchorage (Abbott Loop);61.1479;-149.822
+US;Alaska;Anchorage (Taku / Campbell);61.1581;-149.893
 US;Alaska;Anchorage;61.1759;-149.99
-US;Alaska;"Anchorage (North Star)";61.1979;-149.87
-US;Alaska;"Anchorage (Taku / Campbell)";61.1453;-149.878
-US;Alaska;"Anchorage (Eagle River)";61.33;-149.571
-US;Alaska;"Anchorage (Midtown)";61.1815;-149.885
-US;Alaska;"Anchorage (Taku / Campbell)";61.1671;-149.866
-US;Alaska;"Anchorage (Old Seward / Oceanview)";61.1081;-149.862
+US;Alaska;Anchorage (North Star);61.1979;-149.87
+US;Alaska;Anchorage (Taku / Campbell);61.1453;-149.878
+US;Alaska;Anchorage (Eagle River);61.33;-149.571
+US;Alaska;Anchorage (Midtown);61.1815;-149.885
+US;Alaska;Anchorage (Taku / Campbell);61.1671;-149.866
+US;Alaska;Anchorage (Old Seward / Oceanview);61.1081;-149.862
 US;Alaska;Valdez;61.1302;-146.358
-US;Alaska;"Anchorage (Taku / Campbell)";61.1709;-149.884
-US;Alaska;"Anchorage (Bayshore / Klatt)";61.1417;-149.874
+US;Alaska;Anchorage (Taku / Campbell);61.1709;-149.884
+US;Alaska;Anchorage (Bayshore / Klatt);61.1417;-149.874
 US;Alaska;Aniak;61.5783;-159.522
 RU;Arkhangelskaya;Pugachëvskaya;61.1716;42.7864
-US;Alaska;"Wasilla (Tanaina)";61.6207;-149.433
+US;Alaska;Wasilla (Tanaina);61.6207;-149.433
 FI;Tampere;Tampere;61.4854;23.8478
 FI;Tampere;Tampere;61.4951;23.779
-FI;"South Savo";Ristiina;61.5065;27.2578
-FI;"South Savo";Savonlinna;61.8708;28.8883
+FI;South Savo;Ristiina;61.5065;27.2578
+FI;South Savo;Savonlinna;61.8708;28.8883
 FI;Tampere;Tampere;61.5013;23.6157
 RU;Khanty-Mansia;Surgut;61.2511;73.3811
 RU;Karelia;Petrozavodsk;61.7786;34.4074
-FI;"South Savo";Savonlinna;61.8566;28.9587
+FI;South Savo;Savonlinna;61.8566;28.9587
 FI;Tampere;Tampere;61.4926;23.7711
 FI;Satakunta;Pori;61.5118;21.8138
-FI;"South Karelia";Lappeenranta;61.0637;28.3172
-FI;"South Savo";Sulkava;61.7868;28.371
+FI;South Karelia;Lappeenranta;61.0637;28.3172
+FI;South Savo;Sulkava;61.7868;28.371
 FI;Kanta-Häme;Parola;61.0751;24.3313
 FI;Satakunta;Pomarkku;61.6939;21.9983
 FI;Tampere;Valkeakoski;61.2657;24.0597
@@ -797,10 +797,10 @@ FI;Tampere;Kyröskoski;61.6576;23.1784
 FI;Paijat-Hame;Lahti;61.0096;25.6978
 FI;Satakunta;Ulvila;61.4313;21.8719
 FI;Tampere;Tampere;61.4808;23.8966
-FI;"South Karelia";Lappeenranta;61.0461;28.2285
-FI;"Central Finland";Jämsänkoski;61.9103;25.1515
+FI;South Karelia;Lappeenranta;61.0461;28.2285
+FI;Central Finland;Jämsänkoski;61.9103;25.1515
 FI;Tampere;Tampere;61.518;23.6626
-FI;"South Karelia";Laihia;61.0864;28.3228
+FI;South Karelia;Laihia;61.0864;28.3228
 FI;Tampere;Tampere;61.493;23.8114
 FI;Tampere;Hämeenkyrö;61.6381;23.197
 FI;Tampere;Tampere;61.4921;23.7521
@@ -839,10 +839,10 @@ RU;Komi;Syktyvkar;61.6684;50.8488
 FI;Tampere;Tampere;61.4992;23.7559
 FI;Tampere;Ylöjärvi;61.5496;23.5961
 FI;Tampere;Hämeenkyrö;61.658;23.178
-FI;"South Karelia";Lemi;61.0616;27.8038
-FI;"South Karelia";Lappeenranta;61.0933;28.3726
+FI;South Karelia;Lemi;61.0616;27.8038
+FI;South Karelia;Lappeenranta;61.0933;28.3726
 FI;Tampere;Valkeakoski;61.2774;24.0163
-FI;"Central Finland";Säyrylä;61.8832;25.29
+FI;Central Finland;Säyrylä;61.8832;25.29
 FI;Tampere;Tampere;61.4957;23.7671
 FI;Tampere;Tampere;61.4981;23.7627
 FI;Tampere;Luopioinen;61.4806;24.7012
@@ -850,18 +850,18 @@ FI;Satakunta;Nakkila;61.3659;22.02
 FI;Satakunta;Eura;61.1397;22.137
 FI;Satakunta;Niinisalo;61.8453;22.4819
 FI;Satakunta;Huittinen;61.1916;22.6864
-US;Alaska;"Anchorage (Midtown)";61.193;-149.887
-CA;"Northwest Territories";"Fort Providence";61.3576;-117.661
-CA;"Northwest Territories";"Fort Resolution";61.1721;-113.674
-CA;"Northwest Territories";"Fort Simpson";61.8628;-121.353
-CA;"Northwest Territories";"Jean Marie River";61.5329;-120.635
+US;Alaska;Anchorage (Midtown);61.193;-149.887
+CA;Northwest Territories;Fort Providence;61.3576;-117.661
+CA;Northwest Territories;Fort Resolution;61.1721;-113.674
+CA;Northwest Territories;Fort Simpson;61.8628;-121.353
+CA;Northwest Territories;Jean Marie River;61.5329;-120.635
 CA;Nunavut;Arviat;61.1078;-94.0624
-CA;"Northwest Territories";"Nahanni Butte";61.0335;-123.386
-US;Alaska;"Anchorage (Eagle River)";61.3293;-149.568
+CA;Northwest Territories;Nahanni Butte;61.0335;-123.386
+US;Alaska;Anchorage (Eagle River);61.3293;-149.568
 US;Alaska;Marshall;61.932;-162.271
 NO;Vestland;Gaupne;61.4083;7.2856
 RU;Komi;Syktyvkar;61.669;50.8383
-FI;"South Karelia";Lappeenranta;61.0608;28.1862
+FI;South Karelia;Lappeenranta;61.0608;28.1862
 RU;Khanty-Mansia;Surgut;61.254;73.4278
 RU;Karelia;Petrozavodsk;61.7914;34.3786
 RU;Khanty-Mansia;Surgut;61.2517;73.4209
