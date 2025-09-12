@@ -14,6 +14,8 @@ const { getTimezone } = await import ('../../public/modules/regional/regional.js
 /**
  * @description Returns place in common format
  * @param {{locale:string,
+ *          longitude?:string,
+ *          latitude?:string,
  *          place:string|null}} parameters
  * @returns {server_server_response & {result?:server_geolocation_place}}
  */
@@ -31,15 +33,33 @@ const returnPlace = parameters =>{
                 timezone:   getTimezone(parameters.place.split(';')[3], 
                                         parameters.place.split(';')[4])},
                 type: 'JSON'}; 
-    else
+    else{
+        let latitude = null;
+        let longitude = null;
+        let timezone = null;
+        try {
+            //test convert to numbers
+            latitude = parameters.latitude?+parameters.latitude:null;
+            longitude = parameters.longitude?+parameters.longitude:null;
+            //test find timezone
+            timezone = getTimezone(latitude?.toString()??'0',longitude?.toString()??'0');
+        } catch (error) {
+            latitude = null;
+            longitude = null;
+            timezone = null;
+        }
+        
         return {result:{place:'?',
-                        countryCode:'?',
-                        country:'?',
-                        region:'?',
-                        latitude:'?',
-                        longitude:'?',
-                        timezone:   '?'}, 
-                type:'JSON'};
+                countryCode:'?',
+                country:'?',
+                region:'?',
+                latitude:latitude?.toString()??'',
+                longitude:longitude?.toString()??'',
+                timezone:   timezone?? ''
+                }, 
+    type:'JSON'};
+    }
+        
 };
 /**
  * @name getIP
@@ -147,6 +167,8 @@ const getPlace = parameters =>{
                                 place:result});
     }    
     return returnPlace({locale:parameters.locale,
+                        longitude:parameters.data.longitude,
+                        latitude:parameters.data.latitude,
                         place:null});        
 };
 export {getIP, getPlace};
