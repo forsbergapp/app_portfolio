@@ -2181,21 +2181,22 @@ body.rtl{
 }
 .common_map_popup {
     position:absolute;
-    width:200px;
+    width:max-content;
     height: calc(7em - 10px);
     background-color:white;
     box-shadow: 0 3px 14px rgba(0,0,0,0.4);
     font-size:11px;
     text-align: center;
-    display:block;
+    display:grid;
     border-radius:4px;
+    padding: 0.5em;
 }
 .common_map_popup_close{
     position: absolute;
     top: 0.2em;
-    margin-inline-start: -0.2em;
-    text-align: end;
     font-size: 1.5em;
+    width: 1em !important;
+    margin-inline-start: calc(100% - 1.3em);
 }
 .common_map_popup div{
     display:inline-block;
@@ -2213,15 +2214,10 @@ body.rtl{
 .common_map_popup_sub_title_gps_icon{
     width: 2em !important;
 }
-.common_map_popup_tip_container{
-    overflow: hidden;
-    margin-top: -3px;
-}
 .common_map_popup_tip{
     width: 10px !important;
     height: 10px !important;
-    margin-top: -4px;
-    padding: 3px;
+    margin-top: 5px;
     transform: rotate(45deg);
     background-color: white;
     text-align:center;

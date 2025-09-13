@@ -23,7 +23,7 @@
  * @returns {string}
  */
 const template = props => `<div id='${props.id}' class='common_map_popup' 
-                                style='left:${props.x-100}px; top: ${props.y-60}px;'> 
+                                style='left:${props.x}px; top: ${props.y-85}px;'> 
                                 <div class='common_map_popup_close common_icon'></div>
                                 <div class='common_map_popup_title'>${props.region}, ${props.city}</div>
                                 <div class='common_map_popup_sub_title'>${props.country} (${props.countrycode})</div>

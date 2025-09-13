@@ -247,17 +247,28 @@ const component = async props => {
                         Number(popup.querySelectorAll('.common_map_popup_sub_title_gps')[0].getAttribute('data-latitude'))==latitude);
     /**
      * @name updatePopups
-     * @description Draw layer popups
+     * @description Draw layer popups for given popup or for all popups
      * @function
+     * @param {HTMLElement|null} popup
      * @returns {void}
      */
-    const updatePopups = () =>{
-        for (const popup of Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('.common_map_popup'))) {
+    const updatePopups = (popup=null) =>{
+        /**
+         * @param {HTMLElement} popup
+         */
+        const calc = popup=>{
             const [wx, wy] = project(   Number(popup.querySelectorAll('.common_map_popup_sub_title_gps')[0].getAttribute('data-longitude')), 
-                                        Number(popup.querySelectorAll('.common_map_popup_sub_title_gps')[0].getAttribute('data-latitude')));
-            popup.style.left = `${(wx+offsetX)-100}px`;
-            popup.style.top  = `${(wy+offsetY)-60}px`;
-        }
+            Number(popup.querySelectorAll('.common_map_popup_sub_title_gps')[0].getAttribute('data-latitude')));
+            const rect = popup.getBoundingClientRect();
+            popup.style.left = `${(wx+offsetX -(rect.width/2))}px`;
+            popup.style.top  = `${(wy+offsetY)-85}px`;
+        };
+        if (popup)
+            calc(popup);
+        else
+            for (const popupLoop of Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('.common_map_popup'))) {
+                calc(popupLoop);
+            }
     };
     /**
      * @name addPopup
@@ -267,8 +278,9 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const addPopup = async parameters =>{
+        const id = 'common_map_popups_point_' + Date.now();
         /**@type{commonGeoJSONPopup} */
-        const geoJSON = {   id:  'common_map_popups_point_' + Date.now(),
+        const geoJSON = {   id:  id,
             type:'Feature',
             properties:{x:parameters.x, 
                         y:parameters.y,
@@ -292,6 +304,8 @@ const component = async props => {
                                         methods:{
                                                 COMMON_DOCUMENT:props.methods.COMMON_DOCUMENT
                                                 }})).template;
+        const popup = props.methods.COMMON_DOCUMENT.querySelector(`#${id}`);
+        updatePopups(popup);
     };
     /**
      * @description get place for gps
@@ -505,7 +519,7 @@ const component = async props => {
             setZoom(ZOOM_LEVEL_GOTO);
             const [wx, wy] = project(+longitude, +latitude);
             const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
-            offsetX = ((window.innerWidth-rect.left) / 2) - wx -100;
+            offsetX = ((window.innerWidth-rect.left) / 2) - wx;
             offsetY = ((window.innerHeight-rect.top) / 2) - wy;
             draw();
             if (getPopup(+longitude, +latitude).length==0)
