@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -64,9 +64,8 @@ const template = props => ` <div class='menu_apps_detail_row'>
  * @param {{data:{      commonMountdiv:string,
  *                      app_id_data:number,
  *                      detail:'menu_apps_detail_parameter'|'menu_apps_detail_module'},
- *          methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:CommonModuleCommon['commonFFB']}}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *          methods:{   COMMON:common['CommonModuleCommon']}}} props 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -87,7 +86,7 @@ const component = async props => {
             break;
         }
     }
-    const app_detail = await props.methods.commonFFB({path:path, query:query, method:'GET', authorization_type:'ADMIN'})
+    const app_detail = await props.methods.COMMON.commonFFB({path:path, query:query, method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>props.data.detail=='menu_apps_detail_module'?JSON.parse(result).rows:JSON.parse(result)[0]);
     return {
        lifecycle:   null,

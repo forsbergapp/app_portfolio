@@ -20,7 +20,7 @@
  * @module apps/common/component/common_app_data_display
  */
 /**
- * @import {CommonRESTAPIMethod, CommonRESTAPIAuthorizationType, CommonModuleCommon, CommonMasterObjectType, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -31,7 +31,7 @@
 
 /**
  * @param {{    display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL',
- *              master_object:CommonMasterObjectType,
+ *              master_object:common['CommonMasterObjectType'],
  *              rows:[],
  *              detail_class:string,
  *              new_resource:boolean,
@@ -172,14 +172,14 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      master_path:string,
  *                      master_query:string,
  *                      master_body:string,
- *                      master_method:CommonRESTAPIMethod,
- *                      master_token_type:CommonRESTAPIAuthorizationType,
+ *                      master_method:common['CommonRESTAPIMethod'],
+ *                      master_token_type:common['CommonRESTAPIAuthorizationType'],
  *                      master_resource:string,
  *                      detail_path:string,
  *                      detail_query:string,
  *                      detail_body:string,
- *                      detail_method:CommonRESTAPIMethod,
- *                      detail_token_type:CommonRESTAPIAuthorizationType,
+ *                      detail_method:common['CommonRESTAPIMethod'],
+ *                      detail_token_type:common['CommonRESTAPIAuthorizationType'],
  *                      detail_resource:string,
  *                      detail_class:string,
  *                      new_resource:boolean,
@@ -195,21 +195,20 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      button_delete: boolean,
  *                      button_delete_icon_class:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:CommonModuleCommon['commonFFB'],
+ *                      COMMON:common['CommonModuleCommon'],
  *                      button_print:function,
  *                      button_update:function,
  *                      button_post:function,
  *                      button_delete:function}}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:{master_object:*},
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
     if (props.data.dialogue){
-        props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
-		props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
+		props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     }
     const div_id = () =>Date.now().toString() + Math.floor(Math.random() *100000).toString();
     /**
@@ -271,21 +270,21 @@ const component = async props => {
             return '';
     };
     const master_object = props.data.master_path?
-                                await props.methods.commonFFB({   path: props.data.master_path, 
+                                await props.methods.COMMON.commonFFB({   path: props.data.master_path, 
                                                             query:props.data.master_query, 
                                                             method:props.data.master_method, authorization_type:props.data.master_token_type, body:props.data.master_body})
                                         .then((/**@type{*}*/result)=>
                                             props.data.new_resource?JSON.parse(result).rows:JSON.parse(result).rows[0]):
                                     {};
     const detail_rows = props.data.detail_path?
-                                await props.methods.commonFFB({   path:props.data.detail_path, 
+                                await props.methods.COMMON.commonFFB({   path:props.data.detail_path, 
                                                             query:props.data.detail_query, 
                                                             method:props.data.detail_method, authorization_type:props.data.detail_token_type, body:props.data.detail_body})
                                         .then((/**@type{*}*/result)=>(JSON.parse(result).rows)?.[0]?JSON.parse(result).rows:[]):
                                 [];
     
     if (props.data.new_resource==false){
-        const master_metadata = await props.methods.commonFFB({   path:'/app-common-module/COMMON_APP_DATA_METADATA', 
+        const master_metadata = await props.methods.COMMON.commonFFB({   path:'/app-common-module/COMMON_APP_DATA_METADATA', 
                                                             query:'fields=json_data', 
                                                             method:'POST', authorization_type:'APP_ID', 
                                                             body:{  type:'FUNCTION',
@@ -302,7 +301,7 @@ const component = async props => {
         }
     }
     if (props.data.detail_resource){
-        const detail_metadata = await props.methods.commonFFB({   path:'/app-common-module/COMMON_APP_DATA_METADATA',
+        const detail_metadata = await props.methods.COMMON.commonFFB({   path:'/app-common-module/COMMON_APP_DATA_METADATA',
                                                             query:'fields=json_data', 
                                                             method:'POST', authorization_type:'APP_ID', 
                                                             body:{  type:'FUNCTION',
@@ -323,13 +322,13 @@ const component = async props => {
 
     const onMounted = async () => {
         if (props.methods.button_print)
-            props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_print`)['data-function'] = props.methods.button_print;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_print`)['data-function'] = props.methods.button_print;
         if (props.methods.button_update)
-            props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_update`)['data-function'] = props.methods.button_update;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_update`)['data-function'] = props.methods.button_update;
         if (props.methods.button_post)
-            props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_post`)['data-function'] = props.methods.button_post;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_post`)['data-function'] = props.methods.button_post;
         if (props.methods.button_delete)
-            props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_delete`)['data-function'] = props.methods.button_delete;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_delete`)['data-function'] = props.methods.button_delete;
     };
     return {
         lifecycle:  {onMounted:onMounted},

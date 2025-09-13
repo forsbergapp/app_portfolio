@@ -4,14 +4,14 @@
  */
 
 /**
- * @import {CommonProfileStatRecord, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{stat_list:CommonProfileStatRecord[]|[]}} props 
+ * @param {{stat_list:common['CommonProfileStatRecord'][]|[]}} props 
  * @returns {string}
  */
 const template = props =>`   
@@ -45,10 +45,9 @@ const template = props =>`
  *                      stat_list_app_rest_url:string,
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:CommonModuleCommon['commonFFB']
+ *                      COMMON:common['CommonModuleCommon']
  *                      }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
@@ -63,8 +62,8 @@ const component = async props => {
         /*other statschoice, apps can use >3 and return same columns*/
         path = props.data.stat_list_app_rest_url ?? '';
     }
-    /**@type{import('../../../common_types.js').CommonProfileStatRecord[]} */
-    const stat_list = await props.methods.commonFFB({path:path, query:`statchoice=${props.data.stat_choice}`, method:'GET', authorization_type:'APP_ID'})
+    /**@type{common['CommonProfileStatRecord'][]} */
+    const stat_list = await props.methods.COMMON.commonFFB({path:path, query:`statchoice=${props.data.stat_choice}`, method:'GET', authorization_type:'APP_ID'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     return {

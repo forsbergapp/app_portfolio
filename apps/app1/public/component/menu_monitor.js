@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -53,22 +53,8 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  *                      client_latitude:string,
  *                      client_longitude:string,
  *                      client_place:string},
- *          methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
- *                      commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
- *                      commonMiscInputControl:CommonModuleCommon['commonMiscInputControl'],
- *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                      commonComponentRemove:CommonModuleCommon['commonComponentRemove'],
- *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
- *                      commonMiscListKeyEvent:CommonModuleCommon['commonMiscListKeyEvent'],
- *                      commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
- *                      commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
- *                      commonMiscImport:CommonModuleCommon['commonMiscImport'],
- *                      commonLovClose:CommonModuleCommon['commonLovClose'],
- *                      commonLovShow:CommonModuleCommon['commonLovShow'],
- *                      commonUserLocale:CommonModuleCommon['commonUserLocale'],
- *                      commonFFB:CommonModuleCommon['commonFFB']}}} props 
- * @returns {Promise.<{ lifecycle:  CommonComponentLifecycle, 
+ *          methods:{   COMMON:common['CommonModuleCommon']}}} props 
+ * @returns {Promise.<{ lifecycle:  common['CommonComponentLifecycle'], 
  *                      data:       null,
  *                      methods:    {monitorShow:                monitorShow,
  *                                   monitorDetailShowLogDir:    monitorDetailShowLogDir,
@@ -117,9 +103,9 @@ const component = async props => {
      *                      logObjects:{VALUE:string, TEXT:string}[]}>}
      */
     const get_log_parameters = async () => {
-        const result_parameters = await props.methods.commonFFB({path:'/server-db/configserver', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'ADMIN'})
+        const result_parameters = await props.methods.COMMON.commonFFB({path:'/server-db/configserver', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'ADMIN'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
-        const result_log_objects = await props.methods.commonFFB({path:'/server-db/ORM-objects', method:'GET', authorization_type:'ADMIN'});
+        const result_log_objects = await props.methods.COMMON.commonFFB({path:'/server-db/ORM-objects', method:'GET', authorization_type:'ADMIN'});
         
         const log_parameters = {
             REQUEST_LEVEL : result_parameters.filter((/**@type{*}*/row)=>'REQUEST_LEVEL' in row)[0]['REQUEST_LEVEL'],
@@ -150,7 +136,7 @@ const component = async props => {
      */
     const monitorShow = async (list_detail, offset, sort, order_by, page=null, page_last=null) => {
         
-        props.methods.commonComponentRender({
+        props.methods.COMMON.commonComponentRender({
             mountDiv:   'menu_monitor_detail',
             data:       {
                         app_id:props.data.app_id,
@@ -165,15 +151,7 @@ const component = async props => {
                         SERVICE_LOG_DATA:SERVICE_LOG_DATA
                         },
             methods:    {
-                        monitorShow:monitorShow,
-                        commonMiscElementRow:props.methods.commonMiscElementRow,
-                        commonLovClose:props.methods.commonLovClose,
-                        commonLovShow:props.methods.commonLovShow,
-                        commonMiscInputControl:props.methods.commonMiscInputControl,
-                        commonComponentRender:props.methods.commonComponentRender,
-                        commonWindowUserAgentPlatform:props.methods.commonWindowUserAgentPlatform,
-                        commonMiscRoundOff:props.methods.commonMiscRoundOff,
-                        commonFFB:props.methods.commonFFB
+                        monitorShow:monitorShow
                         },
             path:       '/component/menu_monitor_detail.js'})
             .then(result=>{
@@ -216,89 +194,79 @@ const component = async props => {
 
     const onMounted = async () =>{
         //mount select
-        await props.methods.commonComponentRender({mountDiv:'menu_monitor_select_year',
-            data:{
-                default_value:new Date().getFullYear(),
-                default_data_value:new Date().getFullYear(),
-                options:[ {VALUE:new Date().getFullYear(), TEXT:new Date().getFullYear()}, 
-                          {VALUE:new Date().getFullYear() - 1, TEXT:new Date().getFullYear() -1},
-                          {VALUE:new Date().getFullYear() - 2, TEXT:new Date().getFullYear() -2},
-                          {VALUE:new Date().getFullYear() - 3, TEXT:new Date().getFullYear() -3},
-                          {VALUE:new Date().getFullYear() - 4, TEXT:new Date().getFullYear() -4},
-                          {VALUE:new Date().getFullYear() - 5, TEXT:new Date().getFullYear() -5}],
-                path:'',
-                query:'',
-                method:'',
-                authorization_type:'',
-                column_value:'VALUE',
-                column_text:'TEXT'
-              },
-            methods:{commonFFB:props.methods.commonFFB},
-            path:'/common/component/common_select.js'});
-        await props.methods.commonComponentRender({mountDiv:'menu_monitor_select_month',
-                data:{
-                    default_value:new Date().getMonth()+1,
-                    default_data_value:new Date().getMonth()+1,
-                    options:Array(...Array(12)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
-                    path:'',
-                    query:'',
-                    method:'',
-                    authorization_type:'',
-                    column_value:'VALUE',
-                    column_text:'TEXT'
-                },
-                methods:{commonFFB:props.methods.commonFFB},
-                path:'/common/component/common_select.js'});
+        await props.methods.COMMON.commonComponentRender({mountDiv:'menu_monitor_select_year',
+            data:       {
+                        default_value:new Date().getFullYear(),
+                        default_data_value:new Date().getFullYear(),
+                        options:[ {VALUE:new Date().getFullYear(), TEXT:new Date().getFullYear()}, 
+                                {VALUE:new Date().getFullYear() - 1, TEXT:new Date().getFullYear() -1},
+                                {VALUE:new Date().getFullYear() - 2, TEXT:new Date().getFullYear() -2},
+                                {VALUE:new Date().getFullYear() - 3, TEXT:new Date().getFullYear() -3},
+                                {VALUE:new Date().getFullYear() - 4, TEXT:new Date().getFullYear() -4},
+                                {VALUE:new Date().getFullYear() - 5, TEXT:new Date().getFullYear() -5}],
+                        path:'',
+                        query:'',
+                        method:'',
+                        authorization_type:'',
+                        column_value:'VALUE',
+                        column_text:'TEXT'
+                        },
+            methods:    null,
+            path:       '/common/component/common_select.js'});
+        await props.methods.COMMON.commonComponentRender({mountDiv:'menu_monitor_select_month',
+                data:   {
+                        default_value:new Date().getMonth()+1,
+                        default_data_value:new Date().getMonth()+1,
+                        options:Array(...Array(12)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
+                        path:'',
+                        query:'',
+                        method:'',
+                        authorization_type:'',
+                        column_value:'VALUE',
+                        column_text:'TEXT'
+                        },
+                methods:null,
+                path:   '/common/component/common_select.js'});
 
-        await props.methods.commonComponentRender({mountDiv:'menu_monitor_select_day',
-                data:{
-                    default_value:new Date().getDate(),
-                    default_data_value:new Date().getDate(),
-                    options:Array(...Array(31)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
-                    path:'',
-                    query:'',
-                    method:'',
-                    authorization_type:'',
-                    column_value:'VALUE',
-                    column_text:'TEXT'
-                },
-                methods:{commonFFB:props.methods.commonFFB},
-                path:'/common/component/common_select.js'});
+        await props.methods.COMMON.commonComponentRender({mountDiv:'menu_monitor_select_day',
+                data:   {
+                        default_value:new Date().getDate(),
+                        default_data_value:new Date().getDate(),
+                        options:Array(...Array(31)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
+                        path:'',
+                        query:'',
+                        method:'',
+                        authorization_type:'',
+                        column_value:'VALUE',
+                        column_text:'TEXT'
+                        },
+                methods:null,
+                path:   '/common/component/common_select.js'});
 
-        await props.methods.commonComponentRender({mountDiv:'menu_monitor_select_app',
-                data:{
-                    default_value:'∞',
-                    default_data_value:'',
-                    options:[{id:'', name:'∞'}],
-                    path:'/server-db/app',
-                    query:'key=name',
-                    method:'GET',
-                    authorization_type:'ADMIN',
-                    column_value:'id',
-                    column_text:'name'
-                  },
-                methods:{commonFFB:props.methods.commonFFB},
-                path:'/common/component/common_select.js'});
+        await props.methods.COMMON.commonComponentRender({mountDiv:'menu_monitor_select_app',
+                data:   {
+                        default_value:'∞',
+                        default_data_value:'',
+                        options:[{id:'', name:'∞'}],
+                        path:'/server-db/app',
+                        query:'key=name',
+                        method:'GET',
+                        authorization_type:'ADMIN',
+                        column_value:'id',
+                        column_text:'name'
+                        },
+                methods:null,
+                path:   '/common/component/common_select.js'});
 
         //mount the map
-        props.methods.commonComponentRender({
+        props.methods.COMMON.commonComponentRender({
             mountDiv:   'menu_monitor_mapid',
             data:       { 
                         data_app_id :props.data.common_app_id,
                         longitude:props.data.client_longitude,
                         latitude:props.data.client_latitude
                         },
-            methods:    {
-                        commonComponentRender:props.methods.commonComponentRender,
-                        commonComponentRemove:props.methods.commonComponentRemove,
-                        commonWindowFromBase64:props.methods.commonWindowFromBase64,
-                        commonMiscListKeyEvent:props.methods.commonMiscListKeyEvent,
-                        commonMiscElementRow:props.methods.commonMiscElementRow,
-                        commonMiscElementId:props.methods.commonMiscElementId,
-                        commonMiscImport:props.methods.commonMiscImport,
-                        commonUserLocale:props.methods.commonUserLocale,
-                        commonFFB:props.methods.commonFFB
-                        },
+            methods:    null,
             path:       '/common/component/common_map.js'});
     };
 

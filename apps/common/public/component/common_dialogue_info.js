@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -54,33 +54,31 @@ const template = props => `
 *                      info_link_terms_name:string
 *                      },
 *          methods:    {
-*                      COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                      commonFFB:CommonModuleCommon['commonFFB'],
-*                      commonMessageShow:CommonModuleCommon['commonMessageShow']
+*                      COMMON:common['CommonModuleCommon']
 *                      }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:null, 
 *                      methods:{eventClickSend:Function},
 *                      template:string}>}
 */
 const component = async props => {
-    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
   
     const eventClickSend = async ()=>{
-        await props.methods.commonFFB(
+        await props.methods.COMMON.commonFFB(
                     {
                         path:   '/app-common-module/COMMON_MESSAGE_CONTACT', 
                         method: 'POST', 
                         body:   {   type:'FUNCTION',
-                                    message:props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_info_contact_message').textContent,
+                                    message:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_info_contact_message').textContent,
                                     IAM_data_app_id:props.data.common_app_id},
                         authorization_type:'APP_ID'
                     })
         .then((/**@type{string}*/result)=>{
             if (Number(JSON.parse(result).rows[0].sent) > 0)
-                props.methods.commonMessageShow('INFO', null, 'message_success', `(${Number(JSON.parse(result).rows[0].sent)})`);
+                props.methods.COMMON.commonMessageShow('INFO', null, 'message_success', `(${Number(JSON.parse(result).rows[0].sent)})`);
             else
-                props.methods.commonMessageShow('INFO', null, 'message_fail', `(${Number(JSON.parse(result).rows[0].sent)})`);
+                props.methods.COMMON.commonMessageShow('INFO', null, 'message_fail', `(${Number(JSON.parse(result).rows[0].sent)})`);
         });
     };
         

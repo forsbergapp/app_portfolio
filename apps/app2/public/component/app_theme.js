@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 /**
  * @name template
@@ -39,10 +39,10 @@ const template = () =>` <div id="app_themes">
  * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      COMMON:common['CommonModuleCommon'],
  *                      appPreferencesPostMount:import('../js/app.js')['appPreferencesPostMount']
  *                      }}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

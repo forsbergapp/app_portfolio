@@ -2,7 +2,7 @@
  * @module apps/common/component/common_dialogue_profile_info_detail
  */
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -45,11 +45,9 @@ const template = props => `     ${props.list.map(row=>
  *                      detailchoice:number
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonDialogueShow:CommonModuleCommon['commonDialogueShow'],
- *                      commonFFB:CommonModuleCommon['commonFFB']
+ *                      COMMON:common['CommonModuleCommon']
  *                      }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle,
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'],
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -73,7 +71,7 @@ const component = async props => {
         }    
     }
     if (!props.data.iam_user_id)
-        props.methods.commonDialogueShow('LOGIN');
+        props.methods.COMMON.commonDialogueShow('LOGIN');
 
     return {
       lifecycle:    null,
@@ -83,7 +81,7 @@ const component = async props => {
                                 iam_user_id_profile:props.data.iam_user_id_profile,
                                 detailchoice:props.data.detailchoice,
                                 list:props.data.iam_user_id?
-                                        await props.methods.commonFFB({path:`${path}/${props.data.iam_user_id_profile}`, query:`detailchoice=${props.data.detailchoice}`, method:'GET', authorization_type:'APP_ACCESS'})
+                                        await props.methods.COMMON.commonFFB({path:`${path}/${props.data.iam_user_id_profile}`, query:`detailchoice=${props.data.detailchoice}`, method:'GET', authorization_type:'APP_ACCESS'})
                                                 .then((/**@type{string}*/result)=>JSON.parse(result)):
                                         []
                             })

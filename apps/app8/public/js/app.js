@@ -8,10 +8,10 @@
  * @import {APP_GLOBAL} from './types.js'
  */
 
-/**@type{COMMON_DOCUMENT} */
+/**@type{common['COMMON_DOCUMENT']} */
 const COMMON_DOCUMENT = document;
 
-/**@type {CommonModuleCommon} */
+/**@type {common['CommonModuleCommon']} */
 let common;
 
 /**@type{APP_GLOBAL} */
@@ -42,7 +42,7 @@ const appException = error => {
  * @name appEventClick
  * @description App event click
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventClick = event => {
@@ -115,7 +115,7 @@ const appEventClick = event => {
  * @name appEventMouseDown
  * @description App event mouse down
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventMouseDown = event =>{
@@ -133,7 +133,7 @@ const appEventMouseDown = event =>{
  * @name appEventMouseUp
  * @description App event mouse up
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventMouseUp = event =>{
@@ -152,7 +152,7 @@ const appEventMouseUp = event =>{
  * @name appEventMouseMove
  * @description App event mouse move
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventMouseMove = event =>{
@@ -190,17 +190,7 @@ const appInit = async () => {
                     app_id:common.COMMON_GLOBAL.app_id,
                     common_app_id:common.COMMON_GLOBAL.app_common_app_id
                     },
-        methods:    {
-                    commonWindowSetTimeout:common.commonWindowSetTimeout,
-                    commonMiscImport:common.commonMiscImport,
-                    commonMiscElementRow:common.commonMiscElementRow,
-                    commonLovShow:common.commonLovShow,
-                    commonLovClose:common.commonLovClose,
-                    commonMessageShow:common.commonMessageShow,
-                    commonComponentRemove:common.commonComponentRemove,
-                    commonWindowToBase64:common.commonWindowToBase64,
-                    commonWindowFromBase64:common.commonWindowFromBase64,
-                    commonFFB:common.commonFFB},
+        methods:    null,
         path:       '/component/cube.js'})
     .then((/**@type{{   data:null,
                         methods:{   cube_init:                  function, 
@@ -226,7 +216,7 @@ const appInit = async () => {
  * @name appCommonInit
  * @description Init common
  * @function
- * @param {CommonModuleCommon} commonLib
+ * @param {common['CommonModuleCommon']} commonLib
  * @param {Object.<String,*>} parameters 
  * @returns {Promise.<void>}
  */
@@ -241,7 +231,7 @@ const appCommonInit = async (commonLib, parameters) => {
  * @name appMetadata
  * @description App metadata for event delegataion and lifecycle events
  * @function
- * @returns {commonMetadata}
+ * @returns {common['commonMetadata']}
  */
 const appMetadata = () =>{
     return { 

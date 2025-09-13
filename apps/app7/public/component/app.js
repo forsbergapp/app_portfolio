@@ -3,7 +3,7 @@
  * @module apps/app7/component/app
  */
 /**
- * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 /**
  * @name temaplte
@@ -15,8 +15,8 @@ const template = () =>' <div id=\'mapid\'></div>';
  * @name component
  * @description Component
  * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *          methods:    {COMMON:common['CommonModuleCommon']}}} props 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

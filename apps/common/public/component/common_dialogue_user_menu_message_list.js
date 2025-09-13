@@ -3,16 +3,15 @@
  * @module apps/common/component/common_dialogue_user_menu_message_list
  */
 /**
- * @import {MessagesPagination,
- *          CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{messages:MessagesPagination,
- *          commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate']}} props
+ * @param {{messages:common['MessagesPagination'],
+ *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props
  * @returns {string}
  */
 const template = props => ` 
@@ -45,13 +44,12 @@ const template = props => `
 * @param {{data:       {
 *                      commonMountdiv:string,
 *                      app_id:number,
-*                      messages:MessagesPagination,
+*                      messages:common['MessagesPagination'],
 *                      },
 *          methods:    {
-*                      COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate']
+*                      COMMON:common['CommonModuleCommon']
 *                      }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:null,
 *                      template:string}>}
@@ -63,7 +61,7 @@ const component = async props => {
        data:   null,
        methods:null,
        template: template({ messages:props.data.messages, 
-                            commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate})
+                            commonMiscFormatJsonDate:props.methods.COMMON.commonMiscFormatJsonDate})
    };
 };
 export default component;

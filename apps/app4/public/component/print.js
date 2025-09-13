@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -39,11 +39,10 @@ const template = props =>`  <!DOCTYPE html>
  *                      appHtml:string
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscResourceFetch:CommonModuleCommon['commonMiscResourceFetch']
+ *                      COMMON:common['CommonModuleCommon']
  *                      }}} props
  * 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -51,7 +50,7 @@ const template = props =>`  <!DOCTYPE html>
 const component = async props => {
     //get css with variables in :root
     let cssRoot ='';
-    props.methods.COMMON_DOCUMENT.adoptedStyleSheets.forEach(sheet => { 
+    props.methods.COMMON.COMMON_DOCUMENT.adoptedStyleSheets.forEach(sheet => { 
         for (const i in sheet.cssRules) { 
             //load css with base64 strings and variables in :root
             if (sheet.cssRules[i].cssText?.indexOf('data:font/woff2;') ||
@@ -62,7 +61,7 @@ const component = async props => {
     });
 
     const templateRendered =  template({  
-                                app_link_app_report_css:props.methods.COMMON_DOCUMENT.querySelector('#app_link_app_report_css').attributes['href'].textContent,
+                                app_link_app_report_css:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_link_app_report_css').attributes['href'].textContent,
                                 app_fonts_css:cssRoot,
                                 html: props.data.appHtml});
     return {

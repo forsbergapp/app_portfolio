@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  * @import {CommonModuleLibTimetable} from '../js/types.js'
  */
 /**
@@ -41,10 +41,9 @@ const template = ()=>`  <div id='toolbar_top'>
  * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      commonMiscImport:CommonModuleCommon['commonMiscImport'],
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT
+ *                      COMMON:common['CommonModuleCommon']
  *                      }}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:{appLibTimetable:CommonModuleLibTimetable},
  *                      template:string}>}
@@ -54,7 +53,7 @@ const component = async props => {
     return {
         lifecycle:  null,
         data:       null,
-        methods:    {appLibTimetable:await props.methods.commonMiscImport('/component/app_lib.js')},
+        methods:    {appLibTimetable:await props.methods.COMMON.commonMiscImport('/component/app_lib.js')},
         template:   template()
     };
 };

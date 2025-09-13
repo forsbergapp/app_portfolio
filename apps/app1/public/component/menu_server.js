@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -81,18 +81,16 @@ const template = props => ` <div id='menu_server_content_widget1' class='widget'
  * @description Component
  * @function 
  * @param {{ data:{      commonMountdiv:string},
- *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonMiscSecondsToTime:CommonModuleCommon['commonMiscSecondsToTime'],
- *                       commonFFB:CommonModuleCommon['commonFFB']},
+ *           methods:{   COMMON:common['CommonModuleCommon']},
  *           lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
    
-    const server_info = await props.methods.commonFFB({path:'/server-info', method:'GET', authorization_type:'ADMIN'})
+    const server_info = await props.methods.COMMON.commonFFB({path:'/server-info', method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
    
@@ -100,7 +98,7 @@ const component = async props => {
        lifecycle:   null,
        data:        null,
        methods:     null,
-       template:    template({  function_seconds_to_time:props.methods.commonMiscSecondsToTime,
+       template:    template({  function_seconds_to_time:props.methods.COMMON.commonMiscSecondsToTime,
                                 server_info:server_info,
                             })
    };

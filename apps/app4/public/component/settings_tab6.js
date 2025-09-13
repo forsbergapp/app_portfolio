@@ -3,7 +3,7 @@
  * @module apps/app4/component/settings_tab6
  */
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  * @import {APP_user_setting}  from '../js/types.js'
  */
 
@@ -78,10 +78,9 @@ const template = () =>`  <div id='user_settings'>
  *                      user_settings:APP_user_setting,
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonComponentRender:CommonModuleCommon['commonComponentRender']
+ *                      COMMON:common['CommonModuleCommon']
  *                       }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle,
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'],
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -89,7 +88,7 @@ const template = () =>`  <div id='user_settings'>
 const component = async props => {
     const onMounted = async () =>{
         
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_user_setting',
             data:       {
                         default_data_value:props.data.user_settings.current_id,
@@ -102,7 +101,7 @@ const component = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:'/common/component/common_select.js'});
     };
     return {

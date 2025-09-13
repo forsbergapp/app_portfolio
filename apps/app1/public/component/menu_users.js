@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 /**
  * @name template
@@ -32,9 +32,9 @@ const template = () => `<div id='menu_users_content_widget1' class='widget'>
  * @description Component
  * @function 
  * @param {{ data:{      commonMountdiv:string},
- *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT},
+ *           methods:{   COMMON:common['CommonModuleCommon']},
  *           lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

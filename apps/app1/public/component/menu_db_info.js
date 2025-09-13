@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 
@@ -27,8 +27,8 @@
  *                          pk:[],
  *                          uk:[],
  *                          fk:[]}]|[],
- *          function_seconds_to_time:CommonModuleCommon['commonMiscSecondsToTime'],
- *          function_roundOff:CommonModuleCommon['commonMiscRoundOff']}} props
+ *          function_seconds_to_time:common['CommonModuleCommon']['commonMiscSecondsToTime'],
+ *          function_roundOff:common['CommonModuleCommon']['commonMiscRoundOff']}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_db_info_content_widget1' class='widget'>
@@ -85,12 +85,9 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
  * @description Component
  * @function 
  * @param {{ data:{      commonMountdiv:string},
- *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonMiscSecondsToTime:CommonModuleCommon['commonMiscSecondsToTime'],
- *                       commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
- *                       commonFFB:CommonModuleCommon['commonFFB']},
+ *           methods:{   COMMON:common['CommonModuleCommon']},
  *           lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -104,8 +101,8 @@ const component = async props => {
      *          connections:string,
      *          started:number}}
      */
-    const db = await props.methods.commonFFB({path:'/server-db/ORM', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows[0]);
-    const db_detail = await props.methods.commonFFB({path:'/server-db/ORM-objects', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const db = await props.methods.COMMON.commonFFB({path:'/server-db/ORM', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows[0]);
+    const db_detail = await props.methods.COMMON.commonFFB({path:'/server-db/ORM-objects', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
   return {
       lifecycle:    null,
@@ -114,8 +111,8 @@ const component = async props => {
       template:     template({  size:size,
                                 db:db,
                                 db_detail:db_detail,
-                                function_seconds_to_time:props.methods.commonMiscSecondsToTime,
-                                function_roundOff:props.methods.commonMiscRoundOff
+                                function_seconds_to_time:props.methods.COMMON.commonMiscSecondsToTime,
+                                function_roundOff:props.methods.COMMON.commonMiscRoundOff
       })
   };
 };

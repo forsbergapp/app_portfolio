@@ -4,13 +4,13 @@
  */
 
 /**
- * @import {commonMetadata,CommonAppEvent, commonDocumentType, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {common} from '../../../common_types.js'
  */
 
-/**@type{COMMON_DOCUMENT} */
+/**@type{common['COMMON_DOCUMENT']} */
 const COMMON_DOCUMENT = document;
 
-/**@type {CommonModuleCommon} */
+/**@type {common['CommonModuleCommon']} */
 let common;
 
 /**
@@ -19,7 +19,7 @@ let common;
  * @function
  * @param {string} href
  * @param {string} title
- * @param {commonDocumentType} documentType
+ * @param {common['commonDocumentType']} documentType
  */
 const show = async (href, title, documentType) =>{
     
@@ -35,10 +35,7 @@ const show = async (href, title, documentType) =>{
                         title:title,
                         documentType:documentType
                     },
-        methods:    {
-                        commonMiscResourceFetch:common.commonMiscResourceFetch,
-                        commonFFB:common.commonFFB
-                    },
+        methods:    null,
         path:       '/common/component/common_document.js'});
 };
 /**
@@ -56,7 +53,7 @@ const appException = error => {
  * @name appEventClick
  * @description App event click
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventClick = event => {
@@ -107,7 +104,7 @@ const appInit = async () => {
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       {app_id:common.COMMON_GLOBAL.app_common_app_id},
-        methods:    {commonFFB:common.commonFFB},
+        methods:    null,
         path:       '/component/app.js'});
     //show first menu at start
     COMMON_DOCUMENT.querySelector('#title').click();
@@ -116,7 +113,7 @@ const appInit = async () => {
  * @name appCommonInit
  * @description Init common
  * @function
- * @param {CommonModuleCommon} commonLib
+ * @param {common['CommonModuleCommon']} commonLib
  * @param {Object.<string,*>} parameters 
  * @returns {Promise.<void>}
  */
@@ -132,7 +129,7 @@ const appCommonInit = async (commonLib, parameters) => {
  * @name appMetadata
  * @description App metadata for event delegataion and lifecycle events
  * @function
- * @returns {commonMetadata}
+ * @returns {common['commonMetadata']}
  */
 const appMetadata = () =>{
     return { 

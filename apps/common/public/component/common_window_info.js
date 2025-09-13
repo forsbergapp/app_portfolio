@@ -7,7 +7,7 @@
  * @module apps/common/component/common_window_info
  */
 /**
- * @import {CommonModuleCommon, CommonRESTAPIMethod, CommonRESTAPIAuthorizationType, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -54,14 +54,13 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
  *                      content?:string,
  *                      path?:string,
  *                      query?:string,
- *                      method?:CommonRESTAPIMethod,
+ *                      method?:common['CommonRESTAPIMethod'],
  *                      body?:*,
- *                      authorization?:CommonRESTAPIAuthorizationType},
+ *                      authorization?:common['CommonRESTAPIAuthorizationType']},
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:CommonModuleCommon['commonFFB']
+ *                      COMMON:common['CommonModuleCommon']
  *                      }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}
@@ -69,7 +68,7 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
  */
 const component = async props => {
     const content_fetch = (props.data.info=='URL' && props.data.path && props.data.method && props.data.authorization)?
-                                await props.methods.commonFFB({ path:props.data.path, 
+                                await props.methods.COMMON.commonFFB({ path:props.data.path, 
                                                                 method:props.data.method, 
                                                                 query:props.data.query, 
                                                                 authorization_type:props.data.authorization, 
@@ -78,7 +77,7 @@ const component = async props => {
                                     null;
                             
     
-    const onMounted = async () => props.methods.COMMON_DOCUMENT.querySelector('#common_window_info').style.visibility='visible';
+    const onMounted = async () => props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_window_info').style.visibility='visible';
     
     return {
         lifecycle:  {onMounted:onMounted},

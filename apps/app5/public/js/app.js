@@ -4,13 +4,13 @@
  */
 
 /**
- * @import {commonMetadata, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {common} from '../../../common_types.js'
  */
 
-/**@type{COMMON_DOCUMENT} */
+/**@type{common['COMMON_DOCUMENT']} */
 const COMMON_DOCUMENT = document;
 
-/**@type {CommonModuleCommon} */
+/**@type {common['CommonModuleCommon']} */
 let common;
 
 const APP_GLOBAL = {token:null};
@@ -29,7 +29,7 @@ const appException = error => {
  * @name appEventClick
  * @description App event click
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventClick = event => {
@@ -76,7 +76,6 @@ const appEventClick = event => {
                                     button_delete: false
                                     },
                         methods:    {
-                                    commonFFB:common.commonFFB,
                                     button_print:null,
                                     button_update:null,
                                     button_post:null,
@@ -116,7 +115,6 @@ const appEventClick = event => {
                                     button_delete: false
                                     },
                         methods:    {
-                                    commonFFB:common.commonFFB,
                                     button_print:null,
                                     button_update:null,
                                     button_post:null,
@@ -155,7 +153,6 @@ const appEventClick = event => {
                                     button_delete: false
                                     },
                         methods:    {
-                                    commonFFB:common.commonFFB,
                                     button_print:null,
                                     button_update:null,
                                     button_post:null,
@@ -187,8 +184,6 @@ const appEventClick = event => {
                     mountDiv:   'common_dialogue_user_menu_app_theme',
                     data:       null,
                     methods:    {
-                                commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
-                                commonComponentRender:common.commonComponentRender, 
                                 app_theme_update:common.commonMiscPreferencesPostMount
                                 },
                     path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
@@ -199,8 +194,6 @@ const appEventClick = event => {
                     mountDiv:   'common_dialogue_user_menu_app_theme', 
                     data:       null,
                     methods:    {
-                                commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
-                                commonComponentRender:common.commonComponentRender, 
                                 app_theme_update:common.commonMiscPreferencesPostMount
                                 },
                     path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
@@ -222,7 +215,7 @@ const appEventClick = event => {
  * @name appEventKeyUp
  * @description App event keyup
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventKeyUp = event => {
@@ -394,7 +387,6 @@ const appPaymentRequestShow = async message =>{
                             button_delete_icon_class:'common_data_display_icon_cancel'
                             },
                 methods:    {
-                           commonFFB:common.commonFFB,
                             button_print:null,
                             button_update:null,
                             button_post:appPaymentRequestAccept,
@@ -429,9 +421,7 @@ const appSecureInit = () => {
                     locale:common.COMMON_GLOBAL.user_locale
                     },
         methods:    {
-                    button_post:appCustomerCreate,
-                    commonComponentRender:common.commonComponentRender,
-                    commonFFB:common.commonFFB},
+                    button_post:appCustomerCreate},
         path:       '/component/page_secure.js'});
 };
 /**
@@ -445,7 +435,7 @@ const appInit = async () => {
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div, 
         data:       {logo:common.COMMON_GLOBAL.app_logo},
-        methods:    {commonMiscResourceFetch:common.commonMiscResourceFetch},
+        methods:    null,
         path:       '/component/app.js'})
     .then(()=> 
         common.commonComponentRender({
@@ -458,7 +448,7 @@ const appInit = async () => {
  * @name appCommonInit
  * @description Init common
  * @function
- * @param {CommonModuleCommon} commonLib
+ * @param {common['CommonModuleCommon']} commonLib
  * @param {Object.<String,*>} parameters 
  * @returns {Promise.<void>}
  */
@@ -474,7 +464,7 @@ const appCommonInit = async (commonLib, parameters) => {
  * @name appMetadata
  * @description App metadata for event delegataion and lifecycle events
  * @function
- * @returns {commonMetadata}
+ * @returns {common['commonMetadata']}
  */
 const appMetadata = () =>{
     return { 

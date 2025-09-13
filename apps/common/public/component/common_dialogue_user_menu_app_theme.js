@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -20,20 +20,18 @@ const template = () => '';
  * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscThemeDefaultList:CommonModuleCommon['commonMiscThemeDefaultList'],
- *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
+ *                      COMMON:common['CommonModuleCommon']
  *                      app_theme_update:function}}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    const themes = props.methods.commonMiscThemeDefaultList();
+    const themes = props.methods.COMMON.commonMiscThemeDefaultList();
 
     const onMounted = async () =>{
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   props.data.commonMountdiv, 
             data:       {
                         default_data_value:themes[0].VALUE,
@@ -46,7 +44,7 @@ const component = async props => {
                         column_value:'VALUE',
                         column_text:'TEXT'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:       '/common/component/common_select.js'});
         //set app theme
         props.methods.app_theme_update();
