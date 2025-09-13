@@ -1972,9 +1972,6 @@ const appEventKeyUp = event => {
  * @returns {void}
  */
 const appMapQibblaShow = () => {
-    common.COMMON_GLOBAL.component.common_map?.methods?.removeVectors?
-        common.COMMON_GLOBAL.component.common_map?.methods?.removeVectors():
-            null;
     if (APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text  &&
         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text ){
         /**@type{commonGeoJSONPolyline}*/
