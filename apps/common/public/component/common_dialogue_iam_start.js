@@ -3,7 +3,8 @@
  * @module apps/common/component/common_dialogue_iam_start
  */
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle,
+ *          commonComponentEvents, commonEventType, CommonAppEvent}  from '../../../common_types.js'
  */
 
 /**
@@ -81,21 +82,59 @@ const template = props =>`  ${props.admin_app?'':
  *                      admin_first_time:number},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
+ *                      commonDialogueShow:CommonModuleCommon['commonDialogueShow'],
+ *                      commonComponentRemove:CommonModuleCommon['commonComponentRemove'],
+ *                      commonUserSignup:CommonModuleCommon['commonUserSignup'],
  *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
+ *                      events:commonComponentEvents,
  *                      template:string}>}
  */
 const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
+    
+    /**
+     * @name events
+     * @descption Events for map
+     * @function
+     * @param {commonEventType} event_type
+     * @param {CommonAppEvent} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.commonMiscElementId(event.target);
+        switch (event_type){
+            case 'click':{
+                switch (true){
+                    case event_target_id=='common_dialogue_iam_start_login':
+                    case event_target_id=='common_dialogue_iam_start_signup':{
+                        props.methods.commonDialogueShow(event_target_id.substring('common_dialogue_iam_start_'.length).toUpperCase());
+                        break;
+                    }
+                    case event_target_id=='common_dialogue_iam_start_close':{
+                        props.methods.commonComponentRemove('common_dialogue_iam_start', true);
+                        break;
+                    }
+                    case event_target_id=='common_dialogue_iam_start_signup_button':{
+                        props.methods.commonUserSignup();
+                        break;
+                    }    
+                }
+                break;
+            }
+        }
+    };
     return {
         lifecycle:  null,
         data:       null,
         methods:    null,
+        events:     events,
         template:   template({
                             admin_app:props.data.app_id == props.data.admin_app_id,
                             type:props.data.type,
