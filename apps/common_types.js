@@ -239,10 +239,13 @@
  *              component_import:{app_id:number, url:string,component:*}[]|[],
  *              component:Object.<string,   {
  *                                          methods?:Object.<string,function>|null, 
- *                                          events?:(arg0:commonEventType, arg1:CommonAppEvent)=>void|null}>
+ *                                          events?:commonComponentEvents}>
  *      }} CommonGlobal
  */
-
+/**
+ * @description Type commonComponentEvents
+ * @typedef{(arg0:commonEventType, arg1:CommonAppEvent)=>Promise.<void>} commonComponentEvents
+ */
 /**
  * @description Type CommonComponentLifecycle
  * @typedef  {{ onBeforeMounted?:function|null,
@@ -255,7 +258,7 @@
  * @typedef  {{ lifecycle?:CommonComponentLifecycle,
  *              data?:*,
  *              methods?:Object.<string,function>|null,
- *              events?:(arg0:commonEventType, arg1:CommonAppEvent)=>void|null,
+ *              events?:commonComponentEvents,
  *              template:string|null}} CommonComponentResult
  */
 

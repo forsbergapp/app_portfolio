@@ -4,7 +4,7 @@
 
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle, CommonAppEvent,commonEventType,
- *          commonMapLayers, commonGeoJSONPopup, commonGeoJSONPolyline, commonMapPlace}  from '../../../common_types.js'
+ *          commonMapLayers, commonGeoJSONPopup, commonGeoJSONPolyline, commonMapPlace,commonComponentEvents}  from '../../../common_types.js'
  */
 
 /**
@@ -68,7 +68,7 @@ const template = props =>`
 *                               goTo:function,
 *                               drawVectors:function
 *                              },
-*                      events:  function       
+*                      events:  commonComponentEvents
 *                      template:string}>}
 */
 const component = async props => {
@@ -532,6 +532,7 @@ const component = async props => {
      * @function
      * @param {commonEventType} event_type
      * @param {CommonAppEvent} event
+     * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{
         const event_target_id = props.methods.commonMiscElementId(event.target);

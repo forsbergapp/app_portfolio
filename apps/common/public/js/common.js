@@ -1288,32 +1288,25 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                 commonComponentRemove('common_dialogue_iam_start');
                 break;
             }
-        case 'LOGIN_ADMIN':{
-            await commonComponentRender({
-                mountDiv:       'common_dialogue_iam_start',
-                data:           {
-                                type:               null,
-                                app_id:             COMMON_GLOBAL.app_id,
-                                admin_app_id:       COMMON_GLOBAL.app_admin_app_id,
-                                admin_only: 		COMMON_GLOBAL.admin_only,
-                                admin_first_time:   COMMON_GLOBAL.admin_first_time
-                                },
-                methods:        {commonFFB:commonFFB},
-                path:           '/common/component/common_dialogue_iam_start.js'});
-            break;
-        }
+        case 'LOGIN_ADMIN':
         case 'LOGIN':
         case 'SIGNUP':{
             await commonComponentRender({
                 mountDiv:       'common_dialogue_iam_start',
                 data:           {
-                                type:               dialogue,
+                                type:               dialogue=='LOGIN_ADMIN'?null:dialogue,
                                 app_id:             COMMON_GLOBAL.app_id,
                                 admin_app_id:       COMMON_GLOBAL.app_admin_app_id,
                                 admin_only: 		COMMON_GLOBAL.admin_only,
                                 admin_first_time:   COMMON_GLOBAL.admin_first_time
                                 },
-                methods:        {commonFFB:commonFFB},
+                methods:        {
+                                commonMiscElementId:commonMiscElementId,
+                                commonDialogueShow:commonDialogueShow,
+                                commonComponentRemove:commonComponentRemove,
+                                commonUserSignup:commonUserSignup,
+                                commonFFB:commonFFB
+                                },
                 path:           '/common/component/common_dialogue_iam_start.js'});
             break;
         }
@@ -2748,20 +2741,6 @@ const commonEvent = async (event_type,event=null) =>{
                                 COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
                                 event.target.parentNode.style.display = 'none';
                                 await commonEventSelectAction(event_target_id, event.target);
-                                break;
-                            }
-                            // dialogue login/signup
-                            case 'common_dialogue_iam_start_login':
-                            case 'common_dialogue_iam_start_signup':{
-                                commonDialogueShow(event_target_id.substring('common_dialogue_iam_start_'.length).toUpperCase());
-                                break;
-                            }
-                            case 'common_dialogue_iam_start_close':{
-                                commonComponentRemove('common_dialogue_iam_start', true);
-                                break;
-                            }
-                            case 'common_dialogue_iam_start_signup_button':{
-                                commonUserSignup();
                                 break;
                             }
                             //dialogue message
