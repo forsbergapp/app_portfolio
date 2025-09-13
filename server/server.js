@@ -605,8 +605,8 @@ const serverStart = async () =>{
     serverProcess.env.TZ = 'UTC';
     try {
         //Create ORM and server instances
-        const {ORM} = await import('./db/ORM.js');
         server = new serverClass();
+        const {ORM} = await import('./db/ORM.js');
         //Using Static Asynchronous Factory Method pattern in ORM_class
         await ORM.init();       
         //Using Static Asynchronous Factory Method pattern in serverClass
