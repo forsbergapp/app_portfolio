@@ -3,18 +3,17 @@
  * @module apps/app4/app
  */
 /**
- * @import {commonMetadata, CommonAppEvent, CommonRESTAPIMethod, CommonComponentResult, CommonModuleCommon, COMMON_DOCUMENT,
- *          commonGeoJSONPolyline} from '../../../common_types.js'
+ * @import {common} from '../../../common_types.js'
  * @import {APP_PARAMETERS, APP_user_setting_data, APP_user_setting_record, APP_REPORT_day_user_account_app_data_posts, 
  *          APP_REPORT_settings, APP_GLOBAL, 
  *          APP_user_setting} from './types.js'
  */
 
 
-/**@type{COMMON_DOCUMENT} */
+/**@type{common['COMMON_DOCUMENT']} */
 const COMMON_DOCUMENT = document;
 
-/**@type {CommonModuleCommon} */
+/**@type {common['CommonModuleCommon']} */
 let common;
 
 
@@ -154,15 +153,13 @@ Object.seal(APP_GLOBAL);
  * @returns {Promise.<void>}
  */
 const appReportTimetablePrint = async () => {
-    /**@type{CommonComponentResult}*/
+    /**@type{common['CommonComponentResult']}*/
     const {template} = await common.commonComponentRender({ mountDiv:   null,
                                                             data:  {   
                                                                     commonMountdiv:null, 
                                                                     appHtml:COMMON_DOCUMENT.querySelector('#paper').outerHTML
                                                                     },
-                                                            methods:{
-                                                                    commonMiscResourceFetch:common.commonMiscResourceFetch
-                                                                    },
+                                                            methods:null,
                                                             path: '/component/print.js'});
     template?common.commonMiscPrint(template):null;
 };
@@ -655,12 +652,7 @@ const SettingShow = async (tab_selected) => {
                             user_locale:common.COMMON_GLOBAL.user_locale,
                             user_timezone:common.COMMON_GLOBAL.user_timezone},
                 methods:    {
-                            appComponentSettingUpdate:appComponentSettingUpdate,
-                            commonComponentRender:common.commonComponentRender,
-                            commonFFB:common.commonFFB,
-                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
-                            commonWindowFromBase64:common.commonWindowFromBase64,
-                            
+                            appComponentSettingUpdate:appComponentSettingUpdate                            
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
@@ -673,16 +665,7 @@ const SettingShow = async (tab_selected) => {
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
                             },
                 methods:    {
-                            appComponentSettingUpdate:appComponentSettingUpdate,
-                            commonMiscListKeyEvent:common.commonMiscListKeyEvent,
-                            commonMiscElementRow:common.commonMiscElementRow,
-                            commonMiscElementId:common.commonMiscElementId,
-                            commonMiscImport:common.commonMiscImport,
-                            commonComponentRender:common.commonComponentRender,
-                            commonComponentRemove:common.commonComponentRemove,
-                            commonFFB:common.commonFFB,
-                            commonWindowFromBase64:common.commonWindowFromBase64,
-                            commonUserLocale:common.commonUserLocale
+                            appComponentSettingUpdate:appComponentSettingUpdate
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
@@ -696,11 +679,7 @@ const SettingShow = async (tab_selected) => {
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
                             themes:APP_GLOBAL.themes},
                 methods:    {
-                            appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate,
-                            commonComponentRender:common.commonComponentRender,
-                            commonFFB:common.commonFFB,
-                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
-                            commonWindowFromBase64:common.commonWindowFromBase64
+                            appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
@@ -725,11 +704,7 @@ const SettingShow = async (tab_selected) => {
                             methods:APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.CommonModulePrayTimes_methods
                             },
                 methods:    {
-                            appComponentSettingUpdate:appComponentSettingUpdate,
-                            commonComponentRender:common.commonComponentRender,
-                            commonFFB:common.commonFFB,
-                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
-                            commonWindowFromBase64:common.commonWindowFromBase64
+                            appComponentSettingUpdate:appComponentSettingUpdate
                             },
                 path:`/component/settings_tab${tab_selected}.js`});
             break;
@@ -738,7 +713,7 @@ const SettingShow = async (tab_selected) => {
             common.commonComponentRender({
                 mountDiv:   'settings_content',
                 data:       {user_settings:APP_GLOBAL.user_settings},
-                methods:    {commonComponentRender:common.commonComponentRender},
+                methods:    null,
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
         }
@@ -1108,7 +1083,7 @@ const appUserSettingLink = (item) => {
                                 authorization:'APP_ID',
                                 class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size
                                 },
-                    methods:    {commonFFB:common.commonFFB},
+                    methods:    null,
                     path:       '/common/component/common_window_info.js'});
             break;
         }
@@ -1140,7 +1115,7 @@ const appUserSettingFunction = async (function_name, add_settings=true) => {
         const body = {  json_data:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
                         IAM_iam_user_app_id:    common.COMMON_GLOBAL.iam_user_app_id
                     };
-        /**@type {CommonRESTAPIMethod}*/
+        /**@type {common['CommonRESTAPIMethod']}*/
         let method;
         let path = '';
         let spinner_id;
@@ -1189,7 +1164,7 @@ const appUserSettingFunction = async (function_name, add_settings=true) => {
                                     column_value:'value',
                                     column_text:'text'
                                     },
-                        methods:    {commonFFB:null},
+                        methods:    null,
                         path:       '/common/component/common_select.js'});
                     break;
                 }
@@ -1248,7 +1223,7 @@ const appUserSettingDelete = (choice=null) => {
                                     column_value:'value',
                                     column_text:'text'
                                     },
-                        methods:    {commonFFB:null},
+                        methods:    null,
                         path:       '/common/component/common_select.js'});
                 }
                 
@@ -1458,7 +1433,7 @@ const appUserSettingProfileLink = item => {
                                 body:null,
                                 authorization:'APP_ID'
                                 },
-                    methods:    {commonFFB:common.commonFFB},
+                    methods:    null,
                     path:       '/common/component/common_window_info.js'});
             break;
         }
@@ -1477,7 +1452,7 @@ const appUserSettingProfileLink = item => {
  * @returns {void}
  */
 const appUserSettingsLike = user_account_app_data_post_id => {
-    /**@type{CommonRESTAPIMethod} */
+    /**@type{common['CommonRESTAPIMethod']} */
     let method;
     const json_data = { iam_user_app_data_post_id: user_account_app_data_post_id, 
                         IAM_iam_user_id: common.COMMON_GLOBAL.iam_user_id,
@@ -1508,7 +1483,7 @@ const appUserSettingsLike = user_account_app_data_post_id => {
  * @name appEventClick
  * @description App event click
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventClick = event => {
@@ -1593,7 +1568,7 @@ const appEventClick = event => {
                             method:'GET',
                             authorization:'APP_ID'
                             },
-                methods:    {commonFFB:common.commonFFB},
+                methods:    null,
                 path:       '/common/component/common_window_info.js'});
             break;
         }
@@ -1607,7 +1582,7 @@ const appEventClick = event => {
                             method:'GET',
                             authorization:'APP_ID'
                             },
-                methods:    {commonFFB:common.commonFFB},
+                methods:    null,
                 path:       '/common/component/common_window_info.js'});
             break;
         }
@@ -1621,7 +1596,7 @@ const appEventClick = event => {
                             method:'GET',
                             authorization:'APP_ID'
                             },
-                methods:    {commonFFB:common.commonFFB},
+                methods:    null,
                 path:       '/common/component/common_window_info.js'});
             break;
         }
@@ -1835,8 +1810,6 @@ const appEventClick = event => {
                     mountDiv:   'common_dialogue_user_menu_app_theme',
                     data:       null,
                     methods:    {
-                                commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
-                                commonComponentRender:common.commonComponentRender, 
                                 app_theme_update:common.commonMiscPreferencesPostMount
                                 },
                     path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
@@ -1847,8 +1820,6 @@ const appEventClick = event => {
                 mountDiv:   'common_dialogue_user_menu_app_theme',
                 data:       null,
                 methods:    {
-                            commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
-                            commonComponentRender:common.commonComponentRender, 
                             app_theme_update:common.commonMiscPreferencesPostMount
                             },
                 path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
@@ -1901,10 +1872,7 @@ const appEventClick = event => {
                     data:       {   
                                 iam_user_id:common.COMMON_GLOBAL.iam_user_id,
                                 profile_id:common.commonMiscElementRow(event.target).getAttribute('data-iam_user_id')},
-                    methods:    {
-                                commonComponentRender:common.commonComponentRender,
-                                commonFFB:common.commonFFB
-                                },
+                    methods:    null,
                     path:       '/component/profile_info.js'})
                 .then((/**@type{{data:       null, 
                                 methods:    {
@@ -1937,7 +1905,7 @@ const appEventClick = event => {
  * @name appEventKeyUp
  * @description App event keyup
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventKeyUp = event => {
@@ -1974,7 +1942,7 @@ const appEventKeyUp = event => {
 const appMapQibblaShow = () => {
     if (APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text  &&
         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text ){
-        /**@type{commonGeoJSONPolyline}*/
+        /**@type{common['commonGeoJSONPolyline']}*/
         const geoJSONQibbla = 
         {
             type: 'Feature',
@@ -2001,7 +1969,7 @@ const appMapQibblaShow = () => {
             }
         };
         common.COMMON_GLOBAL.component.common_map?.methods?.drawVectors([geoJSONQibbla]);
-        /**@type{commonGeoJSONPolyline}*/
+        /**@type{common['commonGeoJSONPolyline']}*/
         const geoJSONQibblaOld = 
         {
             type: 'Feature',
@@ -2053,7 +2021,7 @@ const appInit = async parameters => {
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
-        methods:    {commonMiscImport:common.commonMiscImport},
+        methods:    null,
         path:       '/component/app.js'})
     .then(result=>{
         APP_GLOBAL.appLibTimetable = result.methods.appLibTimetable;
@@ -2160,7 +2128,7 @@ const appInit = async parameters => {
  * @name appCommonInit
  * @description Init common
  * @function
- * @param {CommonModuleCommon} commonLib
+ * @param {common['CommonModuleCommon']} commonLib
  * @param {APP_PARAMETERS} parameters 
  * @returns {Promise.<void>}
  */
@@ -2175,7 +2143,7 @@ const appCommonInit = async (commonLib, parameters) => {
  * @name appMetadata
  * @description App metadata for event delegataion and lifecycle events
  * @function
- * @returns {commonMetadata}
+ * @returns {common['commonMetadata']}
  */
 const appMetadata = () =>{
     return { 

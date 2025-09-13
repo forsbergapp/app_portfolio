@@ -4,14 +4,14 @@
  */
 
 /**
- * @import {CommonAppRecord, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{apps:CommonAppRecord[]}} props 
+ * @param {{apps:common['CommonAppRecord'][]}} props 
  * @returns {string}
  */
 const template = props => ` <div id='common_dialogue_apps_list_title'>
@@ -41,23 +41,21 @@ const template = props => ` <div id='common_dialogue_apps_list_title'>
  *                      app_id:number
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:CommonModuleCommon['commonFFB'],
- *                      commonMiscShowDateUpdate:CommonModuleCommon['commonMiscShowDateUpdate'],
+ *                      COMMON:common['CommonModuleCommon'],
  *                      }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
 
-    const apps = await props.methods.commonFFB({path:'/server-db/app-info/', method:'GET', authorization_type:'APP_ID'})
+    const apps = await props.methods.COMMON.commonFFB({path:'/server-db/app-info/', method:'GET', authorization_type:'APP_ID'})
                         .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.app_id != props.data.app_id));
 
     const onMounted =()=>{
-        props.methods.commonMiscShowDateUpdate('common_dialogue_apps_list_title_col_date');
+        props.methods.COMMON.commonMiscShowDateUpdate('common_dialogue_apps_list_title_col_date');
     };
     return {
         lifecycle:  {onMounted:onMounted},

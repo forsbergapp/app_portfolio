@@ -3,16 +3,15 @@
  * @module apps/common/component/common_dialogue_user_menu_message
  */
 /**
- * @import {CommonIAMUser, MessageQueuePublishMessage,CommonMessageType,
- *          CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{message:CommonMessageType & {created:MessageQueuePublishMessage['created'], username:CommonIAMUser['username']},
- *          commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate']}} props
+ * @param {{message:common['CommonMessageType'] & {created:common['MessageQueuePublishMessage']['created'], username:common['CommonIAMUser']['username']},
+ *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props
  * @returns {string}
  */
 const template = props => ` 
@@ -45,13 +44,12 @@ const template = props => `
 * @param {{data:       {
 *                      commonMountdiv:string,
 *                      app_id:number,
-*                      message:CommonMessageType & {created:MessageQueuePublishMessage['created'], username:CommonIAMUser['username']},
+*                      message:common['CommonMessageType'] & {created:common['MessageQueuePublishMessage']['created'], username:common['CommonIAMUser']['username']},
 *                      },
 *          methods:    {
-*                      COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate']
+*                      COMMON:common['CommonModuleCommon']
 *                      }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:null,
 *                      template:string}>}
@@ -62,7 +60,7 @@ const component = async props => {
        lifecycle:  null,
        data:   null,
        methods:null,
-       template: template({message:props.data.message, commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate})
+       template: template({message:props.data.message, commonMiscFormatJsonDate:props.methods.COMMON.commonMiscFormatJsonDate})
    };
 };
 export default component;

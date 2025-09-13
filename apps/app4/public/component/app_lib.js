@@ -4,7 +4,7 @@
 
 /**
  * @import {APP_REPORT_column_titles, APP_REPORT_times, APP_REPORT_settings, APP_REPORT_GLOBAL, APP_REPORT_day_user_account_app_data_posts, timesType}  from '../js/types.js'
- * @import {serverComponentLifecycle}  from '../../../../server/types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**@type{APP_REPORT_GLOBAL} */
@@ -287,8 +287,8 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
  * 						button_id:'toolbar_btn_left'|'toolbar_btn_right'|null,
  * 						user_account_app_data_posts_parameters:APP_REPORT_day_user_account_app_data_posts[]|null
  * 						},
- *          methods:    {COMMON_DOCUMENT:null}}} props
- * @returns {{ lifecycle:serverComponentLifecycle, 
+ *          methods:    {COMMON:common['CommonModuleCommon']}}} props
+ * @returns {{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   	null,
  *                      methods:	null,
  *                      template:string}}

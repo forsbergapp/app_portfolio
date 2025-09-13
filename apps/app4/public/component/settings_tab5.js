@@ -3,7 +3,7 @@
  * @module apps/app4/component/settings_tab5
  */
 /**
- * @import {CommonAppDataRecord, CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  * @import {appComponentSettingUpdate}  from '../js/app.js'
  * @import {APP_user_setting_record, APP_REPORT_GLOBAL}  from '../js/types.js'
  */
@@ -174,28 +174,24 @@ const template = () =>`   <div class='setting_horizontal_row'>
  *                      methods:APP_REPORT_GLOBAL['CommonModulePrayTimes_methods']
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      appComponentSettingUpdate:appComponentSettingUpdate,
- *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                      commonFFB:CommonModuleCommon['commonFFB'],
- *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
- *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64']
+ *                      COMMON:common['CommonModuleCommon'],
+ *                      appComponentSettingUpdate:appComponentSettingUpdate
  *                       }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
     //fetch all settings for current app id
-    /**@type{CommonAppDataRecord[]} */
-    const settings = await props.methods.commonFFB({path:'/server-db/appdata/',
+    /**@type{common['CommonAppDataRecord'][]} */
+    const settings = await props.methods.COMMON.commonFFB({path:'/server-db/appdata/',
                                                     query:`IAM_data_app_id=${props.data.app_id}`,
                                                     method:'GET', 
-                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     const onMounted = async () =>{
         //Method
-        await props.methods.commonComponentRender({ 
+        await props.methods.COMMON.commonComponentRender({ 
             mountDiv:   'setting_select_method',
             data:       {
                         default_data_value: Object.entries(props.data.methods).map(method=>{return {value:method[0], text:method[1].name};})[0].value,
@@ -208,10 +204,10 @@ const component = async props => {
                         column_value:'value',
                         column_text:'text'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:       '/common/component/common_select.js'});
         //Method asr
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_asr',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'METHOD_ASR')[0].value,
@@ -224,10 +220,10 @@ const component = async props => {
                         column_value:'value',
                         column_text:'display_data'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:       '/common/component/common_select.js'});
         //Highlatitude adjustment
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_highlatitude',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIGH_LATITUDE_ADJUSTMENT')[0].value,
@@ -240,10 +236,10 @@ const component = async props => {
                         column_value:'value',
                         column_text:'display_data'
                         },
-            methods:    {commonFFB:null},
-            path:'/common/component/common_select.js'});
+            methods:    null,
+            path:       '/common/component/common_select.js'});
         //Timeformat
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_timeformat',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'TIMEFORMAT')[0].value,
@@ -256,10 +252,10 @@ const component = async props => {
                         column_value:'value',
                         column_text:'display_data'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:       '/common/component/common_select.js'});
         //Hijri date adjustment
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_hijri_adjustment',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIJRI_DATE_ADJUSTMENT')[0].value,
@@ -272,10 +268,10 @@ const component = async props => {
                         column_value:'value',
                         column_text:'display_data'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:'/common/component/common_select.js'});
         //Iqamat
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_fajr',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
@@ -288,9 +284,9 @@ const component = async props => {
                         column_value:'value',
                         column_text:'display_data'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:       '/common/component/common_select.js'});
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_dhuhr',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
@@ -303,9 +299,9 @@ const component = async props => {
                         column_value:'value',
                         column_text:'display_data'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:       '/common/component/common_select.js'});
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_asr',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
@@ -320,7 +316,7 @@ const component = async props => {
                         },
             methods:    null,
             path:       '/common/component/common_select.js'});
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_maghrib',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
@@ -333,9 +329,9 @@ const component = async props => {
                         column_value:'value',
                         column_text:'display_data'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:       '/common/component/common_select.js'});
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_isha',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
@@ -348,10 +344,10 @@ const component = async props => {
                         column_value:'value',
                         column_text:'display_data'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:       '/common/component/common_select.js'});
         //Fasting start end
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_show_fast_start_end',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'FAST_START_END')[0].value,
@@ -364,34 +360,34 @@ const component = async props => {
                         column_value:'value',
                         column_text:'display_data'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:       '/common/component/common_select.js'});
 
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_method', props.data.user_settings.prayer_method);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_method', props.data.user_settings.prayer_method);
         props.methods.appComponentSettingUpdate('PRAYER', 'METHOD');
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_asr', props.data.user_settings.prayer_asr_method);
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_highlatitude', props.data.user_settings.prayer_high_latitude_adjustment);
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_timeformat', props.data.user_settings.prayer_time_format);
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_hijri_adjustment', props.data.user_settings.prayer_hijri_date_adjustment);
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_fajr', props.data.user_settings.prayer_fajr_iqamat);
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_dhuhr', props.data.user_settings.prayer_dhuhr_iqamat);
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_asr', props.data.user_settings.prayer_asr_iqamat);
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_maghrib', props.data.user_settings.prayer_maghrib_iqamat);
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_isha', props.data.user_settings.prayer_isha_iqamat);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_asr', props.data.user_settings.prayer_asr_method);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_highlatitude', props.data.user_settings.prayer_high_latitude_adjustment);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_timeformat', props.data.user_settings.prayer_time_format);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_hijri_adjustment', props.data.user_settings.prayer_hijri_date_adjustment);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_fajr', props.data.user_settings.prayer_fajr_iqamat);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_dhuhr', props.data.user_settings.prayer_dhuhr_iqamat);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_asr', props.data.user_settings.prayer_asr_iqamat);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_maghrib', props.data.user_settings.prayer_maghrib_iqamat);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_isha', props.data.user_settings.prayer_isha_iqamat);
         
         if (Number(props.data.user_settings.prayer_column_imsak_checked))
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_imsak').classList.add('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_imsak').classList.add('checked');
         else
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_imsak').classList.remove('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_imsak').classList.remove('checked');
         if (Number(props.data.user_settings.prayer_column_sunset_checked))
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_sunset').classList.add('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_sunset').classList.add('checked');
         else
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_sunset').classList.remove('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_sunset').classList.remove('checked');
         if (Number(props.data.user_settings.prayer_column_midnight_checked))
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.add('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.add('checked');
         else
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.remove('checked');
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_show_fast_start_end', props.data.user_settings.prayer_column_fast_start_end);
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.remove('checked');
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_show_fast_start_end', props.data.user_settings.prayer_column_fast_start_end);
     };
     return {
         lifecycle:  {onMounted:onMounted},

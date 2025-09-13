@@ -3,7 +3,7 @@
  * @module apps/app8/component/cube
  */
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -114,18 +114,8 @@ const template = props =>`  <div id='cube'>
  *                      app_id:number,
  *                      common_app_id:number},
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonWindowSetTimeout:CommonModuleCommon['commonWindowSetTimeout'],
- *                      commonMiscImport:CommonModuleCommon['commonMiscImport'],
- *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
- *                      commonLovShow:CommonModuleCommon['commonLovShow'],
- *                      commonLovClose:CommonModuleCommon['commonLovClose'],
- *                      commonMessageShow:CommonModuleCommon['commonMessageShow'],
- *                      commonComponentRemove:CommonModuleCommon['commonComponentRemove'],
- *                      commonWindowToBase64:CommonModuleCommon['commonWindowToBase64'],
- *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
- *                      commonFFB:CommonModuleCommon['commonFFB']}}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle,
+ *                      COMMON:common['CommonModuleCommon']}}} props
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'],
  *                      data:   null
  *                      methods:{
  *                              cube_init:                  function, 
@@ -146,13 +136,13 @@ const component = async props => {
         solution:'💡',
         solution_list:'∞'
     };
-    const cube_lib = await props.methods.commonMiscImport('/component/cube_lib.js');
+    const cube_lib = await props.methods.COMMON.commonMiscImport('/component/cube_lib.js');
    
     /**
      * @returns {{cube:*, controls:*}}
      */
     const cube_init = () => {
-        const cube = new cube_lib.RubiksCube( props.data.cube_width, props.methods.commonWindowSetTimeout);
+        const cube = new cube_lib.RubiksCube( props.data.cube_width, props.methods.COMMON.commonWindowSetTimeout);
         cube.render();
         return {cube:cube, controls:new cube_lib.RubiksCubeControls('button_controls', cube)};
     };
@@ -176,7 +166,7 @@ const component = async props => {
             const cube_result_lov = cube_result.map(row=>{return {
                 //use base64 for solution in id column
                 //replace single quote display with ’ to avoid string issues
-                id:props.methods.commonWindowToBase64(row.cube_solution, true), 
+                id:props.methods.COMMON.commonWindowToBase64(row.cube_solution, true), 
                 cube_solution: `${row.cube_solution_model==0?ICONS.robot:ICONS.human} 
                                 (${ICONS.moves}:${row.cube_solution_length}, ${ICONS.time}:${row.cube_solution_time}) - ${row.cube_solution.replaceAll('\'', '’')}`}; 
             });
@@ -186,18 +176,18 @@ const component = async props => {
             * @returns {void}
             */
             const function_event = event => {
-                const solution = props.methods.commonWindowFromBase64(props.methods.commonMiscElementRow(event.target).getAttribute('data-id') ?? '');
+                const solution = props.methods.COMMON.commonWindowFromBase64(props.methods.COMMON.commonMiscElementRow(event.target).getAttribute('data-id') ?? '');
                 if (button_id=='button_solve' || button_id=='button_solve_cubestate')
                     cube.makeMoves(solution);
                 else
                     cube_controls.setSolution(solution);
-                props.methods.commonLovClose();
+                props.methods.COMMON.commonLovClose();
             };
-            props.methods.commonLovShow({lov:'CUSTOM', lov_custom_list:cube_result_lov, lov_custom_value:'cube_solution', function_event:function_event});
+            props.methods.COMMON.commonLovShow({lov:'CUSTOM', lov_custom_list:cube_result_lov, lov_custom_value:'cube_solution', function_event:function_event});
         }
         else
             if (button_id=='button_solve_cubestate' || button_id=='button_solved_step_cubestate')
-                props.methods.commonMessageShow('INFO', null, 'message_text','!');
+                props.methods.COMMON.commonMessageShow('INFO', null, 'message_text','!');
     };
     /**
      * Solve the cube state using server function CUBE_SOLVE that uses generative AI pattern
@@ -218,22 +208,22 @@ const component = async props => {
              *  cube current state  string of cube state
              *  cube goalstate      empty to solve or to given cube state
              */
-            props.methods.commonFFB({ path:'/app-common-module/CUBE_SOLVE', method:'POST', authorization_type:'APP_ID',
+            props.methods.COMMON.commonFFB({ path:'/app-common-module/CUBE_SOLVE', method:'POST', authorization_type:'APP_ID',
                                 body:{  type:'FUNCTION',
-                                        model:              Number(props.methods.COMMON_DOCUMENT.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
+                                        model:              Number(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
                                         IAM_data_app_id:    props.data.app_id,
                                         preamble:           0,
-                                        temperature:        Number(props.methods.COMMON_DOCUMENT.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
+                                        temperature:        Number(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
                                         cube_currentstate: 	cube.getState(),
                                         cube_goalstate: 	cube_goalstate}, 
                                 spinner_id:button_id,
                                 timeout:1000 * 60 * 5}) //5 minutes timeout
                     .then((/**@type{string}*/result)=>{
-                        props.methods.commonComponentRemove('common_dialogue_message', true);
+                        props.methods.COMMON.commonComponentRemove('common_dialogue_message', true);
                         cube_show_solution(cube, cube_controls, result, button_id);
                     })
                     .catch(()=>{
-                        props.methods.commonComponentRemove('common_dialogue_message', true);
+                        props.methods.COMMON.commonComponentRemove('common_dialogue_message', true);
                     });
         }
     };

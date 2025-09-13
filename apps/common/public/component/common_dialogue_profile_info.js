@@ -4,15 +4,15 @@
  */
 
 /**
- * @import {CommonProfileUser, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{profile:CommonProfileUser,
- *          function_commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate']}} props 
+ * @param {{profile:common['CommonProfileUser'],
+ *          function_commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props 
  * @returns {string}
  */
 const template = props =>`  <div id='common_profile_main'>
@@ -95,14 +95,9 @@ const template = props =>`  <div id='common_profile_main'>
  *                      username:string
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate'],
- *                      commonDialogueShow:CommonModuleCommon['commonDialogueShow'],
- *                      commonSocketConnectOnlineCheck:CommonModuleCommon['commonSocketConnectOnlineCheck'],
- *                      commonWindowSetTimeout:CommonModuleCommon['commonWindowSetTimeout'],
- *                      commonFFB:CommonModuleCommon['commonFFB']
+ *                      COMMON:common['CommonModuleCommon']
  *                      }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
@@ -117,8 +112,8 @@ const component = async props => {
             else
                 return `/server-db/iamuser-profile/${props.data.iam_user_id ?? ''}`;
     };
-    /**@type{CommonProfileUser}*/
-    const profile = await props.methods.commonFFB(
+    /**@type{common['CommonProfileUser']}*/
+    const profile = await props.methods.COMMON.commonFFB(
                             {
                                 path:pathInfoGet(), 
                                 query:`id=${props.data.iam_user_id ?? ''}` + (props.data.username!=null?`&name=${props.data.username}`:''), 
@@ -132,24 +127,24 @@ const component = async props => {
         //User account followed and liked
         if (profile.followed_id!=null) {
             //followed
-            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'none';
-            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'block';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'none';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'block';
         } else {
             //not followed
-            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'block';
-            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'none';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'block';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'none';
         }
         if (profile.liked_id!=null) {
             //liked
-            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'none';
-            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'block';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'none';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'block';
         } else {
             //not liked
-            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'block';
-            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'none';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'block';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'none';
         } 
         if (props.data.iam_user_id !=null)
-            props.methods.commonSocketConnectOnlineCheck('common_profile_avatar_online_status', profile.id);
+            props.methods.COMMON.commonSocketConnectOnlineCheck('common_profile_avatar_online_status', profile.id);
     };
 
     return {
@@ -158,7 +153,7 @@ const component = async props => {
         methods:    null,
         template:   template({
                             profile:profile,
-                            function_commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate
+                            function_commonMiscFormatJsonDate:props.methods.COMMON.commonMiscFormatJsonDate
                         })
     };
 };

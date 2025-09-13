@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonAppModuleMetadata, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -12,7 +12,7 @@
  * @description Template
  * @function
  * @param {{report_description:string,
- *          report_metadata:CommonAppModuleMetadata[]}} props
+ *          report_metadata:common['CommonAppModuleMetadata'][]}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_report_metadata_description'>${props.report_description}</div>
@@ -30,13 +30,13 @@ const template = props => ` <div id='menu_report_metadata_description'>${props.r
  * @param {{data:        {
  *                       commonMountdiv:string,
  *                       report_description:string,
- *                       report_metadata:CommonAppModuleMetadata[]
+ *                       report_metadata:common['CommonAppModuleMetadata'][]
  *                       },
  *          methods:     {
- *                       COMMON_DOCUMENT:COMMON_DOCUMENT
+ *                       COMMON:common['CommonModuleCommon']
  *                       },
  *          lifecycle:   null}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

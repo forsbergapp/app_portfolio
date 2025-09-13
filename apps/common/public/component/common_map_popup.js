@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {COMMON_DOCUMENT, commonGeoJSONPopup, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -44,12 +44,12 @@ const template = props => `<div id='${props.id}' class='common_map_popup'
 * @function
 * @param {{data:        {
 *                       commonMountdiv:string,
-*                       geoJSON:commonGeoJSONPopup,
+*                       geoJSON:common['commonGeoJSONPopup'],
 *                       },
 *          methods:     {
-*                       COMMON_DOCUMENT:COMMON_DOCUMENT
+*                       COMMON:common['CommonModuleCommon']
 *                       }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:null,
 *                      template:string}>}

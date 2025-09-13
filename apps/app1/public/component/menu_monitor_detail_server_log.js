@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonRESTAPIAuthorizationType, CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -14,7 +14,7 @@
  *              [log columns][server columns][user columns][detail columms][app columns(broadcast, edit etc)]
  * @function
  * @param {{function_get_order_by:function,
- *          function_roundOff:CommonModuleCommon['commonMiscRoundOff'],
+ *          function_roundOff:common['CommonModuleCommon']['commonMiscRoundOff'],
  *          logs:[],
  *          logscope:'LogRequest'|'LogServer'|'LogApp'|'LogService'|'LogDb'|''}} props
  * @returns {string}
@@ -385,20 +385,18 @@ const template = props => ` ${  props.logscope=='LogRequest'?
  * @param {{ data:{      commonMountdiv:string,
  *                       path:string,
  *                       query:string,
- *                       token_type:CommonRESTAPIAuthorizationType,
+ *                       token_type:common['CommonRESTAPIAuthorizationType'],
  *                       sort:string,
  *                       order_by:string},
- *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
- *                       commonFFB:CommonModuleCommon['commonFFB']},
+ *           methods:{   COMMON:common['CommonModuleCommon']},
  *           lifeycle:   null}} props 
- * @returns {Promise.<{ lifecycle:   CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:   common['CommonComponentLifecycle'], 
  *                      data:        {page_last:number, count:Number, total_count:number},
  *                      methods:     null,
  *                      template:    string}>}
  */
 const component = async props => {
-    const logs = await props.methods.commonFFB({path:props.data.path, query:props.data.query, method:'GET', authorization_type:props.data.token_type}).then((/**@type{string}*/result)=>JSON.parse(result));
+    const logs = await props.methods.COMMON.commonFFB({path:props.data.path, query:props.data.query, method:'GET', authorization_type:props.data.token_type}).then((/**@type{string}*/result)=>JSON.parse(result));
     /**
      * Get order by if column matches
      * @param {string} column
@@ -413,9 +411,9 @@ const component = async props => {
         },
         methods:    null,
         template:   template({  function_get_order_by:get_order_by,
-                                function_roundOff:props.methods.commonMiscRoundOff,
+                                function_roundOff:props.methods.COMMON.commonMiscRoundOff,
                                 logs:logs.rows,
-                                logscope:props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').getAttribute('data-value').replace('Info','').replace('Error','').replace('Verbose','')})
+                                logscope:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').getAttribute('data-value').replace('Info','').replace('Error','').replace('Verbose','')})
     };
 };
 export default component;

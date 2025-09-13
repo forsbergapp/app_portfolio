@@ -19,10 +19,10 @@
  */
 
 /**
- * @import {COMMON_DOCUMENT}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
-/**@type{COMMON_DOCUMENT} */
+/**@type{common['COMMON_DOCUMENT']} */
 const COMMON_DOCUMENT = document;
 
 const WHITE='#ffffff', YELLOW='#ffff00' , GREEN='#009900' , BLUE='#006dbf', RED='#cc0000', ORANGE='#ff8000', CLEAR = '#000000';

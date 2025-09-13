@@ -3,7 +3,7 @@
  * @module apps/common/component/common_dialogue_lov
  */
 /**
- * @import {CommonRESTAPIAuthorizationType, CommonRESTAPIMethod, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -50,25 +50,23 @@ const template = props =>`  <div id='common_lov_form'>
  *                      lov_custom_value?:string
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      function_event:function,
- *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
- *                      commonFFB:CommonModuleCommon['commonFFB']
+ *                      COMMON:common['CommonModuleCommon'],
+ *                      function_event:function
  *                      }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show2');
-    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show2');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
     let path = '';
     let query = null;
-    /**@type{CommonRESTAPIAuthorizationType}*/
+    /**@type{common['CommonRESTAPIAuthorizationType']}*/
     let token_type;
-    /**@type{CommonRESTAPIMethod}*/
+    /**@type{common['CommonRESTAPIMethod']}*/
     let method;
     let body = null;
     let lov_column = '';
@@ -101,24 +99,26 @@ const component = async props => {
             token_type = 'APP_ID';
         }
     }
-    const lov_rows          = props.data.lov=='CUSTOM'?props.data.lov_custom_list:await props.methods.commonFFB({
-                                                                                                                    path:path, 
-                                                                                                                    query:query, 
-                                                                                                                    method:method, 
-                                                                                                                    authorization_type:token_type,
-                                                                                                                    body:body
-                                                                                                                }).then(result=>props.data.lov=='SERVER_LOG_FILES'?
-                                                                                                                                JSON.parse(result).rows:
-                                                                                                                                //COUNTRY and default use base64
-                                                                                                                                JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+    const lov_rows          = props.data.lov=='CUSTOM'?
+                                props.data.lov_custom_list:
+                                    await props.methods.COMMON.commonFFB({
+                                                            path:path, 
+                                                            query:query, 
+                                                            method:method, 
+                                                            authorization_type:token_type,
+                                                            body:body
+                                                        }).then(result=>props.data.lov=='SERVER_LOG_FILES'?
+                                                                        JSON.parse(result).rows:
+                                                                        //COUNTRY and default use base64
+                                                                        JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     const lov_column_value  = props.data.lov=='CUSTOM'?(props.data.lov_custom_value ??''):lov_column;
 
     /**
      * @returns {void}
      */
      const onMounted = () =>{
-        props.methods.COMMON_DOCUMENT.querySelector('#common_lov_list')['data-function'] = props.methods.function_event;
-        props.methods.COMMON_DOCUMENT.querySelector('#common_lov_search_input').focus();
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_lov_list')['data-function'] = props.methods.function_event;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_lov_search_input').focus();
     };
     return {
         lifecycle:  {onMounted:onMounted},

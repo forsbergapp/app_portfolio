@@ -5,14 +5,14 @@
 
 
 /**
- * @import {CommonAppRecord,CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{apps:CommonAppRecord[]}} props
+ * @param {{apps:common['CommonAppRecord'][]}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
@@ -70,23 +70,22 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
  * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB: CommonModuleCommon['commonFFB']
+ *                      COMMON:common['CommonModuleCommon']
  *                      },
  *          lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    /**@type{CommonAppRecord[]} */
-    const apps = await props.methods.commonFFB({path:'/server-db/app', method:'GET', authorization_type:'ADMIN'})
+    /**@type{common['CommonAppRecord'][]} */
+    const apps = await props.methods.COMMON.commonFFB({path:'/server-db/app', method:'GET', authorization_type:'ADMIN'})
                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const onMounted = async () =>{
         if (apps.length>0)
-            props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_apps .list_edit')[0].focus();
+            props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('#menu_apps .list_edit')[0].focus();
     };
     return {
         lifecycle:  {onMounted:onMounted},

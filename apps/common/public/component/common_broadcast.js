@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -36,9 +36,9 @@ const template = props =>` <div id='common_broadcast_info'>
  *                      commonMountdiv:string,
  *                      message:string
  *                      },
- *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonMiscResourceFetch:CommonModuleCommon['commonMiscResourceFetch']}}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *          methods:    {
+ *                      COMMON:common['CommonModuleCommon']}}} props
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
@@ -46,8 +46,8 @@ const template = props =>` <div id='common_broadcast_info'>
 const component = async props => {
     
     const onMounted =()=>{
-        props.methods.commonMiscResourceFetch( '/common/images/logo_broadcast.png',
-                                            props.methods.COMMON_DOCUMENT.querySelector('#common_broadcast_info_logo'), 
+        props.methods.COMMON.commonMiscResourceFetch( '/common/images/logo_broadcast.png',
+                                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_broadcast_info_logo'), 
                                             'image/png');
 
     };

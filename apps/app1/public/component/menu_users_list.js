@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonIAMUser, CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -12,7 +12,7 @@
  * @description Template
  * @function
  * @param {{iam_user_id:number,
- *          users:CommonIAMUser[],
+ *          users:common['CommonIAMUser'][],
  *          function_get_order_by:function}} props
  * @returns {string}
  */
@@ -59,10 +59,9 @@ const template = props => ` <div class='menu_users_list_row'>
  *                       iam_user_id:number,
  *                       sort:string,
  *                       order_by:string},
- *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonFFB:CommonModuleCommon['commonFFB']},
+ *           methods:{   COMMON:common['CommonModuleCommon']},
  *           lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -77,16 +76,16 @@ const component = async props => {
 
     let search_user='*';
     //show all records if no search criteria
-    if (props.methods.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').textContent!='')
-        search_user = encodeURI(props.methods.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').textContent);
-    const users = await props.methods.commonFFB({path:'/server-iam-admin/iamuser/', query:`search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, method:'GET', authorization_type:'ADMIN'})
+    if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').textContent!='')
+        search_user = encodeURI(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').textContent);
+    const users = await props.methods.COMMON.commonFFB({path:'/server-iam-admin/iamuser/', query:`search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const onMounted = async () =>{
-        if (props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0])
+        if (props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0])
             //set focus first column in first row
             //this will trigger to show detail records
-            props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].dispatchEvent(new Event('focus'));
+            props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].dispatchEvent(new Event('focus'));
 
   };
   return {

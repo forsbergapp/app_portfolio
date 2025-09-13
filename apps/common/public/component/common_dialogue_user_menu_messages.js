@@ -3,8 +3,7 @@
  * @module apps/common/component/common_dialogue_user_menu_messages
  */
 /**
- * @import {MessagesPagination,
- *          CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -40,13 +39,9 @@ const template = () => ` <div id='common_dialogue_user_menu_messages'>
 *                      admin_app_id:number,
 *                      },
 *          methods:    {
-*                      COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                      commonFFB:CommonModuleCommon['commonFFB'],
-*                      commonUserMessageShowStat:CommonModuleCommon['commonUserMessageShowStat'],
-*                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
-*                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate']
+*                      COMMON:common['CommonModuleCommon']
 *                      }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:{eventClickPagination:Function},
 *                      template:string}>}
@@ -58,7 +53,7 @@ const component = async props => {
     let page_last=  1;
     let page_limit= 0;
     const offset = 0;
-    /**@type{MessagesPagination}*/    
+    /**@type{common['MessagesPagination']}*/    
     let messages; 
 
     /**
@@ -92,8 +87,8 @@ const component = async props => {
             }
         }
         await messagesShow((page==1?0:page-1) * page_limit);
-        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page').textContent = page; 
-        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page_last').textContent = page_last;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page').textContent = page; 
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page_last').textContent = page_last;
     };
    
     /**
@@ -101,28 +96,26 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const messagesShow = async (offset) =>{
-        /**@type{MessagesPagination}*/    
+        /**@type{common['MessagesPagination']}*/    
         messages = await messagesGet(offset);
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:'common_dialogue_user_menu_messages_list',
-            data:{
-                messages:   messages
-            },
-            methods:{commonFFB:props.methods.commonFFB,
-                    commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate
-            },
+            data:   {
+                    messages:   messages
+                    },
+            methods:null,
             path:'/common/component/common_dialogue_user_menu_message_list.js'});
         //cant check stats on pagination records, call server function that fetches stats for all messages
-        props.methods.commonUserMessageShowStat();
+        props.methods.COMMON.commonUserMessageShowStat();
     };
     
     /**
      * @param {number} offset
-     * @returns {Promise.<MessagesPagination>}
+     * @returns {Promise.<common['MessagesPagination']>}
      */
     const messagesGet = async offset =>{
-        /**@type{MessagesPagination}*/    
-        const messages = await props.methods.commonFFB({path:'/app-common-module/COMMON_MESSAGE_GET', 
+        /**@type{common['MessagesPagination']}*/    
+        const messages = await props.methods.COMMON.commonFFB({path:'/app-common-module/COMMON_MESSAGE_GET', 
             method:'POST', 
             query:`offset=${offset}`,
             body:{  type:'FUNCTION', 
@@ -141,9 +134,9 @@ const component = async props => {
         await messagesShow(offset);
         page_last = messages.rows.length>0?(Math.ceil(messages.page_header.total_count/messages.page_header.count)):0;
         page_limit = messages.page_header.count;
-        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page').textContent = page; 
-        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page_last').textContent = page_last;
-        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page_total_count').textContent = messages.page_header.total_count;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page').textContent = page; 
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page_last').textContent = page_last;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_messages_pagination_page_total_count').textContent = messages.page_header.total_count;
    };
    return {
        lifecycle:  {onMounted:onMounted},

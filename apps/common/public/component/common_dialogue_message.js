@@ -3,9 +3,7 @@
  * @module apps/common/component/common_dialogue_message
  */
 
-/**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- */
+/**@import {common}  from '../../../common_types.js'*/
 
 /**
  * @name template
@@ -64,28 +62,28 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  *                      message_type:'ERROR_BFF'|'INFO'|'EXCEPTION'|'LOG'|'CONFIRM'|'PROGRESS',
  *                      message:*},
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      function_event:function,
- *                      commonComponentRemove:CommonModuleCommon['commonComponentRemove']
+ *                      COMMON:common['CommonModuleCommon'],
+ *                      function_event:function
  *                      }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null, 
+ *                      events:events,
  *                      template:string}>}
  */
 const component = async props => {
     if (props.data.commonMountdiv){
-        props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show3');
-        props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');      
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show3');
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');      
     }
 
-    const function_close = () => { props.methods.commonComponentRemove('common_dialogue_message', true);};
+    const function_close = () => { props.methods.COMMON.commonComponentRemove('common_dialogue_message', true);};
     let display_message = null;
     let display_message_font_class = null;
     switch (props.data.message_type){
         case 'ERROR_BFF':{
             try {
-                /**@type{import('../../../common_types.js').CommonErrorMessageISO20022} */
+                /**@type{common['CommonErrorMessageISO20022']} */
                 const message_iso = JSON.parse(props.data.message);
                 display_message = message_iso.error?.text ?? message_iso;
             } catch (error) {
@@ -124,13 +122,44 @@ const component = async props => {
             break;
         }
     }
+    /**
+     * @name events
+     * @descption Events for map
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (event_type){
+            case 'click':{
+                switch (true){
+                    //dialogue message
+                    case event_target_id=='common_message_close':{
+                        if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_message_close')['data-function'])
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_message_close')['data-function']();
+                        props.methods.COMMON.commonComponentRemove('common_dialogue_message',true);
+                        break;
+                    }
+                    case event_target_id=='common_message_cancel':{
+                        props.methods.COMMON.commonComponentRemove('common_dialogue_message',true);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    };
+                                
+    
     const onMounted = async () =>{
         if (props.data.commonMountdiv)
             if (props.data.message_type == 'PROGRESS')
-                props.methods.COMMON_DOCUMENT.querySelector('#common_message_progressbar').style.width = `${(props.data.message.part/props.data.message.total)*100}%`;
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_message_progressbar').style.width = `${(props.data.message.part/props.data.message.total)*100}%`;
             else{
-                props.methods.COMMON_DOCUMENT.querySelector('#common_message_close')['data-function'] = props.data.message_type == 'CONFIRM'?props.methods.function_event:function_close;
-                props.methods.COMMON_DOCUMENT.querySelector('#common_message_close').focus();
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_message_close')['data-function'] = props.data.message_type == 'CONFIRM'?props.methods.function_event:function_close;
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_message_close').focus();
             }
 
     };
@@ -139,6 +168,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
+        events:     events,
         template:   template({  message:                    display_message,
                                 message_type:               props.data.message_type,
                                 message_title_font_class:   display_message_font_class,

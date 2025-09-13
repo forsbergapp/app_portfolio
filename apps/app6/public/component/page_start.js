@@ -3,7 +3,7 @@
  * @module apps/app6/component/page_start
  */
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 /**
  * @name template
@@ -24,12 +24,11 @@ const template = () => `<div id='app_page_start_shop' class='app_page_start_shop
  *                      timezone:string,
  *                      locale:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      pay:function,
- *                      commonFFB:CommonModuleCommon['commonFFB'],
- *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                      commonMessageShow:function}}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      COMMON:common['CommonModuleCommon'],
+ *                      pay:function
+ *                      }
+ *          }} props
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -37,7 +36,7 @@ const template = () => `<div id='app_page_start_shop' class='app_page_start_shop
 const component = async props => {
       
     const onMounted = async () =>{
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'app_page_start_shop', 
             data:       {
                         app_id:props.data.app_id,
@@ -65,7 +64,6 @@ const component = async props => {
                         button_delete: false
                         },
             methods:    {
-                       commonFFB:props.methods.commonFFB,
                         button_print:null,
                         button_update:null,
                         button_post:props.methods.pay,

@@ -3,7 +3,7 @@
  * @module apps/app5/component/app
  */
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 /**
  * @name template
@@ -29,10 +29,9 @@ const template = () =>` <div id='app_top'>
  *                      commonMountdiv:string
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscResourceFetch:CommonModuleCommon['commonMiscResourceFetch']
+ *                      COMMON:common['CommonModuleCommon']
  *                      }}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -40,7 +39,7 @@ const template = () =>` <div id='app_top'>
 const component = async props => {
 
     const onMounted = async () =>
-        props.methods.COMMON_DOCUMENT.querySelector('#app_top_logo').style.backgroundImage = `url(${props.data.logo})`;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_top_logo').style.backgroundImage = `url(${props.data.logo})`;
     
     return {
         lifecycle:  {onMounted:onMounted},

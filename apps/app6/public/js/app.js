@@ -4,13 +4,13 @@
  */
 
 /**
- * @import {commonMetadata, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {common} from '../../../common_types.js'
  */
 
-/**@type{COMMON_DOCUMENT} */
+/**@type{common['COMMON_DOCUMENT']} */
 const COMMON_DOCUMENT = document;
 
-/**@type {CommonModuleCommon} */
+/**@type {common['CommonModuleCommon']} */
 let common;
 /**
  * @name appException
@@ -26,7 +26,7 @@ const appException = error => {
  * @name appEventClick
  * @description App event click
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventClick = event => {
@@ -65,7 +65,7 @@ const appEventClick = event => {
  * @name appEventKeyUp
  * @description App event keyup
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventKeyUp = event => {
@@ -81,7 +81,7 @@ const appEventKeyUp = event => {
  * @name appVPAIsValid
  * @description Validate VPA
  * @function
- * @param {CommonAppEvent['target']} element
+ * @param {common['CommonAppEvent']['target']} element
  * @param {string} str
  * @returns {boolean}
  */
@@ -133,7 +133,6 @@ const appProductUpdate = async () =>{
                     button_delete: false
                     },
         methods:    {
-                   commonFFB:common.commonFFB,
                     button_print:null,
                     button_update:null,
                     button_post:null,
@@ -215,7 +214,6 @@ const appPaymentRequest = async () =>{
                         button_delete_icon_class:'common_data_display_icon_cancel'
                         },
             methods:    {
-                       commonFFB:common.commonFFB,
                         button_print:null,
                         button_update:null,
                         button_post:null,
@@ -291,7 +289,6 @@ const appPay = async () =>{
                     button_delete_icon_class:'common_data_display_icon_cancel'
                     },
         methods:    {
-                   commonFFB:common.commonFFB,
                     button_print:null,
                     button_update:null,
                     button_post:appPaymentRequest,
@@ -312,7 +309,7 @@ const appInit = async () => {
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div, 
         data:       {logo:common.COMMON_GLOBAL.app_logo},
-        methods:    {commonMiscResourceFetch:common.commonMiscResourceFetch},
+        methods:    null,
         path:'/component/app.js'});
     await common.commonComponentRender({
         mountDiv:   'app_main_page', 
@@ -323,10 +320,7 @@ const appInit = async () => {
                     locale:common.COMMON_GLOBAL.user_locale
                     },
         methods:    {
-                    pay:appPay,
-                    commonFFB:common.commonFFB,
-                    commonComponentRender:common.commonComponentRender,
-                    commonMessageShow:common.commonMessageShow
+                    pay:appPay
                     },
         path:'/component/page_start.js'});
     appProductUpdate();
@@ -335,7 +329,7 @@ const appInit = async () => {
  * @name appCommonInit
  * @description Init common
  * @function
- * @param {CommonModuleCommon} commonLib
+ * @param {common['CommonModuleCommon']} commonLib
  * @param {Object.<String,*>} parameters 
  * @returns {Promise.<void>}
  */
@@ -350,7 +344,7 @@ const appCommonInit = async (commonLib, parameters) => {
  * @name appMetadata
  * @description App metadata for event delegataion and lifecycle events
  * @function
- * @returns {commonMetadata}
+ * @returns {common['commonMetadata']}
  */
 const appMetadata = () =>{
     return { 

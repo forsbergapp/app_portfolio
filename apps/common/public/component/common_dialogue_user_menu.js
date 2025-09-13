@@ -4,8 +4,7 @@
  */
 
 /**
- * @import {CommonIAMUser, CommonMessageType, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle,
- *          MessageQueuePublishMessage, }  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -76,18 +75,9 @@ const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.
 *                      user_direction:string,
 *                      user_arabic_script:string},
 *          methods:    {
-*                      COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate'],
-*                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
-*                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
-*                      commonFFB:CommonModuleCommon['commonFFB'],
-*                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
-*                      commonUserSessionCountdown:CommonModuleCommon['commonUserSessionCountdown'],
-*                      commonMessageShow:CommonModuleCommon['commonMessageShow'],
-*                      commonMesssageNotAuthorized:CommonModuleCommon['commonMesssageNotAuthorized'],
-*                      commonUserMessageShowStat:CommonModuleCommon['commonUserMessageShowStat']
+*                      COMMON:common['CommonModuleCommon']
 *                      }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:{eventClickPagination:       Function,
 *                               eventClickMessage:          Function,
@@ -98,8 +88,8 @@ const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.
 *                      template:string}>}
 */
 const component = async props => {
-    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
-    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
     /**
      * @description page navigation for messages
@@ -125,7 +115,7 @@ const component = async props => {
         element.classList.remove('common_dialogue_user_menu_messages_row_unread');
         element.classList.add('common_dialogue_user_menu_messages_row_read');
 
-        /**@type{CommonMessageType & {created:MessageQueuePublishMessage['created'], username:CommonIAMUser['username']}} */
+        /**@type{common['CommonMessageType'] & {created:common['MessageQueuePublishMessage']['created'], username:common['CommonIAMUser']['username']}} */
         const message = {sender:element.getAttribute('data-sender')==''?null:element.getAttribute('data-sender'),
                          receiver_id:Number(element.getAttribute('data-receiver_id')),
                          username:props.data.iam_user_username ??'',
@@ -137,25 +127,23 @@ const component = async props => {
                         };
         
         //show message detail
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'common_dialogue_user_menu_message_content',
             data:       {
                             app_id:props.data.app_id,
                             message:message
                         },
-            methods:    {
-                        commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate
-                        },
+            methods:    null,
             path:       '/common/component/common_dialogue_user_menu_message.js'});
 
-        await props.methods.commonFFB({ path:'/app-common-module/COMMON_MESSAGE_READ', 
+        await props.methods.COMMON.commonFFB({ path:'/app-common-module/COMMON_MESSAGE_READ', 
                 method:'POST', 
                 body:{  type:'FUNCTION', 
                         IAM_iam_user_id:props.data.iam_user_id,
                         IAM_data_app_id:props.data.common_app_id,
                         message_id:message_id},
                 authorization_type:'APP_ACCESS'});
-        props.methods.commonUserMessageShowStat();
+        props.methods.COMMON.commonUserMessageShowStat();
     };
     /**
      * @description read a message
@@ -163,7 +151,7 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const eventClickMessageDelete = async element =>{
-        await props.methods.commonFFB({ path:'/app-common-module/COMMON_MESSAGE_DELETE', 
+        await props.methods.COMMON.commonFFB({ path:'/app-common-module/COMMON_MESSAGE_DELETE', 
                 method:'POST', 
                 body:{  type:'FUNCTION', 
                         IAM_iam_user_id:props.data.iam_user_id,
@@ -171,7 +159,7 @@ const component = async props => {
                         message_id:element.getAttribute('data-id')},
                 authorization_type:'APP_ACCESS'});
         await eventClickNavMessages();
-        props.methods.commonUserMessageShowStat();
+        props.methods.COMMON.commonUserMessageShowStat();
     };
         
     /**
@@ -179,7 +167,7 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const eventClickNavMessages = async ()=>{
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'common_dialogue_user_menu_detail', 
             data:       {
                             app_id:props.data.app_id,
@@ -187,12 +175,7 @@ const component = async props => {
                             common_app_id:props.data.common_app_id,
                             admin_app_id:props.data.admin_app_id
                         },
-            methods:    {
-                        commonFFB:props.methods.commonFFB,
-                        commonUserMessageShowStat:props.methods.commonUserMessageShowStat,
-                        commonComponentRender:props.methods.commonComponentRender,
-                        commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate
-                        },
+            methods:    null,
             path:       '/common/component/common_dialogue_user_menu_messages.js'})
             .then(result=>eventClickPaginationMessages = result.methods.eventClickPagination);
     };
@@ -201,19 +184,14 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const eventClickNavIamUser = async () =>{
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'common_dialogue_user_menu_detail',
             data:       {
                             app_id:props.data.app_id,
                             iam_user_id:props.data.iam_user_id,
                             admin_app_id:props.data.admin_app_id
                         },
-            methods:    {
-                        commonFFB:props.methods.commonFFB,
-                        commonMessageShow:props.methods.commonMessageShow,
-                        commonMesssageNotAuthorized:props.methods.commonMesssageNotAuthorized,
-                        commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate
-                        },
+            methods:    null,
             path:       '/common/component/common_dialogue_user_menu_iam_user.js'});
     };
     /**
@@ -228,7 +206,7 @@ const component = async props => {
                                         user_timezone,
                                         user_direction,
                                         user_arabic_script) =>{
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'common_dialogue_user_menu_detail',
             data:       {
                             app_id:props.data.app_id,
@@ -241,12 +219,7 @@ const component = async props => {
                             user_direction:user_direction,
                             user_arabic_script:user_arabic_script
                         },
-            methods:    {
-                        commonMiscSelectCurrentValueSet:props.methods.commonMiscSelectCurrentValueSet,
-                        commonWindowFromBase64:props.methods.commonWindowFromBase64,
-                        commonFFB:props.methods.commonFFB,
-                        commonComponentRender:props.methods.commonComponentRender
-                        },
+            methods:    null,
             path:       '/common/component/common_dialogue_user_menu_iam_user_app.js'});
     };
     const onMounted = async () =>{
@@ -264,7 +237,7 @@ const component = async props => {
         
         if (props.data.token_exp && props.data.token_iat){
             const element_id = 'common_dialogue_user_menu_token_countdown_time';
-            props.methods.commonUserSessionCountdown(props.methods.COMMON_DOCUMENT.querySelector(`#${element_id}`), props.data.token_exp);
+            props.methods.COMMON.commonUserSessionCountdown(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${element_id}`), props.data.token_exp);
         }   
     };
     return {

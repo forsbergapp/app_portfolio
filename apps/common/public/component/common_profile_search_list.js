@@ -4,14 +4,14 @@
  */
 
 /**
- * @import {CommonProfileSearchRecord, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{records:CommonProfileSearchRecord[]}} props 
+ * @param {{records:common['CommonProfileSearchRecord'][]}} props 
  * @returns {string}
  */
 const template = props =>`  ${props.records.length>0?
@@ -41,28 +41,26 @@ const template = props =>`  ${props.records.length>0?
  *                      commonMountdiv:string,
  *                      iam_user_id:number},
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscInputControl:CommonModuleCommon['commonMiscInputControl'],
- *                      function_click_function:function,
- *                      commonFFB:CommonModuleCommon['commonFFB']}}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle,
+ *                      COMMON:common['CommonModuleCommon']
+ *                      function_click_function:function}}} props
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'],
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input').classList.remove('common_input_error');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_search_input').classList.remove('common_input_error');
 
     //check search text
-    const searched_username = props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input').textContent;
-    const commonMiscInputControl =   props.methods.commonMiscInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input'),null]]}) &&
-                            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input').textContent!='' &&
+    const searched_username = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_search_input').textContent;
+    const commonMiscInputControl =   props.methods.COMMON.commonMiscInputControl(null,{check_valid_list_elements:[[props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_search_input'),null]]}) &&
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_search_input').textContent!='' &&
                             searched_username.length>1;
     if (!commonMiscInputControl){
-        props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-        props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input').classList.add('common_input_error');
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_search_input').classList.add('common_input_error');
     }
-    const records = commonMiscInputControl?await props.methods.commonFFB(
+    const records = commonMiscInputControl?await props.methods.COMMON.commonFFB(
                                                 {
                                                     path:   '/server-db/iamuser-profile/', 
                                                     query:  `id=${props.data.iam_user_id ?? ''}&search=${encodeURI(searched_username)}`, 
@@ -73,8 +71,8 @@ const component = async props => {
 
     const onMounted = async () =>{           
         if (records.length>0){
-            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
-            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function'] = props.methods.function_click_function;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function'] = props.methods.function_click_function;
         }
     };
     return {

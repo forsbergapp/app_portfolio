@@ -3,7 +3,7 @@
  * @module apps/app1/component/menu_start
  */
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -50,12 +50,10 @@ const template = props => ` <div id='menu_start_content_widget1' class='widget'>
  * @function 
  * @param {{ data:       {commonMountdiv:string},
  *           methods:    {
- *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                       commonFFB:CommonModuleCommon['commonFFB']
+ *                       COMMON:common['CommonModuleCommon']
  *                       },
  *           lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null,
  *                      methods:null,
  *                      template:string}>}
@@ -67,11 +65,11 @@ const component = async props => {
      * @returns{Promise.<{count_connected:number}>}
      */
     const get_count = async (logged_in) => {
-        return props.methods.commonFFB({path:'/server-socket/socket-stat', query:`logged_in=${logged_in}`, method:'GET', authorization_type:'ADMIN'})
+        return props.methods.COMMON.commonFFB({path:'/server-socket/socket-stat', query:`logged_in=${logged_in}`, method:'GET', authorization_type:'ADMIN'})
                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     };
     /**@type{{count_users:number, count_connected:number}[]} */
-    const user_stat = await props.methods.commonFFB({path:'/server-db/iamuser-stat', method:'GET', authorization_type:'ADMIN'})
+    const user_stat = await props.methods.COMMON.commonFFB({path:'/server-db/iamuser-stat', method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     //add count stat
     for (const row of user_stat)
@@ -80,7 +78,7 @@ const component = async props => {
     const count_not_connected = await get_count(0).then(result=>result.count_connected);
 
     /**@type{{status_codes:[number, string][]}} */
-    const result_obj = await props.methods.commonFFB({path:'/server-info-statuscode', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const result_obj = await props.methods.COMMON.commonFFB({path:'/server-info-statuscode', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     // syntax {VALUE:'[ADMIN_statGroup]#[value]#[unique 0/1]#[statgroup]', TEXT:['[ADMIN_STATGROUP] - [VALUE replaced '_' with ' ']']}
     // response has empty statgroup
@@ -99,7 +97,7 @@ const component = async props => {
         })
     ];
     /**@type{0|1|null} */
-    const maintenance = await props.methods.commonFFB({ path:'/server-db/configserver', 
+    const maintenance = await props.methods.COMMON.commonFFB({ path:'/server-db/configserver', 
                                                         query:'config_group=METADATA&parameter=MAINTENANCE', 
                                                         method:'GET', 
                                                         authorization_type:'ADMIN'})
@@ -107,31 +105,11 @@ const component = async props => {
 
    const onMounted = async () =>{
         //mount select
-        await props.methods.commonComponentRender({mountDiv:'menu_start_select_stat',
-            data:{
-                default_value:'REQUEST - IP TOTAL',
-                default_data_value:'request#ip_total#0#ip',
-                options:stat_options,
-                path:'',
-                query:'',
-                method:'',
-                authorization_type:'',
-                column_value:'VALUE',
-                column_text:'TEXT'
-                },
-            methods:{commonFFB:props.methods.commonFFB},
-            path:'/common/component/common_select.js'});
-
-        await props.methods.commonComponentRender({mountDiv:'menu_start_select_year',
-                data:{
-                    default_value:new Date().getFullYear(),
-                    default_data_value:new Date().getFullYear(),
-                    options:[ {VALUE:new Date().getFullYear(), TEXT:new Date().getFullYear()}, 
-                              {VALUE:new Date().getFullYear() - 1, TEXT:new Date().getFullYear() -1},
-                              {VALUE:new Date().getFullYear() - 2, TEXT:new Date().getFullYear() -2},
-                              {VALUE:new Date().getFullYear() - 3, TEXT:new Date().getFullYear() -3},
-                              {VALUE:new Date().getFullYear() - 4, TEXT:new Date().getFullYear() -4},
-                              {VALUE:new Date().getFullYear() - 5, TEXT:new Date().getFullYear() -5}],
+        await props.methods.COMMON.commonComponentRender({mountDiv:'menu_start_select_stat',
+            data:   {
+                    default_value:'REQUEST - IP TOTAL',
+                    default_data_value:'request#ip_total#0#ip',
+                    options:stat_options,
                     path:'',
                     query:'',
                     method:'',
@@ -139,39 +117,57 @@ const component = async props => {
                     column_value:'VALUE',
                     column_text:'TEXT'
                     },
-                methods:{commonFFB:props.methods.commonFFB},
-                path:'/common/component/common_select.js'});
+            methods:null,
+            path:   '/common/component/common_select.js'});
 
-        await props.methods.commonComponentRender({mountDiv:'menu_start_select_month',
-                data:{
-                    default_value:new Date().getMonth()+1,
-                    default_data_value:new Date().getMonth()+1,
-                    options:Array(...Array(12)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
-                    path:'',
-                    query:'',
-                    method:'',
-                    authorization_type:'',
-                    column_value:'VALUE',
-                    column_text:'TEXT'
-                 },
-                methods:{commonFFB:props.methods.commonFFB},
-                path:'/common/component/common_select.js'});
-        await props.methods.commonComponentRender({mountDiv:'menu_start_select_app',
-                data:{
-                    default_value:'∞',
-                    default_data_value:'',
-                    options:[{id:'', name:'∞'}],
-                    path:'/server-db/app',
-                    query:'key=name',
-                    method:'GET',
-                    authorization_type:'ADMIN',
-                    column_value:'id',
-                    column_text:'name'
-                   },
-                methods:{commonFFB:props.methods.commonFFB},
-                path:'/common/component/common_select.js'});
+        await props.methods.COMMON.commonComponentRender({mountDiv:'menu_start_select_year',
+                data:   {
+                        default_value:new Date().getFullYear(),
+                        default_data_value:new Date().getFullYear(),
+                        options:[ {VALUE:new Date().getFullYear(), TEXT:new Date().getFullYear()}, 
+                                {VALUE:new Date().getFullYear() - 1, TEXT:new Date().getFullYear() -1},
+                                {VALUE:new Date().getFullYear() - 2, TEXT:new Date().getFullYear() -2},
+                                {VALUE:new Date().getFullYear() - 3, TEXT:new Date().getFullYear() -3},
+                                {VALUE:new Date().getFullYear() - 4, TEXT:new Date().getFullYear() -4},
+                                {VALUE:new Date().getFullYear() - 5, TEXT:new Date().getFullYear() -5}],
+                        path:'',
+                        query:'',
+                        method:'',
+                        authorization_type:'',
+                        column_value:'VALUE',
+                        column_text:'TEXT'
+                        },
+                methods:null,
+                path:   '/common/component/common_select.js'});
 
-
+        await props.methods.COMMON.commonComponentRender({mountDiv:'menu_start_select_month',
+                data:   {
+                        default_value:new Date().getMonth()+1,
+                        default_data_value:new Date().getMonth()+1,
+                        options:Array(...Array(12)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
+                        path:'',
+                        query:'',
+                        method:'',
+                        authorization_type:'',
+                        column_value:'VALUE',
+                        column_text:'TEXT'
+                        },
+                methods:null,
+                path:   '/common/component/common_select.js'});
+        await props.methods.COMMON.commonComponentRender({mountDiv:'menu_start_select_app',
+                data:   {
+                        default_value:'∞',
+                        default_data_value:'',
+                        options:[{id:'', name:'∞'}],
+                        path:'/server-db/app',
+                        query:'key=name',
+                        method:'GET',
+                        authorization_type:'ADMIN',
+                        column_value:'id',
+                        column_text:'name'
+                        },
+                methods:null,
+                path:   '/common/component/common_select.js'});
    };
     return {
         lifecycle:  {onMounted:onMounted},

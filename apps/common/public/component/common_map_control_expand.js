@@ -3,8 +3,7 @@
  */
 
 /**
- * @import {COMMON_DOCUMENT, CommonModuleCommon, CommonComponentLifecycle, 
- *          commonMapLayers, commonEventType, CommonAppEvent}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -36,23 +35,16 @@ const template = props => props.expand_type=='search'?
 *                       commonMountdiv:string,
 *                       data_app_id:number,
 *                       expand_type:'search'|'layer',
-*                       map_layers:commonMapLayers[]
+*                       map_layers:common['commonMapLayers'][]
 *                       },
 *          methods:     {
-*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+*                       COMMON:common['CommonModuleCommon'],
 *                       goTo:(arg0:{ip:string|null,
 *                                   longitude:string|number|null,
 *                                   latitude:string|number|null})=>void,
-*                       setLayer:(arg0:string)=>void,
-*                       commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
-*                       commonMiscListKeyEvent:CommonModuleCommon['commonMiscListKeyEvent'],
-*                       commonUserLocale:CommonModuleCommon['commonUserLocale'],
-*                       commonFFB:CommonModuleCommon['commonFFB'],
-*                       commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
-*                       commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
-*                       commonComponentRender:CommonModuleCommon['commonComponentRender']
+*                       setLayer:(arg0:string)=>void
 *                       }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:null,
 *                      events:function,
@@ -66,14 +58,14 @@ const component = async props => {
      */
    const map_country = async locale =>  
         [{value:'', text:'...'}]
-        .concat(await props.methods.commonFFB({
+        .concat(await props.methods.COMMON.commonFFB({
                                                 path:'/app-common-module/COMMON_COUNTRY', 
                                                 query:`locale=${locale}`,
                                                 method:'POST', 
                                                 authorization_type:'APP_ID', 
                                                 body:{type:'FUNCTION',IAM_data_app_id:props.data.data_app_id}
                                             })
-        .then((/**@type{*}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)))
+        .then((/**@type{*}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)))
         .then((/**@type{{id:number, country_code:string, flag_emoji:string, group_name:string, text:string}[]}*/result)=>
             result.map(country=>{
                         return {value:JSON.stringify({  id:country.id, 
@@ -95,7 +87,7 @@ const component = async props => {
          */
         const updateSelect = async (default_value, options) =>{
             //set city select with first empty city
-            props.methods.commonComponentRender({
+            props.methods.COMMON.commonComponentRender({
                 mountDiv:       'common_map_control_expand_select_city',
                 data:           {
                                 default_data_value:'',
@@ -108,14 +100,14 @@ const component = async props => {
                                 column_value:'value',
                                 column_text:'text'
                                 },
-                methods:        {commonFFB:null},
+                methods:        null,
                 path:           '/common/component/common_select.js'});
         };
         if (country_code==null)
             await updateSelect('...', [{value:'', text:''}]);
         else{
             /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
-            const cities = await props.methods.commonFFB({
+            const cities = await props.methods.COMMON.commonFFB({
                                     path:'/app-common-module/COMMON_WORLDCITIES', 
                                     method:'POST', 
                                     authorization_type:'APP_ID', 
@@ -125,7 +117,7 @@ const component = async props => {
                                             IAM_data_app_id:props.data.data_app_id
                                         }})
                             .then(result=>
-                                JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+                                JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
             await updateSelect( '...', 
                                 [{value:'', text:''}]
                                 .concat(cities.map(city=>{
@@ -144,9 +136,9 @@ const component = async props => {
      * @param {string} event_target_id
      */
     const eventClickCountry = event_target_id =>{
-        const country_code = props.methods.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')==''?
+        const country_code = props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')==''?
                                 null:
-                                JSON.parse(props.methods.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')).country_code;
+                                JSON.parse(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')).country_code;
         map_city(country_code);
     };
     /**
@@ -161,17 +153,17 @@ const component = async props => {
          *          latitude:string,
          *          longitude:string}}
          */
-        const city = JSON.parse(props.methods.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value'));
+        const city = JSON.parse(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value'));
         props.methods.goTo({ip:null, longitude:city.longitude, latitude:city.latitude});
     };
     /**
      * @description delay search result using delay type watch pattern
      * @function
-     * @param {CommonAppEvent} event
+     * @param {common['CommonAppEvent']} event
      * @param {string} search
      */
     const eventKeyUpDispatch = (event,search)=>{
-        props.methods.commonMiscListKeyEvent({
+        props.methods.COMMON.commonMiscListKeyEvent({
             event:event,
             event_function:eventKeyUpSearch,
             event_parameters:search,
@@ -185,17 +177,14 @@ const component = async props => {
      */
     const eventKeyUpSearch = search=>{
         if (typeof search=='string' && search !='' && search !=null && search.length >2)
-            props.methods.commonComponentRender({
+            props.methods.COMMON.commonComponentRender({
                 mountDiv:   'common_map_control_expand_search_list_wrap',
                 data:       {
                             data_app_id:props.data.data_app_id,
                             search:	search
                             },
                 methods:    {
-                            commonFFB:props.methods.commonFFB,
-                            goTo:props.methods.goTo,
-                            commonMiscElementId:props.methods.commonMiscElementId,
-                            commonMiscElementRow:props.methods.commonMiscElementRow
+                            goTo:props.methods.goTo
                             },
                 path:       '/common/component/common_map_control_expand_search_city.js'});
     };
@@ -203,11 +192,11 @@ const component = async props => {
      * @name events
      * @descption Events for map
      * @function
-     * @param {commonEventType} event_type
-     * @param {CommonAppEvent} event
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
      */
     const events = async (event_type, event) =>{
-        const event_target_id = props.methods.commonMiscElementId(event.target);
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
         switch (event_type){
             case 'click':{
                 switch (true){
@@ -221,11 +210,11 @@ const component = async props => {
                         break;
                     }
                     case event_target_id=='common_map_control_expand_search_icon':{
-                        props.methods.COMMON_DOCUMENT
+                        props.methods.COMMON.COMMON_DOCUMENT
                             .querySelector('#common_map_control_expand_search_input')
                             .focus();
                         eventKeyUpDispatch( event, 
-                                props.methods.COMMON_DOCUMENT
+                                props.methods.COMMON.COMMON_DOCUMENT
                                 .querySelector('#common_map_control_expand_search_input')
                                 .textContent);
                         break;
@@ -241,7 +230,7 @@ const component = async props => {
                 switch (true){
                     case event_target_id=='common_map_control_expand_search_input':{
                         eventKeyUpDispatch( event, 
-                                            props.methods.COMMON_DOCUMENT
+                                            props.methods.COMMON.COMMON_DOCUMENT
                                             .querySelector('#common_map_control_expand_search_input')
                                             .textContent);
                         break;
@@ -252,12 +241,12 @@ const component = async props => {
     };
     const onMounted = async () =>{
         if (props.data.expand_type=='search'){
-            await props.methods.commonComponentRender({
+            await props.methods.COMMON.commonComponentRender({
                 mountDiv:   'common_map_control_expand_select_country',
                 data:       {
                             default_data_value:'',
                             default_value:'...',
-                            options: await map_country(props.methods.commonUserLocale()),
+                            options: await map_country(props.methods.COMMON.commonUserLocale()),
                             path:null,
                             query:null,
                             method:null,
@@ -265,12 +254,12 @@ const component = async props => {
                             column_value:'value',
                             column_text:'text'
                             },
-                methods:    {commonFFB:null},
+                methods:    null,
                 path:       '/common/component/common_select.js'});
                 map_city();
         }
         else
-            await props.methods.commonComponentRender({
+            await props.methods.COMMON.commonComponentRender({
                 mountDiv:   'common_map_control_expand_select_mapstyle', 
                 data:       {
                             default_data_value:props.data.map_layers[0].value,
@@ -283,7 +272,7 @@ const component = async props => {
                             column_value:'value',
                             column_text:'title'
                             },
-                methods:    {commonFFB:null},
+                methods:    null,
                 path:'/common/component/common_select.js'});
     };
     return {

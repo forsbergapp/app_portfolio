@@ -3,15 +3,14 @@
  */
 
 /**
- * @import {CommonWorldcitiesRecordType, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle,
- *          commonEventType, CommonAppEvent}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{records:CommonWorldcitiesRecordType[]}
+ * @param {{records:common['CommonWorldcitiesRecordType'][]}
 *          } props 
 * @returns {string}
 */
@@ -45,13 +44,10 @@ const template = props =>`  <div id='common_map_control_expand_search_list'>
  *                      data_app_id:number,
  *                      search:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      goTo:function,
- *                      commonMiscElementId:CommonModuleCommon['commonMiscElementId']
- *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow']
- *                      commonFFB:CommonModuleCommon['commonFFB']
+ *                      COMMON:common['CommonModuleCommon'],
+ *                      goTo:function
  *                      }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:null,
  *                      events:function,
@@ -60,7 +56,7 @@ const template = props =>`  <div id='common_map_control_expand_search_list'>
 const component = async props => {
     const cities = props.data.search==''?
                    []:
-                       await props.methods.commonFFB({path:'/app-common-module/COMMON_WORLDCITIES', 
+                       await props.methods.COMMON.commonFFB({path:'/app-common-module/COMMON_WORLDCITIES', 
                                method:'POST', 
                                authorization_type:'APP_ID', 
                                body:{  type:'FUNCTION',
@@ -72,10 +68,10 @@ const component = async props => {
                            .then(result=>JSON.parse(result).rows);
 
     /**
-     * @param {CommonAppEvent['target']} target
+     * @param {common['CommonAppEvent']['target']} target
      */
     const eventClickSearchList = async target =>{
-        const row = props.methods.commonMiscElementRow(target);
+        const row = props.methods.COMMON.commonMiscElementRow(target);
         if (row.classList.contains('common_map_control_expand_search_list_row')){
             const data = {  city:       row.getAttribute('data-city') ?? '',
                             country:    row.getAttribute('data-country') ??'',
@@ -89,11 +85,11 @@ const component = async props => {
      * @name events
      * @descption Events for map
      * @function
-     * @param {commonEventType} event_type
-     * @param {CommonAppEvent} event
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
      */
     const events = async (event_type, event) =>{
-        const event_target_id = props.methods.commonMiscElementId(event.target);
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
         switch (event_type){
             case 'click':{
                 switch (true){

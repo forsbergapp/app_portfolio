@@ -4,16 +4,16 @@
  */
 
 /**
- * @import {CommonAppModuleQueue, CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{report_queue:CommonAppModuleQueue[],
+ * @param {{report_queue:common['CommonAppModuleQueue'][],
  *          function_get_order_by:function,
- *          function_commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff']}} props
+ *          function_commonMiscRoundOff:common['CommonModuleCommon']['commonMiscRoundOff']}} props
  * @returns {string}
  */
 const template = props => ` <div class='menu_report_queue_row'>
@@ -55,12 +55,10 @@ const template = props => ` <div class='menu_report_queue_row'>
  *                       order_by:string
  *                       },
  *          methods:     {
- *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonFFB:CommonModuleCommon['commonFFB'],
- *                       commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff']
+ *                       COMMON:common['CommonModuleCommon']
  *                       },
  *          lifecycle:   null}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -71,8 +69,8 @@ const component = async props => {
      * @param {string} column
      */
     const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
-    /**@type{CommonAppModuleQueue[]} */
-    const report_queue = await props.methods.commonFFB({path:'/app-common-module-report-queue/', method:'GET', authorization_type:'ADMIN'})
+    /**@type{common['CommonAppModuleQueue'][]} */
+    const report_queue = await props.methods.COMMON.commonFFB({path:'/app-common-module-report-queue/', method:'GET', authorization_type:'ADMIN'})
                                 .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
     
     return {
@@ -81,7 +79,7 @@ const component = async props => {
             methods:     null,
             template:    template({ report_queue:report_queue,
                                     function_get_order_by:get_order_by,
-                                    function_commonMiscRoundOff:props.methods.commonMiscRoundOff})
+                                    function_commonMiscRoundOff:props.methods.COMMON.commonMiscRoundOff})
    };
 };
 export default component;

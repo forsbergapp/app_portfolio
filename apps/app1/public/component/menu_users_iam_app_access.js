@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -71,16 +71,15 @@ const template = props => ` <div id='menu_users_iam_app_access_row_title' class=
  * @function 
  * @param {{ data:{      commonMountdiv:string,
  *                       iam_user_id:number},
- *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonFFB:CommonModuleCommon['commonFFB']},
+ *           methods:{   COMMON:common['CommonModuleCommon']},
  *           lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    const user_logon = await props.methods.commonFFB({path:'/server-iam/iamappaccess', query:`data_iam_user_id=${props.data.iam_user_id}&data_app_id=`, method:'GET', authorization_type:'ADMIN'})
+    const user_logon = await props.methods.COMMON.commonFFB({path:'/server-iam/iamappaccess', query:`data_iam_user_id=${props.data.iam_user_id}&data_app_id=`, method:'GET', authorization_type:'ADMIN'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
  
     return {

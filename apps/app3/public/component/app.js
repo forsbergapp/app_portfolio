@@ -3,14 +3,14 @@
  * @module apps/app3/component/app
  */
 /**
- * @import {CommonAppMenu, COMMON_DOCUMENT,CommonModuleCommon,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 /**
  * @name template
  * @description Template
  * @function
  * @param {{title:string,
- *          app_menu:CommonAppMenu[]}} props
+ *          app_menu:common['CommonAppMenu'][]}} props
  * @returns {string}
  */
 const template = props =>`  <div id='menu_open' class='common_icon'></div>
@@ -42,16 +42,15 @@ const template = props =>`  <div id='menu_open' class='common_icon'></div>
  *                      app_id:number
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:CommonModuleCommon['commonFFB']
+ *                      COMMON:common['CommonModuleCommon']
  *                      }}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    const menu = await props.methods.commonFFB({path:'/app-common-module/COMMON_DOC', 
+    const menu = await props.methods.COMMON.commonFFB({path:'/app-common-module/COMMON_DOC', 
                                                 method:'POST', 
                                                 authorization_type:'APP_ID', 
                                                 body:{type:'FUNCTION',documentType:'MENU', IAM_data_app_id:props.data.app_id}})
@@ -59,13 +58,13 @@ const component = async props => {
                 .catch(()=>null);
     const onMounted =()=>{
         //add common_link to JSDoc generated menu so they will get default hover effect
-        Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('#nav_content_jsdoc .app_submenu .li a')).forEach(element=>element.classList.add('common_link'));
+        Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('#nav_content_jsdoc .app_submenu .li a')).forEach(element=>element.classList.add('common_link'));
     };
     return {
         lifecycle:  {onMounted},
         data:       null,
         methods:    null,
-        template:   template({  title:props.methods.COMMON_DOCUMENT.title,
+        template:   template({  title:props.methods.COMMON.COMMON_DOCUMENT.title,
                                 app_menu:menu
         })
     };

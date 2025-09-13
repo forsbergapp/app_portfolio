@@ -4,13 +4,13 @@
  */
 
 /**
- * @import {commonMetadata, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {common} from '../../../common_types.js'
  */
 
-/**@type{COMMON_DOCUMENT} */
+/**@type{common['COMMON_DOCUMENT']} */
 const COMMON_DOCUMENT = document;
 
-/**@type {CommonModuleCommon} */
+/**@type {common['CommonModuleCommon']} */
 let common;
 
 /**
@@ -27,7 +27,7 @@ const appException = error => {
  * @name appEventClick
  * @description App event click
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventClick = event =>{
@@ -45,8 +45,6 @@ const appEventClick = event =>{
                     mountDiv:   'common_dialogue_user_menu_app_theme',
                     data:       null,
                     methods:    {
-                                commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
-                                commonComponentRender:common.commonComponentRender, 
                                 app_theme_update:common.commonMiscPreferencesPostMount
                                 },
                     path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
@@ -57,8 +55,6 @@ const appEventClick = event =>{
                     mountDiv:   'common_dialogue_user_menu_app_theme',
                     data:       null,
                     methods:    {
-                                commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
-                                commonComponentRender:common.commonComponentRender, 
                                 app_theme_update:common.commonMiscPreferencesPostMount
                                 },
                     path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
@@ -95,24 +91,14 @@ const appInit = async () =>{
                         longitude:common.COMMON_GLOBAL.client_longitude,
                         latitude:common.COMMON_GLOBAL.client_latitude
                         },
-            methods:    {
-                        commonComponentRender:common.commonComponentRender,
-                        commonComponentRemove:common.commonComponentRemove,
-                        commonWindowFromBase64:common.commonWindowFromBase64,
-                        commonMiscListKeyEvent:common.commonMiscListKeyEvent,
-                        commonMiscElementRow:common.commonMiscElementRow,
-                        commonMiscElementId:common.commonMiscElementId,
-                        commonMiscImport:common.commonMiscImport,
-                        commonUserLocale:common.commonUserLocale,
-                        commonFFB:common.commonFFB
-                        },
+            methods:    null,
             path:       '/common/component/common_map.js'});
 };
 /**
  * @name appCommonInit
  * @description Init common
  * @function
- * @param {CommonModuleCommon} commonLib
+ * @param {common['CommonModuleCommon']} commonLib
  * @param {Object.<String,*>} parameters 
  * @returns {Promise.<void>}
  */
@@ -128,7 +114,7 @@ const appCommonInit = async (commonLib, parameters) => {
  * @name appMetadata
  * @description App metadata for event delegataion and lifecycle events
  * @function
- * @returns {commonMetadata}
+ * @returns {common['commonMetadata']}
  */
 const appMetadata = () =>{
     return { 
