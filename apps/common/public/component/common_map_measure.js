@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -24,9 +24,9 @@ const template = props => `<div>${props.km} km / ${props.miles} mi</div>`;
 *                       miles:number,
 *                       },
 *          methods:     {
-*                       COMMON_DOCUMENT:COMMON_DOCUMENT
+*                       COMMON:common['CommonModuleCommon']
 *                       }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:null,
 *                      template:string}>}

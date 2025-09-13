@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -36,26 +36,16 @@ const template = () => `
  *                      common_app_id:number,
  *                      user_verification_type:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:CommonModuleCommon['commonFFB'],
- *                      commonMessageShow:CommonModuleCommon['commonMessageShow'],
- *                      commonComponentRemove:CommonModuleCommon['commonComponentRemove'],
- *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                      commonDialogueShow:CommonModuleCommon['commonDialogueShow'],
- *                      commonUserLogout:CommonModuleCommon['commonUserLogout'],
- *                      commonMesssageNotAuthorized:CommonModuleCommon['commonMesssageNotAuthorized'],
- *                      commonUserUpdate:CommonModuleCommon['commonUserUpdate'],
- *                      commonUserAuthenticateCode:CommonModuleCommon['commonUserAuthenticateCode'],
- *                      commonUserSessionCountdown:CommonModuleCommon['commonUserSessionCountdown']
+ *                      COMMON:common['CommonModuleCommon'],
  *                      }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:{commonUserVerifyCheckInput:function},
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show2');
-    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show2');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
     /**
      * @name commonUserVerifyCheckInput
@@ -73,54 +63,54 @@ const component = async props => {
     const commonUserVerifyCheckInput = async (item, nextField) => {
         //only accept 0-9
         if (item.textContent && item.textContent.length==1 && ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(item.textContent) > -1)
-            if (nextField == '' || (props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').textContent != '' &&
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char2').textContent != '' &&
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char3').textContent != '' &&
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char4').textContent != '' &&
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').textContent != '' &&
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').textContent != '')) {
+            if (nextField == '' || (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').textContent != '' &&
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char2').textContent != '' &&
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char3').textContent != '' &&
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char4').textContent != '' &&
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').textContent != '' &&
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').textContent != '')) {
                 //last field, validate entered code
-                const verification_code =   props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').textContent +
-                                            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char2').textContent +
-                                            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char3').textContent +
-                                            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char4').textContent +
-                                            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').textContent +
-                                            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').textContent;
-                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').classList.remove('common_input_error');
-                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char2').classList.remove('common_input_error');
-                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char3').classList.remove('common_input_error');
-                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char4').classList.remove('common_input_error');
-                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').classList.remove('common_input_error');
-                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').classList.remove('common_input_error');
+                const verification_code =   props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').textContent +
+                                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char2').textContent +
+                                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char3').textContent +
+                                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char4').textContent +
+                                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').textContent +
+                                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').textContent;
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').classList.remove('common_input_error');
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char2').classList.remove('common_input_error');
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char3').classList.remove('common_input_error');
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char4').classList.remove('common_input_error');
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').classList.remove('common_input_error');
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').classList.remove('common_input_error');
 
-                if ((props.data.user_verification_type== '3' && await props.methods.commonUserUpdate(verification_code)) ||
-                    await props.methods.commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
-                    props.methods.commonComponentRemove('common_dialogue_iam_verify', true);
-                    props.methods.commonDialogueShow('LOGIN');
+                if ((props.data.user_verification_type== '3' && await props.methods.COMMON.commonUserUpdate(verification_code)) ||
+                    await props.methods.COMMON.commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
+                    props.methods.COMMON.commonComponentRemove('common_dialogue_iam_verify', true);
+                    props.methods.COMMON.commonDialogueShow('LOGIN');
                 }
                 else{
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').classList.add('common_input_error');
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char2').classList.add('common_input_error');
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char3').classList.add('common_input_error');
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char4').classList.add('common_input_error');
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').classList.add('common_input_error');
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').classList.add('common_input_error');
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').classList.add('common_input_error');
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char2').classList.add('common_input_error');
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char3').classList.add('common_input_error');
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char4').classList.add('common_input_error');
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').classList.add('common_input_error');
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').classList.add('common_input_error');
                     //code not valid
-                    props.methods.commonMessageShow('INFO', null, 'message_text',props.methods.commonMesssageNotAuthorized());
+                    props.methods.COMMON.commonMessageShow('INFO', null, 'message_text',props.methods.COMMON.commonMesssageNotAuthorized());
                 }                
             } 
             else{
                 //not last, next!
-                props.methods.COMMON_DOCUMENT.querySelector('#' + nextField).focus();
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#' + nextField).focus();
             }
         else{
             //remove anything else than 0-9
-            props.methods.COMMON_DOCUMENT.querySelector('#' + item.id).textContent = '';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#' + item.id).textContent = '';
         }
         
     };
     const onMounted = () =>{
-        props.methods.commonUserSessionCountdown(props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_token_countdown_time'), null);
+        props.methods.COMMON.commonUserSessionCountdown(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_token_countdown_time'), null);
     };
     return {
         lifecycle:  {onMounted:onMounted},

@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {COMMON_DOCUMENT, CommonComponentLifecycle, commonGeoJSONPolyline}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -32,13 +32,13 @@ const template = props => ` <polyline id='${props.id}'
 * @function
 * @param {{data:        {
 *                       commonMountdiv:string,
-*                       geoJSON:commonGeoJSONPolyline
+*                       geoJSON:common['commonGeoJSONPolyline']
 *                       },
 *          methods:     {
-*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+*                       COMMON:common['CommonModuleCommon'],
 *                       project:function,
 *                       }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:null,
 *                      template:string}>}

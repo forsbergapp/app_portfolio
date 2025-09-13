@@ -3,13 +3,13 @@
  */
 
 /**
- * @import {commonMetadata, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {common} from '../../../common_types.js'
  */
 
-/**@type{COMMON_DOCUMENT} */
+/**@type{common['COMMON_DOCUMENT']} */
 const COMMON_DOCUMENT = document;
 
-/**@type{CommonModuleCommon}*/
+/**@type{common['CommonModuleCommon']}*/
 let common;
 
 /**
@@ -33,7 +33,7 @@ let common;
 const appInit = async () => {
     await common.commonComponentRender({mountDiv:common.COMMON_GLOBAL.app_div,
         data:       {logo:common.COMMON_GLOBAL.app_logo},
-        methods:    {commonMiscResourceFetch:common.commonMiscResourceFetch},
+        methods:    null,
         path:'/component/app.js'});
     await common.commonComponentRender({  mountDiv:'app_construction',
                                         data:null,
@@ -44,7 +44,7 @@ const appInit = async () => {
  * @name appCommonInit
  * @description Init common
  * @function
- * @param {CommonModuleCommon} commonLib
+ * @param {common['CommonModuleCommon']} commonLib
  * @param {function} start
  * @param {Object.<String,*>} parameters 
  * @returns {Promise.<void>}
@@ -62,7 +62,7 @@ const appCommonInit = async (commonLib, start, parameters) => {
  * @name appMetadata
  * @description App metadata for event delegataion and lifecycle events
  * @function
- * @returns {commonMetadata}
+ * @returns {common['commonMetadata']}
  */
 const appMetadata = () =>{
     return { 

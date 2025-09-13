@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  * 
  */
 /**
@@ -30,11 +30,9 @@ const template = () =>  `   <div id='common_profile_stat_row1'>
  *                      statchoice:number
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                      commonFFB:CommonModuleCommon['commonFFB']
+ *                      COMMON:common['CommonModuleCommon']
  *                      }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
@@ -42,15 +40,13 @@ const template = () =>  `   <div id='common_profile_stat_row1'>
 const component = async props => {
 
     const onMounted = async () =>{
-        await props.methods.commonComponentRender( 
+        await props.methods.COMMON.commonComponentRender( 
             {   mountDiv:   'common_profile_stat_list',
                 data:       {
                             stat_choice:props.data.statchoice,
                             stat_list_app_rest_url:props.data.stat_list_app_rest_url
                             },
-                methods:    {
-                           commonFFB:props.methods.commonFFB
-                            },
+                methods:    null,
                 path:       '/common/component/common_dialogue_profile_stat_list.js'});
     };
     return {

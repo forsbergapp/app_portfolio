@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -82,29 +82,26 @@ const template = props => ` <div id='menu_start_chart_box1'>
  * @function
  * @param {{ data:       {commonMountdiv:string},
  *           methods:    {
- *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                       commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
- *                       commonFFB:CommonModuleCommon['commonFFB']
+ *                       COMMON:common['CommonModuleCommon']
  *                       },
  *           lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null,
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    const app_id = props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_app .common_select_dropdown_value').getAttribute('data-value'); 
-    const year = props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_year .common_select_dropdown_value').getAttribute('data-value'); 
-    const month = props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_month .common_select_dropdown_value').getAttribute('data-value'); 
+    const app_id = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_app .common_select_dropdown_value').getAttribute('data-value'); 
+    const year = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_year .common_select_dropdown_value').getAttribute('data-value'); 
+    const month = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_month .common_select_dropdown_value').getAttribute('data-value'); 
 
     // syntax {VALUE:'[ADMIN_statGroup]#[value]#[unique 0/1]#[statgroup]',                 TEXT:['[ADMIN_STATGROUP] - [VALUE replaced '_' with ' ']']},
     const admin_statGroup = 
-        props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[0].toUpperCase();
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[0].toUpperCase();
     const admin_statValues = 
-        { value: props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[1],
-            unique:props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[2],
-            statGroup:props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[3]
+        { value: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[1],
+            unique:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[2],
+            statGroup:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[3]
         };
     /**
      * Chart 2 pie colors
@@ -143,7 +140,7 @@ const component = async props => {
         if (admin_statGroup=='REQUEST')
             return stat_value;
         else
-            return Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_start_select_stat .common_select_option')).filter(value=>value.getAttribute('data-value').split('#')[1]==stat_value)[0].textContent;
+            return Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('#menu_start_select_stat .common_select_option')).filter(value=>value.getAttribute('data-value').split('#')[1]==stat_value)[0].textContent;
 
     };
     let query;
@@ -159,8 +156,8 @@ const component = async props => {
      *          day:number,
      *          amount:number,
      *          statValue:string}[]} */
-    const charts = await props.methods.commonFFB({path:'/server-db/log-stat', query:query, method:'GET', authorization_type:'ADMIN'})
-                        .then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows)));
+    const charts = await props.methods.COMMON.commonFFB({path:'/server-db/log-stat', query:query, method:'GET', authorization_type:'ADMIN'})
+                        .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows)));
       
     return {
         lifecycle:  null,
@@ -173,8 +170,8 @@ const component = async props => {
                                 chart2_color_app_all:'rgb(81, 171, 255)',
                                 chart2_color_app:'rgb(197 227 255)',
                                 chart2_stat:charts.filter(row=> row.chart==2),
-                                chart2_legend_text:props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').textContent,
-                                chart2_legend_text_apps:props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_app .common_select_dropdown_value').textContent})
+                                chart2_legend_text:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').textContent,
+                                chart2_legend_text_apps:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_app .common_select_dropdown_value').textContent})
         };
 };
 export default component;

@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 /**
  * @import {server_db_document_ConfigServer}  from '../js/types.js'
@@ -54,24 +54,23 @@ const template = props => ` <div id='menu_config_content_widget1' class='widget'
  * @description Component
  * @function
  * @param {{ data:{      commonMountdiv:string},
- *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonFFB:CommonModuleCommon['commonFFB']},
+ *           methods:{   COMMON:common['CommonModuleCommon']},
  *           lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
     /**@type{server_db_document_ConfigServer} */
-    const config_server = await props.methods.commonFFB({   path:'/server-db/configserver', 
+    const config_server = await props.methods.COMMON.commonFFB({   path:'/server-db/configserver', 
                                                             method:'GET', 
                                                             authorization_type:'ADMIN'})
                                     .then(result=>JSON.parse(result).rows);
 
     const onMounted = () =>{
         //set focus first column in first row
-        props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_config .common_input')[0].focus();
+        props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('#menu_config .common_input')[0].focus();
     };
  
     return {

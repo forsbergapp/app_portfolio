@@ -3,7 +3,7 @@
  * @module apps/app4/component/settings_tab3
  */
 /**
- * @import {CommonAppDataRecord,CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  * @import {appSettingThemeThumbnailsUpdate}  from '../js/app.js'
  * @import {APP_GLOBAL, APP_user_setting_record}  from '../js/types.js'
  */
@@ -120,30 +120,28 @@ const template = props =>`  <div class='setting_horizontal_row'>
  *                      themes:APP_GLOBAL['themes']
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate,
- *                      commonComponentRender:CommonModuleCommon['commonComponentRender'], 
- *                      commonFFB:CommonModuleCommon['commonFFB']
- *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
- *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64']}}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      COMMON:common['CommonModuleCommon'],
+ *                      appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate}}} props
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
     //fetch PAPER_SIZE for common app id
-    /**@type{CommonAppDataRecord[]} */
-    const settings_common = await props.methods.commonFFB({path:'/server-db/appdata/',
+    /**@type{common['CommonAppDataRecord'][]} */
+    const settings_common = await props.methods.COMMON.commonFFB({path:'/server-db/appdata/',
                                                     query:`IAM_data_app_id=${props.data.common_app_id}&name=PAPER_SIZE`,
                                                     method:'GET', 
-                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
+                                                        JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     //fetch HIGHLIGHT_ROW and REPORT_THEME for current app id
-    /**@type{CommonAppDataRecord[]} */
-    const settings_app = await props.methods.commonFFB({ path:'/server-db/appdata/',
+    /**@type{common['CommonAppDataRecord'][]} */
+    const settings_app = await props.methods.COMMON.commonFFB({ path:'/server-db/appdata/',
                                                             query:`IAM_data_app_id=${props.data.app_id}`,
                                                             method:'GET', 
-                                                            authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+                                                            authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
+                                                                JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     //update APP_GLOBAL with themes
     /**@type{import('../js/types.js').APP_GLOBAL['themes']} */
     props.data.themes.data = settings_app.filter(setting=>
@@ -155,7 +153,7 @@ const component = async props => {
 
     const onMounted = async () =>{
         //paper size
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_papersize',
             data:       {
                         default_data_value:settings_common.filter(setting=>
@@ -171,10 +169,10 @@ const component = async props => {
                         column_value:'value',
                         column_text:'display_data'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:       '/common/component/common_select.js'});
         //highlight row
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_highlight_row',
             data:       {
                         default_data_value:settings_app.filter(setting=>
@@ -193,35 +191,35 @@ const component = async props => {
                         column_value:'value',
                         column_text:'display_data'
                         },
-            methods:    {commonFFB:null},
+            methods:    null,
             path:'/common/component/common_select.js'});
 
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_papersize', props.data.user_settings.design_paper_size);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_papersize', props.data.user_settings.design_paper_size);
         
-        props.methods.COMMON_DOCUMENT.querySelector('#paper').className=props.data.user_settings.design_paper_size;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#paper').className=props.data.user_settings.design_paper_size;
 
-        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_highlight_row', props.data.user_settings.design_row_highlight);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_highlight_row', props.data.user_settings.design_row_highlight);
 
         if (Number(props.data.user_settings.design_column_weekday_checked))
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
         else
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
         if (Number(props.data.user_settings.design_column_calendartype_checked))
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
         else
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
         if (Number(props.data.user_settings.design_column_notes_checked))
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
         else
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
         if (Number(props.data.user_settings.design_column_gps_checked))
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
         else
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
         if (Number(props.data.user_settings.design_column_timezone_checked))
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
         else
-            props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
 
         props.methods.appSettingThemeThumbnailsUpdate();
     };

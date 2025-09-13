@@ -4,13 +4,13 @@
  */
 
 /**
- * @import {commonMetadata, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {common} from '../../../common_types.js'
  */
 
-/**@type{COMMON_DOCUMENT} */
+/**@type{common['COMMON_DOCUMENT']} */
 const COMMON_DOCUMENT = document;
 
- /**@type {CommonModuleCommon} */
+ /**@type {common['CommonModuleCommon']} */
 let common;
 
 /**
@@ -34,7 +34,7 @@ const appDialogueAppsShowHide = () => {
  * @name appEventClick
  * @description App event click
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventClick = event => {
@@ -105,7 +105,7 @@ const appEventClick = event => {
  * @name appEventKeyUp
  * @description App event keyup
  * @function
- * @param {CommonAppEvent} event
+ * @param {common['CommonAppEvent']} event
  * @returns {void} 
  */
 const appEventKeyUp = event => {
@@ -202,10 +202,7 @@ const appAppsGet = () => {
         data:       {
                     app_id:common.COMMON_GLOBAL.app_id
                     },
-        methods:    {
-                    commonFFB:common.commonFFB,
-                    commonMiscShowDateUpdate:common.commonMiscShowDateUpdate
-                    },
+        methods:    null,
         path:       '/common/component/common_dialogue_apps.js'});
 };
 /**
@@ -250,7 +247,7 @@ const appInit = async () => {
  * @name appCommonInit
  * @description Init common
  * @function
- * @param {CommonModuleCommon} commonLib
+ * @param {common['CommonModuleCommon']} commonLib
  * @param {Object.<string,*>} parameters 
  * @returns {Promise.<void>}
  */
@@ -266,7 +263,7 @@ const appCommonInit = async (commonLib, parameters) => {
  * @name appMetadata
  * @description App metadata for event delegataion and lifecycle events
  * @function
- * @returns {commonMetadata}
+ * @returns {common['commonMetadata']}
  */
 const appMetadata = () =>{
     return { 

@@ -3,8 +3,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle, CommonAppEvent,commonEventType,
- *          commonMapLayers, commonGeoJSONPopup, commonGeoJSONPolyline, commonMapPlace,commonComponentEvents}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -51,29 +50,20 @@ const template = props =>`
 *                      longitude:number|null,
 *                      latitude:number|null},
 *          methods:    {
-*                      COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
-*                      commonComponentRemove:CommonModuleCommon['commonComponentRemove'],
-*                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
-*                      commonMiscListKeyEvent:CommonModuleCommon['commonMiscListKeyEvent'],
-*                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
-*                      commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
-*                      commonMiscImport:CommonModuleCommon['commonMiscImport'],
-*                      commonUserLocale:CommonModuleCommon['commonUserLocale'],
-*                      commonFFB:CommonModuleCommon['commonFFB']
+*                      COMMON:common['CommonModuleCommon']
 *                      }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:{
 *                               goTo:function,
 *                               drawVectors:function
 *                              },
-*                      events:  commonComponentEvents
+*                      events:  common['commonComponentEvents'],
 *                      template:string}>}
 */
 const component = async props => {
 
-    /**@type{commonMapLayers[]} */
+    /**@type{common['commonMapLayers'][]} */
     const  MAP_LAYERS = [{
         title: 'OpenStreetMap_Mapnik',
         value: 'OpenStreetMap_Mapnik',
@@ -112,10 +102,10 @@ const component = async props => {
     const RAD = Math.PI / 180;
 
     //import components without returned lifecycle, data or methods once for high speed performance
-    const {default:common_map_tile} = await props.methods.commonMiscImport('/common/component/common_map_tile.js');
-    const {default:common_map_line} = await props.methods.commonMiscImport('/common/component/common_map_line.js');
-    const {default:common_map_popup} = await props.methods.commonMiscImport('/common/component/common_map_popup.js');
-    const {default:common_map_measure} = await props.methods.commonMiscImport('/common/component/common_map_measure.js');
+    const {default:common_map_tile} = await props.methods.COMMON.commonMiscImport('/common/component/common_map_tile.js');
+    const {default:common_map_line} = await props.methods.COMMON.commonMiscImport('/common/component/common_map_line.js');
+    const {default:common_map_popup} = await props.methods.COMMON.commonMiscImport('/common/component/common_map_popup.js');
+    const {default:common_map_measure} = await props.methods.COMMON.commonMiscImport('/common/component/common_map_measure.js');
 
     //set default layer
     let TILE_URL = MAP_LAYERS[0].url;
@@ -163,19 +153,19 @@ const component = async props => {
                                                 }
                                             },
                                 methods:    {
-                                            COMMON_DOCUMENT:props.methods.COMMON_DOCUMENT,
+                                            COMMON_DOCUMENT:props.methods.COMMON.COMMON_DOCUMENT,
                                             project:project,
                                             }});
                 tiles +=component.template;
             }
         }
-        props.methods.COMMON_DOCUMENT.querySelector('#common_map_tiles').innerHTML = tiles;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_tiles').innerHTML = tiles;
     };
     /**
      * @name drawVectors
      * @description Adds array of geoJSON type Linestring, RFC 7946 Linestring
      * @function
-     * @param {commonGeoJSONPolyline[]}vectorLinesgeoJSON
+     * @param {common['commonGeoJSONPolyline'][]}vectorLinesgeoJSON
      * @returns {Promise.<void>}
      */
     const drawVectors = async vectorLinesgeoJSON => {
@@ -209,11 +199,11 @@ const component = async props => {
                                                 }
                                             },
                                 methods:    {
-                                            COMMON_DOCUMENT:props.methods.COMMON_DOCUMENT,
+                                            COMMON:props.methods.COMMON,
                                             project:project,
                                             }})).template;
         }
-        props.methods.COMMON_DOCUMENT.querySelector('#common_map_lines').innerHTML = lines;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_lines').innerHTML = lines;
     };
     /**
      * @name updateVectors
@@ -222,7 +212,7 @@ const component = async props => {
      * @returns {void}
      */
     const updateVectors = () =>{
-        for (const line of Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('.common_map_line'))) {
+        for (const line of Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('.common_map_line'))) {
             //use saved gps to calculate new positions
             const points = JSON.parse(line.getAttribute('data-gps'))
                             .map((/**@type{[string, string]}*/[long, lat])=>{
@@ -242,7 +232,7 @@ const component = async props => {
      * @returns {HTMLElement[]}
      */
     const getPopup = (longitude, latitude) =>
-        Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('.common_map_popup'))
+        Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('.common_map_popup'))
         .filter(popup=> Number(popup.querySelectorAll('.common_map_popup_sub_title_gps')[0].getAttribute('data-longitude'))==longitude && 
                         Number(popup.querySelectorAll('.common_map_popup_sub_title_gps')[0].getAttribute('data-latitude'))==latitude);
     /**
@@ -266,7 +256,7 @@ const component = async props => {
         if (popup)
             calc(popup);
         else
-            for (const popupLoop of Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('.common_map_popup'))) {
+            for (const popupLoop of Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('.common_map_popup'))) {
                 calc(popupLoop);
             }
     };
@@ -274,12 +264,12 @@ const component = async props => {
      * @name addPopup
      * @description Add geoJSON type Point with a popup and geolocation data for given lat, long,x and y
      * @function
-     * @param {{place:commonMapPlace, x:number, y:number}} parameters
+     * @param {{place:common['commonMapPlace'], x:number, y:number}} parameters
      * @returns {Promise.<void>}
      */
     const addPopup = async parameters =>{
         const id = 'common_map_popups_point_' + Date.now();
-        /**@type{commonGeoJSONPopup} */
+        /**@type{common['commonGeoJSONPopup']} */
         const geoJSON = {   id:  id,
             type:'Feature',
             properties:{x:parameters.x, 
@@ -296,25 +286,25 @@ const component = async props => {
                     }
             };
         //direct component execution for best performance
-        props.methods.COMMON_DOCUMENT.querySelector('#common_map_popups').innerHTML += (await common_map_popup({
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_popups').innerHTML += (await common_map_popup({
                                         data:   {
                                                 commonMountdiv:'',
                                                 geoJSON:geoJSON,
                                                 },
                                         methods:{
-                                                COMMON_DOCUMENT:props.methods.COMMON_DOCUMENT
+                                                COMMON:props.methods.COMMON
                                                 }})).template;
-        const popup = props.methods.COMMON_DOCUMENT.querySelector(`#${id}`);
+        const popup = props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${id}`);
         updatePopups(popup);
     };
     /**
      * @description get place for gps
      * @param {{longitude:number,
      *          latitude:number}} parameters
-     * @returns {Promise.<commonMapPlace>}
+     * @returns {Promise.<common['commonMapPlace']>}
      */
     const getPlace = async parameters =>
-        await props.methods.commonFFB({
+        await props.methods.COMMON.commonFFB({
             path:'/geolocation/place', 
             query:`longitude=${parameters.longitude}&latitude=${parameters.latitude}`, 
             method:'GET', 
@@ -329,7 +319,7 @@ const component = async props => {
      */
     const addPopupPos =  async (x, y) =>{
         const gps = getGPS(x,y);
-        const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
+        const rect = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
         await addPopup({place:await getPlace({longitude:gps.long, latitude:gps.lat}), x:x- rect.left, y:y-rect.top});
     };
     
@@ -384,7 +374,7 @@ const component = async props => {
      */
     const getGPS = (x,y) =>{
         // Mouse position relative to the map container
-        const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
+        const rect = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
         const mouseX = x - rect.left;
         const mouseY = y - rect.top;
     
@@ -410,14 +400,14 @@ const component = async props => {
         const miles = (meters / 1609.344).toFixed(2);
 
         //direct component execution for best performance
-        props.methods.COMMON_DOCUMENT.querySelector('#common_map_measure').innerHTML =
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_measure').innerHTML =
                 (await common_map_measure({  data:   {
                                                     commonMountdiv:'',
                                                     km: km,
                                                     miles:miles,
                                                     },
                                             methods:{
-                                                    COMMON_DOCUMENT:props.methods.COMMON_DOCUMENT
+                                                    COMMON:props.methods.COMMON
                                                     }})).template;
     };
 
@@ -452,7 +442,7 @@ const component = async props => {
         if (newZ === zoom_level) return;
     
         // Mouse position relative to map
-        const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
+        const rect = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
 
         const mouseX =  parameters.control?
                             rect.left + (rect.width/2):
@@ -505,9 +495,9 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const goTo = async parameters =>{
-        /** @type{commonMapPlace}*/
+        /** @type{common['commonMapPlace']}*/
         const place =  parameters.ip?
-                            await props.methods.commonFFB({ path:'/geolocation/ip', 
+                            await props.methods.COMMON.commonFFB({ path:'/geolocation/ip', 
                                                             query:`ip=${parameters.ip}`, 
                                                             method:'GET', 
                                                             authorization_type:'APP_ID'})
@@ -523,7 +513,7 @@ const component = async props => {
         if (longitude && latitude){
             setZoom(ZOOM_LEVEL_GOTO);
             const [wx, wy] = project(+longitude, +latitude);
-            const rect = props.methods.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
+            const rect = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
             offsetX = ((window.innerWidth-rect.left) / 2) - wx;
             offsetY = ((window.innerHeight-rect.top) / 2) - wy;
             draw();
@@ -535,12 +525,12 @@ const component = async props => {
      * @name events
      * @descption Events for map
      * @function
-     * @param {commonEventType} event_type
-     * @param {CommonAppEvent} event
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{
-        const event_target_id = props.methods.commonMiscElementId(event.target);
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
         switch (event_type){
             case 'click':{
                 switch (true){
@@ -555,16 +545,16 @@ const component = async props => {
                     case event_target_id=='common_map_control_layer':
                     case event_target_id=='common_map_control_search':{
                         const expand_type = event_target_id.split('_')[3];
-                        const expand = props.methods.COMMON_DOCUMENT
+                        const expand = props.methods.COMMON.COMMON_DOCUMENT
                                         .querySelector(`#common_map_control_expand_${expand_type}`)
                                         .innerHTML =='';
-                        if (props.methods.COMMON_DOCUMENT.querySelector('#common_map_control_expand_search').innerHTML !='' ||
-                            props.methods.COMMON_DOCUMENT.querySelector('#common_map_control_expand_layer').innerHTML !=''){
-                            props.methods.commonComponentRemove('common_map_control_expand_search');
-                            props.methods.commonComponentRemove('common_map_control_expand_layer');
+                        if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_control_expand_search').innerHTML !='' ||
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_control_expand_layer').innerHTML !=''){
+                            props.methods.COMMON.commonComponentRemove('common_map_control_expand_search');
+                            props.methods.COMMON.commonComponentRemove('common_map_control_expand_layer');
                         }
                         if (expand)
-                            props.methods.commonComponentRender({
+                            props.methods.COMMON.commonComponentRender({
                                 mountDiv:   `common_map_control_expand_${expand_type}`,
                                 data:       {  
                                             data_app_id:props.data.data_app_id,
@@ -573,24 +563,17 @@ const component = async props => {
                                             },
                                 methods:    {
                                             goTo:goTo,
-                                            setLayer:setLayer,
-                                            commonWindowFromBase64:props.methods.commonWindowFromBase64,
-                                            commonMiscListKeyEvent:props.methods.commonMiscListKeyEvent,
-                                            commonUserLocale:props.methods.commonUserLocale,
-                                            commonFFB:props.methods.commonFFB,
-                                            commonMiscElementId:props.methods.commonMiscElementId,
-                                            commonMiscElementRow:props.methods.commonMiscElementRow,
-                                            commonComponentRender:props.methods.commonComponentRender
+                                            setLayer:setLayer
                                             },
                                 path:       '/common/component/common_map_control_expand.js'});    
                         
                         break;
                     }
                     case event_target_id=='common_map_control_fullscreen':{
-                        if (props.methods.COMMON_DOCUMENT.fullscreenElement)
-                            props.methods.COMMON_DOCUMENT.exitFullscreen();
+                        if (props.methods.COMMON.COMMON_DOCUMENT.fullscreenElement)
+                            props.methods.COMMON.COMMON_DOCUMENT.exitFullscreen();
                         else
-                            props.methods.COMMON_DOCUMENT.querySelector('#common_map').requestFullscreen();
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').requestFullscreen();
                         break;
                     }
                     case event_target_id=='common_map_control_my_location':{
@@ -606,14 +589,14 @@ const component = async props => {
                             event.target.classList.remove('common_map_control_active'):
                                 event.target.classList.add('common_map_control_active');
                         //add or remove class on map to change cursor
-                        props.methods.COMMON_DOCUMENT.querySelector('#common_map').classList.contains('common_map_control_active')?
-                            props.methods.COMMON_DOCUMENT.querySelector('#common_map').classList.remove('common_map_control_active'):
-                                props.methods.COMMON_DOCUMENT.querySelector('#common_map').classList.add('common_map_control_active');
+                        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').classList.contains('common_map_control_active')?
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').classList.remove('common_map_control_active'):
+                                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').classList.add('common_map_control_active');
                         break;
                     }
                     case event.target.classList.contains('common_map_tile'):
                     case event.target.classList.contains('common_map_line'):{
-                        props.methods.COMMON_DOCUMENT.querySelector('#common_map_control_query').classList.contains('common_map_control_active')?
+                        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_control_query').classList.contains('common_map_control_active')?
                             await addPopupPos(event.clientX, event.clientY):
                                 null;
                         break;
@@ -652,8 +635,8 @@ const component = async props => {
             }
             case 'mousemove':{
                 if (event_target_id.startsWith('common_map')){
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.left = `${event.clientX}px`;
-                    props.methods.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.top = `${event.clientY}px`;
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.left = `${event.clientX}px`;
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.top = `${event.clientY}px`;
                 }
                 switch (true){
                     case event_target_id=='common_map_measure':

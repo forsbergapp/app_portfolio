@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -22,16 +22,15 @@ const template = () =>` <div id='dialogue_documents' class='dialogue'>
  *                      logo:string,
  *                      commonMountdiv:string
  *                      },
- *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonMiscResourceFetch:CommonModuleCommon['commonMiscResourceFetch']}}} props 
- * @returns {Promise.<{ lifecycle:  CommonComponentLifecycle, 
+ *          methods:    {COMMON:common['CommonModuleCommon']}}} props 
+ * @returns {Promise.<{ lifecycle:  common['CommonComponentLifecycle'], 
  *                      data:       null, 
  *                      methods:    null,
  *                      template:   string}>}
  */
 const component = async props => {
     const onMounted = async () =>
-        props.methods.COMMON_DOCUMENT.querySelector('#app_logo').style.backgroundImage = `url(${props.data.logo})`;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_logo').style.backgroundImage = `url(${props.data.logo})`;
     return {
         lifecycle:  {onMounted:onMounted},
         data:       null,

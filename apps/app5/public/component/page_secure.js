@@ -3,7 +3,7 @@
  * @module apps/app5/component/page_secure
  */
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 /**
  * @name template
@@ -44,18 +44,16 @@ const template = props => ` <div id='app_page_secure'>
  *                      timezone:string,
  *                      locale:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      button_post:function,
- *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                      commonFFB:CommonModuleCommon['commonFFB']
+ *                      COMMON:common['CommonModuleCommon'],
+ *                      button_post:function
  *                      }}} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    const customer = await props.methods.commonFFB({path:'/app-common-module/CUSTOMER_GET', 
+    const customer = await props.methods.COMMON.commonFFB({path:'/app-common-module/CUSTOMER_GET', 
                                                     method:'POST', 
                                                     authorization_type:'APP_ACCESS', 
                                                     body:{  type:'FUNCTION',
@@ -66,9 +64,9 @@ const component = async props => {
     const onMounted = async () =>{
         
         if (customer.rows.length>0)
-            props.methods.COMMON_DOCUMENT.querySelector('#tab1').click();
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#tab1').click();
         else{
-            props.methods.commonComponentRender({
+            props.methods.COMMON.commonComponentRender({
                 mountDiv:   'app_page_secure_tab_content',
                 data:       {
                             app_id:props.data.app_id,
@@ -98,7 +96,6 @@ const component = async props => {
                             button_delete: false
                             },
                 methods:    {
-                           commonFFB:props.methods.commonFFB,
                             button_print:null,
                             button_update:null,
                             button_post:props.methods.button_post,

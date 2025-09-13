@@ -2,19 +2,17 @@
  * @module apps/common/common
  */
 
-/** @import {   COMMON_WINDOW, COMMON_DOCUMENT, CommonGlobal,
- *              CommonAppEvent,commonEventType, CommonRESTAPIMethod,CommonRESTAPIAuthorizationType,CommonComponentResult,
- *              CommonModuleVue,CommonModuleReact,CommonModuleReactDOM,
- *              commonAppInit, commonMetadata, CommonModuleCommon} from '../../../common_types.js' 
+/** 
+ * @import { common} from '../../../common_types.js' 
  */
 
-/**@type{COMMON_WINDOW} */
+/**@type{common['COMMON_WINDOW']} */
 const COMMON_WINDOW = window;
 
-/**@type{COMMON_DOCUMENT} */
+/**@type{common['COMMON_DOCUMENT']} */
 const COMMON_DOCUMENT = document;
 
-/**@type{CommonGlobal} */
+/**@type{common['CommonGlobal']} */
 const COMMON_GLOBAL = {
     app_id:0,
     app_logo:null,
@@ -434,7 +432,7 @@ const commonMiscInputControl = (dialogue, validate_items) =>{
  * @name commonMiscListKeyEvent
  * @description List key event
  * @function
- * @param {{event:CommonAppEvent,
+ * @param {{event:common['CommonAppEvent'],
  *          event_function:function,
  *          event_parameters:*,
  *          rows_element:string,
@@ -1178,9 +1176,9 @@ const commonComponentRender = async parameters => {
     if (parameters.mountDiv)
         COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`).innerHTML = '<div class=\'css_spinner\'></div>';
 
-    /**@type{CommonComponentResult}*/
+    /**@type{common['CommonComponentResult']}*/
     const component = await ComponentCreate({   data:       {...parameters.data,       ...{commonMountdiv:parameters.mountDiv}},
-                                                methods:    {...parameters.methods,    ...{COMMON_DOCUMENT:COMMON_DOCUMENT}}})
+                                                methods:    {...parameters.methods,    ...{ COMMON:commonGet()}}})
                                                 .catch((/**@type{Error}*/error)=>{
                                                     parameters.mountDiv?commonComponentRemove(parameters.mountDiv, true):null;
                                                     commonException(COMMON_GLOBAL.app_function_exception, error);
@@ -1377,7 +1375,6 @@ const commonMessageShow = async (message_type, function_event, text_class=null, 
                         message:message
                         },
         methods:        {
-                        commonComponentRemove:commonComponentRemove,
                         function_event:function_event
                         },
         path:           '/common/component/common_dialogue_message.js'});
@@ -1412,7 +1409,7 @@ const commonUserSessionClear = () => {
  * @name commonLovEvent
  * @description LOV event
  * @function
- * @param {CommonAppEvent} event
+ * @param {common['CommonAppEvent']} event
  * @param {string} lov
  * @returns {void}
  */
@@ -1425,7 +1422,7 @@ const commonLovEvent = (event, lov) => {
      *  common_input_value = data-value
      * app data row for users should not show technical details
      *  common_input_value = data-value
-     * @param {CommonAppEvent} event_lov 
+     * @param {common['CommonAppEvent']} event_lov 
      */
     const commonLovEvent_function = event_lov => {
         //setting values from LOV
@@ -1456,13 +1453,13 @@ const commonLovEvent = (event, lov) => {
  * @name commonLovAction
  * @description Lov action fetches id and value, updates values and manages data-defaultValue
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @param {string} lov 
  * @param {string|null} old_value
  * @param {string} path 
  * @param {string} query 
- * @param {CommonRESTAPIMethod} method 
- * @param {CommonRESTAPIAuthorizationType} authorization_type 
+ * @param {common['CommonRESTAPIMethod']} method 
+ * @param {common['CommonRESTAPIAuthorizationType']} authorization_type 
  * @param {{}|null} json_data 
  * @returns {void}
  */
@@ -2068,7 +2065,7 @@ const commonUserSignup = () => {
 const commonUserFunction = function_name => {
     return new Promise((resolve, reject)=>{
         const user_id_profile = Number(COMMON_DOCUMENT.querySelector('#common_profile_id').textContent);
-        /**@type{CommonRESTAPIMethod} */
+        /**@type{common['CommonRESTAPIMethod']} */
         let method;
         let path;
         let json_data;
@@ -2348,8 +2345,8 @@ const common_FFBSSE = async parameters =>{
  * @function
  * @param {{path:string,
  *          query?:string|null,
- *          method:CommonRESTAPIMethod,
- *          authorization_type:CommonRESTAPIAuthorizationType,
+ *          method:common['CommonRESTAPIMethod'],
+ *          authorization_type:common['CommonRESTAPIAuthorizationType'],
  *          username?:string,
  *          password?:string,
  *          body?:*,
@@ -2665,8 +2662,8 @@ const commonTextEditingDisabled = () =>COMMON_GLOBAL.app_text_edit=='0';
  * @description Performs action for select event
  * @function
  * @param {string} event_target_id
- * @param { CommonAppEvent['target']|
- *          CommonAppEvent['target']['parentNode']|null} target
+ * @param { common['CommonAppEvent']['target']|
+ *          common['CommonAppEvent']['target']['parentNode']|null} target
  * @returns {Promise.<void>}
  */
 const commonEventSelectAction = async (event_target_id, target) =>{
@@ -2733,13 +2730,13 @@ const commonEventSelectAction = async (event_target_id, target) =>{
  * @description Central event delegation on app root
  *              order of events: 1 common, 2 module, 3 app 
  * @function
- * @param {commonEventType} event_type 
- * @param {CommonAppEvent|null} event 
+ * @param {common['commonEventType']} event_type 
+ * @param {common['CommonAppEvent']|null} event 
  * @returns {Promise.<void>}
  */
 const commonEvent = async (event_type,event=null) =>{
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{common['CommonAppEvent']}*/event) => {
             commonEvent(event_type, event);
         });
     }
@@ -2893,19 +2890,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 event.target.parentNode.style.display = 'none';
                                 await commonEventSelectAction(event_target_id, event.target);
                                 break;
-                            }
-                            //dialogue message
-                            case 'common_message_close':{
-                                if (COMMON_DOCUMENT.querySelector('#common_message_close')['data-function'])
-                                    COMMON_DOCUMENT.querySelector('#common_message_close')['data-function']();
-                                commonComponentRemove('common_dialogue_message',true);
-                                break;
-                            }
-                            case 'common_message_cancel':{
-                                commonComponentRemove('common_dialogue_message',true);
-                                break;
-                            }
-                            
+                            }                            
                             case 'common_profile_search_icon':{
                                 COMMON_DOCUMENT.querySelector('#common_profile_search_input').focus();
                                 COMMON_DOCUMENT.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
@@ -3673,7 +3658,7 @@ const commonEvent = async (event_type,event=null) =>{
  * @name commonEventCopyPasteCutDisable
  * @description Disable copy cut paste
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
  const commonEventCopyPasteCutDisable = event => {
@@ -3694,7 +3679,7 @@ const commonEvent = async (event_type,event=null) =>{
  * @name commonEventInputDisable
  * @description Disable common input textediting
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const commonEventInputDisable = event => {
@@ -3727,7 +3712,7 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
     switch (framework){
         case 2:{
             //Vue
-            /**@type {CommonModuleVue} */
+            /**@type {common['CommonModuleVue']} */
             const Vue = await commonMiscImport(commonMiscImportmap('Vue'));
 
             //Use tempmount div to be able to return pure HTML without extra events
@@ -3760,9 +3745,9 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
         }
         case 3:{
             //React
-            /**@type {CommonModuleReact} */
+            /**@type {common['CommonModuleReact']} */
             const React = await commonMiscImport(commonMiscImportmap('React')).then(module=>module.React);
-            /**@type {CommonModuleReactDOM} */
+            /**@type {common['CommonModuleReactDOM']} */
             const ReactDOM = await commonMiscImport(commonMiscImportmap('ReactDOM')).then(module=>module.ReactDOM);
 
             try {
@@ -4066,7 +4051,7 @@ const custom_framework = () => {
 const commonMountApp = async (app_id) =>{   
     
     COMMON_GLOBAL.app_id =          app_id;
-    /**@type{commonAppInit} */
+    /**@type{common['commonAppInit']} */
     const CommonAppInit = await commonFFB({ path:`/app-mount/${app_id}`, 
                                             method:'GET', 
                                             authorization_type:'APP_ID'})
@@ -4091,7 +4076,7 @@ const commonMountApp = async (app_id) =>{
 
     const {appMetadata, default:AppInit} = await commonMiscImport(CommonAppInit.App.js, CommonAppInit.App.js_content);
     
-    /**@type{commonMetadata} */
+    /**@type{common['commonMetadata']} */
     const appdata = appMetadata();
     //add metadata using tree shaking pattern
     COMMON_GLOBAL.app_metadata.events.change = appdata.events.change;
@@ -4137,11 +4122,12 @@ const commonMountApp = async (app_id) =>{
  * @name commonGet
  * @description Returns all functions and globals
  * @function
- * @returns {CommonModuleCommon}
+ * @returns {common['CommonModuleCommon']}
  */
 const commonGet = () =>{
     return {
         COMMON_GLOBAL:COMMON_GLOBAL, 
+        COMMON_DOCUMENT:COMMON_DOCUMENT,
         /* MISC */
         commonMiscElementId:commonMiscElementId, 
         commonMiscElementRow:commonMiscElementRow, 
@@ -4312,6 +4298,7 @@ const commonInit = async parameters => {
 };
 export{/* GLOBALS*/
        COMMON_GLOBAL, 
+       COMMON_DOCUMENT,
        /* MISC */
        commonMiscElementId, 
        commonMiscElementRow, 

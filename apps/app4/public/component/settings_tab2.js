@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  * @import {appComponentSettingUpdate}  from '../js/app.js'
  * @import {APP_user_setting_record}  from '../js/types.js'
  */
@@ -25,23 +25,9 @@ const template = () => `<div id='mapid'>
  *                      common_app_id:number,
  *                      user_settings:APP_user_setting_record
  *                      },
- *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      appComponentSettingUpdate:appComponentSettingUpdate,
- *                      commonMiscListKeyEvent:CommonModuleCommon['commonMiscListKeyEvent'],
- *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
- *                      commonMiscElementId:CommonModuleCommon['commonMiscElementId'],
- *                      commonMiscImport:CommonModuleCommon['commonMiscImport'],
- *                      commonComponentRender:CommonModuleCommon['commonComponentRender'], 
- *                      commonComponentRemove:CommonModuleCommon['commonComponentRemove'], 
- *                      commonFFB:CommonModuleCommon['commonFFB'],
- *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
- *                      commonUserLocale:CommonModuleCommon['commonUserLocale']}}} props
- * @param {{COMMON_DOCUMENT:COMMON_DOCUMENT,
- *          commonMountdiv:string,
- *          app_id:number,
- *          user_settings:import('../js//types.js').APP_user_setting_record,
- *          }} props 
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *          methods:    {COMMON:common['CommonModuleCommon'],
+ *                      appComponentSettingUpdate:appComponentSettingUpdate}}} props
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -51,24 +37,14 @@ const component = async props => {
     const onMounted = async () =>{
 
         //mount the map
-        await props.methods.commonComponentRender({
+        await props.methods.COMMON.commonComponentRender({
             mountDiv:   'mapid',
             data:       { 
                         data_app_id :props.data.common_app_id,
                         longitude:props.data.user_settings.gps_long_text?.toString()??'',
                         latitude:props.data.user_settings.gps_lat_text?.toString()??''
                         },
-            methods:    {
-                        commonComponentRender:props.methods.commonComponentRender,
-                        commonComponentRemove:props.methods.commonComponentRemove,
-                        commonWindowFromBase64:props.methods.commonWindowFromBase64,
-                        commonMiscListKeyEvent:props.methods.commonMiscListKeyEvent,
-                        commonMiscElementRow:props.methods.commonMiscElementRow,
-                        commonMiscElementId:props.methods.commonMiscElementId,
-                        commonMiscImport:props.methods.commonMiscImport,
-                        commonUserLocale:props.methods.commonUserLocale,
-                        commonFFB:props.methods.commonFFB
-                        },
+            methods:    null,
             path:       '/common/component/common_map.js'});
         props.methods.appComponentSettingUpdate('GPS', 'CITY');
     };

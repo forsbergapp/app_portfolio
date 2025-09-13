@@ -4,7 +4,7 @@
  * @module apps/common/component/common_document
  */
 /**
- * @import {CommonModuleCommon, commonDocumentType, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -15,7 +15,7 @@
  *          app_copyright:string,
  *          app_name:string,
  *          document :string,
- *          documentType:commonDocumentType,
+ *          documentType:common['commonDocumentType'],
  *          document_href:string
  *          }} props
  * @returns {string}
@@ -45,14 +45,12 @@ const template = props =>`  <div class='common_document_header' style='${props.a
  *                      app_name:string,
  *                      href:string,
  *                      title:string,
- *                      documentType:commonDocumentType
+ *                      documentType:common['commonDocumentType']
  *                      },
  *          methods:    {
- *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonMiscResourceFetch:CommonModuleCommon['commonMiscResourceFetch'],
- *                       commonFFB:CommonModuleCommon['commonFFB']
+ *                       COMMON:common['CommonModuleCommon']
  *                      }}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
@@ -62,18 +60,18 @@ const component = async props => {
     const onMounted = async () =>{
         if (props.data.href.split('#')[1]){
             //set focus on highlighted row
-            Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`))[0].setAttribute('tabindex',0);
-            Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`))[0].focus();
+            Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`))[0].setAttribute('tabindex',0);
+            Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`))[0].focus();
         }
-        for (const image_div of props.methods.COMMON_DOCUMENT.querySelectorAll(`#${props.data.commonMountdiv} .common_markdown_image`)){
+        for (const image_div of props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`#${props.data.commonMountdiv} .common_markdown_image`)){
             (image_div.getAttribute('data-url_small')==''||image_div.getAttribute('data-url_small')==null)?
                 null:
-                    props.methods.commonMiscResourceFetch(image_div.getAttribute('data-url_small')??'', image_div,'image/webp');
+                    props.methods.COMMON.commonMiscResourceFetch(image_div.getAttribute('data-url_small')??'', image_div,'image/webp');
             (image_div.getAttribute('data-url')==''||image_div.getAttribute('data-url')==null)?
                 null:
                     //set attribute that is read by image click event
                     image_div.setAttribute('data-url_link', 
-                                            await props.methods.commonMiscResourceFetch(image_div.getAttribute('data-url')??'', null,'image/webp'));
+                                            await props.methods.COMMON.commonMiscResourceFetch(image_div.getAttribute('data-url')??'', null,'image/webp'));
         }
 
     };
@@ -84,7 +82,7 @@ const component = async props => {
         template:   template({app_logo:props.data.app_logo,
                       app_copyright:props.data.app_copyright,
                       app_name:props.data.app_name,
-                      document:await props.methods.commonFFB({  path:'/app-common-module/COMMON_DOC', 
+                      document:await props.methods.COMMON.commonFFB({  path:'/app-common-module/COMMON_DOC', 
                                                                 method:'POST', 
                                                                 authorization_type:'APP_ID',
                                                                 body:{  type:'FUNCTION',

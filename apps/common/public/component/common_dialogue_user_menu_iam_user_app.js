@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonAppDataRecord, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -46,13 +46,9 @@ const template = () =>` <div id='common_dialogue_user_menu_app_theme'></div>
 *                      user_direction:string,
 *                      user_arabic_script:string},
 *          methods:    {
-*                      COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
-*                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
-*                      commonFFB:CommonModuleCommon['commonFFB'],
-*                      commonComponentRender:CommonModuleCommon['commonComponentRender']
+*                      COMMON:common['CommonModuleCommon']
 *                      }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:null,
 *                      template:string}>}
@@ -60,26 +56,26 @@ const template = () =>` <div id='common_dialogue_user_menu_app_theme'></div>
 const component = async props => {
 
     //fetch all settings for common app id
-   /**@type{CommonAppDataRecord[]} */
-   const settings = props.data.admin_only == 1?[]:await props.methods.commonFFB({  path:'/server-db/appdata/', 
+   /**@type{common['CommonAppDataRecord'][]} */
+   const settings = props.data.admin_only == 1?[]:await props.methods.COMMON.commonFFB({  path:'/server-db/appdata/', 
                                                                                    query:`IAM_data_app_id=${props.data.common_app_id}`, 
                                                                                    method:'GET', 
                                                                                    authorization_type:'APP_ID'})
-                                                               .then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+                                                               .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
 
    /**@type{{locale:string, text:string}[]} */
-   const locales = await props.methods.commonFFB({
+   const locales = await props.methods.COMMON.commonFFB({
                                                    path:'/app-common-module/COMMON_LOCALE', 
                                                    query:`locale=${props.data.user_locale}`, 
                                                    method:'POST', authorization_type:'APP_ID',
                                                    body:{type:'FUNCTION',IAM_data_app_id : props.data.common_app_id}
                                                })
-                                               .then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+                                               .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
    const onMounted = async () =>{                                                               
        
        //mount select
        //Locale
-       await props.methods.commonComponentRender({
+       await props.methods.COMMON.commonComponentRender({
            mountDiv:   'common_dialogue_user_menu_iam_user_app_locale_select', 
            data:       {
                        default_data_value:props.data.user_locale,
@@ -92,11 +88,11 @@ const component = async props => {
                        column_value:'locale',
                        column_text:'text'
                        },
-           methods:    {commonFFB:props.methods.commonFFB},
+           methods:    null,
            path:       '/common/component/common_select.js'});
        if (props.data.admin_only!=1){
            //Timezone
-           await props.methods.commonComponentRender({
+           await props.methods.COMMON.commonComponentRender({
                mountDiv:  'common_dialogue_user_menu_iam_user_app_timezone_select', 
                data:       {
                            default_data_value:props.data.user_timezone,
@@ -109,10 +105,10 @@ const component = async props => {
                            column_value:'value',
                            column_text:'display_data'
                            },
-               methods:    {commonFFB:props.methods.commonFFB},
+               methods:    null,
                path:'/common/component/common_select.js'});
            //Direction with default ' '
-           await props.methods.commonComponentRender({
+           await props.methods.COMMON.commonComponentRender({
                mountDiv:   'common_dialogue_user_menu_iam_user_app_direction_select', 
                data:       {
                            default_data_value:props.data.user_direction,
@@ -125,10 +121,10 @@ const component = async props => {
                            column_value:'value',
                            column_text:'display_data'
                            },
-               methods:    {commonFFB:props.methods.commonFFB},
+               methods:    null,
                path:       '/common/component/common_select.js'});   
            //Arabic script with default ' '
-           await props.methods.commonComponentRender({
+           await props.methods.COMMON.commonComponentRender({
                mountDiv:   'common_dialogue_user_menu_iam_user_app_arabic_script_select', 
                data:       {
                            default_data_value:props.data.user_arabic_script,
@@ -141,15 +137,15 @@ const component = async props => {
                            column_value:'value',
                            column_text:'display_data'
                            },
-               methods:    {commonFFB:props.methods.commonFFB},
+               methods:    null,
                path:       '/common/component/common_select.js'});
        }
        //set current value on all the selects
-       props.methods.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_locale_select', props.data.user_locale);
+       props.methods.COMMON.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_locale_select', props.data.user_locale);
        if ((props.data.admin_only == 1)==false){
-           props.methods.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_timezone_select', props.data.user_timezone);
-           props.methods.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_direction_select', props.data.user_direction ?? '');
-           props.methods.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_arabic_script_select', props.data.user_arabic_script ?? '');
+           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_timezone_select', props.data.user_timezone);
+           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_direction_select', props.data.user_direction ?? '');
+           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_arabic_script_select', props.data.user_arabic_script ?? '');
        }
        
    };

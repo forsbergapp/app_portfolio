@@ -3,13 +3,13 @@
  * @module apps/app1/app
  */
 /**
- * @import {commonMetadata, CommonAppEvent, CommonRESTAPIMethod, CommonModuleCommon, COMMON_DOCUMENT}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
-/**@type{COMMON_DOCUMENT} */
+/**@type{common['COMMON_DOCUMENT']} */
 const COMMON_DOCUMENT = document;
 
-/**@type{CommonModuleCommon}*/
+/**@type{common['CommonModuleCommon']}*/
 let common;
 /**
  * App globals
@@ -82,10 +82,7 @@ const appSecureMenuShow = menu => {
         case 1:{
             common.commonComponentRender({mountDiv:   'secure_menu_content',
                                     data:       null,
-                                    methods:    {
-                                                commonComponentRender:common.commonComponentRender, 
-                                                commonFFB:common.commonFFB
-                                                },
+                                    methods:    null,
                                     path:       '/component/menu_start.js'})
             .then(()=>appSecureMenuStartChartShow());
             
@@ -106,7 +103,7 @@ const appSecureMenuShow = menu => {
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
-                methods:    {commonFFB:common.commonFFB},
+                methods:    null,
                 path:       '/component/menu_apps.js'});
             break;    
         }
@@ -123,22 +120,7 @@ const appSecureMenuShow = menu => {
                             client_longitude:common.COMMON_GLOBAL.client_longitude,
                             client_place:common.COMMON_GLOBAL.client_place
                             },
-                methods:    {
-                            commonMiscElementRow:common.commonMiscElementRow,
-                            commonMiscElementId:common.commonMiscElementId,
-                            commonMiscInputControl:common.commonMiscInputControl,
-                            commonComponentRender:common.commonComponentRender,
-                            commonComponentRemove:common.commonComponentRemove,
-                            commonWindowFromBase64:common.commonWindowFromBase64,
-                            commonMiscListKeyEvent:common.commonMiscListKeyEvent,
-                            commonWindowUserAgentPlatform:common.commonWindowUserAgentPlatform,
-                            commonMiscRoundOff:common.commonMiscRoundOff,
-                            commonMiscImport:common.commonMiscImport,
-                            commonLovClose:common.commonLovClose,
-                            commonLovShow:common.commonLovShow,
-                            commonUserLocale:common.commonUserLocale,
-                            commonFFB:common.commonFFB
-                            },
+                methods:    null,
                 path:       '/component/menu_monitor.js'})
             .then(result=>{
                 APP_SECURE_GLOBAL.component.MENU_MONITOR  = result.methods;
@@ -151,7 +133,7 @@ const appSecureMenuShow = menu => {
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
-                methods:    {commonFFB:common.commonFFB},
+                methods:    null,
                 path:       '/component/menu_config.js'});
             break;
         }
@@ -169,11 +151,7 @@ const appSecureMenuShow = menu => {
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
-                methods:    {
-                            commonMiscSecondsToTime:common.commonMiscSecondsToTime,
-                            commonMiscRoundOff:common.commonMiscRoundOff,
-                            commonFFB:common.commonFFB
-                            },
+                methods:    null,
                 path:       '/component/menu_db_info.js'});
             break;
         }
@@ -182,11 +160,7 @@ const appSecureMenuShow = menu => {
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
-                methods:    {
-                            commonComponentRender:common.commonComponentRender,
-                            commonFFB:common.commonFFB,
-                            commonMiscRoundOff:common.commonMiscRoundOff
-                            },
+                methods:    null,
                 path:       '/component/menu_report.js'})
                 .then(result=>{
                     APP_SECURE_GLOBAL.component.MENU_REPORT  = result.methods;
@@ -198,10 +172,7 @@ const appSecureMenuShow = menu => {
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
-                methods:    {
-                            commonMiscSecondsToTime:common.commonMiscSecondsToTime,
-                            commonFFB:common.commonFFB
-                            },
+                methods:    null,
                 path:       '/component/menu_server.js'});
             break;
         }
@@ -217,11 +188,7 @@ const appSecureMenuStartChartShow = async () => {
     await common.commonComponentRender({
         mountDiv:   'menu_start_graphBox',
         data:       null,
-        methods:    {
-                    commonComponentRender:common.commonComponentRender,
-                    commonWindowFromBase64:common.commonWindowFromBase64,
-                    commonFFB:common.commonFFB
-                    },
+        methods:    null,
         path:       '/component/menu_start_chart.js'});
 };
 /**
@@ -287,10 +254,7 @@ const appSecureDialogueSendBroadcastShow = async (dialogue_type, client_id=null)
     common.commonComponentRender({
         mountDiv:       'dialogue_send_broadcast',
         data:           null,
-        methods:        {
-                        commonComponentRender:common.commonComponentRender,
-                        commonFFB:common.commonFFB
-                        },
+        methods:        null,
         path:           '/component/dialogue_send_broadcast.js'})
     .then(()=>{
         switch (dialogue_type){
@@ -390,7 +354,7 @@ const appSecureMenuUsers = (sort='username', order_by='asc') => {
                     sort:sort,
                     order_by:order_by
                     },
-        methods:    {commonFFB:common.commonFFB},
+        methods:    null,
         path:       '/component/menu_users_list.js'});
  
 };
@@ -536,7 +500,7 @@ const appSecureCommonRecordUpdate = async ( table,
                                             resource_id,
                                             data) => {
     let path = '';
-    /**@type{CommonRESTAPIMethod} */
+    /**@type{common['CommonRESTAPIMethod']} */
     let method;
     switch (table){
         case 'user_account':{
@@ -572,7 +536,7 @@ const appSecureCommonRecordUpdate = async ( table,
  * @param {string} id 
  * @param {boolean|null} db_icon 
  * @param {string} path 
- * @param {CommonRESTAPIMethod} method 
+ * @param {common['CommonRESTAPIMethod']} method 
  * @param {{demo_password?:string}|null} data 
  * @returns {void}
  */
@@ -628,7 +592,7 @@ const appSecureMenuInstallationDemoUninstall = () =>{
  * @description App events
  * @function
  * @param {string} event_type 
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @param {string} event_target_id 
  * @param {HTMLElement|null} event_list_title 
  * @returns {void}
@@ -706,7 +670,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                                     app_id_data:parseInt(common.commonMiscElementRow(APP_SECURE_GLOBAL.previous_row).getAttribute('data-app_id') ?? ''),
                                     detail:event_target_id,
                                     },
-                        methods:    {commonFFB:common.commonFFB},
+                        methods:    null,
                         path:       '/component/menu_apps_detail.js'});
                     break;
                 }
@@ -814,7 +778,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                         common.commonComponentRender({
                             mountDiv:   'menu_users_iam_app_access',
                             data:       {iam_user_id:parseInt(common.commonMiscElementRow(event.target).getAttribute('data-iam_user_id') ?? '')},
-                            methods:    {commonFFB:common.commonFFB},
+                            methods:    null,
                             path:       '/component/menu_users_iam_app_access.js'});
                     }
                     break;
@@ -930,7 +894,7 @@ const appLogin = async () => {
  * @name appEventClick
  * @description App event click
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventClick = event => {
@@ -973,8 +937,6 @@ const appEventClick = event => {
                                 {mountDiv:  'common_dialogue_user_menu_app_theme',
                                 data:       null,
                                 methods:    {
-                                            commonMiscThemeDefaultList:common.commonMiscThemeDefaultList, 
-                                            commonComponentRender:common.commonComponentRender, 
                                             app_theme_update:common.commonMiscPreferencesPostMount
                                             },
                                 path:'/common/component/common_dialogue_user_menu_app_theme.js'});
@@ -990,7 +952,7 @@ const appEventClick = event => {
  * @name appEventChange
  * @description App event change
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventChange = event => {
@@ -1001,7 +963,7 @@ const appEventChange = event => {
  * @name appEventKeyUp
  * @description App event keyup
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventKeyUp = event => {
@@ -1025,7 +987,7 @@ const appEventKeyUp = event => {
  * @name appEventKeyDown
  * @description App event keydown
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventKeyDown = event => {
@@ -1036,7 +998,7 @@ const appEventKeyDown = event => {
  * @name appEventInput
  * @description App event input
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventInput = event => {
@@ -1047,7 +1009,7 @@ const appEventInput = event => {
  * @name appEventFocus
  * @description App event focus
  * @function
- * @param {CommonAppEvent} event 
+ * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
 const appEventFocus = event => {
@@ -1078,7 +1040,7 @@ const appInit = async () => {
  * @name appCommonInit
  * @description Init common
  * @function
- * @param {CommonModuleCommon} commonLib
+ * @param {common['CommonModuleCommon']} commonLib
  * @param {Object.<string,*>} parameters 
  * @returns {Promise.<void>}
  */
@@ -1095,7 +1057,7 @@ const appCommonInit = async (commonLib, parameters) => {
  * @name appMetadata
  * @description App metadata for event delegataion and lifecycle events
  * @function
- * @returns {commonMetadata}
+ * @returns {common['commonMetadata']}
  */
 const appMetadata = () =>{
     return { 

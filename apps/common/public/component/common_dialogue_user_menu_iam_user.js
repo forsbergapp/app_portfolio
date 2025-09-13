@@ -3,15 +3,15 @@
  * @module apps/common/component/common_dialogue_user_menu_iam_user
  */
 /**
- * @import {CommonIAMUser,CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{user:CommonIAMUser,
-*          commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate']}} props
+ * @param {{user:common['CommonIAMUser'],
+*          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props
 * @returns {string}
 */
 const template = props => ` <div id='common_dialogue_user_menu_iam_user'>
@@ -92,20 +92,16 @@ const template = props => ` <div id='common_dialogue_user_menu_iam_user'>
 *                      admin_app_id:number,
 *                      },
 *          methods:    {
-*                      COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate'],
-*                      commonMessageShow:CommonModuleCommon['commonMessageShow'],
-*                      commonMesssageNotAuthorized:CommonModuleCommon['commonMesssageNotAuthorized'],
-*                      commonFFB:CommonModuleCommon['commonFFB']
+*                      COMMON:common['CommonModuleCommon']
 *                      }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:null,
 *                      template:string}>}
 */
 const component = async props => {
-   /**@type{CommonIAMUser} */    
-   const user = await props.methods.commonFFB({path:`/server-iam/iamuser/${props.data.iam_user_id}`, 
+   /**@type{common['CommonIAMUser']} */    
+   const user = await props.methods.COMMON.commonFFB({path:`/server-iam/iamuser/${props.data.iam_user_id}`, 
                                                method:'GET', authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
                        .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
    /**
@@ -115,23 +111,23 @@ const component = async props => {
        if (props.data.iam_user_id == user.id) {
 
            if (Number(user.private))
-               props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_checkbox_profile_private').classList.add('checked');
+               props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_checkbox_profile_private').classList.add('checked');
            else
-               props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_checkbox_profile_private').classList.remove('checked');
+               props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_checkbox_profile_private').classList.remove('checked');
 
-           props.methods.COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= user.avatar?
+           props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= user.avatar?
                                                                                                            `url('${user.avatar}')`:
                                                                                                            'url()';
        } else {
            //User not found
-           props.methods.commonMessageShow('INFO', null, 'message_text',props.methods.commonMesssageNotAuthorized());
+           props.methods.COMMON.commonMessageShow('INFO', null, 'message_text',props.methods.COMMON.commonMesssageNotAuthorized());
        }
    };
    return {
        lifecycle:  {onMounted:onMounted},
        data:   null,
        methods:null,
-       template: template({user:user, commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate})
+       template: template({user:user, commonMiscFormatJsonDate:props.methods.COMMON.commonMiscFormatJsonDate})
    };
 };
 export default component;

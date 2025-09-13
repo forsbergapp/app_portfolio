@@ -3,7 +3,7 @@
  * @module apps/app4/component/settings_tab_nav_7
  */
 /**
- * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {common}  from '../../../common_types.js'
  */
 
 /**
@@ -28,8 +28,8 @@ const template = props => ` <div class='paper ${props.class}'>
  *                      type:'day'|'month'|'year',
  *                      html:string
  *                      },
- *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *          methods:    {COMMON:common['CommonModuleCommon']}}} props
+ * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

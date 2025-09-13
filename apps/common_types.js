@@ -1,49 +1,5 @@
 /** 
  * @description Declaration of all common types used in apps
- * 
- * BOM Browser Object Model (contains what is used)
- * 
- * DOM Document Object Model types (contains what is used)
- *  COMMON_DOCUMENT
- *  CommonAppEvent
- * 
- * Common app types
- *  CommonGlobal
- *  CommonComponentLifecycle
- *  CommonComponentResult
- *  CommonErrorMessageISO20022
- *  CommonAppMenu
- *  CommonDocumentType
- *  CommonMetadata
- *  CommonEventType
- * 
- * Common REST API types
- *  CommonRESTAPIMethod
- *  CommonRESTAPIAuthorizationType
- *  CommonAppRecord
- *  commonInitAppParameters
- *  CommonAppDataRecord
- *  CommonAppModulesRecord
- *  CommonAppModuleMetadata
- *  CommonAppModuleWithMetadata
- *  CommonAppModuleQueueStatus
- *  CommonAppModuleQueue
- *  CommonCountryType
- *  CommonProfileUser
- *  CommonProfileStatRecord
- *  CommonProfileSearchRecord
- *  CommonMasterObjectType
- *  CommonMessageType
- *  CommonWorldcitiesRecordType
- * 
- * Common Module files types 
- *  CommonModuleCommon
- *  CommonModuleEasyQRCode
- *  CommonModuleRegional
- *  CommonModuleReact
- *  CommonModuleReactDOM
- *  CommonModuleVue
- * 
  * @module apps/common/types 
 */
 
@@ -491,7 +447,7 @@
  *              common_name:string,
  *              common_role:'APP_ID'|'APP_ACCESS'|'APP_EXTERNAL'|'APP_ACCESS_EXTERNAL'|null,
  *              common_path:string,
- *              common_description:string}}CommonAppModulesRecord
+ *              common_description:string}} CommonAppModulesRecord
  */
 /**
  * @description Type CommonAppModuleMetadata
@@ -610,10 +566,6 @@
  * @typedef {import('./common/public/js/common.js')} CommonModuleCommon
  */
 /**
- * @description Type CommonModuleEasyQRCode
- * @typedef {{QRCode:*}} CommonModuleEasyQRCode
- */
-/**
  * @description Type CommonModuleRegional
  * @typedef {import('./common/public/modules/regional/regional.js')} CommonModuleRegional
  */
@@ -648,4 +600,55 @@
  *              modified:string,
  *              last_logintime?:string}} CommonIAMUser
  */
+/**
+ * @description Type common
+ * @typedef {{	COMMON_WINDOW:COMMON_WINDOW,            //BOM Browser Object Model (contains what is used)
+ *              COMMON_DOCUMENT:COMMON_DOCUMENT,        //DOM Document Object Model types (contains what is used)
+ *		        commonTarget:commonTarget,              //DOM Document Object Model types (contains what is used)
+ *              CommonAppEvent:CommonAppEvent,          //DOM Document Object Model types (contains what is used)
+ *              CommonFFB_parameters:CommonFFB_parameters
+ *              CommonGlobal:CommonGlobal,
+ *              commonComponentEvents:commonComponentEvents,
+ *              CommonComponentLifecycle:CommonComponentLifecycle,
+ *              CommonComponentResult:CommonComponentResult,
+ *              CommonErrorMessageISO20022:CommonErrorMessageISO20022,
+ *              CommonAppMenu:CommonAppMenu,
+ *              commonDocumentType:commonDocumentType,
+ *              commonMetadata:commonMetadata,
+ *              commonEventType:commonEventType,
+ *              commonGeoJSONPopup:commonGeoJSONPopup,
+ *              commonGeoJSONTile:commonGeoJSONTile,
+ *              commonGeoJSONPolyline:commonGeoJSONPolyline,
+ *              commonMapPlace:commonMapPlace,
+ *              commonMapLayers:commonMapLayers,
+ *              CommonRESTAPIMethod:CommonRESTAPIMethod,
+ *              CommonRESTAPIAuthorizationType:CommonRESTAPIAuthorizationType,
+ *              CommonAppRecord:CommonAppRecord,
+ *              commonInitAppParameters:commonInitAppParameters,
+ *              commonAppInit:commonAppInit,
+ *              CommonAppDataRecord:CommonAppDataRecord,
+ *              CommonAppModulesRecord:CommonAppModulesRecord,
+ *              CommonAppModuleMetadata:CommonAppModuleMetadata,
+ *              CommonAppModuleWithMetadata:CommonAppModuleWithMetadata,
+ *              CommonAppModuleQueueStatus:CommonAppModuleQueueStatus,
+ *              CommonAppModuleQueue:CommonAppModuleQueue,
+ *              CommonCountryType:CommonCountryType,
+ *              CommonProfileUser:CommonProfileUser,
+ *              CommonProfileStatRecord:CommonProfileStatRecord,
+ *              CommonProfileSearchRecord:CommonProfileSearchRecord,
+ *              CommonMasterObjectType:CommonMasterObjectType,
+ *              CommonMessageType:CommonMessageType,
+ *              MessageQueuePublishMessage:MessageQueuePublishMessage,
+ *              MessagesPagination:MessagesPagination,
+ *              MessageQueuePublishMicroserviceLog:MessageQueuePublishMicroserviceLog,
+ *              CommonWorldcitiesRecordType:CommonWorldcitiesRecordType,
+ *              CommonIAMUser:CommonIAMUser,
+ *              CommonModuleCommon:CommonModuleCommon,          //Module file types
+ *              CommonModuleRegional:CommonModuleRegional,      //Module file types
+ *              CommonModuleReact:CommonModuleReact,            //Module file types
+ *              CommonModuleReactDOM:CommonModuleReactDOM,      //Module file types
+ *              CommonModuleVue:CommonModuleVue}                //Module file types
+ *          } common
+ */
+
  export {};
