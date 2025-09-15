@@ -144,7 +144,6 @@
  *              app_root:string,
  *              app_div:string,
  *              app_console:{warn:function, info:function, error:function},
- *              app_createElement:{original:function,custom:function},
  *              app_eventListeners:{original:function, REACT:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[], 
  *                                                     VUE:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[], 
  *                                                     OTHER:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[]},

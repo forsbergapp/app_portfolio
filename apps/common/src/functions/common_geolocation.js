@@ -26,7 +26,7 @@ const returnPlace = parameters =>{
                 country:getData('COUNTRY')
                             .filter((/**@type {{locale:string,
                                                 countries:[key:string]}}*/row)=>
-                                    row.locale == formatLocale(parameters.locale))[0].countries[parameters.place.split(';')[0]],
+                                    row.locale == formatLocale(parameters.locale))[0].countries[parameters.place.split(';')[0]]??' ',
                 region:     parameters.place.split(';')[1],
                 latitude:   parameters.place.split(';')[3],
                 longitude:  parameters.place.split(';')[4],
