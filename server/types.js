@@ -1579,7 +1579,6 @@
  *   name:                              string,
  *   server_host:		                string,
  *   server_port:                       number,
- *   path_data:                         string,
  *   service_registry_auth_path:		string,
  *   service_registry_auth_method:      'POST',
  *   message_queue_path:	            string,
