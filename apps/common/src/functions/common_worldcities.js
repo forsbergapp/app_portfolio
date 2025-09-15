@@ -48,7 +48,7 @@ const appFunction = async parameters =>{
                 lat: row.split(';')[3],
                 lng: row.split(';')[4],
                 /**@ts-ignore */
-                country: countries[row.substring(0,2)],
+                country: countries[row.substring(0,2)] ??' ',
                 iso2: row.substring(0,2),
                 admin_name: row.split(';')[1].replaceAll('"','')
             },
@@ -105,9 +105,9 @@ const appFunction = async parameters =>{
                                 //Uses localcompare as collation method when sorting
                                 .sort((/**@type{string}*/first, /**@type{string}*/second)=>{
                                                             /**@ts-ignore */
-                                    const first_sort =  countries[first.split(';')[0]].toLowerCase() +  first.split(';')[1].toLowerCase() +   first.split(';')[2].toLowerCase();
+                                    const first_sort =  (countries[first.split(';')[0]]?.toLowerCase()??' ') +  first.split(';')[1].toLowerCase() +   first.split(';')[2].toLowerCase();
                                                             /**@ts-ignore */
-                                    const second_sort =  countries[second.split(';')[0]].toLowerCase() +  second.split(';')[1].toLowerCase() +   second.split(';')[2].toLowerCase();
+                                    const second_sort =  (countries[second.split(';')[0]]?.toLowerCase()??' ') +  second.split(';')[1].toLowerCase() +   second.split(';')[2].toLowerCase();
                                     //using localeCompare as collation method
                                     if (first_sort.localeCompare(second_sort)<0 )
                                         return -1;

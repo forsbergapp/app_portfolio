@@ -31,7 +31,6 @@ const COMMON_GLOBAL = {
     app_root:'app_root',
     app_div:'app',
     app_console:{warn:COMMON_WINDOW.console.warn, info:COMMON_WINDOW.console.info, error:COMMON_WINDOW.console.error},
-    app_createElement:{original:COMMON_DOCUMENT.createElement,custom:()=>null},
     app_eventListeners:{original: HTMLElement.prototype.addEventListener, REACT:[], VUE:[], OTHER:[]},
     app_function_exception:null,
     app_function_session_expired:null,
@@ -3274,7 +3273,6 @@ const commonEventInputDisable = event => {
  * @returns {Promise.<void>}
  */
 const commonFrameworkMount = async (framework, template, methods,mount_div, component) =>{
-    COMMON_DOCUMENT.createElement = COMMON_GLOBAL.app_createElement.original;
     switch (framework){
         case 2:{
             //Vue
@@ -3344,7 +3342,6 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
             break;
         }
     }
-    COMMON_DOCUMENT.createElement = COMMON_GLOBAL.app_createElement.custom;
 };
 /**
  * @name commonFrameworkClean
@@ -3482,37 +3479,12 @@ const commonFrameworkSet = async (framework) => {
 /**
  * @name custom_framework
  * @description Set custom framework functionality:
- *              replace createElement with temporary element
- *              block debugger calling createElement
  *              show only console messages if app_framework_messages == 1
  *              save info about events created
  * @function
  * @returns {void}
  */
 const custom_framework = () => {
-    /**
-     * @description replaces createElement with temporary element
-     *              so debugger does not create any element
-     * @param {string} element
-     */
-    const customCreateElement = element => {
-        /**@ts-ignore */
-        if (new Error().stack?.split('\n')[1].indexOf('debugger')>-1 ){
-            null;
-        }
-        else{
-            const id = 'temp_' + Date.now().toString();
-            //replace a, span and img with div
-            COMMON_DOCUMENT.querySelector('#common_app').innerHTML += `<${(element=='a' ||element=='img' ||element=='span')?'div':element} id='${id}'></${element}>`;
-            const new_element = COMMON_DOCUMENT.querySelector(`#common_app #${id}`);
-            COMMON_DOCUMENT.querySelector(`#common_app #${id}`).remove();
-            new_element.removeAttribute('id');
-            return new_element;
-        }
-    };
-    COMMON_GLOBAL.app_createElement.custom = COMMON_DOCUMENT.createElement;
-    /**@ts-ignore */
-    COMMON_DOCUMENT.createElement = customCreateElement;
 
     COMMON_GLOBAL.app_eventListeners.original = COMMON_DOCUMENT.addEventListener;
     /**
@@ -3532,7 +3504,7 @@ const custom_framework = () => {
     };
     /**
      * Custom common event to keep track of framework events so they can be removed when necessary
-     * No event is created for React
+     * No event is created for React and Vue
      * Disables test of passive listener that tries to create test event on windows objects that
      * affects touch events on mobile and on scroll divs inside third party divs
      * React tries to create 'test' on windows object
@@ -3547,7 +3519,7 @@ const custom_framework = () => {
         COMMON_GLOBAL.app_eventListeners[eventmodule]
             /**@ts-ignore */
             .push([scope, object, eventParameters[0], eventParameters[1], eventParameters[2]]);
-        if (eventmodule!='REACT')
+        if (eventmodule!='REACT' && eventmodule!='VUE')
             COMMON_GLOBAL.app_eventListeners.original.apply(object, eventParameters);
     };
     /**
