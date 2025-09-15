@@ -4,7 +4,6 @@
 *                                      server_protocol:	                    string,
 *                                      server_host:		                    string,
 *                                      server_port:                         number,
-*                                      path_data:                           string,
 *                                      service_registry_auth_url:		    string,
 *                                      service_registry_auth_method:        'POST',
 *                                      message_queue_url:	                string,

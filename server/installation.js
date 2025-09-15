@@ -830,8 +830,7 @@ const postConfigDefault = async () => {
                             '/data' + config_obj[1][1].SERVER.filter(key=>'PATH_JOBS' in key)[0].PATH_JOBS,
                             '/data/db',
                             '/data/db/journal',
-                            '/data/microservice',
-                            '/data/microservice/data'
+                            '/data/microservice'
                             ])
     .catch((/**@type{server_server_error}*/err) => {
         throw err;

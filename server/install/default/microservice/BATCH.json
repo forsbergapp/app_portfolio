@@ -3,7 +3,6 @@
     "server_protocol":	                "http",
     "server_host":		                "localhost",
     "server_port":                      "3001",
-    "path_data":                        "/data/microservice/data",
     "service_registry_auth_url":		"http://localhost:3000/bff/microservice_auth/v1/server-iam-microservice/BATCH",
     "service_registry_auth_method":     "POST",
     "message_queue_url":	            "http://localhost:3000/bff/microservice/v1/serviceregistry-messagequeue",
