@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {commonMetadata, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {common} from '../../../common_types.js'
  * @import {APP_GLOBAL} from './types.js'
  */
 
@@ -179,7 +179,7 @@ const appEventMouseMove = event =>{
 const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     await common.commonComponentRender({
-        mountDiv:   common.COMMON_GLOBAL.app_div, 
+        mountDiv:   common.commonGlobalGet('app_div'), 
         data:       null,
         methods:    null,
         path:       '/component/app.js'});
@@ -187,8 +187,8 @@ const appInit = async () => {
         mountDiv:   'app_main_page', 
         data:       {
                     cube_width:APP_GLOBAL.width,
-                    app_id:common.COMMON_GLOBAL.app_id,
-                    common_app_id:common.COMMON_GLOBAL.app_common_app_id
+                    app_id:common.commonGlobalGet('app_id'),
+                    common_app_id:common.commonGlobalGet('app_common_app_id')
                     },
         methods:    null,
         path:       '/component/cube.js'})
@@ -223,8 +223,8 @@ const appInit = async () => {
 const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
-    common.COMMON_GLOBAL.app_function_exception = appException;
-    common.COMMON_GLOBAL.app_function_session_expired = null;
+    common.commonGlobalSet('app_function_exception', appException);
+    common.commonGlobalSet('app_function_session_expired', null);
     appInit();
 };
 /**

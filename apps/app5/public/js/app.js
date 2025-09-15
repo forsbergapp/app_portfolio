@@ -45,31 +45,31 @@ const appEventClick = event => {
                     common.commonComponentRender({
                         mountDiv:   'app_page_secure_tab_content', 
                         data:       {
-                                    app_id:common.COMMON_GLOBAL.app_id,
-                                    common_app_id:common.COMMON_GLOBAL.app_common_app_id,
+                                    app_id:common.commonGlobalGet('app_id'),
+                                    common_app_id:common.commonGlobalGet('app_common_app_id'),
                                     display_type:'MASTER_DETAIL_HORIZONTAL',
                                     master_path:'/app-common-module/ACCOUNT_STATEMENT',
                                     master_query:'fields=title,bank_account_balance,bank_account_number,bank_account_iban,currency,currency_name',
                                     master_body:{   type:'FUNCTION',
-                                                    IAM_iam_user_app_id: common.COMMON_GLOBAL.iam_user_app_id,
-                                                    IAM_iam_user_id: common.COMMON_GLOBAL.iam_user_id, 
-                                                    IAM_data_app_id:common.COMMON_GLOBAL.app_id},
+                                                    IAM_iam_user_app_id: common.commonGlobalGet('iam_user_app_id'),
+                                                    IAM_iam_user_id: common.commonGlobalGet('iam_user_id'), 
+                                                    IAM_data_app_id:common.commonGlobalGet('app_id')},
                                     master_method:'POST',
                                     master_token_type:'APP_ACCESS',
                                     master_resource:'ACCOUNT',
                                     detail_path:'/app-common-module/ACCOUNT_TRANSACTIONS',
                                     detail_query: 'fields=timestamp,logo,origin,amount_deposit,amount_withdrawal',
                                     detail_body: {  type:'FUNCTION',
-                                                    IAM_iam_user_id:common.COMMON_GLOBAL.iam_user_id,
-                                                    IAM_data_app_id:common.COMMON_GLOBAL.app_id},
+                                                    IAM_iam_user_id:common.commonGlobalGet('iam_user_id'),
+                                                    IAM_data_app_id:common.commonGlobalGet('app_id')},
                                     detail_method:'POST',
                                     detail_token_type:'APP_ACCESS',
                                     detail_resource:'TRANSACTION_METADATA',
                                     detail_class:'bank_statement',
                                     new_resource:false,
                                     mode:'READ',
-                                    timezone:common.COMMON_GLOBAL.user_timezone,
-                                    locale:common.COMMON_GLOBAL.user_locale,
+                                    timezone:common.commonGlobalGet('user_timezone'),
+                                    locale:common.commonGlobalGet('user_locale'),
                                     button_print: false,
                                     button_update: false,
                                     button_post: false,
@@ -88,15 +88,15 @@ const appEventClick = event => {
                     common.commonComponentRender({
                         mountDiv:   'app_page_secure_tab_content', 
                         data:       {
-                                    app_id:common.COMMON_GLOBAL.app_id,
-                                    common_app_id:common.COMMON_GLOBAL.app_common_app_id,
+                                    app_id:common.commonGlobalGet('app_id'),
+                                    common_app_id:common.commonGlobalGet('app_common_app_id'),
                                     display_type:'VERTICAL_KEY_VALUE',
                                     master_path:'/app-common-module/CUSTOMER_GET',
                                     master_query: 'fields=name,customer_type,address,city,country',
                                     master_body:{   type:'FUNCTION',
-                                                    IAM_iam_user_app_id: common.COMMON_GLOBAL.iam_user_app_id,
-                                                    IAM_iam_user_id:common.COMMON_GLOBAL.iam_user_id, 
-                                                    IAM_data_app_id:common.COMMON_GLOBAL.app_id},
+                                                    IAM_iam_user_app_id: common.commonGlobalGet('iam_user_app_id'),
+                                                    IAM_iam_user_id:common.commonGlobalGet('iam_user_id'), 
+                                                    IAM_data_app_id:common.commonGlobalGet('app_id')},
                                     master_method:'POST',
                                     master_token_type:'APP_ACCESS',
                                     master_resource:'CUSTOMER',
@@ -107,8 +107,8 @@ const appEventClick = event => {
                                     detail_class:null,
                                     new_resource:false,
                                     mode:'READ',
-                                    timezone:common.COMMON_GLOBAL.user_timezone,
-                                    locale:common.COMMON_GLOBAL.user_locale,
+                                    timezone:common.commonGlobalGet('user_timezone'),
+                                    locale:common.commonGlobalGet('user_locale'),
                                     button_print: false,
                                     button_update: false,
                                     button_post: false,
@@ -127,14 +127,14 @@ const appEventClick = event => {
                     common.commonComponentRender({
                         mountDiv:   'app_page_secure_tab_content', 
                         data:       {
-                                    app_id:common.COMMON_GLOBAL.app_id,
-                                    common_app_id:common.COMMON_GLOBAL.app_common_app_id,
+                                    app_id:common.commonGlobalGet('app_id'),
+                                    common_app_id:common.commonGlobalGet('app_common_app_id'),
                                     display_type:'VERTICAL_KEY_VALUE',
                                     master_path:'/app-common-module/ACCOUNT_GET',
                                     master_query: 'fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa',
                                     master_body: {  type:'FUNCTION',
-                                                    IAM_iam_user_id:common.COMMON_GLOBAL.iam_user_id, 
-                                                    IAM_data_app_id:common.COMMON_GLOBAL.app_id},
+                                                    IAM_iam_user_id:common.commonGlobalGet('iam_user_id'), 
+                                                    IAM_data_app_id:common.commonGlobalGet('app_id')},
                                     master_method:'POST',
                                     master_token_type:'APP_ACCESS',
                                     master_resource:'ACCOUNT',
@@ -145,8 +145,8 @@ const appEventClick = event => {
                                     detail_class:null,
                                     new_resource:false,
                                     mode:'READ',
-                                    timezone:common.COMMON_GLOBAL.user_timezone,
-                                    locale:common.COMMON_GLOBAL.user_locale,
+                                    timezone:common.commonGlobalGet('user_timezone'),
+                                    locale:common.commonGlobalGet('user_locale'),
                                     button_print: false,
                                     button_update: false,
                                     button_post: false,
@@ -179,7 +179,7 @@ const appEventClick = event => {
         case 'common_iam_avatar_avatar_img':
         case 'common_iam_avatar_logged_out':
         case 'common_iam_avatar_default_avatar':{
-            if (common.COMMON_GLOBAL.iam_user_id==null)
+            if (common.commonGlobalGet('iam_user_id')==null)
                 common.commonComponentRender({
                     mountDiv:   'common_dialogue_user_menu_app_theme',
                     data:       null,
@@ -249,7 +249,7 @@ const appUserLogin = async () =>{
  * @returns {Promise.<void>}
  */
 const appUserLoginPost = async () =>{
-    if (common.COMMON_GLOBAL.iam_user_id != null){
+    if (common.commonGlobalGet('iam_user_id') != null){
         common.commonComponentRemove('app_main_page');
         appSecureInit();
     }
@@ -282,9 +282,9 @@ const appCustomerCreate = async () => {
                         authorization_type:'APP_ACCESS', 
                         body:{
                             type:'FUNCTION',
-                            IAM_iam_user_app_id :common.COMMON_GLOBAL.iam_user_app_id,
-                            IAM_iam_user_id :common.COMMON_GLOBAL.iam_user_id,
-                            IAM_data_app_id :common.COMMON_GLOBAL.app_id,
+                            IAM_iam_user_app_id :common.commonGlobalGet('iam_user_app_id'),
+                            IAM_iam_user_id :common.commonGlobalGet('iam_user_id'),
+                            IAM_data_app_id :common.commonGlobalGet('app_id'),
                             customer_type   :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'customer_type\']').textContent,
                             name            :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'name\']').textContent,
                             address         :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'address\']').textContent,
@@ -308,8 +308,8 @@ const appPaymentRequestUpdate = async status => {
                         authorization_type:'APP_ACCESS', 
                         body:{
                             type:               'FUNCTION',
-                            IAM_data_app_id:    common.COMMON_GLOBAL.app_id,
-                            IAM_iam_user_id:    common.COMMON_GLOBAL.iam_user_id,
+                            IAM_data_app_id:    common.commonGlobalGet('app_id'),
+                            IAM_iam_user_id:    common.commonGlobalGet('iam_user_id'),
                             token:              APP_GLOBAL.token,
                             status:             status
                         }})
@@ -355,16 +355,16 @@ const appPaymentRequestShow = async message =>{
         await common.commonComponentRender({
                 mountDiv:   'common_dialogue_app_data_display', 
                 data:       {
-                            app_id:common.COMMON_GLOBAL.app_id,
-                            common_app_id:common.COMMON_GLOBAL.app_common_app_id,
+                            app_id:common.commonGlobalGet('app_id'),
+                            common_app_id:common.commonGlobalGet('app_common_app_id'),
                             display_type:'VERTICAL_KEY_VALUE',
                             dialogue:true,
                             master_path:'/app-common-module/PAYMENT_REQUEST_GET',
                             master_query:'',
                             master_body:{	
                                             type:'FUNCTION',
-                                            IAM_data_app_id:common.COMMON_GLOBAL.app_id,
-                                            IAM_iam_user_id: common.COMMON_GLOBAL.iam_user_id,
+                                            IAM_data_app_id:common.commonGlobalGet('app_id'),
+                                            IAM_iam_user_id: common.commonGlobalGet('iam_user_id'),
                                             token: APP_GLOBAL.token
                                         },
                             master_method:'POST',
@@ -377,8 +377,8 @@ const appPaymentRequestShow = async message =>{
                             detail_class:null,
                             new_resource:false,
                             mode:'READ',
-                            timezone:common.COMMON_GLOBAL.user_timezone,
-                            locale:common.COMMON_GLOBAL.user_locale,
+                            timezone:common.commonGlobalGet('user_timezone'),
+                            locale:common.commonGlobalGet('user_locale'),
                             button_print: false,
                             button_update: false,
                             button_post: true,
@@ -414,11 +414,11 @@ const appSecureInit = () => {
     common.commonComponentRender({
         mountDiv:   'app_main_page', 
         data:       {
-                    app_id:common.COMMON_GLOBAL.app_id,
-                    common_app_id:common.COMMON_GLOBAL.app_common_app_id,
-                    iam_user_id:common.COMMON_GLOBAL.iam_user_id,
-                    timezone:common.COMMON_GLOBAL.user_timezone,
-                    locale:common.COMMON_GLOBAL.user_locale
+                    app_id:common.commonGlobalGet('app_id'),
+                    common_app_id:common.commonGlobalGet('app_common_app_id'),
+                    iam_user_id:common.commonGlobalGet('iam_user_id'),
+                    timezone:common.commonGlobalGet('user_timezone'),
+                    locale:common.commonGlobalGet('user_locale')
                     },
         methods:    {
                     button_post:appCustomerCreate},
@@ -433,8 +433,8 @@ const appSecureInit = () => {
 const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     await common.commonComponentRender({
-        mountDiv:   common.COMMON_GLOBAL.app_div, 
-        data:       {logo:common.COMMON_GLOBAL.app_logo},
+        mountDiv:   common.commonGlobalGet('app_div'), 
+        data:       {logo:common.commonGlobalGet('app_logo')},
         methods:    null,
         path:       '/component/app.js'})
     .then(()=> 
@@ -455,9 +455,9 @@ const appInit = async () => {
 const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
-    common.COMMON_GLOBAL.app_function_exception = appException;
-    common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
-    common.COMMON_GLOBAL.app_function_sse = appPaymentRequestShow;
+    common.commonGlobalSet('app_function_exception', appException);
+    common.commonGlobalSet('app_function_session_expired', appUserLogout);
+    common.commonGlobalSet('app_function_sse', appPaymentRequestShow);
     await appInit();
 };
 /**

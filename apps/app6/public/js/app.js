@@ -109,12 +109,12 @@ const appProductUpdate = async () =>{
     await common.commonComponentRender({
         mountDiv:   COMMON_DOCUMENT.querySelectorAll('.common_app_data_display_master_row[id]')[1].id, 
         data:       {
-                    app_id:common.COMMON_GLOBAL.app_id,
-                    common_app_id:common.COMMON_GLOBAL.app_common_app_id,
+                    app_id:common.commonGlobalGet('app_id'),
+                    common_app_id:common.commonGlobalGet('app_common_app_id'),
                     display_type:'VERTICAL_KEY_VALUE',
                     master_path:'/app-common-module/PRODUCT_LOCATION_GET',
                     master_query:'fields=stock',
-                    master_body:{type:'FUNCTION',IAM_data_app_id:common.COMMON_GLOBAL.app_id, resource_id : product_variant_id},
+                    master_body:{type:'FUNCTION',IAM_data_app_id:common.commonGlobalGet('app_id'), resource_id : product_variant_id},
                     master_method:'POST',
                     master_token_type:'APP_ID',
                     master_resource:'PRODUCT_VARIANT_LOCATION_METADATA',
@@ -125,8 +125,8 @@ const appProductUpdate = async () =>{
                     detail_class:null,
                     new_resource:false,
                     mode:'READ',
-                    timezone:common.COMMON_GLOBAL.user_timezone,
-                    locale:common.COMMON_GLOBAL.user_locale,
+                    timezone:common.commonGlobalGet('user_timezone'),
+                    locale:common.commonGlobalGet('user_locale'),
                     button_print: false,
                     button_update: false,
                     button_post: false,
@@ -151,17 +151,17 @@ const appPaymentRequestStatus = ()=>{
     if ( new Date().getSeconds() % 2){
         const payment_request_id = COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
     
-        common.commonFFB({path:'/app-common-module/PAYMENT_REQUEST_GET_STATUS', method:'POST', authorization_type:'APP_ACCESS_EXTERNAL',   body:{type:'FUNCTION',IAM_data_app_id:common.COMMON_GLOBAL.app_id, payment_request_id: payment_request_id}})
+        common.commonFFB({path:'/app-common-module/PAYMENT_REQUEST_GET_STATUS', method:'POST', authorization_type:'APP_ACCESS_EXTERNAL',   body:{type:'FUNCTION',IAM_data_app_id:common.commonGlobalGet('app_id'), payment_request_id: payment_request_id}})
         .then((/**@type{*}*/result)=>{
             const status = JSON.parse(result).rows[0].status;
             if (status != 'PENDING'){
-                common.COMMON_GLOBAL.token_at = null;
+                common.commonGlobalSet('token_at', null);
                 common.commonComponentRemove('common_dialogue_app_data_display', true);
                 common.commonMessageShow('INFO', null, null,status);
             }
         })
         .catch(()=>{
-            common.COMMON_GLOBAL.token_at = null;
+            common.commonGlobalSet('token_at', null);
             common.commonComponentRemove('common_dialogue_app_data_display', true);
         });
     }
@@ -179,7 +179,7 @@ const appPaymentRequest = async () =>{
         const data = {
             type:'FUNCTION',
             reference:      `SHOP SKU ${sku}`,
-            IAM_data_app_id:common.COMMON_GLOBAL.app_id,
+            IAM_data_app_id:common.commonGlobalGet('app_id'),
             payerid:        payerid_element.textContent,
             amount:         COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-price]')[0].getAttribute('data-price'),
             currency_code:  COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-currency_code]')[0].getAttribute('data-currency_code'),
@@ -188,8 +188,8 @@ const appPaymentRequest = async () =>{
         await common.commonComponentRender({
             mountDiv:   'common_dialogue_app_data_display', 
             data:       {
-                        app_id:common.COMMON_GLOBAL.app_id,
-                        common_app_id:common.COMMON_GLOBAL.app_common_app_id,
+                        app_id:common.commonGlobalGet('app_id'),
+                        common_app_id:common.commonGlobalGet('app_common_app_id'),
                         display_type:'VERTICAL_KEY_VALUE',
                         dialogue:true,
                         master_path:'/app-common-module/PAYMENT_REQUEST_CREATE',
@@ -205,8 +205,8 @@ const appPaymentRequest = async () =>{
                         detail_class:null,
                         new_resource:false,
                         mode:'READ',
-                        timezone:common.COMMON_GLOBAL.user_timezone,
-                        locale:common.COMMON_GLOBAL.user_locale,
+                        timezone:common.commonGlobalGet('user_timezone'),
+                        locale:common.commonGlobalGet('user_locale'),
                         button_print: false,
                         button_update: false,
                         button_post: false,
@@ -222,7 +222,7 @@ const appPaymentRequest = async () =>{
             path:'/common/component/common_app_data_display.js'})
             .then(result=>{
                 //save the returned access token
-                common.COMMON_GLOBAL.token_at = result.data.master_object.token.value;
+                common.commonGlobalSet('token_at', result.data.master_object.token.value);
 
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.textContent = 
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.textContent + ' ' +
@@ -244,7 +244,7 @@ const appPaymentRequest = async () =>{
  * @returns {Promise.<void>}
  */
 const appPayCancel = async () =>{
-    common.COMMON_GLOBAL.token_at = null;
+    common.commonGlobalSet('token_at', null);
     common.commonMessageShow('INFO',null,null, 'Payment cancel');
     common.commonComponentRemove('common_dialogue_app_data_display', true);
 };
@@ -258,15 +258,15 @@ const appPay = async () =>{
     await common.commonComponentRender({
         mountDiv:   'common_dialogue_app_data_display', 
         data:       {
-                    app_id:common.COMMON_GLOBAL.app_id,
-                    common_app_id:common.COMMON_GLOBAL.app_common_app_id,
+                    app_id:common.commonGlobalGet('app_id'),
+                    common_app_id:common.commonGlobalGet('app_common_app_id'),
                     display_type:'VERTICAL_KEY_VALUE',
                     dialogue:true,
                     master_path:'/app-common-module/COMMON_APP_DATA_METADATA',
                     master_query:'fields=json_data',
                     master_body:{   type:'FUNCTION',
-                                    IAM_module_app_id:common.COMMON_GLOBAL.app_common_app_id,
-                                    IAM_data_app_id:common.COMMON_GLOBAL.app_id, 
+                                    IAM_module_app_id:common.commonGlobalGet('app_common_app_id'),
+                                    IAM_data_app_id:common.commonGlobalGet('app_id'), 
                                     resource_name:'PAYMENT_METADATA'},
                     master_method:'POST',
                     master_token_type:'APP_ID',
@@ -279,8 +279,8 @@ const appPay = async () =>{
                     detail_class:null,
                     new_resource:true,
                     mode:'EDIT',
-                    timezone:common.COMMON_GLOBAL.user_timezone,
-                    locale:common.COMMON_GLOBAL.user_locale,
+                    timezone:common.commonGlobalGet('user_timezone'),
+                    locale:common.commonGlobalGet('user_locale'),
                     button_print: false,
                     button_update: false,
                     button_post: true,
@@ -307,17 +307,17 @@ const appPay = async () =>{
 const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     await common.commonComponentRender({
-        mountDiv:   common.COMMON_GLOBAL.app_div, 
-        data:       {logo:common.COMMON_GLOBAL.app_logo},
+        mountDiv:   common.commonGlobalGet('app_div'), 
+        data:       {logo:common.commonGlobalGet('app_logo')},
         methods:    null,
         path:'/component/app.js'});
     await common.commonComponentRender({
         mountDiv:   'app_main_page', 
         data:       {
-                    app_id:common.COMMON_GLOBAL.app_id,
-                    common_app_id:common.COMMON_GLOBAL.app_common_app_id,
-                    timezone:common.COMMON_GLOBAL.user_timezone,
-                    locale:common.COMMON_GLOBAL.user_locale
+                    app_id:common.commonGlobalGet('app_id'),
+                    common_app_id:common.commonGlobalGet('app_common_app_id'),
+                    timezone:common.commonGlobalGet('user_timezone'),
+                    locale:common.commonGlobalGet('user_locale')
                     },
         methods:    {
                     pay:appPay
@@ -336,8 +336,8 @@ const appInit = async () => {
 const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
-    common.COMMON_GLOBAL.app_function_exception = appException;
-    common.COMMON_GLOBAL.app_function_session_expired = null;
+    common.commonGlobalSet('app_function_exception', appException);
+    common.commonGlobalSet('app_function_session_expired', null);
     appInit();
 };
 /**

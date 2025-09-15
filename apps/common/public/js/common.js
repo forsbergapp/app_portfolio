@@ -139,6 +139,20 @@ const COMMON_GLOBAL = {
 Object.seal(COMMON_GLOBAL);
 
 /**
+ * @description Get value for given global key
+ * @param {keyof common['CommonGlobal']} key
+ * @returns {*}
+ */
+const commonGlobalGet = key =>COMMON_GLOBAL[key];
+/**
+ * @description Set value for given global key
+ * @param {keyof common['CommonGlobal']} key
+ * @param {*} value
+ * @returns {*}
+ */
+const commonGlobalSet = (key, value) =>COMMON_GLOBAL[key]?Object.assign(COMMON_GLOBAL, {[key]:value}):null;
+
+/**
  * @name commonMiscElementId
  * @description Finds recursive parent id. Use when current element can be an image or svg attached to an event element
  * @function
@@ -1312,6 +1326,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                                     iam_user_id:                COMMON_GLOBAL.iam_user_id,
                                     user_verification_type:     user_verification_type
                                 },
+<<<<<<< HEAD
                     methods:    {   commonFFB:                  commonFFB,
                                     commonMessageShow:          commonMessageShow,
                                     commonComponentRemove:      commonComponentRemove,
@@ -1328,6 +1343,10 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                                         methods:{   commonUserVerifyCheckInput:     function}}}*/component)=>{
                             COMMON_GLOBAL.component.common_dialogue_iam_verify.methods.commonUserVerifyCheckInput =  component.methods.commonUserVerifyCheckInput;
                     });
+=======
+                    methods:    null,
+                    path:       '/common/component/common_dialogue_iam_verify.js'});
+>>>>>>> 37db893b (AP-110 implements closure pattern for COMMON_GLOBAL and adds commonGlobalGet() and commonGlobalSet() in common.js, replaces export of COMMON_GLOBAL and direct variable access with new functions, removes methods common parameters in commonDialogueShow(), moves commonUserSignup() from common.js to common_dialogue_iam_start.js, moves element events from common.js to common_dialogue_apps.js, updates common type in app.js and app 8)
                 commonComponentRemove('common_dialogue_iam_start');
                 break;
             }
@@ -1343,13 +1362,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                                 admin_only: 		COMMON_GLOBAL.admin_only,
                                 admin_first_time:   COMMON_GLOBAL.admin_first_time
                                 },
-                methods:        {
-                                commonMiscElementId:commonMiscElementId,
-                                commonDialogueShow:commonDialogueShow,
-                                commonComponentRemove:commonComponentRemove,
-                                commonUserSignup:commonUserSignup,
-                                commonFFB:commonFFB
-                                },
+                methods:        null,
                 path:           '/common/component/common_dialogue_iam_start.js'});
             break;
         }
@@ -2019,39 +2032,6 @@ const commonUserUpdate = async (totp=null) => {
             })
             .catch(()=>false);
         });
-};
-/**
- * @name commonUserSignup
- * @description User signup
- * @function
- * @returns {void}
- */
-const commonUserSignup = () => {
-    if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
-                            {
-                            username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_username'),
-                            password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password'),
-                            password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_confirm'),
-                            password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_reminder')
-                            })==true){
-        const json_data = { username:           COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_username').textContent,
-                            password:           COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password').textContent,
-                            password_reminder:  COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_reminder').textContent,
-                            active:             0
-                            };
-           
-       commonFFB({path:'/server-iam/iamuser', method:'POST', authorization_type:'IAM_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
-        .then(result=>{
-            COMMON_GLOBAL.iam_user_app_id = JSON.parse(result).iam_user_app_id;
-            COMMON_GLOBAL.iam_user_id =     JSON.parse(result).iam_user_id;
-            COMMON_GLOBAL.token_at =        JSON.parse(result).token_at;
-            COMMON_GLOBAL.token_exp =       JSON.parse(result).exp;
-            COMMON_GLOBAL.token_iat =       JSON.parse(result).iat;
-            commonMessageShow('INFO', null, null,JSON.parse(result).otp_key);
-            
-            commonDialogueShow('VERIFY', 'SIGNUP');
-        });
-    }
 };
 
 /**
@@ -2895,6 +2875,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 COMMON_DOCUMENT.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                                 break;
                             }
+<<<<<<< HEAD
                             //Dialogue apps
                             case 'common_dialogue_apps_list_title_col_info':{
                                 commonComponentRender({
@@ -3147,6 +3128,8 @@ const commonEvent = async (event_type,event=null) =>{
                                     commonMountApp(event.target.getAttribute('data-app_id'));
                                 }
                                 break;
+=======
+>>>>>>> 37db893b (AP-110 implements closure pattern for COMMON_GLOBAL and adds commonGlobalGet() and commonGlobalSet() in common.js, replaces export of COMMON_GLOBAL and direct variable access with new functions, removes methods common parameters in commonDialogueShow(), moves commonUserSignup() from common.js to common_dialogue_iam_start.js, moves element events from common.js to common_dialogue_apps.js, updates common type in app.js and app 8)
                             //Dialogue info
                             case 'common_dialogue_info_contact_message_send':{
                                 COMMON_GLOBAL.component.common_dialogue_info?.methods?.eventClickSend();
@@ -4098,8 +4081,9 @@ const commonMountApp = async (app_id) =>{
  */
 const commonGet = () =>{
     return {
-        COMMON_GLOBAL:COMMON_GLOBAL, 
         COMMON_DOCUMENT:COMMON_DOCUMENT,
+        commonGlobalGet,
+        commonGlobalSet,
         /* MISC */
         commonMiscElementId:commonMiscElementId, 
         commonMiscElementRow:commonMiscElementRow, 
@@ -4162,7 +4146,6 @@ const commonGet = () =>{
         commonUserLogin:commonUserLogin, 
         commonUserLogout:commonUserLogout,
         commonUserSessionCountdown:commonUserSessionCountdown, 
-        commonUserSignup:commonUserSignup, 
         commonUserUpdate:commonUserUpdate, 
         commonUserAuthenticateCode:commonUserAuthenticateCode,
         commonUserMessageShowStat:commonUserMessageShowStat,
@@ -4269,8 +4252,9 @@ const commonInit = async parameters => {
     
 };
 export{/* GLOBALS*/
-       COMMON_GLOBAL, 
        COMMON_DOCUMENT,
+       commonGlobalGet,
+       commonGlobalSet,
        /* MISC */
        commonMiscElementId, 
        commonMiscElementRow, 
@@ -4333,7 +4317,6 @@ export{/* GLOBALS*/
        commonUserLogin, 
        commonUserLogout,
        commonUserSessionCountdown, 
-       commonUserSignup, 
        commonUserUpdate, 
        commonUserAuthenticateCode,
        commonUserMessageShowStat,
