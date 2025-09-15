@@ -44,7 +44,7 @@ const COMMON_GLOBAL = {
                             change:null,
                             keydown:null,
                             keyup:null,
-                            focus:null,
+                            focusin:null,
                             input:null,
                             mousedown:null,
                             mouseup:null,
@@ -3442,7 +3442,7 @@ const commonFrameworkSet = async (framework) => {
     //call event function to add listeners using null parameter
     commonEvent('click', null);
     commonEvent('change', null);
-    commonEvent('focus', null);
+    commonEvent('focusin', null);
     commonEvent('input', null);
     commonEvent('keydown', null);
     commonEvent('keyup', null);
@@ -3619,7 +3619,7 @@ const commonMountApp = async (app_id) =>{
     //add metadata using tree shaking pattern
     COMMON_GLOBAL.app_metadata.events.change = appdata.events.change;
     COMMON_GLOBAL.app_metadata.events.click = appdata.events.click;
-    COMMON_GLOBAL.app_metadata.events.focus = appdata.events.focus;
+    COMMON_GLOBAL.app_metadata.events.focusin = appdata.events.focusin;
     COMMON_GLOBAL.app_metadata.events.input = appdata.events.input;
     COMMON_GLOBAL.app_metadata.events.keydown = appdata.events.keydown;
     COMMON_GLOBAL.app_metadata.events.keyup = appdata.events.keyup;

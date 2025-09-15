@@ -85,7 +85,7 @@ const component = async props => {
         if (props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0])
             //set focus first column in first row
             //this will trigger to show detail records
-            props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].dispatchEvent(new Event('focus'));
+            props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].focus();
 
   };
   return {
