@@ -203,6 +203,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:{master_object:*},
  *                      methods:null,
+ *                      events:common['commonComponentEvents'],
  *                      template:string}>}
  */
 const component = async props => {
@@ -320,6 +321,31 @@ const component = async props => {
         }
     }
 
+    /**
+     * @name events
+     * @descption Events for map
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (event_type){
+            case 'click':{
+                switch (true){
+                    case event.target.classList.contains('common_app_data_display_button_print'):
+                    case event.target.classList.contains('common_app_data_display_button_update'):
+                    case event.target.classList.contains('common_app_data_display_button_post'):
+                    case event.target.classList.contains('common_app_data_display_button_delete'):{
+                        if (props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function'])
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function']();
+                        break;
+                    }
+                }
+            }
+        }
+    };
     const onMounted = async () => {
         if (props.methods.button_print)
             props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_print`)['data-function'] = props.methods.button_print;
@@ -334,6 +360,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       {master_object:master_object},
         methods:    null,
+        events:     events,
         template:   template({
                             display_type:props.data.display_type,
                             master_object:master_object,

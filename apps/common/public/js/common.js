@@ -1555,9 +1555,7 @@ const commonLovShow = parameters => {
                     lov_custom_value:parameters.lov_custom_value
                     },
         methods:    {
-                    function_event:parameters.function_event,
-                    commonWindowFromBase64:commonWindowFromBase64,
-                    commonFFB:commonFFB
+                    function_event:parameters.function_event
                     },
         path:       '/common/component/common_dialogue_lov.js'});        
 };
@@ -1587,73 +1585,6 @@ const commonLovFilter = text_filter => {
 };
 
 /**
- * @name commonZoomInfo
- * @description Window zoom info
- * @function
- * @param {number|null} zoomvalue 
- * @returns {void}
- */
-const commonZoomInfo = (zoomvalue = null) => {
-    let old;
-    let old_scale;
-    const div = COMMON_DOCUMENT.querySelector('#common_window_info_info_img');
-    //called with null as argument at init() then used for zooming
-    //even if css set, this property is not set at startup
-    if (zoomvalue == null) {
-        div.style.transform = 'scale(1)';
-    } else {
-        old = div.style.transform==''? 'scale(1)':div.style.transform;
-        old_scale = parseFloat(old.substr(old.indexOf('(') + 1, old.indexOf(')') - 1));
-        div.style.transform = 'scale(' + (old_scale + ((zoomvalue*5) / 10)) + ')';
-    }
-};
-/**
- * @name commonMoveInfo
- * @description Window move info
- * @function
- * @param {number|null} move1 
- * @param {number|null} move2 
- * @returns {void}
- */
-const commonMoveInfo = (move1=null, move2=null) => {
-    let old;
-    const div = COMMON_DOCUMENT.querySelector('#common_window_info_info_img');
-    if (move1==null || move2==null) {
-        div.style.transformOrigin = '50% 50%';
-    } else {
-        old = div.style.transformOrigin==''? '50% 50%':div.style.transformOrigin;
-        const old_move1 = parseFloat(old.substr(0, old.indexOf('%')));
-        const old_move2 = parseFloat(old.substr(old.indexOf('%') +1, old.length -1));
-        div.style.transformOrigin =  `${old_move1 + (move1*5)}% ${old_move2 + (move2*5)}%`;
-    }
-};
-/**
- * @name commonWindoInfoToolbarShowHide
- * @description Show or hide window info toolbar
- * @function
- * @returns {void}
- */
-const commonWindoInfoToolbarShowHide = () => {
-    if (COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display=='inline-block' ||
-        COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display=='')
-        COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display='none';
-    else
-        COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display='inline-block';
-};
-/**
- * @name commonWindoInfoClose
- * @description Close window info
- * @function
- * @returns {void}
- */
-const commonWindoInfoClose = () =>{
-    commonComponentRemove('common_window_info');
-    COMMON_DOCUMENT.querySelector('#common_window_info').style.visibility = 'hidden'; 
-    if (COMMON_DOCUMENT.fullscreenElement)
-        COMMON_DOCUMENT.exitFullscreen();
-};
-
-/**
  * @name commonProfileFollowLike
  * @description Profile follow or like and then update stat
  * @function
@@ -1680,10 +1611,7 @@ const commonProfileStat = async (statchoice, app_rest_url = null) => {
                     stat_list_app_rest_url:app_rest_url,
                     statchoice:statchoice ?? 1
                     },
-        methods:    {
-                    commonComponentRender:commonComponentRender,
-                   commonFFB:commonFFB
-                    },
+        methods:    null,
         path:       '/common/component/common_dialogue_profile.js'});
 };
 /**
@@ -1706,10 +1634,7 @@ const commonProfileDetail = (detailchoice) => {
                         iam_user_id_profile:COMMON_DOCUMENT.querySelector('#common_profile_id').textContent,
                         detailchoice:detailchoice
                         },
-            methods:    {
-                        commonDialogueShow:commonDialogueShow,
-                       commonFFB:commonFFB
-                        },
+            methods:    null,
             path:       '/common/component/common_dialogue_profile_info_detail.js'});
     }
 };
@@ -1727,9 +1652,7 @@ const commonProfileSearch = click_function => {
                     iam_user_id:COMMON_GLOBAL.iam_user_id
                     },
         methods:    {
-                    commonMiscInputControl:commonMiscInputControl,
-                    function_click_function:click_function,
-                   commonFFB:commonFFB
+                    function_click_function:click_function
                     },
         path:       '/common/component/common_profile_search_list.js'})
     .catch(()=>{
@@ -1755,10 +1678,7 @@ const commonProfileShow = async (iam_user_id_other = null, username = null) => {
                     stat_list_app_rest_url:null,
                     statchoice:null
                     },
-        methods:    {
-                    commonWindowSetTimeout:null,
-                   commonFFB:null,
-                    },
+        methods:    null,
         path:       '/common/component/common_dialogue_profile.js'});
     await commonComponentRender({
         mountDiv:   'common_dialogue_profile_content',
@@ -1767,13 +1687,7 @@ const commonProfileShow = async (iam_user_id_other = null, username = null) => {
                     iam_user_id_other:iam_user_id_other,
                     username:username
                     },
-        methods:    {
-                    commonWindowSetTimeout:commonWindowSetTimeout,
-                    commonFFB:commonFFB,
-                    commonMiscFormatJsonDate:commonMiscFormatJsonDate,
-                    commonDialogueShow:commonDialogueShow,
-                    commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck
-                    },
+        methods:    null,
         path:       '/common/component/common_dialogue_profile_info.js'});
 };
 /**
@@ -1976,7 +1890,9 @@ const commonUserLogout = async () => {
  */
 const commonLogout = async () => {
     commonComponentRemove('common_dialogue_user_menu');
-    commonWindoInfoClose();
+    COMMON_GLOBAL.component.common_window_info?.methods?.commonWindoInfoClose?
+        COMMON_GLOBAL.component.common_window_info?.methods?.commonWindoInfoClose():
+            null;
     commonComponentRemove('common_dialogue_iam_verify');
     if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.app_admin_app_id){
         commonUserUpdateAvatar(false,null );
@@ -2582,7 +2498,7 @@ const commonSocketSSEShow = async (sse_message) => {
             commonComponentRender({
                 mountDiv:   'common_broadcast',
                 data:       {message:sse_message.sse_message},
-                methods:    {commonMiscResourceFetch:commonMiscResourceFetch},
+                methods:    null,
                 path:       '/common/component/common_broadcast.js'});
             break;
         }
@@ -2697,7 +2613,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
                     column_value:'locale',
                     column_text:'text'
                     },
-        methods:    {commonFFB:commonFFB},
+        methods:    null,
         path:       '/common/component/common_select.js'});
         commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_locale_select', COMMON_GLOBAL.user_locale);
    }
@@ -2990,6 +2906,7 @@ const commonEvent = async (event_type,event=null) =>{
                             };
                             await commonIamUserAppDelete(null, function_delete_user_account);
                             
+<<<<<<< HEAD
                             break;
                         }        
                         //dialogue verify
@@ -3260,6 +3177,8 @@ const commonEvent = async (event_type,event=null) =>{
                                     COMMON_DOCUMENT.body.requestFullscreen();
                                 break;
                             }
+=======
+>>>>>>> 014241a2 (AP-110 moves element event from common.js to common_app_data_display.js and element events and functions to common_window_info.js, removes common methods parameters for commonComponentRender() in common.js)
                             /* Dialogue user menu*/
                             case 'common_iam_avatar':
                             case 'common_iam_avatar_logged_in':
@@ -3282,17 +3201,7 @@ const commonEvent = async (event_type,event=null) =>{
                                                 user_direction:COMMON_GLOBAL.user_direction,
                                                 user_arabic_script:COMMON_GLOBAL.user_arabic_script
                                                 },
-                                    methods:    {
-                                                commonMiscFormatJsonDate:commonMiscFormatJsonDate,
-                                                commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
-                                                commonWindowFromBase64:commonWindowFromBase64,
-                                                commonFFB:commonFFB,
-                                                commonComponentRender:commonComponentRender,
-                                                commonUserSessionCountdown:commonUserSessionCountdown,
-                                                commonMessageShow:commonMessageShow,
-                                                commonMesssageNotAuthorized:commonMesssageNotAuthorized,
-                                                commonUserMessageShowStat:commonUserMessageShowStat
-                                                },
+                                    methods:    null,
                                     path:       '/common/component/common_dialogue_user_menu.js'});
                                 break;
                             }
@@ -3495,7 +3404,7 @@ const commonEvent = async (event_type,event=null) =>{
                                                     info:'IMAGE',
                                                     url:event.target.getAttribute('data-url_link'),
                                                     },
-                                        methods:    {commonFFB:commonFFB},
+                                        methods:    null,
                                         path:       '/common/component/common_window_info.js'});
                                 break;
                             }
