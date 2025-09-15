@@ -64,7 +64,7 @@ const appEventClick = event => {
         case 'common_iam_avatar_avatar_img':
         case 'common_iam_avatar_logged_out':
         case 'common_iam_avatar_default_avatar':{
-            if (common.COMMON_GLOBAL.iam_user_id==null)
+            if (common.commonGlobalGet('iam_user_id')==null)
                 common.commonComponentRender({
                     mountDiv:   'common_dialogue_user_menu_app_theme',
                     data:       null,
@@ -200,7 +200,7 @@ const appAppsGet = () => {
     common.commonComponentRender({
         mountDiv:   'common_dialogue_apps',
         data:       {
-                    app_id:common.COMMON_GLOBAL.app_id
+                    app_id:common.commonGlobalGet('app_id')
                     },
         methods:    null,
         path:       '/common/component/common_dialogue_apps.js'});
@@ -223,7 +223,7 @@ const appException = error => {
  */
 const appInit = async () => {
     await common.commonComponentRender({
-        mountDiv:   common.COMMON_GLOBAL.app_div,
+        mountDiv:   common.commonGlobalGet('app_div'),
         data:       null,
         methods:    null,
         path:       '/component/app.js'})
@@ -255,8 +255,8 @@ const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme_sun';
-    common.COMMON_GLOBAL.app_function_exception = appException;
-    common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
+    common.commonGlobalSet('app_function_exception', appException);
+    common.commonGlobalSet('app_function_session_expired', appUserLogout);
     appInit();
 };
 /**

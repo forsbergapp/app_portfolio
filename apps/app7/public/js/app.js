@@ -40,7 +40,7 @@ const appEventClick = event =>{
         case 'common_iam_avatar_avatar_img':
         case 'common_iam_avatar_logged_out':
         case 'common_iam_avatar_default_avatar':{
-            if (common.COMMON_GLOBAL.iam_user_id==null)
+            if (common.commonGlobalGet('iam_user_id')==null)
                 common.commonComponentRender({
                     mountDiv:   'common_dialogue_user_menu_app_theme',
                     data:       null,
@@ -80,16 +80,16 @@ const appEventClick = event =>{
  */
 const appInit = async () =>{
     await common.commonComponentRender({
-        mountDiv:   common.COMMON_GLOBAL.app_div,
+        mountDiv:   common.commonGlobalGet('app_div'),
         data:       null,
         methods:    null,
         path:       '/component/app.js'});
         common.commonComponentRender({
             mountDiv:   'mapid',
             data:       { 
-                        data_app_id :common.COMMON_GLOBAL.app_common_app_id,
-                        longitude:common.COMMON_GLOBAL.client_longitude,
-                        latitude:common.COMMON_GLOBAL.client_latitude
+                        data_app_id :common.commonGlobalGet('app_common_app_id'),
+                        longitude:common.commonGlobalGet('client_longitude'),
+                        latitude:common.commonGlobalGet('client_latitude')
                         },
             methods:    null,
             path:       '/common/component/common_map.js'});
@@ -106,8 +106,8 @@ const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
-    common.COMMON_GLOBAL.app_function_exception = appException;
-    common.COMMON_GLOBAL.app_function_session_expired = null;
+    common.commonGlobalSet('app_function_exception', appException);
+    common.commonGlobalSet('app_function_session_expired', null);
     appInit();
 };
 /**

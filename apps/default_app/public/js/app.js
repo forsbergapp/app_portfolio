@@ -31,8 +31,8 @@ let common;
  * @returns {Promise.<void>}
  */
 const appInit = async () => {
-    await common.commonComponentRender({mountDiv:common.COMMON_GLOBAL.app_div,
-        data:       {logo:common.COMMON_GLOBAL.app_logo},
+    await common.commonComponentRender({mountDiv:common.commonGlobalGet('app_div'),
+        data:       {logo:common.commonGlobalGet('app_logo')},
         methods:    null,
         path:'/component/app.js'});
     await common.commonComponentRender({  mountDiv:'app_construction',
@@ -54,8 +54,8 @@ const appCommonInit = async (commonLib, start, parameters) => {
     common = commonLib;
     await start();
     COMMON_DOCUMENT.body.className = 'app_theme1';    
-    common.COMMON_GLOBAL.app_function_exception = appException;
-    common.COMMON_GLOBAL.app_function_session_expired = null;
+    common.commonGlobalSet('app_function_exception', appException);
+    common.commonGlobalSet('app_function_session_expired', null);
     appInit();
 };
 /**

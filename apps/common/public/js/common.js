@@ -97,6 +97,20 @@ const COMMON_GLOBAL = {
 Object.seal(COMMON_GLOBAL);
 
 /**
+ * @description Get value for given global key
+ * @param {keyof common['CommonGlobal']} key
+ * @returns {*}
+ */
+const commonGlobalGet = key =>COMMON_GLOBAL[key];
+/**
+ * @description Set value for given global key
+ * @param {keyof common['CommonGlobal']} key
+ * @param {*} value
+ * @returns {*}
+ */
+const commonGlobalSet = (key, value) =>COMMON_GLOBAL[key]?Object.assign(COMMON_GLOBAL, {[key]:value}):null;
+
+/**
  * @name commonMiscElementId
  * @description Finds recursive parent id. Use when current element can be an image or svg attached to an event element
  * @function
@@ -1270,17 +1284,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                                     iam_user_id:                COMMON_GLOBAL.iam_user_id,
                                     user_verification_type:     user_verification_type
                                 },
-                    methods:    {   commonFFB:                  commonFFB,
-                                    commonMessageShow:          commonMessageShow,
-                                    commonComponentRemove:      commonComponentRemove,
-                                    commonComponentRender:      commonComponentRender,
-                                    commonDialogueShow:         commonDialogueShow,
-                                    commonUserLogout:           commonUserLogout,
-                                    commonMesssageNotAuthorized:commonMesssageNotAuthorized,
-                                    commonUserUpdate:           commonUserUpdate,
-                                    commonUserAuthenticateCode: commonUserAuthenticateCode,
-                                    commonUserSessionCountdown: commonUserSessionCountdown
-                                },
+                    methods:    null,
                     path:       '/common/component/common_dialogue_iam_verify.js'});
                 commonComponentRemove('common_dialogue_iam_start');
                 break;
@@ -1297,13 +1301,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                                 admin_only: 		COMMON_GLOBAL.admin_only,
                                 admin_first_time:   COMMON_GLOBAL.admin_first_time
                                 },
-                methods:        {
-                                commonMiscElementId:commonMiscElementId,
-                                commonDialogueShow:commonDialogueShow,
-                                commonComponentRemove:commonComponentRemove,
-                                commonUserSignup:commonUserSignup,
-                                commonFFB:commonFFB
-                                },
+                methods:        null,
                 path:           '/common/component/common_dialogue_iam_start.js'});
             break;
         }
@@ -1973,39 +1971,6 @@ const commonUserUpdate = async (totp=null) => {
             })
             .catch(()=>false);
         });
-};
-/**
- * @name commonUserSignup
- * @description User signup
- * @function
- * @returns {void}
- */
-const commonUserSignup = () => {
-    if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
-                            {
-                            username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_username'),
-                            password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password'),
-                            password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_confirm'),
-                            password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_reminder')
-                            })==true){
-        const json_data = { username:           COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_username').textContent,
-                            password:           COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password').textContent,
-                            password_reminder:  COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_reminder').textContent,
-                            active:             0
-                            };
-           
-       commonFFB({path:'/server-iam/iamuser', method:'POST', authorization_type:'IAM_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
-        .then(result=>{
-            COMMON_GLOBAL.iam_user_app_id = JSON.parse(result).iam_user_app_id;
-            COMMON_GLOBAL.iam_user_id =     JSON.parse(result).iam_user_id;
-            COMMON_GLOBAL.token_at =        JSON.parse(result).token_at;
-            COMMON_GLOBAL.token_exp =       JSON.parse(result).exp;
-            COMMON_GLOBAL.token_iat =       JSON.parse(result).iat;
-            commonMessageShow('INFO', null, null,JSON.parse(result).otp_key);
-            
-            commonDialogueShow('VERIFY', 'SIGNUP');
-        });
-    }
 };
 
 /**
@@ -2744,31 +2709,6 @@ const commonEvent = async (event_type,event=null) =>{
                                 COMMON_DOCUMENT.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                                 break;
                             }
-                            //Dialogue apps
-                            case 'common_dialogue_apps_list_title_col_info':{
-                                commonComponentRender({
-                                mountDiv:   'common_dialogue_info',
-                                data:       {
-                                            common_app_id:COMMON_GLOBAL.app_common_app_id,
-                                            app_copyright:COMMON_GLOBAL.app_copyright,
-                                            app_link_url:COMMON_GLOBAL.app_link_url,
-                                            app_link_title:COMMON_GLOBAL.app_link_title,
-                                            info_link_policy_name:COMMON_GLOBAL.info_link_policy_name,
-                                            info_link_disclaimer_name:COMMON_GLOBAL.info_link_disclaimer_name,
-                                            info_link_terms_name:COMMON_GLOBAL.info_link_terms_name
-                                            },
-                                methods:    {
-                                            commonFFB:commonFFB,
-                                            commonMessageShow:commonMessageShow
-                                            },
-                                path:       '/common/component/common_dialogue_info.js'});
-                                break;
-                            }            
-                            case 'common_dialogue_apps_list':
-                                if (event.target.classList.contains('common_dialogue_apps_app_logo')){
-                                    commonMountApp(event.target.getAttribute('data-app_id'));
-                                }
-                                break;
                             //Dialogue info
                             case 'common_dialogue_info_contact_message_send':{
                                 COMMON_GLOBAL.component.common_dialogue_info?.methods?.eventClickSend();
@@ -3664,8 +3604,9 @@ const commonMountApp = async (app_id) =>{
  */
 const commonGet = () =>{
     return {
-        COMMON_GLOBAL:COMMON_GLOBAL, 
         COMMON_DOCUMENT:COMMON_DOCUMENT,
+        commonGlobalGet,
+        commonGlobalSet,
         /* MISC */
         commonMiscElementId:commonMiscElementId, 
         commonMiscElementRow:commonMiscElementRow, 
@@ -3728,7 +3669,6 @@ const commonGet = () =>{
         commonUserLogin:commonUserLogin, 
         commonUserLogout:commonUserLogout,
         commonUserSessionCountdown:commonUserSessionCountdown, 
-        commonUserSignup:commonUserSignup, 
         commonUserUpdate:commonUserUpdate, 
         commonUserAuthenticateCode:commonUserAuthenticateCode,
         commonUserMessageShowStat:commonUserMessageShowStat,
@@ -3835,8 +3775,9 @@ const commonInit = async parameters => {
     
 };
 export{/* GLOBALS*/
-       COMMON_GLOBAL, 
        COMMON_DOCUMENT,
+       commonGlobalGet,
+       commonGlobalSet,
        /* MISC */
        commonMiscElementId, 
        commonMiscElementRow, 
@@ -3899,7 +3840,6 @@ export{/* GLOBALS*/
        commonUserLogin, 
        commonUserLogout,
        commonUserSessionCountdown, 
-       commonUserSignup, 
        commonUserUpdate, 
        commonUserAuthenticateCode,
        commonUserMessageShowStat,
