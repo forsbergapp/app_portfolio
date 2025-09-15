@@ -58,12 +58,86 @@ const template = props => `
 *                      }}} props
 * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:null, 
-*                      methods:{eventClickSend:Function},
+*                      methods:null,
+*                      events:common['commonComponentEvents'],
 *                      template:string}>}
 */
 const component = async props => {
     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
   
+
+    /**
+     * @name events
+     * @descption Events for map
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (event_type){
+            case 'click':{
+                switch (true){
+                    case event_target_id=='common_dialogue_info_contact_message_send':{
+                        eventClickSend();
+                        break;
+                    }
+                    case event_target_id=='common_dialogue_info_app_link':{
+                        if (props.methods.COMMON.commonGlobalGet('app_link_url'))
+                            props.methods.COMMON.commonWindowGet().open(props.methods.COMMON.commonGlobalGet('app_link_url'),'_blank','');
+                        break;
+                    }
+                    case event_target_id=='common_dialogue_info_info_link1':{
+                        props.methods.COMMON.commonComponentRender({
+                            mountDiv:   'common_window_info',
+                            data:       {
+                                        info:'URL',
+                                        path:'/app-resource/' + props.methods.COMMON.commonGlobalGet('info_link_policy_url'),
+                                        query:`type=INFO&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_common_app_id')}`,
+                                        method:'GET',
+                                        authorization:'APP_ID'
+                                        },
+                            methods:    null,
+                            path:       '/common/component/common_window_info.js'});
+                        break;
+                    }
+                    case event_target_id=='common_dialogue_info_info_link2':{
+                        props.methods.COMMON.commonComponentRender({
+                            mountDiv:   'common_window_info',
+                            data:       {
+                                        info:'URL',
+                                        path:'/app-resource/' + props.methods.COMMON.commonGlobalGet('info_link_disclaimer_url'),
+                                        query:`type=INFO&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_common_app_id')}`,
+                                        method:'GET',
+                                        authorization:'APP_ID'
+                                        },
+                            methods:    null,
+                            path:       '/common/component/common_window_info.js'});
+                        break;
+                    }
+                    case event_target_id=='common_dialogue_info_info_link3':{
+                        props.methods.COMMON.commonComponentRender({
+                            mountDiv:   'common_window_info',
+                            data:       {
+                                        info:'URL',
+                                        path:'/app-resource/' + props.methods.COMMON.commonGlobalGet('info_link_terms_url'),
+                                        query:`type=INFO&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_common_app_id')}`,
+                                        method:'GET',
+                                        authorization:'APP_ID'
+                                        },
+                            methods:    null,
+                            path:       '/common/component/common_window_info.js'});
+                        break;
+                    }
+                    case event_target_id=='common_dialogue_info_close':{
+                        props.methods.COMMON.commonComponentRemove('common_dialogue_info', true);
+                        break;
+                    }
+                }
+            }
+        }
+    };
     const eventClickSend = async ()=>{
         await props.methods.COMMON.commonFFB(
                     {
@@ -85,7 +159,8 @@ const component = async props => {
     return {
        lifecycle:  null,
        data:       null,
-       methods:    {eventClickSend:eventClickSend},
+       methods:    null,
+       events:     events,
        template:   template({    
                            app_copyright:props.data.app_copyright,
                            app_link_url:props.data.app_link_url,

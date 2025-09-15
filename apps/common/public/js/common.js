@@ -205,6 +205,7 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
 /**
  * @name commonMiscImport
  * @description fetches javascript module to use in import statement
+ * @function
  * @param {string} url
  * @param {string|null} content
  * @returns {Promise.<*>}
@@ -531,7 +532,10 @@ const commonMiscPreferencesPostMount = () => {
     commonMiscThemeUpdateFromBody();
 };
 /**
+ * @name commonMiscPrint
+ * @description Prints html loading fonts using FontFace() and calls browser print() 
  * @param {string} html
+ * @function 
  * @returns {Promise.<void>}
  */
 const commonMiscPrint = async html => {
@@ -561,6 +565,7 @@ const commonMiscPrint = async html => {
  * @name commonMiscResourceFetch
  * @description fetches resources and updates attributes on element or return result if no element found
  *              'text/javascript' is used here for a link, not import()
+ * @function
  * @param {string} url
  * @param {HTMLElement|null} element
  * @param { 'image/png'|'image/webp'|
@@ -806,6 +811,7 @@ const commonMiscTimezoneOffset = (local_timezone) =>{
 /**
  * @name commonMiscLoadFont
  * @description loads a font using app resource fetch and FontFace
+ * @function
  * @param {{uuid:string,
  *          secret:string,
  *          message:string}} parameters
@@ -867,6 +873,7 @@ const commonMiscLoadFont = parameters => {
 /**
  * @name commonMisCssApply
  * @description apply css
+ * @function
  * @param {string} cssText
 */
 const commonMiscCssApply = cssText =>{
@@ -875,6 +882,95 @@ const commonMiscCssApply = cssText =>{
     
     document.adoptedStyleSheets = [...document.adoptedStyleSheets, css];
 };
+
+/**
+ * @name commonWindoGet
+ * @description get window object
+ * @function
+ * @returns {common['COMMON_WINDOW']}
+ */
+const commonWindowGet = () =>COMMON_WINDOW;
+
+/**
+ * @name commonWindowFromBase64
+ * @description Convert base64 containing unicode to string
+ * @function
+ * @param {string} str 
+ * @returns {string}
+ */
+const commonWindowFromBase64 = str => {
+    const binary_string = COMMON_WINDOW.atob(str);
+    const len = binary_string.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return new TextDecoder('utf-8').decode(bytes);
+};
+
+/**
+ * @name commonWindowDocumentFrame
+ * @description Returns frames document element
+ * @function
+ * @returns {COMMON_DOCUMENT}
+ */
+const commonWindowDocumentFrame = () => COMMON_WINDOW.frames.document;
+
+/**
+ * @name commonWindowLocationReload
+ * @description Reloads window
+ * @function
+ * @returns {void}
+ */
+const commonWindowLocationReload = () => COMMON_WINDOW.location.reload();
+
+/**
+ * @name commonWindowNavigatorLocale
+ * @description Read Navigator language
+ * @function
+ * @returns {string}
+ */
+const commonWindowNavigatorLocale = () => COMMON_WINDOW.navigator.language.toLowerCase();
+
+/**
+ * @name commonWindowOpen
+ * @description Opens an url in a new window
+ * @function
+ * @param {string} url
+ * @returns {void}
+ */
+const commonWindowOpen = url => COMMON_WINDOW.open(url, '_blank');
+
+/**
+ * @name commonWindowPrompt
+ * @description Opens an window prompt with given text
+ * @function
+ * @param {string} text
+ * @returns {string}
+ */
+const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
+
+/**
+ * @name commonWindowSetTimeout
+ * @description Use SetTimout for given function and millseconds
+ * @function
+ * @param {function}    function_timeout
+ * @param {number}      milliseconds
+ * @returns {void}
+ */
+const commonWindowSetTimeout = (function_timeout, milliseconds) => COMMON_WINDOW.setTimeout(function_timeout, milliseconds);
+
+
+/**
+ * @name commonWindowToBase64
+ * @description Convert string to Base64
+ * @function
+ * @param {string} str 
+ * @aram {boolean} btoa_only
+ * @returns {string}
+ */
+const commonWindowToBase64 = (str,btoa=false) => COMMON_WINDOW.btoa(btoa?str:COMMON_WINDOW.encodeURIComponent(str));
+
 /**
  * @name commonWindowUserAgentPlatform
  * @description Get user agent platform
@@ -895,16 +991,6 @@ const commonWindowUserAgentPlatform = useragent =>{
 };
 
 /**
- * @name commonWindowSetTimeout
- * @description Use SetTimout for given function and millseconds
- * @function
- * @param {function}    function_timeout
- * @param {number}      milliseconds
- * @returns {void}
- */
-const commonWindowSetTimeout = (function_timeout, milliseconds) => COMMON_WINDOW.setTimeout(function_timeout, milliseconds);
-
-/**
  * @name commonWindowWait
  * @description Waits given amount of milliseconds
  * @function
@@ -912,74 +998,6 @@ const commonWindowSetTimeout = (function_timeout, milliseconds) => COMMON_WINDOW
  * @returns {Promise<null>}
  */
 const commonWindowWait = async milliseconds => new Promise ((resolve)=>{commonWindowSetTimeout(()=> resolve(null),milliseconds);});
-
-/**
- * @name commonWindowToBase64
- * @description Convert string to Base64
- * @function
- * @param {string} str 
- * @aram {boolean} btoa_only
- * @returns {string}
- */
-const commonWindowToBase64 = (str,btoa=false) => COMMON_WINDOW.btoa(btoa?str:COMMON_WINDOW.encodeURIComponent(str));
-
-/**
- * @name commonWindowFromBase64
- * @description Convert base64 containing unicode to string
- * @function
- * @param {string} str 
- * @returns {string}
- */
-const commonWindowFromBase64 = str => {
-    const binary_string = COMMON_WINDOW.atob(str);
-    const len = binary_string.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
-    }
-    return new TextDecoder('utf-8').decode(bytes);
-};
-/**
- * @name commonWindowNavigatorLocale
- * @description Read Navigator language
- * @function
- * @returns {string}
- */
-const commonWindowNavigatorLocale = () => COMMON_WINDOW.navigator.language.toLowerCase();
-
-/**
- * @name commonWindowDocumentFrame
- * @description Returns frames document element
- * @function
- * @returns {COMMON_DOCUMENT}
- */
-const commonWindowDocumentFrame = () => COMMON_WINDOW.frames.document;
-
-/**
- * @name commonWindowLocationReload
- * @description Reloads window
- * @function
- * @returns {void}
- */
-const commonWindowLocationReload = () => COMMON_WINDOW.location.reload();
-
-/**
- * @name commonWindowOpen
- * @description Opens an url in a new window
- * @function
- * @param {string} url
- * @returns {void}
- */
-const commonWindowOpen = url => COMMON_WINDOW.open(url, '_blank');
-
-/**
- * @name commonWindowPrompt
- * @description Opens an window prompt with given text
- * @function
- * @param {string} text
- * @returns {string}
- */
-const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
 
 /**
  * @name commonFrameworkHtml2ReactComponent
@@ -2212,7 +2230,9 @@ const commonUserPreferencesGlobalSetDefault = (preference) => {
 };
 
 /**
+ * @name common_FFBSSE
  * @description Receives server side event from BFF, decrypts message using start uuid and delegates message
+ * @function
  * @param {{socket:*, 
  *          uuid:string|null, 
  *          secret:string|null}} parameters
@@ -2709,62 +2729,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 COMMON_DOCUMENT.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                                 break;
                             }
-                            //Dialogue info
-                            case 'common_dialogue_info_contact_message_send':{
-                                COMMON_GLOBAL.component.common_dialogue_info?.methods?.eventClickSend();
-                                break;
-                            }
-                            case 'common_dialogue_info_app_link':{
-                                if (COMMON_GLOBAL.app_link_url)
-                                    COMMON_WINDOW.open(COMMON_GLOBAL.app_link_url,'_blank','');
-                                break;
-                            }
-                            case 'common_dialogue_info_info_link1':{
-                                commonComponentRender({
-                                    mountDiv:   'common_window_info',
-                                    data:       {
-                                                info:'URL',
-                                                path:'/app-resource/' + COMMON_GLOBAL.info_link_policy_url,
-                                                query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
-                                                method:'GET',
-                                                authorization:'APP_ID'
-                                                },
-                                    methods:    {commonFFB:commonFFB},
-                                    path:       '/common/component/common_window_info.js'});
-                                break;
-                            }
-                            case 'common_dialogue_info_info_link2':{
-                                commonComponentRender({
-                                    mountDiv:   'common_window_info',
-                                    data:       {
-                                                info:'URL',
-                                                path:'/app-resource/' + COMMON_GLOBAL.info_link_disclaimer_url,
-                                                query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
-                                                method:'GET',
-                                                authorization:'APP_ID'
-                                                },
-                                    methods:    {commonFFB:commonFFB},
-                                    path:       '/common/component/common_window_info.js'});
-                                break;
-                            }
-                            case 'common_dialogue_info_info_link3':{
-                                commonComponentRender({
-                                    mountDiv:   'common_window_info',
-                                    data:       {
-                                                info:'URL',
-                                                path:'/app-resource/' + COMMON_GLOBAL.info_link_terms_url,
-                                                query:`type=INFO&IAM_data_app_id=${COMMON_GLOBAL.app_common_app_id}`,
-                                                method:'GET',
-                                                authorization:'APP_ID'
-                                                },
-                                    methods:    {commonFFB:commonFFB},
-                                    path:       '/common/component/common_window_info.js'});
-                                break;
-                            }
-                            case 'common_dialogue_info_close':{
-                                commonComponentRemove('common_dialogue_info', true);
-                                break;
-                            }
+                            
                             //dialogue app_data_display
                             case event.target.classList.contains('common_app_data_display_button_print')?event_target_id:'':
                             case event.target.classList.contains('common_app_data_display_button_update')?event_target_id:'':
@@ -3632,6 +3597,7 @@ const commonGet = () =>{
         commonMiscLoadFont:commonMiscLoadFont,
         commonMiscCssApply:commonMiscCssApply,
         /**WINDOW OBJECT */
+        commonWindowGet:commonWindowGet,
         commonWindowDocumentFrame:commonWindowDocumentFrame,
         commonWindowFromBase64:commonWindowFromBase64, 
         commonWindowLocationReload:commonWindowLocationReload,
@@ -3803,6 +3769,7 @@ export{/* GLOBALS*/
        commonMiscLoadFont,
        commonMiscCssApply,
        /**WINDOW OBJECT */
+       commonWindowGet,
        commonWindowDocumentFrame,
        commonWindowFromBase64, 
        commonWindowLocationReload,
