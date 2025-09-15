@@ -92,7 +92,40 @@ const component = async props => {
     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
     props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
-    
+    /**
+     * @name commonUserSignup
+     * @description User signup
+     * @function
+     * @returns {void}
+     */
+    const commonUserSignup = () => {
+        if (props.methods.COMMON.commonMiscInputControl(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
+                                {
+                                username: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_username'),
+                                password: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password'),
+                                password_confirm: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_confirm'),
+                                password_confirm_reminder: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_reminder')
+                                })==true){
+            const json_data = { username:           props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_username').textContent,
+                                password:           props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password').textContent,
+                                password_reminder:  props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_reminder').textContent,
+                                active:             0
+                                };
+               
+           props.methods.COMMON.commonFFB({path:'/server-iam/iamuser', method:'POST', authorization_type:'IAM_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
+            .then(result=>{
+                props.methods.COMMON.commonGlobalSet('iam_user_app_id', JSON.parse(result).iam_user_app_id);
+                props.methods.COMMON.commonGlobalSet('iam_user_id',     JSON.parse(result).iam_user_id);
+                props.methods.COMMON.commonGlobalSet('token_at',        JSON.parse(result).token_at);
+                props.methods.COMMON.commonGlobalSet('token_exp',       JSON.parse(result).exp);
+                props.methods.COMMON.commonGlobalSet('token_iat',       JSON.parse(result).iat);
+                props.methods.COMMON.commonMessageShow('INFO', null, null,JSON.parse(result).otp_key);
+                
+                props.methods.COMMON.commonDialogueShow('VERIFY', 'SIGNUP');
+            });
+        }
+    };
+        
     /**
      * @name events
      * @descption Events for map
@@ -116,7 +149,7 @@ const component = async props => {
                         break;
                     }
                     case event_target_id=='common_dialogue_iam_start_signup_button':{
-                        props.methods.COMMON.commonUserSignup();
+                        commonUserSignup();
                         break;
                     }    
                 }

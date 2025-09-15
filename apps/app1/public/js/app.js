@@ -112,13 +112,13 @@ const appSecureMenuShow = menu => {
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       {
-                            app_id:common.COMMON_GLOBAL.app_id, 
-                            common_app_id:common.COMMON_GLOBAL.app_common_app_id,
-                            iam_user_id: common.COMMON_GLOBAL.iam_user_id,
-                            user_locale:common.COMMON_GLOBAL.user_locale,
-                            client_latitude:common.COMMON_GLOBAL.client_latitude,
-                            client_longitude:common.COMMON_GLOBAL.client_longitude,
-                            client_place:common.COMMON_GLOBAL.client_place
+                            app_id:common.commonGlobalGet('app_id'), 
+                            common_app_id:common.commonGlobalGet('app_common_app_id'),
+                            iam_user_id: common.commonGlobalGet('iam_user_id'),
+                            user_locale:common.commonGlobalGet('user_locale'),
+                            client_latitude:common.commonGlobalGet('client_latitude'),
+                            client_longitude:common.commonGlobalGet('client_longitude'),
+                            client_place:common.commonGlobalGet('client_place')
                             },
                 methods:    null,
                 path:       '/component/menu_monitor.js'})
@@ -350,7 +350,7 @@ const appSecureMenuUsers = (sort='username', order_by='asc') => {
     common.commonComponentRender({
         mountDiv:   'menu_users_list',
         data:       {
-                    iam_user_id:common.COMMON_GLOBAL.iam_user_id,
+                    iam_user_id:common.commonGlobalGet('iam_user_id'),
                     sort:sort,
                     order_by:order_by
                     },
@@ -545,11 +545,11 @@ const appSecureMenuInstallationDbInstallationFunction = (id, db_icon, path, meth
     .then((/**@type{string}*/result)=>{
         if (db_icon!=null)
             if (db_icon){
-                common.COMMON_GLOBAL.admin_only = 0;
+                common.commonGlobalSet('admin_only', 0);
                 COMMON_DOCUMENT.querySelector('#menu_installation_db_icon').classList.add('installed');
             }
             else{
-                common.COMMON_GLOBAL.admin_only = 1;
+                common.commonGlobalSet('admin_only', 1);
                 COMMON_DOCUMENT.querySelector('#menu_installation_db_icon').classList.remove('installed');
             }
                 
@@ -736,8 +736,8 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     break;
                 }
                 case event.target.classList.contains('gps_click')?event_target_id:'':{
-                    common.COMMON_GLOBAL.component.common_map?.methods?.goTo?
-                        common.COMMON_GLOBAL.component.common_map.methods.goTo({
+                    common.commonGlobalGet('component').common_map?.methods?.goTo?
+                        common.commonGlobalGet('component').common_map.methods.goTo({
                             latitude:   event.target.getAttribute('data-latitude') ?? '',
                             longitude:  event.target.getAttribute('data-longitude') ?? '',
                             ip:         event.target.getAttribute('data-ip') ?? ''
@@ -1050,8 +1050,8 @@ const appCommonInit = async (commonLib, parameters) => {
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
     COMMON_DOCUMENT.querySelector('#common_user_account').style.display = 'none';
-    common.COMMON_GLOBAL.app_function_exception = appException;
-    common.COMMON_GLOBAL.app_function_session_expired = appLogout;
+    common.commonGlobalSet('app_function_exception', appException);
+    common.commonGlobalSet('app_function_session_expired', appLogout);
     appInit();
 };
 /**

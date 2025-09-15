@@ -27,9 +27,9 @@ const show = async (href, title, documentType) =>{
     //common app component
     await common.commonComponentRender({mountDiv:   'content',
         data:       {
-                        common_app_id:common.COMMON_GLOBAL.app_common_app_id,
-                        app_logo:common.COMMON_GLOBAL.app_logo,
-                        app_copyright:common.COMMON_GLOBAL.app_copyright,
+                        common_app_id:common.commonGlobalGet('app_common_app_id'),
+                        app_logo:common.commonGlobalGet('app_logo'),
+                        app_copyright:common.commonGlobalGet('app_copyright'),
                         app_name:COMMON_DOCUMENT.title,
                         href:href,
                         title:title,
@@ -102,8 +102,8 @@ const appEventClick = event => {
  */
 const appInit = async () => {
     await common.commonComponentRender({
-        mountDiv:   common.COMMON_GLOBAL.app_div,
-        data:       {app_id:common.COMMON_GLOBAL.app_common_app_id},
+        mountDiv:   common.commonGlobalGet('app_div'),
+        data:       {app_id:common.commonGlobalGet('app_common_app_id')},
         methods:    null,
         path:       '/component/app.js'});
     //show first menu at start
@@ -121,8 +121,8 @@ const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
-    common.COMMON_GLOBAL.app_function_exception = appException;
-    common.COMMON_GLOBAL.app_function_session_expired = null;
+    common.commonGlobalSet('app_function_exception', appException);
+    common.commonGlobalSet('app_function_session_expired', null);
     appInit();
 };
 /**
