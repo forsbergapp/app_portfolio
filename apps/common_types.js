@@ -250,7 +250,7 @@
  *              'change'|
  *              'keydown'|
  *              'keyup'|
- *              'focus'|
+ *              'focusin'|
  *              'input'|
  *              'mousedown'|
  *              'mouseup'|

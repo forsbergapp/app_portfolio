@@ -761,7 +761,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
             }
             break;
         }
-        case 'focus':{
+        case 'focusin':{
             switch (event_target_id){
                 case 'menu_apps':{
                     //event on master to automatically show detail records
@@ -1006,15 +1006,16 @@ const appEventInput = event => {
     appSecureEvents('input', event, event_target_id);
 };
 /**
- * @name appEventFocus
- * @description App event focus
+ * @name appEventFocusIn
+ * @description App event focusin
  * @function
  * @param {common['CommonAppEvent']} event 
  * @returns {void}
  */
-const appEventFocus = event => {
+const appEventFocusIn = event => {
     const event_target_id = common.commonMiscElementId(event.target);
-    appSecureEvents('focus', event, event_target_id);
+    
+    appSecureEvents('focusin', event, event_target_id);
 };
 
 /**
@@ -1066,7 +1067,7 @@ const appMetadata = () =>{
             change:  appEventChange,
             keydown: appEventKeyDown,
             keyup:   appEventKeyUp,
-            focus:   appEventFocus,
+            focusin: appEventFocusIn,
             input:   appEventInput},
         lifeCycle:{onMounted:null}
     };
