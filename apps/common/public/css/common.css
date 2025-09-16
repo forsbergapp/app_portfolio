@@ -475,6 +475,7 @@ body.rtl .common_pagination_last::before{										    content:var(--common_app_
 #common_app_dialogues_user_menu_iam_user_input_password_reminder:empty::before{		content:var(--common_app_icon_user_password_reminder)}
 
 /*Icons dialogue user menu iam user app*/
+#common_app_dialogues_user_menu_iam_user_app_theme::before{					        content:var(--common_app_icon_misc_design)}
 #common_app_dialogues_user_menu_iam_user_app_locale::before{					    content:var(--common_app_icon_regional_locale)}
 #common_app_dialogues_user_menu_iam_user_app_timezone::before{				        content:var(--common_app_icon_regional_timezone)}
 #common_app_dialogues_user_menu_iam_user_app_direction::before{				        content:var(--common_app_icon_regional_direction)}
@@ -1724,10 +1725,8 @@ body.rtl{
     margin: 0.5em;
 }
 /* Dialogue user menu - iam user app*/
-#common_app_dialogues_user_menu_app_theme{
-	width: unset !important;
+#common_app_dialogues_user_menu_iam_user_app{
 	margin: 10px;
-	white-space: nowrap;
 }
 #common_app_dialogues_user_menu_iam_user_app div{
 	display: inline-block;

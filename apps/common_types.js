@@ -34,7 +34,7 @@
 
 /**
  * @description Type COMMON_DOCUMENT
- * @typedef {{  body:{className:string, requestFullscreen:function, classList:{add:function, remove:function, contains:function}},
+ * @typedef {{  body:{className:string, requestFullscreen:function, classList:DOMTokenList},
  *              createElement:function,
  *              addEventListener:function,
  *              adoptedStyleSheets:DocumentOrShadowRoot['adoptedStyleSheets'],
@@ -52,7 +52,7 @@
  *              blur:               function,
  *              href:               string,
  *              focus:              function,
- *              classList:          {contains:function, remove:function, add:function},
+ *              classList:          DOMTokenList,
  *              className:          string,
  *              'data-function':    function,
  *              dispatchEvent:      function,
@@ -64,7 +64,7 @@
  *              options:            HTMLOptionsCollection,
  *              parentNode:         {
  *                                      id: string,
- *                                      classList:{contains:function},
+ *                                      classList:DOMTokenList,
  *                                      nextElementSibling:{querySelector:function},
  *                                      innerHTML:string,
  *                                      getAttribute:function,

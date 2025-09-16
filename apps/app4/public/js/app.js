@@ -1798,33 +1798,6 @@ const appEventClick = event => {
             appUserSettingProfileLink(COMMON_DOCUMENT.querySelector(`#${event_target_id}`));
             break;
         }
-        //dialogue user menu
-        case 'common_app_iam_user_menu':
-        case 'common_app_iam_user_menu_logged_in':
-        case 'common_app_iam_user_menu_avatar':
-        case 'common_app_iam_user_menu_avatar_img':
-        case 'common_app_iam_user_menu_logged_out':
-        case 'common_app_iam_user_menu_default_avatar':{
-            if (common.commonGlobalGet('iam_user_id')==null)
-                common.commonComponentRender({
-                    mountDiv:   'common_app_dialogues_user_menu_app_theme',
-                    data:       null,
-                    methods:    {
-                                app_theme_update:common.commonMiscPreferencesPostMount
-                                },
-                    path:       '/common/component/common_app_dialogues_user_menu_app_theme.js'});
-            break;
-        }
-        case 'common_app_dialogues_user_menu_nav_iam_user_app':{
-            common.commonComponentRender({
-                mountDiv:   'common_app_dialogues_user_menu_app_theme',
-                data:       null,
-                methods:    {
-                            app_theme_update:common.commonMiscPreferencesPostMount
-                            },
-                path:       '/common/component/common_app_dialogues_user_menu_app_theme.js'});
-            break;
-            }
         case 'common_app_dialogues_user_menu_log_out':{
             common.commonUserLogout().then(() => {
                 appUserLogout();

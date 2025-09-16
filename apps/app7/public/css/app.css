@@ -30,6 +30,7 @@
 	width: 100% !important;
 }
 /*APP THEME*/
+.app_theme_sun,
 .app_theme1 {
 	--app_theme_main_branding_color1: var(--common_app_color_white1);
 	--app_theme_main_branding_color2: var(--common_app_color_blue2);
@@ -46,6 +47,7 @@
 	--app_theme_selected_background_color:var(--common_app_color_lightgrey);
 	--app_theme_hover:var(--common_app_color_green);
 }
+.app_theme_moon,
 .app_theme2 {
 	--app_theme_main_branding_color1: var(--common_app_color_dark);
 	--app_theme_main_branding_color2: var(--common_app_color_black);
@@ -89,7 +91,7 @@ body{
 
 /*APP THEME COMMON*/
 #common_app_iam_user_menu_avatar_img, 
-#common_app_iam_user_menu_default_avatar,{
+#common_app_iam_user_menu_default_avatar{
 	background-color: var(--app_theme_main_branding_color1);
 }
 .common_app_dialogues_iam_start_selected,
@@ -116,6 +118,9 @@ body{
 	color: var(--app_theme_text_color) !important;
 	background-color:var(--app_theme_background_color) !important;
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
+}
+#common_map_control{
+    color: var(--app_theme_text_color) !important;
 }
 .common_map_control_expand{
 	background-color: var(--app_theme_main_branding_color2) !important;

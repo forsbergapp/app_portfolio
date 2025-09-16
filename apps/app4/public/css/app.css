@@ -675,6 +675,7 @@
 }
 
 /* APP THEME */
+.app_theme_sun,
 .app_theme1{
 	--app_theme_main_color1:var(--common_app_color_light);
 	--app_theme_main_color2:var(--common_app_color_white);
@@ -717,6 +718,7 @@
 	--app_theme_paper_shadow_color1:var(--common_app_color_shadow1);
 	--app_theme_paper_shadow_color2:var(--common_app_color_shadow2);
 }
+.app_theme_moon,
 .app_theme2{
 	--app_theme_main_color1:var(--common_app_color_dark3);
 	--app_theme_main_color2:var(--common_app_color_dark4);

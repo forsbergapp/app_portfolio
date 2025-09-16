@@ -12,8 +12,12 @@
  * @description Template
  * @function
 */
-const template = () =>` <div id='common_app_dialogues_user_menu_app_theme'></div>
+const template = () =>` 
                         <div id='common_app_dialogues_user_menu_iam_user_app'>
+                            <div id='common_app_dialogues_user_menu_iam_user_app_theme' class='common_app_dialogues_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div class='common_app_dialogues_user_menu_iam_user_app_col2'>
+                                <div id='common_app_dialogues_user_menu_iam_user_app_theme_select'></div>
+                            </div>
                             <div id='common_app_dialogues_user_menu_iam_user_app_locale' class='common_app_dialogues_user_menu_iam_user_app_col1 common_icon'></div>
                             <div class='common_app_dialogues_user_menu_iam_user_app_col2'>
                                 <div id='common_app_dialogues_user_menu_iam_user_app_locale_select'></div>
@@ -51,29 +55,195 @@ const template = () =>` <div id='common_app_dialogues_user_menu_app_theme'></div
 * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:null,
+*                      events: common['commonComponentEvents'],
 *                      template:string}>}
 */
 const component = async props => {
 
     //fetch all settings for common app id
-   /**@type{common['CommonAppDataRecord'][]} */
-   const settings = props.data.admin_only == 1?[]:await props.methods.COMMON.commonFFB({  path:'/server-db/appdata/', 
+    /**@type{common['CommonAppDataRecord'][]} */
+    const settings = props.data.admin_only == 1?[]:await props.methods.COMMON.commonFFB({  path:'/server-db/appdata/', 
                                                                                    query:`IAM_data_app_id=${props.data.common_app_id}`, 
                                                                                    method:'GET', 
                                                                                    authorization_type:'APP_ID'})
                                                                .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
 
-   /**@type{{locale:string, text:string}[]} */
-   const locales = await props.methods.COMMON.commonFFB({
+    /**@type{{locale:string, text:string}[]} */
+    const locales = await props.methods.COMMON.commonFFB({
                                                    path:'/app-common-module/COMMON_LOCALE', 
                                                    query:`locale=${props.data.user_locale}`, 
                                                    method:'POST', authorization_type:'APP_ID',
                                                    body:{type:'FUNCTION',IAM_data_app_id : props.data.common_app_id}
                                                })
                                                .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
-   const onMounted = async () =>{                                                               
-       
-       //mount select
+
+    /**
+     * @name appThemeUpdate
+     * @description App theme update
+     * @function
+     * @returns {void}
+     */
+    const appThemeUpdate = () => {
+        props.methods.COMMON.COMMON_DOCUMENT.body.className =   props.methods.COMMON.COMMON_DOCUMENT
+                                                                    .querySelector('#common_app_dialogues_user_menu_iam_user_app_theme_select .common_select_dropdown_value')
+                                                                    .getAttribute('data-value');
+        props.methods.COMMON.commonMiscPreferencesUpdateBodyClassFromPreferences();
+    };
+    /**
+     * @name MiscThemeDefaultList
+     * @description Default app themes 
+     * @function
+     * @returns {{VALUE:*, TEXT:string}[]}
+     */
+    const MiscThemeDefaultList = () =>[ {VALUE:'app_theme1', TEXT:'Light'}, 
+                                        {VALUE:'app_theme2', TEXT:'Dark'}, 
+                                        {VALUE:'app_theme3', TEXT:'Caffè Latte'},
+                                        {VALUE:'app_theme_sun', TEXT:'Sun'},
+                                        {VALUE:'app_theme_moon', TEXT:'Moon'}];
+    /**
+     * @name MiscThemeUpdateFromBody
+     * @description Common theme get
+     * @function
+     * @returns {void}
+     */
+    const MiscThemeUpdateFromBody = () => {    
+        /**@type{DOMTokenList} */
+        props.methods.COMMON.COMMON_DOCUMENT
+            .querySelector('#common_app_dialogues_user_menu_iam_user_app_theme_select .common_select_dropdown_value').textContent = 
+                MiscThemeDefaultList().filter(theme=>theme.VALUE.toString()==props.methods.COMMON.COMMON_DOCUMENT.body.classList[0])[0].TEXT;
+        props.methods.COMMON.COMMON_DOCUMENT
+            .querySelector('#common_app_dialogues_user_menu_iam_user_app_theme_select .common_select_dropdown_value')
+            .setAttribute('data-value', props.methods.COMMON.COMMON_DOCUMENT.body.classList[0]);
+    };
+    /**
+     * @name UserPreferenceSave
+     * @description User preference save
+     * @function
+     * @returns {Promise.<void>}
+     */
+    const UserPreferenceSave = async () => {
+        if (props.methods.COMMON.commonGlobalGet('iam_user_app_id') != null){
+            const body = {
+                            IAM_data_app_id: props.methods.COMMON.commonGlobalGet('app_id'),
+                            IAM_iam_user_id: props.methods.COMMON.commonGlobalGet('iam_user_id'),
+                            json_data: 
+                            {  
+                                preference_locale:       props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_locale_select .common_select_dropdown_value')
+                                                                            .getAttribute('data-value'),
+                                preference_timezone:     props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_timezone_select .common_select_dropdown_value')
+                                                                            .getAttribute('data-value'),
+                                preference_direction:    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_direction_select .common_select_dropdown_value')
+                                                                            .getAttribute('data-value'),
+                                preference_arabic_script:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_arabic_script_select .common_select_dropdown_value')
+                                                                            .getAttribute('data-value'),
+                            }
+                        };
+            await props.methods.COMMON.commonFFB({path:`/server-db/iamuserapp/${props.methods.COMMON.commonGlobalGet('iam_user_app_id')}`, method:'PATCH', authorization_type:'APP_ACCESS', body:body});
+        }
+    };
+
+
+    /**
+     * @name events
+     * @descption Events
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (event_type){
+            case 'click':{
+                switch (true){
+                    case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_theme_select':{
+                        appThemeUpdate();
+                        break;
+                    }
+                    
+                    case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_locale_select':{
+                        props.methods.COMMON.commonGlobalSet('user_locale', event.target?.getAttribute('data-value') ?? '');
+                        /**
+                         * @todo change COMMON_WINDOW.navigator.language, however when logging out default COMMON_WINDOW.navigator.language will be set
+                         *       commented at the moment
+                         *       Object.defineProperties(COMMON_WINDOW.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+                         */
+                        await UserPreferenceSave();
+                        await props.methods.COMMON.commonComponentRender({
+                         mountDiv:   'common_app_dialogues_user_menu_iam_user_app_locale_select', 
+                         data:       {
+                                     default_data_value:props.methods.COMMON.commonGlobalGet('user_locale'),
+                                     default_value:'',
+                                     options: await props.methods.COMMON.commonFFB({
+                                                                 path:'/app-common-module/COMMON_LOCALE', 
+                                                                 method:'POST', authorization_type:'APP_ID',
+                                                                 body:{type:'FUNCTION',IAM_data_app_id : props.methods.COMMON.commonGlobalGet('app_common_app_id')}
+                                                             })
+                                                             .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data))),
+                                     path:null,
+                                     query:null,
+                                     method:null,
+                                     authorization_type:null,
+                                     column_value:'locale',
+                                     column_text:'text'
+                                     },
+                         methods:    null,
+                         path:       '/common/component/common_select.js'});
+                         props.methods.COMMON.commonMiscSelectCurrentValueSet(  'common_app_dialogues_user_menu_iam_user_app_locale_select', 
+                                                                                props.methods.COMMON.commonGlobalGet('user_locale'));
+                         break;
+                    }
+                    case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_timezone_select':{
+                        props.methods.COMMON.commonGlobalSet('user_timezone', event.target?.getAttribute('data-value') ?? '');
+                        await UserPreferenceSave();
+                        break;
+                    }
+                    case event_target_id =='common_app_dialogues_user_menu_iam_user_app_direction_select':{
+                        if(event.target?.getAttribute('data-value')=='rtl')
+                            props.methods.COMMON.COMMON_DOCUMENT.body.classList.add('rtl');
+                        else
+                            props.methods.COMMON.COMMON_DOCUMENT.body.classList.remove('rtl');
+                        props.methods.COMMON.commonGlobalSet('user_direction', event.target?.getAttribute('data-value') ?? '');
+                        await UserPreferenceSave();
+                        appThemeUpdate();
+                        break;
+                    }
+                    case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_arabic_script_select':{
+                        props.methods.COMMON.commonGlobalSet('user_arabic_script', event.target?.getAttribute('data-value') ?? '');
+                        //check if app theme div is using default theme with common select div
+                        if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_theme_select').className?
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_theme_select').className.toLowerCase().indexOf('common_select')>-1:false){
+                            appThemeUpdate();
+                        }
+                        await UserPreferenceSave();
+                        break;
+                    }           
+                }
+            }
+        }
+        
+    };
+    const onMounted = async () =>{                                                               
+        //Theme
+        const themes = MiscThemeDefaultList();
+        await props.methods.COMMON.commonComponentRender({
+            mountDiv:   'common_app_dialogues_user_menu_iam_user_app_theme_select', 
+            data:       {
+                        default_data_value:themes[0].VALUE,
+                        default_value:themes[0].TEXT,
+                        options:themes,
+                        path:null,
+                        query:null,
+                        method:null,
+                        authorization_type:null,
+                        column_value:'VALUE',
+                        column_text:'TEXT'
+                        },
+            methods:    null,
+            path:       '/common/component/common_select.js'});
+        //set app theme
+        MiscThemeUpdateFromBody();
+
        //Locale
        await props.methods.COMMON.commonComponentRender({
            mountDiv:   'common_app_dialogues_user_menu_iam_user_app_locale_select', 
@@ -153,6 +323,7 @@ const component = async props => {
        lifecycle:  {onMounted:onMounted},
        data:       null,
        methods:    null,
+       events:     events,
        template:   template()
    };
 };
