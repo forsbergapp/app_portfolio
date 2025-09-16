@@ -16,20 +16,20 @@
  * @returns {string}
  */
 const template = props =>`  ${props.message_type=='CONFIRM'?
-                                '<div id=\'common_message_confirm_question\' class=\'common_icon\'></div>':''
+                                '<div id=\'common_app_dialogues_message_confirm_question\' class=\'common_icon\'></div>':''
                             }
                             ${props.message_type!='CONFIRM'?
-                            `<div id='common_message_title_container'>
-                                <div id='common_message_title_icon' data-text_class='${props.message_title_icon_class}' class='common_icon'></div>
-                                <div id='common_message_title' class='${props.message_title_font_class}'>
+                            `<div id='common_app_dialogues_message_title_container'>
+                                <div id='common_app_dialogues_message_title_icon' data-text_class='${props.message_title_icon_class}' class='common_icon'></div>
+                                <div id='common_app_dialogues_message_title' class='${props.message_title_font_class}'>
                                     ${typeof props.message == 'object'?Object.entries(props.message).map((/**@type{*}*/list_row)=>
                                         //loop manages both object and array
-                                        `<div id='common_message_info_list'>
-                                            <div class='common_message_info_list_row'>
-                                                <div class='common_message_info_list_col'>
+                                        `<div id='common_app_dialogues_message_info_list'>
+                                            <div class='common_app_dialogues_message_info_list_row'>
+                                                <div class='common_app_dialogues_message_info_list_col'>
                                                     <div>${props.message.constructor===Array?Object.keys(list_row[1])[0]:list_row[0]}</div>
                                                 </div>
-                                                <div class='common_message_info_list_col'>
+                                                <div class='common_app_dialogues_message_info_list_col'>
                                                     <div>${props.message.constructor===Array?Object.values(list_row[1])[0]:list_row[1]}</div>
                                                 </div>
                                             </div>
@@ -40,16 +40,16 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
                             </div>`:''
                             }
                             ${props.message_type=='PROGRESS'?
-                                `<div id='common_message_progressbar_wrap'>
-                                    <div id='common_message_progressbar'></div>
+                                `<div id='common_app_dialogues_message_progressbar_wrap'>
+                                    <div id='common_app_dialogues_message_progressbar'></div>
                                 </div>`:''
                             }
-                            <div id='common_message_buttons'>
+                            <div id='common_app_dialogues_message_buttons'>
                                 ${props.message_type=='CONFIRM'?
-                                    '<div id=\'common_message_cancel\' class=\'common_app_dialogues_button common_icon\' ></div>':''
+                                    '<div id=\'common_app_dialogues_message_cancel\' class=\'common_app_dialogues_button common_icon\' ></div>':''
                                 }
                                 ${props.message_type!='PROGRESS'?
-                                    '<div id=\'common_message_close\' class=\'common_app_dialogues_button common_icon\' ></div>':''
+                                    '<div id=\'common_app_dialogues_message_close\' class=\'common_app_dialogues_button common_icon\' ></div>':''
                                 }
                             </div>`;
 /**
@@ -136,13 +136,13 @@ const component = async props => {
             case 'click':{
                 switch (true){
                     //dialogue message
-                    case event_target_id=='common_message_close':{
-                        if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_message_close')['data-function'])
-                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_message_close')['data-function']();
+                    case event_target_id=='common_app_dialogues_message_close':{
+                        if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close')['data-function'])
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close')['data-function']();
                         props.methods.COMMON.commonComponentRemove('common_app_dialogues_message',true);
                         break;
                     }
-                    case event_target_id=='common_message_cancel':{
+                    case event_target_id=='common_app_dialogues_message_cancel':{
                         props.methods.COMMON.commonComponentRemove('common_app_dialogues_message',true);
                         break;
                     }
@@ -156,10 +156,10 @@ const component = async props => {
     const onMounted = async () =>{
         if (props.data.commonMountdiv)
             if (props.data.message_type == 'PROGRESS')
-                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_message_progressbar').style.width = `${(props.data.message.part/props.data.message.total)*100}%`;
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_progressbar').style.width = `${(props.data.message.part/props.data.message.total)*100}%`;
             else{
-                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_message_close')['data-function'] = props.data.message_type == 'CONFIRM'?props.methods.function_event:function_close;
-                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_message_close').focus();
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close')['data-function'] = props.data.message_type == 'CONFIRM'?props.methods.function_event:function_close;
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close').focus();
             }
 
     };

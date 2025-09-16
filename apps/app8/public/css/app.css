@@ -184,14 +184,14 @@ body {
     background-color: var(--common_app_color_light);
     box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }
-#common_message_progressbar_wrap{
+#common_app_dialogues_message_progressbar_wrap{
 	border-color: var(--common_app_color_blue1) !important;
 }
-#common_message_progressbar{
+#common_app_dialogues_message_progressbar{
 	background-color: var(--common_app_color_blue1);
 }
 
-#common_lov_list[data-lov='CUSTOM'] .common_list_lov_col2{
+#common_app_dialogues_lov_list[data-lov='CUSTOM'] .common_list_lov_col2{
 	width:unset;
 	white-space: wrap;
 }

@@ -1367,10 +1367,10 @@ body{
 .common_toolbar_button{
 	color: var(--app_theme_text_color) !important;
 }
-#common_message_progressbar_wrap{
+#common_app_dialogues_message_progressbar_wrap{
 	border-color: var(--app_theme_main_branding_color1) !important;
 }
-#common_message_progressbar{
+#common_app_dialogues_message_progressbar{
 	background-color: var(--app_theme_main_branding_color1);
 }
 .common_app_dialogues_content{
@@ -1378,7 +1378,7 @@ body{
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1), 0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
 .common_app_dialogues_content a:hover,  .common_app_dialogues_content a:active,
-.common_lov_button:hover, .common_lov_button:active{
+.common_app_dialogues_lov_button:hover, .common_app_dialogues_lov_button:active{
 	color: var(--app_theme_hover_color) !important;
 }
 #common_dialouge_user_menu{
@@ -1403,7 +1403,7 @@ body{
 .common_switch.checked::before {
 	background-color: var(--app_theme_switch_checked_background_color);
 }
-#common_lov_search_input{
+#common_app_dialogues_lov_search_input{
 	border: 1px solid var(--app_theme_input_border_color);
 }
 .common_list_scrollbar{
