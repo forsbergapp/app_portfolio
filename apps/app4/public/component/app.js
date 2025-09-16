@@ -30,7 +30,6 @@ const template = ()=>`  <div id='toolbar_top'>
                         <div id='toolbar_bottom'>
                             <div id='toolbar_btn_print' class='common_toolbar_button common_icon' ></div>
                             <div id='toolbar_btn_day' class='common_toolbar_button common_icon' ></div>
-                            <div id='app_profile_toolbar'></div>
                             <div id='toolbar_btn_month' class='common_toolbar_button common_icon' ></div>
                             <div id='toolbar_btn_year' class='common_toolbar_button common_icon' ></div>
                             <div id='toolbar_btn_settings' class='common_toolbar_button common_icon'></div>

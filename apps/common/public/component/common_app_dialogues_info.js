@@ -90,7 +90,7 @@ const component = async props => {
                     }
                     case event_target_id=='common_app_dialogues_info_info_link1':{
                         props.methods.COMMON.commonComponentRender({
-                            mountDiv:   'common_window_info',
+                            mountDiv:   'common_app_window_info',
                             data:       {
                                         info:'URL',
                                         path:'/app-resource/' + props.methods.COMMON.commonGlobalGet('info_link_policy_url'),
@@ -99,12 +99,12 @@ const component = async props => {
                                         authorization:'APP_ID'
                                         },
                             methods:    null,
-                            path:       '/common/component/common_window_info.js'});
+                            path:       '/common/component/common_app_window_info.js'});
                         break;
                     }
                     case event_target_id=='common_app_dialogues_info_info_link2':{
                         props.methods.COMMON.commonComponentRender({
-                            mountDiv:   'common_window_info',
+                            mountDiv:   'common_app_window_info',
                             data:       {
                                         info:'URL',
                                         path:'/app-resource/' + props.methods.COMMON.commonGlobalGet('info_link_disclaimer_url'),
@@ -113,12 +113,12 @@ const component = async props => {
                                         authorization:'APP_ID'
                                         },
                             methods:    null,
-                            path:       '/common/component/common_window_info.js'});
+                            path:       '/common/component/common_app_window_info.js'});
                         break;
                     }
                     case event_target_id=='common_app_dialogues_info_info_link3':{
                         props.methods.COMMON.commonComponentRender({
-                            mountDiv:   'common_window_info',
+                            mountDiv:   'common_app_window_info',
                             data:       {
                                         info:'URL',
                                         path:'/app-resource/' + props.methods.COMMON.commonGlobalGet('info_link_terms_url'),
@@ -127,7 +127,7 @@ const component = async props => {
                                         authorization:'APP_ID'
                                         },
                             methods:    null,
-                            path:       '/common/component/common_window_info.js'});
+                            path:       '/common/component/common_app_window_info.js'});
                         break;
                     }
                     case event_target_id=='common_app_dialogues_info_close':{

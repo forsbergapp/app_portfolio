@@ -1,6 +1,6 @@
 /**
  * Displays broadcast
- * @module apps/common/component/common_broadcast
+ * @module apps/common/component/common_app_broadcast
  */
 
 /**
@@ -14,17 +14,17 @@
  * @param {{message:string}} props
  * @returns {string}
  */
-const template = props =>` <div id='common_broadcast_info'>
-                            <div id='common_broadcast_banner'>
-                                <div id='common_broadcast_header'>
-                                    <div id='common_broadcast_info_message'>
-                                        <div id='common_broadcast_info_message_item'>${props.message}</div>
+const template = props =>` <div id='common_app_broadcast_info'>
+                            <div id='common_app_broadcast_banner'>
+                                <div id='common_app_broadcast_header'>
+                                    <div id='common_app_broadcast_info_message'>
+                                        <div id='common_app_broadcast_info_message_item'>${props.message}</div>
                                     </div>    
                                 </div>
-                                <div id='common_broadcast_footer'>
-                                    <div id='common_broadcast_info_logo' class='common_image common_image_broadcast'></div>
-                                    <div id='common_broadcast_info_title' class='common_icon'></div>
-                                    <div id='common_broadcast_close' class='common_toolbar_button common_icon'></div>
+                                <div id='common_app_broadcast_footer'>
+                                    <div id='common_app_broadcast_info_logo' class='common_image common_image_broadcast'></div>
+                                    <div id='common_app_broadcast_info_title' class='common_icon'></div>
+                                    <div id='common_app_broadcast_close' class='common_toolbar_button common_icon'></div>
                                 </div>
                             </div>
                         </div>`;
@@ -47,7 +47,7 @@ const component = async props => {
     
     const onMounted =()=>{
         props.methods.COMMON.commonMiscResourceFetch( '/common/images/logo_broadcast.png',
-                                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_broadcast_info_logo'), 
+                                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_broadcast_info_logo'), 
                                             'image/png');
 
     };

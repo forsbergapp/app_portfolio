@@ -234,13 +234,7 @@ const appInit = async () => {
             data:       null,
             methods:    null,
             path:       '/common/component/common_profile_search.js'});
-    })
-    .then(()=>
-        common.commonComponentRender({
-            mountDiv:   'app_profile_toolbar',
-            data:       null,
-            methods:    null,
-            path:       '/common/component/common_profile_toolbar.js'}));
+    });
         
 };
 /**

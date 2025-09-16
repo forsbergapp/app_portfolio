@@ -85,7 +85,7 @@ const component = async props => {
      */
     const reportPreview = id =>{
         props.methods.COMMON.commonComponentRender({
-            mountDiv:   'common_window_info',
+            mountDiv:   'common_app_window_info',
             data:       {
                         info:'URL',
                         class:'A4',
@@ -95,7 +95,7 @@ const component = async props => {
                         authorization:'ADMIN'
                         },
             methods:    null,
-            path:       '/common/component/common_window_info.js'});
+            path:       '/common/component/common_app_window_info.js'});
     };
     const onMounted = async () =>{
         //mount select

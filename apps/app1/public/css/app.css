@@ -895,7 +895,7 @@
     background-color: var(--common_app_color_light);
     box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }    
-#common_window_info {
+#common_app_window_info {
 	background: var(--common_app_color_white);
 }
 #common_app_toolbar{

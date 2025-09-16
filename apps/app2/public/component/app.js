@@ -53,8 +53,7 @@ const template = () =>` <div id="theme_background">
                                 <div class="cloud">
                                 </div>
                             </div>
-                        </div>
-                        <div id='app_profile_toolbar'></div>`;
+                        </div>`;
 /**
  * @name component
  * @description Component
