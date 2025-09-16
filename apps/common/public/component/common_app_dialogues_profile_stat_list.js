@@ -16,20 +16,20 @@
  */
 const template = props =>`   
                             ${props.stat_list.map(row=>
-                                `   <div data-iam_user_id='${row.id}' class='common_profile_stat_list_row common_row'>
-                                        <div class='common_profile_stat_list_col'>
-                                            <div class='common_profile_stat_list_iam_user_id'>${row.id}</div>
+                                `   <div data-iam_user_id='${row.id}' class='common_app_dialogues_profile_stat_list_row common_row'>
+                                        <div class='common_app_dialogues_profile_stat_list_col'>
+                                            <div class='common_app_dialogues_profile_stat_list_iam_user_id'>${row.id}</div>
                                         </div>
-                                        <div class='common_profile_stat_list_col'>
+                                        <div class='common_app_dialogues_profile_stat_list_col'>
                                             <div class='common_image common_image_avatar_list' style='${row.avatar==null?'':`background-image:url(${row.avatar});`}'></div>
                                         </div>
-                                        <div class='common_profile_stat_list_col'>
-                                            <div class='common_profile_stat_list_username common_wide_list_column common_link'>
+                                        <div class='common_app_dialogues_profile_stat_list_col'>
+                                            <div class='common_app_dialogues_profile_stat_list_username common_wide_list_column common_link'>
                                                 ${row.username}
                                             </div>
                                         </div>
-                                        <div class='common_profile_stat_list_col'>
-                                            <div class='common_profile_stat_list_count'>${row.count}</div>
+                                        <div class='common_app_dialogues_profile_stat_list_col'>
+                                            <div class='common_app_dialogues_profile_stat_list_count'>${row.count}</div>
                                         </div>
                                     </div>`
                             ).join('')

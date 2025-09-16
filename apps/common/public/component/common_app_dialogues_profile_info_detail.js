@@ -19,15 +19,15 @@
  * @returns {string}
  */
 const template = props => `     ${props.list.map(row=>
-                                    `<div data-iam_user_id='${row.iam_user_id}' class='common_profile_detail_list_row common_row'>
-                                            <div class='common_profile_detail_list_col'>
-                                                <div class='common_profile_detail_list_iam_user_id'>${row.iam_user_id}</div>
+                                    `<div data-iam_user_id='${row.iam_user_id}' class='common_app_dialogues_profile_info_detail_list_row common_row'>
+                                            <div class='common_app_dialogues_profile_info_detail_list_col'>
+                                                <div class='common_app_dialogues_profile_info_detail_list_iam_user_id'>${row.iam_user_id}</div>
                                             </div>
-                                            <div class='common_profile_detail_list_col'>
+                                            <div class='common_app_dialogues_profile_info_detail_list_col'>
                                                 <div class='common_image common_image_avatar_list' style='${row.avatar==null?'':`background-image:url(${row.avatar});`}'></div>
                                             </div>
-                                            <div class='common_profile_detail_list_col'>
-                                                <div class='common_profile_detail_list_username common_wide_list_column common_link'>
+                                            <div class='common_app_dialogues_profile_info_detail_list_col'>
+                                                <div class='common_app_dialogues_profile_info_detail_list_username common_wide_list_column common_link'>
                                                     ${row.username}
                                                 </div>
                                             </div>

@@ -23,11 +23,11 @@ const appDialogueAppsShowHide = () => {
     if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility=='visible' ||
         COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility==''){
         COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility='hidden';
-        COMMON_DOCUMENT.querySelector('#common_app_profile_toolbar_btn_top').style.visibility='hidden';
+        COMMON_DOCUMENT.querySelector('#common_app_profile_toolbar_stat').style.visibility='hidden';
     }
     else{
         COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility='visible';
-        COMMON_DOCUMENT.querySelector('#common_app_profile_toolbar_btn_top').style.visibility='visible';
+        COMMON_DOCUMENT.querySelector('#common_app_profile_toolbar_stat').style.visibility='visible';
     }
 };
 /**
@@ -86,11 +86,11 @@ const appEventClick = event => {
             break;
         }
         //dialogue profile info
-        case 'common_profile_follow':{
+        case 'common_app_dialogues_profile_info_follow':{
             common.commonProfileFollowLike('FOLLOW');
             break;
         }
-        case 'common_profile_like':{
+        case 'common_app_dialogues_profile_info_like':{
             common.commonProfileFollowLike('LIKE');
             break;
         }
@@ -227,14 +227,7 @@ const appInit = async () => {
         data:       null,
         methods:    null,
         path:       '/component/app.js'})
-    .then(()=>{
-        appAppsGet();
-        common.commonComponentRender({
-            mountDiv:   'common_profile_search',
-            data:       null,
-            methods:    null,
-            path:       '/common/component/common_profile_search.js'});
-    });
+        .then(()=>appAppsGet());
         
 };
 /**
