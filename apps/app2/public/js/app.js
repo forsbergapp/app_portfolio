@@ -23,11 +23,11 @@ const appDialogueAppsShowHide = () => {
     if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility=='visible' ||
         COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility==''){
         COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility='hidden';
-        COMMON_DOCUMENT.querySelector('#common_profile_btn_top').style.visibility='hidden';
+        COMMON_DOCUMENT.querySelector('#common_app_profile_toolbar_btn_top').style.visibility='hidden';
     }
     else{
         COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility='visible';
-        COMMON_DOCUMENT.querySelector('#common_profile_btn_top').style.visibility='visible';
+        COMMON_DOCUMENT.querySelector('#common_app_profile_toolbar_btn_top').style.visibility='visible';
     }
 };
 /**

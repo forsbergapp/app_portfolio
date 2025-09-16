@@ -91,7 +91,7 @@
                                             </div>
                                         </div>
                                         <div id='common_app_profile_toolbar'>
-                                            <div id='common_profile_btn_top' class='common_toolbar_button common_icon' ></div>
+                                            <div id='common_app_profile_toolbar_btn_top' class='common_toolbar_button common_icon' ></div>
                                         </div>
                                     </div>
                                 </div>

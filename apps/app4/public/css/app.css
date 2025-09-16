@@ -587,7 +587,7 @@
     top: unset !important;
 	position: fixed !important;
 }
-#common_profile_btn_top{
+#common_app_profile_toolbar_btn_top{
 	margin-inline-start:inherit !important;
 }
 #common_profile_input_row{
@@ -932,7 +932,7 @@ body,
 .common_input_error{
 	border: 2px solid var(--app_theme_input_error_border_color) !important;
 }
-#common_profile_btn_top{
+#common_app_profile_toolbar_btn_top{
 	background: var(--app_theme_main_color2);
 	box-shadow: 0px -3px 3px var(--app_theme_dialogue_shadow_color1);
 }
@@ -958,8 +958,8 @@ body,
 }
 #common_app_dialogues_user_menu_username:hover,
 #common_app_dialogues_user_menu_username:active,
-#common_profile_btn_top:hover,
-#common_profile_btn_top:active,
+#common_app_profile_toolbar_btn_top:hover,
+#common_app_profile_toolbar_btn_top:active,
 #common_dialouge_user_menu_logged_in div:hover,
 #common_dialouge_user_menu_logged_in div:active,
 #common_dialouge_user_menu_logged_out div:hover,
