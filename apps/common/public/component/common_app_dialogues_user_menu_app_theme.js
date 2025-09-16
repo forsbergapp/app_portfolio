@@ -1,6 +1,6 @@
 /**
  * Displays user menu app theme
- * @module apps/common/component/common_dialogue_user_menu_app_theme
+ * @module apps/common/component/common_app_dialogues_user_menu_app_theme
  */
 
 /**

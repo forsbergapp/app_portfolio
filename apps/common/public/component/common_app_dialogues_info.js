@@ -1,6 +1,6 @@
 /**
  * Displays info
- * @module apps/common/component/common_dialogue_apps
+ * @module apps/common/component/common_app_dialogues_apps
  */
 
 /**
@@ -20,23 +20,23 @@
 * @returns {string}
 */
 const template = props => `
-                            <div id='common_dialogue_info_contact'>
-                                <div id='common_dialogue_info_contact_message_title' class='common_icon'></div>
-                                <div id='common_dialogue_info_contact_message' class='common_input' contentEditable='true'></div>
-                                <div id='common_dialogue_info_contact_message_send' class='common_dialogue_button common_icon' ></div>
+                            <div id='common_app_dialogues_info_contact'>
+                                <div id='common_app_dialogues_info_contact_message_title' class='common_icon'></div>
+                                <div id='common_app_dialogues_info_contact_message' class='common_input' contentEditable='true'></div>
+                                <div id='common_app_dialogues_info_contact_message_send' class='common_app_dialogues_button common_icon' ></div>
                             </div>
-                            <div id='common_dialogue_info_start_links'>
-                                <div id='common_dialogue_info_app_link_row'>
-                                    <div id='common_dialogue_info_app_link' class='common_link'>${props.app_link_url==null?'':props.app_link_title}</div>
+                            <div id='common_app_dialogues_info_start_links'>
+                                <div id='common_app_dialogues_info_app_link_row'>
+                                    <div id='common_app_dialogues_info_app_link' class='common_link'>${props.app_link_url==null?'':props.app_link_title}</div>
                                 </div>
-                                <div id='common_dialogue_info_info_link_row'>
-                                    <div id='common_dialogue_info_info_link1' class='common_link'>${props.info_link_policy_name}</div>
-                                    <div id='common_dialogue_info_info_link2' class='common_link'>${props.info_link_disclaimer_name}</div>
-                                    <div id='common_dialogue_info_info_link3' class='common_link'>${props.info_link_terms_name}</div>
+                                <div id='common_app_dialogues_info_info_link_row'>
+                                    <div id='common_app_dialogues_info_info_link1' class='common_link'>${props.info_link_policy_name}</div>
+                                    <div id='common_app_dialogues_info_info_link2' class='common_link'>${props.info_link_disclaimer_name}</div>
+                                    <div id='common_app_dialogues_info_info_link3' class='common_link'>${props.info_link_terms_name}</div>
                                 </div>
                             </div>
-                            <div id='common_dialogue_info_app_copyright'>${props.app_copyright}</div>
-                            <div id='common_dialogue_info_close' class='common_dialogue_button common_icon' ></div>
+                            <div id='common_app_dialogues_info_app_copyright'>${props.app_copyright}</div>
+                            <div id='common_app_dialogues_info_close' class='common_app_dialogues_button common_icon' ></div>
                            `;
 
 /**
@@ -63,7 +63,7 @@ const template = props => `
 *                      template:string}>}
 */
 const component = async props => {
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show0');
   
 
     /**
@@ -79,16 +79,16 @@ const component = async props => {
         switch (event_type){
             case 'click':{
                 switch (true){
-                    case event_target_id=='common_dialogue_info_contact_message_send':{
+                    case event_target_id=='common_app_dialogues_info_contact_message_send':{
                         eventClickSend();
                         break;
                     }
-                    case event_target_id=='common_dialogue_info_app_link':{
+                    case event_target_id=='common_app_dialogues_info_app_link':{
                         if (props.methods.COMMON.commonGlobalGet('app_link_url'))
                             props.methods.COMMON.commonWindowGet().open(props.methods.COMMON.commonGlobalGet('app_link_url'),'_blank','');
                         break;
                     }
-                    case event_target_id=='common_dialogue_info_info_link1':{
+                    case event_target_id=='common_app_dialogues_info_info_link1':{
                         props.methods.COMMON.commonComponentRender({
                             mountDiv:   'common_window_info',
                             data:       {
@@ -102,7 +102,7 @@ const component = async props => {
                             path:       '/common/component/common_window_info.js'});
                         break;
                     }
-                    case event_target_id=='common_dialogue_info_info_link2':{
+                    case event_target_id=='common_app_dialogues_info_info_link2':{
                         props.methods.COMMON.commonComponentRender({
                             mountDiv:   'common_window_info',
                             data:       {
@@ -116,7 +116,7 @@ const component = async props => {
                             path:       '/common/component/common_window_info.js'});
                         break;
                     }
-                    case event_target_id=='common_dialogue_info_info_link3':{
+                    case event_target_id=='common_app_dialogues_info_info_link3':{
                         props.methods.COMMON.commonComponentRender({
                             mountDiv:   'common_window_info',
                             data:       {
@@ -130,8 +130,8 @@ const component = async props => {
                             path:       '/common/component/common_window_info.js'});
                         break;
                     }
-                    case event_target_id=='common_dialogue_info_close':{
-                        props.methods.COMMON.commonComponentRemove('common_dialogue_info', true);
+                    case event_target_id=='common_app_dialogues_info_close':{
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_info', true);
                         break;
                     }
                 }
@@ -144,7 +144,7 @@ const component = async props => {
                         path:   '/app-common-module/COMMON_MESSAGE_CONTACT', 
                         method: 'POST', 
                         body:   {   type:'FUNCTION',
-                                    message:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_info_contact_message').textContent,
+                                    message:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_info_contact_message').textContent,
                                     IAM_data_app_id:props.data.common_app_id},
                         authorization_type:'APP_ID'
                     })

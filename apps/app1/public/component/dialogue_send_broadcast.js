@@ -18,8 +18,8 @@ const template = () => `<div id='dialogue_send_broadcast_form'>
                             <div id='dialogue_send_broadcast_client_id_label' class='common_icon'></div><div id='dialogue_send_broadcast_client_id'></div>
                             <div id='dialogue_send_broadcast_select_app_broadcast'></div>
                             <div id='dialogue_send_broadcast_message' contentEditable='true'></div>
-                            <div id='dialogue_send_broadcast_send' class='common_dialogue_button common_icon' ></div>
-                            <div id='dialogue_send_broadcast_close' class='common_dialogue_button common_icon' ></div>
+                            <div id='dialogue_send_broadcast_send' class='common_app_dialogues_button common_icon' ></div>
+                            <div id='dialogue_send_broadcast_close' class='common_app_dialogues_button common_icon' ></div>
                         </div>`;
 /**
  * @name component
@@ -36,8 +36,8 @@ const template = () => `<div id='dialogue_send_broadcast_form'>
  *                      template:               string}>}
  */
 const component = async props => {
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show0');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#dialogues').classList.add('common_app_dialogues_modal');
 
     const onMounted = async () =>{
         // select broadcast type

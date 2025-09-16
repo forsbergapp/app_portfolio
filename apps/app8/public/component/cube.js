@@ -48,17 +48,17 @@ const template = props =>`  <div id='cube'>
                                     </div>
                                 </div>
                                 <div id='button_solve_speed'>
-                                    <div id='button_solve_speed_250' data-speed=250 class='button_solve_speed common_dialogue_button button_speed_selected'>250</div>
-                                    <div id='button_solve_speed_500' data-speed=500 class='button_solve_speed common_dialogue_button'>500</div>
-                                    <div id='button_solve_speed_1000' data-speed=1000 class='button_solve_speed common_dialogue_button'>1000</div>
-                                    <div id='button_solve_speed_5000' data-speed=5000 class='button_solve_speed common_dialogue_button'>5000</div>
+                                    <div id='button_solve_speed_250' data-speed=250 class='button_solve_speed common_app_dialogues_button button_speed_selected'>250</div>
+                                    <div id='button_solve_speed_500' data-speed=500 class='button_solve_speed common_app_dialogues_button'>500</div>
+                                    <div id='button_solve_speed_1000' data-speed=1000 class='button_solve_speed common_app_dialogues_button'>1000</div>
+                                    <div id='button_solve_speed_5000' data-speed=5000 class='button_solve_speed common_app_dialogues_button'>5000</div>
                                 </div>
                                 <div class='buttons_row'>
                                     <div class='buttons_col'>
-                                        <div id='button_solve' class='common_dialogue_button'></div>
+                                        <div id='button_solve' class='common_app_dialogues_button'></div>
                                     </div>
                                     <div class='buttons_col'>
-                                        <div id='button_solve_cubestate' class='common_dialogue_button'></div>
+                                        <div id='button_solve_cubestate' class='common_app_dialogues_button'></div>
                                     </div>
                                     <div class='buttons_col'>
                                         <div id='app_select_model' class='common_select'>
@@ -73,15 +73,15 @@ const template = props =>`  <div id='cube'>
                                         </div>
                                     </div>
                                     <div class='buttons_col'>
-                                        <div id='button_solved_step' class='common_dialogue_button'></div>
+                                        <div id='button_solved_step' class='common_app_dialogues_button'></div>
                                     </div>
                                     <div class='buttons_col'>
-                                        <div id='button_solved_step_cubestate' class='common_dialogue_button'></div>
+                                        <div id='button_solved_step_cubestate' class='common_app_dialogues_button'></div>
                                     </div>
                                 </div>
                                 <div class='buttons_row'>
                                     <div class='buttons_col'>
-                                        <div id='button_scramble' class='common_dialogue_button'></div>
+                                        <div id='button_scramble' class='common_app_dialogues_button'></div>
                                     </div>
                                     <div class='buttons_col'></div>
                                     <div class='buttons_col'>
@@ -97,10 +97,10 @@ const template = props =>`  <div id='cube'>
                                         </div>
                                     </div>
                                     <div class='buttons_col'>
-                                        <div id='button_reset' class='common_dialogue_button'></div>
+                                        <div id='button_reset' class='common_app_dialogues_button'></div>
                                     </div>
                                     <div class='buttons_col'>
-                                        <div id='button_info' class='common_dialogue_button'></div>
+                                        <div id='button_info' class='common_app_dialogues_button'></div>
                                     </div>
                                 </div>
                             </div>`;
@@ -219,11 +219,11 @@ const component = async props => {
                                 spinner_id:button_id,
                                 timeout:1000 * 60 * 5}) //5 minutes timeout
                     .then((/**@type{string}*/result)=>{
-                        props.methods.COMMON.commonComponentRemove('common_dialogue_message', true);
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_message', true);
                         cube_show_solution(cube, cube_controls, result, button_id);
                     })
                     .catch(()=>{
-                        props.methods.COMMON.commonComponentRemove('common_dialogue_message', true);
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_message', true);
                     });
         }
     };

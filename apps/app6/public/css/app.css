@@ -149,7 +149,7 @@ body {
 	
 	cursor: pointer;
 }
-#common_dialogue_app_data_display .common_app_data_display_master_row{
+#common_app_dialogues_app_data_display .common_app_data_display_master_row{
 	margin-bottom: 1em !important;
 }
 .common_app_data_display_master_row{
@@ -232,7 +232,7 @@ body {
 .app_shop_div .css_spinner{
 	--common_app_color_background_spinner:var(--common_app_color_blue3);
 }
-.common_dialogue_content .css_spinner{
+.common_app_dialogues_content .css_spinner{
 	--common_app_color_background_spinner:var(--common_app_color_white);
 }
 .dialogue_content{
@@ -301,17 +301,17 @@ body {
     background-color: var(--common_app_color_white1);
     box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1), 0 6px 20px 0 var(--common_app_color_shadow2);
 }
-.common_dialogue_button,
+.common_app_dialogues_button,
 .common_toolbar_button{
 	color: var(--common_app_color_gold) !important;
 }
-.common_dialogue_button:hover,
-.common_dialogue_button:active,
+.common_app_dialogues_button:hover,
+.common_app_dialogues_button:active,
 .common_toolbar_button:hover,
 .common_toolbar_button:active{
 	color:var(--common_app_color_green) !important;
 }
-.common_dialogue_content{
+.common_app_dialogues_content{
 	background-color: var(--common_app_color_white1);
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);	
 }

@@ -1,6 +1,6 @@
 /**
  * Displays user menu iam user app content
- * @module apps/common/component/common_dialogue_user_menu_iam_user_app
+ * @module apps/common/component/common_app_dialogues_user_menu_iam_user_app
  */
 
 /**
@@ -12,23 +12,23 @@
  * @description Template
  * @function
 */
-const template = () =>` <div id='common_dialogue_user_menu_app_theme'></div>
-                        <div id='common_dialogue_user_menu_iam_user_app'>
-                            <div id='common_dialogue_user_menu_iam_user_app_locale' class='common_dialogue_user_menu_iam_user_app_col1 common_icon'></div>
-                            <div class='common_dialogue_user_menu_iam_user_app_col2'>
-                                <div id='common_dialogue_user_menu_iam_user_app_locale_select'></div>
+const template = () =>` <div id='common_app_dialogues_user_menu_app_theme'></div>
+                        <div id='common_app_dialogues_user_menu_iam_user_app'>
+                            <div id='common_app_dialogues_user_menu_iam_user_app_locale' class='common_app_dialogues_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div class='common_app_dialogues_user_menu_iam_user_app_col2'>
+                                <div id='common_app_dialogues_user_menu_iam_user_app_locale_select'></div>
                             </div>
-                            <div id='common_dialogue_user_menu_iam_user_app_timezone' class='common_dialogue_user_menu_iam_user_app_col1 common_icon'></div>
-                            <div class='common_dialogue_user_menu_iam_user_app_col2'>
-                                <div id='common_dialogue_user_menu_iam_user_app_timezone_select'></div>
+                            <div id='common_app_dialogues_user_menu_iam_user_app_timezone' class='common_app_dialogues_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div class='common_app_dialogues_user_menu_iam_user_app_col2'>
+                                <div id='common_app_dialogues_user_menu_iam_user_app_timezone_select'></div>
                             </div>
-                            <div id='common_dialogue_user_menu_iam_user_app_direction' class='common_dialogue_user_menu_iam_user_app_col1 common_icon'></div>
-                            <div class='common_dialogue_user_menu_iam_user_app_col2'>
-                                <div id='common_dialogue_user_menu_iam_user_app_direction_select'></div>
+                            <div id='common_app_dialogues_user_menu_iam_user_app_direction' class='common_app_dialogues_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div class='common_app_dialogues_user_menu_iam_user_app_col2'>
+                                <div id='common_app_dialogues_user_menu_iam_user_app_direction_select'></div>
                             </div>
-                            <div id='common_dialogue_user_menu_iam_user_app_arabic_script' class='common_dialogue_user_menu_iam_user_app_col1 common_icon'></div>
-                            <div class='common_dialogue_user_menu_iam_user_app_col2'>
-                                <div id='common_dialogue_user_menu_iam_user_app_arabic_script_select'></div>
+                            <div id='common_app_dialogues_user_menu_iam_user_app_arabic_script' class='common_app_dialogues_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div class='common_app_dialogues_user_menu_iam_user_app_col2'>
+                                <div id='common_app_dialogues_user_menu_iam_user_app_arabic_script_select'></div>
                             </div>
                         </div>`;
 /**
@@ -76,7 +76,7 @@ const component = async props => {
        //mount select
        //Locale
        await props.methods.COMMON.commonComponentRender({
-           mountDiv:   'common_dialogue_user_menu_iam_user_app_locale_select', 
+           mountDiv:   'common_app_dialogues_user_menu_iam_user_app_locale_select', 
            data:       {
                        default_data_value:props.data.user_locale,
                        default_value:'',
@@ -93,7 +93,7 @@ const component = async props => {
        if (props.data.admin_only!=1){
            //Timezone
            await props.methods.COMMON.commonComponentRender({
-               mountDiv:  'common_dialogue_user_menu_iam_user_app_timezone_select', 
+               mountDiv:  'common_app_dialogues_user_menu_iam_user_app_timezone_select', 
                data:       {
                            default_data_value:props.data.user_timezone,
                            default_value:'',
@@ -109,7 +109,7 @@ const component = async props => {
                path:'/common/component/common_select.js'});
            //Direction with default ' '
            await props.methods.COMMON.commonComponentRender({
-               mountDiv:   'common_dialogue_user_menu_iam_user_app_direction_select', 
+               mountDiv:   'common_app_dialogues_user_menu_iam_user_app_direction_select', 
                data:       {
                            default_data_value:props.data.user_direction,
                            default_value:' ',
@@ -125,7 +125,7 @@ const component = async props => {
                path:       '/common/component/common_select.js'});   
            //Arabic script with default ' '
            await props.methods.COMMON.commonComponentRender({
-               mountDiv:   'common_dialogue_user_menu_iam_user_app_arabic_script_select', 
+               mountDiv:   'common_app_dialogues_user_menu_iam_user_app_arabic_script_select', 
                data:       {
                            default_data_value:props.data.user_arabic_script,
                            default_value:' ',
@@ -141,11 +141,11 @@ const component = async props => {
                path:       '/common/component/common_select.js'});
        }
        //set current value on all the selects
-       props.methods.COMMON.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_locale_select', props.data.user_locale);
+       props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_locale_select', props.data.user_locale);
        if ((props.data.admin_only == 1)==false){
-           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_timezone_select', props.data.user_timezone);
-           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_direction_select', props.data.user_direction ?? '');
-           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_iam_user_app_arabic_script_select', props.data.user_arabic_script ?? '');
+           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_timezone_select', props.data.user_timezone);
+           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_direction_select', props.data.user_direction ?? '');
+           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_arabic_script_select', props.data.user_arabic_script ?? '');
        }
        
    };

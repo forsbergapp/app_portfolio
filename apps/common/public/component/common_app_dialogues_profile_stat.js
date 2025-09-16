@@ -1,6 +1,6 @@
 /**
  * Displays profile stat
- * @module apps/common/component/common_dialogue_profile_stat
+ * @module apps/common/component/common_app_dialogues_profile_stat
  */
 
 /**
@@ -47,7 +47,7 @@ const component = async props => {
                             stat_list_app_rest_url:props.data.stat_list_app_rest_url
                             },
                 methods:    null,
-                path:       '/common/component/common_dialogue_profile_stat_list.js'});
+                path:       '/common/component/common_app_dialogues_profile_stat_list.js'});
     };
     return {
         lifecycle:  {onMounted:onMounted},

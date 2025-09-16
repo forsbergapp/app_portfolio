@@ -1,6 +1,6 @@
 /**
  * Displays list of values
- * @module apps/common/component/common_dialogue_lov
+ * @module apps/common/component/common_app_dialogues_lov
  */
 /**
  * @import {common}  from '../../../common_types.js'
@@ -34,7 +34,7 @@ const template = props =>`  <div id='common_lov_form'>
                                     `).join('')
                                 }
                             </div>
-                            <div id='common_lov_close' class='common_dialogue_button common_icon'></div>
+                            <div id='common_lov_close' class='common_app_dialogues_button common_icon'></div>
                         </div>`;
 /**
  * @name component
@@ -59,8 +59,8 @@ const template = props =>`  <div id='common_lov_form'>
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show2');
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show2');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues').classList.add('common_app_dialogues_modal');
 
     let path = '';
     let query = null;

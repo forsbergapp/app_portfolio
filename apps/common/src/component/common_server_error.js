@@ -106,7 +106,7 @@ const template = () =>`  <!DOCTYPE html>
                                         color: var(--common_app_color_black);
                                         background: var(--common_app_color_blue1);
                                     }
-                                    #common_dialogue_server_error{
+                                    #common_app_dialogues_server_error{
                                         text-align:center;
                                         top: 50%;
                                         left: 50%;
@@ -125,7 +125,7 @@ const template = () =>`  <!DOCTYPE html>
                                 </style>
                             </head>
                                 <body>
-                                    <div id='common_dialogue_server_error'>
+                                    <div id='common_app_dialogues_server_error'>
                                         <div id='common_server_error_message'>SERVER ERROR</div>
                                         <div id='common_server_error_countdown'></div>
                                     </div>

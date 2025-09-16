@@ -105,7 +105,7 @@ const appEventClick = event => {
             break;
         }
         /*Dialogue user start */
-        case 'common_dialogue_iam_start_login_button':{
+        case 'common_app_dialogues_iam_start_login_button':{
             common.commonUserLogin().catch(()=>null);
             break;
         }                

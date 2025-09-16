@@ -76,7 +76,7 @@ const template = props =>`  <!DOCTYPE html>
                                         height:100%;
                                         width: 100%;
                                     }   
-                                    #common_dialogue_maintenance{
+                                    #common_app_dialogues_maintenance{
                                         height:100%;
                                         width: 100%;
                                         position: fixed;
@@ -84,7 +84,7 @@ const template = props =>`  <!DOCTYPE html>
                                         justify-content: center;
                                         align-items:center;
                                     }
-                                    .common_dialogue_content{
+                                    .common_app_dialogues_content{
                                         word-break: break-word;
 	                                    border-radius: var(--common_app_css_border_radius);
                                         background-color: var(--common_app_color_light);
@@ -96,13 +96,13 @@ const template = props =>`  <!DOCTYPE html>
                                     #common_maintenance_header::before{
                                         content:var(--common_app_icon_maintenance)
                                     }
-                                    #common_dialogue_maintenance_content{
+                                    #common_app_dialogues_maintenance_content{
                                         height:250px;
                                         width:300px;
                                         display: grid;
                                         grid-template-rows: [header] 10% [message] 20% [countdown] 50% [footer] 20%;
                                     }
-                                    #common_dialogue_maintenance_content > div{
+                                    #common_app_dialogues_maintenance_content > div{
                                         align-items: center;
                                         display: flex;
                                         justify-content: center;
@@ -126,8 +126,8 @@ const template = props =>`  <!DOCTYPE html>
                                 <meta name='mobile-web-app-capable' content='yes'>
                             </head>
                             <body>
-                                <div id='common_dialogue_maintenance' class='common_dialogues_modal'>
-                                    <div id='common_dialogue_maintenance_content' class='common_dialogue_content'>
+                                <div id='common_app_dialogues_maintenance' class='common_app_dialogues_modal'>
+                                    <div id='common_app_dialogues_maintenance_content' class='common_app_dialogues_content'>
                                         <div id='common_maintenance_header'></div>
                                         <div id='common_maintenance_message'>${props.message}</div>
                                         <div id='common_maintenance_countdown'></div>

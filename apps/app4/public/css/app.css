@@ -166,7 +166,7 @@
 }
 
 /*Dialogue Info */
-#dialogue_info.common_dialogue_show0{
+#dialogue_info.common_app_dialogues_show0{
 	width: 300px;
 	height:auto;
 }
@@ -258,6 +258,7 @@
 	width:100%;
 	max-height: 1.6em;
 	display: block;
+    margin-top: 0.2em;
 }
 #settings .setting_horizontal_col{
 	display: inline-block;
@@ -832,7 +833,7 @@ body,
 #settings select,
 #settings_tab_navigation,
 #common_app_iam_user_menu,
-.common_dialogue_button,
+.common_app_dialogues_button,
 .common_toolbar_button
 {
 	color: var(--app_theme_main_color3) !important;
@@ -846,8 +847,8 @@ body,
 #settings .settings_tab4 .setting_report_title{
     border: 0.5px solid var(--common_app_color_gold);
 }
-.common_dialogue_button:hover,
-.common_dialogue_button:active,
+.common_app_dialogues_button:hover,
+.common_app_dialogues_button:active,
 .common_toolbar_button:hover,
 .common_toolbar_button:active,
 #common_app_iam_user_menu:hover,
@@ -914,7 +915,7 @@ body,
 .common_dialogue{
 	background-color: var(--common_app_color_shadow3);
 }
-.common_dialogue_content{
+.common_app_dialogues_content{
 	background-color:var(--app_theme_main_color1) !important;
 	color: var(--app_theme_main_color3) !important;
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
@@ -934,8 +935,8 @@ body,
 	background: var(--app_theme_main_color2);
 	box-shadow: 0px -3px 3px var(--app_theme_dialogue_shadow_color1);
 }
-#common_dialogues .common_input,
-.common_dialogue_content,
+#common_app_dialogues .common_input,
+.common_app_dialogues_content,
 #common_window_info,
 #common_window_info_content,
 #common_window_info_toolbar,
@@ -945,17 +946,17 @@ body,
 {
 	background-color:var(--app_theme_main_color1);
 }
-#common_dialogues .common_input,
+#common_app_dialogues .common_input,
 #common_window_info,
 #common_window_info_toolbar,
 #common_dialouge_user_menu,
-.common_dialogue_content,
+.common_app_dialogues_content,
 #common_profile_search_icon
 {
 	color: var(--app_theme_main_color3);
 }
-#common_dialogue_user_menu_username:hover,
-#common_dialogue_user_menu_username:active,
+#common_app_dialogues_user_menu_username:hover,
+#common_app_dialogues_user_menu_username:active,
 #common_profile_btn_top:hover,
 #common_profile_btn_top:active,
 #common_dialouge_user_menu_logged_in div:hover,
@@ -966,7 +967,7 @@ body,
 	background-color:var(--app_theme_user_menu_hover_background_color);	
 }
 #common_profile_search_input,
-#common_dialogues .common_input,
+#common_app_dialogues .common_input,
 #common_profile_search_list_wrap{
 	border: 1px solid var(--app_theme_input_border_color);
 	background-color: var(--app_theme_input_background_color);
@@ -997,25 +998,25 @@ body,
 .common_dialogue{
 	background-color: var(--app_theme_dialogue_background_color);
 }
-.common_dialogue_content{
+.common_app_dialogues_content{
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_shadow_color1),0 6px 20px 0 var(--app_theme_dialogue_shadow_color2);
 }
-.common_dialogue_iam_start_selected {
+.common_app_dialogues_iam_start_selected {
 	background-color: var(--app_theme_main_color2);
 }
-#common_dialogue_iam_start #common_dialogue_iam_start_nav>div{
+#common_app_dialogues_iam_start #common_app_dialogues_iam_start_nav>div{
 	color: var(--app_theme_button_color);
 }
-#common_dialogue_iam_start #common_dialogue_iam_start_nav>div:hover,
-#common_dialogue_iam_start #common_dialogue_iam_start_nav:active{
+#common_app_dialogues_iam_start #common_app_dialogues_iam_start_nav>div:hover,
+#common_app_dialogues_iam_start #common_app_dialogues_iam_start_nav:active{
 	color:var(--app_theme_hover);
 }
-#common_dialogue_iam_start .common_login_button{
+#common_app_dialogues_iam_start .common_login_button{
 	background-color: var(--app_theme_login_button_background_color);
 	color: var(--app_theme_login_button_color);
 }
-#common_dialogue_iam_start .common_login_button:hover,
-#common_dialogue_iam_start .common_login_button:active{
+#common_app_dialogues_iam_start .common_login_button:hover,
+#common_app_dialogues_iam_start .common_login_button:active{
 	background-color:var(--app_theme_hover) !important;
 }
 .common_switch::before {

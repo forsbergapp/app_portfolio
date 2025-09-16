@@ -927,19 +927,19 @@ const appEventClick = event => {
             });
             break;
         }
-        case 'common_dialogue_iam_start_login_admin_button':{
+        case 'common_app_dialogues_iam_start_login_admin_button':{
             appLogin();
             break;
         }
         //dialogue user menu
-        case 'common_dialogue_user_menu_nav_iam_user_app':{
+        case 'common_app_dialogues_user_menu_nav_iam_user_app':{
             common.commonComponentRender(
-                                {mountDiv:  'common_dialogue_user_menu_app_theme',
+                                {mountDiv:  'common_app_dialogues_user_menu_app_theme',
                                 data:       null,
                                 methods:    {
                                             app_theme_update:common.commonMiscPreferencesPostMount
                                             },
-                                path:'/common/component/common_dialogue_user_menu_app_theme.js'});
+                                path:'/common/component/common_app_dialogues_user_menu_app_theme.js'});
             break;
         }
         default:{
@@ -969,9 +969,9 @@ const appEventChange = event => {
 const appEventKeyUp = event => {
     const event_target_id = common.commonMiscElementId(event.target);
     switch (event_target_id){
-        case 'common_dialogue_iam_start_login_admin_username':
-        case 'common_dialogue_iam_start_login_admin_password':
-        case 'common_dialogue_iam_start_login_admin_password_confirm':{
+        case 'common_app_dialogues_iam_start_login_admin_username':
+        case 'common_app_dialogues_iam_start_login_admin_password':
+        case 'common_app_dialogues_iam_start_login_admin_password_confirm':{
             if (event.code === 'Enter') {
                 event.preventDefault();
                 appLogin().catch(()=>null);

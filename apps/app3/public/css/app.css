@@ -228,7 +228,7 @@ tr > th:last-child { border-inline-end: 1px solid var(--common_app_color_shadow1
 td, th{
     border-color:  var(--common_app_color_shadow1);
 }
-#menu_close.common_dialogue_button {
+#menu_close.common_app_dialogues_button {
     color: var(--common_app_color_light);
 }
 /* APP THEME COMMON*/
@@ -285,17 +285,17 @@ td, th{
 .common_link:active{
 	color:var(--common_app_color_green);
 }
-.common_dialogue_button:hover,
-.common_dialogue_button:active,
+.common_app_dialogues_button:hover,
+.common_app_dialogues_button:active,
 .common_toolbar_button:hover,
 .common_toolbar_button:active{
 	color:var(--common_app_color_green) !important;
 }
-.common_dialogue_content:hover, 
-.common_dialogue_content:active{
+.common_app_dialogues_content:hover, 
+.common_app_dialogues_content:active{
 	box-shadow: 0 0 35px 4px var(--common_app_color_white_transparent);
 }  
-.common_dialogue_content{
+.common_app_dialogues_content{
 	background-color: var(--common_app_color_white1);
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);	
 }

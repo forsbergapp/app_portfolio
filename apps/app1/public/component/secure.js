@@ -13,12 +13,12 @@
  */
 const template = () =>` <div id='secure'>
                             <div id='dialogues'>
-                                <div id='dialogue_send_broadcast' class='common_dialogue common_dialogue_content'></div>
+                                <div id='dialogue_send_broadcast' class='common_dialogue common_app_dialogues_content'></div>
                             </div>
-                            <div id='secure_menu_open' class='common_dialogue_button common_icon'></div>
+                            <div id='secure_menu_open' class='common_app_dialogues_button common_icon'></div>
                             <div id='secure_menu'>
                                 <div id='secure_menu_menus'>
-                                    <div id='secure_menu_close' class='common_dialogue_button common_icon'></div>
+                                    <div id='secure_menu_close' class='common_app_dialogues_button common_icon'></div>
                                     <div id='secure_menu_1' class='secure_menuitem common_icon'></div>
                                     <div id='secure_menu_2' class='secure_menuitem common_icon'></div>
                                     <div id='secure_menu_3' class='secure_menuitem common_icon'></div>

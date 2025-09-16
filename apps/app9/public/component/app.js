@@ -12,7 +12,7 @@
  */
 const template = () =>  `   <div id='otp_row'>
                                 <div id='otp_key' class='common_input common_placeholder' contentEditable='true'></div>
-                                <div id='clear_button' class='common_dialogue_button common_icon'></div>
+                                <div id='clear_button' class='common_app_dialogues_button common_icon'></div>
                             </div>
                             <div id='totp_row'>
                                 <div id='totp_value'></div>

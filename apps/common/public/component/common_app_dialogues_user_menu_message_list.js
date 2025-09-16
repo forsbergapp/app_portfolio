@@ -1,6 +1,6 @@
 /**
  * Displays user menu message list
- * @module apps/common/component/common_dialogue_user_menu_message_list
+ * @module apps/common/component/common_app_dialogues_user_menu_message_list
  */
 /**
  * @import {common}  from '../../../common_types.js'
@@ -15,14 +15,14 @@
  * @returns {string}
  */
 const template = props => ` 
-                        <div class='common_dialogue_user_menu_messages_row_title common_dialogue_user_menu_messages_row'>
-                            <div id='common_dialogue_user_menu_messages_col_delete' class='common_dialogue_user_menu_messages_col common_dialogue_user_menu_messages_col_delete common_icon'></div>
-                            <div id='common_dialogue_user_menu_messages_col_date' class='common_dialogue_user_menu_messages_col common_icon'></div>
-                            <div id='common_dialogue_user_menu_messages_col_subject' class='common_dialogue_user_menu_messages_col common_icon'></div>
-                            <div id='common_dialogue_user_menu_messages_col_sender' class='common_dialogue_user_menu_messages_col common_icon'></div>
+                        <div class='common_app_dialogues_user_menu_messages_row_title common_app_dialogues_user_menu_messages_row'>
+                            <div id='common_app_dialogues_user_menu_messages_col_delete' class='common_app_dialogues_user_menu_messages_col common_app_dialogues_user_menu_messages_col_delete common_icon'></div>
+                            <div id='common_app_dialogues_user_menu_messages_col_date' class='common_app_dialogues_user_menu_messages_col common_icon'></div>
+                            <div id='common_app_dialogues_user_menu_messages_col_subject' class='common_app_dialogues_user_menu_messages_col common_icon'></div>
+                            <div id='common_app_dialogues_user_menu_messages_col_sender' class='common_app_dialogues_user_menu_messages_col common_icon'></div>
                         </div>
                         ${props.messages.rows.map(row=>
-                            `<div class='common_dialogue_user_menu_messages_row common_row ${row.read?'common_dialogue_user_menu_messages_row_read':'common_dialogue_user_menu_messages_row_unread'}' 
+                            `<div class='common_app_dialogues_user_menu_messages_row common_row ${row.read?'common_app_dialogues_user_menu_messages_row_read':'common_app_dialogues_user_menu_messages_row_unread'}' 
                                 data-id=${row.id} 
                                 data-created='${row.created}'
                                 data-sender='${row.message.sender??''}'
@@ -31,10 +31,10 @@ const template = props => `
                                 data-host='${row.message.host}'
                                 data-subject='${row.message.subject}'
                                 data-message='${row.message.message}'>
-                                <div class='common_dialogue_user_menu_messages_col common_dialogue_user_menu_messages_col_delete common_icon'></div>
-                                <div class='common_dialogue_user_menu_messages_col'>${props.commonMiscFormatJsonDate(row.created??'')}</div>
-                                <div class='common_dialogue_user_menu_messages_col'>${row.message.subject}</div>
-                                <div class='common_dialogue_user_menu_messages_col'>${row.message.sender ?? ''}</div>
+                                <div class='common_app_dialogues_user_menu_messages_col common_app_dialogues_user_menu_messages_col_delete common_icon'></div>
+                                <div class='common_app_dialogues_user_menu_messages_col'>${props.commonMiscFormatJsonDate(row.created??'')}</div>
+                                <div class='common_app_dialogues_user_menu_messages_col'>${row.message.subject}</div>
+                                <div class='common_app_dialogues_user_menu_messages_col'>${row.message.sender ?? ''}</div>
                             </div>`).join('')
                             }`;
 /**

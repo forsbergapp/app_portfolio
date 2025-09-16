@@ -29,7 +29,7 @@ const template = props =>`
                             }
                         </div>
                         <div id='settings_content' class='settings_tab_content'></div>
-                        <div id='settings_close' class='common_dialogue_button common_icon' ></div>
+                        <div id='settings_close' class='common_app_dialogues_button common_icon' ></div>
                         `;
 /**
  * @name component

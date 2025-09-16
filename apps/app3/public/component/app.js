@@ -16,7 +16,7 @@
 const template = props =>`  <div id='menu_open' class='common_icon'></div>
                             <div id='nav'>
                                 <div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].doc}'`:''} id='title' class='common_link'>${props.title}</div>
-                                <div id='menu_close' class='common_dialogue_button common_icon'></div>
+                                <div id='menu_close' class='common_app_dialogues_button common_icon'></div>
                                 <div id='nav_content_app'>
                                     ${props.app_menu.map(row=>
                                         `<div class='app_menu_data' data-id='${row.id}' data-type='${row.type}'>

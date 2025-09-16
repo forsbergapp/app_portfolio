@@ -181,30 +181,30 @@ const appEventClick = event => {
         case 'common_app_iam_user_menu_default_avatar':{
             if (common.commonGlobalGet('iam_user_id')==null)
                 common.commonComponentRender({
-                    mountDiv:   'common_dialogue_user_menu_app_theme',
+                    mountDiv:   'common_app_dialogues_user_menu_app_theme',
                     data:       null,
                     methods:    {
                                 app_theme_update:common.commonMiscPreferencesPostMount
                                 },
-                    path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+                    path:       '/common/component/common_app_dialogues_user_menu_app_theme.js'});
             break;
         }
-        case 'common_dialogue_user_menu_nav_iam_user_app':{
+        case 'common_app_dialogues_user_menu_nav_iam_user_app':{
             common.commonComponentRender({
-                    mountDiv:   'common_dialogue_user_menu_app_theme', 
+                    mountDiv:   'common_app_dialogues_user_menu_app_theme', 
                     data:       null,
                     methods:    {
                                 app_theme_update:common.commonMiscPreferencesPostMount
                                 },
-                    path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+                    path:       '/common/component/common_app_dialogues_user_menu_app_theme.js'});
             break;
         }
-        case 'common_dialogue_user_menu_log_out':{
+        case 'common_app_dialogues_user_menu_log_out':{
             common.commonUserLogout().then(()=>appUserLogout());
             break;
         }
         /*Dialogue user start */
-        case 'common_dialogue_iam_start_login_button':{
+        case 'common_app_dialogues_iam_start_login_button':{
             appUserLogin();
             break;
         }
@@ -221,8 +221,8 @@ const appEventClick = event => {
 const appEventKeyUp = event => {
     const event_target_id = common.commonMiscElementId(event.target);
     switch(event_target_id){
-        case 'common_dialogue_iam_start_login_username':
-        case 'common_dialogue_iam_start_login_password':{
+        case 'common_app_dialogues_iam_start_login_username':
+        case 'common_app_dialogues_iam_start_login_password':{
             if (event.code === 'Enter') {
                 event.preventDefault();
                 appUserLogin();
@@ -317,7 +317,7 @@ const appPaymentRequestUpdate = async status => {
     .finally(()=>{
         //remove the token since user answered the request
         APP_GLOBAL.token=null;
-        common.commonComponentRemove('common_dialogue_app_data_display', true);
+        common.commonComponentRemove('common_app_dialogues_app_data_display', true);
     });
 };
 /**
@@ -348,12 +348,12 @@ const appPaymentRequestCancel = async () => {
 const appPaymentRequestShow = async message =>{
     APP_GLOBAL.token = JSON.parse(message).token;
     //mount component only if not already opened
-    if (COMMON_DOCUMENT.querySelector('#common_dialogue_app_data_display .common_app_data_display_master_col1[data-key=amount]'))
+    if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=amount]'))
         null;
     else
         //Payment request received, show dialogue with payment request info and send received token 
         await common.commonComponentRender({
-                mountDiv:   'common_dialogue_app_data_display', 
+                mountDiv:   'common_app_dialogues_app_data_display', 
                 data:       {
                             app_id:common.commonGlobalGet('app_id'),
                             common_app_id:common.commonGlobalGet('app_common_app_id'),
@@ -401,7 +401,7 @@ const appPaymentRequestShow = async message =>{
                 common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
                                                     JSON.parse(message).exp);
             })
-            .catch(()=>common.commonComponentRemove('common_dialogue_app_data_display', true));
+            .catch(()=>common.commonComponentRemove('common_app_dialogues_app_data_display', true));
 };
 
 /**

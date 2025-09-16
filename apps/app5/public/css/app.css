@@ -197,7 +197,7 @@ body {
 	border: 1px solid var(--common_app_color_gold);
 	background-color: var(--common_app_color_white);
 }
-.common_dialogue_iam_start_selected {
+.common_app_dialogues_iam_start_selected {
     background-color: var(--common_app_color_white3);
 }
 .common_link:hover,
@@ -212,17 +212,17 @@ body {
     background-color: var(--common_app_color_white1);
     box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1), 0 6px 20px 0 var(--common_app_color_shadow2);
 }
-.common_dialogue_button,
+.common_app_dialogues_button,
 .common_toolbar_button{
 	color: var(--common_app_color_gold) !important;
 }
-.common_dialogue_button:hover,
-.common_dialogue_button:active,
+.common_app_dialogues_button:hover,
+.common_app_dialogues_button:active,
 .common_toolbar_button:hover,
 .common_toolbar_button:active{
 	color:var(--common_app_color_green) !important;
 }
-.common_dialogue_content{
+.common_app_dialogues_content{
 	background-color: var(--common_app_color_white1);
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);	
 }

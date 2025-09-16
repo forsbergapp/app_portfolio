@@ -61,7 +61,7 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                 </div>
                                 <div id='menu_apps_detail' class='common_list_scrollbar'></div>
                                 <div id='apps_buttons' class="save_buttons">
-                                    <div id='menu_apps_save' class='common_dialogue_button button_save common_icon'></div>
+                                    <div id='menu_apps_save' class='common_app_dialogues_button button_save common_icon'></div>
                                 </div>
                             </div>` ;
 /**

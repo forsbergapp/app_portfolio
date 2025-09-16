@@ -55,7 +55,7 @@ const appEventClick = event => {
             break;
         }
         /*Dialogue user start */
-        case 'common_dialogue_iam_start_login_button':{
+        case 'common_app_dialogues_iam_start_login_button':{
             common.commonUserLogin().catch(()=>null);
             break;
         }                
@@ -156,13 +156,13 @@ const appPaymentRequestStatus = ()=>{
             const status = JSON.parse(result).rows[0].status;
             if (status != 'PENDING'){
                 common.commonGlobalSet('token_at', null);
-                common.commonComponentRemove('common_dialogue_app_data_display', true);
+                common.commonComponentRemove('common_app_dialogues_app_data_display', true);
                 common.commonMessageShow('INFO', null, null,status);
             }
         })
         .catch(()=>{
             common.commonGlobalSet('token_at', null);
-            common.commonComponentRemove('common_dialogue_app_data_display', true);
+            common.commonComponentRemove('common_app_dialogues_app_data_display', true);
         });
     }
 };
@@ -186,7 +186,7 @@ const appPaymentRequest = async () =>{
             message:        'Shop app'
         };
         await common.commonComponentRender({
-            mountDiv:   'common_dialogue_app_data_display', 
+            mountDiv:   'common_app_dialogues_app_data_display', 
             data:       {
                         app_id:common.commonGlobalGet('app_id'),
                         common_app_id:common.commonGlobalGet('app_common_app_id'),
@@ -232,7 +232,7 @@ const appPaymentRequest = async () =>{
                                                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_exp').getAttribute('data-value'),
                                                 appPaymentRequestStatus);
             })
-            .catch(()=>common.commonComponentRemove('common_dialogue_app_data_display', true));
+            .catch(()=>common.commonComponentRemove('common_app_dialogues_app_data_display', true));
     }
     else
         common.commonMessageShow('INFO', null, 'message_text','!');
@@ -246,7 +246,7 @@ const appPaymentRequest = async () =>{
 const appPayCancel = async () =>{
     common.commonGlobalSet('token_at', null);
     common.commonMessageShow('INFO',null,null, 'Payment cancel');
-    common.commonComponentRemove('common_dialogue_app_data_display', true);
+    common.commonComponentRemove('common_app_dialogues_app_data_display', true);
 };
 /**
  * @name appPay
@@ -256,7 +256,7 @@ const appPayCancel = async () =>{
  */
 const appPay = async () =>{
     await common.commonComponentRender({
-        mountDiv:   'common_dialogue_app_data_display', 
+        mountDiv:   'common_app_dialogues_app_data_display', 
         data:       {
                     app_id:common.commonGlobalGet('app_id'),
                     common_app_id:common.commonGlobalGet('app_common_app_id'),

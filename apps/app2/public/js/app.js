@@ -20,13 +20,13 @@ let common;
  * @returns {void}
  */
 const appDialogueAppsShowHide = () => {
-    if (COMMON_DOCUMENT.querySelector('#common_dialogue_apps').style.visibility=='visible' ||
-        COMMON_DOCUMENT.querySelector('#common_dialogue_apps').style.visibility==''){
-        COMMON_DOCUMENT.querySelector('#common_dialogue_apps').style.visibility='hidden';
+    if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility=='visible' ||
+        COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility==''){
+        COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility='hidden';
         COMMON_DOCUMENT.querySelector('#common_profile_btn_top').style.visibility='hidden';
     }
     else{
-        COMMON_DOCUMENT.querySelector('#common_dialogue_apps').style.visibility='visible';
+        COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility='visible';
         COMMON_DOCUMENT.querySelector('#common_profile_btn_top').style.visibility='visible';
     }
 };
@@ -42,9 +42,9 @@ const appEventClick = event => {
     switch (event_target_id){
         case event.target.classList.contains('common_select_option')?event_target_id:'':
         case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
-            if (event_target_id == 'common_dialogue_user_menu_iam_user_app_locale_select')
+            if (event_target_id == 'common_app_dialogues_user_menu_iam_user_app_locale_select')
                 appAppsGet();
-            if (event_target_id == 'common_dialogue_user_menu_iam_user_app_arabic_script_select')
+            if (event_target_id == 'common_app_dialogues_user_menu_iam_user_app_arabic_script_select')
                 appThemeUpdate();
             break;
         }
@@ -66,21 +66,21 @@ const appEventClick = event => {
         case 'common_app_iam_user_menu_default_avatar':{
             if (common.commonGlobalGet('iam_user_id')==null)
                 common.commonComponentRender({
-                    mountDiv:   'common_dialogue_user_menu_app_theme',
+                    mountDiv:   'common_app_dialogues_user_menu_app_theme',
                     data:       null,
                     methods:    {appPreferencesPostMount:appPreferencesPostMount},
                     path:       '/component/app_theme.js'});
             break;
         }
-        case 'common_dialogue_user_menu_nav_iam_user_app':{
+        case 'common_app_dialogues_user_menu_nav_iam_user_app':{
             common.commonComponentRender({
-                    mountDiv:   'common_dialogue_user_menu_app_theme',
+                    mountDiv:   'common_app_dialogues_user_menu_app_theme',
                     data:       null,
                     methods:    {appPreferencesPostMount:appPreferencesPostMount},
                     path:       '/component/app_theme.js'});
             break;
         }
-        case 'common_dialogue_user_menu_log_out':{
+        case 'common_app_dialogues_user_menu_log_out':{
             common.commonUserLogout();
             appUserLogout();
             break;
@@ -94,7 +94,7 @@ const appEventClick = event => {
             common.commonProfileFollowLike('LIKE');
             break;
         }
-        case 'common_dialogue_iam_start_login_button':{
+        case 'common_app_dialogues_iam_start_login_button':{
             appUserLogin().catch(()=>null);
             break;
         }
@@ -111,8 +111,8 @@ const appEventClick = event => {
 const appEventKeyUp = event => {
     const event_target_id = common.commonMiscElementId(event.target);
     switch (event_target_id){
-        case 'common_dialogue_iam_start_login_username':
-        case 'common_dialogue_iam_start_login_password':{
+        case 'common_app_dialogues_iam_start_login_username':
+        case 'common_app_dialogues_iam_start_login_password':{
             if (event.code === 'Enter') {
                 event.preventDefault();
                 appUserLogin().catch(()=>null);
@@ -198,12 +198,12 @@ const appUserLogin = async () =>{
  */
 const appAppsGet = () => {
     common.commonComponentRender({
-        mountDiv:   'common_dialogue_apps',
+        mountDiv:   'common_app_dialogues_apps',
         data:       {
                     app_id:common.commonGlobalGet('app_id')
                     },
         methods:    null,
-        path:       '/common/component/common_dialogue_apps.js'});
+        path:       '/common/component/common_app_dialogues_apps.js'});
 };
 /**
  * @name appException
