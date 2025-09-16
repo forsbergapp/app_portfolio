@@ -1075,7 +1075,7 @@ const appUserSettingLink = (item) => {
                                         item.id,
                                         'HTML');
             common.commonComponentRender({
-                    mountDiv:   'common_window_info',
+                    mountDiv:   'common_app_window_info',
                     data:       {
                                 info:'URL',
                                 path:url,
@@ -1084,7 +1084,7 @@ const appUserSettingLink = (item) => {
                                 class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size
                                 },
                     methods:    null,
-                    path:       '/common/component/common_window_info.js'});
+                    path:       '/common/component/common_app_window_info.js'});
             break;
         }
     }
@@ -1424,7 +1424,7 @@ const appUserSettingProfileLink = item => {
                                      'HTML',
                                      true);
             common.commonComponentRender({
-                    mountDiv:   'common_window_info',
+                    mountDiv:   'common_app_window_info',
                     data:       {
                                 info:'URL',
                                 class:paper_size,
@@ -1434,7 +1434,7 @@ const appUserSettingProfileLink = item => {
                                 authorization:'APP_ID'
                                 },
                     methods:    null,
-                    path:       '/common/component/common_window_info.js'});
+                    path:       '/common/component/common_app_window_info.js'});
             break;
         }
         case 'profile_user_settings_like':{
@@ -1560,7 +1560,7 @@ const appEventClick = event => {
         }
         case 'info_link1':{
             common.commonComponentRender({
-                mountDiv:   'common_window_info',
+                mountDiv:   'common_app_window_info',
                 data:       {
                             info:'URL',
                             path:'/app-resource/' + common.commonGlobalGet('info_link_policy_url'),
@@ -1569,12 +1569,12 @@ const appEventClick = event => {
                             authorization:'APP_ID'
                             },
                 methods:    null,
-                path:       '/common/component/common_window_info.js'});
+                path:       '/common/component/common_app_window_info.js'});
             break;
         }
         case 'info_link2':{
             common.commonComponentRender({
-                mountDiv:   'common_window_info',
+                mountDiv:   'common_app_window_info',
                 data:       {
                             info:'URL',
                             path:'/app-resource/' + common.commonGlobalGet('info_link_disclaimer_url'),
@@ -1583,12 +1583,12 @@ const appEventClick = event => {
                             authorization:'APP_ID'
                             },
                 methods:    null,
-                path:       '/common/component/common_window_info.js'});
+                path:       '/common/component/common_app_window_info.js'});
             break;
         }
         case 'info_link3':{
             common.commonComponentRender({
-                mountDiv:   'common_window_info',
+                mountDiv:   'common_app_window_info',
                 data:       {
                             info:'URL',
                             path:'/app-resource/' + common.commonGlobalGet('info_link_terms_url'),
@@ -1597,7 +1597,7 @@ const appEventClick = event => {
                             authorization:'APP_ID'
                             },
                 methods:    null,
-                path:       '/common/component/common_window_info.js'});
+                path:       '/common/component/common_app_window_info.js'});
             break;
         }
         case 'info_close':{
@@ -2030,13 +2030,7 @@ const appInit = async parameters => {
             data:       null,
             methods:    null,
             path:       '/common/component/common_profile_search.js'});
-    })
-    .then(()=>
-        common.commonComponentRender({
-            mountDiv:   'app_profile_toolbar',
-            data:       null,
-            methods:    null,
-            path:       '/common/component/common_profile_toolbar.js'}));
+    });
     //set papersize
     appPaperZoom();
     //set app and report globals

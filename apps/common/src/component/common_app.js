@@ -74,8 +74,8 @@
                                             <div id='common_app_dialogues_lov' class='common_app_dialogues_content'></div>
                                             <div id='common_app_dialogues_app_data_display' class='common_app_dialogues_content'></div>
                                         </div>
-                                        <div id='common_window_info'></div>
-                                        <div id='common_broadcast'></div>
+                                        <div id='common_app_window_info'></div>
+                                        <div id='common_app_broadcast'></div>
                                         <div id='common_profile_search'></div>
                                         <div id='common_app_iam_user_menu'>
                                             <div id='common_app_iam_user_menu_logged_in'>
@@ -90,7 +90,9 @@
                                                 <div id='common_app_iam_user_menu_default_avatar' class='common_icon'></div>
                                             </div>
                                         </div>
-                                        <div id='common_profile_toolbar'></div>
+                                        <div id='common_app_profile_toolbar'>
+                                            <div id='common_profile_btn_top' class='common_toolbar_button common_icon' ></div>
+                                        </div>
                                     </div>
                                 </div>
                             </body>

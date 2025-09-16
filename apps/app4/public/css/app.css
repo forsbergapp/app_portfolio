@@ -96,7 +96,7 @@
 #toolbar_btn_search::before{								content:var(--common_app_icon_search)}
 
 /* PAPER, PREVIEW AND PRINT*/
-#common_window_info #paper {
+#common_app_window_info #paper {
 	margin-top: 10px;
 }
 
@@ -114,10 +114,6 @@
 	font-size: 48px;
 }
 /* TOOLBAR BOTTOM*/
-#app_profile_toolbar{
-	text-align: center;
-	margin-inline-start: -15px;
-}
 #toolbar_bottom {
 	width: 100%;
 	text-align: center;
@@ -576,6 +572,11 @@
 	width:60px !important;
 }
 /*COMMON*/
+#common_app_profile_toolbar{
+    display: block !important;
+	text-align: center;
+	margin-inline-start: -15px;
+}
 #common_app_iam_user_menu{
     top: 0.5em !important;
     z-index:2 !important;
@@ -615,18 +616,18 @@
 #common_profile_main_stat_row2 #profile_user_settings_detail div{
 	display:inline-block;	
 }
-#common_window_info #about_table{
+#common_app_window_info #about_table{
 	display:table;
 	padding:0px;
 }
-#common_window_info .about_row{
+#common_app_window_info .about_row{
 	display:table-row;
 }
-#common_window_info .about_row div{
+#common_app_window_info .about_row div{
 	display:table-cell;
 	padding: 5px;
 }
-#common_window_info_content{
+#common_app_window_info_content{
 	display:block;
 	margin: 0 auto;
 }
@@ -937,9 +938,9 @@ body,
 }
 #common_app_dialogues .common_input,
 .common_app_dialogues_content,
-#common_window_info,
-#common_window_info_content,
-#common_window_info_toolbar,
+#common_app_window_info,
+#common_app_window_info_content,
+#common_app_window_info_toolbar,
 #common_app_iam_user_menu_avatar_img, 
 #common_app_iam_user_menu_default_avatar,
 #common_dialouge_user_menu
@@ -947,8 +948,8 @@ body,
 	background-color:var(--app_theme_main_color1);
 }
 #common_app_dialogues .common_input,
-#common_window_info,
-#common_window_info_toolbar,
+#common_app_window_info,
+#common_app_window_info_toolbar,
 #common_dialouge_user_menu,
 .common_app_dialogues_content,
 #common_profile_search_icon

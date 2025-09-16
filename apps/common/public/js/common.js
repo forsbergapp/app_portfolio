@@ -1895,8 +1895,8 @@ const commonUserLogout = async () => {
  */
 const commonLogout = async () => {
     commonComponentRemove('common_app_dialogues_user_menu');
-    COMMON_GLOBAL.component.common_window_info?.methods?.commonWindoInfoClose?
-        COMMON_GLOBAL.component.common_window_info?.methods?.commonWindoInfoClose():
+    COMMON_GLOBAL.component.common_app_window_info?.methods?.commonWindoInfoClose?
+        COMMON_GLOBAL.component.common_app_window_info?.methods?.commonWindoInfoClose():
             null;
     commonComponentRemove('common_app_dialogues_iam_verify');
     if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.app_admin_app_id){
@@ -2501,10 +2501,10 @@ const commonSocketSSEShow = async (sse_message) => {
         case 'CHAT':
         case 'ALERT':{
             commonComponentRender({
-                mountDiv:   'common_broadcast',
+                mountDiv:   'common_app_broadcast',
                 data:       {message:sse_message.sse_message},
                 methods:    null,
-                path:       '/common/component/common_broadcast.js'});
+                path:       '/common/component/common_app_broadcast.js'});
             break;
         }
 		case 'PROGRESS':{
@@ -3312,8 +3312,8 @@ const commonEvent = async (event_type,event=null) =>{
                             }
                             
                             //broadcast
-                            case 'common_broadcast_close':{
-                                commonComponentRemove('common_broadcast');
+                            case 'common_app_broadcast_close':{
+                                commonComponentRemove('common_app_broadcast');
                                 break;
                             }
                             //markdown show/hide details
@@ -3363,13 +3363,13 @@ const commonEvent = async (event_type,event=null) =>{
                             case event.target.classList.contains('common_markdown_image')?event_target_id:'':{
                                 if (event.target.getAttribute('data-url_link'))
                                     commonComponentRender({
-                                        mountDiv:   'common_window_info',
+                                        mountDiv:   'common_app_window_info',
                                         data:       {
                                                     info:'IMAGE',
                                                     url:event.target.getAttribute('data-url_link'),
                                                     },
                                         methods:    null,
-                                        path:       '/common/component/common_window_info.js'});
+                                        path:       '/common/component/common_app_window_info.js'});
                                 break;
                             }
                         }
