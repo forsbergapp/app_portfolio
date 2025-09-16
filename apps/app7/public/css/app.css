@@ -92,7 +92,7 @@ body{
 #common_app_iam_user_menu_default_avatar,{
 	background-color: var(--app_theme_main_branding_color1);
 }
-.common_dialogue_iam_start_selected,
+.common_app_dialogues_iam_start_selected,
 .common_map_control_active,
 .common_row_selected{
 	background-color: var(--app_theme_selected_background_color) !important;
@@ -112,7 +112,7 @@ body{
 .common_input{
 	background-color:var(--app_theme_main_branding_color1) !important;
 }
-.common_dialogue_content{
+.common_app_dialogues_content{
 	color: var(--app_theme_text_color) !important;
 	background-color:var(--app_theme_background_color) !important;
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);

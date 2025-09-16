@@ -896,7 +896,7 @@ const appUserLoginPost = async () =>{
         }
         //Hide settings
         COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
-        common.commonComponentRemove('common_dialogue_profile');
+        common.commonComponentRemove('common_app_dialogues_profile');
         
         COMMON_DOCUMENT.querySelector('#paper').textContent='';
         appUserSettingsGet().then(() => {
@@ -928,7 +928,7 @@ const appUserFunction = async (function_name) => {
  */
 const appUserLogout = () => {
     common.commonComponentRemove('settings_tab_nav_6');
-    common.commonComponentRemove('common_dialogue_profile', true);
+    common.commonComponentRemove('common_app_dialogues_profile', true);
     //set default settings
     appUserSettingDefaultSet().then(() => {
         //show default startup
@@ -1197,7 +1197,7 @@ const appUserSettingDelete = (choice=null) => {
                                 authorization_type:'APP_ACCESS', 
                                 body:{IAM_iam_user_app_id:common.commonGlobalGet('iam_user_app_id')}, spinner_id:'setting_btn_user_delete'})
             .then(()=>{
-                common.commonComponentRemove('common_dialogue_message', true);
+                common.commonComponentRemove('common_app_dialogues_message', true);
                 //check if last setting
                 if (APP_GLOBAL.user_settings.data.length == 1)
                     appUserSettingFunction('ADD', false);
@@ -1228,7 +1228,7 @@ const appUserSettingDelete = (choice=null) => {
                 }
                 
             })
-            .catch(()=>common.commonComponentRemove('common_dialogue_message', true));
+            .catch(()=>common.commonComponentRemove('common_app_dialogues_message', true));
         }
     }
 };
@@ -1711,12 +1711,12 @@ const appEventClick = event => {
         case 'setting_icon_text_theme_day':
         case 'setting_icon_text_theme_month':
         case 'setting_icon_text_theme_year':{
-            COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_day').classList.remove('common_dialogue_button');
-            COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_month').classList.remove('common_dialogue_button');
-            COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_year').classList.remove('common_dialogue_button');
+            COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_day').classList.remove('common_app_dialogues_button');
+            COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_month').classList.remove('common_app_dialogues_button');
+            COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_year').classList.remove('common_app_dialogues_button');
             const  theme_type = event_target_id.substring(24);
             //mark active icon
-            COMMON_DOCUMENT.querySelector('#' + event_target_id).classList.add('common_dialogue_button');
+            COMMON_DOCUMENT.querySelector('#' + event_target_id).classList.add('common_app_dialogues_button');
             COMMON_DOCUMENT.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
                                                                                 `theme_${theme_type}_${appSettingThemeId(theme_type)} ` + 
                                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_arabic_script;
@@ -1807,31 +1807,31 @@ const appEventClick = event => {
         case 'common_app_iam_user_menu_default_avatar':{
             if (common.commonGlobalGet('iam_user_id')==null)
                 common.commonComponentRender({
-                    mountDiv:   'common_dialogue_user_menu_app_theme',
+                    mountDiv:   'common_app_dialogues_user_menu_app_theme',
                     data:       null,
                     methods:    {
                                 app_theme_update:common.commonMiscPreferencesPostMount
                                 },
-                    path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+                    path:       '/common/component/common_app_dialogues_user_menu_app_theme.js'});
             break;
         }
-        case 'common_dialogue_user_menu_nav_iam_user_app':{
+        case 'common_app_dialogues_user_menu_nav_iam_user_app':{
             common.commonComponentRender({
-                mountDiv:   'common_dialogue_user_menu_app_theme',
+                mountDiv:   'common_app_dialogues_user_menu_app_theme',
                 data:       null,
                 methods:    {
                             app_theme_update:common.commonMiscPreferencesPostMount
                             },
-                path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+                path:       '/common/component/common_app_dialogues_user_menu_app_theme.js'});
             break;
             }
-        case 'common_dialogue_user_menu_log_out':{
+        case 'common_app_dialogues_user_menu_log_out':{
             common.commonUserLogout().then(() => {
                 appUserLogout();
             });
             break;
         }
-        case 'common_dialogue_user_menu_username':{
+        case 'common_app_dialogues_user_menu_username':{
             appToolbarButton(6);
             break;
         }
@@ -1845,12 +1845,12 @@ const appEventClick = event => {
         }
         
         //dialogue user start
-        case 'common_dialogue_iam_start_login_button':{
+        case 'common_app_dialogues_iam_start_login_button':{
             appUserLogin();
             break;
         }
         //dialogue profile 
-        case 'common_dialogue_profile_home':{
+        case 'common_app_dialogues_profile_home':{
             appToolbarButton(7);
             break;
         }
@@ -1922,8 +1922,8 @@ const appEventKeyUp = event => {
             break;
         }
         //common
-        case 'common_dialogue_iam_start_login_username':
-        case 'common_dialogue_iam_start_login_password':{
+        case 'common_app_dialogues_iam_start_login_username':
+        case 'common_app_dialogues_iam_start_login_password':{
             if (event.code === 'Enter') {
                 event.preventDefault();
                 appUserLogin().catch(()=>null);

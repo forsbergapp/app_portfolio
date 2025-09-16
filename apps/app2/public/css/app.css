@@ -424,7 +424,7 @@ div.ray8 {
 	margin:20px;
     height: 100%;
 }
-#common_dialogue_apps{
+#common_app_dialogues_apps{
 	z-index: 1;
 }
 /*RESPONSIVE SETTINGS*/
@@ -666,14 +666,14 @@ body{
 	background: var(--app_theme_background_color) !important;
 	caret-color: var(--app_theme_text_color);
 }
-#common_dialogue_apps_list_title{
+#common_app_dialogues_apps_list_title{
 	background: var(--app_theme_background_color);
 	color: var(--common_app_color_white1);
 }
-#common_dialogue_apps_list_title_col_info{
+#common_app_dialogues_apps_list_title_col_info{
 	color: var(--common_app_color_white1);
 }
-#common_dialogue_apps_list, #common_dialogue_info_app_menu_content_apps_list{
+#common_app_dialogues_apps_list, #common_app_dialogues_info_app_menu_content_apps_list{
 	scrollbar-color: var(--app_theme_list_scrollbar_color1) var(--app_theme_list_scrollbar_color2);
 }
 /*background*/
@@ -718,7 +718,7 @@ border-left: 12px solid var(--app_theme_sun_color);
 	background-color:var(--app_theme_spinner_background_color);
 }
 /*THEME COMMON*/
-#common_dialogue_user_menu_messages{
+#common_app_dialogues_user_menu_messages{
     border: var(--app_theme_main_branding_color2) solid 0.5px;
 }
 #common_profile_search >.css_spinner::before{
@@ -745,10 +745,10 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_link:active{
 	color:var(--app_theme_hover_color);
 }
-.common_dialogue_button{
+.common_app_dialogues_button{
 	color: var(--app_theme_dialogue_button_color) !important;
 }
-.common_dialogue_button:hover, .common_dialogue_button:active,
+.common_app_dialogues_button:hover, .common_app_dialogues_button:active,
 .common_toolbar_button:hover, .common_toolbar_button:active{
 	color:var(--app_theme_hover_color) !important;
 }
@@ -779,18 +779,18 @@ border-left: 12px solid var(--app_theme_sun_color);
 }  
 #common_app_iam_user_menu_avatar_img, 
 #common_app_iam_user_menu_default_avatar,
-#common_dialogue_user_menu{
+#common_app_dialogues_user_menu{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
-#common_dialogue_user_menu_username:hover,
-#common_dialogue_user_menu_username:active,
+#common_app_dialogues_user_menu_username:hover,
+#common_app_dialogues_user_menu_username:active,
 #common_profile_btn_top:hover,
 #common_profile_btn_top:active,
-#common_dialogue_user_menu_logged_in div:hover,
-#common_dialogue_user_menu_logged_in div:active,
-#common_dialogue_user_menu_logged_out div:hover,
-#common_dialogue_user_menu_logged_out div:active{
+#common_app_dialogues_user_menu_logged_in div:hover,
+#common_app_dialogues_user_menu_logged_in div:active,
+#common_app_dialogues_user_menu_logged_out div:hover,
+#common_app_dialogues_user_menu_logged_out div:active{
 	background-color:var(--app_theme_menu_selected_hover_background_color);
 	color: var(--app_theme_menu_selected_hover_color);
 }
@@ -798,7 +798,7 @@ border-left: 12px solid var(--app_theme_sun_color);
 	background-color:var(--app_theme_common_window_background_color);
 }
 #common_profile_search_input, 
-#common_dialogue_iam_start .common_input,
+#common_app_dialogues_iam_start .common_input,
 .common_password_new_input{
 	border: 1px solid var(--app_theme_input_border_color);
 }
@@ -815,29 +815,29 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_profile_btn_selected{
 	background-color: var(--app_theme_list_selected_background_color);
 }
-.common_dialogue_iam_start_selected {
+.common_app_dialogues_iam_start_selected {
 	background-color: var(--app_theme_list_selected_background_color);	
 }
-#common_dialogue_iam_start #common_dialogue_iam_start_nav>div{
+#common_app_dialogues_iam_start #common_app_dialogues_iam_start_nav>div{
 	color: var(--app_theme_dialogue_button_color);
 }
-#common_dialogue_user_menu_nav>div:hover,
-#common_dialogue_user_menu_nav>div:active,
-#common_dialogue_iam_start #common_dialogue_iam_start_nav>div:hover,
-#common_dialogue_iam_start #common_dialogue_iam_start_nav:active{
+#common_app_dialogues_user_menu_nav>div:hover,
+#common_app_dialogues_user_menu_nav>div:active,
+#common_app_dialogues_iam_start #common_app_dialogues_iam_start_nav>div:hover,
+#common_app_dialogues_iam_start #common_app_dialogues_iam_start_nav:active{
 	color:var(--app_theme_hover_color);
 }
-#common_dialogue_iam_start .common_login_button{
+#common_app_dialogues_iam_start .common_login_button{
 	color: var(--app_theme_dialogue_button_color);
 }
-#common_dialogue_iam_start .common_login_button:hover,
-#common_dialogue_iam_start .common_login_button:active{
+#common_app_dialogues_iam_start .common_login_button:hover,
+#common_app_dialogues_iam_start .common_login_button:active{
 	background-color:var(--app_theme_hover_color) !important;
 }
 .common_list_scrollbar{
 	scrollbar-color: var(--app_theme_list_scrollbar_color1) var(--app_theme_list_scrollbar_color2);
 }
-.common_dialogue_content{
+.common_app_dialogues_content{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
@@ -858,6 +858,6 @@ border-left: 12px solid var(--app_theme_sun_color);
 #common_window_info_btn_close .common_icon{
 	background: var(--app_theme_dialogue_background_color);
 }
-#common_dialogue_info_contact_message_title{
+#common_app_dialogues_info_contact_message_title{
     color: var(--app_theme_dialogue_button_color) !important;
 }

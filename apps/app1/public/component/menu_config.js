@@ -46,7 +46,7 @@ const template = props => ` <div id='menu_config_content_widget1' class='widget'
                                     ).join('')}
                                 </div>
                                 <div id='menu_config_buttons' class="save_buttons">
-                                    <div id='menu_config_save' class='common_dialogue_button button_save common_icon' ></div>
+                                    <div id='menu_config_save' class='common_app_dialogues_button button_save common_icon' ></div>
                                 </div>
                             </div>`;
 /**

@@ -16,10 +16,10 @@
 const template = () => ` <div id='menu_report_content_widget1' class='widget'>
                                 <div id='menu_report_select_report'></div>
                                 <div id='menu_report_metadata' class='common_list_scrollbar'></div>
-                                <div id='menu_report_run' class='common_dialogue_button common_icon' ></div>
+                                <div id='menu_report_run' class='common_app_dialogues_button common_icon' ></div>
                             </div>
                             <div id='menu_report_content_widget2' class='widget'>
-                                <div id='menu_report_queue_reload' class='common_dialogue_button common_icon' ></div>
+                                <div id='menu_report_queue_reload' class='common_app_dialogues_button common_icon' ></div>
                                 <div id='menu_report_queue' class='common_list_scrollbar'></div>
                             </div>`;
 /**

@@ -17,9 +17,9 @@ const template = () =>` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>
                                 <div id='setting_icon_text_theme_col'>
-                                    <div id='setting_icon_text_theme_day' class='common_dialogue_button common_icon'></div>
-                                    <div id='setting_icon_text_theme_month' class='common_dialogue_button common_icon'></div>
-                                    <div id='setting_icon_text_theme_year' class='common_dialogue_button common_icon'></div>
+                                    <div id='setting_icon_text_theme_day' class='common_app_dialogues_button common_icon'></div>
+                                    <div id='setting_icon_text_theme_month' class='common_app_dialogues_button common_icon'></div>
+                                    <div id='setting_icon_text_theme_year' class='common_app_dialogues_button common_icon'></div>
                                 </div>
                                 <div id='setting_paper_preview_text' class='setting_paper_preview'>
                                     <div id='setting_paper_preview_header_text' class='setting_paper_preview_header'>

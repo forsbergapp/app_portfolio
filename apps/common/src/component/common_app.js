@@ -63,16 +63,16 @@
                                             <div id='common_app_toolbar_framework_vue' class='common_icon common_toolbar_button ${props.app_toolbar_button_framework==1?'show':''}'></div>
                                             <div id='common_app_toolbar_framework_react' class='common_icon common_toolbar_button ${props.app_toolbar_button_framework==1?'show':''}'></div>
                                         </div>
-                                        <div id='common_dialogues'>
-                                            <div id='common_dialogue_apps' class='common_dialogue_content'></div>
-                                            <div id='common_dialogue_info' class='common_dialogue_content'></div>
-                                            <div id='common_dialogue_iam_start' class='common_dialogue_content'></div>
-                                            <div id='common_dialogue_user_menu' class='common_dialogue_content'></div>
-                                            <div id='common_dialogue_iam_verify' class='common_dialogue_content'></div>
-                                            <div id='common_dialogue_message' class='common_dialogue_content'></div>
-                                            <div id='common_dialogue_profile' class='common_dialogue_content'></div>
-                                            <div id='common_dialogue_lov' class='common_dialogue_content'></div>
-                                            <div id='common_dialogue_app_data_display' class='common_dialogue_content'></div>
+                                        <div id='common_app_dialogues'>
+                                            <div id='common_app_dialogues_apps' class='common_app_dialogues_content'></div>
+                                            <div id='common_app_dialogues_info' class='common_app_dialogues_content'></div>
+                                            <div id='common_app_dialogues_iam_start' class='common_app_dialogues_content'></div>
+                                            <div id='common_app_dialogues_user_menu' class='common_app_dialogues_content'></div>
+                                            <div id='common_app_dialogues_iam_verify' class='common_app_dialogues_content'></div>
+                                            <div id='common_app_dialogues_message' class='common_app_dialogues_content'></div>
+                                            <div id='common_app_dialogues_profile' class='common_app_dialogues_content'></div>
+                                            <div id='common_app_dialogues_lov' class='common_app_dialogues_content'></div>
+                                            <div id='common_app_dialogues_app_data_display' class='common_app_dialogues_content'></div>
                                         </div>
                                         <div id='common_window_info'></div>
                                         <div id='common_broadcast'></div>
