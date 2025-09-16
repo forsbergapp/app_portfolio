@@ -1610,7 +1610,7 @@ body.rtl{
 	display: inline-block;
     margin-top: var(--common_app_css_useragent_fix_margin_top)
 }
-#common_app_iam_user_menu_avatar_img, #common_app_iam_user_menu_default_avatar{
+#common_app_iam_user_menu, #common_app_iam_user_menu_avatar_img, #common_app_iam_user_menu_default_avatar{
     border-radius: 50% !important;
 }
 
