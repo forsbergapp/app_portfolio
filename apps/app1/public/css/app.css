@@ -907,8 +907,8 @@
 	height: auto !important;
 	text-align: center;
 }
-#common_profile_input_row,
-#common_profile_search_list_wrap{
+#common_app_dialogues_profile_input_row,
+#common_app_profile_search_list_wrap{
 	visibility: hidden;
 	display:	none !important;
 }

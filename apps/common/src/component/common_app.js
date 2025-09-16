@@ -76,7 +76,18 @@
                                         </div>
                                         <div id='common_app_window_info'></div>
                                         <div id='common_app_broadcast'></div>
-                                        <div id='common_profile_search'></div>
+                                        <div id='common_app_profile'>
+                                            <div id='common_app_profile_search'>
+                                                <div id='common_app_profile_search_input_row'>
+                                                    <div id='common_app_profile_search_input' contentEditable='true' class='common_input '></div>
+                                                    <div id='common_app_profile_search_icon' class='common_icon'></div>
+                                                </div>
+                                                <div id='common_app_profile_search_list_wrap'></div>
+                                            </div>
+                                            <div id='common_app_profile_toolbar'>
+                                                <div id='common_app_profile_toolbar_stat' class='common_toolbar_button common_icon' ></div>
+                                            </div>
+                                        </div>
                                         <div id='common_app_iam_user_menu'>
                                             <div id='common_app_iam_user_menu_logged_in'>
                                                 <div id='common_app_iam_user_menu_avatar'>
@@ -89,9 +100,6 @@
                                             <div id='common_app_iam_user_menu_logged_out'>
                                                 <div id='common_app_iam_user_menu_default_avatar' class='common_icon'></div>
                                             </div>
-                                        </div>
-                                        <div id='common_app_profile_toolbar'>
-                                            <div id='common_app_profile_toolbar_btn_top' class='common_toolbar_button common_icon' ></div>
                                         </div>
                                     </div>
                                 </div>

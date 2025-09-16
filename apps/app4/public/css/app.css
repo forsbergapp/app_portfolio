@@ -128,19 +128,7 @@
 #toolbar_bottom .common_toolbar_button{
 	font-size: 48px !important;
 }
-#app_profile_search{
-	z-index: 50;
-    position: absolute;
-}
-/*profile user setting*/
-#common_profile_main_stat_row2 #profile_info_user_settings,
-#common_profile_main_stat_row2 #profile_info_user_settings div,
-#common_profile_main_stat_row2 #profile_info_user_setting_likes,
-#common_profile_main_stat_row2 #profile_info_user_setting_likes div,
-#common_profile_main_stat_row2 #profile_info_user_setting_liked,
-#common_profile_main_stat_row2 #profile_info_user_setting_liked div{
-	display:inline-block;
-}
+
 #profile_user_settings_row{
 	width:100%;
 }
@@ -572,7 +560,20 @@
 	width:60px !important;
 }
 /*COMMON*/
-#common_app_profile_toolbar{
+#common_app_profile_search{
+	z-index: 50 !important;
+    top: 60px !important;
+}
+/*profile user setting*/
+#common_app_dialogues_profile_info_stat_row2 #profile_info_user_settings,
+#common_app_dialogues_profile_info_stat_row2 #profile_info_user_settings div,
+#common_app_dialogues_profile_info_stat_row2 #profile_info_user_setting_likes,
+#common_app_dialogues_profile_info_stat_row2 #profile_info_user_setting_likes div,
+#common_app_dialogues_profile_info_stat_row2 #profile_info_user_setting_liked,
+#common_app_dialogues_profile_info_stat_row2 #profile_info_user_setting_liked div{
+	display:inline-block;
+}
+#common_app_profile{
     display: block !important;
 	text-align: center;
 	margin-inline-start: -15px;
@@ -587,33 +588,33 @@
     top: unset !important;
 	position: fixed !important;
 }
-#common_app_profile_toolbar_btn_top{
+#common_app_profile_toolbar_stat{
 	margin-inline-start:inherit !important;
 }
-#common_profile_input_row{
+#common_app_dialogues_profile_input_row{
 	visibility:hidden;
 }
-#common_profile_search_input{
+#common_app_profile_search_input{
 	width:285px !important;
 }
-#common_profile_search_list_wrap{
+#common_app_profile_search_list_wrap{
 	max-height: calc(100% - 250px) !important;
 	top: 100px;
 }
-#common_profile_search_icon{
+#common_app_profile_search_icon{
 	display: none !important;
 }
-#common_profile_search_list{
+#common_app_profile_search_list{
 	margin-right: 10px !important;
 }
-#common_profile_main_stat_row2{
+#common_app_dialogues_profile_info_stat_row2{
 	text-align: center;
 	white-space: nowrap;
 }
-#common_profile_main_stat_row1{
+#common_app_dialogues_profile_info_stat_row1{
 	height: 30px;
 }
-#common_profile_main_stat_row2 #profile_user_settings_detail div{
+#common_app_dialogues_profile_info_stat_row2 #profile_user_settings_detail div{
 	display:inline-block;	
 }
 #common_app_window_info #about_table{
@@ -932,7 +933,7 @@ body,
 .common_input_error{
 	border: 2px solid var(--app_theme_input_error_border_color) !important;
 }
-#common_app_profile_toolbar_btn_top{
+#common_app_profile_toolbar_stat{
 	background: var(--app_theme_main_color2);
 	box-shadow: 0px -3px 3px var(--app_theme_dialogue_shadow_color1);
 }
@@ -952,14 +953,14 @@ body,
 #common_app_window_info_toolbar,
 #common_dialouge_user_menu,
 .common_app_dialogues_content,
-#common_profile_search_icon
+#common_app_profile_search_icon
 {
 	color: var(--app_theme_main_color3);
 }
 #common_app_dialogues_user_menu_username:hover,
 #common_app_dialogues_user_menu_username:active,
-#common_app_profile_toolbar_btn_top:hover,
-#common_app_profile_toolbar_btn_top:active,
+#common_app_profile_toolbar_stat:hover,
+#common_app_profile_toolbar_stat:active,
 #common_dialouge_user_menu_logged_in div:hover,
 #common_dialouge_user_menu_logged_in div:active,
 #common_dialouge_user_menu_logged_out div:hover,
@@ -967,20 +968,20 @@ body,
 	color: var(--app_theme_user_menu_hover_color) !important;
 	background-color:var(--app_theme_user_menu_hover_background_color);	
 }
-#common_profile_search_input,
+#common_app_profile_search_input,
 #common_app_dialogues .common_input,
-#common_profile_search_list_wrap{
+#common_app_profile_search_list_wrap{
 	border: 1px solid var(--app_theme_input_border_color);
 	background-color: var(--app_theme_input_background_color);
 }
-#common_profile_qr {
+#common_app_dialogues_profile_qr {
 	background-color:var(--app_theme_qr_code_background);
 }
 
-#common_profile_follow:hover,
-#common_profile_follow:active,
-#common_profile_like:hover,
-#common_profile_like:active,
+#common_app_dialogues_profile_info_follow:hover,
+#common_app_dialogues_profile_info_follow:active,
+#common_app_dialogues_profile_info_like:hover,
+#common_app_dialogues_profile_info_like:active,
 #profile_user_settings_day:hover,
 #profile_user_settings_day:active,
 #profile_user_settings_month:hover,
@@ -993,7 +994,7 @@ body,
 .profile_user_settings_row #profile_user_settings_like:active{
 	color:var(--app_theme_hover);
 }
-.common_profile_btn_selected{
+.common_app_dialogues_profile_btn_selected{
 	background-color: var(--app_theme_main_color2);
 }
 .common_dialogue{
@@ -1037,10 +1038,10 @@ body,
 .common_list_scrollbar{
 	scrollbar-color: var(--app_theme_scrollbar_color1) var(--app_theme_scrollbar_color2);
 }
-#common_profile_avatar_online_status.online{
+#common_app_dialogues_profile_info_avatar_online_status.online{
 	color:var(--app_theme_online_status_online_color);
 }
-#common_profile_avatar_online_status.offline{
+#common_app_dialogues_profile_info_avatar_online_status.offline{
 	color:var(--app_theme_online_status_offline_color);
 }
 #common_dialouge_user_menu{

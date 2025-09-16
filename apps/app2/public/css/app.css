@@ -8,7 +8,7 @@ body.font_arabic_nastaliq #common_app_iam_user_menu_default_avatar{
 	left: calc(50% - 30px);
 	position: absolute;
 }
-#common_app_profile_toolbar{
+#common_app_profile{
     display: block !important;
 	text-align: center;
 }
@@ -414,10 +414,13 @@ div.ray8 {
 #common_app_select_theme{
 	display:none;
 }
-#common_profile_search_list_wrap{
+#common_app_profile_search_input{
+	visibility:'visible' !important;
+}
+#common_app_profile_search_list_wrap{
 	top:62px;
 }
-#common_app_profile_toolbar_btn_top{
+#common_app_profile_toolbar_stat{
 	bottom: 0px !important;
 }
 #common_app_window_info_info{
@@ -722,7 +725,7 @@ border-left: 12px solid var(--app_theme_sun_color);
 #common_app_dialogues_user_menu_messages{
     border: var(--app_theme_main_branding_color2) solid 0.5px;
 }
-#common_profile_search >.css_spinner::before{
+#common_app_profile_search >.css_spinner::before{
 	background-color:var(--app_theme_spinner_background_color);
 }
 .common_row_selected{
@@ -759,7 +762,7 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_input_error{
 	border: 2px solid var(--app_theme_input_error_color) !important;
 }
-#common_app_profile_toolbar_btn_top{
+#common_app_profile_toolbar_stat{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
@@ -786,8 +789,8 @@ border-left: 12px solid var(--app_theme_sun_color);
 }
 #common_app_dialogues_user_menu_username:hover,
 #common_app_dialogues_user_menu_username:active,
-#common_app_profile_toolbar_btn_top:hover,
-#common_app_profile_toolbar_btn_top:active,
+#common_app_profile_toolbar_stat:hover,
+#common_app_profile_toolbar_stat:active,
 #common_app_dialogues_user_menu_logged_in div:hover,
 #common_app_dialogues_user_menu_logged_in div:active,
 #common_app_dialogues_user_menu_logged_out div:hover,
@@ -798,22 +801,22 @@ border-left: 12px solid var(--app_theme_sun_color);
 #common_app_window_info{
 	background-color:var(--app_theme_common_window_background_color);
 }
-#common_profile_search_input, 
+#common_app_profile_search_input, 
 #common_app_dialogues_iam_start .common_input,
 .common_password_new_input{
 	border: 1px solid var(--app_theme_input_border_color);
 }
-#common_profile_search_list_wrap{
+#common_app_profile_search_list_wrap{
 	border: 1px solid var(--app_theme_input_border_color);
 	background-color: var(--app_theme_dialogue_background_color);	
 }
-#common_profile_avatar_online_status.online{
+#common_app_dialogues_profile_info_avatar_online_status.online{
 	color:var(--app_theme_online_status_online_color);
 }
-#common_profile_avatar_online_status.offline{
+#common_app_dialogues_profile_info_avatar_online_status.offline{
 	color:var(--app_theme_online_status_offline_color);
 }
-.common_profile_btn_selected{
+.common_app_dialogues_profile_btn_selected{
 	background-color: var(--app_theme_list_selected_background_color);
 }
 .common_app_dialogues_iam_start_selected {

@@ -409,19 +409,19 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 #common_message_confirm_question:empty::before{							        content:var(--common_app_icon_question)}
 
 /*Icons dialogue profile*/
-#common_profile_joined_date_icon::before{								        content:var(--common_app_icon_user_account_created)}
-#common_profile_private_title::before{									        content:var(--common_app_icon_private)}
-#common_profile_avatar_online_status::before{							        content:var(--common_app_icon_online)}
-#common_profile_stat_row1_1::before{									        content:var(--common_app_icon_user_views)}
-#common_profile_stat_row1_2::before{									        content:var(--common_app_icon_user_follows)}
-#common_profile_stat_row1_3::before{									        content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_user_follows)}
+#common_app_dialogues_profile_info_joined_date_icon::before{								        content:var(--common_app_icon_user_account_created)}
+#common_app_dialogues_profile_info_private_title::before{									        content:var(--common_app_icon_private)}
+#common_app_dialogues_profile_info_avatar_online_status::before{							        content:var(--common_app_icon_online)}
+#common_app_dialogues_profile_stat_row1_1::before{									        content:var(--common_app_icon_user_views)}
+#common_app_dialogues_profile_stat_row1_2::before{									        content:var(--common_app_icon_user_follows)}
+#common_app_dialogues_profile_stat_row1_3::before{									        content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_user_follows)}
 #common_app_dialogues_profile_home::before{									        content:var(--common_app_icon_user_profile_stat)}
 #common_app_dialogues_profile_close::before{									        content:var(--common_app_icon_close)}
-#common_profile_info_view_count_icon::before{							        content:var(--common_app_icon_user_views)}
-#common_profile_main_btn_following::before{								        content:var(--common_app_icon_user_follows)}
-#common_profile_main_btn_followed::before{								        content:var(--common_app_icon_user_followed)}
-#common_profile_main_btn_liked_users::before{							        content:var(--common_app_icon_user_followed)}
-#common_app_profile_toolbar_btn_top::before{										        content:var(--common_app_icon_user_profile_stat)}
+#common_app_dialogues_profile_info_view_count_icon::before{							        content:var(--common_app_icon_user_views)}
+#common_app_dialogues_profile_info_btn_following::before{								        content:var(--common_app_icon_user_follows)}
+#common_app_dialogues_profile_info_btn_followed::before{								        content:var(--common_app_icon_user_followed)}
+#common_app_dialogues_profile_info_btn_liked_users::before{							        content:var(--common_app_icon_user_followed)}
+#common_app_profile_toolbar_stat::before{										        content:var(--common_app_icon_user_profile_stat)}
 
 /*Icons dialogue user menu*/
 #common_app_dialogues_user_menu_nav_messages::before{								content:var(--common_app_icon_email)}
@@ -525,7 +525,7 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 .common_map_popup_sub_title_gps_icon::before{							        content:var(--common_app_icon_gps_position)}
 
 /*Icons profile search*/
-#common_profile_search_icon::before{									        content:var(--common_app_icon_search)}
+#common_app_profile_search_icon::before{									        content:var(--common_app_icon_search)}
 
 /*Icons user account*/
 #common_app_iam_user_menu_default_avatar::before{								content:var(--common_app_icon_user_avatar)}
@@ -565,6 +565,9 @@ body.rtl{
     min-height:100vh;
     margin:0;
 }
+.start .common_input{   
+    border: none !important;
+} 
 @keyframes start_spin{
     from {transform:rotate(0deg);}
     to {transform:rotate(360deg);}
@@ -691,7 +694,7 @@ body.rtl{
 	overflow: hidden;
 	vertical-align: middle;
 	width: 100%;
-	border: 1px solid;
+    border: 1px solid !important;
 }
 .common_password_container{
 	position: relative;
@@ -1282,30 +1285,31 @@ body.rtl{
 }
 
 /*profile search*/
-#common_profile_search{
+#common_app_profile_search{
 	z-index: 1;
     position: absolute;
 	display: block;
   	width: 100%;
   	text-align: center;
 }
-#common_profile_input_row{
+#common_app_dialogues_profile_input_row{
 	position: fixed;
 	margin-top: 10px;
 	margin-inline-start: calc(50% - 140px);
 }
-#common_profile_search_input{
+#common_app_profile_search_input{
 	border-radius: var(--common_app_css_border_radius);
 	width:240px;
 	margin-inline-end:10px;
 	padding: 4px 8px;
 	box-sizing: border-box;
+    visibility:hidden;
 }
-#common_profile_search_icon{
+#common_app_profile_search_icon{
 	display: inline-block;
 	cursor: pointer;
 }
-#common_profile_search_list_wrap{
+#common_app_profile_search_list_wrap{
 	border-radius: var(--common_app_css_border_radius);
 	padding: 6px;
 	width: 275px;
@@ -1315,33 +1319,33 @@ body.rtl{
 	display: none;
 	flex-direction: column;
 }
-#common_profile_search_list{
+#common_app_profile_search_list{
 	width:250px;
 	overflow-y: auto;
     overflow-x: hidden;
 	padding: 10px;
 	margin:0 auto;
 }
-.common_profile_search_list_row{
+.common_app_profile_search_list_row{
 	height:1.8em;
 }
-.common_profile_search_list_col:nth-child(1){
+.common_app_profile_search_list_col:nth-child(1){
 	display: none;
 }
-.common_profile_search_list_col:nth-child(2){
+.common_app_profile_search_list_col:nth-child(2){
 	width:24px;
 	padding-left:10px;
 	padding-right:10px;
 	display:table-cell;
 }
-.common_profile_search_list_col:nth-child(3),
-.common_profile_search_list_col:nth-child(4){
+.common_app_profile_search_list_col:nth-child(3),
+.common_app_profile_search_list_col:nth-child(4){
 	display:table-cell;
 	vertical-align: middle;
 	padding-left:10px;
 	padding-right:10px;
 }
-.common_profile_search_list_col:nth-child(4){
+.common_app_profile_search_list_col:nth-child(4){
 	width:100%;
 	text-align:end;
 }
@@ -1363,37 +1367,37 @@ body.rtl{
 	bottom:30px;
 	position:fixed;
 }
-#common_profile_main {
+#common_app_dialogues_profile_info {
 	width:100%;
 	text-align:center;
 }
-.common_profile_main_row{
+.common_app_dialogues_profile_info_row{
 	width: 100%;
 	margin-bottom: 10px;
 }
-.common_profile_main_col:nth-child(1){
+.common_app_dialogues_profile_info_col:nth-child(1){
 	display:inline-block;
 	width: 100%;
 	text-align:start;
 	vertical-align: top;
 }
-.common_profile_main_col:nth-child(2){
+.common_app_dialogues_profile_info_col:nth-child(2){
 	display:inline-block;
 	width: 45%;
 }
-.common_profile_main_row:nth-child(2) .common_profile_main_col:nth-child(2) div{
+.common_app_dialogues_profile_info_row:nth-child(2) .common_app_dialogues_profile_info_col:nth-child(2) div{
 	width: 66px;
 	display: inline-block;
 }
-#common_profile_id{
+#common_app_dialogues_profile_info_id{
 	display:none;
 }
-#common_profile_avatar{
+#common_app_dialogues_profile_info_avatar{
 	width: 64px;
 	height: 64px;
 	border-radius: 50%;
 }
-#common_profile_avatar_online_status{
+#common_app_dialogues_profile_info_avatar_online_status{
 	display:none;
     margin-inline-start: 45px;
     margin-top: -20px;
@@ -1401,109 +1405,109 @@ body.rtl{
 	border-radius: 50%;
 	font-size:11px;
 }
-#common_profile_avatar_online_status.online{
+#common_app_dialogues_profile_info_avatar_online_status.online{
 	display: inline-block;
 }
-#common_profile_avatar_online_status.offline{
+#common_app_dialogues_profile_info_avatar_online_status.offline{
 	display: inline-block;
 }
-#common_profile_bio{
+#common_app_dialogues_profile_info_bio{
 	font-size: 0.6em;
 }
-#common_profile_joined_date_icon{
+#common_app_dialogues_profile_info_joined_date_icon{
 	display: inline-block;
 }
-#common_profile_main_stat_row1{
+#common_app_dialogues_profile_info_stat_row1{
 	display: inline-block;
 }
-#common_profile_main_stat_row1 div{
+#common_app_dialogues_profile_info_stat_row1 div{
 	display:inline-block;
 	margin-left: 1px;
 	margin-right: 1px;
 }
-#common_profile_joined_date,
-#common_profile_info_following_count,
-#common_profile_info_followers_count,
-#common_profile_info_likes_count,
-#common_profile_info_view_count
+#common_app_dialogues_profile_info_joined_date,
+#common_app_dialogues_profile_info_following_count,
+#common_app_dialogues_profile_info_followers_count,
+#common_app_dialogues_profile_info_likes_count,
+#common_app_dialogues_profile_info_view_count
 {
 	display:inline-block;
 	margin-inline-start: 10px;
 }
-#common_profile_main_btn_following,
-#common_profile_main_btn_followed,
-#common_profile_main_btn_likes,
-#common_profile_main_btn_liked{
+#common_app_dialogues_profile_info_btn_following,
+#common_app_dialogues_profile_info_btn_followed,
+#common_app_dialogues_profile_info_btn_likes,
+#common_app_dialogues_profile_info_btn_liked{
 	height:20px;
 	text-align:start;
 }
-#common_profile_qr {
+#common_app_dialogues_profile_qr {
 	display: inline-block;
 }
-#common_profile_follow_followed,
-#common_profile_like_unlike{
+#common_app_dialogues_profile_info_follow_followed,
+#common_app_dialogues_profile_info_like_unlike{
 	display:none;
 }
-#common_profile_follow:hover,
-#common_profile_follow:active,
-#common_profile_like:hover,
-#common_profile_like:active{
+#common_app_dialogues_profile_info_follow:hover,
+#common_app_dialogues_profile_info_follow:active,
+#common_app_dialogues_profile_info_like:hover,
+#common_app_dialogues_profile_info_like:active{
 	cursor:pointer;
 	transform: scale(1.3);
 	transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
 }
 /*profile private*/
-#common_profile_public{
+#common_app_dialogues_profile_info_public{
 	width: 100%;
 	height:100%;
 	margin-top:10px;
 	margin:0 auto;
 	text-align: center;
 }
-#common_profile_private{
+#common_app_dialogues_profile_info_private{
 	width:100%;
 	height:100%;
 	text-align: center;
 }
-#common_profile_private_title{
+#common_app_dialogues_profile_info_private_title{
 	font-size:48px;
 	margin: 10px;
 	display:inline-block;
 }
 
 /*profile detail*/
-#common_profile_detail {
+#common_app_dialogues_profile_info_detail {
 	width: 100%;
 	height: 100%;	
 	display:block;
 	margin-top: 10px;
 }
-.common_profile_btn_selected{
+.common_app_dialogues_profile_btn_selected{
     border-radius: var(--common_app_css_border_radius);
     padding: 2px;
 }
-.common_profile_detail_list{
+.common_app_dialogues_profile_info_detail_list{
 	height:10.8em;
 	width:100%;
 	border:0.5px solid;
 	display: inline-block;
 	overflow-y: auto;
 }
-.common_profile_detail_list_row{
+.common_app_dialogues_profile_info_detail_list_row{
 	height:1.8em;
     text-align: start;
 }
-.common_profile_detail_list_col:nth-child(1){
+.common_app_dialogues_profile_info_detail_list_col:nth-child(1){
 	display: none;
 }
-.common_profile_detail_list_col:nth-child(2){
+.common_app_dialogues_profile_info_detail_list_col:nth-child(2){
 	width:24px;
 	vertical-align: middle;
 	padding-left:10px;
 	padding-right:10px;
 	display:inline-block;
 }
-.common_profile_detail_list_col:nth-child(3){
+.common_app_dialogues_profile_info_detail_list_col:nth-child(3){
 	display:inline-block;
 	width:200px;
 	vertical-align: middle;
@@ -1511,21 +1515,21 @@ body.rtl{
 	padding-right:10px;
 	text-align:start;
 }
-.common_profile_detail_list_col:nth-child(4){
+.common_app_dialogues_profile_info_detail_list_col:nth-child(4){
 	width:24px;
 	vertical-align: middle;
 	display: inline-block;
     margin-inline-end: 10px;
 }
 /*dialogue profile stat*/
-#common_profile_stat_row1{
+#common_app_dialogues_profile_stat_row1{
 	text-align: center;
 }
-#common_profile_stat_row1 .common_link{
+#common_app_dialogues_profile_stat_row1 .common_link{
 	margin-inline-end:10px;
 	display: inline-block;
 }
-#common_profile_stat_list{
+#common_app_dialogues_profile_stat_list{
 	width:100%;
 	margin-top: 10px;
 	overflow-x:auto;
@@ -1533,33 +1537,33 @@ body.rtl{
 	height: calc(100% - 160px);
 	inset-inline-start: calc(50% - 40px);
 }
-.common_profile_stat_list_row{
+.common_app_dialogues_profile_stat_list_row{
 	height: 1.8em;
 	width: 90%;
     margin: 0 auto;
 }
-.common_profile_stat_list_col:nth-child(1){
+.common_app_dialogues_profile_stat_list_col:nth-child(1){
 	display: none;
 }
-.common_profile_stat_list_col:nth-child(2){
+.common_app_dialogues_profile_stat_list_col:nth-child(2){
 	width:24px;
 	padding-left:10px;
 	padding-right:10px;
 	display:table-cell;
 }
-.common_profile_stat_list_col:nth-child(3),
-.common_profile_stat_list_col:nth-child(4){
+.common_app_dialogues_profile_stat_list_col:nth-child(3),
+.common_app_dialogues_profile_stat_list_col:nth-child(4){
 	display:table-cell;
 	vertical-align: middle;
 	padding-left:10px;
 	padding-right:10px;
 }
-.common_profile_stat_list_col:nth-child(4){
+.common_app_dialogues_profile_stat_list_col:nth-child(4){
 	width:100%;
 	text-align:end;
 }
 /* profile button top*/
-#common_app_profile_toolbar_btn_top{
+#common_app_profile_toolbar_stat{
 	font-size: 48px;
 	cursor:pointer;
 	position:fixed;
@@ -1568,9 +1572,9 @@ body.rtl{
 	margin-inline-start: -30px;
 	border-radius: 4px 4px 0px 0px;
 }
-.common_profile_search_list_username,
-.common_profile_stat_list_username,
-.common_profile_detail_list_username {
+.common_app_profile_search_list_username,
+.common_app_dialogues_profile_stat_list_username,
+.common_app_dialogues_profile_info_detail_list_username {
 	width:200px;
 	display:inline-block;
 	text-align: start;
@@ -1870,8 +1874,8 @@ body.rtl{
 #common_app_window_info_toolbar_btn_fullscreen{
 	line-height: 1;
 }
-#common_profile_detail_header_liked div,
-#common_profile_detail_header_app div{
+#common_app_dialogues_profile_info_detail_header_liked div,
+#common_app_dialogues_profile_info_detail_header_app div{
 	display: inline-block;
 }
 /**Markdown*/
@@ -2297,7 +2301,7 @@ body.rtl{
 	transform: translateY(-65px);
     margin: 5px;
 }
-#common_app_profile_toolbar{
+#common_app_profile{
     display:none
 }
 /* info*/ 
@@ -2356,13 +2360,13 @@ body.rtl{
 	.common_app_dialogues_show1{
 		width:500px !important;
 	}
-	#common_profile_bio{
+	#common_app_dialogues_profile_info_bio{
 		font-size: 0.7em;
 	}	
 	#common_app_dialogues_info_start_links, #common_app_dialogues_info_contact, #common_app_dialogues_info_app_copyright{
 		font-size: 14px;
 	}
-	.common_profile_detail_list{
+	.common_app_dialogues_profile_info_detail_list{
 		height:5.6em;	
 	}
 	#common_message_title #common_message_info_list{
