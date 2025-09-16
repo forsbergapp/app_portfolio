@@ -18,8 +18,8 @@ body {
 	border-radius: var(--common_app_css_border_radius);
 }
 /*COMMON*/
-#common_profile_input_row,
-#common_profile_search_list_wrap{
+#common_app_dialogues_profile_input_row,
+#common_app_profile_search_list_wrap{
 	visibility: hidden;
 }
 #common_app_window_info_content{

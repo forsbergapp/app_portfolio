@@ -20,7 +20,6 @@ const template = ()=>`  <div id='toolbar_top'>
                             <div id='toolbar_btn_right' class='common_toolbar_button common_icon' ></div>
                             <div id='toolbar_btn_search' class='common_toolbar_button common_icon'></div>
                         </div>
-                        <div id='app_profile_search'></div>
                         <div id='paper'></div>
                         <div id='settings'></div>
                         <div id='dialogues'>

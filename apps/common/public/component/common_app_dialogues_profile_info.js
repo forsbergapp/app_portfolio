@@ -15,74 +15,74 @@
  *          function_commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props 
  * @returns {string}
  */
-const template = props =>`  <div id='common_profile_main'>
-                                <div id='common_profile_main_row1' class='common_profile_main_row'>
-                                    <div class='common_profile_main_col'>
-                                        <div id='common_profile_id'>${props.profile.id}</div>
-                                        <div id='common_profile_avatar_container'>
-                                            <div id='common_profile_avatar_image'>
-                                                <div id='common_profile_avatar' class='common_image common_image_avatar_profile' style='${props.profile.avatar==null?'':`background-image:url(${props.profile.avatar});`}'></div>
+const template = props =>`  <div id='common_app_dialogues_profile_info'>
+                                <div id='common_app_dialogues_profile_info_row1' class='common_app_dialogues_profile_info_row'>
+                                    <div class='common_app_dialogues_profile_info_col'>
+                                        <div id='common_app_dialogues_profile_info_id'>${props.profile.id}</div>
+                                        <div id='common_app_dialogues_profile_info_avatar_container'>
+                                            <div id='common_app_dialogues_profile_info_avatar_image'>
+                                                <div id='common_app_dialogues_profile_info_avatar' class='common_image common_image_avatar_profile' style='${props.profile.avatar==null?'':`background-image:url(${props.profile.avatar});`}'></div>
                                             </div>
-                                            <div id='common_profile_avatar_online_status' class='common_icon'></div>
+                                            <div id='common_app_dialogues_profile_info_avatar_online_status' class='common_icon'></div>
                                         </div>
-                                        <div id='common_profile_username'>${props.profile.username}</div>
-                                        <div id='common_profile_bio'>${props.profile.bio ?? ''}</div>
+                                        <div id='common_app_dialogues_profile_info_username'>${props.profile.username}</div>
+                                        <div id='common_app_dialogues_profile_info_bio'>${props.profile.bio ?? ''}</div>
                                     </div>
                                 </div>
-                                <div id='common_profile_main_row2' class='common_profile_main_row'>
-                                    <div class='common_profile_main_col'>
-                                        <div id='common_profile_joined'>
-                                            <div id='common_profile_joined_date_icon' class='common_icon'></div>
-                                            <div id='common_profile_joined_date'>${props.function_commonMiscFormatJsonDate(props.profile.created ?? '', 'SHORT')}</div>
+                                <div id='common_app_dialogues_profile_info_row2' class='common_app_dialogues_profile_info_row'>
+                                    <div class='common_app_dialogues_profile_info_col'>
+                                        <div id='common_app_dialogues_profile_info_joined'>
+                                            <div id='common_app_dialogues_profile_info_joined_date_icon' class='common_icon'></div>
+                                            <div id='common_app_dialogues_profile_info_joined_date'>${props.function_commonMiscFormatJsonDate(props.profile.created ?? '', 'SHORT')}</div>
                                         </div>
                                     </div>    
-                                    <div class='common_profile_main_col'>
-                                        <div id='common_profile_follow' data-record_id='${props.profile.followed_id}'>
+                                    <div class='common_app_dialogues_profile_info_col'>
+                                        <div id='common_app_dialogues_profile_info_follow' data-record_id='${props.profile.followed_id}'>
                                             <div class='common_icon common_user_follow common_link'></div>
                                             <div class='common_icon common_user_followed common_link'></div>
                                         </div>
-                                        <div id='common_profile_like' data-record_id='${props.profile.liked_id}'>
+                                        <div id='common_app_dialogues_profile_info_like' data-record_id='${props.profile.liked_id}'>
                                             <div class='common_icon common_unlike common_link'></div>
                                             <div class='common_icon common_like common_link'></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div id='common_profile_public'>
+                            <div id='common_app_dialogues_profile_info_public'>
                                 ${props.profile.private!=1?
-                                    `<div id='common_profile_main_stat_row1'>
-                                        <div id='common_profile_info_view'>
-                                            <div id='common_profile_info_view_count_icon' class='common_icon'></div>
-                                            <div id='common_profile_info_view_count'>${props.profile.count_views}</div>
+                                    `<div id='common_app_dialogues_profile_info_stat_row1'>
+                                        <div id='common_app_dialogues_profile_info_view'>
+                                            <div id='common_app_dialogues_profile_info_view_count_icon' class='common_icon'></div>
+                                            <div id='common_app_dialogues_profile_info_view_count'>${props.profile.count_views}</div>
                                         </div>
-                                        <div id='common_profile_info_following'>
-                                            <div id='common_profile_main_btn_following' class='common_link common_icon'></div>
-                                            <div id='common_profile_info_following_count'>${props.profile.count_following}</div>
+                                        <div id='common_app_dialogues_profile_info_following'>
+                                            <div id='common_app_dialogues_profile_info_btn_following' class='common_link common_icon'></div>
+                                            <div id='common_app_dialogues_profile_info_following_count'>${props.profile.count_following}</div>
                                         </div>
-                                        <div id='common_profile_info_followers'>
-                                            <div id='common_profile_main_btn_followed' class='common_link common_icon'></div>
-                                            <div id='common_profile_info_followers_count'>${props.profile.count_followed}</div>
+                                        <div id='common_app_dialogues_profile_info_followers'>
+                                            <div id='common_app_dialogues_profile_info_btn_followed' class='common_link common_icon'></div>
+                                            <div id='common_app_dialogues_profile_info_followers_count'>${props.profile.count_followed}</div>
                                         </div>
-                                        <div id='common_profile_info_likes'>
-                                            <div id='common_profile_main_btn_likes' class='common_icon common_link common_like'></div>
-                                            <div id='common_profile_info_likes_count'>${props.profile.count_likes}</div>
+                                        <div id='common_app_dialogues_profile_info_likes'>
+                                            <div id='common_app_dialogues_profile_info_btn_likes' class='common_icon common_link common_like'></div>
+                                            <div id='common_app_dialogues_profile_info_likes_count'>${props.profile.count_likes}</div>
                                         </div>
-                                        <div id='common_profile_info_liked'>
-                                            <div id='common_profile_main_btn_liked' >
-                                                <div id='common_profile_main_btn_liked_heart' class='common_icon common_link common_like'></div>
-                                                <div id='common_profile_main_btn_liked_users' class='common_link common_icon'></div>
+                                        <div id='common_app_dialogues_profile_info_liked'>
+                                            <div id='common_app_dialogues_profile_info_btn_liked' >
+                                                <div id='common_app_dialogues_profile_info_btn_liked_heart' class='common_icon common_link common_like'></div>
+                                                <div id='common_app_dialogues_profile_info_btn_liked_users' class='common_link common_icon'></div>
                                             </div>
-                                            <div id='common_profile_info_liked_count'>${props.profile.count_liked}</div>
+                                            <div id='common_app_dialogues_profile_info_liked_count'>${props.profile.count_liked}</div>
                                         </div>
                                     </div>
-                                    <div id='common_profile_main_stat_row2'></div>
-                                    <div id='common_profile_detail'>
-                                        <div id='common_profile_detail_list' class='common_profile_detail_list'></div>
+                                    <div id='common_app_dialogues_profile_info_stat_row2'></div>
+                                    <div id='common_app_dialogues_profile_info_detail'>
+                                        <div id='common_app_dialogues_profile_info_detail_list' class='common_app_dialogues_profile_info_detail_list'></div>
                                     </div>`:''
                                 }
                             </div>
-                            <div id='common_profile_private'>
-                                ${props.profile.private==1?'<div id=\'common_profile_private_title\' class=\'common_icon\'></div>':''}
+                            <div id='common_app_dialogues_profile_info_private'>
+                                ${props.profile.private==1?'<div id=\'common_app_dialogues_profile_info_private_title\' class=\'common_icon\'></div>':''}
                             </div>`;
 /**
  * @name component
@@ -127,24 +127,24 @@ const component = async props => {
         //User account followed and liked
         if (profile.followed_id!=null) {
             //followed
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'none';
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'block';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_follow .common_user_follow').style.display = 'none';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_follow .common_user_followed').style.display = 'block';
         } else {
             //not followed
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'block';
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'none';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_follow .common_user_follow').style.display = 'block';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_follow .common_user_followed').style.display = 'none';
         }
         if (profile.liked_id!=null) {
             //liked
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'none';
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'block';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_like .common_unlike').style.display = 'none';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_like .common_like').style.display = 'block';
         } else {
             //not liked
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'block';
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'none';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_like .common_unlike').style.display = 'block';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_like .common_like').style.display = 'none';
         } 
         if (props.data.iam_user_id !=null)
-            props.methods.COMMON.commonSocketConnectOnlineCheck('common_profile_avatar_online_status', profile.id);
+            props.methods.COMMON.commonSocketConnectOnlineCheck('common_app_dialogues_profile_info_avatar_online_status', profile.id);
     };
 
     return {

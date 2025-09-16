@@ -1629,14 +1629,14 @@ const commonProfileStat = async (statchoice, app_rest_url = null) => {
 const commonProfileDetail = (detailchoice) => {
     if (detailchoice==0){
         //show only other app specific hide common
-        COMMON_DOCUMENT.querySelector('#common_profile_detail_list').textContent = '';
+        COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_detail_list').textContent = '';
     }
     else{
         commonComponentRender({
-            mountDiv:   'common_profile_detail_list',
+            mountDiv:   'common_app_dialogues_profile_info_detail_list',
             data:       {
                         iam_user_id:COMMON_GLOBAL.iam_user_id,
-                        iam_user_id_profile:COMMON_DOCUMENT.querySelector('#common_profile_id').textContent,
+                        iam_user_id_profile:COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_id').textContent,
                         detailchoice:detailchoice
                         },
             methods:    null,
@@ -1652,17 +1652,17 @@ const commonProfileDetail = (detailchoice) => {
  */
 const commonProfileSearch = click_function => {
     commonComponentRender({
-        mountDiv:   'common_profile_search_list_wrap',
+        mountDiv:   'common_app_profile_search_list_wrap',
         data:       {
                     iam_user_id:COMMON_GLOBAL.iam_user_id
                     },
         methods:    {
                     function_click_function:click_function
                     },
-        path:       '/common/component/common_profile_search_list.js'})
+        path:       '/common/component/common_app_profile_search_list.js'})
     .catch(()=>{
-        COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-        COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap').textContent = '';
+        COMMON_DOCUMENT.querySelector('#common_app_profile_search_list_wrap').style.display = 'none';
+        COMMON_DOCUMENT.querySelector('#common_app_profile_search_list_wrap').textContent = '';
     });
 };
 /**
@@ -1703,7 +1703,7 @@ const commonProfileShow = async (iam_user_id_other = null, username = null) => {
  */
 const commonProfileUpdateStat = async () => {
     return new Promise((resolve, reject) => {
-        const profile_id = COMMON_DOCUMENT.querySelector('#common_profile_id');
+        const profile_id = COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_id');
         //get updated stat for given user
        commonFFB({path:`/server-db/iamuser-profile/${profile_id.textContent}`, 
             query:`id=${profile_id.textContent}`, 
@@ -1711,11 +1711,11 @@ const commonProfileUpdateStat = async () => {
             authorization_type:'APP_ID'})
         .then(result=>{
             const user_stat = JSON.parse(result)[0];
-            COMMON_DOCUMENT.querySelector('#common_profile_info_view_count').textContent = user_stat.count_views;
-            COMMON_DOCUMENT.querySelector('#common_profile_info_following_count').textContent = user_stat.count_following;
-            COMMON_DOCUMENT.querySelector('#common_profile_info_followers_count').textContent = user_stat.count_followed;
-            COMMON_DOCUMENT.querySelector('#common_profile_info_likes_count').textContent = user_stat.count_likes;
-            COMMON_DOCUMENT.querySelector('#common_profile_info_liked_count').textContent = user_stat.count_liked;
+            COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_view_count').textContent = user_stat.count_views;
+            COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_following_count').textContent = user_stat.count_following;
+            COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_followers_count').textContent = user_stat.count_followed;
+            COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_likes_count').textContent = user_stat.count_likes;
+            COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_liked_count').textContent = user_stat.count_liked;
             resolve({id : user_stat.id});
         })
         .catch(err=>reject(err));
@@ -1982,12 +1982,12 @@ const commonUserUpdate = async (totp=null) => {
  */
 const commonUserFunction = function_name => {
     return new Promise((resolve, reject)=>{
-        const user_id_profile = Number(COMMON_DOCUMENT.querySelector('#common_profile_id').textContent);
+        const user_id_profile = Number(COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_id').textContent);
         /**@type{common['CommonRESTAPIMethod']} */
         let method;
         let path;
         let json_data;
-        const check_div = COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`);
+        const check_div = COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`);
         if (check_div.children[0].style.display == 'block') {
             path = `/server-db/iamuser${function_name.toLowerCase()}`;
             method = 'POST';
@@ -1996,7 +1996,7 @@ const commonUserFunction = function_name => {
 
 };
         } else {
-            path = `/server-db/iamuser${function_name.toLowerCase()}/${COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).getAttribute('data-record_id')}`;
+            path = `/server-db/iamuser${function_name.toLowerCase()}/${COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).getAttribute('data-record_id')}`;
             method = 'DELETE';
             json_data = { IAM_iam_user_id: COMMON_GLOBAL.iam_user_id};
         }
@@ -2005,17 +2005,17 @@ const commonUserFunction = function_name => {
         else {
            commonFFB({path:path, method:method, authorization_type:'APP_ACCESS', body:json_data})
             .then(result=> {
-                if (COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
+                if (COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
                     //follow/like
-                    COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'none';
-                    COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'block';
-                    COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).setAttribute('data-record_id',JSON.parse(result).insertId);
+                    COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).children[0].style.display = 'none';
+                    COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).children[1].style.display = 'block';
+                    COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).setAttribute('data-record_id',JSON.parse(result).insertId);
                 }
                 else{
                     //unfollow/unlike
-                    COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'block';
-                    COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'none';
-                    COMMON_DOCUMENT.querySelector(`#common_profile_${function_name.toLowerCase()}`).setAttribute('data-record_id',null);
+                    COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).children[0].style.display = 'block';
+                    COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).children[1].style.display = 'none';
+                    COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).setAttribute('data-record_id',null);
                 }
                 resolve(null);
             })
@@ -2811,9 +2811,9 @@ const commonEvent = async (event_type,event=null) =>{
                                 await commonEventSelectAction(event_target_id, event.target);
                                 break;
                             }                            
-                            case 'common_profile_search_icon':{
-                                COMMON_DOCUMENT.querySelector('#common_profile_search_input').focus();
-                                COMMON_DOCUMENT.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                            case 'common_app_profile_search_icon':{
+                                COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').focus();
+                                COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                                 break;
                             }
 <<<<<<< HEAD
@@ -3249,14 +3249,14 @@ const commonEvent = async (event_type,event=null) =>{
                                 break;
                             }
                             //search list
-                            case 'common_profile_detail_list':
-                            case 'common_profile_search_list':
-                            case 'common_profile_stat_list':{
+                            case 'common_app_dialogues_profile_info_detail_list':
+                            case 'common_app_profile_search_list':
+                            case 'common_app_dialogues_profile_stat_list':{
                                 await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
                                 break;
                             }
                             //dialogue button stat
-                            case 'common_app_profile_toolbar_btn_top':{
+                            case 'common_app_profile_toolbar_stat':{
                                 await commonProfileStat(1, null);
                                 break;
                             }
@@ -3271,43 +3271,43 @@ const commonEvent = async (event_type,event=null) =>{
                                 break;
                             }
                             //dialogue profile stat
-                            case 'common_profile_stat_row1_1':{
+                            case 'common_app_dialogues_profile_stat_row1_1':{
                                 await commonProfileStat(1, null);
                                 break;
                             }
-                            case 'common_profile_stat_row1_2':{
+                            case 'common_app_dialogues_profile_stat_row1_2':{
                                 await commonProfileStat(2, null);
                                 break;
                             }
-                            case 'common_profile_stat_row1_3':{
+                            case 'common_app_dialogues_profile_stat_row1_3':{
                                 await commonProfileStat(3, null);
                                 break;
                             }
                             //dialogue profile info
-                            case 'common_profile_main_btn_following':{
-                                COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                            case 'common_app_dialogues_profile_info_btn_following':{
+                                COMMON_DOCUMENT.querySelectorAll('.common_app_dialogues_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_app_dialogues_profile_btn_selected'));
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
                                 commonProfileDetail(1);
                                 break;
                             }
-                            case 'common_profile_main_btn_followed':{
-                                COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                            case 'common_app_dialogues_profile_info_btn_followed':{
+                                COMMON_DOCUMENT.querySelectorAll('.common_app_dialogues_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_app_dialogues_profile_btn_selected'));
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
                                 commonProfileDetail(2);
                                 break;
                             }
-                            case 'common_profile_main_btn_likes':{
-                                COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                            case 'common_app_dialogues_profile_info_btn_likes':{
+                                COMMON_DOCUMENT.querySelectorAll('.common_app_dialogues_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_app_dialogues_profile_btn_selected'));
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
                                 commonProfileDetail(3);
                                 break;
                             }
-                            case 'common_profile_main_btn_liked':
-                            case 'common_profile_main_btn_liked_heart':
-                            case 'common_profile_main_btn_liked_users':{
+                            case 'common_app_dialogues_profile_info_btn_liked':
+                            case 'common_app_dialogues_profile_info_btn_liked_heart':
+                            case 'common_app_dialogues_profile_info_btn_liked_users':{
                                 commonProfileDetail(4);
-                                COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                                COMMON_DOCUMENT.querySelectorAll('.common_app_dialogues_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_app_dialogues_profile_btn_selected'));
+                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
                                 break;
                             }
                             
@@ -3457,12 +3457,12 @@ const commonEvent = async (event_type,event=null) =>{
                     }
                     else
                         switch (event.target.id){
-                            case 'common_profile_search_input':{
+                            case 'common_app_profile_search_input':{
                                 commonMiscListKeyEvent({event:event,
                                                         event_function:commonProfileSearch,
                                                         event_parameters:commonProfileShow,
-                                                        rows_element:'common_profile_search_list',
-                                                        search_input:'common_profile_search_input'});
+                                                        rows_element:'common_app_profile_search_list',
+                                                        search_input:'common_app_profile_search_input'});
                                 break;
                             }        
                             case 'common_lov_search_input':{
