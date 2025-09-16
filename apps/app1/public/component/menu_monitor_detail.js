@@ -135,7 +135,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                             ${props.monitor_detail=='SERVER_LOG'?
                                 `<div id='menu_monitor_detail_server_log_form'>
                                     <div id='menu_monitor_detail_select_logobject'></div>
-                                    <div id='menu_monitor_detail_filesearch' class='common_dialogue_button common_icon'></div>
+                                    <div id='menu_monitor_detail_filesearch' class='common_app_dialogues_button common_icon'></div>
                                     <div id='menu_monitor_detail_parameters_row'>
                                         <div class='menu_monitor_detail_parameters_row_col'>
                                             <div id='menu_monitor_detail_parameters_row_col1' class='common_icon'></div>

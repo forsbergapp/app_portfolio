@@ -30,7 +30,7 @@ const template = () =>`  <div id='user_settings'>
                                     </div>
                                     <div class='setting_horizontal_col'>
                                         <div id='setting_data_user_url_day'>
-                                            <div id='user_day_html' class='common_dialogue_button common_icon'> </div>
+                                            <div id='user_day_html' class='common_app_dialogues_button common_icon'> </div>
                                         </div>
                                     </div>
                                     <div class='setting_horizontal_col'></div>
@@ -42,7 +42,7 @@ const template = () =>`  <div id='user_settings'>
                                     </div>
                                     <div class='setting_horizontal_col'>
                                         <div id='setting_data_user_url_month'>
-                                            <div id='user_month_html' class='common_dialogue_button common_icon'> </div>
+                                            <div id='user_month_html' class='common_app_dialogues_button common_icon'> </div>
                                         </div>
                                     </div>
                                     <div class='setting_horizontal_col'></div>
@@ -54,7 +54,7 @@ const template = () =>`  <div id='user_settings'>
                                     </div>
                                     <div class='setting_horizontal_col'>
                                         <div id='setting_data_user_url_year'>
-                                            <div id='user_year_html' class='common_dialogue_button common_icon'> </div>
+                                            <div id='user_year_html' class='common_app_dialogues_button common_icon'> </div>
                                         </div>
                                     </div>
                                     <div class='setting_horizontal_col'></div>
@@ -63,9 +63,9 @@ const template = () =>`  <div id='user_settings'>
                                     <div class='setting_horizontal_col'></div>
                                     <div class='setting_horizontal_col'></div>
                                     <div class='setting_horizontal_col'>
-                                        <div id='setting_btn_user_save' class='common_dialogue_button common_icon' ></div>
-                                        <div id='setting_btn_user_add' class='common_dialogue_button common_icon' ></div>
-                                        <div id='setting_btn_user_delete' class='common_dialogue_button common_icon' ></div>
+                                        <div id='setting_btn_user_save' class='common_app_dialogues_button common_icon' ></div>
+                                        <div id='setting_btn_user_add' class='common_app_dialogues_button common_icon' ></div>
+                                        <div id='setting_btn_user_delete' class='common_app_dialogues_button common_icon' ></div>
                                     </div>
                                     <div class='setting_horizontal_col'></div>
                                 </div>

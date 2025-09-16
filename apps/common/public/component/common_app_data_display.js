@@ -147,16 +147,16 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                             }
                             <div class='common_app_data_display_buttons'>
                                 ${props.button_print?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_print common_dialogue_button common_icon ${props.button_print_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_print common_app_dialogues_button common_icon ${props.button_print_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_update?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_update common_dialogue_button common_icon ${props.button_update_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_update common_app_dialogues_button common_icon ${props.button_update_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_post?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_post common_dialogue_button common_icon ${props.button_post_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_post common_app_dialogues_button common_icon ${props.button_post_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_delete?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_delete common_dialogue_button common_icon ${props.button_delete_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_delete common_app_dialogues_button common_icon ${props.button_delete_icon_class ?? ''}' ></div>`:''
                                 }
                             </div>`;
 /**
@@ -208,8 +208,8 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  */
 const component = async props => {
     if (props.data.dialogue){
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
-		props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show1');
+		props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues').classList.add('common_app_dialogues_modal');
     }
     const div_id = () =>Date.now().toString() + Math.floor(Math.random() *100000).toString();
     /**

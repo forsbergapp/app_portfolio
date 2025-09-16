@@ -110,7 +110,7 @@
 
 
 /* Dialogue send broadcast*/
-#dialogue_send_broadcast.common_dialogue_show0{
+#dialogue_send_broadcast.common_app_dialogues_show0{
 	height:320px;
 	width:300px;
 }
@@ -903,7 +903,7 @@
 	bottom:0px !important;
 	top: unset !important;
 }
-#common_dialogue_iam_start{
+#common_app_dialogues_iam_start{
 	height: auto !important;
 	text-align: center;
 }
@@ -1172,7 +1172,7 @@ body{
 	background: var(--app_theme_background_color) !important;
 	caret-color: var(--app_theme_text_color);
 }
-.common_dialogue_button{
+.common_app_dialogues_button{
 	color: var(--app_theme_text_color) !important;
 }
 /*SECURE*/
@@ -1201,14 +1201,14 @@ body{
 .secure_menuitem_selected{
 	background-color: var(--app_theme_secure_menuitem_selected_background_color) !important;
 }
-#common_dialogue_user_menu_messages_col_date:hover,
-#common_dialogue_user_menu_messages_col_date:active,
-#common_dialogue_user_menu_messages_col_sender:hover,
-#common_dialogue_user_menu_messages_col_sender:active,
-#common_dialogue_user_menu_messages_col_subject:hover,
-#common_dialogue_user_menu_messages_col_subject:active,
-.common_dialogue_user_menu_messages_row:not(.common_dialogue_user_menu_messages_row_title):hover,
-.common_dialogue_user_menu_messages_row:not(.common_dialogue_user_menu_messages_row_title):active,
+#common_app_dialogues_user_menu_messages_col_date:hover,
+#common_app_dialogues_user_menu_messages_col_date:active,
+#common_app_dialogues_user_menu_messages_col_sender:hover,
+#common_app_dialogues_user_menu_messages_col_sender:active,
+#common_app_dialogues_user_menu_messages_col_subject:hover,
+#common_app_dialogues_user_menu_messages_col_subject:active,
+.common_app_dialogues_user_menu_messages_row:not(.common_app_dialogues_user_menu_messages_row_title):hover,
+.common_app_dialogues_user_menu_messages_row:not(.common_app_dialogues_user_menu_messages_row_title):active,
 .secure_menuitem:hover,            .secure_menuitem:active, 
 .chat_click:hover,                 .chat_click:active,
 .gps_click:hover,                  .gps_click:active,
@@ -1234,7 +1234,7 @@ body{
 	background-color: var(--app_theme_widget_background_color) !important;
 	box-shadow: 0 4px 8px 0 var(--app_theme_widget_boxshadow_color1), 0 6px 20px 0 var(--app_theme_widget_boxshadow_color2);
 }
-.common_dialogue_user_menu_messages_row:nth-child(odd),
+.common_app_dialogues_user_menu_messages_row:nth-child(odd),
 .menu_db_info_detail_row:nth-child(odd),
 .list_lov_row:nth-child(odd),
 .menu_monitor_detail_app_data_stat_row:nth-child(odd),
@@ -1244,7 +1244,7 @@ body{
 	color: var(--app_theme_list_odd_color);
 	background-color: var(--app_theme_list_odd_background_color);
 }
-.common_dialogue_user_menu_messages_row:nth-child(even),
+.common_app_dialogues_user_menu_messages_row:nth-child(even),
 .menu_db_info_detail_row:last-child,
 .menu_db_info_detail_row:nth-child(even),
 .list_lov_row:nth-child(even),
@@ -1327,13 +1327,13 @@ body{
 	background-color: var(--app_theme_list_background_color) !important;
 }
 /*APP THEME COMMON*/
-#common_dialogue_user_menu_messages{
+#common_app_dialogues_user_menu_messages{
     border: var(--app_theme_list_border_color) solid 0.5px;
 }
-#common_dialogue_user_menu_messages_list{
+#common_app_dialogues_user_menu_messages_list{
     border-bottom: var(--app_theme_list_border_color) solid 0.5px;
 }
-#common_dialogue_user_menu_messages_message_col_message{
+#common_app_dialogues_user_menu_messages_message_col_message{
     border-bottom: var(--app_theme_list_border_color) solid 0.5px;
 }
 #common_app_iam_user_menu:hover,
@@ -1349,17 +1349,17 @@ body{
     box-shadow: 0px -3px 3px var(--app_theme_dialogue_boxshadow_color1);
 }
 
-#common_dialogue_iam_start .common_input{
+#common_app_dialogues_iam_start .common_input{
 	border: 1px solid var(--app_theme_input_border_color);
 }
-.common_dialogue_iam_start_selected {
+.common_app_dialogues_iam_start_selected {
 	background-color:var(--app_theme_login_nav_selected_background_color);
 }
 .common_input{
 	background-color: var(--app_theme_dialogue_background_color);
 }
-.common_dialogue_button:hover, 
-.common_dialogue_button:active,
+.common_app_dialogues_button:hover, 
+.common_app_dialogues_button:active,
 .common_toolbar_button:hover, 
 .common_toolbar_button:active{
 	color:var(--app_theme_hover_color) !important;
@@ -1373,11 +1373,11 @@ body{
 #common_message_progressbar{
 	background-color: var(--app_theme_main_branding_color1);
 }
-.common_dialogue_content{
+.common_app_dialogues_content{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1), 0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
-.common_dialogue_content a:hover,  .common_dialogue_content a:active,
+.common_app_dialogues_content a:hover,  .common_app_dialogues_content a:active,
 .common_lov_button:hover, .common_lov_button:active{
 	color: var(--app_theme_hover_color) !important;
 }

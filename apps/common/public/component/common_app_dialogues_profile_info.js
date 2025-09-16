@@ -1,6 +1,6 @@
 /**
  * Displays profile info
- * @module apps/common/component/common_dialogue_profile_info
+ * @module apps/common/component/common_app_dialogues_profile_info
  */
 
 /**

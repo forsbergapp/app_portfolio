@@ -1,6 +1,6 @@
 /**
  * Displays profile
- * @module apps/common/component/common_dialogue_profile
+ * @module apps/common/component/common_app_dialogues_profile
  */
 
 /**
@@ -13,9 +13,9 @@
  * @function
  * @returns {string}
  */
-const template = () =>` <div id='common_dialogue_profile_home' class='common_dialogue_button common_icon' ></div>
-                        <div id='common_dialogue_profile_content'></div>
-                        <div id='common_dialogue_profile_close' class='common_dialogue_button common_icon' ></div>`;
+const template = () =>` <div id='common_app_dialogues_profile_home' class='common_app_dialogues_button common_icon' ></div>
+                        <div id='common_app_dialogues_profile_content'></div>
+                        <div id='common_app_dialogues_profile_close' class='common_app_dialogues_button common_icon' ></div>`;
 
 /**
  * @name component
@@ -35,21 +35,21 @@ const template = () =>` <div id='common_dialogue_profile_home' class='common_dia
  *                      template:string}>}
  */
 const component = async props => {
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show0');
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues').classList.add('common_app_dialogues_modal');
 
     
     const onMounted = async () =>{
         if (props.data.statchoice){
             //show default stat list
             await props.methods.COMMON.commonComponentRender( 
-                {   mountDiv:   'common_dialogue_profile_content',
+                {   mountDiv:   'common_app_dialogues_profile_content',
                     data:       {
                                 stat_list_app_rest_url:props.data.stat_list_app_rest_url,
                                 statchoice:props.data.statchoice
                                 },
                     methods:    null,
-                    path:       '/common/component/common_dialogue_profile_stat.js'});
+                    path:       '/common/component/common_app_dialogues_profile_stat.js'});
                     }
     };
 

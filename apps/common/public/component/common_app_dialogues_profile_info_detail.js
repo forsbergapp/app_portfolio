@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/common_dialogue_profile_info_detail
+ * @module apps/common/component/common_app_dialogues_profile_info_detail
  */
 /**
  * @import {common}  from '../../../common_types.js'

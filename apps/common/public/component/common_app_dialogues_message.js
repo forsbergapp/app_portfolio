@@ -1,6 +1,6 @@
 /**
  * Displays message
- * @module apps/common/component/common_dialogue_message
+ * @module apps/common/component/common_app_dialogues_message
  */
 
 /**@import {common}  from '../../../common_types.js'*/
@@ -46,10 +46,10 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
                             }
                             <div id='common_message_buttons'>
                                 ${props.message_type=='CONFIRM'?
-                                    '<div id=\'common_message_cancel\' class=\'common_dialogue_button common_icon\' ></div>':''
+                                    '<div id=\'common_message_cancel\' class=\'common_app_dialogues_button common_icon\' ></div>':''
                                 }
                                 ${props.message_type!='PROGRESS'?
-                                    '<div id=\'common_message_close\' class=\'common_dialogue_button common_icon\' ></div>':''
+                                    '<div id=\'common_message_close\' class=\'common_app_dialogues_button common_icon\' ></div>':''
                                 }
                             </div>`;
 /**
@@ -73,11 +73,11 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  */
 const component = async props => {
     if (props.data.commonMountdiv){
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show3');
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');      
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show3');
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues').classList.add('common_app_dialogues_modal');      
     }
 
-    const function_close = () => { props.methods.COMMON.commonComponentRemove('common_dialogue_message', true);};
+    const function_close = () => { props.methods.COMMON.commonComponentRemove('common_app_dialogues_message', true);};
     let display_message = null;
     let display_message_font_class = null;
     switch (props.data.message_type){
@@ -139,11 +139,11 @@ const component = async props => {
                     case event_target_id=='common_message_close':{
                         if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_message_close')['data-function'])
                             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_message_close')['data-function']();
-                        props.methods.COMMON.commonComponentRemove('common_dialogue_message',true);
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_message',true);
                         break;
                     }
                     case event_target_id=='common_message_cancel':{
-                        props.methods.COMMON.commonComponentRemove('common_dialogue_message',true);
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_message',true);
                         break;
                     }
                 }

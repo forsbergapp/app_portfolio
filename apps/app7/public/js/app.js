@@ -42,30 +42,30 @@ const appEventClick = event =>{
         case 'common_app_iam_user_menu_default_avatar':{
             if (common.commonGlobalGet('iam_user_id')==null)
                 common.commonComponentRender({
-                    mountDiv:   'common_dialogue_user_menu_app_theme',
+                    mountDiv:   'common_app_dialogues_user_menu_app_theme',
                     data:       null,
                     methods:    {
                                 app_theme_update:common.commonMiscPreferencesPostMount
                                 },
-                    path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+                    path:       '/common/component/common_app_dialogues_user_menu_app_theme.js'});
             break;
         }
-        case 'common_dialogue_user_menu_nav_iam_user_app':{
+        case 'common_app_dialogues_user_menu_nav_iam_user_app':{
             common.commonComponentRender({
-                    mountDiv:   'common_dialogue_user_menu_app_theme',
+                    mountDiv:   'common_app_dialogues_user_menu_app_theme',
                     data:       null,
                     methods:    {
                                 app_theme_update:common.commonMiscPreferencesPostMount
                                 },
-                    path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+                    path:       '/common/component/common_app_dialogues_user_menu_app_theme.js'});
             break;
         }
-        case 'common_dialogue_user_menu_log_out':{
+        case 'common_app_dialogues_user_menu_log_out':{
             common.commonUserLogout();
             break;
         }
         /*Dialogue user start */
-        case 'common_dialogue_iam_start_login_button':{
+        case 'common_app_dialogues_iam_start_login_button':{
             common.commonUserLogin().catch(()=>null);
             break;
         }
