@@ -15,13 +15,13 @@
  *          lov_column_value:string}} props 
  * @returns {string}
  */
-const template = props =>`  <div id='common_lov_form'>
-                                <div id='common_lov_title' class='common_icon'></div>
-                                <div id='common_lov_search_row'>
-                                    <div id='common_lov_search_input' contentEditable='true' class='common_input'></div>
-                                    <div id='common_lov_search_icon' class='common_icon'></div>
+const template = props =>`  <div id='common_app_dialogues_lov_form'>
+                                <div id='common_app_dialogues_lov_title' class='common_icon'></div>
+                                <div id='common_app_dialogues_lov_search_row'>
+                                    <div id='common_app_dialogues_lov_search_input' contentEditable='true' class='common_input'></div>
+                                    <div id='common_app_dialogues_lov_search_icon' class='common_icon'></div>
                                 </div>
-                            <div id='common_lov_list' data-lov='${props.lov}' class='common_list_scrollbar'>
+                            <div id='common_app_dialogues_lov_list' data-lov='${props.lov}' class='common_list_scrollbar'>
                                 ${props.list.map((/**@type{*}*/list_row)=>
                                     `<div data-id='${(props.lov_column_value.startsWith('text')||props.lov_column_value.startsWith('display_data'))?list_row.value:list_row.id}' data-value='${list_row[props.lov_column_value]}' tabindex=-1 class='common_list_lov_row common_row'>
                                         <div class='common_list_lov_col1'>
@@ -34,7 +34,7 @@ const template = props =>`  <div id='common_lov_form'>
                                     `).join('')
                                 }
                             </div>
-                            <div id='common_lov_close' class='common_app_dialogues_button common_icon'></div>
+                            <div id='common_app_dialogues_lov_close' class='common_app_dialogues_button common_icon'></div>
                         </div>`;
 /**
  * @name component
@@ -117,8 +117,8 @@ const component = async props => {
      * @returns {void}
      */
      const onMounted = () =>{
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_lov_list')['data-function'] = props.methods.function_event;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_lov_search_input').focus();
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_lov_list')['data-function'] = props.methods.function_event;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_lov_search_input').focus();
     };
     return {
         lifecycle:  {onMounted:onMounted},
