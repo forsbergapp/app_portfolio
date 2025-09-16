@@ -8,7 +8,8 @@ body.font_arabic_nastaliq #common_app_iam_user_menu_default_avatar{
 	left: calc(50% - 30px);
 	position: absolute;
 }
-#app_profile_toolbar{
+#common_app_profile_toolbar{
+    display: block !important;
 	text-align: center;
 }
 /* Background with clouds*/
@@ -419,7 +420,7 @@ div.ray8 {
 #common_profile_btn_top{
 	bottom: 0px !important;
 }
-#common_window_info_info{
+#common_app_window_info_info{
 	position:relative;
 	margin:20px;
     height: 100%;
@@ -713,7 +714,7 @@ border-left: 12px solid var(--app_theme_sun_color);
 .app_theme_moon .moon{
 	display:inline-block;	
 }
-#app_profile_toolbar >.css_spinner::before,
+#common_app_profile_toolbar >.css_spinner::before,
 #app >.css_spinner::before{
 	background-color:var(--app_theme_spinner_background_color);
 }
@@ -794,7 +795,7 @@ border-left: 12px solid var(--app_theme_sun_color);
 	background-color:var(--app_theme_menu_selected_hover_background_color);
 	color: var(--app_theme_menu_selected_hover_color);
 }
-#common_window_info{
+#common_app_window_info{
 	background-color:var(--app_theme_common_window_background_color);
 }
 #common_profile_search_input, 
@@ -847,15 +848,15 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_unlike{
 	color: var(--common_app_color_blue1) !important;
 }
-#common_window_info_toolbar{
+#common_app_window_info_toolbar{
 	background: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
-#common_window_info{
+#common_app_window_info{
 	background: var(--app_theme_dialogue_background_color);
 
 }
-#common_window_info_btn_close .common_icon{
+#common_app_window_info_btn_close .common_icon{
 	background: var(--app_theme_dialogue_background_color);
 }
 #common_app_dialogues_info_contact_message_title{

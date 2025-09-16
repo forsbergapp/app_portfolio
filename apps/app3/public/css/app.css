@@ -161,10 +161,10 @@ body{
 #common_profile_search_list_wrap{
 	visibility: hidden;
 }
-#common_window_info{
+#common_app_window_info{
 	display:grid;
 }
-#common_window_info_info{
+#common_app_window_info_info{
 	position:absolute;
 	margin:20px;
 	top: 60px;
@@ -302,10 +302,10 @@ td, th{
 #common_dialouge_user_menu{
 	background-color: var(--common_app_color_white);
 }
-#common_window_info_toolbar{
+#common_app_window_info_toolbar{
 	background: var(--common_app_color_white);
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }
-#common_window_info{
+#common_app_window_info{
 	background: var(--common_app_color_white);
 }

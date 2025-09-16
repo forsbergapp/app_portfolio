@@ -4,7 +4,7 @@
  * 0    IMAGE
  * 1    URL
  * 2    HTML
- * @module apps/common/component/common_window_info
+ * @module apps/common/component/common_app_window_info
  */
 /**
  * @import {common}  from '../../../common_types.js'
@@ -20,24 +20,24 @@
  *          content?:string}} props
  * @returns {string}
  */
-const template = props => ` <div id='common_window_info_btn_close' class='common_toolbar_button common_icon'></div>
+const template = props => ` <div id='common_app_window_info_btn_close' class='common_toolbar_button common_icon'></div>
                             ${props.info=='IMAGE'?
-                                `<div id='common_window_info_info'>
+                                `<div id='common_app_window_info_info'>
                                     ${props.url?
-                                        `<div id='common_window_info_info_img' style='${props.url==null?'':`background-image:url(${props.url});`}'></div>`:
+                                        `<div id='common_app_window_info_info_img' style='${props.url==null?'':`background-image:url(${props.url});`}'></div>`:
                                         ''
                                     }
                                 </div>
-                                <div id='common_window_info_toolbar'>
-                                    <div id='common_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
-                                    <div id='common_window_info_toolbar_btn_zoomin' class='common_toolbar_button common_icon' ></div>
-                                    <div id='common_window_info_toolbar_btn_left' class='common_toolbar_button common_icon' ></div>
-                                    <div id='common_window_info_toolbar_btn_right' class='common_toolbar_button common_icon' ></div>
-                                    <div id='common_window_info_toolbar_btn_up' class='common_toolbar_button common_icon' ></div>
-                                    <div id='common_window_info_toolbar_btn_down' class='common_toolbar_button common_icon' ></div>
-                                    <div id='common_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_app_window_info_toolbar'>
+                                    <div id='common_app_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
+                                    <div id='common_app_window_info_toolbar_btn_zoomin' class='common_toolbar_button common_icon' ></div>
+                                    <div id='common_app_window_info_toolbar_btn_left' class='common_toolbar_button common_icon' ></div>
+                                    <div id='common_app_window_info_toolbar_btn_right' class='common_toolbar_button common_icon' ></div>
+                                    <div id='common_app_window_info_toolbar_btn_up' class='common_toolbar_button common_icon' ></div>
+                                    <div id='common_app_window_info_toolbar_btn_down' class='common_toolbar_button common_icon' ></div>
+                                    <div id='common_app_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon' ></div>
                                 </div>`:
-                                `<div id='common_window_info_info' class='${props.class}'>
+                                `<div id='common_app_window_info_info' class='${props.class}'>
                                     ${props.content}
                                 </div>`
                             }`
@@ -84,8 +84,8 @@ const component = async props => {
      * @returns {void}
      */
     const WindoInfoClose = () =>{
-        props.methods.COMMON.commonComponentRemove('common_window_info');
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_window_info').style.visibility = 'hidden'; 
+        props.methods.COMMON.commonComponentRemove('common_app_window_info');
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info').style.visibility = 'hidden'; 
         if (props.methods.COMMON.COMMON_DOCUMENT.fullscreenElement)
             props.methods.COMMON.COMMON_DOCUMENT.exitFullscreen();
     };
@@ -97,11 +97,11 @@ const component = async props => {
      * @returns {void}
      */
     const WindoInfoToolbarShowHide = () => {
-        if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display=='inline-block' ||
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display=='')
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display='none';
+        if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info_toolbar').style.display=='inline-block' ||
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info_toolbar').style.display=='')
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info_toolbar').style.display='none';
         else
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display='inline-block';
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info_toolbar').style.display='inline-block';
     };
     /**
      * @name ZoomInfo
@@ -113,7 +113,7 @@ const component = async props => {
     const ZoomInfo = (zoomvalue = null) => {
         let old;
         let old_scale;
-        const div = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_window_info_info_img');
+        const div = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info_info_img');
         //called with null as argument at init() then used for zooming
         //even if css set, this property is not set at startup
         if (zoomvalue == null) {
@@ -134,7 +134,7 @@ const component = async props => {
      */
     const MoveInfo = (move1=null, move2=null) => {
         let old;
-        const div = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_window_info_info_img');
+        const div = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info_info_img');
         if (move1==null || move2==null) {
             div.style.transformOrigin = '50% 50%';
         } else {
@@ -158,39 +158,39 @@ const component = async props => {
         switch (event_type){
             case 'click':{
                 switch (true){
-                    case event_target_id=='common_window_info_btn_close':{
+                    case event_target_id=='common_app_window_info_btn_close':{
                         WindoInfoClose();
                         break;
                     }
-                    case event_target_id=='common_window_info_info_img':{
+                    case event_target_id=='common_app_window_info_info_img':{
                         WindoInfoToolbarShowHide();
                         break;
                     }
-                    case event_target_id=='common_window_info_toolbar_btn_zoomout':{
+                    case event_target_id=='common_app_window_info_toolbar_btn_zoomout':{
                         ZoomInfo(-1);
                         break;
                     }
-                    case event_target_id=='common_window_info_toolbar_btn_zoomin':{
+                    case event_target_id=='common_app_window_info_toolbar_btn_zoomin':{
                         ZoomInfo(1);
                         break;
                     }
-                    case event_target_id=='common_window_info_toolbar_btn_left':{
+                    case event_target_id=='common_app_window_info_toolbar_btn_left':{
                         MoveInfo(-1,0);
                         break;
                     }
-                    case event_target_id=='common_window_info_toolbar_btn_right':{
+                    case event_target_id=='common_app_window_info_toolbar_btn_right':{
                         MoveInfo(1,0);
                         break;
                     }
-                    case event_target_id=='common_window_info_toolbar_btn_up':{
+                    case event_target_id=='common_app_window_info_toolbar_btn_up':{
                         MoveInfo(0,-1);
                         break;
                     }
-                    case event_target_id=='common_window_info_toolbar_btn_down':{
+                    case event_target_id=='common_app_window_info_toolbar_btn_down':{
                         MoveInfo(0,1);
                         break;
                     }
-                    case event_target_id=='common_window_info_toolbar_btn_fullscreen':{
+                    case event_target_id=='common_app_window_info_toolbar_btn_fullscreen':{
                         if (props.methods.COMMON.COMMON_DOCUMENT.fullscreenElement)
                             props.methods.COMMON.COMMON_DOCUMENT.exitFullscreen();
                         else
@@ -201,7 +201,7 @@ const component = async props => {
             }
         }
     };
-    const onMounted = async () => props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_window_info').style.visibility='visible';
+    const onMounted = async () => props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info').style.visibility='visible';
     
     return {
         lifecycle:  {onMounted:onMounted},
