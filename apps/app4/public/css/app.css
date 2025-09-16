@@ -575,18 +575,9 @@
 	width:60px !important;
 }
 /*COMMON*/
-#common_user_account{
-	display: unset !important;
-    flex-flow: unset !important;
-	width: unset !important;
-    position: unset !important;
-    top: unset !important;
-}
-
-#common_iam_avatar{
-	position: absolute;
-	bottom:0.1em;
-    z-index:2;
+#common_app_iam_user_menu{
+    top: 0.5em !important;
+    z-index:2 !important;
 }
 #common_app_toolbar{
 	margin-inline-start: 0px !important;
@@ -840,7 +831,7 @@ body,
 #settings,
 #settings select,
 #settings_tab_navigation,
-#common_iam_avatar,
+#common_app_iam_user_menu,
 .common_dialogue_button,
 .common_toolbar_button
 {
@@ -859,8 +850,8 @@ body,
 .common_dialogue_button:active,
 .common_toolbar_button:hover,
 .common_toolbar_button:active,
-#common_iam_avatar:hover,
-#common_iam_avatar:active,
+#common_app_iam_user_menu:hover,
+#common_app_iam_user_menu:active,
 #settings_tab_navigation :hover,
 #settings_tab_navigation :active {
 	color:var(--app_theme_hover) !important;
@@ -948,7 +939,8 @@ body,
 #common_window_info,
 #common_window_info_content,
 #common_window_info_toolbar,
-#common_iam_avatar,
+#common_app_iam_user_menu_avatar_img, 
+#common_app_iam_user_menu_default_avatar,
 #common_dialouge_user_menu
 {
 	background-color:var(--app_theme_main_color1);

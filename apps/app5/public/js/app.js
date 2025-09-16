@@ -173,12 +173,12 @@ const appEventClick = event => {
             break;
         }
         //dialogue user menu
-        case 'common_iam_avatar':
-        case 'common_iam_avatar_logged_in':
-        case 'common_iam_avatar_avatar':
-        case 'common_iam_avatar_avatar_img':
-        case 'common_iam_avatar_logged_out':
-        case 'common_iam_avatar_default_avatar':{
+        case 'common_app_iam_user_menu':
+        case 'common_app_iam_user_menu_logged_in':
+        case 'common_app_iam_user_menu_avatar':
+        case 'common_app_iam_user_menu_avatar_img':
+        case 'common_app_iam_user_menu_logged_out':
+        case 'common_app_iam_user_menu_default_avatar':{
             if (common.commonGlobalGet('iam_user_id')==null)
                 common.commonComponentRender({
                     mountDiv:   'common_dialogue_user_menu_app_theme',

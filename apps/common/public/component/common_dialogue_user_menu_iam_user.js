@@ -115,7 +115,7 @@ const component = async props => {
            else
                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_iam_user_checkbox_profile_private').classList.remove('checked');
 
-           props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= user.avatar?
+           props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img').style.backgroundImage= user.avatar?
                                                                                                            `url('${user.avatar}')`:
                                                                                                            'url()';
        } else {
