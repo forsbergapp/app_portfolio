@@ -2718,7 +2718,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 break;
                             }
                             //dialogue button stat
-                            case 'common_profile_btn_top':{
+                            case 'common_app_profile_toolbar_btn_top':{
                                 await commonProfileStat(1, null);
                                 break;
                             }

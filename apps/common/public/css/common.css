@@ -421,7 +421,7 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 #common_profile_main_btn_following::before{								        content:var(--common_app_icon_user_follows)}
 #common_profile_main_btn_followed::before{								        content:var(--common_app_icon_user_followed)}
 #common_profile_main_btn_liked_users::before{							        content:var(--common_app_icon_user_followed)}
-#common_profile_btn_top::before{										        content:var(--common_app_icon_user_profile_stat)}
+#common_app_profile_toolbar_btn_top::before{										        content:var(--common_app_icon_user_profile_stat)}
 
 /*Icons dialogue user menu*/
 #common_app_dialogues_user_menu_nav_messages::before{								content:var(--common_app_icon_email)}
@@ -1559,7 +1559,7 @@ body.rtl{
 	text-align:end;
 }
 /* profile button top*/
-#common_profile_btn_top{
+#common_app_profile_toolbar_btn_top{
 	font-size: 48px;
 	cursor:pointer;
 	position:fixed;
