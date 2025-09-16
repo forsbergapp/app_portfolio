@@ -522,16 +522,6 @@ const commonMiscPreferencesUpdateBodyClassFromPreferences = () => {
         COMMON_DOCUMENT.body.classList.add(class_arabic_script);
 };
 /**
- * @name commonMiscPreferencesPostMount
- * @description Common preference post mount
- * @function
- * @returns {void}
- */
-const commonMiscPreferencesPostMount = () => {
-    commonMiscPreferencesUpdateBodyClassFromPreferences();
-    commonMiscThemeUpdateFromBody();
-};
-/**
  * @name commonMiscPrint
  * @description Prints html loading fonts using FontFace() and calls browser print() 
  * @param {string} html
@@ -675,24 +665,7 @@ const commonMiscSelectCurrentValueSet = (div, value, json_key=null, json_value=n
         COMMON_DOCUMENT.querySelector(`#${div} .common_select_dropdown_value`).setAttribute('data-value', value);
       
 };
-/**
- * @name commonMiscThemeDefaultList
- * @description Default app themes 
- * @function
- * @returns {{VALUE:number, TEXT:string}[]}
- */
-const commonMiscThemeDefaultList = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}, {VALUE:3, TEXT:'Caffè Latte'}];
-/**
- * @name commonMiscThemeUpdateFromBody
- * @description Common theme get
- * @function
- * @returns {void}
- */
- const commonMiscThemeUpdateFromBody = () => {    
-    COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_app_theme .common_select_dropdown_value').textContent = 
-        commonMiscThemeDefaultList().filter(theme=>theme.VALUE.toString()==COMMON_DOCUMENT.body.className[9])[0].TEXT;
-    COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_app_theme .common_select_dropdown_value').setAttribute('data-value', COMMON_DOCUMENT.body.className[9]);
-};
+
 /**
  * @name commonMiscTimezoneDate
  * @description Get timezone date
@@ -2092,32 +2065,6 @@ const commonUserUpdateAvatar = (login, avatar) =>{
 const commonUserLocale =() =>COMMON_GLOBAL.user_locale;
 
 /**
- * @name commonUserPreferenceSave
- * @description User preference save
- * @function
- * @returns {Promise.<void>}
- */
-const commonUserPreferenceSave = async () => {
-    if (COMMON_GLOBAL.iam_user_app_id != null){
-        const body = {
-                        IAM_data_app_id: COMMON_GLOBAL.app_id,
-                        IAM_iam_user_id: COMMON_GLOBAL.iam_user_id,
-                        json_data: 
-                        {  
-                            preference_locale:       COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_locale_select .common_select_dropdown_value')
-                                                                        .getAttribute('data-value'),
-                            preference_timezone:     COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_timezone_select .common_select_dropdown_value')
-                                                                        .getAttribute('data-value'),
-                            preference_direction:    COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_direction_select .common_select_dropdown_value')
-                                                                        .getAttribute('data-value'),
-                            preference_arabic_script:COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_arabic_script_select .common_select_dropdown_value')
-                                                                        .getAttribute('data-value'),
-                        }
-                    };
-        await commonFFB({path:`/server-db/iamuserapp/${COMMON_GLOBAL.iam_user_app_id}`, method:'PATCH', authorization_type:'APP_ACCESS', body:body});
-    }
-};
-/**
  * @name commonUserPreferencesGlobalSetDefault
  * @description User prefernce set default globals
  * @function
@@ -2512,74 +2459,6 @@ const commonGeolocationPlace = async (longitude, latitude) => {
 const commonTextEditingDisabled = () =>COMMON_GLOBAL.app_text_edit=='0';
 
 /**
- * @name commonEventSelectAction
- * @description Performs action for select event
- * @function
- * @param {string} event_target_id
- * @param { common['CommonAppEvent']['target']|
- *          common['CommonAppEvent']['target']['parentNode']|null} target
- * @returns {Promise.<void>}
- */
-const commonEventSelectAction = async (event_target_id, target) =>{
-   //dialogue user menu events
-   if (event_target_id == 'common_app_dialogues_user_menu_app_theme'){
-       COMMON_DOCUMENT.body.className = 'app_theme' + COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
-       commonMiscPreferencesUpdateBodyClassFromPreferences();
-   }
-   if (event_target_id == 'common_app_dialogues_user_menu_iam_user_app_locale_select'){
-       COMMON_GLOBAL.user_locale = target?.getAttribute('data-value') ?? '';
-       /**
-        * @todo change COMMON_WINDOW.navigator.language, however when logging out default COMMON_WINDOW.navigator.language will be set
-        *       commented at the moment
-        *       Object.defineProperties(COMMON_WINDOW.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
-        */
-       await commonUserPreferenceSave();
-       await commonComponentRender({
-        mountDiv:   'common_app_dialogues_user_menu_iam_user_app_locale_select', 
-        data:       {
-                    default_data_value:COMMON_GLOBAL.user_locale,
-                    default_value:'',
-                    options: await commonFFB({
-                                                path:'/app-common-module/COMMON_LOCALE', 
-                                                method:'POST', authorization_type:'APP_ID',
-                                                body:{type:'FUNCTION',IAM_data_app_id : COMMON_GLOBAL.app_common_app_id}
-                                            })
-                                            .then((/**@type{string}*/result)=>JSON.parse(commonWindowFromBase64(JSON.parse(result).rows[0].data))),
-                    path:null,
-                    query:null,
-                    method:null,
-                    authorization_type:null,
-                    column_value:'locale',
-                    column_text:'text'
-                    },
-        methods:    null,
-        path:       '/common/component/common_select.js'});
-        commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_locale_select', COMMON_GLOBAL.user_locale);
-   }
-   if (event_target_id == 'common_app_dialogues_user_menu_iam_user_app_timezone_select'){
-       COMMON_GLOBAL.user_timezone = target?.getAttribute('data-value') ?? '';
-       await commonUserPreferenceSave();
-   }
-   if(event_target_id =='common_app_dialogues_user_menu_iam_user_app_direction_select'){
-       if(target?.getAttribute('data-value')=='rtl')
-           COMMON_DOCUMENT.body.classList.add('rtl');
-       else
-           COMMON_DOCUMENT.body.classList.remove('rtl');
-       COMMON_GLOBAL.user_direction = target?.getAttribute('data-value') ?? '';
-       await commonUserPreferenceSave();
-   }
-   if(event_target_id == 'common_app_dialogues_user_menu_iam_user_app_arabic_script_select'){
-       COMMON_GLOBAL.user_arabic_script = target?.getAttribute('data-value') ?? '';
-       //check if app theme div is using default theme with common select div
-       if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_app_theme').className?
-           COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_app_theme').className.toLowerCase().indexOf('common_select')>-1:false){
-           COMMON_DOCUMENT.body.className = 'app_theme' + COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_app_theme .common_select_dropdown_value').getAttribute('data-value');
-           commonMiscPreferencesUpdateBodyClassFromPreferences();
-       }
-       await commonUserPreferenceSave();
-   }
-};
-/**
  * @name commonEvent
  * @description Central event delegation on app root
  *              order of events: 1 common, 2 module, 3 app 
@@ -2629,7 +2508,6 @@ const commonEvent = async (event_type,event=null) =>{
                                 COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
                                 COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
                                 event.target.parentNode.parentNode.style.display = 'none';
-                                await commonEventSelectAction(event_target_id, event.target.parentNode);
                                 break;
                             }
                             case event.target.classList.contains('common_select_option')?event_target_id:'':{
@@ -2637,7 +2515,6 @@ const commonEvent = async (event_type,event=null) =>{
                                 COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
                                 COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
                                 event.target.parentNode.style.display = 'none';
-                                await commonEventSelectAction(event_target_id, event.target);
                                 break;
                             }                            
                             case 'common_app_profile_search_icon':{
@@ -2645,7 +2522,6 @@ const commonEvent = async (event_type,event=null) =>{
                                 COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                                 break;
                             }
-                            
                             /* Dialogue user menu*/
                             case 'common_app_iam_user_menu':
                             case 'common_app_iam_user_menu_logged_in':
@@ -3399,13 +3275,10 @@ const commonGet = () =>{
         commonMiscListKeyEvent:commonMiscListKeyEvent,
         commonMiscMobile:commonMiscMobile,
         commonMiscPreferencesUpdateBodyClassFromPreferences:commonMiscPreferencesUpdateBodyClassFromPreferences,
-        commonMiscPreferencesPostMount:commonMiscPreferencesPostMount,
         commonMiscPrint:commonMiscPrint,
         commonMiscResourceFetch:commonMiscResourceFetch,
         commonMiscRoundOff:commonMiscRoundOff,
         commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
-        commonMiscThemeDefaultList:commonMiscThemeDefaultList,
-        commonMiscThemeUpdateFromBody:commonMiscThemeUpdateFromBody,
         commonMiscTimezoneDate:commonMiscTimezoneDate,
         commonMiscTypewatch:commonMiscTypewatch,
         commonMiscShowDateUpdate:commonMiscShowDateUpdate,
@@ -3571,13 +3444,10 @@ export{/* GLOBALS*/
        commonMiscListKeyEvent,
        commonMiscMobile,
        commonMiscPreferencesUpdateBodyClassFromPreferences,
-       commonMiscPreferencesPostMount,
        commonMiscPrint,
        commonMiscResourceFetch,
        commonMiscRoundOff, 
        commonMiscSelectCurrentValueSet,
-       commonMiscThemeDefaultList, 
-       commonMiscThemeUpdateFromBody,
        commonMiscTimezoneDate, 
        commonMiscTypewatch,      
        commonMiscShowDateUpdate,
