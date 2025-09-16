@@ -1836,7 +1836,7 @@ const appEventClick = event => {
             break;
         }
         //profile button
-        case 'common_profile_btn_top':
+        case 'common_app_profile_toolbar_btn_top':
         case 'common_profile_stat_row1_1':
         case 'common_profile_stat_row1_2':
         case 'common_profile_stat_row1_3':{
