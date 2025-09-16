@@ -44,42 +44,12 @@ const appEventClick = event => {
         case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
             if (event_target_id == 'common_app_dialogues_user_menu_iam_user_app_locale_select')
                 appAppsGet();
-            if (event_target_id == 'common_app_dialogues_user_menu_iam_user_app_arabic_script_select')
-                appThemeUpdate();
             break;
         }
         case 'theme_background':{
             appDialogueAppsShowHide();
             break;
         }                    
-        //user preferences
-        case 'app_theme_checkbox':{
-            appThemeUpdate(true);
-            break;
-        }
-        //dialogue user menu
-        case 'common_app_iam_user_menu':
-        case 'common_app_iam_user_menu_logged_in':
-        case 'common_app_iam_user_menu_avatar':
-        case 'common_app_iam_user_menu_avatar_img':
-        case 'common_app_iam_user_menu_logged_out':
-        case 'common_app_iam_user_menu_default_avatar':{
-            if (common.commonGlobalGet('iam_user_id')==null)
-                common.commonComponentRender({
-                    mountDiv:   'common_app_dialogues_user_menu_app_theme',
-                    data:       null,
-                    methods:    {appPreferencesPostMount:appPreferencesPostMount},
-                    path:       '/component/app_theme.js'});
-            break;
-        }
-        case 'common_app_dialogues_user_menu_nav_iam_user_app':{
-            common.commonComponentRender({
-                    mountDiv:   'common_app_dialogues_user_menu_app_theme',
-                    data:       null,
-                    methods:    {appPreferencesPostMount:appPreferencesPostMount},
-                    path:       '/component/app_theme.js'});
-            break;
-        }
         case 'common_app_dialogues_user_menu_log_out':{
             common.commonUserLogout();
             appUserLogout();
@@ -121,55 +91,6 @@ const appEventKeyUp = event => {
         }
         
     }
-};
-/**
- * @name appThemeUpdate
- * @description App theme update
- * @function
- * @param {boolean} toggle_theme 
- * @returns {void}
- */
-const appThemeUpdate = (toggle_theme=false) => {
-    let theme = '';
-    if(COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.contains('checked')){
-        theme = 'app_theme_sun';
-        if (toggle_theme){
-            COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.remove('checked');
-            theme = 'app_theme_moon';
-        }
-    }
-    else{
-        theme = 'app_theme_moon';
-        if (toggle_theme){
-            COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.add('checked');
-            theme = 'app_theme_sun';
-        }
-    }    
-    COMMON_DOCUMENT.body.className = theme;
-    common.commonMiscPreferencesUpdateBodyClassFromPreferences();
-};
-/**
- * @name appThemeUpdateFromBody
- * @description App theme get
- * @function
- * @returns {void}
- */
- const appThemeUpdateFromBody = () => {
-    if (COMMON_DOCUMENT.body.className.split(' ')[0] == 'app_theme_sun')
-        COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.add('checked');
-    else
-        COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.remove('checked');
-};
-/**
- * @name appPreferencesPostMount
- * @description App preference post mount
- * @returns {void}
- */
- const appPreferencesPostMount = () => {
-    if (COMMON_DOCUMENT.body.classList.contains('app_theme_moon'))
-        COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.remove('checked');
-    common.commonMiscPreferencesUpdateBodyClassFromPreferences();
-    appThemeUpdateFromBody();
 };
 
 /**
@@ -261,5 +182,5 @@ const appMetadata = () =>{
     };
 };
 
-export{appCommonInit, appPreferencesPostMount, appMetadata};
+export{appCommonInit, appMetadata};
 export default appCommonInit;

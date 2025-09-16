@@ -945,6 +945,7 @@
 }
 
 /*APP THEME*/
+.app_theme_sun,
 .app_theme1 {
 	--app_theme_main_branding_color1: var(--common_app_color_blue1);
 	--app_theme_main_branding_color2: var(--common_app_color_blue2);
@@ -1018,6 +1019,7 @@
 	--app_theme_nav_selected_background_color:var(--app_theme_main_branding_color2);
 	--app_theme_secure_menuitem_selected_background_color: var(--app_theme_main_branding_color2);
 }
+.app_theme_moon,
 .app_theme2 {
 	--app_theme_main_branding_color1: var(--common_app_color_dark);
 	--app_theme_main_branding_color2: var(--common_app_color_black);
