@@ -1466,21 +1466,21 @@ const commonLovEvent = (event, lov) => {
         /**@type{HTMLElement|null} */
         const common_input_lov = row.querySelector('.common_input_lov');
         /**@type{HTMLElement|null} */
-        const common_lov_value = row.querySelector('.common_lov_value');
+        const common_app_dialogues_lov_value = row.querySelector('.common_app_dialogues_lov_value');
         if (common_input_lov){
             common_input_lov.textContent = row_lov.getAttribute('data-id') ?? '';
             common_input_lov.focus();
         }
-        if (common_lov_value){
+        if (common_app_dialogues_lov_value){
             /**@ts-ignore */
-            if (common_lov_value.parentNode?.classList.contains('common_app_data_display_master_row')){
-                common_lov_value.setAttribute('data-lov_value', row_lov.getAttribute('data-id') ?? '');
+            if (common_app_dialogues_lov_value.parentNode?.classList.contains('common_app_data_display_master_row')){
+                common_app_dialogues_lov_value.setAttribute('data-lov_value', row_lov.getAttribute('data-id') ?? '');
             }
-            common_lov_value.textContent = row_lov.getAttribute('data-value') ?? '';
+            common_app_dialogues_lov_value.textContent = row_lov.getAttribute('data-value') ?? '';
         }
-        //dispatch event for either common_input lov if used or common_lov_value
-        (common_input_lov ?? common_lov_value)?.dispatchEvent(new Event('input'));
-        COMMON_DOCUMENT.querySelector('#common_lov_close').click();
+        //dispatch event for either common_input lov if used or common_app_dialogues_lov_value
+        (common_input_lov ?? common_app_dialogues_lov_value)?.dispatchEvent(new Event('input'));
+        COMMON_DOCUMENT.querySelector('#common_app_dialogues_lov_close').click();
     };
     commonLovShow({lov:lov, function_event:commonLovEvent_function});
 };
@@ -1505,7 +1505,7 @@ const commonLovAction = (event, lov, old_value, path, query, method, authorizati
         if (list_result.length == 1){
             //set lov text
             if (event.target.parentNode && event.target.parentNode.nextElementSibling)
-                event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').textContent = Object.values(list_result[0])[2];
+                event.target.parentNode.nextElementSibling.querySelector('.common_app_dialogues_lov_value').textContent = Object.values(list_result[0])[2];
             //set new value in data-defaultValue used to save old value when editing next time
             event.target.setAttribute('data-defaultValue', Object.values(list_result[0])[0]);
         }
@@ -3217,7 +3217,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 COMMON_GLOBAL.component.common_app_dialogues_user_menu?.methods?.eventClickPagination(event_target_id);
                                 break;
                             }
-                            case (event.target.classList.contains('common_app_dialogues_user_menu_messages_col_delete') && event_target_id != 'common_app_dialogues_user_menu_messages_col_delete')?
+                            case (event.target.classList.contains('common_app_dialogues_user_menu_messages_list_col_delete') && event_target_id != 'common_app_dialogues_user_menu_messages_list_col_delete')?
                                     event_target_id:
                                         '':{
                                 //clicked on delete on row, not the title
@@ -3347,16 +3347,16 @@ const commonEvent = async (event_type,event=null) =>{
                                 commonLovEvent(event, event.target.getAttribute('data-lov'));
                                 break;
                             }
-                            case 'common_lov_search_icon':{
-                                commonLovFilter(COMMON_DOCUMENT.querySelector('#common_lov_search_input').textContent);
+                            case 'common_app_dialogues_lov_search_icon':{
+                                commonLovFilter(COMMON_DOCUMENT.querySelector('#common_app_dialogues_lov_search_input').textContent);
                                 break;
                             }
-                            case 'common_lov_close':{
+                            case 'common_app_dialogues_lov_close':{
                                 commonLovClose();
                                 break;
                             }
-                            case 'common_lov_list':{
-                                COMMON_DOCUMENT.querySelector('#common_lov_list')['data-function'](event);
+                            case 'common_app_dialogues_lov_list':{
+                                COMMON_DOCUMENT.querySelector('#common_app_dialogues_lov_list')['data-function'](event);
                                 break;
                             }
                             //markdown document tags
@@ -3465,12 +3465,12 @@ const commonEvent = async (event_type,event=null) =>{
                                                         search_input:'common_app_profile_search_input'});
                                 break;
                             }        
-                            case 'common_lov_search_input':{
+                            case 'common_app_dialogues_lov_search_input':{
                                 commonMiscListKeyEvent({event:event,
                                                         event_function:commonLovFilter,
-                                                        event_parameters:COMMON_DOCUMENT.querySelector('#common_lov_search_input').textContent,
-                                                        rows_element:'common_lov_list',
-                                                        search_input:'common_lov_search_input'});
+                                                        event_parameters:COMMON_DOCUMENT.querySelector('#common_app_dialogues_lov_search_input').textContent,
+                                                        rows_element:'common_app_dialogues_lov_list',
+                                                        search_input:'common_app_dialogues_lov_search_input'});
                                 break;
                             }
                             //dialogue verify

@@ -347,45 +347,45 @@ body.font_arabic_nastaliq .common_input{
 
 
 /*Icons general use*/
-.common_construction::before{											        content:var(--common_app_icon_maintenance)}	
-.common_unlike::before{													        content:var(--common_app_icon_user_unlike)}	
-.common_like::before{													        content:var(--common_app_icon_user_like)}	
-.common_user_follow::before{											        content:var(--common_app_icon_user_follow_user)}
-.common_user_followed::before{											        content:var(--common_app_icon_user_followed_user)}
-.common_search_icon::before{											        content:var(--common_app_icon_search)}
-.common_reload::before{													        content:var(--common_app_icon_reload)}
-.common_user_session_expired::before{									        content:var(--common_app_icon_user_session_expired)}
+.common_construction::before{											            content:var(--common_app_icon_maintenance)}	
+.common_unlike::before{													            content:var(--common_app_icon_user_unlike)}	
+.common_like::before{													            content:var(--common_app_icon_user_like)}	
+.common_user_follow::before{											            content:var(--common_app_icon_user_follow_user)}
+.common_user_followed::before{											            content:var(--common_app_icon_user_followed_user)}
+.common_search_icon::before{											            content:var(--common_app_icon_search)}
+.common_reload::before{													            content:var(--common_app_icon_reload)}
+.common_user_session_expired::before{									            content:var(--common_app_icon_user_session_expired)}
 
-.common_pagination_first::before{												content:var(--common_app_icon_first)}
-.common_pagination_previous::before{											content:var(--common_app_icon_previous)}
-.common_pagination_next::before{												content:var(--common_app_icon_next)}
-.common_pagination_last::before{												content:var(--common_app_icon_last)}
+.common_pagination_first::before{												    content:var(--common_app_icon_first)}
+.common_pagination_previous::before{											    content:var(--common_app_icon_previous)}
+.common_pagination_next::before{												    content:var(--common_app_icon_next)}
+.common_pagination_last::before{												    content:var(--common_app_icon_last)}
 
-body.rtl .common_pagination_first::before{									    content:var(--common_app_icon_last)}
-body.rtl .common_pagination_previous::before{									content:var(--common_app_icon_next)}
-body.rtl .common_pagination_next::before{										content:var(--common_app_icon_previous)}
-body.rtl .common_pagination_last::before{										content:var(--common_app_icon_first)}
+body.rtl .common_pagination_first::before{									        content:var(--common_app_icon_last)}
+body.rtl .common_pagination_previous::before{									    content:var(--common_app_icon_next)}
+body.rtl .common_pagination_next::before{										    content:var(--common_app_icon_previous)}
+body.rtl .common_pagination_last::before{										    content:var(--common_app_icon_first)}
 
 
 /*Icons app data display*/
-.common_app_data_display_button_update::before{							        content:var(--common_app_icon_update)}
-.common_app_data_display_button_post::before{							        content:var(--common_app_icon_add)}
-.common_app_data_display_button_delete::before{							        content:var(--common_app_icon_delete)}
-.common_app_data_display_button_print::before{							        content:var(--common_app_icon_print)}
-.common_data_display_icon_cancel::before{								        content:var(--common_app_icon_cancel) !important}
-.common_data_display_icon_ok::before{									        content:var(--common_app_icon_ok) !important}
+.common_app_data_display_button_update::before{							            content:var(--common_app_icon_update)}
+.common_app_data_display_button_post::before{							            content:var(--common_app_icon_add)}
+.common_app_data_display_button_delete::before{							            content:var(--common_app_icon_delete)}
+.common_app_data_display_button_print::before{							            content:var(--common_app_icon_print)}
+.common_data_display_icon_cancel::before{								            content:var(--common_app_icon_cancel) !important}
+.common_data_display_icon_ok::before{									            content:var(--common_app_icon_ok) !important}
 
 /*Icons app*/
-#common_app_toolbar_start::before{									            content:var(--common_app_icon_start)}
-#common_app_toolbar_framework_js::before{									    content:var(--common_app_icon_javascript)}
-#common_app_toolbar_framework_vue::before{									    content:var(--common_app_icon_vue)}
-#common_app_toolbar_framework_react::before{								    content:var(--common_app_icon_react)}
+#common_app_toolbar_start::before{									                content:var(--common_app_icon_start)}
+#common_app_toolbar_framework_js::before{									        content:var(--common_app_icon_javascript)}
+#common_app_toolbar_framework_vue::before{									        content:var(--common_app_icon_vue)}
+#common_app_toolbar_framework_react::before{								        content:var(--common_app_icon_react)}
 
 /*Icons broadcast*/
 #common_app_broadcast_close::before{										        content:var(--common_app_icon_broadcast_close)}
 #common_app_broadcast_info_title::before{									        content:var(--common_app_icon_alert)}
 /* Icons maintenance */
-#common_maintenance_message::before{	                                        content:var(--common_app_icon_maintenance)}
+#common_maintenance_message::before{	                                            content:var(--common_app_icon_maintenance)}
 
 /*Icons dialogue apps*/
 #common_app_dialogues_apps_list_title_col_info::before{					            content:var(--common_app_icon_info)}
@@ -393,35 +393,35 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 /*Icons dialogue info*/
 #common_app_dialogues_info_contact_message_title::before{					        content:var(--common_app_icon_email)}
 #common_app_dialogues_info_close::before{									        content:var(--common_app_icon_close)}
-#common_app_dialogues_info_contact_message_send::before{						        content:var(--common_app_icon_send)}
+#common_app_dialogues_info_contact_message_send::before{						    content:var(--common_app_icon_send)}
 /*Icons dialogue lov*/
-.common_lov_button::before{												        content:var(--common_app_icon_lov)}
-#common_lov_search_icon::before{										        content:var(--common_app_icon_search)}
-#common_lov_close::before{												        content:var(--common_app_icon_close)}
+.common_app_dialogues_lov_button::before{											content:var(--common_app_icon_lov)}
+#common_app_dialogues_lov_search_icon::before{										content:var(--common_app_icon_search)}
+#common_app_dialogues_lov_close::before{											content:var(--common_app_icon_close)}
 
 /*Icons dialogue message*/
-#common_message_close::before{											        content:var(--common_app_icon_close)}
-#common_message_cancel::before{											        content:var(--common_app_icon_cancel)}
-#common_message_title_icon::before{										        content:''}
-#common_message_title_icon[data-text_class='message_text']::before{		        content:var(--common_app_icon_message_text)}
-#common_message_title_icon[data-text_class='message_success']::before{	        content:var(--common_app_icon_message_success)}
-#common_message_title_icon[data-text_class='message_fail']::before{		        content:var(--common_app_icon_message_fail)}
-#common_message_confirm_question:empty::before{							        content:var(--common_app_icon_question)}
+#common_app_dialogues_message_close::before{										content:var(--common_app_icon_close)}
+#common_app_dialogues_message_cancel::before{										content:var(--common_app_icon_cancel)}
+#common_app_dialogues_message_title_icon::before{									content:''}
+#common_app_dialogues_message_title_icon[data-text_class='message_text']::before{	content:var(--common_app_icon_message_text)}
+#common_app_dialogues_message_title_icon[data-text_class='message_success']::before{content:var(--common_app_icon_message_success)}
+#common_app_dialogues_message_title_icon[data-text_class='message_fail']::before{	content:var(--common_app_icon_message_fail)}
+#common_app_dialogues_message_confirm_question:empty::before{						content:var(--common_app_icon_question)}
 
 /*Icons dialogue profile*/
-#common_app_dialogues_profile_info_joined_date_icon::before{								        content:var(--common_app_icon_user_account_created)}
-#common_app_dialogues_profile_info_private_title::before{									        content:var(--common_app_icon_private)}
-#common_app_dialogues_profile_info_avatar_online_status::before{							        content:var(--common_app_icon_online)}
-#common_app_dialogues_profile_stat_row1_1::before{									        content:var(--common_app_icon_user_views)}
-#common_app_dialogues_profile_stat_row1_2::before{									        content:var(--common_app_icon_user_follows)}
-#common_app_dialogues_profile_stat_row1_3::before{									        content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_user_follows)}
+#common_app_dialogues_profile_info_joined_date_icon::before{						content:var(--common_app_icon_user_account_created)}
+#common_app_dialogues_profile_info_private_title::before{							content:var(--common_app_icon_private)}
+#common_app_dialogues_profile_info_avatar_online_status::before{					content:var(--common_app_icon_online)}
+#common_app_dialogues_profile_stat_row1_1::before{									content:var(--common_app_icon_user_views)}
+#common_app_dialogues_profile_stat_row1_2::before{									content:var(--common_app_icon_user_follows)}
+#common_app_dialogues_profile_stat_row1_3::before{									content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_user_follows)}
 #common_app_dialogues_profile_home::before{									        content:var(--common_app_icon_user_profile_stat)}
-#common_app_dialogues_profile_close::before{									        content:var(--common_app_icon_close)}
-#common_app_dialogues_profile_info_view_count_icon::before{							        content:var(--common_app_icon_user_views)}
-#common_app_dialogues_profile_info_btn_following::before{								        content:var(--common_app_icon_user_follows)}
-#common_app_dialogues_profile_info_btn_followed::before{								        content:var(--common_app_icon_user_followed)}
-#common_app_dialogues_profile_info_btn_liked_users::before{							        content:var(--common_app_icon_user_followed)}
-#common_app_profile_toolbar_stat::before{										        content:var(--common_app_icon_user_profile_stat)}
+#common_app_dialogues_profile_close::before{									    content:var(--common_app_icon_close)}
+#common_app_dialogues_profile_info_view_count_icon::before{							content:var(--common_app_icon_user_views)}
+#common_app_dialogues_profile_info_btn_following::before{							content:var(--common_app_icon_user_follows)}
+#common_app_dialogues_profile_info_btn_followed::before{							content:var(--common_app_icon_user_followed)}
+#common_app_dialogues_profile_info_btn_liked_users::before{							content:var(--common_app_icon_user_followed)}
+#common_app_profile_toolbar_stat::before{										    content:var(--common_app_icon_user_profile_stat)}
 
 /*Icons dialogue user menu*/
 #common_app_dialogues_user_menu_nav_messages::before{								content:var(--common_app_icon_email)}
@@ -429,19 +429,19 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 #common_app_dialogues_user_menu_nav_iam_user::before{								content:var(--common_app_icon_user)}
 #common_app_dialogues_user_menu_signup::before{								        content:var(--common_app_icon_signup)}
 #common_app_dialogues_user_menu_log_in::before{								        content:var(--common_app_icon_login)}
-#common_app_dialogues_user_menu_log_out::before{								        content:var(--common_app_icon_logout)}
+#common_app_dialogues_user_menu_log_out::before{								    content:var(--common_app_icon_logout)}
 #common_app_dialogues_user_menu_close::before{								        content:var(--common_app_icon_close)}
 
 /*Icons dialogue user menu messages*/
-.common_app_dialogues_user_menu_messages_col_delete::before{					        content:var(--common_app_icon_delete)}
-#common_app_dialogues_user_menu_messages_col_date::before{					        content:var(--common_app_icon_regional_calendar)}
-#common_app_dialogues_user_menu_messages_col_sender::before{					        content:var(--common_app_icon_user)}
-#common_app_dialogues_user_menu_messages_col_subject::before{					    content:var(--common_app_icon_message_text)}
+.common_app_dialogues_user_menu_messages_list_col_delete::before{					content:var(--common_app_icon_delete)}
+#common_app_dialogues_user_menu_messages_list_col_date::before{					    content:var(--common_app_icon_regional_calendar)}
+#common_app_dialogues_user_menu_messages_list_col_sender::before{					content:var(--common_app_icon_user)}
+#common_app_dialogues_user_menu_messages_list_col_subject::before{					content:var(--common_app_icon_message_text)}
 
 #common_app_dialogues_user_menu_messages_message_col_date::before{					content:var(--common_app_icon_regional_calendar)}
-#common_app_dialogues_user_menu_messages_message_col_sender::before{					content:var(--common_app_icon_user) var(--common_app_icon_logout)}
+#common_app_dialogues_user_menu_messages_message_col_sender::before{				content:var(--common_app_icon_user) var(--common_app_icon_logout)}
 #common_app_dialogues_user_menu_messages_message_col_receiver::before{				content:var(--common_app_icon_user) var(--common_app_icon_login)}
-#common_app_dialogues_user_menu_messages_message_col_ip::before{					    content:var(--common_app_icon_internet)}
+#common_app_dialogues_user_menu_messages_message_col_ip::before{					content:var(--common_app_icon_internet)}
 #common_app_dialogues_user_menu_messages_message_col_host::before{					content:var(--common_app_icon_server)}
 #common_app_dialogues_user_menu_messages_message_col_subject::before{				content:var(--common_app_icon_info)}
 #common_app_dialogues_user_menu_messages_message_col_message::before{				content:var(--common_app_icon_email)}
@@ -450,8 +450,8 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 /*Icons dialogue user menu iam user*/
 #common_app_dialogues_user_menu_iam_user_private::before{							content:var(--common_app_icon_private)}
 #common_app_dialogues_user_menu_iam_user_input_username_icon::before{				content:var(--common_app_icon_user)}
-#common_app_dialogues_user_menu_iam_user_input_bio_icon::before{						content:var(--common_app_icon_user_profile)}
-#common_app_dialogues_user_menu_iam_user_input_otp_icon::before{						content:var(--common_app_icon_otp)}
+#common_app_dialogues_user_menu_iam_user_input_bio_icon::before{					content:var(--common_app_icon_user_profile)}
+#common_app_dialogues_user_menu_iam_user_input_otp_icon::before{					content:var(--common_app_icon_otp)}
 #common_app_dialogues_user_menu_iam_user_input_password_icon::before{				content:var(--common_app_icon_user_password)}
 #common_app_dialogues_user_menu_iam_user_input_password_confirm_icon::before{		content:var(--common_app_icon_user_password_confirm)}
 #common_app_dialogues_user_menu_iam_user_input_password_new_icon::before{			content:var(--common_app_icon_user_password)}
@@ -460,7 +460,7 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 
 #common_app_dialogues_user_menu_iam_user_label_last_logintime::before{				content:var(--common_app_icon_user_last_logintime)}
 #common_app_dialogues_user_menu_iam_user_label_account_created::before{				content:var(--common_app_icon_user_account_created)}
-#common_app_dialogues_user_menu_iam_user_label_account_modified::before{				content:var(--common_app_icon_user_account_modified)}
+#common_app_dialogues_user_menu_iam_user_label_account_modified::before{			content:var(--common_app_icon_user_account_modified)}
 
 #common_app_dialogues_user_menu_iam_user_btn_user_delete_account::before{			content:var(--common_app_icon_delete)}	
 #common_app_dialogues_user_menu_iam_user_btn_user_update.spinner::before{			content: ''}
@@ -475,7 +475,7 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 #common_app_dialogues_user_menu_iam_user_input_password_reminder:empty::before{		content:var(--common_app_icon_user_password_reminder)}
 
 /*Icons dialogue user menu iam user app*/
-#common_app_dialogues_user_menu_iam_user_app_locale::before{					        content:var(--common_app_icon_regional_locale)}
+#common_app_dialogues_user_menu_iam_user_app_locale::before{					    content:var(--common_app_icon_regional_locale)}
 #common_app_dialogues_user_menu_iam_user_app_timezone::before{				        content:var(--common_app_icon_regional_timezone)}
 #common_app_dialogues_user_menu_iam_user_app_direction::before{				        content:var(--common_app_icon_regional_direction)}
 #common_app_dialogues_user_menu_iam_user_app_arabic_script::before{			        content:var(--common_app_icon_regional_script)}
@@ -506,30 +506,30 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 
 
 /*Icons dialogue user verify*/
-#common_app_dialogues_iam_verify_verification_code_icon::before{				        content:var(--common_app_icon_verification_code)}
-#common_app_dialogues_iam_verify_cancel::before{								        content:var(--common_app_icon_cancel)}
+#common_app_dialogues_iam_verify_verification_code_icon::before{				    content:var(--common_app_icon_verification_code)}
+#common_app_dialogues_iam_verify_cancel::before{								    content:var(--common_app_icon_cancel)}
 
 /*Icons common map control*/
-#common_map_control_zoomout::before{						                    content:var(--common_app_icon_zoomout)}
-#common_map_control_zoomin::before{							                    content:var(--common_app_icon_zoomin)}
-#common_map_control_search::before{					                            content:var(--common_app_icon_search)}
-#common_map_control_expand_search_icon::before{								    content:var(--common_app_icon_search)}
-#common_map_control_fullscreen::before{					                        content:var(--common_app_icon_fullscreen)}
-#common_map_control_my_location::before{					                    content:var(--common_app_icon_map_my_location)}
-#common_map_control_layer::before{					                            content:var(--common_app_icon_map_layer)}
-#common_map_control_query::before{					                            content:var(--common_app_icon_arrow_pointer_query)}
+#common_map_control_zoomout::before{						                        content:var(--common_app_icon_zoomout)}
+#common_map_control_zoomin::before{							                        content:var(--common_app_icon_zoomin)}
+#common_map_control_search::before{					                                content:var(--common_app_icon_search)}
+#common_map_control_expand_search_icon::before{								        content:var(--common_app_icon_search)}
+#common_map_control_fullscreen::before{					                            content:var(--common_app_icon_fullscreen)}
+#common_map_control_my_location::before{					                        content:var(--common_app_icon_map_my_location)}
+#common_map_control_layer::before{					                                content:var(--common_app_icon_map_layer)}
+#common_map_control_query::before{					                                content:var(--common_app_icon_arrow_pointer_query)}
 
 /*Icons common map popup*/
-.common_map_popup_close::before{											    content:var(--common_app_icon_close)}
-.common_map_popup_sub_title_timezone_icon::before{							    content:var(--common_app_icon_regional_timezone)}
-.common_map_popup_sub_title_gps_icon::before{							        content:var(--common_app_icon_gps_position)}
+.common_map_popup_close::before{											        content:var(--common_app_icon_close)}
+.common_map_popup_sub_title_timezone_icon::before{							        content:var(--common_app_icon_regional_timezone)}
+.common_map_popup_sub_title_gps_icon::before{							            content:var(--common_app_icon_gps_position)}
 
 /*Icons profile search*/
 #common_app_profile_search_icon::before{									        content:var(--common_app_icon_search)}
 
 /*Icons user account*/
-#common_app_iam_user_menu_default_avatar::before{								content:var(--common_app_icon_user_avatar)}
-#common_app_iam_user_menu_message_count::after{								    content:var(--common_app_icon_email)}
+#common_app_iam_user_menu_default_avatar::before{								    content:var(--common_app_icon_user_avatar)}
+#common_app_iam_user_menu_message_count::after{								        content:var(--common_app_icon_email)}
 
 /*Icons window info*/
 #common_app_window_info_btn_close::before{									        content:var(--common_app_icon_close)}
@@ -542,7 +542,7 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 #common_app_window_info_toolbar_btn_fullscreen::before{						        content:var(--common_app_icon_fullscreen)}
 
 /*Icons markdown*/
-.common_markdown_note::before{											        content:'!'}
+.common_markdown_note::before{											            content:'!'}
 
 body{
 	font-size: 16px;
@@ -735,19 +735,19 @@ body.rtl{
 .common_input_lov{
 	width: calc(100% - 15px) !important;
 }
-.common_lov_button{
+.common_app_dialogues_lov_button{
 	display: inline-block;
 }
-.common_lov_search_row{
+.common_app_dialogues_lov_search_row{
 	width:100%;
 }
-#common_lov_search_input{
+#common_app_dialogues_lov_search_input{
 	width: calc(100% - 30px);
 	display: inline-block;
 	border-radius: var(--common_app_css_border_radius);
 	padding:2px;
 }
-#common_lov_search_icon{
+#common_app_dialogues_lov_search_icon{
 	width: 15px;
 	display: inline-block;
 }
@@ -1088,7 +1088,7 @@ body.rtl{
 	display:inline-block;
 	margin-bottom:10px;
 }
-#common_message_progressbar_wrap{
+#common_app_dialogues_message_progressbar_wrap{
 	display:inline-block;
 	text-align: start;
 	width: 100%;
@@ -1098,52 +1098,52 @@ body.rtl{
 	animation: common_pulsate 2s ease-out;
 	animation-iteration-count: infinite;
 }
-#common_message_progressbar{
+#common_app_dialogues_message_progressbar{
 	display:inline-block;
 	width: 100%;
 	height: 10px;
 	border-radius: var(--common_app_css_border_radius);
 	vertical-align: top;
 }
-#common_message_title{
+#common_app_dialogues_message_title{
 	cursor:default;
 	display:inline-block;
 }
-#common_message_title.common_font_log{
+#common_app_dialogues_message_title.common_font_log{
 	font-size: 0.5em;
 }
-#common_message_title.common_font_normal{
+#common_app_dialogues_message_title.common_font_normal{
 	font-size: 1em;
 }
-#common_message_title_icon{
+#common_app_dialogues_message_title_icon{
 	display: inline-block;
 }
-#common_message_cancel{
+#common_app_dialogues_message_cancel{
 	cursor:pointer;
 }
-#common_message_close{
+#common_app_dialogues_message_close{
 	outline:none;
 	cursor:pointer;
 	display:inline-block;
 }
-#common_message_title .common_icon{
+#common_app_dialogues_message_title .common_icon{
 	vertical-align: middle;
 	margin-bottom: 1px;
 }
-#common_message_title #common_message_info_list{
+#common_app_dialogues_message_title #common_app_dialogues_message_info_list{
 	display: block;
 	width: 300px;
 }
-#common_message_title #common_message_info_list #common_message_info_list_title{
+#common_app_dialogues_message_title #common_app_dialogues_message_info_list #common_app_dialogues_message_info_list_title{
 	font-weight: bold;
 	font-size: 1.5em;
 }
-#common_message_title #common_message_info_list .common_message_info_list_row{
+#common_app_dialogues_message_title #common_app_dialogues_message_info_list .common_app_dialogues_message_info_list_row{
 	display: inline-block;
 	width: 100%;
 	margin: 2px;
 }
-#common_message_title #common_message_info_list .common_message_info_list_row .common_message_info_list_col{
+#common_app_dialogues_message_title #common_app_dialogues_message_info_list .common_app_dialogues_message_info_list_row .common_app_dialogues_message_info_list_col{
 	display: inline-block;
 	width: calc(50% - 10px);
 	text-align: start;
@@ -1248,12 +1248,12 @@ body.rtl{
 	height:auto;
 	width: 350px;
 }
-#common_lov_list{
+#common_app_dialogues_lov_list{
 	height: 230px;
     border-radius: var(--common_app_css_border_radius);
     text-align: start;
 }
-#common_lov_search_icon{
+#common_app_dialogues_lov_search_icon{
 	cursor:pointer;	
 }
 .common_list_lov_row{
@@ -1277,10 +1277,10 @@ body.rtl{
 	margin: 1px;
 	border-radius: var(--common_app_css_border_radius);
 }
-#common_lov_list .common_list_lov_col1{
+#common_app_dialogues_lov_list .common_list_lov_col1{
 	display:none;
 }
-#common_lov_list[data-lov=SERVER_LOG_FILES] .common_list_lov_col1{
+#common_app_dialogues_lov_list[data-lov=SERVER_LOG_FILES] .common_list_lov_col1{
 	display:inline-block;
 }
 
@@ -1620,7 +1620,7 @@ body.rtl{
 	text-align: center;
 }
 #common_app_dialogues_user_menu_content.common_app_dialogues_user_menu_connected{
-    height:31em;
+    height:34em;
 }
 #common_app_dialogues_user_menu .common_select .common_select_options{
 	display: none;
@@ -1647,7 +1647,7 @@ body.rtl{
     margin-inline-start: 0.5em;
 }
 #common_app_dialogues_user_menu_detail{
-    height: 22em;
+    height: 25em;
 }
 #common_app_dialogues_user_menu_username{
 	cursor:pointer;
@@ -1670,31 +1670,6 @@ body.rtl{
 #common_app_dialogues_user_menu_messages{
     border-radius: var(--common_app_css_border_radius);
 }
-#common_app_dialogues_user_menu_messages_list{
-    overflow: auto;
-    height: 10em;
-    cursor: pointer;
-}
-.common_app_dialogues_user_menu_messages_row_title{
-    font-weight: bold;
-}
-.common_app_dialogues_user_menu_messages_row > div{
-    display: inline-block;
-}
-.common_app_dialogues_user_menu_messages_row{
-    display: inline-grid;
-    text-align: start;
-    grid-template-columns: 2em 12em 10em 10em;
-}
-.common_app_dialogues_user_menu_messages_row_read{
-    font-weight: inherit;
-}
-.common_app_dialogues_user_menu_messages_row_unread{
-    font-weight: bold;
-}
-.common_app_dialogues_user_menu_messages_col{
-    font-size: 0.8em;
-}
 #common_app_dialogues_user_menu_messages_pagination{
 	display: block;
 	height: 40px;
@@ -1705,15 +1680,36 @@ body.rtl{
 	margin-right: 10px;
 	cursor:pointer;
 }
-
+#common_app_dialogues_user_menu_messages_list{
+    overflow: auto;
+    height: 10em;
+    cursor: pointer;
+}
 #common_app_dialogues_user_menu_message_content{
-    height: 12em;
     text-align: start;
     font-size: 0.8em;
     overflow: auto;
-}
-#common_app_dialogues_user_menu_message_content{
     margin-top: 0.5em;
+}
+.common_app_dialogues_user_menu_messages_list_row_title{
+    font-weight: bold;
+}
+.common_app_dialogues_user_menu_messages_list_row > div{
+    display: inline-block;
+}
+.common_app_dialogues_user_menu_messages_list_row{
+    display: inline-grid;
+    text-align: start;
+    grid-template-columns: 2em 12em 10em 10em;
+}
+.common_app_dialogues_user_menu_messages_list_row_read{
+    font-weight: inherit;
+}
+.common_app_dialogues_user_menu_messages_list_row_unread{
+    font-weight: bold;
+}
+.common_app_dialogues_user_menu_messages_list_col{
+    font-size: 0.8em;
 }
 .common_app_dialogues_user_menu_messages_message_row{
     display: grid;
@@ -2369,7 +2365,7 @@ body.rtl{
 	.common_app_dialogues_profile_info_detail_list{
 		height:5.6em;	
 	}
-	#common_message_title #common_message_info_list{
+	#common_app_dialogues_message_title #common_app_dialogues_message_info_list{
 		width: 500px;
 	}	
 	#common_map_control_expand_search_list{
