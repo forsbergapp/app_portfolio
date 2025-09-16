@@ -1,6 +1,6 @@
 /*APP */
 
-body.font_arabic_nastaliq #common_iam_avatar_default_avatar{
+body.font_arabic_nastaliq #common_app_iam_user_menu_default_avatar{
 	top: -5px;
 }
 #app > .css_spinner{
@@ -662,8 +662,8 @@ div.ray8 {
 }
 /*app colors*/
 body{
-	color: var(--app_theme_text_color);
-	background: var(--app_theme_background_color);
+	color: var(--app_theme_text_color) !important;
+	background: var(--app_theme_background_color) !important;
 	caret-color: var(--app_theme_text_color);
 }
 #common_dialogue_apps_list_title{
@@ -773,11 +773,12 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_switch.checked::before {
 	background-color: var(--app_theme_switch_checked_background_color);
 }
-#common_iam_avatar:hover,
-#common_iam_avatar:active{
+#common_app_iam_user_menu:hover,
+#common_app_iam_user_menu:active{
 	box-shadow: 0 0 35px 4px var(--app_theme_dialogue_boxshadow_active_color);
 }  
-#common_iam_avatar,
+#common_app_iam_user_menu_avatar_img, 
+#common_app_iam_user_menu_default_avatar,
 #common_dialogue_user_menu{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);

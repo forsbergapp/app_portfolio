@@ -2039,7 +2039,7 @@ const commonUserAuthenticateCode = async (verification_code, verification_type) 
 };
 const commonUserMessageShowStat = async () =>{
     if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count') ||
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_message_count_text')){
+        COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_message_count_text')){
         /**@type{{unread:number, 
              *           read:number}}
              */    
@@ -2052,8 +2052,8 @@ const commonUserMessageShowStat = async () =>{
             .then((/**@type{*}*/result)=>JSON.parse(result).rows[0]);
         if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count'))
             COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_nav_messages_count').textContent = `${messageStat.unread}(${messageStat.unread+messageStat.read})`;
-        if (COMMON_DOCUMENT.querySelector('#common_iam_avatar_message_count_text'))
-            COMMON_DOCUMENT.querySelector('#common_iam_avatar_message_count_text').textContent = `${messageStat.unread}(${messageStat.unread+messageStat.read})`;
+        if (COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_message_count_text'))
+            COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_message_count_text').textContent = `${messageStat.unread}(${messageStat.unread+messageStat.read})`;
         
     }    
 };
@@ -2068,19 +2068,19 @@ const commonUserMessageShowStat = async () =>{
  */
 const commonUserUpdateAvatar = (login, avatar) =>{
     if (login){
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= avatar?
+        COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img').style.backgroundImage= avatar?
                                                                                                 `url('${avatar}')`:
                                                                                                     'url()';
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',avatar);
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
+        COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img').setAttribute('data-image',avatar);
+        COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_logged_in').style.display = 'inline-block';
+        COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_logged_out').style.display = 'none';
     }
     else{
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= 'url()';
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',null);
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
-        COMMON_DOCUMENT.querySelector('#common_iam_avatar_message_count_text').textContent = '';
+        COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img').style.backgroundImage= 'url()';
+        COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img').setAttribute('data-image',null);
+        COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_logged_in').style.display = 'none';
+        COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_logged_out').style.display = 'inline-block';
+        COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_message_count_text').textContent = '';
     }
 };
 /**
@@ -2647,12 +2647,12 @@ const commonEvent = async (event_type,event=null) =>{
                             }
                             
                             /* Dialogue user menu*/
-                            case 'common_iam_avatar':
-                            case 'common_iam_avatar_logged_in':
-                            case 'common_iam_avatar_avatar':
-                            case 'common_iam_avatar_avatar_img':
-                            case 'common_iam_avatar_logged_out':
-                            case 'common_iam_avatar_default_avatar':{
+                            case 'common_app_iam_user_menu':
+                            case 'common_app_iam_user_menu_logged_in':
+                            case 'common_app_iam_user_menu_avatar':
+                            case 'common_app_iam_user_menu_avatar_img':
+                            case 'common_app_iam_user_menu_logged_out':
+                            case 'common_app_iam_user_menu_default_avatar':{
                                 await commonComponentRender({
                                     mountDiv:   'common_dialogue_user_menu',
                                     data:       {
@@ -2672,23 +2672,11 @@ const commonEvent = async (event_type,event=null) =>{
                                     path:       '/common/component/common_dialogue_user_menu.js'});
                                 break;
                             }
-                            case 'common_dialogue_user_menu_username':{
-                                commonComponentRemove('common_dialogue_user_menu');
-                                await commonProfileShow();
-                                break;
-                            }
                             case 'common_dialogue_user_menu_messages_pagination_first':
                             case 'common_dialogue_user_menu_messages_pagination_previous':
                             case 'common_dialogue_user_menu_messages_pagination_next':
                             case 'common_dialogue_user_menu_messages_pagination_last':{
                                 COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickPagination(event_target_id);
-                                break;
-                            }
-                            case 'common_dialogue_user_menu_nav_messages_count':
-                            case 'common_dialogue_user_menu_nav_messages':{
-                                COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                                await COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickNavMessages();
                                 break;
                             }
                             case (event.target.classList.contains('common_dialogue_user_menu_messages_col_delete') && event_target_id != 'common_dialogue_user_menu_messages_col_delete')?
@@ -2698,37 +2686,8 @@ const commonEvent = async (event_type,event=null) =>{
                                 COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickMessageDelete( commonMiscElementRow(event.target));
                                 break;
                             }
-                            case 'common_dialogue_user_menu_nav_iam_user_app':{
-                                COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                                await COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickNavIamUserApp(COMMON_GLOBAL.user_locale,
-                                                                                                                        COMMON_GLOBAL.user_timezone,
-                                                                                                                        COMMON_GLOBAL.user_direction,
-                                                                                                                        COMMON_GLOBAL.user_arabic_script);
-                                break;
-                            }
-                            case 'common_dialogue_user_menu_nav_iam_user':{
-                                COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                                await COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickNavIamUser();
-                                break;
-                            }
                             case 'common_dialogue_user_menu_messages_list':{
                                 COMMON_GLOBAL.component.common_dialogue_user_menu?.methods?.eventClickMessage( commonMiscElementRow(event.target));
-                                break;
-                            }
-                            case 'common_dialogue_user_menu_close':{
-                                commonComponentRemove('common_dialogue_user_menu', true);
-                                break;
-                            }
-                            case 'common_dialogue_user_menu_log_in':{
-                                commonComponentRemove('common_dialogue_user_menu');
-                                commonDialogueShow('LOGIN');
-                                break;
-                            }      
-                            case 'common_dialogue_user_menu_signup':{
-                                commonComponentRemove('common_dialogue_user_menu');
-                                commonDialogueShow('SIGNUP');
                                 break;
                             }
                             //dialogue user edit

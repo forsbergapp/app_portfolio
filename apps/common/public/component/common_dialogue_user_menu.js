@@ -33,7 +33,9 @@ const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.
                                 }
                                 ${props.iam_user_id?
                                     `<div id='common_dialogue_user_menu_nav'>
-                                        <div id='common_dialogue_user_menu_nav_messages' class='common_nav_selected common_icon'><div id='common_dialogue_user_menu_nav_messages_count'></div></div>
+                                        <div id='common_dialogue_user_menu_nav_messages' class='common_nav_selected common_icon'>
+                                            <div id='common_dialogue_user_menu_nav_messages_count'></div>
+                                        </div>
                                         <div id='common_dialogue_user_menu_nav_iam_user_app' class='common_icon'></div>
                                         <div id='common_dialogue_user_menu_nav_iam_user' class='common_icon'></div>
                                     </div>`:''
@@ -81,10 +83,8 @@ const template = props =>`  <div id='common_dialogue_user_menu_content' ${props.
 *                      data:   null,
 *                      methods:{eventClickPagination:       Function,
 *                               eventClickMessage:          Function,
-*                               eventClickMessageDelete:    Function,
-*                               eventClickNavMessages:      Function, 
-*                               eventClickNavIamUser:       Function,
-*                               eventClickNavIamUserApp:    Function},
+*                               eventClickMessageDelete:    Function},
+*                      events:  common['commonComponentEvents'],
 *                      template:string}>}
 */
 const component = async props => {
@@ -222,6 +222,66 @@ const component = async props => {
             methods:    null,
             path:       '/common/component/common_dialogue_user_menu_iam_user_app.js'});
     };
+    /**
+     * @name events
+     * @descption Events
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (event_type){
+            case 'click':{
+                switch (true){
+                    case event_target_id=='common_dialogue_user_menu_nav_messages_count':
+                    case event_target_id=='common_dialogue_user_menu_nav_messages':{
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
+                            await eventClickNavMessages();
+                            break;
+                        }
+
+                    case event_target_id=='common_dialogue_user_menu_nav_iam_user_app':{
+                        props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
+                        props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
+                        await eventClickNavIamUserApp(
+                            props.methods.COMMON.commonGlobalGet('user_locale'),
+                            props.methods.COMMON.commonGlobalGet('user_timezone'),
+                            props.methods.COMMON.commonGlobalGet('user_direction'),
+                            props.methods.COMMON.commonGlobalGet('user_arabic_script'));
+                        break;
+                    }
+                    case event_target_id=='common_dialogue_user_menu_nav_iam_user':{
+                        props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
+                        props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
+                        await eventClickNavIamUser();
+                        break;
+                    }
+                    case event_target_id=='common_dialogue_user_menu_username':{
+                        props.methods.COMMON.commonComponentRemove('common_dialogue_user_menu');
+                        await props.methods.COMMON.commonProfileShow();
+                        break;
+                    }
+                    case event_target_id=='common_dialogue_user_menu_close':{
+                        props.methods.COMMON.commonComponentRemove('common_dialogue_user_menu', true);
+                        break;
+                    }
+                    case event_target_id=='common_dialogue_user_menu_log_in':{
+                        props.methods.COMMON.commonComponentRemove('common_dialogue_user_menu');
+                        props.methods.COMMON.commonDialogueShow('LOGIN');
+                        break;
+                    }      
+                    case event_target_id=='common_dialogue_user_menu_signup':{
+                        props.methods.COMMON.commonComponentRemove('common_dialogue_user_menu');
+                        props.methods.COMMON.commonDialogueShow('SIGNUP');
+                        break;
+                    }
+                }
+            }
+        }
+    };
     const onMounted = async () =>{
         if (props.data.iam_user_id){
             //mount messages
@@ -246,11 +306,9 @@ const component = async props => {
         methods:    {
                     eventClickPagination:       eventClickPagination,
                     eventClickMessage:          eventClickMessage,
-                    eventClickMessageDelete:    eventClickMessageDelete,
-                    eventClickNavMessages:      eventClickNavMessages, 
-                    eventClickNavIamUser:       eventClickNavIamUser,
-                    eventClickNavIamUserApp:    eventClickNavIamUserApp
+                    eventClickMessageDelete:    eventClickMessageDelete
                     },
+        events:     events,
         template:   template({  app_id:props.data.app_id,
                                 admin_app_id:props.data.admin_app_id,
                                 iam_user_id:props.data.iam_user_id,

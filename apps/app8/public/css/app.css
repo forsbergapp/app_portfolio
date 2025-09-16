@@ -179,7 +179,8 @@ body {
 	background-color : rgba(0,0,0,.5);
 }
 /* APP THEME COMMON*/
-#common_iam_avatar{
+#common_app_iam_user_menu_avatar_img, 
+#common_app_iam_user_menu_default_avatar{
     background-color: var(--common_app_color_light);
     box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }

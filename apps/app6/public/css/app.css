@@ -72,12 +72,13 @@ body {
 	border-radius: var(--common_app_css_border_radius);
 }
 /*COMMON*/
-#common_iam_avatar{
+#common_app_iam_user_menu_avatar_img, 
+#common_app_iam_user_menu_default_avatar{
     background-color: var(--common_app_color_light);
     box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }
-#common_iam_avatar,
-#common_iam_avatar_message_count{
+#common_app_iam_user_menu,
+#common_app_iam_user_menu_message_count{
     color: var(--common_app_color_gold);
 }
 .common_app_data_display_master_col1{
