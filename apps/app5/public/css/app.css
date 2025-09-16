@@ -100,7 +100,7 @@ body {
 	}
 }
 /*COMMON*/
-#common_iam_avatar{
+#common_app_iam_user_menu{
 	transition-duration: .3s;
     transition-property: box-shadow;
 }
@@ -164,7 +164,8 @@ body {
     box-shadow: 0 10px 10px -10px var(--common_app_color_dark);
 }
 /* APP THEME COMMON*/
-#common_iam_avatar{
+#common_app_iam_user_menu_avatar_img, 
+#common_app_iam_user_menu_default_avatar{
     background-color: var(--common_app_color_light);
     box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }
@@ -228,8 +229,8 @@ body {
 #common_dialouge_user_menu{
 	background-color: var(--common_app_color_white);
 }
-#common_iam_avatar:hover,
-#common_iam_avatar:active{
+#common_app_iam_user_menu:hover,
+#common_app_iam_user_menu:active{
 	box-shadow: 0 10px 10px -10px var(--common_app_color_dark);
 }
 #common_window_info_toolbar{

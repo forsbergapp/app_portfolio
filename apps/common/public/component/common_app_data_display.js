@@ -323,7 +323,7 @@ const component = async props => {
 
     /**
      * @name events
-     * @descption Events for map
+     * @descption Events
      * @function
      * @param {common['commonEventType']} event_type
      * @param {common['CommonAppEvent']} event

@@ -528,8 +528,8 @@ body.rtl .common_pagination_last::before{										content:var(--common_app_icon
 #common_profile_search_icon::before{									        content:var(--common_app_icon_search)}
 
 /*Icons user account*/
-#common_iam_avatar_default_avatar::before{								        content:var(--common_app_icon_user_avatar)}
-#common_iam_avatar_message_count::after{								        content:var(--common_app_icon_email)}
+#common_app_iam_user_menu_default_avatar::before{								content:var(--common_app_icon_user_avatar)}
+#common_app_iam_user_menu_message_count::after{								    content:var(--common_app_icon_email)}
 
 /*Icons window info*/
 #common_window_info_btn_close::before{									        content:var(--common_app_icon_close)}
@@ -1577,43 +1577,38 @@ body.rtl{
 }
 
 /*User account*/
-#common_user_account{
-	display: flex;
-    flex-flow: row-reverse;
-	width: calc(100% - 10px);
-    position: fixed;
-    top: 0;
-}
-#common_iam_avatar{
-	margin-inline-start: 10px;
-	width: 48px;
-	height:48px;
+#common_app_iam_user_menu{
+    position: absolute;
+    top: 1em;
 	z-index:1;
-	border-radius: 50% !important;
+    margin-inline-start: calc(100% - 4em);
+    position: fixed;
 	cursor:pointer;
-	position:fixed;
-	margin-top:1em;
 }
-#common_iam_avatar_logged_in, #common_dialogue_user_menu_logged_in{
+#common_app_iam_user_menu_logged_in, #common_dialogue_user_menu_logged_in{
 	display: none;
 }
-#common_iam_avatar_message_count{
+#common_app_iam_user_menu_message_count{
     display: flex;
     flex-direction: row;
 }
-#common_iam_avatar_logged_out{
+#common_app_iam_user_menu_logged_out{
 	display: inline-block;
 	height: 48px;
 }
-#common_iam_avatar_default_avatar{
+#common_app_iam_user_menu_default_avatar{
 	font-size: 48px;
 	height: 48px;
-	margin-top: var(--common_app_css_useragent_fix_margin_top);
 }
-#common_iam_avatar_default_avatar::before{
+#common_app_iam_user_menu_default_avatar::before{
 	vertical-align: top;
 	display: inline-block;
+    margin-top: var(--common_app_css_useragent_fix_margin_top)
 }
+#common_app_iam_user_menu_avatar_img, #common_app_iam_user_menu_default_avatar{
+    border-radius: 50% !important;
+}
+
 
 /* Dialogue user menu*/
 #common_dialogue_user_menu.common_dialogue_show1{

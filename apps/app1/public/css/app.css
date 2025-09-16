@@ -890,7 +890,8 @@
 	height:calc(100% - 320px);
 }
 /* COMMON */
-#common_iam_avatar{
+#common_app_iam_user_menu_avatar_img, 
+#common_app_iam_user_menu_default_avatar{
     background-color: var(--common_app_color_light);
     box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }    
@@ -1335,8 +1336,8 @@ body{
 #common_dialogue_user_menu_messages_message_col_message{
     border-bottom: var(--app_theme_list_border_color) solid 0.5px;
 }
-#common_iam_avatar:hover,
-#common_iam_avatar:active{
+#common_app_iam_user_menu:hover,
+#common_app_iam_user_menu:active{
 	box-shadow: 0 0px 2px 2px var(--app_theme_hover_color);
 }
 .common_toolbar_selected{

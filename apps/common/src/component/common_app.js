@@ -77,17 +77,17 @@
                                         <div id='common_window_info'></div>
                                         <div id='common_broadcast'></div>
                                         <div id='common_profile_search'></div>
-                                        <div id='common_user_account'>
-                                            <div id='common_iam_avatar'>
-                                                <div id='common_iam_avatar_logged_in'>
-                                                    <div id='common_iam_avatar_avatar'>
-                                                        <div id='common_iam_avatar_avatar_img' class='common_image common_image_avatar'></div>
-                                                        <div id='common_iam_avatar_message_count' class='common_icon'><div id='common_iam_avatar_message_count_text'></div></div>
+                                        <div id='common_app_iam_user_menu'>
+                                            <div id='common_app_iam_user_menu_logged_in'>
+                                                <div id='common_app_iam_user_menu_avatar'>
+                                                    <div id='common_app_iam_user_menu_avatar_img' class='common_image common_image_avatar'></div>
+                                                    <div id='common_app_iam_user_menu_message_count' class='common_icon'>
+                                                        <div id='common_app_iam_user_menu_message_count_text'></div>
                                                     </div>
                                                 </div>
-                                                <div id='common_iam_avatar_logged_out'>
-                                                    <div id='common_iam_avatar_default_avatar' class='common_icon'></div>
-                                                </div>
+                                            </div>
+                                            <div id='common_app_iam_user_menu_logged_out'>
+                                                <div id='common_app_iam_user_menu_default_avatar' class='common_icon'></div>
                                             </div>
                                         </div>
                                         <div id='common_profile_toolbar'></div>
