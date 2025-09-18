@@ -400,7 +400,7 @@ body.rtl .common_pagination_last::before{										    content:var(--common_app_
 #common_app_dialogues_lov_close::before{											content:var(--common_app_icon_close)}
 
 /*Icons dialogue message*/
-#common_app_dialogues_message_close::before{										content:var(--common_app_icon_close)}
+#common_app_dialogues_message_close::before{										content:var(--common_app_icon_ok)}
 #common_app_dialogues_message_cancel::before{										content:var(--common_app_icon_cancel)}
 #common_app_dialogues_message_title_icon::before{									content:''}
 #common_app_dialogues_message_title_icon[data-text_class='message_text']::before{	content:var(--common_app_icon_message_text)}
