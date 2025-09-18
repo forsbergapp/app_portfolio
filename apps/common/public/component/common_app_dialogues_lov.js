@@ -58,7 +58,6 @@ const template = props =>`  <div id='common_app_dialogues_lov_form'>
  */
 const component = async props => {
     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show2');
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues').classList.add('common_app_dialogues_modal');
 
     let path = '';
     let query = null;
@@ -155,14 +154,14 @@ const component = async props => {
                 break;
             }
             case event_type == 'click' && event_target_id=='common_app_dialogues_lov_close':{
-                props.methods.COMMON.commonComponentRemove('common_app_dialogues_lov', true);
+                props.methods.COMMON.commonComponentRemove('common_app_dialogues_lov');
                 break;
             }
             case event_type == 'click' && event_target_id=='common_app_dialogues_lov_list':{
                 if (props.methods.event_target['data-functionRow']){
                     /**@ts-ignore */
                     await props.methods.event_target['data-functionRow'](event.target);
-                    props.methods.COMMON.commonComponentRemove('common_app_dialogues_lov', true);
+                    props.methods.COMMON.commonComponentRemove('common_app_dialogues_lov');
                 }
                 break;
             }

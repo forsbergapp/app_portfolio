@@ -258,7 +258,7 @@ const component = async props => {
                                 spinner_id:event_target.id,
                                 timeout:1000 * 60 * 5}) //5 minutes timeout
                     .then((/**@type{string}*/result)=>{
-                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_message', true);
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_message');
                         /**
                          * @type{{cube_solution:string,
                          *        cube_solution_time:number,
@@ -282,7 +282,7 @@ const component = async props => {
                         }
                     })
                     .catch(error=>{
-                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_lov', true);
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_lov');
                         props.methods.COMMON.commonMessageShow('ERROR_BFF', null, null,error);
                         return [];
                     })

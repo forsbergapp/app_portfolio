@@ -236,6 +236,9 @@ transform-origin: -39px 8px;
 }
 
 /*COMMON*/
+#common_apps{
+    width: 350px;
+}
 #common_app_toolbar{
 	margin-inline-start: 0px !important;
 	bottom:0px !important;
@@ -258,7 +261,7 @@ transform-origin: -39px 8px;
 	margin:20px;
     height: 100%;
 }
-#common_app_dialogues_apps{
+#common_apps{
 	z-index: 1;
 }
 /*RESPONSIVE SETTINGS*/
@@ -448,14 +451,14 @@ body{
 	background: var(--app_theme_background_color) !important;
 	caret-color: var(--app_theme_text_color);
 }
-#common_app_dialogues_apps_list_title{
+#common_apps_list_title{
 	background: var(--app_theme_background_color);
 	color: var(--common_app_color_white1);
 }
-#common_app_dialogues_apps_list_title_col_info{
+#common_apps_list_title_col_info{
 	color: var(--common_app_color_white1);
 }
-#common_app_dialogues_apps_list, #common_app_dialogues_info_app_menu_content_apps_list{
+#common_apps_list, #common_app_dialogues_info_app_menu_content_apps_list{
 	scrollbar-color: var(--app_theme_list_scrollbar_color1) var(--app_theme_list_scrollbar_color2);
 }
 /*background*/

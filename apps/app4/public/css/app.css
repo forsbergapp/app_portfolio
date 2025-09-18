@@ -106,7 +106,7 @@
 	width: 100%;
 	display: flex;
     justify-content: center;
-	z-index: 2;
+	z-index: 10;
     position: fixed;
     top: 0;
 }
@@ -122,7 +122,7 @@
 	position:fixed;
 	grid-template-columns: 30px 30px 30px 30px 30px 30px;
     grid-column-gap: 20px;
-	z-index: 1;
+	z-index: 10;
     justify-content: center;
 }
 #toolbar_bottom .common_toolbar_button{
@@ -569,7 +569,7 @@
 }
 #common_app_iam_user_menu{
     top: 0.5em !important;
-    z-index:2 !important;
+    z-index:10 !important;
 }
 #common_app_toolbar{
 	margin-inline-start: 0px !important;

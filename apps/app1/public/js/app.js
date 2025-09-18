@@ -232,7 +232,7 @@ const appSecureDialogueSendBroadcastSend = () => {
  * @returns{void}
  */
 const appSecureDialogueSendBroadcastClose = () => {
-    common.commonComponentRemove('dialogue_send_broadcast', true);
+    common.commonComponentRemove('dialogue_send_broadcast');
 };
 /**
  * @name appSecureDialogueSendBroadcastShow
@@ -244,7 +244,7 @@ const appSecureDialogueSendBroadcastClose = () => {
  */
 const appSecureDialogueSendBroadcastShow = async (dialogue_type, client_id=null) => {
     common.commonComponentRender({
-        mountDiv:       'dialogue_send_broadcast',
+        mountDiv:       'common_app_dialogues_app_custom',
         data:           null,
         methods:        null,
         path:           '/component/dialogue_send_broadcast.js'})
