@@ -1837,7 +1837,7 @@ const appEventClick = event => {
         }
         //dialogue profile stat and info list
         case 'common_app_profile_search_list':
-        case 'common_app_dialogues_profile_info_detail_list':
+        case 'common_app_dialogues_profile_info_list':
         case 'common_app_dialogues_profile_stat_list':{
             if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_stat_row2'))
                 common.commonComponentRender({

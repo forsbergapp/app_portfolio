@@ -1,5 +1,5 @@
 /**
- * @module apps/common/component/common_app_dialogues_profile_info_detail
+ * @module apps/common/component/common_app_dialogues_profile_info_list
  */
 /**
  * @import {common}  from '../../../common_types.js'
@@ -19,15 +19,15 @@
  * @returns {string}
  */
 const template = props => `     ${props.list.map(row=>
-                                    `<div data-iam_user_id='${row.iam_user_id}' class='common_app_dialogues_profile_info_detail_list_row common_row'>
-                                            <div class='common_app_dialogues_profile_info_detail_list_col'>
-                                                <div class='common_app_dialogues_profile_info_detail_list_iam_user_id'>${row.iam_user_id}</div>
+                                    `<div data-iam_user_id='${row.iam_user_id}' class='common_app_dialogues_profile_info_list_row common_row'>
+                                            <div class='common_app_dialogues_profile_info_list_col'>
+                                                <div class='common_app_dialogues_profile_info_list_iam_user_id'>${row.iam_user_id}</div>
                                             </div>
-                                            <div class='common_app_dialogues_profile_info_detail_list_col'>
+                                            <div class='common_app_dialogues_profile_info_list_col'>
                                                 <div class='common_image common_image_avatar_list' style='${row.avatar==null?'':`background-image:url(${row.avatar});`}'></div>
                                             </div>
-                                            <div class='common_app_dialogues_profile_info_detail_list_col'>
-                                                <div class='common_app_dialogues_profile_info_detail_list_username common_wide_list_column common_link'>
+                                            <div class='common_app_dialogues_profile_info_list_col'>
+                                                <div class='common_app_dialogues_profile_info_list_username common_wide_list_column common_link'>
                                                     ${row.username}
                                                 </div>
                                             </div>
@@ -50,6 +50,7 @@ const template = props => `     ${props.list.map(row=>
  * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'],
  *                      data:null, 
  *                      methods:null,
+ *                      events:common['commonComponentEvents'],
  *                      template:string}>}
  */
 const component = async props => {
@@ -73,10 +74,27 @@ const component = async props => {
     if (!props.data.iam_user_id)
         props.methods.COMMON.commonDialogueShow('LOGIN');
 
+    /**
+     * @name events
+     * @descption Events
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (true){
+            case event_type =='click' && event_target_id == 'common_app_dialogues_profile_info_list':{
+                await props.methods.COMMON.commonProfileShow(Number(props.methods.COMMON.commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
+            }
+        }
+    };
     return {
       lifecycle:    null,
       data:         null,
       methods:      null,
+      events:       events,
       template:     template({  iam_user_id:props.data.iam_user_id,
                                 iam_user_id_profile:props.data.iam_user_id_profile,
                                 detailchoice:props.data.detailchoice,

@@ -50,6 +50,7 @@ const template = props =>`
  * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:null,
+ *                      events:events,
  *                      template:string}>}
  */
 const component = async props => {
@@ -66,10 +67,27 @@ const component = async props => {
     const stat_list = await props.methods.COMMON.commonFFB({path:path, query:`statchoice=${props.data.stat_choice}`, method:'GET', authorization_type:'APP_ID'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
+    /**
+     * @name events
+     * @descption Events
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (true){
+            case event_type =='click' && event_target_id == 'common_app_dialogues_profile_stat_list':{
+                await props.methods.COMMON.commonProfileShow(Number(props.methods.COMMON.commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
+            }
+        }
+    };
     return {
         lifecycle:  null,
         data:       null,
         methods:    null,
+        events:     events,
         template:   template({stat_list:stat_list})
     };
 };
