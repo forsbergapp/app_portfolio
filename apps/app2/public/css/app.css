@@ -245,7 +245,7 @@ transform-origin: -39px 8px;
 	display:none;
 }
 #common_app_profile_search_input{
-	visibility:'visible' !important;
+	visibility:visible !important;
 }
 #common_app_profile_search_list_wrap{
 	top:62px;
