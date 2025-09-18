@@ -43,17 +43,6 @@ const appEventClick = event => {
                 COMMON_DOCUMENT.querySelector(`#${event_target_id}`).parentNode.style.transform = 'scale(2)';
             break;
         }
-        case ('common_app_dialogues_lov_list' && COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_method]'))?event_target_id:'' :{
-            if( COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_method]').getAttribute('data-lov_value')=='VPA'){
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='visible';
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='visible';
-            }
-            else{
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
-            }   
-            break;
-        }
         /*Dialogue user start */
         case 'common_app_dialogues_iam_start_login_button':{
             common.commonUserLogin().catch(()=>null);
@@ -255,6 +244,24 @@ const appPayCancel = async () =>{
  * @returns {Promise.<void>}
  */
 const appPay = async () =>{
+    /**
+     * @description Get payment method from lov
+     * @param{common['CommonAppEvent']['target']} event_target
+     */
+    const getPaymentMethod = event_target =>{
+        if (event_target.id == 'common_app_dialogues_lov_list' && COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_method]')){
+            if( COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_method]').getAttribute('data-lov_value')=='VPA'){
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='visible';
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='visible';
+            }
+            else{
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
+            }
+        }
+
+    };
+    
     await common.commonComponentRender({
         mountDiv:   'common_app_dialogues_app_data_display', 
         data:       {
@@ -294,9 +301,8 @@ const appPay = async () =>{
                     button_post:appPaymentRequest,
                     button_delete:appPayCancel},
         path:       '/common/component/common_app_data_display.js'});
-        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
-        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
         COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').classList.add('common_input_error');
+        COMMON_DOCUMENT.querySelector('.common_list_lov_click[data-lov=PAYMENT_METHOD]')['data-functionRow'] = getPaymentMethod;
 };
 /**
  * @name appInit
