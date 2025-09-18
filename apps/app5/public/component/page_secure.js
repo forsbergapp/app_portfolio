@@ -61,12 +61,25 @@ const component = async props => {
                                                             IAM_data_app_id:props.data.app_id}})
                         .then((/**@type{string}*/result)=>JSON.parse(result));
 
+    /**
+     * @description Get customer type and country from lov
+     * @param{common['CommonAppEvent']['target']} event_target
+     */
+    const getLovData = event_target =>{
+        const lov = props.methods.COMMON.COMMON_DOCUMENT
+                        .querySelector('#common_app_dialogues_lov_list')
+                        .getAttribute('data-lov');
+        if (['COUNTRY', 'CUSTOMER_TYPE'].includes(lov))
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#app_page_secure_tab_content [data-value=${lov.toLowerCase()}]`).textContent = 
+                props.methods.COMMON.commonMiscElementRow(event_target).getAttribute('data-value');
+    };
+
     const onMounted = async () =>{
         
         if (customer.rows.length>0)
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#tab1').click();
         else{
-            props.methods.COMMON.commonComponentRender({
+            await props.methods.COMMON.commonComponentRender({
                 mountDiv:   'app_page_secure_tab_content',
                 data:       {
                             app_id:props.data.app_id,
@@ -101,6 +114,8 @@ const component = async props => {
                             button_post:props.methods.button_post,
                             button_delete:null},
                 path:       '/common/component/common_app_data_display.js'});
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('.common_list_lov_click[data-lov=CUSTOMER_TYPE]')['data-functionRow'] = getLovData;
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('.common_list_lov_click[data-lov=COUNTRY]')['data-functionRow'] = getLovData;
         }
     };
     return {
