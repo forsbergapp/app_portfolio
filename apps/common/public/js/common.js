@@ -109,7 +109,7 @@ const commonGlobalGet = key =>COMMON_GLOBAL[key];
  * @param {*} value
  * @returns {*}
  */
-const commonGlobalSet = (key, value) =>COMMON_GLOBAL[key]?Object.assign(COMMON_GLOBAL, {[key]:value}):null;
+const commonGlobalSet = (key, value) =>(key in COMMON_GLOBAL)?Object.assign(COMMON_GLOBAL, {[key]:value}):null;
 
 /**
  * @name commonMiscElementId
