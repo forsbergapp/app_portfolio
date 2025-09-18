@@ -1552,58 +1552,6 @@ const appEventClick = event => {
             }
             break;
         }
-        //info dialogue
-        case 'app_link':{
-            if (common.commonGlobalGet('app_link_url'))
-                common.commonWindowOpen(common.commonGlobalGet('app_link_url'));
-            break;
-        }
-        case 'info_link1':{
-            common.commonComponentRender({
-                mountDiv:   'common_app_window_info',
-                data:       {
-                            info:'URL',
-                            path:'/app-resource/' + common.commonGlobalGet('info_link_policy_url'),
-                            query:`type=INFO&IAM_data_app_id=${common.commonGlobalGet('app_common_app_id')}`,
-                            method:'GET',
-                            authorization:'APP_ID'
-                            },
-                methods:    null,
-                path:       '/common/component/common_app_window_info.js'});
-            break;
-        }
-        case 'info_link2':{
-            common.commonComponentRender({
-                mountDiv:   'common_app_window_info',
-                data:       {
-                            info:'URL',
-                            path:'/app-resource/' + common.commonGlobalGet('info_link_disclaimer_url'),
-                            query:`type=INFO&IAM_data_app_id=${common.commonGlobalGet('app_common_app_id')}`,
-                            method:'GET',
-                            authorization:'APP_ID'
-                            },
-                methods:    null,
-                path:       '/common/component/common_app_window_info.js'});
-            break;
-        }
-        case 'info_link3':{
-            common.commonComponentRender({
-                mountDiv:   'common_app_window_info',
-                data:       {
-                            info:'URL',
-                            path:'/app-resource/' + common.commonGlobalGet('info_link_terms_url'),
-                            query:`type=INFO&IAM_data_app_id=${common.commonGlobalGet('app_common_app_id')}`,
-                            method:'GET',
-                            authorization:'APP_ID'
-                            },
-                methods:    null,
-                path:       '/common/component/common_app_window_info.js'});
-            break;
-        }
-        case 'info_close':{
-            common.commonComponentRemove('dialogue_info', true);
-            break;
-        }
         //toolbar top
         case 'toolbar_btn_zoomout':{
             appPaperZoom(-1);

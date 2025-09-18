@@ -215,7 +215,7 @@
  * @typedef  {{ lifecycle?:CommonComponentLifecycle,
  *              data?:*,
  *              methods?:Object.<string,function>|null,
- *              events?:commonComponentEvents,
+ *              events?:commonComponentEvents|undefined|null,
  *              template:string|null}} CommonComponentResult
  */
 
