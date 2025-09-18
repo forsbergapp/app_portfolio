@@ -249,8 +249,12 @@ const appPay = async () =>{
      * @param{common['CommonAppEvent']['target']} event_target
      */
     const getPaymentMethod = event_target =>{
-        if (event_target.id == 'common_app_dialogues_lov_list' && COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_method]')){
-            if( COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_method]').getAttribute('data-lov_value')=='VPA'){
+        event_target;
+        if (['PAYMENT_METHOD'].includes(COMMON_DOCUMENT
+                             .querySelector('#common_app_dialogues_lov_list')
+                             .getAttribute('data-lov')) && COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_method]')){
+            
+            if( common.commonMiscElementRow(event_target).getAttribute('data-id')=='VPA'){
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='visible';
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='visible';
             }
@@ -259,7 +263,6 @@ const appPay = async () =>{
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
             }
         }
-
     };
     
     await common.commonComponentRender({
@@ -301,6 +304,8 @@ const appPay = async () =>{
                     button_post:appPaymentRequest,
                     button_delete:appPayCancel},
         path:       '/common/component/common_app_data_display.js'});
+        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
+        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
         COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').classList.add('common_input_error');
         COMMON_DOCUMENT.querySelector('.common_list_lov_click[data-lov=PAYMENT_METHOD]')['data-functionRow'] = getPaymentMethod;
 };
