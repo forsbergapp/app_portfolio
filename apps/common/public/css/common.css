@@ -1495,28 +1495,28 @@ body.rtl{
     border-radius: var(--common_app_css_border_radius);
     padding: 2px;
 }
-.common_app_dialogues_profile_info_detail_list{
+.common_app_dialogues_profile_info_list{
 	height:10.8em;
 	width:100%;
 	border:0.5px solid;
 	display: inline-block;
 	overflow-y: auto;
 }
-.common_app_dialogues_profile_info_detail_list_row{
+.common_app_dialogues_profile_info_list_row{
 	height:1.8em;
     text-align: start;
 }
-.common_app_dialogues_profile_info_detail_list_col:nth-child(1){
+.common_app_dialogues_profile_info_list_col:nth-child(1){
 	display: none;
 }
-.common_app_dialogues_profile_info_detail_list_col:nth-child(2){
+.common_app_dialogues_profile_info_list_col:nth-child(2){
 	width:24px;
 	vertical-align: middle;
 	padding-left:10px;
 	padding-right:10px;
 	display:inline-block;
 }
-.common_app_dialogues_profile_info_detail_list_col:nth-child(3){
+.common_app_dialogues_profile_info_list_col:nth-child(3){
 	display:inline-block;
 	width:200px;
 	vertical-align: middle;
@@ -1524,7 +1524,7 @@ body.rtl{
 	padding-right:10px;
 	text-align:start;
 }
-.common_app_dialogues_profile_info_detail_list_col:nth-child(4){
+.common_app_dialogues_profile_info_list_col:nth-child(4){
 	width:24px;
 	vertical-align: middle;
 	display: inline-block;
@@ -1583,7 +1583,7 @@ body.rtl{
 }
 .common_app_profile_search_list_username,
 .common_app_dialogues_profile_stat_list_username,
-.common_app_dialogues_profile_info_detail_list_username {
+.common_app_dialogues_profile_info_list_username {
 	width:200px;
 	display:inline-block;
 	text-align: start;
@@ -2369,7 +2369,7 @@ body.rtl{
 	#common_app_dialogues_info_start_links, #common_app_dialogues_info_contact, #common_app_dialogues_info_app_copyright{
 		font-size: 14px;
 	}
-	.common_app_dialogues_profile_info_detail_list{
+	.common_app_dialogues_profile_info_list{
 		height:5.6em;	
 	}
 	#common_app_dialogues_message_title #common_app_dialogues_message_info_list{

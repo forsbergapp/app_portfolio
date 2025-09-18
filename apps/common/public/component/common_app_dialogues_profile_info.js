@@ -77,7 +77,7 @@ const template = props =>`  <div id='common_app_dialogues_profile_info'>
                                     </div>
                                     <div id='common_app_dialogues_profile_info_stat_row2'></div>
                                     <div id='common_app_dialogues_profile_info_detail'>
-                                        <div id='common_app_dialogues_profile_info_detail_list' class='common_app_dialogues_profile_info_detail_list'></div>
+                                        <div id='common_app_dialogues_profile_info_list' class='common_app_dialogues_profile_info_list'></div>
                                     </div>`:''
                                 }
                             </div>
@@ -100,6 +100,7 @@ const template = props =>`  <div id='common_app_dialogues_profile_info'>
  * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:null,
+ *                      events: common['commonComponentEvents'],
  *                      template:string}>}
  */
 const component = async props => {
@@ -146,11 +147,50 @@ const component = async props => {
         if (props.data.iam_user_id !=null)
             props.methods.COMMON.commonSocketConnectOnlineCheck('common_app_dialogues_profile_info_avatar_online_status', profile.id);
     };
-
+    /**
+     * @name events
+     * @descption Events
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (true){
+            case event_type =='click' && event_target_id == 'common_app_dialogues_profile_info_btn_following':{
+                props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('.common_app_dialogues_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_app_dialogues_profile_btn_selected'));
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
+                props.methods.COMMON.commonProfileDetail(1);
+                break;
+            }
+            case event_type =='click' && event_target_id == 'common_app_dialogues_profile_info_btn_followed':{
+                props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('.common_app_dialogues_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_app_dialogues_profile_btn_selected'));
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
+                props.methods.COMMON.commonProfileDetail(2);
+                break;
+            }
+            case event_type =='click' && event_target_id == 'common_app_dialogues_profile_info_btn_likes':{
+                props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('.common_app_dialogues_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_app_dialogues_profile_btn_selected'));
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
+                props.methods.COMMON.commonProfileDetail(3);
+                break;
+            }
+            case event_type =='click' && event_target_id == 'common_app_dialogues_profile_info_btn_liked':
+            case event_type =='click' && event_target_id == 'common_app_dialogues_profile_info_btn_liked_heart':
+            case event_type =='click' && event_target_id == 'common_app_dialogues_profile_info_btn_liked_users':{
+                props.methods.COMMON.commonProfileDetail(4);
+                props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('.common_app_dialogues_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_app_dialogues_profile_btn_selected'));
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
+                break;
+            }
+        }
+    };
     return {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
+        events:     events,
         template:   template({
                             profile:profile,
                             function_commonMiscFormatJsonDate:props.methods.COMMON.commonMiscFormatJsonDate
