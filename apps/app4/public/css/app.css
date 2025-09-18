@@ -149,17 +149,6 @@
 	display: inline-block;
 }
 
-/*Dialogue Info */
-#dialogue_info.common_app_dialogues_show0{
-	width: 300px;
-	height:auto;
-}
-#about_logo {
-	background-size: contain;
-	width: 48px;
-	height: 48px;
-	margin: 0 auto;
-}
 /* SETTINGS*/
 #settings {
 	visibility: hidden;
