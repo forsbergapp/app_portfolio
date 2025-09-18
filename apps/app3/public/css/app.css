@@ -188,8 +188,8 @@ body {
 	background: var(--common_app_color_white);
 	caret-color: var(--common_app_color_black);
 }
-#app .css_spinner::before,
-#content_title .css_spinner::before{
+#app .common_loading_spinner::before,
+#content_title .common_loading_spinner::before{
     background-color: var(--common_app_color_white);
 }
 #nav{

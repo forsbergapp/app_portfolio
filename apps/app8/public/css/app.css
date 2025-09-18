@@ -15,19 +15,15 @@ body {
 	text-align: center;
 }
 #app_main{
+    padding-top:50px;
 	height: 100%;
   	position: absolute;
   	width: 100%;
 }
-#app_main_page{
-	display: inline-block;
-	padding-top:50px;
-	text-align: center;
-	width: 360px;
-}
 #cube{
-	width: 100%;
+	width: 360px;
   	height: 360px;
+    margin: 0 auto;
   	display: block;
   	background-color: var(--common_app_color_white);
 }
@@ -39,10 +35,11 @@ body {
 	position: absolute;
 }
 #button_controls{
-	width: 100%;
+	width: 360px;
 	height: 280px;
 	padding-top: 10px;
-  	margin-top: 10px;
+    margin-top: 10px !important;
+    margin: 0 auto;
 }
 #button_controls .buttons_row.buttons_move{
 	display: grid;
@@ -105,7 +102,7 @@ body {
 	
 	font-weight: bold;
 }
-#button_controls .buttons_row .buttons_col .common_app_dialogues_button.css_spinner{
+#button_controls .buttons_row .buttons_col .common_app_dialogues_button.common_loading_spinner{
 	margin-top:unset;
 }
 #overlay{
@@ -184,10 +181,10 @@ body {
     background-color: var(--common_app_color_light);
     box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }
-#common_app_dialogues_message_progressbar_wrap{
+#common_loading_progressbar_wrap{
 	border-color: var(--common_app_color_blue1) !important;
 }
-#common_app_dialogues_message_progressbar{
+#common_loading_progressbar{
 	background-color: var(--common_app_color_blue1);
 }
 
@@ -195,7 +192,7 @@ body {
 	width:unset;
 	white-space: wrap;
 }
-.css_spinner::before {
+.common_loading_spinner::before {
 	background-color: var(--common_app_color_white) !important;
 }
 .common_toolbar_selected{

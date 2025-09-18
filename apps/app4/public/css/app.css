@@ -292,9 +292,9 @@
 	display: block;
 	padding-top: unset;
 }
-#setting_icon_design_theme_day.css_spinner, 
-#setting_icon_design_theme_month.css_spinner, 
-#setting_icon_design_theme_year.css_spinner{
+#setting_icon_design_theme_day.common_loading_spinner, 
+#setting_icon_design_theme_month.common_loading_spinner, 
+#setting_icon_design_theme_year.common_loading_spinner{
 	display: inline-block;
 }
 

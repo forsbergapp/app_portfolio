@@ -43,7 +43,6 @@ const template = props => `
 * @function
 * @param {{data:       {
 *                      commonMountdiv:string,
-*                      app_id:number,
 *                      messages:common['MessagesPagination'],
 *                      },
 *          methods:    {
@@ -55,13 +54,12 @@ const template = props => `
 *                      template:string}>}
 */
 const component = async props => {
-
-   return {
+    return {
        lifecycle:  null,
        data:   null,
        methods:null,
        template: template({ messages:props.data.messages, 
                             commonMiscFormatJsonDate:props.methods.COMMON.commonMiscFormatJsonDate})
-   };
+    };
 };
 export default component;

@@ -45,19 +45,11 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  * @name component
  * @description Component
  * @function
- * @param {{data:{      commonMountdiv:string,
- *                      app_id:number,
- *                      common_app_id:number,
- *                      iam_user_id: number,
- *                      user_locale:string,
- *                      client_latitude:string,
- *                      client_longitude:string,
- *                      client_place:string},
+ * @param {{data:{      commonMountdiv:string},
  *          methods:{   COMMON:common['CommonModuleCommon']}}} props 
  * @returns {Promise.<{ lifecycle:  common['CommonComponentLifecycle'], 
  *                      data:       null,
  *                      methods:    {monitorShow:                monitorShow,
- *                                   monitorDetailShowLogDir:    monitorDetailShowLogDir,
  *                                   monitorDetailShowServerLog: monitorDetailShowServerLog,
  *                                   monitorDetailPage:          monitorDetailPage,
  *                                   monitorDetailClickSort:     monitorDetailClickSort},
@@ -78,11 +70,7 @@ const component = async props => {
      * @param {string} order_by
      */
     let monitorDetailShowServerLogDetail = (offset, sort, order_by) => {offset;sort;order_by;};
-    /**
-     * Show existing logfiles
-     * @returns {void}
-     */
-    let monitorDetailShowLogDirDetail = () => {null;};
+    
     /**
      * List sort click
      * @param {string} list 
@@ -139,14 +127,14 @@ const component = async props => {
         props.methods.COMMON.commonComponentRender({
             mountDiv:   'menu_monitor_detail',
             data:       {
-                        app_id:props.data.app_id,
+                        app_id:props.methods.COMMON.commonGlobalGet('app_id'),
                         monitor_detail:list_detail,
                         offset:offset,
                         sort:sort,
                         order_by:order_by,
                         page:page,
                         page_last:page_last,
-                        iam_user_id:props.data.iam_user_id,
+                        iam_user_id:props.methods.COMMON.commonGlobalGet('iam_user_id'),
                         SERVICE_LOG_FILE_INTERVAL:SERVICE_LOG_FILE_INTERVAL,
                         SERVICE_LOG_DATA:SERVICE_LOG_DATA
                         },
@@ -157,7 +145,6 @@ const component = async props => {
             .then(result=>{
                 monitorDetailPageDetail = result.methods.monitorDetailPage;
                 monitorDetailShowServerLogDetail = result.methods.monitorDetailShowServerLog;
-                monitorDetailShowLogDirDetail = result.methods.monitorDetailShowLogDir;
                 monitorDetailClickSortDetail = result.methods.monitorDetailClickSort;
  
             });
@@ -177,12 +164,6 @@ const component = async props => {
      */
     const monitorDetailShowServerLog = (offset, sort, order_by) => monitorDetailShowServerLogDetail(offset, sort, order_by);
 
-    /**
-     * Show existing logfiles
-     * @returns {void}
-     */
-    const monitorDetailShowLogDir = () => monitorDetailShowLogDirDetail();
-    
     /**
      * List sort click
      * @param {string} list 
@@ -262,9 +243,9 @@ const component = async props => {
         props.methods.COMMON.commonComponentRender({
             mountDiv:   'menu_monitor_mapid',
             data:       { 
-                        data_app_id :props.data.common_app_id,
-                        longitude:props.data.client_longitude,
-                        latitude:props.data.client_latitude
+                        data_app_id :props.methods.COMMON.commonGlobalGet('app_common_app_id'),
+                        longitude:props.methods.COMMON.commonGlobalGet('client_longitude'),
+                        latitude:props.methods.COMMON.commonGlobalGet('client_latitude')
                         },
             methods:    null,
             path:       '/common/component/common_map.js'});
@@ -275,7 +256,6 @@ const component = async props => {
         data:       null,
         methods:    {   
                         monitorShow:                monitorShow,
-                        monitorDetailShowLogDir:    monitorDetailShowLogDir,
                         monitorDetailShowServerLog: monitorDetailShowServerLog,
                         monitorDetailPage:          monitorDetailPage,
                         monitorDetailClickSort:     monitorDetailClickSort

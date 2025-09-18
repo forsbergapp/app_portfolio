@@ -733,9 +733,6 @@ body.rtl{
 .common_link:active{
 	cursor:pointer;
 }
-.common_input_lov{
-	width: calc(100% - 15px) !important;
-}
 .common_app_dialogues_lov_button{
 	display: inline-block;
 }
@@ -1089,23 +1086,33 @@ body.rtl{
 	display:inline-block;
 	margin-bottom:10px;
 }
+#common_loading_progressbar_wrap,
 #common_app_dialogues_message_progressbar_wrap{
 	display:inline-block;
 	text-align: start;
 	width: 100%;
-	height: 10px;
-	border: 0.5px solid;
+    height: 10px;
 	border-radius: var(--common_app_css_border_radius);
 	animation: common_pulsate 2s ease-out;
 	animation-iteration-count: infinite;
 }
+#common_loading_progressbar,
 #common_app_dialogues_message_progressbar{
 	display:inline-block;
-	width: 100%;
+	width: 0%;
 	height: 10px;
 	border-radius: var(--common_app_css_border_radius);
 	vertical-align: top;
 }
+#common_loading_progressbar_wrap{
+    margin-top: 1em;
+}
+#common_loading_progressbar_wrap.common_sse,
+#common_app_dialogues_message_progressbar_wrap{
+    border: 0.5px solid;
+}
+
+
 #common_app_dialogues_message_title{
 	cursor:default;
 	display:inline-block;
@@ -1778,7 +1785,7 @@ body.rtl{
 	from {transform:rotate(0deg);}
 	to {transform:rotate(360deg);}
 }
-.css_spinner{	
+.common_loading_spinner{	
 	position:relative;
 	vertical-align: sub;
 	width:30px !important;
@@ -1792,7 +1799,7 @@ body.rtl{
 	margin-top: 6px;
 	display: inline-block;
 }
-.css_spinner::before{
+.common_loading_spinner::before{
 	content:'' !important;
 	position:absolute;
 	inset-inline-start:50%;
@@ -1803,7 +1810,7 @@ body.rtl{
 	background:var(--common_app_color_background_spinner);
 	border-radius:50%;
 }
-.rtl .css_spinner::before{
+.rtl .common_loading_spinner::before{
 	transform: translate(50%, -50%) !important;
 }
 
@@ -1823,7 +1830,7 @@ body.rtl{
 #common_app_window_info_info{
 	text-align: center;
 }
-#common_app_window_info_info.css_spinner{
+#common_app_window_info_info.common_loading_spinner{
 	inset-inline-start: calc(50% - 30px);
 }
 #common_app_window_info_info_img{

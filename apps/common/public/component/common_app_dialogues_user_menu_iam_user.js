@@ -96,38 +96,177 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
 *                      }}} props
 * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
-*                      methods:null,
+*                      methods:{commonUserUpdate:function},
+*                      events: events,
 *                      template:string}>}
 */
 const component = async props => {
-   /**@type{common['CommonIAMUser']} */    
-   const user = await props.methods.COMMON.commonFFB({path:`/server-iam/iamuser/${props.data.iam_user_id}`, 
-                                               method:'GET', authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
-                       .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
-   /**
-    * @returns {Promise.<void>}
-    */
-   const onMounted = async () => {
-       if (props.data.iam_user_id == user.id) {
+    /**@type{common['CommonIAMUser']} */    
+    const user = await props.methods.COMMON.commonFFB({path:`/server-iam/iamuser/${props.data.iam_user_id}`, 
+                                                method:'GET', authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
+                        .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
 
-           if (Number(user.private))
-               props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.add('checked');
-           else
-               props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.remove('checked');
+    /**
+     * @name commonUserUpdate
+     * @description User update
+     * @function
+     * @param {string|null} totp
+     * @returns {Promise.<boolean>}
+     */
+    const commonUserUpdate = async (totp=null) => {
+        if (props.methods.COMMON.commonMiscInputControl(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user'),
+                                {
+                                username: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_username'),
+                                password: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password'),
+                                password_confirm: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_confirm'),
+                                password_confirm_reminder: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_reminder'),
+                                password_new: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_new'),
+                                password_new_confirm: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_new_confirm'),
+                                bio: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_bio')
+                                })==false)
+                    return false;
+        if (totp==null){
+            props.methods.COMMON.commonDialogueShow('VERIFY', '3');
+            return false;
+        }
+        else
+            return new Promise(resolve=>{
+                const username =            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_username').textContent;
+                const bio =                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_bio').textContent;
+                const avatar =              props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_avatar').getAttribute('data-image').replace('null','')==''?
+                                                null:
+                                                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_avatar').getAttribute('data-image').replace('null','');
+                const password =            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password').textContent;
+                const password_new =        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_new').textContent;
+                const password_reminder =   props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_reminder').textContent;
 
-           props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img').style.backgroundImage= user.avatar?
-                                                                                                           `url('${user.avatar}')`:
-                                                                                                           'url()';
-       } else {
-           //User not found
-           props.methods.COMMON.commonMessageShow('INFO', null, 'message_text',props.methods.COMMON.commonMesssageNotAuthorized());
-       }
-   };
-   return {
-       lifecycle:  {onMounted:onMounted},
-       data:   null,
-       methods:null,
-       template: template({user:user, commonMiscFormatJsonDate:props.methods.COMMON.commonMiscFormatJsonDate})
-   };
+                props.methods.COMMON.commonFFB({ path:`/server-iam/iamuser/${props.methods.COMMON.commonGlobalGet('iam_user_id') ?? ''}`, 
+                            method:'PATCH', 
+                            authorization_type:props.methods.COMMON.commonGlobalGet('app_id')==props.methods.COMMON.commonGlobalGet('app_admin_app_id')?'ADMIN':'APP_ACCESS', 
+                            body:{  username:           username,
+                                    password:           password,
+                                    password_new:       password_new==''?null:password_new,
+                                    bio:                bio,
+                                    private:            Number(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.contains('checked')),
+                                    password_reminder:  password_reminder,
+                                    avatar:             avatar,
+                                    totp:               totp
+                                }, 
+                            spinner_id:'common_app_dialogues_user_menu_iam_user_btn_user_update'})
+                .then((result)=>{
+                    if (JSON.parse(result).updated==1){
+                        props.methods.COMMON.commonUserSessionClear();
+                        resolve(true);
+                    }
+                    else
+                        resolve(false);
+                })
+                .catch(()=>false);
+            });
+    };
+    /**
+     * @name commonIamUserAppDelete
+     * @description IamUserApp delete
+     * @function
+     * @param {number|null} choice 
+     * @param {function|null} function_delete_event 
+     * @returns {Promise.<null>}
+     */
+    const commonIamUserAppDelete = (choice=null, function_delete_event=null) => {
+        return new Promise((resolve, reject)=>{
+            const password = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password').textContent;
+            switch (choice){
+                case null:{
+                    if (props.methods.COMMON.commonMiscInputControl(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user'),
+                                        {
+                                            password: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password')
+                                        })==false)
+                        resolve(null);
+                    else{
+                        props.methods.COMMON.commonMessageShow('CONFIRM',function_delete_event, null, null);
+                        resolve(null);
+                    }
+                    break;
+                }
+                case 1:{
+                    props.methods.COMMON.commonComponentRemove('common_app_dialogues_message');
+        
+                    props.methods.COMMON.commonFFB({ path:`/server-iam/iamuserapp/${props.methods.COMMON.commonGlobalGet('iam_user_app_id')}`, 
+                                body:{  password: password,
+                                        IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_id'), 
+                                        IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('iam_user_id')}, 
+                                method:'DELETE', 
+                                authorization_type:'APP_ACCESS',
+                                spinner_id:'common_app_dialogues_user_menu_iam_user_btn_user_delete_account'})
+                    .then(()=>  resolve((()=>{
+                                            props.methods.COMMON.commonComponentRemove('common_app_dialogues_user_menu',true);
+                                            props.methods.COMMON.commonMountApp(props.methods.COMMON.commonGlobalGet('app_start_app_id'));
+                                            return null;
+                                            })()))
+                    .catch(err=>reject(err));
+                    break;
+                }
+                default:
+                    resolve(null);
+                    break;
+            }
+        });
+    };
+
+
+    /**
+     * @name events
+     * @descption Events
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (event_type){
+            case 'click':{
+                switch (true){
+                    case event_target_id=='common_app_dialogues_user_menu_iam_user_btn_user_update':{
+                        await commonUserUpdate();
+                        break;
+                    }
+                    case event_target_id=='common_app_dialogues_user_menu_iam_user_btn_user_delete_account':{
+                        const function_delete_user_account = () => { 
+                            commonIamUserAppDelete(1, null);
+                        };
+                        await commonIamUserAppDelete(null, function_delete_user_account);                        
+                        break;
+                    }
+                }
+            }
+        }
+    };
+    /**
+        * @returns {Promise.<void>}
+        */
+    const onMounted = async () => {
+        if (props.data.iam_user_id == user.id) {
+
+            if (Number(user.private))
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.add('checked');
+            else
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.remove('checked');
+
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img').style.backgroundImage= user.avatar?
+                                                                                                            `url('${user.avatar}')`:
+                                                                                                            'url()';
+        } else {
+            //User not found
+            props.methods.COMMON.commonMessageShow('INFO', null, 'message_text',props.methods.COMMON.commonMesssageNotAuthorized());
+        }
+    };
+    return {
+        lifecycle:  {onMounted:onMounted},
+        data:   null,
+        methods:{commonUserUpdate:commonUserUpdate},
+        events:events,
+        template: template({user:user, commonMiscFormatJsonDate:props.methods.COMMON.commonMiscFormatJsonDate})
+    };
 };
 export default component;

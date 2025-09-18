@@ -3,7 +3,7 @@
 body.font_arabic_nastaliq #common_app_iam_user_menu_default_avatar{
 	top: -5px;
 }
-#app > .css_spinner{
+#app > .common_loading_spinner{
 	top: calc(50% - 30px);
 	left: calc(50% - 30px);
 	position: absolute;
@@ -501,15 +501,15 @@ border-left: 12px solid var(--app_theme_sun_color);
 .app_theme_moon .moon{
 	display:inline-block;	
 }
-#common_app_profile_toolbar >.css_spinner::before,
-#app >.css_spinner::before{
+#common_app_profile_toolbar >.common_loading_spinner::before,
+#app >.common_loading_spinner::before{
 	background-color:var(--app_theme_spinner_background_color);
 }
 /*THEME COMMON*/
 #common_app_dialogues_user_menu_messages{
     border: var(--app_theme_main_branding_color2) solid 0.5px;
 }
-#common_app_profile_search >.css_spinner::before{
+#common_app_profile_search >.common_loading_spinner::before{
 	background-color:var(--app_theme_spinner_background_color);
 }
 .common_row_selected{

@@ -81,29 +81,13 @@ const template = props =>`  <div id='common_app_dialogues_user_menu_content' ${p
 *                      }}} props
 * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
-*                      methods:{eventClickPagination:       Function,
-*                               eventClickMessage:          Function,
-*                               eventClickMessageDelete:    Function},
+*                      methods:null,
 *                      events:  common['commonComponentEvents'],
 *                      template:string}>}
 */
 const component = async props => {
     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show1');
     props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues').classList.add('common_app_dialogues_modal');
-
-    /**
-     * @description page navigation for messages
-     * @param {HTMLElement} element
-     * @returns {Promise.<void>}
-     */
-    let eventClickPaginationMessages = async element =>{element;};
-
-    /**
-     * @description page navigation for messages
-     * @param {HTMLElement} element
-     * @returns {Promise.<void>}
-     */
-    const eventClickPagination = async element => eventClickPaginationMessages(element);
 
     /**
      * @description read a message
@@ -154,14 +138,14 @@ const component = async props => {
         await props.methods.COMMON.commonFFB({ path:'/app-common-module/COMMON_MESSAGE_DELETE', 
                 method:'POST', 
                 body:{  type:'FUNCTION', 
-                        IAM_iam_user_id:props.data.iam_user_id,
-                        IAM_data_app_id:props.data.common_app_id,
+                        IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('iam_user_id'),
+                        IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id'),
                         message_id:element.getAttribute('data-id')},
                 authorization_type:'APP_ACCESS'});
         await eventClickNavMessages();
         props.methods.COMMON.commonUserMessageShowStat();
     };
-        
+    
     /**
      * @description show messages
      * @returns {Promise.<void>}
@@ -175,9 +159,8 @@ const component = async props => {
                             common_app_id:props.data.common_app_id,
                             admin_app_id:props.data.admin_app_id
                         },
-            methods:    null,
-            path:       '/common/component/common_app_dialogues_user_menu_messages.js'})
-            .then(result=>eventClickPaginationMessages = result.methods.eventClickPagination);
+            methods:    {},
+            path:       '/common/component/common_app_dialogues_user_menu_messages.js'});
     };
     /**
      * @description show iam user
@@ -278,6 +261,15 @@ const component = async props => {
                         props.methods.COMMON.commonDialogueShow('SIGNUP');
                         break;
                     }
+                    case event.target.classList.contains('common_app_dialogues_user_menu_messages_list_col_delete') && event_target_id != 'common_app_dialogues_user_menu_messages_list_col_delete':{
+                        //clicked on delete on row, not the title
+                        eventClickMessageDelete( props.methods.COMMON.commonMiscElementRow(event.target));
+                        break;
+                    }
+                    case event_target_id=='common_app_dialogues_user_menu_messages_list':{
+                        eventClickMessage( props.methods.COMMON.commonMiscElementRow(event.target));
+                        break;
+                    }
                 }
             }
         }
@@ -303,11 +295,7 @@ const component = async props => {
     return {
         lifecycle:  {onMounted:onMounted},
         data:       null,
-        methods:    {
-                    eventClickPagination:       eventClickPagination,
-                    eventClickMessage:          eventClickMessage,
-                    eventClickMessageDelete:    eventClickMessageDelete
-                    },
+        methods:    null,
         events:     events,
         template:   template({  app_id:props.data.app_id,
                                 admin_app_id:props.data.admin_app_id,
