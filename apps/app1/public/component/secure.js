@@ -13,7 +13,7 @@
  */
 const template = () =>` <div id='secure'>
                             <div id='dialogues'>
-                                <div id='dialogue_send_broadcast' class='common_dialogue common_app_dialogues_content'></div>
+                                <div id='dialogue_send_broadcast' class='common_app_dialogues_content'></div>
                             </div>
                             <div id='secure_menu_open' class='common_app_dialogues_button common_icon'></div>
                             <div id='secure_menu'>
