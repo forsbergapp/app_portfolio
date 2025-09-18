@@ -1603,7 +1603,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/iamuser-profile-detail/${IAM_iam_user_id}": {
+        "/bff/app_access/v1/server-db/iamuser-profile-detail/${iam_user_id}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.IamUser.getViewProfileDetail",
@@ -1617,7 +1617,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "$ref": "#/components/parameters/iam_user_id",
                             "in":"path"
                         },
                         {

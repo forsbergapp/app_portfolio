@@ -1378,18 +1378,18 @@ const commonProfileStat = async (statchoice, app_rest_url = null) => {
 const commonProfileDetail = (detailchoice) => {
     if (detailchoice==0){
         //show only other app specific hide common
-        COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_detail_list').textContent = '';
+        COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_list').textContent = '';
     }
     else{
         commonComponentRender({
-            mountDiv:   'common_app_dialogues_profile_info_detail_list',
+            mountDiv:   'common_app_dialogues_profile_info_list',
             data:       {
                         iam_user_id:COMMON_GLOBAL.iam_user_id,
                         iam_user_id_profile:COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_id').textContent,
                         detailchoice:detailchoice
                         },
             methods:    null,
-            path:       '/common/component/common_app_dialogues_profile_info_detail.js'});
+            path:       '/common/component/common_app_dialogues_profile_info_list.js'});
     }
 };
 /**
@@ -2316,65 +2316,13 @@ const commonEvent = async (event_type,event=null) =>{
                                 break;
                             }
                             //search list
-                            case 'common_app_dialogues_profile_info_detail_list':
-                            case 'common_app_profile_search_list':
-                            case 'common_app_dialogues_profile_stat_list':{
+                            case 'common_app_profile_search_list':{
                                 await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
                                 break;
                             }
                             //dialogue button stat
                             case 'common_app_profile_toolbar_stat':{
                                 await commonProfileStat(1, null);
-                                break;
-                            }
-                            //dialogue profile
-                            case 'common_app_dialogues_profile_home':{
-                                commonComponentRemove('common_app_dialogues_user_menu');
-                                await commonProfileStat(1, null);
-                                break;
-                            }
-                            case 'common_app_dialogues_profile_close':{
-                                commonComponentRemove('common_app_dialogues_profile', true);
-                                break;
-                            }
-                            //dialogue profile stat
-                            case 'common_app_dialogues_profile_stat_row1_1':{
-                                await commonProfileStat(1, null);
-                                break;
-                            }
-                            case 'common_app_dialogues_profile_stat_row1_2':{
-                                await commonProfileStat(2, null);
-                                break;
-                            }
-                            case 'common_app_dialogues_profile_stat_row1_3':{
-                                await commonProfileStat(3, null);
-                                break;
-                            }
-                            //dialogue profile info
-                            case 'common_app_dialogues_profile_info_btn_following':{
-                                COMMON_DOCUMENT.querySelectorAll('.common_app_dialogues_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_app_dialogues_profile_btn_selected'));
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
-                                commonProfileDetail(1);
-                                break;
-                            }
-                            case 'common_app_dialogues_profile_info_btn_followed':{
-                                COMMON_DOCUMENT.querySelectorAll('.common_app_dialogues_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_app_dialogues_profile_btn_selected'));
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
-                                commonProfileDetail(2);
-                                break;
-                            }
-                            case 'common_app_dialogues_profile_info_btn_likes':{
-                                COMMON_DOCUMENT.querySelectorAll('.common_app_dialogues_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_app_dialogues_profile_btn_selected'));
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
-                                commonProfileDetail(3);
-                                break;
-                            }
-                            case 'common_app_dialogues_profile_info_btn_liked':
-                            case 'common_app_dialogues_profile_info_btn_liked_heart':
-                            case 'common_app_dialogues_profile_info_btn_liked_users':{
-                                commonProfileDetail(4);
-                                COMMON_DOCUMENT.querySelectorAll('.common_app_dialogues_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_app_dialogues_profile_btn_selected'));
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
                                 break;
                             }
                             //markdown show/hide details
