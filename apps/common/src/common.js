@@ -26,8 +26,6 @@ const {default:serverError} = await import('./component/common_server_error.js')
 
 const fs = await import('node:fs');
 
-const FILES= {data:[]};
-
 /**
  * @name commonConvertBinary
  * @description  converts binary file to base64 url string
@@ -85,8 +83,7 @@ const commonGetFile = async parameters =>{
                     parameters.file;
     };
     
-    return FILES.data.filter(row=>row[0]==parameters.path)[0]?.[1] ??
-            (['font/woff2','image/png', 'image/webp'].includes(parameters.content_type)?
+    return (['font/woff2','image/png', 'image/webp'].includes(parameters.content_type)?
                 fs.promises.readFile(`${server.ORM.serverProcess.cwd()}${parameters.path}`):
                     fs.promises.readFile(`${server.ORM.serverProcess.cwd()}${parameters.path}`, 'utf8'))
             .then(result=>{
@@ -106,11 +103,6 @@ const commonGetFile = async parameters =>{
                                                 path:parameters.path,
                                                 content_type:parameters.content_type,
                                                 file:result.toString()}));
-                //save in cache if not already in cache
-                FILES.data.filter(row=>row[0]==parameters.path)[0]?
-                    null:
-                        /**@ts-ignore */
-                        FILES.data.push([parameters.path, file]);
                 return file;
             })
             .catch(error=>{
