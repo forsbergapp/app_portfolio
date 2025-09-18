@@ -1299,6 +1299,7 @@ body.rtl{
 	display: block;
   	width: 100%;
   	text-align: center;
+    margin: 1em auto;
 }
 #common_app_dialogues_profile_input_row{
 	position: fixed;
