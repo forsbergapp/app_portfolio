@@ -1133,7 +1133,7 @@ const commonComponentMutationObserver = (() =>{
  *          data:{}|null,
  *          methods:{}|null,
  *          path:string}} parameters
- * @returns {Promise.<{data:*, methods:*, events:common['commonComponentEvents'], template:string|null}>}
+ * @returns {Promise.<{data:*, methods:*, events?:common['commonComponentEvents']|null, template:string|null}>}
  */
 const commonComponentRender = async parameters => {
     const {default:ComponentCreate} = await commonMiscImport(parameters.path);
