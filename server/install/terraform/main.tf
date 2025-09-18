@@ -153,6 +153,18 @@ resource "oci_core_instance" "compute_instance_network" {
                               sudo ufw allow 3000/tcp
                               sudo ufw allow 3333/tcp
                               sudo ufw --force enable
+                              sudo apt remove --purge -y update-notifier-common
+                              sudo apt remove --purge -y ubuntu-release-upgrader-core
+                              sudo apt remove --purge -y popularity-contest
+                              sudo apt remove --purge -y apport
+                              sudo apt remove --purge -y whoopsie
+                              sudo apt remove --purge -y friendly-recovery
+                              sudo apt remove --purge -y command-not-found
+                              sudo apt remove --purge -y man-db
+                              sudo apt remove --purge -y vim-tiny
+                              sudo apt remove --purge -y nano
+                              sudo apt remove --purge -y rsyslog
+                              sudo apt -y autoremove
                               sudo -i -u ubuntu git clone ${var.git_repository_url} app_portfolio
                               sudo npm install -g pm2
                               sudo -i -u ubuntu pm2 start /home/ubuntu/app_portfolio/server/init.js --cwd /home/ubuntu/app_portfolio --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".git .vscode .well-known data node_modules .gitignore .eslintignore .eslintrc.js README.md tsconfig.json"
@@ -201,6 +213,18 @@ resource "oci_core_instance" "compute_instance_only" {
                               sudo ufw allow 3000/tcp
                               sudo ufw allow 3333/tcp
                               sudo ufw --force enable
+                              sudo apt remove --purge -y update-notifier-common
+                              sudo apt remove --purge -y ubuntu-release-upgrader-core
+                              sudo apt remove --purge -y popularity-contest
+                              sudo apt remove --purge -y apport
+                              sudo apt remove --purge -y whoopsie
+                              sudo apt remove --purge -y friendly-recovery
+                              sudo apt remove --purge -y command-not-found
+                              sudo apt remove --purge -y man-db
+                              sudo apt remove --purge -y vim-tiny
+                              sudo apt remove --purge -y nano
+                              sudo apt remove --purge -y rsyslog
+                              sudo apt -y autoremove
                               sudo -i -u ubuntu git clone ${var.git_repository_url} app_portfolio
                               sudo npm install -g pm2
                               sudo -i -u ubuntu pm2 start /home/ubuntu/app_portfolio/server/init.js --cwd /home/ubuntu/app_portfolio --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".git .vscode .well-known data node_modules .gitignore .eslintignore .eslintrc.js README.md tsconfig.json"
