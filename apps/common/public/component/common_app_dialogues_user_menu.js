@@ -87,7 +87,6 @@ const template = props =>`  <div id='common_app_dialogues_user_menu_content' ${p
 */
 const component = async props => {
     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show1');
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues').classList.add('common_app_dialogues_modal');
 
     /**
      * @description read a message
@@ -248,7 +247,7 @@ const component = async props => {
                         break;
                     }
                     case event_target_id=='common_app_dialogues_user_menu_close':{
-                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_user_menu', true);
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_user_menu');
                         break;
                     }
                     case event_target_id=='common_app_dialogues_user_menu_log_in':{

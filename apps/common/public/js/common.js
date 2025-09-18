@@ -1148,7 +1148,7 @@ const commonComponentRender = async parameters => {
     const component = await ComponentCreate({   data:       {...parameters.data,       ...{commonMountdiv:parameters.mountDiv}},
                                                 methods:    {...parameters.methods,    ...{ COMMON:commonGet()}}})
                                                 .catch((/**@type{Error}*/error)=>{
-                                                    parameters.mountDiv?commonComponentRemove(parameters.mountDiv, true):null;
+                                                    parameters.mountDiv?commonComponentRemove(parameters.mountDiv):null;
                                                     commonException(COMMON_GLOBAL.app_function_exception, error);
                                                     return null;
                                                 });
@@ -1231,7 +1231,8 @@ const commonComponentRender = async parameters => {
         if (component.lifecycle?.onMounted){
             await component.lifecycle.onMounted();
         }
-        
+        if ((parameters.mountDiv??'').indexOf('dialogue')>-1)
+            COMMON_DOCUMENT.querySelector('#common_app #common_app_dialogues').classList.add('common_app_dialogues_modal');
     }
     //return data and methods from component to be used in apps
     return {data:component?component.data:null, 
@@ -1243,11 +1244,10 @@ const commonComponentRender = async parameters => {
  * @name commonComponentRemove
  * @description Component remove
  * @function
- * @param {string} div 
- * @param {boolean} remove_modal
+ * @param {string} div
  * @returns {void}
  */
-const commonComponentRemove = (div, remove_modal=false) => {
+const commonComponentRemove = div => {
     const APPDIV = COMMON_DOCUMENT.querySelector(`#${div}`);
     if (APPDIV){
         APPDIV.textContent = '';
@@ -1256,14 +1256,9 @@ const commonComponentRemove = (div, remove_modal=false) => {
             APPDIV.classList.remove('common_app_dialogues_show1');
             APPDIV.classList.remove('common_app_dialogues_show2');
             APPDIV.classList.remove('common_app_dialogues_show3');
-            if (remove_modal){
-                if (COMMON_DOCUMENT.querySelector('#app .common_app_dialogues_modal'))
-                    COMMON_DOCUMENT.querySelector('#app .common_app_dialogues_modal').classList.remove('common_app_dialogues_modal');
-                COMMON_DOCUMENT.querySelector('#common_app #common_app_dialogues').classList.remove('common_app_dialogues_modal');
-            }
+            COMMON_DOCUMENT.querySelector('#common_app #common_app_dialogues').classList.remove('common_app_dialogues_modal');
         }
-    }
-    
+    }    
 };
 /**
  * @name commonDialogueShow
@@ -1524,14 +1519,14 @@ const commonUserLogin = async () => {
         if (COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id){
             COMMON_GLOBAL.token_admin_at= JSON.parse(result_iam).token_at;
             COMMON_GLOBAL.token_at	    = null;
-            commonComponentRemove(current_dialogue, true);
+            commonComponentRemove(current_dialogue);
         }
         else{
             COMMON_GLOBAL.token_admin_at= null;
             COMMON_GLOBAL.token_at	    = JSON.parse(result_iam).token_at;
             commonUserUpdateAvatar(true, COMMON_GLOBAL.iam_user_avatar);
-            commonComponentRemove(current_dialogue, true);
-            commonComponentRemove('common_app_dialogues_profile', true);
+            commonComponentRemove(current_dialogue);
+            commonComponentRemove('common_app_dialogues_profile');
         }
         commonUserMessageShowStat();
         await commonUserLoginApp(spinner_item);
@@ -1672,7 +1667,7 @@ const commonLogout = async () => {
         commonUserUpdateAvatar(false,null );
         commonComponentRemove('common_app_dialogues_iam_verify');
         commonComponentRemove('common_app_dialogues_iam_start');
-        commonComponentRemove('common_app_dialogues_profile', true);
+        commonComponentRemove('common_app_dialogues_profile');
     }
     commonUserPreferencesGlobalSetDefault('LOCALE');
     commonUserPreferencesGlobalSetDefault('TIMEZONE');
@@ -2846,7 +2841,7 @@ const commonMountApp = async (app_id) =>{
         await commonUserLoginApp(COMMON_DOCUMENT.querySelector('#common_app_toolbar_start')?'common_app_toolbar_start':null);
     COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_div}`).innerHTML='';
     if (COMMON_GLOBAL.app_id!=COMMON_GLOBAL.app_start_app_id)
-        commonComponentRemove('common_app_dialogues_apps');
+        commonComponentRemove('common_apps');
 
     COMMON_GLOBAL.app_id =          CommonAppInit.App.id;
     COMMON_GLOBAL.app_logo =        CommonAppInit.App.logo_content;

@@ -37,8 +37,6 @@ const template = () =>` <div id='common_app_dialogues_profile_home' class='commo
  */
 const component = async props => {
     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show0');
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues').classList.add('common_app_dialogues_modal');
-
     
     const onMounted = async () =>{
         if (props.data.statchoice){
@@ -70,7 +68,7 @@ const component = async props => {
                 break;
             }
             case event_type =='click' && event_target_id== 'common_app_dialogues_profile_close':{
-                props.methods.COMMON.commonComponentRemove('common_app_dialogues_profile', true);
+                props.methods.COMMON.commonComponentRemove('common_app_dialogues_profile');
                 break;
             }
         }

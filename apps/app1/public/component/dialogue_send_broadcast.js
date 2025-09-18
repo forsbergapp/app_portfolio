@@ -37,7 +37,6 @@ const template = () => `<div id='dialogue_send_broadcast_form'>
  */
 const component = async props => {
     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show0');
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#dialogues').classList.add('common_app_dialogues_modal');
 
     const onMounted = async () =>{
         // select broadcast type
