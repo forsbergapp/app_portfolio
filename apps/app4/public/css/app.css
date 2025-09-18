@@ -808,11 +808,6 @@ body,
 	background-color:var(--app_theme_main_color1) !important;
 }
 #settings .common_input,
-#dialogues .common_input{
-	color: var(--app_theme_main_color3) !important;
-	background-color: var(--app_theme_input_background_color);
-	border: 1px solid var(--app_theme_input_border_color);
-}
 #toolbar_top,
 #settings,
 #settings_tab_navigation,
@@ -849,9 +844,6 @@ body,
 #settings_tab_navigation :hover,
 #settings_tab_navigation :active {
 	color:var(--app_theme_hover) !important;
-}
-.dialogue{
-	background-color: var(--app_theme_dialogue_background_color);
 }
 /*only shadow style on paper, style inside paper is in report*/
 #paper {
