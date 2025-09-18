@@ -138,6 +138,7 @@ const COMMON_GLOBAL = {
 };
 Object.seal(COMMON_GLOBAL);
 
+                    
 /**
  * @description Get value for given global key
  * @param {keyof common['CommonGlobal']} key
@@ -1158,6 +1159,7 @@ const commonComponentMutationObserver = (() =>{
         
     };
 })();
+
 /**
  * @name commonComponentRender
  * @description Renders component
@@ -1173,12 +1175,16 @@ const commonComponentMutationObserver = (() =>{
  *          data:{}|null,
  *          methods:{}|null,
  *          path:string}} parameters
- * @returns {Promise.<{data:*, methods:*, template:string|null}>}
+ * @returns {Promise.<{data:*, methods:*, events:common['commonComponentEvents'], template:string|null}>}
  */
 const commonComponentRender = async parameters => {
     const {default:ComponentCreate} = await commonMiscImport(parameters.path);
     if (parameters.mountDiv)
-        COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`).innerHTML = '<div class=\'css_spinner\'></div>';
+        COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`).innerHTML = 
+            await commonMiscImport('/common/component/common_loading.js')
+            .then((({default:module})=>module()
+                                        .then((/**@type{common['CommonComponentResult']}*/component)=>component.template)))
+            .catch(()=>'');
 
     /**@type{common['CommonComponentResult']}*/
     const component = await ComponentCreate({   data:       {...parameters.data,       ...{commonMountdiv:parameters.mountDiv}},
@@ -1270,7 +1276,10 @@ const commonComponentRender = async parameters => {
         
     }
     //return data and methods from component to be used in apps
-    return {data:component?component.data:null, methods:component?component.methods:null, template:component?.template??null};
+    return {data:component?component.data:null, 
+            methods:component?component.methods:null, 
+            events:component?component.events:null,
+            template:component?.template??null};
 };
 /**
  * @name commonComponentRemove
@@ -1394,173 +1403,6 @@ const commonMessageShow = async (message_type, function_event, text_class=null, 
  * @returns {string}
  */
 const commonMesssageNotAuthorized = () => '⛔';
-/**
- * @name commonUserSessionClear
- * @description Clears users ssesion variables
- * @function
- * @returns {void}
- */
-const commonUserSessionClear = () => {
-    //iam user
-    COMMON_GLOBAL.iam_user_app_id =         null;
-    COMMON_GLOBAL.iam_user_id =             null;
-    COMMON_GLOBAL.iam_user_username =       null;
-
-    //admin access token
-    COMMON_GLOBAL.token_admin_at =          null;
-    //user access token
-    COMMON_GLOBAL.token_at	=               null;
-    COMMON_GLOBAL.token_exp =               null;
-    COMMON_GLOBAL.token_iat =               null;
-};
-/**
- * @name commonLovEvent
- * @description LOV event
- * @function
- * @param {common['CommonAppEvent']} event
- * @param {string} lov
- * @returns {void}
- */
-const commonLovEvent = (event, lov) => {
-    /**
-     * LOV event function
-     * calling row event decides to have common_input_lov and common_input_value
-     * admin row should show technical details
-     *  common_input_lov   = data-id
-     *  common_input_value = data-value
-     * app data row for users should not show technical details
-     *  common_input_value = data-value
-     * @param {common['CommonAppEvent']} event_lov 
-     */
-    const commonLovEvent_function = event_lov => {
-        //setting values from LOV
-        const row = commonMiscElementRow(event.target);
-        const row_lov = commonMiscElementRow(event_lov.target);
-        /**@type{HTMLElement|null} */
-        const common_input_lov = row.querySelector('.common_input_lov');
-        /**@type{HTMLElement|null} */
-        const common_app_dialogues_lov_value = row.querySelector('.common_app_dialogues_lov_value');
-        if (common_input_lov){
-            common_input_lov.textContent = row_lov.getAttribute('data-id') ?? '';
-            common_input_lov.focus();
-        }
-        if (common_app_dialogues_lov_value){
-            /**@ts-ignore */
-            if (common_app_dialogues_lov_value.parentNode?.classList.contains('common_app_data_display_master_row')){
-                common_app_dialogues_lov_value.setAttribute('data-lov_value', row_lov.getAttribute('data-id') ?? '');
-            }
-            common_app_dialogues_lov_value.textContent = row_lov.getAttribute('data-value') ?? '';
-        }
-        //dispatch event for either common_input lov if used or common_app_dialogues_lov_value
-        (common_input_lov ?? common_app_dialogues_lov_value)?.dispatchEvent(new Event('input'));
-        COMMON_DOCUMENT.querySelector('#common_app_dialogues_lov_close').click();
-    };
-    commonLovShow({lov:lov, function_event:commonLovEvent_function});
-};
-/**
- * @name commonLovAction
- * @description Lov action fetches id and value, updates values and manages data-defaultValue
- * @function
- * @param {common['CommonAppEvent']} event 
- * @param {string} lov 
- * @param {string|null} old_value
- * @param {string} path 
- * @param {string} query 
- * @param {common['CommonRESTAPIMethod']} method 
- * @param {common['CommonRESTAPIAuthorizationType']} authorization_type 
- * @param {{}|null} json_data 
- * @returns {void}
- */
-const commonLovAction = (event, lov, old_value, path, query, method, authorization_type, json_data) => {
-   commonFFB({path:path, query:query, method:method, authorization_type:authorization_type, body:json_data})
-    .then((/**@type{string}*/result)=>{
-        const list_result = result?JSON.parse(result).rows:{};
-        if (list_result.length == 1){
-            //set lov text
-            if (event.target.parentNode && event.target.parentNode.nextElementSibling)
-                event.target.parentNode.nextElementSibling.querySelector('.common_app_dialogues_lov_value').textContent = Object.values(list_result[0])[2];
-            //set new value in data-defaultValue used to save old value when editing next time
-            event.target.setAttribute('data-defaultValue', Object.values(list_result[0])[0]);
-        }
-        else{
-            event.stopPropagation();
-            event.preventDefault();
-            //set old value
-            event.target.textContent = event.target.getAttribute('data-defaultValue') ?? '';
-            event.target.focus();    
-            //dispatch click on lov button
-            event.target.nextElementSibling.dispatchEvent(new Event('click'));
-        }
-    })
-    .catch(()=>{
-        event.stopPropagation();
-        event.preventDefault();
-        //set old value
-        event.target.textContent = event.target.getAttribute('data-defaultValue') ?? '';
-        event.target.focus();
-        event.target.nextElementSibling?event.target.nextElementSibling.dispatchEvent(new Event('click')):null;
-    });
-};
-
-/**
- * @name commonLovClose
- * @description Lov close
- * @function
- * @returns {void}
- */
-const commonLovClose = () => {
-    commonComponentRemove('common_app_dialogues_lov', true);
-};
-/**
- * @name commonLovShow
- * @description Lov show
- * @function
- * @param {{lov:string, 
- *          lov_custom_list?:{}[],
- *          lov_custom_value?:string, 
- *          function_event:function|null}} parameters
- * @returns {void} 
- */
-const commonLovShow = parameters => {
-    commonComponentRender({
-        mountDiv:   'common_app_dialogues_lov',
-        data:       {
-                    common_app_id:COMMON_GLOBAL.app_common_app_id,  
-                    app_id:COMMON_GLOBAL.app_id,  
-                    user_locale:COMMON_GLOBAL.user_locale,
-                    lov:parameters.lov,
-                    lov_custom_list:parameters.lov_custom_list,
-                    lov_custom_value:parameters.lov_custom_value
-                    },
-        methods:    {
-                    function_event:parameters.function_event
-                    },
-        path:       '/common/component/common_app_dialogues_lov.js'});        
-};
-/**
- * @name commonLovFilter
- * @description Lov filter
- * @function
- * @param {string} text_filter 
- * @returns {void}
- */
-const commonLovFilter = text_filter => {
-    const rows = COMMON_DOCUMENT.querySelectorAll('.common_list_lov_row');
-    for (const row of rows) {
-        row.classList.remove ('common_row_hide');
-        row.classList.remove ('common_row_selected');
-    }
-    for (const row of rows) {
-        if (row.children[0].children[0].textContent.toUpperCase().indexOf(text_filter.toUpperCase()) > -1 ||
-            row.children[1].children[0].textContent.toUpperCase().indexOf(text_filter.toUpperCase()) > -1){
-                row.classList.remove ('common_row_hide');
-            }
-        else{
-            row.classList.remove ('common_row_hide');
-            row.classList.add ('common_row_hide');
-        }
-    }
-};
 
 /**
  * @name commonProfileFollowLike
@@ -1806,6 +1648,26 @@ const commonUserLoginApp = async spinner_item =>{
     commonMiscPreferencesUpdateBodyClassFromPreferences();
 };
 /**
+ * @name commonUserSessionClear
+ * @description Clears users ssesion variables
+ * @function
+ * @returns {void}
+ */
+const commonUserSessionClear = () => {
+    //iam user
+    COMMON_GLOBAL.iam_user_app_id =         null;
+    COMMON_GLOBAL.iam_user_id =             null;
+    COMMON_GLOBAL.iam_user_username =       null;
+
+    //admin access token
+    COMMON_GLOBAL.token_admin_at =          null;
+    //user access token
+    COMMON_GLOBAL.token_at	=               null;
+    COMMON_GLOBAL.token_exp =               null;
+    COMMON_GLOBAL.token_iat =               null;
+};
+
+/**
  * @name commonUserSessionCountdown
  * @description Countdown function to monitor token expire time
  *              Uses event listener on element instead of setTimeout since element can removed 
@@ -1887,64 +1749,6 @@ const commonLogout = async () => {
     commonUserSessionClear();
 };
 
-/**
- * @name commonUserUpdate
- * @description User update
- * @function
- * @param {string|null} totp
- * @returns {Promise.<boolean>}
- */
-const commonUserUpdate = async (totp=null) => {
-    if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user'),
-                            {
-                            username: COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_username'),
-                            password: COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password'),
-                            password_confirm: COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_confirm'),
-                            password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_reminder'),
-                            password_new: COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_new'),
-                            password_new_confirm: COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_new_confirm'),
-                            bio: COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_bio')
-                            })==false)
-                return false;
-    if (totp==null){
-        commonDialogueShow('VERIFY', '3');
-        return false;
-    }
-    else
-        return new Promise(resolve=>{
-            const username =            COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_username').textContent;
-            const bio =                 COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_bio').textContent;
-            const avatar =              COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_avatar').getAttribute('data-image').replace('null','')==''?
-                                            null:
-                                                COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_avatar').getAttribute('data-image').replace('null','');
-            const password =            COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password').textContent;
-            const password_new =        COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_new').textContent;
-            const password_reminder =   COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_reminder').textContent;
-
-            commonFFB({ path:`/server-iam/iamuser/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
-                        method:'PATCH', 
-                        authorization_type:COMMON_GLOBAL.app_id==COMMON_GLOBAL.app_admin_app_id?'ADMIN':'APP_ACCESS', 
-                        body:{  username:           username,
-                                password:           password,
-                                password_new:       password_new==''?null:password_new,
-                                bio:                bio,
-                                private:            Number(COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.contains('checked')),
-                                password_reminder:  password_reminder,
-                                avatar:             avatar,
-                                totp:               totp
-                            }, 
-                        spinner_id:'common_app_dialogues_user_menu_iam_user_btn_user_update'})
-            .then((result)=>{
-                if (JSON.parse(result).updated==1){
-                    commonUserSessionClear();
-                    resolve(true);
-                }
-                else
-                    resolve(false);
-            })
-            .catch(()=>false);
-        });
-};
 
 /**
  * @name commonUserFunction
@@ -1993,53 +1797,6 @@ const commonUserFunction = function_name => {
                 resolve(null);
             })
             .catch(err=>reject(err));
-        }
-    });
-};
-/**
- * @name commonIamUserAppDelete
- * @description IamUserApp delete
- * @function
- * @param {number|null} choice 
- * @param {function|null} function_delete_event 
- * @returns {Promise.<null>}
- */
-const commonIamUserAppDelete = (choice=null, function_delete_event=null) => {
-    return new Promise((resolve, reject)=>{
-        const password = COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password').textContent;
-        switch (choice){
-            case null:{
-                if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user'),
-                                    {
-                                        password: COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password')
-                                    })==false)
-                    resolve(null);
-                else{
-                    commonMessageShow('CONFIRM',function_delete_event, null, null);
-                    resolve(null);
-                }
-                break;
-            }
-            case 1:{
-                commonComponentRemove('common_app_dialogues_message');
-    
-                commonFFB({ path:`/server-iam/iamuserapp/${COMMON_GLOBAL.iam_user_app_id}`, 
-                            body:{  password: password,
-                                    IAM_data_app_id:COMMON_GLOBAL.app_id, 
-                                    IAM_iam_user_id:COMMON_GLOBAL.iam_user_id}, 
-                            method:'DELETE', 
-                            authorization_type:'APP_ACCESS',
-                            spinner_id:'common_app_dialogues_user_menu_iam_user_btn_user_delete_account'})
-                .then(()=>  resolve((()=>{
-                                        commonComponentRemove('common_app_dialogues_user_menu',true);
-                                        commonMountApp(COMMON_GLOBAL.app_start_app_id);return null;
-                                        })()))
-                .catch(err=>reject(err));
-                break;
-            }
-            default:
-                resolve(null);
-                break;
         }
     });
 };
@@ -2282,7 +2039,7 @@ const commonFFB = async parameter =>{
         const url = ('/bff/x/' + parameters.uuid);
 
         if (parameters.spinner_id && COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
-            COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.add('css_spinner');
+            COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.add('common_loading_spinner');
         const resultFetch = {finished:false};
         const options =     {
                             cache:  'no-store',
@@ -2381,7 +2138,7 @@ const commonFFB = async parameter =>{
                         .finally(()=>{
                             resultFetch.finished=true;
                             if (parameters.spinner_id && COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
-                                COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.remove('css_spinner');
+                                COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.remove('common_loading_spinner');
                         })
         ]);
     };
@@ -2456,6 +2213,16 @@ const commonSocketSSEShow = async (sse_message) => {
         }
 		case 'PROGRESS':{
 			commonMessageShow('PROGRESS', null, null, JSON.parse(sse_message.sse_message));
+            break;
+        }
+        case 'PROGRESS_LOADING':{
+            //set progress info and illustration about progress
+            if (COMMON_DOCUMENT.querySelector('#common_loading_progressbar_info'))
+                COMMON_DOCUMENT.querySelector('#common_loading_progressbar_info').style.width = 
+                    JSON.parse(sse_message.sse_message).info ??'';
+            if (COMMON_DOCUMENT.querySelector('#common_loading_progressbar'))
+                COMMON_DOCUMENT.querySelector('#common_loading_progressbar').style.width = 
+                    `${(JSON.parse(sse_message.sse_message).part/JSON.parse(sse_message.sse_message).total)*100}%`;
             break;
         }
         case 'APP_FUNCTION':{
@@ -3090,44 +2857,6 @@ const commonEvent = async (event_type,event=null) =>{
                                     path:       '/common/component/common_app_dialogues_user_menu.js'});
                                 break;
                             }
-                            case 'common_app_dialogues_user_menu_messages_pagination_first':
-                            case 'common_app_dialogues_user_menu_messages_pagination_previous':
-                            case 'common_app_dialogues_user_menu_messages_pagination_next':
-                            case 'common_app_dialogues_user_menu_messages_pagination_last':{
-                                COMMON_GLOBAL.component.common_app_dialogues_user_menu?.methods?.eventClickPagination(event_target_id);
-                                break;
-                            }
-                            case (event.target.classList.contains('common_app_dialogues_user_menu_messages_list_col_delete') && event_target_id != 'common_app_dialogues_user_menu_messages_list_col_delete')?
-                                    event_target_id:
-                                        '':{
-                                //clicked on delete on row, not the title
-                                COMMON_GLOBAL.component.common_app_dialogues_user_menu?.methods?.eventClickMessageDelete( commonMiscElementRow(event.target));
-                                break;
-                            }
-                            case 'common_app_dialogues_user_menu_messages_list':{
-                                COMMON_GLOBAL.component.common_app_dialogues_user_menu?.methods?.eventClickMessage( commonMiscElementRow(event.target));
-                                break;
-                            }
-                            //dialogue user edit
-                            case 'common_app_dialogues_user_menu_iam_user_btn_user_update':{
-                                await commonUserUpdate();
-                                break;
-                            }
-                            case 'common_app_dialogues_user_menu_iam_user_btn_user_delete_account':{
-                                const function_delete_user_account = () => { 
-                                    commonIamUserAppDelete(1, null);
-                                };
-                                await commonIamUserAppDelete(null, function_delete_user_account);
-                                
-                                break;
-                            }        
-                            //dialogue verify
-                            case 'common_app_dialogues_iam_verify_cancel':{
-                                if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_btn_user_update')==null)
-                                    commonUserSessionClear();
-                                commonComponentRemove('common_app_dialogues_iam_verify', true);
-                                break;
-                            }
                             //search list
                             case 'common_app_dialogues_profile_info_detail_list':
                             case 'common_app_profile_search_list':
@@ -3190,12 +2919,6 @@ const commonEvent = async (event_type,event=null) =>{
                                 COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_app_dialogues_profile_btn_selected');
                                 break;
                             }
-                            
-                            //broadcast
-                            case 'common_app_broadcast_close':{
-                                commonComponentRemove('common_app_broadcast');
-                                break;
-                            }
                             //markdown show/hide details
                             case (event.target.classList.contains('common_markdown_table_row_master_method')||event.target.classList.contains('common_markdown_table_row_master_path'))?event_target_id:null:{
                                 if (commonMiscElementRow(event.target, 'common_markdown_table_row').querySelector('.common_markdown_table_row_detail_master')?.classList?.contains('show'))
@@ -3222,21 +2945,25 @@ const commonEvent = async (event_type,event=null) =>{
                                     await commonFrameworkSet(3);
                                 break;
                             }    
-                            //dialogue lov
-                            case event.target.classList.contains('common_list_lov_click') && event.target.getAttribute('data-lov')?event_target_id:'':{
-                                commonLovEvent(event, event.target.getAttribute('data-lov'));
-                                break;
-                            }
-                            case 'common_app_dialogues_lov_search_icon':{
-                                commonLovFilter(COMMON_DOCUMENT.querySelector('#common_app_dialogues_lov_search_input').textContent);
-                                break;
-                            }
-                            case 'common_app_dialogues_lov_close':{
-                                commonLovClose();
-                                break;
-                            }
-                            case 'common_app_dialogues_lov_list':{
-                                COMMON_DOCUMENT.querySelector('#common_app_dialogues_lov_list')['data-function'](event);
+                            case (  event.target.classList.contains('common_list_lov_click') && 
+                                    event.target.getAttribute('data-lov') &&
+                                    event.target['data-functionRow'])?event_target_id:'':{
+                                //element with attributes
+                                //data-lov:              SERVER_LOG_FILES, COUNTRY, CUSTOM or from AppData.name in db,
+                                //data-lov_custom_value: custom column name in records if used
+                                //data-functionData:async function that returns records with 'id' and 'value' or lov_custom_value columns
+                                //data-functionRow: async function that reads clicked row data using syntax:
+                                //                  commonMiscElementRow(event.target).getAttribute('data-id')
+                                //                  commonMiscElementRow(event.target).getAttribute('data-value')
+                                //                  component closes lov after function
+                                //calls function with event.target so data-functionData can read event in component and use spinner
+                                commonComponentRender({
+                                    mountDiv:   'common_app_dialogues_lov',
+                                    data:       null,
+                                    methods:    {
+                                                event_target:       event.target
+                                                },
+                                    path:       '/common/component/common_app_dialogues_lov.js'});
                                 break;
                             }
                             //markdown document tags
@@ -3343,31 +3070,6 @@ const commonEvent = async (event_type,event=null) =>{
                                                         event_parameters:commonProfileShow,
                                                         rows_element:'common_app_profile_search_list',
                                                         search_input:'common_app_profile_search_input'});
-                                break;
-                            }        
-                            case 'common_app_dialogues_lov_search_input':{
-                                commonMiscListKeyEvent({event:event,
-                                                        event_function:commonLovFilter,
-                                                        event_parameters:COMMON_DOCUMENT.querySelector('#common_app_dialogues_lov_search_input').textContent,
-                                                        rows_element:'common_app_dialogues_lov_list',
-                                                        search_input:'common_app_dialogues_lov_search_input'});
-                                break;
-                            }
-                            //dialogue verify
-                            case 'common_app_dialogues_iam_verify_verification_char1':
-                            case 'common_app_dialogues_iam_verify_verification_char2':
-                            case 'common_app_dialogues_iam_verify_verification_char3':
-                            case 'common_app_dialogues_iam_verify_verification_char4':
-                            case 'common_app_dialogues_iam_verify_verification_char5':{
-                                COMMON_GLOBAL.component.common_app_dialogues_iam_verify?.methods?.commonUserVerifyCheckInput( COMMON_DOCUMENT.querySelector(`#${event.target.id}`), 
-                                                                'common_app_dialogues_iam_verify_verification_char' + (Number(event.target.id.substring(event.target.id.length-1))+1));
-                                break;
-                            }
-                            case 'common_app_dialogues_iam_verify_verification_char6':{
-                                COMMON_GLOBAL.component.common_app_dialogues_iam_verify?.methods?.commonUserVerifyCheckInput(COMMON_DOCUMENT.querySelector(`#${event.target.id}`), '');
-                                break;
-                            }
-                            default:{
                                 break;
                             }
                         }
@@ -3901,11 +3603,6 @@ const commonGet = () =>{
         commonFrameworkSet:commonFrameworkSet,
         /* DIALOGUE */
         commonDialogueShow:commonDialogueShow, 
-        /* LOV */
-        commonLovAction:commonLovAction,
-        commonLovEvent:commonLovEvent, 
-        commonLovClose:commonLovClose, 
-        commonLovShow:commonLovShow,
         /* MESSAGE*/
         commonMessageShow:commonMessageShow,
         commonMesssageNotAuthorized:commonMesssageNotAuthorized,
@@ -3917,11 +3614,10 @@ const commonGet = () =>{
         commonProfileUpdateStat:commonProfileUpdateStat, 
         /* USER  */
         commonUserFunction:commonUserFunction,
-        commonIamUserAppDelete:commonIamUserAppDelete,
         commonUserLogin:commonUserLogin, 
         commonUserLogout:commonUserLogout,
+        commonUserSessionClear:commonUserSessionClear,
         commonUserSessionCountdown:commonUserSessionCountdown, 
-        commonUserUpdate:commonUserUpdate, 
         commonUserAuthenticateCode:commonUserAuthenticateCode,
         commonUserMessageShowStat:commonUserMessageShowStat,
         commonUserUpdateAvatar:commonUserUpdateAvatar,
@@ -4070,11 +3766,6 @@ export{/* GLOBALS*/
        commonFrameworkSet,
        /* DIALOGUE */
        commonDialogueShow,
-       /* LOV */
-       commonLovAction,
-       commonLovEvent, 
-       commonLovClose, 
-       commonLovShow,
        /* MESSAGE*/
        commonMessageShow,
        commonMesssageNotAuthorized,
@@ -4086,11 +3777,10 @@ export{/* GLOBALS*/
        commonProfileUpdateStat, 
        /* USER  */
        commonUserFunction,
-       commonIamUserAppDelete,
        commonUserLogin, 
        commonUserLogout,
+       commonUserSessionClear,
        commonUserSessionCountdown, 
-       commonUserUpdate, 
        commonUserAuthenticateCode,
        commonUserMessageShowStat,
        commonUserUpdateAvatar,

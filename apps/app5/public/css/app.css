@@ -81,7 +81,7 @@ body {
 	min-width: 80%;
 	position: relative;
 }
-#app_page_secure_tab_content.css_spinner{
+#app_page_secure_tab_content.common_loading_spinner{
 	padding: unset !important;
 	min-width: unset !important;
 }
@@ -143,7 +143,7 @@ body {
 	background-color: var(--common_app_color_blue3);
 	box-shadow: 0 0 1px var(--common_app_color_gold);
 }
-.app_bank_div .css_spinner{
+.app_bank_div .common_loading_spinner{
 	--common_app_color_background_spinner:var(--common_app_color_blue3);
 }
 .app_page_start_bank_div:hover,

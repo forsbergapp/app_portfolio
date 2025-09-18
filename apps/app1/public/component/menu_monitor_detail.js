@@ -135,7 +135,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                             ${props.monitor_detail=='SERVER_LOG'?
                                 `<div id='menu_monitor_detail_server_log_form'>
                                     <div id='menu_monitor_detail_select_logobject'></div>
-                                    <div id='menu_monitor_detail_filesearch' class='common_app_dialogues_button common_icon'></div>
+                                    <div id='menu_monitor_detail_filesearch' data-lov='SERVER_LOG_FILES' class='common_app_dialogues_button common_list_lov_click common_icon'></div>
                                     <div id='menu_monitor_detail_parameters_row'>
                                         <div class='menu_monitor_detail_parameters_row_col'>
                                             <div id='menu_monitor_detail_parameters_row_col1' class='common_icon'></div>
@@ -200,7 +200,6 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *                      methods: {
  *                               monitorDetailPage:function,
  *                               monitorDetailShowServerLog:function,
- *                               monitorDetailShowLogDir:function,
  *                               monitorDetailClickSort:function
  *                               },
  *                      template:string}>}
@@ -359,41 +358,34 @@ const component = async props => {
         }
     };
 
+    
     /**
-     * Show existing logfiles
-     * @returns {void}
+     * @description Show existing logfiles
+     * @param {common['CommonAppEvent']['target']} event_target
      */
-    const monitorDetailShowLogDir = () => {
-        /**
-         * Event for LOV
-         * @param {common['CommonAppEvent']} event 
-         */
-        const function_event = event => {
-                                //format [db object]_YYYYMMDD.json
-                                
-                                const filename = props.methods.COMMON.commonMiscElementRow(event.target).getAttribute('data-value') ?? '';
-                                const year     = parseInt(filename.split('_')[1].substring(0,4));
-                                const month    = parseInt(filename.split('_')[1].substring(4,6));
-                                const day      = parseInt(filename.split('_')[1].substring(6,8));
+    const monitorDetailShowLogDir = async event_target => {
+        //format [db object]_YYYYMMDD.json
+        
+        const filename = props.methods.COMMON.commonMiscElementRow(event_target).getAttribute('data-value') ?? '';
+        const year     = parseInt(filename.split('_')[1].substring(0,4));
+        const month    = parseInt(filename.split('_')[1].substring(4,6));
+        const day      = parseInt(filename.split('_')[1].substring(6,8));
 
-                                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').setAttribute('data-value', `${filename.split('_')[0]}`);
-                                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').textContent = `${filename.split('_')[0]}`;
-                                //year
-                                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').setAttribute('data-value', year);
-                                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').textContent = year;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').setAttribute('data-value', `${filename.split('_')[0]}`);
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').textContent = `${filename.split('_')[0]}`;
+        //year
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').setAttribute('data-value', year);
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').textContent = year;
 
-                                //month
-                                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_month .common_select_dropdown_value').setAttribute('data-value', month);
-                                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_month .common_select_dropdown_value').textContent = month;
-                                //day if applicable
-                                if (props.data.SERVICE_LOG_FILE_INTERVAL=='1D'){
-                                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').setAttribute('data-value', day);
-                                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').textContent = day;
-                                }
-                                monitorDetailShowServerLog( 0, 'created', 'desc');
-                                props.methods.COMMON.commonLovClose();
-                            };
-        props.methods.COMMON.commonLovShow({lov:'SERVER_LOG_FILES', function_event:function_event});
+        //month
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_month .common_select_dropdown_value').setAttribute('data-value', month);
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_month .common_select_dropdown_value').textContent = month;
+        //day if applicable
+        if (props.data.SERVICE_LOG_FILE_INTERVAL=='1D'){
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').setAttribute('data-value', day);
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').textContent = day;
+        }
+        monitorDetailShowServerLog( 0, 'created', 'desc');
     };
     /**
      * Display server logs
@@ -441,6 +433,7 @@ const component = async props => {
 
     const onMounted = async () =>{
         if (props.data.monitor_detail=='SERVER_LOG'){
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_filesearch')['data-functionRow'] = monitorDetailShowLogDir;
             await props.methods.COMMON.commonComponentRender({
                 mountDiv:'menu_monitor_detail_select_logobject', 
                 data:{ 
@@ -464,7 +457,6 @@ const component = async props => {
         data:       null,
         methods:    {monitorDetailPage:monitorDetailPage,
                     monitorDetailShowServerLog:monitorDetailShowServerLog,
-                    monitorDetailShowLogDir:monitorDetailShowLogDir,
                     monitorDetailClickSort:monitorDetailClickSort
         },
         template:   template({  iam_user_id:props.data.iam_user_id,

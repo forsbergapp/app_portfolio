@@ -194,7 +194,7 @@
 #secure_menu_content{
 	height: 85%;
 }
-#secure_menu_content .css_spinner{
+#secure_menu_content .common_loading_spinner{
 	display: inline-block;
   	top: calc(50% - 30px);
 }
@@ -314,7 +314,7 @@
 #menu_start_graphBox{
 	height:calc(100% - 40px);
 }
-#menu_start_graphBox.css_spinner{
+#menu_start_graphBox.common_loading_spinner{
 	height:30px;
 }
 #menu_start_chart_box1{
@@ -439,7 +439,7 @@
 	width:100%;
 	font-size:1.2em;
 }
-#menu_users_list .css_spinner, #menu_users_iam_app_access .css_spinner{
+#menu_users_list .common_loading_spinner, #menu_users_iam_app_access .common_loading_spinner{
 	display: inline-block;
 }
 #menu_users_list, #menu_users_iam_app_access{
@@ -483,7 +483,7 @@
 	width:100%;
 	font-size:1.2em;
 }
-#menu_apps_detail .css_spinner{
+#menu_apps_detail .common_loading_spinner{
 	display: inline-block;
 }
 #menu_apps, #menu_apps_detail{
@@ -584,7 +584,7 @@
 	display:block;
 	height: 60px;
 }
-#menu_monitor_detail_server_log_form.css_spinner{
+#menu_monitor_detail_server_log_form.common_loading_spinner{
 	display: inline-block;
 }
 #menu_monitor_pagination{
@@ -738,7 +738,7 @@
 #menu_db_info_content_widget1{
 	height: 130px;
 }
-#menu_db_info1.css_spinner{
+#menu_db_info1.common_loading_spinner{
 	inset-inline-start: calc(50% - 40px);
 }
 #menu_db_info1 div{
@@ -1316,15 +1316,15 @@ body{
 	display: inline-block !important;
     vertical-align: super;
 }
-#secure_menu_content .css_spinner::before{
+#secure_menu_content .common_loading_spinner::before{
 	background-color: var(--app_theme_background_color);
 }
-#secure_menu_content .widget .css_spinner::before{
+#secure_menu_content .widget .common_loading_spinner::before{
 	background-color: var(--app_theme_dialogue_background_color);
 }
-#menu_users_list .css_spinner::before,
-#menu_users_iam_app_access .css_spinner::before,
-#menu_apps_detail .css_spinner::before
+#menu_users_list .common_loading_spinner::before,
+#menu_users_iam_app_access .common_loading_spinner::before,
+#menu_apps_detail .common_loading_spinner::before
 {
 	background-color: var(--app_theme_list_background_color) !important;
 }

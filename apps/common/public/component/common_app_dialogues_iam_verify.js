@@ -41,6 +41,7 @@ const template = () => `
  * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:{commonUserVerifyCheckInput:function},
+ *                      events:events,
  *                      template:string}>}
  */
 const component = async props => {
@@ -83,7 +84,8 @@ const component = async props => {
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_verification_char5').classList.remove('common_input_error');
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_verification_char6').classList.remove('common_input_error');
 
-                if ((props.data.user_verification_type== '3' && await props.methods.COMMON.commonUserUpdate(verification_code)) ||
+                if ((props.data.user_verification_type== '3' &&                     
+                    await props.methods.COMMON.commonGlobalGet('component').common_app_dialogues_user_menu_iam_user?.methods?.commonUserUpdate(verification_code)) ||
                     await props.methods.COMMON.commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
                     props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_verify', true);
                     props.methods.COMMON.commonDialogueShow('LOGIN');
@@ -109,6 +111,48 @@ const component = async props => {
         }
         
     };
+    /**
+     * @name events
+     * @descption Events
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (event_type){
+            case 'click':{
+                switch (true){
+                    case event_target_id=='common_app_dialogues_iam_verify_cancel':{
+                        if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_btn_user_update')==null)
+                            props.methods.COMMON.commonUserSessionClear();
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_verify', true);
+                        break;
+                    }
+                }
+                break;
+            }
+            case 'keyup':{
+                switch (true){
+                    case event_target_id=='common_app_dialogues_iam_verify_verification_char1':
+                    case event_target_id=='common_app_dialogues_iam_verify_verification_char2':
+                    case event_target_id=='common_app_dialogues_iam_verify_verification_char3':
+                    case event_target_id=='common_app_dialogues_iam_verify_verification_char4':
+                    case event_target_id=='common_app_dialogues_iam_verify_verification_char5':{
+                        props.methods.COMMON.commonGlobalGet('component').common_app_dialogues_iam_verify?.methods?.commonUserVerifyCheckInput( props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event.target.id}`), 
+                                                        'common_app_dialogues_iam_verify_verification_char' + (Number(event.target.id.substring(event.target.id.length-1))+1));
+                        break;
+                    }
+                    case event_target_id=='common_app_dialogues_iam_verify_verification_char6':{
+                        props.methods.COMMON.commonGlobalGet('component').common_app_dialogues_iam_verify?.methods?.commonUserVerifyCheckInput(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event.target.id}`), '');
+                        break;
+                    }
+                }
+            }
+        }
+    };
+
     const onMounted = () =>{
         props.methods.COMMON.commonUserSessionCountdown(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_token_countdown_time'), null);
     };
@@ -116,6 +160,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    {commonUserVerifyCheckInput:commonUserVerifyCheckInput},
+        events:     events,
         template:   template()
     };
 };

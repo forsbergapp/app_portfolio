@@ -65,13 +65,13 @@ const cubeSolve = async parameters =>{
 		const model = parameters.data.model;
 		switch (parameters.data.model){
 			case 0:{
-				//Model robot can be slow, send PROGRESS using server side event				
+				//Model robot can be slow, send PROGRESS_LOADING using server side event				
 
 				const timer1 = Date.now();
 				const solver2 = new cuberSolver2.RubiksCubeSolver();	
 				//use Thistlewaite algorithm to solve from solved to given state
 				
-				const solver2_moves_from_solved = solver2.solve(parameters.data.cube_goalstate?parameters.data.cube_goalstate.join(' '):GOAL_SOLVE.join(' '), parameters.data.cube_currentstate.split(' '));
+				const solver2_moves_from_solved = solver2.solve(parameters.data.cube_goalstate?parameters.data.cube_goalstate:GOAL_SOLVE.join(' '), parameters.data.cube_currentstate.split(' '));
 				if (solver2_moves_from_solved=='')
 						return {result:[], type:'JSON'};
 				else{
@@ -80,8 +80,8 @@ const cubeSolve = async parameters =>{
                                                     data:{  data_app_id:parameters.app_id,
                                                             iam_user_id:null,
                                                             idToken:parameters.idToken,
-                                                            message:JSON.stringify({part:1, total:3, text:''}),
-                                                            message_type:'PROGRESS'
+                                                            message:JSON.stringify({part:1, total:3, info:''}),
+                                                            message_type:'PROGRESS_LOADING'
                                                         }
                                             });
 					// Solve using Kociemba algorithm from calculated moves from solved using first Thistlewaite
