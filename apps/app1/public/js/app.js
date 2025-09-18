@@ -111,15 +111,7 @@ const appSecureMenuShow = menu => {
         case 4:{
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
-                data:       {
-                            app_id:common.commonGlobalGet('app_id'), 
-                            common_app_id:common.commonGlobalGet('app_common_app_id'),
-                            iam_user_id: common.commonGlobalGet('iam_user_id'),
-                            user_locale:common.commonGlobalGet('user_locale'),
-                            client_latitude:common.commonGlobalGet('client_latitude'),
-                            client_longitude:common.commonGlobalGet('client_longitude'),
-                            client_place:common.commonGlobalGet('client_place')
-                            },
+                data:       null,
                 methods:    null,
                 path:       '/component/menu_monitor.js'})
             .then(result=>{

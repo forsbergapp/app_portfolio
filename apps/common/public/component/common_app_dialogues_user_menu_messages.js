@@ -43,7 +43,8 @@ const template = () => ` <div id='common_app_dialogues_user_menu_messages'>
 *                      }}} props
 * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
-*                      methods:{eventClickPagination:Function},
+*                      methods:null,
+*                      events:common['commonComponentEvents']
 *                      template:string}>}
 */
 const component = async props => {
@@ -101,10 +102,10 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:'common_app_dialogues_user_menu_messages_list',
             data:   {
-                    messages:   messages
+                    messages:   messages,
                     },
             methods:null,
-            path:'/common/component/common_app_dialogues_user_menu_message_list.js'});
+            path:'/common/component/common_app_dialogues_user_menu_messages_list.js'});
         //cant check stats on pagination records, call server function that fetches stats for all messages
         props.methods.COMMON.commonUserMessageShowStat();
     };
@@ -127,6 +128,31 @@ const component = async props => {
         return messages;
     };
 
+        
+    /**
+     * @name events
+     * @descption Events
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (event_type){
+            case 'click':{
+                switch (true){
+                    case event_target_id=='common_app_dialogues_user_menu_messages_pagination_first':
+                    case event_target_id=='common_app_dialogues_user_menu_messages_pagination_previous':
+                    case event_target_id=='common_app_dialogues_user_menu_messages_pagination_next':
+                    case event_target_id=='common_app_dialogues_user_menu_messages_pagination_last':{
+                        eventClickPagination(event_target_id);
+                        break;
+                    }
+                }
+            }
+        }
+    };
     /**
      * @returns {Promise.<void>}
      */
@@ -141,7 +167,8 @@ const component = async props => {
    return {
        lifecycle:  {onMounted:onMounted},
        data:   null,
-       methods:{eventClickPagination:eventClickPagination},
+       methods:null,
+       events:events,
        template: template()
    };
 };

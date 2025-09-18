@@ -160,7 +160,6 @@ const component = async props => {
                         appThemeUpdate();
                         break;
                     }
-                    
                     case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_locale_select':{
                         props.methods.COMMON.commonGlobalSet('user_locale', event.target?.getAttribute('data-value') ?? '');
                         /**

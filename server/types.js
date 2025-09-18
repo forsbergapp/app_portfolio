@@ -1509,7 +1509,7 @@
 
 /** 
  * @description SOCKET server_socket_broadcast_type_all
- * @typedef {'INIT'|'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'|'MESSAGE'|'FONT_URL'} server_socket_broadcast_type_all
+ * @typedef {'INIT'|'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'PROGRESS_LOADING'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'|'MESSAGE'|'FONT_URL'} server_socket_broadcast_type_all
  */
 
 /**
