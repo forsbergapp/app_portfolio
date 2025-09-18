@@ -140,13 +140,6 @@ body {
 }
 #common_app_window_info{
 	visibility:hidden;
-	z-index: 0 !important;
-	display:grid;
-}
-#common_app_window_info_info{
-	position:relative;
-	margin:20px;
-	margin-top:-70px;
 }
 /*APP THEME*/
 body {

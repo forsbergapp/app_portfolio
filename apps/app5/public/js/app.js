@@ -290,7 +290,7 @@ const appPaymentRequestUpdate = async status => {
     .finally(()=>{
         //remove the token since user answered the request
         APP_GLOBAL.token=null;
-        common.commonComponentRemove('common_app_dialogues_app_data_display', true);
+        common.commonComponentRemove('common_app_dialogues_app_data_display');
     });
 };
 /**
@@ -374,7 +374,7 @@ const appPaymentRequestShow = async message =>{
                 common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
                                                     JSON.parse(message).exp);
             })
-            .catch(()=>common.commonComponentRemove('common_app_dialogues_app_data_display', true));
+            .catch(()=>common.commonComponentRemove('common_app_dialogues_app_data_display'));
 };
 
 /**

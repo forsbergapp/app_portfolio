@@ -388,7 +388,7 @@ body.rtl .common_pagination_last::before{										    content:var(--common_app_
 #common_maintenance_message::before{	                                            content:var(--common_app_icon_maintenance)}
 
 /*Icons dialogue apps*/
-#common_app_dialogues_apps_list_title_col_info::before{					            content:var(--common_app_icon_info)}
+#common_apps_list_title_col_info::before{					            content:var(--common_app_icon_info)}
 
 /*Icons dialogue info*/
 #common_app_dialogues_info_contact_message_title::before{					        content:var(--common_app_icon_email)}
@@ -548,9 +548,7 @@ body.rtl .common_pagination_last::before{										    content:var(--common_app_
 body{
 	font-size: 16px;
 	margin: 0;
-	height: 100%;
 	padding: 0px;
-	width: auto;
 	direction:ltr;
     color: var(--common_app_color_black);
     background: var(--common_app_color_blue1);
@@ -558,7 +556,17 @@ body{
 body.rtl{
 	direction:rtl;
 }
-
+body, 
+#app_root,
+#app,
+#common_app{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+#app{
+    z-index: 1;
+}
 .start {    
     display:flex;
     justify-content:center;
@@ -922,31 +930,37 @@ body.rtl{
 	margin: 1em;
 }
 /*dialogue*/
-.common_app_dialogues_modal {
-	z-index:50 !important;
+#common_app_dialogues{
+	z-index:60 !important;
 	position: fixed;
-	padding-top: 10px;
+	margin:0;
+	padding:0;
 	left: 0;
 	top: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
+	width: 0;
+	height: 0;
+}
+#common_app_dialogues.common_app_dialogues_modal{
+	width: 100% !important;
+	height: 100% !important;
+}
+.common_app_dialogues_show0,
+.common_app_dialogues_show1,
+.common_app_dialogues_show2,
+.common_app_dialogues_show3{
+    padding: 2em;
 }
 .common_app_dialogues_show0 {
-	z-index:50;
-	padding: 20px;
+	z-index:60;
 }
 .common_app_dialogues_show1 {
-	z-index:51;
-	padding: 20px;
+	z-index:61;
 }
 .common_app_dialogues_show2 {
-	z-index:52;
-	padding: 20px;
+	z-index:62;
 }
 .common_app_dialogues_show3 {
-	z-index:53;
-	padding: 20px;
+	z-index:63;
 }
 .common_app_dialogues_content{
 	text-align:center;
@@ -973,15 +987,16 @@ body.rtl{
 }
 
 /*DIALOGUE APPS*/
-#common_app_dialogues_apps.common_app_dialogues_show0{
-	width: 350px;
-	height: calc(100% - 200px);
-}
-#common_app_dialogues_apps{
+#common_apps{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    height: calc(100% - 200px);
+    inset-inline-start: 50%;
+    top: 50%;
 	overflow: hidden;
 	padding: unset;
 }
-#common_app_dialogues_apps_list{
+#common_apps_list{
 	font-size: 0.7em;
     overflow-y: auto;
     display: grid;
@@ -990,47 +1005,47 @@ body.rtl{
     margin: 2em;
     height: calc(100% - 6em);
 }
-#common_app_dialogues_apps_list_title{
+#common_apps_list_title{
 	height: 2em;
   	display: flex;
   	align-items: center;
   	justify-content: space-around;
 }
-#common_app_dialogues_apps_list_title_col_info {
+#common_apps_list_title_col_info {
     font-size: 1.25em;
 }
-#common_app_dialogues_apps_list .common_app_dialogues_apps_app_link_col{
+#common_apps_list .common_apps_app_link_col{
 	width: 100%;
     display: block;
 }
-.common_app_dialogues_apps_app_link_col:nth-child(1),.common_app_dialogues_apps_app_link_col:nth-child(2){
+.common_apps_app_link_col:nth-child(1),.common_apps_app_link_col:nth-child(2){
 	display: none;
 }
-.common_app_dialogues_apps_app_link_col:nth-child(3){
+.common_apps_app_link_col:nth-child(3){
 	width: 20%;
     display: inline-block;
 	margin-left: 5px;
     margin-top: 3px;
 }
-.common_app_dialogues_apps_app_link_col:nth-child(4){
+.common_apps_app_link_col:nth-child(4){
 	width: 70%;
     text-align: start;
     display: inline-block;
     vertical-align: top;
 }
-.common_app_dialogues_apps_app_name{
+.common_apps_app_name{
 	font-weight: bold;
 	cursor: default;
 }
-.common_app_dialogues_apps_app_description{
+.common_apps_app_description{
 	cursor: default;
 	font-size: 0.7em;
 }
-.common_app_dialogues_apps_app_logo:hover, .common_app_dialogues_apps_app_logo:active {
+.common_apps_app_logo:hover, .common_apps_app_logo:active {
 	transform: scale(1.2);
 	cursor: pointer;
 }
-.common_app_dialogues_apps_app_logo{
+.common_apps_app_logo{
 	margin: 0 auto;
 }	
 /* DIALOGUE INFO */
@@ -1863,7 +1878,6 @@ body.rtl{
     border-radius: var(--common_app_css_border_radius);
 	height: 60px;
 	min-width: 25em;
-	z-index: 10;
 }
 #common_app_window_info_toolbar .common_toolbar_button{
 	padding-top: 9px;
@@ -2045,7 +2059,7 @@ body.rtl{
 	display: inline-block;;
 }
 #common_map_control{
-    z-index:3;
+    z-index:10;
     position:absolute;
     top:0.5em;
     margin-inline-start:0.5em;
@@ -2139,13 +2153,8 @@ body.rtl{
     pointer-events: none;
     width:0;
     height:0;
-    z-index:0;
-}
-#common_map{
-    z-index:0;
 }
 .common_map_tile{
-    z-index:1;
     pointer-events:auto;
 }
 #common_map.common_map_control_active #common_map_lines,
@@ -2155,7 +2164,7 @@ body.rtl{
 #common_map.common_map_control_active #common_map_cursor{
     position: fixed;
     pointer-events: none;
-    z-index: 100;
+    z-index: 10;
     user-select: none;
 }
 #common_map.common_map_control_active #common_map_cursor::before,
@@ -2233,7 +2242,7 @@ body.rtl{
 	bottom: 10px;
 	margin: 10px;
 	position:fixed;
-	z-index:100;
+	z-index:1000;
 	text-align: center;
 }
 #common_app_broadcast_banner {
@@ -2308,7 +2317,7 @@ body.rtl{
     display:none
 }
 /* info*/ 
-.common_info_content{
+.common_app_dialogues_info_content{
     width: 97%;
     font-size: 0.8em;
     margin:10px;
@@ -2320,34 +2329,34 @@ body.rtl{
     min-height: 90%;
     display: inline-block;
 }
-.common_info_text_h1 {
+.common_app_dialogues_info_text_h1 {
     font-size: 2em;
     font-weight: bold;
     margin-top: 20px;
     margin-bottom: 10px;
 }
-.common_info_text_h2 {
+.common_app_dialogues_info_text_h2 {
     font-size: 1.5em;
     margin-top: 20px;
     margin-bottom: 5px;
 }
-.common_info_text_h3 {
+.common_app_dialogues_info_text_h3 {
     font-size: 1.25em;
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.common_info_text_p {
+.common_app_dialogues_info_text_p {
     display: block;
     margin-top: 10px;
     margin-bottom: 10px;
 }
-.common_info_text_list {
+.common_app_dialogues_info_text_list {
     padding-block-start: 5px;
     padding-inline-start: 5px;
     text-indent: -5px;
 }
-.common_info_text_list::before{
+.common_app_dialogues_info_text_list::before{
     content:'- ';
 }
 /*RESPONSIVE SETTINGS*/

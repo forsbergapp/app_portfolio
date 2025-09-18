@@ -375,12 +375,12 @@
  * @description Type commonInitAppParameters
  * @typedef {{  AppParametersCommon: {
  *                      app_id?:                             number,
- *                      common_info_link_policy_name:        {value:string},
- *                      common_info_link_policy_url:         {value:string},
- *                      common_info_link_disclaimer_name:    {value:string},
- *                      common_info_link_disclaimer_url:     {value:string},
- *                      common_info_link_terms_name:         {value:string},
- *                      common_info_link_terms_url:          {value:string}
+ *                      common_app_dialogues_info_link_policy_name:        {value:string},
+ *                      common_app_dialogues_info_link_policy_url:         {value:string},
+ *                      common_app_dialogues_info_link_disclaimer_name:    {value:string},
+ *                      common_app_dialogues_info_link_disclaimer_url:     {value:string},
+ *                      common_app_dialogues_info_link_terms_name:         {value:string},
+ *                      common_app_dialogues_info_link_terms_url:          {value:string}
  *                      },
  *              Info:   {
  *                      app_id:                         number,

@@ -74,10 +74,9 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
 const component = async props => {
     if (props.data.commonMountdiv){
         props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show3');
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues').classList.add('common_app_dialogues_modal');      
     }
 
-    const function_close = () => { props.methods.COMMON.commonComponentRemove('common_app_dialogues_message', true);};
+    const function_close = () => { props.methods.COMMON.commonComponentRemove('common_app_dialogues_message');};
     let display_message = null;
     let display_message_font_class = null;
     switch (props.data.message_type){
@@ -139,11 +138,11 @@ const component = async props => {
                     case event_target_id=='common_app_dialogues_message_close':{
                         if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close')['data-function'])
                             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close')['data-function']();
-                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_message',true);
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_message');
                         break;
                     }
                     case event_target_id=='common_app_dialogues_message_cancel':{
-                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_message',true);
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_message');
                         break;
                     }
                 }

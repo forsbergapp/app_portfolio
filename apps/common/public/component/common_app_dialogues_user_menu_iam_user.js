@@ -199,7 +199,7 @@ const component = async props => {
                                 authorization_type:'APP_ACCESS',
                                 spinner_id:'common_app_dialogues_user_menu_iam_user_btn_user_delete_account'})
                     .then(()=>  resolve((()=>{
-                                            props.methods.COMMON.commonComponentRemove('common_app_dialogues_user_menu',true);
+                                            props.methods.COMMON.commonComponentRemove('common_app_dialogues_user_menu');
                                             props.methods.COMMON.commonMountApp(props.methods.COMMON.commonGlobalGet('app_start_app_id'));
                                             return null;
                                             })()))

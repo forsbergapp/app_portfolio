@@ -46,7 +46,6 @@ const template = () => `
  */
 const component = async props => {
     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show2');
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues').classList.add('common_app_dialogues_modal');
 
     /**
      * @name commonUserVerifyCheckInput
@@ -87,7 +86,7 @@ const component = async props => {
                 if ((props.data.user_verification_type== '3' &&                     
                     await props.methods.COMMON.commonGlobalGet('component').common_app_dialogues_user_menu_iam_user?.methods?.commonUserUpdate(verification_code)) ||
                     await props.methods.COMMON.commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
-                    props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_verify', true);
+                    props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_verify');
                     props.methods.COMMON.commonDialogueShow('LOGIN');
                 }
                 else{
@@ -127,7 +126,7 @@ const component = async props => {
                     case event_target_id=='common_app_dialogues_iam_verify_cancel':{
                         if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_btn_user_update')==null)
                             props.methods.COMMON.commonUserSessionClear();
-                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_verify', true);
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_verify');
                         break;
                     }
                 }

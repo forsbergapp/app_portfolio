@@ -37,18 +37,8 @@ body {
 #common_app_profile_search_list_wrap{
 	visibility: hidden;
 }
-#common_app_window_info_content{
-	display: none;
-}
 #common_app_window_info{
-	visibility:hidden;
-	z-index: 0 !important;
-	display:grid;
-}
-#common_app_window_info_info{
-	position:relative;
-	margin:20px;
-	margin-top:-70px;
+	display: none;
 }
 /*APP THEME*/
 body {

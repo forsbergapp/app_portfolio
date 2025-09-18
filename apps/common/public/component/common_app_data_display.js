@@ -209,7 +209,6 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
 const component = async props => {
     if (props.data.dialogue){
         props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show1');
-		props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues').classList.add('common_app_dialogues_modal');
     }
     const div_id = () =>Date.now().toString() + Math.floor(Math.random() *100000).toString();
     /**

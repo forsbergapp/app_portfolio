@@ -90,7 +90,6 @@ const template = props =>`  ${props.admin_app?'':
  */
 const component = async props => {
     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show1');
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues').classList.add('common_app_dialogues_modal');
 
     /**
      * @name commonUserSignup
@@ -145,7 +144,7 @@ const component = async props => {
                         break;
                     }
                     case event_target_id=='common_app_dialogues_iam_start_close':{
-                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_start', true);
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_start');
                         break;
                     }
                     case event_target_id=='common_app_dialogues_iam_start_signup_button':{

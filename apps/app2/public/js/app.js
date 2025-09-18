@@ -20,13 +20,13 @@ let common;
  * @returns {void}
  */
 const appDialogueAppsShowHide = () => {
-    if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility=='visible' ||
-        COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility==''){
-        COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility='hidden';
+    if (COMMON_DOCUMENT.querySelector('#common_apps').style.visibility=='visible' ||
+        COMMON_DOCUMENT.querySelector('#common_apps').style.visibility==''){
+        COMMON_DOCUMENT.querySelector('#common_apps').style.visibility='hidden';
         COMMON_DOCUMENT.querySelector('#common_app_profile_toolbar_stat').style.visibility='hidden';
     }
     else{
-        COMMON_DOCUMENT.querySelector('#common_app_dialogues_apps').style.visibility='visible';
+        COMMON_DOCUMENT.querySelector('#common_apps').style.visibility='visible';
         COMMON_DOCUMENT.querySelector('#common_app_profile_toolbar_stat').style.visibility='visible';
     }
 };
@@ -119,12 +119,12 @@ const appUserLogin = async () =>{
  */
 const appAppsGet = () => {
     common.commonComponentRender({
-        mountDiv:   'common_app_dialogues_apps',
+        mountDiv:   'common_apps',
         data:       {
                     app_id:common.commonGlobalGet('app_id')
                     },
         methods:    null,
-        path:       '/common/component/common_app_dialogues_apps.js'});
+        path:       '/common/component/common_apps.js'});
 };
 /**
  * @name appException

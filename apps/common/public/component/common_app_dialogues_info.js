@@ -1,6 +1,6 @@
 /**
  * Displays info
- * @module apps/common/component/common_app_dialogues_apps
+ * @module apps/common/component/common_app_dialogues_info
  */
 
 /**
@@ -131,7 +131,7 @@ const component = async props => {
                         break;
                     }
                     case event_target_id=='common_app_dialogues_info_close':{
-                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_info', true);
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_info');
                         break;
                     }
                 }

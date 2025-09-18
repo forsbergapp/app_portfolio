@@ -156,13 +156,13 @@ const appPaymentRequestStatus = ()=>{
             const status = JSON.parse(result).rows[0].status;
             if (status != 'PENDING'){
                 common.commonGlobalSet('token_at', null);
-                common.commonComponentRemove('common_app_dialogues_app_data_display', true);
+                common.commonComponentRemove('common_app_dialogues_app_data_display');
                 common.commonMessageShow('INFO', null, null,status);
             }
         })
         .catch(()=>{
             common.commonGlobalSet('token_at', null);
-            common.commonComponentRemove('common_app_dialogues_app_data_display', true);
+            common.commonComponentRemove('common_app_dialogues_app_data_display');
         });
     }
 };
@@ -232,7 +232,7 @@ const appPaymentRequest = async () =>{
                                                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_exp').getAttribute('data-value'),
                                                 appPaymentRequestStatus);
             })
-            .catch(()=>common.commonComponentRemove('common_app_dialogues_app_data_display', true));
+            .catch(()=>common.commonComponentRemove('common_app_dialogues_app_data_display'));
     }
     else
         common.commonMessageShow('INFO', null, 'message_text','!');
@@ -246,7 +246,7 @@ const appPaymentRequest = async () =>{
 const appPayCancel = async () =>{
     common.commonGlobalSet('token_at', null);
     common.commonMessageShow('INFO',null,null, 'Payment cancel');
-    common.commonComponentRemove('common_app_dialogues_app_data_display', true);
+    common.commonComponentRemove('common_app_dialogues_app_data_display');
 };
 /**
  * @name appPay
