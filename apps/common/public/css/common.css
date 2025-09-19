@@ -1908,7 +1908,6 @@ body,
     background-size: contain !important;
     background-repeat: no-repeat;
 	background-position: center;
-	cursor: pointer;
 	border: 2px solid;
 }
 .common_markdown_image_text{
@@ -2017,12 +2016,15 @@ body,
 	display:inline-block;
 	vertical-align: text-top;
 }
-/* common document metadata*/
+/* common document*/
+#common_document{
+    cursor: pointer;
+    text-align: start;
+}
 .common_document_header{
 	background-size: contain;
 	background-repeat: no-repeat;
   	height: 2em;
-    text-align: start;
     margin-bottom: 1em;
     border-bottom: 0.5px solid;
 	padding-inline-start: 3em;
@@ -2035,7 +2037,6 @@ body,
 }
 .common_document_footer{
     font-size: 0.7em !important;
-	text-align: start;
 	border-top: 0.5px solid;
 }
 /* Map*/

@@ -2381,6 +2381,19 @@ const commonEvent = async (event_type,event=null) =>{
                                         path:       '/common/component/common_app_window_info.js'});
                                 break;
                             }
+                            case 'common_document':{
+                                //display document except common_link that uses its own event
+                                if (!event.target.classList.contains('common_link'))
+                                    commonComponentRender({
+                                        mountDiv:   'common_app_window_info',
+                                        data:       {
+                                                    info:'HTML',
+                                                    content:COMMON_DOCUMENT.querySelector(`#${event_target_id}`).outerHTML,
+                                                    },
+                                        methods:    null,
+                                        path:       '/common/component/common_app_window_info.js'});
+                                break;
+                            }
                         }
                     }
                     break;
