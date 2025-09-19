@@ -59,8 +59,6 @@ body{
     display: inline-block;
     font-size: 1em;
     left: 250px;
-    width:80em !important;
-    min-width:80em;
     transition: left 500ms;
     position:absolute;
     padding:1em;
@@ -130,6 +128,10 @@ body{
 	}
 }
 /*COMMON*/
+#common_document{
+    width:80em !important;
+    min-width:80em;
+}
 #common_app_toolbar{
     margin-inline-start: 230px !important;
 }

@@ -67,7 +67,7 @@ const appEventClick = event => {
         }
         case 'app_menu_title':
         case 'app_menu_content':
-        case 'app_document':{
+        case 'common_document':{
             event.preventDefault();
             if (event.target.getAttribute('href'))
                 show({
@@ -84,7 +84,7 @@ const appEventClick = event => {
                             event_target_id=='app_menu_title'?
                                                 'GUIDE':
                                                     /**@ts-ignore */
-                                                    event_target_id=='app_document'?
+                                                    event_target_id=='common_document'?
                                                         'MODULE_CODE':
                                                             common.commonMiscElementRow(event.target, 'app_menu_data').getAttribute('data-type')
                     });
