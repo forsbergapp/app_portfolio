@@ -1622,7 +1622,8 @@ const commonUserLoginApp = async spinner_item =>{
                                                 IAM_iam_user_id: COMMON_GLOBAL.iam_user_id},
                                         method:'POST', authorization_type:'APP_ACCESS', spinner_id:spinner_item})
                                 .then(result=>JSON.parse(result)[0])
-                                .catch(()=>null);
+                                .catch(error=>
+                                    console.log(error));
     COMMON_GLOBAL.iam_user_app_id = IamUserApp.id;
     //get preferences saved in json_data column
     //locale
@@ -1937,8 +1938,8 @@ const common_FFBSSE = async parameters =>{
     const BFFStream = new WritableStream({
         async write(data){
             const BFFmessage = COMMON_GLOBAL.x.decrypt({  
-                                    iv:         JSON.parse(atob(parameters.secret??'')).iv,
-                                    key:        JSON.parse(atob(parameters.secret??'')).jwk.k, 
+                                    iv:         JSON.parse(commonWindowFromBase64(parameters.secret??'')).iv,
+                                    key:        JSON.parse(commonWindowFromBase64(parameters.secret??'')).jwk.k, 
                                     ciphertext: new TextDecoder('utf-8').decode(data).split('\\n\\n')[0].split('data: ')[1]});
             const SSEmessage = getMessage(BFFmessage);
             switch (SSEmessage.sse_type){
@@ -3605,7 +3606,7 @@ const commonException = (appException_function, error) => {
  * @returns {void}
  */
 const commonGlobals = globals => {  
-    const globalsObj = JSON.parse(atob(globals));
+    const globalsObj = JSON.parse(commonWindowFromBase64(globals));
     Object.entries(globalsObj).forEach(key=>{
         /**@ts-ignore */
         COMMON_GLOBAL[key[0]] = key[1];
@@ -3629,7 +3630,7 @@ const commonInit = async parameters => {
     //set globals
     commonGlobals(parameters.globals);
     //import crypto functions
-    const {encrypt, decrypt} = await import(URL.createObjectURL(  new Blob ([atob(parameters.jsCrypto)],{type: 'text/javascript'})))
+    const {encrypt, decrypt} = await import(URL.createObjectURL(  new Blob ([commonWindowFromBase64(parameters.jsCrypto)],{type: 'text/javascript'})))
                                     .then(crypto=>{
                                         return {encrypt:crypto.subtle.encrypt, decrypt:crypto.subtle.decrypt};
                                     });

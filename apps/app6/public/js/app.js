@@ -144,13 +144,11 @@ const appPaymentRequestStatus = ()=>{
         .then((/**@type{*}*/result)=>{
             const status = JSON.parse(result).rows[0].status;
             if (status != 'PENDING'){
-                common.commonGlobalSet('token_at', null);
                 common.commonComponentRemove('common_app_dialogues_app_data_display');
                 common.commonMessageShow('INFO', null, null,status);
             }
         })
         .catch(()=>{
-            common.commonGlobalSet('token_at', null);
             common.commonComponentRemove('common_app_dialogues_app_data_display');
         });
     }
@@ -209,10 +207,7 @@ const appPaymentRequest = async () =>{
                         button_delete:appPayCancel
                         },
             path:'/common/component/common_app_data_display.js'})
-            .then(result=>{
-                //save the returned access token
-                common.commonGlobalSet('token_at', result.data.master_object.token.value);
-
+            .then(()=>{
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.textContent = 
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.textContent + ' ' +
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').textContent;
@@ -233,7 +228,6 @@ const appPaymentRequest = async () =>{
  * @returns {Promise.<void>}
  */
 const appPayCancel = async () =>{
-    common.commonGlobalSet('token_at', null);
     common.commonMessageShow('INFO',null,null, 'Payment cancel');
     common.commonComponentRemove('common_app_dialogues_app_data_display');
 };
