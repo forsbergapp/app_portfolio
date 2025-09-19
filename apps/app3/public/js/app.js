@@ -17,23 +17,22 @@ let common;
  * @name show
  * @description Shows document
  * @function
- * @param {string} href
- * @param {string} title
- * @param {common['commonDocumentType']} documentType
+ * @param {{href:string,
+ *          title:string,
+ *          documentType:common['commonDocumentType']|string|null}} parameters
  */
-const show = async (href, title, documentType) =>{
+const show = async parameters =>{
     
-    COMMON_DOCUMENT.querySelector('#content').innerHTML='';
     //common app component
-    await common.commonComponentRender({mountDiv:   'content',
+    await common.commonComponentRender({mountDiv:   'app_document',
         data:       {
                         common_app_id:common.commonGlobalGet('app_common_app_id'),
                         app_logo:common.commonGlobalGet('app_logo'),
                         app_copyright:common.commonGlobalGet('app_copyright'),
                         app_name:COMMON_DOCUMENT.title,
-                        href:href,
-                        title:title,
-                        documentType:documentType
+                        href:parameters.href,
+                        title:parameters.title,
+                        documentType:parameters.documentType
                     },
         methods:    null,
         path:       '/common/component/common_document.js'});
@@ -59,14 +58,6 @@ const appException = error => {
 const appEventClick = event => {
     const event_target_id = common.commonMiscElementId(event.target);
     switch (event_target_id){
-        case 'menu_open':{
-            COMMON_DOCUMENT.querySelector('#nav').style.display = 'block';
-            break;
-        }
-        case 'menu_close': {
-            COMMON_DOCUMENT.querySelector('#nav').style.display = 'none';
-            break;
-        }
         case event.target.classList.contains('app_menu')?event_target_id:'':{
             if (event.target.parentNode.querySelector('.app_submenu').classList.contains('active'))
                 event.target.parentNode.querySelector('.app_submenu').classList.remove('active');
@@ -74,17 +65,29 @@ const appEventClick = event => {
                 event.target.parentNode.querySelector('.app_submenu').classList.add('active');
             break;
         }
-        case 'title':
-        case 'nav_content_app':
-        case 'content':{
+        case 'app_menu_title':
+        case 'app_menu_content':
+        case 'app_document':{
             event.preventDefault();
             if (event.target.getAttribute('href'))
-                show(   event.target.getAttribute('href'), 
-                        //use title from first menu text if clicking on title
-                        event_target_id=='title'?COMMON_DOCUMENT.querySelectorAll('#nav_content_app .common_link')[0].textContent:event.target.href?event.target.href.split('/')[3]:event.target.textContent, 
-                        //GUIDE in title and nav_content_app
-                        /**@ts-ignore */
-                        event_target_id=='title'?'GUIDE':event_target_id=='content'?'MODULE_CODE':common.commonMiscElementRow(event.target, 'app_menu_data').getAttribute('data-type'));
+                show({
+                        href:event.target.getAttribute('href'), 
+                        title:
+                                //use title from first menu text if clicking on title
+                                event_target_id=='app_menu_title'?
+                                    COMMON_DOCUMENT.querySelectorAll('#app_menu_content .common_link')[0].textContent:
+                                        event.target.href?
+                                            event.target.href.split('/')[3]:
+                                                event.target.textContent, 
+                        documentType:
+                            //GUIDE in title and nav_content_app
+                            event_target_id=='app_menu_title'?
+                                                'GUIDE':
+                                                    /**@ts-ignore */
+                                                    event_target_id=='app_document'?
+                                                        'MODULE_CODE':
+                                                            common.commonMiscElementRow(event.target, 'app_menu_data').getAttribute('data-type')
+                    });
             break;
         }
         /*Dialogue user start */
@@ -107,7 +110,7 @@ const appInit = async () => {
         methods:    null,
         path:       '/component/app.js'});
     //show first menu at start
-    COMMON_DOCUMENT.querySelector('#title').click();
+    COMMON_DOCUMENT.querySelector('#app_menu_title').click();
 };
 /**
  * @name appCommonInit

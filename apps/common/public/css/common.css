@@ -3,34 +3,24 @@
 	--common_app_css_useragent_fix_margin_top: 0px;
 	--common_app_css_border_radius: 4px;
 	/*app colors*/	
-	--common_app_color_king: #32398D;
-	--common_app_color_prince: #755FBE;
-	--common_app_color_princess:#E195CB;
 	--common_app_color_blue1: rgb(81, 171, 255);
 	--common_app_color_blue2: rgb(197 227 255);
 	--common_app_color_blue3: #006dbf;
 	--common_app_color_black: #404040;
-	--common_app_color_black_transparent1: rgba(0,0,0,0.2);
-	--common_app_color_black_transparent2: rgba(0,0,0,0.3);
 	--common_app_color_cafe_latte: #584f46;
-	--common_app_color_cafe_latte2: #3A3632;
+	--common_app_color_cafe_latte2: #19110a;
 	--common_app_color_cafe_latte3: #d2b88f;
 	--common_app_color_dark: rgb(0 2 70);
 	--common_app_color_dark2: rgb(68, 68, 68);
 	--common_app_color_dark3: #2b2b32;
 	--common_app_color_dark4: #1c1c1f;
-	--common_app_color_darkgrey: #333;
 	--common_app_color_green: #6ab344;
-	--common_app_color_green2: #6ddc5f;
-	--common_app_color_grey:#a3a3a3;
 	--common_app_color_gold: #a49775;
 	--common_app_color_light :#f5f5f5;
-	--common_app_color_lightgrey: #ddd;
-	--common_app_color_lightgrey2: #dedede;
 	--common_app_color_lightgreen: #F7FFFF;
 	--common_app_color_lightyellow: #FFFFF9;
-	--common_app_color_shadow1: rgba(0,0,0,.2);
-	--common_app_color_shadow2: rgba(0,0,0,0.19);
+	--common_app_color_shadow1: rgba(0,0,0,0.2);
+	--common_app_color_shadow2: rgba(0,0,0,0.3);
 	--common_app_color_shadow3: rgba(0,0,0,0.4);
 	--common_app_color_yellow: yellow;
 	--common_app_color_white: white;
@@ -335,16 +325,15 @@ body.font_arabic_nastaliq .common_input{
 #common_confirm_question{
 	font-family: inherit;
 }
-.common_markdown_code {
- 	font-family: 'Noto Sans Mono';
-}
-.common_markdown_code_inline{
-	font-family: "Noto Sans Mono";
+.common_markdown_code_inline,
+.common_code
+.common_code_line,
+.common_code_text{
+    font-family: 'Noto Sans Mono';
 }
 .common_markdown_table{
 	font-family: "Noto Sans Mono";
 }
-
 
 /*Icons general use*/
 .common_construction::before{											            content:var(--common_app_icon_maintenance)}	
@@ -848,7 +837,7 @@ body,
 	z-index: 100;
 	flex-direction: row;
 	justify-content: center;
-	position:absolute;
+	position:fixed;
 	top: 0px;
 	border-radius: var(--common_app_css_border_radius);
 	font-size: 1.5em;
@@ -1595,6 +1584,8 @@ body,
 	width:60px;
 	margin-inline-start: -30px;
 	border-radius: 4px 4px 0px 0px;
+    z-index: 10;
+  
 }
 .common_app_profile_search_list_username,
 .common_app_dialogues_profile_stat_list_username,
@@ -2039,7 +2030,7 @@ body,
   	width: 100%;
   	padding-top: 0.5em;
 }
-.common_document_article{
+.common_document_body{
     margin: 1em;
 }
 .common_document_footer{

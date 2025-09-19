@@ -21,14 +21,14 @@
  * @returns {string}
  */
 const template = props =>`  <div class='common_document_header' style='${props.app_logo==null?'':`background-image:url(${props.app_logo});`}'>${props.app_name}</div>
-                               <div class='common_document_article ${props.documentType=='MODULE_CODE'?'common_markdown code':'common_markdown'}'>${
+                               <div class='common_document_body ${props.documentType=='MODULE_CODE'?'common_markdown common_code':'common_markdown'}'>${
                                     props.documentType=='MODULE_CODE'?
                                         props.document
                                         .replaceAll('\r\n','\n').split('\n')
                                         .map((/**@type{string}*/row,/**@type{number}*/index)=>{
-                                            const selected_class = (props.document_href.split('#line')[1] == (index+1).toString())?'code_line_selected':'';
+                                            const selected_class = (props.document_href.split('#line')[1] == (index+1).toString())?'common_code_line_selected':'';
                                             //split rows into two columns and highlight selected line if #line is used in link
-                                            return `<div data-line='${index+1}' class='code_line ${selected_class}'>${index+1}</div><div data-line='${index+1}' class='code_text ${selected_class}'>${row.replaceAll('<','&lt;').replaceAll('>','&gt;')}</div>`;
+                                            return `<div    data-line='${index+1}' class='common_code_line ${selected_class}'>${index+1}</div><div    data-line='${index+1}' class='common_code_text ${selected_class}'>${row.replaceAll('<','&lt;').replaceAll('>','&gt;')}</div>`;
                                         }).join('\n') ?? '':
                                             props.document
                                 }</div>
