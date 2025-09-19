@@ -167,37 +167,37 @@ const component = async props => {
                     match[1].indexOf('@function')>-1 &&
                     match[1].indexOf('@memberof ROUTE_REST_API')>-1)
                     return {summary:
-                            '<div class=\'common_markdown_jsdoc_tag\'>'+
-                            match[1]
-                            .split('@')
-                            .filter(tag=>tag.startsWith('description'))[0]?.substring('description'.length)
-                                                                            .trimStart()
-                                                                            .split('\n')
-                                                                            .map(row=>row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
-                                                                            .join('\n')
-                            +
-                            '</div>',
+                                `<div class='common_markdown_jsdoc_tag'>
+                                    ${match[1]
+                                    .split('@')
+                                    .filter(tag=>tag.startsWith('description'))[0]?.substring('description'.length)
+                                                                                    .trimStart()
+                                                                                    .split('\n')
+                                                                                    .map(row=>row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
+                                                                                    .join('\n')
+                                    }
+                                </div>`,
                             response:
-                            '<div class=\'common_markdown_jsdoc_tag\'>'+
-                            match[1]
-                            .split('@')
-                            .filter(tag=>tag.startsWith('returns'))[0]?.substring('returns'.length)
-                            .trimStart()
-                            .split('\n')
-                            .map(row=>
-                                '<div>' +
-                                (row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
-                                .replaceAll('|','&vert;')
-                                .replaceAll('[','&#91;')
-                                .replaceAll(']','&#93;')
-                                .replaceAll('<','&lt;')
-                                .replaceAll('>','&gt;')
-                                +
-                                '</div>'
-                            )
-                            .join('')
-                            +
-                            '</div>'
+                                `<div class='common_markdown_jsdoc_tag'>
+                                    ${match[1]
+                                    .split('@')
+                                    .filter(tag=>tag.startsWith('returns'))[0]?.substring('returns'.length)
+                                    .trimStart()
+                                    .split('\n')
+                                    .map(row=>
+                                        `<div>
+                                            ${(row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
+                                            .replaceAll('|','&vert;')
+                                            .replaceAll('[','&#91;')
+                                            .replaceAll(']','&#93;')
+                                            .replaceAll('<','&lt;')
+                                            .replaceAll('>','&gt;')
+                                            }
+                                        </div>`
+                                    )
+                                    .join('')
+                                    }
+                                </div>`
                             };
             }
             return {summary:'', response:''};

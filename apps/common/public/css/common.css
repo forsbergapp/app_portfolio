@@ -2024,7 +2024,7 @@ body,
 .common_document_header{
 	background-size: contain;
 	background-repeat: no-repeat;
-  	height: 2em;
+  	height: 1em;
     margin-bottom: 1em;
     border-bottom: 0.5px solid;
 	padding-inline-start: 3em;
