@@ -20,9 +20,10 @@
  *          }} props
  * @returns {string}
  */
-const template = props =>`  <div class='common_document_header' style='${props.app_logo==null?'':`background-image:url(${props.app_logo});`}'>${props.app_name}</div>
-                               <div class='common_document_body ${props.documentType=='MODULE_CODE'?'common_markdown common_code':'common_markdown'}'>${
-                                    props.documentType=='MODULE_CODE'?
+const template = props =>`  <div id='common_document'>
+                                <div class='common_document_header' style='${props.app_logo==null?'':`background-image:url(${props.app_logo});`}'>${props.app_name}</div>
+                                <div class='common_document_body ${props.documentType=='MODULE_CODE'?'common_markdown common_code':'common_markdown'}'>
+                                    ${props.documentType=='MODULE_CODE'?
                                         props.document
                                         .replaceAll('\r\n','\n').split('\n')
                                         .map((/**@type{string}*/row,/**@type{number}*/index)=>{
@@ -30,9 +31,11 @@ const template = props =>`  <div class='common_document_header' style='${props.a
                                             //split rows into two columns and highlight selected line if #line is used in link
                                             return `<div    data-line='${index+1}' class='common_code_line ${selected_class}'>${index+1}</div><div    data-line='${index+1}' class='common_code_text ${selected_class}'>${row.replaceAll('<','&lt;').replaceAll('>','&gt;')}</div>`;
                                         }).join('\n') ?? '':
-                                            props.document
-                                }</div>
-                           <div class='common_document_footer'>${props.app_copyright}</div>`;
+                                        props.document
+                                    }
+                                </div>
+                                <div class='common_document_footer'>${props.app_copyright}</div>
+                            </div>`;
 /**
  * @name component
  * @description Component
@@ -79,10 +82,10 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template({app_logo:props.data.app_logo,
-                      app_copyright:props.data.app_copyright,
-                      app_name:props.data.app_name,
-                      document:await props.methods.COMMON.commonFFB({  path:'/app-common-module/COMMON_DOC', 
+        template:   template({ app_logo:props.data.app_logo,
+                        app_copyright:props.data.app_copyright,
+                        app_name:props.data.app_name,
+                        document:await props.methods.COMMON.commonFFB({  path:'/app-common-module/COMMON_DOC', 
                                                                 method:'POST', 
                                                                 authorization_type:'APP_ID',
                                                                 body:{  type:'FUNCTION',
@@ -90,8 +93,8 @@ const component = async props => {
                                                                         IAM_data_app_id:props.data.common_app_id,
                                                                         doc:(props.data.href.split('#').length>1?props.data.href.split('#')[0]:props.data.href)} })
                                                 .catch(()=>null),
-                      documentType:props.data.documentType,
-                      document_href:props.data.href
+                        documentType:props.data.documentType,
+                        document_href:props.data.href
                     })
     };
 };
