@@ -94,10 +94,11 @@ const component = async props => {
         //1.sections
         let current_section = -1;
         let old_section = -1;
+        let sections = false;
         markdown = markdown.split('\n').map((row, /**@type{number}*/index)=>{
             let div = '';
             if (row.indexOf('#')==0){
-                current_section = row.split('#').length;
+                current_section = row.split(' ')[0].length;
                 if (index==0)
                     div = '<div class=\'common_markdown_section\'>' + '\n' + row;
                 else
@@ -116,17 +117,18 @@ const component = async props => {
                             break;
                         }
                         case current_section > old_section:{
+                            sections = true;
                             div =   '\n' +
                                     '<div class=\'common_markdown_section\'>' + '\n' + row;
                             break;
                         }
                     }   
-                old_section = row.split('#').length;
+                old_section = row.split(' ')[0].length;
                 return div;
             }
             else
                 return row;
-        }).join('\n') + '</div>';
+        }).join('\n') + '</div>' + (sections?'</div>':'');
                                             
         //2.headings        
         markdown = markdown.split('\n').map(row=>row.indexOf('#####')==0?`<div class='common_markdown_title_h5'>${row.replace('#####','')}</div>`:row).join('\n');
@@ -157,8 +159,8 @@ const component = async props => {
         let match;
         while ((match = regexp.exec(markdown)) !==null){
             markdown = markdown.replace(match[0], 
-                                        `<div 	class='common_markdown_image' data-url_small='${match[2]==null?'':match[2]}'
-                                                data-url='${match[3]}'></div><div class='common_markdown_image_text'>${match[1]}</div>`);
+                                        `   <div class='common_markdown_image' data-url_small='${match[2]==null?'':match[2]}' data-url='${match[3]}'></div>
+                                            <div class='common_markdown_image_text'>${match[1]}</div>`);
         }
         //7.links
         //regexp for [text](url)
@@ -194,16 +196,29 @@ const component = async props => {
             //return with HTML Entities for tables
             markdown = markdown.replace(table, 
                     //add class for @method if not inside table with @metadata tag
-                    `<div class='common_markdown_table ${(table.indexOf('@method')>-1 && table.indexOf('@metadata')<0)?'common_markdown_table_method':''}'>${table.split('\n')
-                        //remove alignemnt row and @method tag used to add css class for table but already presented in title
-                        .filter(row=>row.indexOf('---')<0)
-                        .filter(row=>(row.indexOf('@method')<0 && table.indexOf('@metadata')<0)||table.indexOf('@metadata')>-1)
-                        .filter(row=>row.indexOf('@metadata')<0)
-                        .map((row, index_row)=>
-                        `<div class='common_markdown_table_row ${(index_row % 2)==0?'common_markdown_table_row_odd':'common_markdown_table_row_even'} ${index_row==0?'common_markdown_table_row_title':''}'>${
-                            row.split('|').slice(1, -1).map((text, index_col) =>`<div class='common_markdown_table_col' style='${index_col==0?`min-width:${width}em;`:''}text-align:${align[index_col]}'>${text}</div>`).join('')
-                        }</div>`
-                    ).join('')}</div>`);
+                    `   <div class='common_markdown_table ${(table.indexOf('@method')>-1 && table.indexOf('@metadata')<0)?'common_markdown_table_method':''}'>
+                            ${table.split('\n')
+                                //remove alignemnt row and @method tag used to add css class for table but already presented in title
+                                .filter(row=>row.indexOf('---')<0)
+                                .filter(row=>(row.indexOf('@method')<0 && table.indexOf('@metadata')<0)||table.indexOf('@metadata')>-1)
+                                .filter(row=>row.indexOf('@metadata')<0)
+                                .map((row, index_row)=>
+                                    `<div class='common_markdown_table_row ${(index_row % 2)==0?
+                                                                                'common_markdown_table_row_odd':
+                                                                                    'common_markdown_table_row_even'} ${index_row==0?
+                                                                                                                            'common_markdown_table_row_title':
+                                                                                                                                ''}'>${row
+                                            .split('|').slice(1, -1)
+                                            .map((text, index_col) =>
+                                                    `<div class='common_markdown_table_col' style='${index_col==0?
+                                                                                                        `min-width:
+                                                                                                            ${width}em;`:
+                                                                                                                ''}text-align:${align[index_col]}'>${text}</div>`
+                                            ).join('')
+                                        }
+                                    </div>`
+                                ).join('')}
+                        </div>`);
         }
         return markdown;
     };

@@ -185,7 +185,7 @@ body {
     color: var(--common_app_color_light);
 }
 /* APP THEME COMMON*/
-#app_document{
+#common_document{
     box-shadow: 1px 1px 3px 1px var(--common_app_color_shadow3);
 }
 #common_app_iam_user_menu_avatar_img, 
