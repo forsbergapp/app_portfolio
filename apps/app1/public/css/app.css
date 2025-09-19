@@ -953,8 +953,8 @@
 	--app_theme_main_branding_color4: var(--common_app_color_black);
 	--app_theme_main_branding_color5: var(--common_app_color_white2);
 
-	--app_theme_main_shadow_color1: var(--common_app_color_black_transparent1);
-	--app_theme_main_shadow_color2: var(--common_app_color_black_transparent2);
+	--app_theme_main_shadow_color1: var(--common_app_color_shadow1);
+	--app_theme_main_shadow_color2: var(--common_app_color_shadow2);
 	--app_theme_main_shadow_color3: var(--common_app_color_white_transparent);
 	--app_theme_main_select_color: var(--common_app_color_white2);
 	--app_theme_main_select_color2: var(--common_app_color_green);
@@ -1027,8 +1027,8 @@
 	--app_theme_main_branding_color4: var(--common_app_color_gold);
 	--app_theme_main_branding_color5: var(--common_app_color_white2);
 
-	--app_theme_main_shadow_color1: var(--common_app_color_black_transparent1);
-	--app_theme_main_shadow_color2: var(--common_app_color_black_transparent2);
+	--app_theme_main_shadow_color1: var(--common_app_color_shadow1);
+	--app_theme_main_shadow_color2: var(--common_app_color_shadow2);
 	--app_theme_main_shadow_color3: var(--common_app_color_white_transparent);
 	--app_theme_main_select_color: var(--common_app_color_white2);
 	--app_theme_main_select_color2: var(--common_app_color_green);
@@ -1100,8 +1100,8 @@
 	--app_theme_main_branding_color4: var(--common_app_color_black);
 	--app_theme_main_branding_color5: var(--common_app_color_white2);
 
-	--app_theme_main_shadow_color1: var(--common_app_color_black_transparent1);
-	--app_theme_main_shadow_color2: var(--common_app_color_black_transparent2);
+	--app_theme_main_shadow_color1: var(--common_app_color_shadow1);
+	--app_theme_main_shadow_color2: var(--common_app_color_shadow2);
 	--app_theme_main_shadow_color3: var(--common_app_color_white_transparent);
 	--app_theme_main_select_color: var(--common_app_color_white2);
 	--app_theme_main_select_color2: var(--common_app_color_green);

@@ -42,9 +42,9 @@
 	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
 	--app_theme_dialogue_shadow_color1:var(--common_app_color_shadow1);
 	--app_theme_user_menu_hover_color:var(--common_app_color_green);
-	--app_theme_user_menu_hover_background_color:var(--common_app_color_lightgrey);
+	--app_theme_user_menu_hover_background_color:var(--common_app_color_white2);
 	--app_theme_dialogue_background_color:var(--app_theme_main_branding_color1);
-	--app_theme_selected_background_color:var(--common_app_color_lightgrey);
+	--app_theme_selected_background_color:var(--common_app_color_white2);
 	--app_theme_hover:var(--common_app_color_green);
 }
 .app_theme_moon,
@@ -59,9 +59,9 @@
 	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
 	--app_theme_dialogue_shadow_color1:var(--common_app_color_shadow1);
 	--app_theme_user_menu_hover_color:var(--common_app_color_green);
-	--app_theme_user_menu_hover_background_color:var(--common_app_color_lightgrey);
+	--app_theme_user_menu_hover_background_color:var(--common_app_color_white2);
 	--app_theme_dialogue_background_color:var(--app_theme_main_branding_color2);
-	--app_theme_selected_background_color:var(--common_app_color_lightgrey);
+	--app_theme_selected_background_color:var(--common_app_color_white2);
 	--app_theme_hover:var(--common_app_color_green);
 }
 .app_theme3 {
@@ -77,7 +77,7 @@
 	--app_theme_user_menu_hover_color:var(--common_app_color_cafe_latte2);
 	--app_theme_user_menu_hover_background_color:var(--common_app_color_cafe_latte3);
 	--app_theme_dialogue_background_color:var(--app_theme_main_branding_color1);
-	--app_theme_selected_background_color:var(--common_app_color_lightgrey);
+	--app_theme_selected_background_color:var(--common_app_color_white2);
 	--app_theme_hover:var(--common_app_color_green);
 }
 body{

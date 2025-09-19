@@ -6,62 +6,41 @@ body{
     display: block;
     width: calc(380px + 80em);
 }
-#menu_open::before{		content: var(--common_app_icon_menu_open)}
-#menu_close::before{    content: var(--common_app_icon_menu_close)}
-
-#menu_open{
-    margin-inline-start: 20px;
-	height: 30px;
-    display: inline-block;
-}
-#menu_close{
-    display: block;
-    top:40px;
-    position: absolute;
-    height: 20px;
-    margin-inline-start: 300px;
-}
-#menu_open, #menu_close{
-    background: none;
-	border: none;
-	font-size: 30px;
-	width: 60px;
-	padding:0px;
-	text-transform: uppercase;
-	cursor:pointer;
-}
 /* MENU*/
-#nav_content_app div[href]{
-	margin-inline-start: 1em;
-}
 
-#title,
-#nav_content_app div[href]{
+#app_menu_title,
+#app_menu_content div[href]{
 	cursor: pointer;
 }
-#title{
+#app_menu_title{
     cursor:pointer;
     margin-top: 1em;
     margin-bottom: 1em;
 }
-#nav{
-    width: 350px;
-    font-size: 0.9em;
-    overflow-y:auto;
-    overflow-x:hidden;
-    padding-inline-start: 10px;
-    display:none;
-    text-align: start;
+#app_menu{
+    width: 250px;
+    font-size: 13px;
+    overflow:auto;
+    top:0;
+    left:0;
+    bottom:0;
+    padding:0;
+    margin:0;
     height: 100vh;
+    position: fixed;
 }
-#nav_content_guide{
-    font-size: 0.9em;
+#app_menu_content{
+    margin: 2em 1em;
 }
-#nav_content_guide > div{
-    cursor:pointer;
+.app_menu_data,.app_submenu {
+    margin: 1em;
+}
+.app_submenu > div{
+    margin: 1em 0;
 }
 .app_menu{
     cursor: pointer;
+    margin: 1em 0;
 }
 .app_submenu{
     display: none;
@@ -69,8 +48,26 @@ body{
 .app_submenu.active{
     display: block;
 }
-
 /*DOCUMENTS */
+#app_content_title{
+    font-size: 1.5em;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 1em;
+}
+#app_content{
+    display: inline-block;
+    font-size: 1em;
+    left: 250px;
+    width:80em !important;
+    min-width:80em;
+    transition: left 500ms;
+    position:absolute;
+    padding:1em;
+}
+#app_document{
+    margin: 13px auto;
+}
 .title_h1{
     font-size: 1.7em;
     font-weight: bold;
@@ -97,31 +94,17 @@ body{
     font-weight: bold;
     font-style: italic;
 }
-#content_title{
-    font-size: 1.5em;
-    font-weight: bold;
-    display: block;
-    margin-bottom: 1em;
-}
-#content{
-    display: inline-block;
-    font-size: 1em;
-    margin-inline-start: 10px;
-    width:80em !important;
-    min-width:80em;
-    vertical-align: top;
-}
-
 /*CODE*/
 .common_markdown_code,
-.code {
+.common_code{
     border: 1px solid;
     white-space: preserve;
     border-radius: var(--common_app_css_border_radius);
     padding: 0.5em;
     font-size: 0.9em !important;
 }
-.code_line{
+.common_markdown_line,
+.common_code_line{
     width: 4em;
     display:inline-block;
     font-size: 0.7em !important;
@@ -129,27 +112,20 @@ body{
     text-align: end;
     vertical-align: middle;
 }
-.code_text{
+.common_markdown_text,
+.common_code_text{
     font-size: 0.7em !important;
     width: calc(100% - 5em);
     overflow: auto;
     display:inline-block;
     vertical-align: middle;
 }
-.code,
-.code_line,
-.code_text{
-    font-family: 'Noto Sans Mono';
-}
 /*RESPONSIVE SECURE*/
 @media only screen and (min-width: 768px) {
 	body{
 		font-size: 1.2em;
 	}
-	#menu_open, #menu_close{
-		display: none;
-	}
-	#nav{
+	#app_menu{
 		display:inline-block !important;
 	}
 }
@@ -189,49 +165,27 @@ body {
 	caret-color: var(--common_app_color_black);
 }
 #app .common_loading_spinner::before,
-#content_title .common_loading_spinner::before{
+#app_content_title .common_loading_spinner::before{
     background-color: var(--common_app_color_white);
 }
-#nav{
+#app_menu{
     background-color: var(--common_app_color_blue3);
     color: var(--common_app_color_light);
 }
-a {
-    color: var(--common_app_color_light);
-}
-#content a {
-    color: var(--common_app_color_blue3);
-}
 .common_markdown_code,
-.code {
+.common_code{
     background-color: var(--common_app_color_black);
 	color: var(--common_app_color_white);
     border-color: var(--common_app_color_light);
 }
-.code_line_selected{
+.common_code_line_selected{
     background-color: var(--common_app_color_blue1) !important;
     color: var(--common_app_color_light);
 }
-.signature,
-.type-signature{
-    color: var(--common_app_color_blue3);
-}
-#article .title_h4{
-    color: var(--common_app_color_gold);
-}
-thead tr{
-    background-color: var(--common_app_color_light);
-}
-
-th { border-inline-end: 1px solid var(--common_app_color_shadow1); }
-tr > th:last-child { border-inline-end: 1px solid var(--common_app_color_shadow1); }
-td, th{
-    border-color:  var(--common_app_color_shadow1);
-}
-#menu_close.common_app_dialogues_button {
-    color: var(--common_app_color_light);
-}
 /* APP THEME COMMON*/
+#app_document{
+    box-shadow: 1px 1px 3px 1px var(--common_app_color_shadow3);
+}
 #common_app_iam_user_menu_avatar_img, 
 #common_app_iam_user_menu_default_avatar{
     background-color: var(--common_app_color_light);

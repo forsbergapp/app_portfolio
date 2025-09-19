@@ -13,11 +13,9 @@
  *          app_menu:common['CommonAppMenu'][]}} props
  * @returns {string}
  */
-const template = props =>`  <div id='menu_open' class='common_icon'></div>
-                            <div id='nav'>
-                                <div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].doc}'`:''} id='title' class='common_link'>${props.title}</div>
-                                <div id='menu_close' class='common_app_dialogues_button common_icon'></div>
-                                <div id='nav_content_app'>
+const template = props =>`  <div id='app_menu'>
+                                <div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].doc}'`:''} id='app_menu_title' class='common_link'>${props.title}</div>
+                                <div id='app_menu_content'>
                                     ${props.app_menu.map(row=>
                                         `<div class='app_menu_data' data-id='${row.id}' data-type='${row.type}'>
                                             <div class='app_menu common_link'>${row.menu}</div>
@@ -32,7 +30,9 @@ const template = props =>`  <div id='menu_open' class='common_icon'></div>
                                     ).join('')}
                                 </div>
                             </div>
-                            <div id='content'></div>`;
+                            <div id='app_content'>
+                                <div id='app_document'></div>
+                            </div>`;
 /**
  * @name component
  * @description Component
