@@ -30,9 +30,7 @@ const template = props =>`  <div id='app_menu'>
                                     ).join('')}
                                 </div>
                             </div>
-                            <div id='app_content'>
-                                <div id='app_document'></div>
-                            </div>`;
+                            <div id='app_content'></div>`;
 /**
  * @name component
  * @description Component

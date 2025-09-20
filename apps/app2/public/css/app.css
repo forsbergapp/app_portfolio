@@ -644,9 +644,8 @@ border-left: 12px solid var(--app_theme_sun_color);
 }
 #common_app_window_info{
 	background: var(--app_theme_dialogue_background_color);
-
 }
-#common_app_window_info_btn_close .common_icon{
+#common_app_window_info_toolbar_btn_close .common_icon{
 	background: var(--app_theme_dialogue_background_color);
 }
 #common_app_dialogues_info_contact_message_title{
