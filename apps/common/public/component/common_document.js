@@ -20,7 +20,7 @@
  *          }} props
  * @returns {string}
  */
-const template = props =>`  <div id='common_document'>
+const template = props =>`  <div id='${'common_document_' + Date.now()}' class='common_document'>
                                 <div class='common_document_header' style='${props.app_logo==null?'':`background-image:url(${props.app_logo});`}'>${props.app_name}</div>
                                 <div class='common_document_body ${props.documentType=='MODULE_CODE'?'common_markdown common_code':'common_markdown'}'>
                                     ${props.documentType=='MODULE_CODE'?
