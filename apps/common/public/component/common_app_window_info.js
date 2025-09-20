@@ -20,27 +20,25 @@
  *          content?:string}} props
  * @returns {string}
  */
-const template = props => ` <div id='common_app_window_info_btn_close' class='common_toolbar_button common_icon'></div>
-                            ${props.info=='IMAGE'?
-                                `<div id='common_app_window_info_info'>
-                                    ${props.url?
+const template = props => ` 
+                            <div id='common_app_window_info_toolbar'>
+                                <div id='common_app_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_app_window_info_toolbar_btn_zoomin' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_app_window_info_toolbar_btn_left' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_app_window_info_toolbar_btn_right' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_app_window_info_toolbar_btn_up' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_app_window_info_toolbar_btn_down' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_app_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon' ></div>
+                                <div id='common_app_window_info_toolbar_btn_close' class='common_toolbar_button common_icon' ></div>
+                            </div>
+                            <div id='common_app_window_info_info' class='${props.class}'>
+                                ${props.info=='IMAGE'?
+                                    (props.url?
                                         `<div id='common_app_window_info_info_img' style='${props.url==null?'':`background-image:url(${props.url});`}'></div>`:
-                                        ''
-                                    }
-                                </div>
-                                <div id='common_app_window_info_toolbar'>
-                                    <div id='common_app_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
-                                    <div id='common_app_window_info_toolbar_btn_zoomin' class='common_toolbar_button common_icon' ></div>
-                                    <div id='common_app_window_info_toolbar_btn_left' class='common_toolbar_button common_icon' ></div>
-                                    <div id='common_app_window_info_toolbar_btn_right' class='common_toolbar_button common_icon' ></div>
-                                    <div id='common_app_window_info_toolbar_btn_up' class='common_toolbar_button common_icon' ></div>
-                                    <div id='common_app_window_info_toolbar_btn_down' class='common_toolbar_button common_icon' ></div>
-                                    <div id='common_app_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon' ></div>
-                                </div>`:
-                                `<div id='common_app_window_info_info' class='${props.class}'>
-                                    ${props.content}
-                                </div>`
-                            }`
+                                        ''):
+                                        props.content
+                                }
+                            </div>`
 ;
 /**
  * @name component
@@ -113,7 +111,7 @@ const component = async props => {
     const ZoomInfo = (zoomvalue = null) => {
         let old;
         let old_scale;
-        const div = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info_info_img');
+        const div = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info_info > div');
         //called with null as argument at init() then used for zooming
         //even if css set, this property is not set at startup
         if (zoomvalue == null) {
@@ -134,7 +132,7 @@ const component = async props => {
      */
     const MoveInfo = (move1=null, move2=null) => {
         let old;
-        const div = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info_info_img');
+        const div = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info_info > div');
         if (move1==null || move2==null) {
             div.style.transformOrigin = '50% 50%';
         } else {
@@ -158,11 +156,11 @@ const component = async props => {
         switch (event_type){
             case 'click':{
                 switch (true){
-                    case event_target_id=='common_app_window_info_btn_close':{
+                    case event_target_id=='common_app_window_info_toolbar_btn_close':{
                         WindoInfoClose();
                         break;
                     }
-                    case event_target_id=='common_app_window_info_info_img':{
+                    case event_target_id=='common_app_window_info':{
                         WindoInfoToolbarShowHide();
                         break;
                     }

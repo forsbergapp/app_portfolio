@@ -24,7 +24,7 @@ let common;
 const show = async parameters =>{
     
     //common app component
-    await common.commonComponentRender({mountDiv:   'app_document',
+    await common.commonComponentRender({mountDiv:   'app_content',
         data:       {
                         common_app_id:common.commonGlobalGet('app_common_app_id'),
                         app_logo:common.commonGlobalGet('app_logo'),
