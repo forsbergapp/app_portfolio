@@ -14,14 +14,14 @@
  * @returns {string}
  */
 const template = props =>`  <div id='app_menu'>
-                                <div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].doc}'`:''} id='app_menu_title' class='common_link'>${props.title}</div>
+                                <div ${props.app_menu[0]?.menu_sub?`data-href='${props.app_menu[0].menu_sub[0].doc}'`:''} id='app_menu_title' class='common_link'>${props.title}</div>
                                 <div id='app_menu_content'>
                                     ${props.app_menu.map(row=>
                                         `<div class='app_menu_data' data-id='${row.id}' data-type='${row.type}'>
                                             <div class='app_menu common_link'>${row.menu}</div>
                                             <div class='app_submenu'>
                                                 ${row.menu_sub?.map(row_sub=>
-                                                    `<div class='common_link' href='${row_sub.doc}'>${row_sub.menu}</div>`
+                                                    `<div class='common_link' data-href='${row_sub.doc}'>${row_sub.menu}</div>`
                                                     ).join('')
                                                 }
                                             </div>
@@ -55,8 +55,8 @@ const component = async props => {
                 .then(result=>JSON.parse(JSON.parse(result).rows))
                 .catch(()=>null);
     const onMounted =()=>{
-        //add common_link to JSDoc generated menu so they will get default hover effect
-        Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('#nav_content_jsdoc .app_submenu .li a')).forEach(element=>element.classList.add('common_link'));
+        //show first menu at start
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_menu_title').click();
     };
     return {
         lifecycle:  {onMounted},
