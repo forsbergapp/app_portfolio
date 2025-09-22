@@ -9,7 +9,7 @@ body{
 /* MENU*/
 
 #app_menu_title,
-#app_menu_content div[href]{
+#app_menu_content div[data-href]{
 	cursor: pointer;
 }
 #app_menu_title{
@@ -131,9 +131,6 @@ body{
 	}
 }
 /*COMMON*/
-#common_app_toolbar{
-    margin-inline-start: 230px !important;
-}
 #common_app_dialogues_profile_input_row,
 #common_app_profile_search_list_wrap{
 	visibility: hidden;

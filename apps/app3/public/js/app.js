@@ -57,41 +57,39 @@ const appException = error => {
  */
 const appEventClick = event => {
     const event_target_id = common.commonMiscElementId(event.target);
-    switch (event_target_id){
-        case event.target.classList.contains('app_menu')?event_target_id:'':{
+    switch (true){
+        case event.target.classList.contains('app_menu'):{
             if (event.target.parentNode.querySelector('.app_submenu').classList.contains('active'))
                 event.target.parentNode.querySelector('.app_submenu').classList.remove('active');
             else
                 event.target.parentNode.querySelector('.app_submenu').classList.add('active');
             break;
         }
-        case 'app_menu_title':
-        case 'app_menu_content':
-        case 'common_document':{
-            event.preventDefault();
-            if (event.target.getAttribute('href'))
-                show({
-                        href:event.target.getAttribute('href'), 
+        case event_target_id=='app_menu_title':{
+            show({
+                        href:event.target.getAttribute('data-href'), 
                         title:
                                 //use title from first menu text if clicking on title
-                                event_target_id=='app_menu_title'?
-                                    COMMON_DOCUMENT.querySelectorAll('#app_menu_content .common_link')[0].textContent:
-                                        event.target.href?
-                                            event.target.href.split('/')[3]:
-                                                event.target.textContent, 
-                        documentType:
-                            //GUIDE in title and nav_content_app
-                            event_target_id=='app_menu_title'?
-                                                'GUIDE':
-                                                    /**@ts-ignore */
-                                                    event_target_id=='common_document'?
-                                                        'MODULE_CODE':
-                                                            common.commonMiscElementRow(event.target, 'app_menu_data').getAttribute('data-type')
+                                COMMON_DOCUMENT.querySelectorAll('#app_menu_content .common_link')[0].textContent, 
+                        documentType: 'GUIDE'
+                    });
+            break;
+        }
+        case event.target.classList.contains('common_link'):{
+            event.preventDefault();
+            if (event.target.getAttribute('data-href'))
+                show({
+                        href:           event.target.getAttribute('data-href'), 
+                        title:          event.target.getAttribute('data-href').split('/')[3], 
+                        documentType:   event_target_id=='app_menu_content'?
+                                            common.commonMiscElementRow(event.target, 'app_menu_data').getAttribute('data-type'):
+                                                'MODULE_CODE'
+                                                            
                     });
             break;
         }
         /*Dialogue user start */
-        case 'common_app_dialogues_iam_start_login_button':{
+        case event_target_id=='common_app_dialogues_iam_start_login_button':{
             common.commonUserLogin().catch(()=>null);
             break;
         }                
@@ -109,8 +107,6 @@ const appInit = async () => {
         data:       {app_id:common.commonGlobalGet('app_common_app_id')},
         methods:    null,
         path:       '/component/app.js'});
-    //show first menu at start
-    COMMON_DOCUMENT.querySelector('#app_menu_title').click();
 };
 /**
  * @name appCommonInit
