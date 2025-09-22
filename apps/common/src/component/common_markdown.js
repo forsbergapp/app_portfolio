@@ -168,7 +168,7 @@ const component = async props => {
         let match_links;
         while ((match_links = regexp_links.exec(markdown)) !==null){
             markdown = markdown.replace(match_links[0], 
-                                        `<div class='common_link' href='${match_links[2]}' data-url='${match_links[2]}'>${match_links[2]}</div>`);
+                                        `<div class='common_link' data-href='${match_links[2]}' data-url='${match_links[2]}'>${match_links[2]}</div>`);
         }
         //8.tables
         let table_new = true;

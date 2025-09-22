@@ -208,7 +208,7 @@ const component = async props => {
         events:     events,
         template:   template({  info:   props.data.info,
                                 url:    props.data.url,
-                                class:  props.data.class,
+                                class:  props.data.class??'',
                                 content:props.data.info=='URL'?content_fetch:props.data.content
         })
     };

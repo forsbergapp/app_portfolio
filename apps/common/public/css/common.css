@@ -1837,6 +1837,9 @@ body,
 #common_app_window_info_info{
 	text-align: center;
 }
+#common_app_window_info_info >div {
+	pointer-events: none;
+}
 #common_app_window_info_info.common_loading_spinner{
 	inset-inline-start: calc(50% - 30px);
 }
@@ -1847,21 +1850,6 @@ body,
 	background-size: contain;
   	background-position: center;
   	background-repeat: no-repeat;
-}
-#common_app_window_info_content{
-	margin-bottom:20px;
-	width: 100%;
-	height: calc(100% - 60px);
-	border: 0px;
-	display: block;
-}
-#common_app_window_info_content.A4{
-	width : 210mm;
-	height : 297mm;
-}
-#common_app_window_info_content.Letter{
-	width : 8.5in;
-	height : 11in;
 }
 #common_app_window_info_toolbar{
 	display: inline-block;
@@ -2035,7 +2023,7 @@ body,
     border-bottom: 0.5px solid;
 	padding-inline-start: 3em;
   	display: inline-block;
-  	width: 100%;
+  	width: calc(100% - 3em);
   	padding-top: 0.5em;
 }
 .common_document_body{
