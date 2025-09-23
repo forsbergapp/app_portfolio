@@ -556,16 +556,12 @@ const settingsTimesShow = async () => {
  * @returns {Promise.<void>}
  */
 const appToolbarButton = async (choice) => {
-    const paper = COMMON_DOCUMENT.querySelector('#paper');
-    const settings = COMMON_DOCUMENT.querySelector('#settings');
-
     switch (choice) {
         //print
         case 1:
             {
                 if (common.commonMiscMobile())
-                    paper.style.display = 'block';
-                settings.style.visibility = 'hidden';
+                    COMMON_DOCUMENT.querySelector('#paper').style.display = 'block';
                 appReportTimetablePrint();
                 break;
             }
@@ -574,8 +570,8 @@ const appToolbarButton = async (choice) => {
         case 4:
             {
                 if (common.commonMiscMobile())
-                    paper.style.display = 'block';
-                settings.style.visibility = 'hidden';
+                    COMMON_DOCUMENT.querySelector('#paper').style.display = 'block';
+                common.commonComponentRemove('common_app_dialogues_app_custom');
                 COMMON_DOCUMENT.querySelector('#toolbar_btn_day').classList.remove('toolbar_bottom_selected');
                 COMMON_DOCUMENT.querySelector('#toolbar_btn_month').classList.remove('toolbar_bottom_selected');
                 COMMON_DOCUMENT.querySelector('#toolbar_btn_year').classList.remove('toolbar_bottom_selected');
@@ -590,10 +586,9 @@ const appToolbarButton = async (choice) => {
             {
                 //Hide paper on mobile device when showing settings, scrollbug in background
                 if (common.commonMiscMobile())
-                    paper.style.display = 'none';
-                settings.style.visibility = 'visible';
+                    COMMON_DOCUMENT.querySelector('#paper').style.display = 'none';
                 common.commonComponentRender({  
-                    mountDiv:   'settings',
+                    mountDiv:   'common_app_dialogues_app_custom',
                     data:       {
                                 iam_user_id:common.commonGlobalGet('iam_user_id'),
                                 avatar:COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img')?.getAttribute('data-image')
@@ -607,13 +602,13 @@ const appToolbarButton = async (choice) => {
         //profile
         case 6:
             {
-                settings.style.visibility = 'hidden';
+                common.commonComponentRemove('common_app_dialogues_app_custom');
                 break;
             }
         //profile stat
         case 7:
             {
-                settings.style.visibility = 'hidden';
+                common.commonComponentRemove('common_app_dialogues_app_custom');
                 common.commonComponentRender({
                     mountDiv:   'common_app_dialogues_profile_stat_row2',
                     data:       null,
@@ -894,8 +889,7 @@ const appUserLoginPost = async () =>{
         if (JSON.parse(result).rows.length==0){
             await appUserSettingFunction('ADD_LOGIN', true);
         }
-        //Hide settings
-        COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
+        common.commonComponentRemove('common_app_dialogues_app_custom')
         common.commonComponentRemove('common_app_dialogues_profile');
         
         COMMON_DOCUMENT.querySelector('#paper').textContent='';
@@ -1623,10 +1617,7 @@ const appEventClick = event => {
         }
         //settings
         case 'settings_close':{
-            common.commonComponentRemove('settings');
-            if (common.commonMiscMobile())
-                COMMON_DOCUMENT.querySelector('#paper').style.display = 'block';
-            COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
+            common.commonComponentRemove('common_app_dialogues_app_custom');
             const timetable_type = COMMON_DOCUMENT.querySelector('#toolbar_bottom .toolbar_bottom_selected').id
                                         .toLowerCase()
                                         .substring('toolbar_btn_'.length);

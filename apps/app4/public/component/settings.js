@@ -15,21 +15,23 @@
  * @returns {string}
  */
 const template = props =>`      
-                        <div id='settings_tab_navigation'>
-                            <div id='settings_tab_nav_1' class='settings_tab_nav settings_tab_nav_selected common_icon'></div>
-                            <div id='settings_tab_nav_2' class='settings_tab_nav common_icon'></div>
-                            <div id='settings_tab_nav_3' class='settings_tab_nav common_icon'></div>
-                            <div id='settings_tab_nav_4' class='settings_tab_nav common_icon'></div>
-                            <div id='settings_tab_nav_5' class='settings_tab_nav common_icon'></div>
-                            ${props.iam_user_id!=null?
-                                `<div id='settings_tab_nav_6' class='settings_tab_nav common_icon'>
-                                    <div id='user_setting_avatar_img' class='common_image' style='${props.avatar==null?'':`background-image:url(${props.avatar});`}'></div>
-                                </div>`:
-                                ''
-                            }
+                        <div id='settings'>
+                            <div id='settings_tab_navigation'>
+                                <div id='settings_tab_nav_1' class='settings_tab_nav settings_tab_nav_selected common_icon'></div>
+                                <div id='settings_tab_nav_2' class='settings_tab_nav common_icon'></div>
+                                <div id='settings_tab_nav_3' class='settings_tab_nav common_icon'></div>
+                                <div id='settings_tab_nav_4' class='settings_tab_nav common_icon'></div>
+                                <div id='settings_tab_nav_5' class='settings_tab_nav common_icon'></div>
+                                ${props.iam_user_id!=null?
+                                    `<div id='settings_tab_nav_6' class='settings_tab_nav common_icon'>
+                                        <div id='user_setting_avatar_img' class='common_image' style='${props.avatar==null?'':`background-image:url(${props.avatar});`}'></div>
+                                    </div>`:
+                                    ''
+                                }
+                            </div>
+                            <div id='settings_content' class='settings_tab_content'></div>
+                            <div id='settings_close' class='common_app_dialogues_button common_icon' ></div>
                         </div>
-                        <div id='settings_content' class='settings_tab_content'></div>
-                        <div id='settings_close' class='common_app_dialogues_button common_icon' ></div>
                         `;
 /**
  * @name component
@@ -49,6 +51,7 @@ const template = props =>`
  *                      template:string}>}
  */
 const component = async props => {
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show0');
     const onMounted =() =>{
         props.methods.SettingShow(1);
     };

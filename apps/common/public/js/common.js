@@ -2851,6 +2851,9 @@ const commonMountApp = async (app_id) =>{
                                             authorization_type:'APP_ID'})
                             .then(app=>JSON.parse(app));
     COMMON_GLOBAL.iam_user_app_id = null;
+    //remove all dialogues when switching app
+    Array.from(COMMON_DOCUMENT.querySelectorAll('#common_app_dialogues > div')).forEach(dialogue=>commonComponentRemove(dialogue.id));
+
     if (COMMON_GLOBAL.iam_user_id != null)
         await commonUserLoginApp(COMMON_DOCUMENT.querySelector('#common_app_toolbar_start')?'common_app_toolbar_start':null);
     COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_div}`).innerHTML='';

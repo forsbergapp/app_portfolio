@@ -150,19 +150,13 @@
 }
 
 /* SETTINGS*/
+#common_app_dialogues_app_custom.common_app_dialogues_show0{
+	width: 30em;
+	height: 40em;
+}
 #settings {
-	visibility: hidden;
 	width: 100%;
 	height: 100%;
-	border-width: 1px;
-	border-style: outset;
-	border-collapse: collapse;
-	margin: 0;
-	z-index: 50;
-	bottom: 0px;
-	right: 0px;
-	position: fixed;
-	text-align: center;
 }
 
 /*SETTINGS TAB NAVIGATION */
@@ -189,13 +183,14 @@
 #user_setting_avatar_img{
     height: 30px;
 	width: 30px;
-    margin-bottom: -4px;
+	margin: 0 auto;
 }
 
 /*SETTINGS, common*/
 #settings .common_select{
 	display: inline-block;
-	width: inherit;
+	width: 95%;
+	white-space: nowrap;
 }
 
 #settings label {
@@ -256,10 +251,13 @@
 }
 /* SETTINGS GPS*/
 #mapid >div{
-	height: 425px;
+	height: 25em;
 	margin-left: 5%;
 	margin-right: 5%;
 	margin-bottom: 10px;
+}
+#mapid #common_map{
+	width:unset !important;
 }
 /* SETTINGS DESIGN*/
 #settings .settings_tab3 .setting_horizontal_row:nth-child(1){
@@ -318,6 +316,9 @@
 }
 .setting_design_thumbnail .timetable_month_data_header_row{
 	font-size: unset;
+}
+.setting_design_thumbnail .timetable_year_timetables_row .timetable_month_class #timetable_month_data{
+	table-layout: auto;
 }
 .paper.A4 > div{
 	width : 210mm !important;
@@ -515,7 +516,7 @@
 }
 #settings_close{
 	position: absolute;
-    bottom: 70px;
+    bottom: 40px;
 }
 /*Profile */
 #profile_main_btn_user_settings,
@@ -629,9 +630,6 @@
 		text-align: center;
 		width: auto;
 	}
-	#settings {
-		margin: 0 auto;
-	}
 	#settings_tab_navigation .settings_tab_nav {
 		border:0px;
 		width:75px;
@@ -651,9 +649,6 @@
 		max-width:90%;
 		width:inherit;
 	}
-	#mapid >div{
-		height: 500px;
-	}	
 	#profile_user_settings_title_row div:nth-child(1),
 	.profile_user_settings_row div:nth-child(1){
 		width:200px;
@@ -802,24 +797,22 @@ body{
 	caret-color: var(--app_theme_main_color3);
 }
 body,
-#settings select,
-#settings_tab_navigation .settings_tab_nav_selected
+#settings select
 {
 	background-color:var(--app_theme_main_color1) !important;
 }
+#settings_tab_navigation .settings_tab_nav_selected
+{
+	background-color:var(--app_theme_main_color2) !important;
+}
 #settings .common_input,
 #toolbar_top,
-#settings,
-#settings_tab_navigation,
-#settings_tab_navigation .settings_tab_nav,
 #toolbar_bottom
 {
 	background: var(--app_theme_main_color2);
 	color: var(--app_theme_main_color3);
 }
-#settings,
 #settings select,
-#settings_tab_navigation,
 #common_app_iam_user_menu,
 .common_app_dialogues_button,
 .common_toolbar_button
