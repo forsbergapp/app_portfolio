@@ -2154,7 +2154,7 @@ body,
     cursor:none;
 }
 #common_map.common_map_control_active #common_map_cursor{
-    position: fixed;
+    position: absolute;
     pointer-events: none;
     z-index: 10;
     user-select: none;
