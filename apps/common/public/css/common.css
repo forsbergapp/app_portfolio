@@ -1823,22 +1823,24 @@ body,
 
 /*WINDOW INFO*/
 #common_app_window_info {
-    width:100%;
-    height:100%;
 	top: 0px;
 	position:fixed;
     overflow-x: auto;
 	z-index: 100;
 	margin-bottom: 100px;
-	visibility: hidden;
 	text-align:center;
 	display: block;
 	
+}
+#common_app_window_info.common_app_dialogues_show0 {
+    width:100%;
+    height:100%;
 }
 #common_app_window_info_info{
 	text-align: center;
 	display: flex;
   	justify-content: center;
+	margin-top: 60px;
 }
 #common_app_window_info_info >div {
 	pointer-events: none;
@@ -1853,6 +1855,7 @@ body,
 	background-size: contain;
   	background-position: center;
   	background-repeat: no-repeat;
+	position:absolute;
 }
 #common_app_window_info_toolbar{
 	display: inline-block;

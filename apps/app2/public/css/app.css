@@ -256,11 +256,6 @@ transform-origin: -39px 8px;
 #common_app_profile_toolbar_stat{
 	bottom: 0px !important;
 }
-#common_app_window_info_info{
-	position:relative;
-	margin:20px;
-    height: 100%;
-}
 #common_apps{
 	z-index: 1;
 }
