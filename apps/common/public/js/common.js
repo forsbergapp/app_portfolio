@@ -133,7 +133,7 @@ const commonMiscElementRow = (element, className) => element?.classList?.contain
  * @description Returns current target or parent with class list_title or returns empty. Use when clicking in a list title
  * @function
  * @param {*} element 
- * @returns {HTMLElement} 
+ * @returns {HTMLElement|null} 
  */
 const commonMiscElementListTitle = element => element.classList.contains('list_title')?element:(element.parentNode.classList.contains('list_title')?element.parentNode:null);
 /**
@@ -2176,7 +2176,7 @@ const commonSocketConnectOnline = async () => {
     const  authorization_type= (COMMON_GLOBAL.token_at && COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id)?
                                     'ADMIN':
                                         COMMON_GLOBAL.token_at?'APP_ACCESS':'APP_ID';
-    commonFFB({path:'/server-socket/socket/' + COMMON_GLOBAL.x.uuid ?? '', response_type: 'SSE', method:'POST', authorization_type:authorization_type});
+    commonFFB({path:'/server-socket/socket/' + (COMMON_GLOBAL.x.uuid ?? ''), response_type: 'SSE', method:'POST', authorization_type:authorization_type});
 };
 /**
  * @name commonSocketConnectOnlineCheck
