@@ -2,6 +2,7 @@
 
 /**
  * @import {server_db_table_App,
+ *          server_db_table_AppParameter,
  *          server_db_table_AppModule,
  *          server_db_table_IamEncryption,
  *          server_db_table_IamUser,
