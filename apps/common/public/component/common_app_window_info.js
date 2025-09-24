@@ -66,6 +66,7 @@ const template = props => `
  * >}
  */
 const component = async props => {
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show0');
     const content_fetch = (props.data.info=='URL' && props.data.path && props.data.method && props.data.authorization)?
                                 await props.methods.COMMON.commonFFB({ path:props.data.path, 
                                                                 method:props.data.method, 
@@ -83,7 +84,7 @@ const component = async props => {
      */
     const WindoInfoClose = () =>{
         props.methods.COMMON.commonComponentRemove('common_app_window_info');
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info').style.visibility = 'hidden'; 
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.remove('common_app_dialogues_show0');
         if (props.methods.COMMON.COMMON_DOCUMENT.fullscreenElement)
             props.methods.COMMON.COMMON_DOCUMENT.exitFullscreen();
     };
@@ -199,10 +200,11 @@ const component = async props => {
             }
         }
     };
-    const onMounted = async () => props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_window_info').style.visibility='visible';
+    const onUnmounted = ()=>
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.remove('common_app_dialogues_show0');
     
     return {
-        lifecycle:  {onMounted:onMounted},
+        lifecycle:  {onUnmounted:onUnmounted},
         data:       null,
         methods:    {WindoInfoClose:WindoInfoClose},
         events:     events,
