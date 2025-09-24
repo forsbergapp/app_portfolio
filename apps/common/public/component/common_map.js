@@ -630,8 +630,8 @@ const component = async props => {
             }
             case 'mousemove':{
                 if (event_target_id.startsWith('common_map')){
-                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.left = `${event.clientX}px`;
-                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.top = `${event.clientY}px`;
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.left = `${event.clientX - props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect().left}px`;
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.top = `${event.clientY - props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect().top}px`;
                 }
                 switch (true){
                     case event_target_id=='common_map_measure':
