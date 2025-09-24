@@ -75,6 +75,7 @@
                                             <div id='common_app_dialogues_app_custom' class='common_app_dialogues_content'></div>
                                         </div>
                                         <div id='common_apps' class='common_app_dialogues_content'></div>
+                                        <div id='common_app_print'></div>
                                         <div id='common_app_window_info'></div>
                                         <div id='common_app_broadcast'></div>
                                         <div id='common_app_profile'>
