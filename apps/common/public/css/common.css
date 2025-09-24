@@ -1833,9 +1833,12 @@ body,
 	visibility: hidden;
 	text-align:center;
 	display: block;
+	
 }
 #common_app_window_info_info{
 	text-align: center;
+	display: flex;
+  	justify-content: center;
 }
 #common_app_window_info_info >div {
 	pointer-events: none;
@@ -1963,7 +1966,7 @@ body,
   	margin-bottom: 0.5em;
 }
 .common_markdown_table{
-	font-size: 0.9em;
+	font-size: 0.7em;
 }
 .common_markdown_table_method{
 	margin-inline-start: 2em;
