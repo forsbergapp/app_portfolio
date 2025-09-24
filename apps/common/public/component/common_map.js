@@ -268,34 +268,37 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const addPopup = async parameters =>{
-        const id = 'common_map_popups_point_' + Date.now();
-        /**@type{common['commonGeoJSONPopup']} */
-        const geoJSON = {   id:  id,
-            type:'Feature',
-            properties:{x:parameters.x, 
-                        y:parameters.y,
-                        countrycode:parameters.place.countryCode,
-                        country:parameters.place.country,
-                        region:parameters.place.region,
-                        city:parameters.place.place,
-                        timezone_text:parameters.place.timezone
-                        },
-            geometry:{
-                        type:'Point',
-                        coordinates:[[+parameters.place.latitude, +parameters.place.longitude]]
-                    }
-            };
-        //direct component execution for best performance
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_popups').innerHTML += (await common_map_popup({
-                                        data:   {
-                                                commonMountdiv:'',
-                                                geoJSON:geoJSON,
-                                                },
-                                        methods:{
-                                                COMMON:props.methods.COMMON
-                                                }})).template;
-        const popup = props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${id}`);
-        updatePopups(popup);
+        if (getPopup(+parameters.place.longitude, +parameters.place.latitude).length==0){
+            const id = 'common_map_popups_point_' + Date.now();
+            /**@type{common['commonGeoJSONPopup']} */
+            const geoJSON = {   id:  id,
+                type:'Feature',
+                properties:{x:parameters.x, 
+                            y:parameters.y,
+                            countrycode:parameters.place.countryCode,
+                            country:parameters.place.country,
+                            region:parameters.place.region,
+                            city:parameters.place.place,
+                            timezone_text:parameters.place.timezone
+                            },
+                geometry:{
+                            type:'Point',
+                            coordinates:[[+parameters.place.latitude, +parameters.place.longitude]]
+                        }
+                };
+            //direct component execution for best performance
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_popups').innerHTML += (await common_map_popup({
+                                            data:   {
+                                                    commonMountdiv:'',
+                                                    geoJSON:geoJSON,
+                                                    },
+                                            methods:{
+                                                    COMMON:props.methods.COMMON
+                                                    }})).template;
+            const popup = props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${id}`);
+            updatePopups(popup);
+        }
+        
     };
     /**
      * @description get place for gps
@@ -310,14 +313,14 @@ const component = async props => {
             method:'GET', 
             authorization_type:'APP_ID'}).then(result=>JSON.parse(result).rows);
     /**
-     * @name addPopupPos
+     * @name addQueryPos
      * @description Adds a popup for given x and y
      * @function
      * @param {number} x
      * @param {number} y
      * @returns {Promise.<void>}
      */
-    const addPopupPos =  async (x, y) =>{
+    const addQueryPos =  async (x, y) =>{
         const gps = getGPS(x,y);
         const rect = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
         await addPopup({place:await getPlace({longitude:gps.long, latitude:gps.lat}), x:x- rect.left, y:y-rect.top});
@@ -512,8 +515,7 @@ const component = async props => {
             offsetX = ((window.innerWidth-rect.left) / 2) - wx;
             offsetY = ((window.innerHeight-rect.top) / 2) - wy;
             draw();
-            if (getPopup(+longitude, +latitude).length==0)
-                await addPopup({place:place, x:wx+offsetX, y:wy+offsetY});
+            await addPopup({place:place, x:wx+offsetX, y:wy+offsetY});
         }
     };
     /**
@@ -592,7 +594,7 @@ const component = async props => {
                     case event.target.classList.contains('common_map_tile'):
                     case event.target.classList.contains('common_map_line'):{
                         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_control_query').classList.contains('common_map_control_active')?
-                            await addPopupPos(event.clientX, event.clientY):
+                            await addQueryPos(event.clientX, event.clientY):
                                 null;
                         break;
                     }
