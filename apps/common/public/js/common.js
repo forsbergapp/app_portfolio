@@ -572,11 +572,10 @@ const commonMiscPreferencesUpdateBodyClassFromPreferences = () => {
  * @returns {Promise.<void>}
  */
 const commonMiscPrint = async html => {
-    const id = 'PRINT_' + Date.now();
-    COMMON_DOCUMENT.querySelector('#common_app').innerHTML += `<iframe id='${id}'></iframe>>`;
-    const printelement = COMMON_DOCUMENT.querySelector(`#${id}`);
-    printelement.contentWindow.document.open();
-    printelement.contentWindow.document.write(html);
+    COMMON_DOCUMENT.querySelector('#common_app_print').innerHTML = '<iframe/>';
+    const print = COMMON_DOCUMENT.querySelector('#common_app_print iframe').contentWindow
+    await print.document.open();
+    await print.document.write(html);
 
     for (const font of COMMON_GLOBAL.app_fonts_loaded) {         
         const fontNew = new FontFace(
@@ -585,14 +584,14 @@ const commonMiscPrint = async html => {
             font.attributes
         );  
         fontNew.load().then(()=>{
-            printelement.contentWindow.document.fonts.add(fontNew);
+            print.document.fonts.add(fontNew);
         });
     }  
-    printelement.focus();
+    await print.focus();
 
     //await delay to avoid browser render error
-    await new Promise (resolve=>commonWindowSetTimeout(()=> {printelement.contentWindow.print();resolve(null);}, 100));
-    COMMON_DOCUMENT.querySelector(`#common_app #${printelement.id}`).remove();
+    await new Promise (resolve=>commonWindowSetTimeout(()=> {print.print();resolve(null);}, 100));    
+    COMMON_DOCUMENT.querySelector('#common_app_print').textContent='';
 };
 /**
  * @name commonMiscResourceFetch
