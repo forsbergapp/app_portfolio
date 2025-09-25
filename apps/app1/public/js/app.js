@@ -232,7 +232,7 @@ const appSecureDialogueSendBroadcastSend = () => {
  * @returns{void}
  */
 const appSecureDialogueSendBroadcastClose = () => {
-    common.commonComponentRemove('dialogue_send_broadcast');
+    common.commonComponentRemove('common_app_dialogues_app_custom');
 };
 /**
  * @name appSecureDialogueSendBroadcastShow
