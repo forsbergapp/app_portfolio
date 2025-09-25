@@ -103,7 +103,13 @@
                                         ["single framework",					"live switchable multi framework"]
                                     ]
                     ],
-                    "screenshot_end":[""]}
+                    "screenshot_end":[
+                                        "[![Menu Apps - dynamicically generated Markdown document with database info](/common/documents/screenshot_app3_apps_common_small.webp)](/common/documents/screenshot_app3_apps_common.webp)",
+                                        "[![Menu Routes/REST API - dynamicically generated document using open API pattern with type declaration and JSDoc pattern dynamically integrated where each path is expandable in the app](/common/documents/screenshot_app3_routes_rest_api_small.webp)](/common/documents/screenshot_app3_routes_rest_api.webp)",
+                                        "[![Menu Server/Architecture](/common/documents/screenshot_app3_server_architecture_small.webp)](/common/documents/screenshot_app3_server_architecture.webp)",
+                                        "[![Menu Modules - code highlight](/common/documents/screenshot_app3_modules_code_highlight_small.webp)](/common/documents/screenshot_app3_modules_code_highlight.webp)",
+                                        "[![Fullscreen preview of documents](/common/documents/screenshot_app3_preview_documents.webp)](/common/documents/screenshot_app3_preview_documents.webp)",
+                                        "[![Fullscreen preview of images](/common/documents/screenshot_app3_preview_images.webp)](/common/documents/screenshot_app3_preview_images.webp)"]}
     },
     {
         "id": 4,
@@ -118,7 +124,9 @@
                     "reference":"Prayertime sun and moon calculations", 
                     "security":"OWASP",
                     "comparison":[],
-                    "screenshot_end":["[![Showing arabic Nastaliq font and chinese timetable and spanish ui using default font and mixing RTL and LTR](/common/documents/screenshot_app4_arabic_chinese_hanidec_nastaliq_timetable_rtl_user_menu_ltr_spanish_ui_small.webp)](/common/documents/screenshot_app4_arabic_chinese_hanidec_nastaliq_timetable_rtl_user_menu_ltr_spanish_ui.webp)"]}
+                    "screenshot_end":[
+                                        "[![Showing arabic Nastaliq font and chinese timetable and spanish ui using default font and mixing RTL and LTR](/common/documents/screenshot_app4_arabic_chinese_hanidec_nastaliq_timetable_rtl_user_menu_ltr_spanish_ui_small.webp)](/common/documents/screenshot_app4_arabic_chinese_hanidec_nastaliq_timetable_rtl_user_menu_ltr_spanish_ui.webp)",
+                                        "[![Settings with advanced regional support](/common/documents/screenshot_app4_settings_small.webp)](/common/documents/screenshot_app4_settings.webp)"]}
     },
     {
         "id": 5,
@@ -198,7 +206,11 @@
                             ["DOM API for HTML",                                    "Vue SFC pattern and template strings, no DOM API for HTML"]
                         ]
         ],
-                    "screenshot_end":[""]}
+                    "screenshot_end":[
+                                        "[![City search](/common/documents/screenshot_app7_city_search_small.webp)](/common/documents/screenshot_app7_city_search.webp)",
+                                        "[![Country cities](/common/documents/screenshot_app7_country_cities_small.webp)](/common/documents/screenshot_app7_country_cities.webp)",
+                                        "[![Map layer](/common/documents/screenshot_app7_map_layer_small.webp)](/common/documents/screenshot_app7_map_layer.webp)",
+                                        "[![Query mode](/common/documents/screenshot_app7_query_mode_small.webp)](/common/documents/screenshot_app7_query_mode.webp)"]}
     },
     {
         "id": 8,
