@@ -161,10 +161,20 @@ const getPlace = parameters =>{
         const result = (getData('GEOLOCATION_PLACE')[parameters.data.latitude.split('.')[0]]??[])
                         .filter((/**@type{string}*/row)=>
                         check_aprox(row.split(';')[3], parameters.data.latitude, aproximity) && 
-                        check_aprox(row.split(';')[4], parameters.data.longitude, aproximity))[0];
-        if (result)
+                        check_aprox(row.split(';')[4], parameters.data.longitude, aproximity))
+                        //Sort using Euclidean distance calculation
+                        //and return closest
+                        .sort((/**@type{string}*/a, /**@type{string}*/b) => {
+                            const distA = Math.hypot(   +(a.split(';')[3]) - +parameters.data.latitude, 
+                                                        +(a.split(';')[4]) - +parameters.data.longitude);
+                            const distB = Math.hypot(   +(b.split(';')[3]) - +parameters.data.latitude, 
+                                                        +(b.split(';')[4]) - +parameters.data.longitude);
+
+                            return distA - distB;
+                            })
+        if (result[0])
             return returnPlace({locale:parameters.locale,
-                                place:result});
+                                place:result[0]});
     }    
     return returnPlace({locale:parameters.locale,
                         longitude:parameters.data.longitude,
