@@ -1897,8 +1897,8 @@ body,
 }
 .common_markdown_image{
     display:block;
-    width: 1024px;
-    height:528px;
+	width: 100%;
+  	height: 25em;
     max-width:100%;
     margin:auto;
     background-size: contain !important;
