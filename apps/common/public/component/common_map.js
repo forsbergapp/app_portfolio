@@ -448,7 +448,7 @@ const component = async props => {
         const rect = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
 
         const mouseX =  parameters.control?
-                            rect.left + (rect.width/2):
+                            (rect.width/2):
                                 (parameters.x - rect.left);
                                 
         const mouseY =  parameters.control?
@@ -512,8 +512,8 @@ const component = async props => {
             setZoom(ZOOM_LEVEL_GOTO);
             const [wx, wy] = project(+longitude, +latitude);
             const rect = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
-            offsetX = ((window.innerWidth-rect.left) / 2) - wx;
-            offsetY = ((window.innerHeight-rect.top) / 2) - wy;
+            offsetX = ((window.innerWidth-rect.left - ((window.innerWidth - rect.width)/2)) / 2) - wx;
+            offsetY = ((window.innerHeight-rect.top - ((window.innerHeight - rect.height)/2)) / 2) - wy;
             draw();
             await addPopup({place:place, x:wx+offsetX, y:wy+offsetY});
         }
