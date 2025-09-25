@@ -1113,11 +1113,14 @@ const commonComponentMutationObserver = (() =>{
     const tracked= {};
     const observer = new MutationObserver(() => {
                         Object.keys(tracked).forEach(div_id => {
-                            //check if removed
-                            if (!COMMON_DOCUMENT.querySelector(`#${div_id}`)) {
-                                //remove shared component including methods and events
-                                if (COMMON_GLOBAL.component[tracked[div_id].componentName])
+                            //check if removed or empty
+                            if (!COMMON_DOCUMENT.querySelector(`#${div_id}`)||COMMON_DOCUMENT.querySelector(`#${div_id}`).textContent=='') {
+                                //a component can be used on different mounted divs
+                                //and a component can share events to event delegation and methods
+                                //remove if last shared component including methods and events
+                                if (Object.keys(tracked).filter(all_div_id=>COMMON_GLOBAL.component[tracked[all_div_id].componentName]==COMMON_GLOBAL.component[tracked[div_id].componentName]).length==1)
                                     delete COMMON_GLOBAL.component[tracked[div_id].componentName];
+                                //run the onUnMounted for the unmounted component
                                 if (tracked[div_id].onUnmounted){
                                     tracked[div_id].onUnmounted();
                                 }
