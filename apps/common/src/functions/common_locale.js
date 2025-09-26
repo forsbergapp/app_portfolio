@@ -21,7 +21,7 @@ const {getData} = await import('./common_data.js');
  */
 const formatLocale = locale =>{
     //adjust from accept language if used  [locale],[locale],...;[browser options]
-    const localeAdjust = locale.split(',')[0]??'en-us';
+    const localeAdjust = (locale == null || locale=='' || !locale.split(',')[0])?'en-US':locale.split(',')[0];
     const SPLIT_IN  = '-';
     const SPLIT_OUT = '_';
     switch (localeAdjust.split('-').length){
@@ -52,7 +52,7 @@ const formatLocale = locale =>{
                     localeAdjust.split(SPLIT_IN)[2].toUpperCase();
         }
         default:
-            return 'en-us';
+            return 'en-US';
     }
 };
 

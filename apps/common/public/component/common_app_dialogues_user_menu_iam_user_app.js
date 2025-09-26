@@ -156,11 +156,13 @@ const component = async props => {
         switch (event_type){
             case 'click':{
                 switch (true){
-                    case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_theme_select':{
+                    case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_theme_select' &&
+                        event.target.classList.contains('common_select_option'):{
                         appThemeUpdate();
                         break;
                     }
-                    case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_locale_select':{
+                    case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_locale_select' &&
+                         event.target.classList.contains('common_select_option'):{
                         props.methods.COMMON.commonGlobalSet('user_locale', event.target?.getAttribute('data-value') ?? '');
                         /**
                          * @todo change COMMON_WINDOW.navigator.language, however when logging out default COMMON_WINDOW.navigator.language will be set
@@ -192,12 +194,14 @@ const component = async props => {
                                                                                 props.methods.COMMON.commonGlobalGet('user_locale'));
                          break;
                     }
-                    case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_timezone_select':{
+                    case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_timezone_select' &&
+                         event.target.classList.contains('common_select_option'):{
                         props.methods.COMMON.commonGlobalSet('user_timezone', event.target?.getAttribute('data-value') ?? '');
                         await UserPreferenceSave();
                         break;
                     }
-                    case event_target_id =='common_app_dialogues_user_menu_iam_user_app_direction_select':{
+                    case event_target_id =='common_app_dialogues_user_menu_iam_user_app_direction_select' &&
+                         event.target.classList.contains('common_select_option'):{
                         if(event.target?.getAttribute('data-value')=='rtl')
                             props.methods.COMMON.COMMON_DOCUMENT.body.classList.add('rtl');
                         else
@@ -207,7 +211,8 @@ const component = async props => {
                         appThemeUpdate();
                         break;
                     }
-                    case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_arabic_script_select':{
+                    case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_arabic_script_select' &&
+                         event.target.classList.contains('common_select_option'):{
                         props.methods.COMMON.commonGlobalSet('user_arabic_script', event.target?.getAttribute('data-value') ?? '');
                         //check if app theme div is using default theme with common select div
                         if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_theme_select').className?
