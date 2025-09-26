@@ -89,8 +89,17 @@ const test = async t =>
             test_running = false;
             return [
                 /**@ts-ignore */
-                t.expect(   'Count IamAppIdToken',    
-                            spyObject.filter(row=>row.id == spyId && row.object=='IamAppIdToken').length).toBeGreaterThan(0)
+                t.expect(   'Count App',    
+                            spyObject.filter(row=>row.id == spyId && row.object=='App').length).toBeGreaterThan(0),
+                /**@ts-ignore */
+                t.expect(   'Count AppParameter',    
+                            spyObject.filter(row=>row.id == spyId && row.object=='AppParameter').length).toBeGreaterThan(0),
+                /**@ts-ignore */
+                t.expect(   'Count ConfigServer',    
+                            spyObject.filter(row=>row.id == spyId && row.object=='ConfigServer').length).toBeGreaterThan(0),
+                /**@ts-ignore */
+                t.expect(   'Count IamUser',    
+                            spyObject.filter(row=>row.id == spyId && row.object=='IamUser').length).toBeGreaterThan(0)
             ];
         })
         .then(result=>{
