@@ -17,7 +17,7 @@
  *              merchant_public_key:    string,
  *              merchant_private_key:   string,
  *              merchant_vpa:           string,
- *              json_data:              {[key:string]:string},
+ *              Document:              {[key:string]:string},
  *              id:                                 number,                 
  *              iam_user_app_id:   number}} merchant
  */
@@ -31,7 +31,7 @@
  *              currency_code:  string,
  *              amount:         number|null,
  *              message:        string,
- *              json_data?:     {[key:string]:string},
+ *              Document?:     {[key:string]:string},
  *              status:         string}} payment_request
  */
 
@@ -45,7 +45,7 @@
  *            bank_account_vpa:string;
  *            currency:string;
  *            currency_name:string,
- *            json_data:{[key:string]:string}}} bank_account
+ *            Document:{[key:string]:string}}} bank_account
  */
 /**
  * @description bank_transaction

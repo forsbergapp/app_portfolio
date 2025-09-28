@@ -1627,21 +1627,21 @@ const commonUserLoginApp = async spinner_item =>{
                                 .catch(error=>
                                     console.log(error));
     COMMON_GLOBAL.iam_user_app_id = IamUserApp.id;
-    //get preferences saved in json_data column
+    //get preferences saved in Document column
     //locale
-    if (IamUserApp.json_data?.preference_locale==null)
+    if (IamUserApp.Document?.preference_locale==null)
         commonUserPreferencesGlobalSetDefault('LOCALE');
     else
-        COMMON_GLOBAL.user_locale = IamUserApp.json_data.preference_locale;
+        COMMON_GLOBAL.user_locale = IamUserApp.Document.preference_locale;
     //timezone
-    if (IamUserApp.json_data?.preference_timezone==null)
+    if (IamUserApp.Document?.preference_timezone==null)
         commonUserPreferencesGlobalSetDefault('TIMEZONE');
     else
-        COMMON_GLOBAL.user_timezone = IamUserApp.json_data.preference_timezone;
+        COMMON_GLOBAL.user_timezone = IamUserApp.Document.preference_timezone;
     //direction
-    COMMON_GLOBAL.user_direction = IamUserApp.json_data?.preference_direction;
+    COMMON_GLOBAL.user_direction = IamUserApp.Document?.preference_direction;
     //arabic script
-    COMMON_GLOBAL.user_arabic_script = IamUserApp.json_data?.preference_arabic_script;
+    COMMON_GLOBAL.user_arabic_script = IamUserApp.Document?.preference_arabic_script;
     //update body class with app theme, direction and arabic script usage classes
     commonMiscPreferencesUpdateBodyClassFromPreferences();
 };
@@ -1761,24 +1761,23 @@ const commonUserFunction = function_name => {
         /**@type{common['CommonRESTAPIMethod']} */
         let method;
         let path;
-        let json_data;
+        let json;
         const check_div = COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`);
         if (check_div.children[0].style.display == 'block') {
             path = `/server-db/iamuser${function_name.toLowerCase()}`;
             method = 'POST';
-            json_data = {   IAM_iam_user_id: COMMON_GLOBAL.iam_user_id,
-                            [`iam_user_id_${function_name.toLowerCase()}`]: user_id_profile
-
-};
+            json = {    IAM_iam_user_id: COMMON_GLOBAL.iam_user_id,
+                        [`iam_user_id_${function_name.toLowerCase()}`]: user_id_profile
+                    };
         } else {
             path = `/server-db/iamuser${function_name.toLowerCase()}/${COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).getAttribute('data-record_id')}`;
             method = 'DELETE';
-            json_data = { IAM_iam_user_id: COMMON_GLOBAL.iam_user_id};
+            json = { IAM_iam_user_id: COMMON_GLOBAL.iam_user_id};
         }
         if (COMMON_GLOBAL.iam_user_id == null)
             commonDialogueShow('LOGIN');
         else {
-           commonFFB({path:path, method:method, authorization_type:'APP_ACCESS', body:json_data})
+           commonFFB({path:path, method:method, authorization_type:'APP_ACCESS', body:Document})
             .then(result=> {
                 if (COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
                     //follow/like

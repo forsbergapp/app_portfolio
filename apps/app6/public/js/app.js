@@ -267,7 +267,7 @@ const appPay = async () =>{
                     display_type:'VERTICAL_KEY_VALUE',
                     dialogue:true,
                     master_path:'/app-common-module/COMMON_APP_DATA_METADATA',
-                    master_query:'fields=json_data',
+                    master_query:'fields=Document',
                     master_body:{   type:'FUNCTION',
                                     IAM_module_app_id:common.commonGlobalGet('app_common_app_id'),
                                     IAM_data_app_id:common.commonGlobalGet('app_id'), 

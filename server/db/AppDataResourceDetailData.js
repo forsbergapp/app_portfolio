@@ -23,7 +23,7 @@ const {server} = await import ('../server.js');
  *                  resource_name_data_master_attribute:string|null,
  *                  app_data_resource_detail_id:number|null,
  *                  app_data_entity_id:number}}} parameters
- * @returns {server_server_response & {result?:server_db_table_AppDataResourceDetailData & {adrm_attribute_master_json_data:{}}[]|*}}
+ * @returns {server_server_response & {result?:server_db_table_AppDataResourceDetailData & {adrm_attribute_master_Document:{}}[]|*}}
  */
 const get = parameters =>{ 
     const entity_id = parameters.data?.app_data_entity_id?? server.ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
@@ -70,14 +70,14 @@ const get = parameters =>{
                         ).length>0
                         
                     )
-                    .map((/**@type{server_db_table_AppDataResourceDetailData & {adrm_attribute_master_json_data:{}}}*/row)=>{     
-                            row.adrm_attribute_master_json_data = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
+                    .map((/**@type{server_db_table_AppDataResourceDetailData & {adrm_attribute_master_Document:{}}}*/row)=>{     
+                            row.adrm_attribute_master_Document = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                                                 join:true,
                                                                                                 resource_id:row.app_data_resource_master_attribute_id,
                                                                                                 data:{  data_app_id:null,
                                                                                                         iam_user_id:null,
                                                                                                         resource_name:null,
-                                                                                                        app_data_entity_id:parameters.data.app_data_entity_id}}).result[0].json_data;
+                                                                                                        app_data_entity_id:parameters.data.app_data_entity_id}}).result[0].Document;
                         return row;
                     });
     if (result.length>0 || parameters.resource_id==null||parameters.join)
@@ -105,7 +105,7 @@ const post = async parameters => {
                               id:Date.now(),
                               app_data_resource_detail_id:parameters.data.app_data_resource_detail_id,
                               app_data_resource_master_attribute_id:parameters.data.app_data_resource_master_attribute_id,
-                              json_data:parameters.data.json_data,
+                              Document:parameters.data.Document,
                               created:new Date().toISOString(),
                               modified:null
                      };
@@ -138,8 +138,8 @@ const update = async parameters =>{
       /**@type{server_db_table_AppDataResourceDetailData} */
       const data_update = {};
       //allowed parameters to update:
-      if (parameters.data.json_data!=null)
-          data_update.json_data = parameters.data.json_data;
+      if (parameters.data.Document!=null)
+          data_update.Document = parameters.data.Document;
       data_update.modified = new Date().toISOString();
       if (Object.entries(data_update).length>0)
           return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppDataResourceDetailData', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{

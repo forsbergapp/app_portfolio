@@ -1886,7 +1886,7 @@
                                             "IAM_iam_user_id": {
                                                 "$ref": "#/components/parameters/IAM_iam_user_id"
                                             },
-                                            "json_data":{
+                                            "Document":{
                                                 "required":true,
                                                 "type":"string"
                                             }
@@ -1995,7 +1995,7 @@
                                             "description":{
                                                 "type":"string"
                                             },
-                                            "json_data":{
+                                            "Document":{
                                                 "type":"string"
                                             },
                                             "IAM_iam_user_app_id":{
@@ -2054,7 +2054,7 @@
                                             "description":{
                                                 "type":"string"
                                             },
-                                            "json_data":{
+                                            "Document":{
                                                 "type":"string"
                                             },
                                             "IAM_iam_user_app_id":{
@@ -3254,7 +3254,7 @@
                                             "IAM_iam_user_id": {
                                                 "$ref": "#/components/parameters/IAM_iam_user_id"
                                             },
-                                            "json_data":{
+                                            "Document":{
                                                 "required":true,
                                                 "type":"string"
                                             }

@@ -56,7 +56,7 @@ const paymentRequestUpdate = async parameters =>{
                                                                 app_data_entity_id:Entity.id
                                                         }}).result
                                     .filter((/**@type{server_db_table_AppDataResourceMaster}*/payment_request)=>
-                                        payment_request.json_data?.payment_request_id==token?.app_custom_id
+                                        payment_request.Document?.payment_request_id==token?.app_custom_id
                                     )[0];
 
     if (customer && payment_request && payment_request.id!=null && (server.ORM.UtilNumberValue(parameters.data.status)==1 || server.ORM.UtilNumberValue(parameters.data.status)==0)){
@@ -82,14 +82,14 @@ const paymentRequestUpdate = async parameters =>{
                                                                                         resource_name_data_master_attribute:null,
                                                                                         app_data_entity_id:Entity.id
                                                                                 }}).result.reduce(( /**@type{number}*/balance, 
-                                                                                                    /**@type{server_db_table_AppDataResourceDetailData & {json_data:bank_transaction}}*/current_row)=>
-                                                                                    balance += (current_row.json_data.amount_deposit ?? current_row.json_data.amount_withdrawal) ?? 0,0
+                                                                                                    /**@type{server_db_table_AppDataResourceDetailData & {Document:bank_transaction}}*/current_row)=>
+                                                                                    balance += (current_row.Document.amount_deposit ?? current_row.Document.amount_withdrawal) ?? 0,0
                                                                                 );
                 if ((account_payer_saldo - (payment_request.amount??0)) <0)
                     status='NO FUNDS';
                 else{
                     /**@type{server_db_table_AppDataResourceDetailData} */
-                    const data_debit = {json_data                               : { timestamp:new Date().toISOString(),
+                    const data_debit = {Document                               : { timestamp:new Date().toISOString(),
                                                                                     logo:'',
                                                                                     origin:payment_request.reference,
                                                                                     amount_deposit:null,
@@ -110,11 +110,11 @@ const paymentRequestUpdate = async parameters =>{
                                                                                         app_data_entity_id:Entity.id
                                                                                 }}).result
                                                             .filter((/**@type{server_db_table_AppDataResourceDetail}*/account)=>
-                                                                account.json_data?.bank_account_vpa == payment_request.payeeid
+                                                                account.Document?.bank_account_vpa == payment_request.payeeid
                                                             )[0];
                     if (account_payee && account_payee.id!=null){
                         /**@type{server_db_table_AppDataResourceDetailData} */
-                        const data_credit = {   json_data                               : { timestamp:new Date().toISOString(),
+                        const data_credit = {   Document                               : { timestamp:new Date().toISOString(),
                                                                                             logo:'',
                                                                                             origin:payment_request.reference,
                                                                                             amount_deposit:payment_request.amount,
@@ -135,9 +135,9 @@ const paymentRequestUpdate = async parameters =>{
         else
             status='CANCELLED';
         //update status
-        if (payment_request.json_data?.status)
-            payment_request.json_data.status=status;
-        const data_payment_request = {  json_data                                       : payment_request.json_data,
+        if (payment_request.Document?.status)
+            payment_request.Document.status=status;
+        const data_payment_request = {  Document                                       : payment_request.Document,
                                         data_app_id                                     : parameters.data.data_app_id
                                         };
         

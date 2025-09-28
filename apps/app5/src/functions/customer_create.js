@@ -45,7 +45,7 @@ const customerCreate = async parameters =>{
     if (resource_customer.result){
         /**@type{server_db_table_AppDataResourceMaster} */
         const post_data = {
-            json_data                                   : {
+            Document                                   : {
                                                             customer_type   :parameters.data.customer_type,
                                                             name            :parameters.data.name,
                                                             address         :parameters.data.address,

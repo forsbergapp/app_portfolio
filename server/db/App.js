@@ -55,7 +55,7 @@ const getViewInfo = async parameters =>{
                             id:app.id,
                             name:app.name,
                             app_name_translation : server.ORM.db.AppTranslation.get(parameters.app_id,null,parameters.locale, app.id).result
-                                                    .filter((/**@type{server_db_table_AppTranslation}*/appTranslation)=>appTranslation.app_id==app.id)[0].json_data.name,
+                                                    .filter((/**@type{server_db_table_AppTranslation}*/appTranslation)=>appTranslation.app_id==app.id)[0].Document.name,
                             logo:app.logo
                         };
             }), type:'JSON'};

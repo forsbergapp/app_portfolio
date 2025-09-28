@@ -62,16 +62,16 @@ const productGet = async parameters =>{
         for (const product_variant of product_variants.result.filter((/**@type{server_db_table_AppDataResourceDetail}*/row)=>row.app_data_resource_master_id == product.id)){
             product.sku_keys = [];
             for (const product_variant_metadata of product_variant_metadatas.result){
-                const key_name = Object.keys(product_variant_metadata.json_data)[0];
+                const key_name = Object.keys(product_variant_metadata.Document)[0];
                 if (key_name.toLowerCase() != 'name'){
-                    const key_type = product_variant_metadata.json_data[Object.keys(product_variant_metadata.json_data)[0]].type;
-                    product.sku_keys.push({key_name:key_name, key_value:product_variant.json_data[key_name], key_type:key_type});
+                    const key_type = product_variant_metadata.Document[Object.keys(product_variant_metadata.Document)[0]].type;
+                    product.sku_keys.push({key_name:key_name, key_value:product_variant.Document[key_name], key_type:key_type});
                 }
             }
             product.sku_keys.push({key_name:'id', key_value:product_variant.id, key_type:'TEXT'});
             //add currency to be displayed on each product variant
-            product.sku_keys.push({key_name:'currency_code', key_value:currency.json_data.currency_code, key_type:'TEXT'});
-            product.sku_keys.push({key_name:'currency_symbol', key_value:currency.json_data.currency_symbol, key_type:'TEXT'});
+            product.sku_keys.push({key_name:'currency_code', key_value:currency.Document.currency_code, key_type:'TEXT'});
+            product.sku_keys.push({key_name:'currency_symbol', key_value:currency.Document.currency_symbol, key_type:'TEXT'});
             product.sku.push(product.sku_keys);
         }
         

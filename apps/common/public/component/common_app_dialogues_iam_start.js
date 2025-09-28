@@ -105,13 +105,13 @@ const component = async props => {
                                 password_confirm: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start_signup_password_confirm'),
                                 password_confirm_reminder: props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start_signup_password_reminder')
                                 })==true){
-            const json_data = { username:           props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start_signup_username').textContent,
-                                password:           props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start_signup_password').textContent,
-                                password_reminder:  props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start_signup_password_reminder').textContent,
-                                active:             0
-                                };
+            const json = {  username:           props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start_signup_username').textContent,
+                            password:           props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start_signup_password').textContent,
+                            password_reminder:  props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start_signup_password_reminder').textContent,
+                            active:             0
+                            };
                
-           props.methods.COMMON.commonFFB({path:'/server-iam/iamuser', method:'POST', authorization_type:'IAM_SIGNUP', body:json_data, spinner_id:'common_app_dialogues_iam_start_signup_button'})
+           props.methods.COMMON.commonFFB({path:'/server-iam/iamuser', method:'POST', authorization_type:'IAM_SIGNUP', body:json, spinner_id:'common_app_dialogues_iam_start_signup_button'})
             .then(result=>{
                 props.methods.COMMON.commonGlobalSet('iam_user_app_id', JSON.parse(result).iam_user_app_id);
                 props.methods.COMMON.commonGlobalSet('iam_user_id',     JSON.parse(result).iam_user_id);

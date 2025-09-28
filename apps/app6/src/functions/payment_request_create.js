@@ -37,7 +37,7 @@ const {server} = await import('../../../../server/server.js');
 const paymentRequestCreate = async parameters =>{
    
    /**@type{server_db_table_AppDataEntity & 
-    *       {json_data:{   description:string, 
+    *       {Document:{   description:string, 
     *                      name:string, 
     *                      entity_type:string, 
     *                      store_type:string,
@@ -64,7 +64,7 @@ const paymentRequestCreate = async parameters =>{
                                                                        app_data_entity_id:Entity.id
                                                                }}).result[0];
    //validate
-   if (parameters.data.currency_code==currency.json_data?.currency_code && parameters.data.payerid !='' && parameters.data.payerid !=null){
+   if (parameters.data.currency_code==currency.Document?.currency_code && parameters.data.payerid !='' && parameters.data.payerid !=null){
        /** 
         * @type {{ api_secret:     string,
         *          reference:      string,
@@ -75,29 +75,29 @@ const paymentRequestCreate = async parameters =>{
         *          message:        string,
         *          origin:         string}}
         */
-       const body = {   api_secret:     Entity.json_data.merchant_api_secret??'',
+       const body = {   api_secret:     Entity.Document.merchant_api_secret??'',
                         reference:      parameters.data.reference.substring(0,30),
-                        payeeid:        Entity.json_data.merchant_vpa??'', 
+                        payeeid:        Entity.Document.merchant_vpa??'', 
                         payerid:        parameters.data.payerid,
-                        currency_code:  currency.json_data.currency_code,
+                        currency_code:  currency.Document.currency_code,
                         amount:         server.ORM.UtilNumberValue(parameters.data.amount) ?? 0, 
                         message:        parameters.data.message,
                         origin:         parameters.host
        };
        //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
        //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-       const body_encrypted = {id:     server.ORM.UtilNumberValue(Entity.json_data.merchant_id),
+       const body_encrypted = {id:     server.ORM.UtilNumberValue(Entity.Document.merchant_id),
                                message:server.security.securityPublicEncrypt(
-                                                               Entity.json_data.merchant_public_key??'', 
+                                                               Entity.Document.merchant_public_key??'', 
                                                                JSON.stringify(body))};
        const result_bffExternal = await server.bff.bffExternal({  app_id:parameters.app_id,
-                                                   url:Entity.json_data.merchant_api_url_payment_request_create??'', 
+                                                   url:Entity.Document.merchant_api_url_payment_request_create??'', 
                                                    method:'POST', 
                                                    //send body in base64 format
                                                    body:{data:Buffer.from(JSON.stringify(body_encrypted)).toString('base64')}, 
                                                    user_agent:parameters.user_agent, 
                                                    ip:parameters.ip, 
-                                                   'app-id':Entity.json_data.merchant_api_url_payment_request_app_id,
+                                                   'app-id':Entity.Document.merchant_api_url_payment_request_app_id,
                                                    authorization:null, 
                                                    locale:parameters.locale});
        if (result_bffExternal.result.error) {
@@ -122,7 +122,7 @@ const paymentRequestCreate = async parameters =>{
             *          currency_symbol:string}}
             */
            const body_decrypted = JSON.parse(server.security.securityPrivateDecrypt(
-                                                   Entity.json_data.merchant_private_key??'', 
+                                                   Entity.Document.merchant_private_key??'', 
                                                    result_bffExternal.result.rows.message));
 
            return {result:[{token:                 body_decrypted.token,
@@ -131,9 +131,9 @@ const paymentRequestCreate = async parameters =>{
                            payment_request_id:     body_decrypted.payment_request_id,
                            payment_request_message:'Check your bank app to authorize this payment',
                            status:                 body_decrypted.status,
-                           merchant_name:          Entity.json_data.merchant_name??'',
+                           merchant_name:          Entity.Document.merchant_name??'',
                            amount:			        body_decrypted.amount,
-                           currency_symbol:        currency.json_data.currency_symbol,
+                           currency_symbol:        currency.Document.currency_symbol,
                            countdown:              ''
                        }], type:'JSON'};
        }
