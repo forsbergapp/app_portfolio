@@ -1,0 +1,1841 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="1.2.0-beta1" use-changelog="false" max-obj-count="52"
+	 gen-disabled-objs-code="false" show-sys-schemas-rects="true"
+	 last-position="-223,-441" last-zoom="0.9" scene-rect="-248,-490,8068.78,3386.12"
+	 default-schema="public" default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layers="0" fill-color="#e1e1e1" name-color="#000000" sql-disabled="true">
+</schema>
+
+<schema name="ORM" layers="0" rect-visible="true" fill-color="#e1e1e1" name-color="#eff0f1">
+</schema>
+
+<table name="App" layers="0" collapse-mode="1" max-obj-count="15" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="440" y="-420"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Name" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Path" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Logo">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Js">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Css">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="CssReport">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Favicon32x32">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Favicon192x192">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="TextEdit">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Copyright">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="LinkTitle">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="LinkUrl">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="App_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;App&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="AppDataEntity" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="-20" y="-340"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Document">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Modified">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="AppDataEntity_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;AppDataEntity&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppId" index="4"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="App_fk" index="1"/>
+	</customidxs></table>
+
+<relationship name="App_has_many_AppDataEntity" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppDataEntity&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-0.853476" y="-3.80802"/>
+	</label>
+</relationship>
+
+<table name="AppData" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="440" y="160"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Name" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Value" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="DisplayData" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Data2">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Data3">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Data4">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Data5">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="AppData_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;AppData&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppId" index="1"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="App_fk" index="1"/>
+	</customidxs></table>
+
+<relationship name="App_has_many_AppData" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppData&quot;"
+	 src-required="true" dst-required="false"/>
+
+<table name="LogAppInfo" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3160" y="-420"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="AppId">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="AppFileName">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="AppFunctionName">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="LogText">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogAppInfo_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogAppInfo&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="LogDbInfo" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3160" y="-160"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="AppId">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Object">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Dml">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Parameters">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="LogText">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogDbInfo_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogDbInfo&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="LogServiceInfo" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3140" y="240"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Appid">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Service">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Parameters">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Logtext">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogServiceInfo_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogServiceInfo&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="LogRequestinfo" layers="0" collapse-mode="1" max-obj-count="22" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3140" y="500"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="X" default-value="{AppId:0, AppIdAuth:0, Method:&quot;GET&quot;}">
+		<type name="json" length="0"/>
+	</column>
+	<column name="Host">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Ip">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="RequestId">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="CorrelationId">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Url">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="HttpInfo">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Method">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="StatusCode">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="StatusMessage">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="UserAgent">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="AcceptLanguage">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Referer">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SizeReceived">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SizeSent">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="ResponseTime">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="LogText">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogRequestinfo_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogRequestinfo&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="LogServerInfo" layers="0" collapse-mode="1" max-obj-count="3" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3140" y="1040"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="LogText">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogServerInfo_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogServerInfo&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="ConfigRestApi" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3640" y="1900"/>
+	<column name="info" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="servers" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="paths" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="components" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+</table>
+
+<table name="MesssageQueuePublish" layers="0" collapse-mode="1" max-obj-count="4" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3200" y="1300"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Service" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Message" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="MesssageQueuePublish_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;MesssageQueuePublish&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="MessageQueueConsume" layers="0" collapse-mode="1" max-obj-count="9" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3620" y="1260"/>
+	<column name="Id" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Message" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Start" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Finished">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Result">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Modified">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="MessageQueueConsume_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;MessageQueueConsume&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="MessageQueueError" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3140" y="1540"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Message" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Result">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="MessageQueueError_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;MessageQueueError&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="IamMicroserviceToken" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="2620" y="1160"/>
+	<column name="Id" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Res" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Token">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Ip" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Ua" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Host" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamMicroserviceToken_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamMicroserviceToken&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="IamMIcroserviceToken_Uk" type="uq-constr" table="&quot;ORM&quot;.&quot;IamMicroserviceToken&quot;">
+		<columns names="Token" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppId" index="8"/>
+		<object name="ServiceRegistryId" index="7"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="App_fk" index="2"/>
+		<object name="ServiceRegistry_fk" index="1"/>
+	</customidxs></table>
+
+<table name="ServiceRegistry" layers="0" collapse-mode="1" max-obj-count="15" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="2640" y="1640"/>
+	<column name="Id" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Name" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="ServerProtocol" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="ServerHost" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="ServerPort" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="PathMetrics">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="PathHealth">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="RestApiVersion" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Uuid" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Secret" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Status" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Modified">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="ServiceRegistry_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;ServiceRegistry&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="ServiceRegistry_uk" type="uq-constr" table="&quot;ORM&quot;.&quot;ServiceRegistry&quot;">
+		<columns names="Name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="LogRequestError" layers="0" collapse-mode="1" max-obj-count="22" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3640" y="500"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="X" default-value="{AppId:0, AppIdAuth:0, Method:&quot;GET&quot;}">
+		<type name="json" length="0"/>
+	</column>
+	<column name="Host">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Ip">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="RequestId">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="CorrelationId">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Url">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="HttpInfo">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Method">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="StatusCode">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="StatusMessage">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="UserAgent">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="AcceptLanguage">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Referer">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SizeReceived">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SizeSent">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="ResponseTime">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="LogText">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogRequestError_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogRequestError&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="LogAppError" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3620" y="-420"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="AppId">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="AppFileName">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="AppFunctionName">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="LogText">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogAppError_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogAppError&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="LogDbError" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3640" y="-160"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="AppId">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Object">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Dml">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Parameters">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="LogText">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogDbError_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogDbError&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="LogServiceError" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3640" y="240"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Appid">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Service">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Parameters">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Logtext">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogServiceError_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogServiceError&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="LogServerError" layers="0" collapse-mode="1" max-obj-count="3" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3640" y="1040"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="LogText">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogServerError_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogServerError&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="MesssageQueuePublish_has_many_MessageQueueConsume" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;MesssageQueuePublish&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;MessageQueueConsume&quot;"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="MesssageQueuePublish_has_many_MessageQueueError" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;MesssageQueuePublish&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;MessageQueueError&quot;"
+	 src-required="false" dst-required="false"/>
+
+<table name="ConfigServer" layers="0" collapse-mode="2" max-obj-count="10" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<role name="postgres"/>
+	<position x="3160" y="1800"/>
+	<column name="SERVER" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SERVICE_APP" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SERVICE_MICROSERVICE" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SERVICE_DB" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SERVICE_IAM" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SERVICE_SOCKET" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SERVICE_LOG" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SERVICE_TEST" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="METADATA" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+</table>
+
+<relationship name="ServiceRegistry_has_many_IamMicroserviceToken" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;ServiceRegistry&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamMicroserviceToken&quot;"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="App_has_many_IamMicroserviceToken" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamMicroserviceToken&quot;"
+	 src-required="true" dst-required="false"/>
+
+<table name="AppDataEntityResource" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="-80" y="200"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Document" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Modified">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="AppDataEntityResource_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;AppDataEntityResource&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppDataEntityId" index="4"/>
+		<object name="AppDataId" index="5"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="AppDataEntity_fk" index="1"/>
+		<object name="AppData_fk" index="2"/>
+	</customidxs></table>
+
+<relationship name="AppDataEntity_has_many_AppDataEntityResource" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;AppDataEntity&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppDataEntityResource&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="AppData_has_many_AppDataEntityResource" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;AppData&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppDataEntityResource&quot;"
+	 src-required="true" dst-required="false"/>
+
+<table name="AppTranslation" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="2140" y="-420"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Locale">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Text">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Document">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="AppTranslation_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;AppTranslation&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppId" index="1"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="App_fk" index="1"/>
+	</customidxs></table>
+
+<table name="AppModule" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="1080" y="500"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="ModuleType" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="ModuleName" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="ModuleRole" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="ModulePath" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="ModuleDescription" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="AppModule_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;AppModule&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppId" index="1"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="App_fk" index="1"/>
+	</customidxs></table>
+
+<relationship name="App_has_many_AppTranslation" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppTranslation&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="App_has_many_AppModule" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppModule&quot;"
+	 src-required="true" dst-required="false"/>
+
+<table name="IamControlIp" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="2160" y="-240"/>
+	<column name="Id" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="From" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="To" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="HourFrom">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="HourTo">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="DateFrom">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="DateTo">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Action">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamControlIp_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamControlIp&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppId" index="1"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="App_fk" index="1"/>
+	</customidxs></table>
+
+<table name="IamAppIdToken" layers="0" collapse-mode="1" max-obj-count="9" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="2660" y="400"/>
+	<column name="Id" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Res" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Ip" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Ua" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Token">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamAppIdToken_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamAppIdToken&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="IamAppIdToken_Uk" type="uq-constr" table="&quot;ORM&quot;.&quot;IamAppIdToken&quot;">
+		<columns names="Token" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppId" index="6"/>
+		<object name="AppIdToken" index="7"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="App_fk" index="1"/>
+		<object name="App_fk1" index="2"/>
+	</customidxs></table>
+
+<table name="IamEncryption" layers="0" collapse-mode="1" max-obj-count="9" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="2640" y="60"/>
+	<column name="Id" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Uuid" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Secret" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Type" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Url">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamEncryption_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamEncryption&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="IamEncryption_Uk" type="uq-constr" table="&quot;ORM&quot;.&quot;IamEncryption&quot;">
+		<columns names="Uuid" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppId" index="6"/>
+		<object name="IamAppIdTokenId" index="7"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="App_fk" index="1"/>
+		<object name="IamAppIdToken_fk" index="2"/>
+	</customidxs></table>
+
+<relationship name="App_has_many_IamControlIp" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamControlIp&quot;"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-7.4205" y="-5.21736"/>
+	</label>
+</relationship>
+
+<relationship name="App_has_many_IamAppIdToken" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamAppIdToken&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="App_has_many_IamEncryption" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamEncryption&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="AppToken_has_many_IamAppIdToken" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}Token"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamAppIdToken&quot;"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="IamAppIdToken_has_many_IamEncryption" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamAppIdToken&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamEncryption&quot;"
+	 src-required="false" dst-required="false"/>
+
+<table name="IamControlUserAgent" layers="0" collapse-mode="1" max-obj-count="3" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="2620" y="840"/>
+	<column name="Id" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Name" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="UserAgent" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamControlUserAgent_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamControlUserAgent&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="AppDataResourceMaster" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="480" y="580"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Document">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Modified">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="AppDataResourceMaster_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;AppDataResourceMaster&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppDataEntityResourceId" index="4"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="AppDataEntityResource_fk" index="1"/>
+	</customidxs></table>
+
+<table name="AppDataResourceDetail" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="-140" y="560"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Document">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Modified">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="AppDataResourceDetail_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;AppDataResourceDetail&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppDataEntityResourceId" index="5"/>
+		<object name="AppDataResourceMasterId" index="4"/>
+		<object name="AppDataResourceMasterIdAttribute" index="6"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="AppDataEntityResource_fk" index="1"/>
+		<object name="AppDataResourceMaster_fk" index="2"/>
+		<object name="AppDataResourceMaster_fk1" index="3"/>
+	</customidxs></table>
+
+<table name="AppDataResourceDetailData" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="60" y="960"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Document">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Modified">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="AppDataResourceDetailData_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;AppDataResourceDetailData&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppDataResourceDetailId" index="4"/>
+		<object name="AppDataResourceMasterIdAttribute" index="5"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="AppDataResourceDetail_fk" index="1"/>
+		<object name="AppDataResourceMaster_fk" index="2"/>
+	</customidxs></table>
+
+<relationship name="AppDataEntityResource_has_many_AppDataResourceDetail" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;AppDataEntityResource&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppDataResourceDetail&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="AppDataEntityResource_has_many_AppDataResourceMaster" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;AppDataEntityResource&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppDataResourceMaster&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="AppDataResourceDetail_has_many_AppDataResourceDetailData" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;AppDataResourceDetail&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppDataResourceDetailData&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="AppDataResourceMaster_has_many_AppDataResourceDetail" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;AppDataResourceMaster&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppDataResourceDetail&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="AppDataResourceMasterAttribute_has_many_AppDataResourceDetail" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}Attribute"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;AppDataResourceMaster&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppDataResourceDetail&quot;"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="AppDataResourceMasterAttrib_has_many_AppDataResourceDetailData" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}Attribute"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;AppDataResourceMaster&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppDataResourceDetailData&quot;"
+	 src-required="false" dst-required="false"/>
+
+<table name="IamUserApp" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="1080" y="940"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Document">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Modified">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamUserApp_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamUserApp&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppId" index="4"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="App_fk" index="1"/>
+	</customidxs></table>
+
+<table name="IamUser" layers="0" collapse-mode="1" max-obj-count="16" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="1660" y="1420"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Username" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Password" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="PasswordReminder">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Type" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Bio">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Private">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="OtpKey">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Avatar">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="UserLevel">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Status">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Active">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Modified">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamUser_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamUser&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="IamUser_Uk" type="uq-constr" table="&quot;ORM&quot;.&quot;IamUser&quot;">
+		<columns names="Username" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="IamUserAppDataPost" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="-80" y="1260"/>
+	<column name="Id" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Document">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Modified">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamUserAppDataPost_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamUserAppDataPost&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="IamUserAppId" index="4"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="IamUserApp_fk" index="1"/>
+	</customidxs></table>
+
+<table name="IamUserAppDataPostLike" layers="0" collapse-mode="1" max-obj-count="4" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="440" y="1620"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamUserAppDataPostLike_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamUserAppDataPostLike&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="IamUserAppDataPostId" index="3"/>
+		<object name="IamUserAppId" index="2"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="IamUserAppDataPost_fk" index="2"/>
+		<object name="IamUserApp_fk" index="1"/>
+	</customidxs></table>
+
+<table name="IamUserAppDataPostView" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="-120" y="1620"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Document">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamUserAppDataPostView_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamUserAppDataPostView&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="IamUserAppDataPostId" index="4"/>
+		<object name="IamUserAppId" index="3"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="IamUserAppDataPost_fk" index="2"/>
+		<object name="IamUserApp_fk" index="1"/>
+	</customidxs></table>
+
+<table name="IamAppAccess" layers="0" collapse-mode="1" max-obj-count="16" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="1640" y="800"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Type" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Res" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Ip" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Token">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Ua">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="AppCustomId">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="IamUserUsername">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Modified">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamAppAccess_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamAppAccess&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="IamAppAccess_Uk" type="uq-constr" table="&quot;ORM&quot;.&quot;IamAppAccess&quot;">
+		<columns names="Token" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppId" index="10"/>
+		<object name="AppIdToken" index="11"/>
+		<object name="IamUserAppId" index="12"/>
+		<object name="IamUserId" index="13"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="App_fk" index="2"/>
+		<object name="App_fk1" index="3"/>
+		<object name="IamUserApp_fk" index="4"/>
+		<object name="IamUser_fk" index="5"/>
+	</customidxs></table>
+
+<table name="IamControlObserve" layers="0" collapse-mode="1" max-obj-count="3" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="1600" y="260"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="IamControlObserve_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamControlObserve&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="AppModuleQueue" layers="0" collapse-mode="1" max-obj-count="14" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="2140" y="460"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Type">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Name">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Parameters">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="User">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Start">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="End">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Progress">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Status">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Message">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="AppModuleQueue_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;AppModuleQueue&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="AppModuleId" index="11"/>
+		<object name="IamUserId" index="10"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="AppModule_fk" index="2"/>
+		<object name="IamUser_fk" index="1"/>
+	</customidxs></table>
+
+<table name="IamUserEvent" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="2180" y="1520"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Event" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="EventStatus" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamUserEvent_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamUserEvent&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="IamUserId" index="4"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="IamUser_fk" index="1"/>
+	</customidxs></table>
+
+<relationship name="App_has_many_IamUserApp" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserApp&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="IamUserApp_has_many_AppDataResourceMaster" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#52cadb"
+	 src-table="&quot;ORM&quot;.&quot;IamUserApp&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppDataResourceMaster&quot;"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="IamUserApp_has_many_IamUserAppDataPost" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUserApp&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserAppDataPost&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="IamUserApp_has_many_IamUserAppDataPostLike" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUserApp&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserAppDataPostLike&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="IamUserApp_has_many_IamUserAppDataPostView" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUserApp&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserAppDataPostView&quot;"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="IamUser_has_many_IamUserApp" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUser&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserApp&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="IamUserAppDataPost_has_many_IamUserAppDataPostLike" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUserAppDataPost&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserAppDataPostLike&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="IamUserAppDataPost_has_many_IamUserAppDataPostView" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUserAppDataPost&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserAppDataPostView&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<constraint name="AppDataEntityResource_Uk" type="uq-constr" table="&quot;ORM&quot;.&quot;AppDataEntityResource&quot;">
+	<columns names="AppDataEntityId,AppDataId" ref-type="src-columns"/>
+</constraint>
+
+<constraint name="AppTranslation_Uk" type="uq-constr" table="&quot;ORM&quot;.&quot;AppTranslation&quot;">
+	<columns names="AppId,Locale" ref-type="src-columns"/>
+</constraint>
+
+<constraint name="Appmodule_Uk" type="uq-constr" table="&quot;ORM&quot;.&quot;AppModule&quot;">
+	<columns names="AppId,ModuleType,ModuleName" ref-type="src-columns"/>
+</constraint>
+
+<relationship name="App_has_many_IamAppAccess" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamAppAccess&quot;"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="AppToken_has_many_IamAppAccess" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}Token"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamAppAccess&quot;"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="IamUserApp_has_many_IamAppAccess" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUserApp&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamAppAccess&quot;"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="IamUser_has_many_IamAppAccess" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUser&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamAppAccess&quot;"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="IamUser_has_many_IamUserEvent" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUser&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserEvent&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="IamUser_has_many_AppModuleQueue" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUser&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppModuleQueue&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="AppModule_has_many_AppModuleQueue" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;AppModule&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;AppModuleQueue&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="IamUser_has_many_IamControlObserve" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUser&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamControlObserve&quot;"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="App_has_many_IamControlObserve" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;App&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamControlObserve&quot;"
+	 src-required="false" dst-required="false"/>
+
+<constraint name="IamUserAppDataPostLike_Uk" type="uq-constr" table="&quot;ORM&quot;.&quot;IamUserAppDataPostLike&quot;">
+	<columns names="IamUserAppId,IamUserAppDataPostId" ref-type="src-columns"/>
+</constraint>
+
+<table name="IamUserFollow" layers="0" collapse-mode="1" max-obj-count="4" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="1040" y="1380"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamUserFollow_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamUserFollow&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="IamUserId" index="2"/>
+		<object name="IamUserIdFollow" index="3"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="IamUser_fk" index="1"/>
+		<object name="IamUser_fk1" index="2"/>
+	</customidxs></table>
+
+<table name="IamUserLike" layers="0" collapse-mode="1" max-obj-count="4" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="1040" y="1580"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamUserLike_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamUserLike&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="IamUserId" index="2"/>
+		<object name="IamUserIdLike" index="3"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="IamUser_fk" index="1"/>
+		<object name="IamUser_fk1" index="2"/>
+	</customidxs></table>
+
+<table name="IamUserView" layers="0" collapse-mode="1" max-obj-count="4" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="1040" y="1800"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="IamUserView_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;IamUserView&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="IamUserId" index="2"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="IamUser_fk" index="1"/>
+	</customidxs></table>
+
+<relationship name="IamUser_has_many_IamUserFollow" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUser&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserFollow&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="152.705" y="17.1303"/>
+	</label>
+</relationship>
+
+<relationship name="IamUser_has_many_IamUserLike" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUser&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserLike&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="IamUser_has_many_IamUserView" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUser&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserView&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="IamUserFollow_has_many_IamUserFollow" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}Follow"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUser&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserFollow&quot;"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="IamUserLike_has_many_IamUserLike" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}Like"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUser&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserLike&quot;"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="9.2045" y="-4.44099"/>
+	</label>
+</relationship>
+
+<constraint name="IamUserFollow_Uk" type="uq-constr" table="&quot;ORM&quot;.&quot;IamUserFollow&quot;">
+	<columns names="IamUserId,IamUserIdFollow" ref-type="src-columns"/>
+</constraint>
+
+<constraint name="IamUserLike_Uk" type="uq-constr" table="&quot;ORM&quot;.&quot;IamUserLike&quot;">
+	<columns names="IamUserId,IamUserIdLike" ref-type="src-columns"/>
+</constraint>
+
+<relationship name="IamUserView_has_many_IamUserView" type="rel1n" layers="0"
+	 src-col-pattern="{st}{sc}View"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#1da1f2"
+	 src-table="&quot;ORM&quot;.&quot;IamUser&quot;"
+	 dst-table="&quot;ORM&quot;.&quot;IamUserView&quot;"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+</dbmodel>

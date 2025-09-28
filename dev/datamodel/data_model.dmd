@@ -1,8 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="data_model_app_portfolio" id="6F3DAC05-0876-004A-8166-76584B282044" version="3.5">
-<createdBy>admin</createdBy>
-<createdTime>2020-06-30 16:34:08 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<capitalNames>false</capitalNames>
-<designId>6F3DAC05-0876-004A-8166-76584B282044</designId>
-</OSDM_Design>

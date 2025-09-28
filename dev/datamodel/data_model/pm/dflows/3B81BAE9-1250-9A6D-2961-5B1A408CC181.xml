@@ -1,8 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<DataFlowDesign class="oracle.dbtools.crest.model.design.process.DataFlowDesign" name="USER SIGNUP" id="3B81BAE9-1250-9A6D-2961-5B1A408CC181" mainViewID="AFC5110D-AE9A-DD06-BA59-042D6AEE5898" topLevel="true">
-<createdBy>admin</createdBy>
-<createdTime>2022-07-11 22:12:24 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldBeOpen>true</shouldBeOpen>
-<processOrderString>ED7C2462-7A69-8505-7B10-F74387018953,5CC4AA3D-11F4-E2E1-4DD0-DD92A476C7F4,011AD09C-F0E2-33B8-B97F-5AE5FA6144B1</processOrderString>
-</DataFlowDesign>

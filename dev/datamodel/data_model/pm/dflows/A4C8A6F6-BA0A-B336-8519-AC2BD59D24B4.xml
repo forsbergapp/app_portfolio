@@ -1,8 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<DataFlowDesign class="oracle.dbtools.crest.model.design.process.DataFlowDesign" name="Send email SIGNUP Diagram" id="A4C8A6F6-BA0A-B336-8519-AC2BD59D24B4" mainViewID="8DB9AD3A-E54B-356F-2347-32C7E5E9E54A" topLevel="false" parentDFD_ID="3B81BAE9-1250-9A6D-2961-5B1A408CC181">
-<createdBy>admin</createdBy>
-<createdTime>2022-07-11 22:13:30 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldBeOpen>true</shouldBeOpen>
-<process>5CC4AA3D-11F4-E2E1-4DD0-DD92A476C7F4</process>
-</DataFlowDesign>
