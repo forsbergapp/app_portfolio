@@ -1,7 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<SchemaObject class="oracle.dbtools.crest.model.design.relational.SchemaObject" name="app_portfolio" directorySegmentName="seg_0" id="2C9478DD-6110-6AE4-BC0C-0218A99488A9">
-<createdBy>admin</createdBy>
-<createdTime>2020-06-30 19:25:36 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-<ordsAlias>schema_1</ordsAlias>
-</SchemaObject>

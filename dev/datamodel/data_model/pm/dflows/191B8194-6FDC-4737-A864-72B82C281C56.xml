@@ -1,8 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<DataFlowDesign class="oracle.dbtools.crest.model.design.process.DataFlowDesign" name="Send email Diagram" id="191B8194-6FDC-4737-A864-72B82C281C56" mainViewID="0660B9CD-7E8B-4B22-09F7-6EB7FDE0A2D9" topLevel="false" parentDFD_ID="E9202D00-0288-57F8-5D8F-205DAD86C717">
-<createdBy>admin</createdBy>
-<createdTime>2022-07-11 22:08:45 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldBeOpen>true</shouldBeOpen>
-<process>F6F91DD6-8A1A-36CA-990F-38F870D44AD1</process>
-</DataFlowDesign>

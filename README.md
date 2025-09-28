@@ -63,30 +63,38 @@ CI/CD implemented using batch server with scheduled git pull requests and automa
 of Node.js using pm2 managed processes.
 Runs in Node.js.
 	
-Oracle SQL Developer Data model designed ORM data model.
-Databases used as reference to implement database patterns are MariaDB, MySQL, Oracle, PostgreSQL and SQLite.
+pgModeler designed ORM data model.
+Databases used as reference to implement database patterns are MongoDB, MariaDB, MySQL, Oracle, PostgreSQL and SQLite.
 
 A global support implemented in client with ALL Unicode characters supported by Noto Sans font
 included different Arabic scripts and different font heights (Nastaliq).
 Any regional setting supported including direction right to left. More than 500 locales with language and
 country translations. Logographic UI chosen is implemented to minimize text usage and to provide simpler and better explanation to a global audience.
 
-Developed in Visual Studio Code in Windows with integration with Github following 
-Scrum agile project management framework and deployed on Oracle Cloud and Ubuntu server.
+Developed in VSCodium with integration with Github following 
+Scrum agile project management framework and deployed on Oracle Cloud and Linux server.
 
 # Installation
 
 Full documentation in /apps/common/src/functions/documentation or in presentation app when installed
 
-## WINDOWS DEVELOPMENT
+## DEVELOPMENT
 
-install Node.Js from https://nodejs.org/
-install VS Studio Code from https://code.visualstudio.com/download
+Project supports Linux development only
+
 ```
-git clone [repository .git url]
+sudo apt install git
+sudo apt install curl
+sudo apt install codium
+
+git clone [repository .git url] app_portfolio
+sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install nodejs
 npm install
 ``` 
-launch configured (launch.json) from Visual Studio Code
+open repository folder in VSCodium
+launch configured (launch.json) from VSCodium
+
 App Portfolio
 
 optional:
@@ -94,7 +102,7 @@ Microservice Batch
 
 enter http://localhost:3333 
 set admin name and password first time in admin app
-install db and optional demo users so apps will start
+install optional demo users
 		
 enter main server        
 http://localhost:3000
@@ -120,8 +128,7 @@ pm2 start $HOME/app_portfolio/serviceregistry/microservice/batch/server.js --cwd
 
 enter http://[domain]:3333
 set admin name and password first time in admin app
-install db and optional demo users so apps will start
-set SSL, DNS settings etc if necessary
+install optional demo users
 
 all data and configuration files are in /data directory that is created when starting the first time
 

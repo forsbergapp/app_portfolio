@@ -1,8 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<DataFlowDesign class="oracle.dbtools.crest.model.design.process.DataFlowDesign" name="RESET PASSWORD Diagram" id="8681BA0B-3FB3-C150-23E3-87854719B3B6" mainViewID="ABDBC2D3-2971-A416-01D6-E5D98A8CA3D9" topLevel="false" parentDFD_ID="DF0E8BD8-8E75-B9BD-FFA4-F4C2874F266E">
-<createdBy>admin</createdBy>
-<createdTime>2022-07-11 21:45:41 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldBeOpen>true</shouldBeOpen>
-<process>BAB33896-761B-8140-990F-E90606CD031B</process>
-</DataFlowDesign>

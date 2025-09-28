@@ -1,8 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<DataFlowDesign class="oracle.dbtools.crest.model.design.process.DataFlowDesign" name="Verify Diagram" id="F759FFA9-AD7D-3787-6556-42DA9582FC2C" mainViewID="9CFAA9E4-AF57-EB28-8A4C-C4701895255A" topLevel="false" parentDFD_ID="E9202D00-0288-57F8-5D8F-205DAD86C717">
-<createdBy>admin</createdBy>
-<createdTime>2022-07-11 22:10:15 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldBeOpen>true</shouldBeOpen>
-<process>05BE50C9-DFC8-A9DE-D5DC-E2A53A04F1BB</process>
-</DataFlowDesign>

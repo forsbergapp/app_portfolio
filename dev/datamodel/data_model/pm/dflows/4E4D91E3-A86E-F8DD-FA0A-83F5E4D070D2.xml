@@ -1,8 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<DataFlowDesign class="oracle.dbtools.crest.model.design.process.DataFlowDesign" name="Login Diagram" id="4E4D91E3-A86E-F8DD-FA0A-83F5E4D070D2" mainViewID="8B88BF7D-A4CD-AB3F-2212-6C91CBF9300F" topLevel="false" parentDFD_ID="3B81BAE9-1250-9A6D-2961-5B1A408CC181">
-<createdBy>admin</createdBy>
-<createdTime>2022-07-11 22:15:51 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldBeOpen>true</shouldBeOpen>
-<process>011AD09C-F0E2-33B8-B97F-5AE5FA6144B1</process>
-</DataFlowDesign>

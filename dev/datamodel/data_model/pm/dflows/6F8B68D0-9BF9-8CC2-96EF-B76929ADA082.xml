@@ -1,8 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<DataFlowDesign class="oracle.dbtools.crest.model.design.process.DataFlowDesign" name="Signup Diagram" id="6F8B68D0-9BF9-8CC2-96EF-B76929ADA082" mainViewID="B95593DB-2A1D-34D3-38F8-C85E845F99DB" topLevel="false" parentDFD_ID="3B81BAE9-1250-9A6D-2961-5B1A408CC181">
-<createdBy>admin</createdBy>
-<createdTime>2022-07-11 22:12:53 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldBeOpen>true</shouldBeOpen>
-<process>ED7C2462-7A69-8505-7B10-F74387018953</process>
-</DataFlowDesign>
