@@ -107,7 +107,9 @@ install optional demo users
 enter main server        
 http://localhost:3000
 	
-## UBUNTU SERVER
+## LINUX SERVER
+
+Use Linux server that supports apt
 
 see full documentation how to install on a cloud service using Terraform
 
