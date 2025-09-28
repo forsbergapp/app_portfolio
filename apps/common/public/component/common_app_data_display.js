@@ -51,7 +51,7 @@
  * @returns {string}
  */
 const template = props =>`  ${(props.master_object && props.new_resource)?
-                                `<div class='common_app_data_display_master_title'>${props.master_object.filter((/**@type{*}*/row)=>row.json_data.title).length>0?props.master_object.filter((/**@type{*}*/row)=>row.json_data.title)[0].json_data.title.default_text:''}</div>`:''
+                                `<div class='common_app_data_display_master_title'>${props.master_object.filter((/**@type{*}*/row)=>row.Document.title).length>0?props.master_object.filter((/**@type{*}*/row)=>row.Document.title)[0].Document.title.default_text:''}</div>`:''
                             }
                             ${(props.master_object && props.new_resource==false)?
                                 `<div class='common_app_data_display_master_title'>${props.master_object.title?props.master_object.title.default_text:''}</div>
@@ -62,15 +62,15 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                 `
                                 ${(props.master_object && props.new_resource)?
                                     `<div class='common_app_data_display_master'>
-                                        ${props.master_object.filter((/**@type{*}*/row)=>!row.json_data.title && !row.json_data.title_sub).map((/**@type{*}*/master_row)=>
+                                        ${props.master_object.filter((/**@type{*}*/row)=>!row.Document.title && !row.Document.title_sub).map((/**@type{*}*/master_row)=>
                                             `<div class='common_app_data_display_master_row common_row'>
-                                                    <div    data-key='${Object.keys(master_row.json_data)[0]}' 
-                                                            class='common_app_data_display_master_col1'>${Object.values(master_row.json_data)[0].default_text}</div>
-                                                    <div    data-value='${Object.keys(master_row.json_data)[0]}'
-                                                            class='common_app_data_display_master_col2 ${Object.values(master_row.json_data)[0].type=='LOV'?'common_app_dialogues_lov_value':''}'
-                                                            contentEditable='${(Object.values(master_row.json_data)[0].type=='LOV'||props.mode=='READ')?'false':'true'}'></div>
-                                                    ${Object.values(master_row.json_data)[0].type=='LOV'?
-                                                        `<div data-lov='${Object.values(master_row.json_data)[0].lov}' class='common_app_dialogues_lov_button common_list_lov_click common_icon'></div>`:''
+                                                    <div    data-key='${Object.keys(master_row.Document)[0]}' 
+                                                            class='common_app_data_display_master_col1'>${Object.values(master_row.Document)[0].default_text}</div>
+                                                    <div    data-value='${Object.keys(master_row.Document)[0]}'
+                                                            class='common_app_data_display_master_col2 ${Object.values(master_row.Document)[0].type=='LOV'?'common_app_dialogues_lov_value':''}'
+                                                            contentEditable='${(Object.values(master_row.Document)[0].type=='LOV'||props.mode=='READ')?'false':'true'}'></div>
+                                                    ${Object.values(master_row.Document)[0].type=='LOV'?
+                                                        `<div data-lov='${Object.values(master_row.Document)[0].lov}' class='common_app_dialogues_lov_button common_list_lov_click common_icon'></div>`:''
                                                     }
                                             </div>
                                             `).join('')
@@ -285,7 +285,7 @@ const component = async props => {
     
     if (props.data.new_resource==false){
         const master_metadata = await props.methods.COMMON.commonFFB({   path:'/app-common-module/COMMON_APP_DATA_METADATA', 
-                                                            query:'fields=json_data', 
+                                                            query:'fields=Document', 
                                                             method:'POST', authorization_type:'APP_ID', 
                                                             body:{  type:'FUNCTION',
                                                                     IAM_module_app_id:props.data.common_app_id,
@@ -295,14 +295,14 @@ const component = async props => {
         for (const key of Object.entries(master_object)){
             master_object[key[0]] = {   
                                         value:key[1], 
-                                        default_text:master_metadata.filter((/**@type{*}*/row)=>key[0] in row.json_data).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row.json_data)[0].json_data[key[0]].default_text:key[0],
-                                        type:master_metadata.filter((/**@type{*}*/row)=>key[0] in row.json_data).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row.json_data)[0].json_data[key[0]].type:key[0]
+                                        default_text:master_metadata.filter((/**@type{*}*/row)=>key[0] in row.Document).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row.Document)[0].Document[key[0]].default_text:key[0],
+                                        type:master_metadata.filter((/**@type{*}*/row)=>key[0] in row.Document).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row.Document)[0].Document[key[0]].type:key[0]
                                     };
         }
     }
     if (props.data.detail_resource){
         const detail_metadata = await props.methods.COMMON.commonFFB({   path:'/app-common-module/COMMON_APP_DATA_METADATA',
-                                                            query:'fields=json_data', 
+                                                            query:'fields=Document', 
                                                             method:'POST', authorization_type:'APP_ID', 
                                                             body:{  type:'FUNCTION',
                                                                     IAM_module_app_id:props.data.common_app_id,
@@ -312,8 +312,8 @@ const component = async props => {
         for (const row of detail_rows){
             for (const key of Object.entries(row)){
                 for (const key_metadata of detail_metadata){
-                    if (Object.entries(key_metadata.json_data)[0][0] == key[0]){
-                        row[key[0]] = {value:key[1], default_text: Object.entries(key_metadata.json_data)[0][1].default_text};
+                    if (Object.entries(key_metadata.Document)[0][0] == key[0]){
+                        row[key[0]] = {value:key[1], default_text: Object.entries(key_metadata.Document)[0][1].default_text};
                     }
                 }
             }

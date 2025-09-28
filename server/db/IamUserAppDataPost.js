@@ -45,7 +45,7 @@ const get = parameters =>{
  * @returns {Promise.<server_server_response & {result?:{id:server_db_table_IamUserAppDataPost['id'],
  *                                                       description:string,
  *                                                       iam_user_id:server_db_table_IamUserApp['iam_user_id'],
- *                                                       json_data:server_db_table_IamUserAppDataPost['json_data'],
+ *                                                       Document:server_db_table_IamUserAppDataPost['Document'],
  *                                                       count_likes:number,
  *                                                       count_views:number,
  *                                                       liked:number}[] }>}
@@ -59,7 +59,7 @@ const getViewProfileUserPosts = async parameters =>{
                     .map((/**@type{server_db_table_IamUserAppDataPost}*/row)=>{
                         return {
                             id: row.id,
-                            description:row.json_data?.description, 
+                            description:row.Document?.description, 
                             iam_user_id:server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
                                                         resource_id:row.iam_user_app_id, 
                                                         data:{  iam_user_id:    parameters.resource_id, 
@@ -273,7 +273,7 @@ const post = async parameters => {
         const data_new =     {
                                 id:Date.now(),
                                 iam_user_app_id:parameters.data.iam_user_app_id, 
-                                json_data:parameters.data.json_data,
+                                Document:parameters.data.Document,
                                 created:new Date().toISOString(),
                                 modified:null
                         };
@@ -301,8 +301,8 @@ const update = async parameters =>{
     /**@type{server_db_table_IamUserAppDataPost} */
     const data_update = {};
     //allowed parameters to update:
-    if (parameters.data.json_data!=null)
-        data_update.json_data = parameters.data.json_data;
+    if (parameters.data.Document!=null)
+        data_update.Document = parameters.data.Document;
     data_update.modified = new Date().toISOString();
     if (Object.entries(data_update).length>0)
         return server.ORM.Execute({  app_id:parameters.app_id, 

@@ -24,7 +24,7 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
 	const result_user_account_app_data_post =  server.ORM.db.IamUserAppDataPost.get({app_id:app_id, resource_id:user_account_app_data_post_id, data:{data_app_id:null, iam_user_id:null}});
     if (result_user_account_app_data_post.result){
         /**@type{APP_user_setting_record}*/
-        const user_account_app_data_post = result_user_account_app_data_post.result[0].json_data;
+        const user_account_app_data_post = result_user_account_app_data_post.result[0].Document;
         return  {  	locale              	: user_account_app_data_post.regional_language_locale,  
                     timezone            	: user_account_app_data_post.regional_timezone,
                     number_system       	: user_account_app_data_post.regional_number_system,
@@ -122,7 +122,7 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, iam_user_id
 			//would be difficult to consider all settings on same page using
 			//different texts, images, second languages, directions, column titles, 
 			//arabic script, themes or what columns to display, for these use current users setting
-			const settings = user_account_app_data_post.json_data;
+			const settings = user_account_app_data_post.Document;
 			user_account_app_data_posts.push(
 				{
 				'description' : settings.description,
@@ -213,7 +213,7 @@ const timetable = async (timetable_parameters) => {
 																	user_account_app_data_posts_parameters:user_account_app_data_posts_parameters
 																	},
 														methods:	{
-																	COMMON_DOCUMENT:null
+																	COMMON:null
 																	}
 														});
 							resolve(result.template);
@@ -230,7 +230,7 @@ const timetable = async (timetable_parameters) => {
 																	user_account_app_data_posts_parameters:null
 																	},
 														methods:	{
-																	COMMON_DOCUMENT:null
+																	COMMON:null
 																	}
 														});
 							resolve(result.template);
@@ -245,7 +245,7 @@ const timetable = async (timetable_parameters) => {
 																		user_account_app_data_posts_parameters:null
 																		},
 															methods:	{
-																		COMMON_DOCUMENT:null
+																		COMMON:null
 																		}
 															});
 								resolve(result.template);

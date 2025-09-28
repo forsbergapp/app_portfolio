@@ -210,12 +210,12 @@ const appSecureDialogueSendBroadcastSend = () => {
             broadcast_type = 'CHAT';
         }
             
-        const json_data ={  app_id:             app_id==''?null:app_id,
-                            client_id:          client_id==''?null:client_id,
-                            broadcast_type:     broadcast_type, 
-                            broadcast_message:  broadcast_message};
+        const json ={   app_id:             app_id==''?null:app_id,
+                        client_id:          client_id==''?null:client_id,
+                        broadcast_type:     broadcast_type, 
+                        broadcast_message:  broadcast_message};
         
-        common.commonFFB({path:'/server-socket/message', method:'POST', authorization_type:'ADMIN', body:json_data})
+        common.commonFFB({path:'/server-socket/message', method:'POST', authorization_type:'ADMIN', body:json})
         .then((/**@type{string}*/result)=>{
             if (Number(JSON.parse(result).sent) > 0)
                 common.commonMessageShow('INFO', null, 'message_success', `(${Number(JSON.parse(result).sent)})`);
@@ -559,11 +559,11 @@ const appSecureMenuInstallationDemoInstall = () =>{
                         {
                             check_valid_list_elements:[[COMMON_DOCUMENT.querySelector('#menu_installation_demo_password'),null]]
                         })==true){
-        const json_data = { demo_password: COMMON_DOCUMENT.querySelector('#menu_installation_demo_password').textContent};
+        const json = { demo_password: COMMON_DOCUMENT.querySelector('#menu_installation_demo_password').textContent};
         appSecureMenuInstallationDbInstallationFunction(  'menu_installation_demo_button_install', null, 
                                 '/server-installation-demo', 
                                 'POST', 
-                                json_data);
+                                json);
     }
 };
 /**

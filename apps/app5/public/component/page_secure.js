@@ -86,7 +86,7 @@ const component = async props => {
                             common_app_id:props.data.common_app_id,
                             display_type:'VERTICAL_KEY_VALUE',
                             master_path:'/app-common-module/COMMON_APP_DATA_METADATA',
-                            master_query:'fields=json_data',
+                            master_query:'fields=Document',
                             master_body:{   type:'FUNCTION',
                                             IAM_module_app_id:props.data.common_app_id,
                                             IAM_data_app_id:props.data.app_id, 

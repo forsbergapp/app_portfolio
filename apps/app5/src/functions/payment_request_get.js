@@ -54,7 +54,7 @@ const paymentRequestGet = async parameters =>{
                                                                 app_data_entity_id:Entity.id
                                                         }}).result
                                     .filter((/**@type{server_db_table_AppDataResourceMaster}*/payment_request)=>
-                                        payment_request.json_data?.payment_request_id==token?.app_custom_id
+                                        payment_request.Document?.payment_request_id==token?.app_custom_id
                                     )[0];
     if (payment_request){
         /**@type{bank_account} */
@@ -68,7 +68,7 @@ const paymentRequestGet = async parameters =>{
                                                                     app_data_entity_id:Entity.id
                                                             }}).result
                                 .filter((/**@type{server_db_table_AppDataResourceDetail}*/result)=>
-                                    result.json_data?.bank_account_vpa == payment_request.payerid
+                                    result.Document?.bank_account_vpa == payment_request.payerid
                                 )[0];
         /**@type{merchant} */
         const merchant      = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
@@ -80,7 +80,7 @@ const paymentRequestGet = async parameters =>{
                                                                     app_data_entity_id:Entity.id
                                                             }}).result
                                 .filter((/**@type{server_db_table_AppDataResourceMaster}*/merchant)=>
-                                    merchant.json_data?.merchant_id==payment_request.merchant_id
+                                    merchant.Document?.merchant_id==payment_request.merchant_id
                                 )[0];
         const currency      = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
@@ -94,11 +94,11 @@ const paymentRequestGet = async parameters =>{
                                 token:                  parameters.data.token,
                                 exp:                    token?.exp??null,
                                 iat:                    token?.iat??null,
-                                payment_request_id:     payment_request.json_data?.payment_request_id??'',
-                                status:                 payment_request.json_data?.status??'',
-                                merchant_name:          merchant.json_data?.merchant_name??'',
-                                amount:			        server.ORM.UtilNumberValue(payment_request.json_data?.amount),
-                                currency_symbol:        currency.json_data?.currency_symbol??'',
+                                payment_request_id:     payment_request.Document?.payment_request_id??'',
+                                status:                 payment_request.Document?.status??'',
+                                merchant_name:          merchant.Document?.merchant_name??'',
+                                amount:			        server.ORM.UtilNumberValue(payment_request.Document?.amount),
+                                currency_symbol:        currency.Document?.currency_symbol??'',
                                 countdown:              ''}],
                     type:'JSON'};
             }

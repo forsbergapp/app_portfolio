@@ -133,17 +133,17 @@ const getStatement = async parameters =>{
                                                                     resource_name:'CURRENCY',
                                                                     app_data_entity_id:Entity.id
                                                             }}).result[0];
-    //amount_deposit and amount_withdrawal from JSON.parse(json_data) column, each app is responsible for APP_ID json_data content
-    const balance = transactions.result.reduce((/**@type{number}*/balance, /**@type{{json_data:bank_transaction}}*/current_row)=>balance += 
-                                                                    (current_row.json_data.amount_deposit ?? current_row.json_data.amount_withdrawal) ?? 0,0) ?? 0;
+    //amount_deposit and amount_withdrawal from JSON.parse(Document) column, each app is responsible for APP_ID Document content
+    const balance = transactions.result.reduce((/**@type{number}*/balance, /**@type{{Document:bank_transaction}}*/current_row)=>balance += 
+                                                                    (current_row.Document.amount_deposit ?? current_row.Document.amount_withdrawal) ?? 0,0) ?? 0;
     return {result:[{
                     //ENTITY ACCOUNT resource
-                    title_sub	            :Entity.json_data?.name??'',
+                    title_sub	            :Entity.Document?.name??'',
                     //ACCOUNT resource
                     title	                :AccountMetaData.filter((/**@type{*}*/row)=>'title' in row)[0].title.default_text,
                     bank_account_iban	    :IBAN_compose(  /**@ts-ignore */
-                                                            Entity.json_data?.country_code, 
-                                                            Entity.json_data?.bank_id, 
+                                                            Entity.Document?.country_code, 
+                                                            Entity.Document?.bank_id, 
                                                             CustomerAccount.bank_account_number, true),
                     bank_account_number     :CustomerAccount.bank_account_number,
                     currency                :currency.currency_symbol,

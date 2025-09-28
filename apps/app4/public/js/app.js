@@ -20,7 +20,7 @@ let common;
 /**@type{APP_user_setting} */
 const APP_USER_SETTINGS_EMPTY = {current_id:0,
                              data:[{id:0,
-                                    json_data: {description: '',
+                                    Document: {description: '',
                                                 regional_language_locale: '',
                                                 regional_timezone: '',
                                                 regional_number_system: '',
@@ -170,7 +170,7 @@ const appReportTimetablePrint = async () => {
  * @returns {APP_REPORT_settings}
  */
 const appReportTimetableSettings = () => {
-    const setting_global = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data;
+    const setting_global = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document;
     return {    locale              	: setting_global.regional_language_locale,
                 timezone            	: setting_global.regional_timezone,
                 number_system       	: setting_global.regional_number_system,
@@ -250,18 +250,18 @@ const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, sett
             for (const setting of APP_GLOBAL.user_settings.data){
                 current_user_settings.push(
                 {
-                description : setting.json_data.description??'',
-                regional_language_locale : setting.json_data.regional_language_locale,
-                regional_timezone : setting.json_data.regional_timezone,
-                regional_number_system : setting.json_data.regional_number_system,
-                regional_calendar_hijri_type : setting.json_data.regional_calendar_hijri_type,
-                gps_lat_text : setting.json_data.gps_lat_text,
-                gps_long_text : setting.json_data.gps_long_text,
-                prayer_method : setting.json_data.prayer_method,
-                prayer_asr_method : setting.json_data.prayer_asr_method,
-                prayer_high_latitude_adjustment : setting.json_data.prayer_high_latitude_adjustment,
-                prayer_time_format : setting.json_data.prayer_time_format,
-                prayer_hijri_date_adjustment : setting.json_data.prayer_hijri_date_adjustment
+                description : setting.Document.description??'',
+                regional_language_locale : setting.Document.regional_language_locale,
+                regional_timezone : setting.Document.regional_timezone,
+                regional_number_system : setting.Document.regional_number_system,
+                regional_calendar_hijri_type : setting.Document.regional_calendar_hijri_type,
+                gps_lat_text : setting.Document.gps_lat_text,
+                gps_long_text : setting.Document.gps_long_text,
+                prayer_method : setting.Document.prayer_method,
+                prayer_asr_method : setting.Document.prayer_asr_method,
+                prayer_high_latitude_adjustment : setting.Document.prayer_high_latitude_adjustment,
+                prayer_time_format : setting.Document.prayer_time_format,
+                prayer_hijri_date_adjustment : setting.Document.prayer_hijri_date_adjustment
                 });
             }
             COMMON_DOCUMENT.querySelector('#paper').innerHTML = APP_GLOBAL.appLibTimetable.component({	data:		{
@@ -353,18 +353,18 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
     if (theme?.type =='day' || theme==null){
         const current_user_settings = APP_GLOBAL.user_settings.data.map(setting=>{
             return {
-                description : setting.json_data.description??'',
-                regional_language_locale : setting.json_data.regional_language_locale,
-                regional_timezone : setting.json_data.regional_timezone,
-                regional_number_system : setting.json_data.regional_number_system,
-                regional_calendar_hijri_type : setting.json_data.regional_calendar_hijri_type,
-                gps_lat_text : setting.json_data.gps_lat_text,
-                gps_long_text : setting.json_data.gps_long_text,
-                prayer_method : setting.json_data.prayer_method,
-                prayer_asr_method : setting.json_data.prayer_asr_method,
-                prayer_high_latitude_adjustment : setting.json_data.prayer_high_latitude_adjustment,
-                prayer_time_format : setting.json_data.prayer_time_format,
-                prayer_hijri_date_adjustment : setting.json_data.prayer_hijri_date_adjustment
+                description : setting.Document.description??'',
+                regional_language_locale : setting.Document.regional_language_locale,
+                regional_timezone : setting.Document.regional_timezone,
+                regional_number_system : setting.Document.regional_number_system,
+                regional_calendar_hijri_type : setting.Document.regional_calendar_hijri_type,
+                gps_lat_text : setting.Document.gps_lat_text,
+                gps_long_text : setting.Document.gps_long_text,
+                prayer_method : setting.Document.prayer_method,
+                prayer_asr_method : setting.Document.prayer_asr_method,
+                prayer_high_latitude_adjustment : setting.Document.prayer_high_latitude_adjustment,
+                prayer_time_format : setting.Document.prayer_time_format,
+                prayer_hijri_date_adjustment : setting.Document.prayer_hijri_date_adjustment
             };
         });
         
@@ -383,7 +383,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
         await common.commonComponentRender({
             mountDiv:   'setting_design_theme_day',
             data:       { 
-                        class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
+                        class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_paper_size,
                         theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_day').getAttribute('data-theme_id'),
                         type:'day',
                         html:result.template
@@ -416,7 +416,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
                                         });
         await common.commonComponentRender({  mountDiv:   'setting_design_theme_month',
                                         data:       { 
-                                                    class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
+                                                    class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_paper_size,
                                                     theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_month').getAttribute('data-theme_id'),
                                                     type:'month',
                                                     html:result_month.template
@@ -425,7 +425,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
                                         path:       '/component/settings_tab3_theme_thumbnail.js'});
         await common.commonComponentRender({  mountDiv:   'setting_design_theme_year',
                                         data:       { 
-                                                    class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
+                                                    class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_paper_size,
                                                     theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_year').getAttribute('data-theme_id'),
                                                     type:'year',
                                                     html:result_year.template
@@ -465,7 +465,7 @@ const appSettingThemeNav = async (nav, type) => {
     let theme_index_APP_GLOBAL = 0;
 
     //get current index
-    const current_user_theme_id = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data[`design_theme_${type}_id`];
+    const current_user_theme_id = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document[`design_theme_${type}_id`];
 
     theme_index_APP_GLOBAL = APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type)).findIndex( theme => theme.value == current_user_theme_id);
 
@@ -486,7 +486,7 @@ const appSettingThemeNav = async (nav, type) => {
 
         }
     //set user setting theme id since getReportSetting will fetch user settings
-    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data[`design_theme_${type}_id`] = 
+    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document[`design_theme_${type}_id`] = 
         APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value;
     COMMON_DOCUMENT.querySelector(`#setting_design_theme_${type}`).setAttribute('data-theme_id', APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value);
     COMMON_DOCUMENT.querySelector(`#setting_design_theme_${type}_id`).textContent = APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value;
@@ -641,7 +641,7 @@ const SettingShow = async (tab_selected) => {
             common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
-                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document,
                             common_app_id:common.commonGlobalGet('app_common_app_id'),
                             app_id:common.commonGlobalGet('app_id'),
                             user_locale:common.commonGlobalGet('user_locale'),
@@ -657,7 +657,7 @@ const SettingShow = async (tab_selected) => {
                 mountDiv:   'settings_content',
                 data:       {
                             common_app_id:common.commonGlobalGet('app_common_app_id'),
-                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
+                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document
                             },
                 methods:    {
                             appComponentSettingUpdate:appComponentSettingUpdate
@@ -671,7 +671,7 @@ const SettingShow = async (tab_selected) => {
                 data:       {
                             common_app_id:common.commonGlobalGet('app_common_app_id'),
                             app_id:common.commonGlobalGet('app_id'),
-                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document,
                             themes:APP_GLOBAL.themes},
                 methods:    {
                             appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate
@@ -684,7 +684,7 @@ const SettingShow = async (tab_selected) => {
                 mountDiv:   'settings_content',
                 data:       {
                             app_id:common.commonGlobalGet('app_id'),
-                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
+                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document
                             },
                 methods:    {appComponentSettingUpdate:appComponentSettingUpdate},
                 path:`/component/settings_tab${tab_selected}.js`});
@@ -695,7 +695,7 @@ const SettingShow = async (tab_selected) => {
                 mountDiv:   'settings_content',
                 data:       {
                             app_id:common.commonGlobalGet('app_id'),
-                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document,
                             methods:APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.CommonModulePrayTimes_methods
                             },
                 methods:    {
@@ -780,14 +780,14 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
                 if (popup.getAttribute('data-latitude') && popup.getAttribute('data-longitude') &&
                     popup.getAttribute('data-latitude')!='' && popup.getAttribute('data-longitude')!='' &&
                     popup.getAttribute('data-timezone')!='?'){
-                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description = 
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.description = 
                     COMMON_DOCUMENT.querySelectorAll('.common_map_popup_title')[COMMON_DOCUMENT.querySelectorAll('.common_map_popup_title').length - 1 ].textContent;
-                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text =
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_lat_text =
                         popup.getAttribute('data-latitude');
-                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text = 
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_long_text = 
                         popup.getAttribute('data-longitude');
                     appMapQibblaShow();
-                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = popup.getAttribute('data-timezone');
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_timezone = popup.getAttribute('data-timezone');
                     APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(popup.getAttribute('data-timezone'));
                     appUserSettingUpdate('GPS');
                 }
@@ -994,7 +994,7 @@ const appUserSettingsGet = async () => {
         common.commonFFB({path:'/server-db/iamuserappdatapost/', query:`IAM_data_app_id=${common.commonGlobalGet('app_id')}&iam_user_id=${common.commonGlobalGet('iam_user_id')??''}`, method:'GET', authorization_type:'APP_ID'})
         .then((/**@type{string}*/result)=>{
             const settings = JSON.parse(result).rows.map((/** @type{APP_user_setting_record}*/setting)=>{
-                const json_data = {description:setting.description,
+                const json = {description:setting.description,
                     regional_language_locale:setting.regional_language_locale,
                     regional_timezone:setting.regional_timezone,
                     regional_number_system:setting.regional_number_system,
@@ -1042,7 +1042,7 @@ const appUserSettingsGet = async () => {
                 };
                 return {
                         id:setting.id,
-                        json_data:json_data
+                        Document:json
                         };
             });
             APP_GLOBAL.user_settings = {current_id:0,   data:settings};
@@ -1065,7 +1065,7 @@ const appUserSettingLink = (item) => {
         case 'user_year_html':{
             const url = appReportUrl( common.commonGlobalGet('iam_user_id'), 
                                         sid ?? 0, 
-                                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
+                                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_paper_size,
                                         item.id,
                                         'HTML');
             common.commonComponentRender({
@@ -1075,7 +1075,7 @@ const appUserSettingLink = (item) => {
                                 path:url,
                                 method:'GET',
                                 authorization:'APP_ID',
-                                class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size
+                                class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_paper_size
                                 },
                     methods:    null,
                     path:       '/common/component/common_app_window_info.js'});
@@ -1095,18 +1095,18 @@ const appUserSettingFunction = async (function_name, add_settings=true) => {
    
     if (common.commonMiscInputControl(null,{
                                     check_valid_list_values:[
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description??'',null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text?.toString()??'',null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text?.toString()??'',null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_1_text,null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_2_text,null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_3_text,null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_1_text,null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_2_text,null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_3_text,null]
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.description??'',null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_lat_text?.toString()??'',null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_long_text?.toString()??'',null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_1_text,null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_2_text,null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_3_text,null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_1_text,null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_2_text,null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_3_text,null]
                                                 ]})==true){
         
-        const body = {  json_data:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+        const body = {  Document:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document,
                         IAM_iam_user_app_id:    common.commonGlobalGet('iam_user_app_id')
                     };
         /**@type {common['CommonRESTAPIMethod']}*/
@@ -1138,7 +1138,7 @@ const appUserSettingFunction = async (function_name, add_settings=true) => {
                         //update user settings
                         /** @type{APP_user_setting_data}*/
                         const data = {  id:         JSON.parse(result).id, 
-                                        json_data:  JSON.parse(JSON.stringify(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data))};
+                                        Document:  JSON.parse(JSON.stringify(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document))};
                         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.data.length+0] = data;
                         APP_GLOBAL.user_settings.current_id = APP_GLOBAL.user_settings.data.length -1;
                     }
@@ -1149,8 +1149,8 @@ const appUserSettingFunction = async (function_name, add_settings=true) => {
                         mountDiv:   'setting_select_user_setting',
                         data:       {
                                     default_data_value:APP_GLOBAL.user_settings.current_id,
-                                    default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
-                                    options: APP_GLOBAL.user_settings.data.map((setting, index)=>{return {value:index, text:setting.json_data.description};}),
+                                    default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.description,
+                                    options: APP_GLOBAL.user_settings.data.map((setting, index)=>{return {value:index, text:setting.Document.description};}),
                                     path:null,
                                     query:null,
                                     method:null,
@@ -1207,9 +1207,9 @@ const appUserSettingDelete = (choice=null) => {
                         data:       {
                                     default_data_value:APP_GLOBAL.user_settings.current_id,
                                     /**@ts-ignore */
-                                    default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
+                                    default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.description,
                                     /**@ts-ignore */
-                                    options: APP_GLOBAL.user_settings.data.map((setting, index)=>{return {value:index, text:setting.json_data.description};}),
+                                    options: APP_GLOBAL.user_settings.data.map((setting, index)=>{return {value:index, text:setting.Document.description};}),
                                     path:null,
                                     query:null,
                                     method:null,
@@ -1234,7 +1234,7 @@ const appUserSettingDelete = (choice=null) => {
  */
 const appUserSettingDefaultSet = async () => {
     //update APP_GLOBAL
-    const json_data = {
+    const Document = {
         description:                        common.commonGlobalGet('client_place'),
         regional_language_locale:           common.commonGlobalGet('user_locale'),
         regional_timezone:                  (common.commonGlobalGet('client_latitude') && common.commonGlobalGet('client_longitude'))?
@@ -1286,7 +1286,7 @@ const appUserSettingDefaultSet = async () => {
     };
     APP_GLOBAL.user_settings = {current_id:0,
                                 data:[{  id:null,
-                                        json_data:json_data}]
+                                        Document:Document}]
                                 };
     //Design
     COMMON_DOCUMENT.querySelector('#paper').className=APP_GLOBAL.design_default_papersize;
@@ -1308,92 +1308,92 @@ const appCommonFixFloat = value =>  (value==''||value==null)?null:parseFloat(val
  */
 const appUserSettingUpdate = setting_tab => {
 
-    const json_data = { description:                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
+    const Document = { description:                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.description,
                         regional_language_locale:           setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_locale .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_language_locale,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_language_locale,
                         regional_timezone:                  setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_timezone .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_timezone,
                         regional_number_system:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_numbersystem .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_number_system,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_number_system,
                         regional_layout_direction:          setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_direction .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_layout_direction,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_layout_direction,
                         regional_second_language_locale:    setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_locale_second .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_second_language_locale,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_second_language_locale,
                         regional_arabic_script:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_arabic_script .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_arabic_script,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_arabic_script,
                         regional_calendar_type:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_calendartype .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_type,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_calendar_type,
                         regional_calendar_hijri_type:       setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_calendar_hijri_type .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_hijri_type,
-                        gps_lat_text:                       APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text,
-                        gps_long_text:                      APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text,
-                        design_theme_day_id:                setting_tab=='DESIGN'?appSettingThemeId('day'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_day_id,
-                        design_theme_month_id:              setting_tab=='DESIGN'?appSettingThemeId('month'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_month_id,
-                        design_theme_year_id:               setting_tab=='DESIGN'?appSettingThemeId('year'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_year_id,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_calendar_hijri_type,
+                        gps_lat_text:                       APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_lat_text,
+                        gps_long_text:                      APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_long_text,
+                        design_theme_day_id:                setting_tab=='DESIGN'?appSettingThemeId('day'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_theme_day_id,
+                        design_theme_month_id:              setting_tab=='DESIGN'?appSettingThemeId('month'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_theme_month_id,
+                        design_theme_year_id:               setting_tab=='DESIGN'?appSettingThemeId('year'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_theme_year_id,
                         design_paper_size:                  setting_tab=='DESIGN'?COMMON_DOCUMENT.querySelector('#setting_select_report_papersize .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_paper_size,
                         design_row_highlight:               setting_tab=='DESIGN'?COMMON_DOCUMENT.querySelector('#setting_select_report_highlight_row .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_row_highlight,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_row_highlight,
                         design_column_weekday_checked:      setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_column_weekday_checked,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_column_weekday_checked,
                         design_column_calendartype_checked: setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_column_calendartype_checked,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_column_calendartype_checked,
                         design_column_notes_checked:        setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_column_notes_checked,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_column_notes_checked,
                         design_column_gps_checked:          setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_column_gps_checked,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_column_gps_checked,
                         design_column_timezone_checked:     setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_column_timezone_checked,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_column_timezone_checked,
                         image_header_image_img:             setting_tab=='IMAGE'?COMMON_DOCUMENT.querySelector('#setting_reportheader_img').getAttribute('data-image'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.image_header_image_img,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.image_header_image_img,
                         image_footer_image_img:             setting_tab=='IMAGE'?COMMON_DOCUMENT.querySelector('#setting_reportfooter_img').getAttribute('data-image'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.image_footer_image_img,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.image_footer_image_img,
                         text_header_1_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader1').textContent:  
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_1_text,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_1_text,
                         text_header_2_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader2').textContent:
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_2_text,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_2_text,
                         text_header_3_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader3').textContent:
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_3_text,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_3_text,
                         text_header_align:                  setting_tab=='TEXT'? (appSettingButtonAlignValue('header')==''?null:appSettingButtonAlignValue('header')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_align,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_align,
                         text_footer_1_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter1').textContent:
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_1_text,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_1_text,
                         text_footer_2_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter2').textContent:
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_2_text,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_2_text,
                         text_footer_3_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter3').textContent:
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_3_text,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_3_text,
                         text_footer_align:                  setting_tab=='TEXT'? (appSettingButtonAlignValue('footer')==''?null:appSettingButtonAlignValue('footer')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_align,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_align,
                         prayer_method:                      setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_method .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_method,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_method,
                         prayer_asr_method:                  setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_asr .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_asr_method,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_asr_method,
                         prayer_high_latitude_adjustment:    setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_highlatitude .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_high_latitude_adjustment,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_high_latitude_adjustment,
                         prayer_time_format:                 setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_timeformat .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_time_format,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_time_format,
                         prayer_hijri_date_adjustment:       setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_select_hijri_adjustment .common_select_dropdown_value').getAttribute('data-value')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_hijri_date_adjustment,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_hijri_date_adjustment,
                         prayer_fajr_iqamat:                 setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_fajr .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_fajr_iqamat,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_fajr_iqamat,
                         prayer_dhuhr_iqamat:                setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_dhuhr .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_dhuhr_iqamat,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_dhuhr_iqamat,
                         prayer_asr_iqamat:                  setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_asr .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_asr_iqamat,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_asr_iqamat,
                         prayer_maghrib_iqamat:              setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_maghrib .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_maghrib_iqamat,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_maghrib_iqamat,
                         prayer_isha_iqamat:                 setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_isha .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_isha_iqamat,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_isha_iqamat,
                         prayer_column_imsak_checked:        setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_column_imsak_checked,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_column_imsak_checked,
                         prayer_column_sunset_checked:       setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_column_sunset_checked,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_column_sunset_checked,
                         prayer_column_midnight_checked:     setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_column_midnight_checked,
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_column_midnight_checked,
                         prayer_column_fast_start_end:       setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_select_report_show_fast_start_end .common_select_dropdown_value').getAttribute('data-value')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_column_fast_start_end
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_column_fast_start_end
                     };
-    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data = json_data;
+    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document = Document;
 };
 
 /**
@@ -1448,7 +1448,7 @@ const appUserSettingProfileLink = item => {
 const appUserSettingsLike = user_account_app_data_post_id => {
     /**@type{common['CommonRESTAPIMethod']} */
     let method;
-    const json_data = { iam_user_app_data_post_id: user_account_app_data_post_id, 
+    const json = { iam_user_app_data_post_id: user_account_app_data_post_id, 
                         IAM_iam_user_id: common.commonGlobalGet('iam_user_id'),
                         IAM_data_app_id:common.commonGlobalGet('app_id')};
     if (common.commonGlobalGet('iam_user_id') == null)
@@ -1466,7 +1466,7 @@ const appUserSettingsLike = user_account_app_data_post_id => {
         common.commonFFB({  path:path, 
                             method:method, 
                             authorization_type:'APP_ACCESS', 
-                            body:json_data})
+                            body:json})
         .then(()=>APP_GLOBAL.function_profile_user_setting_update(  COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_id').textContent,
                                                                     JSON.parse(COMMON_DOCUMENT.querySelector('#profile_select_user_settings .common_select_dropdown_value')
                                                                                 .getAttribute('data-value')).sid))
@@ -1658,7 +1658,7 @@ const appEventClick = event => {
             COMMON_DOCUMENT.querySelector('#' + event_target_id).classList.add('common_app_dialogues_button');
             COMMON_DOCUMENT.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
                                                                                 `theme_${theme_type}_${appSettingThemeId(theme_type)} ` + 
-                                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_arabic_script;
+                                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_arabic_script;
             break;
         }
         case 'setting_icon_text_header_aleft':
@@ -1852,8 +1852,8 @@ const appEventKeyUp = event => {
  * @returns {void}
  */
 const appMapQibblaShow = () => {
-    if (APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text  &&
-        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text ){
+    if (APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_long_text  &&
+        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_lat_text ){
         /**@type{common['commonGeoJSONPolyline']}*/
         const geoJSONQibbla = 
         {
@@ -1873,9 +1873,9 @@ const appMapQibblaShow = () => {
                     ],
                     [
                         /**@ts-ignore */
-                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text, 
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_long_text, 
                         /**@ts-ignore */
-                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_lat_text
                     ]
                 ]
             }
@@ -1900,9 +1900,9 @@ const appMapQibblaShow = () => {
                     ],
                     [
                         /**@ts-ignore */
-                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text, 
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_long_text, 
                         /**@ts-ignore */
-                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_lat_text
                     ]
                 ]
             }

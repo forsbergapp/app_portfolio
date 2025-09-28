@@ -80,16 +80,16 @@ const paymentRequestCreate = async parameters =>{
                                                        app_data_entity_id:Entity.id
                                                }}).result
                        .filter((/**@type{server_db_table_AppDataResourceMaster}*/merchant)=>
-                           server.ORM.UtilNumberValue(merchant.json_data?.merchant_id)==parameters.data.id
+                           server.ORM.UtilNumberValue(merchant.Document?.merchant_id)==parameters.data.id
                        )
                        .map((/**@type{server_db_table_AppDataResourceMaster}*/result)=>{return {  
-                                                                   merchant_id:                        result.json_data?.merchant_id,
-                                                                   merchant_vpa:                       result.json_data?.merchant_vpa,
-                                                                   merchant_url:                       result.json_data?.merchant_url,
-                                                                   merchant_name:                      result.json_data?.merchant_name,
-                                                                   merchant_public_key:                result.json_data?.merchant_public_key,
-                                                                   merchant_private_key:               result.json_data?.merchant_private_key,
-                                                                   merchant_api_secret:                result.json_data?.merchant_api_secret,
+                                                                   merchant_id:                        result.Document?.merchant_id,
+                                                                   merchant_vpa:                       result.Document?.merchant_vpa,
+                                                                   merchant_url:                       result.Document?.merchant_url,
+                                                                   merchant_name:                      result.Document?.merchant_name,
+                                                                   merchant_public_key:                result.Document?.merchant_public_key,
+                                                                   merchant_private_key:               result.Document?.merchant_private_key,
+                                                                   merchant_api_secret:                result.Document?.merchant_api_secret,
                                                                    id:                                 result.id,
                                                                    iam_user_app_id:                    result.iam_user_app_id};})[0];
                        
@@ -118,7 +118,7 @@ const paymentRequestCreate = async parameters =>{
                                                                    }
                                                                }).result
                                        .filter((/**@type{server_db_table_AppDataResourceDetail}*/account)=>
-                                           account.json_data?.bank_account_vpa==merchant.merchant_vpa
+                                           account.Document?.bank_account_vpa==merchant.merchant_vpa
                                        )[0];
        /**@type{bank_account} */                                                            
        const bankaccount_payer = server.ORM.db.AppDataResourceDetail.get({   app_id:parameters.app_id, 
@@ -132,7 +132,7 @@ const paymentRequestCreate = async parameters =>{
                                                                    }
                                                                }).result
                                    .filter((/**@type{server_db_table_AppDataResourceDetail}*/account)=>
-                                       account.json_data?.bank_account_vpa==body_decrypted.payerid
+                                       account.Document?.bank_account_vpa==body_decrypted.payerid
                                    )[0];
        if (merchant.merchant_api_secret==body_decrypted.api_secret && 
            merchant.merchant_vpa == body_decrypted.payeeid && 
@@ -157,7 +157,7 @@ const paymentRequestCreate = async parameters =>{
                                            };
                /**@type{server_db_table_AppDataResourceMaster} */
                const data_new_payment_request = {
-                                               json_data                                   : data_payment_request,
+                                               Document                                   : data_payment_request,
                                                iam_user_app_id                             : merchant.iam_user_app_id,
                                                app_data_entity_resource_id                 : server.ORM.db.AppDataEntityResource.get({   
                                                                                                                             app_id:parameters.app_id, 

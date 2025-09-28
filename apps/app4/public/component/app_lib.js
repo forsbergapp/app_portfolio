@@ -287,7 +287,7 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
  * 						button_id:'toolbar_btn_left'|'toolbar_btn_right'|null,
  * 						user_account_app_data_posts_parameters:APP_REPORT_day_user_account_app_data_posts[]|null
  * 						},
- *          methods:    {COMMON:common['CommonModuleCommon']}}} props
+ *          methods:    {COMMON:common['CommonModuleCommon']|null}}} props
  * @returns {{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   	null,
  *                      methods:	null,

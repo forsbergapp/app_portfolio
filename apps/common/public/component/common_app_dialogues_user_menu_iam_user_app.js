@@ -126,7 +126,7 @@ const component = async props => {
             const body = {
                             IAM_data_app_id: props.methods.COMMON.commonGlobalGet('app_id'),
                             IAM_iam_user_id: props.methods.COMMON.commonGlobalGet('iam_user_id'),
-                            json_data: 
+                            Document: 
                             {  
                                 preference_locale:       props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_locale_select .common_select_dropdown_value')
                                                                             .getAttribute('data-value'),

@@ -235,7 +235,7 @@
  * @memberof dbObjects
  * @typedef {{  id:number, 
  *              app_id:number, 
- *              json_data:{[key:string]:string}|null,
+ *              Document:{[key:string]:string}|null,
  *              created:string,
  *              modified:string|null}} server_db_table_AppDataEntity
  */
@@ -244,7 +244,7 @@
  * @description DB TABLE AppDataEtntityResource
  * @memberof dbObjects
  * @typedef {{  id:number, 
- *              json_data:{[key:string]:*}|null, 
+ *              Document:{[key:string]:*}|null, 
  *              app_data_entity_id:number, 
  *              app_data_id:number, 
  *              created:string,
@@ -255,7 +255,7 @@
  * @description DB TABLE AppDataResourceMaster
  * @memberof dbObjects
  * @typedef {{  id?:number, 
- *              json_data:{[key:string]:*}|null, 
+ *              Document:{[key:string]:*}|null, 
  *              iam_user_app_id:number|null,
  *              app_data_entity_resource_id:number,
  *              created?:string,
@@ -266,7 +266,7 @@
  * @description DB TABLE AppDataResourceDetail
  * @memberof dbObjects
  * @typedef {{  id?:number, 
- *              json_data:{[key:string]:*}|null, 
+ *              Document:{[key:string]:*}|null, 
  *              app_data_resource_master_id:number,
  *              app_data_entity_resource_id:number,
  *              app_data_resource_master_attribute_id:number|null,
@@ -278,7 +278,7 @@
  * @description DB TABLE AppDataResourceDetailData
  * @memberof dbObjects
  * @typedef {{  id?:number, 
- *              json_data:{[key:string]:*}|null, 
+ *              Document:{[key:string]:*}|null, 
  *              app_data_resource_detail_id:number,
  *              app_data_resource_master_attribute_id:number|null,
  *              created?:string,
@@ -332,7 +332,7 @@
  * @typedef {{id: number,
  *            app_id: number,
  *			      locale: string,
- *			      json_data: {[key:string]:string}|null,       //complex text
+ *			      Document: {[key:string]:string}|null,       //complex text
  *			      text: string|null	            //simple text
  *          }} server_db_table_AppTranslation	
  */
@@ -469,7 +469,7 @@
  * @memberof dbObjects
  * @typedef {{
  *          id?:number, 
- *          json_data:{[key:string]:string}|null,
+ *          Document:{[key:string]:string}|null,
  *          iam_user_id: number, 
  *          app_id:number, 
  *          created?:string, 
@@ -480,7 +480,7 @@
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              iam_user_app_id:number
- *              json_data:{[key:string]:string}|null,
+ *              Document:{[key:string]:string}|null,
  *              created:string,
  *              modified:string|null}} server_db_table_IamUserAppDataPost
  */
@@ -1176,7 +1176,7 @@
  * @property {{app_id:number}}iam_user_app
  * @property {{
  *              app_id:                             number,
- *              json_data:{
+ *              Document:{
  *                          description:                        string,
  *                          regional_language_locale:           string,
  *                          regional_timezone:                  string,
@@ -1228,7 +1228,7 @@
  * @property {{ iam_user_app_iam_user_id:                        string,
  *              iam_user_app_app_id:                             number, 
  *              app_data_entity_resource_id:                     number, 
- *              json_data:                                       {[key:string]:string}|null,
+ *              Document:                                       {[key:string]:string}|null,
  *              app_data_entity?:{id:number,
  *                                [key:string]:string|number},
  *              app_data_resource_detail?:[{app_data_resource_master_id:number,
@@ -1236,13 +1236,13 @@
  *                                          iam_user_app_iam_user_id:number|null,
  *                                          iam_user_app_app_id:number|null,
  *                                          app_data_resource_master_attribute_id:number|null,
- *                                          json_data:{[key:string]:string}|null,
+ *                                          Document:{[key:string]:string}|null,
  *                                          app_data_resource_detail_data?:[{ app_data_resource_detail_id: number,
  *                                                                            iam_user_app_iam_user_id:number|null,
  *                                                                            iam_user_app_iam_user_app_id:number|null,
  *                                                                            data_app_id:number,
  *                                                                            app_data_resource_master_attribute_id:number,
- *                                                                            json_data: {[key:string]:string}|null}
+ *                                                                            Document: {[key:string]:string}|null}
  *                                                                          ]}
  *                                      ]}[]|[]} app_data_resource_master
  */

@@ -87,7 +87,7 @@
 /**
  * @description Type report APP_user_setting_data
  * @typedef {{   id:number|null, 
- *                      json_data:APP_user_setting_record}} APP_user_setting_data
+ *               Document:APP_user_setting_record}} APP_user_setting_data
  */
 /** 
  * @description Type report APP_user_setting

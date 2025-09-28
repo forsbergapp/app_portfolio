@@ -20,7 +20,7 @@
  * 
  *  DOCUMENT        JSON object with any content
  *  TABLE           JSON object with array of records managed as table identified by id and all records have same attributes
- *                  DOCUMENT with any content can be saved in a record using name json_data implemented
+ *                  DOCUMENT with any content can be saved in a record using name Document implemented
  *  TABLE_KEY_VALUE JSON object with array of records managed as table identified by app_id and records can have different attributes
  *  TABLE_LOG       JSON object with array of records, does not use cache_content, only admin should read logs
  *                  does not use temporary transaction_content and does not read file on disk and instead uses WritableStream for performance
@@ -507,9 +507,9 @@ class ORM_class {
                     const records = record.cache_content
                                     .filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id))
                                     .map((/**@type{*}*/row)=>{
-                                        if ('json_data' in row)
+                                        if ('Document' in row)
                                             return {...row,
-                                                    ...{...row.json_data}
+                                                    ...{...row.Document}
                                             };
                                         else
                                             return row;

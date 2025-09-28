@@ -43,7 +43,7 @@ const paymentRequestGetStatus = async parameters =>{
                                                                         app_data_entity_id:Entity.id
                                                                 }}).result
                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/merchant)=>
-                                server.ORM.UtilNumberValue(merchant.json_data?.merchant_id)==parameters.data.id
+                                server.ORM.UtilNumberValue(merchant.Document?.merchant_id)==parameters.data.id
                             )[0];
     if (merchant){
         /** 
@@ -52,7 +52,7 @@ const paymentRequestGetStatus = async parameters =>{
          *           origin:                 string}}
          */
         const  body_decrypted = JSON.parse(server.security.securityPrivateDecrypt(merchant.merchant_private_key, parameters.data.message));
-        if (merchant.json_data.merchant_api_secret==body_decrypted.api_secret && merchant.json_data.merchant_url == body_decrypted.origin){
+        if (merchant.Document.merchant_api_secret==body_decrypted.api_secret && merchant.Document.merchant_url == body_decrypted.origin){
             /**@type{payment_request} */
             const payment_request = await server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                         all_users:true,
@@ -63,7 +63,7 @@ const paymentRequestGetStatus = async parameters =>{
                                                                                 app_data_entity_id:Entity.id
                                                                         }}).result
                                             .filter((/**@type{server_db_table_AppDataResourceMaster}*/payment_request)=>
-                                                payment_request.json_data?.payment_request_id==body_decrypted.payment_request_id
+                                                payment_request.Document?.payment_request_id==body_decrypted.payment_request_id
                                             )[0];
             try {
                 const access_token = await getToken({app_id:parameters.app_id, authorization:parameters.authorization, ip:parameters.ip});
@@ -86,7 +86,7 @@ const paymentRequestGetStatus = async parameters =>{
                                                                                 app_data_entity_id:Entity.id
                                                                         }}).result
                                         .filter((/**@type{server_db_table_AppDataResourceDetail}*/result)=>
-                                            result.json_data?.bank_account_vpa == payment_request.payerid
+                                            result.Document?.bank_account_vpa == payment_request.payerid
                                         )[0];
                     if (account_payer){
                         //if status is still pending then send server side event message to customer

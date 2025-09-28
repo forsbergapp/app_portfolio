@@ -77,7 +77,7 @@ const post = async parameters => {
                                app_data_resource_master_id:parameters.data.app_data_resource_master_id,
                                app_data_entity_resource_id:parameters.data.app_data_entity_resource_id,
                                app_data_resource_master_attribute_id:parameters.data.app_data_resource_master_attribute_id,
-                               json_data:parameters.data.json_data,
+                               Document:parameters.data.Document,
                                created:new Date().toISOString(),
                                modified:null
                       };
@@ -109,8 +109,8 @@ const update = async parameters =>{
         /**@type{server_db_table_AppDataResourceDetail} */
         const data_update = {};
         //allowed parameters to update:
-        if (parameters.data.json_data!=null)
-            data_update.json_data = parameters.data.json_data;
+        if (parameters.data.Document!=null)
+            data_update.Document = parameters.data.Document;
         if (parameters.data.app_data_resource_master_attribute_id!=null)
             data_update.app_data_resource_master_attribute_id = parameters.data.app_data_resource_master_attribute_id;
         data_update.modified = new Date().toISOString();

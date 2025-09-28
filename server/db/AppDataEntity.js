@@ -34,7 +34,7 @@ const post = async parameters => {
         const data_new =     {
                                 id:Date.now(),
                                 app_id:parameters.data.app_id, 
-                                json_data:parameters.data.json_data,
+                                Document:parameters.data.Document,
                                 created:new Date().toISOString(),
                                 modified:null
                         };
@@ -66,8 +66,8 @@ const update = async parameters =>{
         /**@type{server_db_table_AppDataEntity} */
         const data_update = {};
         //allowed parameters to update:
-        if (parameters.data.json_data!=null)
-            data_update.json_data = parameters.data.json_data;
+        if (parameters.data.Document!=null)
+            data_update.Document = parameters.data.Document;
         data_update.modified = new Date().toISOString();
         if (Object.entries(data_update).length>0)
             return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE',object:'AppDataEntity', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{

@@ -47,9 +47,9 @@ const productLocationGet = async parameters =>{
                                                                                 }});
     for (const location of product_variant_location.result){
         //location, stock_text, stock
-        stock.push([{key_name:'location',   key_value:location.adrm_attribute_master_json_data.name, key_type:'TEXT'},
-                    {key_name:'stock_text', key_value:product_variant_location_metadata.result[0].json_data.stock.default_text, key_type:'TEXT'},
-                    {key_name:'stock',      key_value:location.json_data.stock, key_type:'TEXT'}]);
+        stock.push([{key_name:'location',   key_value:location.adrm_attribute_master_Document.name, key_type:'TEXT'},
+                    {key_name:'stock_text', key_value:product_variant_location_metadata.result[0].Document.stock.default_text, key_type:'TEXT'},
+                    {key_name:'stock',      key_value:location.Document.stock, key_type:'TEXT'}]);
     }
 
     return {result:[{stock:stock}], type:'JSON'};

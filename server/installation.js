@@ -148,7 +148,7 @@ const postDemo = async parameters=> {
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserApp.post(parameters.app_id, 
                     /**@ts-ignore */
-                    {app_id:app_id, json_data:null, iam_user_id:iam_user_id})
+                    {app_id:app_id, Document:null, iam_user_id:iam_user_id})
                 .then((/**@type{server_server_response}*/result)=>{
                     if(result.result){
                         if (result.result.affectedRows == 1)
@@ -162,7 +162,7 @@ const postDemo = async parameters=> {
         };
         /**
         * Create iam user app data post
-        * @param {{ json_data:      server_db_table_IamUserAppDataPost['json_data'],
+        * @param {{ Document:      server_db_table_IamUserAppDataPost['Document'],
         *           iam_user_app_id:server_db_table_IamUserAppDataPost['iam_user_app_id']}} data 
         * @returns {Promise.<null>}
         */
@@ -185,7 +185,7 @@ const postDemo = async parameters=> {
 
         /**
         * 
-        * @param {{ json_data:                                      server_db_table_AppDataResourceMaster['json_data'],
+        * @param {{ Document:                                      server_db_table_AppDataResourceMaster['Document'],
         *           iam_user_app_id:                                server_db_table_AppDataResourceMaster['iam_user_app_id'],
         *           app_data_entity_resource_id:                    server_db_table_AppDataResourceMaster['app_data_entity_resource_id']}} data 
         * @returns {Promise.<number>}
@@ -209,7 +209,7 @@ const postDemo = async parameters=> {
         * @param {{app_data_resource_master_id: number;
         *          app_data_entity_resource_id: number;
         *          app_data_resource_master_attribute_id: number|null,
-        *          json_data: server_db_table_AppDataResourceDetail['json_data'],}} data 
+        *          Document: server_db_table_AppDataResourceDetail['Document'],}} data 
         * @returns {Promise.<number>}
         */
         const create_app_data_resource_detail = async data => {
@@ -238,15 +238,15 @@ const postDemo = async parameters=> {
                                                     resource_id:data.id, 
                                                     data:{data_app_id:null}});
             if(result_get.result){
-                const update_json_data = result_get.result[0].json_data;
+                const update_Document = result_get.result[0].Document;
                 for (const key of Object.entries(data??{}))
                     //skip PK
                     if (key[0]!='id')
-                        update_json_data[key[0]] = key[1];
+                        update_Document[key[0]] = key[1];
                 const result_update = await server.ORM.db.AppDataEntity.update({   app_id:user_account_post_app_id, 
                                                                             /**@ts-ignore */
                                                                             resource_id:data.id, 
-                                                                            data:{json_data:update_json_data}});
+                                                                            data:{Document:update_Document}});
                 if(result_update.result){
                     if (result_update.result.affectedRows == 1)
                         records_app_data_resource_detail++;
@@ -262,7 +262,7 @@ const postDemo = async parameters=> {
         /**
         * 
         * @param {number} user_account_post_app_id 
-        * @param {{ json_data: server_db_table_AppDataResourceDetailData['json_data'],
+        * @param {{ Document: server_db_table_AppDataResourceDetailData['Document'],
         *           app_data_resource_detail_id: server_db_table_AppDataResourceDetailData['app_data_resource_detail_id'],
         *           app_data_resource_master_attribute_id:server_db_table_AppDataResourceDetailData['app_data_resource_master_attribute_id']}} data 
         * @returns {Promise.<number>}
@@ -330,8 +330,8 @@ const postDemo = async parameters=> {
             for (const demo_user_account_app_data_post of demo_user.iam_user_app_data_post){
                 let settings_header_image;
                 //use file in settings or if missing then use filename same as demo username
-                if (demo_user_account_app_data_post.json_data.image_header_image_img)
-                    settings_header_image = `${demo_user_account_app_data_post.json_data.image_header_image_img}.webp`;
+                if (demo_user_account_app_data_post.Document.image_header_image_img)
+                    settings_header_image = `${demo_user_account_app_data_post.Document.image_header_image_img}.webp`;
                 else
                     settings_header_image = `${demo_user.username}.webp`;
                 /**@type{Buffer} */
@@ -339,19 +339,19 @@ const postDemo = async parameters=> {
                 /**@ts-ignore */
                 const image_string = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
                 //update settings with loaded image into BASE64 format
-                demo_user_account_app_data_post.json_data.image_header_image_img = image_string;
+                demo_user_account_app_data_post.Document.image_header_image_img = image_string;
                 //use random day and month themes
                 //day 10001-10010
-                demo_user_account_app_data_post.json_data.design_theme_day_id = Math.floor(10001 + Math.random() * 10);
+                demo_user_account_app_data_post.Document.design_theme_day_id = Math.floor(10001 + Math.random() * 10);
                 //month 20001-20022
-                demo_user_account_app_data_post.json_data.design_theme_month_id = Math.floor(20001 + Math.random() * 22);
-                demo_user_account_app_data_post.json_data.design_theme_year_id = 30001;
-                const json_data_user_account_app_data_post = {
-                                                json_data: demo_user_account_app_data_post.json_data,
+                demo_user_account_app_data_post.Document.design_theme_month_id = Math.floor(20001 + Math.random() * 22);
+                demo_user_account_app_data_post.Document.design_theme_year_id = 30001;
+                const Document_user_account_app_data_post = {
+                                                Document: demo_user_account_app_data_post.Document,
                                                 iam_user_app_id: iam_user_app_id
                                             };	
                 /**@ts-ignore */
-                await create_iam_user_app_data_post(json_data_user_account_app_data_post);
+                await create_iam_user_app_data_post(Document_user_account_app_data_post);
             }
             /**
             * Updates resource values
@@ -397,25 +397,25 @@ const postDemo = async parameters=> {
                             }        
                         }
                 };
-                //loop json_data keys
-                for (const key of Object.entries(resource.json_data)){
-                    resource.json_data[key[0]] = value_set(key);
+                //loop Document keys
+                for (const key of Object.entries(resource.Document)){
+                    resource.Document[key[0]] = value_set(key);
                 }
-                return resource.json_data;
+                return resource.Document;
             };
             //3D.Create app data master records if any
             for (const resource_master of demo_user.app_data_resource_master ?? []){
                 const data = {  
                                 iam_user_app_id:                                 iam_user_app_id,
                                 app_data_entity_resource_id:                     resource_master.app_data_entity_resource_id,
-                                json_data:                                       await demo_data_update(resource_master)
+                                Document:                                       await demo_data_update(resource_master)
                 };
                 /**@ts-ignore */
                 const master_id = await create_app_data_resource_master(data);
                 //3E.Update app data entity record if anything to update
                 if (resource_master.app_data_entity && resource_master.app_data_entity.id){
                     //set values used in app data master
-                    for (const key of Object.entries(data.json_data)){
+                    for (const key of Object.entries(data.Document)){
                         if (key[0]!='id' &&
                             (key[0]=='merchant_id' ||
                             key[0]=='merchant_name' ||
@@ -441,14 +441,14 @@ const postDemo = async parameters=> {
                     const data = {  app_data_resource_master_id                     : master_id,
                                     app_data_entity_resource_id                     : resource_detail.app_data_entity_resource_id,
                                     app_data_resource_master_attribute_id           : resource_detail.app_data_resource_master_attribute_id,
-                                    json_data                                       : await demo_data_update(resource_detail)
+                                    Document                                       : await demo_data_update(resource_detail)
                                     };
                     const detail_id = await create_app_data_resource_detail(data);
                     //3G.Create app data detail data records if any
                     for (const resource_detail_data of resource_detail.app_data_resource_detail_data ?? []){
                         const data ={   app_data_resource_detail_id             : detail_id,
                                         app_data_resource_master_attribute_id   : resource_detail_data.app_data_resource_master_attribute_id,
-                                        json_data                               : await demo_data_update(resource_detail_data)
+                                        Document                               : await demo_data_update(resource_detail_data)
                                         };
                         create_app_data_resource_detail_data(parameters.app_id, data);
                     }
@@ -762,7 +762,7 @@ const deleteDemo = async parameters => {
             const result_get = server.ORM.db.AppDataEntity.get({ app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}});
             if(result_get.result){
                 for (const row of result_get.result){
-                    for (const key of Object.entries(row.json_data??{})){
+                    for (const key of Object.entries(row.Document??{})){
                         if (key[0]=='iam_user_id_owner' ||
                             key[0]=='merchant_id' ||
                             key[0]=='merchant_name' ||
@@ -774,12 +774,12 @@ const deleteDemo = async parameters => {
                             key[0]=='merchant_vpa' ||
                             key[0]=='iam_user_id_anonymous' 
                         )
-                            row.json_data[key[0]] = null;
+                            row.Document[key[0]] = null;
                     }
                     await server.ORM.db.AppDataEntity.update({ app_id:parameters.app_id,
                                                 resource_id:row.id,
                                                 /**@ts-ignore */
-                                                data:{json_data:row.json_data}});
+                                                data:{Document:row.Document}});
                 }
             }
             else
