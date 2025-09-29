@@ -3,6 +3,7 @@
 /**
  * @import {server_apps_report_create_parameters,
  * 			server_db_table_IamUserAppDataPostView,
+ * 			server_db_table_AppData,
  * 			server_server_error} from './../../../../server/types.js'
  * @import {APP_REPORT_day_user_account_app_data_posts, APP_REPORT_settings, APP_user_setting_record} from '../types.js'
  */
@@ -160,22 +161,19 @@ const timetable = async (timetable_parameters) => {
 	const user_account_app_data_post_id = Number(urlParams.get('sid'));
 	const reporttype = Number(urlParams.get('type'));
 	const iam_user_app_id_view = urlParams.get('uid_view')?Number(urlParams.get('uid_view')):null;
-	/**
-	 * 
-	 * @param {string} decodedReportparameters 
-	 * @returns 
-	 */
 	
-	const parametersApp = server.ORM.db.AppParameter.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
+	/**@type{Object.<string,*>} */
+	const parametersApp = server.ORM.db.AppData.getServer({app_id:timetable_parameters.app_id, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:timetable_parameters.app_id}}).result
+							.reduce((/**@type{Object.<string,*>}*/key, /**@type{server_db_table_AppData}*/row)=>{key[row.value] = row.display_data; return key},{});
     const result_app = server.ORM.db.App.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
 	return await new Promise((resolve) => {
 		APP_REPORT_GLOBAL.app_copyright = result_app.copyright;
-		APP_REPORT_GLOBAL.regional_def_calendar_lang = parametersApp.app_regional_default_calendar_lang.value;
-		APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parametersApp.app_regional_default_locale_ext_prefix.value;
-		APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parametersApp.app_regional_default_locale_ext_number_system.value;
-		APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parametersApp.app_regional_default_locale_ext_calendar.value;
-		APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parametersApp.app_regional_default_calendar_type_greg.value;
-		APP_REPORT_GLOBAL.regional_def_calendar_number_system = parametersApp.app_regional_default_calendar_number_system.value;
+		APP_REPORT_GLOBAL.regional_def_calendar_lang = parametersApp.app_regional_default_calendar_lang;
+		APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parametersApp.app_regional_default_locale_ext_prefix;
+		APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parametersApp.app_regional_default_locale_ext_number_system;
+		APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parametersApp.app_regional_default_locale_ext_calendar;
+		APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parametersApp.app_regional_default_calendar_type_greg;
+		APP_REPORT_GLOBAL.regional_def_calendar_number_system = parametersApp.app_regional_default_calendar_number_system;
 		
 		/**@type{server_db_table_IamUserAppDataPostView} */
 		const data_ViewStat = { client_ip:          		timetable_parameters.ip,

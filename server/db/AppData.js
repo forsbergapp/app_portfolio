@@ -20,10 +20,10 @@ const {server} = await import ('../server.js');
  * @returns {server_server_response & {result?:{data:string}[]}}
  */
 const get = parameters => {
-    const result = server.ORM.getObject(parameters.app_id, 'AppData',parameters.resource_id, server.ORM.UtilNumberValue(parameters.data.data_app_id));
+    const result = getServer({app_id:parameters.app_id, resource_id:parameters.resource_id, data:parameters.data})
     if (result.result)
         return {result:[{
-                            data:Buffer.from (JSON.stringify(result.result.filter((/**@type{server_db_table_AppData}*/row)=>row.name==(parameters.data?.name ?? row.name) && row.value==(parameters.data?.value ?? row.value)))).toString('base64')
+                            data:Buffer.from (JSON.stringify(result.result)).toString('base64')
                         }], 
                 type:'JSON'};
     else

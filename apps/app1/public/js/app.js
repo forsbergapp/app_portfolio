@@ -387,16 +387,20 @@ const appSecureCommonButtonSave = async (item) => {
                                                     });
             }
             
-            if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_parameter.list_nav_selected_tab'))
+            if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_data.list_nav_selected_tab'))
                 //save changes in menu_apps_parameters
                 for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_apps_detail_row[data-changed-record=\'1\']')){
-                    await appSecureCommonRecordUpdate(  'app_parameter',
+                    await appSecureCommonRecordUpdate(  'app_data',
                                                         record,
                                                         item,
-                                                        record.querySelector('[data-column=\'app_id\']').textContent,
-                                                        {   parameter_name:     record.querySelector('[data-column=\'name\']').textContent,
-                                                            parameter_value:    record.querySelector('[data-column=\'value\']').textContent,
-                                                            parameter_comment:  record.querySelector('[data-column=\'comment\']').textContent
+                                                        record.querySelector('[data-column=\'id\']').textContent,
+                                                        {   app_id:         record.querySelector('[data-column=\'app_id\']').textContent,
+                                                            value:          record.querySelector('[data-column=\'value\']').textContent,
+                                                            display_data:   record.querySelector('[data-column=\'display_data\']').textContent,
+                                                            data2:          record.querySelector('[data-column=\'data2\']').textContent,
+                                                            data3:          record.querySelector('[data-column=\'data3\']').textContent,
+                                                            data4:          record.querySelector('[data-column=\'data4\']').textContent,
+                                                            data5:          record.querySelector('[data-column=\'data5\']').textContent
                                                         });
                 }
             if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_module.list_nav_selected_tab'))
@@ -479,7 +483,7 @@ const appSecureCommonButtonSave = async (item) => {
  * @name appSecureCommonRecordUpdate
  * @description Updates record
  * @function
- * @param {'user_account'|'app'|'app_parameter'|'app_module'} table 
+ * @param {'user_account'|'app'|'app_data'|'app_module'} table 
  * @param {HTMLElement} row_element 
  * @param {string} button 
  * @param {number} resource_id
@@ -510,8 +514,8 @@ const appSecureCommonRecordUpdate = async ( table,
             method = 'PUT';
             break;
         }
-        case 'app_parameter':{
-            path = `/server-db/appparameter/${resource_id}`;
+        case 'app_data':{
+            path = `/server-db/appdata/${resource_id}`;
             method = 'PATCH';
             break;
         }
@@ -652,7 +656,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     appSecureCommonButtonSave('menu_apps_save');
                     break;
                 }
-                case 'menu_apps_detail_parameter':
+                case 'menu_apps_detail_data':
                 case 'menu_apps_detail_module':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
                     COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('list_nav_selected_tab');
@@ -759,7 +763,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     //event on master to automatically show detail records
                     if (APP_SECURE_GLOBAL.previous_row != common.commonMiscElementRow(event.target)){
                         APP_SECURE_GLOBAL.previous_row = common.commonMiscElementRow(event.target);
-                        COMMON_DOCUMENT.querySelector('#menu_apps_detail_parameter').click();
+                        COMMON_DOCUMENT.querySelector('#menu_apps_detail_data').click();
                     }
                     break;
                 }

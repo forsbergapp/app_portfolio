@@ -92,9 +92,6 @@ const test = async t =>
                 t.expect(   'Count App',    
                             spyObject.filter(row=>row.id == spyId && row.object=='App').length).toBeGreaterThan(0),
                 /**@ts-ignore */
-                t.expect(   'Count AppParameter',    
-                            spyObject.filter(row=>row.id == spyId && row.object=='AppParameter').length).toBeGreaterThan(0),
-                /**@ts-ignore */
                 t.expect(   'Count ConfigServer',    
                             spyObject.filter(row=>row.id == spyId && row.object=='ConfigServer').length).toBeGreaterThan(0),
                 /**@ts-ignore */

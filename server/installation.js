@@ -14,7 +14,7 @@
  *          server_db_common_result_insert,
  *          server_DbObject, server_DbObject_record, server_server_error, 
  *          server_db_config_server_service_iam,
- *          server_db_table_AppModule, server_db_table_AppParameter, server_db_table_AppData,
+ *          server_db_table_AppModule, server_db_table_AppData,
  *          server_db_table_AppDataEntityResource, server_db_table_AppDataEntity,
  *          server_db_table_AppTranslation,
  *          server_db_document_ConfigRestApi,
@@ -874,7 +874,6 @@ const postDataDefault = async () => {
      *          [server_DbObject, server_db_table_AppDataResourceDetail[]],
      *          [server_DbObject, server_db_table_AppDataResourceMaster[]],
      *          [server_DbObject, server_db_table_AppModule[]],
-     *          [server_DbObject, server_db_table_AppParameter[]],
      *          [server_DbObject, server_db_table_AppData[]],
      *          [server_DbObject, server_db_table_AppTranslation[]]
      *       ]}
@@ -889,7 +888,6 @@ const postDataDefault = async () => {
                             ['AppDataResourceDetail',           await getDefaultObject('AppDataResourceDetail')],
                             ['AppDataResourceMaster',           await getDefaultObject('AppDataResourceMaster')],
                             ['AppModule',                       await getDefaultObject('AppModule')],
-                            ['AppParameter',                    await getDefaultObject('AppParameter')],
                             ['AppData',                         await getDefaultObject('AppData')],
                             ['AppTranslation',                  await getDefaultObject('AppTranslation')]
                         ]; 

@@ -371,38 +371,7 @@
  *              host:string,
  *              port:string}} CommonAppRecord
  */
-/**
- * @description Type commonInitAppParameters
- * @typedef {{  AppParametersCommon: {
- *                      app_id?:                             number,
- *                      common_app_dialogues_info_link_policy_name:        {value:string},
- *                      common_app_dialogues_info_link_policy_url:         {value:string},
- *                      common_app_dialogues_info_link_disclaimer_name:    {value:string},
- *                      common_app_dialogues_info_link_disclaimer_url:     {value:string},
- *                      common_app_dialogues_info_link_terms_name:         {value:string},
- *                      common_app_dialogues_info_link_terms_url:          {value:string}
- *                      },
- *              Info:   {
- *                      app_id:                         number,
- *                      app_idtoken:                    string,
- *                      client_latitude:                string,
- *                      client_longitude:               string,
- *                      client_place:                   string,
- *                      client_timezone:                string,
- *                      app_start_app_id:               number,
- *                      app_common_app_id:              number,
- *                      app_admin_app_id:               number,
- *                      app_toolbar_button_start:       number,
- *                      app_toolbar_button_framework:   number,
- *                      app_framework:                  number,
- *                      app_framework_messages:         number,
- *                      rest_resource_bff:              string,
- *                      rest_api_version:               string,
- *                      first_time:                     1|0,
- *                      admin_only:                     1|0
- *                      }
- *          }} commonInitAppParameters
- */
+
 /**
  * @description Type commonAppInit
  * @typedef {{App:{
@@ -625,7 +594,6 @@
  *              CommonRESTAPIMethod:CommonRESTAPIMethod,
  *              CommonRESTAPIAuthorizationType:CommonRESTAPIAuthorizationType,
  *              CommonAppRecord:CommonAppRecord,
- *              commonInitAppParameters:commonInitAppParameters,
  *              commonAppInit:commonAppInit,
  *              CommonAppDataRecord:CommonAppDataRecord,
  *              CommonAppModulesRecord:CommonAppModulesRecord,

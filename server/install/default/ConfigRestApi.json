@@ -3013,10 +3013,10 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/appparameter/${resource_id_number}": {
+        "/bff/admin/v1/server-db/appdata/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.AppParameter.get",
+                "operationId": "server_db.AppData.getServer",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3028,9 +3028,17 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"app_parameter.app_id",
-                            "required":true,
+                            "description":"AppData.id",
+                            "required":false,
                             "in":"path"
+                        },
+                        {
+                            "name":"data_app_id",
+                            "in":"query",
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
                         }
                 ],
                 "responses": {
@@ -3051,7 +3059,7 @@
             },
             "patch": {
                 "summary": "",
-                "operationId": "server_db.AppParameter.update",
+                "operationId": "server_db.AppData.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3063,7 +3071,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"app_parameter.app_id",
+                            "description":"AppData.id",
                             "required":true,
                             "in":"path"
                         }
@@ -3076,13 +3084,29 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "parameter_name":{
+                                            "app_id":{
+                                                "type":"number",
+                                                "required":true
+                                            },
+                                            "name":{
                                                 "type":"string"
                                             },
-                                            "parameter_value":{
+                                            "value":{
                                                 "type":"string"
                                             },
-                                            "parameter_comment":{
+                                            "display_data":{
+                                                "type":"string"
+                                            },
+                                            "data2":{
+                                                "type":"string"
+                                            },
+                                            "data3":{
+                                                "type":"string"
+                                            },
+                                            "data4":{
+                                                "type":"string"
+                                            },
+                                            "data5":{
                                                 "type":"string"
                                             }
                                         }
