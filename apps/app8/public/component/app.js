@@ -258,7 +258,7 @@ const component = async props => {
                                 spinner_id:event_target.id,
                                 timeout:1000 * 60 * 5}) //5 minutes timeout
                     .then((/**@type{string}*/result)=>{
-                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_message');
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_lov');
                         /**
                          * @type{{cube_solution:string,
                          *        cube_solution_time:number,

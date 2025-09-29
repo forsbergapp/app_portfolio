@@ -50,8 +50,8 @@ const component = async props => {
     const updateMetadata = async ()=>{
         await props.methods.COMMON.commonComponentRender({mountDiv:'menu_report_metadata',
             data:{
-                report_description:JSON.parse(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_report_select_report .common_select_dropdown_value').getAttribute('data-value')).common_description,
-                report_metadata:JSON.parse(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_report_select_report .common_select_dropdown_value').getAttribute('data-value')).common_metadata
+                report_description:JSON.parse(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_report_select_report .common_select_dropdown_value').getAttribute('data-value')).ModuleDescription,
+                report_metadata:JSON.parse(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_report_select_report .common_select_dropdown_value').getAttribute('data-value')).ModuleMetadata
                 },
             methods:null,
             path:'/component/menu_report_metadata.js'});
@@ -101,9 +101,9 @@ const component = async props => {
         //mount select
         await props.methods.COMMON.commonComponentRender({mountDiv:'menu_report_select_report',
             data:{
-                default_value:reports[0].common_name,
+                default_value:reports[0].ModuleName,
                 default_data_value:JSON.stringify(reports[0]),
-                options:reports.map(row=>{return{value:JSON.stringify(row), text:row.common_name};}),
+                options:reports.map(row=>{return{value:JSON.stringify(row), text:row.ModuleName};}),
                 path:null,
                 query:null,
                 method:null,
