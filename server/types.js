@@ -78,18 +78,18 @@
  * @typedef {{param:{name:string, text:string, default:string|number}}} server_apps_module_metadata
  */
 /**
- * @description APP_server_apps_module_common_type
- * @typedef {'FUNCTION'|'ASSET'|'REPORT'} APP_server_apps_module_common_type
+ * @description APP_server_apps_module_ModuleType
+ * @typedef {'FUNCTION'|'ASSET'|'REPORT'} APP_server_apps_module_ModuleType
  */
 /**
  * @description APP server_apps_module_with_metadata
  * @typedef {{  id:number,
  *              app_id: number,
- *              common_type: APP_server_apps_module_common_type,
- *              common_name:string,
- *              common_path:string,
- *              common_metadata:server_apps_module_metadata[],
- *              common_description:string}} server_apps_module_with_metadata
+ *              ModuleType: APP_server_apps_module_ModuleType,
+ *              ModuleName:string,
+ *              ModulePath:string,
+ *              ModuleMetadata:server_apps_module_metadata[],
+ *              ModuleDescription:string}} server_apps_module_with_metadata
  */
 /**
  * @description APP server_config_apps_status
@@ -290,11 +290,11 @@
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              app_id: number,
- *              common_type: APP_server_apps_module_common_type,
- *              common_name:string,
- *              common_role:'APP_ID'|'APP_ACCESS'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'',
- *              common_path:string,
- *              common_description:string}} server_db_table_AppModule
+ *              ModuleType: APP_server_apps_module_ModuleType,
+ *              ModuleName:string,
+ *              ModuleRole:'APP_ID'|'APP_ACCESS'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'',
+ *              ModulePath:string,
+ *              ModuleDescription:string}} server_db_table_AppModule
  */
 /**
  * @description DB TABLE AppModuleQueue

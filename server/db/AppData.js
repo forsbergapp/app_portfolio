@@ -60,7 +60,7 @@ const getServer = parameters => {
  */
 const post = async (app_id, data) => {
     //check required attributes
-    if (app_id!=null && data.app_id!=null && data.common_type!=null && data.common_name!=null && data.common_role!=null && data.common_path!=null){
+    if (app_id!=null && data.app_id!=null){
         /**@type{server_db_table_AppData} */
         const data_new ={
             id:                 Date.now(),

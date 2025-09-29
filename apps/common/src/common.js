@@ -10,7 +10,7 @@
  *          server_apps_module_with_metadata,
  *          server_apps_module_metadata,
  *          server_app_CommonCSSFonts,
- *          APP_server_apps_module_common_type,
+ *          APP_server_apps_module_ModuleType,
  *          server_server_res,
  *          server_bff_endpoint_type,
  *          server_db_document_ConfigServer,
@@ -385,7 +385,7 @@ const commonResourceFile = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:string,
- *          data: { type?:APP_server_apps_module_common_type,
+ *          data: { type?:APP_server_apps_module_ModuleType,
  *                  module_app_id?:number|null,
  *                  data_app_id?:number|null},   //can accept more parameters if defined
  *          user_agent:string,
@@ -404,13 +404,14 @@ const commonModuleRun = async parameters => {
                                             data:{data_app_id:parameters.data.module_app_id ?? parameters.data.data_app_id}});
     if (modules.result){
         if (parameters.data?.type =='ASSET'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_EXTERNAL'||parameters.endpoint=='APP_ACCESS_EXTERNAL'){
+            /**@type{server_db_table_AppModule}*/
             const module = modules.result.filter((/**@type{server_db_table_AppModule}*/app)=>
                                                                                                 //APP EXTERNAL only uses id and message keys, add function type
-                                                                                                app.common_type==((parameters.endpoint=='APP_EXTERNAL' ||parameters.endpoint=='APP_ACCESS_EXTERNAL')?'FUNCTION':parameters.data.type) && 
-                                                                                                app.common_name==parameters.resource_id && 
-                                                                                                app.common_role == parameters.endpoint)[0];
+                                                                                                app.ModuleType==((parameters.endpoint=='APP_EXTERNAL' ||parameters.endpoint=='APP_ACCESS_EXTERNAL')?'FUNCTION':parameters.data.type) && 
+                                                                                                app.ModuleName==parameters.resource_id && 
+                                                                                                app.ModuleRole == parameters.endpoint)[0];
             if (module){
-                const {default:RunFunction} = await import('../../..' + module.common_path);
+                const {default:RunFunction} = await import('../../..' + module.ModulePath);
                 return await RunFunction({  app_id:parameters.app_id, 
                                             resource_id: parameters.resource_id,
                                             data:parameters.data, 
@@ -478,16 +479,17 @@ const commonAppReport = async parameters => {
     if (parameters.data?.type =='REPORT'){
         const modules = server.ORM.db.AppModule.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id}});
         if (modules.result){
+            /**@type{server_db_table_AppModule}*/
             const module = modules.result.filter((/**@type{server_db_table_AppModule}*/app)=>
-                                                                                            app.common_type==parameters.data.type && 
-                                                                                            app.common_name==parameters.resource_id && 
-                                                                                            app.common_role == parameters.endpoint)[0];
+                                                                                            app.ModuleType==parameters.data.type && 
+                                                                                            app.ModuleName==parameters.resource_id && 
+                                                                                            app.ModuleRole == parameters.endpoint)[0];
             if (module){
                 //report
                 //ID token is created but not used in report
                 await server.iam.iamAuthorizeIdToken(parameters.app_id, parameters.ip, 'REPORT');
                 
-                const {default:RunReport} = await import('../../..' + module.common_path);
+                const {default:RunReport} = await import('../../..' + module.ModulePath);
     
                 const pagesize = parameters.data.ps ?? new URLSearchParams(Buffer.from(parameters.data.reportid ?? '', 'base64').toString('utf-8')).get('ps');
                 /**@type{server_apps_report_create_parameters} */
@@ -676,13 +678,14 @@ const commonModuleMetaDataGet = async parameters =>{
     if (parameters.data.type=='REPORT'||parameters.data.type=='MODULE'||parameters.data.type=='FUNCTION'){
         const modules = server.ORM.db.AppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id,data:{data_app_id:parameters.app_id}});
         if (modules.result){
-            const module_reports = modules.result.filter((/**@type{server_db_table_AppModule}*/row)=>row.common_type==parameters.data.type);
+            /**@type{server_apps_module_with_metadata[]}*/
+            const module_reports = modules.result.filter((/**@type{server_db_table_AppModule}*/row)=>row.ModuleType==parameters.data.type);
             if (module_reports){
                 for (const row of module_reports){
-                    const module = await import('../../..' + row.common_path);
+                    const module = await import('../../..' + row.ModulePath);
                     /**@type{server_apps_module_metadata[]}*/
                     const metadata = module.metadata;
-                    row.common_metadata = metadata;
+                    row.ModuleMetadata = metadata;
                 }
                 return {result:module_reports, type:'JSON'};
             }
@@ -1092,9 +1095,9 @@ const commonAppResource = async parameters =>{
  */
 const commonRegistryAppModule = (app_id, parameters) => server.ORM.db.AppModule.get({app_id:app_id, resource_id:null, data:{data_app_id:app_id}}).result
                                                            .filter((/**@type{server_db_table_AppModule}*/app)=>
-                                                               app.common_type==parameters.type && 
-                                                               app.common_name==parameters.name && 
-                                                               app.common_role == parameters.role)[0];
+                                                               app.ModuleType==parameters.type && 
+                                                               app.ModuleName==parameters.name && 
+                                                               app.ModuleRole == parameters.role)[0];
 
 export {commonGetFile,
         commonCssFonts,

@@ -406,12 +406,12 @@ const appSecureCommonButtonSave = async (item) => {
                                                         record,
                                                         item,
                                                         record.querySelector('[data-column=\'id\']').textContent,
-                                                        {   app_id:             record.querySelector('[data-column=\'app_id\']').textContent,
-                                                            common_type:        record.querySelector('[data-column=\'common_type\']').textContent,
-                                                            common_name:        record.querySelector('[data-column=\'common_name\']').textContent,
-                                                            common_role:        record.querySelector('[data-column=\'common_role\']').textContent,
-                                                            common_path:        record.querySelector('[data-column=\'common_path\']').textContent,
-                                                            common_description: record.querySelector('[data-column=\'common_description\']').textContent
+                                                        {   app_id:            record.querySelector('[data-column=\'app_id\']').textContent,
+                                                            ModuleType:        record.querySelector('[data-column=\'ModuleType\']').textContent,
+                                                            ModuleName:        record.querySelector('[data-column=\'ModuleName\']').textContent,
+                                                            ModuleRole:        record.querySelector('[data-column=\'ModuleRole\']').textContent,
+                                                            ModulePath:        record.querySelector('[data-column=\'ModulePath\']').textContent,
+                                                            ModuleDescription: record.querySelector('[data-column=\'ModuleDescription\']').textContent
                                                         });
                 }
             break;

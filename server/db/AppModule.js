@@ -28,16 +28,16 @@ const get = parameters => server.ORM.getObject(parameters.app_id, 'AppModule',pa
  */
 const post = async (app_id, data) => {
     //check required attributes
-    if (app_id!=null && data.app_id!=null && data.common_type!=null && data.common_name!=null && data.common_role!=null && data.common_path!=null){
+    if (app_id!=null && data.app_id!=null && data.ModuleType!=null && data.ModuleName!=null && data.ModuleRole!=null && data.ModulePath!=null){
         /**@type{server_db_table_AppModule} */
         const data_new ={
             id:                 Date.now(),
             app_id:             data.app_id,
-            common_type:        data.common_type,
-            common_name:        data.common_name,
-            common_role:        data.common_role,
-            common_path:        data.common_path,
-            common_description: data.common_description
+            ModuleType:         data.ModuleType,
+            ModuleName:         data.ModuleName,
+            ModuleRole:         data.ModuleRole,
+            ModulePath:         data.ModulePath,
+            ModuleDescription:  data.ModuleDescription
         };
         return server.ORM.Execute({app_id:app_id, dml:'POST', object:'AppModule', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
             if (result.affectedRows>0){
@@ -66,16 +66,16 @@ const update = async parameters => {
     /**@type{server_db_table_AppModule} */
     const data_update = {};
     //allowed parameters to update:
-    if (parameters.data.common_type!=null)
-        data_update.common_type = parameters.data.common_type;
-    if (parameters.data.common_name!=null)
-        data_update.common_name = parameters.data.common_name;
-    if (parameters.data.common_role!=null)
-        data_update.common_role = parameters.data.common_role;
-    if (parameters.data.common_path!=null)
-        data_update.common_path = parameters.data.common_path;
-    if (parameters.data.common_description!=null)
-        data_update.common_description = parameters.data.common_description;
+    if (parameters.data.ModuleType!=null)
+        data_update.ModuleType = parameters.data.ModuleType;
+    if (parameters.data.ModuleName!=null)
+        data_update.ModuleName = parameters.data.ModuleName;
+    if (parameters.data.ModuleRole!=null)
+        data_update.ModuleRole = parameters.data.ModuleRole;
+    if (parameters.data.ModulePath!=null)
+        data_update.ModulePath = parameters.data.ModulePath;
+    if (parameters.data.ModuleDescription!=null)
+        data_update.ModuleDescription = parameters.data.ModuleDescription;
     if (Object.entries(data_update).length>0)
         return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppModule', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
             if (result.affectedRows>0)

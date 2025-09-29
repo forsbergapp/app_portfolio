@@ -444,11 +444,11 @@
  * @description Type CommonAppModulesRecord
  * @typedef {{  id:number,
  *              app_id: number,
- *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
- *              common_name:string,
- *              common_role:'APP_ID'|'APP_ACCESS'|'APP_EXTERNAL'|'APP_ACCESS_EXTERNAL'|null,
- *              common_path:string,
- *              common_description:string}} CommonAppModulesRecord
+ *              ModuleType: 'FUNCTION'|'MODULE'|'REPORT',
+ *              ModuleName:string,
+ *              ModuleRole:'APP_ID'|'APP_ACCESS'|'APP_EXTERNAL'|'APP_ACCESS_EXTERNAL'|null,
+ *              ModulePath:string,
+ *              ModuleDescription:string}} CommonAppModulesRecord
  */
 /**
  * @description Type CommonAppModuleMetadata
@@ -458,11 +458,11 @@
  * @description Type CommonAppModuleWithMetadata
  * @typedef {{  id:number,
  *              app_id: number,
- *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
- *              common_name:string,
- *              common_path:string,
- *              common_metadata:CommonAppModuleMetadata[],
- *              common_description:string}} CommonAppModuleWithMetadata
+ *              ModuleType: 'FUNCTION'|'MODULE'|'REPORT',
+ *              ModuleName:string,
+ *              ModulePath:string,
+ *              ModuleMetadata:CommonAppModuleMetadata[],
+ *              ModuleDescription:string}} CommonAppModuleWithMetadata
  */
 /**
  * @description Type CommonAppModuleQueueStatus

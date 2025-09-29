@@ -530,23 +530,23 @@
 	white-space: wrap;
 	vertical-align: top !important;
 }
-.menu_apps_detail_col[data-column='common_type']{
+.menu_apps_detail_col[data-column='ModuleType']{
 	display:inline-block;
 	width:150px;
 }
-.menu_apps_detail_col[data-column='common_name']{
+.menu_apps_detail_col[data-column='ModuleName']{
 	display:inline-block;
 	width:200px;
 }
-.menu_apps_detail_col[data-column='common_role']{
+.menu_apps_detail_col[data-column='ModuleRole']{
 	display:inline-block;
 	width:100px;
 }
-.menu_apps_detail_col[data-column='common_path']{
+.menu_apps_detail_col[data-column='ModulePath']{
 	display:inline-block;
 	width:350px;
 }
-.menu_apps_detail_col[data-column='common_description']{
+.menu_apps_detail_col[data-column='ModuleDescription']{
 	display:inline-block;
 	width:250px;
 }

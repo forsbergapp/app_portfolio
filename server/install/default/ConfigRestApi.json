@@ -2976,19 +2976,19 @@
                                             "app_id":{
                                                 "type":"number"
                                             },
-                                            "common_type":{
+                                            "ModuleType":{
                                                 "type":"string"
                                             },
-                                            "common_name":{
+                                            "ModuleName":{
                                                 "type":"string"
                                             },
-                                            "common_role":{
+                                            "ModuleRole":{
                                                 "type":"string"
                                             },
-                                            "common_path":{
+                                            "ModulePath":{
                                                 "type":"string"
                                             },
-                                            "common_description":{
+                                            "ModuleDescription":{
                                                 "type":"string"
                                             }
                                         }
