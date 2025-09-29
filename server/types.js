@@ -30,14 +30,10 @@
 
 
 /**
- * @description APP server_apps_info_parameters
- * @typedef {object}        server_apps_info_parameters
- * @property {number}       app_id
- * @property {string}       app_idtoken
- * @property {string|null}  client_latitude
- * @property {string|null}  client_longitude
- * @property {string|null}  client_place
- * @property {string|null}  client_timezone
+ * @description APP server_apps_globals
+ * @typedef {object}        server_apps_globals
+ * @property {string}       rest_resource_bff
+ * @property {string}       app_rest_api_version
  * @property {number|null}  app_common_app_id
  * @property {number|null}  app_admin_app_id
  * @property {number|null}  app_start_app_id
@@ -45,11 +41,23 @@
  * @property {number}       app_toolbar_button_framework
  * @property {number}       app_framework
  * @property {number}       app_framework_messages
- * @property {string}       rest_resource_bff
- * @property {string}       rest_api_version
- * @property {number}       first_time
  * @property {number}       admin_only
- * @property {{app_id:number, uuid:string, secret:string}[]} x
+ * @property {number}       admin_first_time
+ * @property {number}       app_requesttimeout_seconds
+ * @property {number}       app_requesttimeout_admin_minutes
+ * @property {string}       app_fonts
+ * @property {string|null}  info_link_policy_name
+ * @property {string|null}  info_link_policy_url
+ * @property {string|null}  info_link_disclaimer_name
+ * @property {string|null}  info_link_disclaimer_url
+ * @property {string|null}  info_link_terms_name
+ * @property {string|null}  info_link_terms_url
+ * @property {string|null}  token_dt
+ * @property {string|null}  client_latitude
+ * @property {string|null}  client_longitude
+ * @property {string|null}  client_place
+ * @property {string|null}  client_timezone
+ * @property {{app_id?:number, uuid:string, secret:string}} x
  */
 
 /**
@@ -315,18 +323,6 @@
  */
 
 /**
- * @description DB TABLE AppParameter
- * @memberof dbObjects
- * @typedef {{  app_id:                             number,
- *              common_app_id:                      {value:string, comment:string},
- *              common_info_link_policy_name:       {value:string},
- *              common_info_link_policy_url:        {value:string},
- *              common_info_link_disclaimer_name:   {value:string},
- *              common_info_link_disclaimer_url:    {value:string},
- *              common_info_link_terms_name:        {value:string},
- *              common_info_link_terms_url:         {value:string}}} server_db_table_AppParameter
- */
-/**
  * @description DB TABLE AppTranslation
  * @memberof dbObjects
  * @typedef {{id: number,
@@ -342,7 +338,7 @@
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              app_id: number,
- *              name: DB_FILE_server_db_app_data_name,
+ *              name: string,
  *              value:string,
  *              display_data:string,
  *              data2:string|number|null,
@@ -991,7 +987,6 @@
  *              'AppDataResourceMaster'|
  *              'AppModule'|
  *              'AppModuleQueue'|
- *              'AppParameter'|
  *              'AppTranslation'|
  *              'ConfigServer'| 
  *              'ConfigRestApi'|
@@ -1071,23 +1066,6 @@
 /**
  * @description DB server_db_app_module_queue_status
  * @typedef{'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL'} server_db_app_module_queue_status
- */
-
-/**
- * @description DB server_db_app_parameter_common
- *              apps should use their own types if adding new parameters
- * @typedef {{ app_id?:                             number,
- *             common_info_link_policy_name:        {value:string},
- *             common_info_link_policy_url:         {value:string},
- *             common_info_link_disclaimer_name:    {value:string},
- *             common_info_link_disclaimer_url:     {value:string},
- *             common_info_link_terms_name:         {value:string},
- *             common_info_link_terms_url:          {value:string}}} server_db_app_parameter_common
- */
-
-/**
- * @description DB_FILE_server_db_app_data_name, with common names specified
- * @typedef {'ARABIC_SCRIPT'|'CALENDAR_HIJRI_TYPE'|'CALENDAR_TYPE'|'DIRECTION'|'NUMBER_SYSTEM'|'PAPER_SIZE'|'RESOURCE_TYPE'|'TIMEZONE'|[key:string, string]} DB_FILE_server_db_app_data_name
  */
 
 /**

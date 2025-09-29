@@ -2309,47 +2309,38 @@ body,
     display:none
 }
 /* info*/ 
-.common_app_dialogues_info_content{
+.common_info_content{
     width: 97%;
     font-size: 0.8em;
-    margin:10px;
-    margin-bottom:30px;
+    margin:5em;
     border-radius: var(--common_app_css_border_radius);
     padding: 10px;
     color:var(--common_app_color_black);
     background-color: var(--common_app_color_white);
     min-height: 90%;
     display: inline-block;
+	text-align: start;
 }
-.common_app_dialogues_info_text_h1 {
+.common_info_text_h1 {
     font-size: 2em;
     font-weight: bold;
     margin-top: 20px;
     margin-bottom: 10px;
 }
-.common_app_dialogues_info_text_h2 {
+.common_info_text_h2 {
     font-size: 1.5em;
     margin-top: 20px;
     margin-bottom: 5px;
 }
-.common_app_dialogues_info_text_h3 {
+.common_info_text_h3 {
     font-size: 1.25em;
     margin-top: 5px;
     margin-bottom: 5px;
 }
-
-.common_app_dialogues_info_text_p {
+.common_info_text_p {
     display: block;
     margin-top: 10px;
     margin-bottom: 10px;
-}
-.common_app_dialogues_info_text_list {
-    padding-block-start: 5px;
-    padding-inline-start: 5px;
-    text-indent: -5px;
-}
-.common_app_dialogues_info_text_list::before{
-    content:'- ';
 }
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/

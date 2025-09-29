@@ -2,7 +2,7 @@
 
 /**
  * @import {server_db_table_App,
- *          server_db_table_AppParameter,
+ *          server_db_table_AppData,
  *          server_db_table_AppModule,
  *          server_db_table_IamEncryption,
  *          server_db_table_IamUser,
@@ -839,7 +839,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
   *                                                            link_url:server_db_table_App['link_url'],
   *                                                            link_title:server_db_table_App['link_title'],
   *                                                            text_edit:server_db_table_App['text_edit']},
-  *                                                       AppParameter:server_db_table_AppParameter | {} } }>}
+  *                                                       AppParameter:Object.<string,*>} }>}
   */
 const commonAppMount = async parameters =>{
     /**@type{server_db_document_ConfigServer} */
@@ -905,7 +905,9 @@ const commonAppMount = async parameters =>{
                                     link_title:             app.link_title,
                                     text_edit:              app.text_edit
                                 },
-                            AppParameter:server.ORM.db.AppParameter.get({  app_id:parameters.app_id, resource_id:parameters.resource_id}).result?.[0]??{},
+	                        //fetch parameters and convert records to one object with parameter keys
+                            AppParameter:server.ORM.db.AppData.getServer({app_id:parameters.app_id, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:parameters.app_id}}).result
+                                         .reduce((/**@type{Object.<string,*>}*/key, /**@type{server_db_table_AppData}*/row)=>{key[row.value] = row.display_data; return key},{}) ,
                             ...(await server.socket.socketConnectedUpdate(parameters.app_id, 
                                                             {idToken:parameters.idToken, 
                                                              app_only:true,
@@ -979,7 +981,7 @@ const commonApp = async parameters =>{
                                                 methods:    {
                                                             commonAppStart:commonAppStart,
                                                             bffGeodata:server.bff.bffGeodata,
-                                                            AppParameter:server.ORM.db.AppParameter,
+                                                            AppData:server.ORM.db.AppData,
                                                             IamEncryption:server.ORM.db.IamEncryption,
                                                             IamUser:server.ORM.db.IamUser,
                                                             iamAuthorizeIdToken:server.iam.iamAuthorizeIdToken,

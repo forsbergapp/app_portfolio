@@ -54,7 +54,7 @@
 #menu_users_list .list_title[data-column='modified']::before{					    content:var(--common_app_icon_user_account_modified)}
 
 #menu_apps_title::before{															content:var(--common_app_icon_apps)}
-#menu_apps_detail_parameter::before{												content:var(--common_app_icon_settings)}
+#menu_apps_detail_data::before{												content:var(--common_app_icon_settings)}
 #menu_apps_detail_secret::before{													content:var(--common_app_icon_user_password)}
 #menu_apps_detail_module::before{													content:var(--common_app_icon_init)}
 #menu_apps_save::before{															content:var(--common_app_icon_save)}
@@ -507,9 +507,6 @@
 	padding-inline-start: 5px;
 	text-align: start;
 }
-.menu_apps_detail_row[data-fk='1']{
-	display: none;
-}
 .menu_apps_detail_col[data-column='id']{
 	display:none;
 }
@@ -518,17 +515,22 @@
 }
 .menu_apps_detail_col[data-column='name']{
 	display:inline-block;
-	width:250px;
+	width:200px;
 }
 .menu_apps_detail_col[data-column='value']{
 	display:inline-block;
-	width:350px;
+	width:200px;
 }
-.menu_apps_detail_col[data-column='comment']{
+.menu_apps_detail_col[data-column='display_data']{
 	display:inline-block;
-	width:300px;
-	white-space: wrap;
-	vertical-align: top !important;
+	width:250px;
+}
+.menu_apps_detail_col[data-column='data2'],
+.menu_apps_detail_col[data-column='data3'],
+.menu_apps_detail_col[data-column='data4'],
+.menu_apps_detail_col[data-column='data5']{
+	display:inline-block;
+	width:200px;
 }
 .menu_apps_detail_col[data-column='ModuleType']{
 	display:inline-block;

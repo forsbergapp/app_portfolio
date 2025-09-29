@@ -475,14 +475,18 @@ const bffResponse = async parameters =>{
                     }
                     //records limit in controlled by server, apps can not set limits                                                     
                     const limit = server.ORM.UtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS??0);
-                    if (parameters.result_request.singleResource)
+                    //Admin shows all records except for pagination, apps use always APP_LIMIT_RECORDS
+                    const admin_limit = parameters.app_id == server.ORM.UtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_ADMIN_APP_ID)[0].APP_ADMIN_APP_ID)?
+                                                                null:
+                                                                    limit;
+                    if (parameters.result_request.singleResource){
                         //limit rows if single resource response contains rows
                         server.response({app_id:parameters.app_id,
                                         type:parameters.result_request?.type,
                                         result:await encrypt(JSON.stringify((typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
                                                     parameters.result_request.result
-                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
-                                                    (index+1)<=(limit??0)
+                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>(admin_limit??0)>0?
+                                                    (index+1)<=(admin_limit??0)
                                                         :true):
                                                         parameters.result_request.result)),
                                         route:parameters.route,
@@ -490,6 +494,7 @@ const bffResponse = async parameters =>{
                                         statusMessage: '',
                                         statusCode: parameters.method?.toUpperCase() == 'POST'?201:200,
                                         res:parameters.res});
+                    }
                     else{
                         
                         let result;
@@ -524,12 +529,12 @@ const bffResponse = async parameters =>{
                                             {	
                                                 total_count:	parameters.result_request.result?.length??0,
                                                 offset: 		0,
-                                                count:			Math.min(limit??0,parameters.result_request.result?.length??0)
+                                                count:			Math.min(admin_limit??0,parameters.result_request.result?.length??0)
                                             },
                                         rows:               (typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
                                                                 (parameters.result_request.result??[])
-                                                                .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
-                                                                                                                        (index+1)<=(limit??0)
+                                                                .filter((/**@type{*}*/row, /**@type{number}*/index)=>(admin_limit??0)>0?
+                                                                                                                        (index+1)<=(admin_limit??0)
                                                                                                                             :true):
                                                                     parameters.result_request.result
                                     };

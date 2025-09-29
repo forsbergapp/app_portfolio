@@ -3,7 +3,7 @@
      */  
 
     /**
-     * @import {server_db_document_ConfigServer} from '../../../../server/types.js';
+     * @import {server_db_table_AppData, server_db_document_ConfigServer, server_apps_globals} from '../../../../server/types.js';
      */
     /**
      * @name template
@@ -122,7 +122,7 @@
     *        methods:      {
     *                      commonAppStart:import('../common.js')['commonAppStart'],
     *                      bffGeodata:import('../../../../server/bff.js')['bffGeodata'],
-    *                      AppParameter:import('../../../../server/db/AppParameter.js'),
+    *                      AppData:import('../../../../server/db/AppData.js'),
     *                      IamEncryption:import('../../../../server/db/IamEncryption.js'),
     *                      IamUser:import('../../../../server/db/IamUser.js'),
     *                      iamAuthorizeIdToken:import('../../../../server/iam.js')['iamAuthorizeIdToken'],
@@ -184,7 +184,10 @@
             const count_user = props.methods.IamUser.get(props.data.app_id, null).result.length;
             const admin_only = (await props.methods.commonAppStart(props.data.app_id)==true?false:true) && count_user==0;
             
-            const APP_PARAMETER = props.methods.AppParameter.get({app_id:props.data.app_id,resource_id:common_app_id}).result[0]??{};
+            //fetch parameters and convert records to one object with parameter keys
+            /**@type{Object.<string,*>} */
+            const APP_PARAMETER = props.methods.AppData.getServer({app_id:props.data.app_id, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:common_app_id}}).result
+                                         .reduce((/**@type{Object.<string,*>}*/key, /**@type{server_db_table_AppData}*/row)=>{key[row.value] = row.display_data; return key},{})
             //geodata for APP using start_app_id
             const result_geodata = await props.methods.bffGeodata({ app_id:start_app_id, 
                                                                     endpoint:'APP', 
@@ -228,6 +231,7 @@
                                                         content_type:'font/woff2', 
                                                         data_app_id:common_app_id})).result.resource}) format("woff2")
                                     }`;
+            /**@type{server_apps_globals} */
             const globals = {
                                 //update COMMON_GLOBAL keys:
                                 //Config Server	
@@ -261,13 +265,13 @@
                                                                         return row;
                                                                 }).join('url(')
                                                                 .split('@'),
-                                //AppParameter common
-                                info_link_policy_name:          APP_PARAMETER.common_info_link_policy_name.value,
-                                info_link_policy_url:           APP_PARAMETER.common_info_link_policy_url.value,
-                                info_link_disclaimer_name:      APP_PARAMETER.common_info_link_disclaimer_name.value,
-                                info_link_disclaimer_url:       APP_PARAMETER.common_info_link_disclaimer_url.value,
-                                info_link_terms_name:           APP_PARAMETER.common_info_link_terms_name.value,
-                                info_link_terms_url:            APP_PARAMETER.common_info_link_terms_url.value,
+                                //AppData parameters common
+                                info_link_policy_name:          APP_PARAMETER.INFO_LINK_POLICY_NAME,
+                                info_link_policy_url:           APP_PARAMETER.INFO_LINK_POLICY_URL,
+                                info_link_disclaimer_name:      APP_PARAMETER.INFO_LINK_DISCLAIMER_NAME,
+                                info_link_disclaimer_url:       APP_PARAMETER.INFO_LINK_DISCLAIMER_URL,
+                                info_link_terms_name:           APP_PARAMETER.INFO_LINK_TERMS_NAME,
+                                info_link_terms_url:            APP_PARAMETER.INFO_LINK_TERMS_URL,
                                 
                                 //User
                                 token_dt:                       postData.idToken.token,
@@ -279,7 +283,7 @@
                                                                     uuid:  postData.uuid,
                                                                     secret:postData.secret
                                                                 }
-                                };
+                            };
             return {
                     globals:        Buffer.from(JSON.stringify(globals)).toString('base64'),
                     cssCommon:      Buffer.from((await props.methods.commonResourceFile({ 
