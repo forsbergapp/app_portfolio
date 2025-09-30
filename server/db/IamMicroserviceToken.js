@@ -1,7 +1,7 @@
 /** @module server/db/IamMicroserviceToken */
 
 /**
- * @import {server_server_response,server_db_common_result_insert, server_db_table_IamMicroserviceToken} from '../types.js'
+ * @import {server} from '../types.js'
  */
 const {server} = await import ('../server.js');
 /**
@@ -10,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_table_IamMicroserviceToken[] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['IamMicroserviceToken'][] }}
  */
 const get = parameters => server.ORM.getObject(parameters.app_id, 'IamMicroserviceToken', parameters.resource_id, parameters.app_id);
 
@@ -19,8 +19,8 @@ const get = parameters => server.ORM.getObject(parameters.app_id, 'IamMicroservi
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server_db_table_IamMicroserviceToken} data
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
+ * @param {server['ORM']['IamMicroserviceToken']} data
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
@@ -33,8 +33,8 @@ const post = async (app_id, data) => {
         data.ip != null &&
         data.host != null){
         //security check that token is not used already
-        if (server.ORM.getObject(app_id, 'IamMicroserviceToken', null, null).result.filter((/**@type{server_db_table_IamMicroserviceToken} */row)=>row.token==data.token).length==0){
-            /**@type{server_db_table_IamMicroserviceToken} */
+        if (server.ORM.getObject(app_id, 'IamMicroserviceToken', null, null).result.filter((/**@type{server['ORM']['IamMicroserviceToken']} */row)=>row.token==data.token).length==0){
+            /**@type{server['ORM']['IamMicroserviceToken']} */
             const data_new = {};
             data_new.id = Date.now();
             //required
@@ -49,7 +49,7 @@ const post = async (app_id, data) => {
             if (data.ua!=null)
                 data_new.ua = data.ua;
             data_new.created = new Date().toISOString();
-            return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamMicroserviceToken', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+            return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamMicroserviceToken', post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else

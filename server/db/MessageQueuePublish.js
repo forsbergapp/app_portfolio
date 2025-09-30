@@ -1,11 +1,7 @@
 /** @module server/db/MessageQueuePublish */
 
 /**
- * @import {server_server_response, server_db_common_result_insert, 
- *          server_db_table_MessageQueuePublish,
- *          server_db_table_MessageQueuePublishMessage,
- *          server_db_table_MessageQueuePublishMicroserviceLog,
- *          server_db_common_result_delete} from '../types.js'
+ * @import {server} from '../types.js'
  */
 const {server} = await import ('../server.js');
 /**
@@ -14,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_table_MessageQueuePublish[]}}
+ * @returns {server['server']['response'] & {result?:server['ORM']['MessageQueuePublish'][]}}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueuePublish',null, null);
     
@@ -24,7 +20,7 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueuePu
  * @function
  * @param {{app_id:number,
  *          data:*}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
  */
 const post = async parameters => {
 
@@ -37,7 +33,7 @@ const post = async parameters => {
           parameters.data.message?.message && 
           //no other keys
           Object.keys(parameters.data.message).length==6){
-        /**@type{server_db_table_MessageQueuePublishMessage}*/    
+        /**@type{server['ORM']['MessageQueuePublish']['message']}*/    
         const message = {sender:        parameters.data.message.sender,
                          receiver_id:   parameters.data.message.receiver_id,
                          host:          parameters.data.message.host,
@@ -45,7 +41,7 @@ const post = async parameters => {
                          subject:       parameters.data.message.subject,
                          message:       parameters.data.message.message
         };
-        /**@type{server_db_table_MessageQueuePublish}*/
+        /**@type{server['ORM']['MessageQueuePublish']}*/
         const data_new = {
             id:     Date.now(),
             service:parameters.data.service,
@@ -63,11 +59,11 @@ const post = async parameters => {
             (parameters.data.message?.type=='MICROSERVICE_LOG' || parameters.data.message?.type=='MICROSERVICE_ERROR') &&
             //no other keys
             Object.keys(parameters.data.message).length==2){
-            /**@type{server_db_table_MessageQueuePublishMicroserviceLog}*/
+            /**@type{server['ORM']['MessageQueuePublish']['message']}*/
             const message = {type:parameters.data.message.type,
                              message:parameters.data.message.message
             };
-            /**@type{server_db_table_MessageQueuePublish}*/
+            /**@type{server['ORM']['MessageQueuePublish']}*/
             const data_new = {
                 id:Date.now(),
                 service:parameters.data.service,
@@ -91,7 +87,7 @@ const post = async parameters => {
  * @function
  * @param {{app_id:number,
 *          resource_id:number}} parameters
-* @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
+* @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_delete'] }>}
 */
 const deleteRecord = async parameters =>{
    return server.ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'MessageQueuePublish', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{

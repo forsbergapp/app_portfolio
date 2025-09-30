@@ -3,7 +3,7 @@
  * @module test/performance.spec
  */
 /**
- * @import {test_spec_result} from '../server/types.js'
+ * @import {server} from '../server/types.js'
  */
 const {server} = await import('../server/server.js');
 
@@ -13,7 +13,7 @@ const {server} = await import('../server/server.js');
  *              it: should handle 100 concurrent requests without any error within 10 seconds
  * @function
  * @param {import('./test.js')} t
- * @returns {Promise.<test_spec_result['detail']>}
+ * @returns {Promise.<server['test']['spec_result']['detail']>}
  */
 const test = async t =>
     [await t.describe('Performance test, calling main server url according to configured values', async ()=> {

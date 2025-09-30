@@ -1,10 +1,7 @@
 /** @module server/db/IamUserAppDataPostLike */
 
 /**
- * @import {server_server_response,
- *          server_db_table_IamUserAppDataPostLike,server_db_table_IamUserApp,
- *          server_db_common_result_delete,
- *          server_db_common_result_insert} from '../types.js'
+ * @import {server} from '../types.js'
  */
 const {server} = await import ('../server.js');
 /**
@@ -16,17 +13,17 @@ const {server} = await import ('../server.js');
  *          data:{  iam_user_id:number|null,
  *                  data_app_id:number|null,
  *                  iam_user_app_data_post_id:number|null}}} parameters
- * @returns {server_server_response & {result?:server_db_table_IamUserAppDataPostLike[] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['IamUserAppDataPostLike'][] }}
  */
 const get = parameters =>{
     const IamUserApp_records =  server.ORM.db.IamUserApp.get({ app_id:parameters.app_id,
                                                 resource_id:null, 
                                                 data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result;
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserAppDataPostLike',parameters.resource_id, null).result ??[])
-                        .filter((/**@type{server_db_table_IamUserAppDataPostLike}*/row)=>
+                        .filter((/**@type{server['ORM']['IamUserAppDataPostLike']}*/row)=>
                             row.iam_user_app_data_post_id == (parameters.data.iam_user_app_data_post_id ?? row.iam_user_app_data_post_id) &&
                             IamUserApp_records
-                            .filter((/**@type{server_db_table_IamUserApp}*/rowIamUserApp)=>
+                            .filter((/**@type{server['ORM']['IamUserApp']}*/rowIamUserApp)=>
                                 row.iam_user_app_id == rowIamUserApp.id
                             )
                             .length>0
@@ -43,10 +40,10 @@ const get = parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data: { iam_user_app_data_post_id:server_db_table_IamUserAppDataPostLike['iam_user_app_data_post_id'],
- *                  iam_user_id:server_db_table_IamUserApp['iam_user_id'],
- *                  data_app_id:server_db_table_IamUserApp['app_id'],}}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
+ *          data: { iam_user_app_data_post_id:server['ORM']['IamUserAppDataPostLike']['iam_user_app_data_post_id'],
+ *                  iam_user_id:server['ORM']['IamUserApp']['iam_user_id'],
+ *                  data_app_id:server['ORM']['IamUserApp']['app_id'],}}} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
  */
 const post = async parameters =>{
     //check required attributes
@@ -54,10 +51,10 @@ const post = async parameters =>{
         return server.ORM.getError(parameters.app_id, 400);
     }
     else{
-        /**@type{server_db_table_IamUserApp} */
+        /**@type{server['ORM']['IamUserApp']} */
         const result = server.ORM.db.IamUserApp.get({app_id:parameters.app_id, resource_id:null, data:{   iam_user_id:parameters.data.iam_user_id, 
                                                                                             data_app_id:parameters.data.data_app_id}}).result[0];
-        /**@type{server_db_table_IamUserAppDataPostLike} */
+        /**@type{server['ORM']['IamUserAppDataPostLike']} */
         const data_new =     {
                                 id:Date.now(),
                                 /**@ts-ignore */
@@ -65,7 +62,7 @@ const post = async parameters =>{
                                 iam_user_app_data_post_id:parameters.data.iam_user_app_data_post_id,
                                 created:new Date().toISOString()
                         };
-        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPostLike', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPostLike', post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -83,10 +80,10 @@ const post = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data: { iam_user_app_data_post_id:server_db_table_IamUserAppDataPostLike['iam_user_app_data_post_id'],
- *                  iam_user_id:server_db_table_IamUserApp['iam_user_id'],
- *                  data_app_id:server_db_table_IamUserApp['iam_user_id'],}}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
+ *          data: { iam_user_app_data_post_id:server['ORM']['IamUserAppDataPostLike']['iam_user_app_data_post_id'],
+ *                  iam_user_id:server['ORM']['IamUserApp']['iam_user_id'],
+ *                  data_app_id:server['ORM']['IamUserApp']['iam_user_id'],}}} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>{
     const result = get({app_id:parameters.app_id, resource_id:null, data:{  iam_user_id:parameters.data.iam_user_id, 
@@ -95,7 +92,7 @@ const deleteRecord = async parameters =>{
     return server.ORM.Execute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
                                 object:'IamUserAppDataPostLike', 
-                                delete:{resource_id:parameters.resource_id ?? result.id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
+                                delete:{resource_id:parameters.resource_id ?? result.id, data_app_id:null}}).then((/**@type{server['ORMMetaData']['common_result_delete']}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

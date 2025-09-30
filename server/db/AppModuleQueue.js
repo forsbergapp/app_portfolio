@@ -1,9 +1,7 @@
 /** @module server/db/AppModuleQueue */
 
 /**
- * @import {server_server_response,server_db_app_module_queue_status,
- *          server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_table_AppModuleQueue} from '../types.js'
+ * @import {server} from '../types.js'
  */
 
 const {server} = await import ('../server.js');
@@ -15,7 +13,7 @@ const fs = await import('node:fs');
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_table_AppModuleQueue[] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['AppModuleQueue'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'AppModuleQueue',parameters.resource_id, parameters.app_id);
 
@@ -27,7 +25,7 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'AppModuleQueue
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {Promise.<server_server_response & {result?:{resource:string}}>}
+ * @returns {Promise.<server['server']['response'] & {result?:{resource:string}}>}
  */
 const getResult = async parameters => {
     return {result:{resource:(await fs.promises.readFile(server.ORM.serverProcess.cwd() + `/data/${server.ORM.db.ConfigServer.get({app_id:parameters.app_id, 
@@ -46,12 +44,12 @@ const getResult = async parameters => {
  *          parameters:string,
  *          status:server_db_app_module_queue_status
  *          user:string}} data
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null && data.type!=null && data.name!=null && data.parameters!=null && data.user!=null){
-        /**@type{server_db_table_AppModuleQueue} */
+        /**@type{server['ORM']['AppModuleQueue']} */
         const job =     {
                             id:Date.now(),
                             iam_user_id:data.iam_user_id,       //FK iam_user
@@ -67,7 +65,7 @@ const post = async (app_id, data) => {
                             status:data.status,
                             message:null
                         };
-        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'AppModuleQueue', post:{data:job}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'AppModuleQueue', post:{data:job}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
             if (result.affectedRows>0)
                 return  {result:{insertId:job.id, affectedRows:result.affectedRows}, type:'JSON'};
             else
@@ -84,7 +82,7 @@ const post = async (app_id, data) => {
  * @param {number} app_id
  * @param {number} id
  * @param {string} result
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
  */
 const postResult = async (app_id, id, result) =>{
     await fs.promises.writeFile(server.ORM.serverProcess.cwd() + `/data/${server.ORM.db.ConfigServer.get({app_id:app_id, data:{config_group:'SERVER',parameter:'PATH_JOBS'}}).result}/${id}.html`, result,  'utf8');
@@ -101,7 +99,7 @@ const postResult = async (app_id, id, result) =>{
  *          progress?:number|null,
  *          status?:server_db_app_module_queue_status,
  *          message?:string|null}} data
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_update'] }>}
  */
 const update = async (app_id, resource_id, data) => {
     const data_update = {};
@@ -117,7 +115,7 @@ const update = async (app_id, resource_id, data) => {
     if (data.message!=null)
         data_update.message = data.message;
     if (Object.entries(data_update).length>0)
-        return server.ORM.Execute({app_id:app_id, dml:'UPDATE', object:'AppModuleQueue', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
+        return server.ORM.Execute({app_id:app_id, dml:'UPDATE', object:'AppModuleQueue', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORMMetaData']['common_result_update']}*/result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
@@ -133,10 +131,10 @@ const update = async (app_id, resource_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppModuleQueue', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
+    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppModuleQueue', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server['ORMMetaData']['common_result_delete']}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

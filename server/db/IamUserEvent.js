@@ -1,8 +1,7 @@
 /** @module server/db/IamUserEvent */
 
 /**
- * @import {server_server_response,server_db_common_result_insert,server_db_common_result_delete,
- *          server_db_table_IamUserEvent} from '../types.js'
+ * @import {server} from '../types.js'
  */
 
 const {server} = await import ('../server.js');
@@ -12,7 +11,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server_server_response & {result?:server_db_table_IamUserEvent[] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['IamUserEvent'][] }}
  */
 const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamUserEvent',resource_id, null);
 
@@ -21,8 +20,8 @@ const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamUserEvent',
  * @description Create record
  * @function
  * @param {number} app_id 
- * @param {server_db_table_IamUserEvent} data
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
+ * @param {server['ORM']['IamUserEvent']} data
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
@@ -32,7 +31,7 @@ const post = async (app_id, data) => {
             return server.ORM.getError(app_id, 400);
     }
     else{
-        /**@type{server_db_table_IamUserEvent} */
+        /**@type{server['ORM']['IamUserEvent']} */
         const data_new =     {
                                 id:Date.now(),
                                 iam_user_id:data.iam_user_id, 
@@ -40,7 +39,7 @@ const post = async (app_id, data) => {
                                 event_status:data.event_status,
                                 created:new Date().toISOString()
                         };
-        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserEvent', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserEvent', post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -56,10 +55,10 @@ const post = async (app_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUserEvent', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
+    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUserEvent', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server['ORMMetaData']['common_result_delete']}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

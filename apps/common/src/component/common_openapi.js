@@ -4,14 +4,14 @@
  * @module apps/common/component/common_openapi
  */
 /**
- * @import {server_db_document_ConfigRestApi,server_db_document_ConfigServer}  from '../../../../server/types.js'
+ * @import {server}  from '../../../../server/types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{openapi :server_db_document_ConfigRestApi,
+ * @param {{openapi :server['ORM']['ConfigRestApi'],
  *          sortByRole:function
  *          }} props
  * @returns {string}
@@ -204,7 +204,7 @@ const component = async props => {
             
     };
 
-    /**@type{server_db_document_ConfigServer['SERVER']} */
+    /**@type{server['ORM']['ConfigServer']['SERVER']} */
     const configServer = props.methods.ConfigServer.get({app_id:props.data.app_id,data:{ config_group:'SERVER'}}).result;
 
     const HOST = configServer.filter(parameter=> 'HOST' in parameter)[0].HOST;
@@ -217,7 +217,8 @@ const component = async props => {
      * @returns []
      */
     const sortByRole = paths => paths.sort((a,b) => roleOrder.indexOf(a[0].split('/')[2]) - roleOrder.indexOf(b[0].split('/')[2]));
-                                                    
+              
+    /**@type{server['ORM']['ConfigRestApi']} */
     const CONFIG_REST_API = props.methods.ConfigRestApi.get({app_id:props.data.app_id}).result;
     //return object with 'servers key modified with list from configuration
                                 

@@ -3,7 +3,7 @@
      */  
 
     /**
-     * @import {server_db_table_AppData, server_db_document_ConfigServer, server_apps_globals} from '../../../../server/types.js';
+     * @import {server} from '../../../../server/types.js';
      */
     /**
      * @name template
@@ -117,7 +117,7 @@
     *                      ip:string, 
     *                      user_agent:string, 
     *                      accept_language:string,
-    *                      configServer:server_db_document_ConfigServer,
+    *                      configServer:server['ORM']['ConfigServer'],
     *                      },
     *        methods:      {
     *                      commonAppStart:import('../common.js')['commonAppStart'],
@@ -187,7 +187,7 @@
             //fetch parameters and convert records to one object with parameter keys
             /**@type{Object.<string,*>} */
             const APP_PARAMETER = props.methods.AppData.getServer({app_id:props.data.app_id, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:common_app_id}}).result
-                                         .reduce((/**@type{Object.<string,*>}*/key, /**@type{server_db_table_AppData}*/row)=>{key[row.value] = row.display_data; return key},{})
+                                         .reduce((/**@type{Object.<string,*>}*/key, /**@type{server['ORM']['AppData']}*/row)=>{key[row.value] = row.display_data; return key},{})
             //geodata for APP using start_app_id
             const result_geodata = await props.methods.bffGeodata({ app_id:start_app_id, 
                                                                     endpoint:'APP', 
@@ -231,7 +231,7 @@
                                                         content_type:'font/woff2', 
                                                         data_app_id:common_app_id})).result.resource}) format("woff2")
                                     }`;
-            /**@type{server_apps_globals} */
+            /**@type{server['app']['commonGlobals']} */
             const globals = {
                                 //update COMMON_GLOBAL keys:
                                 //Config Server	

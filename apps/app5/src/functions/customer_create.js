@@ -3,10 +3,7 @@
  */
 
 /**
- * @import {server_server_response, 
- *          server_db_table_AppDataEntity,
- *          server_db_table_AppDataResourceMaster,
- *          server_db_common_result_insert} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  */
 const {server} = await import('../../../../server/server.js');
 const {default:createBankAccount} = await import('./account_create.js');
@@ -28,11 +25,11 @@ const {default:createBankAccount} = await import('./account_create.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert']}>}
  */
 const customerCreate = async parameters =>{
 
-    /**@type{server_db_table_AppDataEntity} */
+    /**@type{server['ORM']['AppDataEntity']} */
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
@@ -43,7 +40,7 @@ const customerCreate = async parameters =>{
                                                                     resource_name:'CUSTOMER'
                                                             }});
     if (resource_customer.result){
-        /**@type{server_db_table_AppDataResourceMaster} */
+        /**@type{server['ORM']['AppDataResourceMaster']} */
         const post_data = {
             Document                                   : {
                                                             customer_type   :parameters.data.customer_type,

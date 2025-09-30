@@ -1,14 +1,7 @@
 /** @module server/db/App */
 
 /**
- * @import {server_server_response,
- *          server_db_common_result_update, 
- *          server_db_common_result_delete, 
- *          server_db_common_result_insert,
- *          server_db_table_App, 
- *          server_db_table_AppTranslation,
- *          server_db_document_ConfigServer,
- *          server_config_apps_with_db_columns} from '../types.js'
+ * @import {server} from '../types.js'
  */
 const {server} = await import ('../server.js');
 /**
@@ -18,7 +11,7 @@ const {server} = await import ('../server.js');
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_table_App[] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['App'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'App',parameters.resource_id, null);
 
@@ -30,15 +23,15 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'App',parameter
  * @param {{app_id:number,
 *          resource_id:number|null,
 *          locale:string}} parameters
-* @returns {Promise.<server_server_response & {result?:server_config_apps_with_db_columns[] }>}
+* @returns {Promise.<server['server']['response'] & {result?:server_config_apps_with_db_columns[] }>}
 */
 const getViewInfo = async parameters =>{
-    /**@type{server_db_document_ConfigServer} */
+    /**@type{server['ORM']['ConfigServer']} */
     const configServer = server.ORM.db.ConfigServer.get({app_id:parameters.app_id}).result;
-    /**@type{server_db_table_App[]}*/
+    /**@type{server['ORM']['App'][]}*/
     const apps = get({app_id:parameters.app_id, resource_id:null}).result
                     //do not show common app id, admin app id or start app id
-                    .filter((/**@type{server_db_table_App}*/app)=>
+                    .filter((/**@type{server['ORM']['App']}*/app)=>
                         app.id != (server.ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_START_APP_ID' in parameter)[0].APP_START_APP_ID)) &&
                         app.id != (server.ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)) &&
                         app.id != (server.ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)));
@@ -55,7 +48,7 @@ const getViewInfo = async parameters =>{
                             id:app.id,
                             name:app.name,
                             app_name_translation : server.ORM.db.AppTranslation.get(parameters.app_id,null,parameters.locale, app.id).result
-                                                    .filter((/**@type{server_db_table_AppTranslation}*/appTranslation)=>appTranslation.app_id==app.id)[0].Document.name,
+                                                    .filter((/**@type{server['ORM']['AppTranslation']}*/appTranslation)=>appTranslation.app_id==app.id)[0].Document.name,
                             logo:app.logo
                         };
             }), type:'JSON'};
@@ -67,15 +60,15 @@ const getViewInfo = async parameters =>{
  * @function
  * @param {number} app_id 
  * @param {*} data
- * @returns {Promise.<server_server_response & {result?:{id:number} }>}
+ * @returns {Promise.<server['server']['response'] & {result?:{id:number} }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null){
-        /**@type{server_db_table_App} */
+        /**@type{server['ORM']['App']} */
         const app =     {
             //fetch max app id + 1
-            id:Math.max(...server.ORM.getObject(app_id, 'App',null, null).result.map((/**@type{server_db_table_App}*/app)=>app.id)) +1,
+            id:Math.max(...server.ORM.getObject(app_id, 'App',null, null).result.map((/**@type{server['ORM']['App']}*/app)=>app.id)) +1,
             name: data.name,
             path: data.path,
             logo: data.logo,
@@ -90,7 +83,7 @@ const post = async (app_id, data) => {
             link_url:data.app_link_url,
             status: 'ONLINE'
         };
-        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'App', post:{data:app}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'App', post:{data:app}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId = app.id;
                 return {result:result, type:'JSON'};
@@ -122,11 +115,11 @@ const post = async (app_id, data) => {
  *                  link_title:string,
  *                  link_url:string,
  *                  status:'ONLINE'|'OFFLINE'}}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
     if (parameters.app_id!=null){
-        /**@type{server_db_table_App} */
+        /**@type{server['ORM']['App']} */
         const data_update = {};
         //allowed parameters to update:
         if (parameters.data.name!=null)
@@ -158,7 +151,7 @@ const update = async parameters => {
         if (parameters.data.status!=null)
             data_update.status = parameters.data.status;
         if (Object.entries(data_update).length>0)
-            return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'App', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
+            return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'App', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORMMetaData']['common_result_update']}*/result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
@@ -177,10 +170,10 @@ const update = async parameters => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'App', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
+    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'App', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server['ORMMetaData']['common_result_delete']}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

@@ -1,8 +1,7 @@
 /** @module server/db/MessageQueueConsume */
 
 /**
- * @import {server_server_response, server_db_common_result_insert, 
- *          server_db_table_MessageQueueConsume} from '../types.js'
+ * @import {server} from '../types.js'
  */
 const {server} = await import ('../server.js');
 /**
@@ -11,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_table_MessageQueueConsume[]}}
+ * @returns {server['server']['response'] & {result?:server['ORM']['MessageQueueConsume'][]}}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueueConsume',null, null);
 
@@ -21,7 +20,7 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueueCo
  * @function
  * @param {{app_id:number,
  *          data:*}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
  */
 const post = async parameters => {
     if (parameters.data.message_queue_publish_id &&
@@ -29,7 +28,7 @@ const post = async parameters => {
         'start' in parameters.data &&
         'finished' in parameters.data &&
         'result' in parameters.data){
-        /**@type{server_db_table_MessageQueueConsume}*/
+        /**@type{server['ORM']['MessageQueueConsume']}*/
         const data_new = {
                             id:Date.now(),
                             message_queue_publish_id:parameters.data.message_queue_publish_id,
@@ -42,7 +41,7 @@ const post = async parameters => {
         return server.ORM.Execute({app_id:parameters.app_id, 
                             dml:'POST', 
                             object:'MessageQueueConsume', 
-                            post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+                            post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};

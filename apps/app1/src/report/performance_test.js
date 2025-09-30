@@ -19,7 +19,7 @@
  * @module apps/app1/src/report/performance_test
  */
 /**
- * @import {server_apps_module_metadata} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  * @import {report_data,test_function_result} from '../types.js'
  */
 const {server} = await import('../../../../server/server.js');
@@ -394,11 +394,11 @@ const component = async props => {
     };
     const report = await new Benchmark({  concurrency: Number(props.queue_parameters.concurrency),
                                     requests: Number(props.queue_parameters.requests),
-                                    name:server.app_common.commonRegistryAppModule(props.app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).common_name
+                                    name:server.app_common.commonRegistryAppModule(props.app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).ModuleName
                                     }).run();
     return template(report);
 };
-/**@type{server_apps_module_metadata[]}*/
+/**@type{server['app']['commonModuleMetadata'][]}*/
 const metadata = [{param:{name:'concurrency',text:'Concurrency', default:50}},
                     {param:{name:'requests',text:'Requests', default:50}}];
 export {metadata};

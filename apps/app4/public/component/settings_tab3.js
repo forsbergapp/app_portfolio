@@ -129,14 +129,14 @@ const template = props =>`  <div class='setting_horizontal_row'>
  */
 const component = async props => {
     //fetch PAPER_SIZE for common app id
-    /**@type{common['CommonAppDataRecord'][]} */
+    /**@type{common['ORM']['AppData'][]} */
     const settings_common = await props.methods.COMMON.commonFFB({path:'/server-db/appdata/',
                                                     query:`IAM_data_app_id=${props.data.common_app_id}&name=PAPER_SIZE`,
                                                     method:'GET', 
                                                     authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
                                                         JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     //fetch HIGHLIGHT_ROW and REPORT_THEME for current app id
-    /**@type{common['CommonAppDataRecord'][]} */
+    /**@type{common['ORM']['AppData'][]} */
     const settings_app = await props.methods.COMMON.commonFFB({ path:'/server-db/appdata/',
                                                             query:`IAM_data_app_id=${props.data.app_id}`,
                                                             method:'GET', 

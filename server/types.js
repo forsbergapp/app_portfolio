@@ -85,33 +85,12 @@
  * @description APP server_apps_module_metadata
  * @typedef {{param:{name:string, text:string, default:string|number}}} server_apps_module_metadata
  */
-/**
- * @description APP_server_apps_module_ModuleType
- * @typedef {'FUNCTION'|'ASSET'|'REPORT'} APP_server_apps_module_ModuleType
- */
-/**
- * @description APP server_apps_module_with_metadata
- * @typedef {{  id:number,
- *              app_id: number,
- *              ModuleType: APP_server_apps_module_ModuleType,
- *              ModuleName:string,
- *              ModulePath:string,
- *              ModuleMetadata:server_apps_module_metadata[],
- *              ModuleDescription:string}} server_apps_module_with_metadata
- */
+
 /**
  * @description APP server_config_apps_status
  * @typedef  {'ONLINE'|'OFFLINE'} server_config_apps_status
  */
 
-/**
- * @description APP server_config_apps_with_db_columns
- * @typedef  {object} server_config_apps_with_db_columns
- * @property {number} id
- * @property {string} name
- * @property {string} app_name_translation
- * @property {string} logo
- */
 /**
  * @description APP CommonCssFonts
  * @typedef {{  css: string;
@@ -134,15 +113,10 @@
  */
 
 /**
- * @description APP commonDocumentType
- * @typedef {'MENU'|'APP'|'GUIDE'|'ROUTE'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_SERVICEREGISTRY'|'MODULE_SERVER'|'MODULE_TEST'} serverDocumentType
- */
-
-/**
  * @description APP commonDocumentMenu
- * @typedef{{   id:number, 
+ * @typedef {{   id:number, 
  *              menu:string,
- *              type:serverDocumentType,
+ *              type:'MENU'|'APP'|'GUIDE'|'ROUTE'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_SERVICEREGISTRY'|'MODULE_SERVER'|'MODULE_TEST',
  *              menu_sub:{  id:number,
  *                          menu:string,
  *                          doc:string}[]|null}} serverDocumentMenu
@@ -172,16 +146,12 @@
  *              admin_name: string}} commonWorldCitiesCity
  */
 
-/** 
- * @description BFF server_bff_endpoint_type
- * @typedef {'APP'|'APP_ID'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_EXTERNAL'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM'|'IAM_SIGNUP'|'SERVER'|'MICROSERVICE'|'MICROSERVICE_AUTH'|string} server_bff_endpoint_type
- */
 
 /**
  * @description BFF server_bff_parameters
  * @typedef {{
  *          app_id:number,
- *          endpoint:server_bff_endpoint_type,
+ *          endpoint:'APP'|'APP_ID'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_EXTERNAL'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM'|'IAM_SIGNUP'|'SERVER'|'MICROSERVICE'|'MICROSERVICE_AUTH' & string,
  *          host:string|null,
  *          url:string,
  *          method: string,
@@ -204,10 +174,10 @@
 /**
  * @description BFF server_bff_RestApi_parameters
  * @typedef {{  app_id:number,
- *              endpoint: server_bff_endpoint_type,
+ *              endpoint: server_bff_parameters['endpoint'],
  *              host:string,
  *              url:string,
- *              method: server_req_method,
+ *              method: server_server_req['method'],
  *              parameters: string,
  *              body:*,
  *              idToken:string
@@ -217,7 +187,6 @@
  *              accept_language:string,
  *              res:server_server_res}} server_bff_RestApi_parameters
  */
-
 
 /**
  * @description DB TABLE App
@@ -298,7 +267,7 @@
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              app_id: number,
- *              ModuleType: APP_server_apps_module_ModuleType,
+ *              ModuleType: 'FUNCTION'|'ASSET'|'REPORT',
  *              ModuleName:string,
  *              ModuleRole:'APP_ID'|'APP_ACCESS'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'',
  *              ModulePath:string,
@@ -373,7 +342,7 @@
  *              method:string,
  *              url:string,
  *              status:1|0,
- *              type:server_db_iam_control_observe_type,
+ *              type:'APP_ID'|'HOST'|'HOST_IP'|'USER_AGENT'|'URI_DECODE'|'METHOD'|'BLOCK_IP',
  *              created?:string,
  *              modified?:string|null}} server_db_table_IamControlObserve
  */
@@ -506,8 +475,8 @@
  * @typedef {{
  *          id?:number, 
  *          iam_user_id:number,
- *          event:server_db_iam_user_event_name, 
- *          event_status?:server_db_iam_user_event_status
+ *          event:'OTP_LOGIN'|'OTP_SIGNUP'|'OTP_2FA'|'USER_UPDATE', 
+ *          event_status?:'INPROGRESS'|'SUCCESSFUL'|'FAIL',
  *          created?:string}} server_db_table_IamUserEvent
  */
 
@@ -639,14 +608,88 @@
 /**
  * @description DB DOCUMENT ConfigServer
  * @memberof dbObjects
- * @typedef  {{ ['SERVER']:[server_db_config_server_server], 
- *              ['SERVICE_APP']:[server_db_config_server_service_app], 
- *              ['SERVICE_DB']:[server_db_config_server_service_db],
- *              ['SERVICE_IAM']:[server_db_config_server_service_iam],
- *              ['SERVICE_SOCKET']:[server_db_config_server_service_socket],
- *              ['SERVICE_LOG']:[server_db_config_server_service_log],
- *              ['SERVICE_TEST']:[server_db_config_server_service_test],
- *              ['METADATA']:server_db_config_server_metadata}} server_db_document_ConfigServer
+ * @typedef  {{ SERVER:[
+ *                {HOST:string,                                       COMMENT:string},
+ *                {PATH_DATA:string,                                  COMMENT:string},
+ *                {HTTP_PORT:string,                                  COMMENT:string},
+ *                {HTTP_PORT_ADMIN:string,                            COMMENT:string},
+ *                {JSON_LIMIT:string,                                 COMMENT:string},
+ *                {REST_RESOURCE_BFF:string,                          COMMENT:string},
+ *                {REST_API_VERSION:string,                           COMMENT:string},
+ *                {GIT_REPOSITORY_URL:string,                         COMMENT:string},
+ *                {NETWORK_INTERFACE:string,                          COMMENT:string},
+ *                {PATH_JOBS:string,                                  COMMENT:string},
+ *                {CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS:number,    COMMENT:string},
+ *                {CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS:number,      COMMENT:string},
+ *                {CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS:number,      COMMENT:string},
+ *                {CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES:number,COMMENT:string}
+ *              ], 
+ *              SERVICE_APP:[
+ *                {APP_START_APP_ID                  :string,COMMENT:string},
+ *                {APP_COMMON_APP_ID                 :string,COMMENT:string},
+ *                {APP_ADMIN_APP_ID                  :string,COMMENT:string},
+ *                {APP_TOOLBAR_BUTTON_START          :string,COMMENT:string},
+ *                {APP_TOOLBAR_BUTTON_FRAMEWORK      :string,COMMENT:string},
+ *                {APP_CACHE_CONTROL                 :string,COMMENT:string},
+ *                {APP_FRAMEWORK                     :number,COMMENT:string},
+ *                {APP_FRAMEWORK_MESSAGES            :number,COMMENT:string},
+ *                {APP_LIMIT_RECORDS                 :number,COMMENT:string},
+ *                {APP_DEFAULT_RANDOM_COUNTRY        :string,COMMENT:string},
+ *                {APP_REQUESTTIMEOUT_SECONDS        :string,COMMENT:string},
+ *                {APP_REQUESTTIMEOUT_ADMIN_MINUTES  :string,COMMENT:string}
+ *              ],
+ *              SERVICE_DB:[
+ *                {JOURNAL:string}
+ *              ],
+ *              SERVICE_IAM:[
+ *                {AUTHENTICATE_REQUEST_ENABLE:string,COMMENT:string},
+ *                {AUTHENTICATE_REQUEST_OBSERVE_LIMIT:string,COMMENT:string},
+ *                {AUTHENTICATE_REQUEST_IP:string,COMMENT:string},
+ *                {MICROSERVICE_TOKEN_EXPIRE_ACCESS:string,COMMENT:string},
+ *                {MICROSERVICE_TOKEN_SECRET:string,COMMENT:string},
+ *                {ADMIN_TOKEN_EXPIRE_ACCESS:string,COMMENT:string},
+ *                {ADMIN_TOKEN_SECRET:string,COMMENT:string},
+ *                {USER_TOKEN_APP_ACCESS_EXPIRE:string,COMMENT:string},
+ *                {USER_TOKEN_APP_ACCESS_SECRET:string,COMMENT:string},
+ *                {USER_TOKEN_APP_ACCESS_VERIFICATION_EXPIRE:string,COMMENT:string},
+ *                {USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET:string,COMMENT:string},
+ *                {USER_TOKEN_APP_ID_EXPIRE:string,COMMENT:string},
+ *                {USER_TOKEN_APP_ID_SECRET:string,COMMENT:string},
+ *                {USER_PASSWORD_ENCRYPTION_KEY:string,COMMENT:string},
+ *                {USER_PASSWORD_INIT_VECTOR:string,COMMENT:string},
+ *                {USER_ENABLE_REGISTRATION:string,COMMENT:string},
+ *                {USER_ENABLE_LOGIN:string,COMMENT:string},
+ *                {CONTENT_SECURITY_POLICY_ENABLE:string,COMMENT:string},
+ *                {CONTENT_SECURITY_POLICY:string,COMMENT:string},
+ *                {ENABLE_GEOLOCATION:string,COMMENT:string},
+ *                {RATE_LIMIT_WINDOW_MS:number,COMMENT:string},
+ *                {RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS:number,COMMENT:string},
+ *                {RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER:number,COMMENT:string},
+ *                {RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN:number,COMMENT:string}
+ *              ],
+ *              SERVICE_SOCKET:[
+ *                {CHECK_INTERVAL:string, COMMENT:string}
+ *              ],
+ *              SERVICE_LOG:[
+ *                {REQUEST_LEVEL:string,  COMMENT:string},
+ *                {APP_LEVEL:string,      COMMENT:string},
+ *                {DB_LEVEL:string,       COMMENT:string},
+ *                {SERVICE_LEVEL:string,  COMMENT:string},
+ *                {FILE_INTERVAL:string,  COMMENT:string}
+ *              ],
+ *              SERVICE_TEST:[
+ *                {FAIL_SPEC_WITH_NO_EXPECTATIONS:string,   COMMENT:string},
+ *                {STOP_SPEC_ON_EXPECTATION_FAILURE:string, COMMENT:string},
+ *                {STOP_ON_SPEC_FAILURE:string,             COMMENT:string},
+ *                {RANDOM:string,                           COMMENT:string},
+ *              ],
+ *              METADATA:{
+ *                MAINTENANCE:number,
+ *                CONFIGURATION:string,
+ *                COMMENT:string,
+ *                CREATED:string,
+ *                MODIFIED:string
+ *              }}} server_db_document_ConfigServer
  */
 
 /** 
@@ -678,7 +721,7 @@
  *                  },
  *              servers: {url: string}[],
  *              paths: {[key:string]: 
- *                          {server_db_config_rest_api_methods:
+ *                          {[key in 'get'|'post'|'delete'|'patch'|'put']:
  *                              {
  *                                  summary: string,
  *                                  operationId: string,
@@ -713,7 +756,7 @@
  *                      [key:string]: {
  *                          description: string,
  *                          content: {
- *                              server_db_config_rest_api_content: {
+ *                              'application/json': {
  *                                  schema: {
  *                                      "$ref": string
  *                                  }
@@ -730,7 +773,7 @@
  * @memberof dbObjects
  * @typedef {{  id?:number,
  *              service:'MESSAGE'|'BATCH',
- *              message:*,
+ *              message:server_db_MessageQueuePublishMessage,
  *              created?:string}} server_db_table_MessageQueuePublish
  */
 
@@ -805,128 +848,6 @@
  */
 
 /**
- * @description DB server_db_config_server_server
- * @typedef {{  HOST:string,
- *              PATH_DATA:string,
- *              HTTP_PORT:string,
- *              HTTP_PORT_ADMIN:string,
- *              JSON_LIMIT:string,
- *              REST_RESOURCE_BFF:string,
- *              REST_API_VERSION:string,
- *              GIT_REPOSITORY_URL:string,
- *              NETWORK_INTERFACE:string,
- *              PATH_JOBS:string,
- *              CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
- *              CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS       : number
- *              CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS       : number
- *              CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}} server_db_config_server_server
- */
-
-/** 
- * @description DB server_db_config_server_service_app
- * @memberof dbObjects
- * @typedef {{APP_START_APP_ID                  :string,
- *            APP_COMMON_APP_ID                 :string,
- *            APP_ADMIN_APP_ID                  :string,
- *            APP_TOOLBAR_BUTTON_START          :string,
- *            APP_TOOLBAR_BUTTON_FRAMEWORK      :string,
- *            APP_CACHE_CONTROL                 :string,
- *            APP_FRAMEWORK                     :number,
- *            APP_FRAMEWORK_MESSAGES            :number,
- *            APP_LIMIT_RECORDS                 :number,
- *            APP_DEFAULT_RANDOM_COUNTRY        :string,
- *            APP_REQUESTTIMEOUT_SECONDS        :string,
- *            APP_REQUESTTIMEOUT_ADMIN_MINUTES  :string}} server_db_config_server_service_app
- */
-
-/**
- * @description DB server_db_config_server_service_db
- * @typedef {{  JOURNAL:string}} server_db_config_server_service_db
- */
-/**
- * @description DB server_db_config_server_service_iam
- * @typedef {{  AUTHENTICATE_REQUEST_ENABLE:string,
- *              AUTHENTICATE_REQUEST_OBSERVE_LIMIT:string,
- *              AUTHENTICATE_REQUEST_IP:string,
- *              MICROSERVICE_TOKEN_EXPIRE_ACCESS:string,
- *              MICROSERVICE_TOKEN_SECRET:string,
- *              ADMIN_TOKEN_EXPIRE_ACCESS:string,
- *              ADMIN_TOKEN_SECRET:string,
- *              USER_TOKEN_APP_ACCESS_EXPIRE:string,
- *              USER_TOKEN_APP_ACCESS_SECRET:string,
- *              USER_TOKEN_APP_ACCESS_VERIFICATION_EXPIRE:string,
- *              USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET:string,
- *              USER_TOKEN_APP_ID_EXPIRE:string,
- *              USER_TOKEN_APP_ID_SECRET:string,
- *              USER_PASSWORD_ENCRYPTION_KEY:string,
- *              USER_PASSWORD_INIT_VECTOR:string,
- *              USER_ENABLE_REGISTRATION:string,
- *              USER_ENABLE_LOGIN:string,
- *              CONTENT_SECURITY_POLICY_ENABLE:string,
- *              CONTENT_SECURITY_POLICY:string,
- *              ENABLE_GEOLOCATION:string,
- *              RATE_LIMIT_WINDOW_MS:number,
- *              RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS:number,
- *              RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER:number,
- *              RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN:number}} server_db_config_server_service_iam
- */
-
-/**
- * @description DB server_db_config_server_service_socket
- * @typedef {{CHECK_INTERVAL:string}} server_db_config_server_service_socket
- */
-
-/**
- * @description DB server_db_config_server_service_log
- * @typedef {{  REQUEST_LEVEL:string,
- *              APP_LEVEL:string,
- *              DB_LEVEL:string,
- *              SERVICE_LEVEL:string
- *              FILE_INTERVAL:string}} server_db_config_server_service_log
- */
-
-/**
- * @description DB server_db_config_server_service_test
- * @typedef {{  FAIL_SPEC_WITH_NO_EXPECTATIONS:string,
- *              STOP_SPEC_ON_EXPECTATION_FAILURE:string,
- *              STOP_ON_SPEC_FAILURE:string,
- *              RANDOM:string}} server_db_config_server_service_test
- */
-
-/**
- * @description DB server_db_config_server_metadata
- * @typedef  {{ MAINTENANCE:number,
- *              CONFIGURATION:string,
- *              COMMENT:string,
- *              CREATED:string,
- *              MODIFIED:string}} server_db_config_server_metadata
- */
-
-/**
- * @description DB server_db_config_rest_api_methods
- * @typedef {'get'|'post'|'delete'|'patch'|'put'} server_db_config_rest_api_methods
- */
-/**
- * @description DB server_db_config_rest_api_content
- * @typedef {'application/json'} server_db_config_rest_api_content
- */
-
-
-/**
- * @description DB server_db_iam_control_observe_type
- * @typedef {'APP_ID'|'HOST'|'HOST_IP'|'USER_AGENT'|'URI_DECODE'|'METHOD'|'BLOCK_IP'} server_db_iam_control_observe_type
- */
-
-/**
- * @description DB server_db_iam_user_event_name
- * @typedef {'OTP_LOGIN'|'OTP_SIGNUP'|'OTP_2FA'|'USER_UPDATE'} server_db_iam_user_event_name
- */
-/**
- * @description DB server_db_iam_user_event_status
- * @typedef {'INPROGRESS'|'SUCCESSFUL'|'FAIL'} server_db_iam_user_event_status
- */
-
-/**
  * @description DB server_db_iam_user_admin
  * @typedef {{
  *          id?:number, 
@@ -975,70 +896,24 @@
  */
 
 /**
- * @description DB object
- * 
- * @typedef {   'DbObjects'|
- *              'App'|
- *              'AppData'|
- *              'AppDataEntity'|
- *              'AppDataEntityResource'|
- *              'AppDataResourceDetailData'|
- *              'AppDataResourceDetail'|
- *              'AppDataResourceMaster'|
- *              'AppModule'|
- *              'AppModuleQueue'|
- *              'AppTranslation'|
- *              'ConfigServer'| 
- *              'ConfigRestApi'|
- *              'IamAppIdToken'|
- *              'IamAppAccess'|
- *              'IamControlIp'|
- *              'IamControlUserAgent'|
- *              'IamControlObserve'|
- *              'IamEncryption'|
- *              'IamMicroserviceToken'|
- *              'IamUser'|
- *              'IamUserApp'|
- *              'IamUserAppDataPost'|
- *              'IamUserAppDataPostLike'|
- *              'IamUserAppDataPostView'|
- *              'IamUserFollow'|
- *              'IamUserLike'|
- *              'IamUserView'|
- *              'IamUserEvent'|
- *              'MessageQueuePublish'|
- *              'MessageQueueConsume'|
- *              'MessageQueueError'|
- *              'ServiceRegistry'|
- *              server_db_tables_log
- *              } server_DbObject
- */
-
-/**
- * @description DB server_db_table_MessageQueuePublishMessage
+ * @description DB server_db_MessageQueuePublishMessage
  * 
  * @typedef {{  id?:number,
- *              sender:string|null,
- *              receiver_id:number|null,
- *              host:string,
- *              client_ip:string,
- *              subject:string,
+ *              type?:'MICROSERVICE_ERROR'|'MICROSERVICE_LOG',
+ *              sender?:string|null,
+ *              receiver_id?:number|null,
+ *              host?:string,
+ *              client_ip?:string,
+ *              subject?:string,
  *              message:string,
  *              created?:string
- *          }} server_db_table_MessageQueuePublishMessage
- */
-
-/**
- * @description DB server_db_table_MessageQueuePublishMicroserviceLog
- * 
- * @typedef {{  type:'MICROSERVICE_ERROR'|'MICROSERVICE_LOG',
- *              message:string}} server_db_table_MessageQueuePublishMicroserviceLog
+ *          }} server_db_MessageQueuePublishMessage
  */
 
 /** 
  * @description DB object record
  * @namespace dbObjects
- * @typedef {{  name:server_DbObject, 
+ * @typedef {{  name:ORM[keyof ORM] |string, 
  *              type:'DOCUMENT'|'TABLE'|'TABLE_KEY_VALUE'|'TABLE_LOG'|'TABLE_LOG_DATE',
  *              in_memory:boolean,
  *              content:*,
@@ -1048,7 +923,7 @@
  *              cache_content?:* ,
  *              pk:string|null,
  *              uk:string[]|null,
- *              fk:[string,string, server_DbObject][]|null}} server_DbObject_record
+ *              fk:[string,string, ORM[keyof ORM]][]|null}} server_db_DbObject
  */
 
 /** 
@@ -1300,14 +1175,15 @@
  *                  }}} server_info_result_Info
  */
 
+/**
+ * @description INFO process
+ * @typedef {*} server_info_process
+ */
 
 /**
  * @description SERVER server_server_req_verbose
  * @typedef {*} server_server_req_verbose
  * 
- */
-/**
- * @typedef {'GET'|'POST'|'DELETE'|'PATCH'|'PUT'|string} server_req_method
  */
 
 /**
@@ -1320,7 +1196,7 @@
  * @property {string} url
  * @property {string} originalUrl
  * @property {string} ip
- * @property {server_req_method} method
+ * @property {'GET'|'POST'|'DELETE'|'PATCH'|'PUT'} method
  * @property {function} get
  * @property {string} protocol
  * @property {string} httpVersion
@@ -1414,7 +1290,7 @@
 
 /**
  * @description geolocation place
- * @typedef{{   place:string, 
+ * @typedef {{  place:string, 
  *              countryCode:string, 
  *              country:string, 
  *              region:string,
@@ -1440,10 +1316,6 @@
  * @typedef {{  header:   {algo:string, typ:string}, 
  *              payload:  server_security_jwt_payload,
  *              signature:string}} server_security_jwt_complete
- */
-/**
- * @description SOCKET config_user_parameter
- * @typedef {'username'|'password'|'created'|'modified'} config_user_parameter
  */
 
 /**
@@ -1486,18 +1358,8 @@
  */
 
 /** 
- * @description SOCKET server_socket_broadcast_type_all
- * @typedef {'INIT'|'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'PROGRESS_LOADING'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'|'MESSAGE'|'FONT_URL'} server_socket_broadcast_type_all
- */
-
-/**
- * @description SOCKET server_socket_broadcast_type_admin
- * @typedef {'ALERT'|'CHAT'|'MAINTENANCE'} server_socket_broadcast_type_admin
- */
-
-/** 
- * @description SOCKET server_socket_broadcast_type_app_function
- * @typedef {'INIT'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'APP_FUNCTION'|'FONT_URL'} server_socket_broadcast_type_app_function
+ * @description SOCKET server_socket_broadcast_type
+ * @typedef {'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'PROGRESS_LOADING'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'|'MESSAGE'|'FONT_URL'} server_socket_broadcast_type
  */
 
 /**
@@ -1515,13 +1377,8 @@
  *              null} server_socket_connected_list_sort
  */
 /**
- * @description TEST test_type
- * @typedef {{ type:'SPY'|'UNIT'|'INTEGRATION'|'PERFORMANCE'}} test_type
-*/
-
-/**
  * @description TEST test_spec_result
- * @typedef {{ type:test_type, 
+ * @typedef {{ type:'SPY'|'UNIT'|'INTEGRATION'|'PERFORMANCE', 
  *             path:string, 
  *             result:boolean,
  *             detail:{ describe:string,
@@ -1541,35 +1398,139 @@
 /**
  * @description TEST test_specrunner
  * @typedef {{  description:string,
- *              specFiles:{ type:test_type, 
+ *              specFiles:{ type:test_spec_result['type'], 
  *                          path:string}[]}} test_specrunner
  */
 
 /**
- * @description SERVICEREGISTRY microservice_registry_service
- * @typedef {'MAIL'|string} microservice_registry_service
- */
-
-
-/**
  * @description SERVICE_REGISTRY microservice_local_config
  * @typedef {{
- *   name:                              string,
+ *   name:                          'BATCH' & string,
  *   server_host:		                string,
- *   server_port:                       number,
+ *   server_port:                   number,
  *   service_registry_auth_path:		string,
- *   service_registry_auth_method:      'POST',
- *   message_queue_path:	            string,
- *   message_queue_method:	            'POST',
- *   iam_auth_app_path:	                string,
- *   iam_auth_app_method:	            'POST',
- *   uuid:                              string,
- *   secret:                            string,
+ *   service_registry_auth_method:  'POST',
+ *   message_queue_path:	          string,
+ *   message_queue_method:	        'POST',
+ *   iam_auth_app_path:	            string,
+ *   iam_auth_app_method:	          'POST',
+ *   uuid:                          string,
+ *   secret:                        string,
  *   config:{url_ip:string, url_place:string}}} microservice_local_config
  */
 
+
 /**
- * @description PROCESS process
- * @typedef {*} process
+ * @description ORM Objects
+ * @typedef {{App:server_db_table_App,
+ *            AppData:server_db_table_AppData,
+ *            AppDataEntity:server_db_table_AppDataEntity,
+ *            AppDataEntityResource:server_db_table_AppDataEntityResource,
+ *            AppDataResourceMaster:server_db_table_AppDataResourceMaster,
+ *            AppDataResourceDetail:server_db_table_AppDataResourceDetail,
+ *            AppDataResourceDetailData:server_db_table_AppDataResourceDetailData,
+ *            AppModule:server_db_table_AppModule,
+ *            AppModuleQueue:server_db_table_AppModuleQueue,
+ *            AppTranslation:server_db_table_AppTranslation,
+ *            IamControlIp:server_db_table_IamControlIp,
+ *            IamControlObserve:server_db_table_IamControlObserve,
+ *            IamControlUserAgent:server_db_table_IamControlUserAgent,
+ *            IamEncryption:server_db_table_IamEncryption,
+ *            IamMicroserviceToken:server_db_table_IamMicroserviceToken,
+ *            IamUser:server_db_table_IamUser,
+ *            IamUserFollow:server_db_table_IamUserFollow,
+ *            IamUserLike:server_db_table_IamUserLike,
+ *            IamUserView:server_db_table_IamUserView,
+ *            IamUserApp:server_db_table_IamUserApp,
+ *            IamUserAppDataPost:server_db_table_IamUserAppDataPost,
+ *            IamUserAppDataPostLike:server_db_table_IamUserAppDataPostLike,
+ *            IamUserAppDataPostView:server_db_table_IamUserAppDataPostView,
+ *            IamUserEvent:server_db_table_IamUserEvent,
+ *            IamAppIdToken:server_db_table_IamAppIdToken,
+ *            IamAppAccess:server_db_table_IamAppAccess,
+ *            LogAppInfo:server_db_table_LogAppInfo,
+ *            LogAppError:server_db_table_LogAppError,
+ *            LogDbInfo:server_db_table_LogDbInfo,
+ *            LogDbError:server_db_table_LogDbError,
+ *            LogServiceInfo:server_db_table_LogServiceInfo,
+ *            LogServiceError:server_db_table_LogServiceError,
+ *            LogRequestInfo:server_db_table_LogRequestInfo,
+ *            LogRequestError:server_db_table_LogRequestError,
+ *            LogServerInfo:server_db_table_LogServerInfo,
+ *            LogServerError:server_db_table_LogServerError,
+ *            ConfigServer:server_db_document_ConfigServer,
+ *            ConfigRestApi:server_db_document_ConfigRestApi,
+ *            ServiceRegistry:server_db_table_ServiceRegistry,
+ *            MessageQueuePublish:server_db_table_MessageQueuePublish,
+ *            MessageQueueConsume:server_db_table_MessageQueueConsume,
+ *            MessageQueueError:server_db_table_MessageQueueError}} ORM
+ */
+/**
+ * @description Server types
+ * @typedef {{app:{
+ *                commonInfo:server_apps_app_info,
+ *                commonGlobals:server_apps_globals,
+ *                commonReportQueryParameters:server_apps_report_query_parameters,
+ *                commonReportCreateParameters:server_apps_report_create_parameters,
+ *                commonModuleMetadata:server_apps_module_metadata,
+ *                commonModuleWithMetadata:(ORM['AppModule'] & {ModuleMetadata:server_apps_module_metadata}),
+ *                commonstatus:server_config_apps_status,
+ *                commonCSSFonts:server_app_CommonCSSFonts,
+ *                commonComponentLifecycle:serverComponentLifecycle,
+ *                commonDocumentMenu:serverDocumentMenu,
+ *                commonWorldCitiesCity:commonWorldCitiesCity
+ *                },
+ *          bff:{
+ *                parameters:server_bff_parameters,
+ *                RestApi_parameters:server_bff_RestApi_parameters
+ *              },
+ *          iam:{
+ *                iam_access_token_claim_scope_type:server_iam_access_token_claim_scope_type,
+ *                iam_access_token_claim:server_iam_access_token_claim,
+ *                iam_microservice_token_claim:server_iam_microservice_token_claim,
+ *                iam_authenticate_request:server_iam_authenticate_request
+ *              },
+ *          info:{
+ *                result_Info:server_info_result_Info,
+ *                process:server_info_process,
+ *              },
+ *          server:{
+ *                req_verbose:server_server_req_verbose,
+ *                req:server_server_req,
+ *                res:server_server_res,
+ *                response_type:server_server_response_type,
+ *                response:server_server_response,
+ *                req_id_number:server_server_req_id_number,
+ *                error:server_server_error,
+ *                geolocation_place:server_geolocation_place
+ *              },
+ *          security:{
+ *                jwt_payload:server_security_jwt_payload,
+ *                jwt_complete:server_security_jwt_complete
+ *              },
+ *          socket:{
+ *                connected_list:server_socket_connected_list,
+ *                connected_list_no_res:server_socket_connected_list_no_res,
+ *                broadcast_type:server_socket_broadcast_type,
+ *                connected_list_sort:server_socket_connected_list_sort
+ *              },
+ *          test:{
+ *                spec_result:test_spec_result,
+ *                expect_result:test_expect_result,
+ *                specrunner:test_specrunner
+ *              }
+ *          serviceregistry:{
+ *                microservice_local_config:microservice_local_config
+ *              }
+ *          ORMMetaData:{
+ *                DbObject:server_db_DbObject,
+ *                result_fileFsRead:server_db_result_fileFsRead,
+ *                common_result:server_db_common_result,
+ *                common_result_select:server_db_common_result_select,
+ *                common_result_insert:server_db_common_result_insert,
+ *                common_result_delete:server_db_common_result_delete,
+ *                common_result_update:server_db_common_result_update
+ *              }
+ *          ORM:ORM}} server
  */
 export {};

@@ -350,106 +350,33 @@
 
 
 /**
- * @description Type CommonAppRecord
- * @typedef {{
- *              id: number,
- *              name: string,
- *              path: string,
- *              logo:string,
- *              js:string,
- *              css: string,
- *              css_report: string,
- *              favicon_32x32:string,
- *              favicon_192x192:string,
- *              text_edit:string,
- *              copyright:string,
- *              link_title:string,
- *              link_url:string,
- *              status:'ONLINE'|'OFFLINE',
- *              app_name_translation:string,
- *              protocol:string,
- *              host:string,
- *              port:string}} CommonAppRecord
- */
-
-/**
  * @description Type commonAppInit
  * @typedef {{App:{
- *                  id:CommonAppRecord['id'],
- *                  name:CommonAppRecord['name'],
- *                  js:CommonAppRecord['js'],
+ *                  id:common['ORM']['App']['id'],
+ *                  name:common['ORM']['App']['name'],
+ *                  js:common['ORM']['App']['js'],
  *                  js_content:string|null,
- *                  css:CommonAppRecord['css'],
+ *                  css:common['ORM']['App']['css'],
  *                  css_content:string|null,
- *                  css_report:CommonAppRecord['css_report'],
+ *                  css_report:common['ORM']['App']['css_report'],
  *                  css_report_content:string|null,
- *                  favicon_32x32:CommonAppRecord['favicon_32x32'],
+ *                  favicon_32x32:common['ORM']['App']['favicon_32x32'],
  *                  favicon_32x32_content:string|null,
- *                  favicon_192x192:CommonAppRecord['favicon_192x192'],
+ *                  favicon_192x192:common['ORM']['App']['favicon_192x192'],
  *                  favicon_192x192_content:string|null,
- *                  logo:CommonAppRecord['logo'],
+ *                  logo:common['ORM']['App']['logo'],
  *                  logo_content:string|null,
- *                  copyright:CommonAppRecord['copyright'],
- *                  link_url:CommonAppRecord['link_url'],
- *                  link_title:CommonAppRecord['link_title'],
- *                  text_edit:CommonAppRecord['text_edit']
+ *                  copyright:common['ORM']['App']['copyright'],
+ *                  link_url:common['ORM']['App']['link_url'],
+ *                  link_title:common['ORM']['App']['link_title'],
+ *                  text_edit:common['ORM']['App']['text_edit']
  *                  },
  *          AppParameter:Object.<string,*>}} commonAppInit
  */
-/**
- * @description Type CommonAppDataRecord
- * @typedef {{  id:number,
- *              app_id: number,
- *              name: string,
- *              value:string,
- *              display_data:string,
- *              data2:string|number|null,
- *              data3:string|number|null,
- *              data4:string|number|null,
- *              data5:string|number|null}} CommonAppDataRecord
- */
 
-/**
- * @description Type CommonAppModulesRecord
- * @typedef {{  id:number,
- *              app_id: number,
- *              ModuleType: 'FUNCTION'|'MODULE'|'REPORT',
- *              ModuleName:string,
- *              ModuleRole:'APP_ID'|'APP_ACCESS'|'APP_EXTERNAL'|'APP_ACCESS_EXTERNAL'|null,
- *              ModulePath:string,
- *              ModuleDescription:string}} CommonAppModulesRecord
- */
 /**
  * @description Type CommonAppModuleMetadata
  * @typedef {{param:{name:string, text:string, default:string|number}}} CommonAppModuleMetadata
- */
-/**
- * @description Type CommonAppModuleWithMetadata
- * @typedef {{  id:number,
- *              app_id: number,
- *              ModuleType: 'FUNCTION'|'MODULE'|'REPORT',
- *              ModuleName:string,
- *              ModulePath:string,
- *              ModuleMetadata:CommonAppModuleMetadata[],
- *              ModuleDescription:string}} CommonAppModuleWithMetadata
- */
-/**
- * @description Type CommonAppModuleQueueStatus
- * @typedef{'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL'} CommonAppModuleQueueStatus
- */
-/**
- * CommonAppModuleQueue
- * @typedef {{  id:number,
- *              app_id: number,
- *              type:'REPORT',
- *              name: string,
- *              parameters:string,
- *              user:string,
- *              start:string|null,
- *              end:string|null,
- *              progress:number|null,
- *              status:CommonAppModuleQueueStatus,
- *              message:string|null}} CommonAppModuleQueue
  */
 
 /**
@@ -493,28 +420,10 @@
 
 /**
  * @description Type
- * @typedef {{  sender:string|null,
- *              receiver_id:number|null,
- *              host:string,
- *              client_ip:string,
- *              subject:string,
- *              message:string
- *          }} CommonMessageType
- */
-/**
- * @description Type
- * @typedef {{  id?:number,
- *              service:'MESSAGE'|'BATCH',
- *              message:CommonMessageType,
- *              created?:string,
- *              read?:boolean}} MessageQueuePublishMessage
- */
-/**
- * @description Type
  * @typedef{{   page_header:{	total_count:number,
  *                              offset: 	number,
  *                              count:		number}
- *              rows:       MessageQueuePublishMessage[]}} MessagesPagination
+ *              rows:       *[]}} CommonResponsePagination
  */    
 
 /**
@@ -553,23 +462,9 @@
  */
 
 /**
- * @description Type CommonIAMUser
- * @typedef {{  id:number, 
- *              username:string, 
- *              password:string, 
- *              password_reminder:string|null, 
- *              type: 'ADMIN'|'USER', 
- *              bio:string|null, 
- *              private:number|null, 
- *              otp_key:string|null,
- *              avatar:string|null,
- *              user_level:number|null, 
- *              status:number|null, 
- *              active:number,
- *              created:string, 
- *              modified:string,
- *              last_logintime?:string}} CommonIAMUser
+ * @import {ORM} from '../server/types.js'}
  */
+
 /**
  * @description Type common
  * @typedef {{	COMMON_WINDOW:COMMON_WINDOW,            //BOM Browser Object Model (contains what is used)
@@ -593,30 +488,23 @@
  *              commonMapLayers:commonMapLayers,
  *              CommonRESTAPIMethod:CommonRESTAPIMethod,
  *              CommonRESTAPIAuthorizationType:CommonRESTAPIAuthorizationType,
- *              CommonAppRecord:CommonAppRecord,
  *              commonAppInit:commonAppInit,
- *              CommonAppDataRecord:CommonAppDataRecord,
- *              CommonAppModulesRecord:CommonAppModulesRecord,
  *              CommonAppModuleMetadata:CommonAppModuleMetadata,
- *              CommonAppModuleWithMetadata:CommonAppModuleWithMetadata,
- *              CommonAppModuleQueueStatus:CommonAppModuleQueueStatus,
- *              CommonAppModuleQueue:CommonAppModuleQueue,
+ *              CommonAppModuleWithMetadata:ORM['AppModule'] & CommonAppModuleMetadata,
  *              CommonCountryType:CommonCountryType,
  *              CommonProfileUser:CommonProfileUser,
  *              CommonProfileStatRecord:CommonProfileStatRecord,
  *              CommonProfileSearchRecord:CommonProfileSearchRecord,
  *              CommonMasterObjectType:CommonMasterObjectType,
- *              CommonMessageType:CommonMessageType,
- *              MessageQueuePublishMessage:MessageQueuePublishMessage,
- *              MessagesPagination:MessagesPagination,
+ *              CommonResponsePagination:CommonResponsePagination,
  *              MessageQueuePublishMicroserviceLog:MessageQueuePublishMicroserviceLog,
  *              CommonWorldcitiesRecordType:CommonWorldcitiesRecordType,
- *              CommonIAMUser:CommonIAMUser,
  *              CommonModuleCommon:CommonModuleCommon,          //Module file types
  *              CommonModuleRegional:CommonModuleRegional,      //Module file types
  *              CommonModuleReact:CommonModuleReact,            //Module file types
  *              CommonModuleReactDOM:CommonModuleReactDOM,      //Module file types
- *              CommonModuleVue:CommonModuleVue}                //Module file types
+ *              CommonModuleVue:CommonModuleVue,                //Module file types
+ *              ORM:ORM}
  *          } common
  */
 

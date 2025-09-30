@@ -3,8 +3,7 @@
  */
 
 /**
- * @import {server_server_response, 
- *          server_db_table_AppDataResourceMaster,server_db_table_AppDataResourceDetail, server_db_table_AppDataEntity} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  * @import {payment_request, bank_account, merchant} from './types.js'
  */
 const {server} = await import('../../../../server/server.js');
@@ -23,7 +22,7 @@ const {getToken} = await import('./payment_request_create.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:{payment_request_message:string,
+ * @returns {Promise.<server['server']['response'] & {result?:{payment_request_message:string,
  *                                              token:                  string,
  *                                              exp:                    number|null,
  *                                              iat:                    number|null,
@@ -36,7 +35,7 @@ const {getToken} = await import('./payment_request_create.js');
  */
 const paymentRequestGet = async parameters =>{
 
-    /**@type{server_db_table_AppDataEntity} */
+    /**@type{server['ORM']['AppDataEntity']} */
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
@@ -53,7 +52,7 @@ const paymentRequestGet = async parameters =>{
                                                                 resource_name:'PAYMENT_REQUEST',
                                                                 app_data_entity_id:Entity.id
                                                         }}).result
-                                    .filter((/**@type{server_db_table_AppDataResourceMaster}*/payment_request)=>
+                                    .filter((/**@type{server['ORM']['AppDataResourceMaster']}*/payment_request)=>
                                         payment_request.Document?.payment_request_id==token?.app_custom_id
                                     )[0];
     if (payment_request){
@@ -67,7 +66,7 @@ const paymentRequestGet = async parameters =>{
                                                                     app_data_resource_master_id:null,
                                                                     app_data_entity_id:Entity.id
                                                             }}).result
-                                .filter((/**@type{server_db_table_AppDataResourceDetail}*/result)=>
+                                .filter((/**@type{server['ORM']['AppDataResourceDetail']}*/result)=>
                                     result.Document?.bank_account_vpa == payment_request.payerid
                                 )[0];
         /**@type{merchant} */
@@ -79,7 +78,7 @@ const paymentRequestGet = async parameters =>{
                                                                     resource_name:'MERCHANT',
                                                                     app_data_entity_id:Entity.id
                                                             }}).result
-                                .filter((/**@type{server_db_table_AppDataResourceMaster}*/merchant)=>
+                                .filter((/**@type{server['ORM']['AppDataResourceMaster']}*/merchant)=>
                                     merchant.Document?.merchant_id==payment_request.merchant_id
                                 )[0];
         const currency      = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 

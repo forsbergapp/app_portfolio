@@ -1,8 +1,7 @@
 /** @module server/db/MessageQueueError */
 
 /**
- * @import {server_server_response, server_db_common_result_insert, 
- *          server_db_table_MessageQueueError} from '../types.js'
+ * @import {server} from '../types.js'
  */
 const {server} = await import ('../server.js');
 
@@ -12,7 +11,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_table_MessageQueueError[] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['MessageQueueError'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueueError',null, null);
     
@@ -22,13 +21,13 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueueEr
  * @function
  * @param {{app_id:number,
  *          data:*}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
  */
 const post = async parameters => {
     if (parameters.data.message_queue_publish_id && 
         'message' in parameters.data &&
         'result' in parameters.data){
-        /**@type{server_db_table_MessageQueueError}*/
+        /**@type{server['ORM']['MessageQueueError']}*/
         const data_new = {
                             id:Date.now(),
                             message_queue_publish_id:parameters.data.message_queue_publish_id,
@@ -39,7 +38,7 @@ const post = async parameters => {
         return server.ORM.Execute({app_id:parameters.app_id, 
                             dml:'POST', 
                             object:'MessageQueueError', 
-                            post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+                            post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};

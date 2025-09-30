@@ -39,7 +39,7 @@ const template = props => ` <div class='menu_apps_detail_row'>
                                     }
                             </div>
                             ${props.detail=='menu_apps_detail_module'?
-                                `${props.app_detail.map((/**@type{import('../../../common_types.js').CommonAppModulesRecord}*/row)=>
+                                `${props.app_detail.map((/**@type{common['ORM']['AppModule']}*/row)=>
                                         `<div data-changed-record='0' class='menu_apps_detail_row common_row'>
                                             <div class='menu_apps_detail_col list_readonly' data-column='id'>${row.id}</div>
                                             <div class='menu_apps_detail_col list_readonly' data-column='app_id'>${row.app_id}</div>
@@ -50,7 +50,7 @@ const template = props => ` <div class='menu_apps_detail_row'>
                                             <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='ModuleDescription'>${row.ModuleDescription??''}</div>
                                         </div>`).join('')
                                 }`:
-                                    `${props.app_detail.map((/**@type{import('../../../common_types.js').CommonAppDataRecord}*/row)=>
+                                    `${props.app_detail.map((/**@type{common['ORM']['AppData']}*/row)=>
                                             `<div data-changed-record='0' class='menu_apps_detail_row common_row'>
                                                 <div class='menu_apps_detail_col list_readonly' data-column='id'>${row.id}</div>
                                                 <div class='menu_apps_detail_col list_readonly' data-column='app_id'>${row.app_id}</div>

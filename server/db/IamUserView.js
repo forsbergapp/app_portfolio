@@ -1,10 +1,7 @@
 /** @module server/db/IamUserView */
 
 /**
- * @import {server_server_response,
- *          server_db_table_IamUserView,
- *          server_db_common_result_delete,
- *          server_db_common_result_insert} from '../types.js'
+ * @import {server} from '../types.js'
  */
 const {server} = await import ('../server.js');
 /**
@@ -15,11 +12,11 @@ const {server} = await import ('../server.js');
  *          resource_id:number|null,
  *          data:{  iam_user_id:number|null,
  *                  iam_user_id_view:number|null}}} parameters
- * @returns {server_server_response & {result?:server_db_table_IamUserView[] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['IamUserView'][] }}
  */
 const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserView',parameters.resource_id, null).result??[])
-                    .filter((/**@type{server_db_table_IamUserView}*/row)=>
+                    .filter((/**@type{server['ORM']['IamUserView']}*/row)=>
                         row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) &&
                         row.iam_user_id_view == (parameters.data.iam_user_id_view ?? row.iam_user_id_view) );
     if (result.length>0 || parameters.resource_id==null)
@@ -34,8 +31,8 @@ const get = parameters =>{
  * @function
  * @function
  * @param {number} app_id,
- * @param {server_db_table_IamUserView} data
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
+ * @param {server['ORM']['IamUserView']} data
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) =>{
     //check required attributes
@@ -43,7 +40,7 @@ const post = async (app_id, data) =>{
         return server.ORM.getError(app_id, 400);
     }
     else{
-        /**@type{server_db_table_IamUserView} */
+        /**@type{server['ORM']['IamUserView']} */
         const data_new =     {
                                 id:Date.now(),
                                 iam_user_id:data.iam_user_id, 
@@ -52,7 +49,7 @@ const post = async (app_id, data) =>{
                                 client_user_agent:data.client_user_agent,
                                 created:new Date().toISOString()
                         };
-        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserView', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserView', post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -70,13 +67,13 @@ const post = async (app_id, data) =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>{
     return server.ORM.Execute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
                                 object:'IamUserView', 
-                                delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
+                                delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server['ORMMetaData']['common_result_delete']}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

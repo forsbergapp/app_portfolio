@@ -3,9 +3,7 @@
  */
 
 /**
- * @import {server_server_response, 
- *          server_db_table_AppDataResourceMaster, server_db_table_AppDataResourceDetail, 
- *          server_db_table_AppDataResourceDetailData, server_db_table_AppDataEntity} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  * @import {payment_request, bank_account, bank_transaction} from './types.js'
  */
 
@@ -26,11 +24,11 @@ const {getToken} = await import('./payment_request_create.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:{status:string}[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:{status:string}[]}>}
  */
 const paymentRequestUpdate = async parameters =>{
 
-    /**@type{server_db_table_AppDataEntity} */
+    /**@type{server['ORM']['AppDataEntity']} */
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
@@ -46,7 +44,7 @@ const paymentRequestUpdate = async parameters =>{
     const token = await getToken({app_id:parameters.app_id, authorization:parameters.data.token, ip:parameters.ip});
 
     //get payment request using app_custom_id that should be the payment request id
-    /**@type{payment_request & {id:server_db_table_AppDataResourceMaster['id']}}*/
+    /**@type{payment_request & {id:server['ORM']['AppDataResourceMaster']['id']}}*/
     const payment_request = server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         all_users:true,
                                                         resource_id:null, 
@@ -55,7 +53,7 @@ const paymentRequestUpdate = async parameters =>{
                                                                 resource_name:'PAYMENT_REQUEST',
                                                                 app_data_entity_id:Entity.id
                                                         }}).result
-                                    .filter((/**@type{server_db_table_AppDataResourceMaster}*/payment_request)=>
+                                    .filter((/**@type{server['ORM']['AppDataResourceMaster']}*/payment_request)=>
                                         payment_request.Document?.payment_request_id==token?.app_custom_id
                                     )[0];
 
@@ -82,13 +80,13 @@ const paymentRequestUpdate = async parameters =>{
                                                                                         resource_name_data_master_attribute:null,
                                                                                         app_data_entity_id:Entity.id
                                                                                 }}).result.reduce(( /**@type{number}*/balance, 
-                                                                                                    /**@type{server_db_table_AppDataResourceDetailData & {Document:bank_transaction}}*/current_row)=>
+                                                                                                    /**@type{server['ORM']['AppDataResourceDetailData'] & {Document:bank_transaction}}*/current_row)=>
                                                                                     balance += (current_row.Document.amount_deposit ?? current_row.Document.amount_withdrawal) ?? 0,0
                                                                                 );
                 if ((account_payer_saldo - (payment_request.amount??0)) <0)
                     status='NO FUNDS';
                 else{
-                    /**@type{server_db_table_AppDataResourceDetailData} */
+                    /**@type{server['ORM']['AppDataResourceDetailData']} */
                     const data_debit = {Document                               : { timestamp:new Date().toISOString(),
                                                                                     logo:'',
                                                                                     origin:payment_request.reference,
@@ -99,7 +97,7 @@ const paymentRequestUpdate = async parameters =>{
                                         };
                     //create DEBIT transaction PAYERID resource TRANSACTION
                     await server.ORM.db.AppDataResourceDetailData.post({app_id:parameters.app_id, data:data_debit});
-                    /**@type{bank_account & {id:server_db_table_AppDataResourceDetail['id']}} */
+                    /**@type{bank_account & {id:server['ORM']['AppDataResourceDetail']['id']}} */
                     const account_payee         =  server.ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                                 all_users:true,
                                                                                 resource_id:null, 
@@ -109,11 +107,11 @@ const paymentRequestUpdate = async parameters =>{
                                                                                         app_data_resource_master_id:null,
                                                                                         app_data_entity_id:Entity.id
                                                                                 }}).result
-                                                            .filter((/**@type{server_db_table_AppDataResourceDetail}*/account)=>
+                                                            .filter((/**@type{server['ORM']['AppDataResourceDetail']}*/account)=>
                                                                 account.Document?.bank_account_vpa == payment_request.payeeid
                                                             )[0];
                     if (account_payee && account_payee.id!=null){
-                        /**@type{server_db_table_AppDataResourceDetailData} */
+                        /**@type{server['ORM']['AppDataResourceDetailData']} */
                         const data_credit = {   Document                               : { timestamp:new Date().toISOString(),
                                                                                             logo:'',
                                                                                             origin:payment_request.reference,

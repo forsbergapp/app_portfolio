@@ -3,12 +3,7 @@
  */
 
 /**
- * @import {server_req_method, server_server_response_type, 
- *          server_server_error, server_server_req, server_server_res,
- *          server_db_document_ConfigServer,
- *          server_db_table_ServiceRegistry,
- *          server_app_CommonCSSFonts,
- *          server_bff_endpoint_type} from './types.js'
+ * @import {server} from './types.js'
  */
 
 /**
@@ -31,7 +26,7 @@ class serverClass {
         this.socket;
         /**@type {import('../apps/common/src/common.js')}*/
         this.app_common;
-        /**@type{server_app_CommonCSSFonts}*/
+        /**@type{server['app']['commonCSSFonts']}*/
         this.commonCssFonts;
         /**@type{import('./db/ORM.js')['ORM']}*/
         this.ORM;
@@ -70,12 +65,12 @@ class serverClass {
      * @name request
      * @description Server app using Express pattern
      * @method
-     * @param {server_server_req} req
-     * @param {server_server_res} res
+     * @param {server['server']['req']} req
+     * @param {server['server']['res']} res
      * @returns {Promise.<*>}
      */
     request = async (req, res)=>{
-        /**@type{server_db_document_ConfigServer} */
+        /**@type{server['ORM']['ConfigServer']} */
         const CONFIG_SERVER = this.ORM.db.ConfigServer.get({app_id:0}).result;
         const read_body = async () =>{
             return new Promise((resolve,reject)=>{
@@ -158,26 +153,26 @@ class serverClass {
      * @name response
      * @description Returns response to client
      * @param {{app_id?:number|null,
-     *          type:server_server_response_type,
+     *          type:server['server']['response']['type'],
      *          result:string,
      *          route:'APP'|'REST_API'|null,
-     *          method?:server_req_method,
+     *          method?:server['server']['req']['method'],
      *          statusMessage: string,
      *          statusCode: number,
      *          sse_message?:string,
-     *          res:server_server_res}} parameters
+     *          res:server['server']['res']}} parameters
      * @method
      * @returns {Promise.<void>}
      */
     response = async parameters =>{
         /**
          * Sets response type
-         * @param {server_server_response_type} type
+         * @param {server['server']['response']['type']} type
          */
         const setType = async type => {
-            /**@type{server_db_document_ConfigServer['SERVICE_APP']} */
+            /**@type{server['ORM']['ConfigServer']['SERVICE_APP']} */
             const CONFIG_SERVICE_APP = this.ORM.db.ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;    
-            const app_cache_control =  CONFIG_SERVICE_APP.filter(parameter=>parameter.APP_CACHE_CONTROL)[0].APP_CACHE_CONTROL;
+            const app_cache_control =  CONFIG_SERVICE_APP.filter(parameter=>'APP_CACHE_CONTROL' in parameter)[0].APP_CACHE_CONTROL;
             switch (type){
                 case 'JSON':{
                     if (app_cache_control !='')
@@ -276,7 +271,7 @@ class serverClass {
                                         this.ORM.db.ServiceRegistry.get({ app_id:parameters['app-id'], 
                                                                             resource_id:null, 
                                                                             data:{name:parameters.service}}).result
-                                        .map((/**@type{server_db_table_ServiceRegistry}*/row)=>{
+                                        .map((/**@type{server['ORM']['ServiceRegistry']}*/row)=>{
                                             return {
                                                 uuid:row.uuid,
                                                 secret:row.secret
@@ -400,7 +395,7 @@ class serverClass {
      * @name UtilResponseTime
      * @description Calculate responsetime
      * @method
-     * @param {server_server_res} res
+     * @param {server['server']['res']} res
      * @returns {number}
      */
     UtilResponseTime = res => {
@@ -425,7 +420,7 @@ class serverClass {
      * @returns {number}
      */
     UtilAppLine = () =>{
-        /**@type {server_server_error} */
+        /**@type {server['server']['error']} */
         const e = new Error() || '';
         const frame = e.stack.split('\n')[2];
         const lineNumber = frame.split(':').reverse()[1];
@@ -455,7 +450,7 @@ let server;
 class serverCircuitBreakerClass {
 
     constructor() {
-        /**@type{server_db_document_ConfigServer} */
+        /**@type{server['ORM']['ConfigServer']} */
         const CONFIG_SERVER = server.ORM.db.ConfigServer.get({app_id:0}).result;
         /**@type{[index:any][*]} */
         this.states = {};
@@ -494,7 +489,7 @@ class serverCircuitBreakerClass {
      *          authorization:string|null,
      *          encryption_type:'BFE' | 'APP' | 'FONT'|'MICROSERVICE',
      *          'app-id':number,
-     *          endpoint:server_bff_endpoint_type|null}} parameters
+     *          endpoint:server['bff']['parameters']['endpoint']|null}} parameters
      * @returns {Promise.<string>}
      */
     async serverRequest(parameters){
@@ -625,7 +620,7 @@ const serverStart = async () =>{
             console.log(reason?.stack ?? reason?.message ?? reason ?? new Error().stack);
             server.ORM.db.Log.post({   app_id:0, 
                 data:{  object:'LogServerError', 
-                        log:'Process unhandledRejection: ' + reason?.stack ?? reason?.message ?? reason ?? new Error().stack
+                        log:'Process unhandledRejection: ' + (reason?.stack ?? reason?.message ?? reason ?? new Error().stack)
                     }
                 });
         });
@@ -637,7 +632,7 @@ const serverStart = async () =>{
 
         //Startup functions
 
-        /**@type{server_db_document_ConfigServer} */
+        /**@type{server['ORM']['ConfigServer']} */
         const configServer = server.ORM.db.ConfigServer.get({app_id:0}).result;
     
         //Update secrets
@@ -660,7 +655,7 @@ const serverStart = async () =>{
                 server.ORM.db.Log.post({app_id:0, 
                                         data:{  object:'LogServerInfo', 
                                                 log:'HTTP Server PORT: ' + 
-                                                    server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80
+                                                    (server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80)
                                             }
                                         });
         });
@@ -672,14 +667,14 @@ const serverStart = async () =>{
             server.ORM.db.Log.post({app_id:0, 
                                     data:{  object:'LogServerInfo', 
                                             log:'HTTP Server Admin  PORT: ' + 
-                                                server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000
+                                                (server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000)
                                         }
                                     });
         });
         //create dummy default https listener that will be destroyed or browser might hang
         net.createServer(socket => socket.destroy()).listen(443, () => null);
 
-    } catch (/**@type{server_server_error}*/error) {
+    } catch (/**@type{server['server']['error']}*/error) {
         server.ORM.db.Log.post({app_id:0, 
                                 data:{  object:'LogServerError', 
                                         log:'serverStart: ' + error.stack

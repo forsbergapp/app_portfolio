@@ -1,7 +1,7 @@
 /** @module server-info */
 
 /**
- * @import {server_server_response,server_info_result_Info} from './types.js'
+ * @import {server} from './types.js'
  */
 const os = await import('node:os');
 
@@ -39,7 +39,7 @@ const serverProcess = new ClassServerProcess();
  * @description Info about operating system and process
  * @function
  * @memberof ROUTE_REST_API
- * @returns {Promise.<server_server_response & {result?:server_info_result_Info }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server_info_result_Info }>}
  */
  const info = async () => {
     const os_json = {

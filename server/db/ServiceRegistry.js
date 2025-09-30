@@ -1,8 +1,7 @@
 /** @module server/db/ServiceRegistry */
 
 /**
- * @import {server_server_response,server_db_common_result_update,
- *          server_db_table_ServiceRegistry} from '../types.js'
+ * @import {server} from '../types.js'
  */
 const {server} = await import ('../server.js');
 /**
@@ -12,11 +11,11 @@ const {server} = await import ('../server.js');
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{  name:string|null}}} parameters
- * @returns {server_server_response & {result?:server_db_table_ServiceRegistry[] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['ServiceRegistry'][] }}
  */
 const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'ServiceRegistry',parameters.resource_id, null).result??[])
-                    .filter((/**@type{server_db_table_ServiceRegistry}*/row)=>
+                    .filter((/**@type{server['ORM']['ServiceRegistry']}*/row)=>
                         row.name == (parameters.data.name ?? row.name ));
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
@@ -30,11 +29,11 @@ const get = parameters =>{
  * @function
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server_db_table_ServiceRegistry}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
+ *          data:server['ORM']['ServiceRegistry']}} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
-   /**@type{server_db_table_ServiceRegistry} */
+   /**@type{server['ORM']['ServiceRegistry']} */
    const data_update = {};
    //allowed parameters to update:
    if (parameters.data.name!=null)
@@ -57,7 +56,7 @@ const update = async parameters => {
                             dml:'UPDATE', 
                             object:'ServiceRegistry', 
                             update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}})
-                .then((/**@type{server_db_common_result_update}*/result)=>{
+                .then((/**@type{server['ORMMetaData']['common_result_update']}*/result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
