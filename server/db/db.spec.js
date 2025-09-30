@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {test_spec_result} from '../types.js'
+ * @import {server} from '../types.js'
  */
 const {server} = await import('../server.js');
 /**
@@ -13,7 +13,7 @@ const {server} = await import('../server.js');
  *              should create a record, update the record, get correct value from updated record and delete the record
  * @function
  * @param {import('../../test/test.js')} t
- * @returns {Promise.<test_spec_result['detail']>}
+ * @returns {Promise.<server['test']['spec_result']['detail']>}
  */
 const test = async t =>
     [await t.describe('Unit test, test ORM post, update, get and delete', async ()=> {

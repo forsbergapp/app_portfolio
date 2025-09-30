@@ -1,7 +1,7 @@
 /** @module server/security */
 
 /**
- * @import {server_db_document_ConfigServer, server_security_jwt_complete, server_security_jwt_payload} from './types.js'}
+ * @import {server} from './types.js'}
  */
 const Crypto = await import('node:crypto');
 const {server} = await import('./server.js');
@@ -256,7 +256,7 @@ const securityPasswordCompare = async (app_id, password, compare_password) =>{
  *                      user_password_init_vector:string}>} 
  */
 const securityParametersGet = async parameters =>{
-    /**@type{server_db_document_ConfigServer['SERVICE_IAM']} */
+    /**@type{server['ORM']['ConfigServer']['SERVICE_IAM']} */
     const configServer = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_IAM'}}).result;
     return {user_password_encryption_key: configServer.filter(parameter=> 'USER_PASSWORD_ENCRYPTION_KEY' in parameter)[0].USER_PASSWORD_ENCRYPTION_KEY,
             user_password_init_vector : configServer.filter(parameter=> 'USER_PASSWORD_INIT_VECTOR' in parameter)[0].USER_PASSWORD_INIT_VECTOR
@@ -375,7 +375,7 @@ class Jwt {
      * @param {string} token
      * @param {string} secret
      * @param {{complete:boolean}|null} options
-     * @returns  {server_security_jwt_complete|server_security_jwt_payload}
+     * @returns  {server_security_jwt_complete|server['security']['jwt_payload']}
      */
     verify (token, secret, options=null) {
         const signature = token.split('.')[2];
@@ -454,7 +454,7 @@ class Jwt {
      * @method
      * @param {string} token
      * @param {{complete:boolean}|null} options
-     * @returns  {server_security_jwt_complete|server_security_jwt_payload}
+     * @returns  {server_security_jwt_complete|server['security']['jwt_payload']}
      */
     decode (token, options=null ) {
         return options?.complete==true?

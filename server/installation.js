@@ -3,23 +3,7 @@
  */
 
 /**
- * @import {server_db_document_ConfigServer,
- *          server_server_response,
- *          server_db_database_demo_data,
- *          server_db_table_App,
- *          server_db_table_IamUser,
- *          server_db_table_IamUserAppDataPost,
- *          server_db_table_IamUserView,
- *          server_db_table_AppDataResourceMaster, server_db_table_AppDataResourceDetail, server_db_table_AppDataResourceDetailData,
- *          server_db_common_result_insert,
- *          server_DbObject, server_DbObject_record, server_server_error, 
- *          server_db_config_server_service_iam,
- *          server_db_table_AppModule, server_db_table_AppData,
- *          server_db_table_AppDataEntityResource, server_db_table_AppDataEntity,
- *          server_db_table_AppTranslation,
- *          server_db_document_ConfigRestApi,
- *          server_db_table_ServiceRegistry,
- *          microservice_local_config} from './types.js'
+ * @import {server} from './types.js'
  */
 
 const DB_DEMO_PATH              = '/server/install/db/demo/';
@@ -29,7 +13,7 @@ const fs = await import('node:fs');
 
 /**
  * @description Get default file for given object in default directory
- * @param {server_DbObject} object
+ * @param {server['ORMMetaData']['DbObject']} object
  */
 const getDefaultObject = async object => 
     await fs.promises.readFile(server.ORM.serverProcess.cwd() + `/server/install/default/${object}.json`)
@@ -65,7 +49,7 @@ const getDefaultObject = async object =>
  * @param {{app_id:number,
 *          idToken:string,
 *          data:{  demo_password?:string|null}}} parameters
-* @returns {Promise.<server_server_response & {result?:{info: {}[]} }>}
+* @returns {Promise.<server['server']['response'] & {result?:{info: {}[]} }>}
 */
 const postDemo = async parameters=> {
 
@@ -102,15 +86,15 @@ const postDemo = async parameters=> {
                 * @returns 
                 */
                 const create_update_id = async demo_user=>{
-                    /**@type{{  username:           server_db_table_IamUser['username'],
-                    *          bio:                server_db_table_IamUser['bio'],
-                    *          avatar:             server_db_table_IamUser['avatar'],
-                    *          password:           server_db_table_IamUser['password'],
-                    *          password_reminder:  server_db_table_IamUser['password_reminder'],
-                    *          active:             server_db_table_IamUser['active'],
-                    *          private:            server_db_table_IamUser['private'],
-                    *          user_level:         server_db_table_IamUser['user_level'],
-                    *          type:               server_db_table_IamUser['type']
+                    /**@type{{  username:           server['ORM']['IamUser']['username'],
+                    *          bio:                server['ORM']['IamUser']['bio'],
+                    *          avatar:             server['ORM']['IamUser']['avatar'],
+                    *          password:           server['ORM']['IamUser']['password'],
+                    *          password_reminder:  server['ORM']['IamUser']['password_reminder'],
+                    *          active:             server['ORM']['IamUser']['active'],
+                    *          private:            server['ORM']['IamUser']['private'],
+                    *          user_level:         server['ORM']['IamUser']['user_level'],
+                    *          type:               server['ORM']['IamUser']['type']
                     * 
                     }}*/
                     const data_create = {   username:               demo_user.username,
@@ -126,7 +110,7 @@ const postDemo = async parameters=> {
                     //create iam user then database user
                     /**@ts-ignore */
                     return await server.ORM.db.IamUser.postAdmin(parameters.app_id,data_create)
-                                .then((/**@type{server_server_response}*/result)=>{
+                                .then((/**@type{server['server']['response']}*/result)=>{
                                     if (result.result)
                                         return result;
                                     else
@@ -142,14 +126,14 @@ const postDemo = async parameters=> {
         * Create iam user app
         * @param {number} app_id 
         * @param {number} iam_user_id
-        * @returns {Promise.<server_db_common_result_insert>}
+        * @returns {Promise.<server['ORMMetaData']['common_result_insert']>}
         */
         const create_iam_user_app = async (app_id, iam_user_id) =>{
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserApp.post(parameters.app_id, 
                     /**@ts-ignore */
                     {app_id:app_id, Document:null, iam_user_id:iam_user_id})
-                .then((/**@type{server_server_response}*/result)=>{
+                .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
                         if (result.result.affectedRows == 1)
                             records_iam_user_app++;
@@ -162,8 +146,8 @@ const postDemo = async parameters=> {
         };
         /**
         * Create iam user app data post
-        * @param {{ Document:      server_db_table_IamUserAppDataPost['Document'],
-        *           iam_user_app_id:server_db_table_IamUserAppDataPost['iam_user_app_id']}} data 
+        * @param {{ Document:      server['ORM']['IamUserAppDataPost']['Document'],
+        *           iam_user_app_id:server['ORM']['IamUserAppDataPost']['iam_user_app_id']}} data 
         * @returns {Promise.<null>}
         */
         const create_iam_user_app_data_post = async (data) => {
@@ -171,7 +155,7 @@ const postDemo = async parameters=> {
                 server.ORM.db.IamUserAppDataPost.post({app_id:parameters.app_id, 
                                         /**@ts-ignore */
                                         data:data})
-                .then((/**@type{server_server_response}*/result)=>{
+                .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
                         if (result.result.data?.affectedRows == 1)
                             records_iam_user_app_data_post++;
@@ -185,15 +169,15 @@ const postDemo = async parameters=> {
 
         /**
         * 
-        * @param {{ Document:                                      server_db_table_AppDataResourceMaster['Document'],
-        *           iam_user_app_id:                                server_db_table_AppDataResourceMaster['iam_user_app_id'],
-        *           app_data_entity_resource_id:                    server_db_table_AppDataResourceMaster['app_data_entity_resource_id']}} data 
+        * @param {{ Document:                                      server['ORM']['AppDataResourceMaster']['Document'],
+        *           iam_user_app_id:                                server['ORM']['AppDataResourceMaster']['iam_user_app_id'],
+        *           app_data_entity_resource_id:                    server['ORM']['AppDataResourceMaster']['app_data_entity_resource_id']}} data 
         * @returns {Promise.<number>}
         */
         const create_app_data_resource_master = async data => {
             return new Promise((resolve, reject) => {
                 server.ORM.db.AppDataResourceMaster.post({app_id:parameters.app_id, data:data})
-                .then((/**@type{server_server_response}*/result)=>{
+                .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
                         if (result.result.affectedRows == 1)
                             records_app_data_resource_master++;
@@ -209,13 +193,13 @@ const postDemo = async parameters=> {
         * @param {{app_data_resource_master_id: number;
         *          app_data_entity_resource_id: number;
         *          app_data_resource_master_attribute_id: number|null,
-        *          Document: server_db_table_AppDataResourceDetail['Document'],}} data 
+        *          Document: server['ORM']['AppDataResourceDetail']['Document'],}} data 
         * @returns {Promise.<number>}
         */
         const create_app_data_resource_detail = async data => {
             return new Promise((resolve, reject) => {
                 server.ORM.db.AppDataResourceDetail.post({app_id:parameters.app_id, data:data})
-                .then((/**@type{server_server_response}*/result)=>{
+                .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
                         if (result.result.affectedRows == 1)
                             records_app_data_resource_detail++;
@@ -262,15 +246,15 @@ const postDemo = async parameters=> {
         /**
         * 
         * @param {number} user_account_post_app_id 
-        * @param {{ Document: server_db_table_AppDataResourceDetailData['Document'],
-        *           app_data_resource_detail_id: server_db_table_AppDataResourceDetailData['app_data_resource_detail_id'],
-        *           app_data_resource_master_attribute_id:server_db_table_AppDataResourceDetailData['app_data_resource_master_attribute_id']}} data 
+        * @param {{ Document: server['ORM']['AppDataResourceDetailData']['Document'],
+        *           app_data_resource_detail_id: server['ORM']['AppDataResourceDetailData']['app_data_resource_detail_id'],
+        *           app_data_resource_master_attribute_id:server['ORM']['AppDataResourceDetailData']['app_data_resource_master_attribute_id']}} data 
         * @returns {Promise.<number>}
         */
         const create_app_data_resource_detail_data = async (user_account_post_app_id, data) => {
             return new Promise((resolve, reject) => {
                 server.ORM.db.AppDataResourceDetailData.post({app_id:user_account_post_app_id, data:data})
-                .then((/**@type{server_server_response}*/result)=>{
+                .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
                         if (result.result.affectedRows == 1)
                             records_app_data_resource_detail_data++;
@@ -322,7 +306,7 @@ const postDemo = async parameters=> {
                                         });
             //create for others apps except common, admin and already created
             for (const app of server.ORM.db.App.get({app_id:parameters.app_id,resource_id:null}).result
-                            .filter((/**@type{server_db_table_App}*/row)=>row.id!=common_app_id && row.id!=admin_app_id && row.id!=demo_user.iam_user_app.app_id)){
+                            .filter((/**@type{server['ORM']['App']}*/row)=>row.id!=common_app_id && row.id!=admin_app_id && row.id!=demo_user.iam_user_app.app_id)){
                 await create_iam_user_app(app.id, demo_user.id);
             }                                    
                 
@@ -385,7 +369,7 @@ const postDemo = async parameters=> {
                             default:{
                                 //replace if containing HOST parameter
                                 if (key_name[1]!=null && typeof key_name[1]=='string' && key_name[1].indexOf('<HOST/>')>-1){
-                                    /**@type{server_db_document_ConfigServer} */
+                                    /**@type{server['ORM']['ConfigServer']} */
                                     const {SERVER:config_SERVER} = server.ORM.db.ConfigServer.get({app_id:0}).result;
                                     //use HTTP configuration as default
                                     const HOST = config_SERVER.filter(row=>'HOST' in row)[0].HOST;
@@ -471,7 +455,7 @@ const postDemo = async parameters=> {
         const create_iam_user_like = async (app_id, id, id_like ) =>{
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserLike.post({app_id:app_id, data:{iam_user_id:id,iam_user_id_like:id_like}})
-                .then((/**@type{server_server_response}*/result) => {
+                .then((/**@type{server['server']['response']}*/result) => {
                     if(result.result){
                         if (result.result.affectedRows == 1)
                             records_iam_user_like++;
@@ -485,16 +469,16 @@ const postDemo = async parameters=> {
         /**
         * Create user account view
         * @param {number} app_id 
-        * @param {{ iam_user_id: server_db_table_IamUserView['iam_user_id'],
-        *           iam_user_id_view: server_db_table_IamUserView['iam_user_id_view'],
-        *           client_ip: server_db_table_IamUserView['client_ip'],
-        *           client_user_agent:server_db_table_IamUserView['client_user_agent']}} data 
+        * @param {{ iam_user_id: server['ORM']['IamUserView']['iam_user_id'],
+        *           iam_user_id_view: server['ORM']['IamUserView']['iam_user_id_view'],
+        *           client_ip: server['ORM']['IamUserView']['client_ip'],
+        *           client_user_agent:server['ORM']['IamUserView']['client_user_agent']}} data 
         * @returns {Promise.<null>}
         */
         const create_iam_user_view = async (app_id, data ) =>{
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserView.post(app_id, data)
-                .then((/**@type{server_server_response}*/result) => {
+                .then((/**@type{server['server']['response']}*/result) => {
                     if(result.result){
                         if (result.result.affectedRows == 1)
                                 records_iam_user_view++;
@@ -517,7 +501,7 @@ const postDemo = async parameters=> {
                 server.ORM.db.IamUserFollow.post({app_id:app_id, 
                                     /**@ts-ignore */
                                     data:{iam_user_id:id, iam_user_id_follow:id_follow}})
-                .then((/**@type{server_server_response}*/result)=>{
+                .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
                         if (result.result.affectedRows == 1)
                             records_iam_user_follow++;
@@ -544,7 +528,7 @@ const postDemo = async parameters=> {
                                                             data:{  iam_user_id:user2,
                                                                     data_app_id:app_id,
                                                                     iam_user_app_data_post_id:result_posts.result[random_posts_index].id}})
-                    .then((/**@type{server_server_response}*/result) => {
+                    .then((/**@type{server['server']['response']}*/result) => {
                         if (result.result){
                             if (result.result.affectedRows == 1)
                                 records_iam_user_app_data_post_like++;
@@ -589,7 +573,7 @@ const postDemo = async parameters=> {
                                                                                                 null,
                                                                         iam_user_app_data_post_id: result_posts.result[random_index].id
                                                                     })
-                    .then((/**@type{server_server_response}*/result)=>{
+                    .then((/**@type{server['server']['response']}*/result)=>{
                         if (result.result){
                             if (result.result.affectedRows == 1)
                                 records_iam_user_app_data_post_view++;
@@ -730,11 +714,11 @@ const postDemo = async parameters=> {
 * @memberof ROUTE_REST_API
 * @param {{app_id:number,
 *          idToken:string}} parameters
-* @returns {Promise.<server_server_response & {result?:{info: {}[]} }>}
+* @returns {Promise.<server['server']['response'] & {result?:{info: {}[]} }>}
 */
 const deleteDemo = async parameters => {
 
-    const result_demo_users = server.ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/row)=>row.user_level==2);
+    const result_demo_users = server.ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{server['ORM']['IamUser']}*/row)=>row.user_level==2);
     if (result_demo_users){
         let deleted_user = 0;
         if (result_demo_users.length>0){
@@ -750,7 +734,7 @@ const deleteDemo = async parameters => {
                                                             message_type:'PROGRESS'}});
                     //delete iam user
                     await server.ORM.db.IamUser.deleteRecordAdmin(parameters.app_id,user.id)
-                    .then((/**@type{server_server_response}*/result)=>{
+                    .then((/**@type{server['server']['response']}*/result)=>{
                         if (result.result )
                             deleted_user++;
                     });
@@ -819,9 +803,9 @@ const postConfigDefault = async () => {
                                             pathServiceRegistry:'/server/install/default/ServiceRegistry.json'
     });
     /**
-     * @type{[  [server_DbObject, server_DbObject_record[]],
-     *          [server_DbObject, server_db_document_ConfigServer],
-     *          [server_DbObject, server_db_table_ServiceRegistry[]]
+     * @type{[  [server['ORMMetaData']['DbObject'], server['ORMMetaData']['DbObject'][]],
+     *          [server['ORMMetaData']['DbObject'], server['ORM']['ConfigServer']],
+     *          [server['ORMMetaData']['DbObject'], server['ORM']['ServiceRegistry'][]]
      *       ]}
      */
     const config_obj = [
@@ -836,7 +820,7 @@ const postConfigDefault = async () => {
                             '/data/db/journal',
                             '/data/microservice'
                             ])
-    .catch((/**@type{server_server_error}*/err) => {
+    .catch((/**@type{server['server']['error']}*/err) => {
         throw err;
     }); 
     
@@ -869,17 +853,17 @@ const postConfigDefault = async () => {
 const postDataDefault = async () => {
     
     /**
-     * @type{[  [server_DbObject, server_db_document_ConfigRestApi],
-     *          [server_DbObject, server_db_table_IamUser[]],
-     *          [server_DbObject, server_db_table_App[]],
-     *          [server_DbObject, server_db_table_AppDataEntityResource[]],
-     *          [server_DbObject, server_db_table_AppDataEntity[]],
-     *          [server_DbObject, server_db_table_AppDataResourceDetailData[]],
-     *          [server_DbObject, server_db_table_AppDataResourceDetail[]],
-     *          [server_DbObject, server_db_table_AppDataResourceMaster[]],
-     *          [server_DbObject, server_db_table_AppModule[]],
-     *          [server_DbObject, server_db_table_AppData[]],
-     *          [server_DbObject, server_db_table_AppTranslation[]]
+     * @type{[  [server['ORMMetaData']['DbObject'], server['ORM']['ConfigRestApi']],
+     *          [server['ORMMetaData']['DbObject'], server['ORM']['IamUser'][]],
+     *          [server['ORMMetaData']['DbObject'], server['ORM']['App'][]],
+     *          [server['ORMMetaData']['DbObject'], server['ORM']['AppDataEntityResource'][]],
+     *          [server['ORMMetaData']['DbObject'], server['ORM']['AppDataEntity'][]],
+     *          [server['ORMMetaData']['DbObject'], server['ORM']['AppDataResourceDetailData'][]],
+     *          [server['ORMMetaData']['DbObject'], server['ORM']['AppDataResourceDetail'][]],
+     *          [server['ORMMetaData']['DbObject'], server['ORM']['AppDataResourceMaster'][]],
+     *          [server['ORMMetaData']['DbObject'], server['ORM']['AppModule'][]],
+     *          [server['ORMMetaData']['DbObject'], server['ORM']['AppData'][]],
+     *          [server['ORMMetaData']['DbObject'], server['ORM']['AppTranslation'][]]
      *       ]}
      */
     const config_obj = [
@@ -898,7 +882,7 @@ const postDataDefault = async () => {
     
     //write files to ORM
     //read default where type is configured
-    /**@type{server_DbObject_record[]}*/
+    /**@type{server['ORMMetaData']['DbObject'][]}*/
     const DbObjects = await getDefaultObject('DbObjects');
     
     for (const config_row of config_obj){
@@ -925,7 +909,7 @@ const updateConfigSecrets = async () =>{
                                         });
     //get users and password
     const users = await new Promise(resolve=>{(async () =>{ 
-        /**@type{server_db_table_IamUser[]} */
+        /**@type{server['ORM']['IamUser'][]} */
         const users = server.ORM.db.IamUser.get(0, null).result??[];
         for (const user of users){
             /**@ts-ignore */
@@ -957,14 +941,14 @@ const updateConfigSecrets = async () =>{
  * @name updateMicroserviceSecurity
  * @description Reads key pair in serviceregistry and updates them in microservice config files
  * @function
- * @param {{serveRegistry:server_db_table_ServiceRegistry[],
+ * @param {{serveRegistry:server['ORM']['ServiceRegistry'][],
  *          pathMicroserviceSource:      string,
  *          pathMicroserviceDestination:   string}} parameters
  * @returns {Promise.<void>}
  */
 const updateMicroserviceSecurity = async parameters =>{
     for (const file of ['BATCH']){
-        /**@type{microservice_local_config} */
+        /**@type{server['serviceregistry']['microservice_local_config']} */
         const content = await fs.promises.readFile(server.ORM.serverProcess.cwd() + `${parameters.pathMicroserviceSource}${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
         content.uuid = parameters.serveRegistry.filter(microservice=>microservice.name==content.name)[0].uuid;
         content.secret = parameters.serveRegistry.filter(microservice=>microservice.name==content.name)[0].secret;
@@ -979,15 +963,15 @@ const updateMicroserviceSecurity = async parameters =>{
  * @function
  * @param {{pathConfigServer:      string|null,
  *          pathServiceRegistry:   string|null}} parameters
- * @returns {Promise.<{ ConfigServer:   server_db_document_ConfigServer,
- *                      ServiceRegistry:server_db_table_ServiceRegistry[]}>}
+ * @returns {Promise.<{ ConfigServer:   server['ORM']['ConfigServer'],
+ *                      ServiceRegistry:server['ORM']['ServiceRegistry'][]}>}
  */
 const getConfigSecurityUpdate = async parameters =>{
     const APP_PORTFOLIO_TITLE = 'App Portfolio';
     
     return {
         ConfigServer:await new Promise(resolve=>{(async () =>{ 
-                            /**@type{server_db_document_ConfigServer}*/
+                            /**@type{server['ORM']['ConfigServer']}*/
                             const content = parameters.pathConfigServer?await fs.promises.readFile(server.ORM.serverProcess.cwd() + parameters.pathConfigServer)
                                                 .then(file=>JSON.parse(file.toString())):server.ORM.getObject(0,'ConfigServer');
                             //generate secrets
@@ -1018,7 +1002,7 @@ const getConfigSecurityUpdate = async parameters =>{
                             resolve(content);
                         })();}),
         ServiceRegistry:parameters.pathServiceRegistry?await new Promise(resolve=>{(async () =>{ 
-                                /**@type{server_db_table_ServiceRegistry[]}*/
+                                /**@type{server['ORM']['ServiceRegistry'][]}*/
                                 const content = await fs.promises.readFile(server.ORM.serverProcess.cwd() + parameters.pathServiceRegistry)
                                                     .then(file=>JSON.parse(file.toString()));
                                 for (const row of content){

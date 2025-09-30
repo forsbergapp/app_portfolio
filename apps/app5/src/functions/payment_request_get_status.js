@@ -4,8 +4,7 @@
 
 /**
  * 
- * @import {server_server_response, 
- *          server_db_table_AppDataEntity, server_db_table_AppDataResourceMaster, server_db_table_AppDataResourceDetail} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  * @import {payment_request, bank_account} from './types.js'
  */
 
@@ -24,11 +23,11 @@ const {getToken} = await import('./payment_request_create.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:{message:string}}>}
+ * @returns {Promise.<server['server']['response'] & {result?:{message:string}}>}
  */
 const paymentRequestGetStatus = async parameters =>{
      
-    /**@type{server_db_table_AppDataEntity} */
+    /**@type{server['ORM']['AppDataEntity']} */
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.app_id}}).result[0];
@@ -42,7 +41,7 @@ const paymentRequestGetStatus = async parameters =>{
                                                                         resource_name:'MERCHANT',
                                                                         app_data_entity_id:Entity.id
                                                                 }}).result
-                            .filter((/**@type{server_db_table_AppDataResourceMaster}*/merchant)=>
+                            .filter((/**@type{server['ORM']['AppDataResourceMaster']}*/merchant)=>
                                 server.ORM.UtilNumberValue(merchant.Document?.merchant_id)==parameters.data.id
                             )[0];
     if (merchant){
@@ -62,7 +61,7 @@ const paymentRequestGetStatus = async parameters =>{
                                                                                 resource_name:'PAYMENT_REQUEST',
                                                                                 app_data_entity_id:Entity.id
                                                                         }}).result
-                                            .filter((/**@type{server_db_table_AppDataResourceMaster}*/payment_request)=>
+                                            .filter((/**@type{server['ORM']['AppDataResourceMaster']}*/payment_request)=>
                                                 payment_request.Document?.payment_request_id==body_decrypted.payment_request_id
                                             )[0];
             try {
@@ -75,7 +74,7 @@ const paymentRequestGetStatus = async parameters =>{
                     const data_return = {   status:                 payment_request.status};
                     const data_encrypted = server.security.securityPublicEncrypt(merchant.merchant_public_key, JSON.stringify(data_return));
 
-                    /**@type{bank_account & {app_data_resource_master_id:server_db_table_AppDataResourceDetail['app_data_resource_master_id']}}*/
+                    /**@type{bank_account & {app_data_resource_master_id:server['ORM']['AppDataResourceDetail']['app_data_resource_master_id']}}*/
                     const account_payer =  server.ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                         all_users:true,
                                                                         resource_id:null, 
@@ -85,13 +84,13 @@ const paymentRequestGetStatus = async parameters =>{
                                                                                 app_data_resource_master_id:null,
                                                                                 app_data_entity_id:Entity.id
                                                                         }}).result
-                                        .filter((/**@type{server_db_table_AppDataResourceDetail}*/result)=>
+                                        .filter((/**@type{server['ORM']['AppDataResourceDetail']}*/result)=>
                                             result.Document?.bank_account_vpa == payment_request.payerid
                                         )[0];
                     if (account_payer){
                         //if status is still pending then send server side event message to customer
                         if (payment_request.status=='PENDING'){
-                            /**@type{server_db_table_AppDataResourceMaster} */
+                            /**@type{server['ORM']['AppDataResourceMaster']} */
                             const customer = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                         all_users:true,
                                                                         resource_id:account_payer.app_data_resource_master_id, 

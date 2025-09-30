@@ -1,19 +1,13 @@
 /** @module server/socket */
 
 /**
- * @import {server_server_response,
- *          server_socket_broadcast_type_all, 
- *          server_socket_broadcast_type_admin,
- *          server_server_res,
- *          server_db_table_IamEncryption,
- *          server_db_table_IamAppIdToken,
- *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
+ * @import {server} from './types.js'
  */
 
 const {server} = await import('./server.js');
 
 
-/**@type{server_socket_connected_list[]} */
+/**@type{server['socket']['connected_list'][]} */
 let SOCKET_CONNECTED_CLIENTS = [];
 
 /**
@@ -22,7 +16,7 @@ let SOCKET_CONNECTED_CLIENTS = [];
  *              
  * @function
  * @param {string} idtoken
- * @returns {server_socket_connected_list}
+ * @returns {server['socket']['connected_list']}
  */
 const socketClientGet = idtoken => SOCKET_CONNECTED_CLIENTS.filter(client => client.idToken == idtoken)[0];
 
@@ -30,7 +24,7 @@ const socketClientGet = idtoken => SOCKET_CONNECTED_CLIENTS.filter(client => cli
  * @name socketClientAdd
  * @description Socket client add
  * @function
- * @param {server_socket_connected_list} newClient
+ * @param {server['socket']['connected_list']} newClient
  * @returns {void}
  */
 const socketClientAdd = (newClient) => {
@@ -52,7 +46,7 @@ const socketClientAdd = (newClient) => {
  *          ip:string,
  *          headers_user_agent:string,
  *          headers_accept_language:string}} parameters
- * @returns {Promise.<server_server_response>}
+ * @returns {Promise.<server['server']['response']>}
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.idToken == parameters.idToken).length==0){
@@ -113,9 +107,9 @@ const socketClientAdd = (newClient) => {
  *          idToken:string,
  *          data:{  app_id:number|null,
  *                  client_id:number|null,
- *                  broadcast_type:server_socket_broadcast_type_admin,
+ *                  broadcast_type: Extract<server['socket']['broadcast_type'],'CHAT'|'ALERT'|'MAINTENANCE'>,
  *                  broadcast_message:string}}} parameters
- * @returns {Promise.<server_server_response & {result?:{sent:number} }>}
+ * @returns {Promise.<server['server']['response'] & {result?:{sent:number} }>}
  */
  const socketAdminSend = async parameters => {
     parameters.data.client_id = server.ORM.UtilNumberValue(parameters.data.client_id);
@@ -176,7 +170,7 @@ const socketClientAdd = (newClient) => {
  *                  order_by?:string|null,
  *                  sort?:*}
  *          }} parameters
- * @returns{Promise.<server_server_response & {result?:server_socket_connected_list_no_res[]}>}
+ * @returns{Promise.<server['server']['response'] & {result?:server_socket_connected_list_no_res[]}>}
  */
  const socketConnectedList = async parameters => {
     const app_id_select = server.ORM.UtilNumberValue(parameters.data.data_app_id);
@@ -250,7 +244,7 @@ const socketClientAdd = (newClient) => {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{data:{  logged_in?:string|null}}} parameters
- * @returns {server_server_response & {result?:{count_connected:number} }}
+ * @returns {server['server']['response'] & {result?:{count_connected:number} }}
  */
  const socketConnectedCount = parameters => {
     const logged_in = server.ORM.UtilNumberValue(parameters.data.logged_in);
@@ -267,7 +261,7 @@ const socketClientAdd = (newClient) => {
  *          uuid:string|null,
  *          user_agent:string,
  *          ip:string,
- *          response:server_server_res
+ *          response:server['server']['res']
  *          }} parameters
  * @returns {Promise.<{ insertId:number,
  *                      latitude:string,
@@ -344,7 +338,7 @@ const socketPost = async parameters =>{
  *          resource_id:string|null,
  *          user_agent:string,
  *          ip:string,
- *          response:server_server_res
+ *          response:server['server']['res']
  *          }} parameters
  * @returns {Promise.<void>}
  */
@@ -425,7 +419,7 @@ const socketExpiredTokensUpdate = async () =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{resource_id :number|null}} parameters
- * @returns {server_server_response & {result:{online:1|0} }}
+ * @returns {server['server']['response'] & {result:{online:1|0} }}
  */
 const CheckOnline = parameters => { 
                                     /**@ts-ignore */
@@ -446,7 +440,7 @@ const CheckOnline = parameters => {
  *                  iam_user_id:number|null,
  *                  idToken:string|null,
  *                  message:String,
- *                  message_type:server_socket_broadcast_type_all}}} parameters
+ *                  message_type:server['socket']['broadcast_type']}}} parameters
  */
 const socketClientPostMessage = async parameters => {
 
@@ -461,13 +455,13 @@ const socketClientPostMessage = async parameters => {
         const token_id = server.ORM.db.IamAppIdToken.get({  app_id:parameters.app_id, 
                                         resource_id:null, 
                                         data:{data_app_id:null}}).result
-                    .filter((/**@type{server_db_table_IamAppIdToken}*/row)=>row.token == client.idToken)?.[0].id;
+                    .filter((/**@type{server['ORM']['IamAppIdToken']}*/row)=>row.token == client.idToken)?.[0].id;
         //get secrets from IamEncryption using uuid saved at record creation and token id
         const {jwk, iv} = server.ORM.db.IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}). result
-                            .filter((/**@type{server_db_table_IamEncryption}*/row)=>
+                            .filter((/**@type{server['ORM']['IamEncryption']}*/row)=>
                                 row.uuid == client.uuid && 
                                 row.iam_app_id_token_id == token_id)
-                            .map((/**@type{server_db_table_IamEncryption}*/row)=>{
+                            .map((/**@type{server['ORM']['IamEncryption']}*/row)=>{
                                 return {jwk:JSON.parse(atob(row.secret)).jwk,
                                         iv:JSON.parse(atob(row.secret)).iv
                                 };

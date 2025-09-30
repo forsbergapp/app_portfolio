@@ -32,12 +32,7 @@
  */
 
 /**
- * @import {server_server_response, server_server_error,
- *          server_DbObject, server_DbObject_record, 
- *          server_db_config_server_server,server_db_config_server_service_log,
- *          server_db_result_fileFsRead,
- *          server_db_common_result_update, server_db_common_result_delete,server_db_common_result_insert,
- *          server_server_req_id_number} from '../types.js'
+ * @import {server} from '../types.js'
  * @import {Dirent} from 'node:fs'
  */
 
@@ -49,7 +44,7 @@ const fs = await import('node:fs');
  * @name #DB
  * @description File database using ORM pattern, is loaded from external file at server start
  * @constant
- * @type{{data:server_DbObject_record[]}}
+ * @type{{data:server['ORMMetaData']['DbObject'][]}}
  */
 const DB = {data: []};
 Object.seal(DB);
@@ -150,7 +145,7 @@ class ORM_class {
      * @name formatContent
      * @description Formats content
      * @method
-     * @param {server_DbObject_record['type']} object_type
+     * @param {server['ORMMetaData']['DbObject']['type']} object_type
      * @param {*} content
      * @returns {string}
      */
@@ -168,13 +163,13 @@ class ORM_class {
      * @description Get file record from file db, uses default not immutable
      *              if record can be updated or no update in calling function using local variable for performance.
      * @method
-     * @param {server_DbObject} filename 
+     * @param {server['ORMMetaData']['DbObject']['name']} object 
      * @param {boolean}  immutable
-     * @returns {server_DbObject_record}
+     * @returns {server['ORMMetaData']['DbObject']}
      */
-    getObjectRecord = (filename, immutable=false) =>immutable?
-                                                        JSON.parse(JSON.stringify(DB.data.filter(file_db=>file_db.name == filename)[0])):
-                                                            DB.data.filter(file_db=>file_db.name == filename)[0];
+    getObjectRecord = (object, immutable=false) =>immutable?
+                                                        JSON.parse(JSON.stringify(DB.data.filter(file_db=>file_db.name == object)[0])):
+                                                            DB.data.filter(file_db=>file_db.name == object)[0];
 
     /**
      * @name fileTransactionStart
@@ -184,7 +179,7 @@ class ORM_class {
      *              Reads and sets `transaction_id`, `transaction_content` and `lock` key in DB 
      *              `transaction_content` is used to rollback info if something goes wrong and can also be used for debugging purpose
      * @method
-     * @param {server_DbObject} object 
+     * @param {server['ORMMetaData']['DbObject']['name']} object 
      * @param {string} filepath
      * @returns {Promise.<{transaction_id:number, transaction_content:*}>}
      */
@@ -234,13 +229,13 @@ class ORM_class {
      * @description Transaction commit
      *              Empties `transaction_id` and `transaction_content`, sets `lock =0` and updates cache_content if used
      * @method
-     * @param {server_DbObject} file 
+     * @param {server['ORMMetaData']['DbObject']['name']} object 
      * @param {number} transaction_id 
      * @param {*} [cache_content]
      * @returns {boolean}
      */
-    commit = (file, transaction_id, cache_content=null)=>{
-        const record = DB.data.filter(file_db=>file_db.name == file)[0];
+    commit = (object, transaction_id, cache_content=null)=>{
+        const record = DB.data.filter(file_db=>file_db.name == object)[0];
         if (record.transaction_id==transaction_id){
             if (cache_content)
                 record.cache_content = cache_content;
@@ -257,12 +252,12 @@ class ORM_class {
      * @description Transaction rollback
      *              Empties `transaction_id` and `transaction_content`, sets `lock =0` and updates cache_content if used
      * @method
-     * @param {server_DbObject} file 
+     * @param {server['ORMMetaData']['DbObject']['name']} object 
      * @param {number} transaction_id 
      * @returns {boolean}
      */
-    rollback = (file, transaction_id)=>{
-        const record = DB.data.filter(file_db=>file_db.name == file)[0];
+    rollback = (object, transaction_id)=>{
+        const record = DB.data.filter(file_db=>file_db.name == object)[0];
         if (record.transaction_id==transaction_id){
             record.lock = 0;
             record.transaction_id = null;
@@ -286,7 +281,7 @@ class ORM_class {
             file_partition = `${partition}`;
         else{
             const config_file_interval = this.getObject(0,'ConfigServer')['SERVICE_LOG']
-                                        .filter((/**@type{server_db_config_server_service_log}*/row)=>row.FILE_INTERVAL)[0].FILE_INTERVAL;
+                                        .filter((/**@type{server['ORM']['ConfigServer']['SERVICE_LOG']}*/row)=>'FILE_INTERVAL' in row)[0].FILE_INTERVAL;
             const year = new Date().toLocaleString('en-US', { timeZone: 'UTC', year: 'numeric'});
             const month = new Date().toLocaleString('en-US', { timeZone: 'UTC', month: '2-digit'});
             const day   = new Date().toLocaleString('en-US', { timeZone: 'UTC', day: '2-digit'});
@@ -319,7 +314,7 @@ class ORM_class {
      * @description Get parsed file for given filepath
      * @method
      * @param {string} filepath
-     * @param {server_DbObject_record['type']|null} [object_type]
+     * @param {server['ORMMetaData']['DbObject']['type']|null} [object_type]
      * @returns {Promise.<*>}
      */
     getFsFile = async (filepath, object_type=null) => fs.promises.readFile(this.serverProcess.cwd() + filepath, 'utf8')
@@ -352,7 +347,7 @@ class ORM_class {
      * @name getFsDbObject
      * @description Get DbObjects file content
      * @method
-     * @returns {Promise.<server_DbObject_record[]>}
+     * @returns {Promise.<server['ORMMetaData']['DbObject'][]>}
      */
     getFsDbObject = async () => this.getFsFile(DB_DIR.db + 'DbObjects.json');
 
@@ -362,7 +357,7 @@ class ORM_class {
      *              Must specify valid transaction id to be able to update a file
      *              Backup of old file will be written to journal directory
      * @method
-     * @param {server_DbObject} object
+     * @param {server['ORMMetaData']['DbObject']['name']} object
      * @param {number|null} transaction_id 
      * @param {[]} file_content 
      * @param {string|null} filepath
@@ -392,7 +387,7 @@ class ORM_class {
      * @method
      * @param {string} path
      * @param {*} content
-     * @param {server_DbObject_record['type']} object_type
+     * @param {server['ORMMetaData']['DbObject']['type']} object_type
      * @returns{Promise.<void>}
      */
     postFsFile = async (path, content, object_type) => {
@@ -438,9 +433,9 @@ class ORM_class {
      * @name postFsAdmin
      * @description Write to a file in database used in first time installation
      * @method
-     * @param {server_DbObject} object
+     * @param {server['ORMMetaData']['DbObject']['name']} object
      * @param {{}} file_content 
-     * @param {server_DbObject_record['type']} object_type
+     * @param {server['ORMMetaData']['DbObject']['type']} object_type
      * @returns {Promise.<void>}
      */
     postFsAdmin = async (object, file_content, object_type) =>{
@@ -451,7 +446,7 @@ class ORM_class {
      * @name postAdmin
      * @description Add table content for memory only table used at server start
      * @method
-     * @param {server_DbObject} object
+     * @param {server['ORMMetaData']['DbObject']['name']} object
      * @param {{}} data
      * @returns {Promise.<void>}
      */
@@ -470,9 +465,9 @@ class ORM_class {
      * @description Locks object in DB
      * @method
      * @param {number} app_id
-     * @param {server_DbObject} object
+     * @param {server['ORMMetaData']['DbObject']['name']} object
      * @param {string |null} filepath_partition
-     * @returns {Promise.<server_db_result_fileFsRead>}
+     * @returns {Promise.<server['ORMMetaData']['result_fileFsRead']>}
      */
     lockObject = async (app_id, object, filepath_partition=null) =>{
         const filepath = filepath_partition ?? (DB_DIR.db + object + '.json');
@@ -491,7 +486,7 @@ class ORM_class {
      *              
      * @method
      * @param {number} app_id
-     * @param {server_DbObject} object
+     * @param {server['ORMMetaData']['DbObject']['name']} object
      * @param {number|null} [resource_id]
      * @param {number|null} [data_app_id]
      * @returns {*}
@@ -547,7 +542,7 @@ class ORM_class {
      *              else returns document
      * @method
      * @param {number} app_id
-     * @param {server_DbObject} object
+     * @param {server['ORMMetaData']['DbObject']['name']} object
      * @param {number|null} resource_id
      * @param {string|null} partition
      * @returns {Promise.<{rows:*[]|{}}>}
@@ -583,7 +578,7 @@ class ORM_class {
      *              FK constraint that should have a value in referref column and object, checked for TABLE and TABLE_KEY_VALUE
      *              Implements contraints pattern using some() function for best performane to check if value already exist
      * @method
-     * @param {server_DbObject} table
+     * @param {server['ORMMetaData']['DbObject']['name']} table
      * @param {[]} table_rows
      * @param {*} data
      * @param {'UPDATE'|'POST'} dml
@@ -594,14 +589,14 @@ class ORM_class {
         const filerecord = this.getObjectRecord(table);
         //check PK for POST
         //update of PK not alllowed
-        if (dml=='POST' && filerecord.pk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
+        if (dml=='POST' && filerecord.pk && table_rows.some((/**@type{server['ORMMetaData']['DbObject']}*/record)=>
             /**@ts-ignore */
             record[filerecord.pk]==data[filerecord.pk]))
                 return false;
         else{
             //check UK for POST
             //no record can exist having given values for POST
-            if (dml=='POST' && filerecord.uk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
+            if (dml=='POST' && filerecord.uk && table_rows.some((/**@type{server['ORMMetaData']['DbObject']}*/record)=>
                 //ignore empty value
                 /**@ts-ignore */
                 filerecord.uk?.filter(column=>record[column] && record[column]==data[column]).length==filerecord.uk?.length))
@@ -609,7 +604,7 @@ class ORM_class {
             else
                 //check UK for UPDATE
                 //max one record can exist having given values for UPDATE
-                if (dml=='UPDATE' && filerecord.uk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
+                if (dml=='UPDATE' && filerecord.uk && table_rows.some((/**@type{server['ORMMetaData']['DbObject']}*/record)=>
                     //check value is the same, ignore empty UK
                     /**@ts-ignore */
                     filerecord.uk.filter(column=>record[column] && record[column]==data[column]).length==filerecord.uk.length &&
@@ -648,9 +643,9 @@ class ORM_class {
      *              and returns the record
      * @method
      * @param {number} app_id
-     * @param {server_DbObject} object
+     * @param {server['ORMMetaData']['DbObject']['name']} object
      * @param {*} data
-     * @returns {Promise.<server_db_common_result_insert>}
+     * @returns {Promise.<server['ORMMetaData']['common_result_insert']>}
      */
     postObject = async (app_id, object, data) =>{
         if (app_id!=null){
@@ -707,11 +702,11 @@ class ORM_class {
      *              TABLE should have column id as primary key using this function
      * @method
      * @param {number} app_id
-     * @param {server_DbObject} object
+     * @param {server['ORMMetaData']['DbObject']['name']} object
      * @param {number|null} resource_id
      * @param {number|null} data_app_id
      * @param {*} data
-     * @returns {Promise<server_db_common_result_update>}
+     * @returns {Promise<server['ORMMetaData']['common_result_update']>}
      */
     updateObject = async (app_id, object, resource_id, data_app_id, data) =>{    
         if (app_id!=null){
@@ -721,7 +716,7 @@ class ORM_class {
                 return {affectedRows:0};
             }
             else{
-                /**@type{server_db_result_fileFsRead} */
+                /**@type{server['ORMMetaData']['result_fileFsRead']} */
                 const file = await this.lockObject(app_id, object);
                 if (['TABLE','TABLE_KEY_VALUE'].includes(object_type)){
                     if (this.constraintsValidate(object, file.file_content, data, 'UPDATE', resource_id)){
@@ -790,15 +785,15 @@ class ORM_class {
      *              TABLE should have column id as primary key using this function
      * @method
      * @param {number} app_id
-     * @param {server_DbObject} table
+     * @param {server['ORMMetaData']['DbObject']['name']} table
      * @param {number|null} resource_id
      * @param {number|null} data_app_id
-     * @returns {Promise<server_db_common_result_delete>}
+     * @returns {Promise<server['ORMMetaData']['common_result_delete']>}
      */
     deleteObject = async (app_id, table, resource_id, data_app_id) =>{
         /**
          * @param {{app_id:number,
-         *		    object:server_DbObject,
+         *		    object:server['ORMMetaData']['DbObject']['name'],
         *		    pk:number|null}} parameters
         */
         const cascadeDelete = async parameters =>{
@@ -806,7 +801,7 @@ class ORM_class {
             for (const objectCascade of DB.data.filter(object=>
                                     (object.type=='TABLE'||object.type=='TABLE_KEY_VALUE') && 
                                     (object.fk??[])
-                                    .filter((/**@type{[string,string,server_DbObject]}*/fk)=>
+                                    .filter(fk=>
                                         fk[2]==parameters.object
                                     ).length>0
                                     )){
@@ -849,7 +844,7 @@ class ORM_class {
             }
         };
 
-        /**@type{server_db_result_fileFsRead} */
+        /**@type{server['ORMMetaData']['result_fileFsRead']} */
         const file = await this.lockObject(app_id, table);
         if (file.file_content.filter((/**@type{*}*/row)=>(data_app_id==null && row.id==resource_id && resource_id!=null)|| (resource_id==null && row.app_id == data_app_id && data_app_id != null)).length>0){
             await cascadeDelete({app_id:app_id, object:table, pk:resource_id??data_app_id})
@@ -862,7 +857,7 @@ class ORM_class {
             await this.updateFsFile(  table, 
                                 file.transaction_id, 
                                 new_content)
-                    .catch((/**@type{server_server_error}*/error)=>{
+                    .catch((/**@type{server['server']['error']}*/error)=>{
                         this.rollback(table, 
                                 /*@ts-ignore*/
                                 file.transaction_id);
@@ -889,7 +884,7 @@ class ORM_class {
      * @method
      * @param {{app_id:number,
      *          dml:'GET'|'UPDATE'|'POST'|'DELETE',
-     *          object:server_DbObject,
+     *          object:server['ORMMetaData']['DbObject']['name'],
      *          get?:{resource_id:number|null, partition:string|null},
      *          update?: {resource_id:number|null, data_app_id:number|null, data:*},
      *          post?:   {data:*},
@@ -920,7 +915,7 @@ class ORM_class {
                                                                                     parameters.object, 
                                                                                     parameters.delete?.resource_id??null, 
                                                                                     parameters.delete?.data_app_id??null);
-                if (parameters.object.startsWith('Log'))
+                if (parameters.object.toString().startsWith('Log'))
                     return result;
                 else
                     return this.db.Log.post({app_id:parameters.app_id, 
@@ -935,7 +930,7 @@ class ORM_class {
             }
         } 
         catch (error) {
-            if (parameters.object.startsWith('Log'))
+            if (parameters.object.toString().startsWith('Log'))
                 throw error;
             else
                 return this.db.Log.post({
@@ -960,7 +955,7 @@ class ORM_class {
      * @param {number|null} app_id
      * @param {number} statusCode
      * @param {*} error
-     * @returns {server_server_response}
+     * @returns {server['server']['response']}
      */
     getError = (app_id, statusCode, error=null) =>{
         if (error){
@@ -986,7 +981,7 @@ class ORM_class {
      *              returns number or null for numbers
      *              so undefined and '' are avoided sending argument to service functions
      * @method
-     * @param {server_server_req_id_number} param
+     * @param {server['server']['req_id_number']} param
      * @returns {number|null}
      */
     UtilNumberValue = param => (param==null||param===undefined||param==='undefined'||param==='')?null:Number(param);
@@ -996,7 +991,7 @@ class ORM_class {
      * @description Database info
      * @method
      * @param {{app_id:number}}parameters
-     * @returns {Promise.<server_server_response & {result?:{   database_name:string, 
+     * @returns {Promise.<server['server']['response'] & {result?:{   database_name:string, 
      *                                                          version:number,
      *                                                          hostname:string,
      *                                                          connections:Number,
@@ -1006,7 +1001,7 @@ class ORM_class {
         return {result: [{
                             database_name:  this.getObject(parameters.app_id,'ConfigServer')['METADATA'].CONFIGURATION,
                             version:        1,
-                            hostname:       this.getObject(parameters.app_id,'ConfigServer')['SERVER'].filter((/**@type{server_db_config_server_server}*/row)=>row.HOST)[0].HOST,
+                            hostname:       this.getObject(parameters.app_id,'ConfigServer')['SERVER'].filter((/**@type{server['ORM']['ConfigServer']['SERVER']}*/row)=>'HOST' in row)[0].HOST,
                             connections:    server.socket.socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
                             started:        this.serverProcess.uptime()
                         }],
@@ -1017,15 +1012,15 @@ class ORM_class {
      * @description Get all objects in ORM
      * @method
      * @param {{app_id:number}}parameters
-     * @returns {server_server_response & {result?:{name:server_DbObject_record['name'],
-     *                                              type:server_DbObject_record['type'],
-     *                                              lock:server_DbObject_record['lock'],
-     *                                              transaction_id:server_DbObject_record['transaction_id'],
+     * @returns {server['server']['response'] & {result?:{name:server['ORMMetaData']['DbObject']['name'],
+     *                                              type:server['ORMMetaData']['DbObject']['type'],
+     *                                              lock:server['ORMMetaData']['DbObject']['lock'],
+     *                                              transaction_id:server['ORMMetaData']['DbObject']['transaction_id'],
      *                                              rows:number|null,
      *                                              size:number|null,
-     *                                              pk:server_DbObject_record['pk'],
-     *                                              uk:server_DbObject_record['uk'],
-     *                                              fk:server_DbObject_record['fk']}[]}}
+     *                                              pk:server['ORMMetaData']['DbObject']['pk'],
+     *                                              uk:server['ORMMetaData']['DbObject']['uk'],
+     *                                              fk:server['ORMMetaData']['DbObject']['fk']}[]}}
      */
     getViewObjects = parameters =>{
         const result = DB.data.map(row=>{
@@ -1061,7 +1056,7 @@ class ORM_class {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {Promise.<server_server_response & {result?:{   database_name:string, 
+ * @returns {Promise.<server['server']['response'] & {result?:{   database_name:string, 
  *                                                          version:number,
  *                                                          hostname:string,
  *                                                          connections:Number,
@@ -1074,15 +1069,15 @@ const getViewInfo = async parameters =>ORM.getViewInfo(parameters);
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {server_server_response & {result?:{name:server_DbObject_record['name'],
- *                                              type:server_DbObject_record['type'],
- *                                              lock:server_DbObject_record['lock'],
- *                                              transaction_id:server_DbObject_record['transaction_id'],
+ * @returns {server['server']['response'] & {result?:{name:server['ORMMetaData']['DbObject']['name'],
+ *                                              type:server['ORMMetaData']['DbObject']['type'],
+ *                                              lock:server['ORMMetaData']['DbObject']['lock'],
+ *                                              transaction_id:server['ORMMetaData']['DbObject']['transaction_id'],
  *                                              rows:number|null,
  *                                              size:number|null,
- *                                              pk:server_DbObject_record['pk'],
- *                                              uk:server_DbObject_record['uk'],
- *                                              fk:server_DbObject_record['fk']}[]}}
+ *                                              pk:server['ORMMetaData']['DbObject']['pk'],
+ *                                              uk:server['ORMMetaData']['DbObject']['uk'],
+ *                                              fk:server['ORMMetaData']['DbObject']['fk']}[]}}
  */
 const getViewObjects = parameters =>ORM.getViewObjects(parameters);
 

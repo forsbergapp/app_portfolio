@@ -88,29 +88,9 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                         LOG TEXT
                                     </div>
                                 </div>
-                                ${props.logs.map((/**@type{{id:number,
-                                                            host:string,
-                                                            app_id:number|null,
-                                                            app_id_auth:1|0|null,
-                                                            ip:string,
-                                                            requestid:string,
-                                                            correlationid:string,
-                                                            url:string,
-                                                            x_url:string|null,
-                                                            http_info:string,
-                                                            method:string,
-                                                            x_method:string|null,
-                                                            statusCode:string,
-                                                            statusMessage:string,
-                                                            'user-agent':string,
-                                                            'accept-language':string,
-                                                            referer:string,
-                                                            size_received:number,
-                                                            size_sent:number,
-                                                            responsetime:number,
-                                                            logtext:string,
-                                                            created:string
-                                                            }}*/log)=>
+                                ${props.logs.map((
+                                                    /**@type{common['ORM']['LogRequestInfo']}*/
+                                                    log)=>
                                     `<div class='menu_monitor_detail_server_log_row'>
                                     <div class='menu_monitor_detail_server_log_request_log_col'>
                                             ${log.id}
@@ -192,10 +172,9 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                         LOGTEXT
                                     </div>
                                 </div>
-                                ${props.logs.map((/**@type{{id:number,
-                                                            logtext:string,
-                                                            created:string
-                                                            }}*/log)=>
+                                ${props.logs.map((
+                                                    /**@type{common['ORM']['LogServerInfo']}*/
+                                                    log)=>
                                     `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_server_row'>
                                         <div class='menu_monitor_detail_server_log_col'>
                                             ${log.id}
@@ -234,14 +213,9 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                         LOG TEXT
                                     </div>
                                 </div>
-                                ${props.logs.map((/**@type{{id:number,
-                                                            app_id:number,
-                                                            app_filename:string,
-                                                            app_function_name:string,
-                                                            app_app_line:string,
-                                                            logtext:string,
-                                                            created:string
-                                                            }}*/log)=>
+                                ${props.logs.map((
+                                                    /**@type{common['ORM']['LogAppInfo']}*/
+                                                    log)=>
                                     `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_app_row'>
                                         <div class='menu_monitor_detail_server_log_app_data_stat_col'>
                                             ${log.id}
@@ -289,13 +263,9 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                         LOG TEXT
                                     </div>
                                 </div>
-                                ${props.logs.map((/**@type{{id:number,
-                                                            app_id:number,
-                                                            service:string,
-                                                            parameters:string,
-                                                            logtext:string,
-                                                            created:string
-                                                            }}*/log)=>
+                                ${props.logs.map((
+                                                    /**@type{common['ORM']['LogServiceInfo']}*/
+                                                    log)=>
                                     `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_service_row'>
                                         <div class='menu_monitor_detail_server_log_service_log_col'>
                                             ${log.id}
@@ -343,14 +313,7 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                         LOG TEXT
                                     </div>
                                 </div>
-                                ${props.logs.map((/**@type{{id:number,
-                                                            app_id:number,
-                                                            object:string,
-                                                            dml:string,
-                                                            parameters:string,
-                                                            logtext:string,
-                                                            created:string
-                                                            }}*/log)=>
+                                ${props.logs.map((/**@type{common['ORM']['LogDbInfo']}*/log)=>
                                     `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_db_row'>
                                         <div class='menu_monitor_detail_server_log_db_log_col'>
                                             ${log.id}

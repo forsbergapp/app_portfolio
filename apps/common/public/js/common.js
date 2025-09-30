@@ -1777,7 +1777,7 @@ const commonUserFunction = function_name => {
         if (COMMON_GLOBAL.iam_user_id == null)
             commonDialogueShow('LOGIN');
         else {
-           commonFFB({path:path, method:method, authorization_type:'APP_ACCESS', body:Document})
+           commonFFB({path:path, method:method, authorization_type:'APP_ACCESS', body:json})
             .then(result=> {
                 if (COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
                     //follow/like

@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{apps:common['CommonAppRecord'][]}} props 
+ * @param {{apps:(common['ORM']['App'] & {app_name_translation:string})[]}} props 
  * @returns {string}
  */
 const template = props => ` <div id='common_apps_list_title'>
@@ -50,7 +50,7 @@ const template = props => ` <div id='common_apps_list_title'>
  *                      template:string}>}
  */
 const component = async props => {
-
+    /**@type{(common['ORM']['App'] & {app_name_translation:string})[]} */
     const apps = await props.methods.COMMON.commonFFB({path:'/server-db/app-info/', method:'GET', authorization_type:'APP_ID'})
                         .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.app_id != props.data.app_id));
 

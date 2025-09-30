@@ -1,7 +1,7 @@
 /** @module server/db/IamAppIdToken */
 
 /**
- * @import {server_server_response,server_db_common_result_insert, server_db_table_IamAppIdToken} from '../types.js'
+ * @import {server} from '../types.js'
  */
 const {server} = await import ('../server.js');
 /**
@@ -11,7 +11,7 @@ const {server} = await import ('../server.js');
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{data_app_id:number|null}}} parameters
- * @returns {server_server_response & {result?:server_db_table_IamAppIdToken[] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['IamAppIdToken'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'IamAppIdToken',parameters.resource_id, parameters.data.data_app_id);
     
@@ -20,8 +20,8 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'IamAppIdToken'
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server_db_table_IamAppIdToken} data
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
+ * @param {server['ORM']['IamAppIdToken']} data
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
@@ -31,8 +31,8 @@ const post = async (app_id, data) => {
         data.token != null &&
         data.ip != null){
         //security check that token is not used already
-        if (server.ORM.getObject(app_id, 'IamAppIdToken', null, null).result.filter((/**@type{server_db_table_IamAppIdToken} */row)=>row.token==data.token).length==0){
-            /**@type{server_db_table_IamAppIdToken} */
+        if (server.ORM.getObject(app_id, 'IamAppIdToken', null, null).result.filter((/**@type{server['ORM']['IamAppIdToken']} */row)=>row.token==data.token).length==0){
+            /**@type{server['ORM']['IamAppIdToken']} */
             const data_new = {};
             data_new.id = Date.now();
             //required
@@ -45,7 +45,7 @@ const post = async (app_id, data) => {
             if (data.ua!=null)
                 data_new.ua = data.ua;
             data_new.created = new Date().toISOString();
-            return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamAppIdToken', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+            return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamAppIdToken', post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
                 if (result.affectedRows>0){
                     result.insertId = data_new.id;
                     return {result:result, type:'JSON'};

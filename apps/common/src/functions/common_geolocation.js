@@ -3,8 +3,7 @@
  */
 
 /**
- * @import {server_db_document_ConfigServer, server_server_response,
- *          server_geolocation_place} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  */
 const {formatLocale} = await import('./common_locale.js');
 const {getData} = await import('./common_data.js');
@@ -17,7 +16,7 @@ const { getTimezone } = await import ('../../public/modules/regional/regional.js
  *          longitude?:string,
  *          latitude?:string,
  *          place:string|null}} parameters
- * @returns {server_server_response & {result?:server_geolocation_place}}
+ * @returns {server['server']['response'] & {result?:server['server']['geolocation_place']}}
  */
 const returnPlace = parameters =>{
     if (parameters.place)
@@ -69,7 +68,7 @@ const returnPlace = parameters =>{
  *          data:{  ip:string},
  *          ip:string,
  *          locale:string}} parameters
- * @returns {server_server_response & {result?:server_geolocation_place|null}}
+ * @returns {server['server']['response'] & {result?:server['server']['geolocation_place']|null}}
  */
 const getIP = parameters =>{
     /**
@@ -99,7 +98,7 @@ const getIP = parameters =>{
     const ipNumber = IPtoNum(parameters.data.ip??'');
     //if geolocation is enabled then search in partitioned key
     const geolocation_ip = server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0,data:{ config_group:'SERVICE_IAM'}}).result
-                            .filter((/**@type{server_db_document_ConfigServer['SERVICE_IAM']}*/parameter)=>
+                            .filter((/**@type{server['ORM']['ConfigServer']['SERVICE_IAM']}*/parameter)=>
                                     'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1?
                             getData('GEOLOCATION_IP')[('000'+parameters.data.ip?.split(',')[0].split('.')[0]).substr(-3)].filter((/**@type{string}*/row)=> 
                                            IPtoNum(row.split(';')[0]) <= ipNumber &&
@@ -131,7 +130,7 @@ const getIP = parameters =>{
  *                  longitude:string},
  *          ip:string,
  *          locale:string}} parameters
- * @returns {server_server_response & {result?:server_geolocation_place}}
+ * @returns {server['server']['response'] & {result?:server['server']['geolocation_place']}}
  */
 const getPlace = parameters =>{
    /**

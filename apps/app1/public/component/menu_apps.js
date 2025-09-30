@@ -3,7 +3,6 @@
  * @module apps/app1/component/menu_apps
  */
 
-
 /**
  * @import {common}  from '../../../common_types.js'
  */
@@ -12,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{apps:common['CommonAppRecord'][]}} props
+ * @param {{apps:common['ORM']['App'][]}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
@@ -79,7 +78,7 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
  *                      template:string}>}
  */
 const component = async props => {
-    /**@type{common['CommonAppRecord'][]} */
+    /**@type{common['ORM']['App'][]} */
     const apps = await props.methods.COMMON.commonFFB({path:'/server-db/app', method:'GET', authorization_type:'ADMIN'})
                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 

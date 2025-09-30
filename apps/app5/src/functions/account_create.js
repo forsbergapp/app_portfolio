@@ -3,8 +3,7 @@
  */
 
 /**
- * @import {    server_server_response, 
- *              server_db_common_result_insert} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  */
 const {server} = await import('../../../../server/server.js');
 
@@ -26,7 +25,7 @@ const createBankAccountVPA = ()=>server.security.securityUUIDCreate();
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert']}>}
  */
 const createBankAccount = async parameters =>{
     return server.ORM.db.AppDataResourceDetail.post({app_id:parameters.app_id, data:{...{Document:{

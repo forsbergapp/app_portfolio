@@ -1,10 +1,7 @@
 /** @module apps/app4/src/report/timetable */
 
 /**
- * @import {server_apps_report_create_parameters,
- * 			server_db_table_IamUserAppDataPostView,
- * 			server_db_table_AppData,
- * 			server_server_error} from './../../../../server/types.js'
+ * @import {server} from './../../../../server/types.js'
  * @import {APP_REPORT_day_user_account_app_data_posts, APP_REPORT_settings, APP_user_setting_record} from '../types.js'
  */
 
@@ -150,7 +147,7 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, iam_user_id
  * @name timetable
  * @description Create timetable day, month or year
  * @function
- * @param {server_apps_report_create_parameters} timetable_parameters
+ * @param {server['app']['commonReportCreateParameters']} timetable_parameters
  * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
@@ -164,7 +161,7 @@ const timetable = async (timetable_parameters) => {
 	
 	/**@type{Object.<string,*>} */
 	const parametersApp = server.ORM.db.AppData.getServer({app_id:timetable_parameters.app_id, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:timetable_parameters.app_id}}).result
-							.reduce((/**@type{Object.<string,*>}*/key, /**@type{server_db_table_AppData}*/row)=>{key[row.value] = row.display_data; return key},{});
+							.reduce((/**@type{Object.<string,*>}*/key, /**@type{server['ORM']['AppData']}*/row)=>{key[row.value] = row.display_data; return key},{});
     const result_app = server.ORM.db.App.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
 	return await new Promise((resolve) => {
 		APP_REPORT_GLOBAL.app_copyright = result_app.copyright;
@@ -175,7 +172,7 @@ const timetable = async (timetable_parameters) => {
 		APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parametersApp.app_regional_default_calendar_type_greg;
 		APP_REPORT_GLOBAL.regional_def_calendar_number_system = parametersApp.app_regional_default_calendar_number_system;
 		
-		/**@type{server_db_table_IamUserAppDataPostView} */
+		/**@type{server['ORM']['IamUserAppDataPostView']} */
 		const data_ViewStat = { Document:{	client_ip:          		timetable_parameters.ip,
 											client_user_agent:  		timetable_parameters.user_agent},
 								iam_user_app_id:    		iam_user_app_id_view,
@@ -251,7 +248,7 @@ const timetable = async (timetable_parameters) => {
 			}) 
 			.catch(()=>resolve(''));
 		})
-		.catch((/**@type{server_server_error}*/error)=>{
+		.catch((/**@type{server['server']['error']}*/error)=>{
 			resolve(error);
 		});
 	});

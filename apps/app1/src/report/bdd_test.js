@@ -16,8 +16,7 @@
  * @module apps/app1/src/report/bdd_test
  */
 /**
- * @import {server_apps_module_metadata, server_db_config_server_service_test,
- *          test_specrunner, test_spec_result} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  */
 const {server} = await import('../../../../server/server.js');
 const test_lib = await import('../../../../test/test.js');
@@ -28,7 +27,7 @@ const test_lib = await import('../../../../test/test.js');
  * @function
  * @param {{title:string, 
  *          date:string,
- *          specs:test_spec_result[]}} props
+ *          specs:server['test']['spec_result'][]}} props
  */
 const template = props => ` <div id='report'>
                                 <div id='report_title'>${props.title}</div>
@@ -96,14 +95,14 @@ const template = props => ` <div id='report'>
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    /**@type{server_db_config_server_service_test[]} */
+    /**@type{server['ORM']['ConfigServer']['SERVICE_TEST'][]} */
     const params = server.ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVICE_TEST'}}).result;
     const fs = await import('node:fs');
     let finished = 0;
-    /**@type{test_spec_result[]} */
+    /**@type{server['test']['spec_result'][]} */
     const specs = [];
 
-    /**@type {test_specrunner} */
+    /**@type {server['test']['specrunner']} */
     const specrunner = await fs.promises.readFile(`${server.ORM.serverProcess.cwd()}/test/specrunner.json`, 'utf8')
                         .then((/**@type{string}*/result)=>JSON.parse(result));
     //run in random order if RANDOM parameter = '1'
@@ -112,7 +111,7 @@ const component = async props => {
     for (const spec of specrunner.specFiles){
         try {
             const {default:testResult} = await import('../../../..' + spec.path);
-            /**@type{test_spec_result['detail']}*/
+            /**@type{server['test']['spec_result']['detail']}*/
             const detail_result = await testResult(test_lib);
             //check if any test inside spec file has empty expect length
             const FAIL_SPEC_WITH_NO_EXPECTATIONS = 
@@ -134,13 +133,13 @@ const component = async props => {
                                             error:JSON.stringify(error.message ?? error));
         }   
     }
-    const report = {title:server.app_common.commonRegistryAppModule(props.app_id, {type:'REPORT', name:'BDD_TEST', role:'ADMIN'}).common_name,
+    const report = {title:server.app_common.commonRegistryAppModule(props.app_id, {type:'REPORT', name:'BDD_TEST', role:'ADMIN'}).ModuleName,
                     date:Date(),
                     specs:specs};
     return template(report);
     
 };
-/**@type{server_apps_module_metadata[]}*/
+/**@type{server['app']['commonModuleMetadata'][]}*/
 const metadata = [{param:{name:'mode',text:'Mode', default:'REPORT'}}];
 export {metadata};
 export default component;

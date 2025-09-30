@@ -10,7 +10,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{message:common['CommonMessageType'] & {created:common['MessageQueuePublishMessage']['created'], username:common['CommonIAMUser']['username']},
+ * @param {{message:common['ORM']['MessageQueuePublish']['message'] & {username:common['ORM']['IamUser']['username']},
  *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props
  * @returns {string}
  */
@@ -44,7 +44,7 @@ const template = props => `
 * @param {{data:       {
 *                      commonMountdiv:string,
 *                      app_id:number,
-*                      message:common['CommonMessageType'] & {created:common['MessageQueuePublishMessage']['created'], username:common['CommonIAMUser']['username']},
+*                      message:common['ORM']['MessageQueuePublish']['message'] & {username:common['ORM']['IamUser']['username']},
 *                      },
 *          methods:    {
 *                      COMMON:common['CommonModuleCommon']

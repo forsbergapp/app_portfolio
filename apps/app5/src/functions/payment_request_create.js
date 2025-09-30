@@ -3,12 +3,7 @@
  */
 
 /**
- * @import {server_db_table_AppDataEntity, 
- *          server_db_table_AppDataResourceMaster,
- *          server_db_table_AppDataResourceDetail,
- *          server_db_table_IamAppAccess, 
- *          server_iam_access_token_claim,
- *          server_server_response} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  * @import {payment_request, bank_account, merchant} from './types.js'
  */
 const {server} = await import('../../../../server/server.js');
@@ -16,7 +11,7 @@ const {server} = await import('../../../../server/server.js');
  * @param {{app_id:number,
  *          authorization:string,
  *          ip:string}} parameters
- * @returns {Promise.<server_iam_access_token_claim & {exp?:number, iat?:number}|null>}
+ * @returns {Promise.<server['iam']['iam_access_token_claim'] & {exp?:number, iat?:number}|null>}
  */
 const getToken = async parameters => {
    const token_verify = server.iam.iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_EXTERNAL');
@@ -25,7 +20,7 @@ const getToken = async parameters => {
        token_verify.scope          == 'APP_EXTERNAL' &&
        //authenticated saved values in iam_app_access
        server.ORM.db.IamAppAccess.get(parameters.app_id, null).result
-                       .filter((/**@type{server_db_table_IamAppAccess}*/row)=>
+                       .filter((/**@type{server['ORM']['IamAppAccess']}*/row)=>
                                                                //Authenticate the token type
                                                                row.type                    == 'APP_ACCESS_EXTERNAL' &&
                                                                //Authenticate app id
@@ -54,11 +49,11 @@ const getToken = async parameters => {
 *          idToken:string,
 *          authorization:string,
 *          locale:string}} parameters
-* @returns {Promise.<server_server_response & {result?:{message:string}}>}
+* @returns {Promise.<server['server']['response'] & {result?:{message:string}}>}
 */
 const paymentRequestCreate = async parameters =>{
    
-   /**@type{server_db_table_AppDataEntity} */
+   /**@type{server['ORM']['AppDataEntity']} */
    const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                            resource_id:null, 
                                            data:{data_app_id:parameters.app_id}}).result[0];
@@ -79,10 +74,10 @@ const paymentRequestCreate = async parameters =>{
                                                        resource_name:'MERCHANT',
                                                        app_data_entity_id:Entity.id
                                                }}).result
-                       .filter((/**@type{server_db_table_AppDataResourceMaster}*/merchant)=>
+                       .filter((/**@type{server['ORM']['AppDataResourceMaster']}*/merchant)=>
                            server.ORM.UtilNumberValue(merchant.Document?.merchant_id)==parameters.data.id
                        )
-                       .map((/**@type{server_db_table_AppDataResourceMaster}*/result)=>{return {  
+                       .map((/**@type{server['ORM']['AppDataResourceMaster']}*/result)=>{return {  
                                                                    merchant_id:                        result.Document?.merchant_id,
                                                                    merchant_vpa:                       result.Document?.merchant_vpa,
                                                                    merchant_url:                       result.Document?.merchant_url,
@@ -117,7 +112,7 @@ const paymentRequestCreate = async parameters =>{
                                                                        app_data_entity_id:Entity.id
                                                                    }
                                                                }).result
-                                       .filter((/**@type{server_db_table_AppDataResourceDetail}*/account)=>
+                                       .filter((/**@type{server['ORM']['AppDataResourceDetail']}*/account)=>
                                            account.Document?.bank_account_vpa==merchant.merchant_vpa
                                        )[0];
        /**@type{bank_account} */                                                            
@@ -131,7 +126,7 @@ const paymentRequestCreate = async parameters =>{
                                                                        app_data_entity_id:Entity.id
                                                                    }
                                                                }).result
-                                   .filter((/**@type{server_db_table_AppDataResourceDetail}*/account)=>
+                                   .filter((/**@type{server['ORM']['AppDataResourceDetail']}*/account)=>
                                        account.Document?.bank_account_vpa==body_decrypted.payerid
                                    )[0];
        if (merchant.merchant_api_secret==body_decrypted.api_secret && 
@@ -155,7 +150,7 @@ const paymentRequestCreate = async parameters =>{
                                                message:        body_decrypted.message,
                                                status:         'PENDING'
                                            };
-               /**@type{server_db_table_AppDataResourceMaster} */
+               /**@type{server['ORM']['AppDataResourceMaster']} */
                const data_new_payment_request = {
                                                Document                                   : data_payment_request,
                                                iam_user_app_id                             : merchant.iam_user_app_id,
@@ -179,7 +174,7 @@ const paymentRequestCreate = async parameters =>{
                                                                                                ip:                 parameters.ip,
                                                                                                scope:              'APP_EXTERNAL'});
                //Save access info in IAM_APP_ACCESS table
-               /**@type{server_db_table_IamAppAccess} */
+               /**@type{server['ORM']['IamAppAccess']} */
                const file_content = {	
                                        type:                   'APP_ACCESS_EXTERNAL',
                                        iam_user_app_id:        null,

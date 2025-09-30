@@ -54,7 +54,7 @@ const component = async props => {
     let page_last=  1;
     let page_limit= 0;
     const offset = 0;
-    /**@type{common['MessagesPagination']}*/    
+    /**@type{common['CommonResponsePagination']}*/    
     let messages; 
 
     /**
@@ -97,7 +97,7 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const messagesShow = async (offset) =>{
-        /**@type{common['MessagesPagination']}*/    
+        /**@type{common['CommonResponsePagination']}*/    
         messages = await messagesGet(offset);
         await props.methods.COMMON.commonComponentRender({
             mountDiv:'common_app_dialogues_user_menu_messages_list',
@@ -112,10 +112,10 @@ const component = async props => {
     
     /**
      * @param {number} offset
-     * @returns {Promise.<common['MessagesPagination']>}
+     * @returns {Promise.<common['CommonResponsePagination']>}
      */
     const messagesGet = async offset =>{
-        /**@type{common['MessagesPagination']}*/    
+        /**@type{common['CommonResponsePagination']}*/    
         const messages = await props.methods.COMMON.commonFFB({path:'/app-common-module/COMMON_MESSAGE_GET', 
             method:'POST', 
             query:`offset=${offset}`,

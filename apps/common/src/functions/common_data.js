@@ -3,7 +3,7 @@
 */
 
 /**
- * @import {server_db_document_ConfigServer} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  */
 const fs = await import('node:fs');
 const {serverProcess} = await import('../../../../server/info.js');
@@ -100,7 +100,7 @@ const postData = async object =>{
              * Uses partition with arrays to speed up searches
              */
             return server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0,data:{ config_group:'SERVICE_IAM'}}).result
-                    .filter((/**@type{server_db_document_ConfigServer['SERVICE_IAM']}*/parameter)=>
+                    .filter((/**@type{server['ORM']['ConfigServer']['SERVICE_IAM']}*/parameter)=>
                             'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1?
                     await loadGeolocation(object):
                         null;

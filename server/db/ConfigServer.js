@@ -1,9 +1,7 @@
 /** @module server/db/ConfigServer */
 
 /**
- * @import {server_server_response,server_db_common_result_update,
- *          server_db_document_ConfigServer,
- *          server_db_config_server_metadata} from '../types.js'
+ * @import {server} from '../types.js'
  */
 const {server} = await import ('../server.js');
 /**
@@ -15,7 +13,7 @@ const {server} = await import ('../server.js');
  *          resource_id?:number|null,
  *          data?:{ config_group?:string|null,
  *                  parameter?:string|null}}} parameters
- * @returns {server_server_response & {result?:* }}
+ * @returns {server['server']['response'] & {result?:* }}
  */
 const get = parameters => {
     try {
@@ -61,11 +59,11 @@ const get = parameters => {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{  config: server_db_document_ConfigServer|null,
+ *          data:{  config: server['ORM']['ConfigServer']|null,
  *                  maintenance?:string,
  *                  comment?:string,
  *                  configuration?:string}}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
     //can only use config or a config key
@@ -73,7 +71,7 @@ const update = async parameters => {
         (parameters.data.maintenance ||parameters.data.comment||parameters.data.configuration))
         return server.ORM.getError(parameters.app_id, 400);
     else{
-        /**@type{server_db_document_ConfigServer} */
+        /**@type{server['ORM']['ConfigServer']} */
         const old_config = get({app_id:parameters.app_id}).result;
         /**@type{server_db_config_server_metadata} */
         const metadata = {

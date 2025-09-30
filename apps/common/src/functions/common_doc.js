@@ -2,10 +2,7 @@
  * @module apps/common/src/functions/common_doc
 */
 /**
- * @import {server_server_response, 
- *          serverDocumentType, 
- *          serverDocumentMenu,
- *          server_db_table_App} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  */
 const {server} = await import('../../../../server/server.js');
 const fs = await import('node:fs');
@@ -215,7 +212,7 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
  *                  GIT_REPOSITORY_URL replaces with GIT_REPOSITORY_URL parameter in ConfigServer if used in any document 
  * @function
  * @param {{app_id:number,
- *          type:serverDocumentType,
+ *          type:server['app']['commonDocumentMenu']['type'],
  *          doc:string,
  *          module:string,
  *          locale:string}} parameters
@@ -357,7 +354,7 @@ const markdownRender = async parameters =>{
  */
 const menuRender = async parameters =>{
 
-    /**@type{serverDocumentMenu[]} */
+    /**@type{server['app']['commonDocumentMenu'][]} */
     const markdown_menu_docs = await getFile(`${server.ORM.serverProcess.cwd()}/apps/common/src/functions/documentation/menu.json`).then((/**@type{string}*/result)=>JSON.parse(result));
     for (const menu of markdown_menu_docs){
         switch (true){
@@ -365,8 +362,8 @@ const menuRender = async parameters =>{
                 //return menu for app with updated id and app name
                 menu.menu_sub = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:null}).result
                                 // sort common last
-                                .sort((/**@type{server_db_table_App}*/a,/**@type{server_db_table_App}*/b)=>(a.id==0&&b.id==0)?0:a.id==0?1:b.id==0?-1:a.id-b.id)
-                                .map((/**@type{server_db_table_App}*/app)=>{
+                                .sort((/**@type{server['ORM']['App']}*/a,/**@type{server['ORM']['App']}*/b)=>(a.id==0&&b.id==0)?0:a.id==0?1:b.id==0?-1:a.id-b.id)
+                                .map((/**@type{server['ORM']['App']}*/app)=>{
                     return { 
                             id:app.id,
                             menu:app.name,
@@ -417,7 +414,7 @@ const menuRender = async parameters =>{
  *              ROUTE_REST_API      HTML - markdown converted, renders content scanning files
  * @function
  * @param {{app_id:number,
- *          data:{  documentType:serverDocumentType,
+ *          data:{  documentType:server['app']['commonDocumentMenu']['type'],
  *                  data_app_id:number,
  *                  doc:string},
  *          user_agent:string,
@@ -426,7 +423,7 @@ const menuRender = async parameters =>{
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:string}>}
+ * @returns {Promise.<server['server']['response'] & {result?:string}>}
  */
 const appFunction = async parameters =>{
     //check if valid document request

@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{report_queue:common['CommonAppModuleQueue'][],
+ * @param {{report_queue:common['ORM']['AppModuleQueue'][],
  *          function_get_order_by:function,
  *          function_commonMiscRoundOff:common['CommonModuleCommon']['commonMiscRoundOff']}} props
  * @returns {string}
@@ -69,7 +69,7 @@ const component = async props => {
      * @param {string} column
      */
     const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
-    /**@type{common['CommonAppModuleQueue'][]} */
+    /**@type{common['ORM']['AppModuleQueue'][]} */
     const report_queue = await props.methods.COMMON.commonFFB({path:'/app-common-module-report-queue/', method:'GET', authorization_type:'ADMIN'})
                                 .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
     

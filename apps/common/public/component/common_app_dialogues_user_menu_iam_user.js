@@ -10,7 +10,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{user:common['CommonIAMUser'],
+ * @param {{user:common['ORM']['IamUser'] & {last_logintime?:string},
 *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props
 * @returns {string}
 */
@@ -70,7 +70,7 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
                                    <div id='common_app_dialogues_user_menu_iam_user_label_account_created' class='common_icon'></div>
-                                   <div id='common_app_dialogues_user_menu_iam_user_label_data_account_created'>${props.commonMiscFormatJsonDate(props.user.created, 'LONG')}</div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_label_data_account_created'>${props.commonMiscFormatJsonDate(props.user.created??'', 'LONG')}</div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
                                    <div id='common_app_dialogues_user_menu_iam_user_label_account_modified' class='common_icon'></div>
@@ -101,7 +101,7 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
 *                      template:string}>}
 */
 const component = async props => {
-    /**@type{common['CommonIAMUser']} */    
+    /**@type{common['ORM']['IamUser'] & {last_logintime?:string}} */    
     const user = await props.methods.COMMON.commonFFB({path:`/server-iam/iamuser/${props.data.iam_user_id}`, 
                                                 method:'GET', authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
                         .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));

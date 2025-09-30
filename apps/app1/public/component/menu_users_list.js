@@ -12,7 +12,7 @@
  * @description Template
  * @function
  * @param {{iam_user_id:number,
- *          users:common['CommonIAMUser'][],
+ *          users:common['ORM']['IamUser'][],
  *          function_get_order_by:function}} props
  * @returns {string}
  */

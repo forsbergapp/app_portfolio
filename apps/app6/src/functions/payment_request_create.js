@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server_server_response, server_db_table_AppDataResourceMaster, server_db_table_AppDataEntity} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -23,7 +23,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:{token:string,
+ * @returns {Promise.<server['server']['response'] & {result?:{token:string,
  *                                                      exp:number,
  *                                                      iat:number,
  *                                                      payment_request_id:string,
@@ -36,7 +36,7 @@ const {server} = await import('../../../../server/server.js');
  */
 const paymentRequestCreate = async parameters =>{
    
-   /**@type{server_db_table_AppDataEntity & 
+   /**@type{server['ORM']['AppDataEntity'] & 
     *       {Document:{   description:string, 
     *                      name:string, 
     *                      entity_type:string, 
@@ -55,7 +55,7 @@ const paymentRequestCreate = async parameters =>{
                                                    resource_id:null, 
                                                    data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
-   /**@type{server_db_table_AppDataResourceMaster} */
+   /**@type{server['ORM']['AppDataResourceMaster']} */
    const currency = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                resource_id:null, 
                                                                data:{  iam_user_id:null,

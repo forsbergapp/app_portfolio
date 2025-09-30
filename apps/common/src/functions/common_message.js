@@ -3,11 +3,7 @@
 */
 
 /**
- * @import {server_server_response,
- *          server_db_table_IamUser,
- *          server_db_table_MessageQueuePublish,
- *          server_db_table_MessageQueueConsume,
- *          server_db_table_MessageQueuePublishMessage} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -31,12 +27,12 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:Object.<string,*>[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:Object.<string,*>[]}>}
  */
 const appFunction = async parameters =>{
    
     /**
-     * @returns {server_server_response}
+     * @returns {server['server']['response']}
      */
     const messageError = () =>{
         return {http:400,
@@ -49,7 +45,7 @@ const appFunction = async parameters =>{
     };
     /**
      * @description get MessageQueuPublish record and authenticate message and user
-     * @returns {server_server_response}
+     * @returns {server['server']['response']}
      */
     const messagePublishGet = () =>{
         const result = server.ORM.db.MessageQueuePublish.get({app_id:parameters.app_id, resource_id:null});
@@ -58,7 +54,7 @@ const appFunction = async parameters =>{
             return result;
         else{
             return {result:(result.result??[])
-                            .filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>
+                            .filter((/**@type{server['ORM']['MessageQueuePublish']}*/message)=>
                             message.service=='MESSAGE' &&
                             (
                                 //admin can read messages without receiver and its own messages
@@ -73,16 +69,16 @@ const appFunction = async parameters =>{
     /**
      * @description posts MessageQueuPublish record and sends SSE to the receiver
      * @param {*} message
-     * @returns {Promise.<server_server_response>}
+     * @returns {Promise.<server['server']['response']>}
      */
     const messagePublishPost = async message =>{
-        /**@type{server_db_table_MessageQueuePublish} */
+        /**@type{server['ORM']['MessageQueuePublish']} */
         const message_queue_message = {service:'MESSAGE', message:message};
         const messagePost = (await server.ORM.db.MessageQueuePublish.post({app_id:parameters.app_id, 
                                                             data:message_queue_message})).result;
         return {result:[ await (async ()=>{
                                 if(messagePost.affectedRows){
-                                    /**@type{server_db_table_IamUser[]} */
+                                    /**@type{server['ORM']['IamUser'][]} */
                                     const users = server.ORM.db.IamUser.get(parameters.app_id, message.receiver_id).result;                               
                                     for (const user of users.filter(user=>  user.type == (( message.receiver_id && 
                                                                                             users.length == 1)?users[0].type:'ADMIN') &&
@@ -106,15 +102,15 @@ const appFunction = async parameters =>{
     };
     /**
      * @description get MessageQueuPublish stat
-     * @param {server_db_table_MessageQueuePublish[]} messages
+     * @param {server['ORM']['MessageQueuePublish'][]} messages
      * @returns {{unread:Number, read:number}}
      */
     const messagesStat = messages =>{
-        return {unread:messages.filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>
+        return {unread:messages.filter((/**@type{server['ORM']['MessageQueuePublish']}*/message)=>
                     (server.ORM.db.MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
                             .filter((/**@type{*}*/messageConsume)=>
                                 message.id == messageConsume.message_queue_publish_id).length==0).length,
-                read:messages.filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>
+                read:messages.filter((/**@type{server['ORM']['MessageQueuePublish']}*/message)=>
                     (server.ORM.db.MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
                             .filter((/**@type{*}*/messageConsume)=>
                                 message.id == messageConsume.message_queue_publish_id).length>0).length,
@@ -125,7 +121,7 @@ const appFunction = async parameters =>{
     switch (parameters.resource_id){
         case 'COMMON_MESSAGE_CONTACT':{
             if (parameters.data.message){
-                /**@type{server_db_table_MessageQueuePublishMessage}*/
+                /**@type{server['ORM']['MessageQueuePublish']['message']}*/
                 const message = {
                         sender: null,
                         receiver_id:null,
@@ -154,7 +150,7 @@ const appFunction = async parameters =>{
             else  
                 return {result:result.result 
                                             // add message read info
-                                            .map((/**@type{server_db_table_MessageQueuePublish}*/message)=>{
+                                            .map((/**@type{server['ORM']['MessageQueuePublish']}*/message)=>{
                                                 return (server.ORM.db.MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
                                                         .filter((/**@type{*}*/messageConsume)=>message.id == messageConsume.message_queue_publish_id).length>0?
                                                             {...message,
@@ -166,8 +162,8 @@ const appFunction = async parameters =>{
                                                 
                                             })
                                             //sort message.id descending order
-                                            .sort(( /**@type{server_db_table_MessageQueuePublish}*/a,
-                                                    /**@type{server_db_table_MessageQueuePublish}*/b)=>
+                                            .sort(( /**@type{server['ORM']['MessageQueuePublish']}*/a,
+                                                    /**@type{server['ORM']['MessageQueuePublish']}*/b)=>
                                                         /**@ts-ignore */
                                                         a.id>b.id?-1:1),
                         type:'JSON'};
@@ -180,8 +176,8 @@ const appFunction = async parameters =>{
                 else
                     //authenticate message id
                     if (result.result
-                            .filter((/**@type{server_db_table_MessageQueuePublish}*/message)=>message.id == parameters.data.message_id).length==1){
-                        /**@type{server_db_table_MessageQueueConsume}*/
+                            .filter((/**@type{server['ORM']['MessageQueuePublish']}*/message)=>message.id == parameters.data.message_id).length==1){
+                        /**@type{server['ORM']['MessageQueueConsume']}*/
                         const message_queue_message = {
                             message_queue_publish_id:parameters.data.message_id,
                             message:    parameters.data.message,
@@ -191,7 +187,7 @@ const appFunction = async parameters =>{
                         //send MessageQueueConsume message
                         return {result:[await server.ORM.db.MessageQueueConsume.post({app_id:parameters.app_id, 
                                                                         data:message_queue_message})
-                                        .then((/**@type{server_server_response}*/result)=>{
+                                        .then((/**@type{server['server']['response']}*/result)=>{
                                             if(result.result?.affectedRows)
                                                 return {sent:result.result.affectedRows};
                                             else

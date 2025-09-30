@@ -88,7 +88,7 @@ const appInit = async () => {
         methods:    null,
         path:       '/component/app.js'})
     .then(component=>{
-        APP_GLOBAL.events = component.events;
+        APP_GLOBAL.events = component.events??null;
     });
 };
 /**RubiksCube

@@ -3,7 +3,7 @@
 */
 
 /**
- * @import {server_db_document_ConfigServer,server_server_response,commonWorldCitiesCity} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  */
 const {formatLocale} = await import('./common_locale.js');
 const {server} = await import('../../../../server/server.js');
@@ -22,7 +22,7 @@ const common_data = await import('./common_data.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:commonWorldCitiesCity[]|{data:string}[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['app']['commonWorldCitiesCity'][]|{data:string}[]}>}
  */
 const appFunction = async parameters =>{
     /**@type {[key:string]}*/
@@ -38,7 +38,7 @@ const appFunction = async parameters =>{
      * 
      * @description format result
      * @param {string|null} row
-     * @returns {server_server_response & {result?:commonWorldCitiesCity,type:'JSON'}}
+     * @returns {server['server']['response'] & {result?:server['app']['commonWorldCitiesCity'],type:'JSON'}}
      */
     const formatReturn = row =>{
         return row?
@@ -67,7 +67,7 @@ const appFunction = async parameters =>{
     switch (parameters.data.searchType?.toUpperCase()){
         case 'RANDOM':{
             const APP_DEFAULT_RANDOM_COUNTRY = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP'}}).result
-            .filter((/**@type{server_db_document_ConfigServer['SERVICE_APP']}*/parameter)=>
+            .filter((/**@type{server['ORM']['ConfigServer']['SERVICE_APP']}*/parameter)=>
                 'APP_DEFAULT_RANDOM_COUNTRY' in parameter)[0].APP_DEFAULT_RANDOM_COUNTRY;
             const objKeys = common_data.getDataKeys('GEOLOCATION_PLACE');
             if (APP_DEFAULT_RANDOM_COUNTRY!=''){

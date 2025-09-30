@@ -1,8 +1,7 @@
 /** @module server/db/IamControlIp */
 
 /**
- * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_table_IamControlIp} from '../types.js'
+ * @import {server} from '../types.js'
  */
 const {server} = await import ('../server.js');
 /**
@@ -11,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server_server_response & {result?:server_db_table_IamControlIp[] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['IamControlIp'][] }}
  */
 const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamControlIp',resource_id, null);
 
@@ -20,8 +19,8 @@ const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamControlIp',
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server_db_table_IamControlIp} data
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
+ * @param {server['ORM']['IamControlIp']} data
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
@@ -36,7 +35,7 @@ const post = async (app_id, data) => {
                                                 hour_to:data.hour_to,
                                                 date_from:data.date_from,
                                                 date_to:data.date_to,
-                                                action:data.action}}}).then((/**@type{server_db_common_result_insert}*/result)=>{
+                                                action:data.action}}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
             if (result.affectedRows>0){
                 result.insertId = id;
                 return {result:result, type:'JSON'};
@@ -55,8 +54,8 @@ const post = async (app_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server_db_table_IamControlIp} data
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
+ * @param {server['ORM']['IamControlIp']} data
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_update'] }>}
  */
 const update = async (app_id, resource_id, data) => {
     if (data.from!=null && data.to!=null){
@@ -77,7 +76,7 @@ const update = async (app_id, resource_id, data) => {
             data_update.action = data.action;
 
         if (Object.entries(data_update).length==2)
-            return server.ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamControlIp', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server_db_common_result_update}*/result)=>{
+            return server.ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamControlIp', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORMMetaData']['common_result_update']}*/result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
@@ -96,10 +95,10 @@ const update = async (app_id, resource_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlIp', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server_db_common_result_delete}*/result)=>{
+    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlIp', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server['ORMMetaData']['common_result_delete']}*/result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

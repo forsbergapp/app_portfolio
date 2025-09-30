@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server_server_response} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.js'
  */
 const {formatLocale} = await import('./common_locale.js');
 const {getData} = await import('./common_data.js');
@@ -26,7 +26,7 @@ const {getData} = await import('./common_data.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:{data:string}[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:{data:string}[]}>}
  */
 const appFunction = async parameters =>{
 

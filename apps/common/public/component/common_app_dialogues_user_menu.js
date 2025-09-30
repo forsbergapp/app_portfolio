@@ -98,7 +98,7 @@ const component = async props => {
         element.classList.remove('common_app_dialogues_user_menu_messages_row_unread');
         element.classList.add('common_app_dialogues_user_menu_messages_row_read');
 
-        /**@type{common['CommonMessageType'] & {created:common['MessageQueuePublishMessage']['created'], username:common['CommonIAMUser']['username']}} */
+        /**@type{common['ORM']['MessageQueuePublish']['message'] & {username:common['ORM']['IamUser']['username']}}} */
         const message = {sender:element.getAttribute('data-sender')==''?null:element.getAttribute('data-sender'),
                          receiver_id:Number(element.getAttribute('data-receiver_id')),
                          username:props.data.iam_user_username ??'',
