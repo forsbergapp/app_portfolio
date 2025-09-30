@@ -577,13 +577,17 @@ const postDemo = async parameters=> {
                         iam_user_id = user2;
                     else
                         iam_user_id = null;
-                    server.ORM.db.IamUserAppDataPostView.post(parameters.app_id, {iam_user_app_id: iam_user_id?
-                                                                server.ORM.db.IamUserApp.get({  app_id:app_id, resource_id:null, 
-                                                                                                data:{iam_user_id:user2, data_app_id:app_id}}).result[0].id:
-                                                                                                    null,
-                                                                    iam_user_app_data_post_id: result_posts.result[random_index].id,
-                                                                    client_ip: null,
-                                                                    client_user_agent: null
+                    server.ORM.db.IamUserAppDataPostView.post(parameters.app_id, {
+                                                                        Document: { client_ip: null,
+                                                                                    client_user_agent: null},
+                                                                        iam_user_app_id: iam_user_id?
+                                                                                            server.ORM.db.IamUserApp
+                                                                                                .get({  app_id:app_id, 
+                                                                                                        resource_id:null, 
+                                                                                                        data:{  iam_user_id:user2, 
+                                                                                                                data_app_id:app_id}}).result[0].id:
+                                                                                                null,
+                                                                        iam_user_app_data_post_id: result_posts.result[random_index].id
                                                                     })
                     .then((/**@type{server_server_response}*/result)=>{
                         if (result.result){
