@@ -176,8 +176,8 @@ const timetable = async (timetable_parameters) => {
 		APP_REPORT_GLOBAL.regional_def_calendar_number_system = parametersApp.app_regional_default_calendar_number_system;
 		
 		/**@type{server_db_table_IamUserAppDataPostView} */
-		const data_ViewStat = { client_ip:          		timetable_parameters.ip,
-								client_user_agent:  		timetable_parameters.user_agent,
+		const data_ViewStat = { Document:{	client_ip:          		timetable_parameters.ip,
+											client_user_agent:  		timetable_parameters.user_agent},
 								iam_user_app_id:    		iam_user_app_id_view,
 								/**@ts-ignore */
 								iam_user_app_data_post_id: 	server.ORM.UtilNumberValue(user_account_app_data_post_id)};

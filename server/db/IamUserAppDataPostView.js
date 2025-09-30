@@ -55,10 +55,10 @@ const post = async (app_id, data) =>{
         /**@type{server_db_table_IamUserAppDataPostView} */
         const data_new =     {
                                 id:Date.now(),
+                                Document:{  client_ip: data.Document.client_ip,
+                                            client_user_agent: data.Document.client_user_agent},
                                 iam_user_app_id:data.iam_user_app_id, 
                                 iam_user_app_data_post_id:data.iam_user_app_data_post_id,
-                                client_ip: data.client_ip,
-                                client_user_agent: data.client_user_agent,
                                 created:new Date().toISOString()
                         };
         return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserAppDataPostView', post:{data:data_new}}).then((/**@type{server_db_common_result_insert}*/result)=>{
