@@ -11,7 +11,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['MessageQueueError'][] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['MessageQueueError'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueueError',null, null);
     
@@ -21,26 +21,26 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueueEr
  * @function
  * @param {{app_id:number,
  *          data:*}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters => {
     if (parameters.data.message_queue_publish_id && 
         'message' in parameters.data &&
         'result' in parameters.data){
-        /**@type{server['ORM']['MessageQueueError']}*/
+        /**@type{server['ORM']['Object']['MessageQueueError']}*/
         const data_new = {
-                            id:Date.now(),
-                            message_queue_publish_id:parameters.data.message_queue_publish_id,
-                            message:parameters.data.message, 
-                            result:parameters.data.result,
-                            created: new Date().toISOString()
+                            Id:Date.now(),
+                            MessageQueuePublishId:parameters.data.message_queue_publish_id,
+                            Message:parameters.data.message, 
+                            Result:parameters.data.result,
+                            Created: new Date().toISOString()
                         };
         return server.ORM.Execute({app_id:parameters.app_id, 
                             dml:'POST', 
                             object:'MessageQueueError', 
-                            post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
-            if (result.affectedRows>0){
-                result.insertId=data_new.id;
+                            post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
+            if (result.AffectedRows>0){
+                result.InsertId=data_new.Id;
                 return {result:result, type:'JSON'};
             }
             else

@@ -28,7 +28,7 @@ const {getToken} = await import('./payment_request_create.js');
  */
 const paymentRequestUpdate = async parameters =>{
 
-    /**@type{server['ORM']['AppDataEntity']} */
+    /**@type{server['ORM']['Object']['AppDataEntity']} */
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
@@ -38,22 +38,22 @@ const paymentRequestUpdate = async parameters =>{
                                                 data:{  iam_user_id:parameters.data.iam_user_id,
                                                         data_app_id:parameters.data.data_app_id,
                                                         resource_name:'CUSTOMER',
-                                                        app_data_entity_id:Entity.id
+                                                        app_data_entity_id:Entity.Id
                                                 }}).result[0];
 
     const token = await getToken({app_id:parameters.app_id, authorization:parameters.data.token, ip:parameters.ip});
 
     //get payment request using app_custom_id that should be the payment request id
-    /**@type{payment_request & {id:server['ORM']['AppDataResourceMaster']['id']}}*/
+    /**@type{payment_request & {id:server['ORM']['Object']['AppDataResourceMaster']['Id']}}*/
     const payment_request = server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         all_users:true,
                                                         resource_id:null, 
                                                         data:{  iam_user_id:null,
                                                                 data_app_id:parameters.data.data_app_id,
                                                                 resource_name:'PAYMENT_REQUEST',
-                                                                app_data_entity_id:Entity.id
+                                                                app_data_entity_id:Entity.Id
                                                         }}).result
-                                    .filter((/**@type{server['ORM']['AppDataResourceMaster']}*/payment_request)=>
+                                    .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster']}*/payment_request)=>
                                         payment_request.Document?.payment_request_id==token?.app_custom_id
                                     )[0];
 
@@ -67,7 +67,7 @@ const paymentRequestUpdate = async parameters =>{
                                                                                     data_app_id:parameters.app_id,
                                                                                     resource_name:'ACCOUNT',
                                                                                     app_data_resource_master_id:customer.id,
-                                                                                    app_data_entity_id:Entity.id
+                                                                                    app_data_entity_id:Entity.Id
                                                                             }}).result[0];
                 /**@type{number} */
                 const account_payer_saldo   =  server.ORM.db.AppDataResourceDetailData.get({  app_id:parameters.app_id, 
@@ -78,26 +78,26 @@ const paymentRequestUpdate = async parameters =>{
                                                                                         resource_name:'ACCOUNT',
                                                                                         resource_name_master_attribute:'CUSTOMER',
                                                                                         resource_name_data_master_attribute:null,
-                                                                                        app_data_entity_id:Entity.id
+                                                                                        app_data_entity_id:Entity.Id
                                                                                 }}).result.reduce(( /**@type{number}*/balance, 
-                                                                                                    /**@type{server['ORM']['AppDataResourceDetailData'] & {Document:bank_transaction}}*/current_row)=>
-                                                                                    balance += (current_row.Document.amount_deposit ?? current_row.Document.amount_withdrawal) ?? 0,0
+                                                                                                    /**@type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction}}*/current_row)=>
+                                                                                    balance += (current_row.Document.AmountDeposit ?? current_row.Document.AmountWithdrawal) ?? 0,0
                                                                                 );
-                if ((account_payer_saldo - (payment_request.amount??0)) <0)
+                if ((account_payer_saldo - (payment_request.Amount??0)) <0)
                     status='NO FUNDS';
                 else{
-                    /**@type{server['ORM']['AppDataResourceDetailData']} */
+                    /**@type{server['ORM']['Object']['AppDataResourceDetailData']} */
                     const data_debit = {Document                               : { timestamp:new Date().toISOString(),
                                                                                     logo:'',
-                                                                                    origin:payment_request.reference,
+                                                                                    origin:payment_request.Reference,
                                                                                     amount_deposit:null,
-                                                                                    amount_withdrawal:(payment_request.amount??0) *-1},
-                                        app_data_resource_detail_id             : account_payer.id,
-                                        app_data_resource_master_attribute_id   : null
+                                                                                    amount_withdrawal:(payment_request.Amount??0) *-1},
+                                        AppDataResourceDetailId             : account_payer.id,
+                                        AppDataResourceMasterAttributeId   : null
                                         };
                     //create DEBIT transaction PAYERID resource TRANSACTION
                     await server.ORM.db.AppDataResourceDetailData.post({app_id:parameters.app_id, data:data_debit});
-                    /**@type{bank_account & {id:server['ORM']['AppDataResourceDetail']['id']}} */
+                    /**@type{bank_account & {id:server['ORM']['Object']['AppDataResourceDetail']['Id']}} */
                     const account_payee         =  server.ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                                 all_users:true,
                                                                                 resource_id:null, 
@@ -105,20 +105,20 @@ const paymentRequestUpdate = async parameters =>{
                                                                                         data_app_id:parameters.data.data_app_id,
                                                                                         resource_name:'ACCOUNT',
                                                                                         app_data_resource_master_id:null,
-                                                                                        app_data_entity_id:Entity.id
+                                                                                        app_data_entity_id:Entity.Id
                                                                                 }}).result
-                                                            .filter((/**@type{server['ORM']['AppDataResourceDetail']}*/account)=>
-                                                                account.Document?.bank_account_vpa == payment_request.payeeid
+                                                            .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail']}*/account)=>
+                                                                account.Document?.bank_account_vpa == payment_request.PayeeId
                                                             )[0];
                     if (account_payee && account_payee.id!=null){
-                        /**@type{server['ORM']['AppDataResourceDetailData']} */
+                        /**@type{server['ORM']['Object']['AppDataResourceDetailData']} */
                         const data_credit = {   Document                               : { timestamp:new Date().toISOString(),
                                                                                             logo:'',
-                                                                                            origin:payment_request.reference,
-                                                                                            amount_deposit:payment_request.amount,
+                                                                                            origin:payment_request.Reference,
+                                                                                            amount_deposit:payment_request.Amount,
                                                                                             amount_withdrawal:null},
-                                                app_data_resource_detail_id             : account_payee.id,
-                                                app_data_resource_master_attribute_id   : null
+                                                AppDataResourceDetailId             : account_payee.id,
+                                                AppDataResourceMasterAttributeId   : null
                                                 };
                         //create CREDIT transaction PAYEEID resource TRANSACTION
                         await server.ORM.db.AppDataResourceDetailData.post({app_id:parameters.app_id, data:data_credit});
@@ -134,7 +134,7 @@ const paymentRequestUpdate = async parameters =>{
             status='CANCELLED';
         //update status
         if (payment_request.Document?.status)
-            payment_request.Document.status=status;
+            payment_request.Document.Status=status;
         const data_payment_request = {  Document                                       : payment_request.Document,
                                         data_app_id                                     : parameters.data.data_app_id
                                         };

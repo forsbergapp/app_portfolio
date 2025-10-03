@@ -7,7 +7,6 @@
  */
 const {formatLocale} = await import('./common_locale.js');
 const {server} = await import('../../../../server/server.js');
-const common_data = await import('./common_data.js');
 /**
  * @name appFunction
  * @description Get searched city from worldcities db
@@ -26,7 +25,7 @@ const common_data = await import('./common_data.js');
  */
 const appFunction = async parameters =>{
     /**@type {[key:string]}*/
-    const countries = (common_data.getData('COUNTRY')??[])
+    const countries = (server.ORM.getExternal('COUNTRY')??[])
                         /**@ts-ignore */
                         .filter((/**@type {{locale:string,
                                             countries:[key:string]}}*/row)=>
@@ -67,13 +66,13 @@ const appFunction = async parameters =>{
     switch (parameters.data.searchType?.toUpperCase()){
         case 'RANDOM':{
             const APP_DEFAULT_RANDOM_COUNTRY = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP'}}).result
-            .filter((/**@type{server['ORM']['ConfigServer']['SERVICE_APP']}*/parameter)=>
+            .filter((/**@type{server['ORM']['Object']['ConfigServer']['SERVICE_APP']}*/parameter)=>
                 'APP_DEFAULT_RANDOM_COUNTRY' in parameter)[0].APP_DEFAULT_RANDOM_COUNTRY;
-            const objKeys = common_data.getDataKeys('GEOLOCATION_PLACE');
+            const objKeys = server.ORM.getExternalKeys('GEOLOCATION_PLACE');
             if (APP_DEFAULT_RANDOM_COUNTRY!=''){
                 //sort random partitioned key and return random record when found
                 for (const key of objKeys.sort((() => Math.random() - 0.5))){
-                        const records = common_data.getDataKey('GEOLOCATION_PLACE',key)
+                        const records = server.ORM.getExternalKey('GEOLOCATION_PLACE',key)
                                         .filter((/**@type{string}*/row)=>row.startsWith(APP_DEFAULT_RANDOM_COUNTRY) );
                         if (records.length>0)
                             return formatReturn(records[Math.floor(Math.random() * (records.length - 1))]);
@@ -81,15 +80,14 @@ const appFunction = async parameters =>{
                 return formatReturn(null);
             }
             else{
-                const places = common_data.getDataKey('GEOLOCATION_PLACE',objKeys[Math.floor(Math.random() * (objKeys.length - 1))]);
+                const places = server.ORM.getExternalKey('GEOLOCATION_PLACE',objKeys[Math.floor(Math.random() * (objKeys.length - 1))]);
                 return formatReturn(places[Math.floor(Math.random() * (places.length - 1))]);
             }
         }
         case 'SEARCH':{
             if ((parameters.data.searchString??'').length>2){
                 const searchFormat = (parameters.data.searchString??'').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
-                                            /**@ts-ignore */
-                return {result: [...new Map(Object.values(common_data.getData('GEOLOCATION_PLACE'))
+                return {result: [...new Map(Object.values(server.ORM.getExternal('GEOLOCATION_PLACE'))
                                 .map(arr=>[...arr.filter((/**@type{string}*/place)=>
                                                     /**@ts-ignore */
                                                     (place+(place.substring(0,2) in countries?countries[place.substring(0,2)]:'')).normalize('NFD')
@@ -124,8 +122,8 @@ const appFunction = async parameters =>{
                 return formatReturn(null);
         }
         case 'COUNTRY':{
-                                                    /**@ts-ignore */
-            const result = [...new Map(Object.values(common_data.getData('GEOLOCATION_PLACE'))
+                                                    
+            const result = [...new Map(Object.values(server.ORM.getExternal('GEOLOCATION_PLACE'))
                 .map(arr=>[...arr.filter((/**@type{string}*/place)=>
                                     place.split(';')[0].startsWith(parameters.data.searchString??'')
                                 )]

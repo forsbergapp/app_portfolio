@@ -34,11 +34,11 @@ const test = async t =>
         return await new Promise(resolve=>
         t.it('should return values ', async () =>{
 
-            /**@type{server['ORM']['App'][]}*/
+            /**@type{server['ORM']['Object']['App'][]}*/
             const apps = server.ORM.db.App.get({app_id:0, resource_id:null}).result;
             
             for (const app of apps){ 
-                const result = await worldcities({  app_id:app.id,
+                const result = await worldcities({  app_id:app.Id,
                                                     data:{searchType:'RANDOM'},
                                                     user_agent:'*',
                                                     ip:'127.0.0.1',

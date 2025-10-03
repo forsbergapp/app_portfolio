@@ -17,11 +17,11 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['AppDataResourceMaster'][]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceMaster'][]}>}
  */
 const productGet = async parameters =>{
         
-    /**@type{server['ORM']['AppDataEntity']} */
+    /**@type{server['ORM']['Object']['AppDataEntity']} */
     const Entity            = server.ORM.db.AppDataEntity.get({app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{data_app_id:parameters.data.data_app_id}}).result[0];
@@ -31,7 +31,7 @@ const productGet = async parameters =>{
                                                         data:{  iam_user_id:null,
                                                                 data_app_id:parameters.data.data_app_id,
                                                                 resource_name:'PRODUCT',
-                                                                app_data_entity_id:Entity.id
+                                                                app_data_entity_id:Entity.Id
                                                         }});
     
     
@@ -40,7 +40,7 @@ const productGet = async parameters =>{
                                                         data:{  iam_user_id:null,
                                                                 data_app_id:parameters.data.data_app_id,
                                                                 resource_name:'CURRENCY',
-                                                                app_data_entity_id:Entity.id
+                                                                app_data_entity_id:Entity.Id
                                                         }}).result[0];
     const product_variants = server.ORM.db.AppDataResourceDetail.get({ app_id:parameters.app_id, 
                                                                 resource_id:parameters.data.resource_id_variant, 
@@ -48,37 +48,37 @@ const productGet = async parameters =>{
                                                                         data_app_id:parameters.data.data_app_id,
                                                                         resource_name:'PRODUCT_VARIANT',
                                                                         app_data_resource_master_id:null,
-                                                                        app_data_entity_id:Entity.id
+                                                                        app_data_entity_id:Entity.Id
                                                                 }});
     const product_variant_metadatas = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:null,
                                                                                 data_app_id:parameters.data.data_app_id,
                                                                                 resource_name:'PRODUCT_VARIANT_METADATA',
-                                                                                app_data_entity_id:Entity.id,
+                                                                                app_data_entity_id:Entity.Id,
                                                                         }});
     for (const product of products.result){
         product.sku = [];
-        for (const product_variant of product_variants.result.filter((/**@type{server['ORM']['AppDataResourceDetail']}*/row)=>row.app_data_resource_master_id == product.id)){
+        for (const product_variant of product_variants.result.filter((/**@type{server['ORM']['Object']['AppDataResourceDetail']}*/row)=>row.AppDataResourceMasterId == product.id)){
             product.sku_keys = [];
             for (const product_variant_metadata of product_variant_metadatas.result){
                 const key_name = Object.keys(product_variant_metadata.Document)[0];
-                if (key_name.toLowerCase() != 'name'){
+                if (key_name != 'Name'){
                     const key_type = product_variant_metadata.Document[Object.keys(product_variant_metadata.Document)[0]].type;
-                    product.sku_keys.push({key_name:key_name, key_value:product_variant.Document[key_name], key_type:key_type});
+                    product.sku_keys.push({KeyName:key_name, KeyValue:product_variant.Document[key_name], KeyType:key_type});
                 }
             }
-            product.sku_keys.push({key_name:'id', key_value:product_variant.id, key_type:'TEXT'});
+            product.sku_keys.push({KeyName:'Id', KeyValue:product_variant.id, KeyType:'TEXT'});
             //add currency to be displayed on each product variant
-            product.sku_keys.push({key_name:'currency_code', key_value:currency.Document.currency_code, key_type:'TEXT'});
-            product.sku_keys.push({key_name:'currency_symbol', key_value:currency.Document.currency_symbol, key_type:'TEXT'});
+            product.sku_keys.push({KeyName:'currency_code', KeyValue:currency.Document.CurrencyCode, KeyType:'TEXT'});
+            product.sku_keys.push({KeyName:'currency_symbol', KeyValue:currency.Document.CurrencySymbol, KeyType:'TEXT'});
             product.sku.push(product.sku_keys);
         }
         
         //return placeholder for stock info
-        product.stock =  [  [{key_name:'location', key_value:'', key_type:'TEXT'}, 
-                            {key_name:'stock_text', key_value:'', key_type:'TEXT'}, 
-                            {key_name:'stock', key_value:'', key_type:'TEXT'}]];
+        product.stock =  [  [{KeyName:'location', KeyValue:'', KeyType:'TEXT'}, 
+                            {KeyName:'stock_text', KeyValue:'', KeyType:'TEXT'}, 
+                            {KeyName:'stock', KeyValue:'', KeyType:'TEXT'}]];
     }
     return products;
 };

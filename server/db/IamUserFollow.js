@@ -12,13 +12,13 @@ const {server} = await import ('../server.js');
  *          resource_id:number|null,
  *          data:{  iam_user_id:number|null,
  *                  iam_user_id_follow:number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['IamUserFollow'][] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserFollow'][] }}
  */
 const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserFollow',parameters.resource_id, null).result??[])
-                    .filter((/**@type{server['ORM']['IamUserFollow']}*/row)=>
-                        row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) &&
-                        row.iam_user_id_follow == (parameters.data.iam_user_id_follow ?? row.iam_user_id_follow) );
+                    .filter((/**@type{server['ORM']['Object']['IamUserFollow']}*/row)=>
+                        row.IamUserId == (parameters.data.iam_user_id ?? row.IamUserId) &&
+                        row.IamUserIdFollow == (parameters.data.iam_user_id_follow ?? row.IamUserIdFollow) );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
@@ -32,25 +32,25 @@ const get = parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:server['ORM']['IamUserFollow']}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
+ *          data:server['ORM']['Object']['IamUserFollow']}} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters =>{
     //check required attributes
-    if (parameters.data.iam_user_id==null || parameters.data.iam_user_id_follow==null){
+    if (parameters.data.IamUserId==null || parameters.data.IamUserIdFollow==null){
         return server.ORM.getError(parameters.app_id, 400);
     }
     else{
-        /**@type{server['ORM']['IamUserFollow']} */
+        /**@type{server['ORM']['Object']['IamUserFollow']} */
         const data_new =     {
-                                id:Date.now(),
-                                iam_user_id:parameters.data.iam_user_id, 
-                                iam_user_id_follow:parameters.data.iam_user_id_follow,
-                                created:new Date().toISOString()
+                                Id:Date.now(),
+                                IamUserId:parameters.data.IamUserId, 
+                                IamUserIdFollow:parameters.data.IamUserIdFollow,
+                                Created:new Date().toISOString()
                         };
-        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserFollow', post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
-            if (result.affectedRows>0){
-                result.insertId=data_new.id;
+        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserFollow', post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
+            if (result.AffectedRows>0){
+                result.InsertId=data_new.Id;
                 return {result:result, type:'JSON'};
             }
             else
@@ -67,7 +67,7 @@ const post = async parameters =>{
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{iam_user_id:number}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_delete'] }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>{
     if (parameters.resource_id==null){
@@ -81,8 +81,8 @@ const deleteRecord = async parameters =>{
             return server.ORM.Execute({  app_id:parameters.app_id, 
                                         dml:'DELETE', 
                                         object:'IamUserFollow', 
-                                        delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server['ORMMetaData']['common_result_delete']}*/result)=>{
-                if (result.affectedRows>0)
+                                        delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server['ORM']['MetaData']['common_result_delete']}*/result)=>{
+                if (result.AffectedRows>0)
                     return {result:result, type:'JSON'};
                 else
                     return server.ORM.getError(parameters.app_id, 404);

@@ -1,7 +1,7 @@
 [
     {
-        "id":1,
-        "app_id": 0,
+        "Id":1,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_COUNTRY",
         "ModuleRole": "APP_ID",
@@ -9,8 +9,8 @@
         "ModuleDescription": "Get countries for given locale"
     },
     {
-        "id":2,
-        "app_id": 0,
+        "Id":2,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_LOCALE",
         "ModuleRole": "APP_ID",
@@ -18,8 +18,8 @@
         "ModuleDescription": "Get locales for given locale"
     },
     {
-        "id":3,
-        "app_id": 0,
+        "Id":3,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_DOC",
         "ModuleRole": "APP_ID",
@@ -27,8 +27,8 @@
         "ModuleDescription": "Get documentation menu or guide, app or jsdoc documentation"
     },
     {
-        "id":4,
-        "app_id": 0,
+        "Id":4,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_WORLDCITIES",
         "ModuleRole": "APP_ID",
@@ -36,8 +36,8 @@
         "ModuleDescription": "RANDOM=random city, SEARCH=search city, COUNTRY=cities for given country code"
     },
     {
-        "id":5,
-        "app_id": 0,
+        "Id":5,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_APP_DATA_METADATA",
         "ModuleRole": "APP_ID",
@@ -45,8 +45,8 @@
         "ModuleDescription": "APP DATA resource metadata"
     },
     {
-        "id":6,
-        "app_id": 0,
+        "Id":6,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_MESSAGE_CONTACT",
         "ModuleRole": "APP_ID",
@@ -54,8 +54,8 @@
         "ModuleDescription": "Message contact"
     },
     {
-        "id":7,
-        "app_id": 0,
+        "Id":7,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_MESSAGE_COUNT",
         "ModuleRole": "APP_ACCESS",
@@ -63,8 +63,8 @@
         "ModuleDescription": "Message count"
     },
     {
-        "id":8,
-        "app_id": 0,
+        "Id":8,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_MESSAGE_GET",
         "ModuleRole": "APP_ACCESS",
@@ -72,8 +72,8 @@
         "ModuleDescription": "Message get"
     },
     {
-        "id":9,
-        "app_id": 0,
+        "Id":9,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_MESSAGE_READ",
         "ModuleRole": "APP_ACCESS",
@@ -81,8 +81,8 @@
         "ModuleDescription": "Message read and send consume"
     },
     {
-        "id":10,
-        "app_id": 0,
+        "Id":10,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_MESSAGE_DELETE",
         "ModuleRole": "APP_ACCESS",
@@ -90,8 +90,8 @@
         "ModuleDescription": "Message delete"
     },
     {
-        "id":11,
-        "app_id": 0,
+        "Id":11,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_MESSAGE_SEND",
         "ModuleRole": "APP_ACCESS",
@@ -99,8 +99,8 @@
         "ModuleDescription": "Message send"
     },
     {
-        "id":12,
-        "app_id": 0,
+        "Id":12,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_MESSAGE_COUNT",
         "ModuleRole": "ADMIN",
@@ -108,8 +108,8 @@
         "ModuleDescription": "Message count"
     },
     {
-        "id":13,
-        "app_id": 0,
+        "Id":13,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_MESSAGE_GET",
         "ModuleRole": "ADMIN",
@@ -117,8 +117,8 @@
         "ModuleDescription": "Message get"
     },
     {
-        "id":14,
-        "app_id": 0,
+        "Id":14,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_MESSAGE_READ",
         "ModuleRole": "ADMIN",
@@ -126,8 +126,8 @@
         "ModuleDescription": "Message read and send consume"
     },
     {
-        "id":15,
-        "app_id": 0,
+        "Id":15,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_MESSAGE_DELETE",
         "ModuleRole": "ADMIN",
@@ -135,8 +135,8 @@
         "ModuleDescription": "Message delete"
     },
     {
-        "id":16,
-        "app_id": 0,
+        "Id":16,
+        "AppId": 0,
         "ModuleType": "FUNCTION",
         "ModuleName": "COMMON_MESSAGE_SEND",
         "ModuleRole": "ADMIN",
@@ -144,8 +144,8 @@
         "ModuleDescription": "Message send"
     },
     {
-        "id":17,
-        "app_id": 1,
+        "Id":17,
+        "AppId": 1,
         "ModuleType": "REPORT",
         "ModuleName": "PERFORMANCE_TEST",
         "ModuleRole": "ADMIN",
@@ -153,8 +153,8 @@
         "ModuleDescription": "Performance test"
     },
     {
-        "id":18,
-        "app_id": 1,
+        "Id":18,
+        "AppId": 1,
         "ModuleType": "REPORT",
         "ModuleName": "BDD_TEST",
         "ModuleRole": "ADMIN",
@@ -162,8 +162,8 @@
         "ModuleDescription": "Behaviour driven development (BDD) test framework pattern executing spec files specified in /test/specrunner.json"
     },
     {
-        "id":19,
-        "app_id": 4,
+        "Id":19,
+        "AppId": 4,
         "ModuleType": "REPORT",
         "ModuleName": "TIMETABLE",
         "ModuleRole": "APP_ID",
@@ -171,8 +171,8 @@
         "ModuleDescription": "Timetable day, month and year"
     },
     {
-        "id":20,
-        "app_id": 5,
+        "Id":20,
+        "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "ACCOUNT_CREATE",
         "ModuleRole": "APP_ACCESS",
@@ -180,8 +180,8 @@
         "ModuleDescription": "ACCOUNT create"
     },
     {
-        "id":21,
-        "app_id": 5,
+        "Id":21,
+        "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "ACCOUNT_GET",
         "ModuleRole": "APP_ACCESS",
@@ -189,8 +189,8 @@
         "ModuleDescription": "ACCOUNT get"
     },
     {
-        "id":22,
-        "app_id": 5,
+        "Id":22,
+        "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "ACCOUNT_STATEMENT",
         "ModuleRole": "APP_ACCESS",
@@ -198,8 +198,8 @@
         "ModuleDescription": "ACCOUNT get statement"
     },
     {
-        "id":23,
-        "app_id": 5,
+        "Id":23,
+        "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "ACCOUNT_TRANSACTIONS",
         "ModuleRole": "APP_ACCESS",
@@ -207,8 +207,8 @@
         "ModuleDescription": "ACCOUNT get transactions"
     },
     {
-        "id":24,
-        "app_id": 5,
+        "Id":24,
+        "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "CUSTOMER_CREATE",
         "ModuleRole": "APP_ACCESS",
@@ -216,8 +216,8 @@
         "ModuleDescription": "CUSTOMER create"
     },
     {
-        "id":25,
-        "app_id": 5,
+        "Id":25,
+        "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "CUSTOMER_GET",
         "ModuleRole": "APP_ACCESS",
@@ -225,8 +225,8 @@
         "ModuleDescription": "CUSTOMER get"
     },
     {
-        "id":26,
-        "app_id": 5,
+        "Id":26,
+        "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "PAYMENT_REQUEST_UPDATE",
         "ModuleRole": "APP_ACCESS",
@@ -234,8 +234,8 @@
         "ModuleDescription": "PAYMENT REQUEST update"
     },
     {
-        "id":27,
-        "app_id": 5,
+        "Id":27,
+        "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "PAYMENT_REQUEST_CREATE",
         "ModuleRole": "APP_EXTERNAL",
@@ -243,8 +243,8 @@
         "ModuleDescription": "PAYMENT REQUEST create"
     },
     {
-        "id":28,
-        "app_id": 5,
+        "Id":28,
+        "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "PAYMENT_REQUEST_GET_STATUS",
         "ModuleRole": "APP_ACCESS_EXTERNAL",
@@ -252,8 +252,8 @@
         "ModuleDescription": "PAYMENT REQUEST get status"
     },
     {
-        "id":29,
-        "app_id": 5,
+        "Id":29,
+        "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "PAYMENT_REQUEST_GET",
         "ModuleRole": "APP_ACCESS",
@@ -261,8 +261,8 @@
         "ModuleDescription": "PAYMENT REQUEST get"
     },
     {
-        "id":30,
-        "app_id": 6,
+        "Id":30,
+        "AppId": 6,
         "ModuleType": "FUNCTION",
         "ModuleName": "PRODUCT_GET",
         "ModuleRole": "APP_ID",
@@ -270,8 +270,8 @@
         "ModuleDescription": "PRODUCT get"
     },
     {
-        "id":31,
-        "app_id": 6,
+        "Id":31,
+        "AppId": 6,
         "ModuleType": "FUNCTION",
         "ModuleName": "PRODUCT_LOCATION_GET",
         "ModuleRole": "APP_ID",
@@ -279,8 +279,8 @@
         "ModuleDescription": "PRODUCT location get"
     },
     {
-        "id":32,
-        "app_id": 6,
+        "Id":32,
+        "AppId": 6,
         "ModuleType": "FUNCTION",
         "ModuleName": "PAYMENT_REQUEST_CREATE",
         "ModuleRole": "APP_ID",
@@ -288,8 +288,8 @@
         "ModuleDescription": "PAYMENT REQUEST create"
     },
     {
-        "id":33,
-        "app_id": 6,
+        "Id":33,
+        "AppId": 6,
         "ModuleType": "FUNCTION",
         "ModuleName": "PAYMENT_REQUEST_GET_STATUS",
         "ModuleRole": "APP_ACCESS_EXTERNAL",
@@ -297,8 +297,8 @@
         "ModuleDescription": "PAYMENT REQUEST get status"
     },
     {
-        "id":34,
-        "app_id": 8, 
+        "Id":34,
+        "AppId": 8, 
         "ModuleType": "FUNCTION",
         "ModuleName": "CUBE_SOLVE",
         "ModuleRole": "APP_ID",
@@ -306,8 +306,8 @@
         "ModuleDescription": "Cube solve"
     },
     {
-        "id":35,
-        "app_id": 9, 
+        "Id":35,
+        "AppId": 9, 
         "ModuleType": "FUNCTION",
         "ModuleName": "TOTP_GET",
         "ModuleRole": "APP_ID",

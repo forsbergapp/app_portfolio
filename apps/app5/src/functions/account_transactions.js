@@ -23,7 +23,7 @@ const {server} = await import('../../../../server/server.js');
  */
 const getTransacions = async parameters =>{
     
-    /**@type{server['ORM']['AppDataEntity']} */
+    /**@type{server['ORM']['Object']['AppDataEntity']} */
     const Entity            = server.ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
@@ -35,7 +35,7 @@ const getTransacions = async parameters =>{
                                                                             resource_name_master_attribute:'CUSTOMER',
                                                                             resource_name_data_master_attribute:null,
                                                                             app_data_resource_detail_id:null,
-                                                                            app_data_entity_id:Entity.id
+                                                                            app_data_entity_id:Entity.Id
                                                                     }});
 }; 
 export default getTransacions;

@@ -11,12 +11,12 @@ const {server} = await import ('../server.js');
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{  name:string|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['ServiceRegistry'][] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['ServiceRegistry'][] }}
  */
 const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'ServiceRegistry',parameters.resource_id, null).result??[])
-                    .filter((/**@type{server['ORM']['ServiceRegistry']}*/row)=>
-                        row.name == (parameters.data.name ?? row.name ));
+                    .filter((/**@type{server['ORM']['Object']['ServiceRegistry']}*/row)=>
+                        row.Name == (parameters.data.name ?? row.Name ));
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
@@ -29,35 +29,35 @@ const get = parameters =>{
  * @function
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server['ORM']['ServiceRegistry']}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_update'] }>}
+ *          data:server['ORM']['Object']['ServiceRegistry']}} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
-   /**@type{server['ORM']['ServiceRegistry']} */
+   /**@type{server['ORM']['Object']['ServiceRegistry']} */
    const data_update = {};
    //allowed parameters to update:
-   if (parameters.data.name!=null)
-       data_update.name = parameters.data.name;
-   if (parameters.data.server_host!=null)
-       data_update.server_host = parameters.data.server_host;
-   if (parameters.data.server_port!=null)
-       data_update.server_port = parameters.data.server_port;
-   if (parameters.data.metrics_url!=null)
-       data_update.metrics_url = parameters.data.metrics_url;
-   if (parameters.data.health_url!=null)
-        data_update.health_url = parameters.data.health_url;
-   if (parameters.data.rest_api_version!=null)
-        data_update.rest_api_version = parameters.data.rest_api_version;
-   if (parameters.data.status!=null)
-        data_update.status = parameters.data.status;
-   data_update.modified = new Date().toISOString();
+   if (parameters.data.Name!=null)
+       data_update.Name = parameters.data.Name;
+   if (parameters.data.ServerHost!=null)
+       data_update.ServerHost = parameters.data.ServerHost;
+   if (parameters.data.ServerPort!=null)
+       data_update.ServerPort = parameters.data.ServerPort;
+   if (parameters.data.MetricsUrl!=null)
+       data_update.MetricsUrl = parameters.data.MetricsUrl;
+   if (parameters.data.HealthUrl!=null)
+        data_update.HealthUrl = parameters.data.HealthUrl;
+   if (parameters.data.RestApiVersion!=null)
+        data_update.RestApiVersion = parameters.data.RestApiVersion;
+   if (parameters.data.Status!=null)
+        data_update.Status = parameters.data.Status;
+   data_update.Modified = new Date().toISOString();
    if (Object.entries(data_update).length>0)
        return server.ORM.Execute({ app_id:parameters.app_id, 
                             dml:'UPDATE', 
                             object:'ServiceRegistry', 
                             update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}})
-                .then((/**@type{server['ORMMetaData']['common_result_update']}*/result)=>{
-                    if (result.affectedRows>0)
+                .then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
+                    if (result.AffectedRows>0)
                         return {result:result, type:'JSON'};
                     else
                         return server.ORM.getError(parameters.app_id, 404);

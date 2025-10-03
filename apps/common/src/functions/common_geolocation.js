@@ -6,7 +6,6 @@
  * @import {server} from '../../../../server/types.js'
  */
 const {formatLocale} = await import('./common_locale.js');
-const {getData} = await import('./common_data.js');
 const {server} = await import('../../../../server/server.js');
 const { getTimezone } = await import ('../../public/modules/regional/regional.js');
 
@@ -22,7 +21,7 @@ const returnPlace = parameters =>{
     if (parameters.place)
         return {result:{place:parameters.place.split(';')[2],
                 countryCode:parameters.place.split(';')[0],
-                country:getData('COUNTRY')
+                country:server.ORM.getExternal('COUNTRY')
                             .filter((/**@type {{locale:string,
                                                 countries:[key:string]}}*/row)=>
                                     row.locale == formatLocale(parameters.locale))[0].countries[parameters.place.split(';')[0]]??' ',
@@ -98,16 +97,16 @@ const getIP = parameters =>{
     const ipNumber = IPtoNum(parameters.data.ip??'');
     //if geolocation is enabled then search in partitioned key
     const geolocation_ip = server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0,data:{ config_group:'SERVICE_IAM'}}).result
-                            .filter((/**@type{server['ORM']['ConfigServer']['SERVICE_IAM']}*/parameter)=>
+                            .filter((/**@type{server['ORM']['Object']['ConfigServer']['SERVICE_IAM']}*/parameter)=>
                                     'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1?
-                            getData('GEOLOCATION_IP')[('000'+parameters.data.ip?.split(',')[0].split('.')[0]).substr(-3)].filter((/**@type{string}*/row)=> 
+                            server.ORM.getExternal('GEOLOCATION_IP')[('000'+parameters.data.ip?.split(',')[0].split('.')[0]).substr(-3)].filter((/**@type{string}*/row)=> 
                                            IPtoNum(row.split(';')[0]) <= ipNumber &&
                                            IPtoNum(row.split(';')[1]) >= ipNumber)[0]:
                                            null;
     if (geolocation_ip && geolocation_ip.split(';')[0] !='127.0.0.0'){
         const lat = geolocation_ip.split(';')[2];
         const long = geolocation_ip.split(';')[3];
-        const place = getData('GEOLOCATION_PLACE')[lat.split('.')[0]].filter((/**@type{string}*/row)=>
+        const place = server.ORM.getExternal('GEOLOCATION_PLACE')[lat.split('.')[0]].filter((/**@type{string}*/row)=>
                             row.split(';')[3] == lat &&
                             row.split(';')[4] == long
                         )[0];
@@ -157,7 +156,7 @@ const getPlace = parameters =>{
         (+number_row >= +number_search - precision) && (+number_row <= +number_search + precision);
     //Find place in ordered aproximity in partioned key using first part of latitude
     for (const aproximity of [0.02, 0.05, 0.1, 0.5, 1, 5, 10]){
-        const result = (getData('GEOLOCATION_PLACE')[parameters.data.latitude.split('.')[0]]??[])
+        const result = (server.ORM.getExternal('GEOLOCATION_PLACE')[parameters.data.latitude.split('.')[0]]??[])
                         .filter((/**@type{string}*/row)=>
                         check_aprox(row.split(';')[3], parameters.data.latitude, aproximity) && 
                         check_aprox(row.split(';')[4], parameters.data.longitude, aproximity))

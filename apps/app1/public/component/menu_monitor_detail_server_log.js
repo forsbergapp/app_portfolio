@@ -21,169 +21,169 @@
  */
 const template = props => ` ${  props.logscope=='LogRequest'?
                                 `<div class='menu_monitor_detail_server_log_row'>
-                                    <div data-column='id' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('id')}'>
+                                    <div data-column='Id' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('Id')}'>
                                         ID
                                     </div>
-                                    <div data-column='created' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('created')}'>
+                                    <div data-column='Created' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('Created')}'>
                                         CREATED
                                     </div>
-                                    <div data-column='host' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('host')}'>
+                                    <div data-column='Host' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('Host')}'>
                                         HOST
                                     </div>
-                                    <div data-column='app_id' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                    <div data-column='AppId' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('AppId')}'>
                                         APP_ID
                                     </div>
-                                    <div data-column='app_id_auth' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('app_id_auth')}'>
+                                    <div data-column='AppIdAuth' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('AppIdAuth')}'>
                                         APP_ID_AUTH
                                     </div>
-                                    <div data-column='ip' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('ip')}'>
+                                    <div data-column='Ip' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('Ip')}'>
                                         IP
                                     </div>
-                                    <div data-column='requestid' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('requestid')}'>
+                                    <div data-column='RequestId' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('RequestId')}'>
                                         REQUEST_ID
                                     </div>
-                                    <div data-column='correlationid' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('correlationid')}'>
+                                    <div data-column='CorrelationId' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('CorrelationId')}'>
                                         CORRELATION_ID
                                     </div>
-                                    <div data-column='url' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('url')}'>
+                                    <div data-column='Url' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('Url')}'>
                                         URL
                                     </div>
-                                    <div data-column='x_url' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('x_url')}'>
+                                    <div data-column='XUrl' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('XUrl')}'>
                                         X_URL
                                     </div>
-                                    <div data-column='http_info' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('http_info')}'>
+                                    <div data-column='HttpInfo' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('HttpInfo')}'>
                                         HTTP INFO
                                     </div>
-                                    <div data-column='method' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('method')}'>
+                                    <div data-column='Method' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('Method')}'>
                                         METHOD
                                     </div>
-                                    <div data-column='x_method' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('x_method')}'>
+                                    <div data-column='XMethod' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('XMethod')}'>
                                         X_METHOD
                                     </div>
-                                    <div data-column='statuscode' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('statuscode')}'>
+                                    <div data-column='StatusCode' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('StatusCode')}'>
                                         STATUSCODE
                                     </div>
-                                    <div data-column='statusmessage' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('statusmessage')}'>
+                                    <div data-column='StatusMessage' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('StatusMessage')}'>
                                         STATUSMESSAGE
                                     </div>
-                                    <div data-column='user-agent' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('user-agent')}'>
+                                    <div data-column='UserAgent' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('UserAgent')}'>
                                         USER AGENT
                                     </div>
-                                    <div data-column='accept-language' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('accept-language')}'>
+                                    <div data-column='AacceptLanguage' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('AcceptLanguage')}'>
                                         ACCEPT LANGUAGE
                                     </div>
-                                    <div data-column='referer' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('referer')}'>
+                                    <div data-column='Referer' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('Referer')}'>
                                         REFERER
                                     </div>
-                                    <div data-column='size_received' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('size_received')}'>
+                                    <div data-column='SizeReceived' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('SizeReceived')}'>
                                         SIZE_RECEIVED
                                     </div>
-                                    <div data-column='size_sent' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('size_sent')}'>
+                                    <div data-column='SizeSent' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('SizeSent')}'>
                                         SIZE_SENT
                                     </div>
-                                    <div data-column='responsetime' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('responsetime')}'>
+                                    <div data-column='ResponseTime' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('ResponseTime')}'>
                                         RESPONSE_TIME
                                     </div>
-                                    <div data-column='logtext' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('logtext')}'>
+                                    <div data-column='Logtext' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('Logtext')}'>
                                         LOG TEXT
                                     </div>
                                 </div>
                                 ${props.logs.map((
-                                                    /**@type{common['ORM']['LogRequestInfo']}*/
+                                                    /**@type{common['ORM']['Object']['LogRequestInfo']}*/
                                                     log)=>
                                     `<div class='menu_monitor_detail_server_log_row'>
                                     <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${log.id}
+                                            ${log.Id}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${log.created}
+                                            ${log.Created}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>
-                                            ${log.host}
+                                            ${log.Host}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${log.app_id}
+                                            ${log.AppId}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${log.app_id_auth}
+                                            ${log.AppIdAuth}
                                         </div>
-                                        <div class='menu_monitor_detail_server_log_request_log_col gps_click' data-ip='${log.ip}'>
-                                            ${log.ip}
-                                        </div>
-                                        <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${log.requestid}
+                                        <div class='menu_monitor_detail_server_log_request_log_col gps_click' data-ip='${log.Ip}'>
+                                            ${log.Ip}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${log.correlationid}
+                                            ${log.RequestId}
+                                        </div>
+                                        <div class='menu_monitor_detail_server_log_request_log_col'>
+                                            ${log.CorrelationId}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>
-                                            ${log.url}
+                                            ${log.Url}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>
-                                            ${log.x_url}
+                                            ${log.XUrl}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${log.http_info}
+                                            ${log.HttpInfo}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${log.method}
+                                            ${log.Method}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${log.x_method}
+                                            ${log.XMethod}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${log.statusCode}
+                                            ${log.StatusCode}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>
-                                            ${log.statusMessage}
+                                            ${log.StatusMessage}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>
-                                            ${log['user-agent']}
+                                            ${log.UserAgent}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>
-                                            ${log['accept-language']}
+                                            ${log.AcceptLanguage}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>
-                                            ${log.referer}
+                                            ${log.Referer}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${log.size_received}
+                                            ${log.SizeReceived}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${log.size_sent}
+                                            ${log.SizeSent}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
-                                            ${props.function_roundOff(log.responsetime)}
+                                            ${props.function_roundOff(log.Responsetime)}
                                         </div>
-                                        <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>${typeof log.logtext === 'object'?JSON.stringify(log.logtext):log.logtext}</div>
+                                        <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>${typeof log.Logtext === 'object'?JSON.stringify(log.Logtext):log.Logtext}</div>
                                     </div>`
                                     ).join('')
                                 }`:''
                             }
                             ${props.logscope=='LogServer'?
                                 `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_server_row'>
-                                    <div data-column='id' class='menu_monitor_detail_server_log_col list_sort_click list_title ${props.function_get_order_by('id')}'>
+                                    <div data-column='Id' class='menu_monitor_detail_server_log_col list_sort_click list_title ${props.function_get_order_by('Id')}'>
                                         ID
                                     </div>
-                                    <div data-column='created' class='menu_monitor_detail_server_log_col list_sort_click list_title ${props.function_get_order_by('created')}'>
+                                    <div data-column='Created' class='menu_monitor_detail_server_log_col list_sort_click list_title ${props.function_get_order_by('Created')}'>
                                         CREATED
                                     </div>
-                                    <div data-column='logtext' class='menu_monitor_detail_server_log_col list_sort_click list_title ${props.function_get_order_by('logtext')}'>
+                                    <div data-column='Logtext' class='menu_monitor_detail_server_log_col list_sort_click list_title ${props.function_get_order_by('Logtext')}'>
                                         LOGTEXT
                                     </div>
                                 </div>
                                 ${props.logs.map((
-                                                    /**@type{common['ORM']['LogServerInfo']}*/
+                                                    /**@type{common['ORM']['Object']['LogServerInfo']}*/
                                                     log)=>
                                     `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_server_row'>
                                         <div class='menu_monitor_detail_server_log_col'>
-                                            ${log.id}
+                                            ${log.Id}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_col'>
-                                            ${log.created}
+                                            ${log.Created}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_col'>
-                                            ${log.logtext}
+                                            ${log.LogText}
                                         </div>
                                     </div>`
                                     ).join('')
@@ -191,52 +191,52 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                             }
                             ${props.logscope=='LogApp'?
                                 `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_app_row'>
-                                    <div data-column='id' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('id')}'>
+                                    <div data-column='Id' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('Id')}'>
                                         ID
                                     </div>
-                                    <div data-column='created' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('created')}'>
+                                    <div data-column='Created' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('Created')}'>
                                         CREATED
                                     </div>
-                                    <div data-column='app_id' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                    <div data-column='AppId' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('AppId')}'>
                                         APP ID
                                     </div>
-                                    <div data-column='filename' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('filename')}'>
+                                    <div data-column='AppFilename' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('AppFilename')}'>
                                         FILENAME
                                     </div>
-                                    <div data-column='function' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('function')}'>
+                                    <div data-column='AppFunction' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('AppFunction')}'>
                                         FUNCTION
                                     </div>
-                                    <div data-column='line' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('line')}'>
+                                    <div data-column='AppLine' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('AppLine')}'>
                                         LINE
                                     </div>
-                                    <div data-column='logtext' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('logtext')}'>
+                                    <div data-column='Logtext' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('Logtext')}'>
                                         LOG TEXT
                                     </div>
                                 </div>
                                 ${props.logs.map((
-                                                    /**@type{common['ORM']['LogAppInfo']}*/
+                                                    /**@type{common['ORM']['Object']['LogAppInfo']}*/
                                                     log)=>
                                     `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_app_row'>
                                         <div class='menu_monitor_detail_server_log_app_data_stat_col'>
-                                            ${log.id}
+                                            ${log.Id}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_app_data_stat_col'>
-                                            ${log.created}
+                                            ${log.Created}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_app_data_stat_col'>
-                                            ${log.app_id}
+                                            ${log.AppId}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_app_data_stat_col common_wide_list_column'>
-                                            ${log.app_filename}
+                                            ${log.AppFilename}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_app_data_stat_col common_wide_list_column'>
-                                            ${log.app_function_name}
+                                            ${log.AppFunction_name}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_app_data_stat_col'>
-                                            ${log.app_app_line}
+                                            ${log.AppAppLine}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_app_data_stat_col common_wide_list_column'>
-                                            ${log.logtext}
+                                            ${log.Logtext}
                                         </div>
                                     </div>`
                                     ).join('')
@@ -244,46 +244,46 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                             }
                             ${props.logscope=='LogService'?
                                 `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_service_row'>
-                                    <div data-column='id' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('id')}'>
+                                    <div data-column='Id' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('Id')}'>
                                         ID
                                     </div>
-                                    <div data-column='created' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('created')}'>
+                                    <div data-column='Created' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('Created')}'>
                                         CREATED
                                     </div>
-                                    <div data-column='app_id' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                    <div data-column='AppId' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('AppId')}'>
                                         APP ID
                                     </div>
-                                    <div data-column='service' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('service')}'>
+                                    <div data-column='Service' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('Service')}'>
                                         SERVICE
                                     </div>
-                                    <div data-column='parameters' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('parameters')}'>
+                                    <div data-column='Parameters' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('Parameters')}'>
                                         PARAMETERS
                                     </div>
-                                    <div data-column='logtext' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('logtext')}'>
+                                    <div data-column='Logtext' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('Logtext')}'>
                                         LOG TEXT
                                     </div>
                                 </div>
                                 ${props.logs.map((
-                                                    /**@type{common['ORM']['LogServiceInfo']}*/
+                                                    /**@type{common['ORM']['Object']['LogServiceInfo']}*/
                                                     log)=>
                                     `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_service_row'>
                                         <div class='menu_monitor_detail_server_log_service_log_col'>
-                                            ${log.id}
+                                            ${log.Id}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_service_log_col'>
-                                            ${log.created}
+                                            ${log.Created}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_service_log_col'>
-                                            ${log.app_id}
+                                            ${log.AppId}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_service_log_col'>
-                                            ${log.service}
+                                            ${log.Service}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_service_log_col common_wide_list_column'>
-                                            ${log.parameters}
+                                            ${log.Parameters}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_service_log_col common_wide_list_column'>
-                                            ${log.logtext}
+                                            ${log.Logtext}
                                         </div>
                                     </div>`
                                     ).join('')
@@ -291,50 +291,50 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                             }    
                             ${props.logscope=='LogDb'?
                                 `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_db_row'>
-                                    <div data-column='id' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('id')}'>
+                                    <div data-column='Id' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('Id')}'>
                                         ID
                                     </div>
-                                    <div data-column='created' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('created')}'>
+                                    <div data-column='Created' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('Created')}'>
                                         CREATED
                                     </div>
-                                    <div data-column='app_id' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                    <div data-column='AppId' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('AppId')}'>
                                         APP ID
                                     </div>
-                                    <div data-column='object' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('object')}'>
+                                    <div data-column='Object' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('Object')}'>
                                         OBJECT
                                     </div>
-                                    <div data-column='dml' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('dml')}'>
+                                    <div data-column='Dml' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('Dml')}'>
                                         DML
                                     </div>
-                                    <div data-column='parameters' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('parameters')}'>
+                                    <div data-column='Parameters' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('Parameters')}'>
                                         PARAMETERS
                                     </div>
-                                    <div data-column='logtext' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('logtext')}'>
+                                    <div data-column='Logtext' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('Logtext')}'>
                                         LOG TEXT
                                     </div>
                                 </div>
-                                ${props.logs.map((/**@type{common['ORM']['LogDbInfo']}*/log)=>
+                                ${props.logs.map((/**@type{common['ORM']['Object']['LogDbInfo']}*/log)=>
                                     `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_db_row'>
                                         <div class='menu_monitor_detail_server_log_db_log_col'>
-                                            ${log.id}
+                                            ${log.Id}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_db_log_col'>
-                                            ${log.created}
+                                            ${log.Created}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_db_log_col'>
-                                            ${log.app_id}
+                                            ${log.AppId}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_db_log_col'>
-                                            ${log.object}
+                                            ${log.Object}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_db_log_col common_wide_list_column'>
-                                            ${log.dml}
+                                            ${log.Dml}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_db_log_col common_wide_list_column'>
-                                            ${typeof log.parameters=='object'?JSON.stringify(log.parameters):log.parameters}
+                                            ${typeof log.Parameters=='object'?JSON.stringify(log.Parameters):log.Parameters}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_db_log_col common_wide_list_column'>
-                                            ${log.logtext}
+                                            ${log.Logtext}
                                         </div>
                                     </div>`
                                     ).join('')

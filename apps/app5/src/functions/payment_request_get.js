@@ -35,7 +35,7 @@ const {getToken} = await import('./payment_request_create.js');
  */
 const paymentRequestGet = async parameters =>{
 
-    /**@type{server['ORM']['AppDataEntity']} */
+    /**@type{server['ORM']['Object']['AppDataEntity']} */
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
@@ -50,10 +50,10 @@ const paymentRequestGet = async parameters =>{
                                                         data:{  iam_user_id:null,
                                                                 data_app_id:parameters.data.data_app_id,
                                                                 resource_name:'PAYMENT_REQUEST',
-                                                                app_data_entity_id:Entity.id
+                                                                app_data_entity_id:Entity.Id
                                                         }}).result
-                                    .filter((/**@type{server['ORM']['AppDataResourceMaster']}*/payment_request)=>
-                                        payment_request.Document?.payment_request_id==token?.app_custom_id
+                                    .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster']}*/payment_request)=>
+                                        payment_request.Document?.PaymentRequestId==token?.app_custom_id
                                     )[0];
     if (payment_request){
         /**@type{bank_account} */
@@ -64,10 +64,10 @@ const paymentRequestGet = async parameters =>{
                                                                     data_app_id:parameters.app_id,
                                                                     resource_name:'ACCOUNT',
                                                                     app_data_resource_master_id:null,
-                                                                    app_data_entity_id:Entity.id
+                                                                    app_data_entity_id:Entity.Id
                                                             }}).result
-                                .filter((/**@type{server['ORM']['AppDataResourceDetail']}*/result)=>
-                                    result.Document?.bank_account_vpa == payment_request.payerid
+                                .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail']}*/result)=>
+                                    result.Document?.BankAccountVpa == payment_request.PayerId
                                 )[0];
         /**@type{merchant} */
         const merchant      = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
@@ -76,28 +76,28 @@ const paymentRequestGet = async parameters =>{
                                                             data:{  iam_user_id:null,
                                                                     data_app_id:parameters.app_id,
                                                                     resource_name:'MERCHANT',
-                                                                    app_data_entity_id:Entity.id
+                                                                    app_data_entity_id:Entity.Id
                                                             }}).result
-                                .filter((/**@type{server['ORM']['AppDataResourceMaster']}*/merchant)=>
-                                    merchant.Document?.merchant_id==payment_request.merchant_id
+                                .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster']}*/merchant)=>
+                                    merchant.Document?.MerchantId==payment_request.MerchantId
                                 )[0];
         const currency      = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
                                                                     data_app_id:parameters.data.data_app_id,
                                                                     resource_name:'CURRENCY',
-                                                                    app_data_entity_id:Entity.id
+                                                                    app_data_entity_id:Entity.Id
                                                             }}).result[0];
         if (account_payer && merchant && currency){
             return  {result:[{   payment_request_message:'Authorize this payment',
                                 token:                  parameters.data.token,
                                 exp:                    token?.exp??null,
                                 iat:                    token?.iat??null,
-                                payment_request_id:     payment_request.Document?.payment_request_id??'',
-                                status:                 payment_request.Document?.status??'',
-                                merchant_name:          merchant.Document?.merchant_name??'',
-                                amount:			        server.ORM.UtilNumberValue(payment_request.Document?.amount),
-                                currency_symbol:        currency.Document?.currency_symbol??'',
+                                payment_request_id:     payment_request.Document?.PaymentRequestId??'',
+                                status:                 payment_request.Document?.Status??'',
+                                merchant_name:          merchant.Document?.MerchantName??'',
+                                amount:			        server.ORM.UtilNumberValue(payment_request.Document?.Amount),
+                                currency_symbol:        currency.Document?.CurrencySymbol??'',
                                 countdown:              ''}],
                     type:'JSON'};
             }

@@ -61,7 +61,7 @@ const template = () =>`
 const component = async props => {
 
     //fetch all settings for common app id
-    /**@type{common['ORM']['AppData'][]} */
+    /**@type{common['ORM']['Object']['AppData'][]} */
     const settings = props.data.admin_only == 1?[]:await props.methods.COMMON.commonFFB({  path:'/server-db/appdata/', 
                                                                                    query:`IAM_data_app_id=${props.data.common_app_id}`, 
                                                                                    method:'GET', 
@@ -271,13 +271,13 @@ const component = async props => {
                data:       {
                            default_data_value:props.data.user_timezone,
                            default_value:'',
-                           options: settings.filter(setting=>setting.name=='TIMEZONE'),
+                           options: settings.filter(setting=>setting.Name=='TIMEZONE'),
                            path:null,
                            query:null,
                            method:null,
                            authorization_type:null,
                            column_value:'value',
-                           column_text:'display_data'
+                           column_text:'DisplayData'
                            },
                methods:    null,
                path:'/common/component/common_select.js'});
@@ -287,13 +287,13 @@ const component = async props => {
                data:       {
                            default_data_value:props.data.user_direction,
                            default_value:' ',
-                           options: [{value:'', display_data:' '}].concat(settings.filter(setting=>setting.name=='DIRECTION')),
+                           options: [{Value:'', DisplayData:' '}].concat(settings.filter(setting=>setting.Name=='DIRECTION')),
                            path:null,
                            query:null,
                            method:null,
                            authorization_type:null,
                            column_value:'value',
-                           column_text:'display_data'
+                           column_text:'DisplayData'
                            },
                methods:    null,
                path:       '/common/component/common_select.js'});   
@@ -303,13 +303,13 @@ const component = async props => {
                data:       {
                            default_data_value:props.data.user_arabic_script,
                            default_value:' ',
-                           options: [{value:'', display_data:' '}].concat(settings.filter(setting=>setting.name=='ARABIC_SCRIPT')),
+                           options: [{Value:'', DisplayData:' '}].concat(settings.filter(setting=>setting.Name=='ARABIC_SCRIPT')),
                            path:null,
                            query:null,
                            method:null,
                            authorization_type:null,
                            column_value:'value',
-                           column_text:'display_data'
+                           column_text:'DisplayData'
                            },
                methods:    null,
                path:       '/common/component/common_select.js'});

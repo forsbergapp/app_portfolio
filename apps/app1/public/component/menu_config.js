@@ -6,14 +6,12 @@
 /**
  * @import {common}  from '../../../common_types.js'
  */
-/**
- * @import {server['ORM']['ConfigServer']}  from '../js/types.js'
- */
+
 /**
  * @name template
  * @description Template
  * @function
- * @param {{config:server['ORM']['ConfigServer']}} props
+ * @param {{config:common['ORM']['Object']['ConfigServer']}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_config_content_widget1' class='widget'>
@@ -62,7 +60,7 @@ const template = props => ` <div id='menu_config_content_widget1' class='widget'
  *                      template:string}>}
  */
 const component = async props => {
-    /**@type{server['ORM']['ConfigServer']} */
+    /**@type{common['ORM']['Object']['ConfigServer']} */
     const config_server = await props.methods.COMMON.commonFFB({   path:'/server-db/configserver', 
                                                             method:'GET', 
                                                             authorization_type:'ADMIN'})

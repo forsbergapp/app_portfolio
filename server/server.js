@@ -26,7 +26,7 @@ class serverClass {
         this.socket;
         /**@type {import('../apps/common/src/common.js')}*/
         this.app_common;
-        /**@type{server['app']['commonCSSFonts']}*/
+        /**@type{{css:string, db_records:server['ORM']['Object']['IamEncryption'][]}}*/
         this.commonCssFonts;
         /**@type{import('./db/ORM.js')['ORM']}*/
         this.ORM;
@@ -70,7 +70,7 @@ class serverClass {
      * @returns {Promise.<*>}
      */
     request = async (req, res)=>{
-        /**@type{server['ORM']['ConfigServer']} */
+        /**@type{server['ORM']['Object']['ConfigServer']} */
         const CONFIG_SERVER = this.ORM.db.ConfigServer.get({app_id:0}).result;
         const read_body = async () =>{
             return new Promise((resolve,reject)=>{
@@ -156,7 +156,6 @@ class serverClass {
      *          type:server['server']['response']['type'],
      *          result:string,
      *          route:'APP'|'REST_API'|null,
-     *          method?:server['server']['req']['method'],
      *          statusMessage: string,
      *          statusCode: number,
      *          sse_message?:string,
@@ -170,7 +169,7 @@ class serverClass {
          * @param {server['server']['response']['type']} type
          */
         const setType = async type => {
-            /**@type{server['ORM']['ConfigServer']['SERVICE_APP']} */
+            /**@type{server['ORM']['Object']['ConfigServer']['SERVICE_APP']} */
             const CONFIG_SERVICE_APP = this.ORM.db.ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;    
             const app_cache_control =  CONFIG_SERVICE_APP.filter(parameter=>'APP_CACHE_CONTROL' in parameter)[0].APP_CACHE_CONTROL;
             switch (type){
@@ -271,20 +270,20 @@ class serverClass {
                                         this.ORM.db.ServiceRegistry.get({ app_id:parameters['app-id'], 
                                                                             resource_id:null, 
                                                                             data:{name:parameters.service}}).result
-                                        .map((/**@type{server['ORM']['ServiceRegistry']}*/row)=>{
+                                        .map((/**@type{server['ORM']['Object']['ServiceRegistry']}*/row)=>{
                                             return {
-                                                uuid:row.uuid,
-                                                secret:row.secret
+                                                uuid:row.Uuid,
+                                                secret:row.Secret
                                             };
                                         })[0]);
         //if BFE then save encryption record
         parameters.encryption_type=='BFE'?
-            await this.ORM.db.IamEncryption.post(0, { app_id:parameters['app-id'], 
-                                                        iam_app_id_token_id: null,
-                                                        url:url_unencrypted,
-                                                        uuid: uuid,
-                                                        type:parameters.encryption_type,
-                                                        secret: secret}):
+            await this.ORM.db.IamEncryption.post(0, { AppId:parameters['app-id'], 
+                                                        IamAppIdTokenId: null,
+                                                        Url:url_unencrypted,
+                                                        Uuid: uuid,
+                                                        Type:parameters.encryption_type,
+                                                        Secret: secret}):
                 null;
         const url = (parameters.url?
                             //external url should be syntax [protocol]://[host + optional port]/[path]
@@ -450,7 +449,7 @@ let server;
 class serverCircuitBreakerClass {
 
     constructor() {
-        /**@type{server['ORM']['ConfigServer']} */
+        /**@type{server['ORM']['Object']['ConfigServer']} */
         const CONFIG_SERVER = server.ORM.db.ConfigServer.get({app_id:0}).result;
         /**@type{[index:any][*]} */
         this.states = {};
@@ -602,12 +601,12 @@ const serverStart = async () =>{
         //Create ORM and server instances
         server = new serverClass();
         const {ORM} = await import('./db/ORM.js');
-        //Using Static Asynchronous Factory Method pattern in ORM_class
-        await ORM.init();       
         //Using Static Asynchronous Factory Method pattern in serverClass
         await server.init(ORM);
+        //Using Static Asynchronous Factory Method pattern in ORM_class
+        await ORM.init();       
         Object.seal(ORM);
-        //Set server process events
+        //Set server process events that need ORM started
         serverProcess.on('uncaughtException', err =>{
             console.log(err);
             server.ORM.db.Log.post({   app_id:0, 
@@ -632,7 +631,7 @@ const serverStart = async () =>{
 
         //Startup functions
 
-        /**@type{server['ORM']['ConfigServer']} */
+        /**@type{server['ORM']['Object']['ConfigServer']} */
         const configServer = server.ORM.db.ConfigServer.get({app_id:0}).result;
     
         //Update secrets

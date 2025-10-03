@@ -7,41 +7,65 @@ const {server} = await import ('../server.js');
 const {STATUS_CODES} = await import('node:http');
 /**
  * @name get
- * @description Get logs with page navigation support using limit and offset parameters
- *              and returns in ISO20022 format
+ * @description Get 
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
-*          data:{  data_app_id?:string|null,
-*                  logobject?:server_db_tables_log,
-*                  search?:string|null,
-*                  sort?:string|null,
-*                  order_by?:string|null,
-*                  year?:string|null,
-*                  month?:string|null,
-*                  day?:string|null,
-*                  offset?:string|null}}} parameters
+*          data:{   data_app_id:string|null,
+*                   logobject:Extract<server['ORM']['MetaData']['DbObject'],
+*                   'LogAppInfo'|
+*                   'LogAppError'|
+*                   'LogDbInfo'|
+*                   'LogDbVerbose'|
+*                   'LogDbError'|
+*                   'LogRequestInfo'|
+*                   'LogRequestVerbose'|
+*                   'LogRequestError'|
+*                   'LogServerInfo'|
+*                   'LogServerError'|
+*                   'LogServiceInfo'|
+*                   'LogServiceError'>,
+*                   search:string|null,
+*                   sort:string|null,
+*                   order_by:string|null,
+*                   year:string,
+*                   month:string,
+*                   day:string|null}}} parameters
 * @returns{Promise.<server['server']['response'] & {result?:[]}>}
 */
 const get = async parameters => {
-    
-    /**@type{server_log_data_parameter_logGet} */
-    const data = {  app_id:			parameters.app_id,
+    /** 
+     * @type {{ app_id:number,
+     *          data_app_id:number|null,
+     *          logobject:Extract<server['ORM']['MetaData']['DbObject']['Name'], 
+     *             'LogAppInfo'|
+     *             'LogAppError'|
+     *             'LogDbInfo'|
+     *             'LogDbVerbose'|
+     *             'LogDbError'|
+     *             'LogRequestInfo'|
+     *             'LogRequestVerbose'|
+     *             'LogRequestError'|
+     *             'LogServerInfo'|
+     *             'LogServerError'|
+     *             'LogServiceInfo'|
+     *             'LogServiceError'>,
+     *              search:string|null,
+     *              sort:string|null,
+     *              order_by:string|null,
+     *              year:string,
+     *              month:string,
+     *              day:string|null}}
+     */
+    const data = { app_id:			parameters.app_id,
                    data_app_id:	    server.ORM.UtilNumberValue(parameters.data.data_app_id),
-                   /**@ts-ignore */
                    logobject:		parameters.data.logobject,
-                   /**@ts-ignore */
                    search:			parameters.data.search,
-                   /**@ts-ignore */
                    sort:			parameters.data.sort,
-                   /**@ts-ignore */
                    order_by:		parameters.data.order_by,
-                   /**@ts-ignore */
-                   year: 			parameters.data.year?.toString(),
-                   /**@ts-ignore */
-                   month:			parameters.data.month?.toString(),
-                   /**@ts-ignore */
-                   day:			parameters.data.day
+                   year: 			parameters.data.year?parameters.data.year.toString():'',
+                   month:			parameters.data.month?parameters.data.month.toString():'',
+                   day:			    parameters.data.day
     };
     return new Promise (resolve=>{
        /**
@@ -54,16 +78,14 @@ const get = async parameters => {
            for (const value of Object.values(record)){
                if (!value.toString().toLowerCase().startsWith('/server/log/logs') && 
                    !value.toString().toLowerCase().startsWith('/log/logs')){
-                       const col_check = value.toString().normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
-                       const search_check = search.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
-                       if (col_check.search(search_check)>-1)
-                           return true;
+                    if (server.ORM.UtilSearchMatch(value, search))
+                        return true;
                    }
            }
            return false;
        };
 
-       const partition = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
+       const partition = `${data.year}${data.month.toString().padStart(2,'0')}${data.day?data.day.toString().padStart(2,'0'):''}`;
        
        server.ORM.Execute({app_id:parameters.app_id, dml:'GET', object:data.logobject, get:{resource_id:null, partition:partition}})
        .then(log_rows_array_obj=>{
@@ -76,7 +98,7 @@ const get = async parameters => {
                    return (
                            (record.app_id == data.data_app_id ||data.data_app_id ==null)
                                &&
-                           (data.search==''|| (data.search!='' && match(record, data.search)))
+                           (data.search==''|| (data.search!='' && data.search!=null && match(record, data.search)))
                        );
            });
            //sort 
@@ -159,7 +181,7 @@ const getStatusCodes = async () =>{
 };
 /**
 * @name getStat
-* @description Get Request log stat, returns base64 string with server_log_result_logStatGet[] to avoid record limit issue
+* @description Get Request log stat, returns base64 string with server['ORM']['View']['LogGetStat'][] to avoid record limit issue
 * @function
 * @memberof ROUTE_REST_API
 * @param {{app_id:number,
@@ -169,11 +191,17 @@ const getStatusCodes = async () =>{
 *                  statValue?:string|null,
 *                  year?:string|null,
 *                  month?:string|null}}} parameters
-* @returns{Promise.<server['server']['response'] & {result?:string|[]}>}
+* @returns{Promise.<server['server']['response'] & {result?:string}>}
 */
 const getStat = async parameters => {
-
-    /**@type{server_log_data_parameter_getLogStats} */
+    /** 
+     * @type {{ app_id:number|null,
+     *          statGroup:keyof server['ORM']['Object']['LogRequestInfo'],
+     *          unique:number|null,
+     *          statValue:string|number|null,
+     *          year:number,
+     *          month:number}}
+     */
     const data = {	app_id:			server.ORM.UtilNumberValue(parameters.data.data_app_id),
                    /**@ts-ignore */
                    statGroup:		parameters.data.statGroup==''?null:parameters.data.statGroup,
@@ -182,9 +210,9 @@ const getStat = async parameters => {
                    year: 			server.ORM.UtilNumberValue(parameters.data.year) ?? new Date().getFullYear(),
                    month:			server.ORM.UtilNumberValue(parameters.data.month) ?? new Date().getMonth() +1
                    };
-   /**@type{server_log_result_logStatGet[]|[]} */
+   /**@type{server['ORM']['View']['LogGetStat'][]} */
    const logfiles = [];
-   /**@type{server_log_result_logStatGet[]|[]} */
+   /**@type{server['ORM']['View']['LogGetStat'][]} */
    const logstat = [];
    
    const files = await server.ORM.getFsDir().then(files=>files.filter(file=>file.isDirectory()==false));
@@ -213,42 +241,40 @@ const getStat = async parameters => {
                sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
            await server.ORM.Execute({app_id:parameters.app_id, dml:'GET', object:file.name.startsWith('LogRequestInfo')?'LogRequestInfo':'LogRequestVerbose', get:{resource_id:null, partition:sample}})
            .then((logs)=>{
-               logs.rows.forEach((/**@type{server['ORM']['LogRequestInfo']|''}*/record) => {
+               logs.rows.forEach((/**@type{server['ORM']['Object']['LogRequestInfo']|''}*/record) => {
                    if (record != ''){
                        if (data.statGroup != null){
-                           if (data.app_id == null || data.app_id == record?.app_id){
-                               const statGroupvalue = (data.statGroup=='url' && record[data.statGroup].indexOf('?')>0)?record[data.statGroup].substring(0,record[data.statGroup].indexOf('?')):record[data.statGroup];
+                           if (data.app_id == null || data.app_id == record?.AppId){
+                               const statGroupvalue = (data.statGroup=='Url' && record[data.statGroup].indexOf('?')>0)?record[data.statGroup].substring(0,record[data.statGroup].indexOf('?')):record[data.statGroup];
                                //add unique statGroup to a set
                                log_stat_value.add(statGroupvalue);
                                log_days.add(day);
-                               if (data.unique==0 ||(data.unique==1 && logfiles.filter(row=>row.statValue==statGroupvalue).length==0)){
-                                   /**@ts-ignore */
+                               if (data.unique==0 ||(data.unique==1 && logfiles.filter(row=>row.StatValue==statGroupvalue).length==0)){
                                    logfiles.push({ 
-                                       chart:null,
-                                       statValue: statGroupvalue,
-                                       year: data.year,
-                                       month: data.month,
-                                       day: Number(day),
-                                       amount: null});
+                                       Chart:null,
+                                       StatValue: statGroupvalue??null,
+                                       Year: data.year,
+                                       Month: data.month,
+                                       Day: Number(day),
+                                       Amount: null});
                                }
                            }
                        }
                        else{
                            //add for given status code or all status codes if all should be returned
                            //save this as chart 2 with days
-                           if (data.statValue == null || data.statValue == record.statusCode){
-                               if (data.app_id == null || data.app_id == record?.app_id){
+                           if (data.statValue == null || data.statValue == record.StatusCode){
+                               if (data.app_id == null || data.app_id == record?.AppId){
                                    //add unique status codes to a set
-                                   log_stat_value.add(record.statusCode);
+                                   log_stat_value.add(record.StatusCode);
                                    log_days.add(day);
-                                   /**@ts-ignore */
                                    logfiles.push({ 
-                                       chart:null,
-                                       statValue: record.statusCode,
-                                       year: data.year,
-                                       month: data.month,
-                                       day: Number(day),
-                                       amount: null});
+                                       Chart:null,
+                                       StatValue: record.StatusCode,
+                                       Year: data.year,
+                                       Month: data.month,
+                                       Day: Number(day),
+                                       Amount: null});
                                }
                            }
                        }
@@ -266,28 +292,24 @@ const getStat = async parameters => {
    //sort the set using ES6 spread operator
    [...log_stat_value].sort().forEach(value=>{
        //save chart 1 without days and sum amount per month
-       /**@ts-ignore */
        logstat.push({
-           chart: 1,
-           statValue: value,
-           year: data.year,
-           month: data.month,
-           day: null,
-           /**@ts-ignore */
-           amount: logfiles.filter(log=>log.statValue==value).length
+           Chart: 1,
+           StatValue: value,
+           Year: data.year,
+           Month: data.month,
+           Day: null,
+           Amount: logfiles.filter(log=>log.StatValue==value).length
        });
    });
    [...log_days].sort().forEach(day=>{
        //save chart2 with days and sum amount per day
-       /**@ts-ignore */
        logstat.push({
-           chart: 2,
-           statValue: null,
-           year: data.year,
-           month: data.month,
-           day: day,
-           /**@ts-ignore */
-           amount: logfiles.filter(log=>log.day == day).length
+           Chart: 2,
+           StatValue: null,
+           Year: data.year,
+           Month: data.month,
+           Day: day,
+           Amount: logfiles.filter(log=>log.Day == day).length
        });
    });
    return {result:Buffer.from (JSON.stringify(logstat)).toString('base64'), type:'JSON'};
@@ -317,14 +339,25 @@ const getFiles = async () => {
  * @description Write log
  * @function
  * @param {{app_id:number,
- *          data:{  object:     server_db_tables_log,
+ *          data:{  object:     Extract<server['ORM']['MetaData']['DbObject']['Name'],
+ *                                  'LogAppInfo'|
+ *                                  'LogAppError'|
+ *                                  'LogDbInfo'|
+ *                                  'LogDbError'|
+ *                                  'LogRequestInfo'|
+ *                                  'LogRequestVerbose'|
+ *                                  'LogRequestError'|
+ *                                  'LogServerInfo'|
+ *                                  'LogServerError'|
+ *                                  'LogServiceInfo'|
+ *                                  'LogServiceError'>,
  *                  request?:{  req:server['server']['req'],
  *                              responsetime:number,
  *                              statusCode:number,
  *                              statusMessage:string | number | object | Error | null},
  *                  service?:{  service:string,
  *                              parameters:string},
- *                  db?:{       object:server['ORMMetaData']['DbObject'],
+ *                  db?:{       object:server['ORM']['MetaData']['DbObject'],
  *                              dml:string,
  *                              parameters:*},
  *                  app?:{      app_filename:string,
@@ -333,30 +366,41 @@ const getFiles = async () => {
  *                  log:        *
  *              }
  *          }} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters => {
-
     let log;
-    /**@type{server_db_tables_log|null}*/
+    /**@type{Extract<server['ORM']['MetaData']['DbObject']['Name'],
+     *              'LogAppInfo'|
+     *              'LogAppError'|
+     *              'LogDbInfo'|
+     *              'LogDbError'|
+     *              'LogRequestInfo'|
+     *              'LogRequestVerbose'|
+     *              'LogRequestError'|
+     *              'LogServerInfo'|
+     *              'LogServerError'|
+     *              'LogServiceInfo'|
+     *              'LogServiceError'>|null}
+     */
     let log_object = null;
     switch (parameters.data.object){
         case 'LogServerError':
         case 'LogServerInfo':{
-            /**@type{server['ORM']['LogServerInfo']} */
-            log = {logtext:parameters.data.log};
+            /**@type{server['ORM']['Object']['LogServerInfo']} */
+            log = {LogText:parameters.data.log};
             log_object = parameters.data.object;
             break;
         }
         case 'LogServiceError':
         case 'LogServiceInfo':{
             const service_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'SERVICE_LEVEL'}}).result;
-            /**@type{server['ORM']['LogServiceInfo']}*/
+            /**@type{server['ORM']['Object']['LogServiceInfo']}*/
             log = (service_level=='1' ||service_level=='2')?
-                    {app_id:    parameters.app_id,
-                    service:    parameters.data.service?.service,
-                    parameters: parameters.data.service?.parameters,
-                    logtext:    parameters.data.log
+                    {AppId:     parameters.app_id,
+                    Service:    parameters.data.service?.service,
+                    Parameters: parameters.data.service?.parameters,
+                    Logtext:    parameters.data.log
                     }:null;
             log_object = parameters.data.object;
             break;
@@ -365,13 +409,13 @@ const post = async parameters => {
         case 'LogAppInfo':{
             const app_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'APP_LEVEL'}}).result;
             if (app_level=='1'||app_level=='2'){
-                /**@type{server['ORM']['LogAppInfo']} */
+                /**@type{server['ORM']['Object']['LogAppInfo']} */
                 log ={
-                    app_id:             parameters.app_id,
-                    app_filename:       parameters.data.app?.app_filename,
-                    app_function_name:  parameters.data.app?.app_function_name,
-                    app_app_line:       parameters.data.app?.app_line,
-                    logtext:            parameters.data.log
+                    AppId:            parameters.app_id,
+                    AppFilename:      parameters.data.app?.app_filename,
+                    AppFunctionName:  parameters.data.app?.app_function_name,
+                    AppAppLine:       parameters.data.app?.app_line,
+                    logtext:           parameters.data.log
                     };
                 log_object = parameters.data.object;
             }
@@ -383,14 +427,14 @@ const post = async parameters => {
         case 'LogDbInfo':{
             const db_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'DB_LEVEL'}}).result;
             if (db_level=='1'||db_level=='2'){
-                log_object = (db_level=='2' && parameters.data.object=='LogDbInfo')?'LogDbVerbose':parameters.data.object;
-                /**@type{server['ORM']['LogDbError']} */
+                log_object = parameters.data.object;
+                /**@type{server['ORM']['Object']['LogDbError']} */
                 log = {
-                        app_id:         parameters.app_id,
-                        object:         parameters.data.db?.object,
-                        dml:            parameters.data.db?.dml,
-                        parameters:     parameters.data.db?.parameters,
-                        logtext:        db_level=='1'?
+                        AppId:         parameters.app_id,
+                        Object:         parameters.data.db?.object,
+                        Dml:            parameters.data.db?.dml,
+                        Parameters:     parameters.data.db?.parameters,
+                        Logtext:        db_level=='1'?
                                             `Rows:${parameters.data.log.affectedRows?parameters.data.log.affectedRows:parameters.data.log.length}`:
                                             typeof parameters.data.log=='object'?JSON.stringify(parameters.data.log):parameters.data.log
                         };
@@ -416,26 +460,26 @@ const post = async parameters => {
             };
             const request_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}).result; 
             if (request_level=='1'||request_level=='2'){
-                log = { host:               parameters.data.request?.req.headers.host,
-                        app_id:             parameters.data.request?.req.headers.x?.app_id,
-                        app_id_auth:        parameters.data.request?.req.headers.x?.app_id_auth,
-                        ip:                 parameters.data.request?.req.ip,
-                        requestid:          parameters.data.request?.req.headers['x-request-id'],
-                        correlationid:      parameters.data.request?.req.headers['x-correlation-id'],
-                        url:                parameters.data.request?.req.originalUrl,
-                        x_url:              parameters.data.request?.req.headers.x?.url,
-                        http_info:          'HTTP/' + parameters.data.request?.req.httpVersion,
-                        method:             parameters.data.request?.req.method,
-                        x_method:           parameters.data.request?.req.headers.x?.method,
-                        statusCode:         parameters.data.request?.statusCode,
-                        statusMessage:      parameters.data.request?.statusMessage,
-                        ['user-agent']:     parameters.data.request?.req.headers['user-agent'], 
-                        ['accept-language']:parameters.data.request?.req.headers['accept-language'], 
-                        referer:            parameters.data.request?.req.headers.referer,
-                        size_received:      parameters.data.request?.req.socket.bytesRead,
-                        size_sent:          parameters.data.request?.req.socket.bytesWritten,
-                        responsetime:       parameters.data.request?.responsetime,
-                        logtext:            parameters.data.object=='LogRequestInfo'?
+                log = { Host:               parameters.data.request?.req.headers.host,
+                        AppId:              parameters.data.request?.req.headers.x?.app_id,
+                        AppIdAuth:          parameters.data.request?.req.headers.x?.app_id_auth,
+                        Ip:                 parameters.data.request?.req.ip,
+                        RequestId:          parameters.data.request?.req.headers['x-request-id'],
+                        CorrelationId:      parameters.data.request?.req.headers['x-correlation-id'],
+                        Url:                parameters.data.request?.req.originalUrl,
+                        XUrl:               parameters.data.request?.req.headers.x?.url,
+                        HttpInfo:          'HTTP/' + parameters.data.request?.req.httpVersion,
+                        Method:             parameters.data.request?.req.method,
+                        XMethod:            parameters.data.request?.req.headers.x?.method,
+                        StatusCode:         parameters.data.request?.statusCode,
+                        StatusMessage:      parameters.data.request?.statusMessage,
+                        UserAgent:          parameters.data.request?.req.headers['user-agent'], 
+                        AcceptLanguage:     parameters.data.request?.req.headers['accept-language'], 
+                        Referer:            parameters.data.request?.req.headers.referer,
+                        SizeReceived:       parameters.data.request?.req.socket.bytesRead,
+                        SizeSent:           parameters.data.request?.req.socket.bytesWritten,
+                        ResponseTime:       parameters.data.request?.responsetime,
+                        Logtext:            parameters.data.object=='LogRequestInfo'?
                                                 (request_level=='1'?
                                                     '':
                                                         'req:' + JSON.stringify(Object.assign({}, parameters.data.request?.req), getCircularReplacer())): 
@@ -454,16 +498,16 @@ const post = async parameters => {
         }
     }
     if (log==null || log_object==null)
-        return {result:{affectedRows:0}, type:'JSON'};
+        return {result:{AffectedRows:0}, type:'JSON'};
     else{
-        const data_new = {  ...{id:Date.now()}, 
+        const data_new = {  ...{Id:Date.now()}, 
                             ...log, 
-                            ...{created:new Date().toISOString()}
+                            ...{Created:new Date().toISOString()}
                         };
         /**@ts-ignore */
         return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:log_object, post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
-            if (result.affectedRows>0){
-                result.insertId=data_new.id;
+            if (result.AffectedRows>0){
+                result.InsertId=data_new.Id;
                 return {result:result, type:'JSON'};
             }
             else

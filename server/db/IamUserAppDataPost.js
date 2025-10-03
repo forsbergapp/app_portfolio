@@ -13,16 +13,16 @@ const {server} = await import ('../server.js');
  *          resource_id:number|null,
  *          data:{  data_app_id:number|null,
  *                  iam_user_id:number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['IamUserAppDataPost'][] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPost'][] }}
  */
 const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserAppDataPost',parameters.resource_id, null).result??[])
-                    .filter((/**@type{server['ORM']['IamUserAppDataPost']}*/row)=>
+                    .filter((/**@type{server['ORM']['Object']['IamUserAppDataPost']}*/row)=>
                         server.ORM.db.IamUserApp.get({ app_id:parameters.app_id,
                                         resource_id:null, 
                                         data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result
-                        .filter((/**@type{server['ORM']['IamUserApp']}*/rowIamUserApp)=>
-                            row.iam_user_app_id == rowIamUserApp.id
+                        .filter((/**@type{server['ORM']['Object']['IamUserApp']}*/rowIamUserApp)=>
+                            row.IamUserAppId == rowIamUserApp.Id
                         )
                         .length>0
                     );
@@ -40,43 +40,37 @@ const get = parameters =>{
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{id_current_user?:string|null}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{id:server['ORM']['IamUserAppDataPost']['id'],
- *                                                       description:string,
- *                                                       iam_user_id:server['ORM']['IamUserApp']['iam_user_id'],
- *                                                       Document:server['ORM']['IamUserAppDataPost']['Document'],
- *                                                       count_likes:number,
- *                                                       count_views:number,
- *                                                       liked:number}[] }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserAppDataPostgetProfileUserPosts'][] }>}
  */
 const getViewProfileUserPosts = async parameters =>{
-    /**@type{server['server']['response'] & {result?:server['ORM']['IamUserAppDataPost'][]}} */
+    /**@type{server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPost'][]}} */
     const result = get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id, iam_user_id:parameters.resource_id}});
     if (result.result)
         if (result.result.length>0)
             return {result:result.result
-                    .map((/**@type{server['ORM']['IamUserAppDataPost']}*/row)=>{
+                    .map((/**@type{server['ORM']['Object']['IamUserAppDataPost']}*/row)=>{
                         return {
-                            id: row.id,
-                            description:row.Document?.description, 
-                            iam_user_id:server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
-                                                        resource_id:row.iam_user_app_id, 
+                            Id: row.Id,
+                            Description:row.Document?.description, 
+                            IamUserId:server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
+                                                        resource_id:row.IamUserAppId, 
                                                         data:{  iam_user_id:    parameters.resource_id, 
                                                                 data_app_id:    parameters.app_id}}).result[0]?.iam_user_id,
-                            count_likes:server.ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
-                                                                    resource_id:null, 
-                                                                    data:{  iam_user_id:                null, 
-                                                                            data_app_id:                parameters.app_id,
-                                                                            iam_user_app_data_post_id:  row.id}}).result.length,
-                            count_views:server.ORM.db.IamUserAppDataPostView.get({app_id:parameters.app_id, 
-                                                                    resource_id:null, 
-                                                                    data:{  iam_user_id:    null, 
-                                                                            data_app_id:    parameters.app_id,
-                                                                            iam_user_app_data_post_id:  row.id}}).result.length,
-                            liked: server.ORM.db.IamUserAppDataPostLike.get({ app_id:parameters.app_id, 
-                                                                resource_id:null, 
-                                                                data:{  iam_user_id:                server.ORM.UtilNumberValue(parameters.data?.id_current_user), 
-                                                                        data_app_id:                parameters.app_id,
-                                                                        iam_user_app_data_post_id:  row.id}}).result.length
+                            CountLikes:server.ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
+                                                        resource_id:null, 
+                                                        data:{  iam_user_id:                null, 
+                                                                data_app_id:                parameters.app_id,
+                                                                iam_user_app_data_post_id:  row.Id}}).result.length,
+                            CountViews:server.ORM.db.IamUserAppDataPostView.get({app_id:parameters.app_id, 
+                                                        resource_id:null, 
+                                                        data:{  iam_user_id:    null, 
+                                                                data_app_id:    parameters.app_id,
+                                                                iam_user_app_data_post_id:  row.Id}}).result.length,
+                            Liked: server.ORM.db.IamUserAppDataPostLike.get({ app_id:parameters.app_id, 
+                                                        resource_id:null, 
+                                                        data:{  iam_user_id:                server.ORM.UtilNumberValue(parameters.data?.id_current_user), 
+                                                                data_app_id:                parameters.app_id,
+                                                                iam_user_app_data_post_id:  row.Id}}).result.length
                             };
                         })
                         ,type:'JSON'};
@@ -95,7 +89,7 @@ const getViewProfileUserPosts = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{count_user_post_likes:number, count_user_post_liked:number}}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserAppDataPostgetProfileStatLike']}>}
  */
  const getViewProfileStatLike = async parameters =>{
 
@@ -105,27 +99,27 @@ const getViewProfileUserPosts = async parameters =>{
                                         data_app_id:parameters.app_id}}).result;
 
     return {result:{
-                    count_user_post_likes:server.ORM.db.IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
+                    CountUserPostLikes:server.ORM.db.IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:parameters.resource_id, 
                                                                                 data_app_id:parameters.app_id,
                                                                                 iam_user_app_data_post_id:null}}).result
-                                            .filter((/**@type{server['ORM']['IamUserAppDataPostLike']}*/row_like)=>
-                                                row_like.iam_user_app_id == get({app_id:parameters.app_id, 
-                                                    resource_id:row_like.iam_user_app_data_post_id, 
+                                            .filter((/**@type{server['ORM']['Object']['IamUserAppDataPostLike']}*/row_like)=>
+                                                row_like.IamUserAppId == get({app_id:parameters.app_id, 
+                                                    resource_id:row_like.IamUserAppDataPostId,
                                                     data:{  iam_user_id:null, 
                                                             data_app_id:parameters.app_id}}).result[0]?.iam_user_app_id
                                                 
                                             ).length,
-                    count_user_post_liked:server.ORM.db.IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
+                    CountUserPostLiked:server.ORM.db.IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:null, 
                                                                                 data_app_id:parameters.app_id,
                                                                                 iam_user_app_data_post_id:null}}).result
-                                            .filter((/**@type{server['ORM']['IamUserAppDataPostLike']}*/row_like)=>
+                                            .filter((/**@type{server['ORM']['Object']['IamUserAppDataPostLike']}*/row_like)=>
                                                 result_liked
-                                                .filter((/**@type{server['ORM']['IamUserAppDataPost']}*/data_post)=>
-                                                    row_like.iam_user_app_data_post_id==data_post.id
+                                                .filter((/**@type{server['ORM']['Object']['IamUserAppDataPost']}*/data_post)=>
+                                                    row_like.IamUserAppDataPostId==data_post.Id
                                                 ).length>0
                                             ).length
                     },
@@ -141,40 +135,36 @@ const getViewProfileUserPosts = async parameters =>{
  * @param {{app_id:number,
  *         data:{statchoice?:string|null}
  *       }} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{top:'LIKED_POST'|'VIEWED_POST',
- *                                                      iam_user_id:server['ORM']['IamUserApp']['iam_user_id'],
- *                                                      avatar:server['ORM']['IamUser']['avatar'],
- *                                                      username:server['ORM']['IamUser']['username'],
- *                                                      count:number}[] }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserAppDataPostGetProfileStatPost'][] }>}
  */
 const getViewProfileStatPost = async parameters =>{
     if (parameters.data.statchoice==null)
         return server.ORM.getError(parameters.app_id, 400);
     else{
         return {result:server.ORM.db.IamUser.get(parameters.app_id, null).result
-                        .map((/**@type{server['ORM']['IamUser']}*/row)=>{
+                        .map((/**@type{server['ORM']['Object']['IamUser']}*/row)=>{
                             return {
-                                top:server.ORM.UtilNumberValue(parameters.data.statchoice)==4?
+                                Top:server.ORM.UtilNumberValue(parameters.data.statchoice)==4?
                                         'LIKED_POST':
                                             'VIEWED_POST',
-                                id:row.id,
-                                avatar:row.avatar,
-                                username:row.username,
-                                count:server.ORM.UtilNumberValue(parameters.data.statchoice)==4?
+                                Id:row.Id,
+                                Avatar:row.Avatar,
+                                Username:row.Username,
+                                Count:server.ORM.UtilNumberValue(parameters.data.statchoice)==4?
                                         server.ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
                                                                     resource_id:null,
-                                                                    data:{  iam_user_id:row.id??null, 
+                                                                    data:{  iam_user_id:row.Id??null, 
                                                                             data_app_id:parameters.app_id,
                                                                             iam_user_app_data_post_id:null}}).result.length:
                                             server.ORM.db.IamUserAppDataPostView.get({app_id:parameters.app_id, 
                                                                         resource_id:null,
-                                                                        data:{  iam_user_id:row.id??null, 
+                                                                        data:{  iam_user_id:row.Id??null, 
                                                                                 data_app_id:parameters.app_id,
                                                                                 iam_user_app_data_post_id:null}}).result.length
                             };
                         })
-                        .sort(( /**@type{server['ORM']['IamUser'] & {count:number}}*/a,
-                            /**@type{server['ORM']['IamUser'] & {count:number}}*/b)=>a.count>b.count?-1:1),
+                        .sort(( /**@type{server['ORM']['View']['IamUserAppDataPostGetProfileStatPost']}*/a,
+                                /**@type{server['ORM']['View']['IamUserAppDataPostGetProfileStatPost']}*/b)=>a.Count>b.Count?-1:1),
                 type:'JSON'};
     }
 };
@@ -189,10 +179,7 @@ const getViewProfileStatPost = async parameters =>{
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{detailchoice?:string|null}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{detail:'LIKE_POST'|'LIKED_POST',
- *                                                      iam_user_id:server['ORM']['IamUserApp']['iam_user_id'],
- *                                                      avatar:server['ORM']['IamUser']['avatar'],
- *                                                      username:server['ORM']['IamUser']['username']}[] }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserAppdataPostGetProfileUserPostDetail'][] }>}
  */
 const getViewProfileUserPostDetail = async parameters =>{
     if (parameters.data.detailchoice==null)
@@ -218,37 +205,37 @@ const getViewProfileUserPostDetail = async parameters =>{
                                                             data:{  iam_user_id:null, 
                                                                     data_app_id:parameters.app_id,
                                                                     iam_user_app_data_post_id:null}}).result
-                                .filter ((/**@type{server['ORM']['IamUserAppDataPostLike']}*/row)=>
+                                .filter ((/**@type{server['ORM']['Object']['IamUserAppDataPostLike']}*/row)=>
                                     result_IamUserAppDataPost
-                                    .filter((/**@type{server['ORM']['IamUserAppDataPost']}*/data_post)=>
-                                        data_post.id == row.iam_user_app_data_post_id
+                                    .filter((/**@type{server['ORM']['Object']['IamUserAppDataPost']}*/data_post)=>
+                                        data_post.Id == row.IamUserAppDataPostId
                                     ).length>0
                                 );
 
         return { result: result
-                        .map((/**@type{server['ORM']['IamUserAppDataPostLike']}*/row)=>{
+                        .map((/**@type{server['ORM']['Object']['IamUserAppDataPostLike']}*/row)=>{
                             const result_IamUserApp_id =    server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
                                                                             resource_id:server.ORM.UtilNumberValue(parameters.data.detailchoice)==6?
                                                                                             get({   app_id:parameters.app_id, 
-                                                                                                    resource_id:row.iam_user_app_data_post_id, 
+                                                                                                    resource_id:row.IamUserAppDataPostId, 
                                                                                                     data:{  iam_user_id:null, 
-                                                                                                            data_app_id:null}}).result[0].iam_user_app_id:
-                                                                                                row.iam_user_app_id,
-                                                                            data:{iam_user_id:null, data_app_id:null}}).result[0]?.iam_user_id;
-                            /**@type{server['ORM']['IamUser']} */
+                                                                                                            data_app_id:null}}).result[0].IamUserAppId:
+                                                                                                row.IamUserAppId,
+                                                                            data:{iam_user_id:null, data_app_id:null}}).result[0]?.IamUserId;
+                            /**@type{server['ORM']['Object']['IamUser']} */
                             const result_IamUser = server.ORM.db.IamUser.get(parameters.app_id, 
                                                                 result_IamUserApp_id).result[0];
                             return {
-                                detail:server.ORM.UtilNumberValue(parameters.data.detailchoice)==1?
+                                Detail:server.ORM.UtilNumberValue(parameters.data.detailchoice)==1?
                                         'LIKE_POST':
                                             'LIKED_POST',
-                                iam_user_id:result_IamUserApp_id,
-                                avatar:result_IamUser?.avatar,
-                                username:result_IamUser?.username
+                                IamUserId:result_IamUserApp_id,
+                                Avatar:result_IamUser?.Avatar,
+                                Username:result_IamUser?.Username
                             };
                         })
-                        .sort(( /**@type{server['ORM']['IamUser']}*/a,
-                                /**@type{server['ORM']['IamUser']}*/b)=>a.username<b.username?-1:1),
+                        .sort(( /**@type{server['ORM']['View']['IamUserAppdataPostGetProfileUserPostDetail']}*/a,
+                                /**@type{server['ORM']['View']['IamUserAppdataPostGetProfileUserPostDetail']}*/b)=>a.Username<b.Username?-1:1),
                 type:'JSON'};
    }
 };
@@ -258,26 +245,26 @@ const getViewProfileUserPostDetail = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:server['ORM']['IamUserAppDataPost']}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert']}>}
+ *          data:server['ORM']['Object']['IamUserAppDataPost']}} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const post = async parameters => {
     //check required attributes
-    if (parameters.data.iam_user_app_id==null){
+    if (parameters.data.IamUserAppId==null){
         return server.ORM.getError(parameters.app_id, 400);
     }
     else{
-        /**@type{server['ORM']['IamUserAppDataPost']} */
+        /**@type{server['ORM']['Object']['IamUserAppDataPost']} */
         const data_new =     {
-                                id:Date.now(),
-                                iam_user_app_id:parameters.data.iam_user_app_id, 
+                                Id:Date.now(),
+                                IamUserAppId:parameters.data.IamUserAppId, 
                                 Document:parameters.data.Document,
-                                created:new Date().toISOString(),
-                                modified:null
+                                Created:new Date().toISOString(),
+                                Modified:null
                         };
         return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPost', post:{data:data_new}}).then((result)=>{
-            if (result.affectedRows>0){
-                result.insertId=data_new.id;
+            if (result.AffectedRows>0){
+                result.InsertId=data_new.Id;
                 return {result:result, type:'JSON'};
             }
             else
@@ -292,22 +279,22 @@ const post = async parameters => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server['ORM']['IamUserAppDataPost']}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_update'] }>}
+ *          data:server['ORM']['Object']['IamUserAppDataPost']}} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
 const update = async parameters =>{
-    /**@type{server['ORM']['IamUserAppDataPost']} */
+    /**@type{server['ORM']['Object']['IamUserAppDataPost']} */
     const data_update = {};
     //allowed parameters to update:
     if (parameters.data.Document!=null)
         data_update.Document = parameters.data.Document;
-    data_update.modified = new Date().toISOString();
+    data_update.Modified = new Date().toISOString();
     if (Object.entries(data_update).length>0)
         return server.ORM.Execute({  app_id:parameters.app_id, 
                                     dml:'UPDATE', 
                                     object: 'IamUserAppDataPost', 
                                     update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
-            if (result.affectedRows>0)
+            if (result.AffectedRows>0)
                 return {result:result, type:'JSON'};
             else
                 return server.ORM.getError(parameters.app_id, 404);
@@ -322,14 +309,14 @@ const update = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_delete'] }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>{
     return server.ORM.Execute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
                                 object:'IamUserAppDataPost', 
                                 delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
-        if (result.affectedRows>0)
+        if (result.AffectedRows>0)
             return {result:result, type:'JSON'};
         else
             return server.ORM.getError(parameters.app_id, 404);

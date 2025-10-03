@@ -12,9 +12,9 @@ const {server} = await import('../server/server.js');
  * @param {{app_id:number,
  *          message_queue_type: 'CONSUME'|'PUBLISH',
  *          data: { service: string,
- *                  message_id?:server['ORM']['MessageQueueConsume']['message_queue_publish_id'],
- *                  type?:server['ORM']['MessageQueuePublish']['message']['type']
- *                  message?:server['ORM']['MessageQueuePublish']['message']['message']},
+ *                  message_id?:server['ORM']['Object']['MessageQueueConsume']['message_queue_publish_id'],
+ *                  type?:server['ORM']['Object']['MessageQueuePublish']['message']['type']
+ *                  message?:server['ORM']['Object']['MessageQueuePublish']['message']['message']},
  *          authorization:string,
  *          endpoint:server['bff']['parameters']['endpoint']}} parameters
  * @returns {Promise.<server['server']['response']>}
@@ -22,7 +22,7 @@ const {server} = await import('../server/server.js');
 const messageQueue = async parameters => {
     switch (parameters.message_queue_type) {
         case 'PUBLISH': {
-            /**@type{server['ORM']['MessageQueuePublish']} */
+            /**@type{server['ORM']['Object']['MessageQueuePublish']} */
             const message_queue = { service: parameters.data.service, 
                                     message:   {type:parameters.data.type,
                                                 message:parameters.data.message}
@@ -34,7 +34,7 @@ const messageQueue = async parameters => {
             //direct microservice call
             return await server.ORM.db.MessageQueuePublish.get({app_id:parameters.app_id, resource_id:parameters.data.message_id})
             .then(message_queue=>{
-                /**@type{server['ORM']['MessageQueueConsume']} */
+                /**@type{server['ORM']['Object']['MessageQueueConsume']} */
                 const message_consume = {   message_queue_publish_id: parameters.data.message_id,
                                             message:    null,
                                             start:      null,

@@ -37,52 +37,52 @@
  */
 /**
  * @description Type APP_user_setting_record
- * @typedef {{  id?:number,
- *              description: string|null,
- *              regional_language_locale: string,
- *              regional_timezone: string,
- *              regional_number_system: string,
- *              regional_layout_direction: string,
- *              regional_second_language_locale: string,
- *              regional_arabic_script: string,
- *              regional_calendar_type: 'GREGORIAN'|'HIJRI',
- *              regional_calendar_hijri_type: string,
- *              gps_lat_text: number|null,
- *              gps_long_text: number|null,
- *              design_theme_day_id: string,
- *              design_theme_month_id: string,
- *              design_theme_year_id: string,
- *              design_paper_size: string,
- *              design_row_highlight: string,
- *              design_column_weekday_checked: number,
- *              design_column_calendartype_checked: number,
- *              design_column_notes_checked: number,
- *              design_column_gps_checked: number,
- *              design_column_timezone_checked: number,
- *              image_header_image_img: string,
- *              image_footer_image_img: string,
- *              text_header_1_text: string,
- *              text_header_2_text: string,
- *              text_header_3_text: string,
- *              text_header_align: string|null,
- *              text_footer_1_text: string,
- *              text_footer_2_text: string,
- *              text_footer_3_text: string,
- *              text_footer_align: string|null,
- *              prayer_method: string,
- *              prayer_asr_method: string,
- *              prayer_high_latitude_adjustment: string,
- *              prayer_time_format: string,
- *              prayer_hijri_date_adjustment: number,
- *              prayer_fajr_iqamat: string,
- *              prayer_dhuhr_iqamat: string,
- *              prayer_asr_iqamat: string,
- *              prayer_maghrib_iqamat: string,
- *              prayer_isha_iqamat: string,
- *              prayer_column_imsak_checked: number,
- *              prayer_column_sunset_checked: number,
- *              prayer_column_midnight_checked: number,
- *              prayer_column_fast_start_end: number}} APP_user_setting_record
+ * @typedef {{  Id?:number,
+ *              Description: string|null,
+ *              RegionalLanguageLocale: string,
+ *              RegionalTimezone: string,
+ *              RegionalNumberSystem: string,
+ *              RegionalLayoutDirection: string,
+ *              RegionalSecondLanguageLocale: string,
+ *              RegionalArabicScript: string,
+ *              RegionalCalendarType: 'GREGORIAN'|'HIJRI',
+ *              RegionalCalendarHijri_type: string,
+ *              GpsLatText: number|null,
+ *              GpsLongText: number|null,
+ *              DesignThemeDayId: string,
+ *              DesignThemeMonthId: string,
+ *              DesignThemeYearId: string,
+ *              DesignPaperSize: string,
+ *              DesignRowHighlight: string,
+ *              DesignColumnWeekdayChecked: number,
+ *              DesignColumnCalendartypeChecked: number,
+ *              DesignColumnNotesChecked: number,
+ *              DesignColumnGpsChecked: number,
+ *              DesignColumnTimezoneChecked: number,
+ *              ImageHeaderImageImg: string,
+ *              ImageFooterImageImg: string,
+ *              TextHeader1Text: string,
+ *              TextHeader2Text: string,
+ *              TextHeader3Text: string,
+ *              TextHeaderAlign: string|null,
+ *              TextFooter1Text: string,
+ *              TextFooter2Text: string,
+ *              TextFooter3Text: string,
+ *              TextFooterAlign: string|null,
+ *              PrayerMethod: string,
+ *              PrayerAsrMethod: string,
+ *              PrayerHighLatitudeAdjustment: string,
+ *              PrayerTimeFormat: string,
+ *              PrayerHijriDateAdjustment: number,
+ *              PrayerFajrIqamat: string,
+ *              PrayerDhuhrIqamat: string,
+ *              PrayerAsrIqamat: string,
+ *              PrayerMaghribIqamat: string,
+ *              PrayerIshaIqamat: string,
+ *              PrayerColumnImsakChecked: number,
+ *              PrayerColumnSunsetChecked: number,
+ *              PrayerColumnMidnightChecked: number,
+ *              PrayerColumnFastStartEnd: number}} APP_user_setting_record
  */
 /**
  * @description Type report APP_user_setting_data
@@ -323,17 +323,17 @@
  * @description Type APP_REPORT_day_user_account_app_data_posts
  * @typedef {object}	APP_REPORT_day_user_account_app_data_posts
  * @property {string}	description
- * @property {string}	regional_language_locale
- * @property {string}	regional_timezone
- * @property {string}	regional_number_system
- * @property {string}	regional_calendar_hijri_type
- * @property {number|null}	gps_lat_text
- * @property {number|null}	gps_long_text
- * @property {string}	prayer_method
- * @property {string}	prayer_asr_method
- * @property {string}	prayer_high_latitude_adjustment
- * @property {string}	prayer_time_format
- * @property {number}	prayer_hijri_date_adjustment
+ * @property {string}	RegionalLanguageLocale
+ * @property {string}	RegionalTimezone
+ * @property {string}	RegionalNumberSystem
+ * @property {string}	RegionalCalendarHijri_type
+ * @property {number|null}	GpsLatText
+ * @property {number|null}	GpsLongText
+ * @property {string}	PrayerMethod
+ * @property {string}	PrayerAsrMethod
+ * @property {string}	PrayerHighLatitudeAdjustment
+ * @property {string}	PrayerTimeFormat
+ * @property {number}	PrayerHijriDateAdjustment
  */
  
 /**
@@ -357,8 +357,8 @@
  * 			regional_def_calendar_type_greg:string,
  * 			regional_def_calendar_number_system:string,
  * 			timezone_text: string,
- * 		    gps_lat_text: string,
- * 		    gps_long_text: string
+ * 		    GpsLatText: string,
+ * 		    GpsLongText: string
  * 			}} APP_REPORT_GLOBAL
  */
 

@@ -38,20 +38,20 @@
 #menu_users_search_icon::before{													content:var(--common_app_icon_reload)}
 #menu_users_iam_app_access_title::before{											content:var(--common_app_icon_login)}
 #menu_users_save::before{															content:var(--common_app_icon_save)}
-#menu_users_list .list_title[data-column='avatar']::before{							content:var(--common_app_icon_user_avatar)}
-#menu_users_list .list_title[data-column='id']::before{								content:var(--common_app_icon_provider_id)}
-#menu_users_list .list_title[data-column='type']::before{							content:'TYPE'}
-#menu_users_list .list_title[data-column='active']::before{							content:var(--common_app_icon_inactive) ' ' var(--common_app_icon_active)}
-#menu_users_list .list_title[data-column='user_level']::before{						content:'LEVEL'}
-#menu_users_list .list_title[data-column='private']::before{						content:var(--common_app_icon_private)}
-#menu_users_list .list_title[data-column='username']::before{						content:var(--common_app_icon_user) ' ' var(--common_app_icon_username)}
-#menu_users_list .list_title[data-column='bio']::before{							content:var(--common_app_icon_user_bio)}
-#menu_users_list .list_title[data-column='otp_key']::before{						content:var(--common_app_icon_otp)' 123456'}
-#menu_users_list .list_title[data-column='password']::before{						content:var(--common_app_icon_user_password)}
-#menu_users_list .list_title[data-column='password_reminder']::before{				content:var(--common_app_icon_user_password) ' ' var(--common_app_icon_info)}
-#menu_users_list .list_title[data-column='verification_code']::before{				content:var(--common_app_icon_verification_code)}
-#menu_users_list .list_title[data-column='created']::before{					    content:var(--common_app_icon_user_account_created)}
-#menu_users_list .list_title[data-column='modified']::before{					    content:var(--common_app_icon_user_account_modified)}
+#menu_users_list .list_title[data-column='Avatar']::before{							content:var(--common_app_icon_user_avatar)}
+#menu_users_list .list_title[data-column='Id']::before{								content:var(--common_app_icon_provider_id)}
+#menu_users_list .list_title[data-column='Type']::before{							content:'TYPE'}
+#menu_users_list .list_title[data-column='Active']::before{							content:var(--common_app_icon_inactive) ' ' var(--common_app_icon_active)}
+#menu_users_list .list_title[data-column='UserLevel']::before{						content:'LEVEL'}
+#menu_users_list .list_title[data-column='Private']::before{						content:var(--common_app_icon_private)}
+#menu_users_list .list_title[data-column='Username']::before{						content:var(--common_app_icon_user) ' ' var(--common_app_icon_username)}
+#menu_users_list .list_title[data-column='Bio']::before{							content:var(--common_app_icon_user_bio)}
+#menu_users_list .list_title[data-column='OtpKey']::before{						content:var(--common_app_icon_otp)' 123456'}
+#menu_users_list .list_title[data-column='Password']::before{						content:var(--common_app_icon_user_password)}
+#menu_users_list .list_title[data-column='PasswordReminder']::before{				content:var(--common_app_icon_user_password) ' ' var(--common_app_icon_info)}
+#menu_users_list .list_title[data-column='VerificationCode']::before{				content:var(--common_app_icon_verification_code)}
+#menu_users_list .list_title[data-column='Created']::before{					    content:var(--common_app_icon_user_account_created)}
+#menu_users_list .list_title[data-column='Modified']::before{					    content:var(--common_app_icon_user_account_modified)}
 
 #menu_apps_title::before{															content:var(--common_app_icon_apps)}
 #menu_apps_detail_data::before{												content:var(--common_app_icon_settings)}
@@ -462,7 +462,7 @@
 }
 .menu_users_iam_app_access_row{
 	display:grid;
-	grid-template-columns: 15em 5em 5em 10em 7em 7em 60em auto;
+	grid-template-columns: 15em 7em 5em 5em 7em 100em auto;
 }
 .menu_users_iam_app_access_col:nth-child(1){
 	display: none;
@@ -507,28 +507,28 @@
 	padding-inline-start: 5px;
 	text-align: start;
 }
-.menu_apps_detail_col[data-column='id']{
+.menu_apps_detail_col[data-column='Id']{
 	display:none;
 }
-.menu_apps_detail_col[data-column='app_id']{
+.menu_apps_detail_col[data-column='AppId']{
 	display:none;
 }
-.menu_apps_detail_col[data-column='name']{
+.menu_apps_detail_col[data-column='Name']{
 	display:inline-block;
 	width:200px;
 }
-.menu_apps_detail_col[data-column='value']{
+.menu_apps_detail_col[data-column='Value']{
 	display:inline-block;
 	width:200px;
 }
-.menu_apps_detail_col[data-column='display_data']{
+.menu_apps_detail_col[data-column='DisplayData']{
 	display:inline-block;
 	width:250px;
 }
-.menu_apps_detail_col[data-column='data2'],
-.menu_apps_detail_col[data-column='data3'],
-.menu_apps_detail_col[data-column='data4'],
-.menu_apps_detail_col[data-column='data5']{
+.menu_apps_detail_col[data-column='Data2'],
+.menu_apps_detail_col[data-column='Data3'],
+.menu_apps_detail_col[data-column='Data4'],
+.menu_apps_detail_col[data-column='Data5']{
 	display:inline-block;
 	width:200px;
 }

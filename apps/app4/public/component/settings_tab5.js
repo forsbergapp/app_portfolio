@@ -16,7 +16,7 @@
 const template = () =>`   <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_method' class='common_icon'></div>
+                            <div id='setting_icon_PrayerMethod' class='common_icon'></div>
                         </div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_select_method'></div>
@@ -211,14 +211,14 @@ const component = async props => {
             mountDiv:   'setting_select_asr',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'METHOD_ASR')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'METHOD_ASR')[0].display_data,
+                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'METHOD_ASR')[0].DisplayData,
                         options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'METHOD_ASR'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'display_data'
+                        column_text:'DisplayData'
                         },
             methods:    null,
             path:       '/common/component/common_select.js'});
@@ -227,14 +227,14 @@ const component = async props => {
             mountDiv:   'setting_select_highlatitude',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIGH_LATITUDE_ADJUSTMENT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIGH_LATITUDE_ADJUSTMENT')[0].display_data,
+                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIGH_LATITUDE_ADJUSTMENT')[0].DisplayData,
                         options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIGH_LATITUDE_ADJUSTMENT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'display_data'
+                        column_text:'DisplayData'
                         },
             methods:    null,
             path:       '/common/component/common_select.js'});
@@ -243,14 +243,14 @@ const component = async props => {
             mountDiv:   'setting_select_timeformat',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'TIMEFORMAT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'TIMEFORMAT')[0].display_data,
+                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'TIMEFORMAT')[0].DisplayData,
                         options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'TIMEFORMAT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'display_data'
+                        column_text:'DisplayData'
                         },
             methods:    null,
             path:       '/common/component/common_select.js'});
@@ -259,14 +259,14 @@ const component = async props => {
             mountDiv:   'setting_select_hijri_adjustment',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIJRI_DATE_ADJUSTMENT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIJRI_DATE_ADJUSTMENT')[0].display_data,
+                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIJRI_DATE_ADJUSTMENT')[0].DisplayData,
                         options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIJRI_DATE_ADJUSTMENT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'display_data'
+                        column_text:'DisplayData'
                         },
             methods:    null,
             path:'/common/component/common_select.js'});
@@ -275,14 +275,14 @@ const component = async props => {
             mountDiv:   'setting_select_report_iqamat_title_fajr',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].display_data,
+                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].DisplayData,
                         options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'display_data'
+                        column_text:'DisplayData'
                         },
             methods:    null,
             path:       '/common/component/common_select.js'});
@@ -290,14 +290,14 @@ const component = async props => {
             mountDiv:   'setting_select_report_iqamat_title_dhuhr',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].display_data,
+                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].DisplayData,
                         options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'display_data'
+                        column_text:'DisplayData'
                         },
             methods:    null,
             path:       '/common/component/common_select.js'});
@@ -305,14 +305,14 @@ const component = async props => {
             mountDiv:   'setting_select_report_iqamat_title_asr',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].display_data,
+                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].DisplayData,
                         options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'display_data'
+                        column_text:'DisplayData'
                         },
             methods:    null,
             path:       '/common/component/common_select.js'});
@@ -320,14 +320,14 @@ const component = async props => {
             mountDiv:   'setting_select_report_iqamat_title_maghrib',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].display_data,
+                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].DisplayData,
                         options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'display_data'
+                        column_text:'DisplayData'
                         },
             methods:    null,
             path:       '/common/component/common_select.js'});
@@ -335,14 +335,14 @@ const component = async props => {
             mountDiv:   'setting_select_report_iqamat_title_isha',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].display_data,
+                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].DisplayData,
                         options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'display_data'
+                        column_text:'DisplayData'
                         },
             methods:    null,
             path:       '/common/component/common_select.js'});
@@ -351,43 +351,43 @@ const component = async props => {
             mountDiv:   'setting_select_report_show_fast_start_end',
             data:       {
                         default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'FAST_START_END')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'FAST_START_END')[0].display_data,
+                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'FAST_START_END')[0].DisplayData,
                         options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'FAST_START_END'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'display_data'
+                        column_text:'DisplayData'
                         },
             methods:    null,
             path:       '/common/component/common_select.js'});
 
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_method', props.data.user_settings.prayer_method);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_method', props.data.user_settings.PrayerMethod);
         props.methods.appComponentSettingUpdate('PRAYER', 'METHOD');
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_asr', props.data.user_settings.prayer_asr_method);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_highlatitude', props.data.user_settings.prayer_high_latitude_adjustment);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_timeformat', props.data.user_settings.prayer_time_format);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_hijri_adjustment', props.data.user_settings.prayer_hijri_date_adjustment);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_fajr', props.data.user_settings.prayer_fajr_iqamat);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_dhuhr', props.data.user_settings.prayer_dhuhr_iqamat);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_asr', props.data.user_settings.prayer_asr_iqamat);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_maghrib', props.data.user_settings.prayer_maghrib_iqamat);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_isha', props.data.user_settings.prayer_isha_iqamat);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_asr', props.data.user_settings.PrayerAsrMethod);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_highlatitude', props.data.user_settings.PrayerHighLatitudeAdjustment);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_timeformat', props.data.user_settings.PrayerTimeFormat);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_hijri_adjustment', props.data.user_settings.PrayerHijriDateAdjustment);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_fajr', props.data.user_settings.PrayerFajrIqamat);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_dhuhr', props.data.user_settings.PrayerDhuhrIqamat);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_asr', props.data.user_settings.PrayerAsrIqamat);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_maghrib', props.data.user_settings.PrayerMaghribIqamat);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_isha', props.data.user_settings.PrayerIshaIqamat);
         
-        if (Number(props.data.user_settings.prayer_column_imsak_checked))
+        if (Number(props.data.user_settings.PrayerColumnImsakChecked))
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_imsak').classList.add('checked');
         else
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_imsak').classList.remove('checked');
-        if (Number(props.data.user_settings.prayer_column_sunset_checked))
+        if (Number(props.data.user_settings.PrayerColumnSunsetChecked))
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_sunset').classList.add('checked');
         else
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_sunset').classList.remove('checked');
-        if (Number(props.data.user_settings.prayer_column_midnight_checked))
+        if (Number(props.data.user_settings.PrayerColumnMidnightChecked))
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.add('checked');
         else
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.remove('checked');
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_show_fast_start_end', props.data.user_settings.prayer_column_fast_start_end);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_show_fast_start_end', props.data.user_settings.PrayerColumnFastStartEnd);
     };
     return {
         lifecycle:  {onMounted:onMounted},

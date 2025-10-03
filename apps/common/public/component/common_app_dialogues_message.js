@@ -22,7 +22,7 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
                             `<div id='common_app_dialogues_message_title_container'>
                                 <div id='common_app_dialogues_message_title_icon' data-text_class='${props.message_title_icon_class}' class='common_icon'></div>
                                 <div id='common_app_dialogues_message_title' class='${props.message_title_font_class}'>
-                                    ${typeof props.message == 'object'?Object.entries(props.message).map((/**@type{*}*/list_row)=>
+                                    ${props.message !=null && props.message !='' && typeof props.message == 'object'?Object.entries(props.message).map((/**@type{*}*/list_row)=>
                                         //loop manages both object and array
                                         `<div id='common_app_dialogues_message_info_list'>
                                             <div class='common_app_dialogues_message_info_list_row'>

@@ -117,11 +117,11 @@
     *                      ip:string, 
     *                      user_agent:string, 
     *                      accept_language:string,
-    *                      configServer:server['ORM']['ConfigServer'],
+    *                      configServer:server['ORM']['Object']['ConfigServer'],
     *                      },
     *        methods:      {
     *                      commonAppStart:import('../common.js')['commonAppStart'],
-    *                      bffGeodata:import('../../../../server/bff.js')['bffGeodata'],
+    *                      commonGeodata:import('../common.js')['commonGeodata'],
     *                      AppData:import('../../../../server/db/AppData.js'),
     *                      IamEncryption:import('../../../../server/db/IamEncryption.js'),
     *                      IamUser:import('../../../../server/db/IamUser.js'),
@@ -157,7 +157,7 @@
             const secret= Buffer.from(JSON.stringify(await props.methods.Security.securityTransportCreateSecrets()),'utf-8')
                                 .toString('base64');
             await props.methods.IamEncryption.post(props.data.app_id,
-                {app_id:common_app_id, uuid:uuid, secret:secret, iam_app_id_token_id:idToken.id??0, type:'APP'});
+                {AppId:common_app_id, Uuid:uuid, Secret:secret, IamAppIdTokenId:idToken.id??0, Type:'APP'});
             return {
                 idToken:idToken,
                 uuid:uuid,
@@ -187,9 +187,9 @@
             //fetch parameters and convert records to one object with parameter keys
             /**@type{Object.<string,*>} */
             const APP_PARAMETER = props.methods.AppData.getServer({app_id:props.data.app_id, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:common_app_id}}).result
-                                         .reduce((/**@type{Object.<string,*>}*/key, /**@type{server['ORM']['AppData']}*/row)=>{key[row.value] = row.display_data; return key},{})
+                                         .reduce((/**@type{Object.<string,*>}*/key, /**@type{server['ORM']['Object']['AppData']}*/row)=>{key[row.Value] = row.DisplayData; return key},{})
             //geodata for APP using start_app_id
-            const result_geodata = await props.methods.bffGeodata({ app_id:start_app_id, 
+            const result_geodata = await props.methods.commonGeodata({ app_id:start_app_id, 
                                                                     endpoint:'APP', 
                                                                     ip:props.data.ip, 
                                                                     user_agent:props.data.user_agent, 

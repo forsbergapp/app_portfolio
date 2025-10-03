@@ -12,20 +12,12 @@
  * @description Template
  * @function
  * @param {{app_id:number|null,
- *          chart1_stat:{   chart:number,
- *                          app_id:number,
- *                          day:number,
- *                          amount:number,
- *                          statValue:string}[],
+ *          chart1_stat:common['ORM']['View']['LogGetStat'][],
  *          function_chart1_pie_colors:function,
  *          function_chart1_legend:function,
  *          chart2_color_app_all:string,
  *          chart2_color_app:string,
- *          chart2_stat:{   chart:number,
- *                          app_id:number,
- *                          day:number,
- *                          amount:number,
- *                          statValue:string}[],
+ *          chart2_stat:common['ORM']['View']['LogGetStat'][],
  *          chart2_legend_text:string,
  *          chart2_legend_text_apps:string}} props
  * @returns {string}
@@ -40,7 +32,7 @@ const template = props => ` <div id='menu_start_chart_box1'>
                                         `<div class='menu_start_chart_box_legend_row'>
                                             <div id='menu_start_chart_box1_legend_col1' class='menu_start_chart_box_legend_col' style='background-color:rgb(${index/props.chart1_stat.length*200},${index/props.chart1_stat.length*200},255)'></div>
                                             <div id='menu_start_chart_box1_legend_col2' class='menu_start_chart_box_legend_col'>
-                                                ${props.function_chart1_legend(stat.app_id, stat.statValue)}
+                                                ${props.function_chart1_legend(stat.StatValue)}
                                             </div>
                                         </div>`
                                     ).join('')
@@ -51,17 +43,17 @@ const template = props => ` <div id='menu_start_chart_box1'>
                                 <div id='menu_start_chart_box2_title' class='menu_start_chart_box_title common_icon'></div>
                                 <div id='menu_start_chart_box2_chart' class='menu_start_chart_box_chart'>
                                     <div id='menu_start_chart_box2_bar_legendY'>
-                                        <div id='menu_start_chart_box2_bar_legend_max'>${Math.max(...props.chart2_stat.map(stat=>stat.amount))}</div>
-                                        <div id='menu_start_chart_box2_bar_legend_medium'>${Math.max(...props.chart2_stat.map(stat=>stat.amount))/2}</div>
+                                        <div id='menu_start_chart_box2_bar_legend_max'>${Math.max(...props.chart2_stat.map(stat=>stat.Amount??0))}</div>
+                                        <div id='menu_start_chart_box2_bar_legend_medium'>${Math.max(...props.chart2_stat.map(stat=>stat.Amount??0))/2}</div>
                                         <div id='menu_start_chart_box2_bar_legend_min'>0</div>
                                     </div>
                                     <div id='menu_start_chart_box2_bar_data'>
                                         ${props.chart2_stat.map(stat=>
                                             `<div class='menu_start_chart_box2_barcol menu_start_chart_box2_barcol_display' style='width:${100/props.chart2_stat.length}%'>
                                                 <div class='menu_start_chart_box2_barcol_color' 
-                                                    style='background-color:${props.app_id?props.chart2_color_app:props.chart2_color_app_all};height:${+stat.amount/Math.max(...props.chart2_stat.map(stat=>stat.amount))*100}%'>
+                                                    style='background-color:${props.app_id?props.chart2_color_app:props.chart2_color_app_all};height:${+(stat.Amount??0)/Math.max(...props.chart2_stat.map(stat=>stat.Amount??0))*100}%'>
                                                 </div>
-                                                <div class='menu_start_chart_box2_barcol_legendX'>${stat.day}</div>
+                                                <div class='menu_start_chart_box2_barcol_legendX'>${stat.Day}</div>
                                             </div>`
                                         ).join('')
                                         }
@@ -132,11 +124,10 @@ const component = async props => {
     };
     /**
      * Chart 1 legend
-     * @param {number} stat_app_id
      * @param {string} stat_value
      * @returns {string}
      */
-    const chart1_legend = (stat_app_id, stat_value) =>{
+    const chart1_legend = stat_value =>{
         if (admin_statGroup=='REQUEST')
             return stat_value;
         else
@@ -151,11 +142,7 @@ const component = async props => {
         query = `data_app_id=${app_id}&statGroup=&statValue=${admin_statValues.value}&unique=&year=${year}&month=${month}`;
     
     //return result for both charts
-    /**@type{{  chart:number,
-     *          app_id:number,
-     *          day:number,
-     *          amount:number,
-     *          statValue:string}[]} */
+    /**@type{common['ORM']['View']['LogGetStat'][]} */
     const charts = await props.methods.COMMON.commonFFB({path:'/server-db/log-stat', query:query, method:'GET', authorization_type:'ADMIN'})
                         .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows)));
       
@@ -164,12 +151,12 @@ const component = async props => {
         data:       null,
         methods:    null,
         template:   template({  app_id:app_id,
-                                chart1_stat:charts.filter(row=> row.chart==1),
+                                chart1_stat:charts.filter(row=> row.Chart==1),
                                 function_chart1_pie_colors:chart1_pie_colors,
                                 function_chart1_legend:chart1_legend,
                                 chart2_color_app_all:'rgb(81, 171, 255)',
                                 chart2_color_app:'rgb(197 227 255)',
-                                chart2_stat:charts.filter(row=> row.chart==2),
+                                chart2_stat:charts.filter(row=> row.Chart==2),
                                 chart2_legend_text:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').textContent,
                                 chart2_legend_text_apps:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_app .common_select_dropdown_value').textContent})
         };

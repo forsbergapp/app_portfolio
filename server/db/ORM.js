@@ -44,9 +44,19 @@ const fs = await import('node:fs');
  * @name #DB
  * @description File database using ORM pattern, is loaded from external file at server start
  * @constant
- * @type{{data:server['ORMMetaData']['DbObject'][]}}
+ * @type{{  data:server['ORM']['MetaData']['DbObject'][], 
+ *          external:{  COUNTRY:*, 
+ *                      LOCALE:*, 
+ *                      GEOLOCATION_IP:*, 
+ *                      GEOLOCATION_PLACE:*}}}
  */
-const DB = {data: []};
+const DB = {
+                data: [],
+                external:{  COUNTRY:null,
+                            LOCALE:null,
+                            GEOLOCATION_IP:null,
+                            GEOLOCATION_PLACE:null
+                }};
 Object.seal(DB);
         
 /**
@@ -79,8 +89,45 @@ class ORM_class {
      * @param {import('../info.js')['serverProcess']}serverProcess
      */
     constructor (serverProcess) {    
-        /**@type{Object.<String,*>} */
-        this.db = {};
+        /** 
+         * @description Get all imported ORM objects from file system
+         *              Using Dependency Injection pattern
+         *              Declare variable first and import in InitAsync with await
+         * @type {  {App:import('./App.js'),
+         *           AppData:import('./AppData.js'),
+         *           AppDataEntity:import('./AppDataEntity.js'),
+         *           AppDataEntityResource:import('./AppDataEntityResource.js'),
+         *           AppDataResourceDetail:import('./AppDataResourceDetail.js'),
+         *           AppDataResourceDetailData:import('./AppDataResourceDetailData.js'),
+         *           AppDataResourceMaster:import('./AppDataResourceMaster.js'),
+         *           AppModule:import('./AppModule.js'),
+         *           AppModuleQueue:import('./AppModuleQueue.js'),
+         *           AppTranslation:import('./AppTranslation.js'),
+         *           ConfigRestApi:import('./ConfigRestApi.js'),
+         *           ConfigServer:import('./ConfigServer.js'),
+         *           IamAppAccess:import('./IamAppAccess.js'),
+         *           IamAppIdToken:import('./IamAppIdToken.js'),
+         *           IamControlIp:import('./IamControlIp.js'),
+         *           IamControlObserve:import('./IamControlObserve.js'),
+         *           IamControlUserAgent:import('./IamControlUserAgent.js'),
+         *           IamEncryption:import('./IamEncryption.js'),
+         *           IamMicroserviceToken:import('./IamMicroserviceToken.js'),
+         *           IamUser:import('./IamUser.js'),
+         *           IamUserApp:import('./IamUserApp.js'),
+         *           IamUserAppDataPost:import('./IamUserAppDataPost.js'),
+         *           IamUserAppDataPostLike:import('./IamUserAppDataPostLike.js'),
+         *           IamUserAppDataPostView:import('./IamUserAppDataPostView.js'),
+         *           IamUserEvent:import('./IamUserEvent.js'),
+         *           IamUserFollow:import('./IamUserFollow.js'),
+         *           IamUserLike:import('./IamUserLike.js'),
+         *           IamUserView:import('./IamUserView.js'),
+         *           Log:import('./Log.js'),
+         *           MessageQueueConsume:import('./MessageQueueConsume.js'),
+         *           MessageQueueError:import('./MessageQueueError.js'),
+         *           MessageQueuePublish:import('./MessageQueuePublish.js'),
+         *           ServiceRegistry:import('./ServiceRegistry.js')}}
+         */
+        this.db;
         this.init = this.InitAsync;
         this.serverProcess = serverProcess;
     }
@@ -92,30 +139,45 @@ class ORM_class {
      * @returns {Promise.<void>}
      */
     InitAsync = async () => {
-        if (Object.keys(this.db).length>0){
+        if (this.db && Object.keys(this.db).length>0){
             throw server.iam.iamUtilMessageNotAuthorized();
         }
         else{
-            /** 
-             * @description Get all imported ORM objects from file system
-             *              Using Dependency Injection pattern
-             * @type {Object.<String,*>}
-             */
-            this.db = await new Promise(resolve=>{(async () =>{ 
-                                const filePaths = await fs.promises.readdir(this.serverProcess.cwd() + 
-                                                                            '/server/db', 
-                                                                            { withFileTypes: true });
-                                /**@type{Object.<String,*>} */
-                                const ORMObjects = {};
-                                for (const file of filePaths){
-                                    //filter directory, ORM file and test spec files
-                                    if (!file.isDirectory() && file.name !='ORM.js' && !file.name.endsWith('spec.js')){
-                                        ORMObjects[file.name.replace('.js','')] = await import('./' +  file.name); 
-                                    }
-                                        
-                                }
-                                resolve(ORMObjects);
-                        })();});
+            this.db = {
+                        App:await import('./App.js'),
+                        AppData:await import('./AppData.js'),
+                        AppDataEntity:await import('./AppDataEntity.js'),
+                        AppDataEntityResource:await import('./AppDataEntityResource.js'),
+                        AppDataResourceDetail:await import('./AppDataResourceDetail.js'),
+                        AppDataResourceDetailData:await import('./AppDataResourceDetailData.js'),
+                        AppDataResourceMaster:await import('./AppDataResourceMaster.js'),
+                        AppModule:await import('./AppModule.js'),
+                        AppModuleQueue:await import('./AppModuleQueue.js'),
+                        AppTranslation:await import('./AppTranslation.js'),
+                        ConfigRestApi:await import('./ConfigRestApi.js'),
+                        ConfigServer:await import('./ConfigServer.js'),
+                        IamAppAccess:await import('./IamAppAccess.js'),
+                        IamAppIdToken:await import('./IamAppIdToken.js'),
+                        IamControlIp:await import('./IamControlIp.js'),
+                        IamControlObserve:await import('./IamControlObserve.js'),
+                        IamControlUserAgent:await import('./IamControlUserAgent.js'),
+                        IamEncryption:await import('./IamEncryption.js'),
+                        IamMicroserviceToken:await import('./IamMicroserviceToken.js'),
+                        IamUser:await import('./IamUser.js'),
+                        IamUserApp:await import('./IamUserApp.js'),
+                        IamUserAppDataPost:await import('./IamUserAppDataPost.js'),
+                        IamUserAppDataPostLike:await import('./IamUserAppDataPostLike.js'),
+                        IamUserAppDataPostView:await import('./IamUserAppDataPostView.js'),
+                        IamUserEvent:await import('./IamUserEvent.js'),
+                        IamUserFollow:await import('./IamUserFollow.js'),
+                        IamUserLike:await import('./IamUserLike.js'),
+                        IamUserView:await import('./IamUserView.js'),
+                        Log:await import('./Log.js'),
+                        MessageQueueConsume:await import('./MessageQueueConsume.js'),
+                        MessageQueueError:await import('./MessageQueueError.js'),
+                        MessageQueuePublish:await import('./MessageQueuePublish.js'),
+                        ServiceRegistry:await import('./ServiceRegistry.js')
+             }
             Object.seal(this.db);
 
             const result_data = await this.getFsDataExists();
@@ -130,14 +192,19 @@ class ORM_class {
 
             //cache file content in db
             for (const file_db_record of DB.data){
-                if ('cache_content' in file_db_record &&
-                    file_db_record.in_memory==false
+                if ('CacheContent' in file_db_record &&
+                    file_db_record.InMemory==false
                 ){
-                    const file = await this.getFsFile(DB_DIR.db + file_db_record.name + '.json', file_db_record.type);
-                    file_db_record.cache_content = file?file:null;
+                    const file = await this.getFsFile(DB_DIR.db + file_db_record.Name + '.json', file_db_record.Type);
+                    file_db_record.CacheContent = file?file:null;
                 }
             }
-    
+            DB.external = {
+                        COUNTRY:		    await this.postExternal('COUNTRY'),
+                        LOCALE: 		    await this.postExternal('LOCALE'),
+                        GEOLOCATION_IP:     await this.postExternal('GEOLOCATION_IP'),
+                        GEOLOCATION_PLACE:  await this.postExternal('GEOLOCATION_PLACE')
+                };
         }
     };
     
@@ -145,7 +212,7 @@ class ORM_class {
      * @name formatContent
      * @description Formats content
      * @method
-     * @param {server['ORMMetaData']['DbObject']['type']} object_type
+     * @param {server['ORM']['MetaData']['DbObject']['Type']} object_type
      * @param {*} content
      * @returns {string}
      */
@@ -163,13 +230,13 @@ class ORM_class {
      * @description Get file record from file db, uses default not immutable
      *              if record can be updated or no update in calling function using local variable for performance.
      * @method
-     * @param {server['ORMMetaData']['DbObject']['name']} object 
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} object 
      * @param {boolean}  immutable
-     * @returns {server['ORMMetaData']['DbObject']}
+     * @returns {server['ORM']['MetaData']['DbObject']}
      */
     getObjectRecord = (object, immutable=false) =>immutable?
-                                                        JSON.parse(JSON.stringify(DB.data.filter(file_db=>file_db.name == object)[0])):
-                                                            DB.data.filter(file_db=>file_db.name == object)[0];
+                                                        JSON.parse(JSON.stringify(DB.data.filter(file_db=>file_db.Name == object)[0])):
+                                                            DB.data.filter(file_db=>file_db.Name == object)[0];
 
     /**
      * @name fileTransactionStart
@@ -179,27 +246,27 @@ class ORM_class {
      *              Reads and sets `transaction_id`, `transaction_content` and `lock` key in DB 
      *              `transaction_content` is used to rollback info if something goes wrong and can also be used for debugging purpose
      * @method
-     * @param {server['ORMMetaData']['DbObject']['name']} object 
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} object 
      * @param {string} filepath
      * @returns {Promise.<{transaction_id:number, transaction_content:*}>}
      */
     fileTransactionStart = async (object, filepath)=>{
-        const record = DB.data.filter(file_db=>file_db.name == object)[0];
+        const record = DB.data.filter(file_db=>file_db.Name == object)[0];
         const transaction = async ()=>{
             const transaction_id = Date.now();
-            record.transaction_id = transaction_id;
-            record.transaction_content = record.type.startsWith('TABLE_LOG')?
+            record.TransactionId = transaction_id;
+            record.TransactionContent = record.Type.startsWith('TABLE_LOG')?
                                                     null:
-                                                        record.in_memory?
-                                                            JSON.parse(record.content?? (record.type.startsWith('TABLE')?'[]':'{}')):
-                                                                await this.getFsFile(filepath,record.type);
+                                                        record.InMemory?
+                                                            JSON.parse(record.Content?? (record.Type.startsWith('TABLE')?'[]':'{}')):
+                                                                await this.getFsFile(filepath,record.Type);
             return {transaction_id:transaction_id,
-                    transaction_content:record.transaction_content
+                    transaction_content:record.TransactionContent
             };
         };
         return new Promise((resolve, reject)=>{
-            if  (record.lock==0){
-                record.lock = 1;
+            if  (record.Lock==0){
+                record.Lock = 1;
                 //add 1ms wait so transaction_id will be guaranteed unique on a fast server
                 setTimeout(()=>{
                     transaction().then((result)=>resolve(result)); 
@@ -212,8 +279,8 @@ class ORM_class {
                     if (tries > 10000)
                         reject ('timeout');
                     else
-                        if (record.lock==0){
-                            record.lock = 1;
+                        if (record.Lock==0){
+                            record.Lock = 1;
                             transaction().then((result)=>resolve(result)); 
                         }
                         else
@@ -227,21 +294,21 @@ class ORM_class {
     /**
      * @name commit
      * @description Transaction commit
-     *              Empties `transaction_id` and `transaction_content`, sets `lock =0` and updates cache_content if used
+     *              Empties `transaction_id` and `TransactionContent`, sets `Lock =0` and updates CacheContent if used
      * @method
-     * @param {server['ORMMetaData']['DbObject']['name']} object 
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} object 
      * @param {number} transaction_id 
      * @param {*} [cache_content]
      * @returns {boolean}
      */
     commit = (object, transaction_id, cache_content=null)=>{
-        const record = DB.data.filter(file_db=>file_db.name == object)[0];
-        if (record.transaction_id==transaction_id){
+        const record = DB.data.filter(file_db=>file_db.Name == object)[0];
+        if (record.TransactionId==transaction_id){
             if (cache_content)
-                record.cache_content = cache_content;
-            record.lock = 0;
-            record.transaction_id = null;
-            record.transaction_content = null;
+                record.CacheContent = cache_content;
+            record.Lock = 0;
+            record.TransactionId = null;
+            record.TransactionContent = null;
             return true;
         }
         else
@@ -250,18 +317,18 @@ class ORM_class {
     /**
      * @name rollback
      * @description Transaction rollback
-     *              Empties `transaction_id` and `transaction_content`, sets `lock =0` and updates cache_content if used
+     *              Empties `transaction_id` and `TransactionContent`, sets `Lock =0` and updates CacheContent if used
      * @method
-     * @param {server['ORMMetaData']['DbObject']['name']} object 
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} object 
      * @param {number} transaction_id 
      * @returns {boolean}
      */
     rollback = (object, transaction_id)=>{
-        const record = DB.data.filter(file_db=>file_db.name == object)[0];
-        if (record.transaction_id==transaction_id){
-            record.lock = 0;
-            record.transaction_id = null;
-            record.transaction_content = null;
+        const record = DB.data.filter(file_db=>file_db.Name == object)[0];
+        if (record.TransactionId==transaction_id){
+            record.Lock = 0;
+            record.TransactionId = null;
+            record.TransactionContent = null;
             return true;
         }
         else
@@ -281,7 +348,7 @@ class ORM_class {
             file_partition = `${partition}`;
         else{
             const config_file_interval = this.getObject(0,'ConfigServer')['SERVICE_LOG']
-                                        .filter((/**@type{server['ORM']['ConfigServer']['SERVICE_LOG']}*/row)=>'FILE_INTERVAL' in row)[0].FILE_INTERVAL;
+                                        .filter((/**@type{server['ORM']['Object']['ConfigServer']['SERVICE_LOG']}*/row)=>'FILE_INTERVAL' in row)[0].FILE_INTERVAL;
             const year = new Date().toLocaleString('en-US', { timeZone: 'UTC', year: 'numeric'});
             const month = new Date().toLocaleString('en-US', { timeZone: 'UTC', month: '2-digit'});
             const day   = new Date().toLocaleString('en-US', { timeZone: 'UTC', day: '2-digit'});
@@ -314,7 +381,7 @@ class ORM_class {
      * @description Get parsed file for given filepath
      * @method
      * @param {string} filepath
-     * @param {server['ORMMetaData']['DbObject']['type']|null} [object_type]
+     * @param {server['ORM']['MetaData']['DbObject']['Type']|null} [object_type]
      * @returns {Promise.<*>}
      */
     getFsFile = async (filepath, object_type=null) => fs.promises.readFile(this.serverProcess.cwd() + filepath, 'utf8')
@@ -347,7 +414,7 @@ class ORM_class {
      * @name getFsDbObject
      * @description Get DbObjects file content
      * @method
-     * @returns {Promise.<server['ORMMetaData']['DbObject'][]>}
+     * @returns {Promise.<server['ORM']['MetaData']['DbObject'][]>}
      */
     getFsDbObject = async () => this.getFsFile(DB_DIR.db + 'DbObjects.json');
 
@@ -357,7 +424,7 @@ class ORM_class {
      *              Must specify valid transaction id to be able to update a file
      *              Backup of old file will be written to journal directory
      * @method
-     * @param {server['ORMMetaData']['DbObject']['name']} object
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} object
      * @param {number|null} transaction_id 
      * @param {[]} file_content 
      * @param {string|null} filepath
@@ -365,19 +432,19 @@ class ORM_class {
      */
     updateFsFile = async (object, transaction_id, file_content, filepath=null) =>{  
         const record = this.getObjectRecord(object);
-        if (record.in_memory==true)
-            record.content = this.formatContent(record.type, file_content);
+        if (record.InMemory==true)
+            record.Content = this.formatContent(record.Type, file_content);
         else
-            if (!transaction_id || record.transaction_id != transaction_id){
+            if (!transaction_id || record.TransactionId != transaction_id){
                 throw server.iam.iamUtilMessageNotAuthorized();
             }
             else{
-                if (['TABLE', 'TABLE_KEY_VALUE', 'DOCUMENT'].includes(record.type) && this.getObject(0,'ConfigServer').SERVICE_DB.filter((/**@type{*}*/key)=>'JOURNAL' in key)[0]?.JOURNAL=='1'){
+                if (['TABLE', 'TABLE_KEY_VALUE', 'DOCUMENT'].includes(record.Type) && this.getObject(0,'ConfigServer').SERVICE_DB.filter((/**@type{*}*/key)=>'JOURNAL' in key)[0]?.JOURNAL=='1'){
                     //write to journal using format [Date.now()].[ISO Date string].[object].json
-                    await this.postFsFile(`${DB_DIR.journal}${Date.now()}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}.${object}.json`, file_content, record.type);
+                    await this.postFsFile(`${DB_DIR.journal}${Date.now()}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}.${object}.json`, file_content, record.Type);
                 }
                 //write new file content
-                await this.postFsFile(filepath ?? (DB_DIR.db + object + '.json'), file_content, record.type);
+                await this.postFsFile(filepath ?? (DB_DIR.db + object + '.json'), file_content, record.Type);
             }
     };
 
@@ -387,7 +454,7 @@ class ORM_class {
      * @method
      * @param {string} path
      * @param {*} content
-     * @param {server['ORMMetaData']['DbObject']['type']} object_type
+     * @param {server['ORM']['MetaData']['DbObject']['Type']} object_type
      * @returns{Promise.<void>}
      */
     postFsFile = async (path, content, object_type) => {
@@ -433,9 +500,9 @@ class ORM_class {
      * @name postFsAdmin
      * @description Write to a file in database used in first time installation
      * @method
-     * @param {server['ORMMetaData']['DbObject']['name']} object
+     * @param {server['ORM']['MetaData']['AllObjects']} object
      * @param {{}} file_content 
-     * @param {server['ORMMetaData']['DbObject']['type']} object_type
+     * @param {server['ORM']['MetaData']['DbObject']['Type']} object_type
      * @returns {Promise.<void>}
      */
     postFsAdmin = async (object, file_content, object_type) =>{
@@ -446,15 +513,15 @@ class ORM_class {
      * @name postAdmin
      * @description Add table content for memory only table used at server start
      * @method
-     * @param {server['ORMMetaData']['DbObject']['name']} object
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} object
      * @param {{}} data
      * @returns {Promise.<void>}
      */
     postAdmin = async (object, data) =>{
         const record = this.getObjectRecord(object);
-        if (record.in_memory){
-            record.cache_content = data;
-            record.content = this.formatContent(record.type,data);
+        if (record.InMemory){
+            record.CacheContent = data;
+            record.Content = this.formatContent(record.Type,data);
         }
         else
             throw this.getError(0, 401);    
@@ -465,16 +532,16 @@ class ORM_class {
      * @description Locks object in DB
      * @method
      * @param {number} app_id
-     * @param {server['ORMMetaData']['DbObject']['name']} object
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} object
      * @param {string |null} filepath_partition
-     * @returns {Promise.<server['ORMMetaData']['result_fileFsRead']>}
+     * @returns {Promise.<server['ORM']['MetaData']['result_fileFsRead']>}
      */
     lockObject = async (app_id, object, filepath_partition=null) =>{
         const filepath = filepath_partition ?? (DB_DIR.db + object + '.json');
         const {transaction_id, transaction_content} = await this.fileTransactionStart(object, filepath);
-        return {   file_content:    transaction_content,
-                    lock:           true,
-                    transaction_id: transaction_id};
+        return {    FileContent:    transaction_content,
+                    Lock:           true,
+                    TransactionId: transaction_id};
     };
 
     /**
@@ -486,7 +553,7 @@ class ORM_class {
      *              
      * @method
      * @param {number} app_id
-     * @param {server['ORMMetaData']['DbObject']['name']} object
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} object
      * @param {number|null} [resource_id]
      * @param {number|null} [data_app_id]
      * @returns {*}
@@ -495,12 +562,13 @@ class ORM_class {
         try {
             //fetch record with already removed object reference
             const record = this.getObjectRecord(object, true);
-            switch(record.type){
+            switch(record.Type){
                 case 'TABLE':
                 case 'TABLE_KEY_VALUE':{
-                    /**@type{*[]} */
-                    const records = record.cache_content
-                                    .filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id))
+                    /**@type{{Id:number, AppId:number}[]} */
+                    const records = record.CacheContent
+                                    //All tables have Id or AppId or both
+                                    .filter((/**@type{*}*/row)=> row.Id ==(resource_id ?? row.Id) && row.AppId == (data_app_id ?? row.AppId))
                                     .map((/**@type{*}*/row)=>{
                                         if ('Document' in row)
                                             return {...row,
@@ -525,7 +593,7 @@ class ORM_class {
                         return ORM.getError(app_id, 404);
                 }
                 case 'DOCUMENT':
-                    return record.cache_content;
+                    return record.CacheContent;
                 default:
                     return ORM.getError(app_id, 404);
             }
@@ -542,33 +610,58 @@ class ORM_class {
      *              else returns document
      * @method
      * @param {number} app_id
-     * @param {server['ORMMetaData']['DbObject']['name']} object
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} object
      * @param {number|null} resource_id
      * @param {string|null} partition
      * @returns {Promise.<{rows:*[]|{}}>}
      */
     getObjectFile = async (app_id, object, resource_id, partition) =>{
-        const record = (await this.getFsDbObject()).filter(row=>row.name==object)[0];
-        if (record.in_memory==true)
-            if (record.type.startsWith('TABLE'))
+        const record = (await this.getFsDbObject()).filter(row=>row.Name==object)[0];
+        if (record.InMemory==true)
+            if (record.Type.startsWith('TABLE'))
                 return this.getObject(app_id, object, resource_id, null);
             else
                 return this.getObject(app_id, object, null, null);
         else
-            if (record.type.startsWith('TABLE')){
-                const filepath = record.type.startsWith('TABLE_LOG')?
+            if (record.Type.startsWith('TABLE')){
+                const filepath = record.Type.startsWith('TABLE_LOG')?
                                     DB_DIR.db + `${object}_${this.fileNamePartition(partition)}.json`:
                                         DB_DIR.db + `${object}.json`;
-                /**@type{*[]} */
-                const file = await this.getFsFile(filepath, record.type);
-                if (record.type=='TABLE_KEY_VALUE')
-                    return {rows:file.filter(row=>row.app_id == (resource_id??row.app_id))};    
+                /**@type{{Id:number, AppId:number}[]} */
+                const file = await this.getFsFile(filepath, record.Type);
+                if (record.Type=='TABLE_KEY_VALUE')
+                    return {rows:file.filter(row=>row.AppId == (resource_id??row.AppId))};
                 else
-                    return {rows:file.filter(row=>row.id == (resource_id??row.id))};    
+                    return {rows:file.filter(row=>row.Id == (resource_id??row.Id))};    
             }
             else
-                return await this.getFsFile(DB_DIR.db + object + '.json', record.type);
+                return await this.getFsFile(DB_DIR.db + object + '.json', record.Type);
     };
+    /**
+     * @name getData
+     * @description Extract transform load
+     * @param {'COUNTRY'|'LOCALE'|'GEOLOCATION_IP'|'GEOLOCATION_PLACE'} object
+     * @returns {*}
+     */
+    getExternal = object =>DB.external[object];
+    
+    /**
+     * @name getDataKeys
+     * @description Get keys of object
+     * @param {'COUNTRY'|'LOCALE'|'GEOLOCATION_IP'|'GEOLOCATION_PLACE'} object
+     * @param {string} key
+     * @returns {*}
+     */
+    getExternalKey = (object,key) =>  DB.external[object][key];
+    
+    /**
+     * @name getDataKeys
+     * @description Get keys of object
+     * @param {'COUNTRY'|'LOCALE'|'GEOLOCATION_IP'|'GEOLOCATION_PLACE'} object
+     * @returns {Object.<string,*>}
+     */
+    getExternalKeys = object => Object.keys(DB.external[object]);
+    
 
     /**
      * @name constraintsValidate
@@ -578,7 +671,7 @@ class ORM_class {
      *              FK constraint that should have a value in referref column and object, checked for TABLE and TABLE_KEY_VALUE
      *              Implements contraints pattern using some() function for best performane to check if value already exist
      * @method
-     * @param {server['ORMMetaData']['DbObject']['name']} table
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} table
      * @param {[]} table_rows
      * @param {*} data
      * @param {'UPDATE'|'POST'} dml
@@ -589,48 +682,48 @@ class ORM_class {
         const filerecord = this.getObjectRecord(table);
         //check PK for POST
         //update of PK not alllowed
-        if (dml=='POST' && filerecord.pk && table_rows.some((/**@type{server['ORMMetaData']['DbObject']}*/record)=>
+        if (dml=='POST' && filerecord.Pk && table_rows.some((/**@type{server['ORM']['MetaData']['DbObject']}*/record)=>
             /**@ts-ignore */
-            record[filerecord.pk]==data[filerecord.pk]))
+            record[filerecord.Pk]==data[filerecord.Pk]))
                 return false;
         else{
             //check UK for POST
             //no record can exist having given values for POST
-            if (dml=='POST' && filerecord.uk && table_rows.some((/**@type{server['ORMMetaData']['DbObject']}*/record)=>
+            if (dml=='POST' && filerecord.Uk && table_rows.some((/**@type{server['ORM']['MetaData']['DbObject']}*/record)=>
                 //ignore empty value
                 /**@ts-ignore */
-                filerecord.uk?.filter(column=>record[column] && record[column]==data[column]).length==filerecord.uk?.length))
+                filerecord.Uk?.filter(column=>record[column] && record[column]==data[column]).length==filerecord.Uk?.length))
                     return false;
             else
                 //check UK for UPDATE
                 //max one record can exist having given values for UPDATE
-                if (dml=='UPDATE' && filerecord.uk && table_rows.some((/**@type{server['ORMMetaData']['DbObject']}*/record)=>
+                if (dml=='UPDATE' && filerecord.Uk && table_rows.some((/**@type{server['ORM']['MetaData']['DbObject']}*/record)=>
                     //check value is the same, ignore empty UK
                     /**@ts-ignore */
-                    filerecord.uk.filter(column=>record[column] && record[column]==data[column]).length==filerecord.uk.length &&
+                    filerecord.Uk.filter(column=>record[column] && record[column]==data[column]).length==filerecord.Uk.length &&
                     //check it is NOT the same user
                     /**@ts-ignore */
-                    record[filerecord.pk]!=resource_id))
+                    record[filerecord.Pk]!=resource_id))
                         return false;
                 else
                     //check FK for POST and UPDATE
                     //for TABLE and TABLE_KEY_VALUE objects for data that should be updated
                     //check if there is a key that does not exists in the referred object in a row in cache_content
                     //ignore empty fk
-                    if (	(filerecord.type=='TABLE'|| filerecord.type=='TABLE_KEY_VALUE') &&
-                            (filerecord.fk??[])
+                    if (	(filerecord.Type=='TABLE'|| filerecord.Type=='TABLE_KEY_VALUE') &&
+                            (filerecord.Fk??[])
                                 .filter(fk=>
                                     fk[0] in data && data[fk[0]]
                                 )
                                 .filter(fk=>
                                     DB.data
                                     .filter(object=>
-                                        object.name == fk[2]
-                                    )[0].cache_content
+                                        object.Name == fk[2]
+                                    )[0].CacheContent
                                     .some((/**@type{*}*/row)=> 
                                         data[fk[0]] && row[fk[1]]==data[fk[0]]
                                     )
-                                ).length!=(filerecord.fk??[]).filter(fk=>fk[0] in data && data[fk[0]]).length
+                                ).length!=(filerecord.Fk??[]).filter(fk=>fk[0] in data && data[fk[0]]).length
                             )
                         return false;
                     else
@@ -643,37 +736,37 @@ class ORM_class {
      *              and returns the record
      * @method
      * @param {number} app_id
-     * @param {server['ORMMetaData']['DbObject']['name']} object
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} object
      * @param {*} data
-     * @returns {Promise.<server['ORMMetaData']['common_result_insert']>}
+     * @returns {Promise.<server['ORM']['MetaData']['common_result_insert']>}
      */
     postObject = async (app_id, object, data) =>{
         if (app_id!=null){
             const record = this.getObjectRecord(object);
-            if (record.type.startsWith('TABLE')){
-                const filepath = record.type=='TABLE'?`${DB_DIR.db}${object}.json`:`${DB_DIR.db}${object}_${this.fileNamePartition()}.json`;
-                const file = await this.lockObject(app_id, object, record.type=='TABLE'?null:filepath);
-                if ((record.type !='TABLE' || (record.type =='TABLE'  && this.constraintsValidate(object, 
+            if (record.Type.startsWith('TABLE')){
+                const filepath = record.Type=='TABLE'?`${DB_DIR.db}${object}.json`:`${DB_DIR.db}${object}_${this.fileNamePartition()}.json`;
+                const file = await this.lockObject(app_id, object, record.Type=='TABLE'?null:filepath);
+                if ((record.Type !='TABLE' || (record.Type =='TABLE'  && this.constraintsValidate(object, 
                     /**@ts-ignore */
-                    file.file_content, 
+                    file.FileContent, 
                     data, 'POST')))){
                         /**@ts-ignore */
-                        const update_data = record.type =='TABLE'?(record.transaction_content?? []).concat(data):data;
+                        const update_data = record.Type =='TABLE'?(record.TransactionContent?? []).concat(data):data;
                         await this.updateFsFile(object, 
-                                                file.transaction_id, 
+                                                file.TransactionId, 
                                                 update_data,
-                                                record.type=='TABLE'?null:filepath)
+                                                record.Type=='TABLE'?null:filepath)
                         .catch(()=>{
                             this.rollback(  object, 
                                             /*@ts-ignore*/
-                                            file.transaction_id);
+                                            file.TransactionId);
                         });
                         //commit and update cache for TABLE
                         if (this.commit(object, 
                                         /*@ts-ignore*/
-                                        file.transaction_id,
-                                        record.type=='TABLE'?update_data:null))
-                            return {affectedRows:1};
+                                        file.TransactionId,
+                                        record.Type=='TABLE'?update_data:null))
+                            return {AffectedRows:1};
                         else{
                             throw server.iam.iamUtilMessageNotAuthorized();
                         }
@@ -681,17 +774,132 @@ class ORM_class {
                 else{
                     this.rollback(object, 
                         /*@ts-ignore*/
-                        file.transaction_id);
-                    return {affectedRows:0};
+                        file.TransactionId);
+                    return {AffectedRows:0};
                 }
             }
             else{
                 //no post on documents
-                return {affectedRows:0};
+                return {AffectedRows:0};
             }
         }
         else{
-            return {affectedRows:0};
+            return {AffectedRows:0};
+        }
+    };
+    /**
+     * @name postData
+     * @description Extract transform load
+     * @method
+     * @param {'COUNTRY'|'LOCALE'|'GEOLOCATION_IP'|'GEOLOCATION_PLACE'} object
+     */
+    postExternal = async object =>{
+        const BASE_DIR = '/server/db/external/';
+        /**
+         * @param {string} dir
+         * @param {boolean} directory
+         */
+        const getDir = async (dir, directory) =>
+            fs.promises.readdir(`${serverProcess.cwd()}${dir}`,{ withFileTypes: true })
+                .then(result=>
+                    result
+                    .filter(row=>row.isDirectory()==directory)
+                    .map((file, index)=>{
+                                        return {id: index, 
+                                                filename:file.name
+                                                };
+                                        })
+                );
+        /**
+         * @param {string} dir
+         * @param {string} file
+         */
+        const getFile = async (dir, file) =>
+            fs.promises.readFile(   (serverProcess.cwd() + `${dir}/${file}`).replaceAll('\\','/'),
+                                    'utf8').then(file=>file.toString());
+        
+        /**
+         * @param {string} fileType
+         * @returns {Promise.<Object.<string,string[]>>}
+         */
+        const loadGeolocation = async fileType =>{
+            const dir = BASE_DIR + '/geolocation';
+                /**@type{Object.<string,string[]>} */
+                const data = {};
+                for (const file of (await getDir(dir, false))){
+                    if (file.filename.startsWith(fileType.toLowerCase()+'_')){
+                        const partition =   file.filename
+                                            .replace(fileType.toLowerCase()+'_','')
+                                            .replace('.csv','');
+                        data[partition] = (await getFile(dir , file.filename)).split('\n');
+                    }
+                }
+                return data;
+    
+        };
+        switch (object){
+            case 'COUNTRY':{
+                //read data directories into variable
+                //array with object keys locales
+                const records = [];
+                const dir = BASE_DIR + '/country-list/data';
+                for (const file of (await getDir(dir, true))){
+                    records.push({  locale:file.filename,
+                                    countries:JSON.parse(await getFile(dir + '/' + file.filename, 'country.json'))
+                                });
+                }
+                return records;
+            }
+            case 'LOCALE':{
+                //read data directories into variable
+                //array with object keys locales
+                const records = [];
+                const dir = BASE_DIR + '/locale-list/data';
+                for (const file of (await getDir(dir, true))){
+                    records.push({  locale:file.filename,
+                                    locales:JSON.parse(await getFile(dir + '/' + file.filename, 'locales.json'))
+                                });
+                }
+                return records;
+            }
+            case 'GEOLOCATION_IP':{
+                /**
+                 *  File content:
+                 *  ip_start
+                 *      First IP v4 address in the block	
+                 *  ip_end
+                 *      Last IP v4 address in the block	
+                 *  latitude
+                 *      Decimal latitude	
+                 *  longitude
+                 *      Decimal longitude
+                 * 
+                 * Uses partition with arrays to speed up searches
+                 */
+                return server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0,data:{ config_group:'SERVICE_IAM'}}).result
+                        .filter((/**@type{server['ORM']['Object']['ConfigServer']['SERVICE_IAM']}*/parameter)=>
+                                'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1?
+                        await loadGeolocation(object):
+                            null;
+            }
+            case 'GEOLOCATION_PLACE':{
+                /**
+                 *  File content:
+                 *  country
+                 *      ISO 3166-1 alpha-2 country code	
+                 *  stateprov
+                 *      State or Province name	
+                 *  city
+                 *      City name	
+                 *  latitude
+                 *      Decimal latitude	
+                 *  longitude
+                 *      Decimal longitude	
+                 * 
+                 * Uses partition with arrays to speed up searches
+                 */
+                return await loadGeolocation(object);
+            }
         }
     };
     /**
@@ -702,73 +910,73 @@ class ORM_class {
      *              TABLE should have column id as primary key using this function
      * @method
      * @param {number} app_id
-     * @param {server['ORMMetaData']['DbObject']['name']} object
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} object
      * @param {number|null} resource_id
      * @param {number|null} data_app_id
      * @param {*} data
-     * @returns {Promise<server['ORMMetaData']['common_result_update']>}
+     * @returns {Promise<server['ORM']['MetaData']['common_result_update']>}
      */
     updateObject = async (app_id, object, resource_id, data_app_id, data) =>{    
         if (app_id!=null){
-            const object_type = this.getObjectRecord(object).type;
+            const object_type = this.getObjectRecord(object).Type;
             if (object_type == 'TABLE_LOG' || object_type == 'TABLE_LOG_DATE'){
                 //no update of log tables
-                return {affectedRows:0};
+                return {AffectedRows:0};
             }
             else{
-                /**@type{server['ORMMetaData']['result_fileFsRead']} */
+                /**@type{server['ORM']['MetaData']['result_fileFsRead']} */
                 const file = await this.lockObject(app_id, object);
                 if (['TABLE','TABLE_KEY_VALUE'].includes(object_type)){
-                    if (this.constraintsValidate(object, file.file_content, data, 'UPDATE', resource_id)){
+                    if (this.constraintsValidate(object, file.FileContent, data, 'UPDATE', resource_id)){
                         let update = false;
                         let count = 0;
-                        for (const index in file.file_content)
-                            //a TABLE must have ID or APP_ID as PK to be able to update
-                            if ((file.file_content[index].id==resource_id && resource_id!=null)|| (file.file_content[index].app_id == data_app_id && data_app_id != null)){
+                        for (const index in file.FileContent)
+                            //a TABLE must have Id or AppId as PK to be able to update
+                            if ((file.FileContent[index].Id==resource_id && resource_id!=null)|| (file.FileContent[index].AppId == data_app_id && data_app_id != null)){
                                 count++;
                                 //update columns requested
                                 for (const key of Object.entries(data)){
                                     update = true;
-                                    file.file_content[index][key[0]] = key[1];
+                                    file.FileContent[index][key[0]] = key[1];
                                 }
                             }
                         if (update){
-                            await this.updateFsFile(object, file.transaction_id, file.file_content)
+                            await this.updateFsFile(object, file.TransactionId, file.FileContent)
                                     .catch(()=>this.rollback(object, 
                                                         /**@ts-ignore */
-                                                        file.transaction_id));
+                                                        file.TransactionId));
                             //commit and update cache for TABLE
                             if (this.commit( object,
-                                        /*@ts-ignore*/
-                                        file.transaction_id,
-                                        file.file_content))
-                                return {affectedRows:count};
+                                        /**@ts-ignore */
+                                        file.TransactionId,
+                                        file.FileContent))
+                                return {AffectedRows:count};
                             else{
                                 throw server.iam.iamUtilMessageNotAuthorized();
                             }
                         }
                         else
-                            return {affectedRows:0};
+                            return {AffectedRows:0};
                     }
                     else{
                         this.rollback(object,
                                                 /*@ts-ignore*/
-                                                file.transaction_id);
-                        return {affectedRows:0};
+                                                file.TransactionId);
+                        return {AffectedRows:0};
                     }
                 }
                 else{
                     //document
-                    await this.updateFsFile(object, file.transaction_id, data)
+                    await this.updateFsFile(object, file.TransactionId, data)
                     .catch(()=>this.rollback(object, 
-                                        /**@ts-ignore */
-                                        file.transaction_id));
+                                            /**@ts-ignore */
+                                            file.TransactionId));
                     //commit and update cache for DOCUMENT
                     if (this.commit(  object, 
                                                 /*@ts-ignore*/
-                                                file.transaction_id, 
+                                                file.TransactionId, 
                                                 data))
-                        return {affectedRows:1};
+                        return {AffectedRows:1};
                     else{
                         throw server.iam.iamUtilMessageNotAuthorized();
                     }
@@ -776,7 +984,7 @@ class ORM_class {
             }
         }
         else
-            return {affectedRows:0};
+            return {AffectedRows:0};
     };
     /**
      * @name deleteObject
@@ -785,58 +993,58 @@ class ORM_class {
      *              TABLE should have column id as primary key using this function
      * @method
      * @param {number} app_id
-     * @param {server['ORMMetaData']['DbObject']['name']} table
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} table
      * @param {number|null} resource_id
      * @param {number|null} data_app_id
-     * @returns {Promise<server['ORMMetaData']['common_result_delete']>}
+     * @returns {Promise<server['ORM']['MetaData']['common_result_delete']>}
      */
     deleteObject = async (app_id, table, resource_id, data_app_id) =>{
         /**
          * @param {{app_id:number,
-         *		    object:server['ORMMetaData']['DbObject']['name'],
+         *		    object:server['ORM']['MetaData']['DbObject']['Name'],
         *		    pk:number|null}} parameters
         */
         const cascadeDelete = async parameters =>{
             //find referring to object
             for (const objectCascade of DB.data.filter(object=>
-                                    (object.type=='TABLE'||object.type=='TABLE_KEY_VALUE') && 
-                                    (object.fk??[])
+                                    (object.Type=='TABLE'||object.Type=='TABLE_KEY_VALUE') && 
+                                    (object.Fk??[])
                                     .filter(fk=>
                                         fk[2]==parameters.object
                                     ).length>0
                                     )){
                 //remove all rows with FK referring to current PK
-                for (const row of (objectCascade.cache_content??[])
+                for (const row of (objectCascade.CacheContent??[])
                                     .filter((/**@type{*[]}*/row)=>
-                                        (objectCascade.fk??[]).filter(fk=>
+                                        (objectCascade.Fk??[]).filter(fk=>
                                                 /**@ts-ignore */
                                                 row[fk[0]]==parameters.pk
                                             ).length>0
                                     )){
                     //recursive call delete all rows in objects with FK referring to this row
                     await cascadeDelete({   app_id:app_id, 
-                                            object:objectCascade.name,
+                                            object:objectCascade.Name,
                                             /**@ts-ignore */
                                             pk:row[objectCascade.pk]});
-                    const file = await this.lockObject(app_id, objectCascade.name);
+                    const file = await this.lockObject(app_id, objectCascade.Name);
                     //get content to update and filter PK
-                    const new_content = file.file_content
+                    const new_content = file.FileContent
                                         .filter((/**@type{*}*/rowFile)=>
-                                            (objectCascade.fk??[])
+                                            (objectCascade.Fk??[])
                                             .filter(fk=>
                                                 rowFile[fk[0]]==parameters.pk
                                             ).length==0
                                         );
-                    await this.updateFsFile(  objectCascade.name, file.transaction_id, new_content)
-                    .catch(()=> this.rollback(objectCascade.name, 
+                    await this.updateFsFile(  objectCascade.Name, file.TransactionId, new_content)
+                    .catch(()=> this.rollback(objectCascade.Name, 
                                         /**@ts-ignore */
-                                        file.transaction_id));
+                                        file.TransactionId));
                     //commit and update cache without removed record
-                    if (this.commit(  objectCascade.name, 
+                    if (this.commit(  objectCascade.Name, 
                                                 /*@ts-ignore*/
-                                                file.transaction_id,
+                                                file.TransactionId,
                                                 new_content))
-                        return {affectedRows:   file.file_content.length - new_content.length};
+                        return {affectedRows:   file.FileContent.length - new_content.length};
                     else{
                         throw server.iam.iamUtilMessageNotAuthorized();
                     }
@@ -844,37 +1052,37 @@ class ORM_class {
             }
         };
 
-        /**@type{server['ORMMetaData']['result_fileFsRead']} */
+        /**@type{server['ORM']['MetaData']['result_fileFsRead']} */
         const file = await this.lockObject(app_id, table);
-        if (file.file_content.filter((/**@type{*}*/row)=>(data_app_id==null && row.id==resource_id && resource_id!=null)|| (resource_id==null && row.app_id == data_app_id && data_app_id != null)).length>0){
+        if (file.FileContent.filter((/**@type{*}*/row)=>(data_app_id==null && row.Id==resource_id && resource_id!=null)|| (resource_id==null && row.AppId == data_app_id && data_app_id != null)).length>0){
             await cascadeDelete({app_id:app_id, object:table, pk:resource_id??data_app_id})
                     .catch(()=>{
                         null;
                     });
             //get content to update and filter unique id
-            const new_content = file.file_content
-                                .filter((/**@type{*}*/row)=>(data_app_id==null && resource_id!=null && row.id!=resource_id) || (resource_id==null && data_app_id!=null && row.app_id!=data_app_id));
+            const new_content = file.FileContent
+                                .filter((/**@type{*}*/row)=>(data_app_id==null && resource_id!=null && row.Id!=resource_id) || (resource_id==null && data_app_id!=null && row.AppId!=data_app_id));
             await this.updateFsFile(  table, 
-                                file.transaction_id, 
+                                file.TransactionId, 
                                 new_content)
                     .catch((/**@type{server['server']['error']}*/error)=>{
                         this.rollback(table, 
                                 /*@ts-ignore*/
-                                file.transaction_id);
+                                file.TransactionId);
                         throw error;
                     });
                     //commit and update cache without removed record
                     if (this.commit(  table, 
                                                 /*@ts-ignore*/
-                                                file.transaction_id,
+                                                file.TransactionId,
                                                 new_content))
-                        return {affectedRows:   file.file_content.length - new_content.length};
+                        return {AffectedRows:   file.FileContent.length - new_content.length};
                     else{
                         throw server.iam.iamUtilMessageNotAuthorized();
                     }
         }
         else
-            return {affectedRows:0};    
+            return {AffectedRows:0};    
     };
     /**
      * @name Execute
@@ -884,7 +1092,7 @@ class ORM_class {
      * @method
      * @param {{app_id:number,
      *          dml:'GET'|'UPDATE'|'POST'|'DELETE',
-     *          object:server['ORMMetaData']['DbObject']['name'],
+     *          object:server['ORM']['MetaData']['DbObject']['Name'],
      *          get?:{resource_id:number|null, partition:string|null},
      *          update?: {resource_id:number|null, data_app_id:number|null, data:*},
      *          post?:   {data:*},
@@ -987,23 +1195,33 @@ class ORM_class {
     UtilNumberValue = param => (param==null||param===undefined||param==='undefined'||param==='')?null:Number(param);
     
     /**
+     * @name UtilSearchMatch
+     * @description Searches for text in given variables without diacrites
+     * @method
+     * @param {string} col
+     * @param {string} search
+     * @returns {boolean}
+     */
+    UtilSearchMatch = (col, search) =>{
+        const col_check = col.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+        const search_check = search.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();            
+        return col_check.search(search_check)>-1;
+    };
+
+    /**
      * @name getViewInfo
      * @description Database info
      * @method
      * @param {{app_id:number}}parameters
-     * @returns {Promise.<server['server']['response'] & {result?:{   database_name:string, 
-     *                                                          version:number,
-     *                                                          hostname:string,
-     *                                                          connections:Number,
-     *                                                          started:number}[]}>}
+     * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['ORMGetInfo'][]}>}
      */
     getViewInfo = async parameters =>{
         return {result: [{
-                            database_name:  this.getObject(parameters.app_id,'ConfigServer')['METADATA'].CONFIGURATION,
-                            version:        1,
-                            hostname:       this.getObject(parameters.app_id,'ConfigServer')['SERVER'].filter((/**@type{server['ORM']['ConfigServer']['SERVER']}*/row)=>'HOST' in row)[0].HOST,
-                            connections:    server.socket.socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
-                            started:        this.serverProcess.uptime()
+                            DatabaseName:  this.getObject(parameters.app_id,'ConfigServer')['METADATA'].CONFIGURATION,
+                            Version:        1,
+                            Hostname:       this.getObject(parameters.app_id,'ConfigServer')['SERVER'].filter((/**@type{server['ORM']['Object']['ConfigServer']['SERVER']}*/row)=>'HOST' in row)[0].HOST,
+                            Connections:    server.socket.socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
+                            Started:        this.serverProcess.uptime()
                         }],
                 type:'JSON'};
     };
@@ -1012,36 +1230,28 @@ class ORM_class {
      * @description Get all objects in ORM
      * @method
      * @param {{app_id:number}}parameters
-     * @returns {server['server']['response'] & {result?:{name:server['ORMMetaData']['DbObject']['name'],
-     *                                              type:server['ORMMetaData']['DbObject']['type'],
-     *                                              lock:server['ORMMetaData']['DbObject']['lock'],
-     *                                              transaction_id:server['ORMMetaData']['DbObject']['transaction_id'],
-     *                                              rows:number|null,
-     *                                              size:number|null,
-     *                                              pk:server['ORMMetaData']['DbObject']['pk'],
-     *                                              uk:server['ORMMetaData']['DbObject']['uk'],
-     *                                              fk:server['ORMMetaData']['DbObject']['fk']}[]}}
+     * @returns {server['server']['response'] & {result?:server['ORM']['View']['ORMGetObjects'][]}}
      */
     getViewObjects = parameters =>{
         const result = DB.data.map(row=>{
             return {
-                name: row.name,
-                type: row.type,
-                lock: row.lock,
-                transaction_id: row.transaction_id,
-                rows: ('cache_content' in row && (row.type=='TABLE' ||row.type=='TABLE_KEY_VALUE'))?
-                        row.cache_content?
-                            row.cache_content.length??0:
+                Name: row.Name,
+                Type: row.Type,
+                Lock: row.Lock,
+                TransactionId: row.TransactionId,
+                Rows: ('CacheContent' in row && (row.Type=='TABLE' ||row.Type=='TABLE_KEY_VALUE'))?
+                        row.CacheContent?
+                            row.CacheContent.length??0:
                                 0:
                                     null,
-                size: ('cache_content' in row)?
-                        row.cache_content?
-                            JSON.stringify(row.cache_content)?.length??0:
+                Size: ('CacheContent' in row)?
+                        row.CacheContent?
+                            JSON.stringify(row.CacheContent)?.length??0:
                                 0:
                                     null,
-                pk: row.pk,
-                uk: row.uk,
-                fk: row.fk
+                Pk: row.Pk,
+                Uk: row.Uk,
+                Fk: row.Fk
             };
         });
         if (result.length>0)
@@ -1056,11 +1266,7 @@ class ORM_class {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {Promise.<server['server']['response'] & {result?:{   database_name:string, 
- *                                                          version:number,
- *                                                          hostname:string,
- *                                                          connections:Number,
- *                                                          started:number}[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['ORMGetInfo'][]}>}
  */
 const getViewInfo = async parameters =>ORM.getViewInfo(parameters);
 /**
@@ -1069,15 +1275,7 @@ const getViewInfo = async parameters =>ORM.getViewInfo(parameters);
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {server['server']['response'] & {result?:{name:server['ORMMetaData']['DbObject']['name'],
- *                                              type:server['ORMMetaData']['DbObject']['type'],
- *                                              lock:server['ORMMetaData']['DbObject']['lock'],
- *                                              transaction_id:server['ORMMetaData']['DbObject']['transaction_id'],
- *                                              rows:number|null,
- *                                              size:number|null,
- *                                              pk:server['ORMMetaData']['DbObject']['pk'],
- *                                              uk:server['ORMMetaData']['DbObject']['uk'],
- *                                              fk:server['ORMMetaData']['DbObject']['fk']}[]}}
+ * @returns {server['server']['response'] & {result?:server['ORM']['View']['ORMGetObjects'][]}}
  */
 const getViewObjects = parameters =>ORM.getViewObjects(parameters);
 

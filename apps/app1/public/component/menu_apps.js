@@ -11,44 +11,44 @@
  * @name template
  * @description Template
  * @function
- * @param {{apps:common['ORM']['App'][]}} props
+ * @param {{apps:common['ORM']['Object']['App'][]}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                 <div id='menu_apps_title' class='common_icon'></div>
                                 <div id='menu_apps' class='common_list_scrollbar'>
                                     <div id='menu_apps_row_title' class='menu_apps_row'>
-                                        <div data-column='id' class='menu_apps_col list_title'>ID</div>
-                                        <div data-column='name' class='menu_apps_col list_title'>NAME</div>
-                                        <div data-column='path' class='menu_apps_col list_title'>PATH</div>
-                                        <div data-column='logo' class='menu_apps_col list_title'>LOGO</div>
-                                        <div data-column='js' class='menu_apps_col list_title'>JS</div>
-                                        <div data-column='css' class='menu_apps_col list_title'>CSS</div>
-                                        <div data-column='css_reprot' class='menu_apps_col list_title'>CSS_REPORT</div>
-                                        <div data-column='favicon_32x32' class='menu_apps_col list_title'>FAVICON_32x32</div>
-                                        <div data-column='favicon_192x192' class='menu_apps_col list_title'>FAVICON_192x192</div>
-                                        <div data-column='text_edit' class='menu_apps_col list_title'>TEXT_EDIT</div>
-                                        <div data-column='copyright' class='menu_apps_col list_title'>COPYRIGHT</div>
-                                        <div data-column='link_title' class='menu_apps_col list_title'>LINK_TITLE</div>
-                                        <div data-column='link_url' class='menu_apps_col list_title'>LINK_URL</div>
-                                        <div id='menu_apps_col_title5' data-column='status' class='menu_apps_col list_title'>STATUS</div>
+                                        <div data-column='Id' class='menu_apps_col list_title'>ID</div>
+                                        <div data-column='Name' class='menu_apps_col list_title'>NAME</div>
+                                        <div data-column='Path' class='menu_apps_col list_title'>PATH</div>
+                                        <div data-column='Logo' class='menu_apps_col list_title'>LOGO</div>
+                                        <div data-column='Js' class='menu_apps_col list_title'>JS</div>
+                                        <div data-column='Css' class='menu_apps_col list_title'>CSS</div>
+                                        <div data-column='CssReport' class='menu_apps_col list_title'>CSS_REPORT</div>
+                                        <div data-column='Favicon32x32' class='menu_apps_col list_title'>FAVICON_32x32</div>
+                                        <div data-column='Favicon192x192' class='menu_apps_col list_title'>FAVICON_192x192</div>
+                                        <div data-column='TextEdit' class='menu_apps_col list_title'>TEXT_EDIT</div>
+                                        <div data-column='Copyright' class='menu_apps_col list_title'>COPYRIGHT</div>
+                                        <div data-column='LinkTitle' class='menu_apps_col list_title'>LINK_TITLE</div>
+                                        <div data-column='LinkUrl' class='menu_apps_col list_title'>LINK_URL</div>
+                                        <div id='menu_apps_col_title5' data-column='Status' class='menu_apps_col list_title'>STATUS</div>
                                     </div>
                                     ${props.apps.map(app=>
-                                        `<div data-changed-record='0' data-app_id = '${app.id}' class='menu_apps_row common_row' >
-                                            <div class='menu_apps_col list_readonly' data-column='id' >${app.id}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='name' contentEditable='true' >${app.name}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='path' contentEditable='true' >${app.path}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='logo' contentEditable='true' >${app.logo}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='js' contentEditable='true' >${app.js}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='css' contentEditable='true' >${app.css}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='css_report' contentEditable='true' >${app.css_report}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='favicon_32x32' contentEditable='true' >${app.favicon_32x32}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='favicon_192x192' contentEditable='true' >${app.favicon_192x192}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='text_edit' contentEditable='true' >${app.text_edit}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='copyright' contentEditable='true' >${app.copyright}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='link_title' contentEditable='true' >${app.link_title}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='link_url' contentEditable='true' >${app.link_url}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='status' contentEditable='true' >${app.status}</div>
+                                        `<div data-changed-record='0' data-app_id = '${app.Id}' class='menu_apps_row common_row' >
+                                            <div class='menu_apps_col list_readonly' data-column='Id' >${app.Id}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='Name' contentEditable='true' >${app.Name}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='Path' contentEditable='true' >${app.Path}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='Logo' contentEditable='true' >${app.Logo}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='Js' contentEditable='true' >${app.Js}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='Css' contentEditable='true' >${app.Css}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='CssReport' contentEditable='true' >${app.CssReport}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='Favicon32x32' contentEditable='true' >${app.Favicon32x32}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='Favicon192x192' contentEditable='true' >${app.Favicon192x192}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='TextEedit' contentEditable='true' >${app.TextEdit}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='Copyright' contentEditable='true' >${app.Copyright}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='LinkTitle' contentEditable='true' >${app.LinkTitle}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='LinkUrl' contentEditable='true' >${app.LinkUrl}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='Status' contentEditable='true' >${app.Status}</div>
                                         </div>`
                                     ).join('')}
                                 </div>
@@ -78,7 +78,7 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
  *                      template:string}>}
  */
 const component = async props => {
-    /**@type{common['ORM']['App'][]} */
+    /**@type{common['ORM']['Object']['App'][]} */
     const apps = await props.methods.COMMON.commonFFB({path:'/server-db/app', method:'GET', authorization_type:'ADMIN'})
                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
