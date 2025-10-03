@@ -41,7 +41,7 @@ const template = () => ` <div id='menu_report_content_widget1' class='widget'>
  */
 const component = async props => {
     
-    /**@type{common['ORM']['AppModule'][]} */
+    /**@type{common['ORM']['Object']['AppModule'][]} */
     const reports = await props.methods.COMMON.commonFFB({path:'/app-common-module-metadata/', query:'type=REPORT',method:'GET', authorization_type:'ADMIN'})
                                 .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
     /**

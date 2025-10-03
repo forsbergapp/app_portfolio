@@ -28,21 +28,21 @@ const template = props => ` <div class='menu_apps_detail_row'>
                                             ''
                                     }
                                     ${props.detail=='menu_apps_detail_data'?
-                                        `<div class='menu_apps_detail_col list_title' data-column='name'>NAME</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='value'>VALUE</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='display_data'>DISPLAY_DATA</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='data2'>DATA2</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='data3'>DATA3</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='data4'>DATA4</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='data5'>DATA5</div>`:
+                                        `<div class='menu_apps_detail_col list_title' data-column='Name'>NAME</div>
+                                         <div class='menu_apps_detail_col list_title' data-column='Value'>VALUE</div>
+                                         <div class='menu_apps_detail_col list_title' data-column='DisplayData'>DISPLAY_DATA</div>
+                                         <div class='menu_apps_detail_col list_title' data-column='Data2'>DATA2</div>
+                                         <div class='menu_apps_detail_col list_title' data-column='Data3'>DATA3</div>
+                                         <div class='menu_apps_detail_col list_title' data-column='Data4'>DATA4</div>
+                                         <div class='menu_apps_detail_col list_title' data-column='Data5'>DATA5</div>`:
                                             ''
                                     }
                             </div>
                             ${props.detail=='menu_apps_detail_module'?
-                                `${props.app_detail.map((/**@type{common['ORM']['AppModule']}*/row)=>
+                                `${props.app_detail.map((/**@type{common['ORM']['Object']['AppModule']}*/row)=>
                                         `<div data-changed-record='0' class='menu_apps_detail_row common_row'>
-                                            <div class='menu_apps_detail_col list_readonly' data-column='id'>${row.id}</div>
-                                            <div class='menu_apps_detail_col list_readonly' data-column='app_id'>${row.app_id}</div>
+                                            <div class='menu_apps_detail_col list_readonly' data-column='Id'>${row.Id}</div>
+                                            <div class='menu_apps_detail_col list_readonly' data-column='AppId'>${row.AppId}</div>
                                             <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='ModuleType'>${row.ModuleType??''}</div>
                                             <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='ModuleName'>${row.ModuleName??''}</div>
                                             <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='ModuleRole'>${row.ModuleRole??''}</div>
@@ -50,17 +50,17 @@ const template = props => ` <div class='menu_apps_detail_row'>
                                             <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='ModuleDescription'>${row.ModuleDescription??''}</div>
                                         </div>`).join('')
                                 }`:
-                                    `${props.app_detail.map((/**@type{common['ORM']['AppData']}*/row)=>
+                                    `${props.app_detail.map((/**@type{common['ORM']['Object']['AppData']}*/row)=>
                                             `<div data-changed-record='0' class='menu_apps_detail_row common_row'>
-                                                <div class='menu_apps_detail_col list_readonly' data-column='id'>${row.id}</div>
-                                                <div class='menu_apps_detail_col list_readonly' data-column='app_id'>${row.app_id}</div>
-                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='name'>${row.name??''}</div>
-                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='value'>${row.value??''}</div>
-                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='display_data'>${row.display_data??''}</div>
-                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='data2'>${row.data2??''}</div>
-                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='data3'>${row.data3??''}</div>
-                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='data4'>${row.data4??''}</div>
-                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='data5'>${row.data5??''}</div>
+                                                <div class='menu_apps_detail_col list_readonly' data-column='Id'>${row.Id}</div>
+                                                <div class='menu_apps_detail_col list_readonly' data-column='AppId'>${row.AppId}</div>
+                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='Name'>${row.Name??''}</div>
+                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='Value'>${row.Value??''}</div>
+                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='DisplayData'>${row.DisplayData??''}</div>
+                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='Data2'>${row.Data2??''}</div>
+                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='Data3'>${row.Data3??''}</div>
+                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='Data4'>${row.Data4??''}</div>
+                                                <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='Data5'>${row.Data5??''}</div>
                                             </div>`).join('')
                                     }`
                             }`;

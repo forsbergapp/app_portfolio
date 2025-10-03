@@ -11,7 +11,7 @@ const {server} = await import ('../server.js');
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{data_app_id:number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['IamEncryption'][] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamEncryption'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'IamEncryption',parameters.resource_id, parameters.data.data_app_id);
     
@@ -20,27 +20,27 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'IamEncryption'
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server['ORM']['IamEncryption']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
+ * @param {server['ORM']['Object']['IamEncryption']} data
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null &&
-        data.app_id != null &&
-        data.uuid != null &&
-        data.secret != null){
-        /**@type{server['ORM']['IamEncryption']} */
+        data.AppId != null &&
+        data.Uuid != null &&
+        data.Secret != null){
+        /**@type{server['ORM']['Object']['IamEncryption']} */
         const data_new = {};
-        data_new.id = Date.now();
-        data_new.app_id = data.app_id;
-        data_new.iam_app_id_token_id = data.iam_app_id_token_id;
-        data_new.uuid = data.uuid;
-        data_new.secret = data.secret;
-        data_new.type = data.type;
-        data_new.url = data.url;
-        data_new.created = new Date().toISOString();
-        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamEncryption', post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
-            if (result.affectedRows>0)
+        data_new.Id = Date.now();
+        data_new.AppId = data.AppId;
+        data_new.IamAppIdTokenId = data.IamAppIdTokenId;
+        data_new.Uuid = data.Uuid;
+        data_new.Secret = data.Secret;
+        data_new.Type = data.Type;
+        data_new.Url = data.Url;
+        data_new.Created = new Date().toISOString();
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamEncryption', post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
+            if (result.AffectedRows>0)
                 return {result:result, type:'JSON'};
             else
                 return server.ORM.getError(app_id, 404);

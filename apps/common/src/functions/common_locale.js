@@ -4,8 +4,7 @@
 /**
  * @import {server} from '../../../../server/types.js'
  */
-
-const {getData} = await import('./common_data.js');
+const {server} = await import('../../../../server/server.js');
 /**
  * @name formatLocale
  * @description Converts locale format
@@ -77,11 +76,11 @@ const formatLocale = locale =>{
  */
 const appFunction = async parameters =>{
     
-    const locales = getData('LOCALE').filter((/**@type {{   locale:string,
+    const locales = server.ORM.getExternal('LOCALE').filter((/**@type {{   locale:string,
                                                             countries:[key:string]}}*/row)=>
                                                                 row.locale == formatLocale(parameters.locale))[0].locales
                     ??
-                    getData('LOCALE').filter((/**@type {{   locale:string,
+                    server.ORM.getExternal('LOCALE').filter((/**@type {{   locale:string,
                                                             countries:[key:string]}}*/row)=>
                                                                 row.locale == 'en')[0].locales
                     ;

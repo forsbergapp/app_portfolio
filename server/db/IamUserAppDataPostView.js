@@ -13,18 +13,18 @@ const {server} = await import ('../server.js');
  *          data:{  iam_user_app_data_post_id:number|null,
  *                  iam_user_id:number|null,
  *                  data_app_id:number}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['IamUserAppDataPostView'][] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPostView'][] }}
  */
 const get = parameters =>{
     const IamUserApp_records =  server.ORM.db.IamUserApp.get({ app_id:parameters.app_id,
                                                 resource_id:null, 
                                                 data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result;
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserAppDataPostView',parameters.resource_id, null).result??[])
-                    .filter((/**@type{server['ORM']['IamUserAppDataPostView']}*/row)=>
-                        row.iam_user_app_data_post_id == (parameters.data.iam_user_app_data_post_id ?? row.iam_user_app_data_post_id) && 
+                    .filter((/**@type{server['ORM']['Object']['IamUserAppDataPostView']}*/row)=>
+                        row.IamUserAppDataPostId == (parameters.data.iam_user_app_data_post_id ?? row.IamUserAppDataPostId) && 
                         IamUserApp_records
-                        .filter((/**@type{server['ORM']['IamUserApp']}*/rowIamUserApp)=>
-                            row.iam_user_app_id == rowIamUserApp.id
+                        .filter((/**@type{server['ORM']['Object']['IamUserApp']}*/rowIamUserApp)=>
+                            row.IamUserAppId == rowIamUserApp.Id
                         )
                         .length>0
                     );
@@ -39,27 +39,27 @@ const get = parameters =>{
  * @description Create record
  * @function
  * @param {number} app_id  
- * @param {server['ORM']['IamUserAppDataPostView']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
+ * @param {server['ORM']['Object']['IamUserAppDataPostView']} data
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) =>{
     //check required attributes
-    if (data.iam_user_app_data_post_id==null){
+    if (data.IamUserAppDataPostId==null){
         return server.ORM.getError(app_id, 400);
     }
     else{
-        /**@type{server['ORM']['IamUserAppDataPostView']} */
+        /**@type{server['ORM']['Object']['IamUserAppDataPostView']} */
         const data_new =     {
-                                id:Date.now(),
+                                Id:Date.now(),
                                 Document:{  client_ip: data.Document.client_ip,
                                             client_user_agent: data.Document.client_user_agent},
-                                iam_user_app_id:data.iam_user_app_id, 
-                                iam_user_app_data_post_id:data.iam_user_app_data_post_id,
-                                created:new Date().toISOString()
+                                IamUserAppId:data.IamUserAppId, 
+                                IamUserAppDataPostId:data.IamUserAppDataPostId,
+                                Created:new Date().toISOString()
                         };
-        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserAppDataPostView', post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
-            if (result.affectedRows>0){
-                result.insertId=data_new.id;
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserAppDataPostView', post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
+            if (result.AffectedRows>0){
+                result.InsertId=data_new.Id;
                 return {result:result, type:'JSON'};
             }
             else
@@ -74,14 +74,14 @@ const post = async (app_id, data) =>{
  * @function
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_delete'] }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>{   
     return server.ORM.Execute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
                                 object:'IamUserAppDataPostView', 
-                                delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server['ORMMetaData']['common_result_delete']}*/result)=>{
-        if (result.affectedRows>0)
+                                delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server['ORM']['MetaData']['common_result_delete']}*/result)=>{
+        if (result.AffectedRows>0)
             return {result:result, type:'JSON'};
         else
             return server.ORM.getError(parameters.app_id, 404);

@@ -23,7 +23,7 @@ const template = props =>`  <div id='common_app_dialogues_lov_form'>
                                 </div>
                             <div id='common_app_dialogues_lov_list' data-lov='${props.lov}' class='common_list_scrollbar'>
                                 ${props.list.map((/**@type{*}*/list_row)=>
-                                    `<div   data-id='${(props.lov_column_value.startsWith('text')||props.lov_column_value.startsWith('display_data'))?list_row.value:list_row.id}' 
+                                    `<div   data-id='${(props.lov_column_value.startsWith('text')||props.lov_column_value.startsWith('DisplayData'))?list_row.value:list_row.id}' 
                                             data-value='${list_row[props.lov_column_value]}' 
                                             tabindex=-1 
                                             class='common_list_lov_row common_row'>
@@ -90,7 +90,7 @@ const component = async props => {
         default:{
             //lov for current app id
             method = 'GET';
-            lov_column = 'display_data';
+            lov_column = 'DisplayData';
             path = '/server-db/appdata/';
             query= `name=${props.methods.event_target.getAttribute('data-lov')}&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_id')}`;
             token_type = 'APP_ID';

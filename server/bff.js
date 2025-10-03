@@ -4,10 +4,9 @@
  * @import {server} from './types.js'
  */
 const {server} = await import('./server.js');
-const {registryConfigServices} = await import('../serviceregistry/registry.js');
-const {default:worldcities} = await import('../apps/common/src/functions/common_worldcities.js');
+const {registryConfigServices} = await import('../serviceregistry/registry.js')
 const {default:ComponentCreate} = await import('../apps/common/src/component/common_maintenance.js');
-const {getIP} = await import('../apps/common/src/functions/common_geolocation.js');
+
 /**
  * @name bffConnect
  * @description Initial request from app, connects to socket, sends SSE message with common library and parameters
@@ -24,7 +23,7 @@ const {getIP} = await import('../apps/common/src/functions/common_geolocation.js
  * @returns {Promise.<void>}
  */
 const bffConnect = async parameters =>{
-    /**@type{server['ORM']['ConfigServer']} */
+    /**@type{server['ORM']['Object']['ConfigServer']} */
     const configServer = server.ORM.db.ConfigServer.get({app_id:parameters.app_id}).result;
 
     const common_app_id = server.ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
@@ -68,7 +67,7 @@ const bffConnect = async parameters =>{
 */
 const bffExternal = async parameters =>{
    if (parameters.url.toLowerCase().startsWith('http://')){
-       /**@type{server['ORM']['ConfigServer']} */
+       /**@type{server['ORM']['Object']['ConfigServer']} */
        const CONFIG_SERVER = server.ORM.db.ConfigServer.get({app_id:0}).result;
        return await server.serverCircuitBreakerBFE.serverRequest( 
            {
@@ -115,7 +114,7 @@ const bffExternal = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
-*          microservice:string, 
+*          microservice:server['serviceregistry']['microservice_local_config']['name'], 
 *          service:string, 
 *          method:server['server']['req']['method'],
 *          data:*,
@@ -139,14 +138,14 @@ const bffMicroservice = async parameters =>{
                     service:            parameters.microservice,
                     protocol:           'http',
                     url:                null,
-                    host:               ServiceRegistry.server_host,
-                    port:               ServiceRegistry.server_port,
+                    host:               ServiceRegistry.ServerHost,
+                    port:               ServiceRegistry.ServerPort,
                     admin:              parameters.app_id == server.ORM.UtilNumberValue(
                                                     server.ORM.db.ConfigServer.get({  app_id:parameters.app_id, 
                                                                         data:{  config_group:'SERVICE_APP', 
                                                                                 parameter:'APP_COMMON_APP_ID'}}).result
                                                 ),
-                    path:               `/api/v${ServiceRegistry.rest_api_version}?${query}`,
+                    path:               `/api/v${ServiceRegistry.RestApiVersion}?${query}`,
                     body:               parameters.data,
                     method:             parameters.method,
                     client_ip:          parameters.ip,
@@ -169,74 +168,6 @@ const bffMicroservice = async parameters =>{
                             type:'JSON'};
                 });
 }; 
-/**
- * @name bffGeodata
- * @description Returns geodata
- * @function
- * @param {{app_id:number,
-*          endpoint:server['bff']['parameters']['endpoint'],
-*          ip:string,
-*          user_agent:string,
-*          accept_language:string}} parameters
-* @returns {Promise.<*>}
-*/
-const bffGeodata = async parameters =>{
-   const result_gps = getIP({ app_id:parameters.app_id,
-                                    data:{ip:parameters.ip},
-                                    ip:parameters.ip,
-                                    locale:'en'
-                                }).result;
-   const result_geodata = {};
-   if (result_gps){
-       result_geodata.latitude =   result_gps.latitude;
-       result_geodata.longitude=   result_gps.longitude;
-       result_geodata.place    =   result_gps.place;
-       result_geodata.timezone =   result_gps.timezone;
-   }
-   else{
-       const result_city = await worldcities({ app_id:parameters.app_id,
-                                               data:{searchType:'RANDOM'},
-                                               user_agent:parameters.user_agent,
-                                               ip:parameters.ip,
-                                               host:'',
-                                               idToken:'', 
-                                               authorization:'',
-                                               locale:parameters.accept_language})
-                                   .then(result=>{if (result.http) throw result; else return result.result;})
-                                   .catch((/**@type{server['server']['error']}*/error)=>{throw error;});
-       result_geodata.latitude =   result_city.lat;
-       result_geodata.longitude=   result_city.lng;
-       result_geodata.place    =   result_city.city + ', ' + result_city.admin_name + ', ' + result_city.country;
-       result_geodata.timezone =   null;
-   }
-   return result_geodata;
-};
-/**
- * @name bffGeodataUser
- * @description Get geodata and user account data
- * @function
- * @param {number} app_id 
- * @param {string} ip
- * @returns {Promise.<{  latitude:string,
-*              longitude:string,
-*               place:string,
-*               timezone:string}>}
-*/
-const bffGeodataUser = async (app_id, ip) =>{
-   //get GPS from IP
-   const {getIP} = await import('../apps/common/src/functions/common_geolocation.js');
-   const result_geodata = getIP({ app_id:app_id,
-                                    data:{ip:ip},
-                                    ip:ip,
-                                    locale:'en'
-                                }).result;   
-   const place = result_geodata?result_geodata.place:'';
-   return {latitude:result_geodata?result_geodata.latitude ?? '':'',
-           longitude:result_geodata?result_geodata.longitude ?? '':'',
-           place:place,
-           timezone:result_geodata?result_geodata.timezone ?? '':''};
-};
-
 
 /**
  * @name bffInit
@@ -290,7 +221,7 @@ const bffInit = async (req, res) =>{
         });
     });
     //access control that stops request if not passing controls
-    /**@type{server['iam']['iam_authenticate_request']}*/
+    /**@type{null|server['iam']['iam_authenticate_request']}*/
     const result = await server.iam.iamAuthenticateRequest({ip:req.ip, 
                                                 host:req.headers.host ?? '', 
                                                 method: req.method, 
@@ -386,7 +317,7 @@ const bffResponse = async parameters =>{
                                     server.security.securityTransportEncrypt({app_id:parameters.app_id??0, data:data, jwk:parameters.jwk, iv:parameters.iv }):
                                         data;
 
-    /**@type{server['ORM']['ConfigServer']['SERVICE_APP']} */
+    /**@type{server['ORM']['Object']['ConfigServer']['SERVICE_APP']} */
     const CONFIG_SERVICE_APP = server.ORM.db.ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;
 
     const admin_app_id = server.ORM.UtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID);
@@ -410,7 +341,6 @@ const bffResponse = async parameters =>{
                        type:'JSON',
                        result:await encrypt(JSON.stringify(message)),
                        route:parameters.route,
-                       method:parameters.method,
                        statusMessage: '',
                        statusCode: parameters.result_request.http ?? 500,
                        res:parameters.res});
@@ -430,7 +360,6 @@ const bffResponse = async parameters =>{
                                             JSON.stringify(parameters.result_request.result):
                                                 parameters.result_request.result),
                                     route:parameters.route,
-                                    method:parameters.method,
                                     statusMessage: '',
                                     statusCode: parameters.method?.toUpperCase() == 'POST'?201:200,
                                     res:parameters.res});
@@ -478,7 +407,6 @@ const bffResponse = async parameters =>{
                                                         :true):
                                                         parameters.result_request.result)),
                                         route:parameters.route,
-                                        method:parameters.method,
                                         statusMessage: '',
                                         statusCode: parameters.method?.toUpperCase() == 'POST'?201:200,
                                         res:parameters.res});
@@ -531,7 +459,6 @@ const bffResponse = async parameters =>{
                                         type:parameters.result_request?.type,
                                         result:await encrypt(JSON.stringify(result)),
                                         route:parameters.route,
-                                        method:parameters.method,
                                         statusMessage: '',
                                         statusCode: parameters.method?.toUpperCase() == 'POST'?201:200,
                                         res:parameters.res});
@@ -543,7 +470,6 @@ const bffResponse = async parameters =>{
                                 type:parameters.result_request?.type,
                                 result:await encrypt(server.iam.iamUtilMessageNotAuthorized()),
                                 route:parameters.route,
-                                method:parameters.method,
                                 statusMessage: '',
                                 statusCode: 500,
                                 res:parameters.res});
@@ -561,7 +487,7 @@ const bffResponse = async parameters =>{
  * @returns {Promise<*>}
  */
  const bff = async (req, res) =>{
-    /**@type{server['ORM']['ConfigServer']} */
+    /**@type{server['ORM']['Object']['ConfigServer']} */
     const configServer = server.ORM.db.ConfigServer.get({app_id:0}).result;
     // check JSON maximum size, parameter uses megabytes (MB)
     if (req.body && JSON.stringify(req.body).length/1024/1024 > 
@@ -601,31 +527,31 @@ const bffResponse = async parameters =>{
                 //fonts use GET all others use POST
                 if (['POST', 'GET'].includes(req.method) && req.url.startsWith('/bff/x/') && req.url.length>'/bff/x/'.length){
                     //lookup uuid in IamEncryption or ServiceRegistry for microservice
-                    /**@type{server['ORM']['IamEncryption']}*/
+                    /**@type{server['ORM']['Object']['IamEncryption']}*/
                     const encryptionData = (server.ORM.db.IamEncryption.get({app_id:common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
-                                            .filter((/**@type{server['ORM']['IamEncryption']}*/encryption)=>
-                                                    encryption.uuid==(req.url.substring('/bff/x/'.length).split('~')[0])
+                                            .filter((/**@type{server['ORM']['Object']['IamEncryption']}*/encryption)=>
+                                                    encryption.Uuid==(req.url.substring('/bff/x/'.length).split('~')[0])
                                             )[0] ?? (server.ORM.db.ServiceRegistry.get({app_id:common_app_id, resource_id:null, data:{name:null}}).result ?? [])
-                                            .filter((/**@type{server['ORM']['ServiceRegistry']}*/service)=>service.uuid==(req.url.substring('/bff/x/'.length).split('~')[0]))
-                                            .map((/**@type{server['ORM']['ServiceRegistry']}*/service)=>{
+                                            .filter((/**@type{server['ORM']['Object']['ServiceRegistry']}*/service)=>service.Uuid==(req.url.substring('/bff/x/'.length).split('~')[0]))
+                                            .map((/**@type{server['ORM']['Object']['ServiceRegistry']}*/service)=>{
                                                 return {
-                                                    id:                 null,
-                                                    app_id:             0,
-                                                    iam_app_id_token_id:null,
-                                                    uuid:               service.uuid,
-                                                    secret:             service.secret,
-                                                    url:                null,
-                                                    type:               'MICROSERVICE',
-                                                    created:            null};})[0];
+                                                    Id:                 null,
+                                                    Uuid:               service.Uuid,
+                                                    AppId:             0,
+                                                    IamAppIdTokenId:null,
+                                                    Secret:             service.Secret,
+                                                    Url:                null,
+                                                    Type:               'MICROSERVICE',
+                                                    Created:            null};})[0];
                                             
                     if (encryptionData){
-                        if(encryptionData.type=='FONT'){
+                        if(encryptionData.Type=='FONT'){
                             const token = server.ORM.db.IamAppIdToken.get({ app_id:common_app_id, 
                                             resource_id:(server.ORM.db.IamEncryption.get({app_id:common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
-                                                            .filter((/**@type{server['ORM']['IamEncryption']}*/encryption)=>
-                                                                    encryption.uuid==(req.url.substring('/bff/x/'.length).split('~')[1])
-                                                            )[0].iam_app_id_token_id, 
-                                            data:{data_app_id:null}}).result[0].token;
+                                                            .filter((/**@type{server['ORM']['Object']['IamEncryption']}*/encryption)=>
+                                                                    encryption.Uuid==(req.url.substring('/bff/x/'.length).split('~')[1])
+                                                            )[0].IamAppIdTokenId, 
+                                            data:{data_app_id:null}}).result[0].Token;
                             if (token){
                                 server.socket.socketClientPostMessage({app_id:common_app_id,
                                                                 resource_id:null,
@@ -634,7 +560,7 @@ const bffResponse = async parameters =>{
                                                                         idToken:token,
                                                                         message:JSON.stringify({
                                                                                     uuid:req.url.substring('/bff/x/'.length).split('~')[0],
-                                                                                    url: encryptionData.url
+                                                                                    url: encryptionData.Url
                                                                                 }),
                                                                         message_type:'FONT_URL'
                                                                     }
@@ -645,8 +571,8 @@ const bffResponse = async parameters =>{
                                 return null;
                         }
                         else{
-                            const jwk = JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).jwk;
-                            const iv  = JSON.parse(Buffer.from(encryptionData.secret, 'base64').toString('utf-8')).iv;
+                            const jwk = JSON.parse(Buffer.from(encryptionData.Secret, 'base64').toString('utf-8')).jwk;
+                            const iv  = JSON.parse(Buffer.from(encryptionData.Secret, 'base64').toString('utf-8')).iv;
                             /**
                              * @type {{headers:{
                              *                 'app-id':       number,
@@ -986,7 +912,7 @@ const bffRestApi = async (routesparameters) =>{
     const URI_query = routesparameters.parameters;
     const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
     const app_query = URI_query?new URLSearchParams(URI_query):null;
-    /**@type{server['ORM']['ConfigServer']} */
+    /**@type{server['ORM']['Object']['ConfigServer']} */
     const configServer = server.ORM.db.ConfigServer.get({app_id:0}).result;
 
     
@@ -1288,4 +1214,4 @@ const bffRestApi = async (routesparameters) =>{
                 type:'JSON'};
 };
 
-export{bffConnect, bffExternal, bffMicroservice, bffGeodata, bffGeodataUser, bffResponse, bff};
+export{bffConnect, bffExternal, bffMicroservice, bffResponse, bff};

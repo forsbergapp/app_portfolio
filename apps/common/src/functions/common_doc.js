@@ -274,7 +274,7 @@ const markdownRender = async parameters =>{
                                 //metadata tags                            
                                 .replaceAll('@{SERVER_HOST}',       server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'HOST'}}).result??'')
                                 .replaceAll('@{APP_CONFIGURATION}', server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'METADATA', parameter:'CONFIGURATION'}}).result??'')
-                                .replaceAll('@{APP_COPYRIGHT}',     server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].copyright)
+                                .replaceAll('@{APP_COPYRIGHT}',     server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].Copyright)
                         );
             
             //replace all found JSDoc comments with markdown formatted module functions
@@ -362,12 +362,12 @@ const menuRender = async parameters =>{
                 //return menu for app with updated id and app name
                 menu.menu_sub = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:null}).result
                                 // sort common last
-                                .sort((/**@type{server['ORM']['App']}*/a,/**@type{server['ORM']['App']}*/b)=>(a.id==0&&b.id==0)?0:a.id==0?1:b.id==0?-1:a.id-b.id)
-                                .map((/**@type{server['ORM']['App']}*/app)=>{
+                                .sort((/**@type{server['ORM']['Object']['App']}*/a,/**@type{server['ORM']['Object']['App']}*/b)=>(a.Id==0&&b.Id==0)?0:a.Id==0?1:b.Id==0?-1:(a.Id??0)-(b.Id??0))
+                                .map((/**@type{server['ORM']['Object']['App']}*/app)=>{
                     return { 
-                            id:app.id,
-                            menu:app.name,
-                            doc:app.id.toString()
+                            id:app.Id,
+                            menu:app.Name,
+                            doc:app.Id?.toString()
                             };
                     });
                 break;

@@ -21,54 +21,54 @@ let common;
 const APP_USER_SETTINGS_EMPTY = {current_id:0,
                              data:[{id:0,
                                     Document: {description: '',
-                                                regional_language_locale: '',
-                                                regional_timezone: '',
-                                                regional_number_system: '',
-                                                regional_layout_direction: '',
-                                                regional_second_language_locale: '',
-                                                regional_arabic_script: '',
-                                                regional_calendar_type: 'GREGORIAN',
-                                                regional_calendar_hijri_type: '',
-                                                gps_lat_text: null,
-                                                gps_long_text: null,
+                                                RegionalLanguageLocale: '',
+                                                RegionalTimezone: '',
+                                                RegionalNumberSystem: '',
+                                                RegionalLayoutDirection: '',
+                                                RegionalSecondLanguageLocale: '',
+                                                RegionalArabicScript: '',
+                                                RegionalCalendarType: 'GREGORIAN',
+                                                RegionalCalendarHijri_type: '',
+                                                GpsLatText: null,
+                                                GpsLongText: null,
                 
-                                                design_theme_day_id: '',
-                                                design_theme_month_id: '',
-                                                design_theme_year_id: '',
-                                                design_paper_size: '',
-                                                design_row_highlight: '0',
-                                                design_column_weekday_checked: 0,
-                                                design_column_calendartype_checked: 0,
-                                                design_column_notes_checked: 0,
-                                                design_column_gps_checked: 0,
-                                                design_column_timezone_checked: 0,
+                                                DesignThemeDayId: '',
+                                                DesignThemeMonthId: '',
+                                                DesignThemeYearId: '',
+                                                DesignPaperSize: '',
+                                                DesignRowHighlight: '0',
+                                                DesignColumnWeekdayChecked: 0,
+                                                DesignColumnCalendartypeChecked: 0,
+                                                DesignColumnNotesChecked: 0,
+                                                DesignColumnGpsChecked: 0,
+                                                DesignColumnTimezoneChecked: 0,
                 
-                                                image_header_image_img: '',
-                                                image_footer_image_img: '',
+                                                ImageHeaderImageImg: '',
+                                                ImageFooterImageImg: '',
                 
-                                                text_header_1_text: '',
-                                                text_header_2_text: '',
-                                                text_header_3_text: '',
-                                                text_header_align: null,
-                                                text_footer_1_text: '',
-                                                text_footer_2_text: '',
-                                                text_footer_3_text: '',
-                                                text_footer_align: null,
+                                                TextHeader1Text: '',
+                                                TextHeader2Text: '',
+                                                TextHeader3Text: '',
+                                                TextHeaderAlign: null,
+                                                TextFooter1Text: '',
+                                                TextFooter2Text: '',
+                                                TextFooter3Text: '',
+                                                TextFooterAlign: null,
                 
-                                                prayer_method: '',
-                                                prayer_asr_method: '',
-                                                prayer_high_latitude_adjustment: '',
-                                                prayer_time_format: '',
-                                                prayer_hijri_date_adjustment: 0,
-                                                prayer_fajr_iqamat: '',
-                                                prayer_dhuhr_iqamat: '',
-                                                prayer_asr_iqamat: '',
-                                                prayer_maghrib_iqamat: '',
-                                                prayer_isha_iqamat: '',
-                                                prayer_column_imsak_checked: 0,
-                                                prayer_column_sunset_checked: 0,
-                                                prayer_column_midnight_checked: 0,
-                                                prayer_column_fast_start_end: 0}}
+                                                PrayerMethod: '',
+                                                PrayerAsrMethod: '',
+                                                PrayerHighLatitudeAdjustment: '',
+                                                PrayerTimeFormat: '',
+                                                PrayerHijriDateAdjustment: 0,
+                                                PrayerFajrIqamat: '',
+                                                PrayerDhuhrIqamat: '',
+                                                PrayerAsrIqamat: '',
+                                                PrayerMaghribIqamat: '',
+                                                PrayerIshaIqamat: '',
+                                                PrayerColumnImsakChecked: 0,
+                                                PrayerColumnSunsetChecked: 0,
+                                                PrayerColumnMidnightChecked: 0,
+                                                PrayerColumnFastStartEnd: 0}}
                                 ]
                             };
 
@@ -171,56 +171,56 @@ const appReportTimetablePrint = async () => {
  */
 const appReportTimetableSettings = () => {
     const setting_global = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document;
-    return {    locale              	: setting_global.regional_language_locale,
-                timezone            	: setting_global.regional_timezone,
-                number_system       	: setting_global.regional_number_system,
-                direction           	: setting_global.regional_layout_direction,
-                second_locale       	: setting_global.regional_second_language_locale,
-                arabic_script       	: setting_global.regional_arabic_script,
-                calendartype        	: setting_global.regional_calendar_type,
-                calendar_hijri_type 	: setting_global.regional_calendar_hijri_type,
+    return {    locale              	: setting_global.RegionalLanguageLocale,
+                timezone            	: setting_global.RegionalTimezone,
+                number_system       	: setting_global.RegionalNumberSystem,
+                direction           	: setting_global.RegionalLayoutDirection,
+                second_locale       	: setting_global.RegionalSecondLanguageLocale,
+                arabic_script       	: setting_global.RegionalArabicScript,
+                calendartype        	: setting_global.RegionalCalendarType,
+                calendar_hijri_type 	: setting_global.RegionalCalendarHijri_type,
 
                 place               	: setting_global.description ??'',
-                gps_lat             	: setting_global.gps_lat_text??0,
-                gps_long            	: setting_global.gps_long_text??0,
+                gps_lat             	: setting_global.GpsLatText??0,
+                gps_long            	: setting_global.GpsLongText??0,
 
-                theme_day           	: 'theme_day_' + setting_global.design_theme_day_id,
-                theme_month         	: 'theme_month_' + setting_global.design_theme_month_id,
-                theme_year          	: 'theme_year_' + setting_global.design_theme_year_id,    
+                theme_day           	: 'theme_day_' + setting_global.DesignThemeDayId,
+                theme_month         	: 'theme_month_' + setting_global.DesignThemeMonthId,
+                theme_year          	: 'theme_year_' + setting_global.DesignThemeYearId,    
                 //papersize missing
-                highlight           	: setting_global.design_row_highlight,
-                show_weekday        	: setting_global.design_column_weekday_checked,
-                show_calendartype   	: setting_global.design_column_calendartype_checked,
-                show_notes          	: setting_global.design_column_notes_checked,
-                show_gps   	       		: setting_global.design_column_gps_checked,
-                show_timezone       	: setting_global.design_column_timezone_checked,
+                highlight           	: setting_global.DesignRowHighlight,
+                show_weekday        	: setting_global.DesignColumnWeekdayChecked,
+                show_calendartype   	: setting_global.DesignColumnCalendartypeChecked,
+                show_notes          	: setting_global.DesignColumnNotesChecked,
+                show_gps   	       		: setting_global.DesignColumnGpsChecked,
+                show_timezone       	: setting_global.DesignColumnTimezoneChecked,
                 
-                header_img_src      	: setting_global.image_header_image_img,
-				footer_img_src      	: setting_global.image_footer_image_img,
+                header_img_src      	: setting_global.ImageHeaderImageImg,
+				footer_img_src      	: setting_global.ImageFooterImageImg,
 
-                header_txt1         	: setting_global.text_header_1_text,
-                header_txt2         	: setting_global.text_header_2_text,
-                header_txt3         	: setting_global.text_header_3_text,
-                header_align            : setting_global.text_header_align,
-                footer_txt1         	: setting_global.text_footer_1_text,
-                footer_txt2         	: setting_global.text_footer_2_text,
-                footer_txt3    	   		: setting_global.text_footer_3_text,
-                footer_align            : setting_global.text_footer_align,
+                header_txt1         	: setting_global.TextHeader1Text,
+                header_txt2         	: setting_global.TextHeader2Text,
+                header_txt3         	: setting_global.TextHeader3Text,
+                header_align            : setting_global.TextHeaderAlign,
+                footer_txt1         	: setting_global.TextFooter1Text,
+                footer_txt2         	: setting_global.TextFooter2Text,
+                footer_txt3    	   		: setting_global.TextFooter3Text,
+                footer_align            : setting_global.TextFooterAlign,
                 
-                method              	: setting_global.prayer_method,
-                asr                 	: setting_global.prayer_asr_method,
-                highlat             	: setting_global.prayer_high_latitude_adjustment,
-                format              	: setting_global.prayer_time_format,
-                hijri_adj           	: setting_global.prayer_hijri_date_adjustment,
-                iqamat_fajr         	: setting_global.prayer_fajr_iqamat,
-                iqamat_dhuhr        	: setting_global.prayer_dhuhr_iqamat,
-                iqamat_asr          	: setting_global.prayer_asr_iqamat,
-                iqamat_maghrib      	: setting_global.prayer_maghrib_iqamat,
-                iqamat_isha         	: setting_global.prayer_isha_iqamat,
-                show_imsak          	: setting_global.prayer_column_imsak_checked,
-                show_sunset         	: setting_global.prayer_column_sunset_checked,
-                show_midnight       	: setting_global.prayer_column_midnight_checked,
-                show_fast_start_end 	: setting_global.prayer_column_fast_start_end,
+                method              	: setting_global.PrayerMethod,
+                asr                 	: setting_global.PrayerAsrMethod,
+                highlat             	: setting_global.PrayerHighLatitudeAdjustment,
+                format              	: setting_global.PrayerTimeFormat,
+                hijri_adj           	: setting_global.PrayerHijriDateAdjustment,
+                iqamat_fajr         	: setting_global.PrayerFajrIqamat,
+                iqamat_dhuhr        	: setting_global.PrayerDhuhrIqamat,
+                iqamat_asr          	: setting_global.PrayerAsrIqamat,
+                iqamat_maghrib      	: setting_global.PrayerMaghribIqamat,
+                iqamat_isha         	: setting_global.PrayerIshaIqamat,
+                show_imsak          	: setting_global.PrayerColumnImsakChecked,
+                show_sunset         	: setting_global.PrayerColumnSunsetChecked,
+                show_midnight       	: setting_global.PrayerColumnMidnightChecked,
+                show_fast_start_end 	: setting_global.PrayerColumnFastStartEnd,
                 
                 timetable_class			: 'timetable_class',
                 timetable_month         : 'timetable_month_class', //class to add for month
@@ -250,18 +250,18 @@ const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, sett
             for (const setting of APP_GLOBAL.user_settings.data){
                 current_user_settings.push(
                 {
-                description : setting.Document.description??'',
-                regional_language_locale : setting.Document.regional_language_locale,
-                regional_timezone : setting.Document.regional_timezone,
-                regional_number_system : setting.Document.regional_number_system,
-                regional_calendar_hijri_type : setting.Document.regional_calendar_hijri_type,
-                gps_lat_text : setting.Document.gps_lat_text,
-                gps_long_text : setting.Document.gps_long_text,
-                prayer_method : setting.Document.prayer_method,
-                prayer_asr_method : setting.Document.prayer_asr_method,
-                prayer_high_latitude_adjustment : setting.Document.prayer_high_latitude_adjustment,
-                prayer_time_format : setting.Document.prayer_time_format,
-                prayer_hijri_date_adjustment : setting.Document.prayer_hijri_date_adjustment
+                description : setting.Document.Description??'',
+                RegionalLanguageLocale : setting.Document.RegionalLanguageLocale,
+                RegionalTimezone : setting.Document.RegionalTimezone,
+                RegionalNumberSystem : setting.Document.RegionalNumberSystem,
+                RegionalCalendarHijri_type : setting.Document.RegionalCalendarHijri_type,
+                GpsLatText : setting.Document.GpsLatText,
+                GpsLongText : setting.Document.GpsLongText,
+                PrayerMethod : setting.Document.PrayerMethod,
+                PrayerAsrMethod : setting.Document.PrayerAsrMethod,
+                PrayerHighLatitudeAdjustment : setting.Document.PrayerHighLatitudeAdjustment,
+                PrayerTimeFormat : setting.Document.PrayerTimeFormat,
+                PrayerHijriDateAdjustment : setting.Document.PrayerHijriDateAdjustment
                 });
             }
             COMMON_DOCUMENT.querySelector('#paper').innerHTML = APP_GLOBAL.appLibTimetable.component({	data:		{
@@ -353,18 +353,18 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
     if (theme?.type =='day' || theme==null){
         const current_user_settings = APP_GLOBAL.user_settings.data.map(setting=>{
             return {
-                description : setting.Document.description??'',
-                regional_language_locale : setting.Document.regional_language_locale,
-                regional_timezone : setting.Document.regional_timezone,
-                regional_number_system : setting.Document.regional_number_system,
-                regional_calendar_hijri_type : setting.Document.regional_calendar_hijri_type,
-                gps_lat_text : setting.Document.gps_lat_text,
-                gps_long_text : setting.Document.gps_long_text,
-                prayer_method : setting.Document.prayer_method,
-                prayer_asr_method : setting.Document.prayer_asr_method,
-                prayer_high_latitude_adjustment : setting.Document.prayer_high_latitude_adjustment,
-                prayer_time_format : setting.Document.prayer_time_format,
-                prayer_hijri_date_adjustment : setting.Document.prayer_hijri_date_adjustment
+                description : setting.Document.Description??'',
+                RegionalLanguageLocale : setting.Document.RegionalLanguageLocale,
+                RegionalTimezone : setting.Document.RegionalTimezone,
+                RegionalNumberSystem : setting.Document.RegionalNumberSystem,
+                RegionalCalendarHijri_type : setting.Document.RegionalCalendarHijri_type,
+                GpsLatText : setting.Document.GpsLatText,
+                GpsLongText : setting.Document.GpsLongText,
+                PrayerMethod : setting.Document.PrayerMethod,
+                PrayerAsrMethod : setting.Document.PrayerAsrMethod,
+                PrayerHighLatitudeAdjustment : setting.Document.PrayerHighLatitudeAdjustment,
+                PrayerTimeFormat : setting.Document.PrayerTimeFormat,
+                PrayerHijriDateAdjustment : setting.Document.PrayerHijriDateAdjustment
             };
         });
         
@@ -383,7 +383,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
         await common.commonComponentRender({
             mountDiv:   'setting_design_theme_day',
             data:       { 
-                        class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_paper_size,
+                        class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignPaperSize,
                         theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_day').getAttribute('data-theme_id'),
                         type:'day',
                         html:result.template
@@ -416,7 +416,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
                                         });
         await common.commonComponentRender({  mountDiv:   'setting_design_theme_month',
                                         data:       { 
-                                                    class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_paper_size,
+                                                    class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignPaperSize,
                                                     theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_month').getAttribute('data-theme_id'),
                                                     type:'month',
                                                     html:result_month.template
@@ -425,7 +425,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
                                         path:       '/component/settings_tab3_theme_thumbnail.js'});
         await common.commonComponentRender({  mountDiv:   'setting_design_theme_year',
                                         data:       { 
-                                                    class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_paper_size,
+                                                    class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignPaperSize,
                                                     theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_year').getAttribute('data-theme_id'),
                                                     type:'year',
                                                     html:result_year.template
@@ -768,7 +768,7 @@ const appPaperZoom = (zoomvalue = null) => {
  */
 const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null) => {
     switch (setting_tab + '_' + setting_type) {
-        case 'REGIONAL_TIMEZONE':
+        case 'RegionalTimezone':
             {
                 settingsTimesShow();
                 break;
@@ -782,12 +782,12 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
                     popup.getAttribute('data-timezone')!='?'){
                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.description = 
                     COMMON_DOCUMENT.querySelectorAll('.common_map_popup_title')[COMMON_DOCUMENT.querySelectorAll('.common_map_popup_title').length - 1 ].textContent;
-                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_lat_text =
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLatText =
                         popup.getAttribute('data-latitude');
-                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_long_text = 
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLongText = 
                         popup.getAttribute('data-longitude');
                     appMapQibblaShow();
-                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_timezone = popup.getAttribute('data-timezone');
+                    APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.RegionalTimezone = popup.getAttribute('data-timezone');
                     APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(popup.getAttribute('data-timezone'));
                     appUserSettingUpdate('GPS');
                 }
@@ -815,8 +815,8 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
                 break;
             }
         
-        case 'TEXT_HEADER_ALIGN':
-        case 'TEXT_FOOTER_ALIGN':
+        case 'TextHeaderAlign':
+        case 'TextFooterAlign':
             {
                 const button_active_class  = 'setting_button_active';
                 const header_footer = setting_type=='HEADER_ALIGN'?'header':'footer';
@@ -839,7 +839,7 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
                 COMMON_DOCUMENT.querySelector(`#setting_input_report${header_footer}3`).style.textAlign= align;
                 break;
             }
-        case 'PRAYER_METHOD':
+        case 'PrayerMethod':
             {
                 const method = COMMON_DOCUMENT.querySelector('#setting_select_method .common_select_dropdown_value').getAttribute('data-value');
                 let suffix;
@@ -995,50 +995,50 @@ const appUserSettingsGet = async () => {
         .then((/**@type{string}*/result)=>{
             const settings = JSON.parse(result).rows.map((/** @type{APP_user_setting_record}*/setting)=>{
                 const json = {description:setting.description,
-                    regional_language_locale:setting.regional_language_locale,
-                    regional_timezone:setting.regional_timezone,
-                    regional_number_system:setting.regional_number_system,
-                    regional_layout_direction:setting.regional_layout_direction,
-                    regional_second_language_locale:setting.regional_second_language_locale,
-                    regional_arabic_script:setting.regional_arabic_script,
-                    regional_calendar_type:setting.regional_calendar_type,
-                    regional_calendar_hijri_type:setting.regional_calendar_hijri_type,
-                    gps_lat_text:typeof setting.gps_lat_text== 'string'?appCommonFixFloat(setting.gps_lat_text):setting.gps_lat_text,
-                    gps_long_text:typeof setting.gps_long_text=='string'?appCommonFixFloat(setting.gps_long_text):setting.gps_long_text,
-                    design_theme_day_id:setting.design_theme_day_id,
-                    design_theme_month_id:setting.design_theme_month_id,
-                    design_theme_year_id:setting.design_theme_year_id,
-                    design_paper_size:setting.design_paper_size,
-                    design_row_highlight:setting.design_row_highlight,
-                    design_column_weekday_checked:Number(setting.design_column_weekday_checked),
-                    design_column_calendartype_checked:Number(setting.design_column_calendartype_checked),
-                    design_column_notes_checked:Number(setting.design_column_notes_checked),
-                    design_column_gps_checked:Number(setting.design_column_gps_checked),
-                    design_column_timezone_checked:Number(setting.design_column_timezone_checked),
-                    image_header_image_img:setting.image_header_image_img,
-                    image_footer_image_img:setting.image_footer_image_img,
-                    text_header_1_text:setting.text_header_1_text,
-                    text_header_2_text:setting.text_header_2_text,
-                    text_header_3_text:setting.text_header_3_text,
-                    text_header_align:setting.text_header_align==''?null:setting.text_header_align,
-                    text_footer_1_text:setting.text_footer_1_text,
-                    text_footer_2_text:setting.text_footer_2_text,
-                    text_footer_3_text:setting.text_footer_3_text,
-                    text_footer_align:setting.text_footer_align==''?null:setting.text_footer_align,
-                    prayer_method:setting.prayer_method,
-                    prayer_asr_method:setting.prayer_asr_method,
-                    prayer_high_latitude_adjustment:setting.prayer_high_latitude_adjustment,
-                    prayer_time_format:setting.prayer_time_format,
-                    prayer_hijri_date_adjustment:Number(setting.prayer_hijri_date_adjustment),
-                    prayer_fajr_iqamat:setting.prayer_fajr_iqamat,
-                    prayer_dhuhr_iqamat:setting.prayer_dhuhr_iqamat,
-                    prayer_asr_iqamat:setting.prayer_asr_iqamat,
-                    prayer_maghrib_iqamat:setting.prayer_maghrib_iqamat,
-                    prayer_isha_iqamat:setting.prayer_isha_iqamat,
-                    prayer_column_imsak_checked:Number(setting.prayer_column_imsak_checked),
-                    prayer_column_sunset_checked:Number(setting.prayer_column_sunset_checked),
-                    prayer_column_midnight_checked:Number(setting.prayer_column_midnight_checked),
-                    prayer_column_fast_start_end:Number(setting.prayer_column_fast_start_end) 
+                    RegionalLanguageLocale:setting.RegionalLanguageLocale,
+                    RegionalTimezone:setting.RegionalTimezone,
+                    RegionalNumberSystem:setting.RegionalNumberSystem,
+                    RegionalLayoutDirection:setting.RegionalLayoutDirection,
+                    RegionalSecondLanguageLocale:setting.RegionalSecondLanguageLocale,
+                    RegionalArabicScript:setting.RegionalArabicScript,
+                    RegionalCalendarType:setting.RegionalCalendarType,
+                    RegionalCalendarHijri_type:setting.RegionalCalendarHijri_type,
+                    GpsLatText:typeof setting.GpsLatText== 'string'?appCommonFixFloat(setting.GpsLatText):setting.GpsLatText,
+                    GpsLongText:typeof setting.GpsLongText=='string'?appCommonFixFloat(setting.GpsLongText):setting.GpsLongText,
+                    DesignThemeDayId:setting.DesignThemeDayId,
+                    DesignThemeMonthId:setting.DesignThemeMonthId,
+                    DesignThemeYearId:setting.DesignThemeYearId,
+                    DesignPaperSize:setting.DesignPaperSize,
+                    DesignRowHighlight:setting.DesignRowHighlight,
+                    DesignColumnWeekdayChecked:Number(setting.DesignColumnWeekdayChecked),
+                    DesignColumnCalendartypeChecked:Number(setting.DesignColumnCalendartypeChecked),
+                    DesignColumnNotesChecked:Number(setting.DesignColumnNotesChecked),
+                    DesignColumnGpsChecked:Number(setting.DesignColumnGpsChecked),
+                    DesignColumnTimezoneChecked:Number(setting.DesignColumnTimezoneChecked),
+                    ImageHeaderImageImg:setting.ImageHeaderImageImg,
+                    ImageFooterImageImg:setting.ImageFooterImageImg,
+                    TextHeader1Text:setting.TextHeader1Text,
+                    TextHeader2Text:setting.TextHeader2Text,
+                    TextHeader3Text:setting.TextHeader3Text,
+                    TextHeaderAlign:setting.TextHeaderAlign==''?null:setting.TextHeaderAlign,
+                    TextFooter1Text:setting.TextFooter1Text,
+                    TextFooter2Text:setting.TextFooter2Text,
+                    TextFooter3Text:setting.TextFooter3Text,
+                    TextFooterAlign:setting.TextFooterAlign==''?null:setting.TextFooterAlign,
+                    PrayerMethod:setting.PrayerMethod,
+                    PrayerAsrMethod:setting.PrayerAsrMethod,
+                    PrayerHighLatitudeAdjustment:setting.PrayerHighLatitudeAdjustment,
+                    PrayerTimeFormat:setting.PrayerTimeFormat,
+                    PrayerHijriDateAdjustment:Number(setting.PrayerHijriDateAdjustment),
+                    PrayerFajrIqamat:setting.PrayerFajrIqamat,
+                    PrayerDhuhrIqamat:setting.PrayerDhuhrIqamat,
+                    PrayerAsrIqamat:setting.PrayerAsrIqamat,
+                    PrayerMaghribIqamat:setting.PrayerMaghribIqamat,
+                    PrayerIshaIqamat:setting.PrayerIshaIqamat,
+                    PrayerColumnImsakChecked:Number(setting.PrayerColumnImsakChecked),
+                    PrayerColumnSunsetChecked:Number(setting.PrayerColumnSunsetChecked),
+                    PrayerColumnMidnightChecked:Number(setting.PrayerColumnMidnightChecked),
+                    PrayerColumnFastStartEnd:Number(setting.PrayerColumnFastStartEnd) 
                 };
                 return {
                         id:setting.id,
@@ -1065,7 +1065,7 @@ const appUserSettingLink = (item) => {
         case 'user_year_html':{
             const url = appReportUrl( common.commonGlobalGet('iam_user_id'), 
                                         sid ?? 0, 
-                                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_paper_size,
+                                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignPaperSize,
                                         item.id,
                                         'HTML');
             common.commonComponentRender({
@@ -1075,7 +1075,7 @@ const appUserSettingLink = (item) => {
                                 path:url,
                                 method:'GET',
                                 authorization:'APP_ID',
-                                class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_paper_size
+                                class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignPaperSize
                                 },
                     methods:    null,
                     path:       '/common/component/common_app_window_info.js'});
@@ -1096,14 +1096,14 @@ const appUserSettingFunction = async (function_name, add_settings=true) => {
     if (common.commonMiscInputControl(null,{
                                     check_valid_list_values:[
                                                 [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.description??'',null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_lat_text?.toString()??'',null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_long_text?.toString()??'',null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_1_text,null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_2_text,null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_3_text,null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_1_text,null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_2_text,null],
-                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_3_text,null]
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLatText?.toString()??'',null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLongText?.toString()??'',null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextHeader1Text,null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextHeader2Text,null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextHeader3Text,null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextFooter1Text,null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextFooter2Text,null],
+                                                [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextFooter3Text,null]
                                                 ]})==true){
         
         const body = {  Document:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document,
@@ -1236,53 +1236,53 @@ const appUserSettingDefaultSet = async () => {
     //update APP_GLOBAL
     const Document = {
         description:                        common.commonGlobalGet('client_place'),
-        regional_language_locale:           common.commonGlobalGet('user_locale'),
-        regional_timezone:                  (common.commonGlobalGet('client_latitude') && common.commonGlobalGet('client_longitude'))?
+        RegionalLanguageLocale:           common.commonGlobalGet('user_locale'),
+        RegionalTimezone:                  (common.commonGlobalGet('client_latitude') && common.commonGlobalGet('client_longitude'))?
                                                 (await common.commonMiscImport(common.commonMiscImportmap('regional')))
                                                     .getTimezone(common.commonGlobalGet('client_latitude'), common.commonGlobalGet('client_longitude')):
                                                         Intl.DateTimeFormat().resolvedOptions().timeZone,
-        regional_number_system:             Intl.NumberFormat().resolvedOptions().numberingSystem,
-        regional_layout_direction:          APP_GLOBAL.regional_default_direction,
-        regional_second_language_locale:    APP_GLOBAL.regional_default_locale_second,
-        regional_arabic_script:             APP_GLOBAL.regional_default_arabic_script,
-        regional_calendar_type:             APP_GLOBAL.regional_default_calendartype,
-        regional_calendar_hijri_type:       APP_GLOBAL.regional_default_calendar_hijri_type,
-        gps_lat_text:                       appCommonFixFloat(common.commonGlobalGet('client_latitude')??''),
-        gps_long_text:                      appCommonFixFloat(common.commonGlobalGet('client_longitude')??''),
-        design_theme_day_id:                APP_GLOBAL.design_default_theme_day,
-        design_theme_month_id:              APP_GLOBAL.design_default_theme_month,
-        design_theme_year_id:               APP_GLOBAL.design_default_theme_year,
-        design_paper_size:                  APP_GLOBAL.design_default_papersize,
-        design_row_highlight:               APP_GLOBAL.design_default_highlight_row,
-        design_column_weekday_checked:      Number(APP_GLOBAL.design_default_show_weekday),
-        design_column_calendartype_checked: Number(APP_GLOBAL.design_default_show_calendartype),
-        design_column_notes_checked:        Number(APP_GLOBAL.design_default_show_notes),
-        design_column_gps_checked:          Number(APP_GLOBAL.design_default_show_gps),
-        design_column_timezone_checked:     Number(APP_GLOBAL.design_default_show_timezone),
-        image_header_image_img:             APP_GLOBAL.image_default_report_header_src,
-        image_footer_image_img:             APP_GLOBAL.image_default_report_footer_src,
-        text_header_1_text:                 APP_GLOBAL.text_default_reporttitle1,
-        text_header_2_text:                 APP_GLOBAL.text_default_reporttitle2,
-        text_header_3_text:                 APP_GLOBAL.text_default_reporttitle3,
-        text_header_align:                  null,
-        text_footer_1_text:                 APP_GLOBAL.text_default_reportfooter1,
-        text_footer_2_text:                 APP_GLOBAL.text_default_reportfooter2,
-        text_footer_3_text:                 APP_GLOBAL.text_default_reportfooter3,
-        text_footer_align:                  null,
-        prayer_method:                      APP_GLOBAL.prayer_default_method,
-        prayer_asr_method:                  APP_GLOBAL.prayer_default_asr,
-        prayer_high_latitude_adjustment:    APP_GLOBAL.prayer_default_highlatitude,
-        prayer_time_format:                 APP_GLOBAL.prayer_default_timeformat,
-        prayer_hijri_date_adjustment:       Number(APP_GLOBAL.prayer_default_hijri_adjustment),
-        prayer_fajr_iqamat:                 APP_GLOBAL.prayer_default_iqamat_title_fajr,
-        prayer_dhuhr_iqamat:                APP_GLOBAL.prayer_default_iqamat_title_dhuhr,
-        prayer_asr_iqamat:                  APP_GLOBAL.prayer_default_iqamat_title_asr,
-        prayer_maghrib_iqamat:              APP_GLOBAL.prayer_default_iqamat_title_maghrib,
-        prayer_isha_iqamat:                 APP_GLOBAL.prayer_default_iqamat_title_isha,
-        prayer_column_imsak_checked:        Number(APP_GLOBAL.prayer_default_show_imsak),
-        prayer_column_sunset_checked:       Number(APP_GLOBAL.prayer_default_show_sunset),
-        prayer_column_midnight_checked:     Number(APP_GLOBAL.prayer_default_show_midnight),
-        prayer_column_fast_start_end:       Number(APP_GLOBAL.prayer_default_show_fast_start_end)
+        RegionalNumberSystem:             Intl.NumberFormat().resolvedOptions().numberingSystem,
+        RegionalLayoutDirection:          APP_GLOBAL.regional_default_direction,
+        RegionalSecondLanguageLocale:    APP_GLOBAL.regional_default_locale_second,
+        RegionalArabicScript:             APP_GLOBAL.regional_default_arabic_script,
+        RegionalCalendarType:             APP_GLOBAL.regional_default_calendartype,
+        RegionalCalendarHijri_type:       APP_GLOBAL.regional_default_calendar_hijri_type,
+        GpsLatText:                       appCommonFixFloat(common.commonGlobalGet('client_latitude')??''),
+        GpsLongText:                      appCommonFixFloat(common.commonGlobalGet('client_longitude')??''),
+        DesignThemeDayId:                APP_GLOBAL.design_default_theme_day,
+        DesignThemeMonthId:              APP_GLOBAL.design_default_theme_month,
+        DesignThemeYearId:               APP_GLOBAL.design_default_theme_year,
+        DesignPaperSize:                  APP_GLOBAL.design_default_papersize,
+        DesignRowHighlight:               APP_GLOBAL.design_default_highlight_row,
+        DesignColumnWeekdayChecked:      Number(APP_GLOBAL.design_default_show_weekday),
+        DesignColumnCalendartypeChecked: Number(APP_GLOBAL.design_default_show_calendartype),
+        DesignColumnNotesChecked:        Number(APP_GLOBAL.design_default_show_notes),
+        DesignColumnGpsChecked:          Number(APP_GLOBAL.design_default_show_gps),
+        DesignColumnTimezoneChecked:     Number(APP_GLOBAL.design_default_show_timezone),
+        ImageHeaderImageImg:             APP_GLOBAL.image_default_report_header_src,
+        ImageFooterImageImg:             APP_GLOBAL.image_default_report_footer_src,
+        TextHeader1Text:                 APP_GLOBAL.text_default_reporttitle1,
+        TextHeader2Text:                 APP_GLOBAL.text_default_reporttitle2,
+        TextHeader3Text:                 APP_GLOBAL.text_default_reporttitle3,
+        TextHeaderAlign:                  null,
+        TextFooter1Text:                 APP_GLOBAL.text_default_reportfooter1,
+        TextFooter2Text:                 APP_GLOBAL.text_default_reportfooter2,
+        TextFooter3Text:                 APP_GLOBAL.text_default_reportfooter3,
+        TextFooterAlign:                  null,
+        PrayerMethod:                      APP_GLOBAL.prayer_default_method,
+        PrayerAsrMethod:                  APP_GLOBAL.prayer_default_asr,
+        PrayerHighLatitudeAdjustment:    APP_GLOBAL.prayer_default_highlatitude,
+        PrayerTimeFormat:                 APP_GLOBAL.prayer_default_timeformat,
+        PrayerHijriDateAdjustment:       Number(APP_GLOBAL.prayer_default_hijri_adjustment),
+        PrayerFajrIqamat:                 APP_GLOBAL.prayer_default_iqamat_title_fajr,
+        PrayerDhuhrIqamat:                APP_GLOBAL.prayer_default_iqamat_title_dhuhr,
+        PrayerAsrIqamat:                  APP_GLOBAL.prayer_default_iqamat_title_asr,
+        PrayerMaghribIqamat:              APP_GLOBAL.prayer_default_iqamat_title_maghrib,
+        PrayerIshaIqamat:                 APP_GLOBAL.prayer_default_iqamat_title_isha,
+        PrayerColumnImsakChecked:        Number(APP_GLOBAL.prayer_default_show_imsak),
+        PrayerColumnSunsetChecked:       Number(APP_GLOBAL.prayer_default_show_sunset),
+        PrayerColumnMidnightChecked:     Number(APP_GLOBAL.prayer_default_show_midnight),
+        PrayerColumnFastStartEnd:       Number(APP_GLOBAL.prayer_default_show_fast_start_end)
     };
     APP_GLOBAL.user_settings = {current_id:0,
                                 data:[{  id:null,
@@ -1309,89 +1309,89 @@ const appCommonFixFloat = value =>  (value==''||value==null)?null:parseFloat(val
 const appUserSettingUpdate = setting_tab => {
 
     const Document = { description:                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.description,
-                        regional_language_locale:           setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_locale .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_language_locale,
-                        regional_timezone:                  setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_timezone .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_timezone,
-                        regional_number_system:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_numbersystem .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_number_system,
-                        regional_layout_direction:          setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_direction .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_layout_direction,
-                        regional_second_language_locale:    setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_locale_second .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_second_language_locale,
-                        regional_arabic_script:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_arabic_script .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_arabic_script,
-                        regional_calendar_type:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_calendartype .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_calendar_type,
-                        regional_calendar_hijri_type:       setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_calendar_hijri_type .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_calendar_hijri_type,
-                        gps_lat_text:                       APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_lat_text,
-                        gps_long_text:                      APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_long_text,
-                        design_theme_day_id:                setting_tab=='DESIGN'?appSettingThemeId('day'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_theme_day_id,
-                        design_theme_month_id:              setting_tab=='DESIGN'?appSettingThemeId('month'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_theme_month_id,
-                        design_theme_year_id:               setting_tab=='DESIGN'?appSettingThemeId('year'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_theme_year_id,
-                        design_paper_size:                  setting_tab=='DESIGN'?COMMON_DOCUMENT.querySelector('#setting_select_report_papersize .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_paper_size,
-                        design_row_highlight:               setting_tab=='DESIGN'?COMMON_DOCUMENT.querySelector('#setting_select_report_highlight_row .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_row_highlight,
-                        design_column_weekday_checked:      setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_column_weekday_checked,
-                        design_column_calendartype_checked: setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_column_calendartype_checked,
-                        design_column_notes_checked:        setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_column_notes_checked,
-                        design_column_gps_checked:          setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_column_gps_checked,
-                        design_column_timezone_checked:     setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.design_column_timezone_checked,
-                        image_header_image_img:             setting_tab=='IMAGE'?COMMON_DOCUMENT.querySelector('#setting_reportheader_img').getAttribute('data-image'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.image_header_image_img,
-                        image_footer_image_img:             setting_tab=='IMAGE'?COMMON_DOCUMENT.querySelector('#setting_reportfooter_img').getAttribute('data-image'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.image_footer_image_img,
-                        text_header_1_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader1').textContent:  
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_1_text,
-                        text_header_2_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader2').textContent:
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_2_text,
-                        text_header_3_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader3').textContent:
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_3_text,
-                        text_header_align:                  setting_tab=='TEXT'? (appSettingButtonAlignValue('header')==''?null:appSettingButtonAlignValue('header')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_header_align,
-                        text_footer_1_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter1').textContent:
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_1_text,
-                        text_footer_2_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter2').textContent:
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_2_text,
-                        text_footer_3_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter3').textContent:
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_3_text,
-                        text_footer_align:                  setting_tab=='TEXT'? (appSettingButtonAlignValue('footer')==''?null:appSettingButtonAlignValue('footer')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.text_footer_align,
-                        prayer_method:                      setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_method .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_method,
-                        prayer_asr_method:                  setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_asr .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_asr_method,
-                        prayer_high_latitude_adjustment:    setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_highlatitude .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_high_latitude_adjustment,
-                        prayer_time_format:                 setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_timeformat .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_time_format,
-                        prayer_hijri_date_adjustment:       setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_select_hijri_adjustment .common_select_dropdown_value').getAttribute('data-value')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_hijri_date_adjustment,
-                        prayer_fajr_iqamat:                 setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_fajr .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_fajr_iqamat,
-                        prayer_dhuhr_iqamat:                setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_dhuhr .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_dhuhr_iqamat,
-                        prayer_asr_iqamat:                  setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_asr .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_asr_iqamat,
-                        prayer_maghrib_iqamat:              setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_maghrib .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_maghrib_iqamat,
-                        prayer_isha_iqamat:                 setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_isha .common_select_dropdown_value').getAttribute('data-value'):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_isha_iqamat,
-                        prayer_column_imsak_checked:        setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_column_imsak_checked,
-                        prayer_column_sunset_checked:       setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_column_sunset_checked,
-                        prayer_column_midnight_checked:     setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_column_midnight_checked,
-                        prayer_column_fast_start_end:       setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_select_report_show_fast_start_end .common_select_dropdown_value').getAttribute('data-value')):
-                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.prayer_column_fast_start_end
+                        RegionalLanguageLocale:           setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_locale .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.RegionalLanguageLocale,
+                        RegionalTimezone:                  setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_timezone .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.RegionalTimezone,
+                        RegionalNumberSystem:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_numbersystem .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.RegionalNumberSystem,
+                        RegionalLayoutDirection:          setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_direction .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.RegionalLayoutDirection,
+                        RegionalSecondLanguageLocale:    setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_locale_second .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.RegionalSecondLanguageLocale,
+                        RegionalArabicScript:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_report_arabic_script .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.RegionalArabicScript,
+                        RegionalCalendarType:             setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_calendartype .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.RegionalCalendarType,
+                        RegionalCalendarHijri_type:       setting_tab=='REGIONAL'?COMMON_DOCUMENT.querySelector('#setting_select_calendar_hijri_type .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.RegionalCalendarHijri_type,
+                        GpsLatText:                       APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLatText,
+                        GpsLongText:                      APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLongText,
+                        DesignThemeDayId:                setting_tab=='DESIGN'?appSettingThemeId('day'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignThemeDayId,
+                        DesignThemeMonthId:              setting_tab=='DESIGN'?appSettingThemeId('month'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignThemeMonthId,
+                        DesignThemeYearId:               setting_tab=='DESIGN'?appSettingThemeId('year'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignThemeYearId,
+                        DesignPaperSize:                  setting_tab=='DESIGN'?COMMON_DOCUMENT.querySelector('#setting_select_report_papersize .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignPaperSize,
+                        DesignRowHighlight:               setting_tab=='DESIGN'?COMMON_DOCUMENT.querySelector('#setting_select_report_highlight_row .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignRowHighlight,
+                        DesignColumnWeekdayChecked:      setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignColumnWeekdayChecked,
+                        DesignColumnCalendartypeChecked: setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignColumnCalendartypeChecked,
+                        DesignColumnNotesChecked:        setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignColumnNotesChecked,
+                        DesignColumnGpsChecked:          setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignColumnGpsChecked,
+                        DesignColumnTimezoneChecked:     setting_tab=='DESIGN'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignColumnTimezoneChecked,
+                        ImageHeaderImageImg:             setting_tab=='IMAGE'?COMMON_DOCUMENT.querySelector('#setting_reportheader_img').getAttribute('data-image'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.ImageHeaderImageImg,
+                        ImageFooterImageImg:             setting_tab=='IMAGE'?COMMON_DOCUMENT.querySelector('#setting_reportfooter_img').getAttribute('data-image'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.ImageFooterImageImg,
+                        TextHeader1Text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader1').textContent:  
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextHeader1Text,
+                        TextHeader2Text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader2').textContent:
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextHeader2Text,
+                        TextHeader3Text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader3').textContent:
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextHeader3Text,
+                        TextHeaderAlign:                  setting_tab=='TEXT'? (appSettingButtonAlignValue('header')==''?null:appSettingButtonAlignValue('header')):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextHeaderAlign,
+                        TextFooter1Text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter1').textContent:
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextFooter1Text,
+                        TextFooter2Text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter2').textContent:
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextFooter2Text,
+                        TextFooter3Text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter3').textContent:
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextFooter3Text,
+                        TextFooterAlign:                  setting_tab=='TEXT'? (appSettingButtonAlignValue('footer')==''?null:appSettingButtonAlignValue('footer')):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextFooterAlign,
+                        PrayerMethod:                      setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_method .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerMethod,
+                        PrayerAsrMethod:                  setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_asr .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerAsrMethod,
+                        PrayerHighLatitudeAdjustment:    setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_highlatitude .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerHighLatitudeAdjustment,
+                        PrayerTimeFormat:                 setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_timeformat .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerTimeFormat,
+                        PrayerHijriDateAdjustment:       setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_select_hijri_adjustment .common_select_dropdown_value').getAttribute('data-value')):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerHijriDateAdjustment,
+                        PrayerFajrIqamat:                 setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_fajr .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerFajrIqamat,
+                        PrayerDhuhrIqamat:                setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_dhuhr .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerDhuhrIqamat,
+                        PrayerAsrIqamat:                  setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_asr .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerAsrIqamat,
+                        PrayerMaghribIqamat:              setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_maghrib .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerMaghribIqamat,
+                        PrayerIshaIqamat:                 setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_report_iqamat_title_isha .common_select_dropdown_value').getAttribute('data-value'):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerIshaIqamat,
+                        PrayerColumnImsakChecked:        setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerColumnImsakChecked,
+                        PrayerColumnSunsetChecked:       setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerColumnSunsetChecked,
+                        PrayerColumnMidnightChecked:     setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerColumnMidnightChecked,
+                        PrayerColumnFastStartEnd:       setting_tab=='PRAYER'?Number(COMMON_DOCUMENT.querySelector('#setting_select_report_show_fast_start_end .common_select_dropdown_value').getAttribute('data-value')):
+                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.PrayerColumnFastStartEnd
                     };
     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document = Document;
 };
@@ -1658,7 +1658,7 @@ const appEventClick = event => {
             COMMON_DOCUMENT.querySelector('#' + event_target_id).classList.add('common_app_dialogues_button');
             COMMON_DOCUMENT.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
                                                                                 `theme_${theme_type}_${appSettingThemeId(theme_type)} ` + 
-                                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.regional_arabic_script;
+                                                                                APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.RegionalArabicScript;
             break;
         }
         case 'setting_icon_text_header_aleft':
@@ -1852,8 +1852,8 @@ const appEventKeyUp = event => {
  * @returns {void}
  */
 const appMapQibblaShow = () => {
-    if (APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_long_text  &&
-        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_lat_text ){
+    if (APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLongText  &&
+        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLatText ){
         /**@type{common['commonGeoJSONPolyline']}*/
         const geoJSONQibbla = 
         {
@@ -1873,9 +1873,9 @@ const appMapQibblaShow = () => {
                     ],
                     [
                         /**@ts-ignore */
-                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_long_text, 
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLongText, 
                         /**@ts-ignore */
-                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_lat_text
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLatText
                     ]
                 ]
             }
@@ -1900,9 +1900,9 @@ const appMapQibblaShow = () => {
                     ],
                     [
                         /**@ts-ignore */
-                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_long_text, 
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLongText, 
                         /**@ts-ignore */
-                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.gps_lat_text
+                        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLatText
                     ]
                 ]
             }

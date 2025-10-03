@@ -19,14 +19,14 @@ const {server} = await import ('../server.js');
  *                  resource_name:string|null,
  *                  resource_name_master_attribute:string|null,
  *                  resource_name_data_master_attribute:string|null,
- *                  app_data_resource_detail_id:number|null,
+ *                  AppDataResourceDetailId:number|null,
  *                  app_data_entity_id:number}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['AppDataResourceDetailData'] & {adrm_attribute_master_Document:{}}[]|*}}
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceDetailData'] & {adrm_attribute_master_Document:{}}[]|*}}
  */
 const get = parameters =>{ 
     const entity_id = parameters.data?.app_data_entity_id?? server.ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
                                         resource_id:null,
-                                        data:{data_app_id:parameters.app_id}}).result[0].id;
+                                        data:{data_app_id:parameters.app_id}}).result[0].Id;
     const restult_AppDataResourceMasterAttributeDetail = server.ORM.db.AppDataResourceMaster.get({  app_id:parameters.app_id, 
                                                                     join:true,
                                                                     resource_id: null,
@@ -47,31 +47,31 @@ const get = parameters =>{
                                                                     data:{  data_app_id:parameters.data.data_app_id,
                                                                             iam_user_id:parameters.data.iam_user_id,
                                                                             resource_name:parameters.data.resource_name,
-                                                                            app_data_resource_master_id:null,
+                                                                            AppDataResourceMasterId:null,
                                                                             app_data_entity_id:entity_id}}).result;    
     const result = (server.ORM.getObject(parameters.app_id, 'AppDataResourceDetailData',parameters.resource_id, null).result ?? [])
-                    .filter((/**@type{server['ORM']['AppDataResourceDetailData']}*/row)=>
-                        row.app_data_resource_detail_id == (parameters.data.app_data_resource_detail_id??row.app_data_resource_detail_id) && 
+                    .filter((/**@type{server['ORM']['Object']['AppDataResourceDetailData']}*/row)=>
+                        row.AppDataResourceDetailId == (parameters.data.AppDataResourceDetailId??row.AppDataResourceDetailId) && 
                         result_AppDataResourceDetail
-                        .filter((/**@type{server['ORM']['AppDataResourceDetail']}*/row_detail)=>
-                            row_detail.id == row.app_data_resource_detail_id && 
+                        .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail']}*/row_detail)=>
+                            row_detail.Id == row.AppDataResourceDetailId && 
                             //detail master attribute
                             restult_AppDataResourceMasterAttributeDetail
-                            .filter((/**@type{server['ORM']['AppDataResourceMaster']}*/row_master)=>
-                                row_master.id == row_detail.app_data_resource_master_id
+                            .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster']}*/row_master)=>
+                                row_master.Id == row_detail.AppDataResourceMasterId
                             ).length>0
                         ).length>0 &&
                         //detail data master attribute
                         result_AppDataResourceMasterAttributeDetailData
-                        .filter((/**@type{server['ORM']['AppDataResourceMaster']}*/row_master)=>
-                            row_master.id == (row.app_data_resource_master_attribute_id ?? row_master.id)
+                        .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster']}*/row_master)=>
+                            row_master.Id == (row.AppDataResourceMasterAttributeId ?? row_master.Id)
                         ).length>0
                         
                     )
-                    .map((/**@type{server['ORM']['AppDataResourceDetailData'] & {adrm_attribute_master_Document:{}}}*/row)=>{     
+                    .map((/**@type{server['ORM']['Object']['AppDataResourceDetailData'] & {adrm_attribute_master_Document:{}}}*/row)=>{     
                             row.adrm_attribute_master_Document = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                                                 join:true,
-                                                                                                resource_id:row.app_data_resource_master_attribute_id,
+                                                                                                resource_id:row.AppDataResourceMasterAttributeId,
                                                                                                 data:{  data_app_id:null,
                                                                                                         iam_user_id:null,
                                                                                                         resource_name:null,
@@ -89,27 +89,27 @@ const get = parameters =>{
  * @description Create record
  * @function
  * @param {{app_id:number,
- *          data:server['ORM']['AppDataResourceDetailData']}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert']}>}
+ *          data:server['ORM']['Object']['AppDataResourceDetailData']}} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const post = async parameters => {
  //check required attributes
- if (  parameters.data.app_data_resource_detail_id==null){
+ if (  parameters.data.AppDataResourceDetailId==null){
      return server.ORM.getError(parameters.app_id, 400);
  }
  else{
-     /**@type{server['ORM']['AppDataResourceDetailData']} */
+     /**@type{server['ORM']['Object']['AppDataResourceDetailData']} */
      const data_new =     {
-                              id:Date.now(),
-                              app_data_resource_detail_id:parameters.data.app_data_resource_detail_id,
-                              app_data_resource_master_attribute_id:parameters.data.app_data_resource_master_attribute_id,
+                              Id:Date.now(),
+                              AppDataResourceDetailId:parameters.data.AppDataResourceDetailId,
+                              AppDataResourceMasterAttributeId:parameters.data.AppDataResourceMasterAttributeId,
                               Document:parameters.data.Document,
-                              created:new Date().toISOString(),
-                              modified:null
+                              Created:new Date().toISOString(),
+                              Modified:null
                      };
-     return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'AppDataResourceDetailData', post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
-         if (result.affectedRows>0){
-             result.insertId=data_new.id;
+     return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'AppDataResourceDetailData', post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
+         if (result.AffectedRows>0){
+             result.InsertId=data_new.Id;
              return {result:result, type:'JSON'};
          }
          else
@@ -124,8 +124,8 @@ const post = async parameters => {
  * @function
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server['ORM']['AppDataResourceDetailData']}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_update'] }>}
+ *          data:server['ORM']['Object']['AppDataResourceDetailData']}} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
 const update = async parameters =>{
   //check required attributes
@@ -133,15 +133,15 @@ const update = async parameters =>{
       return server.ORM.getError(parameters.app_id, 400);
   }
   else{
-      /**@type{server['ORM']['AppDataResourceDetailData']} */
+      /**@type{server['ORM']['Object']['AppDataResourceDetailData']} */
       const data_update = {};
       //allowed parameters to update:
       if (parameters.data.Document!=null)
           data_update.Document = parameters.data.Document;
-      data_update.modified = new Date().toISOString();
+      data_update.Modified = new Date().toISOString();
       if (Object.entries(data_update).length>0)
-          return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppDataResourceDetailData', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORMMetaData']['common_result_update']}*/result)=>{
-              if (result.affectedRows>0)
+          return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppDataResourceDetailData', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
+              if (result.AffectedRows>0)
                   return {result:result, type:'JSON'};
               else
                   return server.ORM.getError(parameters.app_id, 404);
@@ -157,11 +157,11 @@ const update = async parameters =>{
  * @function
  * @param {{app_id:number,
 *          resource_id:number}} parameters
-* @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_delete'] }>}
+* @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
 */
 const deleteRecord = async parameters =>{
-    return server.ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'AppDataResourceDetailData', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server['ORMMetaData']['common_result_delete']}*/result)=>{
-        if (result.affectedRows>0)
+    return server.ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'AppDataResourceDetailData', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((/**@type{server['ORM']['MetaData']['common_result_delete']}*/result)=>{
+        if (result.AffectedRows>0)
             return {result:result, type:'JSON'};
         else
             return server.ORM.getError(parameters.app_id, 404);

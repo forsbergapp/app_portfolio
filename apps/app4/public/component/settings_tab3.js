@@ -22,21 +22,21 @@ const template = props =>`  <div class='setting_horizontal_row'>
                                     <div id='setting_design_theme_day' class='setting_design_thumbnail' data-theme_id='${props.theme_id_day}'></div>
                                     <div id='setting_design_prev_day' class='common_app_dialogues_button setting_design_prev common_icon'></div>
                                     <div id='setting_design_next_day' class='common_app_dialogues_button setting_design_next common_icon'></div>
-                                    <div id='setting_design_theme_day_id'>${props.theme_id_day}</div>
+                                    <div id='setting_DesignThemeDayId'>${props.theme_id_day}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_design_icon_theme_month' class='common_icon'></div>
                                     <div id='setting_design_theme_month' class='setting_design_thumbnail' data-theme_id='${props.theme_id_month}'></div>
                                     <div id='setting_design_prev_month' class='common_app_dialogues_button setting_design_prev common_icon'></div>
                                     <div id='setting_design_next_month' class='common_app_dialogues_button setting_design_next common_icon'></div>
-                                    <div id='setting_design_theme_month_id'>${props.theme_id_month}</div>
+                                    <div id='setting_DesignThemeMonthId'>${props.theme_id_month}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_design_icon_theme_year' class='common_icon'></div>
                                     <div id='setting_design_theme_year' class='setting_design_thumbnail' data-theme_id='${props.theme_id_year}'></div>
                                     <div id='setting_design_prev_year' class='common_app_dialogues_button setting_design_prev common_icon'></div>
                                     <div id='setting_design_next_year' class='common_app_dialogues_button setting_design_next common_icon'></div>
-                                    <div id='setting_design_theme_year_id'>${props.theme_id_year}</div>
+                                    <div id='setting_DesignThemeYearId'>${props.theme_id_year}</div>
                                 </div>
                             </div>
                             <div class='setting_horizontal_row'>
@@ -129,14 +129,14 @@ const template = props =>`  <div class='setting_horizontal_row'>
  */
 const component = async props => {
     //fetch PAPER_SIZE for common app id
-    /**@type{common['ORM']['AppData'][]} */
+    /**@type{common['ORM']['Object']['AppData'][]} */
     const settings_common = await props.methods.COMMON.commonFFB({path:'/server-db/appdata/',
                                                     query:`IAM_data_app_id=${props.data.common_app_id}&name=PAPER_SIZE`,
                                                     method:'GET', 
                                                     authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
                                                         JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     //fetch HIGHLIGHT_ROW and REPORT_THEME for current app id
-    /**@type{common['ORM']['AppData'][]} */
+    /**@type{common['ORM']['Object']['AppData'][]} */
     const settings_app = await props.methods.COMMON.commonFFB({ path:'/server-db/appdata/',
                                                             query:`IAM_data_app_id=${props.data.app_id}`,
                                                             method:'GET', 
@@ -148,7 +148,7 @@ const component = async props => {
             setting.app_id == props.data.app_id && 
             setting.name.startsWith('REPORT_THEME'))
             .map(theme=>{
-                return {type:theme.name, value:theme.value, text:theme.display_data};
+                return {type:theme.name, value:theme.value, text:theme.DisplayData};
             });
 
     const onMounted = async () =>{
@@ -159,7 +159,7 @@ const component = async props => {
                         default_data_value:settings_common.filter(setting=>
                                                 setting.name.startsWith('PAPER_SIZE'))[0].value,
                         default_value:settings_common.filter(setting=>
-                                        setting.name.startsWith('PAPER_SIZE'))[0].display_data,
+                                        setting.name.startsWith('PAPER_SIZE'))[0].DisplayData,
                         options: settings_common.filter(setting=>
                                     setting.name.startsWith('PAPER_SIZE')),
                         path:null,
@@ -167,7 +167,7 @@ const component = async props => {
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'display_data'
+                        column_text:'DisplayData'
                         },
             methods:    null,
             path:       '/common/component/common_select.js'});
@@ -180,7 +180,7 @@ const component = async props => {
                                                 setting.name.startsWith('HIGHLIGHT_ROW'))[0].value,
                         default_value:settings_app.filter(setting=>
                                         setting.app_id == props.data.app_id && 
-                                        setting.name.startsWith('HIGHLIGHT_ROW'))[0].display_data,
+                                        setting.name.startsWith('HIGHLIGHT_ROW'))[0].DisplayData,
                         options: settings_app.filter(setting=>
                                     setting.app_id == props.data.app_id && 
                                     setting.name.startsWith('HIGHLIGHT_ROW')),
@@ -189,34 +189,34 @@ const component = async props => {
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'display_data'
+                        column_text:'DisplayData'
                         },
             methods:    null,
             path:'/common/component/common_select.js'});
 
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_papersize', props.data.user_settings.design_paper_size);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_papersize', props.data.user_settings.DesignPaperSize);
         
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#paper').className=props.data.user_settings.design_paper_size;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#paper').className=props.data.user_settings.DesignPaperSize;
 
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_highlight_row', props.data.user_settings.design_row_highlight);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_highlight_row', props.data.user_settings.DesignRowHighlight);
 
-        if (Number(props.data.user_settings.design_column_weekday_checked))
+        if (Number(props.data.user_settings.DesignColumnWeekdayChecked))
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
         else
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
-        if (Number(props.data.user_settings.design_column_calendartype_checked))
+        if (Number(props.data.user_settings.DesignColumnCalendartypeChecked))
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
         else
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
-        if (Number(props.data.user_settings.design_column_notes_checked))
+        if (Number(props.data.user_settings.DesignColumnNotesChecked))
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
         else
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
-        if (Number(props.data.user_settings.design_column_gps_checked))
+        if (Number(props.data.user_settings.DesignColumnGpsChecked))
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
         else
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
-        if (Number(props.data.user_settings.design_column_timezone_checked))
+        if (Number(props.data.user_settings.DesignColumnTimezoneChecked))
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
         else
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
@@ -228,9 +228,9 @@ const component = async props => {
         data:       null,
         methods:    null,
         template:   template({
-                            theme_id_day:props.data.user_settings.design_theme_day_id,
-                            theme_id_month:props.data.user_settings.design_theme_month_id,
-                            theme_id_year:props.data.user_settings.design_theme_year_id})
+                            theme_id_day:props.data.user_settings.DesignThemeDayId,
+                            theme_id_month:props.data.user_settings.DesignThemeMonthId,
+                            theme_id_year:props.data.user_settings.DesignThemeYearId})
     };
 };
 export default component;

@@ -11,7 +11,7 @@ const {server} = await import ('../server.js');
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{data_app_id:number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['IamAppIdToken'][] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamAppIdToken'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'IamAppIdToken',parameters.resource_id, parameters.data.data_app_id);
     
@@ -20,34 +20,34 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'IamAppIdToken'
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server['ORM']['IamAppIdToken']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
+ * @param {server['ORM']['Object']['IamAppIdToken']} data
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null &&
-        data.app_id != null &&
-        data.res != null &&
-        data.token != null &&
-        data.ip != null){
+        data.AppId != null &&
+        data.Res != null &&
+        data.Token != null &&
+        data.Ip != null){
         //security check that token is not used already
-        if (server.ORM.getObject(app_id, 'IamAppIdToken', null, null).result.filter((/**@type{server['ORM']['IamAppIdToken']} */row)=>row.token==data.token).length==0){
-            /**@type{server['ORM']['IamAppIdToken']} */
+        if (server.ORM.getObject(app_id, 'IamAppIdToken', null, null).result.filter((/**@type{server['ORM']['Object']['IamAppIdToken']} */row)=>row.Token==data.Token).length==0){
+            /**@type{server['ORM']['Object']['IamAppIdToken']} */
             const data_new = {};
-            data_new.id = Date.now();
+            data_new.Id = Date.now();
             //required
-            data_new.app_id = data.app_id;
-            data_new.app_id_token = data.app_id_token;
-            data_new.res = data.res;
-            data_new.token = data.token;
-            data_new.ip = data.ip;
+            data_new.AppId = data.AppId;
+            data_new.AppIdToken = data.AppIdToken;
+            data_new.Res = data.Res;
+            data_new.Token = data.Token;
+            data_new.Ip = data.Ip;
             //optional
-            if (data.ua!=null)
-                data_new.ua = data.ua;
-            data_new.created = new Date().toISOString();
-            return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamAppIdToken', post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
-                if (result.affectedRows>0){
-                    result.insertId = data_new.id;
+            if (data.Ua!=null)
+                data_new.Ua = data.Ua;
+            data_new.Created = new Date().toISOString();
+            return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamAppIdToken', post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
+                if (result.AffectedRows>0){
+                    result.InsertId = data_new.Id;
                     return {result:result, type:'JSON'};
                 }
                 else

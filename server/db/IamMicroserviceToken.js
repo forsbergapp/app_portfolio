@@ -10,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['IamMicroserviceToken'][] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamMicroserviceToken'][] }}
  */
 const get = parameters => server.ORM.getObject(parameters.app_id, 'IamMicroserviceToken', parameters.resource_id, parameters.app_id);
 
@@ -19,38 +19,38 @@ const get = parameters => server.ORM.getObject(parameters.app_id, 'IamMicroservi
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server['ORM']['IamMicroserviceToken']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert'] }>}
+ * @param {server['ORM']['Object']['IamMicroserviceToken']} data
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null &&
-        data.app_id != null &&
-        data.service_registry_id != null &&
-        data.service_registry_name != null &&
-        data.res != null &&
-        data.token != null &&
-        data.ip != null &&
-        data.host != null){
+        data.AppId != null &&
+        data.ServiceRegistryId != null &&
+        data.ServiceRegistryName != null &&
+        data.Res != null &&
+        data.Token != null &&
+        data.Ip != null &&
+        data.Host != null){
         //security check that token is not used already
-        if (server.ORM.getObject(app_id, 'IamMicroserviceToken', null, null).result.filter((/**@type{server['ORM']['IamMicroserviceToken']} */row)=>row.token==data.token).length==0){
-            /**@type{server['ORM']['IamMicroserviceToken']} */
+        if (server.ORM.getObject(app_id, 'IamMicroserviceToken', null, null).result.filter((/**@type{server['ORM']['Object']['IamMicroserviceToken']} */row)=>row.Token==data.Token).length==0){
+            /**@type{server['ORM']['Object']['IamMicroserviceToken']} */
             const data_new = {};
-            data_new.id = Date.now();
+            data_new.Id = Date.now();
             //required
-            data_new.app_id =data.app_id; 
-            data_new.service_registry_id = data.service_registry_id;
-            data_new.service_registry_name = data.service_registry_name;
-            data_new.res = data.res;
-            data_new.token = data.token;
-            data_new.ip = data.ip;
-            data_new.host = data.host;
+            data_new.AppId =data.AppId; 
+            data_new.ServiceRegistryId = data.ServiceRegistryId;
+            data_new.ServiceRegistryName = data.ServiceRegistryName;
+            data_new.Res = data.Res;
+            data_new.Token = data.Token;
+            data_new.Ip = data.Ip;
+            data_new.Host = data.Host;
             //optional
-            if (data.ua!=null)
-                data_new.ua = data.ua;
-            data_new.created = new Date().toISOString();
-            return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamMicroserviceToken', post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
-                if (result.affectedRows>0)
+            if (data.Ua!=null)
+                data_new.Ua = data.Ua;
+            data_new.Created = new Date().toISOString();
+            return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamMicroserviceToken', post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
+                if (result.AffectedRows>0)
                     return {result:result, type:'JSON'};
                 else
                     return server.ORM.getError(app_id, 404);

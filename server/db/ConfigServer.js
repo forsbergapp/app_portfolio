@@ -59,11 +59,11 @@ const get = parameters => {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{  config: server['ORM']['ConfigServer']|null,
+ *          data:{  config: server['ORM']['Object']['ConfigServer']|null,
  *                  maintenance?:string,
  *                  comment?:string,
  *                  configuration?:string}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_update'] }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
     //can only use config or a config key
@@ -71,9 +71,9 @@ const update = async parameters => {
         (parameters.data.maintenance ||parameters.data.comment||parameters.data.configuration))
         return server.ORM.getError(parameters.app_id, 400);
     else{
-        /**@type{server['ORM']['ConfigServer']} */
+        /**@type{server['ORM']['Object']['ConfigServer']} */
         const old_config = get({app_id:parameters.app_id}).result;
-        /**@type{server_db_config_server_metadata} */
+        /**@type{server['ORM']['Object']['ConfigServer']['METADATA']} */
         const metadata = {
                             MAINTENANCE:server.ORM.UtilNumberValue(parameters.data.maintenance ?? old_config.METADATA.MAINTENANCE) ?? old_config.METADATA.MAINTENANCE,
                             CONFIGURATION:parameters.data.configuration ?? old_config.METADATA.CONFIGURATION,

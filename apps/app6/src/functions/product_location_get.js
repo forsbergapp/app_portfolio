@@ -18,11 +18,11 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{stock:{key_name:string, key_value:string, key_type:string}[][]}[] }>}
+ * @returns {Promise.<server['server']['response'] & {result?:{Stock:{KeyName:string, KeyValue:string, KeyType:string}[][]}[] }>}
  */
 const productLocationGet = async parameters =>{
 
-    /**@type{server['ORM']['AppDataEntity']} */
+    /**@type{server['ORM']['Object']['AppDataEntity']} */
     const Entity            = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                                     resource_id:null, 
                                                     data:{data_app_id:parameters.data.data_app_id}}).result[0];
@@ -36,22 +36,22 @@ const productLocationGet = async parameters =>{
                                                                                     resource_name:'PRODUCT_VARIANT',
                                                                                     resource_name_master_attribute:'PRODUCT',
                                                                                     resource_name_data_master_attribute:'LOCATION',
-                                                                                    app_data_entity_id:Entity.id
+                                                                                    app_data_entity_id:Entity.Id
                                                                             }});
     const product_variant_location_metadata = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
                                                                                         data_app_id:parameters.data.data_app_id,
                                                                                         resource_name:'PRODUCT_VARIANT_LOCATION_METADATA',
-                                                                                        app_data_entity_id:Entity.id
+                                                                                        app_data_entity_id:Entity.Id
                                                                                 }});
     for (const location of product_variant_location.result){
         //location, stock_text, stock
-        stock.push([{key_name:'location',   key_value:location.adrm_attribute_master_Document.name, key_type:'TEXT'},
-                    {key_name:'stock_text', key_value:product_variant_location_metadata.result[0].Document.stock.default_text, key_type:'TEXT'},
-                    {key_name:'stock',      key_value:location.Document.stock, key_type:'TEXT'}]);
+        stock.push([{KeyName:'location',   KeyValue:location.adrm_attribute_master_Document.Name, KeyType:'TEXT'},
+                    {KeyName:'stock_text', KeyValue:product_variant_location_metadata.result[0].Document.Stock.DefaultText, KeyType:'TEXT'},
+                    {KeyName:'stock',      KeyValue:location.Document.Stock, KeyType:'TEXT'}]);
     }
 
-    return {result:[{stock:stock}], type:'JSON'};
+    return {result:[{Stock:stock}], type:'JSON'};
 };
 export default productLocationGet;

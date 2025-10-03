@@ -19,30 +19,30 @@ const {server} = await import ('../server.js');
  * @param {number|null} resource_id
  * @param {string|null} locale
  * @param {number} data_app_id
- * @returns {server['server']['response'] & {result?:server['ORM']['AppTranslation'][] }}
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppTranslation'][] }}
  */
 const get = (app_id, resource_id, locale, data_app_id) =>{
     //all locales should be saved with '-' if used
     const SPLIT = '-';
-    const result = server.ORM.getObject(app_id, 'AppTranslation',resource_id, data_app_id).result.filter((/**@type{server['ORM']['AppTranslation']}*/row)=>row.app_id == data_app_id);
-    if ((result ??[]).filter((/**@type{server['ORM']['AppTranslation']}*/row)=>row.locale == locale)[0]){
+    const result = server.ORM.getObject(app_id, 'AppTranslation',resource_id, data_app_id).result.filter((/**@type{server['ORM']['Object']['AppTranslation']}*/row)=>row.AppId == data_app_id);
+    if ((result ??[]).filter((/**@type{server['ORM']['Object']['AppTranslation']}*/row)=>row.Locale == locale)[0]){
         //return found for requested locale
-        return {result:result.filter((/**@type{server['ORM']['AppTranslation']}*/row)=>(row.locale == locale)), type:'JSON'};
+        return {result:result.filter((/**@type{server['ORM']['Object']['AppTranslation']}*/row)=>(row.Locale == locale)), type:'JSON'};
     }        
     else
-        if (locale?.split(SPLIT).length==3 && (result ??[]).filter((/**@type{server['ORM']['AppTranslation']}*/row)=>row.locale == (locale.split(SPLIT)[0] + SPLIT + locale.split(SPLIT)[1]))[0]){
+        if (locale?.split(SPLIT).length==3 && (result ??[]).filter((/**@type{server['ORM']['Object']['AppTranslation']}*/row)=>row.Locale == (locale.split(SPLIT)[0] + SPLIT + locale.split(SPLIT)[1]))[0]){
             //return found for first and second part of locale
-            return {result:result.filter((/**@type{server['ORM']['AppTranslation']}*/row)=>row.locale == (locale.split(SPLIT)[0] + SPLIT + locale.split(SPLIT)[1])), type:'JSON'};
+            return {result:result.filter((/**@type{server['ORM']['Object']['AppTranslation']}*/row)=>row.Locale == (locale.split(SPLIT)[0] + SPLIT + locale.split(SPLIT)[1])), type:'JSON'};
         }            
         else
-            if (locale?.split(SPLIT).length==2 && (result ??[]).filter((/**@type{server['ORM']['AppTranslation']}*/row)=>row.locale == locale.split(SPLIT)[0])[0]){
+            if (locale?.split(SPLIT).length==2 && (result ??[]).filter((/**@type{server['ORM']['Object']['AppTranslation']}*/row)=>row.Locale == locale.split(SPLIT)[0])[0]){
                 //return found for first part of locale 
-                return {result:result.filter((/**@type{server['ORM']['AppTranslation']}*/row)=>row.locale == locale.split(SPLIT)[0]), type:'JSON'};
+                return {result:result.filter((/**@type{server['ORM']['Object']['AppTranslation']}*/row)=>row.Locale == locale.split(SPLIT)[0]), type:'JSON'};
             }
             else
-                if ((result ??[]).filter((/**@type{server['ORM']['AppTranslation']}*/row)=>row.locale == 'en')){
+                if ((result ??[]).filter((/**@type{server['ORM']['Object']['AppTranslation']}*/row)=>row.Locale == 'en')){
                     //return found for default language
-                    return {result:result.filter((/**@type{server['ORM']['AppTranslation']}*/row)=>row.locale == 'en'), type:'JSON'};
+                    return {result:result.filter((/**@type{server['ORM']['Object']['AppTranslation']}*/row)=>row.Locale == 'en'), type:'JSON'};
                 }
                 else
                     return server.ORM.getError(app_id, 404);

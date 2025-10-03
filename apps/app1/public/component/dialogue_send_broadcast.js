@@ -62,11 +62,11 @@ const component = async props => {
                     default_data_value:'',
                     options:[{id:'', name:'∞'}],
                     path:'/server-db/app',
-                    query:'key=name',
+                    query:'key=Name',
                     method:'GET',
                     authorization_type:'ADMIN',
-                    column_value:'id',
-                    column_text:'name'
+                    column_value:'Id',
+                    column_text:'Name'
                   },
                 methods:null,
                 path:'/common/component/common_select.js'});

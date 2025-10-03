@@ -256,8 +256,8 @@ const commonMiscFormatJsonDate = (db_date, format=null) => {
 const commonMiscImport = async (url, content=null) =>{
     const app_id = url.startsWith('/common')?COMMON_GLOBAL.app_common_app_id:COMMON_GLOBAL.app_id;
     const module = COMMON_GLOBAL.component_import.filter(module=>module.url==url && module.app_id == app_id)[0]?.component;
-    if (module) 
-        return import(module);
+    if (module)
+        return import(module);    
     else{
         COMMON_GLOBAL.component_import.push(
                 /*@ts-ignore*/

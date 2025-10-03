@@ -66,31 +66,31 @@ const template = () =>` <div class='setting_horizontal_row'>
 const component = async props => {
     const onMounted = async () =>{
         //Text
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_input_reportheader1').textContent = props.data.user_settings.text_header_1_text;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_input_reportheader2').textContent = props.data.user_settings.text_header_2_text;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_input_reportheader3').textContent = props.data.user_settings.text_header_3_text;
-        if (props.data.user_settings.text_header_align == null) {
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_input_reportheader1').textContent = props.data.user_settings.TextHeader1Text;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_input_reportheader2').textContent = props.data.user_settings.TextHeader2Text;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_input_reportheader3').textContent = props.data.user_settings.TextHeader3Text;
+        if (props.data.user_settings.TextHeaderAlign == null) {
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_icon_text_header_aleft').classList.remove('setting_button_active');
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_icon_text_header_acenter').classList.remove('setting_button_active');
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_icon_text_header_aright').classList.remove('setting_button_active');
         } else { //update with 'left', 'center' or 'right' adding to bject name and add active class to this object
             //remove active class if it is active
             props.methods.COMMON.COMMON_DOCUMENT.querySelector(  '#setting_icon_text_header_a' + 
-                                        props.data.user_settings.text_header_align).classList.remove('setting_button_active');
-            props.methods.appComponentSettingUpdate('TEXT', 'HEADER_ALIGN', 'setting_icon_text_header_a' + props.data.user_settings.text_header_align);
+                                        props.data.user_settings.TextHeaderAlign).classList.remove('setting_button_active');
+            props.methods.appComponentSettingUpdate('TEXT', 'HEADER_ALIGN', 'setting_icon_text_header_a' + props.data.user_settings.TextHeaderAlign);
         }
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_input_reportfooter1').textContent = props.data.user_settings.text_footer_1_text;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_input_reportfooter2').textContent = props.data.user_settings.text_footer_2_text;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_input_reportfooter3').textContent = props.data.user_settings.text_footer_3_text;
-        if (props.data.user_settings.text_footer_align == null) {
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_input_reportfooter1').textContent = props.data.user_settings.TextFooter1Text;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_input_reportfooter2').textContent = props.data.user_settings.TextFooter2Text;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_input_reportfooter3').textContent = props.data.user_settings.TextFooter3Text;
+        if (props.data.user_settings.TextFooterAlign == null) {
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_icon_text_footer_aleft').classList.remove('setting_button_active');
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_icon_text_footer_acenter').classList.remove('setting_button_active');
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_icon_text_footer_aright').classList.remove('setting_button_active');
         } else { //update with 'left', 'center' or 'right' adding to bject name and add active class to this object
             //remove active class if it is active
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_icon_text_footer_a' +
-                props.data.user_settings.text_footer_align).classList.remove('setting_button_active');
-            props.methods.appComponentSettingUpdate('TEXT', 'FOOTER_ALIGN', 'setting_icon_text_footer_a' + props.data.user_settings.text_footer_align);
+                props.data.user_settings.TextFooterAlign).classList.remove('setting_button_active');
+            props.methods.appComponentSettingUpdate('TEXT', 'FOOTER_ALIGN', 'setting_icon_text_footer_a' + props.data.user_settings.TextFooterAlign);
         }
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_day').dispatchEvent(new Event('click'));
     };

@@ -5,7 +5,7 @@
  */
 
 const {server} = await import('./server.js');
-
+const {commonGeodataUser} = await import('../apps/common/src/common.js')
 
 /**@type{server['socket']['connected_list'][]} */
 let SOCKET_CONNECTED_CLIENTS = [];
@@ -67,7 +67,7 @@ const socketClientAdd = (newClient) => {
                     connected.user_agent = parameters.headers_user_agent;
                 }
                 else{
-                    const connectUserData =  await server.bff.bffGeodataUser(app_id, parameters.ip);
+                    const connectUserData =  await commonGeodataUser(app_id, parameters.ip);
                     connected.app_id = app_id;
                     connected.connection_date = new Date().toISOString();
                     connected.token_access = parameters.token_access;
@@ -170,7 +170,7 @@ const socketClientAdd = (newClient) => {
  *                  order_by?:string|null,
  *                  sort?:*}
  *          }} parameters
- * @returns{Promise.<server['server']['response'] & {result?:server_socket_connected_list_no_res[]}>}
+ * @returns{Promise.<server['server']['response'] & {result?:server['socket']['connected_list_no_res'][]}>}
  */
  const socketConnectedList = async parameters => {
     const app_id_select = server.ORM.UtilNumberValue(parameters.data.data_app_id);
@@ -182,7 +182,7 @@ const socketClientAdd = (newClient) => {
     const day= server.ORM.UtilNumberValue(parameters.data.day);
     /**@type{string} */
     const order_by = parameters.data.order_by ?? '';
-    /**@type{server_socket_connected_list_sort} */
+    /**@type{server['socket']['connected_list_sort']} */
     const sort = parameters.data.sort;
 
     const order_by_num = order_by =='asc'?1:-1;
@@ -296,8 +296,8 @@ const socketPost = async parameters =>{
             SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.id !== client_id);
             parameters.response.end();
         });
-        const connectUserData =  await server.bff.bffGeodataUser(  parameters.app_id, parameters.ip);
-        /**@type{server_socket_connected_list} */
+        const connectUserData =  await commonGeodataUser(  parameters.app_id, parameters.ip);
+        /**@type{server['socket']['connected_list']} */
         const newClient = {
                             id:                     client_id,
                             connection_date:        new Date().toISOString(),
@@ -455,15 +455,15 @@ const socketClientPostMessage = async parameters => {
         const token_id = server.ORM.db.IamAppIdToken.get({  app_id:parameters.app_id, 
                                         resource_id:null, 
                                         data:{data_app_id:null}}).result
-                    .filter((/**@type{server['ORM']['IamAppIdToken']}*/row)=>row.token == client.idToken)?.[0].id;
+                    .filter((/**@type{server['ORM']['Object']['IamAppIdToken']}*/row)=>row.Token == client.idToken)?.[0].Id;
         //get secrets from IamEncryption using uuid saved at record creation and token id
         const {jwk, iv} = server.ORM.db.IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}). result
-                            .filter((/**@type{server['ORM']['IamEncryption']}*/row)=>
-                                row.uuid == client.uuid && 
-                                row.iam_app_id_token_id == token_id)
-                            .map((/**@type{server['ORM']['IamEncryption']}*/row)=>{
-                                return {jwk:JSON.parse(atob(row.secret)).jwk,
-                                        iv:JSON.parse(atob(row.secret)).iv
+                            .filter((/**@type{server['ORM']['Object']['IamEncryption']}*/row)=>
+                                row.Uuid == client.uuid && 
+                                row.IamAppIdTokenId == token_id)
+                            .map((/**@type{server['ORM']['Object']['IamEncryption']}*/row)=>{
+                                return {jwk:JSON.parse(atob(row.Secret)).jwk,
+                                        iv:JSON.parse(atob(row.Secret)).iv
                                 };
                             })[0];
         //encrypt message using secrets for curent app id and token found in IamEncryption
@@ -482,7 +482,6 @@ const socketClientPostMessage = async parameters => {
             type:'JSON',
             result:'',
             route:null,
-            method:'',
             statusMessage:'',
             statusCode:200,
             sse_message:encrypted,

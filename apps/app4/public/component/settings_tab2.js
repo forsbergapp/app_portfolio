@@ -41,8 +41,8 @@ const component = async props => {
             mountDiv:   'mapid',
             data:       { 
                         data_app_id :props.data.common_app_id,
-                        longitude:props.data.user_settings.gps_long_text?.toString()??'',
-                        latitude:props.data.user_settings.gps_lat_text?.toString()??''
+                        longitude:props.data.user_settings.GpsLongText?.toString()??'',
+                        latitude:props.data.user_settings.GpsLatText?.toString()??''
                         },
             methods:    null,
             path:       '/common/component/common_map.js'});

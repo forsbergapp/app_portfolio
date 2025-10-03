@@ -25,43 +25,43 @@ const {default:createBankAccount} = await import('./account_create.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert']}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const customerCreate = async parameters =>{
 
-    /**@type{server['ORM']['AppDataEntity']} */
+    /**@type{server['ORM']['Object']['AppDataEntity']} */
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
     const resource_customer = server.ORM.db.AppDataEntityResource.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
-                                                            data:{  app_data_entity_id:Entity.id,
+                                                            data:{  app_data_entity_id:Entity.Id,
                                                                     resource_name:'CUSTOMER'
                                                             }});
     if (resource_customer.result){
-        /**@type{server['ORM']['AppDataResourceMaster']} */
+        /**@type{server['ORM']['Object']['AppDataResourceMaster']} */
         const post_data = {
             Document                                   : {
-                                                            customer_type   :parameters.data.customer_type,
-                                                            name            :parameters.data.name,
-                                                            address         :parameters.data.address,
-                                                            city            :parameters.data.city,
-                                                            country         :parameters.data.country
+                                                            CustomerType   :parameters.data.customer_type,
+                                                            Name            :parameters.data.name,
+                                                            Address         :parameters.data.address,
+                                                            City            :parameters.data.city,
+                                                            Country         :parameters.data.country
                                                         },
-            iam_user_app_id                             : parameters.data.iam_user_app_id,
-            app_data_entity_resource_id                 : resource_customer.result[0].id,
+            IamUserAppId                             : parameters.data.iam_user_app_id,
+            AppDataEntityResourceId                 : resource_customer.result[0].Id,
             };
         //create CUSTOMER    
         const Customer = await server.ORM.db.AppDataResourceMaster.post({app_id:parameters.app_id, data:post_data});
         if (Customer.result){
             const resource_account = server.ORM.db.AppDataEntityResource.get({app_id:parameters.app_id, 
                                                                 resource_id:null, 
-                                                                data:{  app_data_entity_id:Entity.id, 
+                                                                data:{  app_data_entity_id:Entity.Id, 
                                                                         resource_name:'ACCOUNT'}});
             if (resource_account.result){
-                const post_data_account = { app_data_resource_master_id                 : Customer.result.insertId, //CUSTOMER
-                                            app_data_entity_resource_id                 : resource_account.result[0].id,
+                const post_data_account = { app_data_resource_master_id                 : Customer.result.InsertId, //CUSTOMER
+                                            app_data_entity_resource_id                 : resource_account.result[0].Id,
                                             app_data_resource_master_attribute_id       : null
                                             };
                 //create ACCOUNT and return CUSTOMER

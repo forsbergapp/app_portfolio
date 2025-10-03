@@ -25,13 +25,13 @@ const createBankAccountVPA = ()=>server.security.securityUUIDCreate();
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORMMetaData']['common_result_insert']}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const createBankAccount = async parameters =>{
     return server.ORM.db.AppDataResourceDetail.post({app_id:parameters.app_id, data:{...{Document:{
-                                                                                        bank_account_number :createBankAccountNumber(),
-                                                                                        bank_account_secret :createBankAccountSecret(),
-                                                                                        bank_account_vpa    :createBankAccountVPA()
+                                                                                        BankAccountNumber :createBankAccountNumber(),
+                                                                                        BankAccountSecret :createBankAccountSecret(),
+                                                                                        BankAccountVpa    :createBankAccountVPA()
                                                                                 }},
                                                                         ...{...parameters.data}}}
                                                                         );

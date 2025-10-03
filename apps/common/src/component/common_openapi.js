@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{openapi :server['ORM']['ConfigRestApi'],
+ * @param {{openapi :server['ORM']['Object']['ConfigRestApi'],
  *          sortByRole:function
  *          }} props
  * @returns {string}
@@ -204,7 +204,7 @@ const component = async props => {
             
     };
 
-    /**@type{server['ORM']['ConfigServer']['SERVER']} */
+    /**@type{server['ORM']['Object']['ConfigServer']['SERVER']} */
     const configServer = props.methods.ConfigServer.get({app_id:props.data.app_id,data:{ config_group:'SERVER'}}).result;
 
     const HOST = configServer.filter(parameter=> 'HOST' in parameter)[0].HOST;
@@ -218,7 +218,7 @@ const component = async props => {
      */
     const sortByRole = paths => paths.sort((a,b) => roleOrder.indexOf(a[0].split('/')[2]) - roleOrder.indexOf(b[0].split('/')[2]));
               
-    /**@type{server['ORM']['ConfigRestApi']} */
+    /**@type{server['ORM']['Object']['ConfigRestApi']} */
     const CONFIG_REST_API = props.methods.ConfigRestApi.get({app_id:props.data.app_id}).result;
     //return object with 'servers key modified with list from configuration
                                 

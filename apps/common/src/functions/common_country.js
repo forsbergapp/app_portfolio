@@ -5,8 +5,9 @@
 /**
  * @import {server} from '../../../../server/types.js'
  */
+const {server} = await import('../../../../server/server.js');
 const {formatLocale} = await import('./common_locale.js');
-const {getData} = await import('./common_data.js');
+
 /**
  * @name appFunction
  * @description Get countries using ISO 3166-1 country code and language code using ISO 639-1
@@ -311,11 +312,11 @@ const appFunction = async parameters =>{
      */
     
     /**@type {[key:string]} */
-    const countries =   getData('COUNTRY').filter((/**@type {{  locale:string,
+    const countries =   server.ORM.getExternal('COUNTRY').filter((/**@type {{  locale:string,
                                                                 countries:[key:string]}}*/row)=>
                                                                     row.locale == formatLocale(parameters.locale))[0].countries
                         ??
-                        getData('COUNTRY').filter((/**@type {{  locale:string,
+                        server.ORM.getExternal('COUNTRY').filter((/**@type {{  locale:string,
                                                                 countries:[key:string]}}*/row)=>
                                                                     row.locale == 'en')[0].countries;
     //format result and order by group name, country code

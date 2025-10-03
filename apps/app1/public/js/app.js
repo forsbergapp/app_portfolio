@@ -370,20 +370,20 @@ const appSecureCommonButtonSave = async (item) => {
                                                     item,
                                                     record.querySelector('[data-column=\'id\']').textContent,
                                                     {
-                                                        id:             record.querySelector('[data-column=\'id\']').textContent,
-                                                        name:           record.querySelector('[data-column=\'name\']').textContent,
-                                                        path:           record.querySelector('[data-column=\'path\']').textContent,
-                                                        logo:           record.querySelector('[data-column=\'logo\']').textContent,
-                                                        js:             record.querySelector('[data-column=\'js\']').textContent,
-                                                        css:            record.querySelector('[data-column=\'css\']').textContent,
-                                                        css_report:     record.querySelector('[data-column=\'css_report\']').textContent,
-                                                        favicon_32x32:  record.querySelector('[data-column=\'favicon_32x32\']').textContent,
-                                                        favicon_192x192:record.querySelector('[data-column=\'favicon_192x192\']').textContent,
-                                                        text_edit:      record.querySelector('[data-column=\'text_edit\']').textContent,
-                                                        copyright:      record.querySelector('[data-column=\'copyright\']').textContent,
-                                                        link_title:     record.querySelector('[data-column=\'link_title\']').textContent,
-                                                        link_url:       record.querySelector('[data-column=\'link_url\']').textContent,
-                                                        status:         record.querySelector('[data-column=\'status\']').textContent
+                                                        id:             record.querySelector('[data-column=\'Id\']').textContent,
+                                                        name:           record.querySelector('[data-column=\'Name\']').textContent,
+                                                        path:           record.querySelector('[data-column=\'Path\']').textContent,
+                                                        logo:           record.querySelector('[data-column=\'Logo\']').textContent,
+                                                        js:             record.querySelector('[data-column=\'Js\']').textContent,
+                                                        css:            record.querySelector('[data-column=\'Css\']').textContent,
+                                                        css_report:     record.querySelector('[data-column=\'CssReport\']').textContent,
+                                                        favicon_32x32:  record.querySelector('[data-column=\'Favicon32x32\']').textContent,
+                                                        favicon_192x192:record.querySelector('[data-column=\'Favicon192x192\']').textContent,
+                                                        text_edit:      record.querySelector('[data-column=\'TextEdit\']').textContent,
+                                                        copyright:      record.querySelector('[data-column=\'Copyright\']').textContent,
+                                                        link_title:     record.querySelector('[data-column=\'LinkTitle\']').textContent,
+                                                        link_url:       record.querySelector('[data-column=\'LinkUrl\']').textContent,
+                                                        status:         record.querySelector('[data-column=\'Status\']').textContent
                                                     });
             }
             
@@ -394,13 +394,13 @@ const appSecureCommonButtonSave = async (item) => {
                                                         record,
                                                         item,
                                                         record.querySelector('[data-column=\'id\']').textContent,
-                                                        {   app_id:         record.querySelector('[data-column=\'app_id\']').textContent,
-                                                            value:          record.querySelector('[data-column=\'value\']').textContent,
-                                                            display_data:   record.querySelector('[data-column=\'display_data\']').textContent,
-                                                            data2:          record.querySelector('[data-column=\'data2\']').textContent,
-                                                            data3:          record.querySelector('[data-column=\'data3\']').textContent,
-                                                            data4:          record.querySelector('[data-column=\'data4\']').textContent,
-                                                            data5:          record.querySelector('[data-column=\'data5\']').textContent
+                                                        {   app_id:         record.querySelector('[data-column=\'AppId\']').textContent,
+                                                            value:          record.querySelector('[data-column=\'Value\']').textContent,
+                                                            display_data:   record.querySelector('[data-column=\'DisplayData\']').textContent,
+                                                            data2:          record.querySelector('[data-column=\'Data2\']').textContent,
+                                                            data3:          record.querySelector('[data-column=\'Data3\']').textContent,
+                                                            data4:          record.querySelector('[data-column=\'Data4\']').textContent,
+                                                            data5:          record.querySelector('[data-column=\'Data5\']').textContent
                                                         });
                 }
             if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_module.list_nav_selected_tab'))
@@ -410,7 +410,7 @@ const appSecureCommonButtonSave = async (item) => {
                                                         record,
                                                         item,
                                                         record.querySelector('[data-column=\'id\']').textContent,
-                                                        {   app_id:            record.querySelector('[data-column=\'app_id\']').textContent,
+                                                        {   app_id:            record.querySelector('[data-column=\'AppId\']').textContent,
                                                             ModuleType:        record.querySelector('[data-column=\'ModuleType\']').textContent,
                                                             ModuleName:        record.querySelector('[data-column=\'ModuleName\']').textContent,
                                                             ModuleRole:        record.querySelector('[data-column=\'ModuleRole\']').textContent,
@@ -427,22 +427,22 @@ const appSecureCommonButtonSave = async (item) => {
                                                     record,
                                                     item,
                                                     record.querySelector('[data-column=\'id\']').textContent,
-                                                    {   avatar:             record.querySelector('[data-column=\'avatar\']').getAttribute('data-image')=='null'?
+                                                    {   avatar:             record.querySelector('[data-column=\'Avatar\']').getAttribute('data-image')=='null'?
                                                                                 null:
-                                                                                    record.querySelector('[data-column=\'avatar\']').getAttribute('data-image'),
-                                                        active:             record.querySelector('[data-column=\'active\']').textContent,
-                                                        status:             record.querySelector('[data-column=\'status\']').textContent,
-                                                        type:               record.querySelector('[data-column=\'type\']').textContent,
-                                                        user_level:         record.querySelector('[data-column=\'user_level\']').textContent,
-                                                        private:            record.querySelector('[data-column=\'private\']').textContent,
-                                                        username:           record.querySelector('[data-column=\'username\']').textContent,
-                                                        bio:                record.querySelector('[data-column=\'bio\']').textContent,
-                                                        otp_key:            record.querySelector('[data-column=\'otp_key\']').textContent,
-                                                        password:           (record.querySelector('[data-column=\'password\']').textContent=='' ||
-                                                                             record.querySelector('[data-column=\'password\']').textContent==null)?
+                                                                                    record.querySelector('[data-column=\'Avatar\']').getAttribute('data-image'),
+                                                        active:             record.querySelector('[data-column=\'Active\']').textContent,
+                                                        status:             record.querySelector('[data-column=\'Status\']').textContent,
+                                                        type:               record.querySelector('[data-column=\'Ttype\']').textContent,
+                                                        user_level:         record.querySelector('[data-column=\'UserLevel\']').textContent,
+                                                        private:            record.querySelector('[data-column=\'Private\']').textContent,
+                                                        username:           record.querySelector('[data-column=\'Username\']').textContent,
+                                                        bio:                record.querySelector('[data-column=\'Bio\']').textContent,
+                                                        otp_key:            record.querySelector('[data-column=\'OtpKey\']').textContent,
+                                                        password:           (record.querySelector('[data-column=\'Password\']').textContent=='' ||
+                                                                             record.querySelector('[data-column=\'Password\']').textContent==null)?
                                                                                 null:
-                                                                                    record.querySelector('[data-column=\'password\']').textContent,
-                                                        password_reminder:  record.querySelector('[data-column=\'password_reminder\']').textContent
+                                                                                    record.querySelector('[data-column=\'Password\']').textContent,
+                                                        password_reminder:  record.querySelector('[data-column=\'PasswordReminder\']').textContent
                                                     });
             }
             break;

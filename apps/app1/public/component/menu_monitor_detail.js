@@ -30,101 +30,89 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 `<div id='menu_monitor_detail_connected_form'>    
                                     <div id='menu_monitor_detail_connected' class='common_list_scrollbar'>
                                         <div class='menu_monitor_detail_connected_row'>
-                                            <div data-column='id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('id')}'>
+                                            <div data-column='Id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('Id')}'>
                                                 ID
                                             </div>
-                                            <div data-column='connection_date' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('connection_date')}'>
+                                            <div data-column='ConnectionDate' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('ConnectionDate')}'>
                                                 CONNECTION DATE
                                             </div>
-                                            <div data-column='app_id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                            <div data-column='AppId' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('AppId')}'>
                                                 APP ID
                                             </div>
-                                            <div data-column='iam_user_id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('iam_user_id')}'>
+                                            <div data-column='IamUserId' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('IamUserId')}'>
                                                 IAM ID
                                             </div>
-                                            <div data-column='iam_user_username' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('iam_user_username')}'>
+                                            <div data-column='IamUserUsername' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('IamUserUsername')}'>
                                                 IAM USERNAME
                                             </div>
-                                            <div data-column='iam_user_type' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('iam_user_type')}'>
+                                            <div data-column='IamUserType' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('IamUserType')}'>
                                                 IAM TYPE
                                             </div>
-                                            <div data-column='ip' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('ip')}'>
+                                            <div data-column='Ip' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('Ip')}'>
                                                 IP
                                             </div>
-                                            <div data-column='gps_latitude' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('gps_latitude')}'>
+                                            <div data-column='GpsLatitude' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('GpsLatitude')}'>
                                                 GPS LAT
                                             </div>
-                                            <div data-column='gps_longitude' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('gps_longitude')}'>
+                                            <div data-column='GpsLongitude' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('GpsLongitude')}'>
                                                 GPS LONG
                                             </div>
-                                            <div data-column='place' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('place')}'>
+                                            <div data-column='Place' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('Place')}'>
                                                 PLACE
                                             </div>
-                                            <div data-column='timezone' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('timezone')}'>
+                                            <div data-column='Timezone' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('Timezone')}'>
                                                 TIMEZONE
                                             </div>
-                                            <div data-column='user_agent' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('user_agent')}'>
+                                            <div data-column='UserAgent' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('UserAgent')}'>
                                                 USER AGENT
                                             </div>
-                                            <div data-column='broadcast' class='menu_monitor_detail_connected_col list_title ${props.function_get_order_by('broadcast')}'>
+                                            <div data-column='Broadcast' class='menu_monitor_detail_connected_col list_title ${props.function_get_order_by('Broadcast')}'>
                                                 BROADCAST
                                             </div>
                                         </div>
-                                        ${props.logs.map((/**@type{{id:number,
-                                                                    connection_date:string,
-                                                                    app_id:number,
-                                                                    iam_user_id:number|null,
-                                                                    iam_user_username:string|null,
-                                                                    iam_user_type:'ADMIN'|'USER'|null,
-                                                                    ip:string,
-                                                                    gps_latitude:string,
-                                                                    gps_longitude:string,
-                                                                    place:string,
-                                                                    timezone:string,
-                                                                    user_agent:string
-                                                                    }}*/log)=>
-                                            `<div class='menu_monitor_detail_connected_row ${log.iam_user_id==props.iam_user_id?'list_current_user_row':''}'>
+                                        ${props.logs.map((/**@type{common['ORM']['View']['SocketGetConnected']}*/log)=>
+                                            `<div class='menu_monitor_detail_connected_row ${log.IamUserid==props.iam_user_id?'list_current_user_row':''}'>
                                                 <div class='menu_monitor_detail_connected_col'>
-                                                    ${log.id}
+                                                    ${log.Id}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
-                                                    ${log.connection_date}
+                                                    ${log.ConnectionDate}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
-                                                    ${log.app_id}
+                                                    ${log.AppId}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
-                                                    ${log.iam_user_id ?? ''}
+                                                    ${log.IamUserid ?? ''}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
-                                                    ${log.iam_user_username ?? ''}
+                                                    ${log.IamUserUsername ?? ''}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
-                                                    ${log.iam_user_type ?? ''}
+                                                    ${log.IamUserType ?? ''}
                                                 </div>
-                                                <div class='menu_monitor_detail_connected_col gps_click' data-ip='${log.ip}'>
-                                                    ${log.ip}
+                                                <div class='menu_monitor_detail_connected_col gps_click' data-ip='${log.Ip}'>
+                                                    ${log.Ip}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col gps_click' 
-                                                    data-latitude='${log.gps_latitude ?? ''}'
-                                                    data-longitude='${log.gps_longitude ?? ''}'>
-                                                    ${log.gps_latitude ?? ''}
+                                                    data-latitude='${log.GpsLatitude ?? ''}'
+                                                    data-longitude='${log.GpsLongitude ?? ''}'>
+                                                    ${log.GpsLatitude ?? ''}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col gps_click'
-                                                    data-latitude='${log.gps_latitude ?? ''}'
-                                                    data-longitude='${log.gps_longitude ?? ''}'>
-                                                    ${log.gps_longitude ?? ''}
+                                                    data-latitude='${log.GpsLatitude ?? ''}'
+                                                    data-longitude='${log.GpsLongitude ?? ''}'>
+                                                    ${log.GpsLongitude ?? ''}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
-                                                    ${log.place}
+                                                    ${log.Place}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
-                                                    ${log.timezone}
+                                                    ${log.Timezone}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col common_wide_list_column'>
-                                                    ${props.function_commonWindowUserAgentPlatform(log.user_agent) ?? ''}
+                                                    ${props.function_commonWindowUserAgentPlatform(log.UserAgent) ?? ''}
                                                 </div>
-                                                <div class='menu_monitor_detail_connected_col chat_click common_icon' data-id='${log.id}'></div>
+                                                <div class='menu_monitor_detail_connected_col chat_click common_icon' data-id='${log.Id}'></div>
                                             </div>`
                                             ).join('')
                                         }

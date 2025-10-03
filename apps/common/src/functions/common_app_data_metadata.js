@@ -20,11 +20,11 @@ const {server} = await import('../../../../server/server.js');
 *          idToken:string,
 *          authorization:string,
 *          locale:string}} parameters
-* @returns {Promise.<server['server']['response'] & {result?:server['ORM']['AppDataResourceMaster'][]}>}
+* @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceMaster'][]}>}
 */
 const appDataMetadata = async parameters =>{
 
-   /**@type{server['ORM']['AppDataEntity']} */
+   /**@type{server['ORM']['Object']['AppDataEntity']} */
    const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                            resource_id:null, 
                                            data:{data_app_id:parameters.data.data_app_id}}).result[0];
@@ -34,7 +34,7 @@ const appDataMetadata = async parameters =>{
                                        data:{  iam_user_id:null,
                                                data_app_id:null,
                                                resource_name:parameters.data.resource_name,
-                                               app_data_entity_id:Entity.id
+                                               app_data_entity_id:Entity.Id
                                    }});
 };
 export default appDataMetadata;

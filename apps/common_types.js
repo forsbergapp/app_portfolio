@@ -352,24 +352,24 @@
 /**
  * @description Type commonAppInit
  * @typedef {{App:{
- *                  id:common['ORM']['App']['id'],
- *                  name:common['ORM']['App']['name'],
- *                  js:common['ORM']['App']['js'],
+ *                  id:common['ORM']['Object']['App']['Id'] & {Id:number},
+ *                  name:common['ORM']['Object']['App']['Name'],
+ *                  js:common['ORM']['Object']['App']['Js'],
  *                  js_content:string|null,
- *                  css:common['ORM']['App']['css'],
+ *                  css:common['ORM']['Object']['App']['Css'],
  *                  css_content:string|null,
- *                  css_report:common['ORM']['App']['css_report'],
+ *                  css_report:common['ORM']['Object']['App']['CssReport'],
  *                  css_report_content:string|null,
- *                  favicon_32x32:common['ORM']['App']['favicon_32x32'],
+ *                  favicon_32x32:common['ORM']['Object']['App']['Favicon32x32'],
  *                  favicon_32x32_content:string|null,
- *                  favicon_192x192:common['ORM']['App']['favicon_192x192'],
+ *                  favicon_192x192:common['ORM']['Object']['App']['Favicon192x192'],
  *                  favicon_192x192_content:string|null,
- *                  logo:common['ORM']['App']['logo'],
+ *                  logo:common['ORM']['Object']['App']['Logo'],
  *                  logo_content:string|null,
- *                  copyright:common['ORM']['App']['copyright'],
- *                  link_url:common['ORM']['App']['link_url'],
- *                  link_title:common['ORM']['App']['link_title'],
- *                  text_edit:common['ORM']['App']['text_edit']
+ *                  copyright:common['ORM']['Object']['App']['Copyright'],
+ *                  link_url:common['ORM']['Object']['App']['LinkUrl'],
+ *                  link_title:common['ORM']['Object']['App']['LinkTitle'],
+ *                  text_edit:common['ORM']['Object']['App']['TextEdit']
  *                  },
  *          AppParameter:Object.<string,*>}} commonAppInit
  */
@@ -381,7 +381,7 @@
 
 /**
  * @description Type CommonCountryType
- * @typedef {{id:number, value:string, display_data:string}} CommonCountryType
+ * @typedef {{Id:number, Value:string, DisplayData:string}} CommonCountryType
  */
 
 /**
@@ -490,7 +490,7 @@
  *              CommonRESTAPIAuthorizationType:CommonRESTAPIAuthorizationType,
  *              commonAppInit:commonAppInit,
  *              CommonAppModuleMetadata:CommonAppModuleMetadata,
- *              CommonAppModuleWithMetadata:ORM['AppModule'] & CommonAppModuleMetadata,
+ *              CommonAppModuleWithMetadata:ORM['Object']['AppModule'] & CommonAppModuleMetadata,
  *              CommonCountryType:CommonCountryType,
  *              CommonProfileUser:CommonProfileUser,
  *              CommonProfileStatRecord:CommonProfileStatRecord,

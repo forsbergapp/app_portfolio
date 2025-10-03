@@ -83,14 +83,14 @@ const component = async props => {
                                             liked:number, 
                                             count_likes:number, 
                                             count_views:number,
-                                            design_paper_size:string, 
+                                            DesignPaperSize:string, 
                                             description:string}}}*/setting)=>{return {  value:JSON.stringify({   
                                                                                                 sid:setting.id, 
                                                                                                 iam_user_id:setting.iam_user_id, 
                                                                                                 liked:setting.liked,
                                                                                                 count_likes:setting.count_likes,
                                                                                                 count_views:setting.count_views,
-                                                                                                paper_size:setting.design_paper_size,
+                                                                                                paper_size:setting.DesignPaperSize,
                                                                                                 description:setting.description}), 
                                                                                         text:setting.description};}));
     }; 

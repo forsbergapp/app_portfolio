@@ -75,8 +75,8 @@ const APP_REPORT_GLOBAL = {
 	regional_def_calendar_type_greg:'',
 	regional_def_calendar_number_system:'',
 	timezone_text: '🌐',
-	gps_lat_text:'📍',
-	gps_long_text:''
+	GpsLatText:'📍',
+	GpsLongText:''
 };
 Object.seal(APP_REPORT_GLOBAL);
 
@@ -242,13 +242,13 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
 											<div >${props.settings.place}</div>
 											${props.settings.show_gps == 1?
 												`
-												<div >${APP_REPORT_GLOBAL.gps_lat_text}</div>
+												<div >${APP_REPORT_GLOBAL.GpsLatText}</div>
 												<div >${Number(props.settings.gps_lat).toLocaleString(
 																						props.settings.locale + 
 																						APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																						APP_REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																						props.settings.number_system)}</div>
-												<div >${APP_REPORT_GLOBAL.gps_long_text}</div>
+												<div >${APP_REPORT_GLOBAL.GpsLongText}</div>
 												<div >${Number(props.settings.gps_long).toLocaleString(
 																						props.settings.locale + 
 																						APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + 
@@ -1832,25 +1832,25 @@ const component = props => {
 					col_isha : 		show_col('DAY', 'isha', times.isha, show_col_data),
 					col_midnight : 	settings.show_midnight == 1? show_col('DAY', 'midnight', times.midnight ?? 0, show_col_data):null,
 					footer1:		user_place,
-					footer2:		settings.show_gps == 1 ? APP_REPORT_GLOBAL.gps_lat_text:'',
+					footer2:		settings.show_gps == 1 ? APP_REPORT_GLOBAL.GpsLatText:'',
 					footer3:		settings.show_gps == 1 ? user_gps_latitude?.toLocaleString(user_locale + APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + APP_REPORT_GLOBAL.regional_def_locale_ext_number_system + user_number_system) ?? '':'',
-					footer4:		settings.show_gps == 1 ? APP_REPORT_GLOBAL.gps_long_text:'',
+					footer4:		settings.show_gps == 1 ? APP_REPORT_GLOBAL.GpsLongText:'',
 					footer5:		settings.show_gps == 1 ? user_gps_longitude?.toLocaleString(user_locale + APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + APP_REPORT_GLOBAL.regional_def_locale_ext_number_system + user_number_system) ?? '':'',
 					user_timezone:APP_REPORT_GLOBAL.timezone_text + ' ' + user_timezone
 				};
 			};
 			return user_settings.map(user_setting=>{
-													setMethod_praytimes(user_setting.prayer_method, 
-																		user_setting.prayer_asr_method, 
-																		user_setting.prayer_high_latitude_adjustment);	
-													return day_timetable(	user_setting.regional_language_locale, 
-																			user_setting.regional_timezone, 
-																			user_setting.regional_number_system, 
-																			user_setting.regional_calendar_hijri_type,
-																			user_setting.gps_lat_text, 
-																			user_setting.gps_long_text,
-																			user_setting.prayer_time_format, 
-																			Number(user_setting.prayer_hijri_date_adjustment), 
+													setMethod_praytimes(user_setting.PrayerMethod, 
+																		user_setting.PrayerAsrMethod, 
+																		user_setting.PrayerHighLatitudeAdjustment);	
+													return day_timetable(	user_setting.RegionalLanguageLocale, 
+																			user_setting.RegionalTimezone, 
+																			user_setting.RegionalNumberSystem, 
+																			user_setting.RegionalCalendarHijri_type,
+																			user_setting.GpsLatText, 
+																			user_setting.GpsLongText,
+																			user_setting.PrayerTimeFormat, 
+																			Number(user_setting.PrayerHijriDateAdjustment), 
 																			user_setting.description);
 												});
 		};			

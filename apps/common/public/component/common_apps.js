@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{apps:(common['ORM']['App'] & {app_name_translation:string})[]}} props 
+ * @param {{apps:(common['ORM']['View']['AppGetInfo'])[]}} props 
  * @returns {string}
  */
 const template = props => ` <div id='common_apps_list_title'>
@@ -22,10 +22,10 @@ const template = props => ` <div id='common_apps_list_title'>
                                 ${props.apps.map(row=>
                                     `<div class='common_apps_app_link_row common_row'>
                                         <div class='common_apps_app_link_col'>
-                                            <div data-app_id='${row.id}' class='common_apps_app_logo common_image common_image_logo_start' style='${row.logo==null?'':`background-image:url(${row.logo});`}'></div>
+                                            <div data-app_id='${row.Id}' class='common_apps_app_logo common_image common_image_logo_start' style='${row.Logo==null?'':`background-image:url(${row.Logo});`}'></div>
                                         </div>
                                         <div class='common_apps_app_link_col'>
-                                            <div class='common_apps_app_name'>${row.app_name_translation}</div>
+                                            <div class='common_apps_app_name'>${row.AppNameTranslation}</div>
                                         </div>  
                                     </div>`
                                 ).join('')
@@ -50,7 +50,7 @@ const template = props => ` <div id='common_apps_list_title'>
  *                      template:string}>}
  */
 const component = async props => {
-    /**@type{(common['ORM']['App'] & {app_name_translation:string})[]} */
+    /**@type{(common['ORM']['View']['AppGetInfo'])[]} */
     const apps = await props.methods.COMMON.commonFFB({path:'/server-db/app-info/', method:'GET', authorization_type:'APP_ID'})
                         .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.app_id != props.data.app_id));
 

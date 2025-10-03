@@ -95,7 +95,7 @@ const template = props => ` <div id='report'>
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    /**@type{server['ORM']['ConfigServer']['SERVICE_TEST'][]} */
+    /**@type{server['ORM']['Object']['ConfigServer']['SERVICE_TEST'][]} */
     const params = server.ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVICE_TEST'}}).result;
     const fs = await import('node:fs');
     let finished = 0;
