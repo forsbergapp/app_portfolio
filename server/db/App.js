@@ -47,9 +47,6 @@ const getViewInfo = async parameters =>{
                         return {
                                     Id:app.Id,
                                     Name:app.Name,
-                                    AppNameTranslation : server.ORM.db.AppTranslation.get(parameters.app_id,null,parameters.locale, app.Id).result
-                                                            .filter((/**@type{server['ORM']['Object']['AppTranslation']}*/appTranslation)=>
-                                                                    appTranslation.AppId==app.Id)[0].Document.Name,
                                     Logo:app.Logo
                                 };
                     }), 

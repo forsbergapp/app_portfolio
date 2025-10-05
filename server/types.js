@@ -282,9 +282,9 @@
  * @description DB TABLE AppTranslation
  * @memberof dbObjects
  * @typedef {{Id: number,
- *			      Locale: string,
- *			      Document: {[key:string]:string}|null,       //complex text
- *			      Text: string|null,	            //simple text
+ *			  Locale: string,
+ *			  Document: {[key:string]:string}|null,       //complex text
+ *			  Text: string|null,	            //simple text
  *            AppId: number
  *          }} server_db_table_AppTranslation	
  */
@@ -785,7 +785,6 @@
  * @typedef {{
  *              Id: server_db_table_App['Id'],
  *              Name: server_db_table_App['Name'],
- *              AppNameTranslation: string,
  *              Logo:string}} ViewAppGetInfo
  */
 /**

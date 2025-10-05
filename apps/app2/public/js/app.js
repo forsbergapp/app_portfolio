@@ -40,19 +40,12 @@ const appDialogueAppsShowHide = () => {
 const appEventClick = event => {
     const event_target_id = common.commonMiscElementId(event.target);
     switch (event_target_id){
-        case event.target.classList.contains('common_select_option')?event_target_id:'':
-        case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
-            if (event_target_id == 'common_app_dialogues_user_menu_iam_user_app_locale_select')
-                appAppsGet();
-            break;
-        }
         case 'theme_background':{
             appDialogueAppsShowHide();
             break;
         }                    
         case 'common_app_dialogues_user_menu_log_out':{
             common.commonUserLogout();
-            appUserLogout();
             break;
         }
         //dialogue profile info
@@ -65,7 +58,7 @@ const appEventClick = event => {
             break;
         }
         case 'common_app_dialogues_iam_start_login_button':{
-            appUserLogin().catch(()=>null);
+            common.commonUserLogin();
             break;
         }
     }
@@ -85,31 +78,13 @@ const appEventKeyUp = event => {
         case 'common_app_dialogues_iam_start_login_password':{
             if (event.code === 'Enter') {
                 event.preventDefault();
-                appUserLogin().catch(()=>null);
+                common.commonUserLogin();
             }        
             break;
         }
         
     }
 };
-
-/**
- * @name appUserLogin
- * @description User login app
- * @function
- * @returns {Promise.<void>}
- */
-const appUserLogin = async () =>{
-    common.commonUserLogin()
-    .then(()=>appAppsGet());
-};
-/**
- * @name appUserLogout
- * @description User logout app
- * @function
- * @returns {Promise.<void>}
- */
- const appUserLogout = async () =>appAppsGet();
 
 /**
  * @name appAppsGet
@@ -164,7 +139,7 @@ const appCommonInit = async (commonLib, parameters) => {
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme_sun';
     common.commonGlobalSet('app_function_exception', appException);
-    common.commonGlobalSet('app_function_session_expired', appUserLogout);
+    common.commonGlobalSet('app_function_session_expired', null);
     appInit();
 };
 /**
