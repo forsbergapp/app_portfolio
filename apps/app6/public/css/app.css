@@ -151,14 +151,14 @@ body {
 .common_select_options {
 	border-radius:2px;
 }
-.common_app_data_display_master_col_list[data-sku]{
+.common_app_data_display_master_col_list[data-Sku]{
 	width: 13em;
 }
-.common_app_data_display_master_col_list[data-product_color]{
+.common_app_data_display_master_col_list[data-ProductColor]{
 	width: 1em;
 }
-.common_app_data_display_master_col_list[data-product_size],
-.common_app_data_display_master_col_list[data-price]{
+.common_app_data_display_master_col_list[data-ProductSize],
+.common_app_data_display_master_col_list[data-Price]{
 	width: 2em;
 	text-align: end;
 	margin-inline-end: 0.2em;
@@ -166,30 +166,30 @@ body {
 .common_app_data_display_master_col_list[data-id]{
 	display: none;
 }
-.common_app_data_display_master_col_list[data-location]{
+.common_app_data_display_master_col_list[data-Location]{
 	width: 10em !important;
 }
-.common_app_data_display_master_col_list[data-stock_text]{
+.common_app_data_display_master_col_list[data-StockText]{
 	width: 4em !important;
 }
-.common_app_data_display_master_col_list[data-stock]{
+.common_app_data_display_master_col_list[data-Stock]{
 	width: 2em !important;
 }
-.common_app_data_display_master_col_list[data-currency_code]{
+.common_app_data_display_master_col_list[data-CurrencyCode]{
 	display: none;
 }
-.common_app_data_display_master_col1[data-key=payment_id],
-.common_app_data_display_master_col2[data-value=payment_id]{
+.common_app_data_display_master_col1[data-key=PaymentId],
+.common_app_data_display_master_col2[data-value=PaymentId]{
 	display: block;
 	width: 100%;
 }
-.common_app_data_display_master_col1[data-key=payment_method],
-.common_app_data_display_master_col2[data-value=payment_method],
-.common_app_data_display_master_col1[data-key=payment_id],
-.common_app_data_display_master_col2[data-value=payment_id]{
+.common_app_data_display_master_col1[data-key=PaymentMethod],
+.common_app_data_display_master_col2[data-value=PaymentMethod],
+.common_app_data_display_master_col1[data-key=PaymentId],
+.common_app_data_display_master_col2[data-value=PaymentId]{
 	font-size: 0.8em;
 }
-.common_app_data_display_master_col2[data-value=payment_method]{
+.common_app_data_display_master_col2[data-value=PaymentMethod]{
 	width: unset !important;
 }
 

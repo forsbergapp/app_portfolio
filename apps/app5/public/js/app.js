@@ -49,7 +49,7 @@ const appEventClick = event => {
                                     common_app_id:common.commonGlobalGet('app_common_app_id'),
                                     display_type:'MASTER_DETAIL_HORIZONTAL',
                                     master_path:'/app-common-module/ACCOUNT_STATEMENT',
-                                    master_query:'fields=title,bank_account_balance,bank_account_number,bank_account_iban,currency,currency_name',
+                                    master_query:'fields=Title,BankAccountBalance,BankAccountNumber,BankAccountIban,Currency,CurrencyName',
                                     master_body:{   type:'FUNCTION',
                                                     IAM_iam_user_app_id: common.commonGlobalGet('iam_user_app_id'),
                                                     IAM_iam_user_id: common.commonGlobalGet('iam_user_id'), 
@@ -58,7 +58,7 @@ const appEventClick = event => {
                                     master_token_type:'APP_ACCESS',
                                     master_resource:'ACCOUNT',
                                     detail_path:'/app-common-module/ACCOUNT_TRANSACTIONS',
-                                    detail_query: 'fields=timestamp,logo,origin,amount_deposit,amount_withdrawal',
+                                    detail_query: 'fields=Timestamp,Logo,Origin,AmountDeposit,AmountWithdrawal',
                                     detail_body: {  type:'FUNCTION',
                                                     IAM_iam_user_id:common.commonGlobalGet('iam_user_id'),
                                                     IAM_data_app_id:common.commonGlobalGet('app_id')},
@@ -92,7 +92,7 @@ const appEventClick = event => {
                                     common_app_id:common.commonGlobalGet('app_common_app_id'),
                                     display_type:'VERTICAL_KEY_VALUE',
                                     master_path:'/app-common-module/CUSTOMER_GET',
-                                    master_query: 'fields=name,customer_type,address,city,country',
+                                    master_query: 'fields=Name,CustomerType,Address,City,Country',
                                     master_body:{   type:'FUNCTION',
                                                     IAM_iam_user_app_id: common.commonGlobalGet('iam_user_app_id'),
                                                     IAM_iam_user_id:common.commonGlobalGet('iam_user_id'), 
@@ -131,7 +131,7 @@ const appEventClick = event => {
                                     common_app_id:common.commonGlobalGet('app_common_app_id'),
                                     display_type:'VERTICAL_KEY_VALUE',
                                     master_path:'/app-common-module/ACCOUNT_GET',
-                                    master_query: 'fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa',
+                                    master_query: 'fields=Title,TitleSub,BankAccountNumber,BankAccountSecret,BankAccountVpa',
                                     master_body: {  type:'FUNCTION',
                                                     IAM_iam_user_id:common.commonGlobalGet('iam_user_id'), 
                                                     IAM_data_app_id:common.commonGlobalGet('app_id')},
@@ -258,11 +258,11 @@ const appCustomerCreate = async () => {
                             IAM_iam_user_app_id :common.commonGlobalGet('iam_user_app_id'),
                             IAM_iam_user_id :common.commonGlobalGet('iam_user_id'),
                             IAM_data_app_id :common.commonGlobalGet('app_id'),
-                            customer_type   :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'customer_type\']').textContent,
-                            name            :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'name\']').textContent,
-                            address         :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'address\']').textContent,
-                            city            :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'city\']').textContent,
-                            country         :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'country\']').textContent
+                            customer_type   :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'CustomerType\']').textContent,
+                            name            :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'Name\']').textContent,
+                            address         :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'Address\']').textContent,
+                            city            :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'City\']').textContent,
+                            country         :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'Country\']').textContent
                         },
                         spinner_id:COMMON_DOCUMENT.querySelector('.common_app_data_display_button_post').id
                     });
@@ -321,7 +321,7 @@ const appPaymentRequestCancel = async () => {
 const appPaymentRequestShow = async message =>{
     APP_GLOBAL.token = JSON.parse(message).token;
     //mount component only if not already opened
-    if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=amount]'))
+    if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=Amount]'))
         null;
     else
         //Payment request received, show dialogue with payment request info and send received token 
@@ -367,8 +367,8 @@ const appPaymentRequestShow = async message =>{
                             },
                 path:       '/common/component/common_app_data_display.js'})
             .then(()=>{
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.textContent = 
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.textContent + ' ' +
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent = 
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent + ' ' +
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').textContent;
 
                 common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 

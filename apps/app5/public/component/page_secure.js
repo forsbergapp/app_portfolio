@@ -70,7 +70,7 @@ const component = async props => {
                         .querySelector('#common_app_dialogues_lov_list')
                         .getAttribute('data-lov');
         if (['COUNTRY', 'CUSTOMER_TYPE'].includes(lov))
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#app_page_secure_tab_content [data-value=${lov.toLowerCase()}]`).textContent = 
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#app_page_secure_tab_content [data-value=${lov=='COUNTRY'?'Country':'CustomerType'}]`).textContent = 
                 props.methods.COMMON.commonMiscElementRow(event_target).getAttribute('data-value');
     };
 

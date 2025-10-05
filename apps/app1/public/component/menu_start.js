@@ -11,7 +11,7 @@
  * @description Template
  * @function
  * @param {{maintenance:0|1|null,
- *          user_stat:{count_users:number, count_connected:number}[],
+ *          user_stat:(common['ORM']['View']['IamUserGetStatCountAdmin'] & {count_connected:number})[],
  *          count_not_connected:number}} props
  * @returns {string}
  */
@@ -25,7 +25,7 @@ const template = props => ` <div id='menu_start_content_widget1' class='widget'>
                                 <div id='menu_start_graphBox'></div>
                                 <div id='menu_start_user_stat'>
                                     <div id="menu_start_user_stat_count_users" class='menu_start_user_stat_col common_icon'></div>
-                                    <div class='menu_start_user_stat_col'>${props.user_stat[0].count_users}</div>
+                                    <div class='menu_start_user_stat_col'>${props.user_stat[0].CountUsers}</div>
                                     <div id="menu_start_user_stat_count_connected" class='menu_start_user_stat_col common_icon'></div>
                                     <div class='menu_start_user_stat_col'>${props.user_stat[0].count_connected}</div>
                                     <div id="menu_start_user_stat_count_notconnected" class='menu_start_user_stat_col common_icon'></div>
@@ -68,7 +68,7 @@ const component = async props => {
         return props.methods.COMMON.commonFFB({path:'/server-socket/socket-stat', query:`logged_in=${logged_in}`, method:'GET', authorization_type:'ADMIN'})
                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     };
-    /**@type{{count_users:number, count_connected:number}[]} */
+    /**@type{(common['ORM']['View']['IamUserGetStatCountAdmin'] & {count_connected:number})[]} */
     const user_stat = await props.methods.COMMON.commonFFB({path:'/server-db/iamuser-stat', method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     //add count stat
@@ -83,14 +83,14 @@ const component = async props => {
     // syntax {VALUE:'[ADMIN_statGroup]#[value]#[unique 0/1]#[statgroup]', TEXT:['[ADMIN_STATGROUP] - [VALUE replaced '_' with ' ']']}
     // response has empty statgroup
     const stat_options = [
-        {VALUE:'request#ip_total#0#ip',                             TEXT:'REQUEST - IP TOTAL'},
-        {VALUE:'request#ip_unqiue#1#ip',                            TEXT:'REQUEST - IP UNIQUE'},
-        {VALUE:'request#url_total#0#url',                           TEXT:'REQUEST - URL TOTAL'},
-        {VALUE:'request#url_unqiue#1#url',                          TEXT:'REQUEST - URL UNIQUE'},
-        {VALUE:'request#accept_language_total#0#accept-language',   TEXT:'REQUEST - ACCEPT LANGUAGE TOTAL'},
-        {VALUE:'request#accept_language_unqiue#1#accept-language',  TEXT:'REQUEST - ACCEPT LANGUAGE UNIQUE'},
-        {VALUE:'request#user_agent_total#0#user-agent',             TEXT:'REQUEST - USER#AGENT TOTAL'},
-        {VALUE:'request#user_agent_unqiue#1#user-agent',            TEXT:'REQUEST - USER#AGENT UNIQUE'},
+        {VALUE:'request#ip_total#0#Ip',                             TEXT:'REQUEST - IP TOTAL'},
+        {VALUE:'request#ip_unqiue#1#Ip',                            TEXT:'REQUEST - IP UNIQUE'},
+        {VALUE:'request#url_total#0#Url',                           TEXT:'REQUEST - URL TOTAL'},
+        {VALUE:'request#url_unqiue#1#Url',                          TEXT:'REQUEST - URL UNIQUE'},
+        {VALUE:'request#accept_language_total#0#AcceptLanguage',    TEXT:'REQUEST - ACCEPT LANGUAGE TOTAL'},
+        {VALUE:'request#accept_language_unqiue#1#AcceptLanguage',   TEXT:'REQUEST - ACCEPT LANGUAGE UNIQUE'},
+        {VALUE:'request#user_agent_total#0#UserAgent',              TEXT:'REQUEST - USER#AGENT TOTAL'},
+        {VALUE:'request#user_agent_unqiue#1#UserAgent',             TEXT:'REQUEST - USER#AGENT UNIQUE'},
         {VALUE:'response##0#',                                 TEXT:'REPONSE - ∞'},
         ...Object.entries(result_obj.status_codes).map(code=>{
             return {VALUE:`response#${code[0]}#1#`, TEXT:`RESPONSE - ${code[0]} - ${code[1]}`};
@@ -108,7 +108,7 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({mountDiv:'menu_start_select_stat',
             data:   {
                     default_value:'REQUEST - IP TOTAL',
-                    default_data_value:'request#ip_total#0#ip',
+                    default_data_value:'request#ip_total#0#Ip',
                     options:stat_options,
                     path:'',
                     query:'',
@@ -158,7 +158,7 @@ const component = async props => {
                 data:   {
                         default_value:'∞',
                         default_data_value:'',
-                        options:[{id:'', name:'∞'}],
+                        options:[{Id:'', Name:'∞'}],
                         path:'/server-db/app',
                         query:'key=Name',
                         method:'GET',

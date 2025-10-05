@@ -9,7 +9,7 @@
                                                                                                 "EntityType":"BANK",
                                                                                                 "IamUserIdOwner":null
                                                                                                 }},
-    {"Id":6000, "AppId":6, "Created":"2025-01-01T00:00:00.000Z", "Modified":null, "Document":{" Description":"Entity info: Shop", 
+    {"Id":6000, "AppId":6, "Created":"2025-01-01T00:00:00.000Z", "Modified":null, "Document":{ "Description":"Entity info: Shop", 
                                                                                                 "Name":"SHOP", 
                                                                                                 "EntityType":"SHOP", 
                                                                                                 "StoreType":"INTERNET",

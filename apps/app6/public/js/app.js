@@ -60,7 +60,7 @@ const appEventClick = event => {
 const appEventKeyUp = event => {
     const event_target_id = common.commonMiscElementId(event.target);    
     switch(event_target_id){
-        case event.target.getAttribute('data-value')=='payment_id'?event_target_id:'':{
+        case event.target.getAttribute('data-value')=='PaymentId'?event_target_id:'':{
             appVPAIsValid(event.target, event.target.textContent);
             break;
         }
@@ -91,7 +91,7 @@ const appVPAIsValid = (element, str) => {
  * @returns {Promise.<void>}
  */
 const appProductUpdate = async () =>{
-    COMMON_DOCUMENT.querySelector('#tshirt').style.fill = COMMON_DOCUMENT.querySelector('.common_select_dropdown_value.common_app_data_display_master_row_list [data-product_color]').getAttribute('data-product_color');
+    COMMON_DOCUMENT.querySelector('#tshirt').style.fill = COMMON_DOCUMENT.querySelector('.common_select_dropdown_value.common_app_data_display_master_row_list [data-ProductColor]').getAttribute('data-ProductColor');
 
     const product_variant_id = COMMON_DOCUMENT.querySelectorAll('.common_app_data_display_master_row[id] .common_select_dropdown_value .common_app_data_display_master_col_list[data-id]')[0].getAttribute('data-id');
 
@@ -102,7 +102,7 @@ const appProductUpdate = async () =>{
                     common_app_id:common.commonGlobalGet('app_common_app_id'),
                     display_type:'VERTICAL_KEY_VALUE',
                     master_path:'/app-common-module/PRODUCT_LOCATION_GET',
-                    master_query:'fields=stock',
+                    master_query:'fields=Stock',
                     master_body:{type:'FUNCTION',IAM_data_app_id:common.commonGlobalGet('app_id'), resource_id : product_variant_id},
                     master_method:'POST',
                     master_token_type:'APP_ID',
@@ -160,16 +160,16 @@ const appPaymentRequestStatus = ()=>{
  * @returns {Promise.<void>}
  */
 const appPaymentRequest = async () =>{
-    const sku = COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-sku]')[0].getAttribute('data-sku');
-    const payerid_element = COMMON_DOCUMENT.querySelectorAll('.common_app_data_display_master_row .common_app_data_display_master_col2[data-value=payment_id]')[0];
+    const sku = COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-Sku]')[0].getAttribute('data-Sku');
+    const payerid_element = COMMON_DOCUMENT.querySelectorAll('.common_app_data_display_master_row .common_app_data_display_master_col2[data-value=PaymentId]')[0];
     if (appVPAIsValid(payerid_element, payerid_element.textContent)){
         const data = {
             type:'FUNCTION',
             reference:      `SHOP SKU ${sku}`,
             IAM_data_app_id:common.commonGlobalGet('app_id'),
             payerid:        payerid_element.textContent,
-            amount:         COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-price]')[0].getAttribute('data-price'),
-            currency_code:  COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-currency_code]')[0].getAttribute('data-currency_code'),
+            amount:         COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-Price]')[0].getAttribute('data-Price'),
+            currency_code:  COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-CurrencyCode]')[0].getAttribute('data-CurrencyCode'),
             message:        'Shop app'
         };
         await common.commonComponentRender({
@@ -208,8 +208,8 @@ const appPaymentRequest = async () =>{
                         },
             path:'/common/component/common_app_data_display.js'})
             .then(()=>{
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.textContent = 
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.textContent + ' ' +
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent = 
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent + ' ' +
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').textContent;
     
                 common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
@@ -246,15 +246,15 @@ const appPay = async () =>{
         event_target;
         if (['PAYMENT_METHOD'].includes(COMMON_DOCUMENT
                              .querySelector('#common_app_dialogues_lov_list')
-                             .getAttribute('data-lov')) && COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_method]')){
+                             .getAttribute('data-lov')) && COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=PaymentMethod]')){
             
             if( common.commonMiscElementRow(event_target).getAttribute('data-id')=='VPA'){
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='visible';
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='visible';
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=PaymentId]').style.visibility='visible';
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=PaymentId]').style.visibility='visible';
             }
             else{
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=PaymentId]').style.visibility='hidden';
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=PaymentId]').style.visibility='hidden';
             }
         }
     };
@@ -298,9 +298,9 @@ const appPay = async () =>{
                     button_post:appPaymentRequest,
                     button_delete:appPayCancel},
         path:       '/common/component/common_app_data_display.js'});
-        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
-        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
-        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').classList.add('common_input_error');
+        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=PaymentId]').style.visibility='hidden';
+        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=PaymentId]').style.visibility='hidden';
+        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=PaymentId]').classList.add('common_input_error');
         COMMON_DOCUMENT.querySelector('.common_list_lov_click[data-lov=PAYMENT_METHOD]')['data-functionRow'] = getPaymentMethod;
 };
 /**
@@ -314,20 +314,8 @@ const appInit = async () => {
     await common.commonComponentRender({
         mountDiv:   common.commonGlobalGet('app_div'), 
         data:       {logo:common.commonGlobalGet('app_logo')},
-        methods:    null,
+        methods:    {pay:appPay},
         path:'/component/app.js'});
-    await common.commonComponentRender({
-        mountDiv:   'app_main_page', 
-        data:       {
-                    app_id:common.commonGlobalGet('app_id'),
-                    common_app_id:common.commonGlobalGet('app_common_app_id'),
-                    timezone:common.commonGlobalGet('user_timezone'),
-                    locale:common.commonGlobalGet('user_locale')
-                    },
-        methods:    {
-                    pay:appPay
-                    },
-        path:'/component/page_start.js'});
     appProductUpdate();
 };
 /**

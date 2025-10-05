@@ -19,7 +19,7 @@ const {server} = await import ('../server.js');
  *                  resource_name:string|null,
  *                  resource_name_master_attribute:string|null,
  *                  resource_name_data_master_attribute:string|null,
- *                  AppDataResourceDetailId:number|null,
+ *                  app_data_resource_detail_id:number|null,
  *                  app_data_entity_id:number}}} parameters
  * @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceDetailData'] & {adrm_attribute_master_Document:{}}[]|*}}
  */
@@ -47,11 +47,11 @@ const get = parameters =>{
                                                                     data:{  data_app_id:parameters.data.data_app_id,
                                                                             iam_user_id:parameters.data.iam_user_id,
                                                                             resource_name:parameters.data.resource_name,
-                                                                            AppDataResourceMasterId:null,
+                                                                            app_data_resource_master_id:null,
                                                                             app_data_entity_id:entity_id}}).result;    
     const result = (server.ORM.getObject(parameters.app_id, 'AppDataResourceDetailData',parameters.resource_id, null).result ?? [])
                     .filter((/**@type{server['ORM']['Object']['AppDataResourceDetailData']}*/row)=>
-                        row.AppDataResourceDetailId == (parameters.data.AppDataResourceDetailId??row.AppDataResourceDetailId) && 
+                        row.AppDataResourceDetailId == (parameters.data.app_data_resource_detail_id??row.AppDataResourceDetailId) && 
                         result_AppDataResourceDetail
                         .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail']}*/row_detail)=>
                             row_detail.Id == row.AppDataResourceDetailId && 

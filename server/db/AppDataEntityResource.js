@@ -22,11 +22,12 @@ const get = parameters =>{
     if (result)
         return {result:result
                         .map((/**@type{server['ORM']['Object']['AppDataEntityResource'] & {app_data_name:string, app_data_value:string, app_data_display_data:string}}*/row)=>{
+                            /**@type{server['ORM']['Object']['AppData']}*/
                             const app_data = server.ORM.db.AppData.getServer({ app_id:parameters.app_id, 
                                                                                 resource_id:row.AppDataId,
                                                                                 data:{data_app_id:null}}).result[0];
-                            row.app_data_name = app_data?.name;
-                            row.app_data_value = app_data?.value;
+                            row.app_data_name = app_data?.Name;
+                            row.app_data_value = app_data?.Value;
                             row.app_data_display_data = app_data?.DisplayData;
                             return row;
                         })

@@ -60,7 +60,7 @@ const component = async props => {
                 data:{
                     default_value:'∞',
                     default_data_value:'',
-                    options:[{id:'', name:'∞'}],
+                    options:[{Id:'', Name:'∞'}],
                     path:'/server-db/app',
                     query:'key=Name',
                     method:'GET',
