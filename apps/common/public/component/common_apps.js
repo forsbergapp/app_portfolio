@@ -6,7 +6,8 @@
 /**
  * @import {common}  from '../../../common_types.js'
  */
-
+/**@type{(common['ORM']['View']['AppGetInfo'])[]} */
+const APPS = [];
 /**
  * @name template
  * @description Template
@@ -50,9 +51,9 @@ const template = props => ` <div id='common_apps_list_title'>
  *                      template:string}>}
  */
 const component = async props => {
-    /**@type{(common['ORM']['View']['AppGetInfo'])[]} */
-    const apps = await props.methods.COMMON.commonFFB({path:'/server-db/app-info/', method:'GET', authorization_type:'APP_ID'})
-                        .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.app_id != props.data.app_id));
+    if (APPS.length==0)
+        APPS.push(...await props.methods.COMMON.commonFFB({path:'/server-db/app-info/', method:'GET', authorization_type:'APP_ID'})
+                            .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.app_id != props.data.app_id)));
 
     /**
      * @name events
@@ -105,7 +106,7 @@ const component = async props => {
         methods:    null,
         events:     events,
         template:   template({    
-                            apps:apps
+                            apps:APPS
                             })
     };
 };
