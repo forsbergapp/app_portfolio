@@ -223,34 +223,35 @@ const markdownRender = async parameters =>{
     switch (true){
         case parameters.type.toUpperCase()=='APP':{
             //replace variables for APP template
-            
+            /**@type{server['ORM']['Object']['AppTranslation']} */
             const app_translation = server.ORM.db.AppTranslation.get(parameters.app_id,null, parameters.locale, 
-                                                                server.ORM.UtilNumberValue(parameters.doc)).result[0];
+                                                                server.ORM.UtilNumberValue(parameters.doc)??0).result[0];
+            /**@type{server['ORM']['Object']['App']} */
             const app = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:server.ORM.UtilNumberValue(parameters.doc)}).result[0];
 
             let markdown = await getFile(`${server.ORM.serverProcess.cwd()}/apps/common/src/functions/documentation/2.app.md`);
             //remove all '\r' in '\r\n'
             markdown = markdown.replaceAll('\r\n','\n');
             //replace APP_NAME
-            markdown = markdown.replaceAll('@{APP_NAME}', app.name);
+            markdown = markdown.replaceAll('@{APP_NAME}', app.Name);
             //replace SCREENSHOT_START
-            markdown = markdown.replaceAll('@{SCREENSHOT_START}', app_translation?app_translation.Document.screenshot_start:'');
+            markdown = markdown.replaceAll('@{SCREENSHOT_START}', app_translation.Document?app_translation.Document.ScreenshotStart:'');
             //replace DESCRIPTION
-            markdown = markdown.replaceAll('@{DESCRIPTION}', app_translation?app_translation.Document.description:'');
+            markdown = markdown.replaceAll('@{DESCRIPTION}', app_translation.Document?app_translation.Document.Description:'');
             //replace REFERENCE
-            markdown = markdown.replaceAll('@{REFERENCE}', app_translation?app_translation.Document.reference:'');
+            markdown = markdown.replaceAll('@{REFERENCE}', app_translation.Document?app_translation.Document.Reference:'');
             //replace TECHNOLOGY
-            markdown = markdown.replaceAll('@{TECHNOLOGY}', app_translation?app_translation.Document.technology:'');
+            markdown = markdown.replaceAll('@{TECHNOLOGY}', app_translation.Document?app_translation.Document.Technology:'');
             //replace SECURITY
-            markdown = markdown.replaceAll('@{SECURITY}', app_translation?app_translation.Document.security:'');
+            markdown = markdown.replaceAll('@{SECURITY}', app_translation.Document?app_translation.Document.Security:'');
             //replace PATTERN
-            markdown = markdown.replaceAll('@{PATTERN}', app_translation?app_translation.Document.pattern:'');
+            markdown = markdown.replaceAll('@{PATTERN}', app_translation.Document?app_translation.Document.Pattern:'');
             //replace COMPARISON
-            markdown = markdown.replaceAll('@{COMPARISON}', app_translation.Document.comparison?.length==0?
+            markdown = markdown.replaceAll('@{COMPARISON}', app_translation.Document?.Comparison?.length==0?
                                                                 '':
                                                                 'Comparison' + '\n\n' + 
-                                                                app_translation.Document.comparison
-                                                                .map((/**@type{[]}*/table)=>
+                                                                (app_translation.Document?.Comparison??[])
+                                                                .map((/**@type{[string,string][]}*/table)=>
                                                                         table.map((row, index)=>
                                                                                 index==0?
                                                                                 ('|' + row[0] + '|' + row[1] + '|'+'\n' +
@@ -261,7 +262,7 @@ const markdownRender = async parameters =>{
                                             );
             //replace SCREENSHOT_END
             //images are saved in an array
-            return markdown.replaceAll('@{SCREENSHOT_END}', app_translation?app_translation.Document.screenshot_end.join('\n'):'');
+            return markdown.replaceAll('@{SCREENSHOT_END}', app_translation.Document?app_translation.Document.ScreenshotEnd.join('\n'):'');
         }
         case parameters.type.toUpperCase().startsWith('MODULE'):{
             //replace variables for MODULE_APPS, MODULE_SERVICEREGISTRY and MODULE_SERVER            

@@ -283,7 +283,15 @@
  * @memberof dbObjects
  * @typedef {{Id: number,
  *			  Locale: string,
- *			  Document: {[key:string]:string}|null,       //complex text
+ *			  Document: {   ScreenshotStart:string,
+ *                          Description:string,
+ *                          Pattern:string,
+ *                          Technology:string,
+ *                          Reference:string,
+ *                          Security:string,
+ *                          Comparison:[string,string][][],
+ *                          ScreenshotEnd:string[]
+ *                      }|null,       //complex text
  *			  Text: string|null,	            //simple text
  *            AppId: number
  *          }} server_db_table_AppTranslation	

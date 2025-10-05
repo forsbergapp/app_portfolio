@@ -195,8 +195,8 @@ const component = async props => {
             //return with HTML Entities for tables
             markdown = markdown.replace(table, 
                     //add class for @method if not inside table with @metadata tag
-                    `   <div class='common_markdown_table ${(table.indexOf('@method')>-1 && table.indexOf('@metadata')<0)?'common_markdown_table_method':''}'>
-                            ${table.split('\n')
+                    `   <div class='common_markdown_table ${(table.indexOf('@method')>-1 && table.indexOf('@metadata')<0)?'common_markdown_table_method':''}'>${
+                                table.split('\n')
                                 //remove alignemnt row and @method tag used to add css class for table but already presented in title
                                 .filter(row=>row.indexOf('---')<0)
                                 .filter(row=>(row.indexOf('@method')<0 && table.indexOf('@metadata')<0)||table.indexOf('@metadata')>-1)
