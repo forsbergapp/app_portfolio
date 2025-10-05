@@ -51,26 +51,26 @@
  * @returns {string}
  */
 const template = props =>`  ${(props.master_object && props.new_resource)?
-                                `<div class='common_app_data_display_master_title'>${props.master_object.filter((/**@type{*}*/row)=>row.Document.title).length>0?props.master_object.filter((/**@type{*}*/row)=>row.Document.title)[0].Document.title.default_text:''}</div>`:''
+                                `<div class='common_app_data_display_master_title'>${props.master_object.filter((/**@type{*}*/row)=>row.Document.title).length>0?props.master_object.filter((/**@type{*}*/row)=>row.Document.title)[0].Document.Title.DefaultText:''}</div>`:''
                             }
                             ${(props.master_object && props.new_resource==false)?
-                                `<div class='common_app_data_display_master_title'>${props.master_object.title?props.master_object.title.default_text:''}</div>
-                                 <div class='common_app_data_display_master_title_sub'>${props.master_object.title_sub?props.master_object.title_sub.default_text:''}</div>`
+                                `<div class='common_app_data_display_master_title'>${props.master_object.title?props.master_object.Title.DefaultText:''}</div>
+                                 <div class='common_app_data_display_master_title_sub'>${props.master_object.TitleSub?props.master_object.TitleSub.DefaultText:''}</div>`
                                 :''
                             }
                             ${(props.display_type=='VERTICAL_KEY_VALUE' || props.display_type=='MASTER_DETAIL_HORIZONTAL' || props.display_type=='MASTER_DETAIL_VERTICAL')?
                                 `
                                 ${(props.master_object && props.new_resource)?
                                     `<div class='common_app_data_display_master'>
-                                        ${props.master_object.filter((/**@type{*}*/row)=>!row.Document.title && !row.Document.title_sub).map((/**@type{*}*/master_row)=>
+                                        ${props.master_object.filter((/**@type{*}*/row)=>!row.Document.Title && !row.Document.TitleSub).map((/**@type{*}*/master_row)=>
                                             `<div class='common_app_data_display_master_row common_row'>
                                                     <div    data-key='${Object.keys(master_row.Document)[0]}' 
-                                                            class='common_app_data_display_master_col1'>${Object.values(master_row.Document)[0].default_text}</div>
+                                                            class='common_app_data_display_master_col1'>${Object.values(master_row.Document)[0].DefaultText}</div>
                                                     <div    data-value='${Object.keys(master_row.Document)[0]}'
-                                                            class='common_app_data_display_master_col2 ${Object.values(master_row.Document)[0].type=='LOV'?'common_app_dialogues_lov_value':''}'
-                                                            contentEditable='${(Object.values(master_row.Document)[0].type=='LOV'||props.mode=='READ')?'false':'true'}'></div>
-                                                    ${Object.values(master_row.Document)[0].type=='LOV'?
-                                                        `<div data-lov='${Object.values(master_row.Document)[0].lov}' class='common_app_dialogues_lov_button common_list_lov_click common_icon'></div>`:''
+                                                            class='common_app_data_display_master_col2 ${Object.values(master_row.Document)[0].Type=='LOV'?'common_app_dialogues_lov_value':''}'
+                                                            contentEditable='${(Object.values(master_row.Document)[0].Type=='LOV'||props.mode=='READ')?'false':'true'}'></div>
+                                                    ${Object.values(master_row.Document)[0].Type=='LOV'?
+                                                        `<div data-lov='${Object.values(master_row.Document)[0].Lov}' class='common_app_dialogues_lov_button common_list_lov_click common_icon'></div>`:''
                                                     }
                                             </div>
                                             `).join('')
@@ -79,19 +79,19 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                 }
                                 ${(props.master_object && props.new_resource==false)?
                                     `<div class='common_app_data_display_master'>
-                                        ${Object.entries(props.master_object).filter(key=>key[0]!='title' && key[0]!='title_sub').map((/**@type{*}*/master_row)=>
-                                            master_row[1].value.constructor===Array?
+                                        ${Object.entries(props.master_object).filter(key=>key[0]!='Title' && key[0]!='TitleSub').map((/**@type{*}*/master_row)=>
+                                            master_row[1].Value.constructor===Array?
                                                     `<div id='LIST_${props.function_div_id()}' class='common_app_data_display_master_row'>
                                                         <div class='common_select_dropdown'>
                                                             <div class='common_select_dropdown_value common_app_data_display_master_row_list' data-value=''>
-                                                                ${master_row[1].value[0].map((/**@type{*}*/key)=>
+                                                                ${(master_row[1].Value[0]??[]).map((/**@type{*}*/key)=>
                                                                     `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.KeyType.toLowerCase()}' data-${key.KeyName}='${key.KeyValue}' ${key.KeyType=='COLOR'?`style='background-color:${key.KeyValue};'`:''}>${key.KeyType=='COLOR'?' ':key.KeyValue}</div>`
                                                                 ).join('')}
                                                             </div>
                                                             <div class='common_select_dropdown_icon common_icon'></div>
                                                         </div>
                                                         <div class='common_select_options'>
-                                                            ${master_row[1].value.map((/**@type{*}*/list)=>
+                                                            ${(master_row[1].Value??[]).map((/**@type{*}*/list)=>
                                                                 `<div class='common_select_option common_app_data_display_master_row_list'>
                                                                     ${list.map((/**@type{*}*/key)=>
                                                                         `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.KeyType.toLowerCase()}' data-${key.KeyName}='${key.KeyValue}' ${key.KeyType=='COLOR'?`style='background-color:${key.KeyValue};'`:''}>${key.KeyType=='COLOR'?' ':key.KeyValue}</div>`
@@ -102,12 +102,20 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                     </div>`:
                                             `<div class='common_app_data_display_master_row'>
                                                     <div    data-key='${master_row[0]}' 
-                                                            class='common_app_data_display_master_col1'>${master_row[1].default_text}</div>
-                                                    <div    data-value='${master_row[1].type.toUpperCase()=='IMAGE'?'':master_row[1].value}' 
-                                                            class='common_app_data_display_master_col2 common_app_data_display_type_${master_row[1].type.toLowerCase()}'
-                                                            ${master_row[1].type.toUpperCase()=='IMAGE'?' ':` contentEditable='${props.mode=='READ'?'false':'true'}'`}>${master_row[1].type.toUpperCase()=='IMAGE'?
-                                                                                                                        master_row[1].value:
-                                                                                                                            props.function_format_value(master_row[1].value, props.timezone, props.locale)}</div>
+                                                            class='common_app_data_display_master_col1'>${
+                                                                master_row[1].DefaultText
+                                                            }</div>
+                                                    <div    data-value='${master_row[1].Type.toUpperCase()=='IMAGE'?'':master_row[1].Value}' 
+                                                            class='common_app_data_display_master_col2 common_app_data_display_type_${master_row[1].Type.toLowerCase()}'
+                                                            ${master_row[1].Type.toUpperCase()=='IMAGE'?
+                                                                ' ':
+                                                                    ` contentEditable='${props.mode=='READ'?
+                                                                        'false':
+                                                                            'true'}'`}>${
+                                                                                master_row[1].Type.toUpperCase()=='IMAGE'?
+                                                                                    master_row[1].Value:
+                                                                                        props.function_format_value(master_row[1].Value, props.timezone, props.locale)
+                                                            }</div>
                                                 </div>
                                             `).join('')
                                         }
@@ -121,14 +129,14 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                             `
                                             <div class='common_app_data_display_detail_horizontal_row_title common_row ${props.detail_class}'>
                                                 ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
-                                                    `<div class='common_app_data_display_detail_col'>${detail_col[1].default_text}</div>`).join('')
+                                                    `<div class='common_app_data_display_detail_col'>${detail_col[1].DefaultText}</div>`).join('')
                                                 }
                                             </div>
                                             `:''
                                         }
                                         <div class='common_app_data_display_detail_horizontal_row common_row ${props.detail_class}'>
                                             ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
-                                                `<div class='common_app_data_display_detail_col'>${props.function_format_value(detail_col[1].value, props.timezone, props.locale)}</div>`).join('')
+                                                `<div class='common_app_data_display_detail_col'>${props.function_format_value(detail_col[1].Value, props.timezone, props.locale)}</div>`).join('')
                                             }
                                         </div>
                                         `).join('')
@@ -137,9 +145,9 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                 ${(props.display_type=='MASTER_DETAIL_VERTICAL' && props.rows)?
                                     `
                                     ${props.rows.map((/**@type{*}*/detail_row)=>
-                                        `<div data-id='${detail_row.id}' data-key='${detail_row.key}' data-value='${detail_row.value}' tabindex=-1 class='common_app_data_display_detail_vertical_row common_row'>
-                                            <div class='common_app_data_display_col'>${detail_row.key}</div>
-                                            <div class='common_app_data_display_col'>${props.function_format_value(detail_row.value, props.timezone, props.locale)}</div>
+                                        `<div data-id='${detail_row.Id}' data-key='${detail_row.Key}' data-value='${detail_row.Value}' tabindex=-1 class='common_app_data_display_detail_vertical_row common_row'>
+                                            <div class='common_app_data_display_col'>${detail_row.Key}</div>
+                                            <div class='common_app_data_display_col'>${props.function_format_value(detail_row.Value, props.timezone, props.locale)}</div>
                                         </div>
                                         `).join('')
                                     }`:''
@@ -294,9 +302,9 @@ const component = async props => {
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows);
         for (const key of Object.entries(master_object)){
             master_object[key[0]] = {   
-                                        value:key[1], 
-                                        default_text:master_metadata.filter((/**@type{*}*/row)=>key[0] in row.Document).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row.Document)[0].Document[key[0]].default_text:key[0],
-                                        type:master_metadata.filter((/**@type{*}*/row)=>key[0] in row.Document).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row.Document)[0].Document[key[0]].type:key[0]
+                                        Value:key[1], 
+                                        DefaultText:master_metadata.filter((/**@type{*}*/row)=>key[0] in row.Document).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row.Document)[0].Document[key[0]].DefaultText:key[0],
+                                        Type:master_metadata.filter((/**@type{*}*/row)=>key[0] in row.Document).length>0?master_metadata.filter((/**@type{*}*/row)=>key[0] in row.Document)[0].Document[key[0]].Type:key[0]
                                     };
         }
     }
@@ -313,7 +321,7 @@ const component = async props => {
             for (const key of Object.entries(row)){
                 for (const key_metadata of detail_metadata){
                     if (Object.entries(key_metadata.Document)[0][0] == key[0]){
-                        row[key[0]] = {value:key[1], default_text: Object.entries(key_metadata.Document)[0][1].default_text};
+                        row[key[0]] = {Value:key[1], DefaultText: Object.entries(key_metadata.Document)[0][1].DefaultText};
                     }
                 }
             }

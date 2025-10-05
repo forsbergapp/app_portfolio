@@ -57,8 +57,8 @@ const postDemo = async parameters=> {
     const install_result = [];
     install_result.push({'start': new Date().toISOString()});
     const fileBuffer = await fs.promises.readFile(`${server.ORM.serverProcess.cwd()}${DB_DEMO_PATH}${DB_DEMO_FILE}`, 'utf8');
-    /**@type{server['ORM']['Type']['demo_data'][]}*/
-    const demo_users = JSON.parse(fileBuffer.toString()).demo_users;
+    /**@type{server['ORM']['Type']['DemoData'][]}*/
+    const demo_users = JSON.parse(fileBuffer.toString()).DemoUsers;
     //create social records
     const social_types = ['LIKE', 'VIEW', 'VIEW_ANONYMOUS', 'FOLLOWER', 'POSTS_LIKE', 'POSTS_VIEW', 'POSTS_VIEW_ANONYMOUS'];
     let records_iam_user = 0;
@@ -76,13 +76,13 @@ const postDemo = async parameters=> {
     try {
         /**
         * Create demo users
-        * @param {server['ORM']['Type']['demo_data'][]} demo_users 
+        * @param {server['ORM']['Type']['DemoData'][]} demo_users 
         * @returns {Promise.<void>}
         */
         const create_users = async (demo_users) =>{
                 /**
                 * 
-                * @param {server['ORM']['Type']['demo_data']} demo_user
+                * @param {server['ORM']['Type']['DemoData']} demo_user
                 * @returns 
                 */
                 const create_update_id = async demo_user=>{
@@ -121,8 +121,7 @@ const postDemo = async parameters=> {
         const create_iam_user_app = async (app_id, iam_user_id) =>{
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserApp.post(parameters.app_id, 
-                    /**@ts-ignore */
-                    {app_id:app_id, Document:null, iam_user_id:iam_user_id})
+                    {AppId:app_id, Document:null, IamUserId:iam_user_id})
                 .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
                         if (result.result.AffectedRows == 1)
@@ -136,15 +135,13 @@ const postDemo = async parameters=> {
         };
         /**
         * Create iam user app data post
-        * @param {{ Document:      server['ORM']['Object']['IamUserAppDataPost']['Document'],
-        *           iam_user_app_id:server['ORM']['Object']['IamUserAppDataPost']['IamUserAppId']}} data 
+        * @param {server['ORM']['Object']['IamUserAppDataPost']} data 
         * @returns {Promise.<null>}
         */
-        const create_iam_user_app_data_post = async (data) => {
+        const create_iam_user_app_data_post = async data => {
             return new Promise((resolve, reject) => {
-                server.ORM.db.IamUserAppDataPost.post({app_id:parameters.app_id, 
-                                        /**@ts-ignore */
-                                        data:data})
+                server.ORM.db.IamUserAppDataPost.post({ app_id:parameters.app_id, 
+                                                        data:data})
                 .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
                         if (result.result.data?.affectedRows == 1)
@@ -158,12 +155,10 @@ const postDemo = async parameters=> {
         };
 
         /**
-        * 
-        * @param {{ Document:               server['ORM']['Object']['AppDataResourceMaster']['Document'],
-        *           IamUserAppId:           server['ORM']['Object']['AppDataResourceMaster']['IamUserAppId'],
-        *           AppDataEntityResourceId:server['ORM']['Object']['AppDataResourceMaster']['AppDataEntityResourceId']}} data 
-        * @returns {Promise.<number>}
-        */
+         * 
+         * @param {server['ORM']['Object']['AppDataResourceMaster']} data 
+         * @returns {Promise.<number>}
+         */
         const create_app_data_resource_master = async data => {
             return new Promise((resolve, reject) => {
                 server.ORM.db.AppDataResourceMaster.post({app_id:parameters.app_id, data:data})
@@ -198,9 +193,9 @@ const postDemo = async parameters=> {
             });
         };
         /**
-        * Update app_data entity with additional keys
+        * @description Update app_data entity with additional keys
         * @param {number} user_account_post_app_id 
-        * @param {server['ORM']['Type']['demo_data']['AppDataResourceMaster'][0]['AppDataEntity']} data 
+        * @param {server['ORM']['Type']['DemoData']['AppDataResourceMaster'][0]['AppDataEntity']} data 
         * @returns {Promise.<number>}
         */
         const update_app_data_entity = async (user_account_post_app_id,data) => {
@@ -210,10 +205,8 @@ const postDemo = async parameters=> {
                                                     data:{data_app_id:null}});
             if(result_get.result){
                 const update_Document = result_get.result[0].Document;
-                for (const key of Object.entries(data??{}))
-                    //skip PK
-                    if (key[0]!='Id')
-                        update_Document[key[0]] = key[1];
+                for (const key of Object.entries(data?.Document??{}))
+                    update_Document[key[0]] = key[1];
                 const result_update = await server.ORM.db.AppDataEntity.update({   app_id:user_account_post_app_id, 
                                                                             /**@ts-ignore */
                                                                             resource_id:data.Id, 
@@ -282,7 +275,7 @@ const postDemo = async parameters=> {
             //3A.Generate vpa for each user that can be saved both in resource and apps configuration
             const demo_vpa = server.security.securityUUIDCreate();
             //3B.Create iam_user_app record
-            //save iam_user_app.id for creating records with this FK
+            //save iam_user_app.Id for creating records with this FK
             const iam_user_app_id = await create_iam_user_app(demo_user.IamUserApp.AppId, 
                                                                 /**@ts-ignore */
                                                                 demo_user.Id).then(result=>{
@@ -294,7 +287,7 @@ const postDemo = async parameters=> {
             //create for others apps except common, admin and already created
             for (const app of server.ORM.db.App.get({app_id:parameters.app_id,resource_id:null}).result
                             .filter((/**@type{server['ORM']['Object']['App']}*/row)=>row.Id!=common_app_id && row.Id!=admin_app_id && row.Id!=demo_user.IamUserApp.AppId)){
-                await create_iam_user_app(app.id, 
+                await create_iam_user_app(app.Id, 
                                         /**@ts-ignore */
                                         demo_user.Id);
             }                                    
@@ -319,11 +312,14 @@ const postDemo = async parameters=> {
                 //month 20001-20022
                 demo_user_account_app_data_post.Document.DesignThemeMonthId = Math.floor(20001 + Math.random() * 22);
                 demo_user_account_app_data_post.Document.DesignThemeYearId = 30001;
+                /**@type{server['ORM']['Object']['IamUserAppDataPost']} */
                 const Document_user_account_app_data_post = {
+                                                /**@ts-ignore */
                                                 Document: demo_user_account_app_data_post.Document,
-                                                iam_user_app_id: iam_user_app_id
+                                                /**@ts-ignore */
+                                                IamUserAppId: iam_user_app_id
                                             };	
-                /**@ts-ignore */
+                
                 await create_iam_user_app_data_post(Document_user_account_app_data_post);
             }
             /**
@@ -378,17 +374,18 @@ const postDemo = async parameters=> {
             };
             //3D.Create app data master records if any
             for (const resource_master of demo_user.AppDataResourceMaster ?? []){
+                /**@type{server['ORM']['Object']['AppDataResourceMaster']} */
                 const data = {  
-                                iam_user_app_id:                                 iam_user_app_id,
-                                app_data_entity_resource_id:                     resource_master.AppDataEntityResourceId,
-                                Document:                                       await demo_data_update(resource_master)
+                                IamUserAppId:               iam_user_app_id ??null,
+                                AppDataEntityResourceId:    resource_master.AppDataEntityResourceId,
+                                Document:                   await demo_data_update(resource_master)
                 };
                 /**@ts-ignore */
                 const master_id = await create_app_data_resource_master(data);
                 //3E.Update app data entity record if anything to update
                 if (resource_master.AppDataEntity && resource_master.AppDataEntity.Id){
                     //set values used in app data master
-                    for (const key of Object.entries(data.Document)){
+                    for (const key of Object.entries(data.Document??{})){
                         if (key[0]!='Id' &&
                             (key[0]=='MerchantId' ||
                             key[0]=='MerchantName' ||
@@ -399,18 +396,19 @@ const postDemo = async parameters=> {
                             key[0]=='MerchantPrivateKey' ||
                             key[0]=='MerchantVpa')
                         )
-                            resource_master.AppDataEntity[key[0]] = key[1];
+                            resource_master.AppDataEntity.Document[key[0]] = key[1];
                     }
                     //set demo user id values in app data entity if used
-                    if (resource_master.AppDataEntity.IamUserIdOwner)
-                        resource_master.AppDataEntity.IamUserIdOwner = demo_user.Id??0;
-                    if (resource_master.AppDataEntity.IamUserIdAnonymous)
-                        resource_master.AppDataEntity.IamUserIdAnonymous = demo_user.Id??0;
+                    if (resource_master.AppDataEntity.Document?.IamUserIdOwner)
+                        resource_master.AppDataEntity.Document.IamUserIdOwner = demo_user.Id??0;
+                    if (resource_master.AppDataEntity.Document?.IamUserIdAnonymous)
+                        resource_master.AppDataEntity.Document.IamUserIdAnonymous = demo_user.Id??0;
                     await update_app_data_entity(parameters.app_id, resource_master.AppDataEntity);
                 }
                     
                 //3F.Create app data detail records if any
                 for (const resource_detail of resource_master.AppDataResourceDetail ?? []){
+                    /**@type{server['ORM']['Object']['AppDataResourceDetail']} */
                     const data = {  AppDataResourceMasterId                    : master_id,
                                     AppDataEntityResourceId                    : resource_detail.AppDataEntityResourceId,
                                     AppDataResourceMasterAttributeId           : resource_detail.AppDataResourceMasterAttributeId,
@@ -419,6 +417,7 @@ const postDemo = async parameters=> {
                     const detail_id = await create_app_data_resource_detail(data);
                     //3G.Create app data detail data records if any
                     for (const resource_detail_data of resource_detail.AppDataResourceDetailData ?? []){
+                        /**@type{server['ORM']['Object']['AppDataResourceDetailData']} */
                         const data ={   AppDataResourceDetailId            : detail_id,
                                         AppDataResourceMasterAttributeId   : resource_detail_data.AppDataResourceMasterAttributeId,
                                         Document                           : await demo_data_update(resource_detail_data)
@@ -485,8 +484,8 @@ const postDemo = async parameters=> {
         const create_iam_user_follow = async (app_id, id, id_follow ) =>{
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserFollow.post({app_id:app_id, 
-                                    /**@ts-ignore */
-                                    data:{iam_user_id:id, iam_user_id_follow:id_follow}})
+                                    
+                                    data:{IamUserId:id, IamUserIdFollow:id_follow}})
                 .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
                         if (result.result.AffectedRows == 1)
@@ -507,13 +506,14 @@ const postDemo = async parameters=> {
         */
         const create_iam_user_app_data_post_like = async (app_id, user1, user2 ) =>{
             return new Promise((resolve, reject) => {
+                /**@type{server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceDetailData'][]}} */
                 const result_posts = server.ORM.db.IamUserAppDataPost.get({app_id:parameters.app_id, resource_id:null, data:{iam_user_id:user1,data_app_id:app_id}});
                 if (result_posts.result){
                     const random_posts_index = Math.floor(1 + Math.random() * result_posts.result.length - 1 );
                     server.ORM.db.IamUserAppDataPostLike.post({app_id:parameters.app_id, 
                                                             data:{  iam_user_id:user2,
                                                                     data_app_id:app_id,
-                                                                    iam_user_app_data_post_id:result_posts.result[random_posts_index].id}})
+                                                                    iam_user_app_data_post_id:result_posts.result[random_posts_index].Id}})
                     .then((/**@type{server['server']['response']}*/result) => {
                         if (result.result){
                             if (result.result.AffectedRows == 1)
@@ -529,7 +529,7 @@ const postDemo = async parameters=> {
             });
         };
         /**
-        * Create user account app setting view
+        * @description  Create user account app setting view
         * @param {number} app_id 
         * @param {number} user1 
         * @param {number} user2 
@@ -538,6 +538,7 @@ const postDemo = async parameters=> {
         */
         const create_iam_user_app_data_post_view = async (app_id, user1, user2 , social_type) =>{
             return new Promise((resolve, reject) => {
+                /**@type{server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPost'][]}} */
                 const result_posts = server.ORM.db.IamUserAppDataPost.get({app_id:parameters.app_id, resource_id:null, data:{iam_user_id:user1, data_app_id:app_id}});
                 if (result_posts.result){
                     //choose random post from user
@@ -557,7 +558,7 @@ const postDemo = async parameters=> {
                                                                                                         data:{  iam_user_id:user2, 
                                                                                                                 data_app_id:app_id}}).result[0].Id:
                                                                                                 null,
-                                                                        IamUserAppDataPostId: result_posts.result[random_index].id
+                                                                        IamUserAppDataPostId: result_posts.result[random_index].Id
                                                                     })
                     .then((/**@type{server['server']['response']}*/result)=>{
                         if (result.result){
@@ -599,12 +600,12 @@ const postDemo = async parameters=> {
                 /**@ts-ignore */
                 if (random_users1.length <sample_amount && !random_users1.includes(random_include_id1) ){
                     /**@ts-ignore */
-                    random_users1.push(demo_users[random_array_index1].id);
+                    random_users1.push(demo_users[random_array_index1].Id);
                 }
                 /**@ts-ignore */
-                if (random_users2.length <sample_amount && !random_users2.includes(demo_users[random_array_index2].id)){
+                if (random_users2.length <sample_amount && !random_users2.includes(demo_users[random_array_index2].Id)){
                     /**@ts-ignore */
-                    random_users2.push(demo_users[random_array_index2].id);
+                    random_users2.push(demo_users[random_array_index2].Id);
                 }
             }
             //4B.Loop random users group 1
@@ -703,7 +704,7 @@ const postDemo = async parameters=> {
 * @returns {Promise.<server['server']['response'] & {result?:{info: {}[]} }>}
 */
 const deleteDemo = async parameters => {
-
+    /**@type{(server['ORM']['Object']['IamUser'] & {Id:number})[]} */
     const result_demo_users = server.ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{server['ORM']['Object']['IamUser']}*/row)=>row.UserLevel==2);
     if (result_demo_users){
         let deleted_user = 0;
@@ -716,10 +717,10 @@ const deleteDemo = async parameters => {
                                                             iam_user_id: null,
                                                             idToken:parameters.idToken,
                                                             message: JSON.stringify({   part:deleted_user, 
-                                                                                        total:result_demo_users.length, text:user.username}),
+                                                                                        total:result_demo_users.length, text:user.Username}),
                                                             message_type:'PROGRESS'}});
                     //delete iam user
-                    await server.ORM.db.IamUser.deleteRecordAdmin(parameters.app_id,user.id)
+                    await server.ORM.db.IamUser.deleteRecordAdmin(parameters.app_id,user.Id)
                     .then((/**@type{server['server']['response']}*/result)=>{
                         if (result.result )
                             deleted_user++;
@@ -737,21 +738,21 @@ const deleteDemo = async parameters => {
             if(result_get.result){
                 for (const row of result_get.result){
                     for (const key of Object.entries(row.Document??{})){
-                        if (key[0]=='iam_user_id_owner' ||
-                            key[0]=='merchant_id' ||
-                            key[0]=='merchant_name' ||
-                            key[0]=='merchant_api_url_payment_request_create' ||
-                            key[0]=='merchant_api_url_payment_request_get_status' ||
-                            key[0]=='merchant_api_secret' ||
-                            key[0]=='merchant_public_key' ||
-                            key[0]=='merchant_private_key' ||
-                            key[0]=='merchant_vpa' ||
-                            key[0]=='iam_user_id_anonymous' 
+                        if (key[0]=='IamUserIdOwner' ||
+                            key[0]=='MerchantId' ||
+                            key[0]=='MerchantName' ||
+                            key[0]=='MerchantApiUrlPaymentRequestCreate' ||
+                            key[0]=='MerchantApiUrlPaymentRequestGetStatus' ||
+                            key[0]=='MerchantApiSecret' ||
+                            key[0]=='MerchantPublicKey' ||
+                            key[0]=='MerchantPrivateKey' ||
+                            key[0]=='MerchantVpa' ||
+                            key[0]=='IamUserIdAnonymous' 
                         )
                             row.Document[key[0]] = null;
                     }
                     await server.ORM.db.AppDataEntity.update({ app_id:parameters.app_id,
-                                                resource_id:row.id,
+                                                resource_id:row.Id,
                                                 /**@ts-ignore */
                                                 data:{Document:row.Document}});
                 }
@@ -910,6 +911,7 @@ const updateConfigSecrets = async () =>{
     //update IamUser using new secrets
     for (const user of users){
         await server.ORM.db.IamUser.updateAdmin({ app_id:0, 
+                                            /**@ts-ignore */
                                             resource_id:user.Id, 
                                             data:{Password:user.Password}
                                         });

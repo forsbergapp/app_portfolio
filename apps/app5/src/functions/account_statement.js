@@ -87,17 +87,17 @@ const IBAN_validate = iban => {
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{   title_sub	        :string,
- *                                                          title	            :string,
- *                                                          bank_account_iban	:string,
- *                                                          bank_account_number :string,
- *                                                          currency            :string,
- *                                                          currency_name       :string,
- *                                                          bank_account_balance:number}[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:{ TitleSub	        :string,
+ *                                                              Title	            :string,
+ *                                                              BankAccountIban	    :string,
+ *                                                              BankAccountNumber   :string,
+ *                                                              Currency            :string,
+ *                                                              CurrencyName        :string,
+ *                                                              BankAccountBalance:number}[]}>}
  */
 const getStatement = async parameters =>{
 
-    /**@type{server['ORM']['Object']['AppDataEntity']} */
+    /**@type{server['ORM']['Object']['AppDataEntity'] & {Id:number}} */
     const Entity            = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                                     resource_id:null, 
                                                     data:{data_app_id:parameters.data.data_app_id}}).result[0];
@@ -138,17 +138,17 @@ const getStatement = async parameters =>{
                                                                     (current_row.Document.AmountDeposit ?? current_row.Document.AmountWithdrawal) ?? 0,0) ?? 0;
     return {result:[{
                     //ENTITY ACCOUNT resource
-                    title_sub	            :Entity.Document?.name??'',
+                    TitleSub	            :Entity.Document?.Name??'',
                     //ACCOUNT resource
-                    title	                :AccountMetaData.filter((/**@type{*}*/row)=>'title' in row)[0].title.default_text,
-                    bank_account_iban	    :IBAN_compose(  /**@ts-ignore */
-                                                            Entity.Document?.country_code, 
-                                                            Entity.Document?.bank_id, 
-                                                            CustomerAccount.bank_account_number, true),
-                    bank_account_number     :CustomerAccount.bank_account_number,
-                    currency                :currency.currency_symbol,
-                    currency_name           :currency.currency_name,
-                    bank_account_balance    :Number(balance)
+                    Title	                :AccountMetaData.filter((/**@type{*}*/row)=>'Title' in row)[0].Title.DefaultText,
+                    BankAccountIban	        :IBAN_compose(  /**@ts-ignore */
+                                                            Entity.Document?.CountryCode, 
+                                                            Entity.Document?.BankId, 
+                                                            CustomerAccount.BankAccountNumber, true),
+                    BankAccountNumber       :CustomerAccount.BankAccountNumber,
+                    Currency                :currency.CurrencySymbol,
+                    CurrencyName            :currency.CurrencyName,
+                    BankAccountBalance      :Number(balance)
             }], type:'JSON'};
 }; 
 export default getStatement;

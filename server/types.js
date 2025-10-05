@@ -196,11 +196,11 @@
 /**
  * @description DB TABLE AppDataEntity
  * @memberof dbObjects
- * @typedef {{  Id:number, 
+ * @typedef {{  Id?:number, 
  *              Document:{[key:string]:string}|null,
- *              Created:string,
- *              Modified:string|null,
- *              AppId:number}} server_db_table_AppDataEntity
+ *              Created?:string,
+ *              Modified?:string|null,
+ *              AppId?:number}} server_db_table_AppDataEntity
  */
 
 /**
@@ -391,8 +391,8 @@
 /**
  * @description DB TABLE IamUserFollow
  * @memberof dbObjects
- * @typedef {{  Id:number,
- *              Created:string,
+ * @typedef {{  Id?:number,
+ *              Created?:string,
  *              IamUserId:number,
  *              IamUserIdFollow:number}} server_db_table_IamUserFollow
  */
@@ -428,10 +428,10 @@
 /**
  * @description DB TABLE IamUserAppDataPost
  * @memberof dbObjects
- * @typedef {{  Id:number,
+ * @typedef {{  Id?:number,
  *              Document:{[key:string]:string}|null,
- *              Created:string,
- *              Modified:string|null,
+ *              Created?:string,
+ *              Modified?:string|null,
  *              IamUserAppId:number}} server_db_table_IamUserAppDataPost
  */
 
@@ -1017,7 +1017,7 @@
  *              AppDataEntityResourceId:                        number, 
  *              Document:                                       {[key:string]:string}|null,
  *              AppDataEntity?:{  Id:number,
- *                                [key:string]:string|number},
+ *                                Document:{[key:string]:string|number}},
  *              AppDataResourceDetail?:[{   AppDataResourceMasterId:number,
  *                                          AppDataEntityResourceId: number,
  *                                          IamUserAppIamUserId:number|null,
@@ -1406,7 +1406,7 @@
  *              },
  *            Type:{
  *              TokenType:'APP_ID'|server_db_table_IamAppAccess['Type']|'MICROSERVICE',
- *              demo_data:server_db_database_demo_data
+ *              DemoData:server_db_database_demo_data
  *              },
  *            MetaData:{
  *                DbObject:server_db_DbObject,

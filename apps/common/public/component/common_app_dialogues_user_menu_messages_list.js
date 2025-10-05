@@ -10,7 +10,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{messages:common['CommonResponsePagination'] & {rows: common['ORM']['MessageQueuePublish']['message'][]},
+ * @param {{messages:common['CommonResponsePagination'] & {rows: common['ORM']['Object']['MessageQueuePublish']['Message'][]},
  *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props
  * @returns {string}
  */
@@ -43,7 +43,7 @@ const template = props => `
 * @function
 * @param {{data:       {
 *                      commonMountdiv:string,
-*                      messages:common['CommonResponsePagination'] & {rows: common['ORM']['MessageQueuePublish']['message'][]},
+*                      messages:common['CommonResponsePagination'] & {rows: common['ORM']['Object']['MessageQueuePublish']['Message'][]},
 *                      },
 *          methods:    {
 *                      COMMON:common['CommonModuleCommon']

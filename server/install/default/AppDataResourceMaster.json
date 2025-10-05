@@ -116,8 +116,8 @@
 
 {"Id":6044, "IamUserAppId":null,  "AppDataEntityResourceId":6012, "Created":"2025-01-01T00:00:00.000Z", "Modified":null, "Document":{ "Sku":{"DefaultText": "SKU", "Length":null, "Type":"TEXT", "Lov":null}}},
 {"Id":6045, "IamUserAppId":null,  "AppDataEntityResourceId":6012, "Created":"2025-01-01T00:00:00.000Z", "Modified":null, "Document":{ "Name":{"DefaultText": "Name", "Length":null, "Type":"TEXT", "Lov":null}}},
-{"Id":6046, "IamUserAppId":null,  "AppDataEntityResourceId":6012, "Created":"2025-01-01T00:00:00.000Z", "Modified":null, "Document":{ "Product_color":{"DefaultText": "Color code", "Length":null, "Type":"COLOR", "Lov":null}}},
-{"Id":6047, "IamUserAppId":null,  "AppDataEntityResourceId":6012, "Created":"2025-01-01T00:00:00.000Z", "Modified":null, "Document":{ "Product_size":{"DefaultText": "Size", "Length":null, "Type":"TEXT", "Lov":null}}},
+{"Id":6046, "IamUserAppId":null,  "AppDataEntityResourceId":6012, "Created":"2025-01-01T00:00:00.000Z", "Modified":null, "Document":{ "ProductColor":{"DefaultText": "Color code", "Length":null, "Type":"COLOR", "Lov":null}}},
+{"Id":6047, "IamUserAppId":null,  "AppDataEntityResourceId":6012, "Created":"2025-01-01T00:00:00.000Z", "Modified":null, "Document":{ "ProductSize":{"DefaultText": "Size", "Length":null, "Type":"TEXT", "Lov":null}}},
 {"Id":6048, "IamUserAppId":null,  "AppDataEntityResourceId":6012, "Created":"2025-01-01T00:00:00.000Z", "Modified":null, "Document":{ "Price":{"DefaultText": "Price", "Length":null, "Type":"TEXT", "Lov":null}}},
 
 {"Id":6049, "IamUserAppId":null,  "AppDataEntityResourceId":6013, "Created":"2025-01-01T00:00:00.000Z", "Modified":null, "Document":{ "Name":{"DefaultText": "Name", "Length":null, "Type":"TEXT", "Lov":null}}},
