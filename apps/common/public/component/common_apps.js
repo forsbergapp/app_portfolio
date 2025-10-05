@@ -26,7 +26,7 @@ const template = props => ` <div id='common_apps_list_title'>
                                             <div data-app_id='${row.Id}' class='common_apps_app_logo common_image common_image_logo_start' style='${row.Logo==null?'':`background-image:url(${row.Logo});`}'></div>
                                         </div>
                                         <div class='common_apps_app_link_col'>
-                                            <div class='common_apps_app_name'>${row.AppNameTranslation}</div>
+                                            <div class='common_apps_app_name'>${row.Name}</div>
                                         </div>  
                                     </div>`
                                 ).join('')
