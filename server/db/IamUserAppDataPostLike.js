@@ -92,7 +92,7 @@ const deleteRecord = async parameters =>{
     return server.ORM.Execute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
                                 object:'IamUserAppDataPostLike', 
-                                delete:{resource_id:parameters.resource_id ?? result.id, data_app_id:null}}).then((/**@type{server['ORM']['MetaData']['common_result_delete']}*/result)=>{
+                                delete:{resource_id:parameters.resource_id ?? result.Id, data_app_id:null}}).then((/**@type{server['ORM']['MetaData']['common_result_delete']}*/result)=>{
         if (result.AffectedRows>0)
             return {result:result, type:'JSON'};
         else

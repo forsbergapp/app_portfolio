@@ -31,9 +31,9 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
                     arabic_script       	: user_account_app_data_post.RegionalArabicScript,
                     /**@ts-ignore */
                     calendartype        	: user_account_app_data_post.RegionalCalendarType,
-                    calendar_hijri_type 	: user_account_app_data_post.RegionalCalendarHijri_type,
+                    calendar_hijri_type 	: user_account_app_data_post.RegionalCalendarHijriType,
 
-                    place               	: user_account_app_data_post.description,
+                    place               	: user_account_app_data_post.Description,
                     /**@ts-ignore */
                     gps_lat					: typeof user_account_app_data_post.GpsLatText== 'string'?parseFloat(user_account_app_data_post.GpsLatText):user_account_app_data_post.GpsLatText,
                     /**@ts-ignore */
@@ -120,21 +120,25 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, iam_user_id
 			//would be difficult to consider all settings on same page using
 			//different texts, images, second languages, directions, column titles, 
 			//arabic script, themes or what columns to display, for these use current users setting
+			/**@type{APP_user_setting_record}*/
 			const settings = user_account_app_data_post.Document;
 			user_account_app_data_posts.push(
 				{
-				'description' : settings.description,
-				'RegionalLanguageLocale' : settings.RegionalLanguageLocale,
-				'RegionalTimezone' : settings.RegionalTimezone,
-				'RegionalNumberSystem' : settings.RegionalNumberSystem,
-				'RegionalCalendarHijri_type' : settings.RegionalCalendarHijri_type,
-				'GpsLatText' : parseFloat(settings.GpsLatText),
-				'GpsLongText' : parseFloat(settings.GpsLongText),
-				'PrayerMethod' : settings.PrayerMethod,
-				'PrayerAsrMethod' : settings.PrayerAsrMethod,
-				'PrayerHighLatitudeAdjustment' : settings.PrayerHighLatitudeAdjustment,
-				'PrayerTimeFormat' : settings.PrayerTimeFormat,
-				'PrayerHijriDateAdjustment' : settings.PrayerHijriDateAdjustment
+				Description : settings.Description,
+				RegionalLanguageLocale : settings.RegionalLanguageLocale,
+				RegionalTimezone : settings.RegionalTimezone,
+				RegionalNumberSystem : settings.RegionalNumberSystem,
+				RegionalCalendarHijri_type : settings.RegionalCalendarHijriType,
+				/**@ts-ignore */
+				GpsLatText : parseFloat(settings.GpsLatText),
+				/**@ts-ignore */
+				GpsLongText : parseFloat(settings.GpsLongText),
+				PrayerMethod : settings.PrayerMethod,
+				PrayerAsrMethod : settings.PrayerAsrMethod,
+				PrayerHighLatitudeAdjustment : settings.PrayerHighLatitudeAdjustment,
+				PrayerTimeFormat : settings.PrayerTimeFormat,
+				/**@ts-ignore */
+				PrayerHijriDateAdjustment : settings.PrayerHijriDateAdjustment
 				}
 			);
 		}
@@ -162,9 +166,10 @@ const timetable = async (timetable_parameters) => {
 	/**@type{Object.<string,*>} */
 	const parametersApp = server.ORM.db.AppData.getServer({app_id:timetable_parameters.app_id, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:timetable_parameters.app_id}}).result
 							.reduce((/**@type{Object.<string,*>}*/key, /**@type{server['ORM']['Object']['AppData']}*/row)=>{key[row.Value] = row.DisplayData; return key},{});
+	/**@type{server['ORM']['Object']['App']} */
     const result_app = server.ORM.db.App.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
 	return await new Promise((resolve) => {
-		APP_REPORT_GLOBAL.app_copyright = result_app.copyright;
+		APP_REPORT_GLOBAL.app_copyright = result_app.Copyright;
 		APP_REPORT_GLOBAL.regional_def_calendar_lang = parametersApp.app_regional_default_calendar_lang;
 		APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parametersApp.app_regional_default_locale_ext_prefix;
 		APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parametersApp.app_regional_default_locale_ext_number_system;

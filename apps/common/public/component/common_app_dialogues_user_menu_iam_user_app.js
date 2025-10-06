@@ -165,9 +165,7 @@ const component = async props => {
                          event.target.classList.contains('common_select_option'):{
                         props.methods.COMMON.commonGlobalSet('user_locale', event.target?.getAttribute('data-value') ?? '');
                         /**
-                         * @todo change COMMON_WINDOW.navigator.language, however when logging out default COMMON_WINDOW.navigator.language will be set
-                         *       commented at the moment
-                         *       Object.defineProperties(COMMON_WINDOW.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+                         * @todo change COMMON_WINDOW.navigator.language using Object.defineProperties(COMMON_WINDOW.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
                          */
                         await UserPreferenceSave();
                         await props.methods.COMMON.commonComponentRender({
@@ -276,7 +274,7 @@ const component = async props => {
                            query:null,
                            method:null,
                            authorization_type:null,
-                           column_value:'value',
+                           column_value:'Value',
                            column_text:'DisplayData'
                            },
                methods:    null,
@@ -292,7 +290,7 @@ const component = async props => {
                            query:null,
                            method:null,
                            authorization_type:null,
-                           column_value:'value',
+                           column_value:'Value',
                            column_text:'DisplayData'
                            },
                methods:    null,
@@ -308,7 +306,7 @@ const component = async props => {
                            query:null,
                            method:null,
                            authorization_type:null,
-                           column_value:'value',
+                           column_value:'Value',
                            column_text:'DisplayData'
                            },
                methods:    null,

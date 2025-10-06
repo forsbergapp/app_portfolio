@@ -184,7 +184,7 @@ const template = () =>`   <div class='setting_horizontal_row'>
  */
 const component = async props => {
     //fetch all settings for current app id
-    /**@type{common['CommonAppDataRecord'][]} */
+    /**@type{common['ORM']['Object']['AppData'][]} */
     const settings = await props.methods.COMMON.commonFFB({path:'/server-db/appdata/',
                                                     query:`IAM_data_app_id=${props.data.app_id}`,
                                                     method:'GET', 
@@ -210,14 +210,14 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_asr',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'METHOD_ASR')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'METHOD_ASR')[0].DisplayData,
-                        options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'METHOD_ASR'),
+                        default_data_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'METHOD_ASR')[0].Value,
+                        default_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'METHOD_ASR')[0].DisplayData,
+                        options: settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'METHOD_ASR'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -226,14 +226,14 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_highlatitude',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIGH_LATITUDE_ADJUSTMENT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIGH_LATITUDE_ADJUSTMENT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIGH_LATITUDE_ADJUSTMENT'),
+                        default_data_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'HIGH_LATITUDE_ADJUSTMENT')[0].Value,
+                        default_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'HIGH_LATITUDE_ADJUSTMENT')[0].DisplayData,
+                        options: settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'HIGH_LATITUDE_ADJUSTMENT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -242,14 +242,14 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_timeformat',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'TIMEFORMAT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'TIMEFORMAT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'TIMEFORMAT'),
+                        default_data_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'TIMEFORMAT')[0].Value,
+                        default_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'TIMEFORMAT')[0].DisplayData,
+                        options: settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'TIMEFORMAT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -258,14 +258,14 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_hijri_adjustment',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIJRI_DATE_ADJUSTMENT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIJRI_DATE_ADJUSTMENT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'HIJRI_DATE_ADJUSTMENT'),
+                        default_data_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'HIJRI_DATE_ADJUSTMENT')[0].Value,
+                        default_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'HIJRI_DATE_ADJUSTMENT')[0].DisplayData,
+                        options: settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'HIJRI_DATE_ADJUSTMENT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -274,14 +274,14 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_fajr',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT'),
+                        default_data_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT')[0].Value,
+                        default_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT')[0].DisplayData,
+                        options: settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -289,14 +289,14 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_dhuhr',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT'),
+                        default_data_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT')[0].Value,
+                        default_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT')[0].DisplayData,
+                        options: settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -304,14 +304,14 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_asr',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT'),
+                        default_data_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT')[0].Value,
+                        default_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT')[0].DisplayData,
+                        options: settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -319,14 +319,14 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_maghrib',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT'),
+                        default_data_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT')[0].Value,
+                        default_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT')[0].DisplayData,
+                        options: settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -334,14 +334,14 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_isha',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'IQAMAT'),
+                        default_data_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT')[0].Value,
+                        default_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT')[0].DisplayData,
+                        options: settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'IQAMAT'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -350,14 +350,14 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_show_fast_start_end',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'FAST_START_END')[0].value,
-                        default_value:settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'FAST_START_END')[0].DisplayData,
-                        options: settings.filter(setting=>setting.app_id == props.data.app_id && setting.name == 'FAST_START_END'),
+                        default_data_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'FAST_START_END')[0].Value,
+                        default_value:settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'FAST_START_END')[0].DisplayData,
+                        options: settings.filter(setting=>setting.AppId == props.data.app_id && setting.Name == 'FAST_START_END'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,

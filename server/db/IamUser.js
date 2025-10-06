@@ -87,11 +87,11 @@ const getViewProfile = async parameters =>{
                                             FollowedId:    (parameters.data?.id==null ||parameters.data?.id=='')?null:server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:server.ORM.UtilNumberValue(parameters.data?.id),
-                                                                                        iam_user_id_follow:row.Id??null}}).result[0]?.id??null,
+                                                                                        iam_user_id_follow:row.Id??null}}).result[0]?.Id??null,
                                             LikedId:       (parameters.data?.id==null ||parameters.data?.id=='')?null:server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:server.ORM.UtilNumberValue(parameters.data?.id),
-                                                                                        iam_user_id_like:row.Id??null}}).result[0]?.id??null};
+                                                                                        iam_user_id_like:row.Id??null}}).result[0]?.Id??null};
                                 });
   if (parameters.data.search){
       return {result:result_getProfileUser, type:'JSON'};
@@ -101,7 +101,7 @@ const getViewProfile = async parameters =>{
           //always save stat who is viewing, same user, none or someone else
           /**@type{server['ORM']['Object']['IamUserView']} */
           const data_body = { IamUserId:       server.ORM.UtilNumberValue(parameters.data.id),    //who views
-                              IamUserIdView:   server.ORM.UtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
+                              IamUserIdView:   server.ORM.UtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].Id, //viewed account
                               ClientIp:        parameters.ip,
                               ClientUserAgent: parameters.user_agent};
           return await server.ORM.db.IamUserView.post(parameters.app_id, data_body)

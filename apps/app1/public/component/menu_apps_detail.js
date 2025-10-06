@@ -18,7 +18,7 @@
  * @returns {string}
  */
 const template = props => ` <div class='menu_apps_detail_row'>
-                                    <div class='menu_apps_detail_col list_title' data-column='app_id'>app_id</div>
+                                    <div class='menu_apps_detail_col list_title' data-column='AppId'>AppId</div>
                                     ${props.detail=='menu_apps_detail_module'?
                                         `<div class='menu_apps_detail_col list_title' data-column='ModuleType'>TYPE</div>
                                          <div class='menu_apps_detail_col list_title' data-column='ModuleName'>NAME</div>

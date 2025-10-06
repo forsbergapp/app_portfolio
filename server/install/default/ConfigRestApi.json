@@ -2160,7 +2160,7 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "user_account_app_data_post_id":{
+                                            "iam_user_app_data_post_id":{
                                                 "required":true,
                                                 "type":"number"
                                             },

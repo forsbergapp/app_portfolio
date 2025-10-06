@@ -78,21 +78,14 @@ const component = async props => {
         return props.methods.COMMON.commonFFB({path:`/server-db/iamuserappdatapost-profile/${profile_id}`, query:`id_current_user=${props.data.iam_user_id??''}`, method:'GET', authorization_type:'APP_ID'})
                     .then((/**@type{string}*/result)=>
                             JSON.parse(result)
-                            .map((/**@type{{id:number, 
-                                            iam_user_id:number, 
-                                            liked:number, 
-                                            count_likes:number, 
-                                            count_views:number,
-                                            DesignPaperSize:string, 
-                                            description:string}}}*/setting)=>{return {  value:JSON.stringify({   
-                                                                                                sid:setting.id, 
-                                                                                                iam_user_id:setting.iam_user_id, 
-                                                                                                liked:setting.liked,
-                                                                                                count_likes:setting.count_likes,
-                                                                                                count_views:setting.count_views,
-                                                                                                paper_size:setting.DesignPaperSize,
-                                                                                                description:setting.description}), 
-                                                                                        text:setting.description};}));
+                            .map((/**@type{common['ORM']['View']['IamUserAppDataPostgetProfileUserPosts']}*/setting)=>{return {  value:JSON.stringify({   
+                                                                                                sid:setting.Id, 
+                                                                                                iam_user_id:setting.IamUserId, 
+                                                                                                liked:setting.Liked,
+                                                                                                count_likes:setting.CountLikes,
+                                                                                                count_views:setting.CountViews,
+                                                                                                description:setting.Description}), 
+                                                                                        text:setting.Description};}));
     }; 
     /**
      * Profile show user setting detail
@@ -103,8 +96,8 @@ const component = async props => {
      */
     const profile_user_setting_detail_show = (liked, count_likes, count_views) => {
         
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_user_settings_like').children[0].style.display = `${liked == 1?'none':'block'}`;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_user_settings_like').children[1].style.display = `${liked == 1?'block':'none'}`;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_user_settings_like .common_unlike').style.display = `${liked == 1?'none':'block'}`;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_user_settings_like .common_like').style.display = `${liked == 1?'block':'none'}`;
 
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_user_settings_info_likes_count').textContent = count_likes;
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_user_settings_info_views_count').textContent = count_views;

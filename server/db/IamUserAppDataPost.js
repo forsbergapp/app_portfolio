@@ -43,19 +43,19 @@ const get = parameters =>{
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserAppDataPostgetProfileUserPosts'][] }>}
  */
 const getViewProfileUserPosts = async parameters =>{
-    /**@type{server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPost'][]}} */
+    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['IamUserAppDataPost'] & {Id:number})[]}} */
     const result = get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id, iam_user_id:parameters.resource_id}});
     if (result.result)
         if (result.result.length>0)
             return {result:result.result
-                    .map((/**@type{server['ORM']['Object']['IamUserAppDataPost']}*/row)=>{
+                    .map((/**@type{(server['ORM']['Object']['IamUserAppDataPost'] & {Id:number})}*/row)=>{
                         return {
                             Id: row.Id,
-                            Description:row.Document?.description, 
+                            Description:row.Document?.Description, 
                             IamUserId:server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
                                                         resource_id:row.IamUserAppId, 
                                                         data:{  iam_user_id:    parameters.resource_id, 
-                                                                data_app_id:    parameters.app_id}}).result[0]?.iam_user_id,
+                                                                data_app_id:    parameters.app_id}}).result[0]?.IamUserId,
                             CountLikes:server.ORM.db.IamUserAppDataPostLike.get({app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{  iam_user_id:                null, 
@@ -108,7 +108,7 @@ const getViewProfileUserPosts = async parameters =>{
                                                 row_like.IamUserAppId == get({app_id:parameters.app_id, 
                                                     resource_id:row_like.IamUserAppDataPostId,
                                                     data:{  iam_user_id:null, 
-                                                            data_app_id:parameters.app_id}}).result[0]?.iam_user_app_id
+                                                            data_app_id:parameters.app_id}}).result[0]?.IamUserAppId
                                                 
                                             ).length,
                     CountUserPostLiked:server.ORM.db.IamUserAppDataPostLike.get({  app_id:parameters.app_id, 

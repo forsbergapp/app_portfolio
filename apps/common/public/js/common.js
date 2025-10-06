@@ -1402,18 +1402,6 @@ const commonMessageShow = async (message_type, function_event, text_class=null, 
 const commonMesssageNotAuthorized = () => '⛔';
 
 /**
- * @name commonProfileFollowLike
- * @description Profile follow or like and then update stat
- * @function
- * @param {'FOLLOW'|'LIKE'} function_name 
- * @returns {Promise.<void>}
- */
-const commonProfileFollowLike = async (function_name) => {
-    await commonUserFunction(function_name)
-    .then(()=>commonProfileUpdateStat())
-    .catch(()=>null);
-};
-/**
  * @name commonProfileStat
  * @description Profile stat
  * @function
@@ -1507,33 +1495,6 @@ const commonProfileShow = async (iam_user_id_other = null, username = null) => {
         methods:    null,
         path:       '/common/component/common_app_dialogues_profile_info.js'});
 };
-/**
- * @name commonProfileUpdateStat
- * @description Profile update stat
- * @function
- * @returns {Promise.<{id:number}>}
- */
-const commonProfileUpdateStat = async () => {
-    return new Promise((resolve, reject) => {
-        const profile_id = COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_id');
-        //get updated stat for given user
-       commonFFB({path:`/server-db/iamuser-profile/${profile_id.textContent}`, 
-            query:`id=${profile_id.textContent}`, 
-            method:'GET', 
-            authorization_type:'APP_ID'})
-        .then(result=>{
-            const user_stat = JSON.parse(result)[0];
-            COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_view_count').textContent = user_stat.count_views;
-            COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_following_count').textContent = user_stat.count_following;
-            COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_followers_count').textContent = user_stat.count_followed;
-            COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_likes_count').textContent = user_stat.count_likes;
-            COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_liked_count').textContent = user_stat.count_liked;
-            resolve({id : user_stat.id});
-        })
-        .catch(err=>reject(err));
-    });
-};
-
 /**
  * @name commonUserLogin
  * @description User login
@@ -1747,56 +1708,6 @@ const commonLogout = async () => {
     commonUserSessionClear();
 };
 
-
-/**
- * @name commonUserFunction
- * @description User function FOLLOW and LIKE with delete and post for both
- * @function
- * @param {'FOLLOW'|'LIKE'} function_name 
- * @returns {Promise.<null>}
- */
-const commonUserFunction = function_name => {
-    return new Promise((resolve, reject)=>{
-        const user_id_profile = Number(COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_id').textContent);
-        /**@type{common['CommonRESTAPIMethod']} */
-        let method;
-        let path;
-        let json;
-        const check_div = COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`);
-        if (check_div.children[0].style.display == 'block') {
-            path = `/server-db/iamuser${function_name.toLowerCase()}`;
-            method = 'POST';
-            json = {    IAM_iam_user_id: COMMON_GLOBAL.iam_user_id,
-                        [`iam_user_id_${function_name.toLowerCase()}`]: user_id_profile
-                    };
-        } else {
-            path = `/server-db/iamuser${function_name.toLowerCase()}/${COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).getAttribute('data-record_id')}`;
-            method = 'DELETE';
-            json = { IAM_iam_user_id: COMMON_GLOBAL.iam_user_id};
-        }
-        if (COMMON_GLOBAL.iam_user_id == null)
-            commonDialogueShow('LOGIN');
-        else {
-           commonFFB({path:path, method:method, authorization_type:'APP_ACCESS', body:json})
-            .then(result=> {
-                if (COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
-                    //follow/like
-                    COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).children[0].style.display = 'none';
-                    COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).children[1].style.display = 'block';
-                    COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).setAttribute('data-record_id',JSON.parse(result).insertId);
-                }
-                else{
-                    //unfollow/unlike
-                    COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).children[0].style.display = 'block';
-                    COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).children[1].style.display = 'none';
-                    COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_${function_name.toLowerCase()}`).setAttribute('data-record_id',null);
-                }
-                resolve(null);
-            })
-            .catch(err=>reject(err));
-        }
-    });
-};
 
 /**
  * @name commonUserAuthenticateCode
@@ -2894,7 +2805,7 @@ const commonEvent = async (event_type,event=null) =>{
                                     event.target.getAttribute('data-lov') &&
                                     event.target['data-functionRow'])?event_target_id:'':{
                                 //element with attributes
-                                //data-lov:              SERVER_LOG_FILES, COUNTRY, CUSTOM or from AppData.name in db,
+                                //data-lov:              SERVER_LOG_FILES, COUNTRY, CUSTOM or from AppData.Name in db,
                                 //data-lov_custom_value: custom column name in records if used
                                 //data-functionData:async function that returns records with 'id' and 'value' or lov_custom_value columns
                                 //data-functionRow: async function that reads clicked row data using syntax:
@@ -3569,12 +3480,9 @@ const commonGet = () =>{
         commonMesssageNotAuthorized:commonMesssageNotAuthorized,
         /* PROFILE */
         commonProfileDetail:commonProfileDetail, 
-        commonProfileFollowLike:commonProfileFollowLike,
         commonProfileShow:commonProfileShow,
         commonProfileStat:commonProfileStat, 
-        commonProfileUpdateStat:commonProfileUpdateStat, 
         /* USER  */
-        commonUserFunction:commonUserFunction,
         commonUserLogin:commonUserLogin, 
         commonUserLogout:commonUserLogout,
         commonUserSessionClear:commonUserSessionClear,
@@ -3732,12 +3640,9 @@ export{/* GLOBALS*/
        commonMesssageNotAuthorized,
        /* PROFILE */
        commonProfileDetail, 
-       commonProfileFollowLike,
        commonProfileShow,
        commonProfileStat, 
-       commonProfileUpdateStat, 
        /* USER  */
-       commonUserFunction,
        commonUserLogin, 
        commonUserLogout,
        commonUserSessionClear,

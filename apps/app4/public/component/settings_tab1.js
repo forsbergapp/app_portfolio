@@ -203,7 +203,7 @@ const component = async props => {
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -219,7 +219,7 @@ const component = async props => {
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -235,7 +235,7 @@ const component = async props => {
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -251,7 +251,7 @@ const component = async props => {
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -267,7 +267,7 @@ const component = async props => {
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -283,7 +283,7 @@ const component = async props => {
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,

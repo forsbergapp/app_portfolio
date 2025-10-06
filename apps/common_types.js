@@ -384,35 +384,6 @@
  * @typedef {{Id:number, Value:string, DisplayData:string}} CommonCountryType
  */
 
-/**
- * @description Type CommonProfileUser
- * @typedef {{  id:number,
- *              bio:string|null,
- *              private:number|null,
- *              friends:number|null,
- *              user_level:string|null,
- *              created:string|null,
- *              username:string|null, 
- *              avatar:string|null,
- *              count_following:number|null,
- *              count_followed:number|null,
- *              count_likes:number|null,
- *              count_liked:number|null,
- *              count_views:number|null,
- *              followed_id:number|null,
- *              liked_id:number|null}} CommonProfileUser
- */
-
-/**
- * @description Type CommonProfileStatRecord
- * @typedef {{id:number, username:string, avatar:string|null, count:number}}   CommonProfileStatRecord
- */
-
-/**
- * @description Type CommonProfileSearchRecord
- * @typedef {{id:number, avatar:string, username:string}} CommonProfileSearchRecord
- */
- 
 /** 
  * @description Type 
  * @typedef {*} CommonMasterObjectType
@@ -492,9 +463,6 @@
  *              CommonAppModuleMetadata:CommonAppModuleMetadata,
  *              CommonAppModuleWithMetadata:ORM['Object']['AppModule'] & CommonAppModuleMetadata,
  *              CommonCountryType:CommonCountryType,
- *              CommonProfileUser:CommonProfileUser,
- *              CommonProfileStatRecord:CommonProfileStatRecord,
- *              CommonProfileSearchRecord:CommonProfileSearchRecord,
  *              CommonMasterObjectType:CommonMasterObjectType,
  *              CommonResponsePagination:CommonResponsePagination,
  *              MessageQueuePublishMicroserviceLog:MessageQueuePublishMicroserviceLog,

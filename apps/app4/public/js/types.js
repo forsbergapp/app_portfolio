@@ -46,7 +46,7 @@
  *              RegionalSecondLanguageLocale: string,
  *              RegionalArabicScript: string,
  *              RegionalCalendarType: 'GREGORIAN'|'HIJRI',
- *              RegionalCalendarHijri_type: string,
+ *              RegionalCalendarHijriType: string,
  *              GpsLatText: number|null,
  *              GpsLongText: number|null,
  *              DesignThemeDayId: string,
@@ -55,7 +55,7 @@
  *              DesignPaperSize: string,
  *              DesignRowHighlight: string,
  *              DesignColumnWeekdayChecked: number,
- *              DesignColumnCalendartypeChecked: number,
+ *              DesignColumnCalendarTypeChecked: number,
  *              DesignColumnNotesChecked: number,
  *              DesignColumnGpsChecked: number,
  *              DesignColumnTimezoneChecked: number,
@@ -86,7 +86,7 @@
  */
 /**
  * @description Type report APP_user_setting_data
- * @typedef {{   id:number|null, 
+ * @typedef {{   Id:number|null, 
  *               Document:APP_user_setting_record}} APP_user_setting_data
  */
 /** 
@@ -322,7 +322,7 @@
 /**
  * @description Type APP_REPORT_day_user_account_app_data_posts
  * @typedef {object}	APP_REPORT_day_user_account_app_data_posts
- * @property {string}	description
+ * @property {string}	Description
  * @property {string}	RegionalLanguageLocale
  * @property {string}	RegionalTimezone
  * @property {string}	RegionalNumberSystem

@@ -12,23 +12,21 @@
  * @param {{iam_user_id:number,
  *          iam_user_id_profile:number,
  *          detailchoice:number,
- *          list:[{ iam_user_id:number|null, 
- *                  detail:string, 
- *                  avatar:string,
- *                  username:string}]|[]}} props
+ *          list:   common['ORM']['View']['IamUserGetProfileDetail'][]|
+ *                  common['ORM']['View']['IamUserAppdataPostGetProfileUserPostDetail'][]}} props
  * @returns {string}
  */
 const template = props => `     ${props.list.map(row=>
-                                    `<div data-iam_user_id='${row.iam_user_id}' class='common_app_dialogues_profile_info_list_row common_row'>
+                                    `<div data-iam_user_id='${row.IamUserId}' class='common_app_dialogues_profile_info_list_row common_row'>
                                             <div class='common_app_dialogues_profile_info_list_col'>
-                                                <div class='common_app_dialogues_profile_info_list_iam_user_id'>${row.iam_user_id}</div>
+                                                <div class='common_app_dialogues_profile_info_list_iam_user_id'>${row.IamUserId}</div>
                                             </div>
                                             <div class='common_app_dialogues_profile_info_list_col'>
-                                                <div class='common_image common_image_avatar_list' style='${row.avatar==null?'':`background-image:url(${row.avatar});`}'></div>
+                                                <div class='common_image common_image_avatar_list' style='${row.Avatar==null?'':`background-image:url(${row.Avatar});`}'></div>
                                             </div>
                                             <div class='common_app_dialogues_profile_info_list_col'>
                                                 <div class='common_app_dialogues_profile_info_list_username common_wide_list_column common_link'>
-                                                    ${row.username}
+                                                    ${row.Username}
                                                 </div>
                                             </div>
                                         </div>`
