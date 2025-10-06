@@ -11,22 +11,22 @@
  * @name template
  * @description Template
  * @function
- * @param {{records:common['CommonProfileSearchRecord'][]}} props 
+ * @param {{records:common['ORM']['View']['IamUsetGetProfile'][]}} props 
  * @returns {string}
  */
 const template = props =>`  ${props.records.length>0?
                                 `<div id='common_app_profile_search_list'>
                                     ${props.records.map(row=>
-                                        `<div data-iam_user_id='${row.id}' class='common_app_profile_search_list_row common_row' tabindex=-1>
+                                        `<div data-iam_user_id='${row.Id}' class='common_app_profile_search_list_row common_row' tabindex=-1>
                                             <div class='common_app_profile_search_list_col'>
-                                                <div class='common_app_profile_search_list_iam_user_id'>${row.id}</div>
+                                                <div class='common_app_profile_search_list_iam_user_id'>${row.Id}</div>
                                             </div>
                                             <div class='common_app_profile_search_list_col'>
-                                                <div class='common_image common_image_avatar_list' style='${row.avatar==null?'':`background-image:url(${row.avatar});`}'></div>
+                                                <div class='common_image common_image_avatar_list' style='${row.Avatar==null?'':`background-image:url(${row.Avatar});`}'></div>
                                             </div>
                                             <div class='common_app_profile_search_list_col'>
                                                 <div class='common_app_profile_search_list_username common_wide_list_column common_link'>
-                                                    ${row.username}
+                                                    ${row.Username}
                                                 </div>
                                             </div>
                                         </div>`).join('')
@@ -60,6 +60,7 @@ const component = async props => {
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_profile_search_list_wrap').style.display = 'none';
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').classList.add('common_input_error');
     }
+    /**@type{common['ORM']['View']['IamUsetGetProfile'][]} */
     const records = commonMiscInputControl?await props.methods.COMMON.commonFFB(
                                                 {
                                                     path:   '/server-db/iamuser-profile/', 

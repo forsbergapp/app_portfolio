@@ -22,21 +22,21 @@ const template = props =>`  <div class='setting_horizontal_row'>
                                     <div id='setting_design_theme_day' class='setting_design_thumbnail' data-theme_id='${props.theme_id_day}'></div>
                                     <div id='setting_design_prev_day' class='common_app_dialogues_button setting_design_prev common_icon'></div>
                                     <div id='setting_design_next_day' class='common_app_dialogues_button setting_design_next common_icon'></div>
-                                    <div id='setting_DesignThemeDayId'>${props.theme_id_day}</div>
+                                    <div id='setting_design_theme_day_id'>${props.theme_id_day}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_design_icon_theme_month' class='common_icon'></div>
                                     <div id='setting_design_theme_month' class='setting_design_thumbnail' data-theme_id='${props.theme_id_month}'></div>
                                     <div id='setting_design_prev_month' class='common_app_dialogues_button setting_design_prev common_icon'></div>
                                     <div id='setting_design_next_month' class='common_app_dialogues_button setting_design_next common_icon'></div>
-                                    <div id='setting_DesignThemeMonthId'>${props.theme_id_month}</div>
+                                    <div id='setting_design_theme_month_id'>${props.theme_id_month}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_design_icon_theme_year' class='common_icon'></div>
                                     <div id='setting_design_theme_year' class='setting_design_thumbnail' data-theme_id='${props.theme_id_year}'></div>
                                     <div id='setting_design_prev_year' class='common_app_dialogues_button setting_design_prev common_icon'></div>
                                     <div id='setting_design_next_year' class='common_app_dialogues_button setting_design_next common_icon'></div>
-                                    <div id='setting_DesignThemeYearId'>${props.theme_id_year}</div>
+                                    <div id='setting_design_theme_year_id'>${props.theme_id_year}</div>
                                 </div>
                             </div>
                             <div class='setting_horizontal_row'>
@@ -145,10 +145,10 @@ const component = async props => {
     //update APP_GLOBAL with themes
     /**@type{import('../js/types.js').APP_GLOBAL['themes']} */
     props.data.themes.data = settings_app.filter(setting=>
-            setting.app_id == props.data.app_id && 
-            setting.name.startsWith('REPORT_THEME'))
+            setting.AppId == props.data.app_id && 
+            setting.Name.startsWith('REPORT_THEME'))
             .map(theme=>{
-                return {type:theme.name, value:theme.value, text:theme.DisplayData};
+                return {type:theme.Name, value:theme.Value, text:theme.DisplayData};
             });
 
     const onMounted = async () =>{
@@ -157,16 +157,16 @@ const component = async props => {
             mountDiv:   'setting_select_report_papersize',
             data:       {
                         default_data_value:settings_common.filter(setting=>
-                                                setting.name.startsWith('PAPER_SIZE'))[0].value,
+                                                setting.Name.startsWith('PAPER_SIZE'))[0].Value,
                         default_value:settings_common.filter(setting=>
-                                        setting.name.startsWith('PAPER_SIZE'))[0].DisplayData,
+                                        setting.Name.startsWith('PAPER_SIZE'))[0].DisplayData,
                         options: settings_common.filter(setting=>
-                                    setting.name.startsWith('PAPER_SIZE')),
+                                    setting.Name.startsWith('PAPER_SIZE')),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -176,19 +176,19 @@ const component = async props => {
             mountDiv:   'setting_select_report_highlight_row',
             data:       {
                         default_data_value:settings_app.filter(setting=>
-                                                setting.app_id == props.data.app_id && 
-                                                setting.name.startsWith('HIGHLIGHT_ROW'))[0].value,
+                                                setting.AppId == props.data.app_id && 
+                                                setting.Name.startsWith('HIGHLIGHT_ROW'))[0].Value,
                         default_value:settings_app.filter(setting=>
-                                        setting.app_id == props.data.app_id && 
-                                        setting.name.startsWith('HIGHLIGHT_ROW'))[0].DisplayData,
+                                        setting.AppId == props.data.app_id && 
+                                        setting.Name.startsWith('HIGHLIGHT_ROW'))[0].DisplayData,
                         options: settings_app.filter(setting=>
-                                    setting.app_id == props.data.app_id && 
-                                    setting.name.startsWith('HIGHLIGHT_ROW')),
+                                    setting.AppId == props.data.app_id && 
+                                    setting.Name.startsWith('HIGHLIGHT_ROW')),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
-                        column_value:'value',
+                        column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
@@ -204,7 +204,7 @@ const component = async props => {
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
         else
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
-        if (Number(props.data.user_settings.DesignColumnCalendartypeChecked))
+        if (Number(props.data.user_settings.DesignColumnCalendarTypeChecked))
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
         else
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');

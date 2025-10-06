@@ -1851,7 +1851,7 @@ const component = props => {
 																			user_setting.GpsLongText,
 																			user_setting.PrayerTimeFormat, 
 																			Number(user_setting.PrayerHijriDateAdjustment), 
-																			user_setting.description);
+																			user_setting.Description);
 												});
 		};			
 

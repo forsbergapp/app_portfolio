@@ -797,13 +797,22 @@
  */
 /**
  * @descriptin DB VIEW ViewIamUsetGetProfile
- * @typedef {{CountFollowing:number,
- *            CountFollowed: number,
- *            CountLikes:    number,
- *            CountLiked:    number,
- *            CountViews:    number,
- *            FollowedId:    number,
- *            LikedId:       number}} ViewIamUsetGetProfile
+ * @typedef {{  Id:             ORM['Object']['IamUser']['Id'],
+ *              Active:         ORM['Object']['IamUser']['Active'],
+ *              Username:       ORM['Object']['IamUser']['Username'],
+ *              Bio:            ORM['Object']['IamUser']['Bio'],
+ *              Private:        number|null,
+ *              UserLevel:      ORM['Object']['IamUser']['UserLevel'],
+ *              Avatar:         ORM['Object']['IamUser']['Avatar'],
+ *              Friends:        number|null,
+ *              Created:        string,
+ *              CountFollowing: number,
+ *              CountFollowed:  number,
+ *              CountLikes:     number,
+ *              CountLiked:     number,
+ *              CountViews:     number,
+ *              FollowedId:     number,
+ *              LikedId:        number}} ViewIamUsetGetProfile
  */
 /**
  * @description DB VIEW ViewIamUserGetProfileDetail
@@ -828,10 +837,10 @@
  */
 /**
  * @description DB VIEW ViewIamUserAppDataPostgetProfileUserPosts
- * @typedef { {Id:server['ORM']['Object']['IamUserAppDataPost']['Id'],
+ * @typedef { {Id:ORM['Object']['IamUserAppDataPost']['Id'],
  *             Description:string,
- *             IamUserId:server['ORM']['Object']['IamUserApp']['IamUserId'],
- *             Document:server['ORM']['Object']['IamUserAppDataPost']['Document'],
+ *             IamUserId:ORM['Object']['IamUserApp']['IamUserId'],
+ *             Document:ORM['Object']['IamUserAppDataPost']['Document'],
  *             CountLikes:number,
  *             CountViews:number,
  *             Liked:number}} ViewIamUserAppDataPostgetProfileUserPosts
@@ -844,17 +853,17 @@
 /**
  * @description DB VIEW ViewIamUserAppDataPostGetProfileStatPost
  * @typedef {{Top:'LIKED_POST'|'VIEWED_POST',
-  *           Id:server['ORM']['Object']['IamUserApp']['IamUserId'],
-  *           Avatar:server['ORM']['Object']['IamUser']['Avatar'],
-  *           Username:server['ORM']['Object']['IamUser']['Username'],
-  *           Count:number}}  ViewIamUserAppDataPostGetProfileStatPost
+  *           Id:ORM['View']['IamUserGetProfileStat']['Id'],
+  *           Avatar:ORM['View']['IamUserGetProfileStat']['Avatar'],
+  *           Username:ORM['View']['IamUserGetProfileStat']['Username'],
+  *           Count:ORM['View']['IamUserGetProfileStat']['Count']}}  ViewIamUserAppDataPostGetProfileStatPost
  */
 /**
  * @description DB VIEW ViewIamUserAppdataPostGetProfileUserPostDetail
  * @typedef {{Detail:'LIKE_POST'|'LIKED_POST',
- *            IamUserId:server['ORM']['Object']['IamUserApp']['IamUserId'],
- *            Avatar:server['ORM']['Object']['IamUser']['Avatar'],
- *            Username:server['ORM']['Object']['IamUser']['Username']}} ViewIamUserAppdataPostGetProfileUserPostDetail
+ *            IamUserId:ORM['Object']['IamUserApp']['IamUserId'],
+ *            Avatar:ORM['Object']['IamUser']['Avatar'],
+ *            Username:ORM['Object']['IamUser']['Username']}} ViewIamUserAppdataPostGetProfileUserPostDetail
  */
 /**
  * @description DB VIEW ViewORMGetInfo
@@ -866,15 +875,15 @@
  */
 /**
  * @description DB VIEW ViewORMGetObjects
- * @typedef {{Name:server['ORM']['MetaData']['DbObject']['Name'],
- *            Type:server['ORM']['MetaData']['DbObject']['Type'],
- *            Lock:server['ORM']['MetaData']['DbObject']['Lock'],
- *            TransactionId:server['ORM']['MetaData']['DbObject']['TransactionId'],
+ * @typedef {{Name:ORM['MetaData']['DbObject']['Name'],
+ *            Type:ORM['MetaData']['DbObject']['Type'],
+ *            Lock:ORM['MetaData']['DbObject']['Lock'],
+ *            TransactionId:ORM['MetaData']['DbObject']['TransactionId'],
  *            Rows:number|null,
  *            Size:number|null,
- *            Pk:server['ORM']['MetaData']['DbObject']['Pk'],
- *            Uk:server['ORM']['MetaData']['DbObject']['Uk'],
- *            Fk:server['ORM']['MetaData']['DbObject']['Fk']}} ViewORMGetObjects
+ *            Pk:ORM['MetaData']['DbObject']['Pk'],
+ *            Uk:ORM['MetaData']['DbObject']['Uk'],
+ *            Fk:ORM['MetaData']['DbObject']['Fk']}} ViewORMGetObjects
  */
 /**
  * @description DB VIEW ViewSocketGetConnected

@@ -2,8 +2,8 @@
 
 /**
  * @description Type APP_user_setting_record
- * @typedef {{  id?:number,
- *              description: string,
+ * @typedef {{  Id?:number,
+ *              Description: string,
  *              RegionalLanguageLocale: string,
  *              RegionalTimezone: string,
  *              RegionalNumberSystem: string,
@@ -11,7 +11,7 @@
  *              RegionalSecondLanguageLocale: string,
  *              RegionalArabicScript: string,
  *              RegionalCalendarType: string,
- *              RegionalCalendarHijri_type: string,
+ *              RegionalCalendarHijriType: string,
  *              GpsLatText: number|null,
  *              GpsLongText: number|null,
  *              DesignThemeDayId: string,

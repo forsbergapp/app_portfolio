@@ -92,8 +92,8 @@ const component = async props => {
             mountDiv:   'setting_select_user_setting',
             data:       {
                         default_data_value:props.data.user_settings.current_id,
-                        default_value:props.data.user_settings.data[props.data.user_settings.current_id].Document.description,
-                        options: props.data.user_settings.data.map((setting, index)=>{return {value:index, text:setting.Document.description};}),
+                        default_value:props.data.user_settings.data[props.data.user_settings.current_id].Document.Description,
+                        options: props.data.user_settings.data.map((setting, index)=>{return {value:index, text:setting.Document.Description};}),
                         path:null,
                         query:null,
                         method:null,

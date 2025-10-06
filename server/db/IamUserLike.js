@@ -32,20 +32,21 @@ const get = parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:server['ORM']['Object']['IamUserLike']}} parameters
+ *          data:{iam_user_id:server['ORM']['Object']['IamUserLike']['IamUserId'],
+ *                iam_user_id_like:server['ORM']['Object']['IamUserLike']['IamUserIdLike']}}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters =>{
     //check required attributes
-    if (parameters.data.IamUserId==null || parameters.data.IamUserIdLike==null){
+    if (parameters.data.iam_user_id==null || parameters.data.iam_user_id_like==null){
         return server.ORM.getError(parameters.app_id, 400);
     }
     else{
         /**@type{server['ORM']['Object']['IamUserLike']} */
         const data_new =     {
                                 Id:Date.now(),
-                                IamUserId:parameters.data.IamUserId, 
-                                IamUserIdLike:parameters.data.IamUserIdLike,
+                                IamUserId:parameters.data.iam_user_id, 
+                                IamUserIdLike:parameters.data.iam_user_id_like,
                                 Created:new Date().toISOString()
                         };
         return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserLike', post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{

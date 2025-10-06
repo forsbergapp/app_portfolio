@@ -11,25 +11,25 @@
  * @name template
  * @description Template
  * @function
- * @param {{stat_list:common['CommonProfileStatRecord'][]|[]}} props 
+ * @param {{stat_list:common['ORM']['View']['IamUserGetProfileStat'][]|common['ORM']['View']['IamUserAppDataPostGetProfileStatPost'][] }} props 
  * @returns {string}
  */
 const template = props =>`   
                             ${props.stat_list.map(row=>
-                                `   <div data-iam_user_id='${row.id}' class='common_app_dialogues_profile_stat_list_row common_row'>
+                                `   <div data-iam_user_id='${row.Id}' class='common_app_dialogues_profile_stat_list_row common_row'>
                                         <div class='common_app_dialogues_profile_stat_list_col'>
-                                            <div class='common_app_dialogues_profile_stat_list_iam_user_id'>${row.id}</div>
+                                            <div class='common_app_dialogues_profile_stat_list_iam_user_id'>${row.Id}</div>
                                         </div>
                                         <div class='common_app_dialogues_profile_stat_list_col'>
-                                            <div class='common_image common_image_avatar_list' style='${row.avatar==null?'':`background-image:url(${row.avatar});`}'></div>
+                                            <div class='common_image common_image_avatar_list' style='${row.Avatar==null?'':`background-image:url(${row.Avatar});`}'></div>
                                         </div>
                                         <div class='common_app_dialogues_profile_stat_list_col'>
                                             <div class='common_app_dialogues_profile_stat_list_username common_wide_list_column common_link'>
-                                                ${row.username}
+                                                ${row.Username}
                                             </div>
                                         </div>
                                         <div class='common_app_dialogues_profile_stat_list_col'>
-                                            <div class='common_app_dialogues_profile_stat_list_count'>${row.count}</div>
+                                            <div class='common_app_dialogues_profile_stat_list_count'>${row.Count}</div>
                                         </div>
                                     </div>`
                             ).join('')
@@ -63,7 +63,7 @@ const component = async props => {
         /*other statschoice, apps can use >3 and return same columns*/
         path = props.data.stat_list_app_rest_url ?? '';
     }
-    /**@type{common['CommonProfileStatRecord'][]} */
+    /**@type{common['ORM']['View']['IamUserGetProfileStat'][]|common['ORM']['View']['IamUserAppDataPostGetProfileStatPost'][] } */
     const stat_list = await props.methods.COMMON.commonFFB({path:path, query:`statchoice=${props.data.stat_choice}`, method:'GET', authorization_type:'APP_ID'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 

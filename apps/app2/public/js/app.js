@@ -48,15 +48,6 @@ const appEventClick = event => {
             common.commonUserLogout();
             break;
         }
-        //dialogue profile info
-        case 'common_app_dialogues_profile_info_follow':{
-            common.commonProfileFollowLike('FOLLOW');
-            break;
-        }
-        case 'common_app_dialogues_profile_info_like':{
-            common.commonProfileFollowLike('LIKE');
-            break;
-        }
         case 'common_app_dialogues_iam_start_login_button':{
             common.commonUserLogin();
             break;
