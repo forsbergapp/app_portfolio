@@ -98,15 +98,15 @@ const component = async props => {
         element.classList.remove('common_app_dialogues_user_menu_messages_row_unread');
         element.classList.add('common_app_dialogues_user_menu_messages_row_read');
 
-        /**@type{common['ORM']['MessageQueuePublish']['message'] & {username:common['ORM']['IamUser']['username']}}} */
-        const message = {sender:element.getAttribute('data-sender')==''?null:element.getAttribute('data-sender'),
-                         receiver_id:Number(element.getAttribute('data-receiver_id')),
-                         username:props.data.iam_user_username ??'',
-                         host:element.getAttribute('data-host')??'',
-                         client_ip:element.getAttribute('data-client_ip')??'',
-                         subject:element.getAttribute('data-subject')??'',
-                         message:element.getAttribute('data-message')??'',
-                         created:element.getAttribute('data-created')??''
+        /**@type{common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {Username:common['server']['ORM']['Object']['IamUser']['Username']}}} */
+        const message = {Sender:element.getAttribute('data-sender')==''?null:element.getAttribute('data-sender'),
+                         ReceiverId:Number(element.getAttribute('data-receiver_id')),
+                         Username:props.data.iam_user_username ??'',
+                         Host:element.getAttribute('data-host')??'',
+                         ClientIp:element.getAttribute('data-client_ip')??'',
+                         Subject:element.getAttribute('data-subject')??'',
+                         Message:element.getAttribute('data-message')??'',
+                         Created:element.getAttribute('data-created')??''
                         };
         
         //show message detail

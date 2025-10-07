@@ -10,33 +10,33 @@
  * @name template
  * @description Template
  * @function
- * @param {{message:common['ORM']['MessageQueuePublish']['message'] & {username:common['ORM']['IamUser']['username']},
+ * @param {{message:common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {username:common['server']['ORM']['Object']['IamUser']['Username']},
  *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props
  * @returns {string}
  */
 const template = props => ` 
                             <div class='common_app_dialogues_user_menu_messages_message'>
                                 <div class='common_app_dialogues_user_menu_messages_message_row'>
-                                    <div id='common_app_dialogues_user_menu_messages_message_col_date' class='common_icon'></div><div>${props.commonMiscFormatJsonDate(props.message.created??'','LONG')}</div>
+                                    <div id='common_app_dialogues_user_menu_messages_message_col_date' class='common_icon'></div><div>${props.commonMiscFormatJsonDate(props.message.Created??'','LONG')}</div>
                                 </div>
                                 <div class='common_app_dialogues_user_menu_messages_message_row'>
-                                    <div id='common_app_dialogues_user_menu_messages_message_col_sender' class='common_icon'></div><div>${props.message.sender ?? ''}</div>
+                                    <div id='common_app_dialogues_user_menu_messages_message_col_sender' class='common_icon'></div><div>${props.message.Sender ?? ''}</div>
                                 </div>
                                 <div class='common_app_dialogues_user_menu_messages_message_row'>
                                     <div id='common_app_dialogues_user_menu_messages_message_col_receiver' class='common_icon'></div><div>${props.message.username}</div>
                                 </div>
                                 <div class='common_app_dialogues_user_menu_messages_message_row'>
-                                   <div id='common_app_dialogues_user_menu_messages_message_col_ip' class='common_icon'></div><div>${props.message.client_ip}</div>
+                                   <div id='common_app_dialogues_user_menu_messages_message_col_ip' class='common_icon'></div><div>${props.message.ClientIp}</div>
                                 </div>
                                 <div class='common_app_dialogues_user_menu_messages_message_row'>
-                                    <div id='common_app_dialogues_user_menu_messages_message_col_host' class='common_icon'></div><div>${props.message.host}</div>
+                                    <div id='common_app_dialogues_user_menu_messages_message_col_host' class='common_icon'></div><div>${props.message.Host}</div>
                                 </div>
                                 <div class='common_app_dialogues_user_menu_messages_message_row'>
-                                    <div id='common_app_dialogues_user_menu_messages_message_col_subject' class='common_icon'></div><div>${props.message.subject}</div>
+                                    <div id='common_app_dialogues_user_menu_messages_message_col_subject' class='common_icon'></div><div>${props.message.Subject}</div>
                                 </div>
                             </div>
                             <div id='common_app_dialogues_user_menu_messages_message_col_message' class='common_icon'></div>
-                            <div id='common_app_dialogues_user_menu_messages_message_col_message_text'>${props.message.message}</div>`;
+                            <div id='common_app_dialogues_user_menu_messages_message_col_message_text'>${props.message.Message}</div>`;
 /**
 * @name component
 * @description Component
@@ -44,7 +44,7 @@ const template = props => `
 * @param {{data:       {
 *                      commonMountdiv:string,
 *                      app_id:number,
-*                      message:common['ORM']['MessageQueuePublish']['message'] & {username:common['ORM']['IamUser']['username']},
+*                      message:common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {username:common['server']['ORM']['Object']['IamUser']['Username']},
 *                      },
 *          methods:    {
 *                      COMMON:common['CommonModuleCommon']

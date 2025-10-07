@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{stat_list:common['ORM']['View']['IamUserGetProfileStat'][]|common['ORM']['View']['IamUserAppDataPostGetProfileStatPost'][] }} props 
+ * @param {{stat_list:common['server']['ORM']['View']['IamUserGetProfileStat'][]|common['server']['ORM']['View']['IamUserAppDataPostGetProfileStatPost'][] }} props 
  * @returns {string}
  */
 const template = props =>`   
@@ -63,7 +63,7 @@ const component = async props => {
         /*other statschoice, apps can use >3 and return same columns*/
         path = props.data.stat_list_app_rest_url ?? '';
     }
-    /**@type{common['ORM']['View']['IamUserGetProfileStat'][]|common['ORM']['View']['IamUserAppDataPostGetProfileStatPost'][] } */
+    /**@type{common['server']['ORM']['View']['IamUserGetProfileStat'][]|common['server']['ORM']['View']['IamUserAppDataPostGetProfileStatPost'][] } */
     const stat_list = await props.methods.COMMON.commonFFB({path:path, query:`statchoice=${props.data.stat_choice}`, method:'GET', authorization_type:'APP_ID'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 

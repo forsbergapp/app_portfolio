@@ -6,13 +6,13 @@
 /**
  * @import {common}  from '../../../common_types.js'
  */
-/**@type{(common['ORM']['View']['AppGetInfo'])[]} */
+/**@type{(common['server']['ORM']['View']['AppGetInfo'])[]} */
 const APPS = [];
 /**
  * @name template
  * @description Template
  * @function
- * @param {{apps:(common['ORM']['View']['AppGetInfo'])[]}} props 
+ * @param {{apps:(common['server']['ORM']['View']['AppGetInfo'])[]}} props 
  * @returns {string}
  */
 const template = props => ` <div id='common_apps_list_title'>
@@ -89,7 +89,7 @@ const component = async props => {
                     }            
                     case event_target_id=='common_apps_list':{
                         if (event.target.classList.contains('common_apps_app_logo')){
-                            props.methods.COMMON.commonMountApp(event.target.getAttribute('data-app_id'));
+                            props.methods.COMMON.commonAppMount(event.target.getAttribute('data-app_id'));
                         }
                         break;
                     }

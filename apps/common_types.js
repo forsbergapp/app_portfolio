@@ -348,32 +348,6 @@
  * @typedef{'APP_ID'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'IAM'|'IAM_SIGNUP'} CommonRESTAPIAuthorizationType
  */
 
-
-/**
- * @description Type commonAppInit
- * @typedef {{App:{
- *                  id:common['ORM']['Object']['App']['Id'] & {Id:number},
- *                  name:common['ORM']['Object']['App']['Name'],
- *                  js:common['ORM']['Object']['App']['Js'],
- *                  js_content:string|null,
- *                  css:common['ORM']['Object']['App']['Css'],
- *                  css_content:string|null,
- *                  css_report:common['ORM']['Object']['App']['CssReport'],
- *                  css_report_content:string|null,
- *                  favicon_32x32:common['ORM']['Object']['App']['Favicon32x32'],
- *                  favicon_32x32_content:string|null,
- *                  favicon_192x192:common['ORM']['Object']['App']['Favicon192x192'],
- *                  favicon_192x192_content:string|null,
- *                  logo:common['ORM']['Object']['App']['Logo'],
- *                  logo_content:string|null,
- *                  copyright:common['ORM']['Object']['App']['Copyright'],
- *                  link_url:common['ORM']['Object']['App']['LinkUrl'],
- *                  link_title:common['ORM']['Object']['App']['LinkTitle'],
- *                  text_edit:common['ORM']['Object']['App']['TextEdit']
- *                  },
- *          AppParameter:Object.<string,*>}} commonAppInit
- */
-
 /**
  * @description Type CommonAppModuleMetadata
  * @typedef {{param:{name:string, text:string, default:string|number}}} CommonAppModuleMetadata
@@ -391,7 +365,7 @@
 
 /**
  * @description Type
- * @typedef{{   page_header:{	total_count:number,
+ * @typedef {{   page_header:{	total_count:number,
  *                              offset: 	number,
  *                              count:		number}
  *              rows:       *[]}} CommonResponsePagination
@@ -433,7 +407,7 @@
  */
 
 /**
- * @import {ORM} from '../server/types.js'}
+ * @import {server} from '../server/types.js'}
  */
 
 /**
@@ -459,9 +433,8 @@
  *              commonMapLayers:commonMapLayers,
  *              CommonRESTAPIMethod:CommonRESTAPIMethod,
  *              CommonRESTAPIAuthorizationType:CommonRESTAPIAuthorizationType,
- *              commonAppInit:commonAppInit,
  *              CommonAppModuleMetadata:CommonAppModuleMetadata,
- *              CommonAppModuleWithMetadata:ORM['Object']['AppModule'] & CommonAppModuleMetadata,
+ *              CommonAppModuleWithMetadata:server['ORM']['Object']['AppModule'] & CommonAppModuleMetadata,
  *              CommonCountryType:CommonCountryType,
  *              CommonMasterObjectType:CommonMasterObjectType,
  *              CommonResponsePagination:CommonResponsePagination,
@@ -472,7 +445,7 @@
  *              CommonModuleReact:CommonModuleReact,            //Module file types
  *              CommonModuleReactDOM:CommonModuleReactDOM,      //Module file types
  *              CommonModuleVue:CommonModuleVue,                //Module file types
- *              ORM:ORM}
+ *              server:server}
  *          } common
  */
 

@@ -12,8 +12,8 @@
  * @param {{iam_user_id:number,
  *          iam_user_id_profile:number,
  *          detailchoice:number,
- *          list:   common['ORM']['View']['IamUserGetProfileDetail'][]|
- *                  common['ORM']['View']['IamUserAppdataPostGetProfileUserPostDetail'][]}} props
+ *          list:   common['server']['ORM']['View']['IamUserGetProfileDetail'][]|
+ *                  common['server']['ORM']['View']['IamUserAppdataPostGetProfileUserPostDetail'][]}} props
  * @returns {string}
  */
 const template = props => `     ${props.list.map(row=>

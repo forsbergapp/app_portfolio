@@ -795,26 +795,9 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
   *          user_agent:string,
   *          accept_language:string,
   *          idToken:string, 
-  *          data:{ locale:string } } } parameters
-  * @returns {Promise.<server['server']['response'] & {result?:{App:{id:server['ORM']['Object']['App']['Id'],
-  *                                                            name:server['ORM']['Object']['App']['Name'],
-  *                                                            js:server['ORM']['Object']['App']['Js'],
-  *                                                            js_content:string|null,
-  *                                                            css:server['ORM']['Object']['App']['Css'],
-  *                                                            css_content:string|null,
-  *                                                            css_report:server['ORM']['Object']['App']['CssReport'],
-  *                                                            css_report_content:string|null,
-  *                                                            favicon_32x32:server['ORM']['Object']['App']['Favicon32x32'],
-  *                                                            favicon_32x32_content:string|null,
-  *                                                            favicon_192x192:server['ORM']['Object']['App']['Favicon192x192'],
-  *                                                            favicon_192x192_content:string|null,
-  *                                                            logo:server['ORM']['Object']['App']['Logo'],
-  *                                                            logo_content:string|null,
-  *                                                            copyright:server['ORM']['Object']['App']['Copyright'],
-  *                                                            link_url:server['ORM']['Object']['App']['LinkUrl'],
-  *                                                            link_title:server['ORM']['Object']['App']['LinkTitle'],
-  *                                                            text_edit:server['ORM']['Object']['App']['TextEdit']},
-  *                                                       AppParameter:Object.<string,*>} }>}
+  *          data:{ iam_user_id:server['ORM']['Object']['IamUser']['Id'],
+  *                 locale:string } } } parameters
+  * @returns {Promise.<server['server']['response'] & {result?:server['app']['commonAppMount']}>}
   */
 const commonAppMount = async parameters =>{
     /**@type{server['ORM']['Object']['ConfigServer']} */
@@ -831,54 +814,54 @@ const commonAppMount = async parameters =>{
         /**@type{server['ORM']['Object']['App']} */
         const app = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
         if (app)
-            return {result:{App:{   id:                     app.Id,
-                                    name:                   app.Name,
-                                    js:                     app.Js,
-                                    js_content:             (app.Js && app.Js!='')?
+            return {result:{App:{   Id:                     app.Id,
+                                    Name:                   app.Name,
+                                    Js:                     app.Js,
+                                    JsContent:              (app.Js && app.Js!='')?
                                                                 (await commonResourceFile({ app_id:parameters.app_id, 
                                                                                             resource_id:app.Js,
                                                                                             content_type:'text/javascript', 
                                                                                             data_app_id:parameters.app_id})).result.resource:
                                                                     null,
-                                    css:                    app.Css,
-                                    css_content:            (app.Css && app.Css!='')?
+                                    Css:                    app.Css,
+                                    CssContent:             (app.Css && app.Css!='')?
                                                                 (await commonResourceFile({ app_id:parameters.app_id, 
                                                                                             resource_id:app.Css,
                                                                                             content_type:'text/css', 
                                                                                             data_app_id:parameters.app_id})).result.resource:
                                                                     null,
-                                    css_report:             app.CssReport,
-                                    css_report_content:     (app.CssReport && app.CssReport!='')?
+                                    CssReport:              app.CssReport,
+                                    CssReportContent:       (app.CssReport && app.CssReport!='')?
                                                                 (await commonResourceFile({ app_id:parameters.app_id, 
                                                                                             resource_id:app.CssReport,
                                                                                             content_type:'text/css', 
                                                                                             data_app_id:parameters.app_id})).result.resource:
                                                                     null,
-                                    favicon_32x32:          app.Favicon32x32,
-                                    favicon_32x32_content:  app.Favicon32x32?
+                                    Favicon32x32:           app.Favicon32x32,
+                                    Favicon32x32Content:    app.Favicon32x32?
                                                                 (await commonResourceFile({ app_id:parameters.app_id, 
                                                                                             resource_id:app.Favicon32x32,
                                                                                             content_type:'image/png', 
                                                                                             data_app_id:parameters.app_id})).result.resource:
                                                                     null,
-                                    favicon_192x192:        app.Favicon192x192,
-                                    favicon_192x192_content:app.Favicon192x192?
+                                    Favicon192x192:         app.Favicon192x192,
+                                    Favicon192x192Content:  app.Favicon192x192?
                                                                 (await commonResourceFile({ app_id:parameters.app_id, 
                                                                                             resource_id:app.Favicon192x192,
                                                                                             content_type:'image/png', 
                                                                                             data_app_id:parameters.app_id})).result.resource:
                                                                     null,
-                                    logo:                   app.Logo,
-                                    logo_content:           app.Logo?
+                                    Logo:                   app.Logo,
+                                    LogoContent:            app.Logo?
                                                                 (await commonResourceFile({ app_id:parameters.app_id, 
                                                                                             resource_id:app.Logo,
                                                                                             content_type:'image/png', 
                                                                                             data_app_id:parameters.app_id})).result.resource:
                                                                     null,
-                                    copyright:              app.Copyright,
-                                    link_url:               app.LinkUrl,
-                                    link_title:             app.LinkTitle,
-                                    text_edit:              app.TextEdit
+                                    Copyright:              app.Copyright,
+                                    LinkUrl:                app.LinkUrl,
+                                    LinkTitle:              app.LinkTitle,
+                                    TextEdit:               app.TextEdit
                                 },
                             //fetch parameters and convert records to one object with parameter keys
                             AppParameter:server.ORM.db.AppData.getServer({app_id:parameters.app_id, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:parameters.app_id}}).result
@@ -893,7 +876,13 @@ const commonAppMount = async parameters =>{
                                                              token_admin:null,
                                                              ip:parameters.ip,
                                                              headers_user_agent:parameters.user_agent,
-                                                             headers_accept_language:parameters.accept_language})).result
+                                                             headers_accept_language:parameters.accept_language})).result,
+                            IamUserApp: parameters.data.iam_user_id !=null?
+                                            (await server.iam.iamUserLoginApp({ app_id:parameters.app_id, 
+                                                                                data:{  iam_user_id:parameters.data.iam_user_id,
+                                                                                        data_app_id:parameters.resource_id
+                                                                                }})).result[0]:
+                                                null
                             }, 
                     type:'JSON'};
         else

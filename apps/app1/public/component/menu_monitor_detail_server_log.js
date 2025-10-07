@@ -89,7 +89,7 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                     </div>
                                 </div>
                                 ${props.logs.map((
-                                                    /**@type{common['ORM']['Object']['LogRequestInfo']}*/
+                                                    /**@type{common['server']['ORM']['Object']['LogRequestInfo']}*/
                                                     log)=>
                                     `<div class='menu_monitor_detail_server_log_row'>
                                     <div class='menu_monitor_detail_server_log_request_log_col'>
@@ -173,7 +173,7 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                     </div>
                                 </div>
                                 ${props.logs.map((
-                                                    /**@type{common['ORM']['Object']['LogServerInfo']}*/
+                                                    /**@type{common['server']['ORM']['Object']['LogServerInfo']}*/
                                                     log)=>
                                     `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_server_row'>
                                         <div class='menu_monitor_detail_server_log_col'>
@@ -214,7 +214,7 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                     </div>
                                 </div>
                                 ${props.logs.map((
-                                                    /**@type{common['ORM']['Object']['LogAppInfo']}*/
+                                                    /**@type{common['server']['ORM']['Object']['LogAppInfo']}*/
                                                     log)=>
                                     `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_app_row'>
                                         <div class='menu_monitor_detail_server_log_app_data_stat_col'>
@@ -264,7 +264,7 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                     </div>
                                 </div>
                                 ${props.logs.map((
-                                                    /**@type{common['ORM']['Object']['LogServiceInfo']}*/
+                                                    /**@type{common['server']['ORM']['Object']['LogServiceInfo']}*/
                                                     log)=>
                                     `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_service_row'>
                                         <div class='menu_monitor_detail_server_log_service_log_col'>
@@ -313,7 +313,7 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                         LOG TEXT
                                     </div>
                                 </div>
-                                ${props.logs.map((/**@type{common['ORM']['Object']['LogDbInfo']}*/log)=>
+                                ${props.logs.map((/**@type{common['server']['ORM']['Object']['LogDbInfo']}*/log)=>
                                     `<div class='menu_monitor_detail_server_log_row menu_monitor_detail_server_log_db_row'>
                                         <div class='menu_monitor_detail_server_log_db_log_col'>
                                             ${log.Id}

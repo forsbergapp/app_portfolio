@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{profile:common['ORM']['View']['IamUsetGetProfile'] & {Id:number},
+ * @param {{profile:common['server']['ORM']['View']['IamUsetGetProfile'] & {Id:number},
  *          function_commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props 
  * @returns {string}
  */
@@ -113,7 +113,7 @@ const component = async props => {
             else
                 return `/server-db/iamuser-profile/${props.data.iam_user_id ?? ''}`;
     };
-    /**@type{common['ORM']['View']['IamUsetGetProfile'] & {Id:number}}*/
+    /**@type{common['server']['ORM']['View']['IamUsetGetProfile'] & {Id:number}}*/
     const profile = await props.methods.COMMON.commonFFB(
                             {
                                 path:pathInfoGet(), 
@@ -201,7 +201,7 @@ const component = async props => {
                 method:'GET', 
                 authorization_type:'APP_ID'})
             .then(result=>{
-                /**@type{common['ORM']['View']['IamUsetGetProfile'] & {Id:number}}*/
+                /**@type{common['server']['ORM']['View']['IamUsetGetProfile'] & {Id:number}}*/
                 const user_stat = JSON.parse(result)[0];
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_view_count').textContent = user_stat.CountViews;
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_following_count').textContent = user_stat.CountFollowing;

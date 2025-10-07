@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{config:common['ORM']['Object']['ConfigServer']}} props
+ * @param {{config:common['server']['ORM']['Object']['ConfigServer']}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_config_content_widget1' class='widget'>
@@ -60,7 +60,7 @@ const template = props => ` <div id='menu_config_content_widget1' class='widget'
  *                      template:string}>}
  */
 const component = async props => {
-    /**@type{common['ORM']['Object']['ConfigServer']} */
+    /**@type{common['server']['ORM']['Object']['ConfigServer']} */
     const config_server = await props.methods.COMMON.commonFFB({   path:'/server-db/configserver', 
                                                             method:'GET', 
                                                             authorization_type:'ADMIN'})

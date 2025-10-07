@@ -13,8 +13,8 @@
  * @description Template
  * @function
  * @param {{size:string,
- *          db:common['ORM']['View']['ORMGetInfo'],
- *          db_detail:common['ORM']['View']['ORMGetObjects'][],
+ *          db:common['server']['ORM']['View']['ORMGetInfo'],
+ *          db_detail:common['server']['ORM']['View']['ORMGetObjects'][],
  *          function_seconds_to_time:common['CommonModuleCommon']['commonMiscSecondsToTime'],
  *          function_roundOff:common['CommonModuleCommon']['commonMiscRoundOff']}} props
  * @returns {string}
@@ -83,11 +83,11 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
 const component = async props => {
     const size = '(Mb)';
     /**
-     * @type {common['ORM']['View']['ORMGetInfo']}
+     * @type {common['server']['ORM']['View']['ORMGetInfo']}
      */
     const db = await props.methods.COMMON.commonFFB({path:'/server-db/ORM', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows[0]);
     /**
-     * @type {common['ORM']['View']['ORMGetObjects'][]}
+     * @type {common['server']['ORM']['View']['ORMGetObjects'][]}
      */
     const db_detail = await props.methods.COMMON.commonFFB({path:'/server-db/ORM-objects', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
