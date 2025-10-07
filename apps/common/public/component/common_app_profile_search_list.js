@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{records:common['ORM']['View']['IamUsetGetProfile'][]}} props 
+ * @param {{records:common['server']['ORM']['View']['IamUsetGetProfile'][]}} props 
  * @returns {string}
  */
 const template = props =>`  ${props.records.length>0?
@@ -60,7 +60,7 @@ const component = async props => {
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_profile_search_list_wrap').style.display = 'none';
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').classList.add('common_input_error');
     }
-    /**@type{common['ORM']['View']['IamUsetGetProfile'][]} */
+    /**@type{common['server']['ORM']['View']['IamUsetGetProfile'][]} */
     const records = commonMiscInputControl?await props.methods.COMMON.commonFFB(
                                                 {
                                                     path:   '/server-db/iamuser-profile/', 

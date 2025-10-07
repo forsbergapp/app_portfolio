@@ -132,6 +132,30 @@
  *              admin_name: string}} commonWorldCitiesCity
  */
 
+ /**
+  * @description APP commonAppMount
+  * @typedef {{App:{Id:server['ORM']['Object']['App']['Id'] & {Id:number},
+  *                 Name:server['ORM']['Object']['App']['Name'],
+  *                 Js:server['ORM']['Object']['App']['Js'],
+  *                 JsContent:string|null,
+  *                 Css:server['ORM']['Object']['App']['Css'],
+  *                 CssContent:string|null,
+  *                 CssReport:server['ORM']['Object']['App']['CssReport'],
+  *                 CssReportContent:string|null,
+  *                 Favicon32x32:server['ORM']['Object']['App']['Favicon32x32'],
+  *                 Favicon32x32Content:string|null,
+  *                 Favicon192x192:server['ORM']['Object']['App']['Favicon192x192'],
+  *                 Favicon192x192Content:string|null,
+  *                 Logo:server['ORM']['Object']['App']['Logo'],
+  *                 LogoContent:string|null,
+  *                 Copyright:server['ORM']['Object']['App']['Copyright'],
+  *                 LinkUrl:server['ORM']['Object']['App']['LinkUrl'],
+  *                 LinkTitle:server['ORM']['Object']['App']['LinkTitle'],
+  *                 TextEdit:server['ORM']['Object']['App']['TextEdit']},
+  *           AppParameter:Object.<string,*>,
+  *           IamUserApp:ORM['Object']['IamUserApp']
+  *          }} commonAppMount
+  */
 
 /**
  * @description BFF server_bff_parameters
@@ -1449,6 +1473,7 @@
  *                commonComponentLifecycle:serverComponentLifecycle,
  *                commonDocumentMenu:serverDocumentMenu,
  *                commonWorldCitiesCity:commonWorldCitiesCity
+ *                commonAppMount:commonAppMount
  *                },
  *          bff:{
  *                parameters:server_bff_parameters,

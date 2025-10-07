@@ -12,12 +12,12 @@
  * @description Template
  * @function
  * @param {{app_id:number|null,
- *          chart1_stat:common['ORM']['View']['LogGetStat'][],
+ *          chart1_stat:common['server']['ORM']['View']['LogGetStat'][],
  *          function_chart1_pie_colors:function,
  *          function_chart1_legend:function,
  *          chart2_color_app_all:string,
  *          chart2_color_app:string,
- *          chart2_stat:common['ORM']['View']['LogGetStat'][],
+ *          chart2_stat:common['server']['ORM']['View']['LogGetStat'][],
  *          chart2_legend_text:string,
  *          chart2_legend_text_apps:string}} props
  * @returns {string}
@@ -142,7 +142,7 @@ const component = async props => {
         query = `data_app_id=${app_id}&statGroup=&statValue=${admin_statValues.value}&unique=&year=${year}&month=${month}`;
     
     //return result for both charts
-    /**@type{common['ORM']['View']['LogGetStat'][]} */
+    /**@type{common['server']['ORM']['View']['LogGetStat'][]} */
     const charts = await props.methods.COMMON.commonFFB({path:'/server-db/log-stat', query:query, method:'GET', authorization_type:'ADMIN'})
                         .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows)));
       

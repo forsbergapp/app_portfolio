@@ -61,7 +61,7 @@ const template = () =>`
 const component = async props => {
 
     //fetch all settings for common app id
-    /**@type{common['ORM']['Object']['AppData'][]} */
+    /**@type{common['server']['ORM']['Object']['AppData'][]} */
     const settings = props.data.admin_only == 1?[]:await props.methods.COMMON.commonFFB({  path:'/server-db/appdata/', 
                                                                                    query:`IAM_data_app_id=${props.data.common_app_id}`, 
                                                                                    method:'GET', 

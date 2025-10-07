@@ -11,7 +11,7 @@
  * @description Template
  * @function
  * @param {{maintenance:0|1|null,
- *          user_stat:(common['ORM']['View']['IamUserGetStatCountAdmin'] & {count_connected:number})[],
+ *          user_stat:(common['server']['ORM']['View']['IamUserGetStatCountAdmin'] & {count_connected:number})[],
  *          count_not_connected:number}} props
  * @returns {string}
  */
@@ -68,7 +68,7 @@ const component = async props => {
         return props.methods.COMMON.commonFFB({path:'/server-socket/socket-stat', query:`logged_in=${logged_in}`, method:'GET', authorization_type:'ADMIN'})
                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     };
-    /**@type{(common['ORM']['View']['IamUserGetStatCountAdmin'] & {count_connected:number})[]} */
+    /**@type{(common['server']['ORM']['View']['IamUserGetStatCountAdmin'] & {count_connected:number})[]} */
     const user_stat = await props.methods.COMMON.commonFFB({path:'/server-db/iamuser-stat', method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     //add count stat

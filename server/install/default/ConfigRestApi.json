@@ -1273,6 +1273,74 @@
                 }
             }
         },
+        "/bff/app_access/v1/app-mount/${IAM_data_app_id}": {
+            "get": {
+                "summary": "",
+                "operationId": "apps_common_src.common.commonAppMount",
+                "security":[
+                    {"$ref":"#/components/securitySchemes/SecurityApp"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_ip"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_host"
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_accept_language"
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_idtoken"
+                        },
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":false
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_data_app_id",
+                            "in":"path"
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "required":true,
+                            "in":"query"
+                        }
+                ],
+                "responses": {
+                   	"oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
         "/bff/app_id/v1/app-common-module/${resource_id_string}": {
             "post": {
                 "summary": "",
@@ -2319,56 +2387,6 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-iam/iamuserapp": {
-            "post": {
-                "summary": "",
-                "operationId": "server.iam.iamUserLoginApp",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "IAM_iam_user_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_id"
-                                            },
-                                            "IAM_data_app_id":{
-                                                "$ref": "#/components/parameters/IAM_data_app_id"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
         "/bff/app_access/v1/server-iam/iamuser/${IAM_iam_user_id}": {
             "get": {
                 "summary": "",
@@ -3186,56 +3204,6 @@
                                     "allOf":[
                                         {"$ref": "#/components/schema/SuccessReponsePagination/properties"},
                                         {"rows": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
-        "/bff/admin/v1/server-iam/iamuserapp": {
-            "post": {
-                "summary": "",
-                "operationId": "server.iam.iamUserLoginApp",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "IAM_iam_user_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_id"
-                                            },
-                                            "IAM_data_app_id":{
-                                                "$ref": "#/components/parameters/IAM_data_app_id"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
                                     ]
                                 }
                             ]

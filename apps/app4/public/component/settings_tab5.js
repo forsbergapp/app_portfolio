@@ -184,7 +184,7 @@ const template = () =>`   <div class='setting_horizontal_row'>
  */
 const component = async props => {
     //fetch all settings for current app id
-    /**@type{common['ORM']['Object']['AppData'][]} */
+    /**@type{common['server']['ORM']['Object']['AppData'][]} */
     const settings = await props.methods.COMMON.commonFFB({path:'/server-db/appdata/',
                                                     query:`IAM_data_app_id=${props.data.app_id}`,
                                                     method:'GET', 

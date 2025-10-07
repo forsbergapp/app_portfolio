@@ -1558,7 +1558,7 @@ const commonUserLogin = async () => {
             commonComponentRemove('common_app_dialogues_profile');
         }
         commonUserMessageShowStat();
-        await commonUserLoginApp(spinner_item);
+        commonUserLoginApp(JSON.parse(result_iam).IamUserApp);
         return {avatar: JSON.parse(result_iam).avatar};
     }
     else{
@@ -1576,18 +1576,11 @@ const commonUserLogin = async () => {
  * @name commonUserLoginApp
  * @description
  * @function
- * @param {string|null} spinner_item
- * @returns {Promise.<void>}
+ * @param {common['server']['ORM']['Object']['IamUserApp']} IamUserApp
+ * @returns {void}
  */
-const commonUserLoginApp = async spinner_item =>{
-    const IamUserApp = await commonFFB({path:'/server-iam/iamuserapp', 
-                                        body:{  IAM_data_app_id: COMMON_GLOBAL.app_id, 
-                                                IAM_iam_user_id: COMMON_GLOBAL.iam_user_id},
-                                        method:'POST', authorization_type:'APP_ACCESS', spinner_id:spinner_item})
-                                .then(result=>JSON.parse(result)[0])
-                                .catch(error=>
-                                    console.log(error));
-    COMMON_GLOBAL.iam_user_app_id = IamUserApp.id;
+const commonUserLoginApp = IamUserApp =>{
+    COMMON_GLOBAL.iam_user_app_id = IamUserApp.Id ?? null;
     //get preferences saved in Document column
     //locale
     if (IamUserApp.Document?.preference_locale==null)
@@ -1600,9 +1593,9 @@ const commonUserLoginApp = async spinner_item =>{
     else
         COMMON_GLOBAL.user_timezone = IamUserApp.Document.preference_timezone;
     //direction
-    COMMON_GLOBAL.user_direction = IamUserApp.Document?.preference_direction;
+    COMMON_GLOBAL.user_direction = IamUserApp.Document?.preference_direction??'';
     //arabic script
-    COMMON_GLOBAL.user_arabic_script = IamUserApp.Document?.preference_arabic_script;
+    COMMON_GLOBAL.user_arabic_script = IamUserApp.Document?.preference_arabic_script??'';
     //update body class with app theme, direction and arabic script usage classes
     commonMiscPreferencesUpdateBodyClassFromPreferences();
 };
@@ -2785,7 +2778,7 @@ const commonEvent = async (event_type,event=null) =>{
                             }
                             // common app toolbar
                             case 'common_app_toolbar_start':{
-                                commonMountApp(COMMON_GLOBAL.app_start_app_id);
+                                commonAppMount(COMMON_GLOBAL.app_start_app_id);
                                 break;
                             }
                             case 'common_app_toolbar_framework_js':
@@ -3345,42 +3338,42 @@ const custom_framework = () => {
     COMMON_WINDOW.console.error = console_error;
 };
 /**
- * @name commonMountApp
+ * @name commonAppMount
  * @description Mount app
  * @function
  * @param {number} app_id
  * @returns {Promise.<void>}
  */
-const commonMountApp = async (app_id) =>{   
+const commonAppMount = async (app_id) =>{   
     
     COMMON_GLOBAL.app_id =          app_id;
-    /**@type{common['commonAppInit']} */
+    /**@type{common['server']['app']['commonAppMount']} */
     const CommonAppInit = await commonFFB({ path:`/app-mount/${app_id}`, 
                                             method:'GET', 
-                                            authorization_type:'APP_ID'})
+                                            query:COMMON_GLOBAL.iam_user_id!=null?`IAM_iam_user_id=${COMMON_GLOBAL.iam_user_id}`:'',
+                                            authorization_type:COMMON_GLOBAL.iam_user_id!=null?'APP_ACCESS':'APP_ID'})
                             .then(app=>JSON.parse(app));
-    COMMON_GLOBAL.iam_user_app_id = null;
     //remove all dialogues when switching app
     Array.from(COMMON_DOCUMENT.querySelectorAll('#common_app_dialogues > div')).forEach(dialogue=>commonComponentRemove(dialogue.id));
-
-    if (COMMON_GLOBAL.iam_user_id != null)
-        await commonUserLoginApp(COMMON_DOCUMENT.querySelector('#common_app_toolbar_start')?'common_app_toolbar_start':null);
     COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_div}`).innerHTML='';
     if (COMMON_GLOBAL.app_id!=COMMON_GLOBAL.app_start_app_id)
         commonComponentRemove('common_apps');
 
-    COMMON_GLOBAL.app_id =          CommonAppInit.App.id;
-    COMMON_GLOBAL.app_logo =        CommonAppInit.App.logo_content;
-    COMMON_GLOBAL.app_copyright =   CommonAppInit.App.copyright;
-    COMMON_GLOBAL.app_link_url =    CommonAppInit.App.link_url;
-    COMMON_GLOBAL.app_link_title =  CommonAppInit.App.link_title;
-    COMMON_GLOBAL.app_text_edit =   CommonAppInit.App.text_edit;
+    COMMON_GLOBAL.app_id =          CommonAppInit.App.Id;
+    COMMON_GLOBAL.app_logo =        CommonAppInit.App.LogoContent;
+    COMMON_GLOBAL.app_copyright =   CommonAppInit.App.Copyright;
+    COMMON_GLOBAL.app_link_url =    CommonAppInit.App.LinkUrl;
+    COMMON_GLOBAL.app_link_title =  CommonAppInit.App.LinkTitle;
+    COMMON_GLOBAL.app_text_edit =   CommonAppInit.App.TextEdit;
     
-    CommonAppInit.App.css==''?
+    if (COMMON_GLOBAL.iam_user_id != null)
+        commonUserLoginApp(CommonAppInit.IamUserApp);
+    
+    CommonAppInit.App.Css==''?
         null:
-            COMMON_DOCUMENT.querySelector('#app_link_app_css').href = await commonMiscResourceFetch(CommonAppInit.App.css, null, 'text/css', CommonAppInit.App.css_content);
+            COMMON_DOCUMENT.querySelector('#app_link_app_css').href = await commonMiscResourceFetch(CommonAppInit.App.Css, null, 'text/css', CommonAppInit.App.CssContent);
 
-    const {appMetadata, default:AppInit} = await commonMiscImport(CommonAppInit.App.js, CommonAppInit.App.js_content);
+    const {appMetadata, default:AppInit} = await commonMiscImport(CommonAppInit.App.Js, CommonAppInit.App.JsContent);
     
     /**@type{common['commonMetadata']} */
     const appdata = appMetadata();
@@ -3414,15 +3407,15 @@ const commonMountApp = async (app_id) =>{
     else
         commonUserUpdateAvatar(false, null);
 
-    CommonAppInit.App.css_report==''?
+    CommonAppInit.App.CssReport==''?
         null:
-            COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(CommonAppInit.App.css_report, null, 'text/css', CommonAppInit.App.css_report_content);
-    CommonAppInit.App.favicon_32x32==''?
+            COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(CommonAppInit.App.CssReport, null, 'text/css', CommonAppInit.App.CssReportContent);
+    CommonAppInit.App.Favicon32x32==''?
         null:
-            COMMON_DOCUMENT.querySelector('#app_link_favicon_32x32').href = await commonMiscResourceFetch(CommonAppInit.App.favicon_32x32, null, 'image/png', CommonAppInit.App.favicon_32x32_content);
-    CommonAppInit.App.favicon_192x192==''?
+            COMMON_DOCUMENT.querySelector('#app_link_favicon_32x32').href = await commonMiscResourceFetch(CommonAppInit.App.Favicon32x32, null, 'image/png', CommonAppInit.App.Favicon32x32Content);
+    CommonAppInit.App.Favicon192x192==''?
         null:
-            COMMON_DOCUMENT.querySelector('#app_link_favicon_192x192').href = await commonMiscResourceFetch(CommonAppInit.App.favicon_192x192, null, 'image/png',CommonAppInit.App.favicon_192x192_content);
+            COMMON_DOCUMENT.querySelector('#app_link_favicon_192x192').href = await commonMiscResourceFetch(CommonAppInit.App.Favicon192x192, null, 'image/png',CommonAppInit.App.Favicon192x192Content);
 };
 /**
  * @name commonGet
@@ -3503,7 +3496,7 @@ const commonGet = () =>{
         /* EVENT */
         commonEvent:commonEvent,
         /* INIT */
-        commonMountApp:commonMountApp,
+        commonAppMount:commonAppMount,
         commonException:commonException,
         commonGlobals:commonGlobals,
         commonInit:commonInit,
@@ -3585,7 +3578,7 @@ const commonInit = async parameters => {
         authorization_type: 'APP_ID'});
 
     //mount start app
-    commonMountApp(COMMON_GLOBAL.app_start_app_id);
+    commonAppMount(COMMON_GLOBAL.app_start_app_id);
 
     //apply font css
     COMMON_GLOBAL.app_fonts?commonMiscCssApply(COMMON_GLOBAL.app_fonts.join('@')):null;
@@ -3663,7 +3656,7 @@ export{/* GLOBALS*/
        /* EVENT */
        commonEvent,
        /* INIT */
-       commonMountApp,
+       commonAppMount,
        commonException,
        commonGlobals,
        commonInit};

@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{apps:common['ORM']['Object']['App'][]}} props
+ * @param {{apps:common['server']['ORM']['Object']['App'][]}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
@@ -78,7 +78,7 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
  *                      template:string}>}
  */
 const component = async props => {
-    /**@type{common['ORM']['Object']['App'][]} */
+    /**@type{common['server']['ORM']['Object']['App'][]} */
     const apps = await props.methods.COMMON.commonFFB({path:'/server-db/app', method:'GET', authorization_type:'ADMIN'})
                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 

@@ -78,7 +78,7 @@ const component = async props => {
         return props.methods.COMMON.commonFFB({path:`/server-db/iamuserappdatapost-profile/${profile_id}`, query:`id_current_user=${props.data.iam_user_id??''}`, method:'GET', authorization_type:'APP_ID'})
                     .then((/**@type{string}*/result)=>
                             JSON.parse(result)
-                            .map((/**@type{common['ORM']['View']['IamUserAppDataPostgetProfileUserPosts']}*/setting)=>{return {  value:JSON.stringify({   
+                            .map((/**@type{common['server']['ORM']['View']['IamUserAppDataPostgetProfileUserPosts']}*/setting)=>{return {  value:JSON.stringify({   
                                                                                                 sid:setting.Id, 
                                                                                                 iam_user_id:setting.IamUserId, 
                                                                                                 liked:setting.Liked,

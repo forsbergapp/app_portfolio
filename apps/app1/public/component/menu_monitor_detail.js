@@ -70,7 +70,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                 BROADCAST
                                             </div>
                                         </div>
-                                        ${props.logs.map((/**@type{common['ORM']['View']['SocketGetConnected']}*/log)=>
+                                        ${props.logs.map((/**@type{common['server']['ORM']['View']['SocketGetConnected']}*/log)=>
                                             `<div class='menu_monitor_detail_connected_row ${log.IamUserid==props.iam_user_id?'list_current_user_row':''}'>
                                                 <div class='menu_monitor_detail_connected_col'>
                                                     ${log.Id}

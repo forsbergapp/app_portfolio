@@ -180,6 +180,7 @@ const iamUtilResponseNotAuthorized = async (res, status, reason, bff=false) => {
  *                                              iam_user_username:  string,
  *                                              bio?:               string | null,
  *                                              avatar?:            string | null,
+ *                                              IamUserApp?: server['ORM']['Object']['IamUserApp'],
  *                                              token_at:           string,
  *                                              exp:                number,
  *                                              iat:                number} }>}
@@ -195,25 +196,29 @@ const iamAuthenticateUser = async parameters =>{
      * @param {server['ORM']['Object']['IamAppAccess']['Type']} token_type
      * @returns {Promise.<server['server']['response'] & {result?:{
      *                                              iam_user_id:number,
-     *                                              iam_user_username:string,
+     *                                              iam_user_username?:string,
+     *                                              bio?:string | null,
+     *                                              avatar?:string |null,
+     *                                              IamUserApp?: server['ORM']['Object']['IamUserApp'],
      *                                              token_at:string,
      *                                              exp:number,
      *                                              iat:number} }>}
      */
     const check_user = async (result, user, token_type) => {     
         if (result == 1){
-            /**
-             * @param {server['ORM']['Object']['IamUserApp']['Id']} iam_user_app_id
-             * @returns {Promise.<server['server']['response']>}
-             */
-            const return_result = async (iam_user_app_id) =>{
+            //user authorized access
+            const recordIamUserApp = await iamUserLoginApp({  app_id:parameters.app_id, 
+                                                    data:{  data_app_id:parameters.app_id,
+                                                            iam_user_id:user.Id
+                                                            }});
+            if (recordIamUserApp.result){
                 //authorize access token ADMIN or APP_ACCESS for active account or APP_ACCESS_VERFICATION
                 const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                                     user.Active==1?token_type:'APP_ACCESS_VERIFICATION', 
                                                     {   app_id:             parameters.app_id,
                                                         app_id_token:       iamUtilTokenAppId(parameters.app_id),
                                                         app_custom_id:      null,
-                                                        iam_user_app_id:    iam_user_app_id??null,
+                                                        iam_user_app_id:    recordIamUserApp.result[0].Id??null,
                                                         iam_user_id:        user.Id, 
                                                         iam_user_username:  user.Username,
                                                         ip:                 parameters.ip, 
@@ -227,7 +232,7 @@ const iamAuthenticateUser = async parameters =>{
                         Res:		            result,
                         Ip:                     parameters.ip,
                         AppCustomId:            null,
-                        IamUserAppId:           iam_user_app_id??null,
+                        IamUserAppId:           recordIamUserApp.result[0].Id??null,
                         IamUserId:              user.Id,
                         IamUserUsername:        user.Username,
                         Token:                  jwt_data?jwt_data.token:null,
@@ -246,27 +251,21 @@ const iamAuthenticateUser = async parameters =>{
                         headers_accept_language:parameters.accept_language})
                 .then((result_socket)=>{
                     return  result_socket.http?result_socket:{result:{  iam_user_id:    user.Id,
-                                                                        iam_user_app_id: iam_user_app_id,
+                                                                        iam_user_app_id: recordIamUserApp.result[0].Id,
                                                                         //return only if account is active:
                                                                         ...(user.Active==1 && {iam_user_username:  user.Username}),
                                                                         ...(user.Active==1 && {bio:  user.Bio}),
                                                                         ...(user.Active==1 && {avatar:  user.Avatar}),
+                                                                        ...(user.Active==1 && {IamUserApp: recordIamUserApp.result[0]}),
                                                                         token_at:       jwt_data?jwt_data.token:null,
                                                                         exp:            jwt_data?jwt_data.exp:null,
                                                                         iat:            jwt_data?jwt_data.iat:null,
                                                                         active:         user.Active}, 
                                                                     type:'JSON'};
                 });
-            };
-            //user authorized access
-            const record = await iamUserLoginApp({  app_id:parameters.app_id, 
-                                                    data:{  data_app_id:parameters.app_id,
-                                                            iam_user_id:user.Id
-                                                            }});
-            if (record.result)
-                return return_result(record.result[0].Id);
+            }
             else
-                return record;
+                return recordIamUserApp;
         }
         else{
             //save log for all login attempts  
@@ -323,30 +322,16 @@ const iamAuthenticateUser = async parameters =>{
                                                                     }, 'ADMIN'));
         else{
 
-            /**@type{server['ORM']['Object']['IamUser']}*/
+            /**@type{server['ORM']['Object']['IamUser'] & {Id:number, Type:string}}*/
             const user =  server.ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{server['ORM']['Object']['IamUser']}*/user)=>user.Username == username)[0];
             if (user && await server.security.securityPasswordCompare(parameters.app_id, password, user.Password)){
                 if (parameters.app_id == server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP',parameter:'APP_ADMIN_APP_ID'}}).result)){
                     //admin allowed to login to admin app only
-                    if (user.Type=='ADMIN'){
-                        /**@ts-ignore */
-                        return check_user(1, user, 'ADMIN'); 
-                    }
-                    else{
-                        /**@ts-ignore */
-                        return check_user(0, user, 'ADMIN');
-                    }
+                    return check_user(user.Type=='ADMIN'?1:0, user, 'ADMIN'); 
                 }
                 else{
                     //users allowed to login to apps except admin app
-                    if (user.Type=='USER'){
-                        /**@ts-ignore */
-                        return check_user(1, user, 'APP_ACCESS'); 
-                    }
-                    else{
-                        /**@ts-ignore */
-                        return check_user(0, user, 'APP_ACCESS');
-                    }
+                    return check_user(user.Type=='USER'?1:0, user, 'APP_ACCESS'); 
                 }
             }
             else{
@@ -1489,31 +1474,27 @@ const iamUserLogout = async parameters =>{
  * @name iamUserLoginApp
  * @description
  * @function
- * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{data_app_id: server['ORM']['Object']['IamUserApp']['AppId'], 
  *                iam_user_id: server['ORM']['Object']['IamUserApp']['IamUserId']}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['IamUserApp']['Id']}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['IamUserApp']}>}
  */
 const iamUserLoginApp = async parameters => {
     /**
-     * @param{number} id 
+     * @param{number|null} id 
      */
     const iamuserapp = id => server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
                                                 resource_id: id, 
                                                 data:{  iam_user_id:parameters.data.iam_user_id, 
                                                         data_app_id:parameters.data.data_app_id}});
-    const record = server.ORM.db.IamUserApp.get({ app_id:parameters.app_id, 
-                                    resource_id: null,
-                                    data:{  iam_user_id:parameters.data.iam_user_id, 
-                                            data_app_id:parameters.data.data_app_id}});
+    const record = iamuserapp(null)
     if (record.result){
         return record.result.length==0?
                     iamuserapp((await server.ORM.db.IamUserApp.post(parameters.app_id, {  
                                                                             AppId:parameters.app_id, 
                                                                             IamUserId:parameters.data.iam_user_id, 
                                                                             Document:null})).result.InsertId):
-                        iamuserapp(record.result[0].Id);
+                        record;
     }
     else
         return record;

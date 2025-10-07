@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{user_logons:common['ORM']['Object']['IamAppAccess'][]}} props
+ * @param {{user_logons:common['server']['ORM']['Object']['IamAppAccess'][]}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_users_iam_app_access_row_title' class='menu_users_iam_app_access_row'>

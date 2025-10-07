@@ -10,23 +10,23 @@
  * @name template
  * @description Template
  * @function
- * @param {{user:common['ORM']['IamUser'] & {last_logintime?:string},
+ * @param {{user:common['server']['ORM']['Object']['IamUser'] & {last_logintime?:string},
 *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props
 * @returns {string}
 */
 const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
                                <div class='common_app_dialogues_user_menu_iam_user_row_title'>
-                                   <div id='common_app_dialogues_user_menu_iam_user_avatar' data-image=${props.user.avatar} class='common_image common_image_avatar' style='${props.user.avatar==null?'':`background-image:url(${props.user.avatar});`}'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_avatar' data-image=${props.user.Avatar} class='common_image common_image_avatar' style='${props.user.Avatar==null?'':`background-image:url(${props.user.Avatar});`}'></div>
                                    <div id='common_app_dialogues_user_menu_iam_user_private' class='common_icon'></div>
                                    <div id='common_app_dialogues_user_menu_iam_user_checkbox_profile_private' class='common_switch'></div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
                                    <div id='common_app_dialogues_user_menu_iam_user_input_username_icon' class='common_icon'></div>
-                                   <div id='common_app_dialogues_user_menu_iam_user_input_username' class='common_input common_placeholder' contentEditable='true' >${props.user.username}</div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_input_username' class='common_input common_placeholder' contentEditable='true' >${props.user.Username}</div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
                                    <div id='common_app_dialogues_user_menu_iam_user_input_bio_icon' class='common_icon'></div>
-                                   <div id='common_app_dialogues_user_menu_iam_user_input_bio' class='common_input common_placeholder' contentEditable='true' >${props.user.bio??''}</div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_input_bio' class='common_input common_placeholder' contentEditable='true' >${props.user.Bio??''}</div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
                                    <div id='common_app_dialogues_user_menu_iam_user_input_otp_icon' class='common_icon'></div>
@@ -62,7 +62,7 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
                                    <div id='common_app_dialogues_user_menu_iam_user_input_password_reminder_icon' class='common_icon'></div>
-                                   <div id='common_app_dialogues_user_menu_iam_user_input_password_reminder' class='common_input common_placeholder' contentEditable='true'>${props.user.password_reminder??''}</div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_input_password_reminder' class='common_input common_placeholder' contentEditable='true'>${props.user.PasswordReminder??''}</div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
                                    <div id='common_app_dialogues_user_menu_iam_user_label_last_logintime' class='common_icon'></div>
@@ -70,11 +70,11 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
                                    <div id='common_app_dialogues_user_menu_iam_user_label_account_created' class='common_icon'></div>
-                                   <div id='common_app_dialogues_user_menu_iam_user_label_data_account_created'>${props.commonMiscFormatJsonDate(props.user.created??'', 'LONG')}</div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_label_data_account_created'>${props.commonMiscFormatJsonDate(props.user.Created??'', 'LONG')}</div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
                                    <div id='common_app_dialogues_user_menu_iam_user_label_account_modified' class='common_icon'></div>
-                                   <div id='common_app_dialogues_user_menu_iam_user_label_data_account_modified'>${props.commonMiscFormatJsonDate(props.user.modified ??'', 'LONG')}</div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_label_data_account_modified'>${props.commonMiscFormatJsonDate(props.user.Modified ??'', 'LONG')}</div>
                                </div>
                            </div>
                            <div id='common_app_dialogues_user_menu_iam_user_buttons'>
@@ -101,7 +101,7 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
 *                      template:string}>}
 */
 const component = async props => {
-    /**@type{common['ORM']['IamUser'] & {last_logintime?:string}} */    
+    /**@type{common['server']['ORM']['Object']['IamUser'] & {last_logintime?:string}} */    
     const user = await props.methods.COMMON.commonFFB({path:`/server-iam/iamuser/${props.data.iam_user_id}`, 
                                                 method:'GET', authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
                         .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
@@ -200,7 +200,7 @@ const component = async props => {
                                 spinner_id:'common_app_dialogues_user_menu_iam_user_btn_user_delete_account'})
                     .then(()=>  resolve((()=>{
                                             props.methods.COMMON.commonComponentRemove('common_app_dialogues_user_menu');
-                                            props.methods.COMMON.commonMountApp(props.methods.COMMON.commonGlobalGet('app_start_app_id'));
+                                            props.methods.COMMON.commonAppMount(props.methods.COMMON.commonGlobalGet('app_start_app_id'));
                                             return null;
                                             })()))
                     .catch(err=>reject(err));
@@ -246,15 +246,15 @@ const component = async props => {
         * @returns {Promise.<void>}
         */
     const onMounted = async () => {
-        if (props.data.iam_user_id == user.id) {
+        if (props.data.iam_user_id == user.Id) {
 
-            if (Number(user.private))
+            if (Number(user.Private))
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.add('checked');
             else
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.remove('checked');
 
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img').style.backgroundImage= user.avatar?
-                                                                                                            `url('${user.avatar}')`:
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img').style.backgroundImage= user.Avatar?
+                                                                                                            `url('${user.Avatar}')`:
                                                                                                             'url()';
         } else {
             //User not found
