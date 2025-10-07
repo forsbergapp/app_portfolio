@@ -93,7 +93,9 @@ const component = async props => {
     const get_log_parameters = async () => {
         const result_parameters = await props.methods.COMMON.commonFFB({path:'/server-db/configserver', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'ADMIN'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
-        const result_log_objects = await props.methods.COMMON.commonFFB({path:'/server-db/ORM-objects', method:'GET', authorization_type:'ADMIN'});
+        /**@type{common['server']['ORM']['View']['ORMGetObjects'][]}*/
+        const result_log_objects = await props.methods.COMMON.commonFFB({path:'/server-db/ORM-objects', method:'GET', authorization_type:'ADMIN'})
+                                    .then((/**@type{string}*/result)=>JSON.parse(result).rows);
         
         const log_parameters = {
             REQUEST_LEVEL : result_parameters.filter((/**@type{*}*/row)=>'REQUEST_LEVEL' in row)[0]['REQUEST_LEVEL'],
@@ -104,9 +106,9 @@ const component = async props => {
             };
         
         return {parameters:log_parameters,
-                logObjects:JSON.parse(result_log_objects).rows
-                            .filter((/**@type{{name:string}}*/row)=>row.name.startsWith('Log'))
-                            .map((/**@type{{name:string}}*/row)=>{return {VALUE:row.name, TEXT:row.name};})
+                logObjects:result_log_objects
+                            .filter(row=>row.Name.startsWith('Log'))
+                            .map(row=>{return {VALUE:row.Name, TEXT:row.Name};})
                 };
     };
     const SERVICE_LOG_DATA = await get_log_parameters();

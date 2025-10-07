@@ -7,7 +7,7 @@
 const {server} = await import('./server.js');
 const {commonGeodataUser} = await import('../apps/common/src/common.js')
 
-/**@type{server['socket']['connected_list'][]} */
+/**@type{server['socket']['SocketConnectedServer'][]} */
 let SOCKET_CONNECTED_CLIENTS = [];
 
 /**
@@ -16,15 +16,15 @@ let SOCKET_CONNECTED_CLIENTS = [];
  *              
  * @function
  * @param {string} idtoken
- * @returns {server['socket']['connected_list']}
+ * @returns {server['socket']['SocketConnectedServer']}
  */
-const socketClientGet = idtoken => SOCKET_CONNECTED_CLIENTS.filter(client => client.idToken == idtoken)[0];
+const socketClientGet = idtoken => SOCKET_CONNECTED_CLIENTS.filter(client => client.IdToken == idtoken)[0];
 
 /**
  * @name socketClientAdd
  * @description Socket client add
  * @function
- * @param {server['socket']['connected_list']} newClient
+ * @param {server['socket']['SocketConnectedServer']} newClient
  * @returns {void}
  */
 const socketClientAdd = (newClient) => {
@@ -49,7 +49,7 @@ const socketClientAdd = (newClient) => {
  * @returns {Promise.<server['server']['response']>}
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
-    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.idToken == parameters.idToken).length==0){
+    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.IdToken == parameters.idToken).length==0){
         return {http:401,
                 code:'IAM',
                 text:server.iam.iamUtilMessageNotAuthorized(),
@@ -60,32 +60,32 @@ const socketClientAdd = (newClient) => {
     }
     else{
         for (const connected of SOCKET_CONNECTED_CLIENTS){
-            if (connected.idToken == parameters.idToken){
+            if (connected.IdToken == parameters.idToken){
                 if (parameters.app_only == true){
-                    connected.app_id = app_id;
-                    connected.ip = parameters.ip;
-                    connected.user_agent = parameters.headers_user_agent;
+                    connected.AppId = app_id;
+                    connected.Ip = parameters.ip;
+                    connected.UserAgent = parameters.headers_user_agent;
                 }
                 else{
                     const connectUserData =  await commonGeodataUser(app_id, parameters.ip);
-                    connected.app_id = app_id;
-                    connected.connection_date = new Date().toISOString();
-                    connected.token_access = parameters.token_access;
-                    connected.iam_user_id = parameters.iam_user_id;
-                    connected.iam_user_username = parameters.iam_user_username;
-                    connected.iam_user_type = parameters.iam_user_type;
-                    connected.token_admin = parameters.token_admin;
-                    connected.gps_latitude = connectUserData.latitude;
-                    connected.gps_longitude = connectUserData.longitude;
-                    connected.place = connectUserData.place;
-                    connected.timezone = connectUserData.timezone;
+                    connected.TokenAccess = parameters.token_access;
+                    connected.IamUserUsername = parameters.iam_user_username;
+                    connected.IamUserType = parameters.iam_user_type;
+                    connected.TokenAdmin = parameters.token_admin;
+                    connected.GpsLatitude = connectUserData.latitude;
+                    connected.GpsLongitude = connectUserData.longitude;
+                    connected.Place = connectUserData.place;
+                    connected.Timezone = connectUserData.timezone;
+                    connected.Created = new Date().toISOString();
+                    connected.AppId = app_id;
+                    connected.IamUserid = parameters.iam_user_id;
                     //send message to client with updated data
                     socketClientPostMessage({   app_id:app_id,
-                                                resource_id:connected.id,
+                                                resource_id:connected.Id,
                                                 data:{  data_app_id:null,
                                                         iam_user_id:null,
                                                         idToken:null,
-                                                        message:JSON.stringify({client_id:  connected.id, 
+                                                        message:JSON.stringify({client_id:  connected.Id, 
                                                                                 latitude:   connectUserData.latitude,
                                                                                 longitude:  connectUserData.longitude,
                                                                                 place:      connectUserData.place,
@@ -119,15 +119,15 @@ const socketClientAdd = (newClient) => {
         //except MAINTENANCE to admin and current user
         let sent = 0;
         for (const client of SOCKET_CONNECTED_CLIENTS){
-            if (client.idToken != parameters.idToken)
+            if (client.IdToken != parameters.idToken)
                 if (parameters.data.broadcast_type=='MAINTENANCE' && 
-                    client.app_id ==server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({ app_id:parameters.app_id, 
+                    client.AppId ==server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({ app_id:parameters.app_id, 
                                                                                     data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result))
                     null;
                 else
-                    if (client.app_id == parameters.data.app_id || parameters.data.app_id == null){
+                    if (client.AppId == parameters.data.app_id || parameters.data.app_id == null){
                         socketClientPostMessage({   app_id:parameters.app_id,
-                                                    resource_id:client.id,
+                                                    resource_id:client.Id,
                                                     data:{  data_app_id:null,
                                                             iam_user_id:null,
                                                             idToken:null,
@@ -142,9 +142,9 @@ const socketClientAdd = (newClient) => {
         if (parameters.data.broadcast_type=='CHAT'){
             //broadcast CHAT to specific client
             for (const client of SOCKET_CONNECTED_CLIENTS){
-                if (client.id == parameters.data.client_id){
+                if (client.Id == parameters.data.client_id){
                     socketClientPostMessage({   app_id:parameters.app_id,
-                                                resource_id:client.id,
+                                                resource_id:client.Id,
                                                 data:{  data_app_id:null,
                                                         iam_user_id:null,
                                                         idToken:null,
@@ -170,7 +170,7 @@ const socketClientAdd = (newClient) => {
  *                  order_by?:string|null,
  *                  sort?:*}
  *          }} parameters
- * @returns{Promise.<server['server']['response'] & {result?:server['socket']['connected_list_no_res'][]}>}
+ * @returns{Promise.<server['server']['response'] & {result?:server['socket']['SocketConnectedClient'][]}>}
  */
  const socketConnectedList = async parameters => {
     const app_id_select = server.ORM.UtilNumberValue(parameters.data.data_app_id);
@@ -182,40 +182,40 @@ const socketClientAdd = (newClient) => {
     const day= server.ORM.UtilNumberValue(parameters.data.day);
     /**@type{string} */
     const order_by = parameters.data.order_by ?? '';
-    /**@type{server['socket']['connected_list_sort']} */
+    /**@type{keyof server['socket']['SocketConnectedClient']} */
     const sort = parameters.data.sort;
 
     const order_by_num = order_by =='asc'?1:-1;
     return {result:SOCKET_CONNECTED_CLIENTS
                     .filter(client =>
                         //filter rows
-                        (client.app_id == app_id_select || app_id_select==null) &&
-                        parseInt(client.connection_date.substring(0,4)) == year && 
-                        parseInt(client.connection_date.substring(5,7)) == month &&
-                        parseInt(client.connection_date.substring(8,10)) == day
+                        (client.AppId == app_id_select || app_id_select==null) &&
+                        parseInt(client.Created.substring(0,4)) == year && 
+                        parseInt(client.Created.substring(5,7)) == month &&
+                        parseInt(client.Created.substring(8,10)) == day
                         )
                     .map(client=>{
-                        return {id:                     client.id,
-                                app_id:                 client.app_id, 
-                                authorization_bearer:   client.idToken,
-                                iam_user_id:            client.iam_user_id,
-                                iam_user_username:      client.iam_user_username,
-                                iam_user_type:          client.iam_user_type,
-                                connection_date:        client.connection_date,
-                                gps_latitude:           client.gps_latitude ?? '',
-                                gps_longitude:          client.gps_longitude ?? '',
-                                place:                  client.place ?? '',
-                                timezone:               client.timezone ?? '',
-                                ip:                     client.ip,
-                                user_agent:             client.user_agent};
+                        return {Id:                 client.Id,
+                                IdToken:            client.IdToken,
+                                IamUserUsername:    client.IamUserUsername,
+                                IamUserType:        client.IamUserType,
+                                Created:            client.Created,
+                                GpsLatitude:        client.GpsLatitude ?? '',
+                                GpsLongitude:       client.GpsLongitude ?? '',
+                                Place:              client.Place ?? '',
+                                Timezone:           client.Timezone ?? '',
+                                Ip:                 client.Ip,
+                                UserAgent:          client.UserAgent,
+                                AppId:              client.AppId, 
+                                IamUserid:          client.IamUserid};
                     })
                     //sort result
                     .sort((first, second)=>{
                         //sort default is connection_date if sort missing as argument
-                        if (typeof first[sort==null?'connection_date':sort] == 'number'){
+                        if (typeof first[sort==null?'Created':sort] == 'number'){
                             //number sort
-                            const first_sort_num = first[sort==null?'connection_date':sort];
-                            const second_sort_num = second[sort==null?'connection_date':sort];
+                            const first_sort_num = first[sort==null?'Created':sort];
+                            const second_sort_num = second[sort==null?'Created':sort];
                             if ((first_sort_num??0) < (second_sort_num??0) )
                                 return -1 * order_by_num;
                             else if ((first_sort_num??0) > (second_sort_num??0))
@@ -225,8 +225,8 @@ const socketClientAdd = (newClient) => {
                         }
                         else{
                             //string sort with lowercase and localcompare
-                            const first_sort = (first[sort==null?'connection_date':sort] ?? '').toString().toLowerCase();
-                            const second_sort = (second[sort==null?'connection_date':sort] ?? '').toString().toLowerCase();
+                            const first_sort = (first[sort==null?'Created':sort] ?? '').toString().toLowerCase();
+                            const second_sort = (second[sort==null?'Created':sort] ?? '').toString().toLowerCase();
                             //using localeCompare as collation method
                             if (first_sort.localeCompare(second_sort)<0 )
                                 return -1 * order_by_num;
@@ -249,9 +249,9 @@ const socketClientAdd = (newClient) => {
  const socketConnectedCount = parameters => {
     const logged_in = server.ORM.UtilNumberValue(parameters.data.logged_in);
     if (logged_in == 1)
-        return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>  connected.iam_user_id != null).length}, type:'JSON'};
+        return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>  connected.IamUserid != null).length}, type:'JSON'};
     else
-        return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>connected.iam_user_id == null).length}, type:'JSON'};
+        return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>connected.IamUserid== null).length}, type:'JSON'};
 };
 
 /**
@@ -282,7 +282,7 @@ const socketPost = async parameters =>{
                                     server.ORM.db.IamUser.get(parameters.app_id, server.ORM.UtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
                                         null;
     if (SOCKET_CONNECTED_CLIENTS
-            .filter(row=>row.idToken == parameters.idToken).length>0){
+            .filter(row=>row.IdToken == parameters.idToken).length>0){
         throw await server.iam.iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
     }
     else{
@@ -293,29 +293,29 @@ const socketPost = async parameters =>{
         parameters.response.setHeader('Connection', 'keep-alive');
 
         parameters.response.on('close', ()=>{
-            SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.id !== client_id);
+            SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.Id !== client_id);
             parameters.response.end();
         });
         const connectUserData =  await commonGeodataUser(  parameters.app_id, parameters.ip);
-        /**@type{server['socket']['connected_list']} */
+        /**@type{server['socket']['SocketConnectedServer']} */
         const newClient = {
-                            id:                     client_id,
-                            connection_date:        new Date().toISOString(),
-                            app_id:                 parameters.app_id,
-                            idToken:                parameters.idToken,
-                            uuid:                   parameters.uuid,
-                            token_access:           null,
-                            iam_user_id:            iam_user?iam_user.id:null,
-                            iam_user_username:      iam_user?iam_user.username:null,
-                            iam_user_type:          iam_user?iam_user.type:null,
-                            token_admin:            null,
-                            gps_latitude:           connectUserData.latitude,
-                            gps_longitude:          connectUserData.longitude,
-                            place:                  connectUserData.place,
-                            timezone:               connectUserData.timezone,
-                            ip:                     parameters.ip,
-                            user_agent:             parameters.user_agent,
-                            response:               parameters.response
+                            Id:                 client_id,
+                            IdToken:            parameters.idToken,
+                            Uuid:               parameters.uuid,
+                            TokenAccess:        null,
+                            IamUserUsername:    iam_user?iam_user.username:null,
+                            IamUserType:        iam_user?iam_user.type:null,
+                            TokenAdmin:         null,
+                            GpsLatitude:        connectUserData.latitude,
+                            GpsLongitude:       connectUserData.longitude,
+                            Place:              connectUserData.place,
+                            Timezone:           connectUserData.timezone,
+                            Ip:                 parameters.ip,
+                            UserAgent:          parameters.user_agent,
+                            Response:           parameters.response,
+                            Created:            new Date().toISOString(),
+                            AppId:              parameters.app_id,
+                            IamUserid:          iam_user?iam_user.id:null
                         };
     
         socketClientAdd(newClient);
@@ -395,16 +395,16 @@ const socketPost = async parameters =>{
  */
 const socketExpiredTokensUpdate = async () =>{
     for (const client of SOCKET_CONNECTED_CLIENTS){
-        if ((client.token_access && server.iam.iamUtilTokenExpired(client.app_id, 'APP_ACCESS', client.token_access)&&
-            client.token_access && server.iam.iamUtilTokenExpired(client.app_id, 'APP_ACCESS_VERIFICATION', client.token_access)) ||
-            client.token_admin && server.iam.iamUtilTokenExpired(client.app_id, 'ADMIN', client.token_admin)){
-                client.iam_user_id=null;
-                client.iam_user_type=null;
-                client.iam_user_username=null;
-                client.token_access=null;
-                client.token_admin=null;
+        if ((client.TokenAccess && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ACCESS', client.TokenAccess)&&
+            client.TokenAccess && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ACCESS_VERIFICATION', client.TokenAccess)) ||
+            client.TokenAdmin && server.iam.iamUtilTokenExpired(client.AppId, 'ADMIN', client.TokenAdmin)){
+                client.IamUserid=null;
+                client.IamUserType=null;
+                client.IamUserUsername=null;
+                client.TokenAccess=null;
+                client.TokenAdmin=null;
                 socketClientPostMessage({   app_id:0,
-                                            resource_id:client.id,
+                                            resource_id:client.Id,
                                             data:{  data_app_id:null,
                                                     iam_user_id:null,
                                                     idToken:null,
@@ -425,7 +425,7 @@ const CheckOnline = parameters => {
                                     /**@ts-ignore */
                                     return { result:parameters.resource_id?
                                                 (SOCKET_CONNECTED_CLIENTS
-                                                    .filter(client => client.iam_user_id == parameters.resource_id).length>0?
+                                                    .filter(client => client.IamUserid == parameters.resource_id).length>0?
                                                         {online:1}:
                                                             {online:0}):
                                                     {online:0}, 
@@ -446,20 +446,20 @@ const socketClientPostMessage = async parameters => {
 
     for (const client of SOCKET_CONNECTED_CLIENTS
                         .filter(row=>
-                            row.id == (parameters.resource_id??row.id) &&
-                            row.app_id == (parameters.data.data_app_id ?? row.app_id) && 
-                            row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) && 
-                            row.idToken == (parameters.data.idToken ?? row.idToken) 
+                            row.Id == (parameters.resource_id??row.Id) &&
+                            row.AppId == (parameters.data.data_app_id ?? row.AppId) && 
+                            row.IamUserid == (parameters.data.iam_user_id ?? row.IamUserid) && 
+                            row.IdToken == (parameters.data.idToken ?? row.IdToken) 
                         )){
         //get id for token in the record found
         const token_id = server.ORM.db.IamAppIdToken.get({  app_id:parameters.app_id, 
                                         resource_id:null, 
                                         data:{data_app_id:null}}).result
-                    .filter((/**@type{server['ORM']['Object']['IamAppIdToken']}*/row)=>row.Token == client.idToken)?.[0].Id;
+                    .filter((/**@type{server['ORM']['Object']['IamAppIdToken']}*/row)=>row.Token == client.IdToken)?.[0].Id;
         //get secrets from IamEncryption using uuid saved at record creation and token id
         const {jwk, iv} = server.ORM.db.IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}). result
                             .filter((/**@type{server['ORM']['Object']['IamEncryption']}*/row)=>
-                                row.Uuid == client.uuid && 
+                                row.Uuid == client.Uuid && 
                                 row.IamAppIdTokenId == token_id)
                             .map((/**@type{server['ORM']['Object']['IamEncryption']}*/row)=>{
                                 return {jwk:JSON.parse(atob(row.Secret)).jwk,
@@ -485,7 +485,7 @@ const socketClientPostMessage = async parameters => {
             statusMessage:'',
             statusCode:200,
             sse_message:encrypted,
-            res:client.response});
+            res:client.Response});
     }
 };
 export {socketClientGet, socketConnectedUpdate, socketConnectedList, socketConnectedCount, socketPost, socketConnect, 

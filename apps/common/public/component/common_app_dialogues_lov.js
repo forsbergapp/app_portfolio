@@ -73,7 +73,7 @@ const component = async props => {
         //server logs files for admin
         case 'SERVER_LOG_FILES':{
             method = 'GET';
-            lov_column = 'filename';
+            lov_column = 'Filename';
             path = '/server-db/log-files';
             query= null;
             token_type = 'ADMIN';

@@ -97,10 +97,10 @@ const commonGetFile = async parameters =>{
             })
             .catch(error=>{
                 server.ORM.db.Log.post({app_id:parameters.app_id, 
-                                        data:{  object:'LogServiceInfo', 
-                                                app:{   app_filename:server.UtilAppFilename(import.meta.url),
-                                                        app_function_name:'commonGetFile()',
-                                                        app_line:server.UtilAppLine()
+                                        data:{  object:'LogAppError', 
+                                                app:{   AppFilename:server.UtilAppFilename(import.meta.url),
+                                                        AppFunctionName:'commonGetFile()',
+                                                        AppLine:server.UtilAppLine()
                                                 },
                                                 log:`Resource ${parameters.path}, error:${error}`
                                             }
@@ -337,9 +337,9 @@ const commonResourceFile = async parameters =>{
         default:{
             return server.ORM.db.Log.post({ app_id:parameters.app_id, 
                                             data:{  object:'LogAppError', 
-                                                    app:{   app_filename:server.UtilAppFilename(import.meta.url),
-                                                            app_function_name:'commonResourceFile()',
-                                                            app_line:server.UtilAppLine()
+                                                    app:{   AppFilename:server.UtilAppFilename(import.meta.url),
+                                                            AppFunctionName:'commonResourceFile()',
+                                                            AppLine:server.UtilAppLine()
                                                     },
                                                     log:`Invalid resource ${parameters.resource_id}`
                                                 }
@@ -402,9 +402,9 @@ const commonModuleRun = async parameters => {
             else{
                 return server.ORM.db.Log.post({ app_id:parameters.app_id, 
                                                 data:{  object:'LogAppError', 
-                                                        app:{   app_filename:server.UtilAppFilename(import.meta.url),
-                                                                app_function_name:'commonModuleRun()',
-                                                                app_line:server.UtilAppLine()
+                                                        app:{   AppFilename:server.UtilAppFilename(import.meta.url),
+                                                                AppFunctionName:'commonModuleRun()',
+                                                                AppLine:server.UtilAppLine()
                                                         },
                                                         log:`Module ${parameters.resource_id} not found`
                                                     }
@@ -524,9 +524,9 @@ const commonAppReport = async parameters => {
             else{
                 return server.ORM.db.Log.post({   app_id:parameters.app_id, 
                     data:{  object:'LogAppError', 
-                            app:{   app_filename:server.UtilAppFilename(import.meta.url),
-                                    app_function_name:'commonAppReport()',
-                                    app_line:server.UtilAppLine()
+                            app:{   AppFilename:server.UtilAppFilename(import.meta.url),
+                                    AppFunctionName:'commonAppReport()',
+                                    AppLine:server.UtilAppLine()
                             },
                             log:`Module ${parameters.resource_id} not found`
                         }
@@ -623,9 +623,9 @@ const commonAppReportQueue = async parameters =>{
     else
         return server.ORM.db.Log.post({ app_id:parameters.app_id, 
                                         data:{  object:'LogAppError', 
-                                                app:{   app_filename:server.UtilAppFilename(import.meta.url),
-                                                        app_function_name:'commonAppReportQueue()',
-                                                        app_line:server.UtilAppLine()
+                                                app:{   AppFilename:server.UtilAppFilename(import.meta.url),
+                                                        AppFunctionName:'commonAppReportQueue()',
+                                                        AppLine:server.UtilAppLine()
                                                 },
                                                 log:`Module ${parameters.resource_id} not found`
                                             }
@@ -667,9 +667,9 @@ const commonModuleMetaDataGet = async parameters =>{
             else
                 return server.ORM.db.Log.post({ app_id:parameters.app_id, 
                                                 data:{  object:'LogAppError', 
-                                                        app:{   app_filename:server.UtilAppFilename(import.meta.url),
-                                                                app_function_name:'commonModuleMetaDataGet()',
-                                                                app_line:server.UtilAppLine()
+                                                        app:{   AppFilename:server.UtilAppFilename(import.meta.url),
+                                                                AppFunctionName:'commonModuleMetaDataGet()',
+                                                                AppLine:server.UtilAppLine()
                                                         },
                                                         log:`Module ${parameters.resource_id} not found`
                                                     }
@@ -958,9 +958,9 @@ const commonApp = async parameters =>{
                                 .catch(error=>{
                                     return server.ORM.db.Log.post({ app_id:parameters.app_id, 
                                                                     data:{  object:'LogAppError', 
-                                                                            app:{   app_filename:server.UtilAppFilename(import.meta.url),
-                                                                                    app_function_name:'commonApp()',
-                                                                                    app_line:server.UtilAppLine()
+                                                                            app:{   AppFilename:server.UtilAppFilename(import.meta.url),
+                                                                                    AppFunctionName:'commonApp()',
+                                                                                    AppLine:server.UtilAppLine()
                                                                             },
                                                                             log:error
                                                                         }

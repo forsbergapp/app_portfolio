@@ -580,9 +580,10 @@ class ORM_class {
                     //log in background without waiting if db log is enabled
                     this.db.Log.post({   app_id:app_id, 
                                                 data:{  object:'LogDbInfo', 
-                                                        db:{object:object,
-                                                            dml:'GET', 
-                                                            parameters:{resource_id:resource_id, data_app_id:data_app_id}
+                                                        
+                                                        db:{Object:object,
+                                                            Dml:'GET', 
+                                                            Parameters:{resource_id:resource_id, data_app_id:data_app_id}
                                                             }, 
                                                         log:records
                                                     }
@@ -1128,9 +1129,9 @@ class ORM_class {
                 else
                     return this.db.Log.post({app_id:parameters.app_id, 
                                                     data:{  object:'LogDbInfo', 
-                                                            db:{object:parameters.object,
-                                                                dml:parameters.dml, 
-                                                                parameters:parameters
+                                                            db:{Object:parameters.object,
+                                                                Dml:parameters.dml, 
+                                                                Parameters:parameters
                                                                 }, 
                                                             log:result
                                                         }
@@ -1144,9 +1145,9 @@ class ORM_class {
                 return this.db.Log.post({
                                     app_id:parameters.app_id, 
                                     data:{  object:'LogDbError', 
-                                            db:{object:parameters.object,
-                                                dml:parameters.dml, 
-                                                parameters:parameters.update ?? parameters.post ?? parameters.delete
+                                            db:{Object:parameters.object,
+                                                Dml:parameters.dml, 
+                                                Parameters:parameters.update ?? parameters.post ?? parameters.delete
                                                 }, 
                                             log:error
                                         }
