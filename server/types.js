@@ -534,7 +534,7 @@
  * @typedef {{   Id?:number,
  *               AppId:number|null,
  *               AppFilename:string,
- *               AppFunction_name:string,
+ *               AppFunctionName:string,
  *               AppAppLine:number,
  *               Logtext:string,
  *               Created?:string}} server_db_table_LogAppInfo
@@ -553,14 +553,17 @@
  */
 
 /**
- * @description DB TABLE_LOG LogServiceInfo
+ * @description DB TABLE_LOG LogBffInfo
  * @memberof dbObjects
  * @typedef {{  Id?:number,
  *              AppId:number|null,
  *              Service:string,
+ *              Method:string,
+ *              Url:string,
+ *              Operation:string|null
  *              Parameters:string,
  *              Logtext:string,
- *              Created?:string}} server_db_table_LogServiceInfo
+ *              Created?:string}} server_db_table_LogBffInfo
  */
          
 /**
@@ -585,7 +588,7 @@
  *              Referer:string,
  *              SizeReceived:number,
  *              SizeSent:number,
- *              Responsetime:number,
+ *              ResponseTime:number,
  *              Logtext:string,
  *              Created?:string}} server_db_table_LogRequestInfo
  */
@@ -909,21 +912,7 @@
  *            Uk:ORM['MetaData']['DbObject']['Uk'],
  *            Fk:ORM['MetaData']['DbObject']['Fk']}} ViewORMGetObjects
  */
-/**
- * @description DB VIEW ViewSocketGetConnected
- * @typedef {{Id:number,
- *            ConnectionDate:string,
- *            AppId:number,
- *            IamUserid:number|null,
- *            IamUserUsername:string|null,
- *            IamUserType:'ADMIN'|'USER'|null,
- *            Ip:string,
- *            GpsLatitude:string,
- *            GpsLongitude:string,
- *            Place:string,
- *            Timezone:string,
- *            UserAgent:string}} ViewSocketGetConnected
- */
+
 /** 
  * @description DB object record
  * @namespace dbObjects
@@ -1279,63 +1268,45 @@
  */
 
 /**
- * @description SOCKET server_socket_connected_list
- * @typedef {object} server_socket_connected_list
- * @property {number} id
- * @property {string} connection_date
- * @property {number} app_id
- * @property {string|null} idToken
- * @property {string|null} uuid
- * @property {number|null} iam_user_id
- * @property {string|null} iam_user_username
- * @property {'ADMIN'|'USER'|null} iam_user_type
- * @property {string|null} token_access
- * @property {string|null} token_admin
- * @property {string} gps_latitude
- * @property {string} gps_longitude
- * @property {string} place
- * @property {string} timezone
- * @property {string} ip
- * @property {string} user_agent
- * @property {server_server_res}    response
+ * @description SOCKET ViewSocketConnectedServer
+ * @typedef {{Id:number,
+ *            IamUserUsername:string|null,
+ *            IamUserType:'ADMIN'|'USER'|null,
+ *            Ip:string,
+ *            GpsLatitude:string|null,
+ *            GpsLongitude:string|null,
+ *            Place:string,
+ *            Timezone:string,
+ *            UserAgent:string,
+ *            IdToken:string,
+ *            TokenAccess:string|null,
+ *            TokenAdmin:string|null,
+ *            Uuid:string|null,
+ *            Response:server_server_res,
+ *            Created:string,
+ *            AppId:number,
+ *            IamUserid:number|null}} ViewSocketConnectedServer
  */
-
 /**
- * @description SOCKET server_socket_connected_list_no_res
- * @typedef {{  id:number,
- *              connection_date:string,
- *              app_id:number,
- *              authorization_bearer:string|null,
- *              iam_user_id:number|null,
- *              iam_user_username:string|null,
- *              iam_user_type:'ADMIN'|'USER'|null,
- *              gps_latitude:string,
- *              gps_longitude:string,
- *              place:string,
- *              timezone:string,
- *              ip:string,
- *              user_agent:string}} server_socket_connected_list_no_res
+ * @description SOCKET ViewSocketConnectedClient
+ * @typedef {{Id:ViewSocketConnectedServer['Id'],
+ *            IamUserUsername:ViewSocketConnectedServer['IamUserUsername'],
+ *            IamUserType:ViewSocketConnectedServer['IamUserType'],
+ *            Ip:ViewSocketConnectedServer['Ip'],
+ *            GpsLatitude:ViewSocketConnectedServer['GpsLatitude'],
+ *            GpsLongitude:ViewSocketConnectedServer['GpsLongitude'],
+ *            Place:ViewSocketConnectedServer['Place'],
+ *            Timezone:ViewSocketConnectedServer['Timezone'],
+ *            UserAgent:ViewSocketConnectedServer['UserAgent'],
+ *            Created:ViewSocketConnectedServer['Created'],
+ *            AppId:ViewSocketConnectedServer['AppId'],
+ *            IamUserid:ViewSocketConnectedServer['IamUserid']}} ViewSocketConnectedClient
  */
-
 /** 
  * @description SOCKET server_socket_broadcast_type
  * @typedef {'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'PROGRESS_LOADING'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'|'MESSAGE'|'FONT_URL'} server_socket_broadcast_type
  */
 
-/**
- * @description SOCKET server_socket_connected_list_sort
- * @typedef {   'id'|
- *              'connection_date'| 
- *              'app_id'|
- *              'iam_user_id'|
- *              'iam_user_username'|
- *              'iam_user_type'|
- *              'gps_latitude'|
- *              'gps_longitude'|
- *              'ip'|
- *              'user_agent'|
- *              null} server_socket_connected_list_sort
- */
 /**
  * @description TEST test_spec_result
  * @typedef {{ type:'SPY'|'UNIT'|'INTEGRATION'|'PERFORMANCE', 
@@ -1415,9 +1386,9 @@
  *                    LogDbInfo:server_db_table_LogDbInfo,
  *                    LogDbVerbose:server_db_table_LogDbInfo,
  *                    LogDbError:server_db_table_LogDbInfo,
- *                    LogServiceInfo:server_db_table_LogServiceInfo,
- *                    LogServiceVerbose:server_db_table_LogServiceInfo,
- *                    LogServiceError:server_db_table_LogServiceInfo,
+ *                    LogBffInfo:server_db_table_LogBffInfo,
+ *                    LogBffVerbose:server_db_table_LogBffInfo,
+ *                    LogBffError:server_db_table_LogBffInfo,
  *                    LogRequestInfo:server_db_table_LogRequestInfo,
  *                    LogRequestVerbose:server_db_table_LogRequestInfo,
  *                    LogRequestError:server_db_table_LogRequestInfo,
@@ -1441,8 +1412,7 @@
  *                IamUserAppDataPostGetProfileStatPost:ViewIamUserAppDataPostGetProfileStatPost,
  *                IamUserAppdataPostGetProfileUserPostDetail:ViewIamUserAppdataPostGetProfileUserPostDetail,
  *                ORMGetInfo:ViewORMGetInfo,
- *                ORMGetObjects:ViewORMGetObjects,
- *                SocketGetConnected:ViewSocketGetConnected
+ *                ORMGetObjects:ViewORMGetObjects
  *              },
  *            Type:{
  *              TokenType:'APP_ID'|server_db_table_IamAppAccess['Type']|'MICROSERVICE',
@@ -1501,10 +1471,9 @@
  *                jwt_complete:server_security_jwt_complete
  *              },
  *          socket:{
- *                connected_list:server_socket_connected_list,
- *                connected_list_no_res:server_socket_connected_list_no_res,
- *                broadcast_type:server_socket_broadcast_type,
- *                connected_list_sort:server_socket_connected_list_sort
+ *                SocketConnectedClient:ViewSocketConnectedClient,
+ *                SocketConnectedServer:ViewSocketConnectedServer
+ *                broadcast_type:server_socket_broadcast_type
  *              },
  *          test:{
  *                spec_result:test_spec_result,

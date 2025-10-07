@@ -188,10 +188,10 @@ const bffInit = async (req, res) =>{
         //SSE, log since response is open and log again when closing
         server.ORM.db.Log.post({  app_id:0, 
             data:{  object:'LogRequestInfo', 
-                    request:{   req:req,
-                                responsetime:server.UtilResponseTime(res),
-                                statusCode:res.statusCode,
-                                statusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
+                    request:{   Req:req,
+                                ResponseTime:server.UtilResponseTime(res),
+                                StatusCode:res.statusCode,
+                                StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
                             },
                     log:''
                 }
@@ -207,10 +207,10 @@ const bffInit = async (req, res) =>{
         //SSE response time will be time connected until disconnected
         server.ORM.db.Log.post({  app_id:0, 
             data:{  object:'LogRequestInfo', 
-                    request:{   req:req,
-                                responsetime:server.UtilResponseTime(res),
-                                statusCode:res.statusCode,
-                                statusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
+                    request:{   Req:req,
+                                ResponseTime:server.UtilResponseTime(res),
+                                StatusCode:res.statusCode,
+                                StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
                             },
                     log:''
                 }
@@ -495,10 +495,10 @@ const bffResponse = async parameters =>{
         //log error                                        
         server.ORM.db.Log.post({  app_id:0, 
                     data:{  object:'LogRequestError', 
-                            request:{   req:req,
-                                        responsetime:server.UtilResponseTime(res),
-                                        statusCode:res.statusCode,
-                                        statusMessage:res.statusMessage
+                            request:{   Req:req,
+                                        ResponseTime:server.UtilResponseTime(res),
+                                        StatusCode:res.statusCode,
+                                        StatusMessage:res.statusMessage
                                     },
                             log:'PayloadTooLargeError'
                         }
@@ -809,12 +809,14 @@ const bffResponse = async parameters =>{
                                                     route : 'APP',
                                                     res:bff_parameters.res})
                                 .catch((error)=>
-                                                /**@ts-ignore */
                                     server.ORM.db.Log.post({  app_id:common_app_id, 
-                                        data:{  object:'LogServiceError', 
-                                                service:{   service:bff_parameters.endpoint,
-                                                            parameters:bff_parameters.query
-                                                        },
+                                        data:{  object:'LogBffError', 
+                                                bff:{   Service:'APP',
+                                                        Method:bff_parameters.method,
+                                                        Url:bff_parameters.url,
+                                                        Operation:null,
+                                                        Parameters:bff_parameters.query
+                                                    },
                                                 log:error
                                             }
                                         }).then(() =>server.app_common.commonAppError())
@@ -838,7 +840,7 @@ const bffResponse = async parameters =>{
                                                 app_id:bff_parameters.app_id,
                                                 endpoint:bff_parameters.endpoint,
                                                 /**@ts-ignore */
-                                                method:bff_parameters.method.toUpperCase(), 
+                                                method:bff_parameters.method.toUpperCase(),
                                                 ip:bff_parameters.ip, 
                                                 host:bff_parameters.host ?? '', 
                                                 url:bff_parameters.url ?? '',
@@ -849,14 +851,18 @@ const bffResponse = async parameters =>{
                                                 parameters:decodedquery, 
                                                 body:decodedbody,
                                                 res:bff_parameters.res})
-                                .then((/**@type{*}*/result_service) => {
+                                .then(result_service => {
                                     const log_result = server.ORM.UtilNumberValue(configServer.SERVICE_LOG.filter(row=>'REQUEST_LEVEL' in row)[0].REQUEST_LEVEL)==2?result_service:'✅';
-                                                        /**@ts-ignore */
                                     return server.ORM.db.Log.post({  app_id:bff_parameters.app_id, 
-                                        data:{  object:'LogServiceInfo', 
-                                                service:{   service:bff_parameters.endpoint,
-                                                            parameters:bff_parameters.query
-                                                        },
+                                        data:{  object:'LogBffInfo', 
+                                                bff:{   Service:'RESTAPI',
+                                                        Method:bff_parameters.method,
+                                                        Url: bff_parameters.url.indexOf('?')>-1?
+                                                                bff_parameters.url.substring(0, bff_parameters.url.indexOf('?')):
+                                                                    bff_parameters.url,
+                                                        Operation:result_service.operation??null,
+                                                        Parameters:decodedquery
+                                                    },
                                                 log:log_result
                                             }
                                             
@@ -877,9 +883,12 @@ const bffResponse = async parameters =>{
                                 .catch((/**@type{server['server']['error']}*/error) => {
                                     //log with app id 0 if app id still not authenticated
                                     return server.ORM.db.Log.post({  app_id:0, 
-                                        data:{  object:'LogServiceError', 
-                                                service:{   service:bff_parameters.endpoint,
-                                                            parameters:bff_parameters.query
+                                        data:{  object:'LogBffError', 
+                                                bff:{   Service:'RESTAPI',
+                                                        Method:bff_parameters.method,
+                                                        Url:bff_parameters.url,
+                                                        Operation:null,
+                                                        Parameters:bff_parameters.query
                                                         },
                                                 log:error
                                             }
@@ -906,7 +915,7 @@ const bffResponse = async parameters =>{
  *              Returns single resource result format or ISO20022 format with either list header or page header metadata
  * @function
  * @param {server['bff']['RestApi_parameters']} routesparameters
- * @returns {Promise.<server['server']['response']>}
+ * @returns {Promise.<server['server']['response'] & {singleResource?:boolean, operation?:string}>}
  */
 const bffRestApi = async (routesparameters) =>{        
     const URI_query = routesparameters.parameters;
@@ -1182,9 +1191,9 @@ const bffRestApi = async (routesparameters) =>{
                                                                                                                         configPath.components)??{}
                                                                                                         )[0]})
                                 });
-                return { ...result,
-                            ...{singleResource:singleResource()
-                                }
+                return { singleResource:singleResource(),
+                         operation:methodObj.operationId,
+                         ...result
                         };
             }
             else{

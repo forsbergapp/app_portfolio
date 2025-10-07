@@ -657,6 +657,7 @@
 	display:inline-block;
 	width:auto;
 	margin-inline-end: 10px;
+	overflow: auto;
 }
 .menu_monitor_detail_server_log_server_row{
     grid-template-columns: 80px 120px auto !important;
@@ -664,8 +665,8 @@
 .menu_monitor_detail_server_log_app_row{
     grid-template-columns: 80px 120px 30px 150px 100px 100px !important;
 }
-.menu_monitor_detail_server_log_service_row{
-    grid-template-columns: 80px 30px 170px 625px 500px 500px !important;
+.menu_monitor_detail_server_log_bff_row{
+    grid-template-columns: 80px 120px 50px 70px 70px 250px 500px 500px 100px !important
 }
 .menu_monitor_detail_server_log_db_row{
     grid-template-columns: 80px 120px 70px 100px 50px 500px 400px 100px !important;

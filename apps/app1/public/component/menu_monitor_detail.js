@@ -33,7 +33,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                             <div data-column='Id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('Id')}'>
                                                 ID
                                             </div>
-                                            <div data-column='ConnectionDate' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('ConnectionDate')}'>
+                                            <div data-column='Created' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('Created')}'>
                                                 CONNECTION DATE
                                             </div>
                                             <div data-column='AppId' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('AppId')}'>
@@ -70,13 +70,13 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                 BROADCAST
                                             </div>
                                         </div>
-                                        ${props.logs.map((/**@type{common['server']['ORM']['View']['SocketGetConnected']}*/log)=>
+                                        ${props.logs.map((/**@type{common['server']['socket']['SocketConnectedClient']}*/log)=>
                                             `<div class='menu_monitor_detail_connected_row ${log.IamUserid==props.iam_user_id?'list_current_user_row':''}'>
                                                 <div class='menu_monitor_detail_connected_col'>
                                                     ${log.Id}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
-                                                    ${log.ConnectionDate}
+                                                    ${log.Created}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
                                                     ${log.AppId}
@@ -217,7 +217,7 @@ const component = async props => {
             case 'SERVER_LOG':{
                 const logObject = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').getAttribute('data-value');
                 let app_id_filter='';
-                if (logObject.startsWith('LogApp') || logObject.startsWith('LogService') || logObject.startsWith('LogDb')){
+                if (logObject.startsWith('LogApp') || logObject.startsWith('LogBff') || logObject.startsWith('LogDb')){
                     //show app filter and use it
                     props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
                     app_id_filter = `data_app_id=${app_id}&`;

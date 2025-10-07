@@ -5,7 +5,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 -->
 <dbmodel pgmodeler-ver="1.2.0-beta1" use-changelog="false" max-obj-count="52"
 	 gen-disabled-objs-code="false" show-sys-schemas-rects="true"
-	 last-position="-223,-441" last-zoom="0.9" scene-rect="-248,-490,8068.78,3386.12"
+	 last-position="2300,-90" last-zoom="0.9" scene-rect="-248,-490,8068.78,3386.12"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -211,9 +211,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="LogServiceInfo" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+<table name="LogBffInfo" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3140" y="240"/>
+	<position x="3140" y="160"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -221,6 +221,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer" length="0"/>
 	</column>
 	<column name="Service">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Method">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Url">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Operation">
 		<type name="varchar" length="0"/>
 	</column>
 	<column name="Parameters">
@@ -232,7 +241,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="Created" not-null="true">
 		<type name="varchar" length="0"/>
 	</column>
-	<constraint name="LogServiceInfo_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogServiceInfo&quot;">
+	<constraint name="LogServiceInfo_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogBffInfo&quot;">
 		<columns names="Id" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -615,9 +624,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="LogServiceError" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+<table name="LogBffError" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3640" y="240"/>
+	<position x="3640" y="160"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -625,6 +634,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="integer" length="0"/>
 	</column>
 	<column name="Service">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Method">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Url">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Operation">
 		<type name="varchar" length="0"/>
 	</column>
 	<column name="Parameters">
@@ -636,7 +654,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="Created" not-null="true">
 		<type name="varchar" length="0"/>
 	</column>
-	<constraint name="LogServiceError_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogServiceError&quot;">
+	<constraint name="LogServiceError_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogBffError&quot;">
 		<columns names="Id" ref-type="src-columns"/>
 	</constraint>
 </table>

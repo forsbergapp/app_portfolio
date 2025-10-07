@@ -23,8 +23,9 @@ const {STATUS_CODES} = await import('node:http');
 *                   'LogRequestError'|
 *                   'LogServerInfo'|
 *                   'LogServerError'|
-*                   'LogServiceInfo'|
-*                   'LogServiceError'>,
+*                   'LogBffInfo'|
+*                   'LogBffVerbose'|
+*                   'LogBffError'>,
 *                   search:string|null,
 *                   sort:string|null,
 *                   order_by:string|null,
@@ -48,8 +49,9 @@ const get = async parameters => {
      *             'LogRequestError'|
      *             'LogServerInfo'|
      *             'LogServerError'|
-     *             'LogServiceInfo'|
-     *             'LogServiceError'>,
+     *             'LogBffInfo'|
+     *             'LogBffVerbose'|
+     *             'LogBffError'>,
      *              search:string|null,
      *              sort:string|null,
      *              order_by:string|null,
@@ -91,7 +93,7 @@ const get = async parameters => {
        .then(log_rows_array_obj=>{
            data.search = data.search=='null'?'':data.search;
            data.search = data.search==null?'':data.search;
-           if (!data.logobject.startsWith('LogApp') && !data.logobject.startsWith('LogService') && !data.logobject.startsWith('LogDb'))
+           if (!data.logobject.startsWith('LogApp') && !data.logobject.startsWith('LogBff') && !data.logobject.startsWith('LogDb'))
                data.data_app_id = null;
            //filter records
            log_rows_array_obj.rows = log_rows_array_obj.rows.filter((/**@type{*}*/record) => {
@@ -319,15 +321,15 @@ const getStat = async parameters => {
 * @description Get log files
 * @function
 * @memberof ROUTE_REST_API
-* @returns{Promise.<server['server']['response'] & {result?:{id:number, filename:string}[]|[]}>}
+* @returns{Promise.<server['server']['response'] & {result?:{Id:number, Filename:string}[]|[]}>}
 */
 const getFiles = async () => {
     return {result:await server.ORM.getFsDir()
                    .then(result=>
                        result
                        .filter(row=>row.name.startsWith('Log') && row.isDirectory()==false)
-                       .map((file, index)=>{return {id: index, 
-                                                   filename:file.name
+                       .map((file, index)=>{return {Id: index, 
+                                                    Filename:file.name
                                                    };
                                            })
                    ),
@@ -349,20 +351,23 @@ const getFiles = async () => {
  *                                  'LogRequestError'|
  *                                  'LogServerInfo'|
  *                                  'LogServerError'|
- *                                  'LogServiceInfo'|
- *                                  'LogServiceError'>,
- *                  request?:{  req:server['server']['req'],
- *                              responsetime:number,
- *                              statusCode:number,
- *                              statusMessage:string | number | object | Error | null},
- *                  service?:{  service:string,
- *                              parameters:string},
- *                  db?:{       object:server['ORM']['MetaData']['DbObject'],
- *                              dml:string,
- *                              parameters:*},
- *                  app?:{      app_filename:string,
- *                              app_function_name:string,
- *                              app_line:number},
+ *                                  'LogBffInfo'|
+ *                                  'LogBffError'>,
+ *                  request?:{  Req:server['server']['req'],
+ *                              ResponseTime:number,
+ *                              StatusCode:number,
+ *                              StatusMessage:string | number | object | Error | null},
+ *                  bff?:{      Service:string,
+ *                              Method:string,
+ *                              Url:string,
+ *                              Operation:string|null,
+ *                              Parameters:string},
+ *                  db?:{       Object:server['ORM']['MetaData']['DbObject']['Name'],
+ *                              Dml:string,
+ *                              Parameters:*},
+ *                  app?:{      AppFilename:string,
+ *                              AppFunctionName:string,
+ *                              AppLine:number},
  *                  log:        *
  *              }
  *          }} parameters
@@ -380,8 +385,8 @@ const post = async parameters => {
      *              'LogRequestError'|
      *              'LogServerInfo'|
      *              'LogServerError'|
-     *              'LogServiceInfo'|
-     *              'LogServiceError'>|null}
+     *              'LogBffInfo'|
+     *              'LogBffError'>|null}
      */
     let log_object = null;
     switch (parameters.data.object){
@@ -392,14 +397,17 @@ const post = async parameters => {
             log_object = parameters.data.object;
             break;
         }
-        case 'LogServiceError':
-        case 'LogServiceInfo':{
+        case 'LogBffError':
+        case 'LogBffInfo':{
             const service_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'SERVICE_LEVEL'}}).result;
-            /**@type{server['ORM']['Object']['LogServiceInfo']}*/
+            /**@type{server['ORM']['Object']['LogBffInfo']}*/
             log = (service_level=='1' ||service_level=='2')?
                     {AppId:     parameters.app_id,
-                    Service:    parameters.data.service?.service,
-                    Parameters: parameters.data.service?.parameters,
+                    Service:    parameters.data.bff?.Service,
+                    Method:     parameters.data.bff?.Method,
+                    Url:        parameters.data.bff?.Url,
+                    Operation:  parameters.data.bff?.Operation,
+                    Parameters: parameters.data.bff?.Parameters,
                     Logtext:    parameters.data.log
                     }:null;
             log_object = parameters.data.object;
@@ -412,9 +420,9 @@ const post = async parameters => {
                 /**@type{server['ORM']['Object']['LogAppInfo']} */
                 log ={
                     AppId:            parameters.app_id,
-                    AppFilename:      parameters.data.app?.app_filename,
-                    AppFunctionName:  parameters.data.app?.app_function_name,
-                    AppAppLine:       parameters.data.app?.app_line,
+                    AppFilename:      parameters.data.app?.AppFilename,
+                    AppFunctionName:  parameters.data.app?.AppFunctionName,
+                    AppAppLine:       parameters.data.app?.AppLine,
                     logtext:           parameters.data.log
                     };
                 log_object = parameters.data.object;
@@ -431,9 +439,9 @@ const post = async parameters => {
                 /**@type{server['ORM']['Object']['LogDbError']} */
                 log = {
                         AppId:         parameters.app_id,
-                        Object:         parameters.data.db?.object,
-                        Dml:            parameters.data.db?.dml,
-                        Parameters:     parameters.data.db?.parameters,
+                        Object:         parameters.data.db?.Object,
+                        Dml:            parameters.data.db?.Dml,
+                        Parameters:     parameters.data.db?.Parameters,
                         Logtext:        db_level=='1'?
                                             `Rows:${parameters.data.log.affectedRows?parameters.data.log.affectedRows:parameters.data.log.length}`:
                                             typeof parameters.data.log=='object'?JSON.stringify(parameters.data.log):parameters.data.log
@@ -460,29 +468,29 @@ const post = async parameters => {
             };
             const request_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}).result; 
             if (request_level=='1'||request_level=='2'){
-                log = { Host:               parameters.data.request?.req.headers.host,
-                        AppId:              parameters.data.request?.req.headers.x?.app_id,
-                        AppIdAuth:          parameters.data.request?.req.headers.x?.app_id_auth,
-                        Ip:                 parameters.data.request?.req.ip,
-                        RequestId:          parameters.data.request?.req.headers['x-request-id'],
-                        CorrelationId:      parameters.data.request?.req.headers['x-correlation-id'],
-                        Url:                parameters.data.request?.req.originalUrl,
-                        XUrl:               parameters.data.request?.req.headers.x?.url,
-                        HttpInfo:          'HTTP/' + parameters.data.request?.req.httpVersion,
-                        Method:             parameters.data.request?.req.method,
-                        XMethod:            parameters.data.request?.req.headers.x?.method,
-                        StatusCode:         parameters.data.request?.statusCode,
-                        StatusMessage:      parameters.data.request?.statusMessage,
-                        UserAgent:          parameters.data.request?.req.headers['user-agent'], 
-                        AcceptLanguage:     parameters.data.request?.req.headers['accept-language'], 
-                        Referer:            parameters.data.request?.req.headers.referer,
-                        SizeReceived:       parameters.data.request?.req.socket.bytesRead,
-                        SizeSent:           parameters.data.request?.req.socket.bytesWritten,
-                        ResponseTime:       parameters.data.request?.responsetime,
+                log = { Host:               parameters.data.request?.Req.headers.host,
+                        AppId:              parameters.data.request?.Req.headers.x?.app_id,
+                        AppIdAuth:          parameters.data.request?.Req.headers.x?.app_id_auth,
+                        Ip:                 parameters.data.request?.Req.ip,
+                        RequestId:          parameters.data.request?.Req.headers['x-request-id'],
+                        CorrelationId:      parameters.data.request?.Req.headers['x-correlation-id'],
+                        Url:                parameters.data.request?.Req.originalUrl,
+                        XUrl:               parameters.data.request?.Req.headers.x?.url,
+                        HttpInfo:          'HTTP/' + parameters.data.request?.Req.httpVersion,
+                        Method:             parameters.data.request?.Req.method,
+                        XMethod:            parameters.data.request?.Req.headers.x?.method,
+                        StatusCode:         parameters.data.request?.StatusCode,
+                        StatusMessage:      parameters.data.request?.StatusMessage,
+                        UserAgent:          parameters.data.request?.Req.headers['user-agent'], 
+                        AcceptLanguage:     parameters.data.request?.Req.headers['accept-language'], 
+                        Referer:            parameters.data.request?.Req.headers.referer,
+                        SizeReceived:       parameters.data.request?.Req.socket.bytesRead,
+                        SizeSent:           parameters.data.request?.Req.socket.bytesWritten,
+                        ResponseTime:       parameters.data.request?.ResponseTime,
                         Logtext:            parameters.data.object=='LogRequestInfo'?
                                                 (request_level=='1'?
                                                     '':
-                                                        'req:' + JSON.stringify(Object.assign({}, parameters.data.request?.req), getCircularReplacer())): 
+                                                        'req:' + JSON.stringify(Object.assign({}, parameters.data.request?.Req), getCircularReplacer())): 
                                             parameters.data.object=='LogRequestError'?
                                                 (parameters.data.log.status + '-' + parameters.data.log.message):
                                                     ''
