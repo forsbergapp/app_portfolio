@@ -4,7 +4,7 @@
 
 /**
  * @import {server} from '../../../../server/types.js'
- * @import {bank_transaction} from './types.js'
+ * @import {currency, metadata_account, bank_account, bank_transaction} from './types.js'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -101,6 +101,7 @@ const getStatement = async parameters =>{
     const Entity            = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                                     resource_id:null, 
                                                     data:{data_app_id:parameters.data.data_app_id}}).result[0];
+    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction})[]}} */
     const transactions = server.ORM.db.AppDataResourceDetailData.get({app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{  iam_user_id:parameters.data.iam_user_id,
@@ -111,6 +112,7 @@ const getStatement = async parameters =>{
                                                                 app_data_resource_detail_id:null,
                                                                 app_data_entity_id:Entity.Id
                                                         }});
+    /**@type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:metadata_account})[]}} */
     const AccountMetaData   = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
@@ -118,6 +120,7 @@ const getStatement = async parameters =>{
                                                                     resource_name:'ACCOUNT',
                                                                     app_data_entity_id:Entity.Id
                                                             }}).result;
+    /**@type{(server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account})}} */
     const CustomerAccount   = server.ORM.db.AppDataResourceDetail.get(   {app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:parameters.data.iam_user_id,
@@ -126,6 +129,7 @@ const getStatement = async parameters =>{
                                                                     app_data_resource_master_id:null,
                                                                     app_data_entity_id:Entity.Id
                                                             }}).result[0];
+    /**@type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:currency})}} */
     const currency          = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
@@ -133,21 +137,21 @@ const getStatement = async parameters =>{
                                                                     resource_name:'CURRENCY',
                                                                     app_data_entity_id:Entity.Id
                                                             }}).result[0];
-    //amount_deposit and amount_withdrawal from JSON.parse(Document) column, each app is responsible for APP_ID Document content
+    /**@type{number} */
     const balance = transactions.result.reduce((/**@type{number}*/balance, /**@type{{Document:bank_transaction}}*/current_row)=>balance += 
                                                                     (current_row.Document.AmountDeposit ?? current_row.Document.AmountWithdrawal) ?? 0,0) ?? 0;
     return {result:[{
                     //ENTITY ACCOUNT resource
                     TitleSub	            :Entity.Document?.Name??'',
                     //ACCOUNT resource
-                    Title	                :AccountMetaData.filter((/**@type{*}*/row)=>'Title' in row)[0].Title.DefaultText,
+                    Title	                :AccountMetaData.filter((/**@type{*}*/row)=>'Title' in row.Document)[0].Document.Title.DefaultText,
                     BankAccountIban	        :IBAN_compose(  /**@ts-ignore */
                                                             Entity.Document?.CountryCode, 
                                                             Entity.Document?.BankId, 
-                                                            CustomerAccount.BankAccountNumber, true),
-                    BankAccountNumber       :CustomerAccount.BankAccountNumber,
-                    Currency                :currency.CurrencySymbol,
-                    CurrencyName            :currency.CurrencyName,
+                                                            CustomerAccount.Document.BankAccountNumber, true),
+                    BankAccountNumber       :CustomerAccount.Document.BankAccountNumber,
+                    Currency                :currency.Document.CurrencySymbol,
+                    CurrencyName            :currency.Document.CurrencyName,
                     BankAccountBalance      :Number(balance)
             }], type:'JSON'};
 }; 

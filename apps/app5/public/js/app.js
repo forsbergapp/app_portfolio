@@ -367,11 +367,10 @@ const appPaymentRequestShow = async message =>{
                             },
                 path:       '/common/component/common_app_data_display.js'})
             .then(()=>{
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent = 
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent + ' ' +
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').textContent;
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent += ' ' +
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=CurrencySymbol]').textContent;
 
-                common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
+                common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=Countdown]'), 
                                                     JSON.parse(message).exp);
             })
             .catch(()=>common.commonComponentRemove('common_app_dialogues_app_data_display'));

@@ -19,7 +19,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:bank_transaction}>}
+ * @returns {Promise.<server['server']['response'] & {result?:bank_transaction[]}>}
  */
 const getTransacions = async parameters =>{
     

@@ -4,7 +4,7 @@
 
 /**
  * @import {server} from '../../../../server/types.js'
- * @import {payment_request, bank_account, merchant} from './types.js'
+ * @import {currency, payment_request, bank_account, merchant} from './types.js'
  */
 const {server} = await import('../../../../server/server.js');
 const {getToken} = await import('./payment_request_create.js');
@@ -22,16 +22,17 @@ const {getToken} = await import('./payment_request_create.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{payment_request_message:string,
- *                                              token:                  string,
- *                                              exp:                    number|null,
- *                                              iat:                    number|null,
- *                                              payment_request_id:     string,
- *                                              status:                 string,
- *                                              merchant_name:          string,
- *                                              amount:			        number|null,
- *                                              currency_symbol:        string,
- *                                              countdown:              string}[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:{
+ *                                              PaymentRequestMessage:  string,
+ *                                              Token:                  string,
+ *                                              Exp:                    number|null,
+ *                                              Iat:                    number|null,
+ *                                              PaymentRequestId:       string,
+ *                                              Status:                 string,
+ *                                              MerchantName:           string,
+ *                                              Amount:			        number|null,
+ *                                              CurrencySymbol:         string,
+ *                                              Countdown:              string}[]}>}
  */
 const paymentRequestGet = async parameters =>{
 
@@ -43,7 +44,7 @@ const paymentRequestGet = async parameters =>{
     const token = await getToken({app_id:parameters.app_id, authorization:parameters.data.token, ip:parameters.ip});
 
     //get payment request using app_custom_id that should be the payment request id
-    /**@type{payment_request} */
+    /**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:payment_request}} */
     const payment_request = server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         all_users:true,
                                                         resource_id:null, 
@@ -56,7 +57,7 @@ const paymentRequestGet = async parameters =>{
                                         payment_request.Document?.PaymentRequestId==token?.app_custom_id
                                     )[0];
     if (payment_request){
-        /**@type{bank_account} */
+        /**@type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}} */
         const account_payer = server.ORM.db.AppDataResourceDetail.get({   app_id:parameters.app_id, 
                                                             all_users:true,
                                                             resource_id:null, 
@@ -67,9 +68,9 @@ const paymentRequestGet = async parameters =>{
                                                                     app_data_entity_id:Entity.Id
                                                             }}).result
                                 .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail']}*/result)=>
-                                    result.Document?.BankAccountVpa == payment_request.PayerId
+                                    result.Document?.BankAccountVpa == payment_request.Document.PayerId
                                 )[0];
-        /**@type{merchant} */
+        /**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:merchant}} */
         const merchant      = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             all_users:true,
                                                             resource_id:null, 
@@ -79,8 +80,9 @@ const paymentRequestGet = async parameters =>{
                                                                     app_data_entity_id:Entity.Id
                                                             }}).result
                                 .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster']}*/merchant)=>
-                                    merchant.Document?.MerchantId==payment_request.MerchantId
+                                    merchant.Document?.MerchantId==payment_request.Document.MerchantId
                                 )[0];
+        /**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:currency}} */
         const currency      = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
@@ -89,16 +91,16 @@ const paymentRequestGet = async parameters =>{
                                                                     app_data_entity_id:Entity.Id
                                                             }}).result[0];
         if (account_payer && merchant && currency){
-            return  {result:[{   payment_request_message:'Authorize this payment',
-                                token:                  parameters.data.token,
-                                exp:                    token?.exp??null,
-                                iat:                    token?.iat??null,
-                                payment_request_id:     payment_request.Document?.PaymentRequestId??'',
-                                status:                 payment_request.Document?.Status??'',
-                                merchant_name:          merchant.Document?.MerchantName??'',
-                                amount:			        server.ORM.UtilNumberValue(payment_request.Document?.Amount),
-                                currency_symbol:        currency.Document?.CurrencySymbol??'',
-                                countdown:              ''}],
+            return  {result:[{   PaymentRequestMessage:'Authorize this payment',
+                                Token:                  parameters.data.token,
+                                Exp:                    token?.exp??null,
+                                Iat:                    token?.iat??null,
+                                PaymentRequestId:       payment_request.Document?.PaymentRequestId??'',
+                                Status:                 payment_request.Document?.Status??'',
+                                MerchantName:           merchant.Document?.MerchantName??'',
+                                Amount:			        server.ORM.UtilNumberValue(payment_request.Document?.Amount),
+                                CurrencySymbol:         currency.Document?.CurrencySymbol??'',
+                                Countdown:              ''}],
                     type:'JSON'};
             }
         else

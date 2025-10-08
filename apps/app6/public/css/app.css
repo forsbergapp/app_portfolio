@@ -120,11 +120,11 @@ body {
     top: unset !important;
 	position: fixed !important;
 }
-.common_app_data_display_type_image{
+.common_app_data_display_master_col2[data-key=Image]{
 	stroke-width: 4;
 }
-.common_app_data_display_type_image svg:hover,
-.common_app_data_display_type_image svg:active{
+.common_app_data_display_master_col2[data-key=Image] svg:hover,
+.common_app_data_display_master_col2[data-key=Image] svg:active{
 	
 	cursor: pointer;
 }
@@ -146,7 +146,7 @@ body {
 	text-align: center !important;
 	width: 100%;
 }
-.common_app_data_display_type_image,
+.common_app_data_display_master_col2[data-key=Image],
 .common_select_dropdown_value.common_app_data_display_master_row_list,
 .common_select_options {
 	border-radius:2px;
@@ -215,24 +215,24 @@ body {
 	--common_app_color_background_spinner:var(--common_app_color_white);
 }
 /* APP THEME COMMON*/
-.common_app_data_display_master_col1[data-key=token],
-.common_app_data_display_master_col2.common_app_data_display_type_token,
-.common_app_data_display_master_col1[data-key=exp],
-.common_app_data_display_master_col2.common_app_data_display_type_exp,
-.common_app_data_display_master_col1[data-key=iat],
-.common_app_data_display_master_col2.common_app_data_display_type_iat,
-.common_app_data_display_master_col1[data-key=tokentimestamp],
-.common_app_data_display_master_col2.common_app_data_display_type_tokentimestamp,
-.common_app_data_display_master_col1[data-key=payment_request_id],
-.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id,
-.common_app_data_display_master_col1[data-key=currency_symbol],
-.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol,
-.common_app_data_display_master_col1[data-key=payment_request_message],
-.common_app_data_display_master_col1[data-key=countdown]{
+.common_app_data_display_master_col1[data-key=Token],
+.common_app_data_display_master_col2[data-key=Token],
+.common_app_data_display_master_col1[data-key=Exp],
+.common_app_data_display_master_col2[data-key=Exp],
+.common_app_data_display_master_col1[data-key=Iat],
+.common_app_data_display_master_col2[data-key=Iat],
+.common_app_data_display_master_col1[data-key=TokenTimestamp],
+.common_app_data_display_master_col2[data-key=TokenTimestamp],
+.common_app_data_display_master_col1[data-key=PaymentRequestId],
+.common_app_data_display_master_col2[data-key=PaymentRequestId],
+.common_app_data_display_master_col1[data-key=CurrencySymbol],
+.common_app_data_display_master_col2[data-key=CurrencySymbol],
+.common_app_data_display_master_col1[data-key=PaymentRequestMessage],
+.common_app_data_display_master_col1[data-key=Countdown]{
 	display:none;
 }
-.common_app_data_display_master_col2.common_app_data_display_type_payment_request_message,
-.common_app_data_display_master_col2.common_app_data_display_type_countdown{
+.common_app_data_display_master_col2[data-key=PaymentRequestMessage],
+.common_app_data_display_master_col2[data-key=Countdown]{
 	width: 100% !important;
 	text-align: center;
 }
@@ -243,7 +243,7 @@ body {
 .common_select_dropdown_value.common_app_data_display_master_row_list{
 	background-color: var(--common_app_color_white);
 }
-.common_app_data_display_type_image{
+.common_app_data_display_master_col2[data-key=Image]{
 	background-color: var(--common_app_color_white);
 	fill:var(--common_app_color_blue3);
 	stroke: var(--common_app_color_black);

@@ -1,6 +1,36 @@
 /**
  * @module apps/app5/src/functions/types
  */
+/**
+ * @description AppData Resource metadata
+ * @typedef {{DefaultText: string, Length:number|null, Type:string, Lov:string|null}} resource_metadata
+ */
+/**
+ * @description Account metadata
+ * @typedef {{  Title:resource_metadata,
+ *              CustomerType:resource_metadata,
+ *              Name:resource_metadata,
+ *              Address:resource_metadata,
+ *              City:resource_metadata,
+ *              Country:resource_metadata}} metadata_account
+ */
+/**
+ * @description customer
+ * @typedef {{CustomerType: string,
+ *            Name:         string,
+ *            Address:      string,
+ *            City:         string,
+ *            Country:      string}} customer
+ */
+/**
+ * @description  currency
+ * @typedef {{  ConversionRate: number,
+ *              Created:        string,
+ *              CurrencyCode:   string,
+ *              CurenceName:    string,
+ *              CurrencySymbol: string,
+ *              DecimalPlaces:  string}} currency
+ */
 /** 
  * @description merchant
  * @typedef {{  Title:                 string,
@@ -16,36 +46,26 @@
  *              MerchantApiSecret:     string,
  *              MerchantPublicKey:     string,
  *              MerchantPrivateKey:    string,
- *              MerchantVpa:           string,
- *              Document:              {[key:string]:string},
- *              Id:                    number,                 
- *              IamUserAppId:          number}} merchant
+ *              MerchantVpa:           string}} merchant
  */
 /**
  * @description payment_request
  * @typedef {{  MerchantId:         number,
- *              PaymentRequestId:  string,
+ *              PaymentRequestId:   string,
  *              Reference:          string,
  *              PayeeId:            string,
  *              PayerId:            string,
  *              CurrencyCode:       string,
  *              Amount:             number|null,
  *              Message:            string,
- *              Document?:          {[key:string]:string},
  *              Status:             string}} payment_request
  */
 
 /** 
  * @description bank_account
- * @typedef {{Title:string;
- *            BankAccountIban:string;
- *            BankAccountNumber:string;
- *            BankAccount_balance:string;
- *            BankAccount_secret:string;
- *            BankAccount_vpa:string;
- *            Currency:string;
- *            CurrencyName:string,
- *            Document:{[key:string]:string}}} bank_account
+ * @typedef {{BankAccountNumber:string,
+ *            BankAccountSecret:string,
+ *            BankAccountVpa:string}} bank_account
  */
 /**
  * @description bank_transaction

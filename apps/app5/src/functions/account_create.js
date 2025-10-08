@@ -4,6 +4,7 @@
 
 /**
  * @import {server} from '../../../../server/types.js'
+ * @import {bank_account} from './types.js'
  */
 const {server} = await import('../../../../server/server.js');
 
@@ -31,6 +32,7 @@ const createBankAccount = async parameters =>{
     return server.ORM.db.AppDataResourceDetail.post({app_id:parameters.app_id, data:{   AppDataResourceMasterId:parameters.data.app_data_resource_master_id,
                                                                                         AppDataEntityResourceId:parameters.data.app_data_entity_resource_id,
                                                                                         AppDataResourceMasterAttributeId:parameters.data.app_data_resource_master_attribute_id,
+                                                                                        /**@type{bank_account} */
                                                                                         Document:{
                                                                                                 BankAccountNumber :createBankAccountNumber(),
                                                                                                 BankAccountSecret :createBankAccountSecret(),

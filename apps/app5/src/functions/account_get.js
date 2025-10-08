@@ -3,6 +3,7 @@
  */
 /**
  * @import {server} from '../../../../server/types.js'
+ * @import {bank_account} from './types.js'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -19,7 +20,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceDetail'][]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account})[]}>}
  */
 const accountGet = async parameters =>{
 

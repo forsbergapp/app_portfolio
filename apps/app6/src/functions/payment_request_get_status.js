@@ -4,10 +4,9 @@
 
 /**
  * @import {server} from '../../../../server/types.js'
- */
-/**
  * @import {AppDataEntityDocument} from './types.js'
  */
+
 const {server} = await import('../../../../server/server.js');
 /**
  * @name paymentRequestGetStatus

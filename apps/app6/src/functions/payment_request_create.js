@@ -6,7 +6,7 @@
  * @import {server} from '../../../../server/types.js'
  */
 /**
- * @import {AppDataEntityDocument} from './types.js'
+ * @import {currency, AppDataEntityDocument} from './types.js'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -26,16 +26,16 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{token:string,
- *                                                      exp:number,
- *                                                      iat:number,
- *                                                      payment_request_id:string,
- *                                                      payment_request_message:string,
- *                                                      status:string,
- *                                                      merchant_name:string
- *                                                      amount:number,
- *                                                      currency_symbol:string,
- *                                                      countdown:string}[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:{Token:string,
+ *                                                      Exp:number,
+ *                                                      Iat:number,
+ *                                                      PaymentRequestId:string,
+ *                                                      PaymentRequestMessage:string,
+ *                                                      Status:string,
+ *                                                      MerchantName:string
+ *                                                      Amount:number,
+ *                                                      CurrencySymbol:string,
+ *                                                      Countdown:string}[]}>}
  */
 const paymentRequestCreate = async parameters =>{
    
@@ -44,14 +44,14 @@ const paymentRequestCreate = async parameters =>{
                                                    resource_id:null, 
                                                    data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
-   /**@type{server['ORM']['Object']['AppDataResourceMaster']} */
+   /**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:currency}} */
    const currency = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
-                                                               resource_id:null, 
-                                                               data:{  iam_user_id:null,
+                                                                resource_id:null, 
+                                                                data:{  iam_user_id:null,
                                                                        data_app_id:parameters.data.data_app_id,
                                                                        resource_name:'CURRENCY',
                                                                        app_data_entity_id:Entity.Id
-                                                               }}).result[0];
+                                                                }}).result[0];
    //validate
    if (parameters.data.currency_code==currency.Document?.CurrencyCode && parameters.data.payerid !='' && parameters.data.payerid !=null){
        /** 
@@ -101,29 +101,29 @@ const paymentRequestCreate = async parameters =>{
        }
        else{
            /**
-            * @type {{ token:string,
-            *          exp:number,
-            *          iat:number,
-            *          payment_request_id:string,
-            *          status:string,
-            *          merchant_name:string
-            *          amount:number,
-            *          currency_symbol:string}}
-            */
+             * @type {{ Token:string,
+             *          Exp:number,
+             *          Iat:number,
+             *          PaymentRequestId:string,
+             *          Status:string,
+             *          MerchantName:string
+             *          Amount:number,
+             *          CurrencySymbol:string}}
+             */
            const body_decrypted = JSON.parse(server.security.securityPrivateDecrypt(
                                                    Entity.Document.MerchantPrivateKey??'', 
                                                    result_bffExternal.result.rows.message));
 
-           return {result:[{token:                 body_decrypted.token,
-                           exp:                    body_decrypted.exp,
-                           iat:                    body_decrypted.iat,
-                           payment_request_id:     body_decrypted.payment_request_id,
-                           payment_request_message:'Check your bank app to authorize this payment',
-                           status:                 body_decrypted.status,
-                           merchant_name:          Entity.Document.MerchantName??'',
-                           amount:			        body_decrypted.amount,
-                           currency_symbol:        currency.Document.CurrencySymbol,
-                           countdown:              ''
+           return {result:[{Token:                  body_decrypted.Token,
+                           Exp:                     body_decrypted.Exp,
+                           Iat:                     body_decrypted.Iat,
+                           PaymentRequestId:        body_decrypted.PaymentRequestId,
+                           PaymentRequestMessage:   'Check your bank app to authorize this payment',
+                           Status:                  body_decrypted.Status,
+                           MerchantName:            Entity.Document.MerchantName??'',
+                           Amount:			        body_decrypted.Amount,
+                           CurrencySymbol:          currency.Document.CurrencySymbol,
+                           Countdown:               ''
                        }], type:'JSON'};
        }
    }

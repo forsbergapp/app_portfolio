@@ -57,7 +57,7 @@ const paymentRequestCreate = async parameters =>{
    const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                            resource_id:null, 
                                            data:{data_app_id:parameters.app_id}}).result[0];
-
+    /**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:currency}} */
    const currency = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                resource_id:null, 
                                                data:{  iam_user_id:null,
@@ -65,7 +65,7 @@ const paymentRequestCreate = async parameters =>{
                                                        resource_name:'CURRENCY',
                                                        app_data_entity_id:Entity.Id
                                                }}).result[0];
-   /**@type{merchant} */
+   /**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Id:number, Document:merchant}} */
    const merchant = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                all_users:true,
                                                resource_id:null, 
@@ -76,17 +76,7 @@ const paymentRequestCreate = async parameters =>{
                                                }}).result
                        .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster']}*/merchant)=>
                            server.ORM.UtilNumberValue(merchant.Document?.MerchantId)==parameters.data.id
-                       )
-                       .map((/**@type{server['ORM']['Object']['AppDataResourceMaster']}*/result)=>{return {  
-                                                                   MerchantId:          result.Document?.MerchantId,
-                                                                   MerchantVpa:         result.Document?.MerchantVpa,
-                                                                   MerchantUrl:         result.Document?.MerchantUrl,
-                                                                   MerchantName:        result.Document?.MerchantName,
-                                                                   MerchantPublicKey:   result.Document?.MerchantPublicKey,
-                                                                   MerchantPrivateKey:  result.Document?.MerchantPrivateKey,
-                                                                   Merchant_api_secret: result.Document?.MerchantApiSecret,
-                                                                   Id:                  result.Id,
-                                                                   IamUserAppId:        result.IamUserAppId};})[0];
+                       )[0];
                        
    if (merchant){
        /** 
@@ -99,7 +89,7 @@ const paymentRequestCreate = async parameters =>{
        *          message:         string,
        *          origin:          string}}
        */
-       const  body_decrypted = JSON.parse(server.security.securityPrivateDecrypt(merchant.MerchantPrivateKey, parameters.data.message));
+       const  body_decrypted = JSON.parse(server.security.securityPrivateDecrypt(merchant.Document.MerchantPrivateKey, parameters.data.message));
 
        /**@type{bank_account} */
        const merchant_bankaccount = server.ORM.db.AppDataResourceDetail.get({app_id:parameters.app_id, 
@@ -113,9 +103,9 @@ const paymentRequestCreate = async parameters =>{
                                                                    }
                                                                }).result
                                        .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail']}*/account)=>
-                                           account.Document?.BankAccountVpa==merchant.MerchantVpa
+                                           account.Document?.BankAccountVpa==merchant.Document.MerchantVpa
                                        )[0];
-       /**@type{bank_account} */                                                            
+       /**@type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}} */
        const bankaccount_payer = server.ORM.db.AppDataResourceDetail.get({   app_id:parameters.app_id, 
                                                                all_users:true,
                                                                resource_id:null, 
@@ -129,26 +119,26 @@ const paymentRequestCreate = async parameters =>{
                                    .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail']}*/account)=>
                                        account.Document?.BankAccountVpa==body_decrypted.payerid
                                    )[0];
-       if (merchant.MerchantApiSecret==body_decrypted.api_secret && 
-           merchant.MerchantVpa == body_decrypted.payeeid && 
-           merchant.MerchantUrl == body_decrypted.origin && 
+       if (merchant.Document.MerchantApiSecret==body_decrypted.api_secret && 
+           merchant.Document.MerchantVpa == body_decrypted.payeeid && 
+           merchant.Document.MerchantUrl == body_decrypted.origin && 
            merchant_bankaccount && 
            bankaccount_payer && 
            currency){
            //validate data
-           if (body_decrypted.currency_code==currency.currency_code){
+           if (body_decrypted.currency_code==currency.Document.CurrencyCode){
                const payment_request_id = server.security.securityUUIDCreate();
                /**@type{payment_request} */
                const data_payment_request = {
-                                               MerchantId:    parameters.data.id,
+                                               MerchantId:      parameters.data.id,
                                                PaymentRequestId:payment_request_id,
-                                               Reference:      body_decrypted.reference,
-                                               PayeeId:        body_decrypted.payeeid,
-                                               PayerId:        body_decrypted.payerid,
-                                               CurrencyCode:  body_decrypted.currency_code,
-                                               Amount:         server.ORM.UtilNumberValue(body_decrypted.amount),
-                                               Message:        body_decrypted.message,
-                                               Status:         'PENDING'
+                                               Reference:       body_decrypted.reference,
+                                               PayeeId:         body_decrypted.payeeid,
+                                               PayerId:         body_decrypted.payerid,
+                                               CurrencyCode:    body_decrypted.currency_code,
+                                               Amount:          server.ORM.UtilNumberValue(body_decrypted.amount),
+                                               Message:         body_decrypted.message,
+                                               Status:          'PENDING'
                                            };
                /**@type{server['ORM']['Object']['AppDataResourceMaster']} */
                const data_new_payment_request = {
@@ -191,27 +181,27 @@ const paymentRequestCreate = async parameters =>{
                await server.ORM.db.IamAppAccess.post(parameters.app_id, file_content);
    
                /**
-               * @type {{ token:string,
-               *          exp:number,
-               *          iat:number,
-               *          payment_request_id:string,
-               *          status:string,
-               *          merchant_name:string
-               *          amount:number,
-               *          currency_symbol:string}}
+               * @type {{ Token:string,
+               *          Exp:number,
+               *          Iat:number,
+               *          PaymentRequestId:string,
+               *          Status:string,
+               *          MerchantName:string
+               *          Amount:number,
+               *          CurrencySymbol:string}}
                */
-               const data_return = {   token:                  jwt_data.token,
+               const data_return = {   Token:               jwt_data.token,
                                        /**@ts-ignore */
-                                       exp:                    jwt_data.exp,
+                                       Exp:                 jwt_data.exp,
                                        /**@ts-ignore */
-                                       iat:                    jwt_data.iat,
-                                       payment_request_id:     payment_request_id,
-                                       status:                 data_payment_request.Status,
-                                       merchant_name:          merchant.MerchantName,
-                                       amount:			        body_decrypted.amount,
-                                       currency_symbol:        currency.currency_symbol
+                                       Iat:                 jwt_data.iat,
+                                       PaymentRequestId:    payment_request_id,
+                                       Status:              data_payment_request.Status,
+                                       MerchantName:        merchant.Document.MerchantName,
+                                       Amount:			    body_decrypted.amount,
+                                       CurrencySymbol:      currency.Document.CurrencySymbol
                                    };
-               const data_encrypted = server.security.securityPublicEncrypt(merchant.MerchantPublicKey, JSON.stringify(data_return));
+               const data_encrypted = server.security.securityPublicEncrypt(merchant.Document.MerchantPublicKey, JSON.stringify(data_return));
                return {result:{message:data_encrypted}, type:'JSON'};
            }
            else

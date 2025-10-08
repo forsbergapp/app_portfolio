@@ -4,6 +4,7 @@
 
 /**
  * @import {server} from '../../../../server/types.js'
+ * @import {customer} from './types.js'
  */
 const {server} = await import('../../../../server/server.js');
 const {default:createBankAccount} = await import('./account_create.js');
@@ -33,28 +34,29 @@ const customerCreate = async parameters =>{
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
-
+    /**@type{server['server']['response'] & {result?:server['ORM']['Object']['AppDataEntityResource']}} */
     const resource_customer = server.ORM.db.AppDataEntityResource.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  app_data_entity_id:Entity.Id,
                                                                     resource_name:'CUSTOMER'
                                                             }});
     if (resource_customer.result){
-        /**@type{server['ORM']['Object']['AppDataResourceMaster']} */
+        /**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:customer}} */
         const post_data = {
-            Document                                   : {
-                                                            CustomerType   :parameters.data.customer_type,
-                                                            Name            :parameters.data.name,
-                                                            Address         :parameters.data.address,
-                                                            City            :parameters.data.city,
-                                                            Country         :parameters.data.country
-                                                        },
-            IamUserAppId                             : parameters.data.iam_user_app_id,
-            AppDataEntityResourceId                 : resource_customer.result[0].Id,
+            Document                    :{
+                                            CustomerType   :parameters.data.customer_type,
+                                            Name            :parameters.data.name,
+                                            Address         :parameters.data.address,
+                                            City            :parameters.data.city,
+                                            Country         :parameters.data.country
+                                        },
+            IamUserAppId                : parameters.data.iam_user_app_id,
+            AppDataEntityResourceId     : resource_customer.result[0].Id,
             };
         //create CUSTOMER    
         const Customer = await server.ORM.db.AppDataResourceMaster.post({app_id:parameters.app_id, data:post_data});
         if (Customer.result){
+            /**@type{server['server']['response'] & {result?:server['ORM']['Object']['AppDataEntityResource']}} */
             const resource_account = server.ORM.db.AppDataEntityResource.get({app_id:parameters.app_id, 
                                                                 resource_id:null, 
                                                                 data:{  app_data_entity_id:Entity.Id, 
