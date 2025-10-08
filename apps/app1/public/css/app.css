@@ -1344,7 +1344,7 @@ body{
 }
 #common_app_iam_user_menu:hover,
 #common_app_iam_user_menu:active{
-	box-shadow: 0 0px 2px 2px var(--app_theme_hover_color);
+    box-shadow: 0 0 35px 4px var(--app_theme_dialogue_boxshadow_active_color);
 }
 .common_toolbar_selected{
 	background-color: var(--app_theme_login_nav_selected_background_color) !important;

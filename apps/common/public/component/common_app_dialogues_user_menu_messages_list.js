@@ -23,18 +23,18 @@ const template = props => `
                         </div>
                         ${props.messages.rows.map(row=>
                             `<div class='common_app_dialogues_user_menu_messages_list_row common_row ${row.read?'common_app_dialogues_user_menu_messages_list_row_read':'common_app_dialogues_user_menu_messages_list_row_unread'}' 
-                                data-id=${row.id} 
-                                data-created='${row.created}'
-                                data-sender='${row.message.sender??''}'
-                                data-receiver_id='${row.message.receiver_id??''}'
-                                data-client_ip='${row.message.client_ip}'
-                                data-host='${row.message.host}'
-                                data-subject='${row.message.subject}'
-                                data-message='${row.message.message}'>
+                                data-id=${row.Id} 
+                                data-created='${row.Created}'
+                                data-sender='${row.Message.Sender??''}'
+                                data-receiver_id='${row.Message.ReceiverId??''}'
+                                data-client_ip='${row.Message.ClientIp}'
+                                data-host='${row.Message.Host}'
+                                data-subject='${row.Message.Subject}'
+                                data-message='${row.Message.Message}'>
                                 <div class='common_app_dialogues_user_menu_messages_list_col common_app_dialogues_user_menu_messages_list_col_delete common_icon'></div>
-                                <div class='common_app_dialogues_user_menu_messages_list_col'>${props.commonMiscFormatJsonDate(row.created??'')}</div>
-                                <div class='common_app_dialogues_user_menu_messages_list_col'>${row.message.subject}</div>
-                                <div class='common_app_dialogues_user_menu_messages_list_col'>${row.message.sender ?? ''}</div>
+                                <div class='common_app_dialogues_user_menu_messages_list_col'>${props.commonMiscFormatJsonDate(row.Created??'')}</div>
+                                <div class='common_app_dialogues_user_menu_messages_list_col'>${row.Message.Subject}</div>
+                                <div class='common_app_dialogues_user_menu_messages_list_col'>${row.Message.Sender ?? ''}</div>
                             </div>`).join('')
                             }`;
 /**

@@ -10,10 +10,10 @@
  * @name template
  * @description Template
  * @function
- * @param {{user:common['server']['ORM']['Object']['IamUser'] & {last_logintime?:string},
-*          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props
-* @returns {string}
-*/
+ * @param {{user:common['server']['iam']['iam_user'],
+ *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props
+ * @returns {string}
+ */
 const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
                                <div class='common_app_dialogues_user_menu_iam_user_row_title'>
                                    <div id='common_app_dialogues_user_menu_iam_user_avatar' data-image=${props.user.Avatar} class='common_image common_image_avatar' style='${props.user.Avatar==null?'':`background-image:url(${props.user.Avatar});`}'></div>
@@ -66,7 +66,7 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
                                    <div id='common_app_dialogues_user_menu_iam_user_label_last_logintime' class='common_icon'></div>
-                                   <div id='common_app_dialogues_user_menu_iam_user_label_data_last_logintime'>${props.commonMiscFormatJsonDate(props.user.last_logintime ??'', 'LONG')}</div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_label_data_last_logintime'>${props.commonMiscFormatJsonDate(props.user.LastLoginTime ??'', 'LONG')}</div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
                                    <div id='common_app_dialogues_user_menu_iam_user_label_account_created' class='common_icon'></div>
@@ -101,7 +101,7 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
 *                      template:string}>}
 */
 const component = async props => {
-    /**@type{common['server']['ORM']['Object']['IamUser'] & {last_logintime?:string}} */    
+    /**@type{common['server']['iam']['iam_user']} */    
     const user = await props.methods.COMMON.commonFFB({path:`/server-iam/iamuser/${props.data.iam_user_id}`, 
                                                 method:'GET', authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
                         .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
@@ -155,7 +155,8 @@ const component = async props => {
                             spinner_id:'common_app_dialogues_user_menu_iam_user_btn_user_update'})
                 .then((result)=>{
                     if (JSON.parse(result).updated==1){
-                        props.methods.COMMON.commonUserSessionClear();
+                        props.methods.COMMON.commonLogout();
+                        props.methods.COMMON.commonGlobalGet('app_function_session_expired')?props.methods.COMMON.commonGlobalGet('app_function_session_expired')():null;
                         resolve(true);
                     }
                     else

@@ -53,7 +53,7 @@ const component = async props => {
      *              TYPE                        COMMENT                                                         BFF endpoint to use when activating
      *              1 LOGIN                     after login, no data returned if active=0                       APP_ACCESS_VERIFICATION
      *              2 SIGNUP                    not logged in                                                   APP_ACCESS_VERIFICATION
-     * 
+     *              3 UPDATE USER               logged in                                                       APP_ACCESS
      *              User will be required to login again after activation
      * @function
      * @param {HTMLElement} item 

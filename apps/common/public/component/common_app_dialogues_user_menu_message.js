@@ -10,7 +10,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{message:common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {username:common['server']['ORM']['Object']['IamUser']['Username']},
+ * @param {{message:common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {Username:common['server']['ORM']['Object']['IamUser']['Username']},
  *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props
  * @returns {string}
  */
@@ -23,7 +23,7 @@ const template = props => `
                                     <div id='common_app_dialogues_user_menu_messages_message_col_sender' class='common_icon'></div><div>${props.message.Sender ?? ''}</div>
                                 </div>
                                 <div class='common_app_dialogues_user_menu_messages_message_row'>
-                                    <div id='common_app_dialogues_user_menu_messages_message_col_receiver' class='common_icon'></div><div>${props.message.username}</div>
+                                    <div id='common_app_dialogues_user_menu_messages_message_col_receiver' class='common_icon'></div><div>${props.message.Username}</div>
                                 </div>
                                 <div class='common_app_dialogues_user_menu_messages_message_row'>
                                    <div id='common_app_dialogues_user_menu_messages_message_col_ip' class='common_icon'></div><div>${props.message.ClientIp}</div>
@@ -44,7 +44,7 @@ const template = props => `
 * @param {{data:       {
 *                      commonMountdiv:string,
 *                      app_id:number,
-*                      message:common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {username:common['server']['ORM']['Object']['IamUser']['Username']},
+*                      message:common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {Username:common['server']['ORM']['Object']['IamUser']['Username']},
 *                      },
 *          methods:    {
 *                      COMMON:common['CommonModuleCommon']
