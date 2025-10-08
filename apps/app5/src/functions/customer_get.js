@@ -3,6 +3,7 @@
  */
 /**
  * @import {server} from '../../../../server/types.js'
+ * @import {customer} from './types.js' 
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -19,7 +20,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceMaster'][]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:customer})[]}>}
  */
 const customerGet = async parameters =>{
     

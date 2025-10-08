@@ -901,8 +901,8 @@ body,
 	vertical-align: middle;
 	width: calc(50% - 1em);
 }
-.common_app_data_display_type_image > div,
-.common_app_data_display_type_image > svg{
+.common_app_data_display_master_col2[data-key=Image] > div,
+.common_app_data_display_master_col2[data-key=Image] > svg{
 	width: 8em;
 	height: 8em;
 }

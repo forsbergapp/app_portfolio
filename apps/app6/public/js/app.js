@@ -138,18 +138,25 @@ const appProductUpdate = async () =>{
  */
 const appPaymentRequestStatus = ()=>{
     if ( new Date().getSeconds() % 2){
-        const payment_request_id = COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
+        const payment_request_id = COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=PaymentRequestId]').getAttribute('data-value');
     
-        common.commonFFB({path:'/app-common-module/PAYMENT_REQUEST_GET_STATUS', method:'POST', authorization_type:'APP_ACCESS_EXTERNAL',   body:{type:'FUNCTION',IAM_data_app_id:common.commonGlobalGet('app_id'), payment_request_id: payment_request_id}})
+        common.commonFFB({  path:'/app-common-module/PAYMENT_REQUEST_GET_STATUS', 
+                            method:'POST', 
+                            authorization_type:'APP_ACCESS_EXTERNAL',   
+                            body:{  type:'FUNCTION',
+                                    IAM_data_app_id:common.commonGlobalGet('app_id'), 
+                                    payment_request_id: payment_request_id}})
         .then((/**@type{*}*/result)=>{
             const status = JSON.parse(result).rows[0].status;
             if (status != 'PENDING'){
+                common.commonGlobalSet('token_external',null);
                 common.commonComponentRemove('common_app_dialogues_app_data_display');
                 common.commonMessageShow('INFO', null, null,status);
             }
         })
         .catch(()=>{
             common.commonComponentRemove('common_app_dialogues_app_data_display');
+            common.commonGlobalSet('token_external',null);
         });
     }
 };
@@ -207,14 +214,15 @@ const appPaymentRequest = async () =>{
                         button_delete:appPayCancel
                         },
             path:'/common/component/common_app_data_display.js'})
-            .then(()=>{
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent = 
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent + ' ' +
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').textContent;
+            .then(result=>{
+                //save the returned access token
+                common.commonGlobalSet('token_external',result.data.master_object.Token.Value);
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent += ' ' +
+                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=CurrencySymbol]').textContent;
     
-                common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
-                                                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_exp').getAttribute('data-value'),
-                                                appPaymentRequestStatus);
+                common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=Countdown]'), 
+                                                    COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=Exp]').getAttribute('data-value'),
+                                                    appPaymentRequestStatus);
             })
             .catch(()=>common.commonComponentRemove('common_app_dialogues_app_data_display'));
     }

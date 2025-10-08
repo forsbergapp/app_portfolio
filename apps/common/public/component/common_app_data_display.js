@@ -105,8 +105,9 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                             class='common_app_data_display_master_col1'>${
                                                                 master_row[1].DefaultText
                                                             }</div>
-                                                    <div    data-value='${master_row[1].Type.toUpperCase()=='IMAGE'?'':master_row[1].Value}' 
-                                                            class='common_app_data_display_master_col2 common_app_data_display_type_${master_row[1].Type.toLowerCase()}'
+                                                    <div    data-key='${master_row[0]}'
+                                                            data-value='${master_row[1].Type.toUpperCase()=='IMAGE'?'':master_row[1].Value}' 
+                                                            class='common_app_data_display_master_col2'
                                                             ${master_row[1].Type.toUpperCase()=='IMAGE'?
                                                                 ' ':
                                                                     ` contentEditable='${props.mode=='READ'?

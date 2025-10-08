@@ -3,6 +3,7 @@
  */
 /**
  * @import {server} from '../../../../server/types.js'
+ * @import {currency, product, product_variant, metadata_product_variant} from './types.js'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -25,7 +26,7 @@ const productGet = async parameters =>{
     const Entity            = server.ORM.db.AppDataEntity.get({app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{data_app_id:parameters.data.data_app_id}}).result[0];
-    
+    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:product})[]}} */
     const products = server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         resource_id:parameters.data.resource_id, 
                                                         data:{  iam_user_id:null,
@@ -34,7 +35,7 @@ const productGet = async parameters =>{
                                                                 app_data_entity_id:Entity.Id
                                                         }});
     
-    
+    /**@type{server['ORM']['Object']['AppDataEntity'] & {Document:currency}} */
     const currency = server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{  iam_user_id:null,
@@ -42,6 +43,7 @@ const productGet = async parameters =>{
                                                                 resource_name:'CURRENCY',
                                                                 app_data_entity_id:Entity.Id
                                                         }}).result[0];
+    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceDetail'] & {Document:product_variant})[]}} */
     const product_variants = server.ORM.db.AppDataResourceDetail.get({ app_id:parameters.app_id, 
                                                                 resource_id:parameters.data.resource_id_variant, 
                                                                 data:{  iam_user_id:null,
@@ -50,6 +52,7 @@ const productGet = async parameters =>{
                                                                         app_data_resource_master_id:null,
                                                                         app_data_entity_id:Entity.Id
                                                                 }});
+    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:metadata_product_variant})[]}} */
     const product_variant_metadatas = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:null,
@@ -59,7 +62,7 @@ const productGet = async parameters =>{
                                                                         }});
     for (const product of products.result){
         product.Sku = [];
-        for (const product_variant of product_variants.result.filter((/**@type{server['ORM']['Object']['AppDataResourceDetail']}*/row)=>row.AppDataResourceMasterId == product.Id)){
+        for (const product_variant of product_variants.result.filter((/**@type{(server['ORM']['Object']['AppDataResourceDetail'] & {Document:product_variant})}*/row)=>row.AppDataResourceMasterId == product.Id)){
             product.sku_keys = [];
             for (const product_variant_metadata of product_variant_metadatas.result){
                 const key_name = Object.keys(product_variant_metadata.Document)[0];
@@ -78,7 +81,7 @@ const productGet = async parameters =>{
         //return placeholder for stock info
         product.Stock =  [  [{KeyName:'Location', KeyValue:'', KeyType:'TEXT'}, 
                             {KeyName:'StockText', KeyValue:'', KeyType:'TEXT'}, 
-                            {KeyName:'Stock', KeyValue:'', KeyType:'TEXT'}]];
+                            {KeyName:'Stock',     KeyValue:'', KeyType:'TEXT'}]];
     }
     return products;
 };

@@ -80,11 +80,12 @@ const COMMON_GLOBAL = {
     client_longitude:'',
     client_place:'',
     client_timezone:'',
-    token_at:null,
     token_dt:null,
+    token_at:null,
     token_admin_at:null,
     token_exp:null,
     token_iat:null,
+    token_external:null,
     rest_resource_bff:null,
     user_locale:'',
     user_timezone:'',
@@ -1897,6 +1898,7 @@ const commonFFB = async parameter =>{
      *              locale:string,
      *              idToken: string,
      *              accessToken?:string,
+     *              externalToken:string|null,
      *              path?:string|null,
      *              query?:string|null,
      *              method:string,
@@ -1917,9 +1919,12 @@ const commonFFB = async parameter =>{
         const ROLE = (parameters.app_id == parameters.app_admin_app_id && parameters.data.authorization_type =='APP_ACCESS')?
                         'ADMIN':parameters.data.authorization_type;
         switch (ROLE){
+            case 'APP_ACCESS_EXTERNAL':{
+                authorization = 'Bearer ' + parameters.data.externalToken;
+                break;
+            }
             case 'APP_ACCESS':
             case 'APP_ACCESS_VERIFICATION':
-            case 'APP_ACCESS_EXTERNAL':
             case 'ADMIN':{
                 authorization = 'Bearer ' + parameters.data.accessToken;
                 break;
@@ -2059,6 +2064,7 @@ const commonFFB = async parameter =>{
                 accessToken: (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id)?
                                 COMMON_GLOBAL.token_admin_at??'':
                                     COMMON_GLOBAL.token_at??'',
+                externalToken:COMMON_GLOBAL.token_external??null,
                 path:parameter.path,
                 query: parameter.query,
                 method: parameter.method,
