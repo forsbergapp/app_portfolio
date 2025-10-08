@@ -442,7 +442,7 @@ const postDemo = async parameters=> {
         */
         const create_iam_user_like = async (app_id, id, id_like ) =>{
             return new Promise((resolve, reject) => {
-                server.ORM.db.IamUserLike.post({app_id:app_id, data:{IamUserId:id,IamUserIdLike:id_like}})
+                server.ORM.db.IamUserLike.post({app_id:app_id, data:{iam_user_id:id,iam_user_id_like:id_like}})
                 .then((/**@type{server['server']['response']}*/result) => {
                     if(result.result){
                         if (result.result.AffectedRows == 1)
@@ -485,7 +485,7 @@ const postDemo = async parameters=> {
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserFollow.post({app_id:app_id, 
                                     
-                                    data:{IamUserId:id, IamUserIdFollow:id_follow}})
+                                    data:{iam_user_id:id, iam_user_id_follow:id_follow}})
                 .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
                         if (result.result.AffectedRows == 1)
