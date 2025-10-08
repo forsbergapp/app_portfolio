@@ -66,7 +66,7 @@ const template = props => `
  * >}
  */
 const component = async props => {
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show0');
+    
     const content_fetch = (props.data.info=='URL' && props.data.path && props.data.method && props.data.authorization)?
                                 await props.methods.COMMON.commonFFB({ path:props.data.path, 
                                                                 method:props.data.method, 
@@ -75,7 +75,7 @@ const component = async props => {
                                                                 body:props.data.body??null})
                                 .then(result=>JSON.parse(result).resource):
                                     null;
-
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show0');
     /**
      * @name WindoInfoClose
      * @description Close window info

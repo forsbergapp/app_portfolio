@@ -77,7 +77,7 @@ const appFunction = async parameters =>{
         const messagePost = (await server.ORM.db.MessageQueuePublish.post({app_id:parameters.app_id, 
                                                             data:message_queue_message})).result;
         return {result:[ await (async ()=>{
-                                if(messagePost.affectedRows){
+                                if(messagePost.AffectedRows){
                                     /**@type{server['ORM']['Object']['IamUser'][]} */
                                     const users = server.ORM.db.IamUser.get(parameters.app_id, message.receiver_id).result;                               
                                     for (const user of users.filter(user=>  user.Type == (( message.receiver_id && 
@@ -94,7 +94,7 @@ const appFunction = async parameters =>{
                                                                             }
                                                                     });
                                     }
-                                    return {sent:messagePost.affectedRows};
+                                    return {sent:messagePost.AffectedRows};
                                 }
                                 else
                                     return {sent:0};
@@ -188,7 +188,7 @@ const appFunction = async parameters =>{
                         return {result:[await server.ORM.db.MessageQueueConsume.post({app_id:parameters.app_id, 
                                                                         data:message_queue_message})
                                         .then((/**@type{server['server']['response']}*/result)=>{
-                                            if(result.result?.affectedRows)
+                                            if(result.result?.AffectedRows)
                                                 return {sent:result.result.AffectedRows};
                                             else
                                                 return {sent:0};

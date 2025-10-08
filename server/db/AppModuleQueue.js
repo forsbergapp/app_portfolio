@@ -67,7 +67,7 @@ const post = async (app_id, data) => {
                         };
         return server.ORM.Execute({app_id:app_id, dml:'POST', object:'AppModuleQueue', post:{data:job}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
             if (result.AffectedRows>0)
-                return  {result:{insertId:job.Id, affectedRows:result.AffectedRows}, type:'JSON'};
+                return  {result:{InsertId:job.Id, AffectedRows:result.AffectedRows}, type:'JSON'};
             else
                 return server.ORM.getError(app_id, 404);
         });

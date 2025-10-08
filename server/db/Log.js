@@ -443,7 +443,7 @@ const post = async parameters => {
                         Dml:            parameters.data.db?.Dml,
                         Parameters:     parameters.data.db?.Parameters,
                         Logtext:        db_level=='1'?
-                                            `Rows:${parameters.data.log.affectedRows?parameters.data.log.affectedRows:parameters.data.log.length}`:
+                                            `Rows:${parameters.data.log.AffectedRows?parameters.data.log.AffectedRows:parameters.data.log.length}`:
                                             typeof parameters.data.log=='object'?JSON.stringify(parameters.data.log):parameters.data.log
                         };
             }
