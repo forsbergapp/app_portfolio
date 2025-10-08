@@ -24,15 +24,15 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueueEr
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters => {
-    if (parameters.data.message_queue_publish_id && 
-        'message' in parameters.data &&
-        'result' in parameters.data){
+    if (parameters.data.MessageQueuePublishId && 
+        'Message' in parameters.data &&
+        'Result' in parameters.data){
         /**@type{server['ORM']['Object']['MessageQueueError']}*/
         const data_new = {
                             Id:Date.now(),
-                            MessageQueuePublishId:parameters.data.message_queue_publish_id,
-                            Message:parameters.data.message, 
-                            Result:parameters.data.result,
+                            MessageQueuePublishId:parameters.data.MessageQueuePublishId,
+                            Message:parameters.data.Message, 
+                            Result:parameters.data.Result,
                             Created: new Date().toISOString()
                         };
         return server.ORM.Execute({app_id:parameters.app_id, 

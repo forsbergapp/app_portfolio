@@ -2887,6 +2887,7 @@ const commonGet = () =>{
         /* USER  */
         commonUserLogin:commonUserLogin, 
         commonUserLogout:commonUserLogout,
+        commonLogout:commonLogout,
         commonUserSessionClear:commonUserSessionClear,
         commonUserSessionCountdown:commonUserSessionCountdown, 
         commonUserAuthenticateCode:commonUserAuthenticateCode,
@@ -3047,6 +3048,7 @@ export{/* GLOBALS*/
        /* USER  */
        commonUserLogin, 
        commonUserLogout,
+       commonLogout,
        commonUserSessionClear,
        commonUserSessionCountdown, 
        commonUserAuthenticateCode,

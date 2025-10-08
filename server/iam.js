@@ -524,8 +524,8 @@ const iamAuthenticateUserActivate = async parameters =>{
  * @returns {Promise.<server['server']['response'] & {result?:{updated: number} }>}
  */
 const iamAuthenticateUserUpdate = async parameters => {
-    
-    const result_totp =  await server.security.securityTOTPValidate(parameters.data.totp, server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.otp_key);
+    const result_totp =  await server.security.securityTOTPValidate(parameters.data.totp, 
+                                                                    server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.OtpKey);
     if (result_totp){
 
         /**@type{server['ORM']['Object']['IamUser']} */
@@ -540,9 +540,8 @@ const iamAuthenticateUserUpdate = async parameters => {
                             };
         /**@type{server['ORM']['Object']['IamUserEvent']}*/
         const eventData = {
-            /**@ts-ignore */
-            iam_user_id: parameters.resource_id,
-            event: 'USER_UPDATE'
+            IamUserId: parameters.resource_id,
+            Event: 'USER_UPDATE'
         };
         return server.ORM.db.IamUser.update(parameters.app_id, parameters.resource_id, data_update)
             .then((/**@type{server['server']['response']}}*/result_update)=>{
@@ -628,7 +627,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
     if (parameters.resource_id!=null){
         const user = server.ORM.db.IamUser.get(parameters.app_id, parameters.data.iam_user_id);
         if (user.result)
-            if (await server.security.securityPasswordCompare(parameters.app_id, parameters.data.password, user.result[0]?.password))
+            if (await server.security.securityPasswordCompare(parameters.app_id, parameters.data.password, user.result[0]?.Password))
                 return server.ORM.db.IamUserApp.deleteRecord({app_id:parameters.app_id, 
                                                 resource_id:parameters.resource_id});
             else
@@ -1338,7 +1337,7 @@ const iamAppAccessGet = parameters => {const rows = server.ORM.db.IamAppAccess.g
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['IamUser'] }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['iam']['iam_user']}>}
  */
 const iamUserGet = async parameters =>{
     
@@ -1346,20 +1345,19 @@ const iamUserGet = async parameters =>{
     return result.http?
                 result:
                     {result:result.result.map((/**@type{server['ORM']['Object']['IamUser']} */row)=>{
-                        return {id: row.Id,
-                                username: row.Username,
-                                password: row.Password,
-                                type: row.Type,
-                                bio: row.Bio,
-                                private: row.Private,
-                                //remove OTP key, should only be displayed once at signup
-                                otp_key: null,
-                                avatar: row.Avatar,
-                                user_level: row.UserLevel,
-                                status: row.Status,
-                                created: row.Created,
-                                modified: row.Modified,
-                                last_logintime:iamUserGetLastLogin(parameters.app_id, parameters.resource_id)};})[0],
+                        return {Id: row.Id,
+                                Username: row.Username,
+                                Password: row.Password,
+                                PasswordReminder: row.PasswordReminder,
+                                Type: row.Type,
+                                Bio: row.Bio,
+                                Private: row.Private,
+                                Avatar: row.Avatar,
+                                UserLevel: row.UserLevel,
+                                Status: row.Status,
+                                Created: row.Created,
+                                Modified: row.Modified,
+                                LastLoginTime:iamUserGetLastLogin(parameters.app_id, parameters.resource_id)};})[0],
                     type:'JSON'};
 };
 /**

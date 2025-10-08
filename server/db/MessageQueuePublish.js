@@ -24,27 +24,27 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueuePu
  */
 const post = async parameters => {
 
-    if (  parameters.data.service == 'MESSAGE' && 
-          'sender' in parameters.data.message && 
-          'receiver_id' in parameters.data.message && 
-          parameters.data.message?.host && 
-          parameters.data.message?.client_ip && 
-          parameters.data.message?.subject && 
-          parameters.data.message?.message && 
+    if (  parameters.data.Service == 'MESSAGE' && 
+          'Sender' in parameters.data.Message && 
+          'ReceiverId' in parameters.data.Message && 
+          parameters.data.Message?.Host && 
+          parameters.data.Message?.ClientIp && 
+          parameters.data.Message?.Subject && 
+          parameters.data.Message?.Message && 
           //no other keys
-          Object.keys(parameters.data.message).length==6){
+          Object.keys(parameters.data.Message).length==6){
         /**@type{server['ORM']['Object']['MessageQueuePublish']['Message']}*/    
-        const message = {Sender:        parameters.data.message.sender,
-                         ReceiverId:   parameters.data.message.receiver_id,
-                         Host:          parameters.data.message.host,
-                         ClientIp:     parameters.data.message.client_ip,
-                         Subject:       parameters.data.message.subject,
-                         Message:       parameters.data.message.message
+        const message = {Sender:        parameters.data.Message.Sender,
+                         ReceiverId:    parameters.data.Message.ReceiverId,
+                         Host:          parameters.data.Message.Host,
+                         ClientIp:      parameters.data.Message.ClientIp,
+                         Subject:       parameters.data.Message.Subject,
+                         Message:       parameters.data.Message.Message
         };
         /**@type{server['ORM']['Object']['MessageQueuePublish']}*/
         const data_new = {
             Id:     Date.now(),
-            Service:parameters.data.service,
+            Service:parameters.data.Service,
             Message:message, 
             Created:new Date().toISOString()
         };
@@ -55,13 +55,13 @@ const post = async parameters => {
             post:{data:data_new}}), type:'JSON'};
     }
     else
-        if( parameters.data.service == 'BATCH' &&
-            (parameters.data.message?.type=='MICROSERVICE_LOG' || parameters.data.message?.type=='MICROSERVICE_ERROR') &&
+        if( parameters.data.Service == 'BATCH' &&
+            (parameters.data.Message?.Type=='MICROSERVICE_LOG' || parameters.data.Message?.Type=='MICROSERVICE_ERROR') &&
             //no other keys
-            Object.keys(parameters.data.message).length==2){
+            Object.keys(parameters.data.Message).length==2){
             /**@type{server['ORM']['Object']['MessageQueuePublish']['Message']}*/
-            const message = {Type:parameters.data.message.type,
-                             Message:parameters.data.message.message
+            const message = {Type:parameters.data.Message.type,
+                             Message:parameters.data.Message.message
             };
             /**@type{server['ORM']['Object']['MessageQueuePublish']}*/
             const data_new = {

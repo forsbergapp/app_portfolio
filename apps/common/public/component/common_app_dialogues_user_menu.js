@@ -95,8 +95,8 @@ const component = async props => {
      */
     const eventClickMessage = async element =>{
         const message_id = element.getAttribute('data-id');
-        element.classList.remove('common_app_dialogues_user_menu_messages_row_unread');
-        element.classList.add('common_app_dialogues_user_menu_messages_row_read');
+        element.classList.remove('common_app_dialogues_user_menu_messages_list_row_unread');
+        element.classList.add('common_app_dialogues_user_menu_messages_list_row_read');
 
         /**@type{common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {Username:common['server']['ORM']['Object']['IamUser']['Username']}}} */
         const message = {Sender:element.getAttribute('data-sender')==''?null:element.getAttribute('data-sender'),

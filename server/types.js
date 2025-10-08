@@ -1091,7 +1091,22 @@
  * @typedef {{statusCode:number,
  *            statusMessage: string}}server_iam_authenticate_request
  */
-
+/**
+ * @description IAM server_iam_user
+ * @typedef {{ Id: server['ORM']['Object']['IamUser']['Id'],
+ *             Username: server['ORM']['Object']['IamUser']['Username'],
+ *             Password:server['ORM']['Object']['IamUser']['Password'],
+ *             PasswordReminder:server['ORM']['Object']['IamUser']['PasswordReminder'],
+ *             Type:server['ORM']['Object']['IamUser']['Type'],
+ *             Bio:server['ORM']['Object']['IamUser']['Bio'],
+ *             Private:server['ORM']['Object']['IamUser']['Private'],
+ *             Avatar:server['ORM']['Object']['IamUser']['Avatar'],
+ *             UserLevel:server['ORM']['Object']['IamUser']['UserLevel'],
+ *             Status:server['ORM']['Object']['IamUser']['Status'],
+ *             Created:server['ORM']['Object']['IamUser']['Created'],
+ *             Modified:server['ORM']['Object']['IamUser']['Modified'],
+ *             LastLoginTime:string}} server_iam_user
+ */
 /**
  * @description INFO server_info_result_Info
  * @typedef {{  os:{        hostname:string,
@@ -1452,7 +1467,8 @@
  *          iam:{
  *                iam_access_token_claim:server_iam_access_token_claim,
  *                iam_microservice_token_claim:server_iam_microservice_token_claim,
- *                iam_authenticate_request:server_iam_authenticate_request
+ *                iam_authenticate_request:server_iam_authenticate_request,
+ *                iam_user: server_iam_user
  *              },
  *          info:{
  *                result_Info:server_info_result_Info,
