@@ -1321,11 +1321,11 @@ const iamAppAccessGet = parameters => {const rows = server.ORM.db.IamAppAccess.g
                                                                     row.AppId==(server.ORM.UtilNumberValue(parameters.data.data_app_id==''?null:parameters.data.data_app_id) ?? row.AppId));
                                                     
                                                     return {result:rows.length>0?
-                                                                rows.sort(( /**@type{server['ORM']['Object']['IamAppAccess']}*/a,
-                                                                            /**@type{server['ORM']['Object']['IamAppAccess']}*/b)=> 
+                                                                rows.sort(( /**@type{server['ORM']['Object']['IamAppAccess'] & {Created:string}}*/a,
+                                                                            /**@type{server['ORM']['Object']['IamAppAccess'] & {Created:string}}*/b)=> 
                                                                             //sort descending on created
-                                                                            /**@ts-ignore */
-                                                                            a.created.localeCompare(b.created)==1?-1:1):
+                                                                            
+                                                                            a.Created.localeCompare(b.Created)==1?-1:1):
                                                                     [], 
                                                             type:'JSON'};
                                                 };
