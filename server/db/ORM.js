@@ -1001,6 +1001,27 @@ class ORM_class {
      */
     deleteObject = async (app_id, table, resource_id, data_app_id) =>{
         /**
+         * @param {server['ORM']['MetaData']['result_fileFsRead']} file
+         * @param {server['ORM']['MetaData']['DbObject']['Name']} name 
+         * @param {*} new_content 
+         * @returns 
+         */
+        const saveChanges = async (file, name, new_content) =>{
+            await this.updateFsFile(  name, file.TransactionId, new_content)
+                    .catch(()=> this.rollback(name, 
+                                        /**@ts-ignore */
+                                        file.TransactionId));
+                    //commit and update cache without removed record
+                    if (this.commit(  name, 
+                                                /*@ts-ignore*/
+                                                file.TransactionId,
+                                                new_content))
+                        return {AffectedRows:   file.FileContent.length - new_content.length};
+                    else{
+                        throw server.iam.iamUtilMessageNotAuthorized();
+                    }
+        }
+        /**
          * @param {{app_id:number,
          *		    object:server['ORM']['MetaData']['DbObject']['Name'],
         *		    pk:number|null}} parameters
@@ -1036,19 +1057,7 @@ class ORM_class {
                                                 rowFile[fk[0]]==parameters.pk
                                             ).length==0
                                         );
-                    await this.updateFsFile(  objectCascade.Name, file.TransactionId, new_content)
-                    .catch(()=> this.rollback(objectCascade.Name, 
-                                        /**@ts-ignore */
-                                        file.TransactionId));
-                    //commit and update cache without removed record
-                    if (this.commit(  objectCascade.Name, 
-                                                /*@ts-ignore*/
-                                                file.TransactionId,
-                                                new_content))
-                        return {affectedRows:   file.FileContent.length - new_content.length};
-                    else{
-                        throw server.iam.iamUtilMessageNotAuthorized();
-                    }
+                    await saveChanges(file, objectCascade.Name, new_content);
                 }
             }
         };
@@ -1062,25 +1071,13 @@ class ORM_class {
                     });
             //get content to update and filter unique id
             const new_content = file.FileContent
-                                .filter((/**@type{*}*/row)=>(data_app_id==null && resource_id!=null && row.Id!=resource_id) || (resource_id==null && data_app_id!=null && row.AppId!=data_app_id));
-            await this.updateFsFile(  table, 
-                                file.TransactionId, 
-                                new_content)
-                    .catch((/**@type{server['server']['error']}*/error)=>{
-                        this.rollback(table, 
-                                /*@ts-ignore*/
-                                file.TransactionId);
-                        throw error;
-                    });
-                    //commit and update cache without removed record
-                    if (this.commit(  table, 
-                                                /*@ts-ignore*/
-                                                file.TransactionId,
-                                                new_content))
-                        return {AffectedRows:   file.FileContent.length - new_content.length};
-                    else{
-                        throw server.iam.iamUtilMessageNotAuthorized();
-                    }
+                                .filter((/**@type{*}*/row)=>
+                                    (   data_app_id==null && 
+                                        resource_id!=null && 
+                                        row.Id!=resource_id) || 
+                                    (resource_id==null && data_app_id!=null && row.AppId!=data_app_id));
+            return await saveChanges(file, table, new_content);
+            
         }
         else
             return {AffectedRows:0};    
