@@ -144,7 +144,7 @@ const postDemo = async parameters=> {
                                                         data:data})
                 .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
-                        if (result.result.data?.affectedRows == 1)
+                        if (result.result.data?.AffectedRows == 1)
                             records_iam_user_app_data_post++;
                         resolve(null);
                     }

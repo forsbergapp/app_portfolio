@@ -38,10 +38,37 @@ const test = async t =>
             //test update, update value
             app_data.Name='THE ORM';
 
+            /**
+             * @type {{  name:string,
+             *                  path:string,
+             *                  logo:string,
+             *                  js:string,
+             *                  css:string,
+             *                  css_report:string,
+             *                  favicon_32x32:string,
+             *                  favicon_192x192:string,
+             *                  text_edit:string,
+             *                  copyright:string,
+             *                  link_title:string,
+             *                  link_url:string,
+             *                  status:'ONLINE'|'OFFLINE'}}
+             */
+            const data_update = {   name:app_data.Name,
+                                    path:app_data.Path,
+                                    logo:app_data.Logo,
+                                    js:app_data.Js,
+                                    css:app_data.Css,
+                                    css_report:app_data.CssReport,
+                                    favicon_32x32:app_data.Favicon32x32,
+                                    favicon_192x192:app_data.Favicon192x192,
+                                    text_edit:app_data.TextEdit,
+                                    copyright:app_data.Copyright,
+                                    link_title:app_data.LinkTitle,
+                                    link_url:app_data.LinkUrl,
+                                    status:app_data.Status};
             const result_update = await server.ORM.db.App.update({app_id:0, 
                                                     resource_id:result_post.result.InsertId, 
-                                                    /**@ts-ignore} */
-                                                    data:app_data});
+                                                    data:data_update});
             //test get from cache, get updated value
             const result_get = server.ORM.db.App.get({app_id:0,  resource_id:result_post.result.InsertId});
             //test delete, delete record
