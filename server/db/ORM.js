@@ -1026,7 +1026,7 @@ class ORM_class {
                     await cascadeDelete({   app_id:app_id, 
                                             object:objectCascade.Name,
                                             /**@ts-ignore */
-                                            pk:row[objectCascade.pk]});
+                                            pk:row[objectCascade.Pk]});
                     const file = await this.lockObject(app_id, objectCascade.Name);
                     //get content to update and filter PK
                     const new_content = file.FileContent

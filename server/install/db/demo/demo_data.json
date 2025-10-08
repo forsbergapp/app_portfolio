@@ -294,7 +294,7 @@
         "AppDataResourceMaster": [
                             {"IamUserAppIamUserId":"<IAM_USER_ID/>", 
                              "IamUserAppAppId":5, 
-                             "AppDataEntityResourceId":5006, 
+                             "AppDataEntityResourceId":5007, 
                              "Document":{   "Name":"Bank owner",
                                             "Address":"",
                                             "City":"",
@@ -374,7 +374,7 @@
                                             "MerchantPrivateKey":"<PRIVATE_KEY/>",
                                             "MerchantVpa":"<UUID/>"
                                         },
-                            "AppDataEntity":{   "id":6000,
+                            "AppDataEntity":{   "Id":6000,
                                             "Document":{
                                                 "MerchantId":"<MerchantId/>",
                                                 "MerchantName":"<MerchantName/>",
