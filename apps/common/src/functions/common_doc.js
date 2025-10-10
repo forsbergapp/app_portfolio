@@ -9,6 +9,15 @@ const fs = await import('node:fs');
 const {default:ComponentMarkdown} = await import('../component/common_markdown.js');
 const {default:ComponentOpenAPI} = await import('../component/common_openapi.js');
 
+const MD_PATH =                         '/apps/common/src/functions/documentation/';
+const MD_SUFFIX =                        '.md';
+const MD_TEMPLATE_APPS =                'templateApps';
+const MD_TEMPLATE_RESTAPI =             'templateRestApi';
+const MD_TEMPLATE_RESTAPI_FUNCTIONS =   'templateRouteFunctions';
+const MD_TEMPLATE_APPROUTES =           'templateAppRoutes';
+const MD_TEMPLATE_MODULE =              'templateModule';
+
+
 /**
  * @name getFile
  * @description  Get file and add given suffix to path
@@ -202,11 +211,11 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
  *                  APP_CONFIGURATION       ConfigServer->METADATA->CONFIGURATION
  *                  COPYRIGHT               App
  *                  MODULE_FUNCTION replaced by all functions found in getFileFunctions()
- *              type ROUTE and template 7.restapi
+ *              type ROUTE and template
  *                  CONFIG_REST_API variable is rendered directly to HTML using common_openapi.js component because of complexity
- *              type ROUTE and template 7.restapiFunctions
+ *              type ROUTE and template
  *                  ROUTE_FUNCTIONS all functions with tag ROUTE_REST_API
- *              type ROUTE and template 7.appRoutes
+ *              type ROUTE and template
  *                  ROUTE_FUNCTIONS with tag ROUTE_APP
  *              any file in menu of type GUIDE
  *                  GIT_REPOSITORY_URL replaces with GIT_REPOSITORY_URL parameter in ConfigServer if used in any document 
@@ -229,7 +238,7 @@ const markdownRender = async parameters =>{
             /**@type{server['ORM']['Object']['App']} */
             const app = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:server.ORM.UtilNumberValue(parameters.doc)}).result[0];
 
-            let markdown = await getFile(`${server.ORM.serverProcess.cwd()}/apps/common/src/functions/documentation/2.app.md`);
+            let markdown = await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + MD_TEMPLATE_APPS + MD_SUFFIX}`);
             //remove all '\r' in '\r\n'
             markdown = markdown.replaceAll('\r\n','\n');
             //replace APP_NAME
@@ -266,7 +275,7 @@ const markdownRender = async parameters =>{
         }
         case parameters.type.toUpperCase().startsWith('MODULE'):{
             //replace variables for MODULE_APPS, MODULE_SERVICEREGISTRY and MODULE_SERVER            
-            const markdown = await getFile(`${server.ORM.serverProcess.cwd()}/apps/common/src/functions/documentation/8.module.md`)
+            const markdown = await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + MD_TEMPLATE_MODULE + MD_SUFFIX}`)
                         .then(markdown=>
                                 markdown
                                 .replaceAll('@{MODULE_NAME}',       parameters.module ?? '')
@@ -286,59 +295,58 @@ const markdownRender = async parameters =>{
                                                             comment_with_filter:null
                                                         }));
         }
-        case parameters.type.toUpperCase()=='ROUTE':{           
-            if (parameters.doc=='7.restapi'){
-                return await getFile(`${server.ORM.serverProcess.cwd()}/apps/common/src/functions/documentation/7.restapi.md`)
+        case parameters.doc==MD_TEMPLATE_RESTAPI:{
+            return await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + MD_TEMPLATE_RESTAPI + MD_SUFFIX}`)
                             .then(markdown=>
                                     //remove all '\r' in '\r\n'
                                     markdown
                                     .replaceAll('\r\n','\n')
                                 );
-            }
-            else{
-                /**
-                 * @param {string} tag
-                 * @param {string} routePath
-                 * @param {string[]} routeDirectories
-                 * @param {string} file
-                 */
-                const renderRouteFuntions = async (tag, routePath, routeDirectories, file) =>{
-                    const filePattern = /\.js$/;
-                    /**@type{string[]} */
-                    const membersof = [];
-                    //Get REST API function with @namespace tag
-                    membersof.push(await getFileFunctions({ app_id:             parameters.app_id, 
-                                                            file:               await getFile(`${server.ORM.serverProcess.cwd()}${routePath}.js`),
-                                                            module:             routePath,
-                                                            comment_with_filter:`@namespace ${tag}`
-                                                        }));
-                    //Get all REST API functions with @memberof tag
-                    for (const directory of routeDirectories)
-                        for (const file of (await getFiles(`${server.ORM.serverProcess.cwd()}/${directory}`, filePattern)).map(row=>row.file)){
-                            const file_functions = await getFileFunctions({ app_id:             parameters.app_id, 
-                                                                            file:               await getFile(`${server.ORM.serverProcess.cwd()}${file}.js`),
-                                                                            module:             file,
-                                                                            comment_with_filter:`@memberof ${tag}`
-                                                                        });
-                            if (file_functions != '')
-                                membersof.push(file_functions);
-                        }
-                    return await getFile(`${server.ORM.serverProcess.cwd()}/apps/common/src/functions/documentation/${file}.md`)
-                        .then(markdown=>
-                                //remove all '\r' in '\r\n'
-                                markdown
-                                .replaceAll('\r\n','\n')
-                                .replace('@{ROUTE_FUNCTIONS}',membersof.join('\n\n'))
-                            );
-                };
-                if (parameters.doc=='7.appRoutes')
-                    return await renderRouteFuntions('ROUTE_APP', '/apps/common/src/common', ['apps'], parameters.doc);
-                else
-                    return await renderRouteFuntions('ROUTE_REST_API', '/server/server', ['apps', 'serviceregistry','server'], parameters.doc);
-            }
+        }
+        case parameters.doc==MD_TEMPLATE_APPROUTES:
+        case parameters.doc==MD_TEMPLATE_RESTAPI_FUNCTIONS:{
+            /**
+             * @param {string} tag
+             * @param {string} routePath
+             * @param {string[]} routeDirectories
+             * @param {string} file
+             */
+            const renderRouteFuntions = async (tag, routePath, routeDirectories, file) =>{
+                const filePattern = /\.js$/;
+                /**@type{string[]} */
+                const membersof = [];
+                //Get REST API function with @namespace tag
+                membersof.push(await getFileFunctions({ app_id:             parameters.app_id, 
+                                                        file:               await getFile(`${server.ORM.serverProcess.cwd()}${routePath}.js`),
+                                                        module:             routePath,
+                                                        comment_with_filter:`@namespace ${tag}`
+                                                    }));
+                //Get all REST API functions with @memberof tag
+                for (const directory of routeDirectories)
+                    for (const file of (await getFiles(`${server.ORM.serverProcess.cwd()}/${directory}`, filePattern)).map(row=>row.file)){
+                        const file_functions = await getFileFunctions({ app_id:             parameters.app_id, 
+                                                                        file:               await getFile(`${server.ORM.serverProcess.cwd()}${file}.js`),
+                                                                        module:             file,
+                                                                        comment_with_filter:`@memberof ${tag}`
+                                                                    });
+                        if (file_functions != '')
+                            membersof.push(file_functions);
+                    }
+                return await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + file + MD_SUFFIX}`)
+                    .then(markdown=>
+                            //remove all '\r' in '\r\n'
+                            markdown
+                            .replaceAll('\r\n','\n')
+                            .replace('@{ROUTE_FUNCTIONS}',membersof.join('\n\n'))
+                        );
+            };
+            if (parameters.doc==MD_TEMPLATE_APPROUTES)
+                return await renderRouteFuntions('ROUTE_APP', '/server/bff', ['apps'], parameters.doc);
+            else
+                return await renderRouteFuntions('ROUTE_REST_API', '/server/server', ['apps', 'serviceregistry','server'], parameters.doc);
         }
         case parameters.type.toUpperCase()=='GUIDE':{
-            return await getFile(`${server.ORM.serverProcess.cwd()}/apps/common/src/functions/documentation/${parameters.doc}.md`, true)
+            return await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + parameters.doc + MD_SUFFIX}`, true)
                         .then(markdown=>markdown.replaceAll('@{GIT_REPOSITORY_URL}',server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'GIT_REPOSITORY_URL'}}).result));
         }
         default:{
@@ -356,7 +364,7 @@ const markdownRender = async parameters =>{
 const menuRender = async parameters =>{
 
     /**@type{server['app']['commonDocumentMenu'][]} */
-    const markdown_menu_docs = await getFile(`${server.ORM.serverProcess.cwd()}/apps/common/src/functions/documentation/menu.json`).then((/**@type{string}*/result)=>JSON.parse(result));
+    const markdown_menu_docs = await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH}menu.json`).then((/**@type{string}*/result)=>JSON.parse(result));
     for (const menu of markdown_menu_docs){
         switch (true){
             case menu.type=='APP':{
@@ -373,11 +381,10 @@ const menuRender = async parameters =>{
                     });
                 break;
             }
-            case menu.type=='ROUTE':
             case menu.type=='GUIDE':{
                 //return menu with updated first title from the documents
                 for (const menu_sub of menu.menu_sub??[]){
-                    await getFile(`${server.ORM.serverProcess.cwd()}/apps/common/src/functions/documentation/${menu_sub.doc}.md`, true)
+                    await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + menu_sub.doc + MD_SUFFIX}`, true)
                             .then(result=>{
                                 try {
                                     menu_sub.menu =  result.replaceAll('\r\n', '\n').split('\n').filter(row=>row.indexOf('#')==0)[0].split('#')[1];
@@ -450,7 +457,6 @@ const appFunction = async parameters =>{
             }
             case parameters.data.documentType=='GUIDE':
             case parameters.data.documentType=='APP' && server.ORM.db.App.get({app_id:parameters.app_id, resource_id:server.ORM.UtilNumberValue(parameters.data.doc)}).result?.length==1:
-            case parameters.data.documentType=='ROUTE':
             case parameters.data.documentType.startsWith('MODULE') &&
                 (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/serviceregistry')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
                 //guide documents in separate files, app and modules use templates
@@ -460,7 +466,7 @@ const appFunction = async parameters =>{
                                                                     module:parameters.data.doc,
                                                                     locale:parameters.locale})},
                                                             methods:null}))
-                                        .replace(parameters.data.doc=='7.restapi'?'@{CONFIG_REST_API}':'',parameters.data.doc=='7.restapi'?
+                                        .replace(parameters.data.doc==MD_TEMPLATE_RESTAPI?'@{CONFIG_REST_API}':'',parameters.data.doc==MD_TEMPLATE_RESTAPI?
                                                 await ComponentOpenAPI({data:   {  
                                                                                 app_id: parameters.app_id
                                                                                 },

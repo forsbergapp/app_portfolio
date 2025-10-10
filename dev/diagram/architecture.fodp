@@ -1502,7 +1502,7 @@
      </draw:custom-shape>
      <draw:custom-shape draw:style-name="gr28" draw:text-style-name="P7" xml:id="id18" draw:id="id18" draw:layer="layout" svg:width="5.298cm" svg:height="1.346cm" svg:x="13.981cm" svg:y="19.354cm">
       <text:p text:style-name="P6"><text:span text:style-name="T5">GITHUB</text:span></text:p>
-      <text:p text:style-name="P6"><text:span text:style-name="T12">VS Code integration</text:span></text:p>
+      <text:p text:style-name="P6"><text:span text:style-name="T12">VSCodium integration</text:span></text:p>
       <draw:enhanced-geometry draw:mirror-horizontal="false" draw:mirror-vertical="false" svg:viewBox="0 0 0 0" drawooo:sub-view-size="2901 1102" draw:text-areas="0 0 ?f0 ?f1" draw:type="ooxml-non-primitive" draw:enhanced-path="M 108 0 L 109 0 C 89 0 71 5 54 15 38 24 24 38 15 54 5 71 0 89 0 109 L 0 992 0 992 C 0 1012 5 1030 15 1047 24 1063 38 1077 54 1086 71 1096 89 1101 109 1101 L 2791 1101 2791 1101 C 2811 1101 2829 1096 2846 1086 2862 1077 2876 1063 2885 1047 2895 1030 2900 1012 2900 992 L 2900 108 2900 109 2900 109 C 2900 89 2895 71 2885 54 2876 38 2862 24 2846 15 2829 5 2811 0 2791 0 L 108 0 N">
        <draw:equation draw:name="f0" draw:formula="logwidth"/>
        <draw:equation draw:name="f1" draw:formula="logheight"/>

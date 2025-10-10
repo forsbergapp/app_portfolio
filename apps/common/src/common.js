@@ -249,7 +249,7 @@ const commonClientLocale = accept_language =>{
 /**
  * @name commonResourceFile
  * @memberof ROUTE_APP
- * @description Get resource from file or from cached file in FILES variable to avoid disk read
+ * @description Get resource
  *              Supported
  *              .css files
  *              .js files       
