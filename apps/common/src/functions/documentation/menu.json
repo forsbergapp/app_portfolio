@@ -11,6 +11,10 @@
                 {   "id":2,
                     "menu":"",
                     "doc":"1.project"
+                },
+                {   "id":3,
+                    "menu":"",
+                    "doc":"1.architecture"
                 }]
     },
     {
@@ -26,13 +30,9 @@
         "menu_sub":[
                 {   "id":1,
                     "menu":"",
-                    "doc":"3.architecture"
-                },
-                {   "id":2,
-                    "menu":"",
                     "doc":"3.security"
                 },
-                {   "id":3,
+                {   "id":2,
                     "menu":"",
                     "doc":"3.database"
                 }]
@@ -61,75 +61,63 @@
                 {   "id":5,
                     "menu":"",
                     "doc":"4.installationPMMicroservices"
+                },
+                {   "id":6,
+                    "menu":"",
+                    "doc":"4.configurationServer"
+                },
+                {   "id":7,
+                    "menu":"",
+                    "doc":"4.configurationApp"
                 }]
     },
     {
         "id":5,
-        "menu":"5 Configuration",
+        "menu":"5 Development",
         "type":"GUIDE",
         "menu_sub":[
                 {   "id":1,
                     "menu":"",
-                    "doc":"5.configurationServer"
+                    "doc":"5.development_repository"
                 },
                 {   "id":2,
                     "menu":"",
-                    "doc":"5.configurationApp"
+                    "doc":"5.development"
+                },
+                {   "id":3,
+                    "menu":"",
+                    "doc":"templateAppRoutes"
+                },
+                {   "id":4,
+                    "menu":"",
+                    "doc":"templateRestApi"
+                },
+                {   "id":5,
+                    "menu":"",
+                    "doc":"templateRouteFunctions"
                 }]
     },
     {
         "id":6,
-        "menu":"6 Development",
-        "type":"GUIDE",
-        "menu_sub":[
-                {   "id":1,
-                    "menu":"",
-                    "doc":"6.development_repository"
-                },
-                {   "id":2,
-                    "menu":"",
-                    "doc":"6.development"
-                }]
-    },
-    {
-        "id":7,
-        "menu":"7 Routes",
-        "type":"ROUTE",
-        "menu_sub":[
-                {   "id":1,
-                    "menu":"",
-                    "doc":"7.appRoutes"
-                },
-                {   "id":2,
-                    "menu":"",
-                    "doc":"7.restapi"
-                },
-                {   "id":3,
-                    "menu":"",
-                    "doc":"7.restapiFunctions"
-                }]
-    },
-    {
-        "id":8,
-        "menu":"8 Modules Apps",
+        "menu":"6 Modules Apps",
         "type":"MODULE_APPS",
         "menu_sub":null
     },
     {
-        "id":9,
-        "menu":"9 Modules Serviceregistry",
+        "id":7,
+        "menu":"7 Modules Serviceregistry",
         "type":"MODULE_SERVICEREGISTRY",
         "menu_sub":null
     },
     {
-        "id":10,
-        "menu":"10 Modules Server",
+        "id":8,
+        "menu":"8 Modules Server",
         "type":"MODULE_SERVER",
         "menu_sub":null
     },
     {
-        "id":11,
-        "menu":"11 Modules Test",
+        "id":9,
+        "menu":"9 Modules Test",
         "type":"MODULE_TEST",
         "menu_sub":null
     }

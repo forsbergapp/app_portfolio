@@ -102,7 +102,7 @@
  * @description APP commonDocumentMenu
  * @typedef {{   id:number, 
  *              menu:string,
- *              type:'MENU'|'APP'|'GUIDE'|'ROUTE'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_SERVICEREGISTRY'|'MODULE_SERVER'|'MODULE_TEST',
+ *              type:'MENU'|'APP'|'GUIDE'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_SERVICEREGISTRY'|'MODULE_SERVER'|'MODULE_TEST',
  *              menu_sub:{  id:number,
  *                          menu:string,
  *                          doc:string}[]|null}} serverDocumentMenu
