@@ -112,7 +112,7 @@ const getViewProfile = async parameters =>{
 };
 
 /**
- * @name getProfileStat
+ * @name getViewProfileStat
  * @description Get profile stat
  * @function
  * @memberof ROUTE_REST_API
@@ -165,7 +165,7 @@ const getViewProfileStat = async parameters =>{
 };
     
 /**
- * @name getProfileDetail
+ * @name getViewProfileDetail
  * @description Get user profile detail
  * @function
  * @memberof ROUTE_REST_API

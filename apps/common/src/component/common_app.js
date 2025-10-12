@@ -146,7 +146,7 @@
 
         /**
          * @description post data and return created values
-         * @return {Promise.<{  idToken:{id:number, token:string},
+         * @returns {Promise.<{  idToken:{id:number, token:string},
          *                      uuid:   string,
          *                      secret: string}>}
          */

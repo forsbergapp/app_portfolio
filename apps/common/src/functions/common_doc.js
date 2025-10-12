@@ -6,8 +6,6 @@
  */
 const {server} = await import('../../../../server/server.js');
 const fs = await import('node:fs');
-const {default:ComponentMarkdown} = await import('../component/common_markdown.js');
-const {default:ComponentOpenAPI} = await import('../component/common_openapi.js');
 
 const MD_PATH =                         '/apps/common/src/functions/documentation/';
 const MD_SUFFIX =                        '.md';
@@ -79,7 +77,7 @@ const getFiles = async (directory, filePattern) =>{
     return await findFiles(directory, filePattern);
 };
 /**
- * @name getFileFunctions
+ * @name renderTablesFunctions
  * @description
  * @function
  * @param {{app_id:Number,
@@ -88,7 +86,7 @@ const getFiles = async (directory, filePattern) =>{
  *          comment_with_filter:string|null}} parameters
  * @returns {Promise.<string>}
  */
-const getFileFunctions = async parameters =>{
+const renderTablesFunctions = async parameters =>{
     //replace variables for MODULE_APPS, MODULE_SERVICEREGISTRY and MODULE_SERVER
 
     //search all JSDoc comments
@@ -164,11 +162,14 @@ const getFileFunctions = async parameters =>{
 /**
  * @name HTMLEntities
  * @description Return supported characters as HTML Entities for tables
+ *              If cr=true then also replace \n to &crarr;
  * @function
  * @param {string} text
+ * @param {boolean} cr
  * @returns {string}
  */
-const HTMLEntities = text => text
+const HTMLEntities = (text, cr=false) => text
+                            .replaceAll(cr?'\n':'',cr?'&crarr;':'')
                             .replaceAll('|','&vert;')
                             .replaceAll('[','&#91;')
                             .replaceAll(']','&#93;')
@@ -192,33 +193,13 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
 
 /**
  * @name markdownRender
- * @description Renders markdown document and replaces variables:
- *              type APP
- *                  APP_NAME                App
- *                  SCREENSHOT_START        AppTranslation
- *                  DESCRIPTION             AppTranslation
- *                  REFERENCE               AppTranslation
- *                  TECHNOLOGY              AppTranslation
- *                  SECURITY                AppTranslation
- *                  PATTERN                 AppTranslation
- *                  COMPARISON              AppTranslation
- *                  SCREENSHOT_END (arrray) AppTranslation
- *              type MODULE*
- *                  MODULE_NAME
- *                  MODULE
- *                  SOURCE_LINK
- *                  SERVER_HOST             ConfigServer->SERVER->HOST
- *                  APP_CONFIGURATION       ConfigServer->METADATA->CONFIGURATION
- *                  COPYRIGHT               App
- *                  MODULE_FUNCTION replaced by all functions found in getFileFunctions()
- *              type ROUTE and template
- *                  CONFIG_REST_API variable is rendered directly to HTML using common_openapi.js component because of complexity
- *              type ROUTE and template
- *                  ROUTE_FUNCTIONS all functions with tag ROUTE_REST_API
- *              type ROUTE and template
- *                  ROUTE_FUNCTIONS with tag ROUTE_APP
- *              any file in menu of type GUIDE
- *                  GIT_REPOSITORY_URL replaces with GIT_REPOSITORY_URL parameter in ConfigServer if used in any document 
+ * @description Renders markdown document and replaces template variables
+ *              APP uses template MD_TEMPLATE_APPS
+ *              MODULE
+ *              doc==MD_TEMPLATE_RESTAPI:           openApi, uses template MD_TEMPLATE_RESTAPI
+ *              doc==MD_TEMPLATE_APPROUTES:         app routes, uses template MD_TEMPLATE_APPROUTES
+ *              doc==MD_TEMPLATE_RESTAPI_FUNCTIONS: openApi functions, uses template MD_TEMPLATE_RESTAPI_FUNCTIONS
+ *              GUIDE returns saved markdown and replaces GIT_REPOSITORY_URL if used with parameter value GIT_REPOSITORY_URL in ConfigServer
  * @function
  * @param {{app_id:number,
  *          type:server['app']['commonDocumentMenu']['type'],
@@ -289,18 +270,212 @@ const markdownRender = async parameters =>{
             
             //replace all found JSDoc comments with markdown formatted module functions
             return markdown.replace('@{MODULE_FUNCTION}', 
-                                    await getFileFunctions({app_id:         parameters.app_id,                                                 
+                                    await renderTablesFunctions({app_id:         parameters.app_id,                                                 
                                                             file:           await getFile(`${server.ORM.serverProcess.cwd()}${parameters.doc}.js`, true),
                                                             module:         parameters.module,
                                                             comment_with_filter:null
                                                         }));
         }
         case parameters.doc==MD_TEMPLATE_RESTAPI:{
+            const roleOrder = ['app_id', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'app_access_external', 'iam', 'iam_signup', 'microservice', 'microservice_auth'];
+            /**
+             * Sort paths by defined role order
+             * @param {*[]} paths
+             * @returns []
+             */
+            const sortByRole = paths => paths.sort((a,b) => roleOrder.indexOf(a[0].split('/')[2]) - roleOrder.indexOf(b[0].split('/')[2]));
+
+            /**
+             * @description Renders OpenApi documentation
+             *              Renders tables:
+             *                  info
+             *                  servers
+             *                  paths
+             *                  components
+             * @param {{openApi:server['ORM']['Object']['ConfigRestApi']}} parameters
+             * @returns 
+             */
+            const openApiMarkdown = parameters =>{
+
+                        //Table info
+                return `|${Object.entries(parameters.openApi)[0][0]}||\n`+
+                        '|:---|:---|\n' +
+                        `|${Object.keys(Object.entries(parameters.openApi)[0][1])[0]}|${Object.values(Object.entries(parameters.openApi)[0][1])[0]}|\n` +
+                        `|${Object.keys(Object.entries(parameters.openApi)[0][1])[1]}|${Object.values(Object.entries(parameters.openApi)[0][1])[1]}|\n` +
+                        `|${Object.keys(Object.entries(parameters.openApi)[0][1])[2]}|${Object.values(Object.entries(parameters.openApi)[0][1])[2]}|\n` +
+                        '\n'+
+                        //Table servers
+                        `|${Object.entries(parameters.openApi)[1][0]}||\n` +
+                        '|:---|:---|\n' + 
+                        `${Object.entries(parameters.openApi.servers).map(key => 
+                            `|${Object.keys(key[1])[0]}|${Object.values(key[1])[0]}|`
+                        ).join('\n')}\n` + 
+                        '\n' +
+                        //Paths contains table for each path
+                        `|${Object.entries(parameters.openApi)[2][0]}||\n` +
+                        '|:---|:---|\n\n' +
+                        `${sortByRole(Object.entries(parameters.openApi.paths).sort((a,b)=>a[0]>b[0]?1:-1)).map((/**@type{*}*/path) =>
+                            `${Object.entries(path[1]).map(method => 
+                                `|${method[0].toUpperCase()}|${path[0]}|\n` +
+                                '|:---|:---|\n' + 
+                                `|**Summary**|****${HTMLEntities(method[1].summary,true)}****|\n` +
+                                `|**operationId**|${method[1].operationId}|\n` +
+                                `|**Parameters**||\n` +
+                                `${method[1].parameters.map((/**@type{*}*/param) =>
+                                    `|${param['$ref']?
+                                            'ref$':
+                                            param['name']?param.name:Object.keys(param)[0]}|${Object.keys(param)[0].startsWith('server')?
+                                                                                                Object.values(param)[0]:
+                                                                                                    `****${HTMLEntities(JSON.stringify(param, undefined,2),true)}****`}|\n`
+                                ).join('')
+                                }`+
+                                `${method[1]?.requestBody?
+                                    `|**Request body**||\n`+
+                                    `|Description|****${HTMLEntities(method[1]?.requestBody.description, true)}****|\n`+
+                                    `|Required|${method[1]?.requestBody.required}|\n`+
+                                    `|Content|****${HTMLEntities(JSON.stringify(method[1]?.requestBody.content, undefined,2),true)}****|\n`
+                                    :''
+                                }` +
+                                '|**Responses**||\n' +
+                                `${Object.entries(method[1].responses).length>0?
+                                        Object.entries(method[1].responses).map(([status, response]) =>
+                                            `|${status}|****${HTMLEntities(JSON.stringify(response, undefined,2),true)}****|\n`
+                                        ).join(''):
+                                        '\n'
+                                }\n`
+                            ).join('')}\n`
+                        ).join('')}\n` +
+                        //Table components
+                        `|${Object.entries(parameters.openApi)[3][0]}||\n` +
+                         '|:---|:---|\n' +
+                         `${Object.entries(parameters.openApi.components).map(key => 
+                             `|${key[0]}|****${HTMLEntities(JSON.stringify(key[1], undefined,2),true)}****|\n`
+                          ).join('')}\n`;
+            }
+            const renderOpenApi = async () => {
+                /**
+                 * Return description tag for given operationId
+                 * @param{string} operationId
+                 * @returns {Promise.<{summary:string, response:string}>}
+                 */
+                const getJsDocMetadata = async operationId =>{
+                        //read operationId what file to import and what function to execute
+                        //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
+                        const filePath = '/' + operationId.split('.')[0].replaceAll('_','/') + '/' +
+                                            operationId.split('.')[1] + '.js';
+                        const functionRESTAPI = operationId.split('.')[2];
+                        const file = await fs.promises.readFile(`${server.ORM.serverProcess.cwd()}${filePath}`, 'utf8').then(file=>file.toString().replaceAll('\r\n','\n'))
+                                            .catch(()=>null);
+                        const regexp_module_function = /\/\*\*([\s\S]*?)\*\//g;
+                        let match;
+                        while ((match = regexp_module_function.exec(file ?? '')) !==null){
+                            if ((match[1].indexOf(`@name ${functionRESTAPI}\n`)>-1 || match[1].indexOf(`@name ${functionRESTAPI} `)>-1) &&
+                                match[1].indexOf('@function')>-1 &&
+                                match[1].indexOf('@memberof ROUTE_REST_API')>-1)
+                                return {summary:
+                                            `***${match[1]
+                                                .split('@')
+                                                .filter(tag=>tag.startsWith('description'))[0]?.substring('description'.length)
+                                                                                                .trimStart()
+                                                                                                .split('\n')
+                                                                                                .map(row=>row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
+                                                                                                .join('\n')
+                                                }***`,
+                                        response:
+                                            `***${match[1]
+                                                .split('@')
+                                                .filter(tag=>tag.startsWith('returns'))[0]?.substring('returns'.length)
+                                                .trimStart()
+                                                .split('\n')
+                                                .map(row=>
+                                                    `${(row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
+                                                        .replaceAll('|','&vert;')
+                                                        .replaceAll('[','&#91;')
+                                                        .replaceAll(']','&#93;')
+                                                        .replaceAll('<','&lt;')
+                                                        .replaceAll('>','&gt;')
+                                                        }`
+                                                )
+                                                .join('')
+                                                }***`
+                                        };
+                        }
+                        return {summary:'', response:''};
+                };
+
+                /**@type{server['ORM']['Object']['ConfigServer']['SERVER']} */
+                const configServer = server.ORM.db.ConfigServer.get({app_id:parameters.app_id,data:{ config_group:'SERVER'}}).result;
+
+                const HOST = configServer.filter(parameter=> 'HOST' in parameter)[0].HOST;
+                const PORT = server.ORM.UtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT);
+                const PORT_ADMIN = server.ORM.UtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN);
+                
+                        
+                /**@type{server['ORM']['Object']['ConfigRestApi']} */
+                const CONFIG_REST_API = server.ORM.db.ConfigRestApi.get({app_id:parameters.app_id}).result;
+                //return object with 'servers key modified with list from configuration
+                                            
+                CONFIG_REST_API.servers = [
+                                            {
+                                            url:'http://' + HOST + ((PORT==80||PORT==443)?'':`/:${PORT}`)
+                                            },
+                                            {
+                                                url:'http://' + HOST + ((PORT_ADMIN==80||PORT_ADMIN==443)?'':`/:${PORT_ADMIN}`)
+                                            },
+                                            ];
+                for (const path of Object.entries(CONFIG_REST_API.paths))
+                    for (const method of Object.entries(path[1])){
+                        const JSDocResult = await getJsDocMetadata(method[1].operationId);
+                        //Update summary with @description tag
+                        method[1].summary = JSDocResult.summary;
+                        //All paths starts with oneOf key followed by allOf key except SSE path
+                        if (method[1].responses.oneOf)
+                            //Update rows and properties with @returns tag
+                            /**@ts-ignore */
+                            for (const elementallOf of method[1].responses.oneOf.filter((/**@type{*}*/row)=>'allOf' in row)[0].allOf){
+                                if (Object.keys(elementallOf)[0]=='oneOf' || Object.keys(elementallOf)[0]=='allOf' ){
+                                    for (const elementArray of elementallOf[Object.keys(elementallOf)[0]]){
+                                        if (Object.keys(elementArray)[0]=='oneOf' || Object.keys(elementArray)[0]=='allOf' ){
+                                            for (const elementArraySub of elementArray[Object.keys(elementArray)[0]]){
+                                                if ('properties' in elementArraySub || 'rows' in elementArraySub){
+                                                    if ('properties' in elementArraySub)
+                                                        elementArraySub.properties = JSDocResult.response;
+                                                    if ('rows' in elementArraySub)
+                                                        elementArraySub.rows = JSDocResult.response;
+                                                }           
+                                            }
+                                        }
+                                        else
+                                            if ('properties' in elementArray || 'rows' in elementArray){
+                                                if ('properties' in elementArray)
+                                                    elementArray.properties = JSDocResult.response;
+                                                if ('rows' in elementArray)
+                                                    elementArray.rows = JSDocResult.response;
+                                            } 
+                                    }
+                                }
+                                else
+                                    if ('properties' in elementallOf || 'rows' in elementallOf){
+                                        if ('properties' in elementallOf)
+                                            elementallOf.properties = JSDocResult.response;
+                                        if ('rows' in elementallOf)
+                                            elementallOf.rows = JSDocResult.response;
+                                    }
+                            }    
+                    }
+                    try {
+                        return openApiMarkdown({openApi:CONFIG_REST_API});        
+                    } catch (error) {
+                        return '';
+                    }
+            };
+            const openApi = await renderOpenApi();
             return await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + MD_TEMPLATE_RESTAPI + MD_SUFFIX}`)
                             .then(markdown=>
                                     //remove all '\r' in '\r\n'
                                     markdown
                                     .replaceAll('\r\n','\n')
+                                    .replace('@{CONFIG_REST_API}',openApi)
                                 );
         }
         case parameters.doc==MD_TEMPLATE_APPROUTES:
@@ -316,7 +491,7 @@ const markdownRender = async parameters =>{
                 /**@type{string[]} */
                 const membersof = [];
                 //Get REST API function with @namespace tag
-                membersof.push(await getFileFunctions({ app_id:             parameters.app_id, 
+                membersof.push(await renderTablesFunctions({ app_id:             parameters.app_id, 
                                                         file:               await getFile(`${server.ORM.serverProcess.cwd()}${routePath}.js`),
                                                         module:             routePath,
                                                         comment_with_filter:`@namespace ${tag}`
@@ -324,7 +499,7 @@ const markdownRender = async parameters =>{
                 //Get all REST API functions with @memberof tag
                 for (const directory of routeDirectories)
                     for (const file of (await getFiles(`${server.ORM.serverProcess.cwd()}/${directory}`, filePattern)).map(row=>row.file)){
-                        const file_functions = await getFileFunctions({ app_id:             parameters.app_id, 
+                        const file_functions = await renderTablesFunctions({ app_id:             parameters.app_id, 
                                                                         file:               await getFile(`${server.ORM.serverProcess.cwd()}${file}.js`),
                                                                         module:             file,
                                                                         comment_with_filter:`@memberof ${tag}`
@@ -460,23 +635,11 @@ const appFunction = async parameters =>{
             case parameters.data.documentType.startsWith('MODULE') &&
                 (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/serviceregistry')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
                 //guide documents in separate files, app and modules use templates
-                return {result:(await ComponentMarkdown({   data:{  markdown:await markdownRender({ app_id:parameters.app_id,
-                                                                    type:parameters.data.documentType,
-                                                                    doc:parameters.data.doc,
-                                                                    module:parameters.data.doc,
-                                                                    locale:parameters.locale})},
-                                                            methods:null}))
-                                        .replace(parameters.data.doc==MD_TEMPLATE_RESTAPI?'@{CONFIG_REST_API}':'',parameters.data.doc==MD_TEMPLATE_RESTAPI?
-                                                await ComponentOpenAPI({data:   {  
-                                                                                app_id: parameters.app_id
-                                                                                },
-                                                                        methods:{
-                                                                                App:server.ORM.db.App,
-                                                                                ConfigServer:server.ORM.db.ConfigServer,
-                                                                                ConfigRestApi:server.ORM.db.ConfigRestApi,
-                                                                                UtilNumberValue:server.ORM.UtilNumberValue
-                                                                                }
-                                                                        }):''),
+                return {result:await markdownRender({   app_id:parameters.app_id,
+                                                        type:parameters.data.documentType,
+                                                        doc:parameters.data.doc,
+                                                        module:parameters.data.doc,
+                                                        locale:parameters.locale}),
                         type:'HTML'};
             }
             default:{

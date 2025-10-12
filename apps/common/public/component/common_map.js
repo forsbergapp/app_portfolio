@@ -476,7 +476,7 @@ const component = async props => {
      * @descripton Set map layer
      * @function
      * @param {string} value
-     * @return {void}
+     * @returns {void}
      */
     const setLayer = value =>{
         TILE_URL = MAP_LAYERS.filter(layer=>layer.value==value)[0].url;

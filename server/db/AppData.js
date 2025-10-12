@@ -34,13 +34,14 @@ const get = parameters => {
  * @name getServer
  * @description Get record, called from server without base64 encoding
  * @function
+ * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
-*          resource_id:number|null,
-*          data:{  name?:string,
-*                  value?:string,
-*                  data_app_id?:string|number|null}}} parameters
-* @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppData'][]}}
-*/
+ *          resource_id:number|null,
+ *          data:{  name?:string,
+ *                  value?:string,
+ *                  data_app_id?:string|number|null}}} parameters
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppData'][]}}
+ */
 const getServer = parameters => {
    const result = server.ORM.getObject(parameters.app_id, 'AppData',parameters.resource_id, server.ORM.UtilNumberValue(parameters.data.data_app_id));
    if (result.result)
@@ -90,6 +91,7 @@ const post = async (app_id, data) => {
  * @name update
  * @description Update record
  * @function
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:server['ORM']['Object']['AppData']}} parameters

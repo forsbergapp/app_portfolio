@@ -135,15 +135,6 @@ body{
 #common_app_profile_search_list_wrap{
 	visibility: hidden;
 }
-.common_markdown_table_no_odd_event{
-    white-space: initial;
-}
-.common_markdown_table_no_odd_event .common_markdown_table_content_preserve{
-    white-space: pre-wrap;
-}
-.common_markdown_table_no_odd_event .common_markdown_table_row{
-    display: block;
-}
 /*APP THEME*/
 body {
 	--common_app_color_spinner:var(--common_app_color_black);
@@ -179,11 +170,11 @@ body {
     background-color: var(--common_app_color_light);
     box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }    
-.common_markdown_image {
-    border-color: var(--common_app_color_light) !important;
-}
 .common_document_header{
     border-bottom-color: var(--common_app_color_shadow1) !important;
+}
+.common_markdown_image {
+    border-color: var(--common_app_color_light) !important;
 }
 .common_document_footer{
     border-top-color: var(--common_app_color_shadow1) !important;
@@ -200,20 +191,17 @@ body {
   	color: var(--common_app_color_light);
     background-color: var(--common_app_color_blue1);
 }
-.common_markdown_table_no_odd_event .common_markdown_table_row:nth-child(odd),
 .common_markdown_table_row_odd{
     color: var(--common_report_color_black);
   	background-color: var(--common_report_color_lightblue3);
 }
-.common_markdown_table_no_odd_event .common_markdown_table_row:nth-child(even),
 .common_markdown_table_row_even{
 	color: var(--common_report_color_black);
 	background-color:var(--common_report_color_white);
 }
-.common_markdown_jsdoc_tag{
+.common_markdown_bold_italic{
     color: var(--common_app_color_green);
 }
-
 .common_toolbar_selected{
 	background-color: var(--common_app_color_blue1) !important;
 }
