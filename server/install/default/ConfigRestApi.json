@@ -1077,58 +1077,6 @@
                 }
             }
         },
-        "/bff/app_id/v1/app-common-module-asset/${resource_id_string}": {
-            "get": {
-                "summary": "",
-                "operationId": "apps_common_src.common.commonModuleAsset",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/resource_id_string",
-                            "description":"AppModule.common_name",
-                            "required":true,
-                            "in":"path"
-                        },
-                        {
-                            "$ref": "#/components/parameters/locale",
-                            "required":false
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_ip"
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_idtoken"
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_user_agent"
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_endpoint"
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
         "/bff/app_id/v1/app-resource/${resource_id_string}": {
             "get": {
                 "summary": "",

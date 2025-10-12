@@ -606,7 +606,7 @@ const iamAuthenticateUserUpdate = async parameters => {
 const iamAuthenticateUserDelete = async parameters => server.ORM.db.IamUser.deleteRecord(parameters.app_id, parameters.resource_id, {password:parameters.data.password});
 
 /**
- * @name iamAuthenticateUserDbDelete
+ * @name iamAuthenticateUserAppDelete
  * @description IAM Authenticates delete of user app
  * @function 
  * @memberof ROUTE_REST_API

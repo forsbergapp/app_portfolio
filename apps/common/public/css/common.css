@@ -1970,9 +1970,7 @@ body,
 }
 .common_markdown_table{
 	font-size: 0.7em;
-}
-.common_markdown_table_method{
-	margin-inline-start: 2em;
+    display: block;
 }
 .common_markdown_table_row{
 	display: flex;
@@ -1992,6 +1990,7 @@ body,
 }
 .common_markdown_table_row_detail .common_markdown_table_col2{
 	width: 55em;
+    margin-inline-start: 4em;
 }
 .common_markdown_table_row_detail_master.show{
 	display:inline-block;
@@ -2008,9 +2007,15 @@ body,
 	vertical-align: top;
 	max-width: 60em;
 }
-.common_markdown_jsdoc_tag{
-	display:inline-block;
-	vertical-align: text-top;
+.common_markdown_table_content_preserve{
+    white-space: pre-wrap;
+}
+.common_markdown_bold_italic{
+    display:inline;
+}
+.common_markdown_bold{
+    font-weight: bold;
+    display:inline;
 }
 /* common document*/
 .common_document{

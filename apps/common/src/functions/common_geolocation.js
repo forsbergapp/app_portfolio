@@ -63,6 +63,7 @@ const returnPlace = parameters =>{
  * @name getIP
  * @description Server function for geolocation IP
  * @function
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{  ip:string},
  *          ip:string,
@@ -124,6 +125,7 @@ const getIP = parameters =>{
  *              IP      
  *              PLACE   
  * @function
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{  latitude:string,
  *                  longitude:string},
