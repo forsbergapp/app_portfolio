@@ -2775,11 +2775,11 @@ const commonEvent = async (event_type,event=null) =>{
                                 break;
                             }
                             //markdown show/hide details
-                            case (event.target.classList.contains('common_md_tab_row_master_method')||event.target.classList.contains('common_md_tab_row_master_path'))?event_target_id:null:{
-                                if (commonMiscElementRow(event.target, 'common_md_tab_row').querySelector('.common_md_tab_row_detail_master')?.classList?.contains('show'))
-                                    commonMiscElementRow(event.target, 'common_md_tab_row').querySelector('.common_md_tab_row_detail_master')?.classList?.remove('show');
+                            case (event.target.className.startsWith('common_md_tab_col') && commonMiscElementRow(event.target, 'common_md_tab_row').classList?.contains('common_md_tab_row_title')?event_target_id:null):{
+                                if (commonMiscElementRow(event.target, 'common_md_tab').classList?.contains('hide'))
+                                    commonMiscElementRow(event.target, 'common_md_tab').classList?.remove('hide');
                                 else
-                                    commonMiscElementRow(event.target, 'common_md_tab_row').querySelector('.common_md_tab_row_detail_master')?.classList?.add('show');
+                                    commonMiscElementRow(event.target, 'common_md_tab').classList?.add('hide');
                                 break;
                             }
                             // common app toolbar

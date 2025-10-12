@@ -95,8 +95,8 @@ const renderTablesFunctions = async parameters =>{
     const module_functions =[];
     let match_module_function;
 
-    // module table with variables
-    const HEADER            = '|@{TYPE}         |@{FUNCTION_NAME}                       |';
+    // module table with variables, add keyvalue id in title to use CSS common_md_tab_key_value class
+    const HEADER            = '|{#kv}@{TYPE}    |@{FUNCTION_NAME}                       |';
     const ALIGNMENT         = '|:---------------|:--------------------------------------|';
     const FUNCTION_TAG      = '|@{FUNCTION_TAG} |@{FUNCTION_TEXT}                       |';
     const SOURCE_LINE_TAG   = '|Source line     |[@{MODULE_LINE}](@{SOURCE_LINE_LINK)   |';
@@ -297,28 +297,29 @@ const markdownRender = async parameters =>{
              */
             const openApiMarkdown = parameters =>{
 
-                        //Table info
-                return `|${Object.entries(parameters.openApi)[0][0]}||\n`+
+                        //Table 
+                        //info, add keyvalue id in title to use CSS common_md_tab_key_value class
+                return `|{#kv}OpenApi||\n`+
                         '|:---|:---|\n' +
+                        `|**${Object.entries(parameters.openApi)[0][0]}**||\n`+
                         `|${Object.keys(Object.entries(parameters.openApi)[0][1])[0]}|${Object.values(Object.entries(parameters.openApi)[0][1])[0]}|\n` +
                         `|${Object.keys(Object.entries(parameters.openApi)[0][1])[1]}|${Object.values(Object.entries(parameters.openApi)[0][1])[1]}|\n` +
                         `|${Object.keys(Object.entries(parameters.openApi)[0][1])[2]}|${Object.values(Object.entries(parameters.openApi)[0][1])[2]}|\n` +
-                        '\n'+
-                        //Table servers
-                        `|${Object.entries(parameters.openApi)[1][0]}||\n` +
-                        '|:---|:---|\n' + 
+                        //servers
+                        `|**${Object.entries(parameters.openApi)[1][0]}**||\n` +
                         `${Object.entries(parameters.openApi.servers).map(key => 
-                            `|${Object.keys(key[1])[0]}|${Object.values(key[1])[0]}|`
-                        ).join('\n')}\n` + 
-                        '\n' +
-                        //Paths contains table for each path
-                        `|${Object.entries(parameters.openApi)[2][0]}||\n` +
+                            `|${Object.keys(key[1])[0]}|${Object.values(key[1])[0]}|\n`
+                        ).join('')}\n` + 
+                        //Table Paths 
+                        //contains table for each path
+                        `|{#kv}${Object.entries(parameters.openApi)[2][0]}||\n` +
                         '|:---|:---|\n\n' +
                         `${sortByRole(Object.entries(parameters.openApi.paths).sort((a,b)=>a[0]>b[0]?1:-1)).map((/**@type{*}*/path) =>
                             `${Object.entries(path[1]).map(method => 
-                                `|${method[0].toUpperCase()}|${path[0]}|\n` +
+                                //Table path
+                                `|{#kv}${method[0].toUpperCase()}|${path[0]}|\n` +
                                 '|:---|:---|\n' + 
-                                `|**Summary**|****${HTMLEntities(method[1].summary,true)}****|\n` +
+                                `|**Summary**|${HTMLEntities(method[1].summary,true)}|\n` +
                                 `|**operationId**|${method[1].operationId}|\n` +
                                 `|**Parameters**||\n` +
                                 `${method[1].parameters.map((/**@type{*}*/param) =>
@@ -326,30 +327,30 @@ const markdownRender = async parameters =>{
                                             'ref$':
                                             param['name']?param.name:Object.keys(param)[0]}|${Object.keys(param)[0].startsWith('server')?
                                                                                                 Object.values(param)[0]:
-                                                                                                    `****${HTMLEntities(JSON.stringify(param, undefined,2),true)}****`}|\n`
+                                                                                                    `${HTMLEntities(JSON.stringify(param, undefined,2),true)}`}|\n`
                                 ).join('')
                                 }`+
                                 `${method[1]?.requestBody?
                                     `|**Request body**||\n`+
-                                    `|Description|****${HTMLEntities(method[1]?.requestBody.description, true)}****|\n`+
+                                    `|Description|${HTMLEntities(method[1]?.requestBody.description, true)}|\n`+
                                     `|Required|${method[1]?.requestBody.required}|\n`+
-                                    `|Content|****${HTMLEntities(JSON.stringify(method[1]?.requestBody.content, undefined,2),true)}****|\n`
+                                    `|Content|${HTMLEntities(JSON.stringify(method[1]?.requestBody.content, undefined,2),true)}|\n`
                                     :''
                                 }` +
                                 '|**Responses**||\n' +
                                 `${Object.entries(method[1].responses).length>0?
                                         Object.entries(method[1].responses).map(([status, response]) =>
-                                            `|${status}|****${HTMLEntities(JSON.stringify(response, undefined,2),true)}****|\n`
+                                            `|${status}|${HTMLEntities(JSON.stringify(response, undefined,2),true)}|\n`
                                         ).join(''):
                                         '\n'
                                 }\n`
                             ).join('')}\n`
                         ).join('')}\n` +
                         //Table components
-                        `|${Object.entries(parameters.openApi)[3][0]}||\n` +
+                        `|{#kv}${Object.entries(parameters.openApi)[3][0]}||\n` +
                          '|:---|:---|\n' +
                          `${Object.entries(parameters.openApi.components).map(key => 
-                             `|${key[0]}|****${HTMLEntities(JSON.stringify(key[1], undefined,2),true)}****|\n`
+                             `|${key[0]}|${HTMLEntities(JSON.stringify(key[1], undefined,2),true)}|\n`
                           ).join('')}\n`;
             }
             const renderOpenApi = async () => {
