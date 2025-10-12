@@ -117,13 +117,11 @@ const component = async props => {
      *   ''    : no : found in cell 
      *   css used:
      *   style:text-align: center|start|end|'' start and end is used to support RTL and LTR direction
-     * 9.extended syntax to support preserve format
-     *   ****text****
-     * 10.bold and italic
+     * 9.bold and italic
      *   ***text*** anywhere in text
-     * 11.bold
+     * 10.bold
      *   **text** anywhere in text
-     * 12. correct all HTML entities after parsing
+     * 11. correct all HTML entities after parsing
      * @param {string} markdown
      * @returns {string}
      */
@@ -226,14 +224,17 @@ const component = async props => {
                         }).filter(row=>row!='').join('\n').split('*TABLE*');
         for (const table of tables.filter(row=>row!='')){
             const align = table.split('\n').filter(row=>row.indexOf('---')>-1)[0].split('|').slice(1, -1).map(row=>
-                (row.indexOf(':-')>-1 && row.indexOf('-:')>-1)?'center':row.indexOf(':-')>-1?'start':row.indexOf('-:')>-1?'end':''
+                (row.indexOf(':-')>-1 && row.indexOf('-:')>-1)?
+                    'center':
+                        row.indexOf(':-')>-1?
+                            'start':
+                                row.indexOf('-:')>-1?
+                                    'end':
+                                        ''
             );
-            //get max length of first column and set max length 40em (half width)
-            //use number to calculate width/80
-            const width = Math.min(Math.max(...table.split('\n').map(row=>(row.split('|')[1]??'').length)),40);
-            //return with HTML Entities for tables
             markdown = markdown.replace(table, 
-                    `<div class='common_md_tab'>${
+                    //add extra extended markdown syntax: if first table row starts width |{#kv} then apply class key value class with specific columns widths
+                    `<div class='common_md_tab ${table.split('\n')[0].startsWith('|{#kv}')?'common_md_tab_kv':''}'>${
                                 table.split('\n')
                                 //remove alignment row 
                                 .filter(row=>row.indexOf('---')<0)
@@ -245,47 +246,35 @@ const component = async props => {
                                                                                                                                 ''}'>${row
                                             .split('|').slice(1, -1)
                                             .map((text, index_col) =>
-                                                    `<div class='common_md_tab_col' style='${index_col==0?
-                                                                                                        `min-width:
-                                                                                                            ${width}em;`:
-                                                                                                                ''}text-align:${align[index_col]}'>${text}</div>`
+                                                    `<div class='common_md_tab_col${index_col+1}' ${align[index_col]==''?'':`style='text-align:${align[index_col]}'`}>${text}</div>`
                                             ).join('')
                                         }
                                     </div>`
                                 ).join('')}
                         </div>`);
         }
-        //* 9.extended syntax to support preserve format
-        const regexp_preserve = /\*\*\*\*([\s\S]*?)\*\*\*\*/g;
-        let match_preserve;
-        while ((match_preserve = regexp_preserve.exec(markdown)) !==null){
-            try {
-                markdown = markdown.replace(match_preserve[0], (match_preserve[1]!='' && match_preserve[1]!=null)?`<div class='common_md_tab_content_preserve'>${match_preserve[1]}</div>`:'');
-            } catch (error) {
-                throw error
-            }
-            
-        }
-        //10.bold and italic
+        //9.bold and italic
         //regexp for ***text***
         const regexp_bold_italic = /\*\*\*([\s\S]*?)\*\*\*/g;
         let match_bold_italic;
         while ((match_bold_italic = regexp_bold_italic.exec(markdown)) !==null){
             markdown = markdown.replace(match_bold_italic[0], `<div class='common_md_bold_italic'>${match_bold_italic[1]}</div>`);
         }
-        //11.bold
+        //10.bold
         //regexp for **text**
         const regexp_bold = /\*\*([\s\S]*?)\*\*/g;
         let match_bold;
         while ((match_bold = regexp_bold.exec(markdown)) !==null){
             markdown = markdown.replace(match_bold[0], `<div class='common_md_bold'>${match_bold[1]}</div>`);
         }
-        //12. correct all HTML entities after parsing
+        //11. correct all HTML entities after parsing
         return markdown
                 //use in code block in table columns
                 .replaceAll('&crarr;','\n')
                 //use in code blocks so it does not intefere with bold
-                .replaceAll('&Star;','*');
+                .replaceAll('&Star;','*')
+                //use in table title and inside first column and first value to add key value class
+                .replaceAll('{#kv}','');
     };
     
     const onMounted = async () =>{

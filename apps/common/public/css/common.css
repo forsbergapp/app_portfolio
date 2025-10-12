@@ -1971,44 +1971,36 @@ body,
 .common_md_tab{
 	font-size: 0.7em;
     display: block;
+    white-space: initial;
 }
 .common_md_tab_row{
 	display: flex;
 	width: 100%;
 }
-.common_md_tab_row_master div{
-	display: inline-block;	
+.common_md_tab.hide .common_md_tab_row{
+    display:none !important;
 }
-.common_md_tab_row_master {
+.common_md_tab.hide .common_md_tab_row_title{
+    display:flex !important;
+}
+.common_md_tab_row_title {
 	cursor: pointer;
 }
-.common_md_tab_row_detail{
-	margin-inline-start: 5em;
+.common_md_tab_kv .common_md_tab_col1{
+    width:30%;
 }
-.common_md_tab_row_detail .common_md_tab_col1{
-	width:25em;
-}
-.common_md_tab_row_detail .common_md_tab_col2{
-	width: 55em;
-    margin-inline-start: 4em;
-}
-.common_md_tab_row_detail_master.show{
-	display:inline-block;
-}
-.common_md_tab_row_detail_master{
-	display:none;
+.common_md_tab_kv .common_md_tab_col2{
+    width:70%;
+    white-space: pre-wrap;
 }
 .common_md_tab_row_title{
 	font-weight: bold;
 }
-.common_md_tab_col{
+.common_md_tab_col1,
+.common_md_tab_col2,
+.common_md_tab_col3{
 	display: inline-block;
-	min-width: 20em;
-	vertical-align: top;
-	max-width: 60em;
-}
-.common_md_tab_content_preserve{
-    white-space: pre-wrap;
+	width:50%;
 }
 .common_md_bold_italic{
     display:inline;
