@@ -23,7 +23,7 @@
  */
 const template = props =>`  <div id='${'common_document_' + Date.now()}' class='common_document'>
                                 <div class='common_document_header' style='${props.app_logo==null?'':`background-image:url(${props.app_logo});`}'>${props.app_name}</div>
-                                <div class='common_document_body ${props.documentType=='MODULE_CODE'?'common_markdown common_code':'common_markdown'}'>
+                                <div class='common_document_body ${props.documentType=='MODULE_CODE'?'common_md common_code':'common_md'}'>
                                     ${props.documentType=='MODULE_CODE'?
                                         props.document
                                         .replaceAll('\r\n','\n').split('\n')
@@ -65,7 +65,7 @@ const component = async props => {
      * Converts following in this order:
      * 1.sections
      *   # character must start at first position on a  row
-     *   creates div with class common_markdown_section for all sections
+     *   creates div with class common_md_section for all sections
      *   so all sections will have the correct indentations
      *   supports unlimited amount of heading levels although implemented h1-h5
      * 
@@ -90,7 +90,7 @@ const component = async props => {
      * 
      * 6.images:
      *   [![text](small img)](full size img)  
-     *   creates class common_markdown_image  
+     *   creates class common_md_image  
      *   alt text should be used here as text below image
      *   hover text is not supported
      *   images should be clickable and displayed in windows info using event delegation
@@ -139,12 +139,12 @@ const component = async props => {
             if (row.indexOf('#')==0){
                 current_section = row.split(' ')[0].length;
                 if (index==0)
-                    div = '<div class=\'common_markdown_section\'>' + '\n' + row;
+                    div = '<div class=\'common_md_section\'>' + '\n' + row;
                 else
                     switch (true){
                         case current_section == old_section:{
                             div =   '</div>' + '\n' +
-                                    '<div class=\'common_markdown_section\'>' + '\n' + row;
+                                    '<div class=\'common_md_section\'>' + '\n' + row;
                             break;
                         }
                         case current_section < old_section:{
@@ -152,13 +152,13 @@ const component = async props => {
                             for (let i=1;i<=(old_section - current_section);i++){
                                 div +='</div>' + '\n';
                             }
-                            div +=  '<div class=\'common_markdown_section\'>' + '\n' + row;
+                            div +=  '<div class=\'common_md_section\'>' + '\n' + row;
                             break;
                         }
                         case current_section > old_section:{
                             sections = true;
                             div =   '\n' +
-                                    '<div class=\'common_markdown_section\'>' + '\n' + row;
+                                    '<div class=\'common_md_section\'>' + '\n' + row;
                             break;
                         }
                     }   
@@ -170,27 +170,27 @@ const component = async props => {
         }).join('\n') + '</div>' + (sections?'</div>':'');
                                             
         //2.headings        
-        markdown = markdown.split('\n').map(row=>row.indexOf('#####')==0?`<div class='common_markdown_title_h5'>${row.replace('#####','')}</div>`:row).join('\n');
-        markdown = markdown.split('\n').map(row=>row.indexOf('####')==0?`<div class='common_markdown_title_h4'>${row.replace('####','')}</div>`:row).join('\n');
-        markdown = markdown.split('\n').map(row=>row.indexOf('###')==0?`<div class='common_markdown_title_h3'>${row.replace('###','')}</div>`:row).join('\n');
-        markdown = markdown.split('\n').map(row=>row.indexOf('##')==0?`<div class='common_markdown_title_h2'>${row.replace('##','')}</div>`:row).join('\n');
-        markdown = markdown.split('\n').map(row=>row.indexOf('#')==0?`<div class='common_markdown_title_h1'>${row.replace('#','')}</div>`:row).join('\n');
+        markdown = markdown.split('\n').map(row=>row.indexOf('#####')==0?`<div class='common_md_title_h5'>${row.replace('#####','')}</div>`:row).join('\n');
+        markdown = markdown.split('\n').map(row=>row.indexOf('####')==0?`<div class='common_md_title_h4'>${row.replace('####','')}</div>`:row).join('\n');
+        markdown = markdown.split('\n').map(row=>row.indexOf('###')==0?`<div class='common_md_title_h3'>${row.replace('###','')}</div>`:row).join('\n');
+        markdown = markdown.split('\n').map(row=>row.indexOf('##')==0?`<div class='common_md_title_h2'>${row.replace('##','')}</div>`:row).join('\n');
+        markdown = markdown.split('\n').map(row=>row.indexOf('#')==0?`<div class='common_md_title_h1'>${row.replace('#','')}</div>`:row).join('\n');
         //3. code blocks
         //regexp for code blocks
         const regexp_code = /```([\s\S]*?)```/g;
         let match_code;
         while ((match_code = regexp_code.exec(markdown)) !==null){
-            markdown = markdown.replace(match_code[0], `<div class='common_markdown_code'>${match_code[1]}</div>`);
+            markdown = markdown.replace(match_code[0], `<div class='common_md_code'>${match_code[1]}</div>`);
         }
         //4.code inline
         //regexp for code blocks
         const regexp_code_inline = /`([\s\S]*?)`/g;
         let match_code_inline;
         while ((match_code_inline = regexp_code_inline.exec(markdown)) !==null){
-            markdown = markdown.replace(match_code_inline[0], `<div class='common_markdown_code_inline'>${match_code_inline[1]}</div>`);
+            markdown = markdown.replace(match_code_inline[0], `<div class='common_md_code_inline'>${match_code_inline[1]}</div>`);
         }
         //5.notes
-        markdown = markdown.split('\n').map(row=>row.indexOf('> **Note:**')==0?`<div class='common_markdown_note'>${row.replace('> **Note:**','')}</div>`:row).join('\n');
+        markdown = markdown.split('\n').map(row=>row.indexOf('> **Note:**')==0?`<div class='common_md_note'>${row.replace('> **Note:**','')}</div>`:row).join('\n');
         
         //6.images
         //regexp for [![text](small img)](full size img)
@@ -198,7 +198,7 @@ const component = async props => {
         let match;
         while ((match = regexp.exec(markdown)) !==null){
             markdown = markdown.replace(match[0], 
-                                        `   <div class='common_markdown_image' data-url_small='${match[2]==null?'':match[2]}' data-url='${match[3]}'></div><div class='common_markdown_image_text'>${match[1]}</div>`);
+                                        `   <div class='common_md_image' data-url_small='${match[2]==null?'':match[2]}' data-url='${match[3]}'></div><div class='common_md_image_text'>${match[1]}</div>`);
         }
         //7.links
         //regexp for [text](url)
@@ -233,19 +233,19 @@ const component = async props => {
             const width = Math.min(Math.max(...table.split('\n').map(row=>(row.split('|')[1]??'').length)),40);
             //return with HTML Entities for tables
             markdown = markdown.replace(table, 
-                    `<div class='common_markdown_table'>${
+                    `<div class='common_md_tab'>${
                                 table.split('\n')
                                 //remove alignment row 
                                 .filter(row=>row.indexOf('---')<0)
                                 .map((row, index_row)=>
-                                    `<div class='common_markdown_table_row ${(index_row % 2)==0?
-                                                                                'common_markdown_table_row_odd':
-                                                                                    'common_markdown_table_row_even'} ${index_row==0?
-                                                                                                                            'common_markdown_table_row_title':
+                                    `<div class='common_md_tab_row ${(index_row % 2)==0?
+                                                                                'common_md_tab_row_odd':
+                                                                                    'common_md_tab_row_even'} ${index_row==0?
+                                                                                                                            'common_md_tab_row_title':
                                                                                                                                 ''}'>${row
                                             .split('|').slice(1, -1)
                                             .map((text, index_col) =>
-                                                    `<div class='common_markdown_table_col' style='${index_col==0?
+                                                    `<div class='common_md_tab_col' style='${index_col==0?
                                                                                                         `min-width:
                                                                                                             ${width}em;`:
                                                                                                                 ''}text-align:${align[index_col]}'>${text}</div>`
@@ -260,7 +260,7 @@ const component = async props => {
         let match_preserve;
         while ((match_preserve = regexp_preserve.exec(markdown)) !==null){
             try {
-                markdown = markdown.replace(match_preserve[0], (match_preserve[1]!='' && match_preserve[1]!=null)?`<div class='common_markdown_table_content_preserve'>${match_preserve[1]}</div>`:'');
+                markdown = markdown.replace(match_preserve[0], (match_preserve[1]!='' && match_preserve[1]!=null)?`<div class='common_md_tab_content_preserve'>${match_preserve[1]}</div>`:'');
             } catch (error) {
                 throw error
             }
@@ -271,14 +271,14 @@ const component = async props => {
         const regexp_bold_italic = /\*\*\*([\s\S]*?)\*\*\*/g;
         let match_bold_italic;
         while ((match_bold_italic = regexp_bold_italic.exec(markdown)) !==null){
-            markdown = markdown.replace(match_bold_italic[0], `<div class='common_markdown_bold_italic'>${match_bold_italic[1]}</div>`);
+            markdown = markdown.replace(match_bold_italic[0], `<div class='common_md_bold_italic'>${match_bold_italic[1]}</div>`);
         }
         //11.bold
         //regexp for **text**
         const regexp_bold = /\*\*([\s\S]*?)\*\*/g;
         let match_bold;
         while ((match_bold = regexp_bold.exec(markdown)) !==null){
-            markdown = markdown.replace(match_bold[0], `<div class='common_markdown_bold'>${match_bold[1]}</div>`);
+            markdown = markdown.replace(match_bold[0], `<div class='common_md_bold'>${match_bold[1]}</div>`);
         }
         //12. correct all HTML entities after parsing
         return markdown
@@ -294,7 +294,7 @@ const component = async props => {
             Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`))[0].setAttribute('tabindex',0);
             Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`))[0].focus();
         }
-        for (const image_div of props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`#${props.data.commonMountdiv} .common_markdown_image`)){
+        for (const image_div of props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`#${props.data.commonMountdiv} .common_md_image`)){
             (image_div.getAttribute('data-url_small')==''||image_div.getAttribute('data-url_small')==null)?
                 null:
                     props.methods.COMMON.commonMiscResourceFetch(image_div.getAttribute('data-url_small')??'', image_div,'image/webp');

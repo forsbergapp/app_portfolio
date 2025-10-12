@@ -2775,11 +2775,11 @@ const commonEvent = async (event_type,event=null) =>{
                                 break;
                             }
                             //markdown show/hide details
-                            case (event.target.classList.contains('common_markdown_table_row_master_method')||event.target.classList.contains('common_markdown_table_row_master_path'))?event_target_id:null:{
-                                if (commonMiscElementRow(event.target, 'common_markdown_table_row').querySelector('.common_markdown_table_row_detail_master')?.classList?.contains('show'))
-                                    commonMiscElementRow(event.target, 'common_markdown_table_row').querySelector('.common_markdown_table_row_detail_master')?.classList?.remove('show');
+                            case (event.target.classList.contains('common_md_tab_row_master_method')||event.target.classList.contains('common_md_tab_row_master_path'))?event_target_id:null:{
+                                if (commonMiscElementRow(event.target, 'common_md_tab_row').querySelector('.common_md_tab_row_detail_master')?.classList?.contains('show'))
+                                    commonMiscElementRow(event.target, 'common_md_tab_row').querySelector('.common_md_tab_row_detail_master')?.classList?.remove('show');
                                 else
-                                    commonMiscElementRow(event.target, 'common_markdown_table_row').querySelector('.common_markdown_table_row_detail_master')?.classList?.add('show');
+                                    commonMiscElementRow(event.target, 'common_md_tab_row').querySelector('.common_md_tab_row_detail_master')?.classList?.add('show');
                                 break;
                             }
                             // common app toolbar
@@ -2822,7 +2822,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 break;
                             }
                             //markdown document tags
-                            case event.target.classList.contains('common_markdown_image')?event_target_id:'':{
+                            case event.target.classList.contains('common_md_image')?event_target_id:'':{
                                 if (event.target.getAttribute('data-url_link'))
                                     commonComponentRender({
                                         mountDiv:   'common_app_window_info',
