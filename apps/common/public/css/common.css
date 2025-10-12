@@ -325,13 +325,13 @@ body.font_arabic_nastaliq .common_input{
 #common_confirm_question{
 	font-family: inherit;
 }
-.common_markdown_code_inline,
+.common_md_code_inline,
 .common_code
 .common_code_line,
 .common_code_text{
     font-family: 'Noto Sans Mono';
 }
-.common_markdown_table{
+.common_md_tab{
 	font-family: "Noto Sans Mono";
 }
 
@@ -532,7 +532,7 @@ body.rtl .common_pagination_last::before{										    content:var(--common_app_
 #common_app_window_info_toolbar_btn_fullscreen::before{						        content:var(--common_app_icon_fullscreen)}
 
 /*Icons markdown*/
-.common_markdown_note::before{											            content:'!'}
+.common_md_note::before{											            content:'!'}
 
 body{
 	font-size: 16px;
@@ -1884,18 +1884,18 @@ body,
 }
 /**Markdown*/
 /*MARKDOWN */
-.common_markdown{
+.common_md{
     white-space: pre-wrap;
 	font-size: 0.8em !important;
     margin-bottom: 10em;
 	line-height: 1.2em;
 }
-.common_markdown_section{
+.common_md_section{
     margin: 0.5em;
 	margin-top: 0em;
   	margin-bottom: 0em;
 }
-.common_markdown_image{
+.common_md_image{
     display:block;
 	width: 100%;
   	height: 25em;
@@ -1906,58 +1906,58 @@ body,
 	background-position: center;
 	border: 2px solid;
 }
-.common_markdown_image_text{
+.common_md_image_text{
     display: inline-block;
     width: 100%;
     text-align: center;
 	margin-top: 0.5em;
 	margin-bottom: 1em;
 }
-.common_markdown_title_h1{
+.common_md_title_h1{
     font-size: 1.7em;
     font-weight: bold;
     margin-top: 1em;
     margin-bottom: 1em;
 }
-.common_markdown_title_h2{
+.common_md_title_h2{
     margin-top: 0.5em;
     font-size: 1.2em;
     font-weight: bold;
 }
-.common_markdown_title_h3{
+.common_md_title_h3{
 	margin-top: 0.5em;
     font-size: 1.1em;
     font-weight: bold;
 }
-.common_markdown_title_h4{
+.common_md_title_h4{
 	margin-top: 0.5em;
     font-size: 1em;
     font-weight: bold;
 }
-.common_markdown_title_h5{
+.common_md_title_h5{
 	margin-top: 0.5em;
     font-size: 1em;
     font-weight: bold;
 }
-.common_markdown_code {
+.common_md_code {
     border: 1px solid;
     white-space: preserve;
     border-radius: var(--common_app_css_border_radius);
     padding: 0.5em;
     font-size: 0.9em !important;
 }
-.common_markdown_code_inline{
+.common_md_code_inline{
 	border: 1px solid;
 	border-radius:var(--common_app_css_border_radius);
 	display: inline-block;
 }
-.common_markdown_note{
+.common_md_note{
 	padding: 1rem 1rem 1rem 3rem;
 	border-radius:var(--common_app_css_border_radius);
 	border-inline-start:2px solid;
 	position:relative;
 }
-.common_markdown_note::before{
+.common_md_note::before{
 	display: block;
   	width: 1.25em;
   	border-radius: 50%;
@@ -1968,52 +1968,52 @@ body,
   	padding-top: 0.25em;
   	margin-bottom: 0.5em;
 }
-.common_markdown_table{
+.common_md_tab{
 	font-size: 0.7em;
     display: block;
 }
-.common_markdown_table_row{
+.common_md_tab_row{
 	display: flex;
 	width: 100%;
 }
-.common_markdown_table_row_master div{
+.common_md_tab_row_master div{
 	display: inline-block;	
 }
-.common_markdown_table_row_master {
+.common_md_tab_row_master {
 	cursor: pointer;
 }
-.common_markdown_table_row_detail{
+.common_md_tab_row_detail{
 	margin-inline-start: 5em;
 }
-.common_markdown_table_row_detail .common_markdown_table_col1{
+.common_md_tab_row_detail .common_md_tab_col1{
 	width:25em;
 }
-.common_markdown_table_row_detail .common_markdown_table_col2{
+.common_md_tab_row_detail .common_md_tab_col2{
 	width: 55em;
     margin-inline-start: 4em;
 }
-.common_markdown_table_row_detail_master.show{
+.common_md_tab_row_detail_master.show{
 	display:inline-block;
 }
-.common_markdown_table_row_detail_master{
+.common_md_tab_row_detail_master{
 	display:none;
 }
-.common_markdown_table_row_title{
+.common_md_tab_row_title{
 	font-weight: bold;
 }
-.common_markdown_table_col{
+.common_md_tab_col{
 	display: inline-block;
 	min-width: 20em;
 	vertical-align: top;
 	max-width: 60em;
 }
-.common_markdown_table_content_preserve{
+.common_md_tab_content_preserve{
     white-space: pre-wrap;
 }
-.common_markdown_bold_italic{
+.common_md_bold_italic{
     display:inline;
 }
-.common_markdown_bold{
+.common_md_bold{
     font-weight: bold;
     display:inline;
 }

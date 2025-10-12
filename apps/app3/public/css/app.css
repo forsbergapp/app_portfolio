@@ -96,7 +96,7 @@ body{
     font-style: italic;
 }
 /*CODE*/
-.common_markdown_code,
+.common_md_code,
 .common_code{
     border: 1px solid;
     white-space: preserve;
@@ -104,7 +104,7 @@ body{
     padding: 0.5em;
     font-size: 0.9em !important;
 }
-.common_markdown_line,
+.common_md_line,
 .common_code_line{
     width: 4em;
     display:inline-block;
@@ -113,7 +113,7 @@ body{
     text-align: end;
     vertical-align: middle;
 }
-.common_markdown_text,
+.common_md_text,
 .common_code_text{
     font-size: 0.7em !important;
     width: calc(100% - 5em);
@@ -151,7 +151,7 @@ body {
     background-color: var(--common_app_color_blue3);
     color: var(--common_app_color_light);
 }
-.common_markdown_code,
+.common_md_code,
 .common_code{
     background-color: var(--common_app_color_black);
 	color: var(--common_app_color_white);
@@ -173,33 +173,33 @@ body {
 .common_document_header{
     border-bottom-color: var(--common_app_color_shadow1) !important;
 }
-.common_markdown_image {
+.common_md_image {
     border-color: var(--common_app_color_light) !important;
 }
 .common_document_footer{
     border-top-color: var(--common_app_color_shadow1) !important;
 }
-.common_markdown_code_inline{
+.common_md_code_inline{
 	background-color:var(--common_app_color_white3);
     border-color: var(--common_app_color_white2) !important;
 }
-.common_markdown_note{
+.common_md_note{
     background-color: var(--common_app_color_blue2);
     border-inline-start-color: var(--common_app_color_blue1) !important;
 }
-.common_markdown_note::before{
+.common_md_note::before{
   	color: var(--common_app_color_light);
     background-color: var(--common_app_color_blue1);
 }
-.common_markdown_table_row_odd{
+.common_md_tab_row_odd{
     color: var(--common_report_color_black);
   	background-color: var(--common_report_color_lightblue3);
 }
-.common_markdown_table_row_even{
+.common_md_tab_row_even{
 	color: var(--common_report_color_black);
 	background-color:var(--common_report_color_white);
 }
-.common_markdown_bold_italic{
+.common_md_bold_italic{
     color: var(--common_app_color_green);
 }
 .common_toolbar_selected{
