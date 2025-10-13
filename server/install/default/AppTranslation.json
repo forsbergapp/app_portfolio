@@ -69,7 +69,7 @@
                     "Description":"Presentation app that shows documentation of project", 
                     "Pattern":"Object Relational Mapping (ORM), openAPI, ISO20022, JSDoc, stateless documentation", 
                     "Technology":"Markdown render, Markdown to HTML conversion using Vue SFC pattern on server, Typescript, ER Model, architecture diagram including ORM, Infrastructure as code diagram", 
-                    "Reference":"jsdoc.app, www.readthedocs.com, www.openapis.org, pgModeler, Terraform, www.iso20022.org", 
+                    "Reference":"jsdoc.app, www.readthedocs.com, www.openapis.org, markdownguide.org, pgModeler, Terraform, www.iso20022.org", 
                     "Security":"OWASP",
                     "Comparison":[
                                     [   ["JSDoc",                               "App Portfolio"], 
@@ -98,6 +98,22 @@
                                         ["events on elements",					"event delegation"],
                                         ["no image presentation functionality", "image presentation functionality"],
                                         ["single framework",					"live switchable multi framework"]
+                                    ],
+                                    [
+                                        ["Markdownguide",                       "App Portfolio"],
+                                        ["document markup",                     "document markup, template markdown real time render, compact and stateless parser and HTML output"],
+                                        ["semantic HTML focus",                 "pure divs"],
+                                        ["no section, only headings",           "organizes document in div sections using headings"],
+                                        ["code block",                          "code block"],
+                                        ["note extended syntax",                "instead of blockquotes, notes uses Mozilla documentation standard: `> &Star;&Star;Note:&Star;&Star;`"],
+                                        ["images as links",                     "image preview and link to presentation component within SPA app using event delegation"],
+                                        ["image hover",                         "no hover support"],
+                                        ["url links",                           "links for event delegation and REST API fetch"],
+                                        ["no table identification",             "adds `{ #kv }` in table title for table with key value style separately from default table"],
+                                        ["no code block in tables supported",   "code block in tables supported using `{ #kv }` in title and `&crarr`; in code to preserve format for code in table"],
+                                        ["bold and italic",                     "used here to display JSDoc integrated code with openApi documentation" ],
+                                        ["bold",                                "bold"],
+                                        ["more features",                       "section management implements decided document design in project, so no blockquotes, lists, horizontal lines or other extra text features supported"]
                                     ]
                     ],
                     "ScreenshotEnd":[
