@@ -229,15 +229,7 @@
  *               developer_text:string|null,
  *               more_info:string|null}}} CommonErrorMessageISO20022
  */
-/**
- * @description Type CommonAppMenu
- * @typedef {{  id:number, 
- *              menu:string,
- *              type:'GUIDE'|'APP',
- *              menu_sub:{  id:number,
- *                          menu:string,
- *                          doc:string}[]|null}} CommonAppMenu
- */
+
 /**
  * @description Type commonDocumentType
  * @typedef {'APP'|'GUIDE'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_SERVICEREGISTRY'|'MODULE_SERVER'} commonDocumentType
@@ -423,7 +415,6 @@
  *              CommonComponentLifecycle:CommonComponentLifecycle,
  *              CommonComponentResult:CommonComponentResult,
  *              CommonErrorMessageISO20022:CommonErrorMessageISO20022,
- *              CommonAppMenu:CommonAppMenu,
  *              commonDocumentType:commonDocumentType,
  *              commonMetadata:commonMetadata,
  *              commonEventType:commonEventType,
