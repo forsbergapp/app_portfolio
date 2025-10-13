@@ -63,13 +63,7 @@ const component = async props => {
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
      * Converts following in this order:
-     * 1.sections
-     *   # character must start at first position on a  row
-     *   creates div with class common_md_section for all sections
-     *   so all sections will have the correct indentations
-     *   supports unlimited amount of heading levels although implemented h1-h5
-     * 
-     * 2.headings:
+     * 1.headings:
      *   # character must start at first position on a row
      *          div class
      *   #      title_h1
@@ -78,17 +72,17 @@ const component = async props => {
      *   ####   title_h4
      *   #####  title_h5
      * 
-     * 3.code block:
+     * 2.code block:
      *   ```` must start as first position on a row and ends with ```` on a new row
      *   all text within is a code block
      * 
-     * 4.code inline:
+     * 3.code inline:
      *   text should be wrapped with `` and is processed after code block
      * 
-     * 5.notes:
+     * 4.notes:
      *   > **Note:** must start as first position and text after must be on one row
      * 
-     * 6.images:
+     * 5.images:
      *   [![text](small img)](full size img)  
      *   creates class common_md_image  
      *   alt text should be used here as text below image
@@ -97,9 +91,9 @@ const component = async props => {
      * 
      *   not supported:
      *   ![alt text ](img "hover text")
-     * 7.links
+     * 6.links
      *   [text](url)
-     * 8.tables:
+     * 7.tables:
      *   | must start as first position on a row
      *   unlimited columns supported
      *   unlimited rows supported
@@ -117,98 +111,60 @@ const component = async props => {
      *   ''    : no : found in cell 
      *   css used:
      *   style:text-align: center|start|end|'' start and end is used to support RTL and LTR direction
-     * 9.bold and italic
+     * 8.bold and italic
      *   ***text*** anywhere in text
-     * 10.bold
+     * 9.bold
      *   **text** anywhere in text
-     * 11. correct all HTML entities after parsing
+     * 10. correct all HTML entities after parsing
      * @param {string} markdown
      * @returns {string}
      */
     const MarkdownParse = markdown =>{
         //remove all '\r' in '\r\n'
-        markdown = markdown.replaceAll('\r\n','\n');
-        //1.sections
-        let current_section = -1;
-        let old_section = -1;
-        let sections = false;
-        markdown = markdown.split('\n').map((row, /**@type{number}*/index)=>{
-            let div = '';
-            if (row.indexOf('#')==0){
-                current_section = row.split(' ')[0].length;
-                if (index==0)
-                    div = '<div class=\'common_md_section\'>' + '\n' + row;
-                else
-                    switch (true){
-                        case current_section == old_section:{
-                            div =   '</div>' + '\n' +
-                                    '<div class=\'common_md_section\'>' + '\n' + row;
-                            break;
-                        }
-                        case current_section < old_section:{
-                            div +='</div>' + '\n';
-                            for (let i=1;i<=(old_section - current_section);i++){
-                                div +='</div>' + '\n';
-                            }
-                            div +=  '<div class=\'common_md_section\'>' + '\n' + row;
-                            break;
-                        }
-                        case current_section > old_section:{
-                            sections = true;
-                            div =   '\n' +
-                                    '<div class=\'common_md_section\'>' + '\n' + row;
-                            break;
-                        }
-                    }   
-                old_section = row.split(' ')[0].length;
-                return div;
-            }
-            else
-                return row;
-        }).join('\n') + '</div>' + (sections?'</div>':'');
+        let html = markdown.replaceAll('\r\n','\n');
                                             
-        //2.headings        
-        markdown = markdown.split('\n').map(row=>row.indexOf('#####')==0?`<div class='common_md_title_h5'>${row.replace('#####','')}</div>`:row).join('\n');
-        markdown = markdown.split('\n').map(row=>row.indexOf('####')==0?`<div class='common_md_title_h4'>${row.replace('####','')}</div>`:row).join('\n');
-        markdown = markdown.split('\n').map(row=>row.indexOf('###')==0?`<div class='common_md_title_h3'>${row.replace('###','')}</div>`:row).join('\n');
-        markdown = markdown.split('\n').map(row=>row.indexOf('##')==0?`<div class='common_md_title_h2'>${row.replace('##','')}</div>`:row).join('\n');
-        markdown = markdown.split('\n').map(row=>row.indexOf('#')==0?`<div class='common_md_title_h1'>${row.replace('#','')}</div>`:row).join('\n');
-        //3. code blocks
+        //1.headings        
+        html = html.split('\n').map(row=>row.indexOf('#####')==0?`<div class='common_md_title_h5'>${row.replace('#####','')}</div>`:row).join('\n');
+        html = html.split('\n').map(row=>row.indexOf('####')==0?`<div class='common_md_title_h4'>${row.replace('####','')}</div>`:row).join('\n');
+        html = html.split('\n').map(row=>row.indexOf('###')==0?`<div class='common_md_title_h3'>${row.replace('###','')}</div>`:row).join('\n');
+        html = html.split('\n').map(row=>row.indexOf('##')==0?`<div class='common_md_title_h2'>${row.replace('##','')}</div>`:row).join('\n');
+        html = html.split('\n').map(row=>row.indexOf('#')==0?`<div class='common_md_title_h1'>${row.replace('#','')}</div>`:row).join('\n');
+        //2. code blocks
         //regexp for code blocks
         const regexp_code = /```([\s\S]*?)```/g;
         let match_code;
-        while ((match_code = regexp_code.exec(markdown)) !==null){
-            markdown = markdown.replace(match_code[0], `<div class='common_md_code'>${match_code[1]}</div>`);
+        while ((match_code = regexp_code.exec(html)) !==null){
+            html = html.replace(match_code[0], `<div class='common_md_code'>${match_code[1]}</div>`);
         }
-        //4.code inline
+        //3.code inline
         //regexp for code blocks
         const regexp_code_inline = /`([\s\S]*?)`/g;
         let match_code_inline;
-        while ((match_code_inline = regexp_code_inline.exec(markdown)) !==null){
-            markdown = markdown.replace(match_code_inline[0], `<div class='common_md_code_inline'>${match_code_inline[1]}</div>`);
+        while ((match_code_inline = regexp_code_inline.exec(html)) !==null){
+            html = html.replace(match_code_inline[0], `<div class='common_md_code_inline'>${match_code_inline[1]}</div>`);
         }
-        //5.notes
-        markdown = markdown.split('\n').map(row=>row.indexOf('> **Note:**')==0?`<div class='common_md_note'>${row.replace('> **Note:**','')}</div>`:row).join('\n');
+        //4.notes
+        html = html.split('\n').map(row=>row.indexOf('> **Note:**')==0?`<div class='common_md_note'>${row.replace('> **Note:**','')}</div>`:row).join('\n');
         
-        //6.images
+        //5.images
         //regexp for [![text](small img)](full size img)
         const regexp = /\[!\[([^)]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;
         let match;
-        while ((match = regexp.exec(markdown)) !==null){
-            markdown = markdown.replace(match[0], 
+        while ((match = regexp.exec(html)) !==null){
+            html = html.replace(match[0], 
                                         `   <div class='common_md_image' data-url_small='${match[2]==null?'':match[2]}' data-url='${match[3]}'></div><div class='common_md_image_text'>${match[1]}</div>`);
         }
-        //7.links
+        //6.links
         //regexp for [text](url)
         const regexp_links = /\[([^)]+)\]\(([^)]+)\)/g;
         let match_links;
-        while ((match_links = regexp_links.exec(markdown)) !==null){
-            markdown = markdown.replace(match_links[0], 
+        while ((match_links = regexp_links.exec(html)) !==null){
+            html = html.replace(match_links[0], 
                                         `<div class='common_link' data-href='${match_links[2]}' data-url='${match_links[2]}'>${match_links[2]}</div>`);
         }
-        //8.tables
+        //7.tables
         let table_new = true;
-        const tables = markdown.split('\n').
+        const tables = html.split('\n').
                         map(row=>{
                             if (row.indexOf('|')==0)
                                 if (table_new){
@@ -232,7 +188,7 @@ const component = async props => {
                                     'end':
                                         ''
             );
-            markdown = markdown.replace(table, 
+            html = html.replace(table, 
                     //add extra extended markdown syntax: if first table row starts width |{#kv} then apply class key value class with specific columns widths
                     `<div class='common_md_tab ${table.split('\n')[0].startsWith('|{#kv}')?'common_md_tab_kv':''}'>${
                                 table.split('\n')
@@ -253,22 +209,22 @@ const component = async props => {
                                 ).join('')}
                         </div>`);
         }
-        //9.bold and italic
+        //8.bold and italic
         //regexp for ***text***
         const regexp_bold_italic = /\*\*\*([\s\S]*?)\*\*\*/g;
         let match_bold_italic;
-        while ((match_bold_italic = regexp_bold_italic.exec(markdown)) !==null){
-            markdown = markdown.replace(match_bold_italic[0], `<div class='common_md_bold_italic'>${match_bold_italic[1]}</div>`);
+        while ((match_bold_italic = regexp_bold_italic.exec(html)) !==null){
+            html = html.replace(match_bold_italic[0], `<div class='common_md_bold_italic'>${match_bold_italic[1]}</div>`);
         }
-        //10.bold
+        //9.bold
         //regexp for **text**
         const regexp_bold = /\*\*([\s\S]*?)\*\*/g;
         let match_bold;
-        while ((match_bold = regexp_bold.exec(markdown)) !==null){
-            markdown = markdown.replace(match_bold[0], `<div class='common_md_bold'>${match_bold[1]}</div>`);
+        while ((match_bold = regexp_bold.exec(html)) !==null){
+            html = html.replace(match_bold[0], `<div class='common_md_bold'>${match_bold[1]}</div>`);
         }
-        //11. correct all HTML entities after parsing
-        return markdown
+        //10. correct all HTML entities after parsing
+        return html
                 //use in code block in table columns
                 .replaceAll('&crarr;','\n')
                 //use in code blocks so it does not intefere with bold

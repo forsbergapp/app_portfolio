@@ -103,7 +103,6 @@
                                         ["Markdownguide",                       "App Portfolio"],
                                         ["document markup",                     "document markup, template markdown real time render, compact and stateless parser and HTML output"],
                                         ["semantic HTML focus",                 "pure divs"],
-                                        ["no section, only headings",           "organizes document in div sections using headings"],
                                         ["code block",                          "code block"],
                                         ["note extended syntax",                "instead of blockquotes, notes uses Mozilla documentation standard: `> &Star;&Star;Note:&Star;&Star;`"],
                                         ["images as links",                     "image preview and link to presentation component within SPA app using event delegation"],
@@ -113,7 +112,7 @@
                                         ["no code block in tables supported",   "code block in tables supported using `{ #kv }` in title and `&crarr`; in code to preserve format for code in table"],
                                         ["bold and italic",                     "used here to display JSDoc integrated code with openApi documentation" ],
                                         ["bold",                                "bold"],
-                                        ["more features",                       "section management implements decided document design in project, so no blockquotes, lists, horizontal lines or other extra text features supported"]
+                                        ["more features",                       "implemented document design in project is without blockquotes, lists, horizontal lines or other extra text features"]
                                     ]
                     ],
                     "ScreenshotEnd":[

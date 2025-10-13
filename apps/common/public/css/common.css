@@ -1735,8 +1735,9 @@ body,
     width: 100%;
 }
 #common_app_dialogues_user_menu_messages_message_col_message_text{
-    white-space: preserve;
+    white-space: pre;
     margin: 0.5em;
+    height: 2em;
 }
 /* Dialogue user menu - iam user app*/
 #common_app_dialogues_user_menu_iam_user_app{
@@ -1885,15 +1886,10 @@ body,
 /**Markdown*/
 /*MARKDOWN */
 .common_md{
-    white-space: pre-wrap;
+    white-space: pre-line;
 	font-size: 0.8em !important;
     margin-bottom: 10em;
 	line-height: 1.2em;
-}
-.common_md_section{
-    margin: 0.5em;
-	margin-top: 0em;
-  	margin-bottom: 0em;
 }
 .common_md_image{
     display:block;
@@ -1941,7 +1937,7 @@ body,
 }
 .common_md_code {
     border: 1px solid;
-    white-space: preserve;
+    white-space: pre;
     border-radius: var(--common_app_css_border_radius);
     padding: 0.5em;
     font-size: 0.9em !important;
