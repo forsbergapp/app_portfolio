@@ -239,7 +239,7 @@ const markdownRender = async parameters =>{
             //replace COMPARISON
             markdown = markdown.replaceAll('@{COMPARISON}', app_translation.Document?.Comparison?.length==0?
                                                                 '':
-                                                                'Comparison' + '\n\n' + 
+                                                                '**Comparison**' + '\n\n' + 
                                                                 (app_translation.Document?.Comparison??[])
                                                                 .map((/**@type{[string,string][]}*/table)=>
                                                                         table.map((row, index)=>
