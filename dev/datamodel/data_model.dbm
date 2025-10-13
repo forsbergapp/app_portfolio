@@ -5,7 +5,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 -->
 <dbmodel pgmodeler-ver="1.2.0-beta1" use-changelog="false" max-obj-count="52"
 	 gen-disabled-objs-code="false" show-sys-schemas-rects="true"
-	 last-position="2300,-90" last-zoom="0.9" scene-rect="-248,-490,8068.78,3386.12"
+	 last-position="1955,-207" last-zoom="0.9" scene-rect="-248,-490,8068.78,3386.12"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -140,7 +140,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 
 	<customidxs object-type="column">
-		<object name="AppId" index="1"/>
+		<object name="AppId" index="8"/>
 	</customidxs>
 	<customidxs object-type="constraint">
 		<object name="App_fk" index="1"/>
@@ -821,7 +821,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 
 	<customidxs object-type="column">
-		<object name="AppId" index="1"/>
+		<object name="AppId" index="4"/>
 	</customidxs>
 	<customidxs object-type="constraint">
 		<object name="App_fk" index="1"/>
@@ -853,7 +853,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 
 	<customidxs object-type="column">
-		<object name="AppId" index="1"/>
+		<object name="AppId" index="6"/>
 	</customidxs>
 	<customidxs object-type="constraint">
 		<object name="App_fk" index="1"/>
@@ -915,7 +915,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 
 	<customidxs object-type="column">
-		<object name="AppId" index="1"/>
+		<object name="AppId" index="8"/>
 	</customidxs>
 	<customidxs object-type="constraint">
 		<object name="App_fk" index="1"/>

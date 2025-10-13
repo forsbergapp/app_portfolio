@@ -5,12 +5,14 @@
 /**
  * @import {common}  from '../../../common_types.js'
  */
+/**@type{common['server']['app']['commonDocumentMenu'][]} */
+const MENU = [];
 /**
  * @name template
  * @description Template
  * @function
  * @param {{title:string,
- *          app_menu:common['CommonAppMenu'][]}} props
+ *          app_menu:common['server']['app']['commonDocumentMenu'][]}} props
  * @returns {string}
  */
 const template = props =>`  <div id='app_menu'>
@@ -48,12 +50,12 @@ const template = props =>`  <div id='app_menu'>
  *                      template:string}>}
  */
 const component = async props => {
-    const menu = await props.methods.COMMON.commonFFB({path:'/app-common-module/COMMON_DOC', 
+    if (MENU.length==0)
+        MENU.push(...await props.methods.COMMON.commonFFB({path:'/app-common-module/COMMON_DOC', 
                                                 method:'POST', 
                                                 authorization_type:'APP_ID', 
                                                 body:{type:'FUNCTION',documentType:'MENU', IAM_data_app_id:props.data.app_id}})
-                .then(result=>JSON.parse(JSON.parse(result).rows))
-                .catch(()=>null);
+                .then(result=>JSON.parse(JSON.parse(result).rows)));
     const onMounted =()=>{
         //show first menu at start
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_menu_title').click();
@@ -63,7 +65,7 @@ const component = async props => {
         data:       null,
         methods:    null,
         template:   template({  title:props.methods.COMMON.COMMON_DOCUMENT.title,
-                                app_menu:menu
+                                app_menu:MENU
         })
     };
 };
