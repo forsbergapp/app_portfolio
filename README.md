@@ -80,7 +80,7 @@ Full documentation in /apps/common/src/functions/documentation or in presentatio
 
 ## DEVELOPMENT
 
-Project supports Linux development only
+Project focuses on open source directive and supports Linux development only
 
 ```
 sudo apt install git
