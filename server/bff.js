@@ -962,7 +962,7 @@ const bffRestApi = async (routesparameters) =>{
     };
 
     /**
-     * @description returns resource id name and value if used using ConfigRestApi and URI path
+     * @description returns resource id name and value if used using OpentApi and URI path
      * @param {*} paths
      * @param {*} components
      * @returns {Object.<string, string|number|null>|null}
@@ -981,9 +981,9 @@ const bffRestApi = async (routesparameters) =>{
                 //no resource id string in defined path
                 null;
 
-    //get paths and components keys in ConfigRestApi
+    //get paths and components keys in OpenApi
     const configPath = (() => { 
-        const { paths, components } = server.ORM.db.ConfigRestApi.get({app_id:server.ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID) ?? 0}).result; 
+        const { paths, components } = server.ORM.db.OpenApi.get({app_id:server.ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID) ?? 0}).result; 
             return {paths:Object.entries(paths).filter(path=>   
                 //match with resource id string             
                 (path[0].indexOf('${')>-1 && path[0].substring(0,path[0].lastIndexOf('${')) == URI_path.substring(0,URI_path.lastIndexOf('/')+1)) ||

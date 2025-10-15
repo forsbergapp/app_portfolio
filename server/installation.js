@@ -840,7 +840,7 @@ const postConfigDefault = async () => {
 const postDataDefault = async () => {
     
     /**
-     * @type{[  [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['ConfigRestApi']],
+     * @type{[  [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['OpenApi']],
      *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['IamUser'][]],
      *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['App'][]],
      *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['AppDataEntityResource'][]],
@@ -854,7 +854,7 @@ const postDataDefault = async () => {
      *       ]}
      */
     const config_obj = [
-                            ['ConfigRestApi',                   await getDefaultObject('ConfigRestApi')],
+                            ['OpenApi',                         await getDefaultObject('OpenApi')],
                             ['IamUser',                         await getDefaultObject('IamUser')],
                             ['App',                             await getDefaultObject('App')],
                             ['AppDataEntityResource',           await getDefaultObject('AppDataEntityResource')],
