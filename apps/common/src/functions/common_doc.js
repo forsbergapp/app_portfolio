@@ -199,7 +199,7 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
  *              doc==MD_TEMPLATE_RESTAPI:           openApi, uses template MD_TEMPLATE_RESTAPI
  *              doc==MD_TEMPLATE_APPROUTES:         app routes, uses template MD_TEMPLATE_APPROUTES
  *              doc==MD_TEMPLATE_RESTAPI_FUNCTIONS: openApi functions, uses template MD_TEMPLATE_RESTAPI_FUNCTIONS
- *              GUIDE returns saved markdown and replaces GIT_REPOSITORY_URL if used with parameter value GIT_REPOSITORY_URL in ConfigServer
+ *              GUIDE returns saved markdow
  * @function
  * @param {{app_id:number,
  *          type:server['app']['commonDocumentMenu']['type'],
@@ -522,8 +522,7 @@ const markdownRender = async parameters =>{
                 return await renderRouteFuntions('ROUTE_REST_API', '/server/server', ['apps', 'serviceregistry','server'], parameters.doc);
         }
         case parameters.type.toUpperCase()=='GUIDE':{
-            return await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + parameters.doc + MD_SUFFIX}`, true)
-                        .then(markdown=>markdown.replaceAll('@{GIT_REPOSITORY_URL}',server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'GIT_REPOSITORY_URL'}}).result));
+            return await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + parameters.doc + MD_SUFFIX}`, true);
         }
         default:{
             return '';

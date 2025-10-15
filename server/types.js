@@ -611,7 +611,6 @@
  *                {JSON_LIMIT:string,                                 COMMENT:string},
  *                {REST_RESOURCE_BFF:string,                          COMMENT:string},
  *                {REST_API_VERSION:string,                           COMMENT:string},
- *                {GIT_REPOSITORY_URL:string,                         COMMENT:string},
  *                {NETWORK_INTERFACE:string,                          COMMENT:string},
  *                {PATH_JOBS:string,                                  COMMENT:string},
  *                {CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS:number,    COMMENT:string},
