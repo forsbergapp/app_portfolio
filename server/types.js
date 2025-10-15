@@ -706,7 +706,7 @@
  */
 
 /**
- * @description DB DOCUMENT ConfigRestApi
+ * @description DB DOCUMENT OpenApi
  *              Follows Open API syntax
  * @memberof dbObjects
  * @typedef  {{ info: {
@@ -760,7 +760,7 @@
  *                      }
  *                  },
  *              }
- *          }} server_db_document_ConfigRestApi
+ *          }} server_db_document_OpenApi
  */
 
 /**
@@ -1410,7 +1410,7 @@
  *                    LogServerInfo:server_db_table_LogServerInfo,
  *                    LogServerError:server_db_table_LogServerInfo,
  *                    ConfigServer:server_db_document_ConfigServer,
- *                    ConfigRestApi:server_db_document_ConfigRestApi,
+ *                    OpenApi:server_db_document_OpenApi,
  *                    ServiceRegistry:server_db_table_ServiceRegistry,
  *                    MessageQueuePublish:server_db_table_MessageQueuePublish,
  *                    MessageQueueConsume:server_db_table_MessageQueueConsume,

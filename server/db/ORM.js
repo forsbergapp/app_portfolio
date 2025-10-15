@@ -103,7 +103,6 @@ class ORM_class {
          *           AppModule:import('./AppModule.js'),
          *           AppModuleQueue:import('./AppModuleQueue.js'),
          *           AppTranslation:import('./AppTranslation.js'),
-         *           ConfigRestApi:import('./ConfigRestApi.js'),
          *           ConfigServer:import('./ConfigServer.js'),
          *           IamAppAccess:import('./IamAppAccess.js'),
          *           IamAppIdToken:import('./IamAppIdToken.js'),
@@ -125,6 +124,7 @@ class ORM_class {
          *           MessageQueueConsume:import('./MessageQueueConsume.js'),
          *           MessageQueueError:import('./MessageQueueError.js'),
          *           MessageQueuePublish:import('./MessageQueuePublish.js'),
+         *           OpenApi:import('./OpenApi.js'),
          *           ServiceRegistry:import('./ServiceRegistry.js')}}
          */
         this.db;
@@ -154,7 +154,6 @@ class ORM_class {
                         AppModule:await import('./AppModule.js'),
                         AppModuleQueue:await import('./AppModuleQueue.js'),
                         AppTranslation:await import('./AppTranslation.js'),
-                        ConfigRestApi:await import('./ConfigRestApi.js'),
                         ConfigServer:await import('./ConfigServer.js'),
                         IamAppAccess:await import('./IamAppAccess.js'),
                         IamAppIdToken:await import('./IamAppIdToken.js'),
@@ -176,6 +175,7 @@ class ORM_class {
                         MessageQueueConsume:await import('./MessageQueueConsume.js'),
                         MessageQueueError:await import('./MessageQueueError.js'),
                         MessageQueuePublish:await import('./MessageQueuePublish.js'),
+                        OpenApi:await import('./OpenApi.js'),
                         ServiceRegistry:await import('./ServiceRegistry.js')
              }
             Object.seal(this.db);

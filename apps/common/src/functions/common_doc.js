@@ -292,7 +292,7 @@ const markdownRender = async parameters =>{
              *                  servers
              *                  paths
              *                  components
-             * @param {{openApi:server['ORM']['Object']['ConfigRestApi']}} parameters
+             * @param {{openApi:server['ORM']['Object']['OpenApi']}} parameters
              * @returns 
              */
             const openApiMarkdown = parameters =>{
@@ -412,8 +412,8 @@ const markdownRender = async parameters =>{
                 const PORT_ADMIN = server.ORM.UtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN);
                 
                         
-                /**@type{server['ORM']['Object']['ConfigRestApi']} */
-                const CONFIG_REST_API = server.ORM.db.ConfigRestApi.get({app_id:parameters.app_id}).result;
+                /**@type{server['ORM']['Object']['OpenApi']} */
+                const CONFIG_REST_API = server.ORM.db.OpenApi.get({app_id:parameters.app_id}).result;
                 //return object with 'servers key modified with list from configuration
                                             
                 CONFIG_REST_API.servers = [

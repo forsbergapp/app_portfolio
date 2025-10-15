@@ -1,8 +1,8 @@
 {
     "info": {
-      "title": "App Portfolio REST API",
+      "title": "App Portfolio API",
       "version": "1.0.0",
-      "description": "REST API using ISO20022, all #/components/parameters/server* parameters provided by server"
+      "description": "REST API uses ISO20022, all #/components/parameters/server* parameters provided by server"
     },
     "servers": [
         {"url": ""}

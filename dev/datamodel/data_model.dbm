@@ -328,7 +328,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="ConfigRestApi" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+<table name="OpenApi" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
 	<position x="3640" y="1900"/>
 	<column name="info" not-null="true">
