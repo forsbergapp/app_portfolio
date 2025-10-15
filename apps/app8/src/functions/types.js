@@ -37,7 +37,7 @@
  *			    preamble:			APP_FUNCTION_notation_singmaster,
  *			    temperature:		APP_FUNCTION_solution_one|APP_FUNCTION_solution_all,
  *			    cube_currentstate:	string,
- * 			    cube_goalstate:		[]|null,
+ * 			    cube_goalstate:		string|null,
  * 			    client_id: 			number}} APP_FUNCTION_cube_solve_data
  */
 /**
