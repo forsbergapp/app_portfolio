@@ -164,8 +164,7 @@ const component = async props => {
                     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id.replace('_cubestate','')}`).click();
                 else{
                     CONSTANTS.cube_goalstate = null;
-                    if (CONSTANTS.cube_goalstate)
-                        props.methods.COMMON.commonMessageShow('INFO', null, 'message_text','!');
+                    props.methods.COMMON.commonMessageShow('INFO', null, 'message_text','!');
                 }
                     
                 break;
@@ -228,7 +227,7 @@ const component = async props => {
      * @description Get cube solutions
      * @param {common['CommonAppEvent']['target']} event_target
      * @returns {Promise.<{
-     *                      id: string,
+     *                      Id: string,
      *                      cube_solution: string
      *                      }[]>}
      */
@@ -258,7 +257,6 @@ const component = async props => {
                                 spinner_id:event_target.id,
                                 timeout:1000 * 60 * 5}) //5 minutes timeout
                     .then((/**@type{string}*/result)=>{
-                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_lov');
                         /**
                          * @type{{cube_solution:string,
                          *        cube_solution_time:number,
@@ -270,7 +268,7 @@ const component = async props => {
                             return cube_result.map(row=>{return {
                                 //use base64 for solution in id column
                                 //replace single quote display with ’ to avoid string issues
-                                id:props.methods.COMMON.commonWindowToBase64(row.cube_solution, true), 
+                                Id:props.methods.COMMON.commonWindowToBase64(row.cube_solution, true), 
                                 cube_solution: `${row.cube_solution_model==0?ICONS.robot:ICONS.human} 
                                                 (${ICONS.moves}:${row.cube_solution_length}, ${ICONS.time}:${row.cube_solution_time}) - ${row.cube_solution.replaceAll('\'', '’')}`}; 
                             });

@@ -104,7 +104,7 @@ const cubeSolve = async parameters =>{
 					const solution1 = await solve1(solver2_moves_from_solved);
                     
 					const timer2 = Date.now();
-					const solution2 = solver2.solve(parameters.data.cube_currentstate, parameters.data.cube_goalstate ?? GOAL_SOLVE);
+					const solution2 = solver2.solve(parameters.data.cube_currentstate, parameters.data.cube_goalstate?.split(' ') ?? GOAL_SOLVE);
 					const timer3 = Date.now();
 					if (parameters.data.temperature ==0){
 						//return best solution
