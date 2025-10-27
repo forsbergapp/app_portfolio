@@ -86,15 +86,15 @@
                 },
                 {   "id":3,
                     "menu":"",
-                    "doc":"templateAppRoutes"
+                    "doc":"templateOpenApi"
                 },
                 {   "id":4,
                     "menu":"",
-                    "doc":"templateRestApi"
+                    "doc":"templateOpenApiAppFunctions"
                 },
                 {   "id":5,
                     "menu":"",
-                    "doc":"templateRouteFunctions"
+                    "doc":"templateOpenApiRestApiFunctions"
                 }]
     },
     {
