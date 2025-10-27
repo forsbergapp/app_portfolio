@@ -306,10 +306,7 @@ const markdownRender = async parameters =>{
                         `|${Object.keys(Object.entries(parameters.openApi)[0][1])[1]}|${Object.values(Object.entries(parameters.openApi)[0][1])[1]}|\n` +
                         `|${Object.keys(Object.entries(parameters.openApi)[0][1])[2]}|${Object.values(Object.entries(parameters.openApi)[0][1])[2]}|\n` +
                         //servers
-                        `|**${Object.entries(parameters.openApi)[1][0]}**||\n` +
-                        `${Object.entries(parameters.openApi.servers).map(key => 
-                            `|${Object.keys(key[1])[0]}|${Object.values(key[1])[0]}|\n`
-                        ).join('')}\n` + 
+                        `|**${Object.entries(parameters.openApi)[1][0]}**|${HTMLEntities(JSON.stringify(Object.entries(parameters.openApi)[1][1], undefined,2),true)}|\n` +
                         //Table Paths 
                         //contains table for each path
                         `|{#kv}${Object.entries(parameters.openApi)[2][0]}||\n` +
@@ -321,15 +318,7 @@ const markdownRender = async parameters =>{
                                 '|:---|:---|\n' + 
                                 `|**Summary**|${HTMLEntities(method[1].summary,true)}|\n` +
                                 `|**operationId**|${method[1].operationId}|\n` +
-                                `|**Parameters**||\n` +
-                                `${method[1].parameters.map((/**@type{*}*/param) =>
-                                    `|${param['$ref']?
-                                            'ref$':
-                                            param['name']?param.name:Object.keys(param)[0]}|${Object.keys(param)[0].startsWith('server')?
-                                                                                                Object.values(param)[0]:
-                                                                                                    `${HTMLEntities(JSON.stringify(param, undefined,2),true)}`}|\n`
-                                ).join('')
-                                }`+
+                                `|**Parameters**|${HTMLEntities(JSON.stringify(method[1].parameters, undefined,2),true)}|\n` +
                                 `${method[1]?.requestBody?
                                     `|**Request body**||\n`+
                                     `|Description|${HTMLEntities(method[1]?.requestBody.description, true)}|\n`+
@@ -404,26 +393,10 @@ const markdownRender = async parameters =>{
                         return {summary:'', response:''};
                 };
 
-                /**@type{server['ORM']['Object']['ConfigServer']['SERVER']} */
-                const configServer = server.ORM.db.ConfigServer.get({app_id:parameters.app_id,data:{ config_group:'SERVER'}}).result;
-
-                const HOST = configServer.filter(parameter=> 'HOST' in parameter)[0].HOST;
-                const PORT = server.ORM.UtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT);
-                const PORT_ADMIN = server.ORM.UtilNumberValue(configServer.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN);
                 
                         
                 /**@type{server['ORM']['Object']['OpenApi']} */
-                const CONFIG_REST_API = server.ORM.db.OpenApi.get({app_id:parameters.app_id}).result;
-                //return object with 'servers key modified with list from configuration
-                                            
-                CONFIG_REST_API.servers = [
-                                            {
-                                            url:'http://' + HOST + ((PORT==80||PORT==443)?'':`/:${PORT}`)
-                                            },
-                                            {
-                                                url:'http://' + HOST + ((PORT_ADMIN==80||PORT_ADMIN==443)?'':`/:${PORT_ADMIN}`)
-                                            },
-                                            ];
+                const CONFIG_REST_API = server.ORM.db.OpenApi.getViewWithoutConfig({app_id:parameters.app_id}).result;
                 for (const path of Object.entries(CONFIG_REST_API.paths))
                     for (const method of Object.entries(path[1])){
                         const JSDocResult = await getJsDocMetadata(method[1].operationId);
