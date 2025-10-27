@@ -7,13 +7,13 @@
 const {server} = await import('../../../../server/server.js');
 const fs = await import('node:fs');
 
-const MD_PATH =                         '/apps/common/src/functions/documentation/';
-const MD_SUFFIX =                        '.md';
-const MD_TEMPLATE_APPS =                'templateApps';
-const MD_TEMPLATE_RESTAPI =             'templateRestApi';
-const MD_TEMPLATE_RESTAPI_FUNCTIONS =   'templateRouteFunctions';
-const MD_TEMPLATE_APPROUTES =           'templateAppRoutes';
-const MD_TEMPLATE_MODULE =              'templateModule';
+const MD_PATH =                                 '/apps/common/src/functions/documentation/';
+const MD_SUFFIX =                               '.md';
+const MD_TEMPLATE_APPS =                        'templateApps';
+const MD_TEMPLATE_OPENAPI =                     'templateOpenApi';
+const MD_TEMPLATE_OPENAPI_RESTAPI_FUNCTIONS =   'templateOpenApiRestApiFunctions';
+const MD_TEMPLATE_OPENAPI_APP_FUNCTIONS =       'templateOpenApiAppFunctions';
+const MD_TEMPLATE_MODULE =                      'templateModule';
 
 
 /**
@@ -276,7 +276,7 @@ const markdownRender = async parameters =>{
                                                             comment_with_filter:null
                                                         }));
         }
-        case parameters.doc==MD_TEMPLATE_RESTAPI:{
+        case parameters.doc==MD_TEMPLATE_OPENAPI:{
             const roleOrder = ['app_id', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'app_access_external', 'iam', 'iam_signup', 'microservice', 'microservice_auth'];
             /**
              * Sort paths by defined role order
@@ -396,8 +396,8 @@ const markdownRender = async parameters =>{
                 
                         
                 /**@type{server['ORM']['Object']['OpenApi']} */
-                const CONFIG_REST_API = server.ORM.db.OpenApi.getViewWithoutConfig({app_id:parameters.app_id}).result;
-                for (const path of Object.entries(CONFIG_REST_API.paths))
+                const openApi = server.ORM.db.OpenApi.getViewWithoutConfig({app_id:parameters.app_id}).result;
+                for (const path of Object.entries(openApi.paths))
                     for (const method of Object.entries(path[1])){
                         const JSDocResult = await getJsDocMetadata(method[1].operationId);
                         //Update summary with @description tag
@@ -438,22 +438,22 @@ const markdownRender = async parameters =>{
                             }    
                     }
                     try {
-                        return openApiMarkdown({openApi:CONFIG_REST_API});        
+                        return openApiMarkdown({openApi:openApi});        
                     } catch (error) {
                         return '';
                     }
             };
             const openApi = await renderOpenApi();
-            return await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + MD_TEMPLATE_RESTAPI + MD_SUFFIX}`)
+            return await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + MD_TEMPLATE_OPENAPI + MD_SUFFIX}`)
                             .then(markdown=>
                                     //remove all '\r' in '\r\n'
                                     markdown
                                     .replaceAll('\r\n','\n')
-                                    .replace('@{CONFIG_REST_API}',openApi)
+                                    .replace('@{OPENAPI}',openApi)
                                 );
         }
-        case parameters.doc==MD_TEMPLATE_APPROUTES:
-        case parameters.doc==MD_TEMPLATE_RESTAPI_FUNCTIONS:{
+        case parameters.doc==MD_TEMPLATE_OPENAPI_APP_FUNCTIONS:
+        case parameters.doc==MD_TEMPLATE_OPENAPI_RESTAPI_FUNCTIONS:{
             /**
              * @param {string} tag
              * @param {string} routePath
@@ -486,10 +486,10 @@ const markdownRender = async parameters =>{
                             //remove all '\r' in '\r\n'
                             markdown
                             .replaceAll('\r\n','\n')
-                            .replace('@{ROUTE_FUNCTIONS}',membersof.join('\n\n'))
+                            .replace('@{OPENAPI_FUNCTIONS}',membersof.join('\n\n'))
                         );
             };
-            if (parameters.doc==MD_TEMPLATE_APPROUTES)
+            if (parameters.doc==MD_TEMPLATE_OPENAPI_APP_FUNCTIONS)
                 return await renderRouteFuntions('ROUTE_APP', '/server/bff', ['apps'], parameters.doc);
             else
                 return await renderRouteFuntions('ROUTE_REST_API', '/server/server', ['apps', 'serviceregistry','server'], parameters.doc);

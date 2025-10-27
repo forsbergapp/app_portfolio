@@ -1,11 +1,25 @@
-# REST API
+# OpenApi
 
-- ISO20022
-- OWASP guidelines for security 
-- IAM pattern to authenticate resources
-- OpenAPI pattern using JSON syntax
+OpenApi is used as both documentation and for management of configuration of App Portfolio and uses JSON syntax.
+The documentation follows single source of truth pattern and is integrated with JSDoc where all comments are saved using @description tag for summary and @returns tag for responses in the rows and properties keys and these JSDoc tags are displayed with green text. 
 
-## REST API URI implementation
+## Security
+
+OpenApi follows OWASP guidelines for security and uses IAM pattern that includes 
+
+- encrypting transport for all requests
+- role based REST API
+- IAM pattern to authenticate REST API resources
+
+## ISO20022
+
+ISO2022 REST API pattern is implemented. See ISO20022 specification how pagination, list response, error response, field limits, single or multi resource work.
+Objects in ORM use PascalCase naming standard. In REST API they use lowercase naming standard to follow ISO20022.
+Record limit is controlled by server using document ConfigServer, SERVICE_APP and APP_LIMIT_RECORD parameter.
+Pagination can be used in any path that can return one or many records. Records are returned in rows key.
+
+
+## OpenApi REST API URI implementation
 
 [protocol]://[domain]/[Backend For Frontend (BFF)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?[URI query]
 
@@ -33,16 +47,5 @@ All REST API send data in body with route info including query, method and heade
 |microservice               |Authorized when microservice is in use using encrypted messages to get access to service registry, IAM and message queue |
 |microservice_auth          |Authenticates microservices using encrypted messages         |
 
-## REST API uses ISO20022 pattern
 
-See ISO20022 specification how pagination, list response, error response, field limits, single or multi resource work.
-Objects in ORM use PascalCase naming standard. In REST API they use lowercase naming standard to follow ISO20022.
-Record limit is controlled by server using document ConfigServer, SERVICE_APP and APP_LIMIT_RECORD parameter.
-Pagination can be used in any path that can return one or many records. Records are returned in rows key.
-
-## REST API uses openAPI pattern
-
-OpenAPI pattern is implemented for REST API documentation and uses JSON format. This source is used as both documentation and for management of REST API in Javascript.
-The documentation follows single source of truth pattern and is integrated with JSDoc where all comments are saved using @description tag for summary and @returns tag for responses in the rows and properties keys and these JSDoc tags are displayed with green text. 
-
-@{CONFIG_REST_API}
+@{OPENAPI}
