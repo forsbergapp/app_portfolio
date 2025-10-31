@@ -2,7 +2,7 @@
     "info": {
       "title": "App Portfolio API",
       "version": "1.0.0",
-      "description": "App Portfolio, REST API uses ISO20022, all #/components/parameters/server* parameters provided by server",
+      "description": "App Portfolio, REST API uses ISO20022, all #/components/parameters/paths/server* parameters provided by server",
       "x-created":"",
       "x-modified":""
     },
@@ -75,7 +75,7 @@
                 "parameters": [
                         {"description": "Encrypted BFF"},
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "description":"UUID used in IamEncryption",
                             "in":"path",
                             "required":true
@@ -109,30 +109,30 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "description":"uuid",
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         },
                         {
-                            "$ref": "#/components/parameters/server_response"
+                            "$ref": "#/components/parameters/paths/server_response"
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         }
                 ],
@@ -191,15 +191,15 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"app.id",
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         }
                 ],
@@ -239,10 +239,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"AppData.id",
                             "in":"path"
                         },
@@ -263,11 +263,11 @@
                             }    
                         },
                         {
-                            "$ref":"#/components/parameters/IAM_data_app_id",
+                            "$ref":"#/components/parameters/paths/IAM_data_app_id",
                             "in":"query"
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         }
                 ],
@@ -298,26 +298,26 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "$ref": "#/components/parameters/paths/IAM_iam_user_id",
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -365,7 +365,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
                             "name":"statchoice",
@@ -402,10 +402,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"IamUser.id",
                             "in":"path"
                         },
@@ -442,13 +442,13 @@
                             }    
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "responses": {
@@ -487,19 +487,19 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/iam_user_id",
+                            "$ref": "#/components/parameters/paths/iam_user_id",
                             "in":"query",
                             "required":true
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_data_app_id",
+                            "$ref": "#/components/parameters/paths/IAM_data_app_id",
                             "in":"query"
                         }
                 ],
@@ -539,10 +539,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"IamUser.id",
                             "required":true,
                             "in":"path"
@@ -584,10 +584,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"IamUser.id",
                             "required":true,
                             "in":"path"
@@ -637,7 +637,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
                             "name":"statchoice",
@@ -674,10 +674,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"IamUser.id",
                             "required":true,
                             "in":"path"
@@ -710,35 +710,35 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "description":"AppModule.common_name",
                             "required":true,
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_host"
+                            "$ref": "#/components/parameters/paths/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint"
+                            "$ref": "#/components/parameters/paths/server_endpoint"
                         }
                 ],
                 "requestBody":{
@@ -750,11 +750,11 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_app_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_app_id",
+                                                "$ref": "#/components/parameters/paths/IAM_iam_user_app_id",
                                                 "required":false
                                             },
                                             "IAM_iam_user_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_id",
+                                                "$ref": "#/components/parameters/paths/IAM_iam_user_id",
                                                 "required":false
                                             },
                                             "type":{
@@ -794,10 +794,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"AppModule.id",
                             "in":"path"
                         },
@@ -847,10 +847,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "description":"AppModule.common_name",
                             "required":true,
                             "in":"path"
@@ -872,17 +872,17 @@
                             }    
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint"
+                            "$ref": "#/components/parameters/paths/server_endpoint"
                         }
                 ],
                 "responses": {
@@ -911,10 +911,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "description":"AppModule.common_name",
                             "required":true,
                             "in":"path"
@@ -936,17 +936,17 @@
                             }    
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint"
+                            "$ref": "#/components/parameters/paths/server_endpoint"
                         }
                 ],
                 "responses": {
@@ -976,10 +976,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"AppModuleQueue.id",
                             "in":"path"
                         }
@@ -1019,22 +1019,22 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"AppModule.id",
                             "required":true,
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint"
+                            "$ref": "#/components/parameters/paths/server_endpoint"
                         }
                 ],
                 "requestBody":{
@@ -1083,10 +1083,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"AppModuleQueue.id",
                             "in":"path"
                         }
@@ -1127,30 +1127,30 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
                         {
-                            "$ref": "#/components/parameters/server_host"
+                            "$ref": "#/components/parameters/paths/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
                         {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_data_app_id",
+                            "$ref": "#/components/parameters/paths/IAM_data_app_id",
                             "required":true,
                             "in":"query"
                         },
@@ -1207,29 +1207,29 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
                         {
-                            "$ref": "#/components/parameters/server_host"
+                            "$ref": "#/components/parameters/paths/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
                         {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_data_app_id",
+                            "$ref": "#/components/parameters/paths/IAM_data_app_id",
                             "in":"path"
                         }
                 ],
@@ -1269,33 +1269,33 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
                         {
-                            "$ref": "#/components/parameters/server_host"
+                            "$ref": "#/components/parameters/paths/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
                         {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_data_app_id",
+                            "$ref": "#/components/parameters/paths/IAM_data_app_id",
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "$ref": "#/components/parameters/paths/IAM_iam_user_id",
                             "required":true,
                             "in":"query"
                         }
@@ -1336,32 +1336,32 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "description":"AppModule.common_name",
                             "required":true,
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_host"
+                            "$ref": "#/components/parameters/paths/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint"
+                            "$ref": "#/components/parameters/paths/server_endpoint"
                         }
                 ],
                 "requestBody":{
@@ -1373,11 +1373,11 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_module_app_id": {
-                                                "$ref": "#/components/parameters/IAM_module_app_id",
+                                                "$ref": "#/components/parameters/paths/IAM_module_app_id",
                                                 "required":false
                                             },
                                             "IAM_data_app_id": {
-                                                "$ref": "#/components/parameters/IAM_data_app_id"
+                                                "$ref": "#/components/parameters/paths/IAM_data_app_id"
                                             },
                                             "type":{
                                                 "type":"string",
@@ -1422,30 +1422,30 @@
                 "operationId": "apps_common_src.common.commonModuleRun",
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id",
+                            "$ref": "#/components/parameters/paths/server_app_id",
                             "description":"APP EXTERNAL can only run a module that belongs to the app id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "description":"AppModule.common_name",
                             "required":true,
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_host"
+                            "$ref": "#/components/parameters/paths/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint"
+                            "$ref": "#/components/parameters/paths/server_endpoint"
                         }
                 ],
                 "requestBody":{
@@ -1493,36 +1493,36 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id",
+                            "$ref": "#/components/parameters/paths/server_app_id",
                             "description":"APP EXTERNAL can only run a module that belongs to the app id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "description":"AppModule.common_name",
                             "required":true,
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_host"
+                            "$ref": "#/components/parameters/paths/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint"
+                            "$ref": "#/components/parameters/paths/server_endpoint"
                         }
                 ],
                 "requestBody":{
@@ -1572,35 +1572,35 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "description":"AppModule.common_name",
                             "required":true,
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_host"
+                            "$ref": "#/components/parameters/paths/server_host"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_endpoint"
+                            "$ref": "#/components/parameters/paths/server_endpoint"
                         }
                 ],
                 "requestBody":{
@@ -1612,19 +1612,19 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_app_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_app_id",
+                                                "$ref": "#/components/parameters/paths/IAM_iam_user_app_id",
                                                 "required":false
                                             },
                                             "IAM_iam_user_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_id",
+                                                "$ref": "#/components/parameters/paths/IAM_iam_user_id",
                                                 "required":false
                                             },
                                             "IAM_module_app_id": {
-                                                "$ref": "#/components/parameters/IAM_module_app_id",
+                                                "$ref": "#/components/parameters/paths/IAM_module_app_id",
                                                 "required":false
                                             },
                                             "IAM_data_app_id": {
-                                                "$ref": "#/components/parameters/IAM_data_app_id"
+                                                "$ref": "#/components/parameters/paths/IAM_data_app_id"
                                             },
                                             "type":{
                                                 "type":"string",
@@ -1663,10 +1663,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/iam_user_id",
+                            "$ref": "#/components/parameters/paths/iam_user_id",
                             "in":"path"
                         },
                         {
@@ -1705,7 +1705,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         }
                 ],
                 "requestBody":{
@@ -1717,7 +1717,7 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_id":{
-                                                "$ref":"#/components/parameters/IAM_iam_user_id"
+                                                "$ref":"#/components/parameters/paths/IAM_iam_user_id"
                                             },
                                             "iam_user_id_follow":{
                                                 "required":true,
@@ -1755,10 +1755,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"IamUserFollow.id",
                             "required":true,
                             "in":"path"
@@ -1773,7 +1773,7 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_id":{
-                                                "$ref":"#/components/parameters/IAM_iam_user_id"
+                                                "$ref":"#/components/parameters/paths/IAM_iam_user_id"
                                             }
                                         }
                                     }
@@ -1807,7 +1807,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         }
                 ],
                 "requestBody":{
@@ -1819,7 +1819,7 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_id":{
-                                                "$ref":"#/components/parameters/IAM_iam_user_id"
+                                                "$ref":"#/components/parameters/paths/IAM_iam_user_id"
                                             },
                                             "iam_user_id_like":{
                                                 "required":true,
@@ -1857,10 +1857,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"IamUserLike.id",
                             "required":true,
                             "in":"path"
@@ -1875,7 +1875,7 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_id":{
-                                                "$ref":"#/components/parameters/IAM_iam_user_id"
+                                                "$ref":"#/components/parameters/paths/IAM_iam_user_id"
                                             }
                                         }
                                     }
@@ -1909,10 +1909,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_iam_user_app_id",
+                            "$ref": "#/components/parameters/paths/IAM_iam_user_app_id",
                             "in":"path"
                         }
                 ],
@@ -1925,10 +1925,10 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_data_app_id": {
-                                                "$ref": "#/components/parameters/IAM_data_app_id"
+                                                "$ref": "#/components/parameters/paths/IAM_data_app_id"
                                             },
                                             "IAM_iam_user_id": {
-                                                "$ref": "#/components/parameters/IAM_iam_user_id"
+                                                "$ref": "#/components/parameters/paths/IAM_iam_user_id"
                                             },
                                             "Document":{
                                                 "required":true,
@@ -1966,10 +1966,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"IamUser.id",
                             "required":true,
                             "in":"path"
@@ -2020,7 +2020,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         }
                 ],
                 "requestBody":{
@@ -2041,7 +2041,7 @@
                                                 "type":"string"
                                             },
                                             "IAM_iam_user_app_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_app_id"
+                                                "$ref": "#/components/parameters/paths/IAM_iam_user_app_id"
                                             }
                                         }
                                     }
@@ -2075,10 +2075,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"IamUserAppDataPost.id",
                             "required":true,
                             "in":"path"
@@ -2099,7 +2099,7 @@
                                                 "type":"string"
                                             },
                                             "IAM_iam_user_app_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_app_id"
+                                                "$ref": "#/components/parameters/paths/IAM_iam_user_app_id"
                                             }
                                         }
                                     }
@@ -2131,10 +2131,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"IamUserAppDataPost.id",
                             "required":true,
                             "in":"path"
@@ -2149,7 +2149,7 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_iam_user_app_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_app_id"
+                                                "$ref": "#/components/parameters/paths/IAM_iam_user_app_id"
                                             }
                                         }
                                     }
@@ -2183,10 +2183,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"IamUserAppDataPostLike.id",
                             "in":"path"
                         }
@@ -2204,10 +2204,10 @@
                                                 "type":"number"
                                             },
                                             "IAM_iam_user_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_id"
+                                                "$ref": "#/components/parameters/paths/IAM_iam_user_id"
                                             },
                                             "IAM_data_app_id":{
-                                                "$ref": "#/components/parameters/IAM_data_app_id"
+                                                "$ref": "#/components/parameters/paths/IAM_data_app_id"
                                             }
                                         }
                                     }
@@ -2241,7 +2241,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         }                        
                 ],
                 "requestBody":{
@@ -2257,10 +2257,10 @@
                                                 "type":"number"
                                             },
                                             "IAM_iam_user_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_id"
+                                                "$ref": "#/components/parameters/paths/IAM_iam_user_id"
                                             },
                                             "IAM_data_app_id": {
-                                                "$ref": "#/components/parameters/IAM_data_app_id"
+                                                "$ref": "#/components/parameters/paths/IAM_data_app_id"
                                             }
                                         }
                                     }
@@ -2294,26 +2294,26 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_iam_user_app_id",
+                            "$ref": "#/components/parameters/paths/IAM_iam_user_app_id",
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         }
                 ],
                 "requestBody":{
@@ -2329,10 +2329,10 @@
                                                 "type":"string"
                                             },
                                             "IAM_iam_user_id":{
-                                                "$ref": "#/components/parameters/IAM_iam_user_id"
+                                                "$ref": "#/components/parameters/paths/IAM_iam_user_id"
                                             },
                                             "IAM_data_app_id":{
-                                                "$ref": "#/components/parameters/IAM_data_app_id"
+                                                "$ref": "#/components/parameters/paths/IAM_data_app_id"
                                             }
                                         }
                                     }
@@ -2366,10 +2366,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "$ref": "#/components/parameters/paths/IAM_iam_user_id",
                             "in":   "path"
                         }
                 ],
@@ -2408,26 +2408,26 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "$ref": "#/components/parameters/paths/IAM_iam_user_id",
                             "in":   "path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
                         {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         }
                 ],
                 "requestBody":{
@@ -2493,10 +2493,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         }
                 ],
                 "requestBody":{
@@ -2551,7 +2551,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
                             "name":"identity_provider_id",
@@ -2597,7 +2597,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
                             "name":"data_app_id",
@@ -2682,27 +2682,27 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "description":"uuid",
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
                         {
-                            "$ref": "#/components/parameters/server_response"
+                            "$ref": "#/components/parameters/paths/server_response"
                         }
                 ],
                 "requestBody":{
@@ -2789,10 +2789,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"app.id",
                             "required":true,
                             "in":"path"
@@ -2883,10 +2883,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"AppModule.id",
                             "in":"path"
                         },
@@ -2934,10 +2934,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"AppModule.id",
                             "required":true,
                             "in":"path"
@@ -3001,10 +3001,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"AppData.id",
                             "required":false,
                             "in":"path"
@@ -3043,10 +3043,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"AppData.id",
                             "required":true,
                             "in":"path"
@@ -3143,10 +3143,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"iam_user.id",
                             "in":"path"
                         }
@@ -3178,10 +3178,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_iam_user_app_id",
+                            "$ref": "#/components/parameters/paths/IAM_iam_user_app_id",
                             "in":"path",
                             "required":true
                         }
@@ -3195,10 +3195,10 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_data_app_id": {
-                                                "$ref": "#/components/parameters/IAM_data_app_id"
+                                                "$ref": "#/components/parameters/paths/IAM_data_app_id"
                                             },
                                             "IAM_iam_user_id": {
-                                                "$ref": "#/components/parameters/IAM_iam_user_id"
+                                                "$ref": "#/components/parameters/paths/IAM_iam_user_id"
                                             },
                                             "Document":{
                                                 "required":true,
@@ -3236,7 +3236,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
                             "name":"config_group",
@@ -3290,7 +3290,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         }
                 ],
                 "requestBody":{
@@ -3371,10 +3371,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         }
                 ],
                 "requestBody":{
@@ -3419,10 +3419,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         }
                 ],
                 "responses": {
@@ -3452,7 +3452,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         }
                 ],
                 "responses": {
@@ -3482,7 +3482,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         }
                 ],
                 "responses": {
@@ -3512,7 +3512,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
                             "name":"data_app_id",
@@ -3640,7 +3640,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
                             "name":"data_app_id",
@@ -3744,10 +3744,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "$ref": "#/components/parameters/paths/IAM_iam_user_id",
                             "in":   "path"
                         }
                 ],
@@ -3786,26 +3786,26 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "$ref": "#/components/parameters/paths/IAM_iam_user_id",
                             "in":   "path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
                         {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         }
                 ],
                 "requestBody":{
@@ -3871,10 +3871,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"iam_user.id",
                             "in":"path"
                         },
@@ -3937,10 +3937,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
+                            "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"iam_user.id",
                             "in":"path"
                         }
@@ -4021,10 +4021,10 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/paths/resource_id_number"
                         },
                         {
                             "name":"iam_user_id",
@@ -4069,24 +4069,24 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "description":"uuid",
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
                         {
-                            "$ref": "#/components/parameters/server_response"
+                            "$ref": "#/components/parameters/paths/server_response"
                         }
                 ],
                 "requestBody":{
@@ -4144,27 +4144,27 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/paths/resource_id_string",
                             "description":"uuid",
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
                         {
-                            "$ref": "#/components/parameters/server_response"
+                            "$ref": "#/components/parameters/paths/server_response"
                         }
                 ],
                 "requestBody":{
@@ -4222,19 +4222,19 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
                         {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -4288,22 +4288,22 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -4337,22 +4337,22 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "responses": {
@@ -4382,22 +4382,22 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_idtoken"
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_accept_language"
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "responses": {
@@ -4424,19 +4424,19 @@
                 "security":[],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
-                            "$ref": "#/components/parameters/server_user_agent"
+                            "$ref": "#/components/parameters/paths/server_user_agent"
                         },
                         {
-                            "$ref": "#/components/parameters/server_host"
+                            "$ref": "#/components/parameters/paths/server_host"
                         },
                         {
-                            "$ref": "#/components/parameters/service",
+                            "$ref": "#/components/parameters/paths/service",
                             "in":"path",
                             "required":true
                         }
@@ -4471,13 +4471,13 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/server_authorization"
+                            "$ref": "#/components/parameters/paths/server_authorization"
                         },
                         {
-                            "$ref": "#/components/parameters/server_message_queue_type",
+                            "$ref": "#/components/parameters/paths/server_message_queue_type",
                             "default":"PUBLISH"
                         }
                         
@@ -4491,7 +4491,7 @@
                                         "type":"object" ,
                                         "properties":{
                                             "IAM_service":{
-                                                "$ref":"#/components/parameters/IAM_service"
+                                                "$ref":"#/components/parameters/paths/IAM_service"
                                             },
                                             "type":{
                                                 "type":"string",
@@ -4532,7 +4532,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
                             "name":"ip",
@@ -4543,11 +4543,11 @@
                             }    
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         }
                 ],
                 "responses": {
@@ -4602,7 +4602,7 @@
                 ],
                 "parameters": [
                         {
-                            "$ref": "#/components/parameters/server_app_id"
+                            "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
                             "name":"latitude",
@@ -4621,11 +4621,11 @@
                             }    
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
+                            "$ref": "#/components/parameters/paths/locale",
                             "required":false
                         },
                         {
-                            "$ref": "#/components/parameters/server_ip"
+                            "$ref": "#/components/parameters/paths/server_ip"
                         }
                 ],
                 "responses": {
@@ -5060,182 +5060,183 @@
                     "description": "0=NO, 1=YES"
                 }
             },
-            "resource_id_number":{
-                "description":"Used here to identify the resource number, if used then response is single resource format or else resource list format using ISO20022 format",
-                "name":	"resource_id_number",
-                "in":"path",
-                "required":false,
-                "schema":{
-                    "type": "number"
-                }
-            },
-            "resource_id_string":{
-                "description":"Used here to identify the resource string, if used then response is single resource format or else resource list format using ISO20222 format",
-                "name":	"resource_id_string",
-                "in":"path",
-                "required":false,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "locale":{
-                "description":"Used here for regional result that overrides accept_language, contains string either ISO 639-1, ISO 639-1 + '_' + ISO 3166-1 or ISO 639-1 + '_' + ISO 15924 + '_' + ISO 3166-1 using BCP 47 format. Scripts arab, cyrl, guru, hans, hant and latn part of ISO15924 are supported. All characters that Noto Sans font offers are supported and configured. Browsers can have some limited support with known issues of hanidec numbers and hijri transliteration of arabic on some mobile devices or apps. Parameter is required since server will set value if not used in request. FFB in the app sends locale for all GET requests",
-                "name":	"locale",
-                "in":"query",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "IAM_iam_user_id":{
-                "description":"iam_user.id to be authenticated in IAM can be in query or in body, admin does not use IAM authentication",
-                "name":	"iam_user_id",
-                "required":true,
-                "schema":{
-                    "type": "number"
-                }
-            },
-            "IAM_iam_user_app_id":{
-                "description":"iam_user_app.id to be authenticated in IAM can be in path or in body, admin does not use IAM authentication",
-                "name":	"iam_user_app_id",
-                "required":true,
-                "schema":{
-                    "type": "number"
-                }
-            },
-            "IAM_module_app_id":{
-                "description":"App id for an App Module to be authenticated in IAM that user has access to, can be in query or in body, admin does not use IAM authentication",
-                "name":	"module_app_id",
-                "required":true,
-                "schema":{
-                    "type": "number"
-                }
-            },
-            "IAM_data_app_id":{
-                "description":"App id for data to be authenticated in IAM that user has access to, can be in query or in body, admin does not use IAM authentication",
-                "name":	"data_app_id",
-                "required":true,
-                "schema":{
-                    "type": "number"
-                }
-            },
-            "server_app_id":{
-                "description":"Used here to authenticate app id",
-                "name":	"app_id",
-                "in":"header",
-                "required":true,
-                "schema":{
-                    "type": "number"
-                }
-            },
-            "server_authorization":{
-                "description":"Used here to send as parameter to a function on the server for security reasons",
-                "name":	"authorization",
-                "in":"header",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "server_ip":{
-                "description":"Used here for regional result or security reasons",
-                "name":	"ip",
-                "in":"header",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "server_idtoken":{
-                "description": "Used here to send as parameter to a function on the server and update socket connection or send SSE",
-                "name":	"iam",
-                "in":"query",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "server_user_agent":{
-                "description":"Used in a function for responsive result, statistic or security reasons",
-                "name":	"user_agent",
-                "in":"header",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "server_accept_language":{
-                "description":"Used in a function for regional result, statistic or security reasons",
-                "name":	"accept_language",
-                "in":"header",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "server_host":{
-                "description":"req.headers.host, used in a function for security reasons",
-                "name":	"host",
-                "in":"header",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "server_endpoint":{
-                "description":"Used to prioritize requests for admin, authenticating app modules or for control of APP_EXTERNAL requests",
-                "name":	"endpoint",
-                "in":"path",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "server_microservice":{
-                "description":"Used to identify microservice",
-                "name":	"microservice",
-                "in":"path",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "server_microservice_service":{
-                "description":"Used to identify microservice service",
-                "name":	"service",
-                "in":"path",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "server_message_queue_type":{
-                "description":"Used to identify message queue type PUBLISH or CONSUME. Message queue type ERROR is created in server if CONSUME fails",
-                "name":	"message_queue_type",
-                "in":"path",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "server_method":{
-                "description":"Used to send method to microservice from server",
-                "name":	"method",
-                "in":"path",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "server_response":{
-                "description":"Use this parameter to send response as parameter if response is text/event-stream",
-                "name":	"server_response",
-                "required":true,
-                "schema":{
-                    "type":"object"
+            "paths":{
+                "resource_id_number":{
+                    "description":"Used here to identify the resource number, if used then response is single resource format or else resource list format using ISO20022 format",
+                    "name":	"resource_id_number",
+                    "in":"path",
+                    "required":false,
+                    "schema":{
+                        "type": "number"
+                    }
+                },
+                "resource_id_string":{
+                    "description":"Used here to identify the resource string, if used then response is single resource format or else resource list format using ISO20222 format",
+                    "name":	"resource_id_string",
+                    "in":"path",
+                    "required":false,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "locale":{
+                    "description":"Used here for regional result that overrides accept_language, contains string either ISO 639-1, ISO 639-1 + '_' + ISO 3166-1 or ISO 639-1 + '_' + ISO 15924 + '_' + ISO 3166-1 using BCP 47 format. Scripts arab, cyrl, guru, hans, hant and latn part of ISO15924 are supported. All characters that Noto Sans font offers are supported and configured. Browsers can have some limited support with known issues of hanidec numbers and hijri transliteration of arabic on some mobile devices or apps. Parameter is required since server will set value if not used in request. FFB in the app sends locale for all GET requests",
+                    "name":	"locale",
+                    "in":"query",
+                    "required":true,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "IAM_iam_user_id":{
+                    "description":"iam_user.id to be authenticated in IAM can be in query or in body, admin does not use IAM authentication",
+                    "name":	"iam_user_id",
+                    "required":true,
+                    "schema":{
+                        "type": "number"
+                    }
+                },
+                "IAM_iam_user_app_id":{
+                    "description":"iam_user_app.id to be authenticated in IAM can be in path or in body, admin does not use IAM authentication",
+                    "name":	"iam_user_app_id",
+                    "required":true,
+                    "schema":{
+                        "type": "number"
+                    }
+                },
+                "IAM_module_app_id":{
+                    "description":"App id for an App Module to be authenticated in IAM that user has access to, can be in query or in body, admin does not use IAM authentication",
+                    "name":	"module_app_id",
+                    "required":true,
+                    "schema":{
+                        "type": "number"
+                    }
+                },
+                "IAM_data_app_id":{
+                    "description":"App id for data to be authenticated in IAM that user has access to, can be in query or in body, admin does not use IAM authentication",
+                    "name":	"data_app_id",
+                    "required":true,
+                    "schema":{
+                        "type": "number"
+                    }
+                },
+                "server_app_id":{
+                    "description":"Used here to authenticate app id",
+                    "name":	"app_id",
+                    "in":"header",
+                    "required":true,
+                    "schema":{
+                        "type": "number"
+                    }
+                },
+                "server_authorization":{
+                    "description":"Used here to send as parameter to a function on the server for security reasons",
+                    "name":	"authorization",
+                    "in":"header",
+                    "required":true,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "server_ip":{
+                    "description":"Used here for regional result or security reasons",
+                    "name":	"ip",
+                    "in":"header",
+                    "required":true,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "server_idtoken":{
+                    "description": "Used here to send as parameter to a function on the server and update socket connection or send SSE",
+                    "name":	"iam",
+                    "in":"query",
+                    "required":true,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "server_user_agent":{
+                    "description":"Used in a function for responsive result, statistic or security reasons",
+                    "name":	"user_agent",
+                    "in":"header",
+                    "required":true,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "server_accept_language":{
+                    "description":"Used in a function for regional result, statistic or security reasons",
+                    "name":	"accept_language",
+                    "in":"header",
+                    "required":true,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "server_host":{
+                    "description":"req.headers.host, used in a function for security reasons",
+                    "name":	"host",
+                    "in":"header",
+                    "required":true,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "server_endpoint":{
+                    "description":"Used to prioritize requests for admin, authenticating app modules or for control of APP_EXTERNAL requests",
+                    "name":	"endpoint",
+                    "in":"path",
+                    "required":true,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "server_microservice":{
+                    "description":"Used to identify microservice",
+                    "name":	"microservice",
+                    "in":"path",
+                    "required":true,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "server_microservice_service":{
+                    "description":"Used to identify microservice service",
+                    "name":	"service",
+                    "in":"path",
+                    "required":true,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "server_message_queue_type":{
+                    "description":"Used to identify message queue type PUBLISH or CONSUME. Message queue type ERROR is created in server if CONSUME fails",
+                    "name":	"message_queue_type",
+                    "in":"path",
+                    "required":true,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "server_method":{
+                    "description":"Used to send method to microservice from server",
+                    "name":	"method",
+                    "in":"path",
+                    "required":true,
+                    "schema":{
+                        "type": "string"
+                    }
+                },
+                "server_response":{
+                    "description":"Use this parameter to send response as parameter if response is text/event-stream",
+                    "name":	"server_response",
+                    "required":true,
+                    "schema":{
+                        "type":"object"
+                    }
                 }
             }
-            
         },
         "responses":{
             "200": {

@@ -974,7 +974,7 @@ const bffRestApi = async (routesparameters) =>{
                 parameter.in=='path'
             )[0]==null?null:
             {[paths[0].substring(paths[0].indexOf('${')+'${'.length).replace('}','')]:
-                (components.parameters[paths[0].substring(paths[0].indexOf('${')+'${'.length).replace('}','')]?.schema.type == 'number'?
+                (components.parameters.paths[paths[0].substring(paths[0].indexOf('${')+'${'.length).replace('}','')]?.schema.type == 'number'?
                     server.ORM.UtilNumberValue(URI_path.substring(URI_path.lastIndexOf('/')+1)):
                         URI_path.substring(URI_path.lastIndexOf('/')+1))
             }:
@@ -1001,7 +1001,7 @@ const bffRestApi = async (routesparameters) =>{
          * @returns {*}
          */
         const getParameter = key => methodObj.parameters.filter((/**@type{*}*/parameter)=>
-                                                                        Object.keys(parameter)[0]=='$ref' && Object.values(parameter)[0]=='#/components/parameters/' + key)[0];
+                                                                        Object.keys(parameter)[0]=='$ref' && Object.values(parameter)[0]=='#/components/parameters/paths/' + key)[0];
 
         const methodObj = configPath.paths[1][routesparameters.method.toLowerCase()];
         if (methodObj){   
@@ -1031,16 +1031,16 @@ const bffRestApi = async (routesparameters) =>{
                                                             //component parameter that has in=query
                                                             (   '$ref' in parameter && 
                                                                 'required' in parameter && 
-                                                                configPath.components.parameters[parameter['$ref'].split('#/components/parameters/')[1]].in == 'query')
+                                                                configPath.components.parameters.paths[parameter['$ref'].split('#/components/parameters/paths/')[1]].in == 'query')
                                                         )
                                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
                                                             if ('$ref' in key )
                                                                 return {...keys, ...{   
-                                                                                    [key['$ref'].split('#/components/parameters/')[1]]:
+                                                                                    [key['$ref'].split('#/components/parameters/paths/')[1]]:
                                                                                     {
-                                                                                        data:       app_query?.get(key['$ref'].split('#/components/parameters/')[1]),
+                                                                                        data:       app_query?.get(key['$ref'].split('#/components/parameters/paths/')[1]),
                                                                                         //IAM parameters are required by default
-                                                                                        required:   (key?.required ?? (key['$ref'].split('#/components/parameters/')[1].startsWith('IAM')?true:false)),
+                                                                                        required:   (key?.required ?? (key['$ref'].split('#/components/parameters/paths/')[1].startsWith('IAM')?true:false)),
                                                                                         type:       'QUERY',
                                                                                     }
                                                                                 }
@@ -1073,11 +1073,11 @@ const bffRestApi = async (routesparameters) =>{
                                         parameter.in=='path' && '$ref' in parameter) 
                                     .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
                                             return {...keys, ...{   
-                                                                [key['$ref'].split('#/components/parameters/')[1]]:
+                                                                [key['$ref'].split('#/components/parameters/paths/')[1]]:
                                                                 {
-                                                                    data:       resourceId(configPath.paths, configPath.components)?.[key['$ref'].split('#/components/parameters/')[1]],
+                                                                    data:       resourceId(configPath.paths, configPath.components)?.[key['$ref'].split('#/components/parameters/paths/')[1]],
                                                                     //IAM parameters are required by default
-                                                                    required:   (key?.required ?? (key['$ref'].split('#/components/parameters/')[1].startsWith('IAM')?true:false)),
+                                                                    required:   (key?.required ?? (key['$ref'].split('#/components/parameters/paths/')[1].startsWith('IAM')?true:false)),
                                                                     type:       'PATH',
                                                                 }
                                                             }
