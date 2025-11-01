@@ -711,9 +711,33 @@
  * @typedef  {{ info: {
  *                      title: string,
  *                      version: string,
- *                      description: string
- *                  },
- *              servers: {url: string}[],
+ *                      description: string,
+ *                      'x-created':string,
+ *                      'x-modified':string
+ *              },
+ *              servers: {
+ *                          "url": string,
+ *                          "description": string,
+ *                          "variables": {
+ *    			                "type": {
+ *          		                "$ref": string,
+ *          		                "default": "APP"|"ADMIN"
+ *        	                    },
+ *			                    "protocol": {
+ *				                    "default": string
+ *        	                    },
+ *			                    "host": {
+ *				                    "default": string
+ *		                        },
+ *		                        "port": {
+ *				                    "default": string
+ *		                        },
+ *		                        "basePath": {
+ *				                    "default": string
+ *		                        },
+ *                              "config"?:[key:{default:*, description:string}]
+ *  		                }
+ *              }[],
  *              paths: {[key:string]: 
  *                          {[key in 'get'|'post'|'delete'|'patch'|'put']:
  *                              {
@@ -723,8 +747,8 @@
  *                                      {[key:string]:boolean|string|{}}
  *                                  ],
  *                                  requestBody: {
- *                                      "description":"",
- *                                      "required":true,
+ *                                      "description":string,
+ *                                      "required":boolean,
  *                                      "content":{
  *                                          [key:string]: {
  *                                              [key:string]: string|boolean
@@ -744,7 +768,8 @@
  *                      [key:string]: {}
  *                  },
  *                  "parameters":{
- *                      [key:string]: {}
+ *                      "config": [key:{default:*, description:string}],
+ *                      "paths": [key:*]
  *                  },
  *                  "responses":{
  *                      [key:string]: {
