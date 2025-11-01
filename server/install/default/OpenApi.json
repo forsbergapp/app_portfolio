@@ -13,22 +13,18 @@
             "variables": {
     			"type": {
           		    "$ref": "#/components/schemas/PathType",
-          		    "value": "APP"
+          		    "default": "APP"
         	    },
 			    "protocol": {
-              		"enum": ["http"],
 				    "default": "http"
         	    },
 			    "host": {
-              		"enum": ["localhost"],
 				    "default": "localhost"
 		        },
 		        "port": {
-    		    	"enum": ["3000"],
 				    "default": "3000"
 		        },
 		        "basePath": {
-    		    	"enum": ["/"],
 				    "default": "/"
 		        },
                 "config":{
@@ -42,22 +38,18 @@
             "variables": {
                 "type": {
                     "$ref": "#/components/schemas/PathType",
-                    "value": "ADMIN"
+                    "default": "ADMIN"
                 },
                 "protocol": {
-                    "enum": ["http"],
                     "default": "http"
                 },
                 "host": {
-                    "enum": ["localhost"],
                     "default": "localhost"
                 },
                 "port": {
-                    "enum": ["3333"],
                     "default": "3333"
                 },
                 "basePath": {
-                    "enum": ["/"],
                     "default": "/"
                 },
                 "config":{
@@ -4832,231 +4824,231 @@
         "parameters":{
             "config":{
                 "SERVER_MAINTENANCE":{
-                    "enum":0,
+                    "default":0,
                     "description":""
                 },
                 "SERVER_JSON_LIMIT": {
-                    "enum": "10MB", 
+                    "default": "10MB", 
                     "description": ""
                 },
                 "SERVER_REST_RESOURCE_BFF":{
-                    "enum":"/bff",
+                    "default":"/bff",
                     "description": "rest resource path for apps backend for frontend (BFF)"
                 },
                 "SERVER_REST_API_VERSION":{
-                    "enum":"1", 
+                    "default":"1", 
                     "description": "REST API Version"
                 },
                 "SERVER_NETWORK_INTERFACE":{
-                    "enum":"0.0.0.0", 
+                    "default":"0.0.0.0", 
                     "description": "used by http.createServer at start, default '0.0.0.0' = ipv4 allow connections from any IP address, '::' to allow all for ipv6 or any other valid setting"
                 },
                 "SERVER_PATH_JOBS":{
-                    "enum":"/jobs", 
+                    "default":"/jobs", 
                     "description": "Report queue jobs path"
                 },
                 "SERVER_CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS":{
-                    "enum":5, 
+                    "default":5, 
                     "description":""
                 },
                 "SERVER_CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS":{
-                    "enum":10,
+                    "default":10,
                     "description":""
                 },
                 "SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS":{
-                    "enum":5,
+                    "default":5,
                     "description":""
                 },
                 "SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES":{
-                    "enum":60,
+                    "default":60,
                     "description":""
                 },
                 "APP_START_APP_ID":{
-                    "enum":"2", 
+                    "default":"2", 
                     "description":"start app id"
                 },
                 "APP_COMMON_APP_ID":{
-                    "enum":"0", 
+                    "default":"0", 
                     "description":"common app id"
                 },
                 "APP_ADMIN_APP_ID":{
-                    "enum":"1", 
+                    "default":"1", 
                     "description":"admin app id"
                 },
                 "APP_TOOLBAR_BUTTON_START":{
-                    "enum":"1", 
+                    "default":"1", 
                     "description":"1 = Show start button on toolbar, 0=Hide"
                 },
                 "APP_TOOLBAR_BUTTON_FRAMEWORK":{
-                    "enum":"1", 
+                    "default":"1", 
                     "description":"1=show, 0= hide"
                 },
                 "APP_CACHE_CONTROL":{
-                    "enum":"no-store", 
+                    "default":"no-store", 
                     "description":"Cache control for JSON and HTML, max-age value in milliseconds ex 1 hour = max-age=3600 or use any valid Cache-Control setting, default is to not cache anything"
                 },
                 "APP_FRAMEWORK":{
-                    "enum":"1",
+                    "default":"1",
                     "description":"1=Javascript (default), 2=Vue, 3=React"
                 },
                 "APP_FRAMEWORK_MESSAGES": {
-                    "enum":"1",
+                    "default":"1",
                     "description":"0=NO, 1=YES"
                 },
                 "APP_LIMIT_RECORDS":{
-                    "enum":"100",
+                    "default":"100",
                     "description":""
                 },
                 "APP_DEFAULT_RANDOM_COUNTRY":{
-                    "enum":"",
+                    "default":"",
                     "description":"Used by worldcities random function"
                 },
                 "APP_REQUESTTIMEOUT_SECONDS":{
-                    "enum":5,
+                    "default":5,
                     "description":""
                 },
                 "APP_REQUESTTIMEOUT_ADMIN_MINUTES":{
-                    "enum":60,
+                    "default":60,
                     "description":""
                 },
                 "DB_JOURNAL":{
-                    "enum":"1", 
+                    "default":"1", 
                     "description": "1=on, 0=off"
                 },
                 "IAM_SERVER_UPDATE_SECRETS_START":{
-                    "enum":"1",
+                    "default":"1",
                     "description":"1=YES, 0=NO"
                 },
                 "IAM_AUTHENTICATE_REQUEST_ENABLE":{
-                    "enum":"0",
+                    "default":"0",
                     "description":"0=NO, 1=YES"
                 },
                 "IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT":{
-                    "enum":"5",
+                    "default":"5",
                     "description":"If observe limit reached then IP should be blocked"
                 },
                 "IAM_AUTHENTICATE_REQUEST_IP":{
-                    "enum":"0",
+                    "default":"0",
                     "description":"0=NO, 1=YES, check IP v4 range to block. Could be integrated with iptables on Linux."
                 },
                 "IAM_MICROSERVICE_TOKEN_EXPIRE_ACCESS":{
-                    "enum":"365d",
+                    "default":"365d",
                     "description":"setting jsonwebtoken"
                 },
                 "IAM_MICROSERVICE_TOKEN_SECRET":{
-                    "enum":"",
+                    "default":"",
                     "description":"setting jsonwebtoken"
                 },
                 "IAM_ADMIN_TOKEN_EXPIRE_ACCESS":{
-                    "enum":"1d",
+                    "default":"1d",
                     "description":"setting jsonwebtoken"
                 },
                 "IAM_ADMIN_TOKEN_SECRET":{
-                    "enum":"",
+                    "default":"",
                     "description":"setting jsonwebtoken"
                 },
                 "IAM_USER_PASSWORD_ENCRYPTION_KEY":{
-                    "enum":"",
+                    "default":"",
                     "description":"32 characters"
                 },
                 "IAM_USER_PASSWORD_INIT_VECTOR":{
-                    "enum":"",
+                    "default":"",
                     "description":"16 characters"
                 },
                 "IAM_USER_ENABLE_REGISTRATION":{
-                    "enum":"0",
+                    "default":"0",
                     "description":"0=NO, 1=YES"
                 },
                 "IAM_USER_ENABLE_LOGIN":{
-                    "enum":"1",
+                    "default":"1",
                     "description":"0=NO, 1=YES"
                 },
                 "IAM_USER_TOKEN_APP_ACCESS_EXPIRE":{
-                    "enum":"1h",
+                    "default":"1h",
                     "description":""
                 },
                 "IAM_USER_TOKEN_APP_ACCESS_SECRET":{
-                    "enum":"",
+                    "default":"",
                     "dscription":""
                 },
                 "IAM_USER_TOKEN_APP_ACCESS_VERIFICATION_EXPIRE":{
-                    "enum":"2m",
+                    "default":"2m",
                     "description":""
                 },
                 "IAM_USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET":{
-                    "enum":"",
+                    "default":"",
                     "description":""
                 },
                 "IAM_USER_TOKEN_APP_ID_EXPIRE":{
-                    "enum":"2d",
+                    "default":"2d",
                     "description":""
                 },
                 "IAM_USER_TOKEN_APP_ID_SECRET":{
-                    "enum":"",
+                    "default":"",
                     "description":""
                 },
                 "IAM_CONTENT_SECURITY_POLICY_ENABLE":{
-                    "enum":"1",
+                    "default":"1",
                     "description":"0=NO, 1=YES"
                 },
                 "IAM_CONTENT_SECURITY_POLICY":{
-                    "enum":"default-src 'self';script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:;script-src-attr 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline' blob:;font-src 'self' data:;img-src * data: blob:;connect-src *;child-src 'self' blob:;object-src 'self' data:;frame-src 'self' data: ;base-uri 'self';form-action 'self';frame-ancestors 'self'",
+                    "default":"default-src 'self';script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:;script-src-attr 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline' blob:;font-src 'self' data:;img-src * data: blob:;connect-src *;child-src 'self' blob:;object-src 'self' data:;frame-src 'self' data: ;base-uri 'self';form-action 'self';frame-ancestors 'self'",
                     "description":"Content security policy"
                 },
                 "IAM_ENABLE_GEOLOCATION":{
-                    "enum":"0",
+                    "default":"0",
                     "description":"0=NO, 1=YES, get geodata from clients and from chosen places in apps, client geodata is saved if enabled"
                 },
                 "IAM_RATE_LIMIT_WINDOW_MS":{
-                    "enum":60000,
+                    "default":60000,
                     "description":"Milliseconds"
                 },
                 "IAM_RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS":{
-                    "enum":500, 
+                    "default":500, 
                     "description": ""
                 },
                 "IAM_RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER":{
-                    "enum":500, 
+                    "default":500, 
                     "description": ""
                 },
                 "IAM_RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN":{
-                    "enum":1000,
+                    "default":1000,
                     "description": ""
                 },
                 "SOCKET_CHECK_INTERVAL":{
-                    "enum":"5000",
+                    "default":"5000",
                     "description": "maintenance check interval in milliseconds"
                 },
                 "LOG_REQUEST_LEVEL":{
-                    "enum":"1",
+                    "default":"1",
                     "description": "0=none, 1=INFO, 2=Verbose"
                 },
                 "LOG_APP_LEVEL":{
-                    "enum":"0", 
+                    "default":"0", 
                     "description": "0=none, 1=INFO, 2=Verbose"
                 },
                 "LOG_DB_LEVEL":{
-                    "enum":"0",
+                    "default":"0",
                     "description": "0=none, 1=INFO, 2=Verbose"
                 },
                 "LOG_SERVICE_LEVEL":{
-                    "enum":"1",
+                    "default":"1",
                     "description": "0=none, 1=INFO, 2=Verbose"
                 },
                 "LOG_FILE_INTERVAL":{
-                    "enum":"1D", 
+                    "default":"1D", 
                     "description": "1D or 1M"
                 },
                 "TEST_FAIL_SPEC_WITH_NO_EXPECTATIONS":{
-                    "enum":"0",
+                    "default":"0",
                     "description": "0=NO, 1=YES"
                 },
                 "TEST_STOP_ON_SPEC_FAILURE":{
-                    "enum":"0",
+                    "default":"0",
                     "description": "0=NO, 1=YES"
                 },
                 "TEST_RANDOM":{
-                    "enum":"0",
+                    "default":"0",
                     "description": "0=NO, 1=YES"
                 }
             },
