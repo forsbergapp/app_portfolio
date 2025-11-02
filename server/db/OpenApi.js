@@ -22,9 +22,8 @@ const get = parameters => {
  * @name getViewConfig
  * @description Returns #/compomnents/parameters/config or given parameter
  * @function
- * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{parameter:string|null}}} parameters
+ *          data:{parameter?:string|null}}} parameters
  * @returns {server['server']['response'] & {result?:server['ORM']['Object']['OpenApi']['components']['parameters']['config'] }}
  */
 const getViewConfig = parameters =>{
@@ -41,9 +40,8 @@ const getViewConfig = parameters =>{
  * @name getViewServers
  * @description Returns #/servers for given pathType or all servers without variables.config for each server
  * @function
- * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{pathType:server['ORM']['Object']['OpenApi']['servers'][0]['variables']['type']['default']|null}}} parameters
+ *          data:{pathType?:server['ORM']['Object']['OpenApi']['servers'][0]['variables']['type']['default']|null}}} parameters
  * @returns {server['server']['response'] & {result?:server['ORM']['Object']['OpenApi']['servers'] }}
  */
 const getViewServers = parameters =>{
@@ -108,29 +106,44 @@ const update = async parameters => {
     
 };
 /**
+ * @name updateConfig
+ * @description Update config
+ *              Updates #/components/parameters/config/[key].default
+ *              Only one key allowed to be updated for each request.
+ * @function
+ * @param {{app_id:number,
+ *         data:{config_key:keyof server['ORM']['Object']['OpenApi']['servers'][0]['variables']['config'],
+ *               config_value:*}
+ *          }} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ */
+const updateConfig = async parameters =>{
+    const old = server.ORM.getObject(parameters.app_id, 'OpenApi',null, null);
+    if (parameters.data.config_key!=null){
+        old.components.parameters.config[parameters.data.config_key].default = parameters.data.config_value;
+        return update({app_id:parameters.app_id,
+                        data:{  openApiKey: 'components',
+                                openApiValue: old.components}});
+    }
+    else
+        return server.ORM.getError(parameters.app_id, 404);
+}
+
+/**
  * @name updateServersVariables
  * @description Update server variables
- *              Updates 
- *                  #/servers/[APP or ADMIN]/variables/[key].default
- *              or
- *                  #/components/parameters/config/[key].default
- *              Allowed keys to update: host, port, basePath and config.
+ *              Updates #/servers/[APP or ADMIN]/variables/[key].default
+ *              Allowed keys to update: host, port and basePath.
  *              Only one key allowed to be updated for each request.
  *              if variable_name = host, port, basePath and pathType is APP or ADMIN
  *                  update record given pathType record
  *              else
- *                  if variable_name = config and key is not null
- *                      update parameter in config
- *                  else
- *                      return 400
+ *                  return 400
  * @function
- * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *         data:{pathType:server['ORM']['Object']['OpenApi']['servers'][0]['variables']['type']['default'],
  *               server_key: Extract<server['ORM']['Object']['OpenApi']['servers'][0]['variables'],'host'|'port'|'basePath'|'config'>,
- *               server_value: *,
- *               config_key:keyof server['ORM']['Object']['OpenApi']['servers'][0]['variables']['config'],
- *               config_value:*}
+ *               server_value: *}
  *          }} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
@@ -146,14 +159,7 @@ const updateServersVariables = async parameters =>{
                                 openApiValue: old.servers}})
     }
     else
-        if (parameters.data.server_key=='config' && parameters.data.config_key!=null){
-            old.components.parameters.config[parameters.data.config_key].default = parameters.data.config_value;
-            return update({app_id:parameters.app_id,
-                            data:{  openApiKey: 'components',
-                                    openApiValue: old.components}});
-        }
-        else
-            return server.ORM.getError(parameters.app_id, 404);
-}		
+        return server.ORM.getError(parameters.app_id, 404);
+}
 
-export{ get,getViewConfig, getViewServers, getViewWithoutConfig, updateServersVariables};
+export{ get,getViewConfig, getViewServers, getViewWithoutConfig, updateConfig, updateServersVariables};

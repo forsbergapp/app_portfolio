@@ -6,6 +6,8 @@
  * @import {server} from './types.js'
  */
 
+const http = await import('node:http');
+const net = await import('node:net');
 /**
  * @name serverClass
  * @description server class, uses Dependency Injection pattern
@@ -14,6 +16,12 @@
 class serverClass {
     
     constructor(){
+        /**@type{*} */
+        this.server_app = {};
+        /**@type{*} */
+		this.server_admin = {};
+        /**@type{*} */
+        this.server_dummy = {}
         /** @type {import('./bff.js')}*/
         this.bff;
         /**@type {import('./iam.js')}*/
@@ -388,8 +396,61 @@ class serverClass {
                 });
             });
             request.end();
-        });
+        });								
     };
+    /**
+     * @name postServer
+     * @description Post server
+     * @method
+     * @returns {void}
+     */
+    postServer = () =>{
+        /**@type{server['ORM']['Object']['ConfigServer']} */
+        const configServer = server.ORM.db.ConfigServer.get({app_id:0}).result;
+        const NETWORK_INTERFACE = configServer.SERVER.filter(parameter=> 'NETWORK_INTERFACE' in parameter)[0].NETWORK_INTERFACE;
+        //Start http server and listener for apps
+        this.server_app = http.createServer((req,res)=>server.request(
+                                            /**@ts-ignore*/
+                                            req,
+                                            res))
+            .listen(server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80, NETWORK_INTERFACE, () => {
+                server.ORM.db.Log.post({app_id:0, 
+                                        data:{  object:'LogServerInfo', 
+                                                log:'HTTP Server PORT: ' + 
+                                                    (server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80)
+                                            }
+                                        });
+        });
+        //Start http server and listener for admin
+        this.server_admin = http.createServer((req,res)=>server.request(
+                                            /**@ts-ignore*/
+                                            req,
+                                            res)).listen(server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
+            server.ORM.db.Log.post({app_id:0, 
+                                    data:{  object:'LogServerInfo', 
+                                            log:'HTTP Server Admin  PORT: ' + 
+                                                (server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000)
+                                        }
+                                    });
+        });
+        //create dummy default https listener that will be destroyed or browser might hang
+        this.server_dummy = net.createServer(socket => socket.destroy()).listen(443, () => null);
+        
+    }
+    /**
+     * @name updateServer
+     * @description Updates server
+     * @method
+     * @returns {void}
+     */
+    updateServer = () =>{
+        //changing port and NETWORK_INTERFACE, must use close()
+        //restart app server, admin server and dummy net server for any change
+        this.server_app.close();
+        this.server_admin.close();
+        this.server_dummy.close();
+        this.postServer();
+    }
     /**
      * @name UtilResponseTime
      * @description Calculate responsetime
@@ -594,8 +655,6 @@ class serverCircuitBreakerClass {
  * @returns{Promise.<void>}
  */
 const serverStart = async () =>{
-    const http = await import('node:http');
-    const net = await import('node:net');
     serverProcess.env.TZ = 'UTC';
     try {
         //Create ORM and server instances
@@ -643,35 +702,7 @@ const serverStart = async () =>{
         await server.ORM.postAdmin('IamEncryption', server.commonCssFonts.db_records);
     
         server.socket.socketIntervalCheck();
-                                            
-        const NETWORK_INTERFACE = configServer.SERVER.filter(parameter=> 'NETWORK_INTERFACE' in parameter)[0].NETWORK_INTERFACE;
-        //Start http server and listener for apps
-        http.createServer((req,res)=>server.request(
-                                            /**@ts-ignore*/
-                                            req,
-                                            res))
-            .listen(server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80, NETWORK_INTERFACE, () => {
-                server.ORM.db.Log.post({app_id:0, 
-                                        data:{  object:'LogServerInfo', 
-                                                log:'HTTP Server PORT: ' + 
-                                                    (server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80)
-                                            }
-                                        });
-        });
-        //Start http server and listener for admin
-        http.createServer((req,res)=>server.request(
-                                            /**@ts-ignore*/
-                                            req,
-                                            res)).listen(server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
-            server.ORM.db.Log.post({app_id:0, 
-                                    data:{  object:'LogServerInfo', 
-                                            log:'HTTP Server Admin  PORT: ' + 
-                                                (server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000)
-                                        }
-                                    });
-        });
-        //create dummy default https listener that will be destroyed or browser might hang
-        net.createServer(socket => socket.destroy()).listen(443, () => null);
+        server.postServer();
 
     } catch (/**@type{server['server']['error']}*/error) {
         server.ORM.db.Log.post({app_id:0, 
