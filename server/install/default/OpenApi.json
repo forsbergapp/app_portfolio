@@ -26,10 +26,7 @@
 		        },
 		        "basePath": {
 				    "default": "/"
-		        },
-                "config":{
-                    "ref$": "#/component/parameters/config"
-                }
+		        }
   		    }
         },
         {
@@ -51,9 +48,6 @@
                 },
                 "basePath": {
                     "default": "/"
-                },
-                "config":{
-                    "ref$": "#/component/parameters/config"
                 }
             }
         }
@@ -3717,6 +3711,118 @@
                                     "allOf":[
                                         {"$ref": "#/components/schema/SuccessResponseList/properties"},
                                         {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
+        "/bff/admin/v1/server-db/openapi/${resource_id_string}":{
+            "get": {
+                "summary": "",
+                "operationId": "server.iam.iamAdminServerConfigGet",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {
+                            "$ref": "#/components/parameters/paths/server_app_id"
+                        },
+                        {   
+                            "name": "pathType",
+                            "in":"query",
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name":"parameter",
+                            "in":"query",
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }
+                ],
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            },
+            "put": {
+                "summary": "",
+                "operationId": "server.iam.iamAdminServerConfigUpdate",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {
+                            "$ref": "#/components/parameters/paths/server_app_id"
+                        }
+                ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "pathType":{
+                                                "type":"string"
+                                            },
+                                            "server_key":{
+                                                "type":"string"
+                                            },
+                                            "server_value":{
+                                                "type":"string"
+                                            },
+                                            "config_key":{
+                                                "type":"string"
+                                            },
+                                            "config_value":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
                                     ]
                                 }
                             ]

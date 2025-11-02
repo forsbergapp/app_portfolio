@@ -1329,7 +1329,84 @@ const iamAppAccessGet = parameters => {const rows = server.ORM.db.IamAppAccess.g
                                                                     [], 
                                                             type:'JSON'};
                                                 };
-
+/**
+ * @name iamAdminServerConfigGet
+ * @description Admin config get
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+ *          resource_id:'servers'|'components',
+ *          data:{pathType?:server['ORM']['Object']['OpenApi']['servers'][0]['variables']['type']['default'],
+ *                parameter?:string}}} parameters
+ * @returns {server['server']['response'] & {result?:server["ORM"]["Object"]["OpenApi"]["servers"]|
+ *                                                   server['ORM']['Object']['OpenApi']['components']['parameters']['config']|
+ *                                                   [*]}}
+ */
+const iamAdminServerConfigGet = parameters =>{
+    if (parameters.resource_id == 'servers')
+        return server.ORM.db.OpenApi.getViewServers({   app_id:parameters.app_id, 
+                                                        data:{pathType:parameters.data.pathType}});
+    else
+        if (parameters.resource_id == 'components')
+            return server.ORM.db.OpenApi.getViewConfig({app_id:parameters.app_id, 
+                                                        data:{parameter:parameters.data.parameter}})
+        else
+            return {http:400,
+                    code:'IAM',
+                    text:iamUtilMessageNotAuthorized(),
+                    developerText:null,
+                    moreInfo:null,
+                    type:'JSON'
+                };
+}
+/**
+ * @name iamAdminServerConfigUpdate
+ * @description Admin config update
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+ *          resource_id:string,
+ *          data:{pathType:server['ORM']['Object']['OpenApi']['servers'][0]['variables']['type']['default'],
+ *                server_key: Extract<server['ORM']['Object']['OpenApi']['servers'][0]['variables'],'host'|'port'|'basePath'|'config'>,
+ *                server_value: *,
+ *                config_key:keyof server['ORM']['Object']['OpenApi']['servers'][0]['variables']['config'],
+ *                config_value:*}}} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:{updated: number}}>}
+ */
+const iamAdminServerConfigUpdate = async parameters =>{
+    if (parameters.resource_id == 'servers'){
+        //servers cant use port 443 reserved for dummy server
+        return await server.ORM.db.OpenApi.updateServersVariables({ app_id:parameters.app_id, 
+                                                                    data:{  pathType:parameters.data.pathType, 
+                                                                            server_key:parameters.data.server_key,
+                                                                            server_value:parameters.data.server_value}})
+                .then(()=>{
+                    server.updateServer();
+                    return {result:{updated:1},
+                            type:'JSON'};
+                });
+    }
+    else
+        if (parameters.resource_id == 'components'){
+            //only #/parameters/config allowed to be updated
+            return await server.ORM.db.OpenApi.updateConfig({   app_id:parameters.app_id, 
+                                                                data:{  config_key:parameters.data.config_key, 
+                                                                        config_value:parameters.data.config_key}})
+                    .then(()=>{
+                            return {result:{updated:1},
+                                    type:'JSON'};
+                        });
+        }
+        else
+            return {http:400,
+                    code:'IAM',
+                    text:iamUtilMessageNotAuthorized(),
+                    developerText:null,
+                    moreInfo:null,
+                    type:'JSON'
+                };
+        
+}
 /**
  * @name iamUserGet
  * @description User get
@@ -1515,8 +1592,11 @@ export{ iamUtilMessageNotAuthorized,
         iamAuthorizeIdToken,
         iamAuthorizeToken,
         iamAppAccessGet,
+        iamAdminServerConfigGet,
+        iamAdminServerConfigUpdate,
         iamUserGet,
         iamUserGetAdmin,
         iamUserGetLastLogin,
         iamUserLogout,
         iamUserLoginApp}; 
+        
