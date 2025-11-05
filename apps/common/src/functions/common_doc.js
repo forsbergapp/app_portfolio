@@ -263,8 +263,7 @@ const markdownRender = async parameters =>{
                                 .replaceAll('@{MODULE}',            parameters.module ??'')
                                 .replaceAll('@{SOURCE_LINK}',       parameters.module ??'')
                                 //metadata tags                            
-                                .replaceAll('@{SERVER_HOST}',       server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'SERVER', parameter:'HOST'}}).result??'')
-                                .replaceAll('@{APP_CONFIGURATION}', server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{ config_group:'METADATA', parameter:'CONFIGURATION'}}).result??'')
+                                .replaceAll('@{SERVER_HOST}',       server.ORM.db.OpenApi.getViewServers({app_id:parameters.app_id, data:{pathType:'APP'}}).result[0].variables.host.default??'')
                                 .replaceAll('@{APP_COPYRIGHT}',     server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].Copyright)
                         );
             
@@ -301,10 +300,8 @@ const markdownRender = async parameters =>{
                         //info, add keyvalue id in title to use CSS common_md_tab_key_value class
                 return `|{#kv}OpenApi||\n`+
                         '|:---|:---|\n' +
-                        `|**${Object.entries(parameters.openApi)[0][0]}**||\n`+
-                        `|${Object.keys(Object.entries(parameters.openApi)[0][1])[0]}|${Object.values(Object.entries(parameters.openApi)[0][1])[0]}|\n` +
-                        `|${Object.keys(Object.entries(parameters.openApi)[0][1])[1]}|${Object.values(Object.entries(parameters.openApi)[0][1])[1]}|\n` +
-                        `|${Object.keys(Object.entries(parameters.openApi)[0][1])[2]}|${Object.values(Object.entries(parameters.openApi)[0][1])[2]}|\n` +
+                        //info
+                        `|**${Object.entries(parameters.openApi)[0][0]}**|${HTMLEntities(JSON.stringify(Object.entries(parameters.openApi)[0][1], undefined,2),true)}|\n`+
                         //servers
                         `|**${Object.entries(parameters.openApi)[1][0]}**|${HTMLEntities(JSON.stringify(Object.entries(parameters.openApi)[1][1], undefined,2),true)}|\n` +
                         //Table Paths 

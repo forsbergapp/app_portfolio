@@ -59,7 +59,7 @@
 #menu_apps_detail_module::before{													content:var(--common_app_icon_init)}
 #menu_apps_save::before{															content:var(--common_app_icon_save)}
 
-#menu_config_save::before{															content:var(--common_app_icon_save)}
+#menu_openapi_save::before{															content:var(--common_app_icon_save)}
 
 #menu_monitor_connected::before{													content:var(--common_app_icon_user_connections)  ' '  var(--common_app_icon_log)}
 #menu_monitor_app_data_stat::before{												content:var(--common_app_icon_apps) ' ' var(--common_app_icon_log)}
@@ -82,9 +82,9 @@
 
 #menu_monitor_detail_server_log_search_icon::before{								content:var(--common_app_icon_reload)}
 
-#menu_config_config_server::before{													content:var(--common_app_icon_server)}
+#menu_openapi_detail_config::before{												content:var(--common_app_icon_server)}
 
-#menu_config_config_iam_policy::before{												content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_misc_book)}
+#menu_openapi_detail_servers::before{												content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_misc_book)}
 
 #menu_installation_demo_demo_users_icon::before{									content:var(--common_app_icon_users)}
 #menu_installation_demo_button_install::before{										content:var(--common_app_icon_add)}
@@ -682,38 +682,45 @@
 	direction: ltr;
 }
 /*MENU CONFIG*/
-#menu_config_content_widget1{
+#menu_openapi_content_widget1{
 	height: calc(100%  + 10px);
 	display: flex;
 	flex-direction: column;
 }
-#menu_config{
+#menu_openapi{
 	display: flex;
 	flex-direction: column;
 	height: calc(100% - 50px);
 	overflow-x:auto;
 	overflow-y:auto;
 }
-#menu_config_row_title{
+#menu_openapi_row_title{
     margin-bottom: 1em;
 }
-.menu_config_row{
+.menu_openapi_detail_config_row{
     display:grid;
 	height: auto;
 	padding-top:4px;
 	padding-inline-start: 1em;
 	text-align: start;
-    grid-template-columns: 250px 200px 700px;
-}   
-.menu_config_group_title{
-	text-transform: uppercase;
-	font-weight: bold;
-    text-align: start;
-    padding-inline-start: 0.5em;
+    grid-template-columns: 30em 20em 50em;
+    grid-column-gap: 1em;
+    white-space: wrap;
 }
-.menu_config_col{
+.menu_openapi_detail_config_row div,
+.menu_openapi_detail_servers_row div {
     margin-inline-end: 1em;
 }
+.menu_openapi_detail_servers_row{
+    display:grid;
+	height: auto;
+	padding-top:4px;
+	padding-inline-start: 1em;
+	text-align: start;
+    grid-template-columns: 20em 15em 5em 5em 20em 5em 10em;
+    grid-column-gap: 1em;
+}   
+
 /* MENU INSTALLATION*/
 #menu_installation_content_widget1{
 	height: calc(100% - 10px);
@@ -1274,7 +1281,8 @@ body{
 .menu_monitor_detail_app_data_stat_row,
 .menu_monitor_detail_connected_row,
 .menu_monitor_detail_server_log_row,
-.menu_config_row{
+.menu_openapi_detail_config_row,
+.menu_openapi_detail_servers_row{
 	font-size: 9px;
 }
 .menu_users_list_row .common_input,
@@ -1288,7 +1296,7 @@ body{
 #menu_users_iam_app_access,
 #menu_apps,
 #menu_apps_detail,
-#menu_config{
+#menu_openapi_detail{
 	background-color: var(--app_theme_list_background_color);
 }
 #menu_db_info_detail,

@@ -121,8 +121,7 @@ const socketClientAdd = (newClient) => {
         for (const client of SOCKET_CONNECTED_CLIENTS){
             if (client.IdToken != parameters.idToken)
                 if (parameters.data.broadcast_type=='MAINTENANCE' && 
-                    client.AppId ==server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({ app_id:parameters.app_id, 
-                                                                                    data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result))
+                    client.AppId ==server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'APP_ADMIN_APP_ID'}}).result))
                     null;
                 else
                     if (client.AppId == parameters.data.app_id || parameters.data.app_id == null){
@@ -273,7 +272,7 @@ const socketPost = async parameters =>{
     //get access token if any
     const access_token =    parameters.authorization?server.iam.iamUtilTokenGet(   parameters.app_id,
                                             parameters.authorization, 
-                                            parameters.app_id==server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result)?'ADMIN':'APP_ACCESS'):null;
+                                            parameters.app_id==server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'APP_ADMIN_APP_ID'}}).result)?'ADMIN':'APP_ACCESS'):null;
 
     const iam_user =        parameters.authorization?
                                 /**@ts-ignore */
@@ -373,7 +372,7 @@ const socketPost = async parameters =>{
  const socketIntervalCheck = async () => {
     setInterval(async () => {
         //server interval run as app 0
-        if (server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0, data:{config_group:'METADATA',parameter:'MAINTENANCE'}}).result)==1){
+        if (server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'SERVER_MAINTENANCE'}}).result)==1){
             await socketAdminSend({ app_id:0,
                                     idToken:'',
                                     data:{app_id:null,
@@ -384,7 +383,7 @@ const socketPost = async parameters =>{
         }
         await socketExpiredTokensUpdate();
     //set default interval to 5 seconds if no parameter is set
-    }, server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVICE_SOCKET', parameter:'CHECK_INTERVAL'}}).result)??5000);
+    }, server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'SOCKET_CHECK_INTERVAL'}}).result)??5000);
 };
 
 /**

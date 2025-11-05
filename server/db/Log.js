@@ -234,7 +234,7 @@ const getStat = async parameters => {
            (file.name.startsWith(`LogRequestVerbose_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
            (regexp_verbose_day.exec(file.name)!=null||regexp_verbose_month.exec(file.name)!=null))){
            //filename format: log_request_info_YYYMMDD.json
-           if (server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'FILE_INTERVAL'}}).result=='1D'){
+           if (server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'SERVER_FILE_INTERVAL'}}).result=='1D'){
                //return DD
                day = file.name.slice(-7).substring(0,2);
                sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;
@@ -399,7 +399,7 @@ const post = async parameters => {
         }
         case 'LogBffError':
         case 'LogBffInfo':{
-            const service_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'SERVICE_LEVEL'}}).result;
+            const service_level = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'LOG_SERVICE_LEVEL'}}).result;
             /**@type{server['ORM']['Object']['LogBffInfo']}*/
             log = (service_level=='1' ||service_level=='2')?
                     {AppId:     parameters.app_id,
@@ -415,7 +415,7 @@ const post = async parameters => {
         }
         case 'LogAppError':
         case 'LogAppInfo':{
-            const app_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'APP_LEVEL'}}).result;
+            const app_level = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'LOG_APP_LEVEL'}}).result;
             if (app_level=='1'||app_level=='2'){
                 /**@type{server['ORM']['Object']['LogAppInfo']} */
                 log ={
@@ -433,7 +433,7 @@ const post = async parameters => {
         }
         case 'LogDbError':
         case 'LogDbInfo':{
-            const db_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'DB_LEVEL'}}).result;
+            const db_level = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'LOG_DB_LEVEL'}}).result;
             if (db_level=='1'||db_level=='2'){
                 log_object = parameters.data.object;
                 /**@type{server['ORM']['Object']['LogDbError']} */
@@ -466,7 +466,7 @@ const post = async parameters => {
                     return value;
                 };
             };
-            const request_level = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_LOG', parameter:'REQUEST_LEVEL'}}).result; 
+            const request_level = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'LOG_REQUEST_LEVEL'}}).result; 
             if (request_level=='1'||request_level=='2'){
                 log = { Host:               parameters.data.request?.Req.headers.host,
                         AppId:              parameters.data.request?.Req.headers.x?.app_id,

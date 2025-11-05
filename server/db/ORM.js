@@ -103,7 +103,6 @@ class ORM_class {
          *           AppModule:import('./AppModule.js'),
          *           AppModuleQueue:import('./AppModuleQueue.js'),
          *           AppTranslation:import('./AppTranslation.js'),
-         *           ConfigServer:import('./ConfigServer.js'),
          *           IamAppAccess:import('./IamAppAccess.js'),
          *           IamAppIdToken:import('./IamAppIdToken.js'),
          *           IamControlIp:import('./IamControlIp.js'),
@@ -154,7 +153,6 @@ class ORM_class {
                         AppModule:await import('./AppModule.js'),
                         AppModuleQueue:await import('./AppModuleQueue.js'),
                         AppTranslation:await import('./AppTranslation.js'),
-                        ConfigServer:await import('./ConfigServer.js'),
                         IamAppAccess:await import('./IamAppAccess.js'),
                         IamAppIdToken:await import('./IamAppIdToken.js'),
                         IamControlIp:await import('./IamControlIp.js'),
@@ -347,8 +345,7 @@ class ORM_class {
         if (partition)
             file_partition = `${partition}`;
         else{
-            const config_file_interval = this.getObject(0,'ConfigServer')['SERVICE_LOG']
-                                        .filter((/**@type{server['ORM']['Object']['ConfigServer']['SERVICE_LOG']}*/row)=>'FILE_INTERVAL' in row)[0].FILE_INTERVAL;
+            const config_file_interval = this.getObject(0,'OpenApi').components.parameters.config.LOG_FILE_INTERVAL.default;
             const year = new Date().toLocaleString('en-US', { timeZone: 'UTC', year: 'numeric'});
             const month = new Date().toLocaleString('en-US', { timeZone: 'UTC', month: '2-digit'});
             const day   = new Date().toLocaleString('en-US', { timeZone: 'UTC', day: '2-digit'});
@@ -439,7 +436,7 @@ class ORM_class {
                 throw server.iam.iamUtilMessageNotAuthorized();
             }
             else{
-                if (['TABLE', 'TABLE_KEY_VALUE', 'DOCUMENT'].includes(record.Type) && this.getObject(0,'ConfigServer').SERVICE_DB.filter((/**@type{*}*/key)=>'JOURNAL' in key)[0]?.JOURNAL=='1'){
+                if (['TABLE', 'TABLE_KEY_VALUE', 'DOCUMENT'].includes(record.Type) && this.getObject(0,'OpenApi').components.parameters.config.DB_JOURNAL.default=='1'){
                     //write to journal using format [Date.now()].[ISO Date string].[object].json
                     await this.postFsFile(`${DB_DIR.journal}${Date.now()}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}.${object}.json`, file_content, record.Type);
                 }
@@ -877,9 +874,7 @@ class ORM_class {
                  * 
                  * Uses partition with arrays to speed up searches
                  */
-                return server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0,data:{ config_group:'SERVICE_IAM'}}).result
-                        .filter((/**@type{server['ORM']['Object']['ConfigServer']['SERVICE_IAM']}*/parameter)=>
-                                'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1?
+                return server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'IAM_ENABLE_GELOCATION'}}).result)==1?
                         await loadGeolocation(object):
                             null;
             }
@@ -1215,9 +1210,9 @@ class ORM_class {
      */
     getViewInfo = async parameters =>{
         return {result: [{
-                            DatabaseName:  this.getObject(parameters.app_id,'ConfigServer')['METADATA'].CONFIGURATION,
+                            DatabaseName:  'ORM',
                             Version:        1,
-                            Hostname:       this.getObject(parameters.app_id,'ConfigServer')['SERVER'].filter((/**@type{server['ORM']['Object']['ConfigServer']['SERVER']}*/row)=>'HOST' in row)[0].HOST,
+                            Hostname:       this.getObject(parameters.app_id,'OpenApi').servers.filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/row)=>row.variables.type.default=='APP')[0].variables.host.default,
                             Connections:    server.socket.socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
                             Started:        this.serverProcess.uptime()
                         }],

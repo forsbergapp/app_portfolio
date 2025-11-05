@@ -15,7 +15,7 @@ OpenApi follows OWASP guidelines for security and uses IAM pattern that includes
 
 ISO2022 REST API pattern is implemented. See ISO20022 specification how pagination, list response, error response, field limits, single or multi resource work.
 Objects in ORM use PascalCase naming standard. In REST API they use lowercase naming standard to follow ISO20022.
-Record limit is controlled by server using document ConfigServer, SERVICE_APP and APP_LIMIT_RECORD parameter.
+Record limit is controlled by server using document OpenApi.components.parameters.config and APP_LIMIT_RECORD parameter.
 Pagination can be used in any path that can return one or many records. Records are returned in rows key.
 
 

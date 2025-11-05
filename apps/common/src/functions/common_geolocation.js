@@ -97,9 +97,7 @@ const getIP = parameters =>{
      */
     const ipNumber = IPtoNum(parameters.data.ip??'');
     //if geolocation is enabled then search in partitioned key
-    const geolocation_ip = server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0,data:{ config_group:'SERVICE_IAM'}}).result
-                            .filter((/**@type{server['ORM']['Object']['ConfigServer']['SERVICE_IAM']}*/parameter)=>
-                                    'ENABLE_GEOLOCATION' in parameter)[0].ENABLE_GEOLOCATION)==1?
+    const geolocation_ip = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0,data:{ parameter:'IAM_ENABLE_GEOLOCATION'}}).result)==1?
                             server.ORM.getExternal('GEOLOCATION_IP')[('000'+parameters.data.ip?.split(',')[0].split('.')[0]).substr(-3)].filter((/**@type{string}*/row)=> 
                                            IPtoNum(row.split(';')[0]) <= ipNumber &&
                                            IPtoNum(row.split(';')[1]) >= ipNumber)[0]:

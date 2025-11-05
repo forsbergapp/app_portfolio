@@ -125,8 +125,8 @@ const appSecureMenuShow = menu => {
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
-                methods:    null,
-                path:       '/component/menu_config.js'});
+                methods:    {appSecureCommonButtonSave:appSecureCommonButtonSave},
+                path:       '/component/menu_openapi.js'});
             break;
         }
         //INSTALLATION
@@ -321,10 +321,11 @@ const appSecureDialogueSendBroadcastBroadcastTypeSet = () => {
  * @returns{void}
  */
 const appSecureDialogueSendBroadcastMaintenanceSet = () => {
-    common.commonFFB({  path:'/server-db/configserver', 
-                        method:'PUT', 
+    common.commonFFB({  path:'/server-db/openapi/config', 
+                        method:'PATCH', 
                         authorization_type:'ADMIN', 
-                        body:{maintenance:COMMON_DOCUMENT.querySelector('#menu_start_checkbox_maintenance')
+                        body:{  config_key:'SERVER_MAINTENANCE',
+                                config_value:COMMON_DOCUMENT.querySelector('#menu_start_checkbox_maintenance')
                                             .classList.contains('checked')?
                                                 1:
                                                     0}})
@@ -447,34 +448,31 @@ const appSecureCommonButtonSave = async (item) => {
             }
             break;
         }
-        case 'menu_config_save':{
-            const config_server = () => {
-                /**@type{object} */
-                let config_server = {};
-                COMMON_DOCUMENT.querySelectorAll('#menu_config .menu_config_group').forEach((/**@type{HTMLElement}*/config_group_element) => 
-                    {
-                        const config_group  = {
-                                                [config_group_element.querySelector('.menu_config_group_title div')?.textContent ?? '']:
-                                                        Array.from(config_group_element.querySelectorAll('.menu_config_row')).map(config_group_row => 
-                                                            {
-                                                                return {
-                                                                    [config_group_row.querySelectorAll('.menu_config_col div')[0].textContent ?? '']:
-                                                                                config_group_row.querySelectorAll('.menu_config_col div')[1].textContent,
-                                                                    COMMENT:    config_group_row.querySelectorAll('.menu_config_col div')[2].textContent ?? ''
-                                                                };
-                                                            }
-                                                        )
-                                            };
-                        config_server = {...config_server, ...config_group};
-                    }
-                );
-                return config_server;
-            };
-            common.commonFFB({  path:'/server-db/configserver', 
-                                method: 'PUT', 
-                                authorization_type:'ADMIN', 
-                                body:{ config:config_server()}, 
-                                spinner_id:item});
+        case 'menu_openapi_save':{
+            if (COMMON_DOCUMENT.querySelector('#menu_openapi_detail_config.list_nav_selected_tab'))
+                //save changes in menu_openapi config
+                for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_openapi_detail_config_row[data-changed-record=\'1\']')){
+                    await appSecureCommonRecordUpdate(  'config',
+                                                        record,
+                                                        item,
+                                                        'config',
+                                                        {   config_key:     record.querySelector('[data-column=\'config_key\']').textContent,
+                                                            config_value:   record.querySelector('[data-column=\'config_value\']').textContent
+                                                        });
+                }
+            if (COMMON_DOCUMENT.querySelector('#menu_openapi_detail_servers.list_nav_selected_tab'))
+                //save changes in menu_openapi config
+                for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_openapi_detail_servers_row[data-changed-record=\'1\']')){
+                    await appSecureCommonRecordUpdate(  'servers',
+                                                        record,
+                                                        item,
+                                                        'servers',
+                                                        {   pathType:   record.querySelector('[data-column=\'type\']').textContent,
+                                                            host:       record.querySelector('[data-column=\'host\']').textContent,
+                                                            port:       record.querySelector('[data-column=\'port\']').textContent,
+                                                            basePath:   record.querySelector('[data-column=\'basePath\']').textContent
+                                                        });
+                }
             break;
         }
     }
@@ -483,10 +481,10 @@ const appSecureCommonButtonSave = async (item) => {
  * @name appSecureCommonRecordUpdate
  * @description Updates record
  * @function
- * @param {'user_account'|'app'|'app_data'|'app_module'} table 
+ * @param {'user_account'|'app'|'app_data'|'app_module'|'config'|'servers'} table 
  * @param {HTMLElement} row_element 
  * @param {string} button 
- * @param {number} resource_id
+ * @param {number|string} resource_id
  * @param {*} data
  * @returns {Promise.<void>}
  */
@@ -516,6 +514,12 @@ const appSecureCommonRecordUpdate = async ( table,
         }
         case 'app_data':{
             path = `/server-db/appdata/${resource_id}`;
+            method = 'PATCH';
+            break;
+        }
+        case 'config':
+        case 'servers':{
+            path = `/server-db/openapi/${resource_id}`;
             method = 'PATCH';
             break;
         }
@@ -697,11 +701,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                 case 'menu_monitor_pagination_last':{
                     APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailPage(event_target_id);
                     break;
-                }
-                case 'menu_config_save':{
-                    appSecureCommonButtonSave('menu_config_save');
-                    break;
-                }
+                }                
                 case 'menu_installation_demo_button_install':{
                     appSecureMenuInstallationDemoInstall();
                     break;
