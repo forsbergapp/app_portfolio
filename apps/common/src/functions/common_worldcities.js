@@ -65,9 +65,7 @@ const appFunction = async parameters =>{
 
     switch (parameters.data.searchType?.toUpperCase()){
         case 'RANDOM':{
-            const APP_DEFAULT_RANDOM_COUNTRY = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP'}}).result
-            .filter((/**@type{server['ORM']['Object']['ConfigServer']['SERVICE_APP']}*/parameter)=>
-                'APP_DEFAULT_RANDOM_COUNTRY' in parameter)[0].APP_DEFAULT_RANDOM_COUNTRY;
+            const APP_DEFAULT_RANDOM_COUNTRY = server.ORM.db.OpenApi.getViewConfig({app_id:0,data:{ parameter:'APP_DEFAULT_RANDOM_COUNTRY'}}).result;
             const objKeys = server.ORM.getExternalKeys('GEOLOCATION_PLACE');
             if (APP_DEFAULT_RANDOM_COUNTRY!=''){
                 //sort random partitioned key and return random record when found

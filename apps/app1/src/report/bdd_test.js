@@ -95,8 +95,8 @@ const template = props => ` <div id='report'>
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    /**@type{server['ORM']['Object']['ConfigServer']['SERVICE_TEST'][]} */
-    const params = server.ORM.db.ConfigServer.get({app_id:props.app_id,data:{config_group:'SERVICE_TEST'}}).result;
+    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
+    const params = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
     const fs = await import('node:fs');
     let finished = 0;
     /**@type{server['test']['spec_result'][]} */
@@ -106,7 +106,7 @@ const component = async props => {
     const specrunner = await fs.promises.readFile(`${server.ORM.serverProcess.cwd()}/test/specrunner.json`, 'utf8')
                         .then((/**@type{string}*/result)=>JSON.parse(result));
     //run in random order if RANDOM parameter = '1'
-    if (params.filter(row=>'RANDOM' in row)[0].RANDOM=='1')
+    if (params.TEST_RANDOM.default=='1')
         specrunner.specFiles = specrunner.specFiles.sort(()=>Math.random() - 0.5);
     for (const spec of specrunner.specFiles){
         try {
@@ -116,7 +116,7 @@ const component = async props => {
             //check if any test inside spec file has empty expect length
             const FAIL_SPEC_WITH_NO_EXPECTATIONS = 
                     detail_result.filter(detail=>detail.it.expect.length==0).length > 0 &&
-                    params.filter(row=>'FAIL_SPEC_WITH_NO_EXPECTATIONS' in row)[0].FAIL_SPEC_WITH_NO_EXPECTATIONS=='1';
+                    params.TEST_FAIL_SPEC_WITH_NO_EXPECTATIONS.default=='1';
             //check if any expect has result false
             const ANY_EXPECT_FALSE = detail_result.filter(detail=>
                                             detail.it.expect.filter(expect=>expect.result==false).length > 0).length > 0;
@@ -128,7 +128,7 @@ const component = async props => {
             if (props.queue_parameters.appModuleQueueId)
                 server.ORM.db.AppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(finished / specrunner.specFiles.length)});
         } catch (/**@type{*}*/error) {
-            if (params.filter(row=>'STOP_ON_SPEC_FAILURE' in row)[0].STOP_ON_SPEC_FAILURE=='1')
+            if (params.TEST_STOP_ON_SPEC_FAILURE.default=='1')
                 throw spec.path + ', ' + (typeof error == 'string'?
                                             error:JSON.stringify(error.message ?? error));
         }   

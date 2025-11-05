@@ -13,8 +13,6 @@ const COMMON_DOCUMENT = document;
 /**@type {common['CommonModuleCommon']} */
 let common;
 
-/**@type{{events:common['commonComponentEvents']|null}} */
-const APP_GLOBAL = {events:null};
 /**
  * @name appException
  * @description App exception function
@@ -41,37 +39,6 @@ const appEventClick = event => {
             break;
         }
     }
-    APP_GLOBAL.events?APP_GLOBAL.events('click', event):null;
-};
-/**
- * @name appEventMouseDown
- * @description App event mouse down
- * @function
- * @param {common['CommonAppEvent']} event 
- * @returns {void}
- */
-const appEventMouseDown = event =>{
-    APP_GLOBAL.events?APP_GLOBAL.events('mousedown', event):null;
-};
-/**
- * @name appEventMouseUp
- * @description App event mouse up
- * @function
- * @param {common['CommonAppEvent']} event 
- * @returns {void}
- */
-const appEventMouseUp = event =>{
-    APP_GLOBAL.events?APP_GLOBAL.events('mouseup', event):null;
-};
-/**
- * @name appEventMouseMove
- * @description App event mouse move
- * @function
- * @param {common['CommonAppEvent']} event 
- * @returns {void}
- */
-const appEventMouseMove = event =>{
-    APP_GLOBAL.events?APP_GLOBAL.events('mousemove', event):null;
 };
 
 /**
@@ -86,10 +53,7 @@ const appInit = async () => {
         mountDiv:   common.commonGlobalGet('app_div'), 
         data:       null,
         methods:    null,
-        path:       '/component/app.js'})
-    .then(component=>{
-        APP_GLOBAL.events = component.events??null;
-    });
+        path:       '/component/app.js'});
 };
 /**RubiksCube
  * @name appCommonInit
@@ -115,14 +79,7 @@ const appCommonInit = async (commonLib, parameters) => {
 const appMetadata = () =>{
     return { 
         events:{  
-            click:      appEventClick,
-            mousedown:  appEventMouseDown,
-            mouseup:    appEventMouseUp,
-            mousemove:  appEventMouseMove,
-            touchmove:  appEventMouseMove,
-            touchend:   appEventMouseUp,
-            touchcancel:appEventMouseUp,
-            touchstart: appEventMouseDown},
+            click:      appEventClick},
         lifeCycle:{onMounted:null}
     };
 };

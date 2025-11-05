@@ -187,7 +187,8 @@ const component = async props => {
                 CONSTANTS.cube_controls.cube.scramble(null, props.methods.COMMON.commonWindowSetTimeout);
                 break;
             }
-            case event_type=='mousedown' && event.target.classList.contains('cube_face'):{
+            
+            case (event_type=='mousedown' || event_type=='touchstart') && event.target.classList.contains('cube_face'):{
                 CONSTANTS.cube.mouseDown = true;
                 if(event.touches && event.touches.length > 0){
                     event = event.touches[0];
@@ -197,7 +198,7 @@ const component = async props => {
                 CONSTANTS.cube.render();
                 break;
             }
-            case event_type=='mouseup' && event.target.classList.contains('cube_face'):{
+            case (event_type=='mouseup' ||event_type =='touchend' ||event_type=='touchcancel') && event.target.classList.contains('cube_face'):{
                 if(CONSTANTS.cube.mouseDown){
                     CONSTANTS.cube.mouseDown = false;
                     if(CONSTANTS.cube.affinediff){
@@ -208,7 +209,7 @@ const component = async props => {
                 }
                 break;
             }
-            case event_type == 'mousemove' && event.target.classList.contains('cube_face'):{
+            case (event_type == 'mousemove' || event_type=='touchmove') && event.target.classList.contains('cube_face'):{
                 if(CONSTANTS.cube.mouseDown){
                     event.preventDefault();
                     if(event.touches && event.touches.length > 0){

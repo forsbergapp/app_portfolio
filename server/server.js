@@ -78,8 +78,8 @@ class serverClass {
      * @returns {Promise.<*>}
      */
     request = async (req, res)=>{
-        /**@type{server['ORM']['Object']['ConfigServer']} */
-        const CONFIG_SERVER = this.ORM.db.ConfigServer.get({app_id:0}).result;
+        /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
+        const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
         const read_body = async () =>{
             return new Promise((resolve,reject)=>{
                 if (req.headers['content-type'] =='application/json'){
@@ -141,8 +141,8 @@ class serverClass {
         res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
         
-        if (CONFIG_SERVER.SERVICE_IAM.filter(row=>'CONTENT_SECURITY_POLICY_ENABLE' in row)[0].CONTENT_SECURITY_POLICY_ENABLE == '1'){
-            res.setHeader('content-security-policy', CONFIG_SERVER.SERVICE_IAM.filter(row=>'CONTENT_SECURITY_POLICY' in row)[0].CONTENT_SECURITY_POLICY);
+        if (openapiConfig.IAM_CONTENT_SECURITY_POLICY_ENABLE.default == '1'){
+            res.setHeader('content-security-policy', openapiConfig.IAM_CONTENT_SECURITY_POLICY.default);
         }
         res.setHeader('cross-origin-opener-policy','same-origin');
         res.setHeader('cross-origin-resource-policy',	'same-origin');
@@ -177,9 +177,7 @@ class serverClass {
          * @param {server['server']['response']['type']} type
          */
         const setType = async type => {
-            /**@type{server['ORM']['Object']['ConfigServer']['SERVICE_APP']} */
-            const CONFIG_SERVICE_APP = this.ORM.db.ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;    
-            const app_cache_control =  CONFIG_SERVICE_APP.filter(parameter=>'APP_CACHE_CONTROL' in parameter)[0].APP_CACHE_CONTROL;
+            const app_cache_control =  server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'APP_CACHE_CONTROL'}}).result;
             switch (type){
                 case 'JSON':{
                     if (app_cache_control !='')
@@ -405,19 +403,21 @@ class serverClass {
      * @returns {void}
      */
     postServer = () =>{
-        /**@type{server['ORM']['Object']['ConfigServer']} */
-        const configServer = server.ORM.db.ConfigServer.get({app_id:0}).result;
-        const NETWORK_INTERFACE = configServer.SERVER.filter(parameter=> 'NETWORK_INTERFACE' in parameter)[0].NETWORK_INTERFACE;
+        /**@type{string} */
+        const NETWORK_INTERFACE = server.ORM.db.OpenApi.getViewConfig({app_id:0,data:{}}).result.SERVER_NETWORK_INTERFACE.default;
+        /**@type{string} */
+        const PORT_APP = server.ORM.db.OpenApi.getViewServers({app_id:0,data:{pathType:'APP'}}).result[0].variables.port.default;
+        /**@type{string} */
+        const PORT_ADMIN = server.ORM.db.OpenApi.getViewServers({app_id:0,data:{pathType:'ADMIN'}}).result[0].variables.port.default;
         //Start http server and listener for apps
         this.server_app = http.createServer((req,res)=>server.request(
                                             /**@ts-ignore*/
                                             req,
                                             res))
-            .listen(server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80, NETWORK_INTERFACE, () => {
+            .listen(server.ORM.UtilNumberValue(PORT_APP)??80, NETWORK_INTERFACE, () => {
                 server.ORM.db.Log.post({app_id:0, 
                                         data:{  object:'LogServerInfo', 
-                                                log:'HTTP Server PORT: ' + 
-                                                    (server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT' in parameter)[0].HTTP_PORT)??80)
+                                                log:'HTTP Server PORT: ' + (PORT_APP??80)
                                             }
                                         });
         });
@@ -425,11 +425,10 @@ class serverClass {
         this.server_admin = http.createServer((req,res)=>server.request(
                                             /**@ts-ignore*/
                                             req,
-                                            res)).listen(server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
+                                            res)).listen(server.ORM.UtilNumberValue(PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
             server.ORM.db.Log.post({app_id:0, 
                                     data:{  object:'LogServerInfo', 
-                                            log:'HTTP Server Admin  PORT: ' + 
-                                                (server.ORM.UtilNumberValue(configServer.SERVER.filter(parameter=> 'HTTP_PORT_ADMIN' in parameter)[0].HTTP_PORT_ADMIN)??5000)
+                                            log:'HTTP Server Admin  PORT: ' + (server.ORM.UtilNumberValue(PORT_ADMIN)??5000)
                                         }
                                     });
         });
@@ -500,33 +499,25 @@ let server;
  *              Uses circuit states CLOSED, HALF, OPEN
  *              Origin   Timeout
  *              server   1 second
- *              users    1 second * CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS or default 20 seconds
- *              admin    1 minute * CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES or default 60 minutes
+ *              users    1 second * CONFIG.SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS or default 20 seconds
+ *              admin    1 minute * CONFIG.SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES or default 60 minutes
  * 
- *              Failure threshold    CONFIG.CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS or default 5 seconds
- *              Cooldown period      CONFIG.CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS or default 10 seconds
+ *              Failure threshold    CONFIG.SERVER_CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS or default 5 seconds
+ *              Cooldown period      CONFIG.SERVER_CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS or default 10 seconds
  * @class
  */
 class serverCircuitBreakerClass {
 
     constructor() {
-        /**@type{server['ORM']['Object']['ConfigServer']} */
-        const CONFIG_SERVER = server.ORM.db.ConfigServer.get({app_id:0}).result;
+        /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
+        const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
         /**@type{[index:any][*]} */
         this.states = {};
                                                         
-        this.requestTimeout =       CONFIG_SERVER.SERVER
-                                    .filter(parameter=>'CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS' in parameter)[0]
-                                    .CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS ?? 20;
-        this.requestTimeoutAdmin =  CONFIG_SERVER.SERVER
-                                    .filter(parameter=>'CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES' in parameter)[0]
-                                    .CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES ?? 60;
-        this.failureThreshold =     CONFIG_SERVER.SERVER
-                                    .filter(parameter=>'CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS' in parameter)[0]
-                                    .CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS ?? 5;
-        this.cooldownPeriod =       CONFIG_SERVER.SERVER
-                                    .filter(parameter=>'CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS' in parameter)[0]
-                                    .CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS ?? 10;
+        this.requestTimeout =       openapiConfig.SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS.default ?? 20;
+        this.requestTimeoutAdmin =  openapiConfig.SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES.default ?? 60;
+        this.failureThreshold =     openapiConfig.SERVER_CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS.default ?? 5;
+        this.cooldownPeriod =       openapiConfig.SERVER_CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS.default ?? 10;
 
     }
     /**
@@ -689,12 +680,9 @@ const serverStart = async () =>{
         Object.seal(server);
 
         //Startup functions
-
-        /**@type{server['ORM']['Object']['ConfigServer']} */
-        const configServer = server.ORM.db.ConfigServer.get({app_id:0}).result;
     
         //Update secrets
-        if (configServer.SERVICE_IAM.filter(parameter=> 'SERVER_UPDATE_SECRETS_START' in parameter)[0].SERVER_UPDATE_SECRETS_START=='1')
+        if (server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'IAM_SERVER_UPDATE_SECRETS_START'}}).result=='1')
             await server.installation.updateConfigSecrets();
 
         //common font css contain many font urls, return css file with each url replaced with a secure url

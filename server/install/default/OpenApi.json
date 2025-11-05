@@ -3212,115 +3212,6 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/configserver": {
-            "get": {
-                "summary": "",
-                "operationId": "server_db.ConfigServer.get",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {
-                            "$ref": "#/components/parameters/paths/server_app_id"
-                        },
-                        {
-                            "name":"config_group",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "string"
-                            }    
-                        },
-                        {
-                            "name":"parameter",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "string"
-                            }    
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "oneOf":[
-                                        {
-                                            "allOf":[
-                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
-                                                {"rows": ""}
-                                            ]
-                                        },
-                                        {
-                                            "allOf":[
-                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                                    {"properties": ""}
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            },
-            "put": {
-                "summary": "",
-                "operationId": "server_db.ConfigServer.update",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {
-                            "$ref": "#/components/parameters/paths/server_app_id"
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "config":{
-                                                "type":"string"
-                                            },
-                                            "maintenance":{
-                                                "type":"string"
-                                            },
-                                            "comment":{
-                                                "type":"string"
-                                            },
-                                            "configuration":{
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
         "/bff/admin/v1/server-info": {
             "get": {
                 "summary": "",
@@ -3732,6 +3623,11 @@
                         {
                             "$ref": "#/components/parameters/paths/server_app_id"
                         },
+                        {
+                            "$ref": "#/components/parameters/paths/resource_id_string",
+                            "description":"config or servers",
+                            "in":"path"
+                        },
                         {   
                             "name": "pathType",
                             "in":"query",
@@ -3775,7 +3671,7 @@
                     ]
                 }
             },
-            "put": {
+            "patch": {
                 "summary": "",
                 "operationId": "server.iam.iamAdminServerConfigUpdate",
                 "security":[
@@ -3796,19 +3692,28 @@
                                         "type":"object" ,
                                         "properties":{
                                             "pathType":{
-                                                "type":"string"
+                                                "type":"string",
+                                                "description":"servers"
                                             },
-                                            "server_key":{
-                                                "type":"string"
+                                            "host":{
+                                                "type":"string",
+                                                "description":"servers"
                                             },
-                                            "server_value":{
-                                                "type":"string"
+                                            "port":{
+                                                "type":"string",
+                                                "description":"servers"
+                                            },
+                                            "basePath":{
+                                                "type":"string",
+                                                "description":"servers"
                                             },
                                             "config_key":{
-                                                "type":"string"
+                                                "type":"string",
+                                                "description":"config"
                                             },
                                             "config_value":{
-                                                "type":"string"
+                                                "type":"string",
+                                                "description":"config"
                                             }
                                         }
                                     }

@@ -23,10 +23,7 @@ const {default:ComponentCreate} = await import('../apps/common/src/component/com
  * @returns {Promise.<void>}
  */
 const bffConnect = async parameters =>{
-    /**@type{server['ORM']['Object']['ConfigServer']} */
-    const configServer = server.ORM.db.ConfigServer.get({app_id:parameters.app_id}).result;
-
-    const common_app_id = server.ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
+    const common_app_id = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:parameters.app_id, data:{parameter:'APP_COMMON_APP_ID'}}).result)??0;
 
     //connect socket for common app id
     const connectUserData = await server.socket.socketPost({  app_id:common_app_id,
@@ -67,8 +64,6 @@ const bffConnect = async parameters =>{
 */
 const bffExternal = async parameters =>{
    if (parameters.url.toLowerCase().startsWith('http://')){
-       /**@type{server['ORM']['Object']['ConfigServer']} */
-       const CONFIG_SERVER = server.ORM.db.ConfigServer.get({app_id:0}).result;
        return await server.serverCircuitBreakerBFE.serverRequest( 
            {
                request_function:   server.serverRequest,
@@ -77,7 +72,7 @@ const bffExternal = async parameters =>{
                url:                parameters.url,
                host:               null,
                port:               null,
-               admin:              parameters.app_id == server.ORM.UtilNumberValue(CONFIG_SERVER.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID),
+               admin:              parameters.app_id == server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:parameters.app_id, data:{parameter:'APP_ADMIN_APP_ID'}}).result),
                path:               null,
                body:               parameters.body,
                method:             parameters.method,
@@ -140,11 +135,7 @@ const bffMicroservice = async parameters =>{
                     url:                null,
                     host:               ServiceRegistry.ServerHost,
                     port:               ServiceRegistry.ServerPort,
-                    admin:              parameters.app_id == server.ORM.UtilNumberValue(
-                                                    server.ORM.db.ConfigServer.get({  app_id:parameters.app_id, 
-                                                                        data:{  config_group:'SERVICE_APP', 
-                                                                                parameter:'APP_COMMON_APP_ID'}}).result
-                                                ),
+                    admin:              parameters.app_id == server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:parameters.app_id, data:{parameter:'APP_ADMIN_APP_ID'}}).result),
                     path:               `/api/v${ServiceRegistry.RestApiVersion}?${query}`,
                     body:               parameters.data,
                     method:             parameters.method,
@@ -317,10 +308,10 @@ const bffResponse = async parameters =>{
                                     server.security.securityTransportEncrypt({app_id:parameters.app_id??0, data:data, jwk:parameters.jwk, iv:parameters.iv }):
                                         data;
 
-    /**@type{server['ORM']['Object']['ConfigServer']['SERVICE_APP']} */
-    const CONFIG_SERVICE_APP = server.ORM.db.ConfigServer.get({app_id:parameters.app_id??0,data:{ config_group:'SERVICE_APP'}}).result;
+    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
+    const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
 
-    const admin_app_id = server.ORM.UtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID);
+    const admin_app_id = server.ORM.UtilNumberValue(openapiConfig.APP_ADMIN_APP_ID.default);
     if (parameters.result_request.http){    
         //ISO20022 error format
         const message = {error:{
@@ -391,9 +382,9 @@ const bffResponse = async parameters =>{
                         }
                     }
                     //records limit in controlled by server, apps can not set limits                                                     
-                    const limit = server.ORM.UtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS??0);
+                    const limit = server.ORM.UtilNumberValue(openapiConfig.APP_LIMIT_RECORDS.default??0);
                     //Admin shows all records except for pagination, apps use always APP_LIMIT_RECORDS
-                    const admin_limit = parameters.app_id == server.ORM.UtilNumberValue(CONFIG_SERVICE_APP.filter(parameter=>'APP_ADMIN_APP_ID' in parameter)[0].APP_ADMIN_APP_ID)?
+                    const admin_limit = parameters.app_id == server.ORM.UtilNumberValue(openapiConfig.APP_ADMIN_APP_ID.default)?
                                                                 null:
                                                                     limit;
                     if (parameters.result_request.singleResource){
@@ -487,11 +478,11 @@ const bffResponse = async parameters =>{
  * @returns {Promise<*>}
  */
  const bff = async (req, res) =>{
-    /**@type{server['ORM']['Object']['ConfigServer']} */
-    const configServer = server.ORM.db.ConfigServer.get({app_id:0}).result;
+    /**@type{server['ORM']['Object']['OpenApi']} */
+    const openApi = server.ORM.db.OpenApi.get({app_id:0}).result;
     // check JSON maximum size, parameter uses megabytes (MB)
     if (req.body && JSON.stringify(req.body).length/1024/1024 > 
-            (server.ORM.UtilNumberValue((configServer.SERVER.filter(parameter=>'JSON_LIMIT' in parameter)[0].JSON_LIMIT ?? '0').replace('MB',''))??0)){
+            (server.ORM.UtilNumberValue((openApi.components.parameters.config.SERVER_JSON_LIMIT.default ?? '0').replace('MB',''))??0)){
         //log error                                        
         server.ORM.db.Log.post({  app_id:0, 
                     data:{  object:'LogRequestError', 
@@ -517,7 +508,7 @@ const bffResponse = async parameters =>{
     }
     else{
         const resultbffInit =   await bffInit(req, res);
-        const common_app_id = server.ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID)??0;
+        const common_app_id = server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default)??0;
         /**
          * @returns {Promise.<server['bff']['parameters']|null|1>}
          */
@@ -592,8 +583,7 @@ const bffResponse = async parameters =>{
                                         iv:         iv})
                                         .then(result=>{
                                             const decrypted = JSON.parse(result);
-                                            const endpoint = decrypted.url.startsWith(configServer.SERVER
-                                                .filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF + '/')?
+                                            const endpoint = decrypted.url.startsWith(openApi.components.parameters.config.SERVER_REST_RESOURCE_BFF.default + '/')?
                                                     (decrypted.url.split('/')[2]?.toUpperCase()):
                                                         'APP';
                                             const idToken = //All external roles and microservice do not use AppId Token
@@ -694,7 +684,7 @@ const bffResponse = async parameters =>{
             else{
                 //start url
                 /**@type{server['bff']['parameters']['endpoint'] | string} */
-                const endpoint = req.url.startsWith(configServer.SERVER.filter(parameter=>'REST_RESOURCE_BFF' in parameter)[0].REST_RESOURCE_BFF + '/')?
+                const endpoint = req.url.startsWith(openApi.components.parameters.config.SERVER_REST_RESOURCE_BFF.default + '/')?
                                         (req.url.split('/')[2]?.toUpperCase()):
                                             'APP';
                 const idToken = //All external roles and microservice do not use AppId Token
@@ -793,7 +783,7 @@ const bffResponse = async parameters =>{
                 else  
                     if (bff_parameters.endpoint == 'APP' && 
                         bff_parameters.method.toUpperCase() == 'GET' && 
-                        !bff_parameters.url?.startsWith(configServer.SERVER.filter(row=>'REST_RESOURCE_BFF' in row)[0].REST_RESOURCE_BFF + '/')){
+                        !bff_parameters.url?.startsWith(openApi.components.parameters.config.SERVER_REST_RESOURCE_BFF.default + '/')){
                         //use common app id for APP since no app id decided
                         switch (true){
                             case bff_parameters.url == '/':{
@@ -825,7 +815,7 @@ const bffResponse = async parameters =>{
                             default:{
                                 //unknown path, redirect to hostname
                                 bff_parameters.res?
-                                bff_parameters.res.redirect(`http://${configServer.SERVER.filter(row=>'HOST' in row)[0].HOST}:${configServer.SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT}`):
+                                bff_parameters.res.redirect(`http://${openApi.servers.filter(row=>row.variables.type.default=='APP')[0].variables.host.default}:${openApi.servers.filter(row=>row.variables.type.default=='APP')[0].variables.port.default}`):
                                     null;
                             }
                         }
@@ -852,7 +842,7 @@ const bffResponse = async parameters =>{
                                                 body:decodedbody,
                                                 res:bff_parameters.res})
                                 .then(result_service => {
-                                    const log_result = server.ORM.UtilNumberValue(configServer.SERVICE_LOG.filter(row=>'REQUEST_LEVEL' in row)[0].REQUEST_LEVEL)==2?result_service:'✅';
+                                    const log_result = server.ORM.UtilNumberValue(openApi.components.parameters.config.LOG_REQUEST_LEVEL.default)==2?result_service:'✅';
                                     return server.ORM.db.Log.post({  app_id:bff_parameters.app_id, 
                                         data:{  object:'LogBffInfo', 
                                                 bff:{   Service:'RESTAPI',
@@ -921,9 +911,6 @@ const bffRestApi = async (routesparameters) =>{
     const URI_query = routesparameters.parameters;
     const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
     const app_query = URI_query?new URLSearchParams(URI_query):null;
-    /**@type{server['ORM']['Object']['ConfigServer']} */
-    const configServer = server.ORM.db.ConfigServer.get({app_id:0}).result;
-
     
     /**
      * Authenticates if user has access to given resource
@@ -943,16 +930,16 @@ const bffRestApi = async (routesparameters) =>{
             params.IAM_module_app_id || 
             params.IAM_data_app_id ||
             params.IAM_service){
-            if (server.iam.iamAuthenticateResource({   app_id:                     params.app_id_authenticated, 
-                                                ip:                         routesparameters.ip, 
-                                                idToken:                    routesparameters.idToken,
-                                                endpoint:                   routesparameters.endpoint,
-                                                authorization:              routesparameters.authorization, 
-                                                claim_iam_user_app_id:      server.ORM.UtilNumberValue(params.IAM_iam_user_app_id),
-                                                claim_iam_user_id:          server.ORM.UtilNumberValue(params.IAM_iam_user_id),
-                                                claim_iam_module_app_id:    server.ORM.UtilNumberValue(params.IAM_module_app_id),
-                                                claim_iam_data_app_id:      server.ORM.UtilNumberValue(params.IAM_data_app_id),
-                                                claim_iam_service:          params.IAM_service}))
+            if (server.iam.iamAuthenticateResource({app_id:                     params.app_id_authenticated, 
+                                                    ip:                         routesparameters.ip, 
+                                                    idToken:                    routesparameters.idToken,
+                                                    endpoint:                   routesparameters.endpoint,
+                                                    authorization:              routesparameters.authorization, 
+                                                    claim_iam_user_app_id:      server.ORM.UtilNumberValue(params.IAM_iam_user_app_id),
+                                                    claim_iam_user_id:          server.ORM.UtilNumberValue(params.IAM_iam_user_id),
+                                                    claim_iam_module_app_id:    server.ORM.UtilNumberValue(params.IAM_module_app_id),
+                                                    claim_iam_data_app_id:      server.ORM.UtilNumberValue(params.IAM_data_app_id),
+                                                    claim_iam_service:          params.IAM_service}))
                 return true;
             else
                 return false;
@@ -983,7 +970,7 @@ const bffRestApi = async (routesparameters) =>{
 
     //get paths and components keys in OpenApi
     const configPath = (() => { 
-        const { paths, components } = server.ORM.db.OpenApi.get({app_id:server.ORM.UtilNumberValue(configServer.SERVICE_APP.filter(parameter=>'APP_COMMON_APP_ID' in parameter)[0].APP_COMMON_APP_ID) ?? 0}).result; 
+        const { paths, components } = server.ORM.db.OpenApi.get({app_id:server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'APP_COMMON_APP_ID'}}).result) ?? 0}).result; 
             return {paths:Object.entries(paths).filter(path=>   
                 //match with resource id string             
                 (path[0].indexOf('${')>-1 && path[0].substring(0,path[0].lastIndexOf('${')) == URI_path.substring(0,URI_path.lastIndexOf('/')+1)) ||

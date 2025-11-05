@@ -600,91 +600,6 @@
  *              LogText:string,
  *              Created?:string}} server_db_table_LogServerInfo
  */
-/**
- * @description DB DOCUMENT ConfigServer
- * @memberof dbObjects
- * @typedef  {{ SERVER:[
- *                {HOST:string,                                       COMMENT:string},
- *                {PATH_DATA:string,                                  COMMENT:string},
- *                {HTTP_PORT:string,                                  COMMENT:string},
- *                {HTTP_PORT_ADMIN:string,                            COMMENT:string},
- *                {JSON_LIMIT:string,                                 COMMENT:string},
- *                {REST_RESOURCE_BFF:string,                          COMMENT:string},
- *                {REST_API_VERSION:string,                           COMMENT:string},
- *                {NETWORK_INTERFACE:string,                          COMMENT:string},
- *                {PATH_JOBS:string,                                  COMMENT:string},
- *                {CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS:number,    COMMENT:string},
- *                {CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS:number,      COMMENT:string},
- *                {CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS:number,      COMMENT:string},
- *                {CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES:number,COMMENT:string}
- *              ], 
- *              SERVICE_APP:[
- *                {APP_START_APP_ID                  :string,COMMENT:string},
- *                {APP_COMMON_APP_ID                 :string,COMMENT:string},
- *                {APP_ADMIN_APP_ID                  :string,COMMENT:string},
- *                {APP_TOOLBAR_BUTTON_START          :string,COMMENT:string},
- *                {APP_TOOLBAR_BUTTON_FRAMEWORK      :string,COMMENT:string},
- *                {APP_CACHE_CONTROL                 :string,COMMENT:string},
- *                {APP_FRAMEWORK                     :number,COMMENT:string},
- *                {APP_FRAMEWORK_MESSAGES            :number,COMMENT:string},
- *                {APP_LIMIT_RECORDS                 :number,COMMENT:string},
- *                {APP_DEFAULT_RANDOM_COUNTRY        :string,COMMENT:string},
- *                {APP_REQUESTTIMEOUT_SECONDS        :string,COMMENT:string},
- *                {APP_REQUESTTIMEOUT_ADMIN_MINUTES  :string,COMMENT:string}
- *              ],
- *              SERVICE_DB:[
- *                {JOURNAL:string}
- *              ],
- *              SERVICE_IAM:[
- *                {AUTHENTICATE_REQUEST_ENABLE:string,COMMENT:string},
- *                {AUTHENTICATE_REQUEST_OBSERVE_LIMIT:string,COMMENT:string},
- *                {AUTHENTICATE_REQUEST_IP:string,COMMENT:string},
- *                {MICROSERVICE_TOKEN_EXPIRE_ACCESS:string,COMMENT:string},
- *                {MICROSERVICE_TOKEN_SECRET:string,COMMENT:string},
- *                {ADMIN_TOKEN_EXPIRE_ACCESS:string,COMMENT:string},
- *                {ADMIN_TOKEN_SECRET:string,COMMENT:string},
- *                {USER_TOKEN_APP_ACCESS_EXPIRE:string,COMMENT:string},
- *                {USER_TOKEN_APP_ACCESS_SECRET:string,COMMENT:string},
- *                {USER_TOKEN_APP_ACCESS_VERIFICATION_EXPIRE:string,COMMENT:string},
- *                {USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET:string,COMMENT:string},
- *                {USER_TOKEN_APP_ID_EXPIRE:string,COMMENT:string},
- *                {USER_TOKEN_APP_ID_SECRET:string,COMMENT:string},
- *                {USER_PASSWORD_ENCRYPTION_KEY:string,COMMENT:string},
- *                {USER_PASSWORD_INIT_VECTOR:string,COMMENT:string},
- *                {USER_ENABLE_REGISTRATION:string,COMMENT:string},
- *                {USER_ENABLE_LOGIN:string,COMMENT:string},
- *                {CONTENT_SECURITY_POLICY_ENABLE:string,COMMENT:string},
- *                {CONTENT_SECURITY_POLICY:string,COMMENT:string},
- *                {ENABLE_GEOLOCATION:string,COMMENT:string},
- *                {RATE_LIMIT_WINDOW_MS:number,COMMENT:string},
- *                {RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS:number,COMMENT:string},
- *                {RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER:number,COMMENT:string},
- *                {RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN:number,COMMENT:string}
- *              ],
- *              SERVICE_SOCKET:[
- *                {CHECK_INTERVAL:string, COMMENT:string}
- *              ],
- *              SERVICE_LOG:[
- *                {REQUEST_LEVEL:string,  COMMENT:string},
- *                {APP_LEVEL:string,      COMMENT:string},
- *                {DB_LEVEL:string,       COMMENT:string},
- *                {SERVICE_LEVEL:string,  COMMENT:string},
- *                {FILE_INTERVAL:string,  COMMENT:string}
- *              ],
- *              SERVICE_TEST:[
- *                {FAIL_SPEC_WITH_NO_EXPECTATIONS:string,   COMMENT:string},
- *                {STOP_SPEC_ON_EXPECTATION_FAILURE:string, COMMENT:string},
- *                {STOP_ON_SPEC_FAILURE:string,             COMMENT:string},
- *                {RANDOM:string,                           COMMENT:string},
- *              ],
- *              METADATA:{
- *                MAINTENANCE:number,
- *                CONFIGURATION:string,
- *                COMMENT:string,
- *                CREATED:string,
- *                MODIFIED:string
- *              }}} server_db_document_ConfigServer
- */
 
 /** 
  * @description DB DOCUMENT ServiceRegistry
@@ -768,7 +683,7 @@
  *                      [key:string]: {}
  *                  },
  *                  "parameters":{
- *                      "config": [key:{default:*, description:string}],
+ *                      "config": Object<string,{default:*, description:string}>,
  *                      "paths": [key:*]
  *                  },
  *                  "responses":{
@@ -1433,7 +1348,6 @@
  *                    LogRequestError:server_db_table_LogRequestInfo,
  *                    LogServerInfo:server_db_table_LogServerInfo,
  *                    LogServerError:server_db_table_LogServerInfo,
- *                    ConfigServer:server_db_document_ConfigServer,
  *                    OpenApi:server_db_document_OpenApi,
  *                    ServiceRegistry:server_db_table_ServiceRegistry,
  *                    MessageQueuePublish:server_db_table_MessageQueuePublish,

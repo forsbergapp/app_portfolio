@@ -244,22 +244,18 @@ const securityPasswordCompare = async (app_id, password, compare_password) =>{
  * @name securityParametersGet
  * @description Returns parameters
  *              Uses parameters
- *              ConfigServer
- *                  SERVICE_IAM
- *                      USER_PASSWORD_ENCRYPTION_KEY
- *              ConfigServer
- *                  SERVICE_IAM
- *                      USER_PASSWORD_INIT_VECTOR
+ *                  IAM_USER_PASSWORD_ENCRYPTION_KEY
+ *                  IAM_USER_PASSWORD_INIT_VECTOR
  * @function
  * @param {{app_id:number}} parameters
  * @returns {Promise.<{ user_password_encryption_key:string,
  *                      user_password_init_vector:string}>} 
  */
 const securityParametersGet = async parameters =>{
-    /**@type{server['ORM']['Object']['ConfigServer']['SERVICE_IAM']} */
-    const configServer = server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_IAM'}}).result;
-    return {user_password_encryption_key: configServer.filter(parameter=> 'USER_PASSWORD_ENCRYPTION_KEY' in parameter)[0].USER_PASSWORD_ENCRYPTION_KEY,
-            user_password_init_vector : configServer.filter(parameter=> 'USER_PASSWORD_INIT_VECTOR' in parameter)[0].USER_PASSWORD_INIT_VECTOR
+    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
+    const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
+    return {user_password_encryption_key: openapiConfig.IAM_USER_PASSWORD_ENCRYPTION_KEY.default,
+            user_password_init_vector : openapiConfig.IAM_USER_PASSWORD_INIT_VECTOR.default
         };    
 };
 

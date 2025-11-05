@@ -27,13 +27,13 @@ const get = parameters => {
  * @returns {server['server']['response'] & {result?:server['ORM']['Object']['OpenApi']['components']['parameters']['config'] }}
  */
 const getViewConfig = parameters =>{
-						return parameters.data.parameter!=null?
-							//return value
-                            {result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null).result.components.parameters.config[parameters.data.parameter]?.default, 
-                                    type:'JSON'}:
-                                //return all configuration
-								{result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null).result.components.parameters.config,
-                                        type:'JSON'};
+    return parameters.data.parameter!=null?
+        //return value
+        {result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null).components.parameters.config[parameters.data.parameter]?.default, 
+                type:'JSON'}:
+            //return all configuration
+            {result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null).components.parameters.config,
+                    type:'JSON'};
 }
 
 /**
@@ -45,7 +45,7 @@ const getViewConfig = parameters =>{
  * @returns {server['server']['response'] & {result?:server['ORM']['Object']['OpenApi']['servers'] }}
  */
 const getViewServers = parameters =>{
-    return {result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null).components.servers
+    return {result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null).servers
                     .filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0] }*/server)=>server.variables.type.default==(parameters.data.pathType??server.variables.type.default))
                     .map((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/server)=>{
                         /**@type{server['ORM']['Object']['OpenApi']['servers'][0]} */
@@ -142,18 +142,22 @@ const updateConfig = async parameters =>{
  * @function
  * @param {{app_id:number,
  *         data:{pathType:server['ORM']['Object']['OpenApi']['servers'][0]['variables']['type']['default'],
- *               server_key: Extract<server['ORM']['Object']['OpenApi']['servers'][0]['variables'],'host'|'port'|'basePath'|'config'>,
- *               server_value: *}
+ *               host: string,
+ *               port: number,
+ *               basePath: string}
  *          }} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
 const updateServersVariables = async parameters =>{
     const old = server.ORM.getObject(parameters.app_id, 'OpenApi',null, null);
-    if (['host','port','basePath'].includes(parameters.data.server_key) &&
-        ['APP','ADMIN'].includes(parameters.data.pathType)){
+    
+    if (['APP','ADMIN'].includes(parameters.data.pathType)){
         for (const server of old.servers)
-            if (server.variables.type.value==parameters.data.pathType)
-                server.variables[parameters.data.server_key].default = parameters.data.server_value;
+            if (server.variables.type.default == parameters.data.pathType){
+                server.variables.host.default = parameters.data.host;
+                server.variables.port.default = parameters.data.port;
+                server.variables.basePath.default = parameters.data.basePath;
+            }
         return update({app_id:parameters.app_id,
                         data:{  openApiKey: 'servers',
                                 openApiValue: old.servers}})
@@ -162,4 +166,4 @@ const updateServersVariables = async parameters =>{
         return server.ORM.getError(parameters.app_id, 404);
 }
 
-export{ get,getViewConfig, getViewServers, getViewWithoutConfig, updateConfig, updateServersVariables};
+export{ get,getViewConfig, getViewServers, getViewWithoutConfig, update, updateConfig, updateServersVariables};

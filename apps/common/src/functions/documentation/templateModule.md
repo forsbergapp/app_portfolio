@@ -9,5 +9,4 @@
 |Metadata           |                                                   |
 |:------------------|:--------------------------------------------------|
 |Author	            |@{SERVER_HOST}                                     |
-|Configuration      |@{APP_CONFIGURATION}                               |
 |Copyright	        |@{APP_COPYRIGHT}                                   |

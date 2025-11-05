@@ -19,8 +19,8 @@ const test = async t =>
     [await t.describe('Integration test, setting DB cache', async ()=> {
         return await new Promise(resolve=>
         t.it('should return values when using ORM pattern for Config', async () =>{
-            const HOST = server.ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVER', parameter:'HOST'}}).result;
-            const PORT = server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:0, data:{config_group:'SERVER',parameter:'HTTP_PORT'}}).result);
+            const HOST = server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result.variables.host.default;
+            const PORT = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result.variables.port.default);
 
             return [
                 /**@ts-ignore */
@@ -34,7 +34,7 @@ const test = async t =>
         return await new Promise(resolve=>
         t.it('should return values ', async () =>{
 
-            /**@type{server['ORM']['Object']['App'][]}*/
+            /**@type{(server['ORM']['Object']['App'] & {Id:number})[]}*/
             const apps = server.ORM.db.App.get({app_id:0, resource_id:null}).result;
             
             for (const app of apps){ 

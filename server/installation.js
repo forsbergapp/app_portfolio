@@ -52,6 +52,8 @@ const getDefaultObject = async object =>
 * @returns {Promise.<server['server']['response'] & {result?:{info: {}[]} }>}
 */
 const postDemo = async parameters=> {
+    /**@type{server['ORM']['Object']['OpenApi']} */
+    const openApi = server.ORM.db.OpenApi.get({app_id:0}).result;
 
     /**@type{{[key:string]: string|number}[]} */
     const install_result = [];
@@ -70,8 +72,8 @@ const postDemo = async parameters=> {
     let install_count=0;
     const install_total_count = demo_users.length + social_types.length;
     install_count++;
-    const common_app_id = server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_COMMON_APP_ID'}}).result) ?? 0;
-    const admin_app_id = server.ORM.UtilNumberValue(server.ORM.db.ConfigServer.get({app_id:parameters.app_id, data:{config_group:'SERVICE_APP', parameter:'APP_ADMIN_APP_ID'}}).result);
+    const common_app_id = server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default) ?? 0;
+    const admin_app_id = server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_ADMIN_APP_ID.default);
 
     try {
         /**
@@ -354,11 +356,9 @@ const postDemo = async parameters=> {
                             default:{
                                 //replace if containing HOST parameter
                                 if (key_name[1]!=null && typeof key_name[1]=='string' && key_name[1].indexOf('<HOST/>')>-1){
-                                    /**@type{server['ORM']['Object']['ConfigServer']} */
-                                    const {SERVER:config_SERVER} = server.ORM.db.ConfigServer.get({app_id:0}).result;
                                     //use HTTP configuration as default
-                                    const HOST = config_SERVER.filter(row=>'HOST' in row)[0].HOST;
-                                    const HTTP_PORT = server.ORM.UtilNumberValue(config_SERVER.filter(row=>'HTTP_PORT' in row)[0].HTTP_PORT);
+                                    const HOST = openApi.servers.filter(row=>row.variables.type.default=='APP')[0].variables.host.default;
+                                    const HTTP_PORT = server.ORM.UtilNumberValue(openApi.servers.filter(row=>row.variables.type.default=='APP')[0].variables.port.default);
                                     return key_name[1]?.replaceAll('<HOST/>', HOST + ((HTTP_PORT==443)?'':`:${HTTP_PORT}`));
                                 }
                                 else
@@ -786,23 +786,23 @@ const deleteDemo = async parameters => {
  */
 const postConfigDefault = async () => {
     const updatedConfigSecurity = await getConfigSecurityUpdate({   
-                                            pathConfigServer:'/server/install/default/ConfigServer.json',
+                                            pathOpenApi:'/server/install/default/OpenApi.json',
                                             pathServiceRegistry:'/server/install/default/ServiceRegistry.json'
     });
     /**
      * @type{[  [server['ORM']['MetaData']['AllObjects'], server['ORM']['MetaData']['DbObject'][]],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['ConfigServer']],
+     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['OpenApi']],
      *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['ServiceRegistry'][]]
      *       ]}
      */
     const config_obj = [
-                            ['DbObjects',                       await getDefaultObject('DbObjects')],
-                            ['ConfigServer',                    updatedConfigSecurity.ConfigServer],
-                            ['ServiceRegistry',                 updatedConfigSecurity.ServiceRegistry]
+                            ['DbObjects',       await getDefaultObject('DbObjects')],
+                            ['OpenApi',         updatedConfigSecurity.OpenApi],
+                            ['ServiceRegistry', updatedConfigSecurity.ServiceRegistry]
                         ]; 
     //create directories in orm
     await server.ORM.postFsDir(['/data',
-                            '/data' + config_obj[1][1].SERVER.filter(key=>'PATH_JOBS' in key)[0].PATH_JOBS,
+                            '/data' + config_obj[1][1].components.parameters.config.SERVER_PATH_JOBS.default,
                             '/data/db',
                             '/data/db/journal',
                             '/data/microservice'
@@ -840,8 +840,7 @@ const postConfigDefault = async () => {
 const postDataDefault = async () => {
     
     /**
-     * @type{[  [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['OpenApi']],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['IamUser'][]],
+     * @type{[  [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['IamUser'][]],
      *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['App'][]],
      *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['AppDataEntityResource'][]],
      *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['AppDataEntity'][]],
@@ -854,7 +853,6 @@ const postDataDefault = async () => {
      *       ]}
      */
     const config_obj = [
-                            ['OpenApi',                         await getDefaultObject('OpenApi')],
                             ['IamUser',                         await getDefaultObject('IamUser')],
                             ['App',                             await getDefaultObject('App')],
                             ['AppDataEntityResource',           await getDefaultObject('AppDataEntityResource')],
@@ -883,15 +881,15 @@ const postDataDefault = async () => {
 };
 /**
  * @name updateConfigSecrets
- * @description Updates configuration secrets in ConfigServer, ServiceRegistry and IamUser
+ * @description Updates configuration secrets in OpenApi, ServiceRegistry and IamUser
  * @function
  * @returns {Promise<void>}
  */
 const updateConfigSecrets = async () =>{
     
-    //get ConfigServer and ServiceRegistry with new secrets
+    //get OpenApi and ServiceRegistry with new secrets
     const updatedConfigSecurity = await getConfigSecurityUpdate({
-                                            pathConfigServer:   null,
+                                            pathOpenApi:   null,
                                             pathServiceRegistry:null
                                         });
     //get users and password
@@ -905,9 +903,10 @@ const updateConfigSecrets = async () =>{
         }
         resolve(users);
     })();});                                                              
-    //update ConfigServer
-    await server.ORM.db.ConfigServer.update({ app_id:0,
-                                data:{  config: updatedConfigSecurity.ConfigServer}});
+    //update OpenApi with secrets updated in components.parameters.config
+    await server.ORM.db.OpenApi.update({app_id:0,
+                        data:{  openApiKey: 'components',
+                                openApiValue: updatedConfigSecurity.OpenApi.components}});
     //update IamUser using new secrets
     for (const user of users){
         await server.ORM.db.IamUser.updateAdmin({ app_id:0, 
@@ -951,41 +950,30 @@ const updateMicroserviceSecurity = async parameters =>{
  * @description Reads config files with security and return documents with updates security values
  *              If path is empty then object is read from db
  * @function
- * @param {{pathConfigServer:      string|null,
- *          pathServiceRegistry:   string|null}} parameters
- * @returns {Promise.<{ ConfigServer:   server['ORM']['Object']['ConfigServer'],
+ * @param {{pathOpenApi:            string|null,
+ *          pathServiceRegistry:    string|null}} parameters
+ * @returns {Promise.<{ OpenApi:    server['ORM']['Object']['OpenApi'],
  *                      ServiceRegistry:server['ORM']['Object']['ServiceRegistry'][]}>}
  */
 const getConfigSecurityUpdate = async parameters =>{
-    const APP_PORTFOLIO_TITLE = 'App Portfolio';
     
     return {
-        ConfigServer:await new Promise(resolve=>{(async () =>{ 
-                            /**@type{server['ORM']['Object']['ConfigServer']}*/
-                            const content = parameters.pathConfigServer?await fs.promises.readFile(server.ORM.serverProcess.cwd() + parameters.pathConfigServer)
-                                                .then(file=>JSON.parse(file.toString())):server.ORM.getObject(0,'ConfigServer');
+        OpenApi:await new Promise(resolve=>{(async () =>{ 
+                            /**@type{server['ORM']['Object']['OpenApi']}*/
+                            const openApi = parameters.pathOpenApi?await fs.promises.readFile(server.ORM.serverProcess.cwd() + parameters.pathOpenApi)
+                                                .then(file=>JSON.parse(file.toString())):server.ORM.getObject(0,'OpenApi');
                             //generate secrets
-                            content.SERVICE_IAM.map(row=>{
-                                if ('MICROSERVICE_TOKEN_SECRET' in row)
-                                    row.MICROSERVICE_TOKEN_SECRET = server.security.securitySecretCreate();
-                                if ('ADMIN_TOKEN_SECRET' in row)
-                                    row.ADMIN_TOKEN_SECRET = server.security.securitySecretCreate();        
-                                if ('USER_TOKEN_APP_ACCESS_SECRET' in row)
-                                    row.USER_TOKEN_APP_ACCESS_SECRET = server.security.securitySecretCreate();
-                                if ('USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET' in row)
-                                    row.USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET = server.security.securitySecretCreate();
-                                if ('USER_TOKEN_APP_ID_SECRET' in row)
-                                    row.USER_TOKEN_APP_ID_SECRET = server.security.securitySecretCreate();
-                                if ('USER_PASSWORD_ENCRYPTION_KEY' in row)
-                                    row.USER_PASSWORD_ENCRYPTION_KEY = server.security.securitySecretCreate(false, 32);
-                                if ('USER_PASSWORD_INIT_VECTOR' in row)
-                                    row.USER_PASSWORD_INIT_VECTOR = server.security.securitySecretCreate(false, 16)
-                            });
+                            openApi.components.parameters.config.IAM_MICROSERVICE_TOKEN_SECRET.default = server.security.securitySecretCreate();
+                            openApi.components.parameters.config.IAM_ADMIN_TOKEN_SECRET.default = server.security.securitySecretCreate();
+                            openApi.components.parameters.config.IAM_USER_TOKEN_APP_ACCESS_SECRET.default = server.security.securitySecretCreate();
+                            openApi.components.parameters.config.IAM_USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET.default = server.security.securitySecretCreate();
+                            openApi.components.parameters.config.IAM_USER_TOKEN_APP_ID_SECRET.default = server.security.securitySecretCreate();
+                            openApi.components.parameters.config.IAM_USER_PASSWORD_ENCRYPTION_KEY.default = server.security.securitySecretCreate(false, 32);
+                            openApi.components.parameters.config.IAM_USER_PASSWORD_INIT_VECTOR.default = server.security.securitySecretCreate(false, 16);
                             //set server metadata
-                            content.METADATA.CONFIGURATION = content.METADATA.CONFIGURATION ?? APP_PORTFOLIO_TITLE;
-                            content.METADATA.MODIFIED      = content.METADATA.CREATED?`${new Date().toISOString()}`:'';
-                            content.METADATA.CREATED       = content.METADATA.CREATED ?? `${new Date().toISOString()}`;
-                            resolve(content);
+                            openApi.info['x-created'] = openApi.info['x-created'] ?? `${new Date().toISOString()}`;
+                            openApi.info['x-modified'] = openApi.info['x-created'] ?? `${new Date().toISOString()}`;
+                            resolve(openApi);
                         })();}),
         ServiceRegistry:parameters.pathServiceRegistry?await new Promise(resolve=>{(async () =>{ 
                                 /**@type{server['ORM']['Object']['ServiceRegistry'][]}*/

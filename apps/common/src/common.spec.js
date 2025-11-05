@@ -92,8 +92,8 @@ const test = async t =>
                 t.expect(   'Count App',    
                             spyObject.filter(row=>row.id == spyId && row.object=='App').length).toBeGreaterThan(0),
                 /**@ts-ignore */
-                t.expect(   'Count ConfigServer',    
-                            spyObject.filter(row=>row.id == spyId && row.object=='ConfigServer').length).toBeGreaterThan(0),
+                t.expect(   'Count OpenApi',    
+                            spyObject.filter(row=>row.id == spyId && row.object=='OpenApi').length).toBeGreaterThan(0),
                 /**@ts-ignore */
                 t.expect(   'Count IamUser',    
                             spyObject.filter(row=>row.id == spyId && row.object=='IamUser').length).toBeGreaterThan(0)

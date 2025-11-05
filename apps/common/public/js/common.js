@@ -1226,18 +1226,19 @@ const commonComponentRender = async parameters => {
             (link.getAttribute('data-href')==''||link.getAttribute('data-href')==null)?
                 null:
                     commonMiscResourceFetch(link.getAttribute('data-href')??'', link,'text/css'));
-        
-        //set component name from filename without .js
-        const componentName = parameters.path.split('/').reverse()[0].split('.')[0];
+        //set component with appid and name from filename without .js
+        const componentName = (parameters.path.startsWith('/common/component/')?COMMON_GLOBAL.app_common_app_id:COMMON_GLOBAL.app_id).toString() + '_' +
+                                parameters.path.split('/').reverse()[0].split('.')[0];
         //use Vue.createApp and data() return pattern and React.createRef() + current key pattern to share methods
         //share methods
-        if (parameters.path.startsWith('/common/component/') && component.methods){
+        if (component.methods){
             if (!COMMON_GLOBAL.component[componentName])
                 COMMON_GLOBAL.component[componentName]={};
             COMMON_GLOBAL.component[componentName].methods = component.methods;
         }
         //share events to event delegation in commonEvent()
-        if (parameters.path.startsWith('/common/component/') && component.events){
+        if (component.events){
+            
             if (!COMMON_GLOBAL.component[componentName])
                 COMMON_GLOBAL.component[componentName]={};
             COMMON_GLOBAL.component[componentName].events = component.events;
@@ -1683,8 +1684,8 @@ const commonUserLogout = async () => {
  */
 const commonLogout = async () => {
     commonComponentRemove('common_app_dialogues_user_menu');
-    COMMON_GLOBAL.component.common_app_window_info?.methods?.commonWindoInfoClose?
-        COMMON_GLOBAL.component.common_app_window_info?.methods?.commonWindoInfoClose():
+    COMMON_GLOBAL.component[COMMON_GLOBAL.app_common_app_id + '_' + 'common_app_window_info']?.methods?.commonWindoInfoClose?
+        COMMON_GLOBAL.component[COMMON_GLOBAL.app_common_app_id + '_' + 'common_app_window_info']?.methods?.commonWindoInfoClose():
             null;
     commonComponentRemove('common_app_dialogues_iam_verify');
     if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.app_admin_app_id){
@@ -2975,6 +2976,7 @@ const commonEvent = async (event_type,event=null) =>{
         })();
         //2 component events
         //fire component events defined in each component in COMMON_GLOBAL.component[component].events key
+        //component events should be for component elements, use app events to add addional functionality after common event and component events
         for (const component of Object.values(COMMON_GLOBAL.component))
             component.events?
                 await component.events(event_type, event):
