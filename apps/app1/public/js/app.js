@@ -395,7 +395,8 @@ const appSecureCommonButtonSave = async (item) => {
                                                         item,
                                                         record.querySelector('[data-column=\'Id\']').textContent,
                                                         //appid not allowed to update
-                                                        {   Value:          record.querySelector('[data-column=\'Value\']').textContent,
+                                                        {   Name:           record.querySelector('[data-column=\'Name\']').textContent,
+                                                            Value:          record.querySelector('[data-column=\'Value\']').textContent,
                                                             DisplayData:    record.querySelector('[data-column=\'DisplayData\']').textContent,
                                                             Data2:          record.querySelector('[data-column=\'Data2\']').textContent,
                                                             Data3:          record.querySelector('[data-column=\'Data3\']').textContent,
