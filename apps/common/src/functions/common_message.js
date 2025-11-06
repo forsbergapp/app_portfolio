@@ -109,11 +109,11 @@ const appFunction = async parameters =>{
         return {unread:messages.filter((/**@type{server['ORM']['Object']['MessageQueuePublish']}*/message)=>
                     (server.ORM.db.MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
                             .filter((/**@type{*}*/messageConsume)=>
-                                message.Id == messageConsume.message_queue_publish_id).length==0).length,
+                                message.Id == messageConsume.MessageQueuePublishId).length==0).length,
                 read:messages.filter((/**@type{server['ORM']['Object']['MessageQueuePublish']}*/message)=>
                     (server.ORM.db.MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
                             .filter((/**@type{*}*/messageConsume)=>
-                                message.Id == messageConsume.message_queue_publish_id).length>0).length,
+                                message.Id == messageConsume.MessageQueuePublishId).length>0).length,
                 };
     };
     
