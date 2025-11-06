@@ -2937,9 +2937,6 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "app_id":{
-                                                "type":"number"
-                                            },
                                             "ModuleType":{
                                                 "type":"string"
                                             },
@@ -3046,29 +3043,25 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "app_id":{
-                                                "type":"number",
-                                                "required":true
-                                            },
-                                            "name":{
+                                            "Name":{
                                                 "type":"string"
                                             },
-                                            "value":{
+                                            "Value":{
                                                 "type":"string"
                                             },
-                                            "display_data":{
+                                            "DisplayData":{
                                                 "type":"string"
                                             },
-                                            "data2":{
+                                            "Data2":{
                                                 "type":"string"
                                             },
-                                            "data3":{
+                                            "Data3":{
                                                 "type":"string"
                                             },
-                                            "data4":{
+                                            "Data4":{
                                                 "type":"string"
                                             },
-                                            "data5":{
+                                            "Data5":{
                                                 "type":"string"
                                             }
                                         }
