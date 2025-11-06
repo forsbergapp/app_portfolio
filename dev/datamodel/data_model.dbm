@@ -696,39 +696,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="&quot;ORM&quot;.&quot;MessageQueueError&quot;"
 	 src-required="false" dst-required="false"/>
 
-<table name="ConfigServer" layers="0" collapse-mode="2" max-obj-count="10" z-value="0">
-	<schema name="&quot;ORM&quot;"/>
-	<role name="postgres"/>
-	<position x="3160" y="1800"/>
-	<column name="SERVER" not-null="true">
-		<type name="varchar" length="0"/>
-	</column>
-	<column name="SERVICE_APP" not-null="true">
-		<type name="varchar" length="0"/>
-	</column>
-	<column name="SERVICE_MICROSERVICE" not-null="true">
-		<type name="varchar" length="0"/>
-	</column>
-	<column name="SERVICE_DB" not-null="true">
-		<type name="varchar" length="0"/>
-	</column>
-	<column name="SERVICE_IAM" not-null="true">
-		<type name="varchar" length="0"/>
-	</column>
-	<column name="SERVICE_SOCKET" not-null="true">
-		<type name="varchar" length="0"/>
-	</column>
-	<column name="SERVICE_LOG" not-null="true">
-		<type name="varchar" length="0"/>
-	</column>
-	<column name="SERVICE_TEST" not-null="true">
-		<type name="varchar" length="0"/>
-	</column>
-	<column name="METADATA" not-null="true">
-		<type name="varchar" length="0"/>
-	</column>
-</table>
-
 <relationship name="ServiceRegistry_has_many_IamMicroserviceToken" type="rel1n" layers="0"
 	 src-col-pattern="{st}{sc}"
 	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
