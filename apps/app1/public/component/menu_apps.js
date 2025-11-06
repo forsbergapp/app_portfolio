@@ -44,7 +44,7 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                             <div class='menu_apps_col common_input list_edit' data-column='CssReport' contentEditable='true' >${app.CssReport}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='Favicon32x32' contentEditable='true' >${app.Favicon32x32}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='Favicon192x192' contentEditable='true' >${app.Favicon192x192}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='TextEedit' contentEditable='true' >${app.TextEdit}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='TextEdit' contentEditable='true' >${app.TextEdit}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='Copyright' contentEditable='true' >${app.Copyright}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='LinkTitle' contentEditable='true' >${app.LinkTitle}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='LinkUrl' contentEditable='true' >${app.LinkUrl}</div>

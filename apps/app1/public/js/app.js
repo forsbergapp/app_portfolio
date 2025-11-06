@@ -369,9 +369,8 @@ const appSecureCommonButtonSave = async (item) => {
                 await appSecureCommonRecordUpdate(  'app',
                                                     record,
                                                     item,
-                                                    record.querySelector('[data-column=\'id\']').textContent,
+                                                    record.querySelector('[data-column=\'Id\']').textContent,
                                                     {
-                                                        id:             record.querySelector('[data-column=\'Id\']').textContent,
                                                         name:           record.querySelector('[data-column=\'Name\']').textContent,
                                                         path:           record.querySelector('[data-column=\'Path\']').textContent,
                                                         logo:           record.querySelector('[data-column=\'Logo\']').textContent,
@@ -394,14 +393,14 @@ const appSecureCommonButtonSave = async (item) => {
                     await appSecureCommonRecordUpdate(  'app_data',
                                                         record,
                                                         item,
-                                                        record.querySelector('[data-column=\'id\']').textContent,
-                                                        {   app_id:         record.querySelector('[data-column=\'AppId\']').textContent,
-                                                            value:          record.querySelector('[data-column=\'Value\']').textContent,
-                                                            display_data:   record.querySelector('[data-column=\'DisplayData\']').textContent,
-                                                            data2:          record.querySelector('[data-column=\'Data2\']').textContent,
-                                                            data3:          record.querySelector('[data-column=\'Data3\']').textContent,
-                                                            data4:          record.querySelector('[data-column=\'Data4\']').textContent,
-                                                            data5:          record.querySelector('[data-column=\'Data5\']').textContent
+                                                        record.querySelector('[data-column=\'Id\']').textContent,
+                                                        //appid not allowed to update
+                                                        {   Value:          record.querySelector('[data-column=\'Value\']').textContent,
+                                                            DisplayData:    record.querySelector('[data-column=\'DisplayData\']').textContent,
+                                                            Data2:          record.querySelector('[data-column=\'Data2\']').textContent,
+                                                            Data3:          record.querySelector('[data-column=\'Data3\']').textContent,
+                                                            Data4:          record.querySelector('[data-column=\'Data4\']').textContent,
+                                                            Data5:          record.querySelector('[data-column=\'Data5\']').textContent
                                                         });
                 }
             if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_module.list_nav_selected_tab'))
@@ -410,9 +409,9 @@ const appSecureCommonButtonSave = async (item) => {
                     await appSecureCommonRecordUpdate(  'app_module',
                                                         record,
                                                         item,
-                                                        record.querySelector('[data-column=\'id\']').textContent,
-                                                        {   app_id:            record.querySelector('[data-column=\'AppId\']').textContent,
-                                                            ModuleType:        record.querySelector('[data-column=\'ModuleType\']').textContent,
+                                                        record.querySelector('[data-column=\'Id\']').textContent,
+                                                        //appid not allowed to update
+                                                        {   ModuleType:        record.querySelector('[data-column=\'ModuleType\']').textContent,
                                                             ModuleName:        record.querySelector('[data-column=\'ModuleName\']').textContent,
                                                             ModuleRole:        record.querySelector('[data-column=\'ModuleRole\']').textContent,
                                                             ModulePath:        record.querySelector('[data-column=\'ModulePath\']').textContent,
@@ -427,7 +426,7 @@ const appSecureCommonButtonSave = async (item) => {
                 await appSecureCommonRecordUpdate(  'user_account',
                                                     record,
                                                     item,
-                                                    record.querySelector('[data-column=\'id\']').textContent,
+                                                    record.querySelector('[data-column=\'Id\']').textContent,
                                                     {   avatar:             record.querySelector('[data-column=\'Avatar\']').getAttribute('data-image')=='null'?
                                                                                 null:
                                                                                     record.querySelector('[data-column=\'Avatar\']').getAttribute('data-image'),
