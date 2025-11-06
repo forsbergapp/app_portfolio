@@ -753,7 +753,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
                     //all apps
                     apps:apps};
         else
-            if ([openApi.servers.filter(row=>row.variables.type.default=='ADMIN')[0].variables.port.default]
+            if ([openApi.servers.filter(row=>row['x-type'].default=='ADMIN')[0].variables.port.default]
                                     .includes(host.split(':')[host.split(':').length-1]))
                 return {
                         admin:true,

@@ -634,11 +634,7 @@
  *                          "url": string,
  *                          "description": string,
  *                          "variables": {
- *    			                "type": {
- *          		                "$ref": string,
- *          		                "default": "APP"|"ADMIN"
- *        	                    },
- *			                    "protocol": {
+ *    			                "protocol": {
  *				                    "default": string
  *        	                    },
  *			                    "host": {
@@ -651,7 +647,11 @@
  *				                    "default": string
  *		                        },
  *                              "config"?:[key:{default:*, description:string}]
- *  		                }
+ *  		                },
+ *                          "x-type": {
+ *				                "$ref": string,
+ *          		            "default": "APP"|"ADMIN"|"NOHANGING_HTTPS"|"REST_API"
+ *		                    },
  *              }[],
  *              paths: {[key:string]: 
  *                          {[key in 'get'|'post'|'delete'|'patch'|'put']:

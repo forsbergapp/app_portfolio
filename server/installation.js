@@ -357,8 +357,8 @@ const postDemo = async parameters=> {
                                 //replace if containing HOST parameter
                                 if (key_name[1]!=null && typeof key_name[1]=='string' && key_name[1].indexOf('<HOST/>')>-1){
                                     //use HTTP configuration as default
-                                    const HOST = openApi.servers.filter(row=>row.variables.type.default=='APP')[0].variables.host.default;
-                                    const HTTP_PORT = server.ORM.UtilNumberValue(openApi.servers.filter(row=>row.variables.type.default=='APP')[0].variables.port.default);
+                                    const HOST = openApi.servers.filter(row=>row['x-type'].default=='APP')[0].variables.host.default;
+                                    const HTTP_PORT = server.ORM.UtilNumberValue(openApi.servers.filter(row=>row['x-type'].default=='APP')[0].variables.port.default);
                                     return key_name[1]?.replaceAll('<HOST/>', HOST + ((HTTP_PORT==443)?'':`:${HTTP_PORT}`));
                                 }
                                 else

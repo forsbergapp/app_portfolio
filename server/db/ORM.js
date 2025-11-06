@@ -1212,7 +1212,7 @@ class ORM_class {
         return {result: [{
                             DatabaseName:  'ORM',
                             Version:        1,
-                            Hostname:       this.getObject(parameters.app_id,'OpenApi').servers.filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/row)=>row.variables.type.default=='APP')[0].variables.host.default,
+                            Hostname:       this.getObject(parameters.app_id,'OpenApi').servers.filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/row)=>row['x-type'].default=='APP')[0].variables.host.default,
                             Connections:    server.socket.socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
                             Started:        this.serverProcess.uptime()
                         }],

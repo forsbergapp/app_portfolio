@@ -1324,7 +1324,7 @@ const iamAppAccessGet = parameters => {const rows = server.ORM.db.IamAppAccess.g
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:'servers'|'config',
- *          data:{pathType?:server['ORM']['Object']['OpenApi']['servers'][0]['variables']['type']['default'],
+ *          data:{pathType?:server['ORM']['Object']['OpenApi']['servers'][0]['x-type']['default'],
  *                parameter?:string}}} parameters
  * @returns {server['server']['response'] & {result?:server["ORM"]["Object"]["OpenApi"]["servers"]|
  *                                                   server['ORM']['Object']['OpenApi']['components']['parameters']['config']|
@@ -1350,11 +1350,13 @@ const iamAdminServerConfigGet = parameters =>{
 /**
  * @name iamAdminServerConfigUpdate
  * @description Admin config update
+ *              pathType = NOHANGING_HTTPS must use port 443
+ *              pathType != NOHANGING_HTTPS must NOT use port 443
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:'servers'|'config',
- *          data:{pathType:server['ORM']['Object']['OpenApi']['servers'][0]['variables']['type']['default'],
+ *          data:{pathType:server['ORM']['Object']['OpenApi']['servers'][0]['x-type']['default'],
  *                host: string,
  *                port: number,
  *                basePath:string,
@@ -1363,7 +1365,9 @@ const iamAdminServerConfigGet = parameters =>{
  * @returns {Promise.<server['server']['response'] & {result?:{updated: number}}>}
  */
 const iamAdminServerConfigUpdate = async parameters =>{
-    if (parameters.resource_id == 'servers' && parameters.data.port != 443){
+    if (parameters.resource_id == 'servers' && 
+        ((parameters.data.pathType == 'NOHANGING_HTTPS' && parameters.data.port == 443)||
+        (parameters.data.pathType != 'NOHANGING_HTTPS' && parameters.data.port != 443))){
         //servers cant use port 443 reserved for dummy server
         return await server.ORM.db.OpenApi.updateServersVariables({ app_id:parameters.app_id, 
                                                                     data:{  pathType:parameters.data.pathType, 

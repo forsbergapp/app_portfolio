@@ -467,7 +467,7 @@ const appSecureCommonButtonSave = async (item) => {
                                                         record,
                                                         item,
                                                         'servers',
-                                                        {   pathType:   record.querySelector('[data-column=\'type\']').textContent,
+                                                        {   pathType:   record.querySelector('[data-column=\'x-type\']').textContent,
                                                             host:       record.querySelector('[data-column=\'host\']').textContent,
                                                             port:       record.querySelector('[data-column=\'port\']').textContent,
                                                             basePath:   record.querySelector('[data-column=\'basePath\']').textContent

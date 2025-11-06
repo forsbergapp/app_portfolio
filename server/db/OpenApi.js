@@ -41,24 +41,24 @@ const getViewConfig = parameters =>{
  * @description Returns #/servers for given pathType or all servers without variables.config for each server
  * @function
  * @param {{app_id:number,
- *          data:{pathType?:server['ORM']['Object']['OpenApi']['servers'][0]['variables']['type']['default']|null}}} parameters
+ *          data:{pathType?:server['ORM']['Object']['OpenApi']['servers'][0]['x-type']['default']|null}}} parameters
  * @returns {server['server']['response'] & {result?:server['ORM']['Object']['OpenApi']['servers'] }}
  */
 const getViewServers = parameters =>{
     return {result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null).servers
-                    .filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0] }*/server)=>server.variables.type.default==(parameters.data.pathType??server.variables.type.default))
+                    .filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0] }*/server)=>server['x-type'].default==(parameters.data.pathType??server['x-type'].default))
                     .map((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/server)=>{
                         /**@type{server['ORM']['Object']['OpenApi']['servers'][0]} */
                         const serverReturn = {
                             "url":          server.url,
                             "description":  server.description,
                             "variables":{
-                                "type":     server.variables.type,
                                 "protocol": server.variables.protocol,
                                 "host":     server.variables.host,
                                 "port":     server.variables.port,
                                 "basePath": server.variables.basePath
-                            }
+                            },
+                            "x-type":       server['x-type'],
                         }
                         return serverReturn;
                     }),
@@ -133,7 +133,8 @@ const updateConfig = async parameters =>{
  * @name updateServersVariables
  * @description Update server variables
  *              Updates #/servers/[APP or ADMIN]/variables/[key].default
- *              Allowed keys to update: host, port and basePath.
+ *              Allowed keys to update: host, port
+ *              basePath only allowed to change for REST_API
  *              Only one key allowed to be updated for each request.
  *              if variable_name = host, port, basePath and pathType is APP or ADMIN
  *                  update record given pathType record
@@ -141,7 +142,7 @@ const updateConfig = async parameters =>{
  *                  return 400
  * @function
  * @param {{app_id:number,
- *         data:{pathType:server['ORM']['Object']['OpenApi']['servers'][0]['variables']['type']['default'],
+ *         data:{pathType:server['ORM']['Object']['OpenApi']['servers'][0]['x-type']['default'],
  *               host: string,
  *               port: number,
  *               basePath: string}
@@ -151,12 +152,14 @@ const updateConfig = async parameters =>{
 const updateServersVariables = async parameters =>{
     const old = server.ORM.getObject(parameters.app_id, 'OpenApi',null, null);
     
-    if (['APP','ADMIN'].includes(parameters.data.pathType)){
+    if (['APP','ADMIN','REST_API','NOHANGING_HTTPS'].includes(parameters.data.pathType)){
         for (const server of old.servers)
-            if (server.variables.type.default == parameters.data.pathType){
+            if (server['x-type'].default == parameters.data.pathType){
                 server.variables.host.default = parameters.data.host;
-                server.variables.port.default = parameters.data.port;
-                server.variables.basePath.default = parameters.data.basePath;
+                if (parameters.data.pathType !='NOHANGING_HTTPS')
+                    server.variables.port.default = parameters.data.port;
+                if (parameters.data.pathType =='REST_API')
+                    server.variables.basePath.default = parameters.data.basePath;
             }
         return update({app_id:parameters.app_id,
                         data:{  openApiKey: 'servers',
