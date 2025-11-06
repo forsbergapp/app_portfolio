@@ -19,8 +19,8 @@ const test = async t =>
     [await t.describe('Integration test, setting DB cache', async ()=> {
         return await new Promise(resolve=>
         t.it('should return values when using ORM pattern for Config', async () =>{
-            const HOST = server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result.variables.host.default;
-            const PORT = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result.variables.port.default);
+            const HOST = server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result[0].variables.host.default;
+            const PORT = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result[0].variables.port.default);
 
             return [
                 /**@ts-ignore */
