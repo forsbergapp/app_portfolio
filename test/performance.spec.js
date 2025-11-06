@@ -22,8 +22,8 @@ const test = async t =>
                 /**@type{number} */
                 let status;
                 const PROTOCOL = 'http://';
-                const HOST = server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result.variables.host.default
-                const PORT = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result.variables.port.default);
+                const HOST = server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result[0].variables.host.default
+                const PORT = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result[0].variables.port.default);
                 const requests = [];
                 const totalRequests = 100;
                 let err=0;
