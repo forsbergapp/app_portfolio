@@ -61,7 +61,7 @@ const returnPlace = parameters =>{
 };
 /**
  * @name getIP
- * @description Server function for geolocation IP
+ * @description Server function for GEOLOCATION_IP, also reads GEOLOCATION_PLACE if not local IP address
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
@@ -119,9 +119,7 @@ const getIP = parameters =>{
 };
 /**
  * @name getPlace
- * @description Server function for geolocation
- *              IP      
- *              PLACE   
+ * @description Server function for GEOLOCATION_PLACE   
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
