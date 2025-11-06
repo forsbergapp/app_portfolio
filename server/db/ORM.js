@@ -874,7 +874,7 @@ class ORM_class {
                  * 
                  * Uses partition with arrays to speed up searches
                  */
-                return server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'IAM_ENABLE_GELOCATION'}}).result)==1?
+                return server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'IAM_ENABLE_GEOLOCATION'}}).result)==1?
                         await loadGeolocation(object):
                             null;
             }
