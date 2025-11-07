@@ -82,9 +82,8 @@
 
 #menu_monitor_detail_server_log_search_icon::before{								content:var(--common_app_icon_reload)}
 
-#menu_openapi_detail_config::before{												content:var(--common_app_icon_server)}
-
-#menu_openapi_detail_servers::before{												content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_misc_book)}
+#menu_openapi_detail_config::before{												content:var(--common_app_icon_server) ' ' var(--common_app_icon_settings)}
+#menu_openapi_detail_servers::before{												content:var(--common_app_icon_server) ' ' var(--common_app_icon_internet)}
 
 #menu_installation_demo_demo_users_icon::before{									content:var(--common_app_icon_users)}
 #menu_installation_demo_button_install::before{										content:var(--common_app_icon_add)}
@@ -717,7 +716,7 @@
 	padding-top:4px;
 	padding-inline-start: 1em;
 	text-align: start;
-    grid-template-columns: 20em 15em 5em 5em 20em 5em 10em;
+    grid-template-columns: 20em 15em 10em 5em 20em 5em 10em;
     grid-column-gap: 1em;
 }   
 

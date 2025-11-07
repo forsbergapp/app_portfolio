@@ -11,10 +11,6 @@
             "url": "{protocol}://{host}:{port}{basePath}",
             "description": "App Portfolio App server",
             "variables": {
-    			"type": {
-          		    "$ref": "#/components/schemas/PathType",
-          		    "default": "APP"
-        	    },
 			    "protocol": {
 				    "default": "http"
         	    },
@@ -27,16 +23,16 @@
 		        "basePath": {
 				    "default": "/"
 		        }
-  		    }
+  		    },
+            "x-type": {
+          		    "$ref": "#/components/schemas/PathType",
+          		    "default": "APP"
+        	}
         },
         {
             "url": "{protocol}://{host}:{port}{basePath}",
             "description": "App Portfolio Admin server",
             "variables": {
-                "type": {
-                    "$ref": "#/components/schemas/PathType",
-                    "default": "ADMIN"
-                },
                 "protocol": {
                     "default": "http"
                 },
@@ -49,7 +45,55 @@
                 "basePath": {
                     "default": "/"
                 }
-            }
+            },
+            "x-type": {
+          		    "$ref": "#/components/schemas/PathType",
+          		    "default": "ADMIN"
+        	}
+        },
+        {
+            "url": "{protocol}://{host}:{port}{basePath}",
+            "description": "App Portfolio REST API",
+            "variables":{
+                "protocol": {
+                    "default": "http"
+                },
+                "host": {
+                    "default": "localhost"
+                },
+                "port": {
+                    "default": "3000"
+                },
+                "basePath": {
+                    "default": "/bff"
+                }
+            },	
+			"x-type": {
+                "$ref": "#/components/schemas/PathType",
+                "default": "REST_API"
+        	}
+        },
+        {
+            "url": "{protocol}://{host}:{port}",
+            "description": "App Portfolio dummy server",
+            "variables":{
+                "protocol": {
+                    "default": "https"
+                },
+                "host": {
+                    "default": "localhost"
+                },
+                "port": {
+                    "default": "443"
+                },
+                "basePath": {
+                    "default": "/"
+                }
+            },	
+			"x-type": {
+                "$ref": "#/components/schemas/PathType",
+                "default": "NOHANGING_HTTPS"
+        	}
         }
     ],
     "paths": {
@@ -57,7 +101,12 @@
             "post": {
                 "summary": "",
                 "operationId": "server.bff.bffX",
-                "security":[],
+                "security":[
+                    {
+                        "$ref": "#/components/securitySchemes/AuthorizationAccess",
+                        "default":"public"
+                    }
+                ],
                 "parameters": [
                         {"description": "Encrypted BFF"},
                         {
@@ -91,7 +140,8 @@
                 "summary": "",
                 "operationId": "server.bff.bffConnect",
                 "security":[
-                    {"$ref":"#/components/securitySchemes/app-id-token"}
+                    {"$ref":"#/components/securitySchemes/app-id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -173,7 +223,8 @@
                 "summary": "",
                 "operationId": "server_db.App.getViewInfo",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -221,7 +272,8 @@
                 "summary": "",
                 "operationId": "server_db.AppData.get",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -280,7 +332,8 @@
                 "operationId": "server.iam.iamAuthenticateUserActivate",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -347,7 +400,8 @@
                 "summary": "",
                 "operationId": "server_db.IamUser.getViewProfileStat",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -384,7 +438,8 @@
                 "summary": "",
                 "operationId": "server_db.IamUser.getViewProfile",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -469,7 +524,8 @@
                 "summary": "",
                 "operationId": "server_db.IamUserAppDataPost.get",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -521,7 +577,8 @@
                 "summary": "",
                 "operationId": "server_db.IamUserAppDataPost.getViewProfileStatLike",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -566,7 +623,8 @@
                 "summary": "",
                 "operationId": "server_db.IamUserAppDataPost.getViewProfileUserPosts",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -619,7 +677,8 @@
                 "summary": "",
                 "operationId": "server_db.IamUserAppDataPost.getViewProfileStatPost",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -656,7 +715,8 @@
                 "summary": "",
                 "operationId": "server.socket.CheckOnline",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -692,7 +752,8 @@
                 "operationId": "apps_common_src.common.commonModuleRun",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -776,7 +837,8 @@
                 "operationId": "apps_common_src.common.commonModuleMetaDataGet",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -829,7 +891,8 @@
                 "operationId": "apps_common_src.common.commonAppReport",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -893,7 +956,8 @@
                 "summary": "",
                 "operationId": "apps_common_src.common.commonAppReport",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -958,7 +1022,8 @@
                 "operationId": "server_db.AppModuleQueue.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1001,7 +1066,8 @@
                 "operationId": "apps_common_src.common.commonAppReportQueue",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1065,7 +1131,8 @@
                 "operationId": "server_db.AppModuleQueue.getResult",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1109,7 +1176,8 @@
                 "summary": "",
                 "operationId": "apps_common_src.common.commonAppResource",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1189,7 +1257,8 @@
                 "summary": "",
                 "operationId": "apps_common_src.common.commonAppMount",
                 "security":[
-                    {"$ref":"#/components/securitySchemes/SecurityApp"}
+                    {"$ref":"#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1251,7 +1320,8 @@
                 "summary": "",
                 "operationId": "apps_common_src.common.commonAppMount",
                 "security":[
-                    {"$ref":"#/components/securitySchemes/SecurityApp"}
+                    {"$ref":"#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1318,7 +1388,8 @@
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1406,6 +1477,9 @@
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
+                ],
                 "parameters": [
                         {
                             "$ref": "#/components/parameters/paths/server_app_id",
@@ -1475,7 +1549,8 @@
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1554,7 +1629,8 @@
                 "operationId": "apps_common_src.common.commonModuleRun",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1645,7 +1721,8 @@
                 "operationId": "server_db.IamUser.getViewProfileDetail",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1687,7 +1764,8 @@
                 "operationId": "server_db.IamUserFollow.post",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1737,7 +1815,8 @@
                 "operationId": "server_db.IamUserFollow.deleteRecord",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1789,7 +1868,8 @@
                 "operationId": "server_db.IamUserLike.post",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1839,7 +1919,8 @@
                 "operationId": "server_db.IamUserLike.deleteRecord",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1891,7 +1972,8 @@
                 "operationId": "server_db.IamUserApp.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -1948,7 +2030,8 @@
                 "operationId": "server_db.IamUserAppDataPost.getViewProfileUserPostDetail",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2002,7 +2085,8 @@
                 "operationId": "server_db.IamUserAppDataPost.post",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2057,7 +2141,8 @@
                 "operationId": "server_db.IamUserAppDataPost.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2113,7 +2198,8 @@
                 "operationId": "server_db.IamUserAppDataPost.deleteRecord",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2165,7 +2251,8 @@
                 "operationId": "server_db.IamUserAppDataPostLike.deleteRecord",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2223,7 +2310,8 @@
                 "operationId": "server_db.IamUserAppDataPostLike.post",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2276,7 +2364,8 @@
                 "operationId": "server.iam.iamAuthenticateUserAppDelete",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2348,7 +2437,8 @@
                 "operationId": "server.iam.iamUserGet",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2390,7 +2480,8 @@
                 "operationId": "server.iam.iamAuthenticateUserUpdate",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2475,7 +2566,8 @@
                 "operationId": "server.socket.socketAdminSend",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2533,7 +2625,8 @@
                 "operationId": "server.socket.socketConnectedCount",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2579,7 +2672,8 @@
                 "operationId": "server.socket.socketConnectedList",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2664,7 +2758,8 @@
                 "summary": "",
                 "operationId": "server.socket.socketConnect",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2743,7 +2838,8 @@
                 "operationId": "server_db.App.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {"description": "Sends resource_id=null"}
@@ -2771,7 +2867,8 @@
                 "operationId": "server_db.App.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2865,7 +2962,8 @@
                 "operationId": "server_db.AppModule.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2916,7 +3014,8 @@
                 "operationId": "server_db.AppModule.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -2980,7 +3079,8 @@
                 "operationId": "server_db.AppData.getServer",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3022,7 +3122,8 @@
                 "operationId": "server_db.AppData.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3092,7 +3193,8 @@
                 "operationId": "server_db.IamUser.getViewStatCountAdmin",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [],
                 "responses": {
@@ -3118,7 +3220,8 @@
                 "operationId": "server_db.IamUser.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3153,7 +3256,8 @@
                 "operationId": "server_db.IamUserApp.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3211,7 +3315,8 @@
                 "operationId": "server.info.info",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [],
                 "responses": {
@@ -3237,7 +3342,8 @@
                 "operationId": "server.installation.postDemo",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3285,7 +3391,8 @@
                 "operationId": "server.installation.deleteDemo",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3318,7 +3425,8 @@
                 "operationId": "server_db.ORM.getViewObjects",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3348,7 +3456,8 @@
                 "operationId": "server_db.ORM.getViewInfo",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3378,7 +3487,8 @@
                 "operationId": "server_db.Log.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3480,7 +3590,8 @@
                 "operationId": "server_db.Log.getStatusCodes",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [],
                 "responses": {
@@ -3506,7 +3617,8 @@
                 "operationId": "server_db.Log.getStat",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3584,7 +3696,8 @@
                 "operationId": "server_db.Log.getFiles",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [],
                 "responses": {
@@ -3610,7 +3723,8 @@
                 "operationId": "server.iam.iamAdminServerConfigGet",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3669,7 +3783,8 @@
                 "operationId": "server.iam.iamAdminServerConfigUpdate",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3736,7 +3851,8 @@
                 "operationId": "server.iam.iamUserGet",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3778,7 +3894,8 @@
                 "operationId": "server.iam.iamAuthenticateUserUpdate",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3863,7 +3980,8 @@
                 "operationId": "server.iam.iamUserGetAdmin",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -3929,7 +4047,8 @@
                 "operationId": "server_db.IamUser.updateAdmin",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -4013,7 +4132,8 @@
                 "operationId": "server.iam.iamAppAccessGet",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -4061,7 +4181,8 @@
                 "summary": "",
                 "operationId": "server.socket.socketConnect",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -4136,7 +4257,8 @@
                 "summary": "",
                 "operationId": "server.socket.socketConnect",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -4214,7 +4336,8 @@
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserSignup",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -4280,7 +4403,8 @@
                 "operationId": "server.iam.iamAuthenticateUser",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBasic"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBasic"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -4329,7 +4453,8 @@
                 "operationId": "server.iam.iamUserLogout",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -4374,7 +4499,8 @@
                 "operationId": "server.iam.iamUserLogout",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -4417,7 +4543,9 @@
             "post": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateMicroservice",
-                "security":[],
+                "security":[
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
+                ],
                 "parameters": [
                         {
                             "$ref": "#/components/parameters/paths/server_app_id"
@@ -4463,7 +4591,8 @@
                 "summary": "",
                 "operationId": "serviceregistry.messagequeue.messageQueue",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -4524,7 +4653,8 @@
                 "summary": "",
                 "operationId": "apps_common_src_functions.common_geolocation.getIP",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -4594,7 +4724,8 @@
                 "summary": "",
                 "operationId": "apps_common_src_functions.common_geolocation.getPlace",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"}
+                    {"$ref": "#/components/securitySchemes/SecurityApp"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
                 ],
                 "parameters": [
                         {
@@ -4801,6 +4932,11 @@
                 "description":"Syntax: Bearer [app access, app_access_verification or admin token using base64]",
                 "type":"http",
                 "schema":"bearer"
+            },
+            "AuthorizationAccess":{
+                "description":"Authorization access to path, FFB sends path using uuid, server decrypts REST API path that can be accessed in the server only, set start path, ffb path and font path to public",
+                "enum":["public", "server"],
+                "default":"server"
             },
             "app-id":{
                 "description":"Should be in all requests to identify app",

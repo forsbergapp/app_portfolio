@@ -46,11 +46,19 @@ const template = props => `
                                             `<div data-changed-record='0' class='menu_openapi_detail_servers_row common_row'>
                                                 <div class='list_readonly' data-column='url'>${row.url}</div>
                                                 <div class='list_readonly' data-column='description'>${row.description}</div>
-                                                <div class='list_readonly' contentEditable='true' data-column='type'>${row.variables.type.default??''}</div>
-                                                <div class='list_readonly' contentEditable='true' data-column='protocol'>${row.variables.protocol.default??''}</div>
+                                                <div class='list_readonly' data-column='x-type'>${row['x-type'].default??''}</div>
+                                                <div class='list_readonly' data-column='protocol'>${row.variables.protocol.default??''}</div>
                                                 <div class='common_input list_edit' contentEditable='true' data-column='host'>${row.variables.host.default??''}</div>
-                                                <div class='common_input list_edit' contentEditable='true' data-column='port'>${row.variables.port.default??''}</div>
-                                                <div class='common_input list_edit' contentEditable='true' data-column='basePath'>${row.variables.basePath.default??''}</div>
+                                                ${row['x-type'].default!='NOHANGING_HTTPS'?
+                                                    `<div class='common_input list_edit' contentEditable='true' data-column='port'>${row.variables.port.default??''}</div>`
+                                                    :
+                                                    `<div class='list_readonly' data-column='port'>${row.variables.port.default??''}</div>`
+                                                }
+                                                ${row['x-type'].default=='REST_API'?
+                                                    `<div class='common_input list_edit' contentEditable='true' data-column='basePath'>${row.variables.basePath.default??''}</div>`
+                                                    :
+                                                    `<div class='list_readonly' data-column='basePath'>${row.variables.basePath.default??''}</div>`
+                                                }
                                             </div>`).join('')
                                     }`
                             }`;

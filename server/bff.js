@@ -815,7 +815,7 @@ const bffResponse = async parameters =>{
                             default:{
                                 //unknown path, redirect to hostname
                                 bff_parameters.res?
-                                bff_parameters.res.redirect(`http://${openApi.servers.filter(row=>row.variables.type.default=='APP')[0].variables.host.default}:${openApi.servers.filter(row=>row.variables.type.default=='APP')[0].variables.port.default}`):
+                                bff_parameters.res.redirect(`http://${openApi.servers.filter(row=>row['x-type'].default=='APP')[0].variables.host.default}:${openApi.servers.filter(row=>row['x-type'].default=='APP')[0].variables.port.default}`):
                                     null;
                             }
                         }
