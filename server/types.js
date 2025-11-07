@@ -34,6 +34,7 @@
  * @typedef {object}        server_apps_globals
  * @property {string}       rest_resource_bff
  * @property {string}       app_rest_api_version
+ * @property {string}       app_rest_api_basepath
  * @property {number|null}  app_common_app_id
  * @property {number|null}  app_admin_app_id
  * @property {number|null}  app_start_app_id
@@ -189,7 +190,7 @@
  *              host:string,
  *              url:string,
  *              method: server_server_req['method'],
- *              parameters: string,
+ *              app_query:URLSearchParams|null,
  *              body:*,
  *              idToken:string
  *              authorization:string,

@@ -127,7 +127,7 @@ const commonGetFile = async parameters =>{
  *              and saved on serverClass in server.js
  *              can return base64 url or secure url:
  *              secure url logic:
- *              replaces url with secure font url /bff/x/[uuid]
+ *              replaces url with secure font url [basePath REST_API server][uuid]
  *              returns array with data to create records in IamEncryption with old url for all font url
  *              returns {css:string, db_records:server['ORM']['Object']['IamEncryption'][]}
  * @param {boolean} base64
@@ -135,6 +135,7 @@ const commonGetFile = async parameters =>{
  * @function
  */
 const commonCssFonts = async (base64=false)=>{
+    const basePathRESTAPI = server.ORM.db.OpenApi.get({app_id:0}).result.servers.filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/server)=>server['x-type'].default=='REST_API')[0].variables.basePath.default;
     const cssFontFace = [];
     /**@type {{uuid:string, url:string}[]}} */
     const url_record = [];
@@ -181,11 +182,11 @@ const commonCssFonts = async (base64=false)=>{
                                                 Created:            new Date().toISOString()}
                                 db_records.push(data);
                                 css.push(row.substring(0, row.indexOf(startString) + startString.length) +
-                                                `/bff/x/${uuid}` + row.substring(row.indexOf(endString)));
+                                                `${basePathRESTAPI}${uuid}` + row.substring(row.indexOf(endString)));
                             }
                             else
                                 css.push(row.substring(0, row.indexOf(startString) + startString.length) +
-                                                `/bff/x/${url_record.filter(row=>row.url == url)[0].uuid}` + row.substring(row.indexOf(endString)));
+                                                `${basePathRESTAPI}${url_record.filter(row=>row.url == url)[0].uuid}` + row.substring(row.indexOf(endString)));
 
                         }                        
                             
@@ -925,7 +926,7 @@ const commonApp = async parameters =>{
             
             const admin_app_id = server.ORM.UtilNumberValue(openApiConfig.APP_ADMIN_APP_ID.default)??1;
             const common_app_id = server.ORM.UtilNumberValue(openApiConfig.APP_COMMON_APP_ID.default)??0;
-            
+            const basePathRESTAPI = server.ORM.db.OpenApi.getViewServers({app_id:common_app_id, data:{pathType:'REST_API'}}).result[0].variables.basePath.default
             const app_id = (await commonAppIam(parameters.host, 'APP')).admin?
                                 admin_app_id:
                                     common_app_id;
@@ -936,7 +937,8 @@ const commonApp = async parameters =>{
                                                             ip:                 parameters.ip, 
                                                             user_agent:         parameters.user_agent ??'', 
                                                             accept_language:    parameters.accept_language??'',
-                                                            openApiConfig:      openApiConfig
+                                                            openApiConfig:      openApiConfig,
+                                                            basePathRESTAPI:    basePathRESTAPI
                                                             },
                                                 methods:    {
                                                             commonAppStart:commonAppStart,

@@ -65,7 +65,7 @@
                     "default": "3000"
                 },
                 "basePath": {
-                    "default": "/bff"
+                    "default": "/bff/x/"
                 }
             },	
 			"x-type": {
@@ -97,10 +97,11 @@
         }
     ],
     "paths": {
-        "/bff/x/${resource_id_string}": {
+        "${resource_id_string}": {
             "post": {
                 "summary": "",
-                "operationId": "server.bff.bffX",
+                "description":"Encrypt URL using UUID for REST API public path, bff uses basePath from REST_API server + this public path to match path",
+                "operationId": "",
                 "security":[
                     {
                         "$ref": "#/components/securitySchemes/AuthorizationAccess",
@@ -132,6 +133,26 @@
                                 }
                             }
 			            },
+                "responses": {}
+            },
+            "get": {
+                "summary": "",
+                "description":"Encrypt URL using font UUID + user UUID for CSS font url public path",
+                "operationId": "",
+                "security":[
+                    {
+                        "$ref": "#/components/securitySchemes/AuthorizationAccess",
+                        "default":"public"
+                    }
+                ],
+                "parameters": [
+                        {
+                            "$ref": "#/components/parameters/paths/resource_id_string",
+                            "description":"syntax UUID~UUID meaning fontUUID + '~' + userUUID added at each app instance start and used in IamEncryption",
+                            "in":"path",
+                            "required":true
+                        }
+                ],
                 "responses": {}
             }
         },

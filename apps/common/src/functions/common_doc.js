@@ -313,23 +313,7 @@ const markdownRender = async parameters =>{
                                 //Table path
                                 `|{#kv}${method[0].toUpperCase()}|${path[0]}|\n` +
                                 '|:---|:---|\n' + 
-                                `|**Summary**|${HTMLEntities(method[1].summary,true)}|\n` +
-                                `|**operationId**|${method[1].operationId}|\n` +
-                                `|**Parameters**|${HTMLEntities(JSON.stringify(method[1].parameters, undefined,2),true)}|\n` +
-                                `${method[1]?.requestBody?
-                                    `|**Request body**||\n`+
-                                    `|Description|${HTMLEntities(method[1]?.requestBody.description, true)}|\n`+
-                                    `|Required|${method[1]?.requestBody.required}|\n`+
-                                    `|Content|${HTMLEntities(JSON.stringify(method[1]?.requestBody.content, undefined,2),true)}|\n`
-                                    :''
-                                }` +
-                                '|**Responses**||\n' +
-                                `${Object.entries(method[1].responses).length>0?
-                                        Object.entries(method[1].responses).map(([status, response]) =>
-                                            `|${status}|${HTMLEntities(JSON.stringify(response, undefined,2),true)}|\n`
-                                        ).join(''):
-                                        '\n'
-                                }\n`
+                                `||${HTMLEntities(JSON.stringify(method[1], undefined,2),true)}|\n`
                             ).join('')}\n`
                         ).join('')}\n` +
                         //Table components

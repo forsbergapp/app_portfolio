@@ -291,11 +291,12 @@ class serverClass {
                                                         Type:parameters.encryption_type,
                                                         Secret: secret}):
                 null;
+        const basePathRESTAPI = server.ORM.db.OpenApi.get({app_id:0}).result.servers.filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/server)=>server['x-type'].default=='REST_API')[0].variables.basePath.default;
         const url = (parameters.url?
                             //external url should be syntax [protocol]://[host + optional port]/[path]
                             //implements same path for external url
-                            (protocol + '://' + parameters.url.split('/')[2] + '/bff/x/' + uuid):
-                                (protocol + '://' + parameters.host + ':' + parameters.port + '/bff/x/' + uuid));
+                            (protocol + '://' + parameters.url.split('/')[2] + basePathRESTAPI + uuid):
+                                (protocol + '://' + parameters.host + ':' + parameters.port + basePathRESTAPI + uuid));
 
         /**@type{import('node:http').RequestOptions['headers'] & {'app-id'?:number, 'app-signature'?:string}} */
         const headers = {
