@@ -118,6 +118,7 @@
     *                      user_agent:string, 
     *                      accept_language:string,
     *                      openApiConfig:server['ORM']['Object']['OpenApi']['components']['parameters']['config'],
+    *                      basePathRESTAPI:string
     *                      },
     *        methods:      {
     *                      commonAppStart:import('../common.js')['commonAppStart'],
@@ -237,6 +238,7 @@
                                 //Config Server	
                                 rest_resource_bff:              rest_resource_bff,
                                 app_rest_api_version:           app_rest_api_version,
+                                app_rest_api_basepath:          props.data.basePathRESTAPI,
                                 //Config ServiceApp
                                 app_common_app_id:              common_app_id,
                                 app_admin_app_id:               admin_app_id,
@@ -257,10 +259,10 @@
                                                                         data_app_id:common_app_id})).result.resource
                                                                 .split('url(')
                                                                 .map((/**@type{string}*/row)=>{
-                                                                    if (row.startsWith('/bff/x/'))
+                                                                    if (row.startsWith(props.data.basePathRESTAPI))
                                                                         //add app start uuid after font uuid separated with '~'
-                                                                        return row.replace( row.substring(0,'/bff/x/'.length+36),
-                                                                                            row.substring(0,'/bff/x/'.length+36) + '~' + postData.uuid);
+                                                                        return row.replace( row.substring(0,props.data.basePathRESTAPI.length+36),
+                                                                                            row.substring(0,props.data.basePathRESTAPI.length+36) + '~' + postData.uuid);
                                                                     else
                                                                         return row;
                                                                 }).join('url(')

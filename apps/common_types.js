@@ -143,6 +143,7 @@
  *              app_framework:number,
  *              app_framework_messages:number,
  *              app_rest_api_version:string|null,
+ *              app_rest_api_basepath:string|null,
  *              app_root:string,
  *              app_div:string,
  *              app_console:{warn:function, info:function, error:function},

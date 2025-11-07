@@ -28,6 +28,7 @@ const COMMON_GLOBAL = {
     app_framework:1,
     app_framework_messages:1,
     app_rest_api_version:null,
+    app_rest_api_basepath:null,
     app_root:'app_root',
     app_div:'app',
     app_console:{warn:COMMON_WINDOW.console.warn, info:COMMON_WINDOW.console.info, error:COMMON_WINDOW.console.error},
@@ -1886,17 +1887,14 @@ const commonFFB = async parameter =>{
     /**
      * @description Front end for backend (FFB) that receives responses 
      *              from backend for frontend (BFF)
-     * @param {{app_id:number,
-     *          uuid:string,
+     * @param {{uuid:string,
      *          secret:string,
      *          response_type?:'SSE'|'TEXT'|'BLOB',
      *          spinner_id?:string|null,
      *          timeout?:number|null,
-     *          app_admin_app_id:number,
      *          rest_api_version: string,
      *          rest_bff_path   : string,
      *          data:{
-     *              locale:string,
      *              idToken: string,
      *              accessToken?:string,
      *              externalToken:string|null,
@@ -1917,7 +1915,7 @@ const commonFFB = async parameter =>{
         parameters.data.query = parameters.data.query==null?'':parameters.data.query;
         parameters.data.body = parameters.data.body?parameters.data.body:null;
         //admin uses ADMIN instead of APP_ACCESS so all ADMIN requests use separate admin token
-        const ROLE = (parameters.app_id == parameters.app_admin_app_id && parameters.data.authorization_type =='APP_ACCESS')?
+        const ROLE = (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id && parameters.data.authorization_type =='APP_ACCESS')?
                         'ADMIN':parameters.data.authorization_type;
         switch (ROLE){
             case 'APP_ACCESS_EXTERNAL':{
@@ -1936,14 +1934,15 @@ const commonFFB = async parameter =>{
             }
         }
         //add common query parameter
-        parameters.data.query += '&locale=' + (parameters.data.locale??'');
+        parameters.data.query += '&locale=' + (COMMON_GLOBAL.user_locale??'');
 
         //encode query parameters
         const encodedparameters = parameters.data.query?commonWindowToBase64(parameters.data.query):'';
         const bff_path = parameters.rest_bff_path + '/' + 
                             ROLE.toLowerCase() + 
                             '/v' + (parameters.rest_api_version ??1);
-        const url = ('/bff/x/' + parameters.uuid);
+        //public url
+        const url = (COMMON_GLOBAL.app_rest_api_basepath + parameters.uuid);
 
         if (parameters.spinner_id && COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
             COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.add('common_loading_spinner');
@@ -1964,11 +1963,11 @@ const commonFFB = async parameter =>{
                                         key:    JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k, 
                                         data:JSON.stringify({  
                                                 headers:{
-                                                        'app-id':       parameters.app_id,
+                                                        'app-id':       COMMON_GLOBAL.app_id,
                                                         'app-signature':COMMON_GLOBAL.x.encrypt({ 
                                                                             iv:     JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
                                                                             key:    JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k, 
-                                                                            data:   JSON.stringify({app_id: parameters.app_id })}),
+                                                                            data:   JSON.stringify({app_id: COMMON_GLOBAL.app_id })}),
                                                         'app-id-token': 'Bearer ' + parameters.data.idToken,
                                                         ...(authorization && {Authorization: authorization}),
                                                         'Content-Type': parameters.response_type =='SSE'?
@@ -1998,7 +1997,7 @@ const commonFFB = async parameter =>{
                             resolve('🗺⛔?');
                             throw ('TIMEOUT');
                         }
-                        }, parameters.app_id == parameters.app_admin_app_id?
+                        }, COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id?
                                 (1000 * 60 * COMMON_GLOBAL.app_requesttimeout_admin_minutes):
                                 parameters.timeout || (1000 * COMMON_GLOBAL.app_requesttimeout_seconds))),
                     /**@ts-ignore */
@@ -2050,17 +2049,14 @@ const commonFFB = async parameter =>{
         ]);
     };
     return await FFB({
-            app_id: COMMON_GLOBAL.app_id,
             uuid: COMMON_GLOBAL.x.uuid??'',
             secret: COMMON_GLOBAL.x.secret??'',
             response_type: parameter.response_type??'TEXT',
             spinner_id: parameter.spinner_id,
             timeout: parameter.timeout,
-            app_admin_app_id:COMMON_GLOBAL.app_admin_app_id,
             rest_api_version: COMMON_GLOBAL.app_rest_api_version??'',
             rest_bff_path   : COMMON_GLOBAL.rest_resource_bff??'',
             data: {
-                locale: COMMON_GLOBAL.user_locale,
                 idToken: COMMON_GLOBAL.token_dt??'',
                 accessToken: (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id)?
                                 COMMON_GLOBAL.token_admin_at??'':
