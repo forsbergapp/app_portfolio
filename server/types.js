@@ -184,6 +184,7 @@
 /**
  * @description BFF server_bff_RestApi_parameters
  * @typedef {{  app_id:number,
+ *              openApi:server['ORM']['Object']['OpenApi'],
  *              endpoint: server_bff_parameters['endpoint'],
  *              host:string,
  *              url:string,

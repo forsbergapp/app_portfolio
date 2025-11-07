@@ -252,36 +252,36 @@ const bffInit = async (req, res) =>{
     }
 };
 /**
- *  Returns response to client
- *  Uses host parameter for errors in requests or unknown route paths
- *  Returns result using ISO20022 format
- *  Error
- *           http:          statusCode,
- *           code:          optional app Code,
- *           text:          error,
- *           developerText: optional text,
- *           moreInfo:      optionlal text
- *  Result
- *          Single resource format supported return types
- *             JSON, resource of any kind
- *             returned as result with resource key and type JSON
- *             HTML
- *             used by initial APP and maintenance
+ * @description Returns response to client
+ *              Uses host parameter for errors in requests or unknown route paths
+ *              Returns result using ISO20022 format
+ *              Error
+ *                  http:          statusCode,
+ *                  code:          optional app Code,
+ *                  text:          error,
+ *                  developerText: optional text,
+ *                  moreInfo:      optionlal text
+ *              Result
+ *                  Single resource format supported return types
+ *                  JSON, resource of any kind
+ *                  returned as result with resource key and type JSON
+ *                  HTML
+ *                  used by initial APP and maintenance
  * 
- *          Multiple resources in JSON format:
- *              list_header : {	total_count:	number of records,
- *                              offset: 		offset parameter or 0,
- *                              count:			limit parameter or number of records
- *                            }
- *              rows        : array of anything
- *          Pagination result
- *              page_header : {	total_count:	number of records or 0,
- *								offset: 		offset parameter or 0,
- *								count:			least number of limit parameter and number of records
- *                            }
- *              rows        : array of anything
- * 
- *  @param {{app_id?:number|null,
+ *              Multiple resources in JSON format:
+ *                  list_header : {	total_count:	number of records,
+ *                                  offset: 		offset parameter or 0,
+ *                                  count:			limit parameter or number of records
+ *                                }
+ *                  rows        : array of anything
+ *              Pagination result
+ *                  page_header : {	total_count:	number of records or 0,
+ *					    			offset: 		offset parameter or 0,
+ *						    		count:			least number of limit parameter and number of records
+ *                                }
+ *                  rows        : array of anything
+ * @function
+ * @param {{app_id?:number|null,
  *           result_request:{   http?:number|null,
  *                              code?:number|string|null,
  *                              text?:*,
@@ -297,7 +297,7 @@ const bffInit = async (req, res) =>{
  *           jwk?:JsonWebKey|null,
  *           iv?:string|null,
  *           res:server['server']['res']}} parameters
- *  @returns {Promise.<void>}
+ * @returns {Promise.<void>}
  */
 const bffResponse = async parameters =>{
     /**
@@ -469,6 +469,223 @@ const bffResponse = async parameters =>{
     }
 };
 /**
+ * @name
+ * @description 
+ * @function
+ * @param {{common_app_id:number,
+ *          req:server['server']['req'],
+ *          res:server['server']['res'],
+ *          openApi:server['ORM']['Object']['OpenApi']}} parameters
+ * @returns {Promise.<server['bff']['parameters']|null|1>}
+ */
+const bffDecryptRequest = async parameters =>{
+    if (parameters.openApi.servers.filter(row=>['APP', 'ADMIN'].includes(row['x-type'].default) && row.variables.basePath.default == parameters.req.url)[0]){
+        //APP or ADMIN server start url
+        //save info for logs in the request object
+        parameters.req.headers.x = {app_id:     parameters.req.headers['app-id']??null, 
+                                    app_id_auth:null, 
+                                    method:     parameters.req.method, 
+                                    url:        parameters.req.url};
+        return {
+                app_id:         0,
+                endpoint:       'APP',
+                //request
+                host:           parameters.req.headers.host ?? '', 
+                url:            parameters.req.originalUrl,
+                method:         parameters.req.method,
+                query:          parameters.req.query?.parameters ?? '',
+                body:           parameters.req.body,
+                security_app:   { 
+                                AppId:          parameters.req.headers['content-type'] =='text/event-stream'?
+                                                    0:
+                                                        parameters.req.headers['app-id']??null,
+                                AppSignature:   parameters.req.headers['app-signature']??null,
+                                AppIdToken:     parameters.req.headers['app-id-token']?.replace('Bearer ','')??null
+                                },
+                authorization:  parameters.req.headers.authorization, 
+                //metadata
+                ip:             parameters.req.headers['x-forwarded-for'] || parameters.req.ip, 
+                user_agent:     parameters.req.headers['user-agent'], 
+                accept_language:parameters.req.headers['accept-language'], 
+                //response
+                jwk:            null,
+                iv:             null,
+                res:            parameters.res
+            }
+    }
+    else{
+        //check if REST API or font request
+        //fonts use GET all others use POST
+        if (['POST', 'GET'].includes(parameters.req.method) && parameters.req.url.startsWith('/bff/x/') && parameters.req.url.length>'/bff/x/'.length){
+            //lookup uuid in IamEncryption or ServiceRegistry for microservice
+            /**@type{server['ORM']['Object']['IamEncryption']}*/
+            const encryptionData = (server.ORM.db.IamEncryption.get({app_id:parameters.common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
+                                    .filter((/**@type{server['ORM']['Object']['IamEncryption']}*/encryption)=>
+                                            encryption.Uuid==(parameters.req.url.substring('/bff/x/'.length).split('~')[0])
+                                    )[0] ?? (server.ORM.db.ServiceRegistry.get({app_id:parameters.common_app_id, resource_id:null, data:{name:null}}).result ?? [])
+                                    .filter((/**@type{server['ORM']['Object']['ServiceRegistry']}*/service)=>service.Uuid==(parameters.req.url.substring('/bff/x/'.length).split('~')[0]))
+                                    .map((/**@type{server['ORM']['Object']['ServiceRegistry']}*/service)=>{
+                                        return {
+                                            Id:                 null,
+                                            Uuid:               service.Uuid,
+                                            AppId:             0,
+                                            IamAppIdTokenId:null,
+                                            Secret:             service.Secret,
+                                            Url:                null,
+                                            Type:               'MICROSERVICE',
+                                            Created:            null};})[0];
+                                    
+            if (encryptionData){
+                if(encryptionData.Type=='FONT'){
+                    //font request
+                    const token = server.ORM.db.IamAppIdToken.get({ app_id:parameters.common_app_id, 
+                                    resource_id:(server.ORM.db.IamEncryption.get({app_id:parameters.common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
+                                                    .filter((/**@type{server['ORM']['Object']['IamEncryption']}*/encryption)=>
+                                                            encryption.Uuid==(parameters.req.url.substring('/bff/x/'.length).split('~')[1])
+                                                    )[0].IamAppIdTokenId, 
+                                    data:{data_app_id:null}}).result[0].Token;
+                    if (token){
+                        server.socket.socketClientPostMessage({app_id:parameters.common_app_id,
+                                                        resource_id:null,
+                                                        data:{  data_app_id:null,
+                                                                iam_user_id:null,
+                                                                idToken:token,
+                                                                message:JSON.stringify({
+                                                                            uuid:parameters.req.url.substring('/bff/x/'.length).split('~')[0],
+                                                                            url: encryptionData.Url
+                                                                        }),
+                                                                message_type:'FONT_URL'
+                                                            }
+                                                    });
+                        return 1;
+                    }
+                    else
+                        return null;
+                }
+                else{
+                    //REST API request
+                    const jwk = JSON.parse(Buffer.from(encryptionData.Secret, 'base64').toString('utf-8')).jwk;
+                    const iv  = JSON.parse(Buffer.from(encryptionData.Secret, 'base64').toString('utf-8')).iv;
+                    /**
+                     * @type {{headers:{
+                     *                 'app-id':       number,
+                     *                 'app-signature':string,
+                     *                 'app-id-token': string,
+                     *                 Authorization?: string,
+                     *                 'Content-Type': string,
+                     *                 },
+                     *         method: string,
+                     *         url:    string,
+                     *         body:   *}}}
+                     */
+                    return await server.security.securityTransportDecrypt({ 
+                                app_id:0,
+                                encrypted:  parameters.req.body.x,
+                                jwk:        jwk,
+                                iv:         iv})
+                                .then(result=>{
+                                    const decrypted = JSON.parse(result);
+                                    const endpoint = decrypted.url.startsWith(parameters.openApi.components.parameters.config.SERVER_REST_RESOURCE_BFF.default + '/')?
+                                            (decrypted.url.split('/')[2]?.toUpperCase()):
+                                                'APP';
+                                    const idToken = //All external roles and microservice do not use AppId Token
+                                                        (endpoint.indexOf('EXTERNAL')>-1 ||
+                                                        endpoint.indexOf('MICROSERVICE')>-1)?
+                                                                '':
+                                                                decrypted.headers['app-id-token']?.replace('Bearer ',''); 
+                            
+                                    return server.iam.iamAuthenticateCommon({
+                                            idToken: idToken, 
+                                            endpoint:endpoint,
+                                            authorization: decrypted.headers.Authorization??'', 
+                                            host: parameters.req.headers.host ?? '', 
+                                            security:{
+                                                        IamEncryption:encryptionData,
+                                                        idToken:idToken,
+                                                        AppId:decrypted.headers['app-id'], 
+                                                        AppSignature: decrypted.headers['app-signature'],
+                                            },
+                                            ip: parameters.req.headers['x-forwarded-for'] || parameters.req.ip,
+                                            res:parameters.res
+                                            })
+                                            .then(authenticate=>{
+                                                //save decrypted info for logs
+                                                parameters.req.headers.x = {app_id:     decrypted?.headers['app-id']??null, 
+                                                                            app_id_auth:authenticate.app_id !=null?1:0, 
+                                                                            method:     decrypted?.method??null, 
+                                                                            url:        decrypted?.url??null};
+                                                return  (authenticate.app_id !=null && decrypted)?
+                                                            {
+                                                            app_id:         authenticate.app_id,
+                                                            endpoint:       endpoint,
+                                                            //request
+                                                            host:           parameters.req.headers.host ?? '', 
+                                                            url:            decrypted.url,
+                                                            method:         decrypted.method,
+                                                            query:          (decrypted.url.indexOf('?')>-1?
+                                                                                Array.from(new URLSearchParams(decrypted.url
+                                                                                .substring(decrypted.url.indexOf('?')+1)))
+                                                                                .reduce((query, param)=>{
+                                                                                    const key = {[param[0]] : decodeURIComponent(param[1])};
+                                                                                    return {...query, ...key};
+                                                                                                /**@ts-ignore */
+                                                                                }, {}):null)?.parameters ?? '',
+                                                            body:           decrypted.body?JSON.parse(decrypted.body):null,
+                                                            security_app:   { 
+                                                                            AppId: decrypted.headers['Content-Type'] =='text/event-stream'?
+                                                                                0:
+                                                                                    decrypted.headers['app-id']??null,
+                                                                            AppSignature: decrypted.headers['app-signature']??null,
+                                                                            AppIdToken: decrypted.headers['app-id-token']?.replace('Bearer ','')??null
+                                                                            },
+                                                            authorization:  decrypted.headers.Authorization??null, 
+                                                            //metadata
+                                                            ip:             parameters.req.headers['x-forwarded-for'] || parameters.req.ip, 
+                                                            user_agent:     parameters.req.headers['user-agent'], 
+                                                            accept_language:parameters.req.headers['accept-language'], 
+                                                            //response
+                                                            jwk:            jwk,
+                                                            iv:             iv,
+                                                            res:            parameters.res}:
+                                                                null;
+                                            });
+                                })
+                                .catch(()=>
+                                    //decrypt failed
+                                    null
+                                );
+                }
+                
+            }
+            else{
+                //invalid request
+                //no encryption data
+                return null;
+            }
+        }
+        else{
+            //request not server start url, REST API url or font url
+            return  {
+                    app_id:         0,
+                    endpoint:       'APP',
+                    host:           parameters.req.headers.host ?? '', 
+                    url:            parameters.req.url,
+                    method:         parameters.req.method,
+                    query:          '',
+                    body:           null,
+                    security_app:   null,
+                    authorization:  null, 
+                    ip:             parameters.req.headers['x-forwarded-for'] || parameters.req.ip, 
+                    user_agent:     parameters.req.headers['user-agent'], 
+                    accept_language:parameters.req.headers['accept-language'], 
+                    //response
+                    jwk:            null,
+                    iv:             null,
+                    res:            parameters.res};
+        }
+    }
+};
+/**
  * @name bff
  * @namespace ROUTE_APP
  * @description Backend for frontend (BFF) called from client
@@ -509,241 +726,7 @@ const bffResponse = async parameters =>{
     else{
         const resultbffInit =   await bffInit(req, res);
         const common_app_id = server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default)??0;
-        /**
-         * @returns {Promise.<server['bff']['parameters']|null|1>}
-         */
-        const parameters = async () =>{
-            //if not start url and method='POST and path starts with /bff/x/
-            if (req.url !='/'){
-                //fonts use GET all others use POST
-                if (['POST', 'GET'].includes(req.method) && req.url.startsWith('/bff/x/') && req.url.length>'/bff/x/'.length){
-                    //lookup uuid in IamEncryption or ServiceRegistry for microservice
-                    /**@type{server['ORM']['Object']['IamEncryption']}*/
-                    const encryptionData = (server.ORM.db.IamEncryption.get({app_id:common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
-                                            .filter((/**@type{server['ORM']['Object']['IamEncryption']}*/encryption)=>
-                                                    encryption.Uuid==(req.url.substring('/bff/x/'.length).split('~')[0])
-                                            )[0] ?? (server.ORM.db.ServiceRegistry.get({app_id:common_app_id, resource_id:null, data:{name:null}}).result ?? [])
-                                            .filter((/**@type{server['ORM']['Object']['ServiceRegistry']}*/service)=>service.Uuid==(req.url.substring('/bff/x/'.length).split('~')[0]))
-                                            .map((/**@type{server['ORM']['Object']['ServiceRegistry']}*/service)=>{
-                                                return {
-                                                    Id:                 null,
-                                                    Uuid:               service.Uuid,
-                                                    AppId:             0,
-                                                    IamAppIdTokenId:null,
-                                                    Secret:             service.Secret,
-                                                    Url:                null,
-                                                    Type:               'MICROSERVICE',
-                                                    Created:            null};})[0];
-                                            
-                    if (encryptionData){
-                        if(encryptionData.Type=='FONT'){
-                            const token = server.ORM.db.IamAppIdToken.get({ app_id:common_app_id, 
-                                            resource_id:(server.ORM.db.IamEncryption.get({app_id:common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
-                                                            .filter((/**@type{server['ORM']['Object']['IamEncryption']}*/encryption)=>
-                                                                    encryption.Uuid==(req.url.substring('/bff/x/'.length).split('~')[1])
-                                                            )[0].IamAppIdTokenId, 
-                                            data:{data_app_id:null}}).result[0].Token;
-                            if (token){
-                                server.socket.socketClientPostMessage({app_id:common_app_id,
-                                                                resource_id:null,
-                                                                data:{  data_app_id:null,
-                                                                        iam_user_id:null,
-                                                                        idToken:token,
-                                                                        message:JSON.stringify({
-                                                                                    uuid:req.url.substring('/bff/x/'.length).split('~')[0],
-                                                                                    url: encryptionData.Url
-                                                                                }),
-                                                                        message_type:'FONT_URL'
-                                                                    }
-                                                            });
-                                return 1;
-                            }
-                            else
-                                return null;
-                        }
-                        else{
-                            const jwk = JSON.parse(Buffer.from(encryptionData.Secret, 'base64').toString('utf-8')).jwk;
-                            const iv  = JSON.parse(Buffer.from(encryptionData.Secret, 'base64').toString('utf-8')).iv;
-                            /**
-                             * @type {{headers:{
-                             *                 'app-id':       number,
-                             *                 'app-signature':string,
-                             *                 'app-id-token': string,
-                             *                 Authorization?: string,
-                             *                 'Content-Type': string,
-                             *                 },
-                             *         method: string,
-                             *         url:    string,
-                             *         body:   *}}}
-                             */
-                            return await server.security.securityTransportDecrypt({ 
-                                        app_id:0,
-                                        encrypted:  req.body.x,
-                                        jwk:        jwk,
-                                        iv:         iv})
-                                        .then(result=>{
-                                            const decrypted = JSON.parse(result);
-                                            const endpoint = decrypted.url.startsWith(openApi.components.parameters.config.SERVER_REST_RESOURCE_BFF.default + '/')?
-                                                    (decrypted.url.split('/')[2]?.toUpperCase()):
-                                                        'APP';
-                                            const idToken = //All external roles and microservice do not use AppId Token
-                                                                (endpoint.indexOf('EXTERNAL')>-1 ||
-                                                                endpoint.indexOf('MICROSERVICE')>-1)?
-                                                                        '':
-                                                                        decrypted.headers['app-id-token']?.replace('Bearer ',''); 
-                                    
-                                            return server.iam.iamAuthenticateCommon({
-                                                    idToken: idToken, 
-                                                    endpoint:endpoint,
-                                                    authorization: decrypted.headers.Authorization??'', 
-                                                    host: req.headers.host ?? '', 
-                                                    security:{
-                                                                IamEncryption:encryptionData,
-                                                                idToken:idToken,
-                                                                AppId:decrypted.headers['app-id'], 
-                                                                AppSignature: decrypted.headers['app-signature'],
-                                                    },
-                                                    ip: req.headers['x-forwarded-for'] || req.ip,
-                                                    res:res
-                                                    })
-                                                    .then(authenticate=>{
-                                                        //save decrypted info for logs
-                                                        req.headers.x = {   app_id:     decrypted?.headers['app-id']??null, 
-                                                                            app_id_auth:authenticate.app_id !=null?1:0, 
-                                                                            method:     decrypted?.method??null, 
-                                                                            url:        decrypted?.url??null};
-                                                        return  (authenticate.app_id !=null && decrypted)?
-                                                                    {
-                                                                    app_id:         authenticate.app_id,
-                                                                    endpoint:       endpoint,
-                                                                    //request
-                                                                    host:           req.headers.host ?? '', 
-                                                                    url:            decrypted.url,
-                                                                    method:         decrypted.method,
-                                                                    query:          (decrypted.url.indexOf('?')>-1?
-                                                                                        Array.from(new URLSearchParams(decrypted.url
-                                                                                        .substring(decrypted.url.indexOf('?')+1)))
-                                                                                        .reduce((query, param)=>{
-                                                                                            const key = {[param[0]] : decodeURIComponent(param[1])};
-                                                                                            return {...query, ...key};
-                                                                                                        /**@ts-ignore */
-                                                                                        }, {}):null)?.parameters ?? '',
-                                                                    body:           decrypted.body?JSON.parse(decrypted.body):null,
-                                                                    security_app:   { 
-                                                                                    AppId: decrypted.headers['Content-Type'] =='text/event-stream'?
-                                                                                        0:
-                                                                                            decrypted.headers['app-id']??null,
-                                                                                    AppSignature: decrypted.headers['app-signature']??null,
-                                                                                    AppIdToken: decrypted.headers['app-id-token']?.replace('Bearer ','')??null
-                                                                                    },
-                                                                    authorization:  decrypted.headers.Authorization??null, 
-                                                                    //metadata
-                                                                    ip:             req.headers['x-forwarded-for'] || req.ip, 
-                                                                    user_agent:     req.headers['user-agent'], 
-                                                                    accept_language:req.headers['accept-language'], 
-                                                                    //response
-                                                                    jwk:            jwk,
-                                                                    iv:             iv,
-                                                                    res:            res}:
-                                                                        null;
-                                                    });
-                                        })
-                                        .catch(()=>
-                                            //decrypt failed
-                                            null
-                                        );
-                        }
-                        
-                    }
-                    else{
-                        //no encryption data
-                        return null;
-                    }
-                }
-                else{
-                    //request not using method POST and url that starts with /bff/x/
-                    return  {
-                            app_id:         0,
-                            endpoint:       'APP',
-                            host:           req.headers.host ?? '', 
-                            url:            req.url,
-                            method:         req.method,
-                            query:          '',
-                            body:           null,
-                            security_app:   null,
-                            authorization:  null, 
-                            ip:             req.headers['x-forwarded-for'] || req.ip, 
-                            user_agent:     req.headers['user-agent'], 
-                            accept_language:req.headers['accept-language'], 
-                            //response
-                            jwk:            null,
-                            iv:             null,
-                            res:            res};
-                }
-            }
-            else{
-                //start url
-                /**@type{server['bff']['parameters']['endpoint'] | string} */
-                const endpoint = req.url.startsWith(openApi.components.parameters.config.SERVER_REST_RESOURCE_BFF.default + '/')?
-                                        (req.url.split('/')[2]?.toUpperCase()):
-                                            'APP';
-                const idToken = //All external roles and microservice do not use AppId Token
-                                (endpoint.indexOf('EXTERNAL')>-1 ||
-                                    endpoint.indexOf('MICROSERVICE')>-1)?
-                                        '':
-                                        req.headers['app-id-token']?.replace('Bearer ',''); 
-    
-                const authenticate = endpoint=='APP'?
-                                        null:
-                                            await server.iam.iamAuthenticateCommon({
-                                                idToken: idToken, 
-                                                /**@ts-ignore */
-                                                endpoint:endpoint,
-                                                authorization: req.headers.authorization??'', 
-                                                host: req.headers.host??'', 
-                                                security:{
-                                                    IamEncryption:null,
-                                                    idToken:null,
-                                                    AppId:req.headers['app-id'], 
-                                                    AppSignature: null,
-                                                },
-                                                ip: req.headers['x-forwarded-for'] || req.ip, 
-                                                res:res
-                                                });
-                //save info for logs
-                req.headers.x = {   app_id:     req.headers['app-id']??null, 
-                                    app_id_auth:null, 
-                                    method:     req.method, 
-                                    url:        req.url};
-                return (endpoint=='APP' ||authenticate?.app_id != null)?{
-                        app_id:         authenticate?.app_id??0,
-                        /**@ts-ignore */
-                        endpoint:       endpoint,
-                        //request
-                        host:           req.headers.host ?? '', 
-                        url:            req.originalUrl,
-                        method:         req.method,
-                        query:          req.query?.parameters ?? '',
-                        body:           req.body,
-                        security_app:   { 
-                                        AppId: req.headers['content-type'] =='text/event-stream'?
-                                            0:
-                                                req.headers['app-id']??null,
-                                        AppSignature: req.headers['app-signature']??null,
-                                        AppIdToken: req.headers['app-id-token']?.replace('Bearer ','')??null
-                                        },
-                        authorization:  req.headers.authorization, 
-                        //metadata
-                        ip:             req.headers['x-forwarded-for'] || req.ip, 
-                        user_agent:     req.headers['user-agent'], 
-                        accept_language:req.headers['accept-language'], 
-                        //response
-                        jwk:            null,
-                        iv:             null,
-                        res:            res
-                    }:null;
-            }
-        };
+        
         if (resultbffInit.reason == null){
             //If first time, when no admin exists, then display maintenance for users
             if (server.ORM.db.IamUser.get(0, null).result.length==0 && (await server.app_common.commonAppIam(req.headers.host)).admin == false){
@@ -757,8 +740,10 @@ const bffResponse = async parameters =>{
                                         res:res});
             }
             else{
+                //decrypt request
                 /**@type{server['bff']['parameters']|null|1} */
-                const bff_parameters = await parameters();
+                const bff_parameters = await bffDecryptRequest({common_app_id:common_app_id, req:req, res:res, openApi:openApi});
+
                 //if decrypt failed, authentication failed or font
                 if (bff_parameters==null || bff_parameters==1){
                     if (bff_parameters==1){
@@ -824,10 +809,9 @@ const bffResponse = async parameters =>{
                         //REST API route
                         //REST API requests from client are encoded using base64
                         const decodedquery = bff_parameters.query?decodeURIComponent(Buffer.from(bff_parameters.query, 'base64').toString('utf-8')):'';   
-                        const decodedbody = bff_parameters.body?.data?JSON.parse(decodeURIComponent(Buffer.from(bff_parameters.body.data, 'base64').toString('utf-8'))):'';   
-                        
                         return await bffRestApi({  
                                                 app_id:bff_parameters.app_id,
+                                                openApi:openApi,
                                                 endpoint:bff_parameters.endpoint,
                                                 /**@ts-ignore */
                                                 method:bff_parameters.method.toUpperCase(),
@@ -839,7 +823,7 @@ const bffResponse = async parameters =>{
                                                 idToken:bff_parameters.security_app?.AppIdToken??'', 
                                                 authorization:bff_parameters.authorization ?? '', 
                                                 parameters:decodedquery, 
-                                                body:decodedbody,
+                                                body:bff_parameters.body?.data?JSON.parse(decodeURIComponent(Buffer.from(bff_parameters.body.data, 'base64').toString('utf-8'))):'',
                                                 res:bff_parameters.res})
                                 .then(result_service => {
                                     const log_result = server.ORM.UtilNumberValue(openApi.components.parameters.config.LOG_REQUEST_LEVEL.default)==2?result_service:'✅';
@@ -911,7 +895,6 @@ const bffRestApi = async (routesparameters) =>{
     const URI_query = routesparameters.parameters;
     const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
     const app_query = URI_query?new URLSearchParams(URI_query):null;
-    
     /**
      * Authenticates if user has access to given resource
      * Authenticates IAM parameters using IAM token claims if path requires
@@ -954,7 +937,7 @@ const bffRestApi = async (routesparameters) =>{
      * @param {*} components
      * @returns {Object.<string, string|number|null>|null}
      */
-    const resourceId =(paths, components) =>
+    const openApiResourceId =(paths, components) =>
         paths[0].indexOf('${')>-1?
             paths[1][Object.keys(paths[1])[0]].parameters
             .filter((/**@type{*}*/parameter)=>
@@ -968,20 +951,23 @@ const bffRestApi = async (routesparameters) =>{
                 //no resource id string in defined path
                 null;
 
-    //get paths and components keys in OpenApi
-    const configPath = (() => { 
-        const { paths, components } = server.ORM.db.OpenApi.get({app_id:server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'APP_COMMON_APP_ID'}}).result) ?? 0}).result; 
-            return {paths:Object.entries(paths).filter(path=>   
-                //match with resource id string             
-                (path[0].indexOf('${')>-1 && path[0].substring(0,path[0].lastIndexOf('${')) == URI_path.substring(0,URI_path.lastIndexOf('/')+1)) ||
-                //match without resource id string
-                path[0].indexOf('${')==-1 && path[0] == URI_path
-                )[0],
-                components};    
-        
+    /**
+     * @description get paths and components keys in OpenApi
+     * @returns {{
+     *              paths: [string, *]
+     *          }}
+     */
+    const openApiPath = (() => { 
+        return {
+            paths:      Object.entries(routesparameters.openApi.paths).filter(path=>   
+                            //match with resource id string             
+                            (path[0].indexOf('${')>-1 && path[0].substring(0,path[0].lastIndexOf('${')) == URI_path.substring(0,URI_path.lastIndexOf('/')+1)) ||
+                            //match without resource id string
+                            path[0].indexOf('${')==-1 && path[0] == URI_path
+                            )[0]};
     })();
 
-    if (configPath.paths){
+    if (openApiPath.paths){
         /**
          * @description get parameter in path
          * @param{string} key
@@ -990,7 +976,8 @@ const bffRestApi = async (routesparameters) =>{
         const getParameter = key => methodObj.parameters.filter((/**@type{*}*/parameter)=>
                                                                         Object.keys(parameter)[0]=='$ref' && Object.values(parameter)[0]=='#/components/parameters/paths/' + key)[0];
 
-        const methodObj = configPath.paths[1][routesparameters.method.toLowerCase()];
+                        /**@ts-ignore */
+        const methodObj = openApiPath.paths[1][routesparameters.method.toLowerCase()];
         if (methodObj){   
             /**
              * @param {{}} keys
@@ -1018,7 +1005,7 @@ const bffRestApi = async (routesparameters) =>{
                                                             //component parameter that has in=query
                                                             (   '$ref' in parameter && 
                                                                 'required' in parameter && 
-                                                                configPath.components.parameters.paths[parameter['$ref'].split('#/components/parameters/paths/')[1]].in == 'query')
+                                                                routesparameters.openApi.components.parameters.paths[parameter['$ref'].split('#/components/parameters/paths/')[1]].in == 'query')
                                                         )
                                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
                                                             if ('$ref' in key )
@@ -1062,7 +1049,8 @@ const bffRestApi = async (routesparameters) =>{
                                             return {...keys, ...{   
                                                                 [key['$ref'].split('#/components/parameters/paths/')[1]]:
                                                                 {
-                                                                    data:       resourceId(configPath.paths, configPath.components)?.[key['$ref'].split('#/components/parameters/paths/')[1]],
+                                                                    data:       openApiResourceId(  openApiPath.paths, 
+                                                                                                    routesparameters.openApi.components)?.[key['$ref'].split('#/components/parameters/paths/')[1]],
                                                                     //IAM parameters are required by default
                                                                     required:   (key?.required ?? (key['$ref'].split('#/components/parameters/paths/')[1].startsWith('IAM')?true:false)),
                                                                     type:       'PATH',
@@ -1153,7 +1141,8 @@ const bffRestApi = async (routesparameters) =>{
                 const singleResource = () => functionRESTAPI=='commonModuleRun'?
                                                 false:
                                                     (routesparameters.method!='GET' ||functionRESTAPI=='microserviceRequest')?
-                                                        true: (Object.keys(resourceId(configPath.paths, configPath.components)??{}).length==1 && Object.values(resourceId(configPath.paths, configPath.components)??{})[0]!=null);
+                                                        true: ( Object.keys(openApiResourceId(openApiPath.paths, routesparameters.openApi.components)??{}).length==1 && 
+                                                                Object.values(openApiResourceId(openApiPath.paths, routesparameters.openApi.components)??{})[0]!=null);
                 //return result using ISO20022 format
                 //send only parameters to the function if declared true
                 const result = await  moduleRESTAPI[functionRESTAPI]({
@@ -1170,13 +1159,13 @@ const bffRestApi = async (routesparameters) =>{
                                 ...(getParameter('server_microservice_service') && {service:            getParameter('server_microservice_service').default}),
                                 ...(getParameter('server_message_queue_type')   && {message_queue_type: getParameter('server_message_queue_type').default}),
                                 ...(getParameter('server_method')               && {method:             routesparameters.method}),
-                                ...(Object.keys(parametersIn)?.length>0       && {data:               {...parametersIn}}),
+                                ...(Object.keys(parametersIn)?.length>0         && {data:               {...parametersIn}}),
                                 ...(getParameter('server_endpoint')             && {endpoint:           routesparameters.endpoint}),
-                                ...(resourceId( configPath.paths, 
-                                                configPath.components)          && {resource_id:        Object.values(
-                                                                                                            resourceId( configPath.paths, 
-                                                                                                                        configPath.components)??{}
-                                                                                                        )[0]})
+                                ...(openApiResourceId(  openApiPath.paths, 
+                                                        routesparameters.openApi.components) && {resource_id:   Object.values(
+                                                                                                                        openApiResourceId(  openApiPath.paths, 
+                                                                                                                                            routesparameters.openApi.components)??{}
+                                                                                                                )[0]})
                                 });
                 return { singleResource:singleResource(),
                          operation:methodObj.operationId,
