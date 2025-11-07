@@ -234,7 +234,7 @@ const getStat = async parameters => {
            (file.name.startsWith(`LogRequestVerbose_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
            (regexp_verbose_day.exec(file.name)!=null||regexp_verbose_month.exec(file.name)!=null))){
            //filename format: log_request_info_YYYMMDD.json
-           if (server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'SERVER_FILE_INTERVAL'}}).result=='1D'){
+           if (server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'LOG_FILE_INTERVAL'}}).result=='1D'){
                //return DD
                day = file.name.slice(-7).substring(0,2);
                sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;
