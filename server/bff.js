@@ -175,7 +175,7 @@ const bffMicroservice = async parameters =>{
  * @returns Promise.<{  reason:'ROBOT'|'FAVICON'|'REQUEST'|null}>
  */
 const bffInit = async (req, res) =>{
-    if (req.headers.accept == 'text/event-stream'){
+    if (req.headers.accept?.indexOf(server.CONTENT_TYPE_SSE_ACCEPT)>-1){
         //SSE, log since response is open and log again when closing
         server.ORM.db.Log.post({  app_id:0, 
             data:{  object:'LogRequestInfo', 
@@ -224,7 +224,7 @@ const bffInit = async (req, res) =>{
         res.statusCode = result.statusCode;
         res.statusMessage = ' ';
         res.writeHead(res.statusCode, {
-            'Content-Type': 'text/plain;charset=utf-8',
+            'Content-Type': server.CONTENT_TYPE_PLAIN,
             'Content-length':0
         });
         return {reason:'REQUEST'};
@@ -234,7 +234,7 @@ const bffInit = async (req, res) =>{
         //check robots.txt
         if (req.originalUrl=='/robots.txt'){
             res.statusMessage = ' ';
-            res.type('text/plain');
+            res.type(server.CONTENT_TYPE_PLAIN);
             res.write('User-agent: *\nDisallow: /');
             return {reason:'ROBOT'};
         }
@@ -337,7 +337,7 @@ const bffResponse = async parameters =>{
                        res:parameters.res});
     }
     else{
-        if (parameters.res.getHeader('Content-Type')?.startsWith('text/event-stream')){
+        if (parameters.res.getHeader('Content-Type') == server.CONTENT_TYPE_SSE){
             //For SSE so no more update of response
             null;
         }
@@ -518,7 +518,7 @@ const bffDecryptRequest = async parameters =>{
                 query:          parameters.req.query?.parameters ?? '',
                 body:           parameters.req.body,
                 security_app:   { 
-                                AppId:          parameters.req.headers['content-type'] =='text/event-stream'?
+                                AppId:          parameters.req.headers['content-type'] ==server.CONTENT_TYPE_SSE?
                                                     0:
                                                         parameters.req.headers['app-id']??null,
                                 AppSignature:   parameters.req.headers['app-signature']??null,
@@ -541,7 +541,8 @@ const bffDecryptRequest = async parameters =>{
         //match public path without basePath from server of type REST_API
         const OpenApiPathsMatchPublic = bffOpenApiPathMatch({URI_path:URI_path.replace(basePathRESTAPI,''), 
                                                             openApi:parameters.openApi}).paths;
-        if (OpenApiPathsMatchPublic[1][parameters.req.method.toLowerCase()] && 
+        if (OpenApiPathsMatchPublic && 
+            OpenApiPathsMatchPublic[1][parameters.req.method.toLowerCase()] && 
             OpenApiPathsMatchPublic[1][parameters.req.method.toLowerCase()].security
             .filter((/**@type{Object.<string,string>}*/parameter)=>
                     parameter['$ref']=='#/components/securitySchemes/AuthorizationAccess' && 
@@ -661,7 +662,7 @@ const bffDecryptRequest = async parameters =>{
                                                                                 }, {}):null)?.parameters ?? '',
                                                             body:           decrypted.body?JSON.parse(decrypted.body):null,
                                                             security_app:   { 
-                                                                            AppId: decrypted.headers['Content-Type'] =='text/event-stream'?
+                                                                            AppId: decrypted.headers['Content-Type'] ==server.CONTENT_TYPE_SSE?
                                                                                 0:
                                                                                     decrypted.headers['app-id']??null,
                                                                             AppSignature: decrypted.headers['app-signature']??null,
@@ -768,10 +769,6 @@ const bffDecryptRequest = async parameters =>{
                         });
                     }
                     else{
-                        //invalid request or not start url and not font url, redirect to hostname
-                        //bff_parameters.res?
-                        //bff_parameters.res.redirect(`http://${openApi.servers.filter(row=>row['x-type'].default=='APP')[0].variables.host.default}:${openApi.servers.filter(row=>row['x-type'].default=='APP')[0].variables.port.default}`):
-                        //    null;
                         return bffResponse({result_request:{http:401, 
                                                             code:null,
                                                             text:server.iam.iamUtilMessageNotAuthorized(), 
@@ -791,8 +788,7 @@ const bffDecryptRequest = async parameters =>{
                                                                         ip:bff_parameters.ip, 
                                                                         host:bff_parameters.host ?? '', 
                                                                         user_agent:bff_parameters.user_agent, 
-                                                                        accept_language:bff_parameters.accept_language})
-                                                                    .then(result=>result?.http == 301?bff_parameters.res.redirect('/'):result),
+                                                                        accept_language:bff_parameters.accept_language}),
                                             host:bff_parameters.host,
                                             route : 'APP',
                                             res:bff_parameters.res})
@@ -987,6 +983,8 @@ const bffRestApi = async (routesparameters) =>{
                                     }
                                 };
             };
+            const CONTENT_TYPE_JSON_OPENAPI = 'application/json';
+
             //add parameters using tree shaking pattern
             //so only defined parameters defined using openAPI pattern are sent to functions
             const parametersIn = 
@@ -1028,10 +1026,10 @@ const bffRestApi = async (routesparameters) =>{
                                         //BODY:
                                         //all other methods use body to send data
                                         //if additional properties allowed then add to defined parameters or only parameters matching defined parameters
-                                        (methodObj.requestBody?.content && methodObj.requestBody?.content['application/json']?.schema?.additionalProperties)?
-                                            {...routesparameters.body,...Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
+                                        (methodObj.requestBody?.content && methodObj.requestBody?.content[CONTENT_TYPE_JSON_OPENAPI]?.schema?.additionalProperties)?
+                                            {...routesparameters.body,...Object.entries(methodObj.requestBody?.content[CONTENT_TYPE_JSON_OPENAPI]?.schema?.properties)
                                                                             .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{})}:
-                                                        Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties??[])
+                                                        Object.entries(methodObj.requestBody?.content[CONTENT_TYPE_JSON_OPENAPI]?.schema?.properties??[])
                                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{})??{},
                                     ...methodObj.parameters
                                     //PATH

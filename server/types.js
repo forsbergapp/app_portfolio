@@ -47,6 +47,9 @@
  * @property {number}       app_requesttimeout_seconds
  * @property {number}       app_requesttimeout_admin_minutes
  * @property {string}       app_fonts
+ * @property {string}       app_content_type_json,
+ * @property {string}       app_content_type_html,
+ * @property {string}       app_content_type_sse,
  * @property {string|null}  info_link_policy_name
  * @property {string|null}  info_link_policy_url
  * @property {string|null}  info_link_disclaimer_name
@@ -1159,7 +1162,6 @@
  * @property {function} type
  * @property {function} end
  * @property {function} send
- * @property {function} redirect 
  * @property {function} getHeader
  * @property {function} setHeader
  * @property {function} removeHeader

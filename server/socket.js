@@ -287,7 +287,7 @@ const socketPost = async parameters =>{
     else{
         const client_id = Date.now();
         
-        parameters.response.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+        parameters.response.setHeader('Content-Type', server.CONTENT_TYPE_SSE);
         parameters.response.setHeader('Cache-control', 'no-cache');
         parameters.response.setHeader('Connection', 'keep-alive');
 

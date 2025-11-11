@@ -267,6 +267,9 @@
                                                                         return row;
                                                                 }).join('url(')
                                                                 .split('@'),
+                                app_content_type_json:          'application/json; charset=utf-8',
+                                app_content_type_html:          'text/html; charset=utf-8',
+                                app_content_type_sse:           'text/event-stream; charset=utf-8',
                                 //AppData parameters common
                                 info_link_policy_name:          APP_PARAMETER.INFO_LINK_POLICY_NAME,
                                 info_link_policy_url:           APP_PARAMETER.INFO_LINK_POLICY_URL,

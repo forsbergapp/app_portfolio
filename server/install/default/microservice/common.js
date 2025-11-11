@@ -8,6 +8,7 @@ class ClassServerProcess {
     cwd = () => process.cwd().replaceAll('\\','/');
 }
 const serverProcess = new ClassServerProcess();
+const CONTENT_TYPE_JSON = 'application/json; charset=utf-8';
 
 /**
  * @name commonFromBase64
@@ -162,7 +163,7 @@ const commonServerReturn = async parameters=>{
         parameters.res.write(commonEncrypt({secret:parameters.secret, data:message}), 'utf8');
     }
     else{
-        parameters.res.setHeader('Content-Type',  'application/json; charset=utf-8');
+        parameters.res.setHeader('Content-Type',  CONTENT_TYPE_JSON);
         parameters.res.write(commonEncrypt({secret:parameters.secret, data:JSON.stringify(parameters.result)}), 'utf8');
     }
     parameters.res.end();
@@ -271,7 +272,7 @@ const commonRequestUrl = async parameters => {
                                         'User-Agent': 'Server',
                                         'Accept-Language': parameters.language,
                                         ...(parameters.authorization && {Authorization: parameters.authorization}),
-                                        ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
+                                        ...(parameters.method!='GET' && {'Content-Type':  CONTENT_TYPE_JSON}),
                                         'Connection':   'close1'
                                     }
                             }:
@@ -283,7 +284,7 @@ const commonRequestUrl = async parameters => {
                             headers:{
                                         'User-Agent': 'Server',
                                         'Accept-Language': parameters.language,
-                                        'Content-Type':  'application/json',
+                                        'Content-Type':  CONTENT_TYPE_JSON,
                                         'Connection':   'close',
                                     }
                             };
@@ -302,7 +303,7 @@ const commonRequestUrl = async parameters => {
                                                             ...(parameters.external==false &&  {'app-signature':commonEncrypt({ secret:parameters.secret,
                                                                                                                                 data:JSON.stringify({app_id: 0 })})}),
                                                             ...(parameters.external==false && parameters.authorization && {Authorization: parameters.authorization}),
-                                                            ...(parameters.method!='GET' && {'Content-Type':  'application/json'}),
+                                                            ...(parameters.method!='GET' && {'Content-Type':  CONTENT_TYPE_JSON}),
                                                             },
                                                         method: parameters.method,
                                                         url:    restAPIPath + parameters.url.split(restAPIPath)[1],
@@ -370,7 +371,7 @@ const commonRequestUrl = async parameters => {
 const commonRequestData = async parameters =>{
     const read_body = async () =>{
         return new Promise((resolve)=>{
-            if (parameters.req.headers['content-type'] =='application/json'){
+            if (parameters.req.headers['content-type'] ==CONTENT_TYPE_JSON){
                 let body= '';
                 parameters.req.on('data', chunk =>{
                     body += chunk.toString();

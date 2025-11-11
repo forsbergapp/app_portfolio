@@ -37,6 +37,9 @@ const COMMON_GLOBAL = {
     app_function_session_expired:null,
     app_function_sse:null,
     app_fonts:[],
+    app_content_type_json: '',
+    app_content_type_html: '',
+    app_content_type_sse: '',
     app_fonts_loaded:[],
     app_requesttimeout_seconds:5,
     app_requesttimeout_admin_minutes:60,
@@ -561,7 +564,6 @@ const commonMiscPrint = async html => {
  * @param {string} url
  * @param {HTMLElement|null} element
  * @param { 'image/png'|'image/webp'|
- *          'application/json'|
  *          'text/javascript'|
  *          'text/css'} content_type,
  * @param {string|null} content
@@ -1886,7 +1888,7 @@ const commonFFB = async parameter =>{
                             method: 'POST',
                             headers:{
                                         ...(parameters.response_type =='SSE' && {'Cache-control': 'no-cache'}),
-                                        'Content-Type': 'application/json',
+                                        'Content-Type': COMMON_GLOBAL.app_content_type_json,
                                         'Connection':   parameters.response_type =='SSE'?
                                                             'keep-alive':
                                                                 'close',
@@ -1905,8 +1907,8 @@ const commonFFB = async parameter =>{
                                                         'app-id-token': 'Bearer ' + parameters.data.idToken,
                                                         ...(authorization && {Authorization: authorization}),
                                                         'Content-Type': parameters.response_type =='SSE'?
-                                                                            'text/event-stream':
-                                                                                'application/json',
+                                                                            COMMON_GLOBAL.app_content_type_sse:
+                                                                                COMMON_GLOBAL.app_content_type_json,
                                                         },
                                                 method: parameters.data.method,
                                                 url:    bff_path + parameters.data.path + '?parameters=' + encodedparameters,
