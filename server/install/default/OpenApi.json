@@ -5408,14 +5408,6 @@
                         }
                     }
                 },
-            "301": {
-                    "description": "Redirect if user account or path not found",
-                    "content": {
-                        "application/json": {
-                            "schema":{}
-                        }
-                    }
-                },
             "400": {
                     "description": "Bad request",
                     "content":{

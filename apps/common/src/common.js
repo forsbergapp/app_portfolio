@@ -263,7 +263,6 @@ const commonClientLocale = accept_language =>{
  *              .webp files
  *              .png files
  *              .woff2 files
- *              .json
  * @function
  * @param {{app_id:number,
  *          resource_id:string, 
@@ -282,7 +281,6 @@ const commonResourceFile = async parameters =>{
             return {result:{resource:server.commonCssFonts.css}, type:'JSON'};
         }
         case parameters.content_type == 'text/css':
-        case parameters.content_type == 'application/json':
         case parameters.content_type == 'image/webp':
         case parameters.content_type == 'image/png':
         case parameters.content_type == 'font/woff2':{        
@@ -1033,8 +1031,7 @@ const commonAppResource = async parameters =>{
             case parameters.data.content_type == 'font/woff2':
             case parameters.data.content_type == 'text/javascript':
             case parameters.data.content_type == 'image/webp':
-            case parameters.data.content_type == 'image/png':
-            case parameters.data.content_type == 'application/json':{
+            case parameters.data.content_type == 'image/png':{
                 return await commonResourceFile({   app_id:parameters.app_id, 
                                                     resource_id:parameters.resource_id.replaceAll('~','/'), 
                                                     content_type:parameters.data.content_type,

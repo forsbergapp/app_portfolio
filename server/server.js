@@ -16,6 +16,11 @@ const net = await import('node:net');
 class serverClass {
     
     constructor(){
+        this.CONTENT_TYPE_JSON = 'application/json; charset=utf-8';	
+		this.CONTENT_TYPE_HTML = 'text/html; charset=utf-8';	
+		this.CONTENT_TYPE_SSE = 'text/event-stream; charset=utf-8';
+        this.CONTENT_TYPE_SSE_ACCEPT = 'text/event-stream';
+        this.CONTENT_TYPE_PLAIN = 'text/plain; charset=utf-8';
         /**@type{*} */
         this.server_app = {};
         /**@type{*} */
@@ -82,7 +87,7 @@ class serverClass {
         const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
         const read_body = async () =>{
             return new Promise((resolve,reject)=>{
-                if (req.headers['content-type'] =='application/json'){
+                if (req.headers['content-type'] ==this.CONTENT_TYPE_JSON){
                     let body= '';
                     /**@ts-ignore */
                     req.on('data', chunk =>{
@@ -124,12 +129,7 @@ class serverClass {
         res.type =          (/**@type{string}*/type)=>{
                                 res.setHeader('Content-Type', type);
                             };
-    
-        res.redirect =      (/**@type{string}*/url) =>{
-                                res.writeHead(301, {'Location':url});
-                                res.end();
-                            };
-    
+        
         //set headers
         res.setHeader('x-response-time', serverProcess.hrtime());
         req.headers['x-request-id'] =  this.security.securityUUIDCreate().replaceAll('-','');
@@ -182,13 +182,13 @@ class serverClass {
                 case 'JSON':{
                     if (app_cache_control !='')
                         parameters.res.setHeader('Cache-Control', app_cache_control);
-                    parameters.res.type('application/json; charset=utf-8');
+                    parameters.res.type(this.CONTENT_TYPE_JSON);
                     break;
                 }
                 case 'HTML':{
                     if (app_cache_control !='')
                         parameters.res.setHeader('Cache-Control', app_cache_control);
-                    parameters.res.type('text/html; charset=utf-8');
+                    parameters.res.type(this.CONTENT_TYPE_HTML);
                     break;
                 }
                 default:{
@@ -209,24 +209,18 @@ class serverClass {
         else{
             parameters.res.setHeader('Connection', 'Close');
             await setType(parameters.type);
-            if (parameters.route=='APP' && parameters.res.statusCode==301){
-                //result from APP can request to redirect
-                parameters.res.redirect('/');
+            if(parameters.type){
+                parameters.res.setHeader('Cache-control', 'no-cache');
+                parameters.res.setHeader('Access-Control-Max-Age', '0');
             }
-            else{        
-                if(parameters.type){
-                    parameters.res.setHeader('Cache-control', 'no-cache');
-                    parameters.res.setHeader('Access-Control-Max-Age', '0');
-                }
-                parameters.res.statusMessage = parameters.statusMessage;
-                parameters.res.statusCode = parameters.statusCode;
-        
-                if (parameters.res.getHeader('Content-Type')==undefined)
-                    parameters.res.type('text/html; charset=utf-8');
-                
-                write(parameters.result);
-                parameters.res.end();
-            }
+            parameters.res.statusMessage = parameters.statusMessage;
+            parameters.res.statusCode = parameters.statusCode;
+    
+            if (parameters.res.getHeader('Content-Type')==undefined)
+                parameters.res.type(this.CONTENT_TYPE_HTML);
+            
+            write(parameters.result);
+            parameters.res.end();
         }
     };
     /**
@@ -333,7 +327,7 @@ class serverClass {
                             method: 'POST',
                             timeout: parameters.timeout,
                             headers:{
-                                        'Content-Type':  'application/json',
+                                        'Content-Type':  this.CONTENT_TYPE_JSON,
                                         'Connection':   'close'
                                     },
                         };
