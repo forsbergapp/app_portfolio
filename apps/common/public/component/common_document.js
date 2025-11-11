@@ -189,8 +189,12 @@ const component = async props => {
                                         ''
             );
             html = html.replace(table, 
-                    //add extra extended markdown syntax: if first table row starts width |{#kv} then apply class key value class with specific columns widths
-                    `<div class='common_md_tab ${table.split('\n')[0].startsWith('|{#kv}')?'common_md_tab_kv':''}'>${
+                    //add extra extended markdown syntax: if first table row starts width |{#kv} or |{#2kv} then apply corresponding class with specific columns widths
+                    `<div class='common_md_tab ${table.split('\n')[0].startsWith('|{#kv}')?
+                                                    'common_md_tab_kv':
+                                                        table.split('\n')[0].startsWith('|{#2kv}')?
+                                                            'common_md_tab_2kv':
+                                                                ''}'>${
                                 table.split('\n')
                                 //remove alignment row 
                                 .filter(row=>row.indexOf('---')<0)
@@ -229,8 +233,10 @@ const component = async props => {
                 .replaceAll('&crarr;','\n')
                 //use in code blocks so it does not intefere with bold
                 .replaceAll('&Star;','*')
-                //use in table title and inside first column and first value to add key value class
-                .replaceAll('{#kv}','');
+                //use in table title and inside first column and first value 
+                //to add key value class for 2 column tables or double key value class for 3 column tables
+                .replaceAll('{#kv}','')
+                .replaceAll('{#2kv}','');
     };
     
     const onMounted = async () =>{
