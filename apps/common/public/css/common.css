@@ -1989,6 +1989,14 @@ body,
     width:70%;
     white-space: pre-wrap;
 }
+.common_md_tab_2kv .common_md_tab_col1,
+.common_md_tab_2kv .common_md_tab_col2{
+    width:15%;
+}
+.common_md_tab_2kv .common_md_tab_col3{
+    width:70%;
+}
+
 .common_md_tab_row_title{
 	font-weight: bold;
 }
