@@ -732,8 +732,8 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     break;
                 }
                 case event.target.classList.contains('gps_click')?event_target_id:'':{
-                    common.commonGlobalGet('component').common_map?.methods?.goTo?
-                        common.commonGlobalGet('component').common_map.methods.goTo({
+                    common.commonGlobalGet('component')[common.commonGlobalGet('app_common_app_id') + '_' + 'common_map']?.methods?.goTo?
+                        common.commonGlobalGet('component')[common.commonGlobalGet('app_common_app_id') + '_' + 'common_map'].methods.goTo({
                             latitude:   event.target.getAttribute('data-latitude') ?? '',
                             longitude:  event.target.getAttribute('data-longitude') ?? '',
                             ip:         event.target.getAttribute('data-ip') ?? ''

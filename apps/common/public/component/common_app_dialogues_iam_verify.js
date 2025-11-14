@@ -83,8 +83,9 @@ const component = async props => {
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_verification_char5').classList.remove('common_input_error');
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_verification_char6').classList.remove('common_input_error');
 
-                if ((props.data.user_verification_type== '3' &&                     
-                    await props.methods.COMMON.commonGlobalGet('component').common_app_dialogues_user_menu_iam_user?.methods?.commonUserUpdate(verification_code)) ||
+                if ((props.data.user_verification_type== '3' &&       
+                    
+                    await props.methods.COMMON.commonGlobalGet('component')[props.methods.COMMON.commonGlobalGet('app_common_app_id') + '_' + 'common_app_dialogues_user_menu_iam_user']?.methods?.commonUserUpdate(verification_code)) ||
                     await props.methods.COMMON.commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
                     props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_verify');
                     props.methods.COMMON.commonDialogueShow('LOGIN');
@@ -139,12 +140,13 @@ const component = async props => {
                     case event_target_id=='common_app_dialogues_iam_verify_verification_char3':
                     case event_target_id=='common_app_dialogues_iam_verify_verification_char4':
                     case event_target_id=='common_app_dialogues_iam_verify_verification_char5':{
-                        props.methods.COMMON.commonGlobalGet('component').common_app_dialogues_iam_verify?.methods?.commonUserVerifyCheckInput( props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event.target.id}`), 
+                        
+                        props.methods.COMMON.commonGlobalGet('component')[props.methods.COMMON.commonGlobalGet('app_common_app_id') + '_' + 'common_app_dialogues_iam_verify']?.methods?.commonUserVerifyCheckInput( props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event.target.id}`), 
                                                         'common_app_dialogues_iam_verify_verification_char' + (Number(event.target.id.substring(event.target.id.length-1))+1));
                         break;
                     }
                     case event_target_id=='common_app_dialogues_iam_verify_verification_char6':{
-                        props.methods.COMMON.commonGlobalGet('component').common_app_dialogues_iam_verify?.methods?.commonUserVerifyCheckInput(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event.target.id}`), '');
+                        props.methods.COMMON.commonGlobalGet('component')[props.methods.COMMON.commonGlobalGet('app_common_app_id') + '_' + 'common_app_dialogues_iam_verify']?.methods?.commonUserVerifyCheckInput(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event.target.id}`), '');
                         break;
                     }
                 }

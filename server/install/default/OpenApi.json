@@ -2547,6 +2547,9 @@
                                             "password_new":{
                                                 "type":"string"
                                             },
+                                            "password_reminder":{
+                                                "type":"string"
+                                            },
                                             "bio":{
                                                 "type":"string"
                                             },
@@ -3959,6 +3962,9 @@
                                                 "type":"string"
                                             },
                                             "password_new":{
+                                                "type":"string"
+                                            },
+                                            "password_reminder":{
                                                 "type":"string"
                                             },
                                             "bio":{
