@@ -1854,7 +1854,7 @@ const appMapQibblaShow = () => {
                 ]
             }
         };
-        common.commonGlobalGet('component').common_map?.methods?.drawVectors([geoJSONQibbla]);
+        common.commonGlobalGet('component')[common.commonGlobalGet('app_common_app_id') + '_' + 'common_map']?.methods?.drawVectors([geoJSONQibbla]);
         /**@type{common['commonGeoJSONPolyline']}*/
         const geoJSONQibblaOld = 
         {
@@ -1881,7 +1881,7 @@ const appMapQibblaShow = () => {
                 ]
             }
         };
-        common.commonGlobalGet('component').common_map?.methods?.drawVectors([geoJSONQibblaOld]);
+        common.commonGlobalGet('component')[common.commonGlobalGet('app_common_app_id') + '_' + 'common_map']?.methods?.drawVectors([geoJSONQibblaOld]);
     }
 };
 
