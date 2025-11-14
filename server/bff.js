@@ -471,7 +471,11 @@ const bffDecryptRequest = async parameters =>{
                                                         encryption.Uuid==(parameters.req.url.substring(parameters.basePathRESTAPI.length).split('~')[1])
                                                 )[0].IamAppIdTokenId, 
                                 data:{data_app_id:null}}).result[0].Token;
-                if (token){
+                if (token && 
+                    //Browser has sent the request, apply OWASP 3.2.1 requirement
+                    parameters.req.headers['sec-fetch-dest']== 'font' &&
+                    parameters.req.headers['sec-fetch-mode']=='cors' && 
+                    parameters.req.headers['sec-fetch-site']=='same-origin'){
                     server.socket.socketClientPostMessage({app_id:parameters.common_app_id,
                                                     resource_id:null,
                                                     data:{  data_app_id:null,
