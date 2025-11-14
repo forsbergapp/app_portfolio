@@ -36,7 +36,7 @@ const post = async (app_id, data) => {
                             AcceptLanguage:data.AcceptLanguage,
                             Method:data.Method,
                             Url:data.Url,
-                            Status:data.Status,
+                            Status:data.Status, //0=dont stop, 1=stop immediately 
                             Type:data.Type,
                             Created:new Date().toISOString()};
         return server.ORM.Execute({  app_id:app_id, dml:'POST', object:'IamControlObserve', 
