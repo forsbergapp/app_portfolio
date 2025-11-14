@@ -859,6 +859,8 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
  *              if ip is blocked in IamControlObserve or ip range is blocked in IAM_CONTROL_IP 
  *                  return 401
  *              else
+ *                 if requested path is not APP/ADMIN path or public path according to OpenApi
+ *                 if host is not valid
  *                 if user agent is blocked
  *                 if decodeURIComponent() has error 
  *                 if fail block or fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
@@ -866,12 +868,8 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
  *                     return 401
  * @function
  * @param {{ip:string, 
- *          host:string,
- *          method:string,
- *          'user-agent':string,
- *          'accept-language': string,
+ *          OpenApiPathsMatchPublic:[string, *],
  *          openApi:server['ORM']['Object']['OpenApi'],
- *          path: string,
  *          req:server['server']['req'],
  *          res:server['server']['res']}} parameters
  * @returns {Promise.<boolean>}
@@ -884,7 +882,21 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
     let statusMessage;
 
     /**
-     * IP to number
+     * @description check if observe limit reached
+     * @function
+     * @param {string} ip 
+     * @returns {boolean}
+     */
+    const observeLimitReached = ip =>{
+        return server.ORM.db.IamControlObserve.get(common_app_id, 
+                                                    null).result
+                    .filter((/**@type{server['ORM']['Object']['IamControlObserve']}*/row)=>
+                            row.Ip==ip && 
+                            row.AppId == common_app_id).length>
+                                                parameters.openApi.components.parameters.config.IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT.default
+    }
+    /**
+     * @description IP to number
      * @function
      * @param {string} ip
      * @returns {number}
@@ -936,97 +948,110 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
         else
             return false;
     };
-    
-
     if (parameters.openApi.components.parameters.config.IAM_AUTHENTICATE_REQUEST_ENABLE.default=='1'){
         let fail = 0;
         let fail_block = false;
         const ip_v4 = parameters.ip.replace('::ffff:','');
-        
-        /**@type{server['ORM']['Object']['IamControlObserve']} */
-        const record = {    IamUserId:null,
-                            AppId:common_app_id,
-                            Ip:ip_v4, 
-                            UserAgent:parameters['user-agent'], 
-                            Host:parameters.host, 
-                            AcceptLanguage:parameters['accept-language'], 
-                            Method:parameters.method,
-                            Url:parameters.path};
-        const result_range = block_ip_control(common_app_id, ip_v4);
-        if (result_range){
+
+        if (observeLimitReached(ip_v4)){
+            //use 401 to avoid more explanation
             statusCode = 401, 
             statusMessage= '';
         }
         else{
-            //check if host exists
-            if (typeof parameters.host=='undefined'){
-                await server.ORM.db.IamControlObserve.post(common_app_id, 
-                                                        {   ...record,
-                                                            Status:1, 
-                                                            Type:'HOST'});
-                fail ++;
-                fail_block = true;
-            }
-            //check if user-agent is blocked
-            if(server.ORM.db.IamControlUserAgent.get(common_app_id, null).result.filter((/**@type{server['ORM']['Object']['IamControlUserAgent']}*/row)=>row.UserAgent== parameters['user-agent']).length>0){
-                //stop always
-                fail_block = true;
-                await server.ORM.db.IamControlObserve.post(common_app_id, 
-                    {   ...record,
-                        Status:1, 
-                        Type:'USER_AGENT'});
-                fail ++;
-            }
-            //check request
-            let err = null;
-            try {
-                decodeURIComponent(parameters.path);
-            }
-            catch(e) {
-                err = e;
-            }
-            if (err){
-                await server.ORM.db.IamControlObserve.post(common_app_id, 
-                    {   ...record,
-                        Status:0, 
-                        Type:'URI_DECODE'});
-                fail ++;
-            }
-            if (fail>0){
-                if (fail_block ||
-                    //check how many observation exists for given app_id or records with unknown app_id
-                    server.ORM.db.IamControlObserve.get(common_app_id, 
-                                                    null).result
-                    .filter((/**@type{server['ORM']['Object']['IamControlObserve']}*/row)=>
-                            row.Ip==ip_v4 && 
-                            row.AppId == common_app_id).length>
-                                                parameters.openApi.components.parameters.config.IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT.default){
-                    await server.ORM.db.IamControlObserve.post(common_app_id,
-                                                        {   ...record,
-                                                            Status:1, 
-                                                            Type:'BLOCK_IP'});
-                }
-                statusCode = 401;
+            /**@type{server['ORM']['Object']['IamControlObserve']} */
+            const record = {    IamUserId:null,
+                                AppId:common_app_id,
+                                Ip:ip_v4, 
+                                UserAgent:parameters.req.headers['user-agent'], 
+                                Host:parameters.req.headers.host, 
+                                AcceptLanguage:parameters.req.headers['accept-language'], 
+                                Method:parameters.req.method,
+                                Url:parameters.req.path};
+            const result_range = block_ip_control(common_app_id, ip_v4);
+            if (result_range){
+                statusCode = 401, 
                 statusMessage= '';
             }
-            else
-                if (parameters.req.originalUrl=='/robots.txt') {
-                    statusCode = 401;
-                    statusMessage=' ';
-                    parameters.res.type(server.CONTENT_TYPE_PLAIN);
-                    parameters.res.write('User-agent: *\nDisallow: /');
+            else{
+                //match APP/ADMIN path or public path are requested according to OpenApi
+                if (!(parameters.openApi.servers.filter(row=>['APP', 'ADMIN'].includes(row['x-type'].default) && row.variables.basePath.default == parameters.req.url)[0] &&
+                    parameters.req.method.toUpperCase() == 'GET') &&
+                    (!parameters.OpenApiPathsMatchPublic ||
+                        (parameters.OpenApiPathsMatchPublic[1][parameters.req.method.toLowerCase()] && 
+                        parameters.OpenApiPathsMatchPublic[1][parameters.req.method.toLowerCase()].security
+                        .filter((/**@type{Object.<string,string>}*/parameter)=>
+                                parameter['$ref']=='#/components/securitySchemes/AuthorizationAccess' && 
+                                parameter.default=='public').length==0))){
+                    await server.ORM.db.IamControlObserve.post(common_app_id, 
+                                                {   ...record,
+                                                    Status:1, 
+                                                    Type:'INVALID_PATH'});
+                    fail ++;
                 }
-                else{
-                    //browser favicon to ignore
-                    if (parameters.req.originalUrl=='/favicon.ico'){
-                        statusMessage = ' ';
-                        parameters.res.write('');
-                        parameters.res.writeHead(parameters.res.statusCode, {
-                                    'Content-Type': server.CONTENT_TYPE_PLAIN,
-                                    'Content-length':0
-                        });
+                //check if host exists
+                if (typeof parameters.req.headers.host=='undefined'){
+                    await server.ORM.db.IamControlObserve.post(common_app_id, 
+                                                            {   ...record,
+                                                                Status:1, 
+                                                                Type:'HOST'});
+                    fail ++;
+                    fail_block = true;
+                }
+                //check if user-agent is blocked
+                if(server.ORM.db.IamControlUserAgent.get(common_app_id, null).result.filter((/**@type{server['ORM']['Object']['IamControlUserAgent']}*/row)=>row.UserAgent== parameters.req.headers['user-agent']).length>0){
+                    //stop always
+                    fail_block = true;
+                    await server.ORM.db.IamControlObserve.post(common_app_id, 
+                        {   ...record,
+                            Status:1, 
+                            Type:'USER_AGENT'});
+                    fail ++;
+                }
+                //check request
+                let err = null;
+                try {
+                    decodeURIComponent(parameters.req.path);
+                }
+                catch(e) {
+                    err = e;
+                }
+                if (err){
+                    await server.ORM.db.IamControlObserve.post(common_app_id, 
+                        {   ...record,
+                            Status:0, 
+                            Type:'URI_DECODE'});
+                    fail ++;
+                }
+                if (fail>0){
+                    if (fail_block || observeLimitReached(ip_v4)){
+                        await server.ORM.db.IamControlObserve.post(common_app_id,
+                                                            {   ...record,
+                                                                Status:1, 
+                                                                Type:'BLOCK_IP'});
                     }
+                    statusCode = 401;
+                    statusMessage= '';
                 }
+                else
+                    if (parameters.req.originalUrl=='/robots.txt') {
+                        statusCode = 401;
+                        statusMessage=' ';
+                        parameters.res.type(server.CONTENT_TYPE_PLAIN);
+                        parameters.res.write('User-agent: *\nDisallow: /');
+                    }
+                    else{
+                        //browser favicon to ignore
+                        if (parameters.req.originalUrl=='/favicon.ico'){
+                            statusMessage = ' ';
+                            parameters.res.write('');
+                            parameters.res.writeHead(parameters.res.statusCode, {
+                                        'Content-Type': server.CONTENT_TYPE_PLAIN,
+                                        'Content-length':0
+                            });
+                        }
+                    }
+            }
         }
         parameters.res.statusCode = statusCode?statusCode:parameters.res.statusCode;
         parameters.res.statusMessage = statusMessage?statusMessage:parameters.res.statusMessage;
