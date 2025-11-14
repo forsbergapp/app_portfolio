@@ -809,41 +809,79 @@ const iamAuthenticateUserAppDelete = async parameters => {
 };
 
 /**
+ * @name iamAuthenticateRequestRateLimiter
+ * @description Controls requests and rate limiter
+ *              Checks parameters 
+ *                  RATE_LIMIT_WINDOW_MS                            milliseconds
+ *                  RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER         all REST API paths starting with /bff/app_access
+ *                  RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN        all REST API paths starting with /bff/admin
+ *                  RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS    all other paths
+ * @param {{app_id:number,
+ *          ip:string,
+ *          openApi:server['ORM']['Object']['OpenApi'],
+ *          path: string}} parameters
+ * @returns {boolean}
+ */
+const iamAuthenticateRequestRateLimiter = parameters =>{	
+    const RATE_LIMIT_WINDOW_MS =                            parameters.openApi.components.parameters.config.IAM_RATE_LIMIT_WINDOW_MS.default;
+    const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS =    parameters.openApi.components.parameters.config.IAM_RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS.default;
+    const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER =         parameters.openApi.components.parameters.config.IAM_RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER.default; 
+    const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN =        parameters.openApi.components.parameters.config.IAM_RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN.default;
+
+    const currentTime = Date.now();
+    if (!iamRequestRateLimiterCount[parameters.ip])
+        iamRequestRateLimiterCount[parameters.ip] = {count:0, firstRequestTime:currentTime};
+        
+    const {count, firstRequestTime} = iamRequestRateLimiterCount[parameters.ip];
+    const USER = parameters.path?.toLowerCase().startsWith('/bff/app_access')?1:null;                                                                              
+    const ADMIN = parameters.path?.toLowerCase().startsWith('/bff/admin')?1:null;    
+                                                                            
+    if (currentTime - firstRequestTime > RATE_LIMIT_WINDOW_MS){
+        iamRequestRateLimiterCount[parameters.ip] = {count:1, firstRequestTime:currentTime};
+        return true;
+    }
+    else
+        /**@ts-ignore */
+        if (count < (   (USER && RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER) ||
+                        (ADMIN && RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN)||
+                        (USER==null && ADMIN==null && RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS)
+                    )){
+            iamRequestRateLimiterCount[parameters.ip].count += 1;
+            return true;
+        }
+        else
+            return false;
+};
+/**
  * @name iamAuthenticateRequest
  * @description IAM Authorize request
  *              Controls if AUTHENTICATE_REQUEST_ENABLE=1 else skips all checks
  *              if ip is blocked in IamControlObserve or ip range is blocked in IAM_CONTROL_IP 
  *                  return 401
  *              else
- *                  if request count > rate limit (anonymous, user or admin)
- *                      if fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
- *                          add IamControlObserve with status = 1 and type=BLOCK_IP
- *                      return status 429
- *                  else
- *                      if app_id is unknown
- *                      if user agent is blocked
- *                      if decodeURIComponent() has error 
- *                      if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'
- *                      if fail block or fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
- *                          add IamControlObserver with status = 1 and type=BLOCK_IP
- *                          return 401
+ *                 if user agent is blocked
+ *                 if decodeURIComponent() has error 
+ *                 if fail block or fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
+ *                     add IamControlObserver with status = 1 and type=BLOCK_IP
+ *                     return 401
  * @function
  * @param {{ip:string, 
  *          host:string,
  *          method:string,
  *          'user-agent':string,
  *          'accept-language': string,
- *          path: string}} parameters
- * @returns {Promise.<null|server['iam']['iam_authenticate_request']>}
+ *          openApi:server['ORM']['Object']['OpenApi'],
+ *          path: string,
+ *          req:server['server']['req'],
+ *          res:server['server']['res']}} parameters
+ * @returns {Promise.<boolean>}
  */
  const iamAuthenticateRequest = async parameters => {
-    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-    const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
-    const app_id = (await server.app_common.commonAppIam(parameters.host, null)).app_id;
-    //set calling app_id using app_id or common app_id if app_id is unknown
-    const calling_app_id = app_id ?? server.ORM.UtilNumberValue(openapiConfig.APP_COMMON_APP_ID.default) ?? 0;
+   
+    const common_app_id = server.ORM.UtilNumberValue(parameters.openApi.components.parameters.config.APP_COMMON_APP_ID.default) ?? 0;
 
-    
+    let statusCode;
+    let statusMessage;
 
     /**
      * IP to number
@@ -862,12 +900,11 @@ const iamAuthenticateUserAppDelete = async parameters => {
      * Controls if ip is blocked
      * @function
      * @param {number} app_id
-     * @param {number|null} data_app_id
      * @param {string} ip_v4
      * @returns {boolean}
      */
-    const block_ip_control = (app_id, data_app_id, ip_v4) => {
-        if (openapiConfig.IAM_AUTHENTICATE_REQUEST_IP.default == '1'){
+    const block_ip_control = (app_id, ip_v4) => {
+        if (parameters.openApi.components.parameters.config.IAM_AUTHENTICATE_REQUEST_IP.default == '1'){
             /**@type{server['ORM']['Object']['IamControlIp'][]} */
             const ranges = server.ORM.db.IamControlIp.get(
                                                     app_id, 
@@ -876,7 +913,10 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                     {}).result;
             //check if IP is blocked
             if (server.ORM.db.IamControlObserve.get( app_id, 
-                                                null).result.filter((/**@type{server['ORM']['Object']['IamControlObserve']}*/row)=>row.Ip==ip_v4 && row.AppId == data_app_id && row.Status==1).length>0)
+                                                null).result
+                    .filter((/**@type{server['ORM']['Object']['IamControlObserve']}*/row)=>
+                        row.Ip==ip_v4 && row.AppId == app_id && row.Status==1)
+                    .length>0)
                 //IP is blocked in IamControlObserve
                 return true;
             else
@@ -896,149 +936,107 @@ const iamAuthenticateUserAppDelete = async parameters => {
         else
             return false;
     };
-    /**
-     * Controls requests and rate limiter
-     * Checks parameters 
-     *  RATE_LIMIT_WINDOW_MS                            milliseconds
-     *  RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER         all REST API paths starting with /bff/app_access
-     *  RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN        all REST API paths starting with /bff/admin
-     *  RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS    all other paths
-     * @param {number} app_id
-     * @param {string} ip
-     * @returns {boolean}
-     */
-    const rateLimiter = (app_id, ip) =>{	
-        
-        const RATE_LIMIT_WINDOW_MS =                            openapiConfig.IAM_RATE_LIMIT_WINDOW_MS.default;
-        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS =    openapiConfig.IAM_RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS.default;
-        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER =         openapiConfig.IAM_RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER.default; 
-        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN =        openapiConfig.IAM_RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN.default;
-  
-        const currentTime = Date.now();
-        if (!iamRequestRateLimiterCount[ip])
-            iamRequestRateLimiterCount[ip] = {count:0, firstRequestTime:currentTime};
-          
-        const {count, firstRequestTime} = iamRequestRateLimiterCount[ip];
-        const USER = parameters.path?.toLowerCase().startsWith('/bff/app_access')?1:null;                                                                              
-        const ADMIN = parameters.path?.toLowerCase().startsWith('/bff/admin')?1:null;    
-                                                                              
-        if (currentTime - firstRequestTime > RATE_LIMIT_WINDOW_MS){
-            iamRequestRateLimiterCount[ip] = {count:1, firstRequestTime:currentTime};
-            return false;
-        }
-        else
-            /**@ts-ignore */
-            if (count < (   (USER && RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER) ||
-                            (ADMIN && RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN)||
-                            (USER==null && ADMIN==null && RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS)
-                        )){
-                iamRequestRateLimiterCount[ip].count += 1;
-                return false;
-            }
-            else
-                return true;
-    };
+    
 
-    if (openapiConfig.IAM_AUTHENTICATE_REQUEST_ENABLE.default=='1'){
+    if (parameters.openApi.components.parameters.config.IAM_AUTHENTICATE_REQUEST_ENABLE.default=='1'){
         let fail = 0;
         let fail_block = false;
         const ip_v4 = parameters.ip.replace('::ffff:','');
         
-        //set record with app_id or empty app_id
         /**@type{server['ORM']['Object']['IamControlObserve']} */
         const record = {    IamUserId:null,
-                            AppId:app_id,
+                            AppId:common_app_id,
                             Ip:ip_v4, 
                             UserAgent:parameters['user-agent'], 
                             Host:parameters.host, 
                             AcceptLanguage:parameters['accept-language'], 
                             Method:parameters.method,
                             Url:parameters.path};
-        const result_range = block_ip_control(calling_app_id, app_id, ip_v4);
+        const result_range = block_ip_control(common_app_id, ip_v4);
         if (result_range){
-            return {statusCode: 401, 
-                    statusMessage: ''};
+            statusCode = 401, 
+            statusMessage= '';
         }
         else{
-            if (rateLimiter(calling_app_id, ip_v4)){
-                return {statusCode: 429, 
-                        statusMessage: ''};
+            //check if host exists
+            if (typeof parameters.host=='undefined'){
+                await server.ORM.db.IamControlObserve.post(common_app_id, 
+                                                        {   ...record,
+                                                            Status:1, 
+                                                            Type:'HOST'});
+                fail ++;
+                fail_block = true;
             }
-            else{
-                //check if host exists
-                if (typeof parameters.host=='undefined'){
-                    await server.ORM.db.IamControlObserve.post(calling_app_id, 
-                                                            {   ...record,
-                                                                Status:1, 
-                                                                Type:'HOST'});
-                    fail ++;
-                    fail_block = true;
+            //check if user-agent is blocked
+            if(server.ORM.db.IamControlUserAgent.get(common_app_id, null).result.filter((/**@type{server['ORM']['Object']['IamControlUserAgent']}*/row)=>row.UserAgent== parameters['user-agent']).length>0){
+                //stop always
+                fail_block = true;
+                await server.ORM.db.IamControlObserve.post(common_app_id, 
+                    {   ...record,
+                        Status:1, 
+                        Type:'USER_AGENT'});
+                fail ++;
+            }
+            //check request
+            let err = null;
+            try {
+                decodeURIComponent(parameters.path);
+            }
+            catch(e) {
+                err = e;
+            }
+            if (err){
+                await server.ORM.db.IamControlObserve.post(common_app_id, 
+                    {   ...record,
+                        Status:0, 
+                        Type:'URI_DECODE'});
+                fail ++;
+            }
+            if (fail>0){
+                if (fail_block ||
+                    //check how many observation exists for given app_id or records with unknown app_id
+                    server.ORM.db.IamControlObserve.get(common_app_id, 
+                                                    null).result
+                    .filter((/**@type{server['ORM']['Object']['IamControlObserve']}*/row)=>
+                            row.Ip==ip_v4 && 
+                            row.AppId == common_app_id).length>
+                                                parameters.openApi.components.parameters.config.IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT.default){
+                    await server.ORM.db.IamControlObserve.post(common_app_id,
+                                                        {   ...record,
+                                                            Status:1, 
+                                                            Type:'BLOCK_IP'});
                 }
-                if (app_id == null){
-                    await server.ORM.db.IamControlObserve.post(calling_app_id, 
-                                                            {   ...record,
-                                                                Status:0, 
-                                                                Type:'APP_ID'});
-                    fail ++;
+                statusCode = 401;
+                statusMessage= '';
+            }
+            else
+                if (parameters.req.originalUrl=='/robots.txt') {
+                    statusCode = 401;
+                    statusMessage=' ';
+                    parameters.res.type(server.CONTENT_TYPE_PLAIN);
+                    parameters.res.write('User-agent: *\nDisallow: /');
                 }
-                //check if user-agent is blocked
-                if(server.ORM.db.IamControlUserAgent.get(calling_app_id, null).result.filter((/**@type{server['ORM']['Object']['IamControlUserAgent']}*/row)=>row.UserAgent== parameters['user-agent']).length>0){
-                    //stop always
-                    fail_block = true;
-                    await server.ORM.db.IamControlObserve.post(calling_app_id, 
-                        {   ...record,
-                            Status:1, 
-                            Type:'USER_AGENT'});
-                    fail ++;
-                }
-                //check request
-                let err = null;
-                try {
-                    decodeURIComponent(parameters.path);
-                }
-                catch(e) {
-                    err = e;
-                }
-                if (err){
-                    await server.ORM.db.IamControlObserve.post(calling_app_id, 
-                        {   ...record,
-                            Status:0, 
-                            Type:'URI_DECODE'});
-                    fail ++;
-                }
-                //check method
-                if (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].filter(allowed=>allowed==parameters.method).length==0){
-                    //stop always
-                    fail_block = true;
-                    await server.ORM.db.IamControlObserve.post(calling_app_id, 
-                        {   ...record,
-                            Status:0, 
-                            Type:'METHOD'});
-                    fail ++;
-                }
-                if (fail>0){
-                    if (fail_block ||
-                        //check how many observation exists for given app_id or records with unknown app_id
-                        server.ORM.db.IamControlObserve.get(calling_app_id, 
-                                                        null).result
-                        .filter((/**@type{server['ORM']['Object']['IamControlObserve']}*/row)=>
-                                row.Ip==ip_v4 && 
-                                row.AppId == app_id).length>
-                                                    openapiConfig.IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT.default){
-                        await server.ORM.db.IamControlObserve.post(calling_app_id,
-                                                            {   ...record,
-                                                                Status:1, 
-                                                                Type:'BLOCK_IP'});
+                else{
+                    //browser favicon to ignore
+                    if (parameters.req.originalUrl=='/favicon.ico'){
+                        statusMessage = ' ';
+                        parameters.res.write('');
+                        parameters.res.writeHead(parameters.res.statusCode, {
+                                    'Content-Type': server.CONTENT_TYPE_PLAIN,
+                                    'Content-length':0
+                        });
                     }
-                    return {statusCode: 401, statusMessage: ''};
                 }
-                else
-                    return null;
-            }
         }
+        parameters.res.statusCode = statusCode?statusCode:parameters.res.statusCode;
+        parameters.res.statusMessage = statusMessage?statusMessage:parameters.res.statusMessage;
+        if (statusMessage !=null)
+            return false;
+        else
+            return true;
     }
     else
-        return null;
+        return true;
 };
 
 /**
@@ -1580,6 +1578,7 @@ export{ iamUtilMessageNotAuthorized,
         iamAuthenticateUserDelete,
         iamAuthenticateUserAppDelete,
         iamAuthenticateCommon,
+        iamAuthenticateRequestRateLimiter,
         iamAuthenticateRequest,
         iamAuthenticateResource,
         iamAuthenticateMicroservice,

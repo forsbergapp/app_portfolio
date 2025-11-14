@@ -169,6 +169,7 @@
  *          host:string|null,
  *          url:string,
  *          method: string,
+ *          URI_path:string,
  *          query: string,
  *          body:server_server_req['body'] & {type?:string, IAM_data_app_id?:number|null, data?:string}|null,
  *          security_app:{
@@ -193,6 +194,7 @@
  *              host:string,
  *              url:string,
  *              method: server_server_req['method'],
+ *              URI_path:string,
  *              app_query:URLSearchParams|null,
  *              body:*,
  *              idToken:string
@@ -364,7 +366,7 @@
  *              Method:string,
  *              Url:string,
  *              Status?:1|0,
- *              Type?:'APP_ID'|'HOST'|'HOST_IP'|'USER_AGENT'|'URI_DECODE'|'METHOD'|'BLOCK_IP',
+ *              Type?:'HOST'|'USER_AGENT'|'URI_DECODE'|'BLOCK_IP',
  *              Created?:string,
  *              Modified?:string|null,
  *              IamUserId:number|null,
@@ -1030,11 +1032,7 @@
  *              host:                   string,
  *              scope:                  'MICROSERVICE'}} server_iam_microservice_token_claim
  */
-/**
- * @description IAM server_iam_authenticate_request
- * @typedef {{statusCode:number,
- *            statusMessage: string}}server_iam_authenticate_request
- */
+
 /**
  * @description IAM server_iam_user
  * @typedef {{ Id: server['ORM']['Object']['IamUser']['Id'],
@@ -1409,7 +1407,6 @@
  *          iam:{
  *                iam_access_token_claim:server_iam_access_token_claim,
  *                iam_microservice_token_claim:server_iam_microservice_token_claim,
- *                iam_authenticate_request:server_iam_authenticate_request,
  *                iam_user: server_iam_user
  *              },
  *          info:{

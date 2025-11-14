@@ -5,7 +5,7 @@
  */
 const {server} = await import('./server.js');
 const {registryConfigServices} = await import('../serviceregistry/registry.js')
-const {default:ComponentCreate} = await import('../apps/common/src/component/common_maintenance.js');
+const {default:ComponentMaintenance} = await import('../apps/common/src/component/common_maintenance.js');
 
 /**
  * @name bffConnect
@@ -159,98 +159,6 @@ const bffMicroservice = async parameters =>{
                             type:'JSON'};
                 });
 }; 
-
-/**
- * @name bffInit
- * @description Backend for frontend (BFF) init
- *              Logs if the request is from SSE
- *              Logs when the response is closed
- *              Authenticates the request
- *              Sets header values on both on the response and on the request
- *              Checks robots.txt and favicon.ico
- *              Returns a reason if response should be closed
- * @function
- * @param {server['server']['req']} req
- * @param {server['server']['res']} res
- * @returns Promise.<{  reason:'ROBOT'|'FAVICON'|'REQUEST'|null}>
- */
-const bffInit = async (req, res) =>{
-    if (req.headers.accept?.indexOf(server.CONTENT_TYPE_SSE_ACCEPT)>-1){
-        //SSE, log since response is open and log again when closing
-        server.ORM.db.Log.post({  app_id:0, 
-            data:{  object:'LogRequestInfo', 
-                    request:{   Req:req,
-                                ResponseTime:server.UtilResponseTime(res),
-                                StatusCode:res.statusCode,
-                                StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
-                            },
-                    log:''
-                }
-            });
-    }
-    else{
-        //set default no cache response header and close connection request header
-        res.setHeader('Cache-Control', 'no-store');
-        req.headers.connection = 'close';
-    }
-        
-    res.on('close',()=>{	
-        //SSE response time will be time connected until disconnected
-        server.ORM.db.Log.post({  app_id:0, 
-            data:{  object:'LogRequestInfo', 
-                    request:{   Req:req,
-                                ResponseTime:server.UtilResponseTime(res),
-                                StatusCode:res.statusCode,
-                                StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
-                            },
-                    log:''
-                }
-            }).then(() => {
-            // do not return any StatusMessage to client, this is only used for logging purpose
-            res.statusMessage = '';
-            res.end();
-        });
-    });
-    //access control that stops request if not passing controls
-    /**@type{null|server['iam']['iam_authenticate_request']}*/
-    const result = await server.iam.iamAuthenticateRequest({ip:req.ip, 
-                                                host:req.headers.host ?? '', 
-                                                method: req.method, 
-                                                'user-agent': req.headers['user-agent'], 
-                                                'accept-language':req.headers['accept-language'], 
-                                                path:req.path})
-                        .catch((/**@type{server['server']['error']}*/error)=>{return { statusCode: 500, statusMessage: error};});
-    if (result != null){
-        res.statusCode = result.statusCode;
-        res.statusMessage = ' ';
-        res.writeHead(res.statusCode, {
-            'Content-Type': server.CONTENT_TYPE_PLAIN,
-            'Content-length':0
-        });
-        return {reason:'REQUEST'};
-    }
-    else{
-
-        //check robots.txt
-        if (req.originalUrl=='/robots.txt'){
-            res.statusMessage = ' ';
-            res.type(server.CONTENT_TYPE_PLAIN);
-            res.write('User-agent: *\nDisallow: /');
-            return {reason:'ROBOT'};
-        }
-        else{
-            //browser favorite icon to ignore
-            if (req.originalUrl=='/favicon.ico'){
-                res.statusMessage = ' ';
-                res.write('');
-                return {reason:'FAVICON'};
-            }
-            else{
-                return {reason:null};
-            }
-        }
-    }
-};
 /**
  * @description Returns response to client
  *              Uses host parameter for errors in requests or unknown route paths
@@ -496,7 +404,7 @@ const bffOpenApiPathMatch = parameters => {
  * @returns {Promise.<server['bff']['parameters']|null|1>}
  */
 const bffDecryptRequest = async parameters =>{
-    //Encrypted path
+    //Encrypted or App/Admin path
     const URI_path = parameters.req.url.indexOf('?')>-1?
                         parameters.req.url.substring(0, parameters.req.url.indexOf('?')):
                             parameters.req.url;
@@ -515,6 +423,7 @@ const bffDecryptRequest = async parameters =>{
                 host:           parameters.req.headers.host ?? '', 
                 url:            parameters.req.originalUrl,
                 method:         parameters.req.method,
+                URI_path:       URI_path,
                 query:          parameters.req.query?.parameters ?? '',
                 body:           parameters.req.body,
                 security_app:   { 
@@ -652,6 +561,9 @@ const bffDecryptRequest = async parameters =>{
                                                             host:           parameters.req.headers.host ?? '', 
                                                             url:            decrypted.url,
                                                             method:         decrypted.method,
+                                                            URI_path:       decrypted.url.indexOf('?')>-1?
+                                                                                decrypted.url.substring(0, decrypted.url.indexOf('?')):
+                                                                                    decrypted.url,
                                                             query:          (decrypted.url.indexOf('?')>-1?
                                                                                 Array.from(new URLSearchParams(decrypted.url
                                                                                 .substring(decrypted.url.indexOf('?')+1)))
@@ -738,26 +650,43 @@ const bffDecryptRequest = async parameters =>{
         });
     }
     else{
-        const resultbffInit =   await bffInit(req, res);
         const common_app_id = server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default)??0;
-        
-        if (resultbffInit.reason == null){
-            //If first time, when no admin exists, then display maintenance for users
-            if (server.ORM.db.IamUser.get(0, null).result.length==0 && (await server.app_common.commonAppIam(req.headers.host)).admin == false){
-                return bffResponse({
-                                        result_request:{result:await ComponentCreate({  data:   null,
-                                                                    methods:{commonResourceFile:server.app_common.commonResourceFile}
-                                                                }), 
-                                                        type:'HTML'},
-                                        host:req.headers.host,
-                                        route:null,
-                                        res:res});
-            }
-            else{
+        //If first time, when no admin exists, then display maintenance for users
+        if (server.ORM.db.IamUser.get(0, null).result.length==0 && (await server.app_common.commonAppIam(req.headers.host)).admin == false){
+            return bffResponse({
+                                    result_request:{result:await ComponentMaintenance({  data:   null,
+                                                                methods:{commonResourceFile:server.app_common.commonResourceFile}
+                                                            }), 
+                                                    type:'HTML'},
+                                    host:req.headers.host,
+                                    route:null,
+                                    res:res});
+        }
+        else{
+            //access control that stops request if not passing controls
+            if (await server.iam.iamAuthenticateRequest({ip:req.ip, 
+                                                        host:req.headers.host ?? '', 
+                                                        method: req.method, 
+                                                        'user-agent': req.headers['user-agent'], 
+                                                        'accept-language':req.headers['accept-language'], 
+                                                        path:req.path,
+                                                        openApi:openApi,
+                                                        req:req,
+                                                        res:res})
+                    .catch((/**@type{server['server']['error']}*/error)=>{
+                        return bffResponse({result_request:{
+                                                http:500, 
+                                                code:null,
+                                                text:error, 
+                                                developerText:'bff',
+                                                moreInfo:null, 
+                                                type:'JSON'},
+                                            route:null,
+                                            res:res})
+                    })){
                 //decrypt request
                 /**@type{server['bff']['parameters']|null|1} */
                 const bff_parameters = await bffDecryptRequest({common_app_id:common_app_id, req:req, res:res, openApi:openApi});
-
                 //if decrypt failed, authentication failed or font
                 if (bff_parameters==null || bff_parameters==1){
                     if (bff_parameters==1){
@@ -780,109 +709,161 @@ const bffDecryptRequest = async parameters =>{
                     }
                 } 
                 else  
-                    if (bff_parameters.endpoint == 'APP'){
-                        //use common app id for APP since no app id decided
-                        //App route
-                        return bffResponse({app_id:common_app_id,
-                                            result_request:await server.app_common.commonApp({  app_id:common_app_id,
-                                                                        ip:bff_parameters.ip, 
-                                                                        host:bff_parameters.host ?? '', 
-                                                                        user_agent:bff_parameters.user_agent, 
-                                                                        accept_language:bff_parameters.accept_language}),
-                                            host:bff_parameters.host,
-                                            route : 'APP',
-                                            res:bff_parameters.res})
-                        .catch((error)=>
-                            server.ORM.db.Log.post({  app_id:common_app_id, 
-                                data:{  object:'LogBffError', 
-                                        bff:{   Service:'APP',
-                                                Method:bff_parameters.method,
-                                                Url:bff_parameters.url,
-                                                Operation:null,
-                                                Parameters:bff_parameters.query
-                                            },
-                                        log:error
+                    //control rate limiter using decrypted url
+                    if (server.iam.iamAuthenticateRequestRateLimiter({  app_id:common_app_id, 
+                                                                        ip:req.ip, 
+                                                                        openApi:openApi, 
+                                                                        path:bff_parameters.url})){
+                        if (bff_parameters.endpoint != 'APP' &&bffOpenApiPathMatch({ URI_path:   
+                                                                                        bff_parameters.URI_path, 
+                                                                                        openApi:openApi})
+                                .paths[1][bff_parameters.method.toLowerCase()]?.requestBody?.content['text/event-stream']){
+                            //SSE, log since response is open and log again when closing
+                            server.ORM.db.Log.post({  app_id:0, 
+                                data:{  object:'LogRequestInfo', 
+                                        request:{   Req:req,
+                                                    ResponseTime:server.UtilResponseTime(res),
+                                                    StatusCode:res.statusCode,
+                                                    StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
+                                                },
+                                        log:''
                                     }
-                                }).then(() =>server.app_common.commonAppError())
-                        );
-                    }
-                    else{
-                        //REST API route
-                        //REST API requests from client are encoded using base64
-                        const decodedquery = bff_parameters.query?decodeURIComponent(Buffer.from(bff_parameters.query, 'base64').toString('utf-8')):'';   
-                        return await bffRestApi({  
-                                                app_id:bff_parameters.app_id,
-                                                openApi:openApi,
-                                                endpoint:bff_parameters.endpoint,
-                                                host:bff_parameters.host ?? '', 
-                                                url:bff_parameters.url ?? '',
-                                                /**@ts-ignore */
-                                                method:bff_parameters.method.toUpperCase(),
-                                                app_query: decodedquery?
-                                                            new URLSearchParams(decodedquery):
-                                                                null,
-                                                body:bff_parameters.body?.data?
-                                                        JSON.parse(decodeURIComponent(Buffer.from(bff_parameters.body.data, 'base64').toString('utf-8'))):
-                                                            '',
-                                                idToken:bff_parameters.security_app?.AppIdToken??'', 
-                                                authorization:bff_parameters.authorization ?? '', 
-                                                ip:bff_parameters.ip, 
-                                                user_agent:bff_parameters.user_agent, 
-                                                accept_language:bff_parameters.accept_language, 
-                                                res:bff_parameters.res})
-                                .then(result_service => {
-                                    const log_result = server.ORM.UtilNumberValue(openApi.components.parameters.config.LOG_REQUEST_LEVEL.default)==2?result_service:'✅';
-                                    return server.ORM.db.Log.post({  app_id:bff_parameters.app_id, 
-                                        data:{  object:'LogBffInfo', 
-                                                bff:{   Service:'RESTAPI',
-                                                        Method:bff_parameters.method,
-                                                        Url: bff_parameters.url.indexOf('?')>-1?
-                                                                bff_parameters.url.substring(0, bff_parameters.url.indexOf('?')):
-                                                                    bff_parameters.url,
-                                                        Operation:result_service.operation??null,
-                                                        Parameters:decodedquery
-                                                    },
-                                                log:log_result
-                                            }
-                                            
-                                        }).then((/**@type{*}*/result_log)=>result_log.http?
-                                                                result_log:
-                                                                bffResponse({   app_id:bff_parameters.app_id,
-                                                                                result_request:result_service, 
-                                                                                host:bff_parameters.host,
-                                                                                route:'REST_API',
-                                                                                /**@ts-ignore */
-                                                                                method:bff_parameters.method, 
-                                                                                decodedquery:decodedquery, 
-                                                                                jwk:bff_parameters.jwk,
-                                                                                iv:bff_parameters.iv,
-                                                                                res:bff_parameters.res})
-                                                                    );
-                                })
-                                .catch((/**@type{server['server']['error']}*/error) => {
-                                    //log with app id 0 if app id still not authenticated
-                                    return server.ORM.db.Log.post({  app_id:0, 
-                                        data:{  object:'LogBffError', 
-                                                bff:{   Service:'RESTAPI',
-                                                        Method:bff_parameters.method,
-                                                        Url:bff_parameters.url,
-                                                        Operation:null,
-                                                        Parameters:bff_parameters.query
-                                                        },
-                                                log:error
-                                            }
-                                        }).then(() => 
-                                            bffResponse({result_request:{http:500, code:null,text:error, developerText:'bff',moreInfo:null, type:'JSON'},
-                                                            route:null,
-                                                            jwk:bff_parameters.jwk,
-                                                            iv:bff_parameters.iv,
-                                                            res:bff_parameters.res}));  
                                 });
+                        }
+                        else{
+                            //set default no cache response header and close connection request header
+                            res.setHeader('Cache-Control', 'no-store');
+                            req.headers.connection = 'close';
+                        }
+                            
+                        res.on('close',()=>{	
+                            //SSE response time will be time connected until disconnected
+                            server.ORM.db.Log.post({  app_id:0, 
+                                data:{  object:'LogRequestInfo', 
+                                        request:{   Req:req,
+                                                    ResponseTime:server.UtilResponseTime(res),
+                                                    StatusCode:res.statusCode,
+                                                    StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
+                                                },
+                                        log:''
+                                    }
+                                }).then(() => {
+                                // do not return any StatusMessage to client, this is only used for logging purpose
+                                res.statusMessage = '';
+                                res.end();
+                            });
+                        });
+                        if (bff_parameters.endpoint == 'APP'){
+                            //use common app id for APP since no app id decided
+                            //App route
+                            return bffResponse({app_id:common_app_id,
+                                                result_request:await server.app_common.commonApp({  app_id:common_app_id,
+                                                                            ip:bff_parameters.ip, 
+                                                                            host:bff_parameters.host ?? '', 
+                                                                            user_agent:bff_parameters.user_agent, 
+                                                                            accept_language:bff_parameters.accept_language}),
+                                                host:bff_parameters.host,
+                                                route : 'APP',
+                                                res:bff_parameters.res})
+                            .catch((error)=>
+                                server.ORM.db.Log.post({  app_id:common_app_id, 
+                                    data:{  object:'LogBffError', 
+                                            bff:{   Service:'APP',
+                                                    Method:bff_parameters.method,
+                                                    Url:bff_parameters.url,
+                                                    Operation:null,
+                                                    Parameters:bff_parameters.query
+                                                },
+                                            log:error
+                                        }
+                                    }).then(() =>server.app_common.commonAppError())
+                            );
+                        }
+                        else{
+                            //REST API route
+                            //REST API requests from client are encoded using base64
+                            const decodedquery = bff_parameters.query?decodeURIComponent(Buffer.from(bff_parameters.query, 'base64').toString('utf-8')):'';   
+                            return await bffRestApi({  
+                                                    app_id:bff_parameters.app_id,
+                                                    openApi:openApi,
+                                                    endpoint:bff_parameters.endpoint,
+                                                    host:bff_parameters.host ?? '', 
+                                                    url:bff_parameters.url ?? '',
+                                                    /**@ts-ignore */
+                                                    method:bff_parameters.method.toUpperCase(),
+                                                    URI_path:bff_parameters.URI_path,
+                                                    app_query: decodedquery?
+                                                                new URLSearchParams(decodedquery):
+                                                                    null,
+                                                    body:bff_parameters.body?.data?
+                                                            JSON.parse(decodeURIComponent(Buffer.from(bff_parameters.body.data, 'base64').toString('utf-8'))):
+                                                                '',
+                                                    idToken:bff_parameters.security_app?.AppIdToken??'', 
+                                                    authorization:bff_parameters.authorization ?? '', 
+                                                    ip:bff_parameters.ip, 
+                                                    user_agent:bff_parameters.user_agent, 
+                                                    accept_language:bff_parameters.accept_language, 
+                                                    res:bff_parameters.res})
+                                    .then(result_service => {
+                                        const log_result = server.ORM.UtilNumberValue(openApi.components.parameters.config.LOG_REQUEST_LEVEL.default)==2?result_service:'✅';
+                                        return server.ORM.db.Log.post({  app_id:bff_parameters.app_id, 
+                                            data:{  object:'LogBffInfo', 
+                                                    bff:{   Service:'RESTAPI',
+                                                            Method:bff_parameters.method,
+                                                            Url: bff_parameters.url.indexOf('?')>-1?
+                                                                    bff_parameters.url.substring(0, bff_parameters.url.indexOf('?')):
+                                                                        bff_parameters.url,
+                                                            Operation:result_service.operation??null,
+                                                            Parameters:decodedquery
+                                                        },
+                                                    log:log_result
+                                                }
+                                                
+                                            }).then((/**@type{*}*/result_log)=>result_log.http?
+                                                                    result_log:
+                                                                    bffResponse({   app_id:bff_parameters.app_id,
+                                                                                    result_request:result_service, 
+                                                                                    host:bff_parameters.host,
+                                                                                    route:'REST_API',
+                                                                                    /**@ts-ignore */
+                                                                                    method:bff_parameters.method, 
+                                                                                    decodedquery:decodedquery, 
+                                                                                    jwk:bff_parameters.jwk,
+                                                                                    iv:bff_parameters.iv,
+                                                                                    res:bff_parameters.res})
+                                                                        );
+                                    })
+                                    .catch((/**@type{server['server']['error']}*/error) => {
+                                        //log with app id 0 if app id still not authenticated
+                                        return server.ORM.db.Log.post({  app_id:0, 
+                                            data:{  object:'LogBffError', 
+                                                    bff:{   Service:'RESTAPI',
+                                                            Method:bff_parameters.method,
+                                                            Url:bff_parameters.url,
+                                                            Operation:null,
+                                                            Parameters:bff_parameters.query
+                                                            },
+                                                    log:error
+                                                }
+                                            }).then(() => 
+                                                bffResponse({result_request:{http:500, code:null,text:error, developerText:'bff',moreInfo:null, type:'JSON'},
+                                                                route:null,
+                                                                jwk:bff_parameters.jwk,
+                                                                iv:bff_parameters.iv,
+                                                                res:bff_parameters.res}));  
+                                    });
+                        } 
                     }
-             }
+                    else
+                        //too many requests
+                        res.statusCode = 429;
+                        res.statusMessage= server.iam.iamUtilMessageNotAuthorized();
+                        res.end();
+            }
+            else
+                res.end();
+            
         }
-        else
-            res.end();
     }
 };
 
@@ -893,14 +874,10 @@ const bffDecryptRequest = async parameters =>{
  *              OperationId syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
  *              Returns single resource result format or ISO20022 format with either list header or page header metadata
  * @function
- * @param {server['bff']['RestApi_parameters']} routesparameters
+ * @param {server['bff']['RestApi_parameters']} parameters
  * @returns {Promise.<server['server']['response'] & {singleResource?:boolean, operation?:string}>}
  */
-const bffRestApi = async (routesparameters) =>{
-    //Decrypted path
-    const URI_path =    routesparameters.url.indexOf('?')>-1?
-                            routesparameters.url.substring(0, routesparameters.url.indexOf('?')):
-                                routesparameters.url;
+const bffRestApi = async parameters =>{
     /**
      * Authenticates if user has access to given resource
      * Authenticates IAM parameters using IAM token claims if path requires
@@ -920,10 +897,10 @@ const bffRestApi = async (routesparameters) =>{
             params.IAM_data_app_id ||
             params.IAM_service){
             if (server.iam.iamAuthenticateResource({app_id:                     params.app_id_authenticated, 
-                                                    ip:                         routesparameters.ip, 
-                                                    idToken:                    routesparameters.idToken,
-                                                    endpoint:                   routesparameters.endpoint,
-                                                    authorization:              routesparameters.authorization, 
+                                                    ip:                         parameters.ip, 
+                                                    idToken:                    parameters.idToken,
+                                                    endpoint:                   parameters.endpoint,
+                                                    authorization:              parameters.authorization, 
                                                     claim_iam_user_app_id:      server.ORM.UtilNumberValue(params.IAM_iam_user_app_id),
                                                     claim_iam_user_id:          server.ORM.UtilNumberValue(params.IAM_iam_user_id),
                                                     claim_iam_module_app_id:    server.ORM.UtilNumberValue(params.IAM_module_app_id),
@@ -951,13 +928,13 @@ const bffRestApi = async (routesparameters) =>{
             )[0]==null?null:
             {[paths[0].substring(paths[0].indexOf('${')+'${'.length).replace('}','')]:
                 (components.parameters.paths[paths[0].substring(paths[0].indexOf('${')+'${'.length).replace('}','')]?.schema.type == 'number'?
-                    server.ORM.UtilNumberValue(URI_path.substring(URI_path.lastIndexOf('/')+1)):
-                        URI_path.substring(URI_path.lastIndexOf('/')+1))
+                    server.ORM.UtilNumberValue(parameters.URI_path.substring(parameters.URI_path.lastIndexOf('/')+1)):
+                        parameters.URI_path.substring(parameters.URI_path.lastIndexOf('/')+1))
             }:
                 //no resource id string in defined path
                 null;
-    const OpenApiPaths = bffOpenApiPathMatch({  URI_path:   URI_path, 
-                                                    openApi:routesparameters.openApi}).paths;
+    const OpenApiPaths = bffOpenApiPathMatch({  URI_path:   parameters.URI_path, 
+                                                    openApi:parameters.openApi}).paths;
     if (OpenApiPaths){
         /**
          * @description get parameter in path
@@ -967,7 +944,7 @@ const bffRestApi = async (routesparameters) =>{
         const getParameter = key => methodObj.parameters.filter((/**@type{*}*/parameter)=>
                                                                         Object.keys(parameter)[0]=='$ref' && Object.values(parameter)[0]=='#/components/parameters/paths/' + key)[0];
                    
-        const methodObj = OpenApiPaths[1][routesparameters.method.toLowerCase()];
+        const methodObj = OpenApiPaths[1][parameters.method.toLowerCase()];
         if (methodObj){   
             /**
              * @param {{}} keys
@@ -975,7 +952,7 @@ const bffRestApi = async (routesparameters) =>{
              */
             const addBodyKey = (keys, key )=>{
                 return {...keys, ...{   [key[0]]:{  
-                                                    data:       routesparameters.body[key[0]],
+                                                    data:       parameters.body[key[0]],
                                                     //IAM parameters are required by default
                                                     required:   key[1]?.required ?? (key[0].startsWith('IAM')?true:false),
                                                     type:       'BODY',
@@ -988,7 +965,7 @@ const bffRestApi = async (routesparameters) =>{
             //add parameters using tree shaking pattern
             //so only defined parameters defined using openAPI pattern are sent to functions
             const parametersIn = 
-                                    {...routesparameters.method=='GET'?
+                                    {...parameters.method=='GET'?
                                         //QUERY
                                         {...methodObj.parameters
                                                         //include all parameters.in=query
@@ -997,14 +974,14 @@ const bffRestApi = async (routesparameters) =>{
                                                             //component parameter that has in=query
                                                             (   '$ref' in parameter && 
                                                                 'required' in parameter && 
-                                                                routesparameters.openApi.components.parameters.paths[parameter['$ref'].split('#/components/parameters/paths/')[1]].in == 'query')
+                                                                parameters.openApi.components.parameters.paths[parameter['$ref'].split('#/components/parameters/paths/')[1]].in == 'query')
                                                         )
                                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
                                                             if ('$ref' in key )
                                                                 return {...keys, ...{   
                                                                                     [key['$ref'].split('#/components/parameters/paths/')[1]]:
                                                                                     {
-                                                                                        data:       routesparameters.app_query?.get(key['$ref'].split('#/components/parameters/paths/')[1]),
+                                                                                        data:       parameters.app_query?.get(key['$ref'].split('#/components/parameters/paths/')[1]),
                                                                                         //IAM parameters are required by default
                                                                                         required:   (key?.required ?? (key['$ref'].split('#/components/parameters/paths/')[1].startsWith('IAM')?true:false)),
                                                                                         type:       'QUERY',
@@ -1014,7 +991,7 @@ const bffRestApi = async (routesparameters) =>{
                                                             else
                                                                 return {...keys, ...{   
                                                                                     [key.name]:{
-                                                                                        data:       routesparameters.app_query?.get(key.name),
+                                                                                        data:       parameters.app_query?.get(key.name),
                                                                                         //IAM parameters are required by default
                                                                                         required:   (key?.required ?? (key.name.startsWith('IAM')?true:false)),
                                                                                         type:       'QUERY',
@@ -1027,7 +1004,7 @@ const bffRestApi = async (routesparameters) =>{
                                         //all other methods use body to send data
                                         //if additional properties allowed then add to defined parameters or only parameters matching defined parameters
                                         (methodObj.requestBody?.content && methodObj.requestBody?.content[CONTENT_TYPE_JSON_OPENAPI]?.schema?.additionalProperties)?
-                                            {...routesparameters.body,...Object.entries(methodObj.requestBody?.content[CONTENT_TYPE_JSON_OPENAPI]?.schema?.properties)
+                                            {...parameters.body,...Object.entries(methodObj.requestBody?.content[CONTENT_TYPE_JSON_OPENAPI]?.schema?.properties)
                                                                             .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{})}:
                                                         Object.entries(methodObj.requestBody?.content[CONTENT_TYPE_JSON_OPENAPI]?.schema?.properties??[])
                                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>addBodyKey(keys,key),{})??{},
@@ -1042,7 +1019,7 @@ const bffRestApi = async (routesparameters) =>{
                                                                 [key['$ref'].split('#/components/parameters/paths/')[1]]:
                                                                 {
                                                                     data:       openApiResourceId(  OpenApiPaths, 
-                                                                                                    routesparameters.openApi.components)?.[key['$ref'].split('#/components/parameters/paths/')[1]],
+                                                                                                    parameters.openApi.components)?.[key['$ref'].split('#/components/parameters/paths/')[1]],
                                                                     //IAM parameters are required by default
                                                                     required:   (key?.required ?? (key['$ref'].split('#/components/parameters/paths/')[1].startsWith('IAM')?true:false)),
                                                                     type:       'PATH',
@@ -1051,7 +1028,7 @@ const bffRestApi = async (routesparameters) =>{
                                                     };
                                     },{})
                                     };
-            if (AuthenticateIAM({   app_id_authenticated:   routesparameters.app_id,
+            if (AuthenticateIAM({   app_id_authenticated:   parameters.app_id,
                                     IAM_iam_user_app_id:    parametersIn.IAM_iam_user_app_id?.data,
                                     IAM_iam_user_id:        parametersIn.IAM_iam_user_id?.data,
                                     IAM_module_app_id:      parametersIn.IAM_module_app_id?.data,
@@ -1066,9 +1043,9 @@ const bffRestApi = async (routesparameters) =>{
                                         parametersIn[parameter]?.required && 
                                         (parametersIn[parameter].type == 'PATH'?
                                             parametersIn[parameter].data == null:
-                                            routesparameters.method=='GET'?
-                                            ((routesparameters.app_query?.has(parameter)??false)==false):
-                                                (parameter in routesparameters.body)==false)
+                                            parameters.method=='GET'?
+                                            ((parameters.app_query?.has(parameter)??false)==false):
+                                                (parameter in parameters.body)==false)
                                         )).length==0){ 
                 //remove path parameter not used for data parameter
                 for (const key of Object.entries(parametersIn))
@@ -1082,18 +1059,18 @@ const bffRestApi = async (routesparameters) =>{
                 );
                 //rename IAM parameter names with common names as admin parameter names
                 //admin sends parameters without IAM_ to access "anything"
-                if ('IAM_module_app_id' in parametersIn ||routesparameters.endpoint=='APP_ACCESS_EXTERNAL'){
+                if ('IAM_module_app_id' in parametersIn ||parameters.endpoint=='APP_ACCESS_EXTERNAL'){
                     //APP_ACCESS_EXTERNAL can only run function using same appid used by host and access data for same app id
-                    parametersIn.module_app_id = routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?
-                                                    routesparameters.app_id:
+                    parametersIn.module_app_id = parameters.endpoint=='APP_ACCESS_EXTERNAL'?
+                                                    parameters.app_id:
                                                         parametersIn.IAM_module_app_id!=null?
                                                             server.ORM.UtilNumberValue(parametersIn.IAM_module_app_id):
                                                                 null;
                 }
-                if ('IAM_data_app_id' in parametersIn ||routesparameters.endpoint=='APP_ACCESS_EXTERNAL'){
+                if ('IAM_data_app_id' in parametersIn ||parameters.endpoint=='APP_ACCESS_EXTERNAL'){
                     //APP_ACCESS_EXTERNAL can only run function using same appid used by host and access data for same app id
-                    parametersIn.data_app_id = routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?
-                                                    routesparameters.app_id:
+                    parametersIn.data_app_id = parameters.endpoint=='APP_ACCESS_EXTERNAL'?
+                                                    parameters.app_id:
                                                         parametersIn.IAM_data_app_id!=null?
                                                             server.ORM.UtilNumberValue(parametersIn.IAM_data_app_id):
                                                                 null;
@@ -1132,31 +1109,31 @@ const bffRestApi = async (routesparameters) =>{
                  */
                 const singleResource = () => functionRESTAPI=='commonModuleRun'?
                                                 false:
-                                                    (routesparameters.method!='GET' ||functionRESTAPI=='microserviceRequest')?
-                                                        true: ( Object.keys(openApiResourceId(OpenApiPaths, routesparameters.openApi.components)??{}).length==1 && 
-                                                                Object.values(openApiResourceId(OpenApiPaths, routesparameters.openApi.components)??{})[0]!=null);
+                                                    (parameters.method!='GET' ||functionRESTAPI=='microserviceRequest')?
+                                                        true: ( Object.keys(openApiResourceId(OpenApiPaths, parameters.openApi.components)??{}).length==1 && 
+                                                                Object.values(openApiResourceId(OpenApiPaths, parameters.openApi.components)??{})[0]!=null);
                 //return result using ISO20022 format
                 //send only parameters to the function if declared true
                 const result = await  moduleRESTAPI[functionRESTAPI]({
-                                ...(getParameter('server_app_id')               && {app_id:             routesparameters.app_id}),
-                                ...(getParameter('server_idtoken')              && {idToken:            routesparameters.idToken}),
-                                ...(getParameter('server_authorization')        && {authorization:      routesparameters.authorization}),
-                                ...(getParameter('server_user_agent')           && {user_agent:         routesparameters.user_agent}),
-                                ...(getParameter('server_accept_language')      && {accept_language:    routesparameters.accept_language}),
-                                ...(getParameter('server_response')             && {response:           routesparameters.res}),
-                                ...(getParameter('server_host')                 && {host:               routesparameters.host}),
-                                ...(getParameter('locale')                      && {locale:             routesparameters.app_query?.get('locale') ??server.app_common.commonClientLocale(routesparameters.accept_language)}),
-                                ...(getParameter('server_ip')                   && {ip:                 routesparameters.ip}),
+                                ...(getParameter('server_app_id')               && {app_id:             parameters.app_id}),
+                                ...(getParameter('server_idtoken')              && {idToken:            parameters.idToken}),
+                                ...(getParameter('server_authorization')        && {authorization:      parameters.authorization}),
+                                ...(getParameter('server_user_agent')           && {user_agent:         parameters.user_agent}),
+                                ...(getParameter('server_accept_language')      && {accept_language:    parameters.accept_language}),
+                                ...(getParameter('server_response')             && {response:           parameters.res}),
+                                ...(getParameter('server_host')                 && {host:               parameters.host}),
+                                ...(getParameter('locale')                      && {locale:             parameters.app_query?.get('locale') ??server.app_common.commonClientLocale(parameters.accept_language)}),
+                                ...(getParameter('server_ip')                   && {ip:                 parameters.ip}),
                                 ...(getParameter('server_microservice')         && {microservice:       getParameter('server_microservice').default}),
                                 ...(getParameter('server_microservice_service') && {service:            getParameter('server_microservice_service').default}),
                                 ...(getParameter('server_message_queue_type')   && {message_queue_type: getParameter('server_message_queue_type').default}),
-                                ...(getParameter('server_method')               && {method:             routesparameters.method}),
+                                ...(getParameter('server_method')               && {method:             parameters.method}),
                                 ...(Object.keys(parametersIn)?.length>0         && {data:               {...parametersIn}}),
-                                ...(getParameter('server_endpoint')             && {endpoint:           routesparameters.endpoint}),
+                                ...(getParameter('server_endpoint')             && {endpoint:           parameters.endpoint}),
                                 ...(openApiResourceId(  OpenApiPaths, 
-                                                        routesparameters.openApi.components) && {resource_id:   Object.values(
+                                                        parameters.openApi.components) && {resource_id:   Object.values(
                                                                                                                         openApiResourceId(  OpenApiPaths, 
-                                                                                                                                            routesparameters.openApi.components)??{}
+                                                                                                                                            parameters.openApi.components)??{}
                                                                                                                 )[0]})
                                 });
                 return { singleResource:singleResource(),
