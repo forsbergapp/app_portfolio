@@ -70,23 +70,6 @@ const get = async parameters => {
                    day:			    parameters.data.day
     };
     return new Promise (resolve=>{
-       /**
-        * 
-        * @param {object} record 
-        * @param {string} search 
-        * @returns 
-        */
-       const match = (record, search) =>{
-           for (const value of Object.values(record)){
-               if (!value.toString().toLowerCase().startsWith('/server/log/logs') && 
-                   !value.toString().toLowerCase().startsWith('/log/logs')){
-                    if (server.ORM.UtilSearchMatch(value, search))
-                        return true;
-                   }
-           }
-           return false;
-       };
-
        const partition = `${data.year}${data.month.toString().padStart(2,'0')}${data.day?data.day.toString().padStart(2,'0'):''}`;
        
        server.ORM.Execute({app_id:parameters.app_id, dml:'GET', object:data.logobject, get:{resource_id:null, partition:partition}})
@@ -98,9 +81,11 @@ const get = async parameters => {
            //filter records
            log_rows_array_obj.rows = log_rows_array_obj.rows.filter((/**@type{*}*/record) => {
                    return (
-                           (record.app_id == data.data_app_id ||data.data_app_id ==null)
+                           (record.AppId == data.data_app_id ||data.data_app_id ==null)
                                &&
-                           (data.search==''|| (data.search!='' && data.search!=null && match(record, data.search)))
+                           (data.search==''|| ( data.search!='' && 
+                                                data.search!=null && 
+                                                Object.values(record).some(value=>value!=null?server.ORM.UtilSearchMatch(value.toString(), data.search??''):null)))
                        );
            });
            //sort 

@@ -716,7 +716,7 @@ const bffDecryptRequest = async parameters =>{
                                         request:{   Req:req,
                                                     ResponseTime:server.UtilResponseTime(res),
                                                     StatusCode:res.statusCode,
-                                                    StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
+                                                    StatusMessage:'SSE'
                                                 },
                                         log:''
                                     }
