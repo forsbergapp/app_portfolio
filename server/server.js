@@ -403,6 +403,8 @@ class serverClass {
         const PORT_APP = server.ORM.db.OpenApi.getViewServers({app_id:0,data:{pathType:'APP'}}).result[0].variables.port.default;
         /**@type{string} */
         const PORT_ADMIN = server.ORM.db.OpenApi.getViewServers({app_id:0,data:{pathType:'ADMIN'}}).result[0].variables.port.default;
+        /**@type{string} */
+        const PORT_DUMMY = server.ORM.db.OpenApi.getViewServers({app_id:0,data:{pathType:'NOHANGING_HTTPS'}}).result[0].variables.port.default;
         //Start http server and listener for apps
         this.server_app = http.createServer((req,res)=>server.request(
                                             /**@ts-ignore*/
@@ -419,15 +421,15 @@ class serverClass {
         this.server_admin = http.createServer((req,res)=>server.request(
                                             /**@ts-ignore*/
                                             req,
-                                            res)).listen(server.ORM.UtilNumberValue(PORT_ADMIN)??5000, NETWORK_INTERFACE, () => {
+                                            res)).listen(server.ORM.UtilNumberValue(PORT_ADMIN)??3333, NETWORK_INTERFACE, () => {
             server.ORM.db.Log.post({app_id:0, 
                                     data:{  object:'LogServerInfo', 
-                                            log:'HTTP Server Admin  PORT: ' + (server.ORM.UtilNumberValue(PORT_ADMIN)??5000)
+                                            log:'HTTP Server Admin  PORT: ' + (server.ORM.UtilNumberValue(PORT_ADMIN)??3333)
                                         }
                                     });
         });
         //create dummy default https listener that will be destroyed or browser might hang
-        this.server_dummy = net.createServer(socket => socket.destroy()).listen(443, () => null);
+        this.server_dummy = net.createServer(socket => socket.destroy()).listen(server.ORM.UtilNumberValue(PORT_DUMMY)??443, () => null);
         
     }
     /**
