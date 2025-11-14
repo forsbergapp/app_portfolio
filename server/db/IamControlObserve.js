@@ -26,19 +26,21 @@ const post = async (app_id, data) => {
     //check required attributes
     if ((data.Status==0 ||data.Status==1) && data.Type){
         const id = Date.now();
+        /**@type{server['ORM']['Object']['IamControlObserve']}*/
+        const data_new = {  Id:id, 
+                            IamUserId:data.IamUserId,
+                            AppId:data.AppId,
+                            Ip:data.Ip, 
+                            UserAgent:data.UserAgent,
+                            Host:data.Host,
+                            AcceptLanguage:data.AcceptLanguage,
+                            Method:data.Method,
+                            Url:data.Url,
+                            Status:data.Status,
+                            Type:data.Type,
+                            Created:new Date().toISOString()};
         return server.ORM.Execute({  app_id:app_id, dml:'POST', object:'IamControlObserve', 
-                                    post:{data:{id:id, 
-                                                iam_user_id:data.IamUserId,
-                                                app_id:data.AppId,
-                                                ip:data.Ip, 
-                                                user_agent:data.UserAgent,
-                                                host:data.Host,
-                                                accept_language:data.AcceptLanguage,
-                                                method:data.Method,
-                                                url:data.Url,
-                                                status:data.Status,
-                                                type:data.Type,
-                                                created:new Date().toISOString()}}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
+                                    post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
             if (result.AffectedRows>0){
                 result.InsertId = id;
                 return {result:result,type:'JSON'};
@@ -61,6 +63,7 @@ const post = async (app_id, data) => {
  */
 const update = async (app_id, resource_id, data) => {
     if ((data.Status==0 ||data.Status==1)){
+        /**@type{server['ORM']['Object']['IamControlObserve']}*/
         const data_update = {};
         if (data.AppId!=null)
             data_update.AppId = data.AppId;
@@ -77,7 +80,7 @@ const update = async (app_id, resource_id, data) => {
         if (data.Url!=null)
             data_update.Url = data.Url;
         data_update.Status = data.Status;
-        data_update.modified = new Date().toISOString();
+        data_update.Modified = new Date().toISOString();
         //id and type not allowed to update
         if (Object.entries(data_update).length>0)
             return server.ORM.Execute({app_id:app_id, dml:'UPDATE',object:'IamControlObserve', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
