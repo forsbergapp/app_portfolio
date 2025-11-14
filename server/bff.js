@@ -690,6 +690,19 @@ const bffDecryptRequest = async parameters =>{
                         });
                     }
                     else{
+                        //Add observe record with stop immediately status
+                        /**@type{server['ORM']['Object']['IamControlObserve']} */
+                        const recordObserve = {    IamUserId:null,
+                                AppId:common_app_id,
+                                Ip:req.ip.replace('::ffff:',''), 
+                                UserAgent:req.headers['user-agent'], 
+                                Host:req.headers.host, 
+                                AcceptLanguage:req.headers['accept-language'], 
+                                Method:req.method,
+                                Url:req.path,
+                                Status:1, 
+                                Type:'DECRYPTION_FAIL'};
+                        await server.ORM.db.IamControlObserve.post(common_app_id, recordObserve);
                         return bffResponse({result_request:{http:401, 
                                                             code:null,
                                                             text:server.iam.iamUtilMessageNotAuthorized(), 
