@@ -833,8 +833,9 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
         iamRequestRateLimiterCount[parameters.ip] = {count:0, firstRequestTime:currentTime};
         
     const {count, firstRequestTime} = iamRequestRateLimiterCount[parameters.ip];
-    const USER = parameters.path?.toLowerCase().startsWith('/bff/app_access')?1:null;                                                                              
-    const ADMIN = parameters.path?.toLowerCase().startsWith('/bff/admin')?1:null;    
+    
+    const USER = parameters.path?.toLowerCase().startsWith(parameters.openApi.components.parameters.config.SERVER_REST_RESOURCE_BFF.default + '/app_access')?1:null;                                                                              
+    const ADMIN = parameters.path?.toLowerCase().startsWith(parameters.openApi.components.parameters.config.SERVER_REST_RESOURCE_BFF.default + '/admin')?1:null;    
                                                                             
     if (currentTime - firstRequestTime > RATE_LIMIT_WINDOW_MS){
         iamRequestRateLimiterCount[parameters.ip] = {count:1, firstRequestTime:currentTime};

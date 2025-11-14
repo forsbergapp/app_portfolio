@@ -848,9 +848,14 @@ const bffDecryptRequest = async parameters =>{
                     }
                     else
                         //too many requests
-                        res.statusCode = 429;
-                        res.statusMessage= server.iam.iamUtilMessageNotAuthorized();
-                        res.end();
+                        return bffResponse({result_request:{http:429, 
+                                                            code:null,
+                                                            text:server.iam.iamUtilMessageNotAuthorized(), 
+                                                            developerText:'bff',
+                                                            moreInfo:null, 
+                                                            type:'JSON'},
+                                                route:null,
+                                                res:res});
             }
             else
                 res.end();
