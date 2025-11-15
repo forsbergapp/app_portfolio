@@ -19,7 +19,6 @@ class serverClass {
         this.CONTENT_TYPE_JSON = 'application/json; charset=utf-8';	
 		this.CONTENT_TYPE_HTML = 'text/html; charset=utf-8';	
 		this.CONTENT_TYPE_SSE = 'text/event-stream; charset=utf-8';
-        this.CONTENT_TYPE_PLAIN = 'text/plain; charset=utf-8';
         /**@type{*} */
         this.server_app = {};
         /**@type{*} */
