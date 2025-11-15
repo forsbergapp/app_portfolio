@@ -1935,9 +1935,14 @@ body,
     font-size: 1em;
     font-weight: bold;
 }
+.common_code {
+    display: grid;
+    grid-template-columns: 4em calc(100% - 4em);
+}
+.common_code,
 .common_md_code {
     border: 1px solid;
-    white-space: pre;
+    white-space: preserve !important;
     border-radius: var(--common_app_css_border_radius);
     padding: 0.5em;
     font-size: 0.9em !important;
@@ -2012,6 +2017,24 @@ body,
 .common_md_bold{
     font-weight: bold;
     display:inline;
+}
+/*CODE*/
+.common_md_line,
+.common_code_line{
+    width: 4em;
+    display:inline-block;
+    font-size: 0.7em !important;
+    padding-inline-end: 1em;
+    text-align: end;
+    vertical-align: middle;
+}
+.common_md_text,
+.common_code_text{
+    font-size: 0.7em !important;
+    width: calc(100% - 5em);
+    overflow: auto;
+    display:inline-block;
+    vertical-align: middle;
 }
 /* common document*/
 .common_document{

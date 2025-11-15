@@ -95,32 +95,7 @@ body{
     font-weight: bold;
     font-style: italic;
 }
-/*CODE*/
-.common_md_code,
-.common_code{
-    border: 1px solid;
-    white-space: preserve;
-    border-radius: var(--common_app_css_border_radius);
-    padding: 0.5em;
-    font-size: 0.9em !important;
-}
-.common_md_line,
-.common_code_line{
-    width: 4em;
-    display:inline-block;
-    font-size: 0.7em !important;
-    padding-inline-end: 1em;
-    text-align: end;
-    vertical-align: middle;
-}
-.common_md_text,
-.common_code_text{
-    font-size: 0.7em !important;
-    width: calc(100% - 5em);
-    overflow: auto;
-    display:inline-block;
-    vertical-align: middle;
-}
+
 /*RESPONSIVE SECURE*/
 @media only screen and (min-width: 768px) {
 	body{
