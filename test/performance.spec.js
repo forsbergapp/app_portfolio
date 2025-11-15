@@ -31,13 +31,9 @@ const test = async t =>
                 const request_status = [];
                 for (let i=0; i<totalRequests; i++){
                     requests.push(new Promise(resolve=>{
-                        fetch(PROTOCOL + HOST + ':' + PORT)
-                        .then((response=>{
-                            status = response.status;
-                            return response.text();
-                            }))
-                        .then(()=>{
-                            request_status.push(status);
+                        t.serverRequest({url:PROTOCOL + HOST + ':' + PORT})
+                        .then(result=>{
+                            request_status.push(result.status??0);
                             resolve(null);
                         })
                         .catch(()=>{err++;});

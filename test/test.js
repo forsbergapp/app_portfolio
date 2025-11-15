@@ -4,6 +4,7 @@
 /**
  * @import {server} from '../server/types.js'
  */
+const {server} = await import('../server/server.js');
 /**
  * @name describe
  * @description  description function for Behaviour Driven Development (BDD) test pattern
@@ -149,4 +150,64 @@ class Expect {
  */
 const expect = (desc,actual) => new Expect(desc, actual);
 
-export {describe, it, expect};
+/**
+ * @description Server request to be used in tests
+ *              with specific test request parameters
+ * @param {{url:string}} parameters 
+ * @returns {Promise <{ result:*, 
+ *                      reqSize:number, 
+ *                      resSize:number, 
+ *                      status:server['server']['res']['statusCode']|undefined}>}
+ */
+const serverRequest = async parameters =>{
+    const protocol = await import('node:http')
+    return new Promise((resolve, reject)=>{
+        /**
+         * @param {import('node:http').IncomingMessage} res
+         * @returns {void}
+         */
+        const response = res =>{
+            let responseBody = '';
+            res.setEncoding('utf8');
+            res.on('data', (/**@type{*}*/chunk) =>{
+                responseBody += chunk;
+            });
+            res.on('end', ()=>{
+                resolve({result:responseBody,
+                        reqSize: parameters.url.length,
+                        resSize: responseBody.length,
+                        status:res.statusCode})
+            });
+        };
+        /**@type{Object.<string,string>} */
+        const OpenApiKey = JSON.parse(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'IAM_AUTHENTICATE_REQUEST_KEY_VALUES_APP'}}).result);
+        /**@type{import('node:http').RequestOptions}*/    
+        const options = {
+                        family: 4,
+                        method: 'GET',
+                        headers:{
+                                'Accept-Language':  '*',
+                                'Connection':   	'close',
+                                //OWASP 3.2.1 requirement
+                                'sec-fetch-dest':   OpenApiKey['sec-fetch-dest']??null,
+                                'sec-fetch-mode':   OpenApiKey['sec-fetch-mode']??null,
+                                'sec-fetch-site':   OpenApiKey['sec-fetch-site']??null,
+                                'User-Agent':		server.UtilAppFilename(import.meta.url)
+                                },
+                        };
+        const request =  protocol.request(new URL(parameters.url), options, response);
+        request.on('error', error => {
+                    reject({   
+                                http:500,
+                                code:'',
+                                text:error,
+                                developerText:'',
+                                moreInfo:null,
+                                type:'JSON'
+                    })
+        });
+        request.end();
+    })
+}
+
+export {describe, it, expect, serverRequest};

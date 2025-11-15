@@ -91,7 +91,7 @@ const component = async props => {
     const PROTOCOL = 'http://';
     const HOST = server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result[0].variables.host.default;
     const PORT = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result[0].variables.port.default);
-
+    const test = await import('../../../../test/test.js');
     class Benchmark {
         /**
          * @param {{concurrency: number,
@@ -377,18 +377,12 @@ const component = async props => {
     * @returns {Promise.<test_function_result>}
     */
     const test_function = async () => {
-        /**@type{number} */
-        let status;
-        return await fetch(PROTOCOL + HOST + ':' + PORT)
-                    .then((response=>{
-                            status = response.status;
-                            return response.text();
-                            }))
+        return await test.serverRequest({url:PROTOCOL + HOST + ':' + PORT})
                     .then((result=>{ 
-                                    return {   result:result,
-                                                reqSize: (PROTOCOL + HOST + ':' + PORT).length,
-                                                resSize: result.length,
-                                                status:status};
+                                    return {   result:result.result,
+                                                reqSize: result.reqSize,
+                                                resSize: result.resSize,
+                                                status:result.status??0};
                                     }))
                     .catch((err)=>{throw err;});
     };
