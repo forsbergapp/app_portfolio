@@ -877,6 +877,8 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
  */
  const iamAuthenticateRequest = async parameters => {
    
+
+    const BLOCKED_PATHS = ['/favicon.ico', '/robots.txt'];
     const common_app_id = server.ORM.UtilNumberValue(parameters.openApi.components.parameters.config.APP_COMMON_APP_ID.default) ?? 0;
 
     let statusCode;
@@ -975,8 +977,8 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
                 statusMessage= '';
             }
             else{
-                //match APP/ADMIN path or public path are requested according to OpenApi
-                if (!(parameters.openApi.servers.filter(row=>['APP', 'ADMIN'].includes(row['x-type'].default) && row.variables.basePath.default == parameters.req.url)[0] &&
+                //match APP/ADMIN path or public path are requested according to OpenApi, excludes blocked paths here
+                if (!BLOCKED_PATHS.includes(parameters.req.url) && !(parameters.openApi.servers.filter(row=>['APP', 'ADMIN'].includes(row['x-type'].default) && row.variables.basePath.default == parameters.req.url)[0] &&
                     parameters.req.method.toUpperCase() == 'GET') &&
                     (!parameters.OpenApiPathsMatchPublic ||
                         (parameters.OpenApiPathsMatchPublic[1][parameters.req.method.toLowerCase()] && 
@@ -986,7 +988,7 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
                                 parameter.default=='public').length==0))){
                     await server.ORM.db.IamControlObserve.post(common_app_id, 
                                                 {   ...record,
-                                                    Status:1, 
+                                                    Status:0, 
                                                     Type:'INVALID_PATH'});
                     fail ++;
                 }
@@ -1035,28 +1037,15 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
                     statusMessage= '';
                 }
                 else
-                    if (parameters.req.originalUrl=='/robots.txt') {
+                    if (BLOCKED_PATHS.includes(parameters.req.originalUrl)) {
                         statusCode = 401;
-                        statusMessage=' ';
-                        parameters.res.type(server.CONTENT_TYPE_PLAIN);
-                        parameters.res.write('User-agent: *\nDisallow: /');
-                    }
-                    else{
-                        //browser favicon to ignore
-                        if (parameters.req.originalUrl=='/favicon.ico'){
-                            statusMessage = ' ';
-                            parameters.res.write('');
-                            parameters.res.writeHead(parameters.res.statusCode, {
-                                        'Content-Type': server.CONTENT_TYPE_PLAIN,
-                                        'Content-length':0
-                            });
-                        }
+                        statusMessage=' ';    
                     }
             }
         }
         parameters.res.statusCode = statusCode?statusCode:parameters.res.statusCode;
         parameters.res.statusMessage = statusMessage?statusMessage:parameters.res.statusMessage;
-        if (statusMessage !=null)
+        if (statusCode !=null)
             return false;
         else
             return true;
