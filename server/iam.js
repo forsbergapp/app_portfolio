@@ -166,7 +166,7 @@ const iamUtilResponseNotAuthorized = async (res, status, reason, bff=false) => {
 
 /**
  * @name iamAuthenticateUser
- * @description IAM Authenticates admin login
+ * @description IAM Authenticates login
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
