@@ -18,7 +18,11 @@
                 },
                 {   "id":4,
                     "menu":"",
-                    "doc":"1.owasp"
+                    "doc":"1.security_owasp"
+                },
+                {   "id":5,
+                    "menu":"",
+                    "doc":"1.security_implementation"
                 }]
     },
     {
@@ -33,10 +37,6 @@
         "type":"GUIDE",
         "menu_sub":[
                 {   "id":1,
-                    "menu":"",
-                    "doc":"3.security"
-                },
-                {   "id":2,
                     "menu":"",
                     "doc":"3.database"
                 }]
