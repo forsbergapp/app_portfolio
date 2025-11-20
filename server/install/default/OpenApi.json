@@ -4947,7 +4947,15 @@
                         "type":"string"
                     }
                 }
-            }
+            },
+            "parameterDoc":{
+                "TokenExpireDescription":{
+                    "description":"Expire time setting in jsonwebtoken that will result numeric date format, [number]d = number o days, [number]h = number of hours or [number]m = number of minutes, default 1 hour if 'd', 'h' and 'm' are missing, default number = 1 if number is missing. App displays different role based count down info of remaining session lifetime using this expire time setting. Server will send server side message to force logout of expired session wihtout any prompts and users should keep track of remaining lifetime as directive"
+                },
+                "TokenSecretDescription":{
+                    "description"  :"Secret using SHA256 encryption for jsonwebtoken"
+                }
+		    }
         },
         "securitySchemes":{
             "AuthorizationBasic":{
@@ -5112,19 +5120,19 @@
                 },
                 "IAM_MICROSERVICE_TOKEN_EXPIRE_ACCESS":{
                     "default":"365d",
-                    "description":"setting jsonwebtoken"
+                    "$ref":"#/components/schemas/parameterDoc/TokenExpireDescription"
                 },
                 "IAM_MICROSERVICE_TOKEN_SECRET":{
                     "default":"",
-                    "description":"setting jsonwebtoken"
+                    "$ref":"#/components/schemas/parameterDoc/TokenSecretDescription"
                 },
                 "IAM_ADMIN_TOKEN_EXPIRE_ACCESS":{
                     "default":"1d",
-                    "description":"setting jsonwebtoken"
+                    "$ref":"#/components/schemas/parameterDoc/TokenExpireDescription"
                 },
                 "IAM_ADMIN_TOKEN_SECRET":{
                     "default":"",
-                    "description":"setting jsonwebtoken"
+                    "$ref":"#/components/schemas/parameterDoc/TokenSecretDescription"
                 },
                 "IAM_USER_PASSWORD_ENCRYPTION_KEY":{
                     "default":"",
@@ -5144,27 +5152,27 @@
                 },
                 "IAM_USER_TOKEN_APP_ACCESS_EXPIRE":{
                     "default":"1h",
-                    "description":""
+                    "$ref":"#/components/schemas/parameterDoc/TokenExpireDescription"
                 },
                 "IAM_USER_TOKEN_APP_ACCESS_SECRET":{
                     "default":"",
-                    "dscription":""
+                    "$ref":"#/components/schemas/parameterDoc/TokenSecretDescription"
                 },
                 "IAM_USER_TOKEN_APP_ACCESS_VERIFICATION_EXPIRE":{
                     "default":"2m",
-                    "description":""
+                    "$ref":"#/components/schemas/parameterDoc/TokenExpireDescription"
                 },
                 "IAM_USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET":{
                     "default":"",
-                    "description":""
+                    "$ref":"#/components/schemas/parameterDoc/TokenSecretDescription"
                 },
                 "IAM_USER_TOKEN_APP_ID_EXPIRE":{
                     "default":"2d",
-                    "description":""
+                    "$ref":"#/components/schemas/parameterDoc/TokenExpireDescription"
                 },
                 "IAM_USER_TOKEN_APP_ID_SECRET":{
                     "default":"",
-                    "description":""
+                    "$ref":"#/components/schemas/parameterDoc/TokenSecretDescription"
                 },
                 "IAM_CONTENT_SECURITY_POLICY_ENABLE":{
                     "default":"1",
