@@ -445,7 +445,7 @@ class Jwt {
         return Jwt.fromBase64(`${securedInput}.${Jwt.signatureCompute(Jwt.fromBase64(securedInput), secret)}`);
     }
     /**
-     * @name verify
+     * @name decode
      * @description verify jsonwebtoken pattern using RFC 7519
      * @method
      * @param {string} token
