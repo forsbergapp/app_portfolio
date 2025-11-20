@@ -729,7 +729,7 @@ const bffDecryptRequest = async parameters =>{
                         });
                     }
                     else{
-                        //Add observe record with stop immediately status
+                        //Add observe record
                         /**@type{server['ORM']['Object']['IamControlObserve']} */
                         const recordObserve = {    IamUserId:null,
                                 AppId:common_app_id,
@@ -739,7 +739,7 @@ const bffDecryptRequest = async parameters =>{
                                 AcceptLanguage:req.headers['accept-language'], 
                                 Method:req.method,
                                 Url:req.path,
-                                Status:1, 
+                                Status:0, 
                                 Type:'DECRYPTION_FAIL'};
                         await server.ORM.db.IamControlObserve.post(common_app_id, recordObserve);
                         return bffResponse({result_request:{http:401, 
