@@ -44,6 +44,7 @@
  * @property {number}       app_framework_messages
  * @property {number}       admin_only
  * @property {number}       admin_first_time
+ * @property {number}       app_request_tries
  * @property {number}       app_requesttimeout_seconds
  * @property {number}       app_requesttimeout_admin_minutes
  * @property {string}       app_fonts

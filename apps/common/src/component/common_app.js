@@ -249,6 +249,7 @@
                                 app_framework_messages:         props.methods.UtilNumberValue(props.data.openApiConfig.APP_FRAMEWORK_MESSAGES.default)??1,
                                 admin_only:                     admin_only?1:0,
                                 admin_first_time:               count_user==0?1:0,
+                                app_request_tries:              props.methods.UtilNumberValue(props.data.openApiConfig.APP_REQUEST_TRIES.default)??5,
                                 app_requesttimeout_seconds:     props.methods.UtilNumberValue(props.data.openApiConfig.APP_REQUESTTIMEOUT_SECONDS.default)??5,
                                 app_requesttimeout_admin_minutes:props.methods.UtilNumberValue(props.data.openApiConfig.APP_REQUESTTIMEOUT_ADMIN_MINUTES.default)??60,
                                 //font css split by '@font-face' in array, unicode fonts only, ui fonts applied at start

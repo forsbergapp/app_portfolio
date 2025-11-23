@@ -41,6 +41,7 @@ const COMMON_GLOBAL = {
     app_content_type_html: '',
     app_content_type_sse: '',
     app_fonts_loaded:[],
+    app_request_tries: 5,
     app_requesttimeout_seconds:5,
     app_requesttimeout_admin_minutes:60,
     app_typewatch:[],
@@ -1821,57 +1822,21 @@ const commonUserPreferencesGlobalSetDefault = (preference) => {
     }
 };
 
-/**
- * @name common_FFBSSE
- * @description Receives server side event from BFF, decrypts message using start uuid and delegates message
- * @function
- * @param {{socket:*, 
- *          uuid:string|null, 
- *          secret:string|null}} parameters
- */
-const common_FFBSSE = async parameters =>{
-    /**
-     * @param {string|null} BFFmessage
-     * @returns {{sse_type:string,
-     *           sse_message:string}}
-     */
-    const getMessage = BFFmessage =>{
-        if (BFFmessage){
-            const messageDecoded = commonWindowFromBase64(BFFmessage);
-            return {sse_type:JSON.parse(messageDecoded).sse_type,
-                    sse_message:JSON.parse(messageDecoded).sse_message};
-        }
-        else
-            return {sse_type:'',
-                    sse_message:''};
-    };
-    const BFFStream = new WritableStream({
-        async write(data){
-            const BFFmessage = COMMON_GLOBAL.x.decrypt({  
-                                    iv:         JSON.parse(commonWindowFromBase64(parameters.secret??'')).iv,
-                                    key:        JSON.parse(commonWindowFromBase64(parameters.secret??'')).jwk.k, 
-                                    ciphertext: new TextDecoder('utf-8').decode(data).split('\\n\\n')[0].split('data: ')[1]});
-            const SSEmessage = getMessage(BFFmessage);
-            switch (SSEmessage.sse_type){
-                case 'FONT_URL':{
-                    commonMiscLoadFont({uuid:               parameters.uuid??'',
-                                        secret:             parameters.secret??'',
-                                        message:            SSEmessage.sse_message});
-                    break;
-                }
-                default:{
-                    commonSocketSSEShow(SSEmessage);
-                    break;
-                }
-            }
-        }
-    //The total number of chunks that can be contained in the internal queue before backpressure is applied
-    }, new CountQueuingStrategy({ highWaterMark: 1 }));
-    parameters.socket.pipeTo(BFFStream).catch(()=>commonWindowSetTimeout(()=>{commonSocketConnectOnline();}, 5000));
-};
+
 /**
  * @name commonFFB
  * @description Frontend for Backend (FFB)
+ *              All requests are encrypted
+ *              Can use request for roles 
+ *              APP_ACCESS_EXTERNAL
+ *              APP_ACCESS
+ *              APP_ACCESS_VERIFICATION
+ *              ADMIN
+ *              IAM
+ *              Uses backoff algorithm to requests
+ *              Adds increasing milliseconds to request timeout or error 429 Too many requests: Math.pow(2, increased retry) * 1000
+ *              Timeout error will be returned until server parameter APP_REQUEST_TRIES reached
+ *              Pipes encrypted result to readable stream if SSE where events are delegated or returns result from REST API
  * @function
  * @param {{path:string,
  *          query?:string|null,
@@ -1989,54 +1954,114 @@ const commonFFB = async parameter =>{
          * @param {*} message
          */
         const showError      = message   => commonMessageShow('ERROR_BFF', null, null, message);
-        return parameters.response_type=='SSE'?
-            /**@ts-ignore */
-            fetch(url, options).then(result=>common_FFBSSE({socket:result.body, uuid:parameters.uuid, secret:parameters.secret})):
-                await Promise.race([ new Promise((resolve)=>
-                    setTimeout(()=>{
-                        if (resultFetch.finished==false){
-                            showError('🗺⛔?');
-                            resolve('🗺⛔?');
-                            throw ('TIMEOUT');
-                        }
-                        }, COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id?
-                                (1000 * 60 * COMMON_GLOBAL.app_requesttimeout_admin_minutes):
-                                parameters.timeout || (1000 * COMMON_GLOBAL.app_requesttimeout_seconds))),
+        /**
+         * 
+         * @param {*} data 
+         * @returns {string}
+         */
+        const getDecrypted   = data =>
+                COMMON_GLOBAL.x.decrypt({
+                            iv:         JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
+                            key:        JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k,
+                            ciphertext: parameters.response_type=='SSE'?
+                                            new TextDecoder('utf-8').decode(data).split('\\n\\n')[0].split('data: ')[1]:
+                                            data});
+        let retries = 0;
+        //loop max retries according to parameter until result is fetched in case of too many request or timeout errors
+        do{
+            //add backoff algorithm to requests
+            //add increasing milliseconds to user or admin request timeout values
+            const waitBackoffInMilliseconds = Math.pow(2, retries) * 1000;
+            //0:0 sec, 1:2 sec, 2:4 sec, 3:8 sec, 4:16 sec, 5:32...
+            const result = await Promise.race(
+                [   new Promise((resolve)=>
+                        setTimeout(()=>{
+                            if (resultFetch.finished==false){
+                                showError('🗺⛔?');
+                                resolve('🗺⛔?');
+                                throw ('TIMEOUT');
+                            }
+                            }, (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id?
+                                    (1000 * 60 * COMMON_GLOBAL.app_requesttimeout_admin_minutes):
+                                    parameters.timeout || (1000 * COMMON_GLOBAL.app_requesttimeout_seconds)) + waitBackoffInMilliseconds
+                        )),
                     /**@ts-ignore */
-                    await fetch(url, options)
-                        .then(response =>{
+                    fetch(url, options)
+                        .then((/**@type{*}*/response) =>{
                             status = response.status;
-                            return response.text();
+                            if (parameters.response_type=='SSE')
+                                return response;
+                            else
+                                return response.text();
                         })
-                        .then(result => {
-                            const result_decrypted = 
-                                        COMMON_GLOBAL.x.decrypt({
-                                                iv:         JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
-                                                key:        JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k,
-                                                ciphertext: result});
+                        .then(result => {                                    
                             switch (status){
                                 case 200:
                                 case 201:{
-                                    /**@ts-ignore */
-                                    return result_decrypted;
+                                    if (parameters.response_type=='SSE'){
+                                        /**
+                                         * @param {string|null} BFFmessage
+                                         * @returns {{sse_type:string,
+                                         *           sse_message:string}}
+                                         */
+                                        const getSSEMessage = BFFmessage =>{
+                                            if (BFFmessage){
+                                                const messageDecoded = commonWindowFromBase64(BFFmessage);
+                                                return {sse_type:JSON.parse(messageDecoded).sse_type,
+                                                        sse_message:JSON.parse(messageDecoded).sse_message};
+                                            }
+                                            else
+                                                return {sse_type:'',
+                                                        sse_message:''};
+                                        };
+                                        const BFFStream = new WritableStream({
+                                            async write(BFFmessage){
+                                                const SSEmessage = getSSEMessage(getDecrypted(BFFmessage));
+                                                switch (SSEmessage.sse_type){
+                                                    case 'FONT_URL':{
+                                                        commonMiscLoadFont({uuid:               parameters.uuid??'',
+                                                                            secret:             parameters.secret??'',
+                                                                            message:            SSEmessage.sse_message});
+                                                        break;
+                                                    }
+                                                    default:{
+                                                        commonSocketSSEShow(SSEmessage);
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        //The total number of chunks that can be contained in the internal queue before backpressure is applied
+                                        }, new CountQueuingStrategy({ highWaterMark: 1 }));
+                                        result.body.pipeTo(BFFStream).catch(()=>commonWindowSetTimeout(()=>{commonSocketConnectOnline();}, 5000));
+                                        return {status:status, result:null};
+                                    }
+                                    else
+                                        /**@ts-ignore */
+                                        return {status:status, result:getDecrypted(result)};
                                 }
                                 case 400:{
                                     //Bad request
                                     commonMessageShow('ERROR_BFF', null, 'message_text', '!');
-                                    throw result_decrypted;
+                                    throw getDecrypted(result);
+                                }
+                                case 429:{
+                                    //Too many requests
+                                    return {status:status, result:null};
                                 }
                                 case 404:   //Not found
                                 case 401:   //Unauthorized, token expired
                                 case 403:   //Forbidden, not allowed to login or register new user
                                 case 503:   //Service unavailable or other error in microservice
                                 {   
-                                    showError(result_decrypted);
-                                    throw result_decrypted;
+                                    const error = getDecrypted(result);
+                                    showError(error);
+                                    throw error;
                                 }
                                 case 500:{
                                     //Unknown error
-                                    commonException(COMMON_GLOBAL.app_function_exception, result_decrypted);
-                                    throw result_decrypted;
+                                    const error = getDecrypted(result);
+                                    commonException(COMMON_GLOBAL.app_function_exception, error);
+                                    throw error;
                                 }
                             }
                         })
@@ -2048,7 +2073,15 @@ const commonFFB = async parameter =>{
                             if (parameters.spinner_id && COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
                                 COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.remove('common_loading_spinner');
                         })
-        ]);
+                ]);
+            if ([200,201].includes(result.status))
+                return result.result;
+            else
+                retries++;
+            }
+        while (retries < COMMON_GLOBAL.app_request_tries);
+        showError('🗺⛔?');
+        throw ('TIMEOUT');
     };
     return await FFB({
             uuid: COMMON_GLOBAL.x.uuid??'',
@@ -3492,7 +3525,6 @@ const commonGet = () =>{
         commonUserUpdateAvatar:commonUserUpdateAvatar,
         commonUserLocale:commonUserLocale,
         /* FFB */
-        common_FFBSSE,
         commonFFB:commonFFB,
         /* SERVICE SOCKET */
         commonSocketSSEShow:commonSocketSSEShow, 
@@ -3653,7 +3685,6 @@ export{/* GLOBALS*/
        commonUserUpdateAvatar,
        commonUserLocale,
        /* FFB */
-       common_FFBSSE,
        commonFFB,
        /* SERVICE SOCKET */
        commonSocketSSEShow, 

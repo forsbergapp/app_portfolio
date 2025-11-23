@@ -158,6 +158,7 @@
  *              app_content_type_html: string,
  *              app_content_type_sse:  string,
  *              app_fonts_loaded:{family:string, url:string, attributes:Object.<string,*>}[],
+ *              app_request_tries:number,
  *              app_requesttimeout_seconds:number,
  *              app_requesttimeout_admin_minutes:number,
  *              app_metadata:commonMetadata,

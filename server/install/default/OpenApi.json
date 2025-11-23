@@ -5078,9 +5078,13 @@
                     "default":"",
                     "description":"Used by worldcities random function"
                 },
-                "APP_REQUESTTIMEOUT_SECONDS":{
+                "APP_REQUEST_TRIES":{
                     "default":5,
                     "description":""
+                },
+                "APP_REQUESTTIMEOUT_SECONDS":{
+                    "default":5,
+                    "description":"Used by backoff algoritm in clients calling REST API"
                 },
                 "APP_REQUESTTIMEOUT_ADMIN_MINUTES":{
                     "default":60,
