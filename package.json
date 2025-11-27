@@ -8,8 +8,8 @@
   "license": "",
   "type": "module",
   "description": "",
-  "devDependencies": {
-    "@types/node": "^22.15.17",
-    "eslint": "^8.49.0"
+  "dependencies": {
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.1"
   }
 }
