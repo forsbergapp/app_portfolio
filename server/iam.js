@@ -237,7 +237,7 @@ const iamAuthenticateUser = async parameters =>{
                         IamUserId:              user.Id,
                         IamUserUsername:        user.Username,
                         Token:                  jwt_data?jwt_data.token:null,
-                        Ua:                     null};
+                        Ua:                     parameters.user_agent};
                 await server.ORM.db.IamAppAccess.post(parameters.app_id, file_content);
                 //update info in connected list and then return login result
                 return await server.socket.socketConnectedUpdate(parameters.app_id, 
@@ -284,7 +284,7 @@ const iamAuthenticateUser = async parameters =>{
                         Res:		            result,
                         Token:                  null,
                         Ip:                     parameters.ip,
-                        Ua:                     null};
+                        Ua:                     parameters.user_agent};
             await server.ORM.db.IamAppAccess.post(parameters.app_id, file_content);
             return {http:401,
                 code:'IAM',
@@ -1319,7 +1319,7 @@ const iamAuthenticateMicroservice = async parameters =>{
 const iamAppAccessGet = parameters => {const rows = server.ORM.db.IamAppAccess.get(parameters.app_id, null).result
                                                                 .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>
                                                                     row.IamUserId==server.ORM.UtilNumberValue(parameters.data.iam_user_id) &&  
-                                                                    row.AppId==(server.ORM.UtilNumberValue(parameters.data.data_app_id==''?null:parameters.data.data_app_id) ?? row.AppId));
+                                                                    row.AppId==(server.ORM.UtilNumberValue(parameters.data.data_app_id) ?? row.AppId));
                                                     
                                                     return {result:rows.length>0?
                                                                 rows.sort(( /**@type{server['ORM']['Object']['IamAppAccess'] & {Created:string}}*/a,

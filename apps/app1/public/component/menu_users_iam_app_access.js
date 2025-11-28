@@ -63,7 +63,7 @@ const template = props => ` <div id='menu_users_iam_app_access_row_title' class=
  *                      template:string}>}
  */
 const component = async props => {
-    const user_logon = await props.methods.COMMON.commonFFB({path:'/server-iam/iamappaccess', query:`data_iam_user_id=${props.data.iam_user_id}&data_app_id=`, method:'GET', authorization_type:'ADMIN'})
+    const user_logon = await props.methods.COMMON.commonFFB({path:'/server-iam/iamappaccess', query:`iam_user_id=${props.data.iam_user_id}&data_app_id=`, method:'GET', authorization_type:'ADMIN'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
  
     return {
