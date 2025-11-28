@@ -94,27 +94,33 @@ const post = async (app_id, data) => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server['ORM']['Object']['AppData']}} parameters
+ *          data:{  name: server['ORM']['Object']['AppData']['Name'],
+ *                  value: server['ORM']['Object']['AppData']['Value'],
+ *                  display_data: server['ORM']['Object']['AppData']['DisplayData'],
+ *                  data2: server['ORM']['Object']['AppData']['Data2'],
+ *                  data3: server['ORM']['Object']['AppData']['Data3'],
+ *                  data4: server['ORM']['Object']['AppData']['Data4'],
+ *                  data5: server['ORM']['Object']['AppData']['Data5']}}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
     /**@type{server['ORM']['Object']['AppData']} */
     const data_update = {};
     //allowed parameters to update:
-    if (parameters.data.Name!=null)
-        data_update.Name = parameters.data.Name;
-    if (parameters.data.Value!=null)
-        data_update.Value = parameters.data.Value;
-    if (parameters.data.DisplayData!=null)
-        data_update.DisplayData = parameters.data.DisplayData;
-    if (parameters.data.Data2!=null)
-        data_update.Data2 = parameters.data.Data2;
-    if (parameters.data.Data3!=null)
-        data_update.Data3 = parameters.data.Data3;
-    if (parameters.data.Data4!=null)
-        data_update.Data4 = parameters.data.Data4;
-    if (parameters.data.Data5!=null)
-        data_update.Data5 = parameters.data.Data5;
+    if (parameters.data.name!=null)
+        data_update.Name = parameters.data.name;
+    if (parameters.data.value!=null)
+        data_update.Value = parameters.data.value;
+    if (parameters.data.display_data!=null)
+        data_update.DisplayData = parameters.data.display_data;
+    if (parameters.data.data2!=null)
+        data_update.Data2 = parameters.data.data2;
+    if (parameters.data.data3!=null)
+        data_update.Data3 = parameters.data.data3;
+    if (parameters.data.data4!=null)
+        data_update.Data4 = parameters.data.data4;
+    if (parameters.data.data5!=null)
+        data_update.Data5 = parameters.data.data5;
     if (Object.entries(data_update).length>0)
         return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppData', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
             if (result.AffectedRows>0)

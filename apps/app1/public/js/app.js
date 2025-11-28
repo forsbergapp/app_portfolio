@@ -395,13 +395,13 @@ const appSecureCommonButtonSave = async (item) => {
                                                         item,
                                                         record.querySelector('[data-column=\'Id\']').textContent,
                                                         //appid not allowed to update
-                                                        {   Name:           record.querySelector('[data-column=\'Name\']').textContent,
-                                                            Value:          record.querySelector('[data-column=\'Value\']').textContent,
-                                                            DisplayData:    record.querySelector('[data-column=\'DisplayData\']').textContent,
-                                                            Data2:          record.querySelector('[data-column=\'Data2\']').textContent,
-                                                            Data3:          record.querySelector('[data-column=\'Data3\']').textContent,
-                                                            Data4:          record.querySelector('[data-column=\'Data4\']').textContent,
-                                                            Data5:          record.querySelector('[data-column=\'Data5\']').textContent
+                                                        {   name:           record.querySelector('[data-column=\'Name\']').textContent,
+                                                            value:          record.querySelector('[data-column=\'Value\']').textContent,
+                                                            display_data:    record.querySelector('[data-column=\'DisplayData\']').textContent,
+                                                            data2:          record.querySelector('[data-column=\'Data2\']').textContent,
+                                                            data3:          record.querySelector('[data-column=\'Data3\']').textContent,
+                                                            data4:          record.querySelector('[data-column=\'Data4\']').textContent,
+                                                            data5:          record.querySelector('[data-column=\'Data5\']').textContent
                                                         });
                 }
             if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_module.list_nav_selected_tab'))
@@ -412,11 +412,11 @@ const appSecureCommonButtonSave = async (item) => {
                                                         item,
                                                         record.querySelector('[data-column=\'Id\']').textContent,
                                                         //appid not allowed to update
-                                                        {   ModuleType:        record.querySelector('[data-column=\'ModuleType\']').textContent,
-                                                            ModuleName:        record.querySelector('[data-column=\'ModuleName\']').textContent,
-                                                            ModuleRole:        record.querySelector('[data-column=\'ModuleRole\']').textContent,
-                                                            ModulePath:        record.querySelector('[data-column=\'ModulePath\']').textContent,
-                                                            ModuleDescription: record.querySelector('[data-column=\'ModuleDescription\']').textContent
+                                                        {   module_type:        record.querySelector('[data-column=\'ModuleType\']').textContent,
+                                                            module_name:        record.querySelector('[data-column=\'ModuleName\']').textContent,
+                                                            module_role:        record.querySelector('[data-column=\'ModuleRole\']').textContent,
+                                                            module_path:        record.querySelector('[data-column=\'ModulePath\']').textContent,
+                                                            module_description: record.querySelector('[data-column=\'ModuleDescription\']').textContent
                                                         });
                 }
             break;
