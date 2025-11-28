@@ -488,13 +488,8 @@ const component = async props => {
      * @description Go to given gps and display popup
      * @function
      * @param {{ip:string|null,
-<<<<<<< HEAD
      *          longitude:string|number|null,
      *          latitude:string|number|null}} parameters
-=======
-     *          longitude:string|null,
-     *          latitude:string|null}} parameters
->>>>>>> 0df011dd (AP-110 adds ip and gps click support in admin app and removes commonGeolocationIP in common.js, consolidates return restult with returnPlace() in common_geolocation.js, consolidates place with getPlace() used by goTo() and addPopupPos() and adds ip parameter for goTo() in common_map.js, removes parameter appSecureDialogueSendBroadcastShow and calls from app.js, removes monitorDetailClickItemDetail() and monitorDetailClickItem and removes commonGeolocationIP, commonGeolocationPlace and map_update parameters in admin app)
      * @returns {Promise.<void>}
      */
     const goTo = async parameters =>{
