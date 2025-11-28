@@ -123,7 +123,13 @@ const postDemo = async parameters=> {
         const create_iam_user_app = async (app_id, iam_user_id) =>{
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserApp.post(parameters.app_id, 
-                    {AppId:app_id, Document:null, IamUserId:iam_user_id})
+                    {AppId:app_id, Document:{
+                                        PreferenceLocale: null, 
+                                        PreferenceTimezone: null, 
+                                        PreferenceDirection: null, 
+                                        PreferenceArabicScript: null,
+                                        Custom: null}, IamUserId:iam_user_id
+                                        })
                 .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
                         if (result.result.AffectedRows == 1)

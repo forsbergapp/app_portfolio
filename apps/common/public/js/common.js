@@ -96,6 +96,7 @@ const COMMON_GLOBAL = {
     user_timezone:'',
     user_direction:'',
     user_arabic_script:'',
+    user_custom:{},
     resource_import:[],
     component_import:[],
     component:{}
@@ -1523,19 +1524,21 @@ const commonUserLoginApp = IamUserApp =>{
     COMMON_GLOBAL.iam_user_app_id = IamUserApp.Id ?? null;
     //get preferences saved in Document column
     //locale
-    if (IamUserApp.Document?.preference_locale==null)
+    if (IamUserApp.Document?.PreferenceLocale==null)
         commonUserPreferencesGlobalSetDefault('LOCALE');
     else
-        COMMON_GLOBAL.user_locale = IamUserApp.Document.preference_locale;
+        COMMON_GLOBAL.user_locale = IamUserApp.Document.PreferenceLocale;
     //timezone
-    if (IamUserApp.Document?.preference_timezone==null)
+    if (IamUserApp.Document?.PreferenceTimezone==null)
         commonUserPreferencesGlobalSetDefault('TIMEZONE');
     else
-        COMMON_GLOBAL.user_timezone = IamUserApp.Document.preference_timezone;
+        COMMON_GLOBAL.user_timezone = IamUserApp.Document.PreferenceTimezone;
     //direction
-    COMMON_GLOBAL.user_direction = IamUserApp.Document?.preference_direction??'';
+    COMMON_GLOBAL.user_direction = IamUserApp.Document?.PreferenceDirection??'';
     //arabic script
-    COMMON_GLOBAL.user_arabic_script = IamUserApp.Document?.preference_arabic_script??'';
+    COMMON_GLOBAL.user_arabic_script = IamUserApp.Document?.PreferenceArabicScript??'';
+    //custom data for individual app functionality
+    COMMON_GLOBAL.user_custom = IamUserApp.Document?.Custom??null;
     //update body class with app theme, direction and arabic script usage classes
     commonMiscPreferencesUpdateBodyClassFromPreferences();
 };

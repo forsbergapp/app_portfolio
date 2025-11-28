@@ -43,7 +43,12 @@ const post = async (app_id, data) =>{
                                 Id:Date.now(),
                                 AppId:data.AppId, 
                                 IamUserId:data.IamUserId,
-                                Document:data.Document,
+                                Document:{  PreferenceLocale: data.Document?.PreferenceLocale, 
+                                            PreferenceTimezone: data.Document?.PreferenceTimezone, 
+                                            PreferenceDirection: data.Document?.PreferenceDirection, 
+                                            PreferenceArabicScript: data.Document?.PreferenceArabicScript,
+                                            Custom: data.Document?.Custom
+                                        },
                                 Created:new Date().toISOString(),
                                 Modified:null
                         };
@@ -65,15 +70,27 @@ const post = async (app_id, data) =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server['ORM']['Object']['IamUserApp']}} parameters
+ *          data:{
+ *                  data_app_id: number,
+ *                  document :{
+ *                      preference_locale?: Extract<server['ORM']['Object']['IamUserApp']['Document'], 'PreferenceLocale'>, 
+ *                      preference_timezone?: server['ORM']['Object']['IamUserApp']['Document']['PreferenceTimezone'], 
+ *                      preference_direction?: server['ORM']['Object']['IamUserApp']['Document']['PreferenceDirection'], 
+ *                      preference_arabic_script?: server['ORM']['Object']['IamUserApp']['Document']['PreferenceArabicScript'],
+ *                      custom?: server['ORM']['Object']['IamUserApp']['Document']['Custom']}
+ *              }}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
 const update = async parameters =>{
     /**@type{server['ORM']['Object']['IamUserApp']} */
     const data_update = {};
     //allowed parameters to update:
-    if (parameters.data.Document!=null)
-        data_update.Document = parameters.data.Document;
+    if (parameters.data.document!=null)
+        data_update.Document = {PreferenceLocale: parameters.data.document.preference_locale, 
+                                PreferenceTimezone: parameters.data.document.preference_timezone, 
+                                PreferenceDirection: parameters.data.document.preference_direction, 
+                                PreferenceArabicScript: parameters.data.document.preference_arabic_script,
+                                Custom: parameters.data.document.custom}
     
     data_update.Modified = new Date().toISOString();
 
