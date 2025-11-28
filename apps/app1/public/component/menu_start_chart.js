@@ -97,13 +97,13 @@ const component = async props => {
         };
     /**
      * Chart 2 pie colors
-     * @param {[{amount:number}]} chart1
+     * @param {common['server']['ORM']['View']['LogGetStat'][]} chart1
      * @returns {string}
      */
     const chart1_pie_colors = chart1 =>{
         let sum_amount =0;
         for (const stat of chart1) {
-            sum_amount += +stat.amount;
+            sum_amount += +(stat.Amount??0);
         }
         let chart_colors = '';
         let degree_start = 0;
@@ -112,13 +112,13 @@ const component = async props => {
         let chart_color;
         chart1.forEach((stat, i)=>{
             //calculate colors and degree
-            degree_stop = degree_start + +stat.amount/sum_amount*360;
+            degree_stop = degree_start + +(stat.Amount??0)/sum_amount*360;
             chart_color = `rgb(${i/chart1.length*200},${i/chart1.length*200},255) ${degree_start}deg ${degree_stop}deg`;
             if (i < chart1.length - 1)
                 chart_colors += chart_color + ',';
             else
                 chart_colors += chart_color;
-            degree_start = degree_start + stat.amount/sum_amount*360;
+            degree_start = degree_start + +(stat.Amount??0)/sum_amount*360;
         });
         return chart_colors; 
     };
