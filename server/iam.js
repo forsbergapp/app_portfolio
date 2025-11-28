@@ -1575,7 +1575,13 @@ const iamUserLoginApp = async parameters => {
                     iamuserapp((await server.ORM.db.IamUserApp.post(parameters.app_id, {  
                                                                             AppId:parameters.app_id, 
                                                                             IamUserId:parameters.data.iam_user_id, 
-                                                                            Document:null})).result.InsertId):
+                                                                            Document:{
+                                                                                PreferenceLocale: null, 
+                                                                                PreferenceTimezone: null, 
+                                                                                PreferenceDirection: null, 
+                                                                                PreferenceArabicScript: null,
+                                                                                Custom: null}
+                                                                            })).result.InsertId):
                         record;
     }
     else

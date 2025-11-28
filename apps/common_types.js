@@ -195,6 +195,7 @@
  *              user_timezone:string,
  *              user_direction:string,
  *              user_arabic_script:string,
+ *              user_custom:{ [key: string]: string}|null,
  *              resource_import:{   app_id:number, 
  *                                  url:string, 
  *                                  content:*, 

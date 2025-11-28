@@ -459,7 +459,15 @@
  * @description DB TABLE IamUserApp
  * @memberof dbObjects
  * @typedef {{  Id?:number, 
- *              Document:{[key:string]:string}|null,
+ *              Document:{
+ *                          PreferenceLocale?:string|null,
+ *                          PreferenceTimezone?:string|null,
+ *                          PreferenceDirection?:string|null,
+ *                          PreferenceArabicScript?:string|null,
+ *                          Custom?:{
+ *                              [key:string]:string
+ *                          }|null
+ *                      },
  *              Created?:string, 
  *              Modified?:string|null,
  *              IamUserId: number, 
