@@ -59,23 +59,27 @@ const post = async (app_id, data) => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server['ORM']['Object']['AppModule']}} parameters
+ *          data:{  module_type: server['ORM']['Object']['AppModule']['ModuleType'],
+ *                  module_name: server['ORM']['Object']['AppModule']['ModuleName'],
+ *                  module_role: server['ORM']['Object']['AppModule']['ModuleRole']
+ *                  module_path: server['ORM']['Object']['AppModule']['ModulePath'],
+ *                  module_description: server['ORM']['Object']['AppModule']['ModuleDescription']}}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
     /**@type{server['ORM']['Object']['AppModule']} */
     const data_update = {};
     //allowed parameters to update:
-    if (parameters.data.ModuleType!=null)
-        data_update.ModuleType = parameters.data.ModuleType;
-    if (parameters.data.ModuleName!=null)
-        data_update.ModuleName = parameters.data.ModuleName;
-    if (parameters.data.ModuleRole!=null)
-        data_update.ModuleRole = parameters.data.ModuleRole;
-    if (parameters.data.ModulePath!=null)
-        data_update.ModulePath = parameters.data.ModulePath;
-    if (parameters.data.ModuleDescription!=null)
-        data_update.ModuleDescription = parameters.data.ModuleDescription;
+    if (parameters.data.module_type!=null)
+        data_update.ModuleType = parameters.data.module_type;
+    if (parameters.data.module_name!=null)
+        data_update.ModuleName = parameters.data.module_name;
+    if (parameters.data.module_role!=null)
+        data_update.ModuleRole = parameters.data.module_role;
+    if (parameters.data.module_path!=null)
+        data_update.ModulePath = parameters.data.module_path;
+    if (parameters.data.module_description!=null)
+        data_update.ModuleDescription = parameters.data.module_description;
     if (Object.entries(data_update).length>0)
         return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppModule', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
             if (result.AffectedRows>0)

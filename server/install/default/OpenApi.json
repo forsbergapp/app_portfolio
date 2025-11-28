@@ -3060,19 +3060,19 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "ModuleType":{
+                                            "module_type":{
                                                 "type":"string"
                                             },
-                                            "ModuleName":{
+                                            "module_name":{
                                                 "type":"string"
                                             },
-                                            "ModuleRole":{
+                                            "module_role":{
                                                 "type":"string"
                                             },
-                                            "ModulePath":{
+                                            "module_path":{
                                                 "type":"string"
                                             },
-                                            "ModuleDescription":{
+                                            "module_description":{
                                                 "type":"string"
                                             }
                                         }
@@ -3168,25 +3168,25 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "Name":{
+                                            "name":{
                                                 "type":"string"
                                             },
-                                            "Value":{
+                                            "value":{
                                                 "type":"string"
                                             },
-                                            "DisplayData":{
+                                            "display_data":{
                                                 "type":"string"
                                             },
-                                            "Data2":{
+                                            "data2":{
                                                 "type":"string"
                                             },
-                                            "Data3":{
+                                            "data3":{
                                                 "type":"string"
                                             },
-                                            "Data4":{
+                                            "data4":{
                                                 "type":"string"
                                             },
-                                            "Data5":{
+                                            "data5":{
                                                 "type":"string"
                                             }
                                         }
