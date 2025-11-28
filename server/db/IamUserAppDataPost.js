@@ -245,20 +245,21 @@ const getViewProfileUserPostDetail = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:server['ORM']['Object']['IamUserAppDataPost']}} parameters
+ *          data:{  iam_user_app_id:server['ORM']['Object']['IamUserAppDataPost']['IamUserAppId'],
+ *                  document:server['ORM']['Object']['IamUserAppDataPost']['Document']}}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const post = async parameters => {
     //check required attributes
-    if (parameters.data.IamUserAppId==null){
+    if (parameters.data.iam_user_app_id==null){
         return server.ORM.getError(parameters.app_id, 400);
     }
     else{
         /**@type{server['ORM']['Object']['IamUserAppDataPost']} */
         const data_new =     {
                                 Id:Date.now(),
-                                IamUserAppId:parameters.data.IamUserAppId, 
-                                Document:parameters.data.Document,
+                                IamUserAppId:parameters.data.iam_user_app_id, 
+                                Document:parameters.data.document,
                                 Created:new Date().toISOString(),
                                 Modified:null
                         };
@@ -279,18 +280,18 @@ const post = async parameters => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server['ORM']['Object']['IamUserAppDataPost']}} parameters
+ *          data:{document:server['ORM']['Object']['IamUserAppDataPost']['Document']}}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
 const update = async parameters =>{
     /**@type{server['ORM']['Object']['IamUserAppDataPost']} */
     const data_update = {};
     //allowed parameters to update:
-    if (parameters.data.Document!=null)
-        data_update.Document = parameters.data.Document;
+    if (parameters.data.document!=null)
+        data_update.Document = parameters.data.document;
     data_update.Modified = new Date().toISOString();
     if (Object.entries(data_update).length>0)
-        return server.ORM.Execute({  app_id:parameters.app_id, 
+        return server.ORM.Execute({ app_id:parameters.app_id, 
                                     dml:'UPDATE', 
                                     object: 'IamUserAppDataPost', 
                                     update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
