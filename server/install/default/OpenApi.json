@@ -2139,13 +2139,7 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "initial":{
-                                                "type":"number"
-                                            },
-                                            "description":{
-                                                "type":"string"
-                                            },
-                                            "Document":{
+                                            "document":{
                                                 "type":"string"
                                             },
                                             "IAM_iam_user_app_id":{
@@ -2201,10 +2195,7 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "description":{
-                                                "type":"string"
-                                            },
-                                            "Document":{
+                                            "document":{
                                                 "type":"string"
                                             },
                                             "IAM_iam_user_app_id":{

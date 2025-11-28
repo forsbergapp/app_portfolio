@@ -1018,7 +1018,7 @@ const appUserSettingsGet = async () => {
                     PrayerColumnFastStartEnd:Number(setting.PrayerColumnFastStartEnd) 
                 };
                 return {
-                        id:setting.Id,
+                        Id:setting.Id,
                         Document:json
                         };
             });
@@ -1083,7 +1083,7 @@ const appUserSettingFunction = async (function_name, add_settings=true) => {
                                                 [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.TextFooter3Text,null]
                                                 ]})==true){
         
-        const body = {  Document:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document,
+        const body = {  document:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document,
                         IAM_iam_user_app_id:    common.commonGlobalGet('iam_user_app_id')
                     };
         /**@type {common['CommonRESTAPIMethod']}*/
@@ -1184,9 +1184,9 @@ const appUserSettingDelete = (choice=null) => {
                         data:       {
                                     default_data_value:APP_GLOBAL.user_settings.current_id,
                                     /**@ts-ignore */
-                                    default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.description,
+                                    default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.Description,
                                     /**@ts-ignore */
-                                    options: APP_GLOBAL.user_settings.data.map((setting, index)=>{return {value:index, text:setting.Document.description};}),
+                                    options: APP_GLOBAL.user_settings.data.map((setting, index)=>{return {value:index, text:setting.Document.Description};}),
                                     path:null,
                                     query:null,
                                     method:null,

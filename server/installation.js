@@ -57,12 +57,13 @@ const postDemo = async parameters=> {
 
     /**@type{{[key:string]: string|number}[]} */
     const install_result = [];
-    install_result.push({'start': new Date().toISOString()});
+    install_result.push({'⌚': new Date().toISOString()});
     const fileBuffer = await fs.promises.readFile(`${server.ORM.serverProcess.cwd()}${DB_DEMO_PATH}${DB_DEMO_FILE}`, 'utf8');
     /**@type{server['ORM']['Type']['DemoData'][]}*/
     const demo_users = JSON.parse(fileBuffer.toString()).DemoUsers;
     //create social records
-    const social_types = ['LIKE', 'VIEW', 'VIEW_ANONYMOUS', 'FOLLOWER', 'POSTS_LIKE', 'POSTS_VIEW', 'POSTS_VIEW_ANONYMOUS'];
+    /**@type{('IamUserLike'|'IamUserView'|'IamUserViewX'|'IamUserFollow'|'IamUserAppDataPostLike'|'IamUserAppDataPostView'|'IamUserAppDataPostViewX')[]} */
+    const social_types = ['IamUserLike', 'IamUserView', 'IamUserViewX', 'IamUserFollow', 'IamUserAppDataPostLike', 'IamUserAppDataPostView', 'IamUserAppDataPostViewX'];
     let records_iam_user = 0;
     let records_iam_user_app = 0;
     let records_iam_user_app_data_post = 0;
@@ -149,7 +150,8 @@ const postDemo = async parameters=> {
         const create_iam_user_app_data_post = async data => {
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserAppDataPost.post({ app_id:parameters.app_id, 
-                                                        data:data})
+                                                        data:{  iam_user_app_id:data.IamUserAppId,
+                                                                document:data.Document}})
                 .then((/**@type{server['server']['response']}*/result)=>{
                     if(result.result){
                         if (result.result.data?.AffectedRows == 1)
@@ -250,7 +252,7 @@ const postDemo = async parameters=> {
                         reject(result);
                 });
             });
-        };
+        }; 
 
         //1.Create all users first and update with id
         await create_users(demo_users);
@@ -263,7 +265,7 @@ const postDemo = async parameters=> {
                                                 iam_user_id: null,
                                                 idToken:parameters.idToken,
                                                 message: JSON.stringify({   part:install_count, 
-                                                                            total:install_total_count, text:'Generating key pair...'}),
+                                                                            total:install_total_count, text:'🔑...'}),
                                                 message_type:'PROGRESS'}});
         const {publicKey, privateKey} = await server.security.securityKeyPairCreate();
         const demo_public_key = publicKey;
@@ -539,7 +541,7 @@ const postDemo = async parameters=> {
         * @param {number} app_id 
         * @param {number} user1 
         * @param {number} user2 
-        * @param {string} social_type 
+        * @param {'IamUserLike'|'IamUserView'|'IamUserViewX'|'IamUserFollow'|'IamUserAppDataPostLike'|'IamUserAppDataPostView'|'IamUserAppDataPostViewX'} social_type 
         * @returns {Promise.<null>}
         */
         const create_iam_user_app_data_post_view = async (app_id, user1, user2 , social_type) =>{
@@ -550,7 +552,7 @@ const postDemo = async parameters=> {
                     //choose random post from user
                     const random_index = Math.floor(1 + Math.random() * result_posts.result.length -1);
                     let iam_user_id;
-                    if (social_type == 'POSTS_VIEW')
+                    if (social_type == 'IamUserAppDataPostView')
                         iam_user_id = user2;
                     else
                         iam_user_id = null;
@@ -619,12 +621,12 @@ const postDemo = async parameters=> {
                 //4C.Loop random users group 2
                 for(const user2 of random_users2){
                     switch (social_type){
-                        case 'LIKE':{
+                        case 'IamUserLike':{
                             //4D.Create user like
                             await create_iam_user_like(parameters.app_id, user1, user2);
                             break;
                         }
-                        case 'VIEW':{
+                        case 'IamUserView':{
                             //4E.Create user view by a user
                             await create_iam_user_view(parameters.app_id, 
                                                             {   IamUserId: user1,
@@ -634,7 +636,7 @@ const postDemo = async parameters=> {
                                                             });
                             break;
                         }
-                        case 'VIEW_ANONYMOUS':{
+                        case 'IamUserViewX':{
                             //4F.Create user view by anonymous
                             await create_iam_user_view(parameters.app_id, 
                                                             {
@@ -645,12 +647,12 @@ const postDemo = async parameters=> {
                                                             });
                             break;
                         }
-                        case 'FOLLOWER':{
+                        case 'IamUserFollow':{
                             //4G.Create user follow
                             await create_iam_user_follow(parameters.app_id, user1, user2);
                             break;
                         }
-                        case 'POSTS_LIKE':{
+                        case 'IamUserAppDataPostLike':{
                             //4H.Create user account app data post like
                             //pick a random user setting from the user and return the app_id
                             const user_account_app_data_posts = demo_users.filter(user=>user.Id == user1)[0].IamUserAppDataPost;
@@ -660,8 +662,8 @@ const postDemo = async parameters=> {
                             }
                             break;
                         }
-                        case 'POSTS_VIEW':
-                        case 'POSTS_VIEW_ANONYMOUS':{
+                        case 'IamUserAppDataPostView':
+                        case 'IamUserAppDataPostViewX':{
                             //4I.Create user account app data post view
                             //pick a random user setting from the user and return the app_id
                             const user_account_app_data_posts = demo_users.filter(user=>user.Id == user1)[0].IamUserAppDataPost;
@@ -674,20 +676,20 @@ const postDemo = async parameters=> {
                     }						
                 }
             }
-        }
+        } 
         //5.Return result
-        install_result.push({'iam_user': records_iam_user});
-        install_result.push({'iam_user_app': records_iam_user_app});
-        install_result.push({'iam_user_like': records_iam_user_like});
-        install_result.push({'iam_user_view': records_iam_user_view});
-        install_result.push({'iam_user_follow': records_iam_user_follow});
-        install_result.push({'iam_user_app_data_post': records_iam_user_app_data_post});
-        install_result.push({'iam_user_app_data_post_like': records_iam_user_app_data_post_like});
-        install_result.push({'iam_user_app_data_post_view': records_iam_user_app_data_post_view});
-        install_result.push({'app_data_resource_master': records_app_data_resource_master});
-        install_result.push({'app_data_resource_detail': records_app_data_resource_detail});
-        install_result.push({'app_data_resource_detail_data': records_app_data_resource_detail_data});
-        install_result.push({'finished': new Date().toISOString()});
+        install_result.push({'IamUser': records_iam_user});
+        install_result.push({'IamUserApp': records_iam_user_app});
+        install_result.push({'IamUserLike': records_iam_user_like});
+        install_result.push({'IamUSerView': records_iam_user_view});
+        install_result.push({'IamUserFollow': records_iam_user_follow});
+        install_result.push({'IamUserAppDataPost': records_iam_user_app_data_post});
+        install_result.push({'IamUserAppDataPostLike': records_iam_user_app_data_post_like});
+        install_result.push({'IamUserAppDataPostView': records_iam_user_app_data_post_view});
+        install_result.push({'AppDataResourceMaster': records_app_data_resource_master});
+        install_result.push({'AppDataResourceDetail': records_app_data_resource_detail});
+        install_result.push({'AppDataResourceDetailData': records_app_data_resource_detail_data});
+        install_result.push({'⌚': new Date().toISOString()});
         server.ORM.db.Log.post({   app_id:parameters.app_id, 
                     data:{  object:'LogServerInfo', 
                             log:`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`
@@ -770,7 +772,7 @@ const deleteDemo = async parameters => {
                                 log:`Demo uninstall count: ${deleted_user}`
                             }
                         });
-            return {result:{info: [{'count': deleted_user}]}, type:'JSON'};
+            return {result:{info: [{'∑': deleted_user}]}, type:'JSON'};
         }
         else{
             server.ORM.db.Log.post({  app_id:parameters.app_id, 
@@ -778,7 +780,7 @@ const deleteDemo = async parameters => {
                         log:`Demo uninstall count: ${result_demo_users.length}`
                     }
                 });
-            return {result:{info: [{'count': result_demo_users.length}]},type:'JSON'};
+            return {result:{info: [{'∑': result_demo_users.length}]},type:'JSON'};
         }
     }
     else
