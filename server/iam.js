@@ -452,21 +452,21 @@ const iamAuthenticateUserSignup = async parameters =>{
  * @returns {Promise.<server['server']['response'] & { result?:{activated:number} }>}
  */
 const iamAuthenticateUserActivate = async parameters =>{
-    if (parameters.data.verification_type=='1' || parameters.data.verification_type=='2'){
-        const result_activate =  await server.security.securityTOTPValidate(parameters.data.verification_code, server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.otp_key);
+    if (server.ORM.UtilNumberValue(parameters.data.verification_type)==1 || server.ORM.UtilNumberValue(parameters.data.verification_type)==2){
+        const result_activate =  await server.security.securityTOTPValidate(parameters.data.verification_code, server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.OtpKey);
         if (result_activate){
             //set user active = 1
-            server.ORM.db.IamUser.updateAdmin({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{Active:1}});
+            server.ORM.db.IamUser.updateAdmin({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{active:1}});
 
             /**@type{server['ORM']['Object']['IamUserEvent']}*/
             const eventData = {
                 /**@ts-ignore */
-                iam_user_id:    iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_VERIFICATION').iam_user_id,
-                event:          server.ORM.UtilNumberValue(parameters.data.verification_type)==1?
+                IamUserId:      iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_VERIFICATION').iam_user_id,
+                Event:          server.ORM.UtilNumberValue(parameters.data.verification_type)==1?
                                     'OTP_LOGIN':
-                                        'OTP_SIGNUP'
+                                        'OTP_SIGNUP',
+                EventStatus:    'SUCCESSFUL'
             };
-            eventData.EventStatus='SUCCESSFUL';
             return server.ORM.db.IamUserEvent.post(parameters.app_id, eventData)
                         .then((/**@type{server['server']['response']}*/result)=>result.http?result:
                                 iamUserLogout(  {app_id:parameters.app_id,
