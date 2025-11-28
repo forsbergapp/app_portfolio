@@ -466,6 +466,9 @@
 .menu_users_iam_app_access_col:nth-child(1){
 	display: none;
 }
+.menu_users_iam_app_access_col{
+    overflow: scroll;
+}
 /* MENU APP ADMIN*/
 #menu_apps_content_widget1{
 	height: calc(30% - 10px);

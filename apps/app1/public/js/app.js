@@ -433,7 +433,7 @@ const appSecureCommonButtonSave = async (item) => {
                                                                                     record.querySelector('[data-column=\'Avatar\']').getAttribute('data-image'),
                                                         active:             record.querySelector('[data-column=\'Active\']').textContent,
                                                         status:             record.querySelector('[data-column=\'Status\']').textContent,
-                                                        type:               record.querySelector('[data-column=\'Ttype\']').textContent,
+                                                        type:               record.querySelector('[data-column=\'Type\']').textContent,
                                                         user_level:         record.querySelector('[data-column=\'UserLevel\']').textContent,
                                                         private:            record.querySelector('[data-column=\'Private\']').textContent,
                                                         username:           record.querySelector('[data-column=\'Username\']').textContent,
