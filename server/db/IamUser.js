@@ -396,18 +396,18 @@ const update = async (app_id, resource_id, data) => {
  * @param {{app_id:number,
  *          resource_id:number,
  *          data :{
- *              Username?: server['ORM']['Object']['IamUser']['Username'],
- *              Password?: server['ORM']['Object']['IamUser']['Password'],
- *              PasswordNew?: server['ORM']['Object']['IamUser']['PasswordNew'],
- *              PasswordReminder?: server['ORM']['Object']['IamUser']['PasswordReminder'],
- *              Bio?: server['ORM']['Object']['IamUser']['Bio'],
- *              Private?: server['ORM']['Object']['IamUser']['Private'],
- *              Avatar?: server['ORM']['Object']['IamUser']['Avatar'],
- *              OtpKey?: server['ORM']['Object']['IamUser']['OtpKey'],
- *              Type?: server['ORM']['Object']['IamUser']['Type'],
- *              UserLevel?: server['ORM']['Object']['IamUser']['UserLevel'],
- *              Status?: server['ORM']['Object']['IamUser']['Status'],
- *              Active?: server['ORM']['Object']['IamUser']['Active']}}} parameters
+ *              username?: server['ORM']['Object']['IamUser']['Username'],
+ *              password?: server['ORM']['Object']['IamUser']['Password'],
+ *              password_new?: server['ORM']['Object']['IamUser']['PasswordNew'],
+ *              password_reminder?: server['ORM']['Object']['IamUser']['PasswordReminder'],
+ *              bio?: server['ORM']['Object']['IamUser']['Bio'],
+ *              private?: server['ORM']['Object']['IamUser']['Private'],
+ *              avatar?: server['ORM']['Object']['IamUser']['Avatar'],
+ *              otp_key?: server['ORM']['Object']['IamUser']['OtpKey'],
+ *              type?: server['ORM']['Object']['IamUser']['Type'],
+ *              user_level?: server['ORM']['Object']['IamUser']['UserLevel'],
+ *              status?: server['ORM']['Object']['IamUser']['Status'],
+ *              active?: server['ORM']['Object']['IamUser']['Active']}}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
 const updateAdmin = async parameters => {
@@ -417,29 +417,29 @@ const updateAdmin = async parameters => {
             /**@type{server['ORM']['Object']['IamUser']} */
             const data_update = {};
             //allowed parameters to update:
-            if (parameters.data?.Username!=null && parameters.data?.Username!='')
-                data_update.Username = parameters.data.Username;
-            if (parameters.data?.Password!=null && parameters.data?.Password!='')
-                data_update.Password = await server.security.securityPasswordCreate(parameters.app_id, parameters.data?.PasswordNew ?? parameters.data.Password);
-            if (parameters.data?.PasswordReminder!=null)
-                data_update.PasswordReminder = parameters.data.PasswordReminder;
-            if (parameters.data?.Bio!=null)
-                data_update.Bio = parameters.data.Bio;
-            if (parameters.data?.Private!=null)
-                data_update.Private = server.ORM.UtilNumberValue(parameters.data.Private) ?? 0;
-            if (parameters.data?.Avatar!=null)
-                data_update.Avatar = parameters.data.Avatar;
-            if (parameters.data?.OtpKey!=null)
-                data_update.OtpKey = parameters.data.OtpKey;
+            if (parameters.data?.username!=null && parameters.data?.username!='')
+                data_update.Username = parameters.data.username;
+            if (parameters.data?.password!=null && parameters.data?.password!='')
+                data_update.Password = await server.security.securityPasswordCreate(parameters.app_id, parameters.data?.password_new ?? parameters.data.password);
+            if (parameters.data?.password_reminder!=null)
+                data_update.PasswordReminder = parameters.data.password_reminder;
+            if (parameters.data?.bio!=null)
+                data_update.Bio = parameters.data.bio;
+            if (parameters.data?.private!=null)
+                data_update.Private = server.ORM.UtilNumberValue(parameters.data.private) ?? 0;
+            if (parameters.data?.avatar!=null)
+                data_update.Avatar = parameters.data.avatar;
+            if (parameters.data?.otp_key!=null)
+                data_update.OtpKey = parameters.data.otp_key;
             //admin columns
-            if (parameters.data?.Type!=null)
-                data_update.Type = parameters.data.Type;
-            if (parameters.data?.UserLevel!=null)
-                data_update.UserLevel = server.ORM.UtilNumberValue(parameters.data.UserLevel);
-            if (parameters.data?.Status!=null)
-                data_update.Status = parameters.data.Status;
-            if (parameters.data?.Active!=null)
-                data_update.Active = server.ORM.UtilNumberValue(parameters.data.Active) ?? 0;
+            if (parameters.data?.type!=null)
+                data_update.Type = parameters.data.type;
+            if (parameters.data?.user_level!=null)
+                data_update.UserLevel = server.ORM.UtilNumberValue(parameters.data.user_level);
+            if (parameters.data?.status!=null)
+                data_update.Status = parameters.data.status;
+            if (parameters.data?.active!=null)
+                data_update.Active = server.ORM.UtilNumberValue(parameters.data.active) ?? 0;
             data_update.Modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)

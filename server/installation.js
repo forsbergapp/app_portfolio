@@ -912,7 +912,7 @@ const updateConfigSecrets = async () =>{
         await server.ORM.db.IamUser.updateAdmin({ app_id:0, 
                                             /**@ts-ignore */
                                             resource_id:user.Id, 
-                                            data:{Password:user.Password}
+                                            data:{password:user.Password}
                                         });
     }
     //update ServiceRegistry with new secrets
