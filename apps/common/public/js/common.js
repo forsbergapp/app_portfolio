@@ -2268,7 +2268,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 break;
                             }
                             //markdown show/hide details
-                            case (event.target.className.startsWith('common_md_tab_col') && commonMiscElementRow(event.target, 'common_md_tab_row').classList?.contains('common_md_tab_row_title')?event_target_id:null):{
+                            case ((typeof event.target.className=='string'?event.target.className.indexOf('common_md_tab_col')>-1:false) && commonMiscElementRow(event.target, 'common_md_tab_row').classList?.contains('common_md_tab_row_title')?event_target_id:null):{
                                 if (commonMiscElementRow(event.target, 'common_md_tab').classList?.contains('hide'))
                                     commonMiscElementRow(event.target, 'common_md_tab').classList?.remove('hide');
                                 else
