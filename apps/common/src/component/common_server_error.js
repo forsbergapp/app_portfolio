@@ -132,7 +132,7 @@ const template = () =>`  <!DOCTYPE html>
                                     <script>
                                         const server_error_countdown = remaining => {
                                             if(remaining && remaining <= 0)
-                                                location.reload();
+                                                window.location.href = '/';
                                             else{
                                                 document.querySelector('#common_server_error_countdown').innerHTML = remaining;
                                                 setTimeout(()=>{ server_error_countdown(remaining - 1); }, 1000);

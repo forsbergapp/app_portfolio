@@ -5137,15 +5137,15 @@
                 },
                 "IAM_AUTHENTICATE_REQUEST_KEY_VALUES_APP" : {
                     "default":"{\"sec-fetch-dest\": \"document\", \"sec-fetch-mode\":\"navigate\", \"sec-fetch-site\":\"none\"}",
-                    "description":"authenticate request headers keys for APP/ADMIN requests, allow missing keys"
+                    "description":"authenticate request headers keys for APP/ADMIN requests, allow missing keys and sec-fetch-site can be same-origin or specified value"
                 },
                 "IAM_AUTHENTICATE_REQUEST_KEY_VALUES_FONT" : {
                     "default":"{\"sec-fetch-dest\": \"font\", \"sec-fetch-mode\":\"cors\", \"sec-fetch-site\":\"same-origin\"}",
-                    "description":"authenticate request headers keys for browser CSS font url requests, allow missing keys"
+                    "description":"authenticate request headers keys for browser CSS font url requests, allow missing keys and sec-fetch-site can be same-origin or specified value"
                 },
                 "IAM_AUTHENTICATE_REQUEST_KEY_VALUES_REST_API" : {
                     "default":"{\"sec-fetch-dest\": \"empty\", \"sec-fetch-mode\":\"cors\", \"sec-fetch-site\":\"same-origin\"}",
-                    "description":"authenticate request headers keys for REST API requests, allow missing keys"
+                    "description":"authenticate request headers keys for REST API requests, allow missing keys and sec-fetch-site can be same-origin or specified value"
                 },
                 "IAM_MICROSERVICE_TOKEN_EXPIRE_ACCESS":{
                     "default":"365d",

@@ -114,7 +114,7 @@ const template = props =>`  <!DOCTYPE html>
                                 <script type='module' >
                                     const maintenance_countdown = (remaining = null) => {
                                         if(remaining && remaining <= 0)
-                                            window.location.reload();
+                                            window.location.href = '/';
                                         else{
                                             document.querySelector('#common_maintenance_countdown').textContent = remaining;
                                             window.setTimeout(()=>{ maintenance_countdown((remaining ?? 60) - 1); }, 1000);

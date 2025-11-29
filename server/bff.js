@@ -420,8 +420,11 @@ const bffDecryptRequest = async parameters =>{
     const bffAuthenticateRequestKeys = params =>
         Object.entries(JSON.parse(parameters.openApi.components.parameters.config[params.openApiConfigKey].default))
             .filter(key=>
+                //Accept always same-origin or value in OpenApi for sec-fetch-site
+                (key[0]=='sec-fetch-site' && ['same-origin',key[1]].includes((params.headers[key[0]]??key[1])) ||
                 /**@ts-ignore */
-                (params.headers[key[0]]??key[1])==key[1])
+                 key[0]!='sec-fetch-site' && ((params.headers[key[0]]??key[1])==key[1]))
+            )
             .length == Object.keys(JSON.parse(parameters.openApi.components.parameters.config[params.openApiConfigKey].default)).length;
 
     if (parameters.openApi.servers.filter(row=>['APP', 'ADMIN'].includes(row['x-type'].default) && row.variables.basePath.default == parameters.req.url)[0] &&
