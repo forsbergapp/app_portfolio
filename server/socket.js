@@ -256,7 +256,6 @@ const socketClientAdd = (newClient) => {
 /**
  * @param {{app_id:number,
  *          idToken:string,
- *          authorization:string,
  *          uuid:string|null,
  *          user_agent:string,
  *          ip:string,
@@ -269,17 +268,7 @@ const socketClientAdd = (newClient) => {
  *                      timezone: string}>}
  */
 const socketPost = async parameters =>{
-    //get access token if any
-    const access_token =    parameters.authorization?server.iam.iamUtilTokenGet(   parameters.app_id,
-                                            parameters.authorization, 
-                                            parameters.app_id==server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'APP_ADMIN_APP_ID'}}).result)?'ADMIN':'APP_ACCESS'):null;
 
-    const iam_user =        parameters.authorization?
-                                /**@ts-ignore */
-                                (server.ORM.UtilNumberValue(access_token?.iam_user_id)?
-                                    /*@ts-ignore*/
-                                    server.ORM.db.IamUser.get(parameters.app_id, server.ORM.UtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
-                                        null;
     if (SOCKET_CONNECTED_CLIENTS
             .filter(row=>row.IdToken == parameters.idToken).length>0){
         throw await server.iam.iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
@@ -302,8 +291,8 @@ const socketPost = async parameters =>{
                             IdToken:            parameters.idToken,
                             Uuid:               parameters.uuid,
                             TokenAccess:        null,
-                            IamUserUsername:    iam_user?iam_user.username:null,
-                            IamUserType:        iam_user?iam_user.type:null,
+                            IamUserUsername:    null,
+                            IamUserType:        null,
                             TokenAdmin:         null,
                             GpsLatitude:        connectUserData.latitude,
                             GpsLongitude:       connectUserData.longitude,
@@ -314,7 +303,7 @@ const socketPost = async parameters =>{
                             Response:           parameters.response,
                             Created:            new Date().toISOString(),
                             AppId:              parameters.app_id,
-                            IamUserid:          iam_user?iam_user.id:null
+                            IamUserid:          null
                         };
     
         socketClientAdd(newClient);
@@ -328,12 +317,10 @@ const socketPost = async parameters =>{
 /**
  * @name socketConnect
  * @description Socket connect
- *              Used by SSE and leaves connection open
+ *              Adds client to socket and sends SSE CONNECTINFO with geodata
  * @function
- * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          idToken:string,
- *          authorization:string,
  *          resource_id:string|null,
  *          user_agent:string,
  *          ip:string,
@@ -344,7 +331,6 @@ const socketPost = async parameters =>{
  const socketConnect = async parameters =>{   
     const connectUserData = await socketPost({  app_id:parameters.app_id,
                                                 idToken:parameters.idToken,
-                                                authorization:parameters.authorization,
                                                 uuid:parameters.resource_id,
                                                 user_agent:parameters.user_agent,
                                                 ip:parameters.ip,
@@ -388,7 +374,7 @@ const socketPost = async parameters =>{
 
 /**
  * @name socketExpiredTokensUpdate
- * @description Sends SESSION_EXPIRED message to clients with expired token
+ * @description Sends EXPIRED_SESSION or EXPIRED_ACCESS message to clients with expired token
  * @function
  * @returns {Promise.<void>}
  */
@@ -408,8 +394,17 @@ const socketExpiredTokensUpdate = async () =>{
                                                     iam_user_id:null,
                                                     idToken:null,
                                                     message:'',
-                                                    message_type:'SESSION_EXPIRED'}});
+                                                    message_type:'EXPIRED_SESSION'}});
             }
+        else 
+            if (client.TokenAccess && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ID', client.IdToken))
+                socketClientPostMessage({   app_id:0,
+                                            resource_id:client.Id,
+                                            data:{  data_app_id:null,
+                                                    iam_user_id:null,
+                                                    idToken:null,
+                                                    message:'',
+                                                    message_type:'EXPIRED_ACCESS'}});
     }
 };
 /**

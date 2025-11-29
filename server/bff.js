@@ -24,28 +24,14 @@ const {default:ComponentMaintenance} = await import('../apps/common/src/componen
  */
 const bffConnect = async parameters =>{
     const common_app_id = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:parameters.app_id, data:{parameter:'APP_COMMON_APP_ID'}}).result)??0;
-
-    //connect socket for common app id
-    const connectUserData = await server.socket.socketPost({  app_id:common_app_id,
-                            idToken:parameters.idToken,
-                            authorization:'',
-                            uuid:parameters.resource_id,
-                            user_agent:parameters.user_agent,
-                            ip:parameters.ip,
-                            response:parameters.response
-                            });
-    //send SSE CONNECTINFO
-    server.socket.socketClientPostMessage({app_id:common_app_id, 
-                                    resource_id:connectUserData.insertId, 
-                                    data:{  data_app_id:null, 
-                                            iam_user_id: null,
-                                            idToken:null,
-                                            message: JSON.stringify({ 
-                                                        latitude: connectUserData.latitude,
-                                                        longitude: connectUserData.longitude,
-                                                        place: connectUserData.place,
-                                                        timezone: connectUserData.timezone}),
-                                            message_type:'CONNECTINFO'}});
+    await server.socket.socketConnect({
+        app_id:common_app_id,
+           idToken:parameters.idToken,
+           resource_id:parameters.resource_id,
+           user_agent:parameters.user_agent,
+           ip:parameters.ip,
+           response:parameters.response
+    })
 };
 /**
  * @name bffExternal
