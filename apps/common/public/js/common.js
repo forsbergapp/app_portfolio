@@ -896,14 +896,6 @@ const commonWindowFromBase64 = str => {
 const commonWindowDocumentFrame = () => COMMON_WINDOW.frames.document;
 
 /**
- * @name commonWindowLocationReload
- * @description Reloads window
- * @function
- * @returns {void}
- */
-const commonWindowLocationReload = () => COMMON_WINDOW.location.reload();
-
-/**
  * @name commonWindowNavigatorLocale
  * @description Read Navigator language
  * @function
@@ -2898,7 +2890,6 @@ const commonGet = () =>{
         commonWindowGet:commonWindowGet,
         commonWindowDocumentFrame:commonWindowDocumentFrame,
         commonWindowFromBase64:commonWindowFromBase64, 
-        commonWindowLocationReload:commonWindowLocationReload,
         commonWindowNavigatorLocale:commonWindowNavigatorLocale,
         commonWindowOpen:commonWindowOpen,
         commonWindowPrompt:commonWindowPrompt,
@@ -3058,7 +3049,6 @@ export{/* GLOBALS*/
        commonWindowGet,
        commonWindowDocumentFrame,
        commonWindowFromBase64, 
-       commonWindowLocationReload,
        commonWindowNavigatorLocale,
        commonWindowOpen,
        commonWindowPrompt,
