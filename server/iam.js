@@ -1539,7 +1539,7 @@ const iamUserLogout = async parameters =>{
     //set token expired after user is logged out in app
     const result = await iamUtilTokenExpiredSet(parameters.app_id, parameters.authorization, parameters.ip);
     if (result.result){
-        server.socket.socketExpiredTokensUpdate();
+        server.socket.socketExpiredTokenSendSSE();
         server.socket.socketConnectedUpdate(parameters.app_id, 
             {   idToken:parameters.idToken,
                 iam_user_id:null,

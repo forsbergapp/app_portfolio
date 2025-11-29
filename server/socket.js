@@ -367,18 +367,18 @@ const socketPost = async parameters =>{
                                         broadcast_message:''}}
                                     );
         }
-        await socketExpiredTokensUpdate();
+        await socketExpiredTokenSendSSE();
     //set default interval to 5 seconds if no parameter is set
     }, server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'SOCKET_CHECK_INTERVAL'}}).result)??5000);
 };
 
 /**
- * @name socketExpiredTokensUpdate
+ * @name socketExpiredTokenSendSSE
  * @description Sends EXPIRED_SESSION or EXPIRED_ACCESS message to clients with expired token
  * @function
  * @returns {Promise.<void>}
  */
-const socketExpiredTokensUpdate = async () =>{
+const socketExpiredTokenSendSSE = async () =>{
     for (const client of SOCKET_CONNECTED_CLIENTS){
         if ((client.TokenAccess && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ACCESS', client.TokenAccess)&&
             client.TokenAccess && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ACCESS_VERIFICATION', client.TokenAccess)) ||
@@ -397,7 +397,7 @@ const socketExpiredTokensUpdate = async () =>{
                                                     message_type:'EXPIRED_SESSION'}});
             }
         else 
-            if (client.TokenAccess && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ID', client.IdToken))
+            if (client.IdToken && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ID', client.IdToken))
                 socketClientPostMessage({   app_id:0,
                                             resource_id:client.Id,
                                             data:{  data_app_id:null,
@@ -484,5 +484,5 @@ const socketClientPostMessage = async parameters => {
 };
 export {socketClientGet, socketConnectedUpdate, socketConnectedList, socketConnectedCount, socketPost, socketConnect, 
         socketAdminSend, 
-        socketIntervalCheck, socketExpiredTokensUpdate, CheckOnline, 
+        socketIntervalCheck, socketExpiredTokenSendSSE, CheckOnline, 
         socketClientPostMessage};
