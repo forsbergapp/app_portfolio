@@ -272,7 +272,7 @@
 }
 /*MENU DASHBOARD*/
 #menu_start_content_widget1{
-	height:calc(80% - 10px);
+	height:calc(88% - 10px);
 }
 #menu_start_content_widget1 .common_select_options{
 	max-height: 550px;
@@ -281,15 +281,9 @@
 	white-space: nowrap;
 }
 #menu_start_content_widget2{
-	height:calc(20% - 10px);
-	vertical-align: middle;
-}
-#menu_start_content_widget2 #menu_start_maintenance,
-#menu_start_content_widget2 #menu_start_broadcast
-{
-	display: inline-block;
-	width: calc(50% - 10px);
-	vertical-align: middle;
+	height:calc(12% - 10px);
+	display: grid;
+    grid-template-columns: 50% 50%;
 }
 
 #menu_start_maintenance_title{
@@ -320,18 +314,20 @@
 #menu_start_chart_box1{
 	width: 100%;
 	display:inline-block;
-	vertical-align: top;	
+	vertical-align: top;
+    height: 50%;	
 }
 #menu_start_chart_box1_chart{
 	width: 49%;
 	display: inline-block;
-	height:120px;
+	height:50%;
+    padding-top: 2em;
 }
 #menu_start_chart_box1_pie{
 	border-radius: 50%;
 	display: inline-block;
-	height: 117px;
-	width: 117px;
+	height: 16em;
+    width: 16em;
 }
 #menu_start_chart_box1_pie:after {
 	content: "";
@@ -352,7 +348,7 @@
 	width: 50%;
 	vertical-align: top;
 	overflow-y: auto;
-	height: 120px;
+	height: calc(100% - 3em);
 }
 .menu_start_chart_box_legend_row{
 	width: 100%;
@@ -366,13 +362,14 @@
 	width: 100%;
 	display:inline-block;
 	vertical-align: top;
+    height:50%;
 	
 }
 #menu_start_chart_box2_chart{
 	display: flex;
 	align-items: flex-end;
 	width: 100%;
-	height: 100px;
+	height: calc(100% - 8em);
 	margin-bottom: 20px;
 	font-size: 0.7em;
 }
