@@ -1929,19 +1929,14 @@ const commonFFB = async parameter =>{
                                 case 201:{
                                     if (parameters.response_type=='SSE'){
                                         /**
-                                         * @param {string|null} BFFmessage
-                                         * @returns {{sse_type:string,
+                                         * @param {string} BFFmessage
+                                         * @returns {{sse_type:common['server']['socket']['broadcast_type'],
                                          *           sse_message:string}}
                                          */
                                         const getSSEMessage = BFFmessage =>{
-                                            if (BFFmessage){
-                                                const messageDecoded = commonWindowFromBase64(BFFmessage);
-                                                return {sse_type:JSON.parse(messageDecoded).sse_type,
-                                                        sse_message:JSON.parse(messageDecoded).sse_message};
-                                            }
-                                            else
-                                                return {sse_type:'',
-                                                        sse_message:''};
+                                            const messageDecoded = commonWindowFromBase64(BFFmessage);
+                                            return {sse_type:JSON.parse(messageDecoded).sse_type,
+                                                    sse_message:JSON.parse(messageDecoded).sse_message};
                                         };
                                         const BFFStream = new WritableStream({
                                             async write(BFFmessage){
@@ -1961,7 +1956,8 @@ const commonFFB = async parameter =>{
                                             }
                                         //The total number of chunks that can be contained in the internal queue before backpressure is applied
                                         }, new CountQueuingStrategy({ highWaterMark: 1 }));
-                                        result.body.pipeTo(BFFStream).catch(()=>commonWindowSetTimeout(()=>{commonSocketConnectOnline();}, 5000));
+                                        //pipe to Writeable Stream and restart if connection is lost
+                                        result.body.pipeTo(BFFStream).catch(()=>window.location.href='/');
                                         return {status:status, result:null};
                                     }
                                     else
@@ -2040,17 +2036,18 @@ const commonFFB = async parameter =>{
  * @name commonSocketSSEShow
  * @description Show sse message
  * @function
- * @param {{sse_type:string,
+ * @param {{sse_type:common['server']['socket']['broadcast_type'],
  *           sse_message:string}} sse_message 
  * @returns {Promise.<void>}
  */
 const commonSocketSSEShow = async (sse_message) => {
     switch (sse_message.sse_type){
+        case 'EXPIRED_ACCESS':
         case 'MAINTENANCE':{
             window.location.href = '/';
             break;
         }
-        case 'SESSION_EXPIRED':{
+        case 'EXPIRED_SESSION':{
             commonLogout();
             COMMON_GLOBAL.app_function_session_expired?COMMON_GLOBAL.app_function_session_expired():null;
             break;
@@ -2103,18 +2100,6 @@ const commonSocketSSEShow = async (sse_message) => {
             break;
         }   
     }
-};
-/**
- * @name commonSocketConnectOnline
- * @description Socket connect online, can use id-token or access token
- * @function
- * @returns {Promise.<void>}
- */
-const commonSocketConnectOnline = async () => {
-    const  authorization_type= (COMMON_GLOBAL.token_at && COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id)?
-                                    'ADMIN':
-                                        COMMON_GLOBAL.token_at?'APP_ACCESS':'APP_ID';
-    commonFFB({path:'/server-socket/socket/' + (COMMON_GLOBAL.x.uuid ?? ''), response_type: 'SSE', method:'POST', authorization_type:authorization_type});
 };
 /**
  * @name commonSocketConnectOnlineCheck
@@ -2925,7 +2910,6 @@ const commonGet = () =>{
         commonFFB:commonFFB,
         /* SERVICE SOCKET */
         commonSocketSSEShow:commonSocketSSEShow, 
-        commonSocketConnectOnline:commonSocketConnectOnline,
         commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck,
         /* GEOLOCATION */
         commonGeolocationPlace:commonGeolocationPlace,
@@ -3084,7 +3068,6 @@ export{/* GLOBALS*/
        commonFFB,
        /* SERVICE SOCKET */
        commonSocketSSEShow, 
-       commonSocketConnectOnline,
        commonSocketConnectOnlineCheck,
        /* GEOLOCATION */
        commonGeolocationPlace,

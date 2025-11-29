@@ -91,7 +91,8 @@ const iamUtilTokenGet = (app_id, token, token_type) =>{
 
 /**
  * @name iamUtilTokenExpired
- * @description IAM util token expired
+ * @description Checks expired APP_ID token in IamAppIdToken 
+ *              or access tokens APP_ACCESS, APP_ACCESS_VERIFICATION, APP_ACCESS_EXTERNAL or ADMIN in IamAppAccess
  * @function
  * @param {number}  app_id
  * @param {server['ORM']['Type']['TokenType']} token_type 
@@ -101,8 +102,10 @@ const iamUtilTokenGet = (app_id, token, token_type) =>{
 const iamUtilTokenExpired = (app_id, token_type, token) =>{
     try {
         return iamUtilTokenGet(app_id, token, token_type) && 
-                    server.ORM.db.IamAppAccess.get(app_id,null).result
-                    .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>row.Token==token)[0].Res!=1;
+                    (token_type=='APP_ID' && server.ORM.db.IamAppIdToken.get({app_id:app_id, resource_id:null, data:{data_app_id:null}}).result
+                    .filter((/**@type{server['ORM']['Object']['IamAppIdToken']}*/row)=>row.Token==token)[0].Res!=1) ||
+                    (token_type!='APP_ID' && server.ORM.db.IamAppAccess.get(app_id,null).result
+                    .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>row.Token==token)[0].Res!=1);
     } catch (error) {
         return true;   
     }
