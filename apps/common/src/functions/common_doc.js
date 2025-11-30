@@ -170,6 +170,7 @@ const renderTablesFunctions = async parameters =>{
  */
 const HTMLEntities = (text, cr=false) => text
                             .replaceAll(cr?'\n':'',cr?'&crarr;':'')
+                            .replaceAll('\t','   ')
                             .replaceAll('|','&vert;')
                             .replaceAll('[','&#91;')
                             .replaceAll(']','&#93;')
@@ -347,27 +348,17 @@ const markdownRender = async parameters =>{
                                             `***${match[1]
                                                 .split('@')
                                                 .filter(tag=>tag.startsWith('description'))[0]?.substring('description'.length)
-                                                                                                .trimStart()
-                                                                                                .split('\n')
-                                                                                                .map(row=>row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
-                                                                                                .join('\n')
+                                                .split('\n')
+                                                .map(row=>HTMLEntities(row.replace('*',' ')))  //replace only first
+                                                .join('&crarr;')
                                                 }***`,
                                         response:
                                             `***${match[1]
                                                 .split('@')
                                                 .filter(tag=>tag.startsWith('returns'))[0]?.substring('returns'.length)
-                                                .trimStart()
                                                 .split('\n')
-                                                .map(row=>
-                                                    `${(row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
-                                                        .replaceAll('|','&vert;')
-                                                        .replaceAll('[','&#91;')
-                                                        .replaceAll(']','&#93;')
-                                                        .replaceAll('<','&lt;')
-                                                        .replaceAll('>','&gt;')
-                                                        }`
-                                                )
-                                                .join('')
+                                                .map(row=>HTMLEntities(row.replace('*',' ')))  //replace only first
+                                                .join('&crarr;')
                                                 }***`
                                         };
                         }
