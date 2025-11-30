@@ -5,6 +5,7 @@
 An app portfolio created as a reference platform with refactored and simplified solutions of common used third party solutions and support for any language and regional settings.
 
 Comparison tables with solutions are presented in the Presentation app and Apps and Server menus that includes:
+- OWASP
 - Vue/React
 - Transpiler/build step
 - Polyfill
