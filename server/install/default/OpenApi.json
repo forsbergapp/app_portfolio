@@ -4889,10 +4889,6 @@
                     "default":"1",
                     "description":"1=YES, 0=NO"
                 },
-                "IAM_AUTHENTICATE_REQUEST_ENABLE":{
-                    "default":"0",
-                    "description":"0=NO, 1=YES"
-                },
                 "IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT":{
                     "default":"5",
                     "description":"If observe limit reached then IP should be blocked"

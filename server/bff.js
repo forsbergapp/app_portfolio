@@ -393,18 +393,37 @@ const bffOpenApiPathMatch = parameters => {
  */
 const bffDecryptRequest = async parameters =>{
     /**
+     * @description Adds observation record for given type
+     * @param {server['ORM']['Object']['IamControlObserve']['Type']} type 
+     */
+    const bffObserveRecord = async type => {
+            /**@type{server['ORM']['Object']['IamControlObserve']} */
+            const recordObserve = { IamUserId:null,
+                                    AppId:parameters.common_app_id,
+                                    Ip:parameters.req.ip.replace('::ffff:',''), 
+                                    UserAgent:parameters.req.headers['user-agent'], 
+                                    Host:parameters.req.headers.host, 
+                                    AcceptLanguage:parameters.req.headers['accept-language'], 
+                                    Method:parameters.req.method,
+                                    Url:parameters.req.path,
+                                    Status:0, 
+                                    Type:type};
+            await server.ORM.db.IamControlObserve.post(parameters.common_app_id, recordObserve);
+    }
+    /**
      * @name bffAuthenticateRequestKeys
      * @description OWASP 3.2.1 requirement
      *              Authenticates request headers keys for APP/ADMIN, font or browser CSS font url
      *              Values must be as specified in openApi config or request headers can be missing
+     *              Creates observe record REQUEST_KEY if authentication fails
      * @param {{headers:            server['server']['req']['headers'], 
      *          openApiConfigKey:  'IAM_AUTHENTICATE_REQUEST_KEY_VALUES_APP'|
      *                              'IAM_AUTHENTICATE_REQUEST_KEY_VALUES_FONT'|
      *                              'IAM_AUTHENTICATE_REQUEST_KEY_VALUES_REST_API'}} params
-     * @returns {boolean}
+     * @returns {Promise.<boolean>}
      */
-    const bffAuthenticateRequestKeys = params =>
-        Object.entries(JSON.parse(parameters.openApi.components.parameters.config[params.openApiConfigKey].default))
+    const bffAuthenticateRequestKeys = async params =>{
+        const keysOk = Object.entries(JSON.parse(parameters.openApi.components.parameters.config[params.openApiConfigKey].default))
             .filter(key=>
                 //Accept always same-origin or value in OpenApi for sec-fetch-site
                 (key[0]=='sec-fetch-site' && ['same-origin',key[1]].includes((params.headers[key[0]]??key[1])) ||
@@ -412,12 +431,19 @@ const bffDecryptRequest = async parameters =>{
                  key[0]!='sec-fetch-site' && ((params.headers[key[0]]??key[1])==key[1]))
             )
             .length == Object.keys(JSON.parse(parameters.openApi.components.parameters.config[params.openApiConfigKey].default)).length;
+        if (!keysOk){
+            //Add observe record
+            await bffObserveRecord('REQUEST_KEY')
+        }
+        return keysOk;
+    }
+        
 
     if (parameters.openApi.servers.filter(row=>['APP', 'ADMIN'].includes(row['x-type'].default) && row.variables.basePath.default == parameters.req.url)[0] &&
         parameters.req.method.toUpperCase() == 'GET'){
         //APP or ADMIN server start url
         //Apply OWASP 3.2.1 requirement for APP/ADMIN, accept missing or correct values
-        if (bffAuthenticateRequestKeys({headers:parameters.req.headers, 
+        if (await bffAuthenticateRequestKeys({headers:parameters.req.headers, 
                                         openApiConfigKey:'IAM_AUTHENTICATE_REQUEST_KEY_VALUES_APP'})){
             //save info for logs in the request object
             parameters.req.headers.x = {app_id:     parameters.req.headers['app-id']??null, 
@@ -478,7 +504,7 @@ const bffDecryptRequest = async parameters =>{
         if (encryptionData){
             if(encryptionData.Type=='FONT'){
                 //Apply OWASP 3.2.1 requirement for browser CSS font url request, accept missing or correct values
-                if (bffAuthenticateRequestKeys({headers:parameters.req.headers, 
+                if (await bffAuthenticateRequestKeys({headers:parameters.req.headers, 
                                                 openApiConfigKey:'IAM_AUTHENTICATE_REQUEST_KEY_VALUES_FONT'})){
                     //font request
                     const token = server.ORM.db.IamAppIdToken.get({ app_id:parameters.common_app_id, 
@@ -512,7 +538,7 @@ const bffDecryptRequest = async parameters =>{
             }
             else{
                 //Apply OWASP 3.2.1 requirement for REST API, accept missing or correct values
-                if (bffAuthenticateRequestKeys({headers:parameters.req.headers, 
+                if (await bffAuthenticateRequestKeys({headers:parameters.req.headers, 
                                                 openApiConfigKey:'IAM_AUTHENTICATE_REQUEST_KEY_VALUES_REST_API'})){
                     //REST API request
                     const jwk = JSON.parse(Buffer.from(encryptionData.Secret, 'base64').toString('utf-8')).jwk;
@@ -618,6 +644,8 @@ const bffDecryptRequest = async parameters =>{
         else{
             //invalid request
             //no encryption data
+            //Add observe record
+            await bffObserveRecord('DECRYPTION_FAIL')
             return null;
         }
     }
@@ -718,19 +746,6 @@ const bffDecryptRequest = async parameters =>{
                         });
                     }
                     else{
-                        //Add observe record
-                        /**@type{server['ORM']['Object']['IamControlObserve']} */
-                        const recordObserve = {    IamUserId:null,
-                                AppId:common_app_id,
-                                Ip:req.ip.replace('::ffff:',''), 
-                                UserAgent:req.headers['user-agent'], 
-                                Host:req.headers.host, 
-                                AcceptLanguage:req.headers['accept-language'], 
-                                Method:req.method,
-                                Url:req.path,
-                                Status:0, 
-                                Type:'DECRYPTION_FAIL'};
-                        await server.ORM.db.IamControlObserve.post(common_app_id, recordObserve);
                         return bffResponse({result_request:{http:401, 
                                                             code:null,
                                                             text:server.iam.iamUtilMessageNotAuthorized(), 

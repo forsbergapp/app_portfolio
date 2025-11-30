@@ -367,7 +367,7 @@
  *              Method:string,
  *              Url:string,
  *              Status?:1|0,
- *              Type?:'INVALID_PATH'|'HOST'|'USER_AGENT'|'URI_DECODE'|'BLOCK_IP'|'DECRYPTION_FAIL',
+ *              Type?:'INVALID_PATH'|'HOST'|'USER_AGENT'|'URI_DECODE'|'BLOCK_IP'|'DECRYPTION_FAIL'|'REQUEST_KEY',
  *              Created?:string,
  *              Modified?:string|null,
  *              IamUserId:number|null,
