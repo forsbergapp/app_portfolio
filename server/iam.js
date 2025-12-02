@@ -857,6 +857,23 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
             return false;
 };
 /**
+ * @name iamObserveLimitReached
+ * @description check if observe limit reached
+ * @function
+ * @param {number} app_id
+ * @param {server['ORM']['Object']['OpenApi']} openApi
+ * @param {string} ip 
+ * @returns {boolean}
+ */
+const iamObserveLimitReached = (app_id, openApi, ip) =>{
+    return server.ORM.db.IamControlObserve.get(app_id, 
+                                                null).result
+                .filter((/**@type{server['ORM']['Object']['IamControlObserve']}*/row)=>
+                        row.Ip==ip && 
+                        row.AppId == app_id).length>
+                                            openApi.components.parameters.config.IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT.default
+}
+/**
  * @name iamAuthenticateRequest
  * @description IAM Authorize request
  *              Controls if AUTHENTICATE_REQUEST_ENABLE=1 else skips all checks
@@ -872,6 +889,7 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
  *                     return 401
  * @function
  * @param {{ip:string, 
+ *          common_app_id:number,
  *          OpenApiPathsMatchPublic:[string, *],
  *          openApi:server['ORM']['Object']['OpenApi'],
  *          req:server['server']['req'],
@@ -881,25 +899,10 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
  const iamAuthenticateRequest = async parameters => {
    
     const BLOCKED_PATHS = ['/favicon.ico'];
-    const common_app_id = server.ORM.UtilNumberValue(parameters.openApi.components.parameters.config.APP_COMMON_APP_ID.default) ?? 0;
 
     let statusCode;
     let statusMessage;
-
-    /**
-     * @description check if observe limit reached
-     * @function
-     * @param {string} ip 
-     * @returns {boolean}
-     */
-    const observeLimitReached = ip =>{
-        return server.ORM.db.IamControlObserve.get(common_app_id, 
-                                                    null).result
-                    .filter((/**@type{server['ORM']['Object']['IamControlObserve']}*/row)=>
-                            row.Ip==ip && 
-                            row.AppId == common_app_id).length>
-                                                parameters.openApi.components.parameters.config.IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT.default
-    }
+    
     /**
      * @description IP to number
      * @function
@@ -964,7 +967,7 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
         let fail_block = false;
         const ip_v4 = parameters.ip.replace('::ffff:','');
 
-        if (observeLimitReached(ip_v4)){
+        if (iamObserveLimitReached(parameters.common_app_id,parameters.openApi, ip_v4)){
             //use 401 to avoid more explanation
             statusCode = 401, 
             statusMessage= '';
@@ -972,14 +975,14 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
         else{
             /**@type{server['ORM']['Object']['IamControlObserve']} */
             const record = {    IamUserId:null,
-                                AppId:common_app_id,
+                                AppId:parameters.common_app_id,
                                 Ip:ip_v4, 
                                 UserAgent:parameters.req.headers['user-agent'], 
                                 Host:parameters.req.headers.host, 
                                 AcceptLanguage:parameters.req.headers['accept-language'], 
                                 Method:parameters.req.method,
                                 Url:parameters.req.path};
-            const result_range = block_ip_control(common_app_id, ip_v4);
+            const result_range = block_ip_control(parameters.common_app_id, ip_v4);
             if (result_range){
                 statusCode = 401, 
                 statusMessage= '';
@@ -994,7 +997,9 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
                         .filter((/**@type{Object.<string,string>}*/parameter)=>
                                 parameter['$ref']=='#/components/securitySchemes/AuthorizationAccess' && 
                                 parameter.default=='public').length==0))){
-                    await server.ORM.db.IamControlObserve.post(common_app_id, 
+                                    parameters.res.statusCode = 401;
+                                    parameters.res.statusMessage ='';
+                    await server.ORM.db.IamControlObserve.post(parameters.common_app_id, 
                                                 {   ...record,
                                                     Status:0, 
                                                     Type:'INVALID_PATH'});
@@ -1002,7 +1007,7 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
                 }
                 //check if host exists
                 if (typeof parameters.req.headers.host=='undefined'){
-                    await server.ORM.db.IamControlObserve.post(common_app_id, 
+                    await server.ORM.db.IamControlObserve.post(parameters.common_app_id, 
                                                             {   ...record,
                                                                 Status:1, 
                                                                 Type:'HOST'});
@@ -1010,10 +1015,10 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
                     fail_block = true;
                 }
                 //check if user-agent is blocked
-                if(server.ORM.db.IamControlUserAgent.get(common_app_id, null).result.filter((/**@type{server['ORM']['Object']['IamControlUserAgent']}*/row)=>row.UserAgent== parameters.req.headers['user-agent']).length>0){
+                if(server.ORM.db.IamControlUserAgent.get(parameters.common_app_id, null).result.filter((/**@type{server['ORM']['Object']['IamControlUserAgent']}*/row)=>row.UserAgent== parameters.req.headers['user-agent']).length>0){
                     //stop always
                     fail_block = true;
-                    await server.ORM.db.IamControlObserve.post(common_app_id, 
+                    await server.ORM.db.IamControlObserve.post(parameters.common_app_id, 
                         {   ...record,
                             Status:1, 
                             Type:'USER_AGENT'});
@@ -1028,15 +1033,15 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
                     err = e;
                 }
                 if (err){
-                    await server.ORM.db.IamControlObserve.post(common_app_id, 
+                    await server.ORM.db.IamControlObserve.post(parameters.common_app_id, 
                         {   ...record,
                             Status:0, 
                             Type:'URI_DECODE'});
                     fail ++;
                 }
                 if (fail>0){
-                    if (fail_block || observeLimitReached(ip_v4)){
-                        await server.ORM.db.IamControlObserve.post(common_app_id,
+                    if (fail_block || iamObserveLimitReached(parameters.common_app_id, parameters.openApi, ip_v4)){
+                        await server.ORM.db.IamControlObserve.post(parameters.common_app_id,
                                                             {   ...record,
                                                                 Status:1, 
                                                                 Type:'BLOCK_IP'});
@@ -1601,6 +1606,7 @@ export{ iamUtilMessageNotAuthorized,
         iamAuthenticateUserAppDelete,
         iamAuthenticateCommon,
         iamAuthenticateRequestRateLimiter,
+        iamObserveLimitReached,
         iamAuthenticateRequest,
         iamAuthenticateResource,
         iamAuthenticateMicroservice,

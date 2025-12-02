@@ -1094,59 +1094,61 @@ class ORM_class {
      * @returns {Promise<*>}
      */
     Execute = async parameters =>{
-        try{
+        return new Promise((resolve, reject)=>{
             if (parameters.dml!='GET' && parameters.dml!='UPDATE' && parameters.dml!='POST' && parameters.dml!='DELETE')
             {
-                throw server.iam.iamUtilMessageNotAuthorized();
+                reject (server.iam.iamUtilMessageNotAuthorized());
             }
             else{
-                const result =  parameters.dml=='GET'?  await this.getObjectFile(   parameters.app_id, 
-                                                                                    parameters.object, 
-                                                                                    parameters.get?.resource_id??null, 
-                                                                                    parameters.get?.partition??null):
-                                parameters.dml=='UPDATE'?  await this.updateObject( parameters.app_id, 
-                                                                                    parameters.object, 
-                                                                                    parameters.update?.resource_id??null, 
-                                                                                    parameters.update?.data_app_id??null, 
-                                                                                    parameters.update?.data):
-                                parameters.dml=='POST'?    await this.postObject(   parameters.app_id,   
-                                                                                    parameters.object, 
-                                                                                    parameters.post?.data):
-                                    await this.deleteObject(                        parameters.app_id, 
-                                                                                    parameters.object, 
-                                                                                    parameters.delete?.resource_id??null, 
-                                                                                    parameters.delete?.data_app_id??null);
-                if (parameters.object.toString().startsWith('Log'))
-                    return result;
-                else
-                    return this.db.Log.post({app_id:parameters.app_id, 
-                                                    data:{  object:'LogDbInfo', 
-                                                            db:{Object:parameters.object,
-                                                                Dml:parameters.dml, 
-                                                                Parameters:parameters
-                                                                }, 
-                                                            log:result
-                                                        }
-                                                    }).then(()=>result);
+                (parameters.dml=='GET'?this.getObjectFile(      parameters.app_id, 
+                                                                parameters.object, 
+                                                                parameters.get?.resource_id??null, 
+                                                                parameters.get?.partition??null):
+                    parameters.dml=='UPDATE'?this.updateObject( parameters.app_id, 
+                                                                parameters.object, 
+                                                                parameters.update?.resource_id??null, 
+                                                                parameters.update?.data_app_id??null, 
+                                                                parameters.update?.data):
+                        parameters.dml=='POST'?this.postObject( parameters.app_id,   
+                                                                parameters.object, 
+                                                                parameters.post?.data):
+                            this.deleteObject(                  parameters.app_id, 
+                                                                parameters.object, 
+                                                                parameters.delete?.resource_id??null, 
+                                                                parameters.delete?.data_app_id??null))
+                .then(result=>{
+                    if (parameters.object.toString().startsWith('Log'))
+                        resolve(result);
+                    else
+                        this.db.Log.post({  app_id:parameters.app_id, 
+                                            data:{  object:'LogDbInfo', 
+                                                    db:{Object:parameters.object,
+                                                        Dml:parameters.dml, 
+                                                        Parameters:parameters
+                                                        }, 
+                                                    log:result
+                                                }
+                                            }).then(()=>resolve(result));
+                    })
+                .catch(error=>{
+                    if (parameters.object.toString().startsWith('Log'))
+                        reject(error);
+                    else
+                        this.db.Log.post({
+                        app_id:parameters.app_id, 
+                        data:{  object:'LogDbError', 
+                                db:{Object:parameters.object,
+                                    Dml:parameters.dml, 
+                                    Parameters:parameters.update ?? parameters.post ?? parameters.delete
+                                    }, 
+                                log:error
+                            }
+                        }).then(()=>{
+                            reject(error);
+                        });
+                })
             }
-        } 
-        catch (error) {
-            if (parameters.object.toString().startsWith('Log'))
-                throw error;
-            else
-                return this.db.Log.post({
-                                    app_id:parameters.app_id, 
-                                    data:{  object:'LogDbError', 
-                                            db:{Object:parameters.object,
-                                                Dml:parameters.dml, 
-                                                Parameters:parameters.update ?? parameters.post ?? parameters.delete
-                                                }, 
-                                            log:error
-                                        }
-                                    }).then(()=>{
-                                        throw error;
-                                    });
-        }
+        }) 
     };
 
     /**
