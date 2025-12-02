@@ -662,6 +662,30 @@ const bffDecryptRequest = async parameters =>{
  const bff = async (req, res) =>{
     /**@type{server['ORM']['Object']['OpenApi']} */
     const openApi = server.ORM.db.OpenApi.get({app_id:0}).result;
+    const common_app_id = server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default)??0;
+    res.on('close',()=>{
+        if (server.iam.iamObserveLimitReached(common_app_id,openApi, req.ip.replace('::ffff:',''))){
+            //do not log blocked ip that could cause unwanted logs
+            res.statusMessage = '';
+            res.end();
+        }
+        else
+            //SSE response time will be time connected until disconnected
+            server.ORM.db.Log.post({  app_id:0, 
+                data:{  object:'LogRequestInfo', 
+                        request:{   Req:req,
+                                    ResponseTime:server.UtilResponseTime(res),
+                                    StatusCode:res.statusCode,
+                                    StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
+                                },
+                        log:''
+                    }
+                }).then(() => {
+                    // do not return any StatusMessage to client, this is only used for logging purpose
+                    res.statusMessage = '';
+                    res.end();
+                });
+    });
     // check JSON maximum size, parameter uses megabytes (MB)
     if (req.body && JSON.stringify(req.body).length/1024/1024 > 
             (server.ORM.UtilNumberValue((openApi.components.parameters.config.SERVER_JSON_LIMIT.default ?? '0').replace('MB',''))??0)){
@@ -689,7 +713,7 @@ const bffDecryptRequest = async parameters =>{
         });
     }
     else{
-        const common_app_id = server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default)??0;
+        
         //If first time, when no admin exists, then display maintenance for users
         if (server.ORM.db.IamUser.get(0, null).result.length==0 && (await server.app_common.commonAppIam(req.headers.host)).admin == false){
             return bffResponse({
@@ -712,6 +736,7 @@ const bffDecryptRequest = async parameters =>{
                                                                 openApi:openApi}).paths;
             //access control that stops request if not passing controls
             if (await server.iam.iamAuthenticateRequest({ip:req.ip, 
+                                                        common_app_id:common_app_id,
                                                         OpenApiPathsMatchPublic:OpenApiPathsMatchPublic,
                                                         openApi:openApi,
                                                         req:req,
@@ -784,23 +809,7 @@ const bffDecryptRequest = async parameters =>{
                             req.headers.connection = 'close';
                         }
                             
-                        res.on('close',()=>{	
-                            //SSE response time will be time connected until disconnected
-                            server.ORM.db.Log.post({  app_id:0, 
-                                data:{  object:'LogRequestInfo', 
-                                        request:{   Req:req,
-                                                    ResponseTime:server.UtilResponseTime(res),
-                                                    StatusCode:res.statusCode,
-                                                    StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
-                                                },
-                                        log:''
-                                    }
-                                }).then(() => {
-                                // do not return any StatusMessage to client, this is only used for logging purpose
-                                res.statusMessage = '';
-                                res.end();
-                            });
-                        });
+                        
                         if (bff_parameters.endpoint == 'APP'){
                             //use common app id for APP since no app id decided
                             //App route
@@ -913,8 +922,9 @@ const bffDecryptRequest = async parameters =>{
                                                 route:null,
                                                 res:res});
             }
-            else
+            else{
                 res.end();
+            }
             
         }
     }
