@@ -41,11 +41,11 @@ const template = props =>`  ${props.records.length>0?
  *                      commonMountdiv:string,
  *                      iam_user_id:number},
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon']
- *                      function_click_function:function}}} props
+ *                      COMMON:common['CommonModuleCommon']}}} props
  * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'],
  *                      data:   null,
  *                      methods:null,
+ *                      events:common['commonComponentEvents'],
  *                      template:string}>}
  */
 const component = async props => {
@@ -70,16 +70,33 @@ const component = async props => {
                                                 })
                                         .then((/**@type{string}*/result)=>JSON.parse(result).rows):[];
 
+    /**
+     * @name events
+     * @descption Events
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (true){
+            case event_type == 'click' && event_target_id == 'common_app_profile_search_list':{
+                await props.methods.COMMON.commonProfileShow(Number(props.methods.COMMON.commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
+                break;
+            }
+        }
+    }
     const onMounted = async () =>{           
         if (records.length>0){
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_profile_search_list_wrap').style.display = 'flex';
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_profile_search_list')['data-function'] = props.methods.function_click_function;
         }
     };
     return {
         lifecycle:  {onMounted:commonMiscInputControl?onMounted:null},
         data:       null,
         methods:    null,
+        events:     events,
         template:   template({records:records})
     };
 };

@@ -1380,24 +1380,22 @@ const commonProfileDetail = (detailchoice) => {
  * @name commonProfileSearch
  * @description Profile search
  * @function
- * @param {function} click_function 
  * @returns {void}
  */
-const commonProfileSearch = click_function => {
+const commonProfileSearch = () => {
     commonComponentRender({
         mountDiv:   'common_app_profile_search_list_wrap',
         data:       {
                     iam_user_id:COMMON_GLOBAL.iam_user_id
                     },
-        methods:    {
-                    function_click_function:click_function
-                    },
+        methods:    null,
         path:       '/common/component/common_app_profile_search_list.js'})
     .catch(()=>{
         COMMON_DOCUMENT.querySelector('#common_app_profile_search_list_wrap').style.display = 'none';
         COMMON_DOCUMENT.querySelector('#common_app_profile_search_list_wrap').textContent = '';
     });
 };
+
 /**
  * @name commonProfileShow
  * @description Profile show
@@ -2234,11 +2232,7 @@ const commonEvent = async (event_type,event=null) =>{
                                     path:       '/common/component/common_app_dialogues_user_menu.js'});
                                 break;
                             }
-                            //search list
-                            case 'common_app_profile_search_list':{
-                                await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-iam_user_id')),null);
-                                break;
-                            }
+
                             //dialogue button stat
                             case 'common_app_profile_toolbar_stat':{
                                 await commonProfileStat(1, null);
@@ -2329,7 +2323,7 @@ const commonEvent = async (event_type,event=null) =>{
                             case 'common_app_profile_search_input':{
                                 commonMiscListKeyEvent({event:event,
                                                         event_function:commonProfileSearch,
-                                                        event_parameters:commonProfileShow,
+                                                        event_parameters:null,
                                                         rows_element:'common_app_profile_search_list',
                                                         search_input:'common_app_profile_search_input'});
                                 break;
