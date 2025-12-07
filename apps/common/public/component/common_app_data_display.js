@@ -1,5 +1,5 @@
 /**
- *  Displays app data:
+ *  @description Displays app data:
  *                              usage suggestion        design
  *  VERTICAL_KEY_VALUE          form                    key value vertical array list, 2 columns
  *                                                      
@@ -8,14 +8,50 @@
  * 
  *  MASTER_DETAIL_VERTICAL      resource info           master key values one object with detail key value (2 columns) vertical array list below
  * 
- *  Buttons:
+ *  @example Show pay dialogue
  * 
- *  print, update, post, delete, display with custom functions
- * 
- *  Click event delegation in common.js triggers ['data-function'] function for the buttons
- *  App data divs are all classes. Buttons use id to be identified so mount this component only once at a time if any button is used.
- * 
- *  Set optional custom styles using class on div where component is mounted in the app
+ *  await common.commonComponentRender({
+ *       mountDiv:   'common_app_dialogues_app_data_display', 
+ *       data:       {
+ *                   app_id:common.commonGlobalGet('app_id'),
+ *                   common_app_id:common.commonGlobalGet('app_common_app_id'),
+ *                   display_type:'VERTICAL_KEY_VALUE',
+ *                   dialogue:true,
+ *                   lov:[	{   lov:'PAYMENT_METHOD', 	
+ *                               lov_functionData:null, 
+ *                               lov_functionRow:getPaymentMethod}],
+ *                   master_path:'/app-common-module/COMMON_APP_DATA_METADATA',
+ *                   master_query:'fields=Document',
+ *                   master_body:{   type:'FUNCTION',
+ *                                   IAM_module_app_id:common.commonGlobalGet('app_common_app_id'),
+ *                                   IAM_data_app_id:common.commonGlobalGet('app_id'), 
+ *                                   resource_name:'PAYMENT_METADATA'},
+ *                   master_method:'POST',
+ *                   master_token_type:'APP_ID',
+ *                   master_resource:'PAYMENT_METADATA',
+ *                   detail_path:null,
+ *                   detail_query:null,
+ *                   detail_body:null,
+ *                   detail_method:null,
+ *                   detail_token_type:null,
+ *                   detail_class:null,
+ *                   new_resource:true,
+ *                   mode:'EDIT',
+ *                   timezone:common.commonGlobalGet('user_timezone'),
+ *                   locale:common.commonGlobalGet('user_locale'),
+ *                   button_print: false,
+ *                   button_update: false,
+ *                   button_post: true,
+ *                   button_post_icon_class:'common_data_display_icon_ok',
+ *                   button_delete: true,
+ *                   button_delete_icon_class:'common_data_display_icon_cancel'
+ *                   },
+ *       methods:    {
+ *                   button_print:null,
+ *                   button_update:null,
+ *                   button_post:appPaymentRequest,
+ *                   button_delete:appPayCancel},
+ *       path:       '/common/component/common_app_data_display.js'});
  * 
  * @module apps/common/component/common_app_data_display
  */
@@ -156,16 +192,16 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                             }
                             <div class='common_app_data_display_buttons'>
                                 ${props.button_print?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_print common_app_dialogues_button common_icon ${props.button_print_icon_class ?? ''}' ></div>`:''
+                                    `<div id='common_app_data_display_button_print' class='common_app_dialogues_button common_icon ${props.button_print_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_update?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_update common_app_dialogues_button common_icon ${props.button_update_icon_class ?? ''}' ></div>`:''
+                                    `<div id='common_app_data_display_button_update' class='common_app_dialogues_button common_icon ${props.button_update_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_post?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_post common_app_dialogues_button common_icon ${props.button_post_icon_class ?? ''}' ></div>`:''
+                                    `<div id='common_app_data_display_button_post' class='common_app_dialogues_button common_icon ${props.button_post_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_delete?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_delete common_app_dialogues_button common_icon ${props.button_delete_icon_class ?? ''}' ></div>`:''
+                                    `<div id='common_app_data_display_button_delete' class='common_app_dialogues_button common_icon ${props.button_delete_icon_class ?? ''}' ></div>`:''
                                 }
                             </div>`;
 /**
@@ -363,12 +399,12 @@ const component = async props => {
                                 path:       '/common/component/common_app_dialogues_lov.js'});
                         break;
                     }
-                    case event.target.classList.contains('common_app_data_display_button_print'):
-                    case event.target.classList.contains('common_app_data_display_button_update'):
-                    case event.target.classList.contains('common_app_data_display_button_post'):
-                    case event.target.classList.contains('common_app_data_display_button_delete'):{
-                        if (props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function'])
-                            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function']();
+                    case [  'common_app_data_display_button_print',
+                            'common_app_data_display_button_update',
+                            'common_app_data_display_button_post',
+                            'common_app_data_display_button_delete'].includes(event_target_id ):{
+                            if (props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function'])
+                                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function']()
                         break;
                     }
                 }
@@ -377,13 +413,13 @@ const component = async props => {
     };
     const onMounted = async () => {
         if (props.methods.button_print)
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_print`)['data-function'] = props.methods.button_print;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} #common_app_data_display_button_print`)['data-function'] = props.methods.button_print;
         if (props.methods.button_update)
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_update`)['data-function'] = props.methods.button_update;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} #common_app_data_display_button_update`)['data-function'] = props.methods.button_update;
         if (props.methods.button_post)
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_post`)['data-function'] = props.methods.button_post;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} #common_app_data_display_button_post`)['data-function'] = props.methods.button_post;
         if (props.methods.button_delete)
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_delete`)['data-function'] = props.methods.button_delete;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} #common_app_data_display_button_delete`)['data-function'] = props.methods.button_delete;
     };
     return {
         lifecycle:  {onMounted:onMounted},
