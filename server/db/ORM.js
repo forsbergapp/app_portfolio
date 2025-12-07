@@ -1232,6 +1232,7 @@ class ORM_class {
             return {
                 Name: row.Name,
                 Type: row.Type,
+                InMemory:row.InMemory,
                 Lock: row.Lock,
                 TransactionId: row.TransactionId,
                 Rows: ('CacheContent' in row && (row.Type=='TABLE' ||row.Type=='TABLE_KEY_VALUE'))?

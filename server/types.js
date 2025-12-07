@@ -859,6 +859,7 @@
  * @description DB VIEW ViewORMGetObjects
  * @typedef {{Name:ORM['MetaData']['DbObject']['Name'],
  *            Type:ORM['MetaData']['DbObject']['Type'],
+ *            InMemory:ORM['MetaData']['DbObject']['InMemory'],
  *            Lock:ORM['MetaData']['DbObject']['Lock'],
  *            TransactionId:ORM['MetaData']['DbObject']['TransactionId'],
  *            Rows:number|null,

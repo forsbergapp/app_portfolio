@@ -34,8 +34,9 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
                                     <div id='menu_db_info_detail_row_title' class='menu_db_info_detail_row'>
                                         <div class='menu_db_info_detail_col list_title'>NAME</div>
                                         <div class='menu_db_info_detail_col list_title'>TYPE</div>
+                                        <div class='menu_db_info_detail_col list_title'>IN MEMORY</div>
                                         <div class='menu_db_info_detail_col list_title'>LOCK</div>
-                                        <div class='menu_db_info_detail_col list_title'>TRANSACTION_ID</div>
+                                        <div class='menu_db_info_detail_col list_title'>TRANSACTION ID</div>
                                         <div class='menu_db_info_detail_col menu_db_info_detail_col_number list_title'>ROWS</div>
                                         <div class='menu_db_info_detail_col menu_db_info_detail_col_number list_title'>SIZE ${props.size}</div>
                                         <div class='menu_db_info_detail_col list_title'>PK</div>
@@ -46,6 +47,7 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
                                         `<div class='menu_db_info_detail_row' >
                                             <div class='menu_db_info_detail_col'>${row.Name}</div>
                                             <div class='menu_db_info_detail_col'>${row.Type}</div>
+                                            <div class='menu_db_info_detail_col'>${row.InMemory}</div>
                                             <div class='menu_db_info_detail_col'>${row.Lock==null?'':row.Lock}</div>
                                             <div class='menu_db_info_detail_col'>${row.TransactionId==null?'':row.TransactionId}</div>
                                             <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${row.Rows==null?'':row.Rows}</div>
