@@ -63,15 +63,15 @@ const component = async props => {
 
     /**
      * @description Get customer type and country from lov
-     * @param{common['CommonAppEvent']['target']} event_target
+      * @param{{id:*, value:*}} record
      */
-    const getLovData = event_target =>{
+    const getLovData = record =>{
         const lov = props.methods.COMMON.COMMON_DOCUMENT
                         .querySelector('#common_app_dialogues_lov_list')
                         .getAttribute('data-lov');
         if (['COUNTRY', 'CUSTOMER_TYPE'].includes(lov))
             props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#app_page_secure_tab_content [data-value=${lov=='COUNTRY'?'Country':'CustomerType'}]`).textContent = 
-                props.methods.COMMON.commonMiscElementRow(event_target).getAttribute('data-value');
+                record.value;
     };
 
     const onMounted = async () =>{
@@ -85,6 +85,8 @@ const component = async props => {
                             app_id:props.data.app_id,
                             common_app_id:props.data.common_app_id,
                             display_type:'VERTICAL_KEY_VALUE',
+                            lov:[	{lov:'CUSTOMER_TYPE', 	lov_functionData:null, lov_functionRow:getLovData}, 
+				                    {lov:'COUNTRY', 		lov_functionData:null, lov_functionRow:getLovData}],
                             master_path:'/app-common-module/COMMON_APP_DATA_METADATA',
                             master_query:'fields=Document',
                             master_body:{   type:'FUNCTION',
@@ -114,8 +116,6 @@ const component = async props => {
                             button_post:props.methods.button_post,
                             button_delete:null},
                 path:       '/common/component/common_app_data_display.js'});
-                props.methods.COMMON.COMMON_DOCUMENT.querySelector('.common_list_lov_click[data-lov=CUSTOMER_TYPE]')['data-functionRow'] = getLovData;
-                props.methods.COMMON.COMMON_DOCUMENT.querySelector('.common_list_lov_click[data-lov=COUNTRY]')['data-functionRow'] = getLovData;
         }
     };
     return {

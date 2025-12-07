@@ -26,7 +26,7 @@
 const COMMON_DOCUMENT = document;
 
 const WHITE='#ffffff', YELLOW='#ffff00' , GREEN='#009900' , BLUE='#006dbf', RED='#cc0000', ORANGE='#ff8000', CLEAR = '#000000';
-
+const GOAL_SOLVE =  ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 'BR', 'BL', 'UFR', 'URB', 'UBL', 'ULF', 'DRF', 'DFL', 'DLB', 'DBR'];
 const clock90 =   '↷';
 const counter90 = '↶';
 const clock180 = '↷180°';
@@ -1068,6 +1068,13 @@ class RubiksCube {
 				}));
 		}
 	};
+    /**
+	 * @name getSolved
+	 * @description getSolved
+	 * @method
+	 * @returns {string[]}
+	 */
+    getSolved = () =>GOAL_SOLVE;
 	/**
 	 * @name getCubie
 	 * @description getCubie
@@ -1075,7 +1082,7 @@ class RubiksCube {
 	 * @param {*} position
 	 * @returns {*}
 	 */
-	getCubie = (position) =>{
+	getCubie = position =>{
 		const cubes = this.getBlocks(position[0]);
 		switch(position){
 			//Edge piece
@@ -1150,8 +1157,6 @@ class RubiksCube {
 	 */
 	getState = () =>{
 		const me = this;
-		let result = '';
-		const cubicles = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 'BR', 'BL', 'UFR', 'URB', 'UBL', 'ULF', 'DRF', 'DFL', 'DLB', 'DBR'];
 		const colorToFace = {};
 		const faceToDirection = {
 			'F':'x',
@@ -1185,19 +1190,14 @@ class RubiksCube {
 			colorToFace[me.getFaceColor(face)] = face;
 		});
 		
-		cubicles.forEach(cubicle=>{
-			const c = me.getCubie(cubicle);
-			let cubieName = '';
-			cubicle.split('').forEach(face=>{
-				/**@ts-ignore */
-				const color = getFaceColor(c, faceToDirection[face]);
-				/**@ts-ignore */
-				cubieName += colorToFace[color];
-			});
-			result += cubieName + ' ';
-		});
-		
-		return result.trim();
+        return GOAL_SOLVE.map(cubicle=>
+            cubicle.split('').map(face=>
+                /**@ts-ignore */
+                colorToFace[getFaceColor(me.getCubie(cubicle), faceToDirection[face])]
+			).join('')
+        )
+        .join(' ')
+        .trim()
 	};
 
 }

@@ -178,6 +178,10 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      common_app_id:number,
  *                      display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL'
  *                      dialogue:boolean,
+ *                      lov: {  lov:string, 
+ *                              lov_functionData: ((arg0:common['CommonAppEvent']['target'])=>Promise.<Object.<string,*>[]>)|null,
+ *                              lov_functionRow :((arg0:{id:*,value:*}|null)=> Promise.<void>)|null
+ *                          }[],
  *                      master_path:string,
  *                      master_query:string,
  *                      master_body:string,
@@ -342,6 +346,23 @@ const component = async props => {
         switch (event_type){
             case 'click':{
                 switch (true){
+                    case    event.target.classList.contains('common_list_lov_click') && 
+                            event.target.hasAttribute('data-lov'):{
+                        if (props.data.lov.filter(row=>row.lov==event.target.getAttribute('data-lov')).length>0)
+                            props.methods.COMMON.commonComponentRender({
+                                mountDiv:   'common_app_dialogues_lov',
+                                data:       {
+                                            lov:                event.target.getAttribute('data-lov'),
+                                            lov_custom_value:   null
+                                            },
+                                methods:    {
+                                            functionData:       props.data.lov.filter(row=>row.lov==event.target.getAttribute('data-lov'))[0].lov_functionData,
+                                            functionRow:        props.data.lov.filter(row=>row.lov==event.target.getAttribute('data-lov'))[0].lov_functionRow,
+                                            event_target:       event.target
+                                            },
+                                path:       '/common/component/common_app_dialogues_lov.js'});
+                        break;
+                    }
                     case event.target.classList.contains('common_app_data_display_button_print'):
                     case event.target.classList.contains('common_app_data_display_button_update'):
                     case event.target.classList.contains('common_app_data_display_button_post'):

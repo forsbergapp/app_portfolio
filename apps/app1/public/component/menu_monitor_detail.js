@@ -123,7 +123,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                             ${props.monitor_detail=='SERVER_LOG'?
                                 `<div id='menu_monitor_detail_server_log_form'>
                                     <div id='menu_monitor_detail_select_logobject'></div>
-                                    <div id='menu_monitor_detail_filesearch' data-lov='SERVER_LOG_FILES' class='common_app_dialogues_button common_list_lov_click common_icon'></div>
+                                    <div id='menu_monitor_detail_filesearch' class='common_app_dialogues_button common_list_lov_click common_icon'></div>
                                     <div id='menu_monitor_detail_parameters_row'>
                                         <div class='menu_monitor_detail_parameters_row_col'>
                                             <div id='menu_monitor_detail_parameters_row_col1' class='common_icon'></div>
@@ -190,6 +190,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *                               monitorDetailShowServerLog:function,
  *                               monitorDetailClickSort:function
  *                               },
+ *                      events:common['commonComponentEvents'],
  *                      template:string}>}
  */
 const component = async props => {
@@ -349,18 +350,16 @@ const component = async props => {
     
     /**
      * @description Show existing logfiles
-     * @param {common['CommonAppEvent']['target']} event_target
+     * @param{{id:*, value:*}} record
      */
-    const monitorDetailShowLogDir = async event_target => {
+    const monitorDetailShowLogDir = async record => {
         //format [db object]_YYYYMMDD.json
-        
-        const filename = props.methods.COMMON.commonMiscElementRow(event_target).getAttribute('data-value') ?? '';
-        const year     = parseInt(filename.split('_')[1].substring(0,4));
-        const month    = parseInt(filename.split('_')[1].substring(4,6));
-        const day      = parseInt(filename.split('_')[1].substring(6,8));
+        const year     = parseInt(record.value.split('_')[1].substring(0,4));
+        const month    = parseInt(record.value.split('_')[1].substring(4,6));
+        const day      = parseInt(record.value.split('_')[1].substring(6,8));
 
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').setAttribute('data-value', `${filename.split('_')[0]}`);
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').textContent = `${filename.split('_')[0]}`;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').setAttribute('data-value', `${record.value.split('_')[0]}`);
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logobject .common_select_dropdown_value').textContent = `${record.value.split('_')[0]}`;
         //year
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').setAttribute('data-value', year);
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').textContent = year;
@@ -418,10 +417,36 @@ const component = async props => {
      */
     const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
 
-
+    /**
+     * @name events
+     * @descption Events
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        switch (true){
+            case event_type =='click' && event_target_id == 'menu_monitor_detail_filesearch':{
+                props.methods.COMMON.commonComponentRender({
+                    mountDiv:   'common_app_dialogues_lov',
+                    data:       {
+                                lov:                'SERVER_LOG_FILES',
+                                lov_custom_value:   null
+                                },
+                    methods:    {
+                                functionData:       null,
+                                functionRow:        monitorDetailShowLogDir,
+                                event_target:       event.target
+                                },
+                    path:       '/common/component/common_app_dialogues_lov.js'});
+                break;                      
+            }
+        }
+    }
     const onMounted = async () =>{
         if (props.data.monitor_detail=='SERVER_LOG'){
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_filesearch')['data-functionRow'] = monitorDetailShowLogDir;
             await props.methods.COMMON.commonComponentRender({
                 mountDiv:'menu_monitor_detail_select_logobject', 
                 data:{ 
@@ -447,6 +472,7 @@ const component = async props => {
                     monitorDetailShowServerLog:monitorDetailShowServerLog,
                     monitorDetailClickSort:monitorDetailClickSort
         },
+        events:     events,
         template:   template({  iam_user_id:props.data.iam_user_id,
                                 monitor_detail:props.data.monitor_detail,
                                 function_commonWindowUserAgentPlatform:props.methods.COMMON.commonWindowUserAgentPlatform,
