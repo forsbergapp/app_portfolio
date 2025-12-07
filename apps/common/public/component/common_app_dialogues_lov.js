@@ -5,80 +5,7 @@
 /**
  * @import {common}  from '../../../common_types.js'
  */
-/**
- * @name setup
- * @description Setup
- * @function
- * @param {*} props 
- * @returns {Promise.<{ lov_rows:Object.<string,*>[], 
- *                      lov_column_id:string,
- *                      lov_column_value:string}>}
- */
-const setup = async props => {
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show2');
 
-    let path = '';
-    let query = null;
-    /**@type{common['CommonRESTAPIAuthorizationType']}*/
-    let token_type;
-    /**@type{common['CommonRESTAPIMethod']}*/
-    let method;
-    let body = null;
-    let lov_column_value = '';
-    let lov_column_id = '';
-    switch (props.data.lov){
-        //server logs files for admin
-        case 'SERVER_LOG_FILES':{
-            method = 'GET';
-            lov_column_id = 'Id';
-            lov_column_value = 'Filename';
-            path = '/server-db/log-files';
-            query= null;
-            token_type = 'ADMIN';
-            break;
-        }
-        //country for common app id
-        case 'COUNTRY':{
-            method = 'POST', 
-            lov_column_id = 'Value';
-            lov_column_value = 'text';
-            path = '/app-common-module/COMMON_COUNTRY';
-            query= `locale=${props.methods.COMMON.commonGlobalGet('user_locale')}`;
-            token_type = 'APP_ID';
-            body = {type:'FUNCTION',IAM_data_app_id : props.methods.COMMON.commonGlobalGet('app_common_app_id')};
-            break;
-        }
-        default:{
-            //lov for current app id
-            method = 'GET';
-            lov_column_id = 'Value';
-            lov_column_value = 'DisplayData';
-            path = '/server-db/appdata/';
-            query= `name=${props.data.lov}&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_id')}`;
-            token_type = 'APP_ID';
-        }
-    }
-    return {lov_rows:   props.data.lov=='CUSTOM'?
-                            (props.methods.functionData ?
-                                await props.methods.functionData(props.methods.event_target):
-                                null):
-                            await props.methods.COMMON.commonFFB({
-                                                    path:path, 
-                                                    query:query, 
-                                                    method:method, 
-                                                    authorization_type:token_type,
-                                                    body:body
-                                                }).then((/**@type{string}*/result)=>
-                                                        props.data.lov =='SERVER_LOG_FILES'?
-                                                            JSON.parse(result).rows:
-                                                                //COUNTRY and default use base64
-                                                                JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data))),
-            lov_column_id     : props.data.lov=='CUSTOM'?'Id':lov_column_id,
-            lov_column_value  : props.data.lov=='CUSTOM'?
-                                    props.data.lov_custom_value:
-                                        lov_column_value
-        };
-}
 /**
  * @name template
  * @description Template
@@ -132,7 +59,69 @@ const template = props =>`  <div id='common_app_dialogues_lov_form'>
  */
 const component = async props => {
     
-    const setupResult = await setup(props);    
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show2');
+
+    let path = '';
+    let query = null;
+    /**@type{common['CommonRESTAPIAuthorizationType']}*/
+    let token_type;
+    /**@type{common['CommonRESTAPIMethod']}*/
+    let method;
+    let body = null;
+    let lov_column_value = '';
+    let lov_column_id = '';
+    switch (props.data.lov){
+        //server logs files for admin
+        case 'SERVER_LOG_FILES':{
+            method = 'GET';
+            lov_column_id = 'Id';
+            lov_column_value = 'Filename';
+            path = '/server-db/log-files';
+            query= null;
+            token_type = 'ADMIN';
+            break;
+        }
+        //country for common app id
+        case 'COUNTRY':{
+            method = 'POST', 
+            lov_column_id = 'Value';
+            lov_column_value = 'text';
+            path = '/app-common-module/COMMON_COUNTRY';
+            query= `locale=${props.methods.COMMON.commonGlobalGet('user_locale')}`;
+            token_type = 'APP_ID';
+            body = {type:'FUNCTION',IAM_data_app_id : props.methods.COMMON.commonGlobalGet('app_common_app_id')};
+            break;
+        }
+        default:{
+            //lov for current app id
+            method = 'GET';
+            lov_column_id = 'Value';
+            lov_column_value = 'DisplayData';
+            path = '/server-db/appdata/';
+            query= `name=${props.data.lov}&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_id')}`;
+            token_type = 'APP_ID';
+        }
+    }
+    const setup =  {lov_rows:   props.data.lov=='CUSTOM'?
+                            (props.methods.functionData ?
+                                await props.methods.functionData(props.methods.event_target):
+                                null):
+                            await props.methods.COMMON.commonFFB({
+                                                    path:path, 
+                                                    query:query, 
+                                                    method:method, 
+                                                    authorization_type:token_type,
+                                                    body:body
+                                                }).then((/**@type{string}*/result)=>
+                                                        props.data.lov =='SERVER_LOG_FILES'?
+                                                            JSON.parse(result).rows:
+                                                                //COUNTRY and default use base64
+                                                                JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data))),
+                    lov_column_id     : props.data.lov=='CUSTOM'?'Id':lov_column_id,
+                    lov_column_value  : props.data.lov=='CUSTOM'?
+                                            props.data.lov_custom_value:
+                                                lov_column_value
+        };
 
     /**
      * @name LovFilter
@@ -205,7 +194,7 @@ const component = async props => {
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_lov_search_input').focus();
     };
     //return empty component if CUSTOM and no records found
-    return (props.data.lov=='CUSTOM' && (!setupResult.lov_rows ||setupResult.lov_rows.length==0))?
+    return (props.data.lov=='CUSTOM' && (!setup.lov_rows ||setup.lov_rows.length==0))?
                 null:
                     {
                         lifecycle:  {onMounted:onMounted},
@@ -213,10 +202,10 @@ const component = async props => {
                         methods:    null,
                         events:     events,
                         template:   template({
-                                            list: setupResult.lov_rows, 
+                                            list: setup.lov_rows, 
                                             lov:props.data.lov, 
-                                            lov_column_id:setupResult.lov_column_id,
-                                            lov_column_value:setupResult.lov_column_value
+                                            lov_column_id:setup.lov_column_id,
+                                            lov_column_value:setup.lov_column_value
                                             })
                     };
 };
