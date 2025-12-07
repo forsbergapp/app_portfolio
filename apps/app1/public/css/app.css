@@ -787,7 +787,7 @@
 	padding-inline-start: 5px;
 	text-align: start;
 	display: grid;
-	grid-template-columns: 20em 10em 10em 10em 10em 10em 12em 20em 35em;
+	grid-template-columns: 20em 10em 8em 5em 10em 10em 10em 5em 20em 35em;
 }   
 #menu_db_info_detail_row_total{
 	border-top: 1px solid black;
