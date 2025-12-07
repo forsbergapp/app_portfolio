@@ -248,15 +248,14 @@ const appPayCancel = async () =>{
 const appPay = async () =>{
     /**
      * @description Get payment method from lov
-     * @param{common['CommonAppEvent']['target']} event_target
+     * @param{{id:*, value:*}} record
      */
-    const getPaymentMethod = event_target =>{
-        event_target;
+    const getPaymentMethod = record =>{
         if (['PAYMENT_METHOD'].includes(COMMON_DOCUMENT
                              .querySelector('#common_app_dialogues_lov_list')
                              .getAttribute('data-lov')) && COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=PaymentMethod]')){
             
-            if( common.commonMiscElementRow(event_target).getAttribute('data-id')=='VPA'){
+            if( record.id=='VPA'){
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=PaymentId]').style.visibility='visible';
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=PaymentId]').style.visibility='visible';
             }
@@ -274,6 +273,9 @@ const appPay = async () =>{
                     common_app_id:common.commonGlobalGet('app_common_app_id'),
                     display_type:'VERTICAL_KEY_VALUE',
                     dialogue:true,
+                    lov:[	{   lov:'PAYMENT_METHOD', 	
+                                lov_functionData:null, 
+                                lov_functionRow:getPaymentMethod}],
                     master_path:'/app-common-module/COMMON_APP_DATA_METADATA',
                     master_query:'fields=Document',
                     master_body:{   type:'FUNCTION',
@@ -309,7 +311,6 @@ const appPay = async () =>{
         COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=PaymentId]').style.visibility='hidden';
         COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=PaymentId]').style.visibility='hidden';
         COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=PaymentId]').classList.add('common_input_error');
-        COMMON_DOCUMENT.querySelector('.common_list_lov_click[data-lov=PAYMENT_METHOD]')['data-functionRow'] = getPaymentMethod;
 };
 /**
  * @name appInit

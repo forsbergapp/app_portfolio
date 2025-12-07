@@ -58,6 +58,7 @@
  *              'data-functionData':Promise.<(arg0:CommonAppEvent['target'])=>{id:*, value:*}>|null|undefined,
  *              'data-functionRow': Promise.<(arg0:CommonAppEvent['target'])=>{id:*, value:*}>|null|undefined,
  *              dispatchEvent:      function,
+ *              hasAttribute:       function,
  *              getAttribute:       function,
  *              innerHTML:          string,
  *              textContent:        string,

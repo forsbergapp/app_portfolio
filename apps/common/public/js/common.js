@@ -2269,27 +2269,6 @@ const commonEvent = async (event_type,event=null) =>{
                                 if (event_target_id=='common_app_toolbar_framework_react')
                                     await commonFrameworkSet(3);
                                 break;
-                            }    
-                            case (  event.target.classList.contains('common_list_lov_click') && 
-                                    event.target.getAttribute('data-lov') &&
-                                    event.target['data-functionRow'])?event_target_id:'':{
-                                //element with attributes
-                                //data-lov:              SERVER_LOG_FILES, COUNTRY, CUSTOM or from AppData.Name in db,
-                                //data-lov_custom_value: custom column name in records if used
-                                //data-functionData:async function that returns records with 'id' and 'value' or lov_custom_value columns
-                                //data-functionRow: async function that reads clicked row data using syntax:
-                                //                  commonMiscElementRow(event.target).getAttribute('data-id')
-                                //                  commonMiscElementRow(event.target).getAttribute('data-value')
-                                //                  component closes lov after function
-                                //calls function with event.target so data-functionData can read event in component and use spinner
-                                commonComponentRender({
-                                    mountDiv:   'common_app_dialogues_lov',
-                                    data:       null,
-                                    methods:    {
-                                                event_target:       event.target
-                                                },
-                                    path:       '/common/component/common_app_dialogues_lov.js'});
-                                break;
                             }
                             //markdown document tags
                             case event.target.classList.contains('common_md_image')?event_target_id:'':{

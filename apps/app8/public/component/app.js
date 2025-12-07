@@ -55,7 +55,7 @@ const template = props =>`  <div id='app_main'>
                                     </div>
                                     <div class='buttons_row'>
                                         <div class='buttons_col'>
-                                            <div id='button_solve' data-lov='CUSTOM' data-lov_custom_value='cube_solution' class='common_app_dialogues_button common_list_lov_click'></div>
+                                            <div id='button_solve' class='common_app_dialogues_button common_list_lov_click'></div>
                                         </div>
                                         <div class='buttons_col'>
                                             <div id='button_solve_cubestate' class='common_app_dialogues_button'></div>
@@ -73,7 +73,7 @@ const template = props =>`  <div id='app_main'>
                                             </div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='button_solved_step' data-lov='CUSTOM' data-lov_custom_value='cube_solution' class='common_app_dialogues_button common_list_lov_click'></div>
+                                            <div id='button_solved_step' class='common_app_dialogues_button common_list_lov_click'></div>
                                         </div>
                                         <div class='buttons_col'>
                                             <div id='button_solved_step_cubestate' class='common_app_dialogues_button'></div>
@@ -158,15 +158,44 @@ const component = async props => {
                 CONSTANTS.cube_controls.cube.makeMove(event.target.getAttribute('name'));
                 break;
             }
+            case event_type =='click' && ['button_solve', 'button_solved_step'].includes(event_target_id):{
+                //if not already solved then show lov
+                if (CONSTANTS.cube.getState() != CONSTANTS.cube.getSolved().join(' '))
+                    props.methods.COMMON.commonComponentRender({
+                        mountDiv:   'common_app_dialogues_lov',
+                        data:       {
+                                    lov:                'CUSTOM',
+                                    lov_custom_value:   'cube_solution'
+                                    },
+                        methods:    {
+                                    functionData:       appCubeSolveLovData,
+                                    functionRow:        event_target_id=='button_solved_step'?
+                                                            appCubeSolveCubestateShowResult:
+                                                                appCubeSolveShowResult,
+                                    event_target:       event.target
+                                    },
+                        path:       '/common/component/common_app_dialogues_lov.js'});
+                break;                      
+            }
             case event_type=='click' && ['button_solve_cubestate', 'button_solved_step_cubestate'].includes(event_target_id):{
                 CONSTANTS.cube_goalstate = props.methods.COMMON.commonWindowPrompt('?');
                 if (CONSTANTS.cube_goalstate && CONSTANTS.cube_goalstate.split(' ').length==20)
-                    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id.replace('_cubestate','')}`).click();
+                    props.methods.COMMON.commonComponentRender({
+                    mountDiv:   'common_app_dialogues_lov',
+                    data:       {
+                                lov:                'CUSTOM',
+                                lov_custom_value:   'cube_solution'
+                                },
+                    methods:    {
+                                functionData:       appCubeSolveLovData,
+                                functionRow:        appCubeSolveCubestateShowResult,
+                                event_target:       event.target
+                                },
+                    path:       '/common/component/common_app_dialogues_lov.js'});
                 else{
                     CONSTANTS.cube_goalstate = null;
                     props.methods.COMMON.commonMessageShow('INFO', null, 'message_text','!');
                 }
-                    
                 break;
             }
             case event_type=='click' && event_target_id=='button_info':{
@@ -295,18 +324,18 @@ const component = async props => {
 
     /**
      * @description Start cube moves or show step by step cube moves using solution chosen from lov
-     * @param{common['CommonAppEvent']['target']} event_target
+     * @param{{id:*, value:*}} record
      */
-    const appCubeSolveShowResult = async event_target =>{
+    const appCubeSolveShowResult = async record =>{
         CONSTANTS.cube_goalstate = null;
-        const solution = props.methods.COMMON.commonWindowFromBase64(props.methods.COMMON.commonMiscElementRow(event_target).getAttribute('data-id') ?? '');
+        const solution = props.methods.COMMON.commonWindowFromBase64(record.id);
         CONSTANTS.cube.makeMoves(solution);
     };
     /**
-     * @param{common['CommonAppEvent']['target']} event_target
+     * @param{{id:*, value:*}} record
      */
-    const appCubeSolveCubestateShowResult = async event_target =>{
-        const solution = props.methods.COMMON.commonWindowFromBase64(props.methods.COMMON.commonMiscElementRow(event_target).getAttribute('data-id') ?? '');
+    const appCubeSolveCubestateShowResult = async record =>{
+        const solution = props.methods.COMMON.commonWindowFromBase64(record.id);
         CONSTANTS.cube_controls.setSolution(solution);
     };
     const initCube = ()=>{
@@ -316,15 +345,6 @@ const component = async props => {
     };
     const onMounted =() =>{
         initCube();
-        //set lov functions
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#button_solve')['data-functionData'] =                  appCubeSolveLovData;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#button_solve')['data-functionRow'] =                   appCubeSolveShowResult;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#button_solved_step')['data-functionData'] =            appCubeSolveLovData;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#button_solved_step')['data-functionRow'] =             appCubeSolveShowResult;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#button_solve_cubestate')['data-functionData'] =        appCubeSolveLovData;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#button_solve_cubestate')['data-functionRow'] =         appCubeSolveCubestateShowResult;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#button_solved_step_cubestate')['data-functionData'] =  appCubeSolveLovData;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#button_solved_step_cubestate')['data-functionRow'] =   appCubeSolveCubestateShowResult;
     };
     return {
         lifecycle:  {onMounted:onMounted},

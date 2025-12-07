@@ -5,13 +5,87 @@
 /**
  * @import {common}  from '../../../common_types.js'
  */
+/**
+ * @name setup
+ * @description Setup
+ * @function
+ * @param {*} props 
+ * @returns {Promise.<{ lov_rows:Object.<string,*>[], 
+ *                      lov_column_id:string,
+ *                      lov_column_value:string}>}
+ */
+const setup = async props => {
+    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show2');
 
+    let path = '';
+    let query = null;
+    /**@type{common['CommonRESTAPIAuthorizationType']}*/
+    let token_type;
+    /**@type{common['CommonRESTAPIMethod']}*/
+    let method;
+    let body = null;
+    let lov_column_value = '';
+    let lov_column_id = '';
+    switch (props.data.lov){
+        //server logs files for admin
+        case 'SERVER_LOG_FILES':{
+            method = 'GET';
+            lov_column_id = 'Id';
+            lov_column_value = 'Filename';
+            path = '/server-db/log-files';
+            query= null;
+            token_type = 'ADMIN';
+            break;
+        }
+        //country for common app id
+        case 'COUNTRY':{
+            method = 'POST', 
+            lov_column_id = 'Value';
+            lov_column_value = 'text';
+            path = '/app-common-module/COMMON_COUNTRY';
+            query= `locale=${props.methods.COMMON.commonGlobalGet('user_locale')}`;
+            token_type = 'APP_ID';
+            body = {type:'FUNCTION',IAM_data_app_id : props.methods.COMMON.commonGlobalGet('app_common_app_id')};
+            break;
+        }
+        default:{
+            //lov for current app id
+            method = 'GET';
+            lov_column_id = 'Value';
+            lov_column_value = 'DisplayData';
+            path = '/server-db/appdata/';
+            query= `name=${props.data.lov}&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_id')}`;
+            token_type = 'APP_ID';
+        }
+    }
+    return {lov_rows:   props.data.lov=='CUSTOM'?
+                            (props.methods.functionData ?
+                                await props.methods.functionData(props.methods.event_target):
+                                null):
+                            await props.methods.COMMON.commonFFB({
+                                                    path:path, 
+                                                    query:query, 
+                                                    method:method, 
+                                                    authorization_type:token_type,
+                                                    body:body
+                                                }).then((/**@type{string}*/result)=>
+                                                        props.data.lov =='SERVER_LOG_FILES'?
+                                                            JSON.parse(result).rows:
+                                                                //COUNTRY and default use base64
+                                                                JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data))),
+            lov_column_id     : props.data.lov=='CUSTOM'?'Id':lov_column_id,
+            lov_column_value  : props.data.lov=='CUSTOM'?
+                                    props.data.lov_custom_value:
+                                        lov_column_value
+        };
+}
 /**
  * @name template
  * @description Template
  * @function
- * @param {{list:*,
+ * @param {{list:Object.<string,*>[],
  *          lov:string,
+ *          lov_column_id:string,
  *          lov_column_value:string}} props 
  * @returns {string}
  */
@@ -22,19 +96,13 @@ const template = props =>`  <div id='common_app_dialogues_lov_form'>
                                     <div id='common_app_dialogues_lov_search_icon' class='common_icon'></div>
                                 </div>
                             <div id='common_app_dialogues_lov_list' data-lov='${props.lov}' class='common_list_scrollbar'>
-                                ${props.list.map((/**@type{*}*/list_row)=>
-                                    `<div   data-id='${(props.lov_column_value.startsWith('text')||props.lov_column_value.startsWith('DisplayData'))?
-                                                            list_row.Value:
-                                                                list_row.Id}' 
-                                            data-value='${list_row[props.lov_column_value]}' 
-                                            tabindex=-1 
+                                ${props.list.map(list_row=>
+                                    `<div   data-id     ='${list_row[props.lov_column_id]}' 
+                                            data-value  ='${list_row[props.lov_column_value]}' 
+                                            tabindex    =-1 
                                             class='common_list_lov_row common_row'>
-                                        <div class='common_list_lov_col1'>
-                                            <div>${props.lov_column_value=='text'?list_row.Value:list_row.Id}</div>
-                                        </div>
-                                        <div class='common_list_lov_col2'>
-                                            <div>${list_row[props.lov_column_value]}</div>
-                                        </div>
+                                        <div class='common_list_lov_col1'>${list_row[props.lov_column_id]}</div>
+                                        <div class='common_list_lov_col2'>${list_row[props.lov_column_value]}</div>
                                     </div>
                                     `).join('')
                                 }
@@ -46,11 +114,15 @@ const template = props =>`  <div id='common_app_dialogues_lov_form'>
  * @description Component
  * @function
  * @param {{data:       {
+ *                      lov: 'SERVER_LOG_FILES'|'COUNTRY'|'CUSTOM'|string,
+ *                      lov_custom_value:string,
  *                      commonMountdiv:string
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon'],
+ *                      functionData:   ((arg0:common['CommonAppEvent']['target'])=>Promise.<Object.<string,*>[]>)|null,
+ *                      functionRow:    ((arg0:{id:*,value:*}|null)=> Promise.<void>)|null,
  *                      event_target:common['CommonAppEvent']['target']
+ *                      COMMON:common['CommonModuleCommon'],
  *                      }}} props
  * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
@@ -59,62 +131,9 @@ const template = props =>`  <div id='common_app_dialogues_lov_form'>
  *                      template:string}|null>}
  */
 const component = async props => {
-    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show2');
+    
+    const setupResult = await setup(props);    
 
-    let path = '';
-    let query = null;
-    /**@type{common['CommonRESTAPIAuthorizationType']}*/
-    let token_type;
-    /**@type{common['CommonRESTAPIMethod']}*/
-    let method;
-    let body = null;
-    let lov_column = '';
-    switch (props.methods.event_target.getAttribute('data-lov')){
-        //server logs files for admin
-        case 'SERVER_LOG_FILES':{
-            method = 'GET';
-            lov_column = 'Filename';
-            path = '/server-db/log-files';
-            query= null;
-            token_type = 'ADMIN';
-            break;
-        }
-        //country for common app id
-        case 'COUNTRY':{
-            method = 'POST', 
-            lov_column = 'text';
-            path = '/app-common-module/COMMON_COUNTRY';
-            query= `locale=${props.methods.COMMON.commonGlobalGet('user_locale')}`;
-            token_type = 'APP_ID';
-            body = {type:'FUNCTION',IAM_data_app_id : props.methods.COMMON.commonGlobalGet('app_common_app_id')};
-            break;
-        }
-        default:{
-            //lov for current app id
-            method = 'GET';
-            lov_column = 'DisplayData';
-            path = '/server-db/appdata/';
-            query= `name=${props.methods.event_target.getAttribute('data-lov')}&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_id')}`;
-            token_type = 'APP_ID';
-        }
-    }
-    const lov_rows          = props.methods.event_target.getAttribute('data-lov')=='CUSTOM'?
-                                    (props.methods.event_target['data-functionData']?
-                                        /**@ts-ignore */
-                                        await props.methods.event_target['data-functionData'](props.methods.event_target):
-                                        null):
-                                    await props.methods.COMMON.commonFFB({
-                                                            path:path, 
-                                                            query:query, 
-                                                            method:method, 
-                                                            authorization_type:token_type,
-                                                            body:body
-                                                        }).then(result=>props.methods.event_target.getAttribute('data-lov')=='SERVER_LOG_FILES'?
-                                                                        JSON.parse(result).rows:
-                                                                        //COUNTRY and default use base64
-                                                                        JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
-    const lov_column_value  = props.methods.event_target.getAttribute('data-lov')=='CUSTOM'?(props.methods.event_target.getAttribute('data-lov_custom_value') ??''):lov_column;
-   
     /**
      * @name LovFilter
      * @description Lov filter
@@ -159,10 +178,12 @@ const component = async props => {
                 props.methods.COMMON.commonComponentRemove('common_app_dialogues_lov');
                 break;
             }
-            case event_type == 'click' && event_target_id=='common_app_dialogues_lov_list':{
-                if (props.methods.event_target['data-functionRow']){
-                    /**@ts-ignore */
-                    await props.methods.event_target['data-functionRow'](event.target);
+            case event_type == 'click' && event_target_id=='common_app_dialogues_lov_list' && 
+                props.methods.COMMON.commonMiscElementRow(event.target).hasAttribute('data-id'):{
+                if (props.methods.functionRow){
+                    await props.methods.functionRow({id:props.methods.COMMON.commonMiscElementRow(event.target).getAttribute('data-id'),
+                                                     value:props.methods.COMMON.commonMiscElementRow(event.target).getAttribute('data-value')
+                                                    });
                     props.methods.COMMON.commonComponentRemove('common_app_dialogues_lov');
                 }
                 break;
@@ -184,7 +205,7 @@ const component = async props => {
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_lov_search_input').focus();
     };
     //return empty component if CUSTOM and no records found
-    return (props.methods.event_target.getAttribute('data-lov')=='CUSTOM' && (!lov_rows ||lov_rows.length==0))?
+    return (props.data.lov=='CUSTOM' && (!setupResult.lov_rows ||setupResult.lov_rows.length==0))?
                 null:
                     {
                         lifecycle:  {onMounted:onMounted},
@@ -192,9 +213,10 @@ const component = async props => {
                         methods:    null,
                         events:     events,
                         template:   template({
-                                            list: lov_rows, 
-                                            lov:props.methods.event_target.getAttribute('data-lov'), 
-                                            lov_column_value:lov_column_value
+                                            list: setupResult.lov_rows, 
+                                            lov:props.data.lov, 
+                                            lov_column_id:setupResult.lov_column_id,
+                                            lov_column_value:setupResult.lov_column_value
                                             })
                     };
 };
