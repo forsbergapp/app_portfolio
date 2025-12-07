@@ -21,7 +21,7 @@
  *          logs:[],
  *          SERVICE_LOG_DATA_PARAMETERS:{
  *                                      REQUEST_LEVEL:number,
- *                                      SERVICE_LEVEL:number,
+ *                                      BFF_LEVEL:number,
  *                                      DB_LEVEL:number,
  *                                      FILE_INTERVAL:string}}} props
  * @returns {string}
@@ -134,7 +134,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                         </div>
                                         <div class='menu_monitor_detail_parameters_row_col'>
                                             <div id='menu_monitor_detail_parameters_row_col2' class='common_icon'></div>
-                                            ${(props.SERVICE_LOG_DATA_PARAMETERS.SERVICE_LEVEL==1 || props.SERVICE_LOG_DATA_PARAMETERS.SERVICE_LEVEL==2)?
+                                            ${(props.SERVICE_LOG_DATA_PARAMETERS.BFF_LEVEL==1 || props.SERVICE_LOG_DATA_PARAMETERS.BFF_LEVEL==2)?
                                                 '<div id=\'menu_monitor_detail_parameters_row_col2_1\' class=\'common_icon\'></div>':
                                                 '<div id=\'menu_monitor_detail_parameters_row_col2_0\' class=\'common_icon\'></div>'
                                             }
@@ -171,7 +171,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *                       iam_user_id:number,
  *                       SERVICE_LOG_FILE_INTERVAL:string,
  *                       SERVICE_LOG_DATA:{parameters:{  REQUEST_LEVEL:number,
- *                                                       SERVICE_LEVEL:number,
+ *                                                       BFF_LEVEL:number,
  *                                                       DB_LEVEL:number,
  *                                                       APP_LEVEL:number,
  *                                                       FILE_INTERVAL:string

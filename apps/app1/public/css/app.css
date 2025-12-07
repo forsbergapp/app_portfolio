@@ -72,7 +72,7 @@
 #menu_monitor_detail_parameters_row_col1_1::before{									content:var(--common_app_icon_checkbox_checked)}
 #menu_monitor_detail_parameters_row_col1_0::before{									content:var(--common_app_icon_checkbox_empty)}
 
-#menu_monitor_detail_parameters_row_col2::before{									content:var(--common_app_icon_server) ' SERVICE'}
+#menu_monitor_detail_parameters_row_col2::before{									content:var(--common_app_icon_server) ' BFF'}
 #menu_monitor_detail_parameters_row_col2_1::before{									content:var(--common_app_icon_checkbox_checked)}
 #menu_monitor_detail_parameters_row_col2_0::before{									content:var(--common_app_icon_checkbox_empty)}
 

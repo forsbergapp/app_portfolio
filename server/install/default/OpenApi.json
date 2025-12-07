@@ -5009,7 +5009,7 @@
                     "default":"0",
                     "description": "0=none, 1=INFO, 2=Verbose"
                 },
-                "LOG_SERVICE_LEVEL":{
+                "LOG_BFF_LEVEL":{
                     "default":"1",
                     "description": "0=none, 1=INFO, 2=Verbose"
                 },

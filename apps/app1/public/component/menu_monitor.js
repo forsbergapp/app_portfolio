@@ -84,7 +84,7 @@ const component = async props => {
      * Get log parameters
      * @returns {Promise.<{ parameters:{ 
      *                                  REQUEST_LEVEL:number,
-     *                                  SERVICE_LEVEL:number,
+     *                                  BFF_LEVEL:number,
      *                                  DB_LEVEL:number,
      *                                  APP_LEVEL:number,
      *                                  FILE_INTERVAL:string},
@@ -100,7 +100,7 @@ const component = async props => {
         
         const log_parameters = {
             REQUEST_LEVEL : result_parameters.LOG_REQUEST_LEVEL.default,
-            SERVICE_LEVEL : result_parameters.LOG_SERVICE_LEVEL.default,
+            BFF_LEVEL :     result_parameters.LOG_BFF_LEVEL.default,
             DB_LEVEL :      result_parameters.LOG_DB_LEVEL.default,
             APP_LEVEL :     result_parameters.LOG_APP_LEVEL.default,
             FILE_INTERVAL : result_parameters.LOG_FILE_INTERVAL.default
