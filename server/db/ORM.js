@@ -542,6 +542,20 @@ class ORM_class {
     };
 
     /**
+     * @name getObjectRowSum
+     * @description Get sum of all records in files for given object 
+     * @param {server['ORM']['MetaData']['DbObject']['Name']} object
+     * @param {server['ORM']['MetaData']['DbObject']['Type']} type
+     * @returns {Promise.<{}[][]>}
+     */
+    getObjectRowSum = async (object, type) =>{
+        const files = [];	
+        for (const file of await server.ORM.getFsDir().then(files=>files.filter(file=>file.isDirectory()==false)))
+            if (file.name.startsWith(object))
+                files.push(await this.getFsFile(DB_DIR.db + file.name, type))
+        return files;
+    }
+    /**
      * @name getObject
      * @description Gets a record or records in a TABLE from memory only for performance
      *              for given app id and if resource id if specified
@@ -1225,35 +1239,35 @@ class ORM_class {
      * @description Get all objects in ORM
      * @method
      * @param {{app_id:number}}parameters
-     * @returns {server['server']['response'] & {result?:server['ORM']['View']['ORMGetObjects'][]}}
+     * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['ORMGetObjects'][]}>}
      */
-    getViewObjects = parameters =>{
-        const result = DB.data.map(row=>{
-            return {
+    getViewObjects = async parameters =>{
+        /**@type{server['ORM']['View']['ORMGetObjects'][]} */
+        const records = [];
+        for (const row of DB.data)
+            records.push ({
                 Name: row.Name,
                 Type: row.Type,
                 InMemory:row.InMemory,
                 Lock: row.Lock,
                 TransactionId: row.TransactionId,
                 Rows: ('CacheContent' in row && (row.Type=='TABLE' ||row.Type=='TABLE_KEY_VALUE'))?
-                        row.CacheContent?
+                        (row.CacheContent?
                             row.CacheContent.length??0:
-                                0:
-                                    null,
+                                0):
+                                    (await this.getObjectRowSum(row.Name, row.Type)).reduce((total_rows, row)=>total_rows += row.length??0,0),
                 Size: ('CacheContent' in row)?
                         row.CacheContent?
                             JSON.stringify(row.CacheContent)?.length??0:
                                 0:
-                                    null,
+                                    (await this.getObjectRowSum(row.Name, row.Type)).reduce((total_size, row)=>total_size += JSON.stringify(row??'').length??0,0),
                 Pk: row.Pk,
                 Uk: row.Uk,
                 Fk: row.Fk
-            };
-        });
-        if (result.length>0)
-            return {result:result, type:'JSON'};
-        else
-            return this.getError(parameters.app_id, 404);
+            });
+        return {result: records,
+                type: 'JSON'
+        };
     };
 }
 /**
@@ -1271,9 +1285,9 @@ const getViewInfo = async parameters =>ORM.getViewInfo(parameters);
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['View']['ORMGetObjects'][]}}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['ORMGetObjects'][]}>}
  */
-const getViewObjects = parameters =>ORM.getViewObjects(parameters);
+const getViewObjects = async parameters =>ORM.getViewObjects(parameters);
 
 const ORM = new ORM_class(serverProcess);
 

@@ -62,6 +62,7 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
                                         <div class='menu_db_info_detail_col'></div>
                                         <div class='menu_db_info_detail_col'></div>
                                         <div class='menu_db_info_detail_col'></div>
+                                        <div class='menu_db_info_detail_col'></div>
                                         <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${props.function_roundOff(props.db_detail.reduce((total_rows, row)=>total_rows += row.Rows??0,0))}</div>
                                         <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${props.function_roundOff(props.db_detail.reduce((total_size, row)=>total_size += (row.Size??0)/1024/1024,0))}</div>
                                         <div class='menu_db_info_detail_col'></div>
