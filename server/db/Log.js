@@ -384,7 +384,7 @@ const post = async parameters => {
         }
         case 'LogBffError':
         case 'LogBffInfo':{
-            const service_level = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'LOG_SERVICE_LEVEL'}}).result;
+            const service_level = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'LOG_BFF_LEVEL'}}).result;
             /**@type{server['ORM']['Object']['LogBffInfo']}*/
             log = (service_level=='1' ||service_level=='2')?
                     {AppId:     parameters.app_id,
