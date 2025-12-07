@@ -3,9 +3,9 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.2.0-beta1" use-changelog="false" max-obj-count="52"
+<dbmodel pgmodeler-ver="1.2.0-beta1" use-changelog="false" max-obj-count="54"
 	 gen-disabled-objs-code="false" show-sys-schemas-rects="true"
-	 last-position="1955,-207" last-zoom="0.9" scene-rect="-248,-490,8068.78,3386.12"
+	 last-position="1955,969" last-zoom="0.8" scene-rect="-248,-490,8068.78,3386.12"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -158,7 +158,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="LogAppInfo" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3160" y="-420"/>
+	<position x="3080" y="-400"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -184,7 +184,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="LogDbInfo" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3160" y="-160"/>
+	<position x="3080" y="-180"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -213,7 +213,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="LogBffInfo" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3140" y="160"/>
+	<position x="3080" y="60"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -241,14 +241,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="Created" not-null="true">
 		<type name="varchar" length="0"/>
 	</column>
-	<constraint name="LogServiceInfo_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogBffInfo&quot;">
+	<constraint name="LogBffInfo_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogBffInfo&quot;">
 		<columns names="Id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
 <table name="LogRequestinfo" layers="0" collapse-mode="1" max-obj-count="22" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3140" y="500"/>
+	<position x="3080" y="380"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -313,7 +313,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="LogServerInfo" layers="0" collapse-mode="1" max-obj-count="3" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3140" y="1040"/>
+	<position x="3080" y="940"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -330,7 +330,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="OpenApi" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3640" y="1900"/>
+	<position x="3680" y="1840"/>
 	<column name="info" not-null="true">
 		<type name="varchar" length="0"/>
 	</column>
@@ -396,7 +396,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="MessageQueueError" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3140" y="1540"/>
+	<position x="3140" y="1560"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -506,7 +506,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="LogRequestError" layers="0" collapse-mode="1" max-obj-count="22" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3640" y="500"/>
+	<position x="3740" y="380"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -571,7 +571,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="LogAppError" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3620" y="-420"/>
+	<position x="3740" y="-400"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -597,7 +597,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="LogDbError" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3640" y="-160"/>
+	<position x="3740" y="-180"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -626,7 +626,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <table name="LogBffError" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3640" y="160"/>
+	<position x="3740" y="60"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -654,14 +654,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="Created" not-null="true">
 		<type name="varchar" length="0"/>
 	</column>
-	<constraint name="LogServiceError_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogBffError&quot;">
+	<constraint name="LogBffError_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogBffError&quot;">
 		<columns names="Id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
 <table name="LogServerError" layers="0" collapse-mode="1" max-obj-count="3" z-value="0">
 	<schema name="&quot;ORM&quot;"/>
-	<position x="3640" y="1040"/>
+	<position x="3740" y="940"/>
 	<column name="Id" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
@@ -1822,5 +1822,160 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<position x="0" y="0"/>
 	</label>
 </relationship>
+
+<table name="LogAppVerbose" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3400" y="-400"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="AppId">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="AppFileName">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="AppFunctionName">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="LogText">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogAppVerbose_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogAppVerbose&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="LogDbVerbose" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3400" y="-180"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="AppId">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Object">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Dml">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Parameters">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="LogText">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogDbVerbose_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogDbVerbose&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="LogBffVerbose" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3400" y="60"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Appid">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="Service">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Method">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Url">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Operation">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Parameters">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Logtext">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogBffVerbose_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogBffVerbose&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="LogRequestVerbose" layers="0" collapse-mode="1" max-obj-count="22" z-value="0">
+	<schema name="&quot;ORM&quot;"/>
+	<position x="3400" y="380"/>
+	<column name="Id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="X" default-value="{AppId:0, AppIdAuth:0, Method:&quot;GET&quot;}">
+		<type name="json" length="0"/>
+	</column>
+	<column name="Host">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Ip">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="RequestId">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="CorrelationId">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Url">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="HttpInfo">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Method">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="StatusCode">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="StatusMessage">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="UserAgent">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="AcceptLanguage">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Referer">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SizeReceived">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="SizeSent">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="ResponseTime">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="LogText">
+		<type name="varchar" length="0"/>
+	</column>
+	<column name="Created" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="LogRequestVerbose_pk" type="pk-constr" table="&quot;ORM&quot;.&quot;LogRequestVerbose&quot;">
+		<columns names="Id" ref-type="src-columns"/>
+	</constraint>
+</table>
 
 </dbmodel>
