@@ -13,16 +13,6 @@ const COMMON_DOCUMENT = document;
 /**@type {common['CommonModuleCommon']} */
 let common;
 /**
- * @name appException
- * @description App exception function
- * @function
- * @param {Error} error 
- * @returns {void}
- */
-const appException = error => {
-    common.commonMessageShow('EXCEPTION', null, null, error);
-};
-/**
  * @name appEventClick
  * @description App event click
  * @function
@@ -338,7 +328,6 @@ const appInit = async () => {
 const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
-    common.commonGlobalSet('app_function_exception', appException);
     common.commonGlobalSet('app_function_session_expired', null);
     appInit();
 };

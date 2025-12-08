@@ -1886,17 +1886,6 @@ const appMapQibblaShow = () => {
 };
 
 /**
- * @name appException
- * @description App exception function
- * @function
- * @param {Error} error
- * @returns {void}
- */
-const appException = error => {
-    common.commonMessageShow('EXCEPTION', null, null, error);
-};
-
-/**
  * @name appInit
  * @description Init app
  * @function
@@ -2008,7 +1997,6 @@ const appInit = async parameters => {
 const appCommonInit = async (commonLib, parameters) => {
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
-    common.commonGlobalSet('app_function_exception', appException);
     common.commonGlobalSet('app_function_session_expired', appUserLogout);
     await appInit(parameters);
 };

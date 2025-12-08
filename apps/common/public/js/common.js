@@ -33,7 +33,6 @@ const COMMON_GLOBAL = {
     app_div:'app',
     app_console:{warn:COMMON_WINDOW.console.warn, info:COMMON_WINDOW.console.info, error:COMMON_WINDOW.console.error},
     app_eventListeners:{original: HTMLElement.prototype.addEventListener, REACT:[], VUE:[], OTHER:[]},
-    app_function_exception:null,
     app_function_session_expired:null,
     app_function_sse:null,
     app_fonts:[],
@@ -1149,7 +1148,7 @@ const commonComponentRender = async parameters => {
                                                 methods:    {...parameters.methods,    ...{ COMMON:commonGet()}}})
                                                 .catch((/**@type{Error}*/error)=>{
                                                     parameters.mountDiv?commonComponentRemove(parameters.mountDiv):null;
-                                                    commonException(COMMON_GLOBAL.app_function_exception, error);
+                                                    commonMessageShow('EXCEPTION', null, null, error);
                                                     return null;
                                                 });
     if (component){
@@ -1878,10 +1877,6 @@ const commonFFB = async parameter =>{
                                 })
                             };
         /**
-         * @param {*} message
-         */
-        const showError      = message   => commonMessageShow('ERROR_BFF', null, null, message);
-        /**
          * 
          * @param {*} data 
          * @returns {string}
@@ -1904,7 +1899,7 @@ const commonFFB = async parameter =>{
                 [   new Promise((resolve)=>
                         setTimeout(()=>{
                             if (resultFetch.finished==false){
-                                showError('🗺⛔?');
+                                commonMessageShow('ERROR_BFF', null, null, '🗺⛔?');
                                 resolve('🗺⛔?');
                                 throw ('TIMEOUT');
                             }
@@ -1977,13 +1972,13 @@ const commonFFB = async parameter =>{
                                 case 503:   //Service unavailable or other error in microservice
                                 {   
                                     const error = getDecrypted(result);
-                                    showError(error);
+                                    commonMessageShow('ERROR_BFF', null, null, error);
                                     throw error;
                                 }
                                 case 500:{
                                     //Unknown error
                                     const error = getDecrypted(result);
-                                    commonException(COMMON_GLOBAL.app_function_exception, error);
+                                    commonMessageShow('EXCEPTION', null, null, error);
                                     throw error;
                                 }
                             }
@@ -2003,7 +1998,7 @@ const commonFFB = async parameter =>{
                 retries++;
             }
         while (retries < COMMON_GLOBAL.app_request_tries);
-        showError('🗺⛔?');
+        commonMessageShow('ERROR_BFF', null, null, '🗺⛔?');
         throw ('TIMEOUT');
     };
     return await FFB({
@@ -2890,22 +2885,9 @@ const commonGet = () =>{
         commonEvent:commonEvent,
         /* INIT */
         commonAppMount:commonAppMount,
-        commonException:commonException,
         commonGlobals:commonGlobals,
         commonInit:commonInit,
         default:{commonInit}};
-};
-/**
- * @name commonException
- * @description Exception function
- * @function
- * @param {function|null} appException_function 
- * @param {Error|string} error 
- * @returns {void}
- */
-const commonException = (appException_function, error) => {
-    if (appException_function)
-        appException_function(error);
 };
 
 /**
@@ -3048,7 +3030,6 @@ export{/* GLOBALS*/
        commonEvent,
        /* INIT */
        commonAppMount,
-       commonException,
        commonGlobals,
        commonInit};
 export default {commonInit};

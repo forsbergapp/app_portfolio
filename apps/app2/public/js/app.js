@@ -93,16 +93,6 @@ const appAppsGet = () => {
         path:       '/common/component/common_apps.js'});
 };
 /**
- * @name appException
- * @description App exception function
- * @function
- * @param {Error} error 
- * @returns {void}
- */
-const appException = error => {
-    common.commonMessageShow('EXCEPTION', null, null, error);
-};
-/**
  * @name appInit
  * @description Init app
  * @function
@@ -129,7 +119,6 @@ const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme_sun';
-    common.commonGlobalSet('app_function_exception', appException);
     common.commonGlobalSet('app_function_session_expired', null);
     appInit();
 };

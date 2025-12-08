@@ -149,7 +149,6 @@
  *              app_eventListeners:{original:function, REACT:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[], 
  *                                                     VUE:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[], 
  *                                                     OTHER:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[]},
- *              app_function_exception:function|null,
  *              app_function_session_expired:function|null,
  *              app_function_sse:function|null,
  *              app_fonts:[],
