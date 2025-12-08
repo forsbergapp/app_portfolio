@@ -190,8 +190,6 @@ const component = async props => {
                     break;
                 }
                 case 1:{
-                    props.methods.COMMON.commonComponentRemove('common_app_dialogues_message');
-        
                     props.methods.COMMON.commonFFB({ path:`/server-iam/iamuserapp/${props.methods.COMMON.commonGlobalGet('iam_user_app_id')}`, 
                                 body:{  password: password,
                                         IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_id'), 

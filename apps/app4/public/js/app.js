@@ -1168,7 +1168,6 @@ const appUserSettingDelete = (choice=null) => {
                                 authorization_type:'APP_ACCESS', 
                                 body:{IAM_iam_user_app_id:common.commonGlobalGet('iam_user_app_id')}, spinner_id:'setting_btn_user_delete'})
             .then(()=>{
-                common.commonComponentRemove('common_app_dialogues_message');
                 //check if last setting
                 if (APP_GLOBAL.user_settings.data.length == 1)
                     appUserSettingFunction('ADD', false);
@@ -1199,7 +1198,7 @@ const appUserSettingDelete = (choice=null) => {
                 }
                 
             })
-            .catch(()=>common.commonComponentRemove('common_app_dialogues_message'));
+            .catch(error=>{throw error});
         }
     }
 };
