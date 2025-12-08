@@ -192,16 +192,16 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                             }
                             <div class='common_app_data_display_buttons'>
                                 ${props.button_print?
-                                    `<div id='common_app_data_display_button_print' class='common_app_dialogues_button common_icon ${props.button_print_icon_class ?? ''}' ></div>`:''
+                                    `<div <div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_print common_app_dialogues_button common_icon ${props.button_print_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_update?
-                                    `<div id='common_app_data_display_button_update' class='common_app_dialogues_button common_icon ${props.button_update_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_update common_app_dialogues_button common_icon ${props.button_update_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_post?
-                                    `<div id='common_app_data_display_button_post' class='common_app_dialogues_button common_icon ${props.button_post_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_post common_app_dialogues_button common_icon ${props.button_post_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_delete?
-                                    `<div id='common_app_data_display_button_delete' class='common_app_dialogues_button common_icon ${props.button_delete_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_delete common_app_dialogues_button common_icon ${props.button_delete_icon_class ?? ''}' ></div>`:''
                                 }
                             </div>`;
 /**
@@ -399,13 +399,13 @@ const component = async props => {
                                 path:       '/common/component/common_app_dialogues_lov.js'});
                         break;
                     }
-                    case [  'common_app_data_display_button_print',
-                            'common_app_data_display_button_update',
-                            'common_app_data_display_button_post',
-                            'common_app_data_display_button_delete'].includes(event_target_id ):{
-                            if (props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function'])
-                                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function']()
-                        break;
+                    case event.target.classList.contains('common_app_data_display_button_print'):
+                    case event.target.classList.contains('common_app_data_display_button_update'):
+                    case event.target.classList.contains('common_app_data_display_button_post'):
+                    case event.target.classList.contains('common_app_data_display_button_delete'):{
+                        if (props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function'])
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function']();
+                         break;
                     }
                 }
             }
@@ -413,13 +413,13 @@ const component = async props => {
     };
     const onMounted = async () => {
         if (props.methods.button_print)
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} #common_app_data_display_button_print`)['data-function'] = props.methods.button_print;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_print`)['data-function'] = props.methods.button_print;
         if (props.methods.button_update)
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} #common_app_data_display_button_update`)['data-function'] = props.methods.button_update;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_update`)['data-function'] = props.methods.button_update;
         if (props.methods.button_post)
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} #common_app_data_display_button_post`)['data-function'] = props.methods.button_post;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_post`)['data-function'] = props.methods.button_post;
         if (props.methods.button_delete)
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} #common_app_data_display_button_delete`)['data-function'] = props.methods.button_delete;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_delete`)['data-function'] = props.methods.button_delete;
     };
     return {
         lifecycle:  {onMounted:onMounted},

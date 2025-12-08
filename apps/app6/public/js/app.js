@@ -137,7 +137,7 @@ const appProductUpdate = async () =>{
  * @returns {void}
  */
 const appPaymentRequestStatus = ()=>{
-    if ( new Date().getSeconds() % 2){
+    if ( new Date().getSeconds() % 2 && COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=PaymentRequestId]')?.getAttribute('data-value')){
         const payment_request_id = COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=PaymentRequestId]').getAttribute('data-value');
     
         common.commonFFB({  path:'/app-common-module/PAYMENT_REQUEST_GET_STATUS', 
