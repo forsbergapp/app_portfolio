@@ -13,17 +13,6 @@ const COMMON_DOCUMENT = document;
 let common;
 
 /**
- * @name appException
- * @description App exception function
- * @function
- * @param {Error} error 
- * @returns {void}
- */
- const appException = error => {
-    common.commonMessageShow('EXCEPTION', null, null, error);
-};
-
-/**
  * @name appTotpGet
  * @description Get TOTP value
  * @function
@@ -134,7 +123,6 @@ const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';    
-    common.commonGlobalSet('app_function_exception', appException);
     common.commonGlobalSet('app_function_session_expired', null);
     appInit();
 };

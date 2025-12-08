@@ -1004,16 +1004,6 @@ const appEventFocusIn = event => {
 };
 
 /**
- * @name appException
- * @description App exception function
- * @function
- * @param {Error} error
- * @returns {void}
- */
-const appException = error => {
-    common.commonMessageShow('EXCEPTION', null, null, error);
-};
-/**
  * @name appInit
  * @description App init
  * @function
@@ -1035,7 +1025,6 @@ const appCommonInit = async (commonLib, parameters) => {
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
     COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu').style.display = 'none';
-    common.commonGlobalSet('app_function_exception', appException);
     common.commonGlobalSet('app_function_session_expired', appLogout);
     appInit();
 };
