@@ -1118,6 +1118,55 @@ const commonComponentMutationObserver = (() =>{
 })();
 
 /**
+ * @name commonComponentTemplateMessage
+ * @description Displays message, 
+ *              local component template to be able to display app start errors and also to improve performance
+ * @function
+ * @param {{message:*,
+ *          message_type:string,
+ *          message_title_font_class:string|null,
+ *          message_title_icon_class:string}} props 
+ * @returns {string}
+ */
+const commonComponentTemplateMessage = props =>`  
+        ${props.message_type=='CONFIRM'?
+            '<div id=\'common_app_dialogues_message_confirm_question\' class=\'common_icon\'></div>':''
+        }
+        ${props.message_type!='CONFIRM'?
+        `<div id='common_app_dialogues_message_title_container'>
+            <div id='common_app_dialogues_message_title_icon' data-text_class='${props.message_title_icon_class}' class='common_icon'></div>
+            <div id='common_app_dialogues_message_title' class='${props.message_title_font_class}'>
+                ${props.message !=null && props.message !='' && typeof props.message == 'object'?Object.entries(props.message).map((/**@type{*}*/list_row)=>
+                    //loop manages both object and array
+                    `<div id='common_app_dialogues_message_info_list'>
+                        <div class='common_app_dialogues_message_info_list_row'>
+                            <div class='common_app_dialogues_message_info_list_col'>
+                                <div>${props.message.constructor===Array?Object.keys(list_row[1])[0]:list_row[0]}</div>
+                            </div>
+                            <div class='common_app_dialogues_message_info_list_col'>
+                                <div>${props.message.constructor===Array?Object.values(list_row[1])[0]:list_row[1]}</div>
+                            </div>
+                        </div>
+                    </div>`).join(''):
+                    (props.message?props.message:'')
+                }
+            </div>
+        </div>`:''
+        }
+        ${props.message_type=='PROGRESS'?
+            `<div id='common_app_dialogues_message_progressbar_wrap'>
+                <div id='common_app_dialogues_message_progressbar'></div>
+            </div>`:''
+        }
+        <div id='common_app_dialogues_message_buttons'>
+            ${props.message_type=='CONFIRM'?
+                '<div id=\'common_app_dialogues_message_cancel\' class=\'common_app_dialogues_button common_icon\' ></div>':''
+            }
+            ${props.message_type!='PROGRESS'?
+                '<div id=\'common_app_dialogues_message_close\' class=\'common_app_dialogues_button common_icon\' ></div>':''
+            }
+        </div>`;
+/**
  * @name commonComponentRender
  * @description Renders component
  *              Components use analogic Vue SFC structure
@@ -1305,6 +1354,14 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
 /**
  * @name commonMessageShow
  * @description Show message dialogue
+ *              mounts local component using template for performance and to avoid any component error
+ *              no async except optional close function event
+ *              no spinner
+ *              no framework mount
+ *              no REST API
+ *              no component cache
+ *              no MutationObserver
+ *              
  * @function
  * @param {'ERROR'|'ERROR_BFF'|'INFO'|'EXCEPTION'|'CONFIRM'|'LOG'|'PROGRESS'} message_type 
  * @param {function|null} function_event 
@@ -1313,17 +1370,73 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
  * @returns {Promise.<void>}
  */
 const commonMessageShow = async (message_type, function_event, text_class=null, message=null) => {
-    commonComponentRender({
-        mountDiv:       'common_app_dialogues_message',
-        data:           {
-                        message_type:message_type,
-                        text_class:text_class,
-                        message:message
-                        },
-        methods:        {
-                        function_event:function_event
-                        },
-        path:           '/common/component/common_app_dialogues_message.js'});
+    
+    COMMON_DOCUMENT.querySelector('#common_app_dialogues_message').classList.add('common_app_dialogues_show3');
+    const function_close = async () => { 
+        try {
+            (message_type == 'CONFIRM' && function_event)?await function_event():null;    
+        } catch (error) {
+            null;
+        }
+        commonComponentRemove('common_app_dialogues_message');
+    };
+
+    let display_message = null;
+    let display_message_font_class = null;
+    switch (message_type){
+        case 'ERROR_BFF':{
+            try {
+                /**@type{common['CommonErrorMessageISO20022']} */
+                const message_iso = JSON.parse(message);
+                display_message = message_iso.error?.text ?? message_iso;
+            } catch (error) {
+                display_message = message;
+            }
+            display_message_font_class = 'common_font_normal';
+            break;
+        }
+        case 'INFO':
+        case 'EXCEPTION':
+        case 'LOG':{
+            /**
+             * @param {*} message
+             */
+            const format_message = message =>{
+                try {
+                    return (JSON.parse(message).error?JSON.parse(message).error.text:JSON.parse(message));
+                } catch (error) {
+                    return message;
+                }
+            };
+            //parse error key or message
+            display_message = format_message(message);
+            
+            display_message_font_class = message_type=='LOG'?'common_font_log':'common_font_normal';
+            break;
+        }
+        case 'CONFIRM':{
+            display_message = null;
+            display_message_font_class = null;
+            break;
+        }
+        case 'PROGRESS':{
+            display_message = message.text;
+            display_message_font_class = 'common_font_log';
+            break;
+        }
+    }
+    COMMON_DOCUMENT.querySelector('#common_app_dialogues_message').innerHTML = commonComponentTemplateMessage({  
+                                message:                    display_message,
+                                message_type:               message_type,
+                                message_title_font_class:   display_message_font_class,
+                                message_title_icon_class:   text_class ??''
+                            })
+    if (message_type == 'PROGRESS')
+        COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_progressbar').style.width = `${(message.part/message.total)*100}%`;
+    else{
+        COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close')['data-function'] = function_close;
+        COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close').focus();
+    }
 };
 /**
  * @name commonMesssageNotAuthorized
@@ -2201,6 +2314,16 @@ const commonEvent = async (event_type,event=null) =>{
                                 COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                                 break;
                             }
+                            /**Dialogue message */
+                            case 'common_app_dialogues_message_close':{
+                                if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close')['data-function'])
+                                    await COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close')['data-function']();
+                                break;
+                            }
+                            case 'common_app_dialogues_message_cancel':{
+                                commonComponentRemove('common_app_dialogues_message');
+                                break;
+                            }
                             /* Dialogue user menu*/
                             case 'common_app_iam_user_menu':
                             case 'common_app_iam_user_menu_logged_in':
@@ -2939,12 +3062,7 @@ const commonInit = async parameters => {
     custom_framework();
     //set common app id
     COMMON_GLOBAL.app_id =                          COMMON_GLOBAL.app_common_app_id;
-    //load message component
-    await commonComponentRender({
-        mountDiv:       null,
-        data:           null,
-        methods:        null,
-        path:           '/common/component/common_app_dialogues_message.js'});
+    
     //connect to BFF
     await commonFFB({path:               '/server-bff/' + COMMON_GLOBAL.x.uuid, 
         method:             'POST',
