@@ -768,7 +768,7 @@ const appPaperZoom = (zoomvalue = null) => {
  */
 const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null) => {
     switch (setting_tab + '_' + setting_type) {
-        case 'RegionalTimezone':
+        case 'REGIONAL_TIMEZONE':
             {
                 settingsTimesShow();
                 break;
@@ -815,8 +815,8 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
                 break;
             }
         
-        case 'TextHeaderAlign':
-        case 'TextFooterAlign':
+        case 'TEXT_HEADER_ALIGN':
+        case 'TEXT_FOOTER_ALIGN':
             {
                 const button_active_class  = 'setting_button_active';
                 const header_footer = setting_type=='HEADER_ALIGN'?'header':'footer';
@@ -839,7 +839,7 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
                 COMMON_DOCUMENT.querySelector(`#setting_input_report${header_footer}3`).style.textAlign= align;
                 break;
             }
-        case 'PrayerMethod':
+        case 'PRAYER_METHOD':
             {
                 const method = COMMON_DOCUMENT.querySelector('#setting_select_method .common_select_dropdown_value').getAttribute('data-value');
                 let suffix;

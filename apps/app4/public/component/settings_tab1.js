@@ -298,7 +298,7 @@ const component = async props => {
         props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_direction', props.data.user_settings.RegionalLayoutDirection);
         props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_arabic_script', props.data.user_settings.RegionalArabicScript);
         props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_calendartype', props.data.user_settings.RegionalCalendarType);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_calendar_hijri_type', props.data.user_settings.RegionalCalendarHijri_type);
+        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_calendar_hijri_type', props.data.user_settings.RegionalCalendarHijriType);
 
         //display live timezone time
         props.methods.appComponentSettingUpdate('REGIONAL', 'TIMEZONE');
