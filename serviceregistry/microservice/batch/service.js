@@ -143,7 +143,7 @@ const scheduleMilliseconds = (cron_expression) =>{
         let new_date = null;
         if (cron_expression_array[0]=='*' && cron_expression_array[1]=='*'){
             //every minute and every hour
-            new_date = UTC.getTime() + (60*1000);
+            new_date = UTC.getTime() + roundToNextMinute(60*1000);
         }
         else
             if (cron_expression_array[0]!='*'){
@@ -161,7 +161,7 @@ const scheduleMilliseconds = (cron_expression) =>{
                     new_date = UTC.setMinutes(cron_expression_array[0]);
             }
             else
-                new_date = UTC.getTime() + (60*1000);
+                new_date = UTC.getTime() + roundToNextMinute(60*1000);
             if (cron_expression_array[1]!='*'){
                 if (new Date(new_date).getHours()>=cron_expression_array[1]){
                     //next specific hour is next day
@@ -216,8 +216,8 @@ const scheduleMilliseconds = (cron_expression) =>{
         new_date = new Date(new_date).setSeconds(0);
 
         return {
-                milliseconds:       roundToNextMinute(new_date - UTC.valueOf()),
-                scheduled_start:    new Date(UTC.valueOf() + roundToNextMinute(new_date - UTC.valueOf()))
+                milliseconds:       new_date - UTC.valueOf(),
+                scheduled_start:    new Date(UTC.valueOf() + (new_date - UTC.valueOf()))
                 } ;
     }
 };
