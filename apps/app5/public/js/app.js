@@ -28,7 +28,7 @@ const appEventClick = event => {
         case 'tab1':
         case 'tab2':
         case 'tab3':{
-            COMMON_DOCUMENT.querySelectorAll('.app_page_secure_tab').forEach((/**@type{HTMLElement}*/element)=>element.classList.remove('active'));
+            COMMON_DOCUMENT.querySelectorAll('#app_page_secure .app_page_secure_tab').forEach((/**@type{HTMLElement}*/element)=>element.classList.remove('active'));
             COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('active');
             switch (event_target_id){
                 case 'tab1':{
@@ -349,10 +349,10 @@ const appPaymentRequestShow = async message =>{
                             },
                 path:       '/common/component/common_app_data_display.js'})
             .then(()=>{
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent += ' ' +
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=CurrencySymbol]').textContent;
+                COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent += ' ' +
+                COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=CurrencySymbol]').textContent;
 
-                common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=Countdown]'), 
+                common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=Countdown]'), 
                                                     JSON.parse(message).exp);
             })
             .catch(()=>common.commonComponentRemove('common_app_dialogues_app_data_display'));
