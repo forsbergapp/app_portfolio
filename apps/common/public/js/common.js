@@ -144,69 +144,82 @@ const commonMiscElementRow = (element, className) => element?.classList?.contain
 const commonMiscElementListTitle = element => element.classList.contains('list_title')?element:(element.parentNode.classList.contains('list_title')?element.parentNode:null);
 /**
  * @name commonMiscFormatJsonDate
- * @description Format JSON date with user timezone
+ * @description Format JSON date for given format and with optional locale and timezone or COMMON_GLOBAL values will be used
  * @function
- * @param {string} db_date 
+ * @param {*} value 
  * @param {'SHORT'|'NORMAL'|'LONG'|null} format 
- * @returns {string|null}
+ * @param {string|null} locale
+ * @param {string|null} timezone
+ * @returns {string}
  */
-const commonMiscFormatJsonDate = (db_date, format=null) => {
-    if (db_date == null)
-        return null;
+const commonMiscFormatJsonDate = (value, format=null, locale=null, timezone=null) => {
+    if (value == null)
+        return '';
     else {
-        //Json returns UTC time
-        //in ISO 8601 format
-        //JSON returns format 2020-08-08T05:15:28Z
-        //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-        /**@type{COMMON_WINDOW['Intl']['DateTimeFormatOptions']} */ 
-        let options;
-        switch (format){
-            case 'SHORT':{
-                options = {
-                    timeZone: COMMON_GLOBAL.user_timezone,
-                    year: 'numeric',
-                    month: 'long'
-                };
-                break;
-            }
-            case 'LONG':{
-                options = {
-                    timeZone: COMMON_GLOBAL.user_timezone,
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    timeZoneName: 'long'
-                };
-                break;
-            }
-            default:
-            case 'NORMAL':{
-                options = {
-                    timeZone: COMMON_GLOBAL.user_timezone,
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                };
-                break;
+        if (typeof value=='number')
+            return value==0?'0':value.toLocaleString(locale ?? COMMON_GLOBAL.user_locale ?? 'en').padStart(2,(0).toLocaleString(locale ?? COMMON_GLOBAL.user_locale ?? 'en'));
+        else{
+            //ISO 8601 format
+            //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
+            const isodate = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)+/g;
+            try {
+                if (value.match(isodate)){ 
+                    /**@type{COMMON_WINDOW['Intl']['DateTimeFormatOptions']} */ 
+                    let options;
+                    switch (format){
+                        case 'SHORT':{
+                            options = {
+                                timeZone: timezone ?? COMMON_GLOBAL.user_timezone,
+                                year: 'numeric',
+                                month: 'long'
+                            };
+                            break;
+                        }
+                        case 'LONG':{
+                            options = {
+                                timeZone: timezone ?? COMMON_GLOBAL.user_timezone,
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                                timeZoneName: 'long'
+                            };
+                            break;
+                        }
+                        default:
+                        case 'NORMAL':{
+                            options = {
+                                timeZone: timezone ?? COMMON_GLOBAL.user_timezone,
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            };
+                            break;
+                        }
+                    }
+                        
+                    const utc_date = new Date(Date.UTC(
+                        Number(value.substring(0, 4)), //year
+                        Number(value.substring(5, 7)) - 1, //month
+                        Number(value.substring(8, 10)), //day
+                        Number(value.substring(11, 13)), //hour
+                        Number(value.substring(14, 16)), //min
+                        Number(value.substring(17, 19)) //sec
+                    ));
+                    const format_date = utc_date.toLocaleDateString(locale ?? COMMON_GLOBAL.user_locale, options);
+                    return format_date;
+                }
+                else
+                    return value;
+            } catch (error) {
+                return value;
             }
         }
-            
-        const utc_date = new Date(Date.UTC(
-            Number(db_date.substring(0, 4)), //year
-            Number(db_date.substring(5, 7)) - 1, //month
-            Number(db_date.substring(8, 10)), //day
-            Number(db_date.substring(11, 13)), //hour
-            Number(db_date.substring(14, 16)), //min
-            Number(db_date.substring(17, 19)) //sec
-        ));
-        const format_date = utc_date.toLocaleDateString(COMMON_GLOBAL.user_locale, options);
-        return format_date;
     }
 };
 /**

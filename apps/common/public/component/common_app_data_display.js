@@ -37,8 +37,6 @@
  *                   detail_class:null,
  *                   new_resource:true,
  *                   mode:'EDIT',
- *                   timezone:common.commonGlobalGet('user_timezone'),
- *                   locale:common.commonGlobalGet('user_locale'),
  *                   button_print: false,
  *                   button_update: false,
  *                   button_post: true,
@@ -74,8 +72,6 @@
  *              mode:'EDIT'|'READ',
  *              function_format_value:function,
  *              function_div_id:function,
- *              timezone:string,
- *              locale:string,
  *              button_print:boolean,
  *              button_print_icon_class:string,
  *              button_update:boolean,
@@ -151,7 +147,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                                             'true'}'`}>${
                                                                                 master_row[1].Type.toUpperCase()=='IMAGE'?
                                                                                     master_row[1].Value:
-                                                                                        props.function_format_value(master_row[1].Value, props.timezone, props.locale)
+                                                                                        props.function_format_value(master_row[1].Value)
                                                             }</div>
                                                 </div>
                                             `).join('')
@@ -173,7 +169,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                         }
                                         <div class='common_app_data_display_detail_horizontal_row common_row ${props.detail_class}'>
                                             ${Object.entries(detail_row).map((/**@type{*}*/detail_col)=> 
-                                                `<div class='common_app_data_display_detail_col'>${props.function_format_value(detail_col[1].Value, props.timezone, props.locale)}</div>`).join('')
+                                                `<div class='common_app_data_display_detail_col'>${props.function_format_value(detail_col[1].Value)}</div>`).join('')
                                             }
                                         </div>
                                         `).join('')
@@ -184,7 +180,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                     ${props.rows.map((/**@type{*}*/detail_row)=>
                                         `<div data-id='${detail_row.Id}' data-key='${detail_row.Key}' data-value='${detail_row.Value}' tabindex=-1 class='common_app_data_display_detail_vertical_row common_row'>
                                             <div class='common_app_data_display_col'>${detail_row.Key}</div>
-                                            <div class='common_app_data_display_col'>${props.function_format_value(detail_row.Value, props.timezone, props.locale)}</div>
+                                            <div class='common_app_data_display_col'>${props.function_format_value(detail_row.Value)}</div>
                                         </div>
                                         `).join('')
                                     }`:''
@@ -233,8 +229,6 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      detail_class:string,
  *                      new_resource:boolean,
  *                      mode:'EDIT'|'READ',
- *                      timezone:string,
- *                      locale:string,
  *                      button_print: boolean,
  *                      button_print_icon_class:string,
  *                      button_update: boolean,
@@ -260,64 +254,7 @@ const component = async props => {
         props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show1');
     }
     const div_id = () =>Date.now().toString() + Math.floor(Math.random() *100000).toString();
-    /**
-     * 
-     * @param {*} value 
-     * @param {string} timezone
-     * @param {string} locale
-     * @param {boolean} short
-     * @returns {string}
-     */
-    const format_value = (value, timezone, locale, short=true) => {
-        if (value!=null)
-            if (typeof value=='number')
-                return value==0?'0':value.toLocaleString(locale ?? 'en').padStart(2,(0).toLocaleString(locale ?? 'en'));
-            else{
-                //ISO 8601 format
-                const isodate = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)+/g;
-                try {
-                    if (value.match(isodate)){
-                        /**@type{Intl.DateTimeFormatOptions} */
-                        const options = short?
-                                            {
-                                                timeZone: timezone,
-                                                year: 'numeric',
-                                                month: 'numeric',
-                                                day: 'numeric',
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                                second: '2-digit'
-                                            }:{
-                                                timeZone: timezone,
-                                                weekday: 'long',
-                                                year: 'numeric',
-                                                month: 'long',
-                                                day: 'numeric',
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                                second: '2-digit',
-                                                timeZoneName: 'long'  
-                                            };
-                        const utc_date = new Date(Date.UTC(
-                            Number(value.substring(0, 4)),      //year
-                            Number(value.substring(5, 7)) - 1,  //month
-                            Number(value.substring(8, 10)),     //day
-                            Number(value.substring(11, 13)),    //hour
-                            Number(value.substring(14, 16)),    //min
-                            Number(value.substring(17, 19))     //sec
-                        ));
-                        const format_date = utc_date.toLocaleDateString(locale, options);
-                        return format_date;
-                    }
-                    return value;
-
-                } catch (error) {
-                    return value;
-                }
-            }
-        else
-            return '';
-    };
+    
     const master_object = props.data.master_path?
                                 await props.methods.COMMON.commonFFB({   path: props.data.master_path, 
                                                             query:props.data.master_query, 
@@ -435,10 +372,8 @@ const component = async props => {
                             detail_class:props.data.detail_class,
                             new_resource:props.data.new_resource,
                             mode:props.data.mode,
-                            function_format_value:format_value,
+                            function_format_value:props.methods.COMMON.commonMiscFormatJsonDate,
                             function_div_id:div_id,
-                            timezone:props.data.timezone, 
-                            locale:props.data.locale,
                             button_print:props.data.button_print,
                             button_print_icon_class:props.data.button_print_icon_class,
                             button_update:props.data.button_update,

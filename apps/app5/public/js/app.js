@@ -58,8 +58,6 @@ const appEventClick = event => {
                                     detail_class:'bank_statement',
                                     new_resource:false,
                                     mode:'READ',
-                                    timezone:common.commonGlobalGet('user_timezone'),
-                                    locale:common.commonGlobalGet('user_locale'),
                                     button_print: false,
                                     button_update: false,
                                     button_post: false,
@@ -97,8 +95,6 @@ const appEventClick = event => {
                                     detail_class:null,
                                     new_resource:false,
                                     mode:'READ',
-                                    timezone:common.commonGlobalGet('user_timezone'),
-                                    locale:common.commonGlobalGet('user_locale'),
                                     button_print: false,
                                     button_update: false,
                                     button_post: false,
@@ -135,8 +131,6 @@ const appEventClick = event => {
                                     detail_class:null,
                                     new_resource:false,
                                     mode:'READ',
-                                    timezone:common.commonGlobalGet('user_timezone'),
-                                    locale:common.commonGlobalGet('user_locale'),
                                     button_print: false,
                                     button_update: false,
                                     button_post: false,
@@ -340,8 +334,6 @@ const appPaymentRequestShow = async message =>{
                             detail_class:null,
                             new_resource:false,
                             mode:'READ',
-                            timezone:common.commonGlobalGet('user_timezone'),
-                            locale:common.commonGlobalGet('user_locale'),
                             button_print: false,
                             button_update: false,
                             button_post: true,
@@ -378,9 +370,7 @@ const appSecureInit = () => {
         data:       {
                     app_id:common.commonGlobalGet('app_id'),
                     common_app_id:common.commonGlobalGet('app_common_app_id'),
-                    iam_user_id:common.commonGlobalGet('iam_user_id'),
-                    timezone:common.commonGlobalGet('user_timezone'),
-                    locale:common.commonGlobalGet('user_locale')
+                    iam_user_id:common.commonGlobalGet('iam_user_id')
                     },
         methods:    {
                     button_post:appCustomerCreate},
