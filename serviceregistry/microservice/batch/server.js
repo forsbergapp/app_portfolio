@@ -38,7 +38,7 @@ const serverStart = async () =>{
     const service = await import('./service.js');
 
     /**@type{common} */
-    const common = await import('file://' + serverProcess.cwd() + '/../../../data/microservice/common.js');
+    const common = await import('file://' + serverProcess.cwd() + '/data/microservice/common.js');
     /**
      * @description Get config
      * @type{config} 
