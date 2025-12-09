@@ -193,10 +193,14 @@ const appFunction = async parameters =>{
                                             else
                                                 return {sent:0};
                                         })
-                                        .catch((/**@type{*}*/error)=>server.ORM.db.MessageQueueError.post({  app_id:parameters.app_id,
-                                                                                data:{message_queue_publish_id:parameters.data.message_id,
-                                                                                message:error, 
-                                                                                result:0}}).then(()=>{return {sent:0};}))
+                                        .catch((/**@type{*}*/error)=>
+                                            server.ORM.db.MessageQueueError.post({  
+                                                app_id:parameters.app_id,
+                                                data:{
+                                                    MessageQueuePublishId:parameters.data.message_id,
+                                                    Message:error, 
+                                                    Result:0
+                                                }}).then(()=>{return {sent:0};}))
                                         ], type:'JSON'};
                     }
                     else

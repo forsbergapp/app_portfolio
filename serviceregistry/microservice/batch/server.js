@@ -75,7 +75,7 @@ const serverStart = async () =>{
 	});
 	service.startJobs(common, Config, auth.token);
 	serverProcess.on('uncaughtException', err =>{
-        console.log(err);
+        console.log('uncaughtException:' + err);
         common.commonLog({
             type:'MICROSERVICE_ERROR',
             service:'BATCH',
@@ -87,7 +87,7 @@ const serverStart = async () =>{
             secret:Config.secret});
 	});
     serverProcess.on('unhandledRejection', (/**@type{*}*/reason) =>{
-        console.log(reason?.stack ?? reason?.message ?? reason ?? new Error().stack);
+        console.log('unhandledRejection:'|reason?.stack ?? reason?.message ?? reason ?? new Error().stack);
         common.commonLog({
             type:'MICROSERVICE_ERROR',
             service:'BATCH',
