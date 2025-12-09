@@ -166,10 +166,11 @@ resource "oci_core_instance" "compute_instance_network" {
                               sudo apt remove --purge -y rsyslog
                               sudo apt -y autoremove
                               sudo -i -u ubuntu git clone ${var.git_repository_url} app_portfolio
-                              sudo npm install -g pm2
-                              sudo -i -u ubuntu pm2 start /home/ubuntu/app_portfolio/server/init.js --cwd /home/ubuntu/app_portfolio --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".git .vscode .well-known data node_modules .gitignore .eslintignore .eslintrc.js README.md tsconfig.json"
-                              sudo -i -u ubuntu pm2 start /home/ubuntu/app_portfolio/serviceregistry/microservice/batch/server.js --cwd /home/ubuntu/app_portfolio --name batch --no-autorestart --silent
-                              sudo -i -u ubuntu pm2 save
+                              sudo systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio.service
+                              sudo systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio_microservice_batch.service
+                              sudo systemctl daemon-reload
+                              sudo systemctl start app_portfolio.service
+                              sudo systemctl start app_portfolio_microservice_batch.service
                               EOF
                               )
     ssh_authorized_keys     = tls_private_key.AppPortfolioKey.public_key_openssh
@@ -226,10 +227,11 @@ resource "oci_core_instance" "compute_instance_only" {
                               sudo apt remove --purge -y rsyslog
                               sudo apt -y autoremove
                               sudo -i -u ubuntu git clone ${var.git_repository_url} app_portfolio
-                              sudo npm install -g pm2
-                              sudo -i -u ubuntu pm2 start /home/ubuntu/app_portfolio/server/init.js --cwd /home/ubuntu/app_portfolio --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".git .vscode .well-known data node_modules .gitignore .eslintignore .eslintrc.js README.md tsconfig.json"
-                              sudo -i -u ubuntu pm2 start /home/ubuntu/app_portfolio/serviceregistry/microservice/batch/server.js --cwd /home/ubuntu/app_portfolio --name batch --no-autorestart --silent
-                              sudo -i -u ubuntu pm2 save
+                              sudo -i -u ubuntu systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio.service
+                              sudo -i -u ubuntu systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio_microservice_batch.service
+                              sudo -i -u ubuntu systemctl daemon-reload
+                              sudo -i -u ubuntu systemctl start app_portfolio.service
+                              sudo -i -u ubuntu systemctl start app_portfolio_microservice_batch.service
                               EOF
                               )
     ssh_authorized_keys     = tls_private_key.AppPortfolioKey.public_key_openssh
