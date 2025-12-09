@@ -205,14 +205,11 @@ const scheduleMilliseconds = (cron_expression) =>{
  * @param {string}      token
  * @param {number}      jobid 
  * @param {'OS'}        command_type 
- * @param {string}      path 
  * @param {string}      command 
- * @param {string}      argument 
  * @param {string}      cron_expression 
  * @returns {Promise.<void>}
  */
-const scheduleJob = async (commonLog, config, token, jobid, command_type, path, command, argument, cron_expression) =>{
-    const {serverProcess} = await import('./server.js');
+const scheduleJob = async (commonLog, config, token, jobid, command_type, command, cron_expression) =>{
     /**
      * @param {{}} message
      * @param {'MICROSERVICE_LOG'|'MICROSERVICE_ERROR'|null} type
@@ -253,16 +250,7 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, path, 
                                 status:'RUNNING', 
                                 result:null});
                     try{
-                        let command_path;
-                        if (path.includes('%HOMEPATH%')){
-                            /**@ts-ignore */
-                            command_path = path.replace('%HOMEPATH%', serverProcess.env.HOMEPATH);
-                        }
-                        if (path.includes('$HOME')){
-                            /**@ts-ignore */
-                            command_path = path.replace('$HOME', serverProcess.env.HOME);
-                        }
-                        exec(`${command} ${argument}`, {cwd: command_path}, (err, stdout, stderr) => {
+                        exec(command, (err, stdout, stderr) => {
                             log({
                                     log_id: log_id,
                                     jobid: jobid, 
@@ -281,7 +269,7 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, path, 
                                 /**@ts-ignore */
                                 timeId = null;
                                 //schedule job again, recursive call
-                                scheduleJob(jobid, command_type, path, command, argument,cron_expression); 
+                                scheduleJob(jobid, command_type, command, cron_expression); 
                             });
                         });
                     }
@@ -342,16 +330,7 @@ const startJobs = async (common, config, token) =>{
                             uuid:config.uuid,
                             secret:config.secret
                         });
-    /**@type{{  jobid:number,
-     *          name:string,
-     *          command_type:'OS',
-     *          platform:string,
-     *          path:string,
-     *          command:string,
-     *          argument:string,
-     *          cron_expression:string,
-     *          enabled:boolean}[]} 
-     */
+    /**@type{config['config']['jobs']} */                        
     const jobs = config.config.filter(row=>'jobs' in row)[0].jobs;
     for (const job of jobs){
         //schedule enabled jobs and for current platform
@@ -363,9 +342,7 @@ const startJobs = async (common, config, token) =>{
                                     token,
                                     job.jobid, 
                                     job.command_type, 
-                                    job.path, 
                                     job.command, 
-                                    job.argument, 
                                     job.cron_expression);
             else
                 await common.commonLog({type:'MICROSERVICE_ERROR', 
