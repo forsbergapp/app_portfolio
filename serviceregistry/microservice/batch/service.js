@@ -108,12 +108,33 @@ const validateCronExpression = (expression) =>{
  *              ~ (random)
  * @function
  * @param {string} cron_expression 
- * @returns {number}
+ * @returns {{milliseconds:number,
+ *            scheduled_start:number}}
  */
 const scheduleMilliseconds = (cron_expression) =>{
+    const roundToNextMinute = milliseconds =>{
+        //set to next minute and second to 0
+         const roundUTC = UTC;
+         roundUTC.setMinutes(roundUTC.getMinutes());
+         roundUTC.setSeconds(0);
+         return milliseconds + (roundUTC.valueOf() - UTC.valueOf() )
+    };
+    //Get current UTC time with seconds
+    const UTC = new Date(   Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'})),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false})),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'})),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', second:'numeric'})));
+    
+
+    
     if (cron_expression== '* * * * *'){
         //every minute
-        return 60*1000;
+        return {
+                milliseconds:roundToNextMinute(60*1000),
+                scheduled_start:new Date(UTC.valueOf() + roundToNextMinute(60*1000))
+                }
     }
     else{
         /**@type{*[]}*/
@@ -122,14 +143,14 @@ const scheduleMilliseconds = (cron_expression) =>{
         let new_date = null;
         if (cron_expression_array[0]=='*' && cron_expression_array[1]=='*'){
             //every minute and every hour
-            new_date = new Date().getTime() + (60*1000);
+            new_date = UTC.getTime() + (60*1000);
         }
         else
             if (cron_expression_array[0]!='*'){
-                if (new Date().getMinutes()>=cron_expression_array[0]){
+                if (UTC.getMinutes()>=cron_expression_array[0]){
                     //next specific minute is next hour
                     //set next hour 
-                    new_date = new Date().setHours(new Date().getHours()+1);
+                    new_date = UTC.setHours(UTC.getHours()+1);
                     
                 }
                 //set specific minute
@@ -137,10 +158,10 @@ const scheduleMilliseconds = (cron_expression) =>{
                     new_date = new Date(new_date).setMinutes(cron_expression_array[0]);
                 }
                 else
-                    new_date = new Date().setMinutes(cron_expression_array[0]);
+                    new_date = UTC.setMinutes(cron_expression_array[0]);
             }
             else
-                new_date = new Date().getTime() + (60*1000);
+                new_date = UTC.getTime() + (60*1000);
             if (cron_expression_array[1]!='*'){
                 if (new Date(new_date).getHours()>=cron_expression_array[1]){
                     //next specific hour is next day
@@ -193,7 +214,11 @@ const scheduleMilliseconds = (cron_expression) =>{
             new_date = new Date(new_date).setMonth(month);
         }
         new_date = new Date(new_date).setSeconds(0);
-        return new_date - Date.now();
+
+        return {
+                milliseconds:       roundToNextMinute(new_date - UTC.valueOf()),
+                scheduled_start:    new Date(UTC.valueOf() + roundToNextMinute(new_date - UTC.valueOf()))
+                } ;
     }
 };
 /**
@@ -227,14 +252,13 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, comman
     };
     switch (command_type){
         case 'OS':{
-            const milliseconds = scheduleMilliseconds(cron_expression);
-            const scheduled_start = new Date(new Date().getTime() + milliseconds);
+            const schedule  = scheduleMilliseconds(cron_expression);
             //first log for jobid will get correlation log id
             //so all logs for this jobid can be traced
             const log_id = Date.now();
             await log({ log_id: log_id,
                         jobid: jobid, 
-                        scheduled_start: scheduled_start, 
+                        scheduled_start: schedule.scheduled_start, 
                         start:null, 
                         end:null, 
                         status:'PENDING', 
@@ -269,7 +293,7 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, comman
                                 /**@ts-ignore */
                                 timeId = null;
                                 //schedule job again, recursive call
-                                scheduleJob(jobid, command_type, command, cron_expression); 
+                                scheduleJob(commonLog, config, token, jobid, command_type, command, cron_expression); 
                             });
                         });
                     }
@@ -284,14 +308,14 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, comman
                                     result:error
                                 });
                     }
-                }, milliseconds);
+                }, schedule.milliseconds);
             JOBS.push({ jobid:jobid, 
                         log_id: log_id, 
                         timeId:timeId, 
                         command:command, 
                         cron_expression:cron_expression, 
-                        milliseconds: milliseconds,
-                        scheduled_start: scheduled_start});
+                        milliseconds: schedule.milliseconds,
+                        scheduled_start: schedule.scheduled_start});
             break;
         }
         default:{

@@ -776,7 +776,7 @@ const commonMiscLengthWithoutDiacrites = (str) =>{
 const commonMiscTimezoneOffset = (local_timezone) =>{
     const utc = new Date(	Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
-                            Number(Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'}))),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'})),
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false})),
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'}))).valueOf();
     const local = new Date(	Number(new Date().toLocaleString('en', {timeZone: local_timezone, year:'numeric'})),
