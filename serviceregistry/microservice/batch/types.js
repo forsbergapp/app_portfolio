@@ -46,9 +46,7 @@
  *                  name:string, 
  *                  command_type:'OS', 
  *                  platform: string, 
- *                  path: string, 
  *                  command: string, 
- *                  argument: string, 
  *                  cron_expression:string, 
  *                  enabled:boolean}[]
  *          },

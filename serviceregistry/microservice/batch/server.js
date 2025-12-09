@@ -24,7 +24,6 @@ class ClassServerProcess {
      * @param {(...args: any[]) => void} listener
      */
     on = (event, listener) => process.on(event, listener);
-    env = process.env;
 }
 const serverProcess = new ClassServerProcess();
 
