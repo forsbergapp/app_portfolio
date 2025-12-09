@@ -81,12 +81,12 @@ const appVPAIsValid = (element, str) => {
  * @returns {Promise.<void>}
  */
 const appProductUpdate = async () =>{
-    COMMON_DOCUMENT.querySelector('#tshirt').style.fill = COMMON_DOCUMENT.querySelector('.common_select_dropdown_value.common_app_data_display_master_row_list [data-ProductColor]').getAttribute('data-ProductColor');
+    COMMON_DOCUMENT.querySelector('#tshirt').style.fill = COMMON_DOCUMENT.querySelector('#app_page_start_shop .common_select_dropdown_value.common_app_data_display_master_row_list [data-ProductColor]').getAttribute('data-ProductColor');
 
-    const product_variant_id = COMMON_DOCUMENT.querySelectorAll('.common_app_data_display_master_row[id] .common_select_dropdown_value .common_app_data_display_master_col_list[data-id]')[0].getAttribute('data-id');
+    const product_variant_id = COMMON_DOCUMENT.querySelectorAll('#app_page_start_shop .common_app_data_display_master_row[id] .common_select_dropdown_value .common_app_data_display_master_col_list[data-id]')[0].getAttribute('data-id');
 
     await common.commonComponentRender({
-        mountDiv:   COMMON_DOCUMENT.querySelectorAll('.common_app_data_display_master_row[id]')[1].id, 
+        mountDiv:   COMMON_DOCUMENT.querySelectorAll('#app_page_start_shop .common_app_data_display_master_row[id]')[1].id, 
         data:       {
                     app_id:common.commonGlobalGet('app_id'),
                     common_app_id:common.commonGlobalGet('app_common_app_id'),
@@ -125,8 +125,8 @@ const appProductUpdate = async () =>{
  * @returns {void}
  */
 const appPaymentRequestStatus = ()=>{
-    if ( new Date().getSeconds() % 2 && COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=PaymentRequestId]')?.getAttribute('data-value')){
-        const payment_request_id = COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=PaymentRequestId]').getAttribute('data-value');
+    if ( new Date().getSeconds() % 2 && COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=PaymentRequestId]')?.getAttribute('data-value')){
+        const payment_request_id = COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=PaymentRequestId]').getAttribute('data-value');
     
         common.commonFFB({  path:'/app-common-module/PAYMENT_REQUEST_GET_STATUS', 
                             method:'POST', 
@@ -155,16 +155,16 @@ const appPaymentRequestStatus = ()=>{
  * @returns {Promise.<void>}
  */
 const appPaymentRequest = async () =>{
-    const sku = COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-Sku]')[0].getAttribute('data-Sku');
-    const payerid_element = COMMON_DOCUMENT.querySelectorAll('.common_app_data_display_master_row .common_app_data_display_master_col2[data-value=PaymentId]')[0];
+    const sku = COMMON_DOCUMENT.querySelectorAll('#app_page_start_shop .common_select_dropdown_value .common_app_data_display_master_col_list[data-Sku]')[0].getAttribute('data-Sku');
+    const payerid_element = COMMON_DOCUMENT.querySelectorAll('#common_app_dialogues_app_data_display .common_app_data_display_master_row .common_app_data_display_master_col2[data-value=PaymentId]')[0];
     if (appVPAIsValid(payerid_element, payerid_element.textContent)){
         const data = {
             type:'FUNCTION',
             reference:      `SHOP SKU ${sku}`,
             IAM_data_app_id:common.commonGlobalGet('app_id'),
             payerid:        payerid_element.textContent,
-            amount:         COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-Price]')[0].getAttribute('data-Price'),
-            currency_code:  COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-CurrencyCode]')[0].getAttribute('data-CurrencyCode'),
+            amount:         COMMON_DOCUMENT.querySelectorAll('#app_page_start_shop .common_select_dropdown_value .common_app_data_display_master_col_list[data-Price]')[0].getAttribute('data-Price'),
+            currency_code:  COMMON_DOCUMENT.querySelectorAll('#app_page_start_shop .common_select_dropdown_value .common_app_data_display_master_col_list[data-CurrencyCode]')[0].getAttribute('data-CurrencyCode'),
             message:        'Shop app'
         };
         await common.commonComponentRender({
@@ -203,11 +203,11 @@ const appPaymentRequest = async () =>{
             .then(result=>{
                 //save the returned access token
                 common.commonGlobalSet('token_external',result.data.master_object.Token.Value);
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent += ' ' +
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=CurrencySymbol]').textContent;
+                COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent += ' ' +
+                COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=CurrencySymbol]').textContent;
     
-                common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=Countdown]'), 
-                                                    COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-key=Exp]').getAttribute('data-value'),
+                common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=Countdown]'), 
+                                                    COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=Exp]').getAttribute('data-value'),
                                                     appPaymentRequestStatus);
             })
             .catch(()=>common.commonComponentRemove('common_app_dialogues_app_data_display'));
@@ -239,15 +239,15 @@ const appPay = async () =>{
     const getPaymentMethod = record =>{
         if (['PAYMENT_METHOD'].includes(COMMON_DOCUMENT
                              .querySelector('#common_app_dialogues_lov_list')
-                             .getAttribute('data-lov')) && COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=PaymentMethod]')){
+                             .getAttribute('data-lov')) && COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display  .common_app_data_display_master_col1[data-key=PaymentMethod]')){
             
             if( record.id=='VPA'){
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=PaymentId]').style.visibility='visible';
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=PaymentId]').style.visibility='visible';
+                COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=PaymentId]').style.visibility='visible';
+                COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-value=PaymentId]').style.visibility='visible';
             }
             else{
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=PaymentId]').style.visibility='hidden';
-                COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=PaymentId]').style.visibility='hidden';
+                COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=PaymentId]').style.visibility='hidden';
+                COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-value=PaymentId]').style.visibility='hidden';
             }
         }
     };
@@ -292,9 +292,9 @@ const appPay = async () =>{
                     button_post:appPaymentRequest,
                     button_delete:appPayCancel},
         path:       '/common/component/common_app_data_display.js'});
-        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=PaymentId]').style.visibility='hidden';
-        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=PaymentId]').style.visibility='hidden';
-        COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=PaymentId]').classList.add('common_input_error');
+        COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=PaymentId]').style.visibility='hidden';
+        COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-value=PaymentId]').style.visibility='hidden';
+        COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-value=PaymentId]').classList.add('common_input_error');
 };
 /**
  * @name appInit

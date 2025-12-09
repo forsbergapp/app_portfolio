@@ -1693,8 +1693,16 @@ const commonUserSessionClear = () => {
 
     if (element.id)
         element = COMMON_DOCUMENT.querySelector(`#${element.id}`);
-    else
-        element = COMMON_DOCUMENT.querySelector(`.${element.className.replaceAll(' ','.')}`);
+    else{
+        let id;
+        try {
+            id = `#${commonMiscElementId(element)}`;
+        } catch (error) {
+            id = null;
+        }
+        element = id?COMMON_DOCUMENT.querySelector(`${id} .${element.className.replaceAll(' ','.')}`):null;
+    }
+        
     if (element){
         const time_left = ((token_exp ?? COMMON_GLOBAL?.token_exp ??0) * 1000) - (Date.now());
         if (time_left < 0){
