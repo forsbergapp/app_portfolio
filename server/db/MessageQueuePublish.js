@@ -19,7 +19,7 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueuePu
  * @description Add record
  * @function
  * @param {{app_id:number,
- *          data:*}} parameters
+ *          data:server['ORM']['Object']['MessageQueuePublish']}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters => {
@@ -60,13 +60,13 @@ const post = async parameters => {
             //no other keys
             Object.keys(parameters.data.Message).length==2){
             /**@type{server['ORM']['Object']['MessageQueuePublish']['Message']}*/
-            const message = {Type:parameters.data.Message.type,
-                             Message:parameters.data.Message.message
+            const message = {Type:parameters.data.Message.Type,
+                             Message:parameters.data.Message.Message
             };
             /**@type{server['ORM']['Object']['MessageQueuePublish']}*/
             const data_new = {
                 Id:Date.now(),
-                Service:parameters.data.service,
+                Service:parameters.data.Service,
                 Message:message, 
                 Created: new Date().toISOString()
             };

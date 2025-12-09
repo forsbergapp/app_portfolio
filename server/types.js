@@ -755,7 +755,7 @@
  * @typedef {{  Id?:number,
  *              Message:*,
  *              Result:*,
- *              Created:string,
+ *              Created?:string,
  *              MessageQueuePublishId:number}} server_db_table_MessageQueueError
  */
 

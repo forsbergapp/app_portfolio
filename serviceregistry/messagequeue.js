@@ -23,40 +23,39 @@ const messageQueue = async parameters => {
     switch (parameters.message_queue_type) {
         case 'PUBLISH': {
             /**@type{server['ORM']['Object']['MessageQueuePublish']} */
-            const message_queue = { service: parameters.data.service, 
-                                    message:   {type:parameters.data.type,
-                                                message:parameters.data.message}
+            const message_queue = { Service: parameters.data.service, 
+                                    Message:   {Type:parameters.data.type,
+                                                Message:parameters.data.message}
                                     };
             return await server.ORM.db.MessageQueuePublish.post({app_id:parameters.app_id, data:message_queue});
         }
         case 'CONSUME': {
             //message CONSUME
-            //direct microservice call
             return await server.ORM.db.MessageQueuePublish.get({app_id:parameters.app_id, resource_id:parameters.data.message_id})
             .then(message_queue=>{
                 /**@type{server['ORM']['Object']['MessageQueueConsume']} */
-                const message_consume = {   message_queue_publish_id: parameters.data.message_id,
-                                            message:    null,
-                                            start:      null,
-                                            finished:   null,
-                                            result:     null};
+                const message_consume = {   MessageQueuePublishId: parameters.data.message_id,
+                                            Message:    null,
+                                            Start:      null,
+                                            Finished:   null,
+                                            Result:     null};
                 for (const row of message_queue.result){
-                    if (row.id == parameters.data.message_id){
-                        message_consume.message = row.message;
+                    if (row.Id == parameters.data.message_id){
+                        message_consume.Message = row.Message;
                         break;
                     }
                 }
-                message_consume.start = new Date().toISOString();
+                message_consume.Start = new Date().toISOString();
                 //write to message_queue_consume.json
                 return server.ORM.db.MessageQueueConsume.post({app_id:parameters.app_id, data:message_consume})
-                .catch((/**@type{server['server']['error']}*/error)=>{
-                    server.ORM.db.MessageQueueError.post({app_id:parameters.app_id, 
-                                            data:{  message_queue_publish_id: parameters.data.message_id, 
-                                                    message:   error, 
-                                                    result:error}}).then(()=>{
-                        throw error;
+                    .catch((/**@type{server['server']['error']}*/error)=>{
+                        server.ORM.db.MessageQueueError.post({app_id:parameters.app_id, 
+                                                data:{  message_queue_publish_id: parameters.data.message_id, 
+                                                        message:   error, 
+                                                        result:error}}).then(()=>{
+                            throw error;
+                        });
                     });
-                });
             });
         }
         default: {

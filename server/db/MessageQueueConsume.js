@@ -19,7 +19,7 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueueCo
  * @description Add record
  * @function
  * @param {{app_id:number,
- *          data:*}} parameters
+ *          data:server['ORM']['Object']['MessageQueueConsume']}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters => {
