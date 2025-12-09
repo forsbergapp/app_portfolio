@@ -62,8 +62,7 @@ Implemented with many examples of patterns
 - role based and secure app server functions (simplified version of Function as a Service and serverless functions model)
 - batch cron pattern
 
-CI/CD implemented using batch server with scheduled git pull requests and automatic restart 
-of Node.js using pm2 managed processes.
+CI/CD implemented using batch server with scheduled git pull requests using Linux systemctl managed services on server
 Runs in Node.js.
 	
 pgModeler designed ORM data model.
@@ -117,17 +116,27 @@ Use Linux server that supports apt
 see full documentation how to install on a cloud service using Terraform
 
 ```
+cd $HOME
 git clone [repository .git url] app_portfolio
 sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install nodejs
-sudo npm install -g pm2
 
-pm2 start $HOME/app_portfolio/server/init.js --cwd $HOME/app_portfolio --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".git .vscode .well-known data docs node_modules .gitignore .eslintignore .eslintrc.js README.md tsconfig.json"
+node server/init.js
 
+#or run as service:
+sudo systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio.service
+sudo systemctl daemon-reload
+sudo systemctl start app_portfolio.service
 ```
 	optional (batch and git are used for CI/CD solution):
 ```	
-pm2 start $HOME/app_portfolio/serviceregistry/microservice/batch/server.js --cwd $HOME/app_portfolio --name batch
+node /serviceregistry/microservice/batch/server.js 
+
+#or run as service:
+
+sudo systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio_microservice_batch.service
+sudo systemctl daemon-reload
+sudo systemctl start app_portfolio_microservice_batch.service
 
 ```
 
