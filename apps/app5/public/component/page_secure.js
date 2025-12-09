@@ -40,9 +40,7 @@ const template = props => ` <div id='app_page_secure'>
  *                      commonMountdiv:string,
  *                      app_id:number,
  *                      common_app_id:number,
- *                      iam_user_id:number,
- *                      timezone:string,
- *                      locale:string},
+ *                      iam_user_id:number},
  *          methods:    {
  *                      COMMON:common['CommonModuleCommon'],
  *                      button_post:function
@@ -103,8 +101,6 @@ const component = async props => {
                             detail_class:null,
                             new_resource:true,
                             mode:'EDIT',
-                            timezone:props.data.timezone,
-                            locale:props.data.locale,
                             button_print: false,
                             button_update: false,
                             button_post: true,

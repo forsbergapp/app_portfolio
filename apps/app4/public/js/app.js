@@ -524,23 +524,13 @@ const settingsTimesShow = async () => {
     const setting_select_report_timezone        = COMMON_DOCUMENT.querySelector('#setting_select_report_timezone .common_select_dropdown_value')?.getAttribute('data-value');
     const element_setting_report_data_time      = COMMON_DOCUMENT.querySelector('#setting_report_date_time_display');
     
-    /**@type{Intl.DateTimeFormatOptions} */
-    const options = {
-        timeZone: common.commonGlobalGet('user_timezone'),
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        timeZoneName: 'long'
-    };
     if (element_setting_current_date){     
-        element_setting_current_date.textContent = new Date().toLocaleTimeString(common.commonGlobalGet('user_locale'), options);    
+        element_setting_current_date.textContent = common.commonMiscFormatJsonDate(new Date().toISOString(), 'LONG');
         if (setting_select_report_timezone){
-            options.timeZone = setting_select_report_timezone;
-            element_setting_report_data_time.textContent = new Date().toLocaleTimeString(setting_select_locale, options);
+            element_setting_report_data_time.textContent = common.commonMiscFormatJsonDate( new Date().toISOString(), 
+                                                                                            'LONG', 
+                                                                                            setting_select_locale, 
+                                                                                            setting_select_report_timezone);
         }
         //wait 1 second
         await common.commonWindowWait(1000);

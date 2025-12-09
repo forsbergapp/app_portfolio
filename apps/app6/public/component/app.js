@@ -64,8 +64,6 @@ const component = async props => {
                             detail_class:null,
                             new_resource:false,
                             mode:'READ',
-                            timezone:props.methods.COMMON.commonGlobalGet('user_timezone'),
-                            locale:props.methods.COMMON.commonGlobalGet('user_locale'),
                             button_print: false,
                             button_update: false,
                             button_post: true,
