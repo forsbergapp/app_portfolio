@@ -44,8 +44,7 @@ const socketClientAdd = (newClient) => {
  *          token_access:string|null,
  *          token_admin:string|null,
  *          ip:string,
- *          headers_user_agent:string,
- *          headers_accept_language:string}} parameters
+ *          headers_user_agent:string}} parameters
  * @returns {Promise.<server['server']['response']>}
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
@@ -383,6 +382,7 @@ const socketExpiredTokenSendSSE = async () =>{
         if ((client.TokenAccess && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ACCESS', client.TokenAccess)&&
             client.TokenAccess && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ACCESS_VERIFICATION', client.TokenAccess)) ||
             client.TokenAdmin && server.iam.iamUtilTokenExpired(client.AppId, 'ADMIN', client.TokenAdmin)){
+                //Access Token expired
                 client.IamUserid=null;
                 client.IamUserType=null;
                 client.IamUserUsername=null;
@@ -398,6 +398,7 @@ const socketExpiredTokenSendSSE = async () =>{
             }
         else 
             if (client.IdToken && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ID', client.IdToken))
+                //Id Token expired
                 socketClientPostMessage({   app_id:0,
                                             resource_id:client.Id,
                                             data:{  data_app_id:null,
@@ -405,6 +406,32 @@ const socketExpiredTokenSendSSE = async () =>{
                                                     idToken:null,
                                                     message:'',
                                                     message_type:'EXPIRED_ACCESS'}});
+            else{
+                const user = server.ORM.db.IamUser.get(0, client.IamUserid).result
+                if ((client.TokenAccess || client.TokenAdmin) && 
+                    client.IamUserid && 
+                    (user[0]?.Active !=1||user.length==0)){
+                    //OWASP 7.4.2
+                    //User inactive or deleted expired
+                    //Set token to expired if user inactive
+                    const result = user.length>0?
+                                    await server.iam.iamUtilTokenExpiredSet(client.AppId, client.TokenAccess ?? client.TokenAdmin ??'', client.Ip):
+                                        null;
+                    client.IamUserid=null;
+                    client.IamUserType=null;
+                    client.IamUserUsername=null;
+                    client.TokenAccess=null;
+                    client.TokenAdmin=null;
+                    socketClientPostMessage({   app_id:0,
+                                            resource_id:client.Id,
+                                            data:{  data_app_id:null,
+                                                    iam_user_id:null,
+                                                    idToken:null,
+                                                    message:'',
+                                                    message_type:'EXPIRED_SESSION'}});
+                    }
+            }
+                
     }
 };
 /**
