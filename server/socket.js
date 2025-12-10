@@ -380,8 +380,9 @@ const socketPost = async parameters =>{
 const socketExpiredTokenSendSSE = async () =>{
     for (const client of SOCKET_CONNECTED_CLIENTS){
         if ((client.TokenAccess && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ACCESS', client.TokenAccess)&&
-            client.TokenAccess && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ACCESS_VERIFICATION', client.TokenAccess)) ||
-            client.TokenAdmin && server.iam.iamUtilTokenExpired(client.AppId, 'ADMIN', client.TokenAdmin)){
+             client.TokenAccess && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ACCESS_VERIFICATION', client.TokenAccess)) ||
+            (client.TokenAdmin && server.iam.iamUtilTokenExpired(client.AppId, 'ADMIN', client.TokenAdmin)) &&
+             client.TokenAdmin && server.iam.iamUtilTokenExpired(client.AppId, 'APP_ACCESS_VERIFICATION', client.TokenAdmin)){
                 //Access Token expired
                 client.IamUserid=null;
                 client.IamUserType=null;
@@ -408,7 +409,12 @@ const socketExpiredTokenSendSSE = async () =>{
                                                     message_type:'EXPIRED_ACCESS'}});
             else{
                 const user = server.ORM.db.IamUser.get(0, client.IamUserid).result
-                if ((client.TokenAccess || client.TokenAdmin) && 
+                //check if access token and not APP_ACCESS_VERIFICATION
+                if ((client.TokenAccess || client.TokenAdmin) &&  
+                    server.ORM.db.IamAppAccess.get(0, null).result
+                        .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>
+                            row.Token ==(client.TokenAccess || client.TokenAdmin) &&
+                            row.Type!='APP_ACCESS_VERIFICATION').length>0 &&
                     client.IamUserid && 
                     (user[0]?.Active !=1||user.length==0)){
                     //OWASP 7.4.2
