@@ -358,10 +358,16 @@ const update = async (app_id, resource_id, data) => {
             /**@type{server['ORM']['Object']['IamUser']} */
             const data_update = {};
             //allowed parameters to update:
-            if (data.Username!=null && data.Username != '')
+            if (data.Username!=null && data.Username != ''){
+                //OWASP 7.4.3
+                data_update.Active=0;
                 data_update.Username = data.Username;
-            if (data.Password!=null && data.Password != '')
+            }
+            if (data.Password!=null && data.Password != ''){
+                //OWASP 7.4.3
+                data_update.Active=0;
                 data_update.Password = await server.security.securityPasswordCreate(app_id, data.PasswordNew ?? data.Password);
+            }
             if (data.PasswordReminder!=null)
                 data_update.PasswordReminder = data.PasswordReminder;
             if (data.Bio!=null)
@@ -417,10 +423,20 @@ const updateAdmin = async parameters => {
             /**@type{server['ORM']['Object']['IamUser']} */
             const data_update = {};
             //allowed parameters to update:
-            if (parameters.data?.username!=null && parameters.data?.username!='')
+            if (parameters.data?.active!=null)
+                data_update.Active = server.ORM.UtilNumberValue(parameters.data.active) ?? 0;
+            if (parameters.data?.username!=null && parameters.data?.username!=''){
+                if (parameters.data.username != user.Username){
+                    //OWASP 7.4.3
+                    data_update.Active=0;
+                }
                 data_update.Username = parameters.data.username;
-            if (parameters.data?.password!=null && parameters.data?.password!='')
+            }
+            if (parameters.data?.password!=null && parameters.data?.password!=''){
+                //OWASP 7.4.3
+                data_update.Active=0;
                 data_update.Password = await server.security.securityPasswordCreate(parameters.app_id, parameters.data?.password_new ?? parameters.data.password);
+            }
             if (parameters.data?.password_reminder!=null)
                 data_update.PasswordReminder = parameters.data.password_reminder;
             if (parameters.data?.bio!=null)
@@ -429,17 +445,35 @@ const updateAdmin = async parameters => {
                 data_update.Private = server.ORM.UtilNumberValue(parameters.data.private) ?? 0;
             if (parameters.data?.avatar!=null)
                 data_update.Avatar = parameters.data.avatar;
-            if (parameters.data?.otp_key!=null)
+            if (parameters.data?.otp_key!=null){
+                if (parameters.data.otp_key != user.OtpKey){
+                    //OWASP 7.4.3
+                    data_update.Active=0;
+                }
                 data_update.OtpKey = parameters.data.otp_key;
+            }
             //admin columns
-            if (parameters.data?.type!=null)
+            if (parameters.data?.type!=null){
+                if (parameters.data.type != user.Type){
+                    //OWASP 7.4.3
+                    data_update.Active=0;
+                }
                 data_update.Type = parameters.data.type;
-            if (parameters.data?.user_level!=null)
+            }
+            if (parameters.data?.user_level!=null){
+                if (parameters.data.user_level != user.UserLevel){
+                    //OWASP 7.4.3
+                    data_update.Active=0;
+                }
                 data_update.UserLevel = server.ORM.UtilNumberValue(parameters.data.user_level);
-            if (parameters.data?.status!=null)
+            }
+            if (parameters.data?.status!=null){
+                if (parameters.data.status != user.Status){
+                    //OWASP 7.4.3
+                    data_update.Active=0;
+                }
                 data_update.Status = parameters.data.status;
-            if (parameters.data?.active!=null)
-                data_update.Active = server.ORM.UtilNumberValue(parameters.data.active) ?? 0;
+            }
             data_update.Modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)
