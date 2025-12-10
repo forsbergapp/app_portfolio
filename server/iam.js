@@ -251,8 +251,7 @@ const iamAuthenticateUser = async parameters =>{
                         token_access:           token_type=='ADMIN'?null:jwt_data?jwt_data.token:null,
                         token_admin:            token_type=='ADMIN'?jwt_data?jwt_data.token:null:null,
                         ip:                     parameters.ip,
-                        headers_user_agent:     parameters.user_agent,
-                        headers_accept_language:parameters.accept_language})
+                        headers_user_agent:     parameters.user_agent})
                 .then((result_socket)=>{
                     return  result_socket.http?result_socket:{result:{  iam_user_id:    user.Id,
                                                                         iam_user_app_id: recordIamUserApp.result[0].Id,
@@ -419,8 +418,7 @@ const iamAuthenticateUserSignup = async parameters =>{
                 token_access:           jwt_data?jwt_data.token:null,
                 token_admin:            null,
                 ip:                     parameters.ip,
-                headers_user_agent:     parameters.user_agent,
-                headers_accept_language:parameters.accept_language})
+                headers_user_agent:     parameters.user_agent})
         .then(result_socket=>result_socket.http?result_socket:
                                 {result:{
                                                 otp_key:        server.ORM.db.IamUser.get(parameters.app_id, new_user.result.InsertId).result[0]?.otp_key,
@@ -1533,7 +1531,7 @@ const iamUserGetLastLogin = (app_id, id) =>server.ORM.db.IamAppAccess.get(app_id
  *          authorization:string,
  *          ip:string,
  *          user_agent:string,
- *          accept_language:string}} parameters
+ *          accept_language:string|null}} parameters
  * @returns {Promise.<server['server']['response']>}
  */
 
@@ -1551,8 +1549,7 @@ const iamUserLogout = async parameters =>{
                 token_access:null,
                 token_admin:null,
                 ip:parameters.ip,
-                headers_user_agent:parameters.user_agent,
-                headers_accept_language:parameters.accept_language});
+                headers_user_agent:parameters.user_agent});
         return result;
     }
     else
@@ -1597,6 +1594,7 @@ export{ iamUtilMessageNotAuthorized,
         iamUtilTokenAppId,
         iamUtilTokenGet,
         iamUtilTokenExpired,
+        iamUtilTokenExpiredSet,
         iamUtilResponseNotAuthorized,
         iamAuthenticateUser,
         iamAuthenticateUserSignup,
