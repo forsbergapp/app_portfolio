@@ -1242,6 +1242,7 @@ class ORM_class {
      * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['ORMGetObjects'][]}>}
      */
     getViewObjects = async parameters =>{
+        parameters;
         /**@type{server['ORM']['View']['ORMGetObjects'][]} */
         const records = [];
         for (const row of DB.data)

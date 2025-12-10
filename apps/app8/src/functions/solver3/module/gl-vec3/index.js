@@ -197,46 +197,7 @@ const floor = (out, a) =>{
     out[2] = Math.floor(a[2]);
     return out;
   };
-/**
- * @name forEach
- * @description Perform some operation over an array of vec3s. (not used contains vec is not defined error)
- * @function
- * @param {[]} a the array of vectors to iterate over
- * @param {Number} stride Number of elements between the start of each vec3. If 0 assumes tightly packed
- * @param {Number} offset Number of elements to skip at the beginning of the array
- * @param {Number} count Number of vec3s to iterate over. If 0 iterates over entire array
- * @param {Function} fn Function to call for each vector in the array
- * @param {Object} [arg] additional argument to pass to fn
- * @returns {[]} a
- */
-const forEach = (a, stride, offset, count, fn, arg) => {
-    let i, l;
-    if(!stride) {
-        stride = 3;
-    }
 
-    if(!offset) {
-        offset = 0;
-    }
-    
-    if(count) {
-        l = Math.min((count * stride) + offset, a.length);
-    } else {
-        l = a.length;
-    }
-
-    for(i = offset; i < l; i += stride) {
-        vec[0] = a[i]; 
-        vec[1] = a[i+1]; 
-        vec[2] = a[i+2];
-        fn(vec, vec, arg);
-        a[i] = vec[0]; 
-        a[i+1] = vec[1]; 
-        a[i+2] = vec[2];
-    }
-    
-    return a;
-};
 /**
  * @name fromValues
  * @description Creates a new vec3 initialized with the given values
@@ -647,7 +608,7 @@ const transformQuat = (out, a, q) => {
     out[2] = iz * qw + iw * -qz + ix * -qy - iy * -qx;
     return out;
 };
-export {EPSILON, add, angle, ceil, clone, create, cross, distance, divide, dot, equals, exactEquals, floor, forEach, fromValues, inverse, length, lerp, max, min, multiply,
+export {EPSILON, add, angle, ceil, clone, create, cross, distance, divide, dot, equals, exactEquals, floor, fromValues, inverse, length, lerp, max, min, multiply,
             negate, normalize, random, rotateX, rotateY, rotateZ, round, scale, scaleAndAdd, set, squaredDistance, squaredLength, subtract, 
             transformMat3, transformMat4, transformQuat
 };

@@ -18,9 +18,7 @@ const {server} = await import('../server/server.js');
 const test = async t =>
     [await t.describe('Performance test, calling main server url according to configured values', async ()=> {
         return await new Promise(resolve=>
-        t.it('should handle 100 concurrent requests without any error within 10 seconds', async () =>{                 
-                /**@type{number} */
-                let status;
+        t.it('should handle 100 concurrent requests without any error within 10 seconds', async () =>{
                 const PROTOCOL = 'http://';
                 const HOST = server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result[0].variables.host.default
                 const PORT = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result[0].variables.port.default);
