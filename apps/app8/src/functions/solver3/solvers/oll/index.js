@@ -2,7 +2,6 @@
  * @module apps/app8/src/functions/solver3/solvers/oll
  */
 
-import { RubiksCube } from '../../models/RubiksCube.js';
 import { BaseSolver } from '../BaseSolver.js';
 import { getDirectionFromFaces } from '../../utils/index.js';
 
@@ -12,15 +11,6 @@ import { getDirectionFromFaces } from '../../utils/index.js';
  * @constant
  */
 const SOLVED_STATE = '00000000';
-
-/**
- * @name R
- * @description R
- * @function
- * @param {*} moves
- * @returns {*}
- */
-const R = moves => RubiksCube.reverseMoves(moves);
 
 /**
  * @name OLLSolver

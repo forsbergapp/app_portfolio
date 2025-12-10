@@ -328,8 +328,9 @@ class RubiksCube {
 			const isWithMiddle = move === move.toLowerCase();
 			const isDoubleMove  = notation.includes('2');
 
-			/**@ts-ignore */
-			let { axis, mag } = this._getRotationForFace(move);
+			
+			const { axis } = this._getRotationForFace(move);
+            let { mag } = this._getRotationForFace(move);
 			let cubesToRotate = this.getFace(move);
 
 			if (isPrime) mag *= -1;
@@ -497,7 +498,8 @@ class RubiksCube {
 	 * @description The the rotation axis and magnitude for the given face.
 	 * @method
 	 * @param {*} face
-	 * @returns {object}
+	 * @returns {{axis:string,
+     *           mag:number}}
 	 */
 	_getRotationForFace(face) {
 		if (typeof face !== 'string') {

@@ -462,8 +462,6 @@ class Face  {
 	* @param {*} rubiks
 	*/
 	constructor(cube, index, normalVector, color, rubiks){
-		/*eslint-disable */
-		var g, b;
 		// ---- Rubiks Cube ----
 		this.rubiks = rubiks;
 		// ---- parent cube ---- 

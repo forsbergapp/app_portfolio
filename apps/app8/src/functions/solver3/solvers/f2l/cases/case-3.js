@@ -38,6 +38,7 @@ class Case3Solver extends F2LCaseBaseSolver {
 	 * @returns {number}
 	 */
 	_getCaseNumber({ corner, edge }) {
+        edge;
 		if (corner.getColorOfFace('up') === 'u') {
 			return 1;
 		} else {

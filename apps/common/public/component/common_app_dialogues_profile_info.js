@@ -227,12 +227,12 @@ const component = async props => {
         switch (true){
             case event_type =='click' && event_target_id == 'common_app_dialogues_profile_info_follow':{
                 await commonUserFunction('FOLLOW')
-    		    .then(()=>commonProfileUpdateStat())
+                    .then(()=>commonProfileUpdateStat())
                 break;
             }
             case event_type =='click' && event_target_id == 'common_app_dialogues_profile_info_like':{
                 await commonUserFunction('LIKE')
-    		    .then(()=>commonProfileUpdateStat())
+                    .then(()=>commonProfileUpdateStat())
                 break;
             }
             case event_type =='click' && event_target_id == 'common_app_dialogues_profile_info_btn_following':{

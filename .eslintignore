@@ -1,2 +1,0 @@
-apps/common/public/modules/**/*.js
-!apps/common/public/modules/regional/*.js
