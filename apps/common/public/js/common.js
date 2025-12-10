@@ -1621,7 +1621,10 @@ const commonUserLogin = async () => {
         COMMON_GLOBAL.iam_user_app_id =         JSON.parse(result_iam).iam_user_app_id;
         COMMON_GLOBAL.iam_user_id =             JSON.parse(result_iam).iam_user_id;
         COMMON_GLOBAL.iam_user_username =       JSON.parse(result_iam).iam_user_username;
-        COMMON_GLOBAL.token_at	=               JSON.parse(result_iam).token_at;
+        if (COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id)
+            COMMON_GLOBAL.token_admin_at    = JSON.parse(result_iam).token_at;
+        else
+            COMMON_GLOBAL.token_at	        = JSON.parse(result_iam).token_at;
         COMMON_GLOBAL.token_exp =               JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat =               JSON.parse(result_iam).iat;
         commonDialogueShow('VERIFY', 'LOGIN');
