@@ -239,9 +239,12 @@ const getViewStatCountAdmin = parameters => {return {result: [{CountUsers:get(pa
  * @description Validates user data
  * @function
  * @param {server['ORM']['Object']['IamUser']} data
+ * @returns {Promise.<boolean>}
  */
-const validationData = data =>{
+const validationData = async data =>{
     return (data.Type !=null &&
+            //check valid Avatar image if included
+            (data.Avatar && await server.app_common.commonValidImage(data.Avatar)) ||data.Avatar ==null &&
             //check not allowed attributes when creating or updating a user
             ('Id' in data||'UserLevel' in data ||'Status' in data||'Created' in data||'Modified' in data)==false &&
             //must be valid username
@@ -273,7 +276,7 @@ const validationData = data =>{
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
-    if (validationData(data)){
+    if (await validationData(data)){
         /**@type{server['ORM']['Object']['IamUser']} */
         const data_new =     {
                                 Id:                 Date.now(),
@@ -354,7 +357,7 @@ const update = async (app_id, resource_id, data) => {
     /**@type{server['ORM']['Object']['IamUser']}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        if (validationData(data) && user.Username == data.Username && data.Password && await server.security.securityPasswordCompare(app_id, data.Password, user.Password)){
+        if (await validationData(data) && user.Username == data.Username && data.Password && await server.security.securityPasswordCompare(app_id, data.Password, user.Password)){
             /**@type{server['ORM']['Object']['IamUser']} */
             const data_update = {};
             //allowed parameters to update:
@@ -377,7 +380,6 @@ const update = async (app_id, resource_id, data) => {
             if (data.Avatar!=null)
                 data_update.Avatar = data.Avatar;
             data_update.Modified = new Date().toISOString();
-
             if (Object.entries(data_update).length>0)
                 return server.ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamUser', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
                     if (result.AffectedRows>0)

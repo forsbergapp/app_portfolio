@@ -278,8 +278,7 @@ export const getRotationFromTo = (face, from, to) => {
  * @description Returns an array of transformed notations so that if done when the cube's
  * 				orientation is default (FRONT face is FRONT, RIGHT face is RIGHT, etc.), the
  * 				moves will have the same effect as performing the given notations on a cube
- * 				oriented by the specified orientation.
- * @function
+ * 				oriented by the specified orientation. 
  * @example		orientMoves(['R', 'U'], { front: 'front', up: 'up' })      === ['R', 'U']
  * 				orientMoves(['R', 'U'], { front: 'front', down: 'right' }) === ['U', 'L']
  * 				orientMoves(['R', 'U', 'LPrime', 'D'], { up: 'back', right: 'down' }) === ['D', 'B', 'UPrime', 'F']

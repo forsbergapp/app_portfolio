@@ -38,6 +38,249 @@ const commonConvertBinary = async (content_type, path) =>
             });
 
 /**
+ * @name commonValidImage
+ * @description  Controls if image using encoded using base64 is valid
+ * @param {string} image
+ * @returns {Promise.<boolean>}
+ */
+const commonValidImage = async image => {
+    /**
+     * @name controlImage
+     * @description Detects file type
+     * @function
+     * @param {FileInput} input 
+     * @param {{    bytesToRead?: number,       
+     *              expectedExtension?: string, 
+     *              expectedMimeType?: string,  
+     *          }} options 
+     * @returns {Promise<{  mimeType: string|null,
+     *                      typeName: string,
+     *                      extension: string|null,
+     *                      category: 'image'|'?',
+     *                      confidence: ConfidenceLevel,
+     *                      Valid: boolean,
+     *                      Spoofed: boolean,
+     *                      magicBytes: string
+     *                  }>}
+     */
+    const  controlImage = async (input,options = {}) => {
+        /**
+         * @typedef {'H' | 'M' | 'L' | '⛔'} ConfidenceLevel
+         * @typedef {Buffer | Uint8Array | ArrayBuffer | Blob | File} FileInput
+         */
+
+        /**
+         * @name EXTENSION_MIME
+         * @description Supported EXTENSION_MIME
+         * @constant
+         */
+        const EXTENSION_MIME = {
+            jpg:  'image/jpeg',
+            jpeg: 'image/jpeg',
+            png:  'image/png',
+            webp: 'image/webp',
+            ico:  'image/x-icon',
+            svg:  'image/svg+xml'
+        };
+        /**
+         * @name MIME_CATEGORY
+         * @description Supported MIME_CATEGORY
+         * @constant
+         */
+        const MIME_CATEGORY = {
+            'image/jpeg':         'image',
+            'image/png':          'image',
+            'image/webp':         'image',
+            'image/svg+xml':      'image'
+        };
+        /**
+         * @name SIGNATURES
+         * @description Supported SIGNATURES
+         * @constant
+         * @type {Object.<string,
+         *              {
+         *              bytes?:     number[],
+         *              offset?:    number,
+         *              extBytes?:  number[],
+         *              extOffset?: number,
+         *              contains?:  string,
+         *              secondText?:string,
+         *              text?:      string
+         *              name:       string
+         *              }[]>}
+         */
+        const SIGNATURES = {
+            'image/jpeg':	    [{name: 'JPEG', bytes: [0xff, 0xd8, 0xff], offset: 0 }],
+            'image/png': 	    [{name: 'PNG',  bytes: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],offset: 0}],
+            'image/webp': 	    [{name: 'WebP', bytes: [0x52, 0x49, 0x46, 0x46],offset: 0,extBytes: [0x57, 0x45, 0x42, 0x50],extOffset: 8}],
+            'image/svg+xml':    [{name: 'SVG',  text: '<svg' },{name: 'SVG', text: '<?xml', secondText: '<svg'}]
+        };
+        /**
+         * @name MIME_EXTENSION
+         * @description Supported MIME_EXTENSION
+         * @constant
+         */
+        const MIME_EXTENSION = {
+            'image/jpeg':     'jpg',
+            'image/png':      'png',
+            'image/webp':     'webp',
+            'image/svg+xml':  'svg'
+        };
+
+        /**
+         * @name matchBytes
+         * @description match bytes
+         * @function
+         * @param {Uint8Array} bytes 
+         * @param {number[]} signature 
+         * @param {number} offset 
+         * @returns {boolean}
+         */
+        const  matchBytes = (bytes, signature, offset = 0) =>  {
+            if (offset + signature.length > bytes.length)
+                return false;
+            else
+                for (let i = 0; i < signature.length; i++) {
+                    if (bytes[offset + i] !== signature[i]) {
+                        return false;
+                    }
+                }
+                return true;
+        }
+
+        /**
+         * @name matchText
+         * @description match text
+         * @function
+         * @param {string} text 
+         * @param {string} pattern 
+         * @returns {boolean}
+         */
+        const matchText = (text, pattern) =>
+            text.toLowerCase().includes(pattern.toLowerCase());
+
+        /**
+         * @name controlMimeType
+         * @description control Mime type
+         * @function
+         * @param {Uint8Array} bytes 
+         * @returns {{
+         *              mimeType:   string | null,
+         *              name:       string,
+         *              confidence: ConfidenceLevel
+         *              }}
+         */
+        const controlMimeType = bytes => {
+            const decoder = new TextDecoder('utf-8', { fatal: false });
+            const textContent = decoder.decode(
+                bytes.slice(0, Math.min(4096, bytes.length))
+            );
+            for (const [mimeType, signatures] of Object.entries(SIGNATURES)) {
+                for (const sig of signatures) {
+                    if (sig.bytes) {
+                        const offset = sig.offset ?? 0;
+                        if (matchBytes(bytes, sig.bytes, offset)) {
+                            if (sig.extBytes && sig.extOffset !== undefined) {
+                                if (!matchBytes(bytes, sig.extBytes, sig.extOffset))
+                                    continue;
+                            }
+                            if (sig.contains) {
+                                if (matchText(textContent, sig.contains))
+                                    return { mimeType, name: sig.name, confidence: 'H' };
+                                else
+                                    continue;
+                            }
+                            return { mimeType, name: sig.name, confidence: 'H' };
+                        }
+                    }
+                    if (sig.text) {
+                        if (matchText(textContent, sig.text)) {
+                            if (sig.secondText && !matchText(textContent, sig.secondText))
+                                continue;
+                            else
+                                return { mimeType, name: sig.name, confidence: 'M' };
+                        }
+                    }
+                }
+            }
+            return { mimeType: null, name: '?', confidence: '⛔' };
+        }
+        let bytes = input instanceof Uint8Array?
+                                input:
+                                    input instanceof ArrayBuffer?
+                                        new Uint8Array(input):
+                                            (typeof Buffer !== 'undefined' && Buffer.isBuffer(input))?
+                                                new Uint8Array(input):
+                                                    input instanceof Blob?
+                                                        new Uint8Array(await input.arrayBuffer()):
+                                                            null;
+        if (bytes==null)    
+            throw {http:400,
+                    code:null,
+                    text:'',
+                    developerText:null,
+                    moreInfo:null,
+                    type:'JSON'
+                };
+        if (bytes.length > (options.bytesToRead?options.bytesToRead:64*1024)) {
+            bytes = bytes.slice(0, (options.bytesToRead?options.bytesToRead:64*1024));
+        }
+        const controlled = controlMimeType(bytes);
+        
+        const finalExpectedMimeType = (!options.expectedMimeType && options.expectedExtension)?
+                                            /**@ts-ignore */
+                                            EXTENSION_MIME[expectedExtension.toLowerCase()] ?? undefined:
+                                                options.expectedMimeType;
+
+        const Valid =   controlled.mimeType && finalExpectedMimeType?
+                                controlled.mimeType === finalExpectedMimeType:
+                                    false;
+
+        const Spoofed = controlled.mimeType && finalExpectedMimeType?
+                                controlled.mimeType !== finalExpectedMimeType:
+                                    false;
+
+        const magicBytes = Array.from(bytes.slice(0, Math.min(16, bytes.length)))
+                                .map(b => b.toString(16).padStart(2, '0').toUpperCase())
+                                .join(' ')
+
+        return {
+                mimeType:   controlled.mimeType,
+                typeName:   controlled.name,
+                extension:  controlled.mimeType?
+                                /**@ts-ignore */
+                                MIME_EXTENSION[controlled.mimeType] || null: 
+                                    null,
+                category:   controlled.mimeType?
+                                /**@ts-ignore */
+                                MIME_CATEGORY[controlled.mimeType] || '?':
+                                    '?',
+                confidence: controlled.confidence,
+                Valid,
+                Spoofed,
+                magicBytes,
+            };
+    }
+
+
+    let file;
+    try {
+        //example image: 'data:image/webp;base64, [base64 string]'
+        file = Buffer.from(image.split(',')[1], 'base64')
+        //check supported image types
+        const extenstion = image.split(';')[0]?.split('/')[1].toLowerCase();
+        if (file && ['webp', 'jpg', 'jpeg', 'png', 'svg'].includes(extenstion)){
+            const result = await controlImage(file,{expectedExtension:extenstion});
+            return result.Valid;
+        }    
+        else
+            return false
+    } catch (error) {
+        return false;
+    }
+}
+
+/**
  * @name commonGetFile
  * @description Returns file from cache in FILES variable or reads from disk, saves in variable and returns file content.
  *              Modify function parameter can be used to modify original content.
@@ -870,8 +1113,7 @@ const commonAppMount = async parameters =>{
                                                              token_access:null,
                                                              token_admin:null,
                                                              ip:parameters.ip,
-                                                             headers_user_agent:parameters.user_agent,
-                                                             headers_accept_language:parameters.accept_language})).result,
+                                                             headers_user_agent:parameters.user_agent})).result,
                             IamUserApp: parameters.data.iam_user_id !=null?
                                             (await server.iam.iamUserLoginApp({ app_id:parameters.app_id, 
                                                                                 data:{  iam_user_id:parameters.data.iam_user_id,
@@ -1126,7 +1368,8 @@ const commonGeodataUser = async (app_id, ip) =>{
            timezone:result_geodata?result_geodata.timezone ?? '':''};
 };
 
-export {commonGetFile,
+export {commonValidImage,
+        commonGetFile,
         commonCssFonts,
         commonAppStart, commonClientLocale,
         commonAppIam, commonResourceFile,

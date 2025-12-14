@@ -236,7 +236,7 @@
  */
 
 /**
- * @description DB TABLE AppDataEtntityResource
+ * @description DB TABLE AppDataEntityResource
  * @memberof dbObjects
  * @typedef {{  Id:number, 
  *              Document:{[key:string]:*}|null, 
