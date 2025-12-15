@@ -798,6 +798,13 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
+                                            "IAM_module_app_id": {
+                                                "$ref": "#/components/parameters/paths/IAM_module_app_id",
+                                                "required":false
+                                            },
+                                            "IAM_data_app_id": {
+                                                "$ref": "#/components/parameters/paths/IAM_data_app_id"
+                                            },
                                             "IAM_iam_user_app_id":{
                                                 "$ref": "#/components/parameters/paths/IAM_iam_user_app_id",
                                                 "required":false
@@ -1535,7 +1542,7 @@
                 "parameters": [
                         {
                             "$ref": "#/components/parameters/paths/server_app_id",
-                            "description":"APP EXTERNAL can only run a module that belongs to the app id"
+                            "description":"APP ACCESS EXTERNAL can only run a module that belongs to the app id"
                         },
                         {
                             "$ref": "#/components/parameters/paths/resource_id_string",
