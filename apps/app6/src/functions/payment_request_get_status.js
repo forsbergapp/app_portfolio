@@ -20,7 +20,7 @@ const {server} = await import('../../../../server/server.js');
  *          host:string,
  *          idToken:string,
  *          authorization:string,
- *          locale:string}} parameters
+ *          accept_language:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:{ status:string}[]}>}
  */
 const paymentRequestGetStatus = async parameters =>{
@@ -56,7 +56,7 @@ const paymentRequestGetStatus = async parameters =>{
                                                 ip:parameters.ip, 
                                                 'app-id':+Entity.Document.MerchantApiUrlPaymentRequestAppId,
                                                 authorization:parameters.authorization, 
-                                                locale:parameters.locale});
+                                                accept_language:parameters.accept_language});
    if (result_bffExternal.result.error)
        //read external ISO20022 error format and return internal server format using camel case format
        return {http:           result_bffExternal.result.error.http,

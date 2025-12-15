@@ -1292,7 +1292,7 @@ const commonGeodata = async parameters =>{
                                                 host:'',
                                                 idToken:'', 
                                                 authorization:'',
-                                                locale:parameters.accept_language})
+                                                accept_language:parameters.accept_language})
                                     .then(result=>{if (result.http) throw result; else return result.result;})
                                     .catch((/**@type{server['server']['error']}*/error)=>{throw error;});
         result_geodata.latitude =   result_city.lat;

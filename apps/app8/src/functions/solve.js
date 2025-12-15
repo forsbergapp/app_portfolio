@@ -35,7 +35,7 @@ const {server} = await import('../../../../server/server.js');
  *          host:string,
  * 			idToken:string,
  *          authorization:string,
- *          locale:string}} parameters
+ *          accept_language:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:APP_FUNCTION_cube_solve_return[]}>}
  */
 const cubeSolve = async parameters =>{

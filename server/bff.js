@@ -44,7 +44,7 @@ const bffConnect = async parameters =>{
 *          ip:string,
 *          'app-id': number,
 *          authorization:string|null,
-*          locale:string}} parameters
+*          accept_language:string}} parameters
 * @returns {Promise.<server['server']['response']>}
 */
 const bffExternal = async parameters =>{
@@ -64,7 +64,7 @@ const bffExternal = async parameters =>{
                client_ip:          parameters.ip,
                authorization:      parameters.authorization??'',
                user_agent:         parameters.user_agent,
-               accept_language:    parameters.locale,
+               accept_language:    parameters.accept_language,
                encryption_type:    'BFE',
                'app-id':           parameters['app-id'],
                endpoint:           null

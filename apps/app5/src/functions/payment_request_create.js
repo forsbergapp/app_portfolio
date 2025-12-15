@@ -48,7 +48,7 @@ const getToken = async parameters => {
 *          host:string,
 *          idToken:string,
 *          authorization:string,
-*          locale:string}} parameters
+*          accept_language:string}} parameters
 * @returns {Promise.<server['server']['response'] & {result?:{message:string}}>}
 */
 const paymentRequestCreate = async parameters =>{

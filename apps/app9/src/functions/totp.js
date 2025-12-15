@@ -16,7 +16,7 @@ const {server} = await import('../../../../server/server.js');
 *          host:string,
 *          idToken:string,
 *          authorization:string,
-*          locale:string}} parameters
+*          accept_language:string}} parameters
 * @returns {Promise.<server['server']['response'] & {result?:{totp_value?:string, expire?:number}|null[]}>}
 */
 const getTOTP = async parameters =>{

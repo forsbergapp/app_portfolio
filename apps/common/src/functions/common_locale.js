@@ -65,12 +65,13 @@ const formatLocale = locale =>{
  *              
  * @function
  * @param {{app_id:number,
- *          data:*,
+ *          data:{locale:string},
  *          user_agent:string,
  *          ip:string,
  *          host:string,
  *          idToken:string,
- *          authorization:string}} parameters
+ *          authorization:string,
+ *          accept_language:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:{data: string}[]}>}
  */
 const appFunction = async parameters =>{
