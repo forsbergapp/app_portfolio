@@ -21,10 +21,7 @@ const returnPlace = parameters =>{
     if (parameters.place)
         return {result:{place:parameters.place.split(';')[2],
                 countryCode:parameters.place.split(';')[0],
-                country:server.ORM.getExternal('COUNTRY')
-                            .filter((/**@type {{locale:string,
-                                                countries:[key:string]}}*/row)=>
-                                    row.locale == formatLocale(parameters.locale))[0].countries[parameters.place.split(';')[0]]??' ',
+                country:server.ORM.getExternal('COUNTRY', formatLocale(parameters.locale))[0].countries[parameters.place.split(';')[0]]??' ',
                 region:     parameters.place.split(';')[1],
                 latitude:   parameters.place.split(';')[3],
                 longitude:  parameters.place.split(';')[4],
@@ -65,9 +62,8 @@ const returnPlace = parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{  ip:string},
- *          ip:string,
- *          locale:string}} parameters
+ *          data:{  ip:string, locale:string},
+ *          ip:string}} parameters
  * @returns {server['server']['response'] & {result?:server['server']['geolocation_place']|null}}
  */
 const getIP = parameters =>{
@@ -111,7 +107,7 @@ const getIP = parameters =>{
                         )[0];
                         
 
-        return returnPlace({locale:parameters.locale,
+        return returnPlace({locale:parameters.data.locale,
                                     place:place});
     }
     else

@@ -21,8 +21,7 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'App',parameter
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
-*          resource_id:number|null,
-*          locale:string}} parameters
+*          resource_id:number|null}} parameters
 * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['AppGetInfo'][] }>}
 */
 const getViewInfo = async parameters =>{

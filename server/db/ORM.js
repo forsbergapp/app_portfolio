@@ -653,9 +653,14 @@ class ORM_class {
      * @name getData
      * @description Extract transform load
      * @param {'COUNTRY'|'LOCALE'|'GEOLOCATION_IP'|'GEOLOCATION_PLACE'} object
+     * @param {string|null} locale?
      * @returns {*}
      */
-    getExternal = object =>DB.external[object];
+    getExternal = (object, locale=null) =>locale?
+                                            DB.external[object].filter((/**@type {{  locale:string,
+                                                                countries:[key:string]}}*/row)=>
+                                                                    row.locale == locale):
+                                                DB.external[object];
     
     /**
      * @name getDataKeys

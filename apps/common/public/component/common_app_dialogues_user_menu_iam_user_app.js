@@ -42,13 +42,8 @@ const template = () =>`
 * @param {{data:       {
 *                      commonMountdiv:string,
 *                      app_id:number,
-*                      common_app_id:number,
 *                      admin_app_id:number,
-*                      admin_only:number,
-*                      user_locale:string,
-*                      user_timezone:string,
-*                      user_direction:string,
-*                      user_arabic_script:string},
+*                      admin_only:number},
 *          methods:    {
 *                      COMMON:common['CommonModuleCommon']
 *                      }}} props
@@ -60,22 +55,26 @@ const template = () =>`
 */
 const component = async props => {
 
+    const getLocales = async ()=>
+        props.methods.COMMON.commonFFB({
+            path:'/app-common-module/COMMON_LOCALE', 
+            method:'POST', authorization_type:'APP_ID',
+            body:{  type:'FUNCTION',
+                    IAM_data_app_id : props.methods.COMMON.commonGlobalGet('app_common_app_id'),
+                    locale: props.methods.COMMON.commonGlobalGet('user_locale')}
+        })
+        .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)))
+
     //fetch all settings for common app id
     /**@type{common['server']['ORM']['Object']['AppData'][]} */
     const settings = props.data.admin_only == 1?[]:await props.methods.COMMON.commonFFB({  path:'/server-db/appdata/', 
-                                                                                   query:`IAM_data_app_id=${props.data.common_app_id}`, 
+                                                                                   query:`IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_common_app_id')}`, 
                                                                                    method:'GET', 
                                                                                    authorization_type:'APP_ID'})
                                                                .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
 
     /**@type{{locale:string, text:string}[]} */
-    const locales = await props.methods.COMMON.commonFFB({
-                                                   path:'/app-common-module/COMMON_LOCALE', 
-                                                   query:`locale=${props.data.user_locale}`, 
-                                                   method:'POST', authorization_type:'APP_ID',
-                                                   body:{type:'FUNCTION',IAM_data_app_id : props.data.common_app_id}
-                                               })
-                                               .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+    const locales = await getLocales();
 
     /**
      * @name appThemeUpdate
@@ -174,12 +173,7 @@ const component = async props => {
                          data:       {
                                      default_data_value:props.methods.COMMON.commonGlobalGet('user_locale'),
                                      default_value:'',
-                                     options: await props.methods.COMMON.commonFFB({
-                                                                 path:'/app-common-module/COMMON_LOCALE', 
-                                                                 method:'POST', authorization_type:'APP_ID',
-                                                                 body:{type:'FUNCTION',IAM_data_app_id : props.methods.COMMON.commonGlobalGet('app_common_app_id')}
-                                                             })
-                                                             .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data))),
+                                     options: await getLocales(),
                                      path:null,
                                      query:null,
                                      method:null,
@@ -251,7 +245,7 @@ const component = async props => {
        await props.methods.COMMON.commonComponentRender({
            mountDiv:   'common_app_dialogues_user_menu_iam_user_app_locale_select', 
            data:       {
-                       default_data_value:props.data.user_locale,
+                       default_data_value:props.methods.COMMON.commonGlobalGet('user_locale'),
                        default_value:'',
                        options: locales,
                        path:null,
@@ -268,7 +262,7 @@ const component = async props => {
            await props.methods.COMMON.commonComponentRender({
                mountDiv:  'common_app_dialogues_user_menu_iam_user_app_timezone_select', 
                data:       {
-                           default_data_value:props.data.user_timezone,
+                           default_data_value:props.methods.COMMON.commonGlobalGet('user_timezone'),
                            default_value:'',
                            options: settings.filter(setting=>setting.Name=='TIMEZONE'),
                            path:null,
@@ -284,7 +278,7 @@ const component = async props => {
            await props.methods.COMMON.commonComponentRender({
                mountDiv:   'common_app_dialogues_user_menu_iam_user_app_direction_select', 
                data:       {
-                           default_data_value:props.data.user_direction,
+                           default_data_value:props.methods.COMMON.commonGlobalGet('user_direction'),
                            default_value:' ',
                            options: [{Value:'', DisplayData:' '}].concat(settings.filter(setting=>setting.Name=='DIRECTION')),
                            path:null,
@@ -300,7 +294,7 @@ const component = async props => {
            await props.methods.COMMON.commonComponentRender({
                mountDiv:   'common_app_dialogues_user_menu_iam_user_app_arabic_script_select', 
                data:       {
-                           default_data_value:props.data.user_arabic_script,
+                           default_data_value:props.methods.COMMON.commonGlobalGet('user_arabic_script'),
                            default_value:' ',
                            options: [{Value:'', DisplayData:' '}].concat(settings.filter(setting=>setting.Name=='ARABIC_SCRIPT')),
                            path:null,
@@ -314,11 +308,11 @@ const component = async props => {
                path:       '/common/component/common_select.js'});
        }
        //set current value on all the selects
-       props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_locale_select', props.data.user_locale);
+       props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_locale_select', props.methods.COMMON.commonGlobalGet('user_locale'));
        if ((props.data.admin_only == 1)==false){
-           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_timezone_select', props.data.user_timezone);
-           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_direction_select', props.data.user_direction ?? '');
-           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_arabic_script_select', props.data.user_arabic_script ?? '');
+           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_timezone_select', props.methods.COMMON.commonGlobalGet('user_timezone'));
+           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_direction_select', props.methods.COMMON.commonGlobalGet('user_direction') ?? '');
+           props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_arabic_script_select', props.methods.COMMON.commonGlobalGet('user_arabic_script') ?? '');
        }
        
    };

@@ -312,13 +312,9 @@ const appFunction = async parameters =>{
      */
     
     /**@type {[key:string]} */
-    const countries =   server.ORM.getExternal('COUNTRY').filter((/**@type {{  locale:string,
-                                                                countries:[key:string]}}*/row)=>
-                                                                    row.locale == formatLocale(parameters.locale))[0].countries
+    const countries =   server.ORM.getExternal('COUNTRY', formatLocale(parameters.locale))[0].countries
                         ??
-                        server.ORM.getExternal('COUNTRY').filter((/**@type {{  locale:string,
-                                                                countries:[key:string]}}*/row)=>
-                                                                    row.locale == 'en')[0].countries;
+                        server.ORM.getExternal('COUNTRY', 'en')[0].countries;
     //format result and order by group name, country code
     const countries_map = Object.entries(countries)
                                  .map(country => {

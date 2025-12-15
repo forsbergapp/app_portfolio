@@ -25,13 +25,9 @@ const {server} = await import('../../../../server/server.js');
  */
 const appFunction = async parameters =>{
     /**@type {[key:string]}*/
-    const countries = (server.ORM.getExternal('COUNTRY')??[])
-                        /**@ts-ignore */
-                        .filter((/**@type {{locale:string,
-                                            countries:[key:string]}}*/row)=>
-                                row.locale == formatLocale(
-                                                            /**@ts-ignore */
-                                                            parameters.locale))[0].countries;
+    const countries =   server.ORM.getExternal('COUNTRY', formatLocale(parameters.locale))[0]?.countries
+                        ??
+                        server.ORM.getExternal('COUNTRY', 'en')[0].countries;
 
     /**
      * 

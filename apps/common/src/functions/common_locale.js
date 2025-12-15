@@ -70,19 +70,14 @@ const formatLocale = locale =>{
  *          ip:string,
  *          host:string,
  *          idToken:string,
- *          authorization:string,
- *          locale:string}} parameters
+ *          authorization:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:{data: string}[]}>}
  */
 const appFunction = async parameters =>{
     
-    const locales = server.ORM.getExternal('LOCALE').filter((/**@type {{   locale:string,
-                                                            countries:[key:string]}}*/row)=>
-                                                                row.locale == formatLocale(parameters.locale))[0].locales
+    const locales = server.ORM.getExternal('LOCALE', formatLocale(parameters.data.locale))[0].locales
                     ??
-                    server.ORM.getExternal('LOCALE').filter((/**@type {{   locale:string,
-                                                            countries:[key:string]}}*/row)=>
-                                                                row.locale == 'en')[0].locales
+                    server.ORM.getExternal('LOCALE', 'en')[0].locales
                     ;
     //format result and order by text using base 64 to avoid record limit
     return {result:[{data:Buffer.from (JSON.stringify(Object.entries(locales)

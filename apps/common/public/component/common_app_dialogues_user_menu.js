@@ -71,11 +71,7 @@ const template = props =>`  <div id='common_app_dialogues_user_menu_content' ${p
 *                      admin_app_id:number,
 *                      token_exp:number|null,
 *                      token_iat:number|null,
-*                      admin_only:number,
-*                      user_locale:string,
-*                      user_timezone:string,
-*                      user_direction:string,
-*                      user_arabic_script:string},
+*                      admin_only:number},
 *          methods:    {
 *                      COMMON:common['CommonModuleCommon']
 *                      }}} props
@@ -178,28 +174,16 @@ const component = async props => {
     };
     /**
      * @description show iam user app
-     * @param {string} user_locale,
-     * @param {string} user_timezone,
-     * @param {string} user_direction,
-     * @param {string} user_arabic_script
      * @returns {Promise.<void>}
      */
-    const eventClickNavIamUserApp = async (user_locale,
-                                        user_timezone,
-                                        user_direction,
-                                        user_arabic_script) =>{
+    const eventClickNavIamUserApp = async () =>{
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'common_app_dialogues_user_menu_detail',
             data:       {
                             app_id:props.data.app_id,
                             iam_user_id:props.data.iam_user_id,
-                            common_app_id:props.data.common_app_id,
                             admin_app_id:props.data.admin_app_id,
-                            admin_only:props.data.admin_only,
-                            user_locale:user_locale,
-                            user_timezone:user_timezone,
-                            user_direction:user_direction,
-                            user_arabic_script:user_arabic_script
+                            admin_only:props.data.admin_only
                         },
             methods:    null,
             path:       '/common/component/common_app_dialogues_user_menu_iam_user_app.js'});
@@ -228,11 +212,7 @@ const component = async props => {
                     case event_target_id=='common_app_dialogues_user_menu_nav_iam_user_app':{
                         props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('.common_nav_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_nav_selected'));
                         props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_nav_selected');
-                        await eventClickNavIamUserApp(
-                            props.methods.COMMON.commonGlobalGet('user_locale'),
-                            props.methods.COMMON.commonGlobalGet('user_timezone'),
-                            props.methods.COMMON.commonGlobalGet('user_direction'),
-                            props.methods.COMMON.commonGlobalGet('user_arabic_script'));
+                        await eventClickNavIamUserApp();
                         break;
                     }
                     case event_target_id=='common_app_dialogues_user_menu_nav_iam_user':{
@@ -280,10 +260,7 @@ const component = async props => {
         }
         else{
             //mount iam_user_app
-            await eventClickNavIamUserApp( props.data.user_locale,
-                                        props.data.user_timezone,
-                                        props.data.user_direction,
-                                        props.data.user_arabic_script);
+            await eventClickNavIamUserApp();
         }
         
         if (props.data.token_exp && props.data.token_iat){
