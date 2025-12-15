@@ -901,68 +901,6 @@
                 }
             }
         },
-        "/bff/admin/v1/app-common-module-report/${resource_id_string}": {
-            "get": {
-                "summary": "",
-                "operationId": "apps_common_src.common.commonAppReport",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/SecurityApp"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
-                ],
-                "parameters": [
-                        {
-                            "$ref": "#/components/parameters/paths/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/resource_id_string",
-                            "description":"AppModule.common_name",
-                            "required":true,
-                            "in":"path"
-                        },
-                        {
-                            "name":"type",
-                            "in":"query",
-                            "required":true,
-                            "schema":{
-                                "type": "string"
-                            }    
-                        },
-                        {
-                            "name":"reportid",
-                            "in":"query",
-                            "required":true,
-                            "schema":{
-                                "type": "string"
-                            }    
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/server_ip"
-                        },
-			            {
-                            "$ref": "#/components/parameters/paths/server_user_agent"
-                        },
-			            {
-                            "$ref": "#/components/parameters/paths/server_endpoint"
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
         "/bff/app_id/v1/app-common-module-report/${resource_id_string}": {
             "get": {
                 "summary": "",
