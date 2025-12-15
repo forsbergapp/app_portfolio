@@ -25,15 +25,13 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'App',parameter
 * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['AppGetInfo'][] }>}
 */
 const getViewInfo = async parameters =>{
-    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-    const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
     /**@type{server['ORM']['Object']['App'][]}*/
     const apps = get({app_id:parameters.app_id, resource_id:null}).result
                     //do not show common app id, admin app id or start app id
                     .filter((/**@type{server['ORM']['Object']['App']}*/app)=>
-                        app.Id != (server.ORM.UtilNumberValue(openapiConfig.APP_START_APP_ID.default)) &&
-                        app.Id != (server.ORM.UtilNumberValue(openapiConfig.APP_COMMON_APP_ID.default)) &&
-                        app.Id != (server.ORM.UtilNumberValue(openapiConfig.APP_ADMIN_APP_ID.default)));
+                        app.Id != (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_START_APP_ID.default)) &&
+                        app.Id != (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)) &&
+                        app.Id != (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default)));
     for (const app of apps){
         app.Logo = (await server.app_common.commonResourceFile({app_id:parameters.app_id, 
                                                     resource_id:app.Logo, 

@@ -22,7 +22,7 @@ const {default:ComponentMaintenance} = await import('../apps/common/src/componen
  * @returns {Promise.<void>}
  */
 const bffConnect = async parameters =>{
-    const common_app_id = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:parameters.app_id, data:{parameter:'APP_COMMON_APP_ID'}}).result)??0;
+    const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??0;
     await server.socket.socketConnect({
         app_id:common_app_id,
            idToken:parameters.idToken,
@@ -57,7 +57,7 @@ const bffExternal = async parameters =>{
                url:                parameters.url,
                host:               null,
                port:               null,
-               admin:              parameters.app_id == server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:parameters.app_id, data:{parameter:'APP_ADMIN_APP_ID'}}).result),
+               admin:              parameters.app_id == server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default),
                path:               null,
                body:               parameters.body,
                method:             parameters.method,
@@ -120,7 +120,7 @@ const bffMicroservice = async parameters =>{
                     url:                null,
                     host:               ServiceRegistry.ServerHost,
                     port:               ServiceRegistry.ServerPort,
-                    admin:              parameters.app_id == server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:parameters.app_id, data:{parameter:'APP_ADMIN_APP_ID'}}).result),
+                    admin:              parameters.app_id == server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default),
                     path:               `/api/v${ServiceRegistry.RestApiVersion}?${query}`,
                     body:               parameters.data,
                     method:             parameters.method,
@@ -201,10 +201,7 @@ const bffResponse = async parameters =>{
                                     server.security.securityTransportEncrypt({app_id:parameters.app_id??0, data:data, jwk:parameters.jwk, iv:parameters.iv }):
                                         data;
 
-    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-    const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
-
-    const admin_app_id = server.ORM.UtilNumberValue(openapiConfig.APP_ADMIN_APP_ID.default);
+    const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default);
     if (parameters.result_request.http){    
         //ISO20022 error format
         const message = {error:{
@@ -275,9 +272,9 @@ const bffResponse = async parameters =>{
                         }
                     }
                     //records limit in controlled by server, apps can not set limits                                                     
-                    const limit = server.ORM.UtilNumberValue(openapiConfig.APP_LIMIT_RECORDS.default??0);
+                    const limit = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_LIMIT_RECORDS.default??0);
                     //Admin shows all records except for pagination, apps use always APP_LIMIT_RECORDS
-                    const admin_limit = parameters.app_id == server.ORM.UtilNumberValue(openapiConfig.APP_ADMIN_APP_ID.default)?
+                    const admin_limit = parameters.app_id == server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default)?
                                                                 null:
                                                                     limit;
                     if (parameters.result_request.singleResource){

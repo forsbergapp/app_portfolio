@@ -93,12 +93,15 @@ const getIP = parameters =>{
      */
     const ipNumber = IPtoNum(parameters.data.ip??'');
     //if geolocation is enabled then search in partitioned key
-    const geolocation_ip = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0,data:{ parameter:'IAM_ENABLE_GEOLOCATION'}}).result)==1?
-                            server.ORM.getExternal('GEOLOCATION_IP')[('000'+parameters.data.ip?.split(',')[0].split('.')[0]).substr(-3)].filter((/**@type{string}*/row)=> 
-                                           IPtoNum(row.split(';')[0]) <= ipNumber &&
-                                           IPtoNum(row.split(';')[1]) >= ipNumber)[0]:
-                                           null;
-    if (geolocation_ip && geolocation_ip.split(';')[0] !='127.0.0.0'){
+    //ignore all local IP addresses
+    const geolocation_ip = parameters.data.ip.startsWith('127.0.0.')?
+                                null:
+                                server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_ENABLE_GEOLOCATION.default)==1?
+                                    server.ORM.getExternal('GEOLOCATION_IP')[('000'+parameters.data.ip?.split(',')[0].split('.')[0]).substr(-3)].filter((/**@type{string}*/row)=> 
+                                                IPtoNum(row.split(';')[0]) <= ipNumber &&
+                                                IPtoNum(row.split(';')[1]) >= ipNumber)[0]:
+                                                null;
+    if (geolocation_ip){
         const lat = geolocation_ip.split(';')[2];
         const long = geolocation_ip.split(';')[3];
         const place = server.ORM.getExternal('GEOLOCATION_PLACE')[lat.split('.')[0]].filter((/**@type{string}*/row)=>

@@ -120,7 +120,7 @@ const socketClientAdd = (newClient) => {
         for (const client of SOCKET_CONNECTED_CLIENTS){
             if (client.IdToken != parameters.idToken)
                 if (parameters.data.broadcast_type=='MAINTENANCE' && 
-                    client.AppId ==server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'APP_ADMIN_APP_ID'}}).result))
+                    client.AppId ==server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default))
                     null;
                 else
                     if (client.AppId == parameters.data.app_id || parameters.data.app_id == null){
@@ -357,7 +357,7 @@ const socketPost = async parameters =>{
  const socketIntervalCheck = async () => {
     setInterval(async () => {
         //server interval run as app 0
-        if (server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'SERVER_MAINTENANCE'}}).result)==1){
+        if (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.SERVER_MAINTENANCE.default)==1){
             await socketAdminSend({ app_id:0,
                                     idToken:'',
                                     data:{app_id:null,
@@ -368,7 +368,7 @@ const socketPost = async parameters =>{
         }
         await socketExpiredTokenSendSSE();
     //set default interval to 5 seconds if no parameter is set
-    }, server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'SOCKET_CHECK_INTERVAL'}}).result)??5000);
+    }, server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.SOCKET_CHECK_INTERVAL.default)??5000);
 };
 
 /**

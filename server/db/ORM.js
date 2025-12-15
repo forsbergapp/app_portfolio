@@ -129,6 +129,8 @@ class ORM_class {
         this.db;
         this.init = this.InitAsync;
         this.serverProcess = serverProcess;
+        /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
+        this.OpenApiConfig;
     }
     /**
      * @name InitAsync
@@ -197,6 +199,8 @@ class ORM_class {
                     file_db_record.CacheContent = file?file:null;
                 }
             }
+            //cache OpenConfig parameters
+            this.OpenApiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
             DB.external = {
                         COUNTRY:		    await this.postExternal('COUNTRY'),
                         LOCALE: 		    await this.postExternal('LOCALE'),
@@ -893,7 +897,7 @@ class ORM_class {
                  * 
                  * Uses partition with arrays to speed up searches
                  */
-                return server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'IAM_ENABLE_GEOLOCATION'}}).result)==1?
+                return server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_ENABLE_GEOLOCATION.default)==1?
                         await loadGeolocation(object):
                             null;
             }
