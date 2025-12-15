@@ -30,11 +30,9 @@ const iamUtilMessageNotAuthorized = () => '⛔';
  * @returns {number}
  */
 const iamUtilTokenAppId = app_id => {
-    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-    const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
-    return app_id==(server.ORM.UtilNumberValue(openapiConfig.APP_ADMIN_APP_ID.default))?
+    return app_id==(server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default))?
                             app_id:
-                                server.ORM.UtilNumberValue(openapiConfig.APP_COMMON_APP_ID.default)??0;
+                                server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??0;
 };
 /**
  * @name iamUtilTokenGet
@@ -46,20 +44,18 @@ const iamUtilTokenAppId = app_id => {
  * @returns {server['iam']['iam_access_token_claim'] |server['iam']['iam_microservice_token_claim'] & {app_id_token?:number, exp:number, iat:number}}
  */
 const iamUtilTokenGet = (app_id, token, token_type) =>{
-    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-    const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
     /**@type{*} */
     const verify = server.security.jwt.verify( token.replace('Bearer ','').replace('Basic ',''), 
                                         token_type=='MICROSERVICE'?
-                                            openapiConfig.IAM_MICROSERVICE_TOKEN_SECRET.default:
+                                            server.ORM.OpenApiConfig.IAM_MICROSERVICE_TOKEN_SECRET.default:
                                                 token_type=='ADMIN'?
-                                                    openapiConfig.IAM_ADMIN_TOKEN_SECRET.default:
+                                                    server.ORM.OpenApiConfig.IAM_ADMIN_TOKEN_SECRET.default:
                                                                 token_type == 'APP_ACCESS'?
-                                                                    openapiConfig.IAM_USER_TOKEN_APP_ACCESS_SECRET.default:
+                                                                    server.ORM.OpenApiConfig.IAM_USER_TOKEN_APP_ACCESS_SECRET.default:
                                                                         ['APP_ACCESS_EXTERNAL', 'APP_ACCESS_VERIFICATION'].includes(token_type)?
-                                                                            openapiConfig.IAM_USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET.default:
+                                                                            server.ORM.OpenApiConfig.IAM_USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET.default:
                                                                                 token_type == 'APP_ID'?
-                                                                                    openapiConfig.IAM_USER_TOKEN_APP_ID_SECRET.default:
+                                                                                    server.ORM.OpenApiConfig.IAM_USER_TOKEN_APP_ID_SECRET.default:
                                                                                         '');
                                                     
 
@@ -188,7 +184,7 @@ const iamUtilResponseNotAuthorized = async (res, status, reason, bff=false) => {
  *                                              iat:                number} }>}
  */
 const iamAuthenticateUser = async parameters =>{
-    const admin_app_id = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:parameters.app_id, data:{parameter:'APP_ADMIN_APP_ID'}}).result);
+    const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default);
     const userpass =  decodeURIComponent(Buffer.from((parameters.authorization || '').split(' ')[1] || '', 'base64').toString('utf-8'));
     const username = userpass.split(':')[0];
     const password = userpass.split(':')[1];
@@ -655,8 +651,6 @@ const iamAuthenticateUserAppDelete = async parameters => {
  * @returns {Promise.<{app_id:number|null}>}
  */
  const iamAuthenticateCommon = async parameters  =>{
-    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-    const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
     const appIam = await server.app_common.commonAppIam(parameters.host, parameters.endpoint, parameters.security);
     
     if (parameters.endpoint=='APP_EXTERNAL' ||
@@ -670,7 +664,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
             /**@type{*} */
             const microservice_token_decoded = server.security.jwt.verify(
                                                     microservice_token.replace('Bearer ','').replace('Basic ',''),
-                                                    openapiConfig.IAM_MICROSERVICE_TOKEN_SECRET.default);
+                                                    server.ORM.OpenApiConfig.IAM_MICROSERVICE_TOKEN_SECRET.default);
             /**@type{server['ORM']['Object']['ServiceRegistry']}*/
             const service = server.ORM.db.ServiceRegistry.get({   app_id:appIam.app_id??0,
                                                     resource_id:null, 
@@ -730,14 +724,14 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                     if (appIam.admin)
                                         return {app_id:appIam.app_id};
                                     else
-                                        if (server.ORM.UtilNumberValue(openapiConfig.IAM_USER_ENABLE_LOGIN.default)==1)
+                                        if (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_USER_ENABLE_LOGIN.default)==1)
                                             return {app_id:appIam.app_id};
                                         else
                                             return {app_id:null};
                                 }
                                 case parameters.endpoint=='ADMIN' && appIam.admin && parameters.authorization.toUpperCase().startsWith('BEARER'):
                                 case parameters.endpoint=='APP_ACCESS_VERIFICATION' && parameters.authorization.toUpperCase().startsWith('BEARER'):
-                                case parameters.endpoint=='APP_ACCESS' && server.ORM.UtilNumberValue(openapiConfig.IAM_USER_ENABLE_LOGIN.default)==1 && parameters.authorization.toUpperCase().startsWith('BEARER'):{
+                                case parameters.endpoint=='APP_ACCESS' && server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_USER_ENABLE_LOGIN.default)==1 && parameters.authorization.toUpperCase().startsWith('BEARER'):{
                                     //authenticate access token
                                     const access_token = parameters.authorization?.split(' ')[1] ?? '';
                                     const access_token_decoded = iamUtilTokenGet(appIam.app_id, access_token, parameters.endpoint);
@@ -777,7 +771,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                     else
                                         return {app_id:null};
                                 }
-                                case parameters.endpoint=='IAM_SIGNUP' && server.ORM.UtilNumberValue(openapiConfig.IAM_USER_ENABLE_REGISTRATION.default)==1 && appIam.admin==false:{
+                                case parameters.endpoint=='IAM_SIGNUP' && server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_USER_ENABLE_REGISTRATION.default)==1 && appIam.admin==false:{
                                     return {app_id:appIam.app_id};
                                 }
                                 default:
@@ -1061,7 +1055,7 @@ const iamObserveLimitReached = (app_id, openApi, ip) =>{
  * @returns {boolean}
  */
 const iamAuthenticateResource = parameters =>  {
-    const app_id_common = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'APP_COMMON_APP_ID'}}).result)??0;
+    const app_id_common = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??0;
     
     const iamuserApp = (parameters.claim_iam_user_id !=null||parameters.claim_iam_user_app_id!=null)?
                             (server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
@@ -1158,8 +1152,6 @@ const iamAuthenticateResource = parameters =>  {
  * @returns {Promise.<server['server']['response']>}
  */
 const iamAuthenticateMicroservice = async parameters =>{
-    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-    const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
     /**@type{server['ORM']['Object']['ServiceRegistry'][]} */
     const service = server.ORM.db.ServiceRegistry.get({app_id:parameters.app_id, resource_id:null, data:{name:parameters.resource_id}}).result;
     
@@ -1172,8 +1164,8 @@ const iamAuthenticateMicroservice = async parameters =>{
                                     ua:parameters.user_agent,
                                     host:parameters.host,
                                     scope:'MICROSERVICE'}, 
-                                    openapiConfig.IAM_MICROSERVICE_TOKEN_SECRET.default, 
-                                    {expiresIn: openapiConfig.IAM_MICROSERVICE_TOKEN_EXPIRE_ACCESS.default});
+                                    server.ORM.OpenApiConfig.IAM_MICROSERVICE_TOKEN_SECRET.default, 
+                                    {expiresIn: server.ORM.OpenApiConfig.IAM_MICROSERVICE_TOKEN_EXPIRE_ACCESS.default});
         const jwt_data = {token:token,
                 /**@ts-ignore */
                 exp:server.security.jwt.decode(token, { complete: true }).payload.exp,
@@ -1214,9 +1206,10 @@ const iamAuthenticateMicroservice = async parameters =>{
  * @returns {Promise.<{id:Number, token:string}>}
  */
  const iamAuthorizeIdToken = async (app_id, ip, scope)=>{
+    const AppIdToken = iamUtilTokenAppId(app_id);
     const jwt_data = iamAuthorizeToken(app_id, 'APP_ID', {  app_custom_id:null,
                                                             app_id: app_id, 
-                                                            app_id_token:iamUtilTokenAppId(app_id), 
+                                                            app_id_token:AppIdToken, 
                                                             iam_user_app_id:null,
                                                             iam_user_id:null,
                                                             iam_user_username:null,
@@ -1225,7 +1218,7 @@ const iamAuthenticateMicroservice = async parameters =>{
 
     /**@type{server['ORM']['Object']['IamAppIdToken']} */
     const file_content = {	AppId:     app_id,
-                            AppIdToken: iamUtilTokenAppId(app_id), 
+                            AppIdToken: AppIdToken, 
                             Res:		1,
                             Token:   	jwt_data.token,
                             Ip:         ip ?? '',
@@ -1250,29 +1243,27 @@ const iamAuthenticateMicroservice = async parameters =>{
  * }}
  */
  const iamAuthorizeToken = (app_id, endpoint, claim)=>{
-    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-    const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
     let secret = '';
     let expiresin = '';
     switch (endpoint){
         case 'APP_ACCESS_VERIFICATION':
         case 'APP_ACCESS':
         case 'APP_ID':{
-            secret = openapiConfig[`IAM_USER_TOKEN_${endpoint}_SECRET`].default;
-            expiresin = openapiConfig[`IAM_USER_TOKEN_${endpoint}_EXPIRE`].default;
+            secret = server.ORM.OpenApiConfig[`IAM_USER_TOKEN_${endpoint}_SECRET`].default;
+            expiresin = server.ORM.OpenApiConfig[`IAM_USER_TOKEN_${endpoint}_EXPIRE`].default;
             break;
         }
         //Admin Access token
         case 'ADMIN':{
-            secret = openapiConfig.IAM_ADMIN_TOKEN_SECRET.default ?? '';
-            expiresin = openapiConfig.IAM_ADMIN_TOKEN_EXPIRE_ACCESS.default ?? '';
+            secret = server.ORM.OpenApiConfig.IAM_ADMIN_TOKEN_SECRET.default ?? '';
+            expiresin = server.ORM.OpenApiConfig.IAM_ADMIN_TOKEN_EXPIRE_ACCESS.default ?? '';
             break;
         }
         //APP Access external token
         //only allowed to use app_access_verification token expire used to set short expire time
         case 'APP_ACCESS_EXTERNAL':{
-            secret = openapiConfig.IAM_USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET.default;
-            expiresin = openapiConfig.IAM_USER_TOKEN_APP_ACCESS_VERIFICATION_EXPIRE.default;
+            secret = server.ORM.OpenApiConfig.IAM_USER_TOKEN_APP_ACCESS_VERIFICATION_SECRET.default;
+            expiresin = server.ORM.OpenApiConfig.IAM_USER_TOKEN_APP_ACCESS_VERIFICATION_EXPIRE.default;
             break;
         }
     }

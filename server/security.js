@@ -253,10 +253,8 @@ const securityPasswordCompare = async (app_id, password, compare_password) =>{
  */
 const securityParametersGet = async parameters =>{
     parameters;
-    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-    const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
-    return {user_password_encryption_key: openapiConfig.IAM_USER_PASSWORD_ENCRYPTION_KEY.default,
-            user_password_init_vector : openapiConfig.IAM_USER_PASSWORD_INIT_VECTOR.default
+    return {user_password_encryption_key: server.ORM.OpenApiConfig.IAM_USER_PASSWORD_ENCRYPTION_KEY.default,
+            user_password_init_vector : server.ORM.OpenApiConfig.IAM_USER_PASSWORD_INIT_VECTOR.default
         };    
 };
 

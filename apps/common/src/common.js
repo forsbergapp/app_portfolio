@@ -1006,7 +1006,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
   * @returns {Promise.<server['server']['response'] & {result?:server['app']['commonAppMount']}>}
   */
 const commonAppMount = async parameters =>{
-    if (parameters.resource_id == server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewConfig({app_id:parameters.app_id, data:{}}).result.APP_COMMON_APP_ID.default))
+    if (parameters.resource_id == server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default))
         return {http:400,
             code:null,
             text:null,
@@ -1126,11 +1126,8 @@ const commonApp = async parameters =>{
                                                 }), type:'HTML'};
         }
         else{
-            /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-            const openApiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:parameters.app_id, data:{}}).result;
-            
-            const admin_app_id = server.ORM.UtilNumberValue(openApiConfig.APP_ADMIN_APP_ID.default)??1;
-            const common_app_id = server.ORM.UtilNumberValue(openApiConfig.APP_COMMON_APP_ID.default)??0;
+            const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default)??1;
+            const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??0;
             const basePathRESTAPI = server.ORM.db.OpenApi.getViewServers({app_id:common_app_id, data:{pathType:'REST_API'}}).result[0].variables.basePath.default
             const app_id = (await commonAppIam(parameters.host, 'APP')).admin?
                                 admin_app_id:
@@ -1142,7 +1139,6 @@ const commonApp = async parameters =>{
                                                             ip:                 parameters.ip, 
                                                             user_agent:         parameters.user_agent ??'', 
                                                             accept_language:    parameters.accept_language??'',
-                                                            openApiConfig:      openApiConfig,
                                                             basePathRESTAPI:    basePathRESTAPI
                                                             },
                                                 methods:    {

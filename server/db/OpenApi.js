@@ -96,14 +96,20 @@ const update = async parameters => {
     OpenApi.info['x-created'] = created;
     OpenApi.info['x-modified'] = new Date().toISOString();
 
-    return {result:await server.ORM.Execute({app_id:parameters.app_id, 
-                                    object:'OpenApi',
-                                    dml:'UPDATE',                  
-                                    update:{resource_id:null, 
-                                            data_app_id:null, 
-                                            data:OpenApi}}),
-            type:'JSON'};    
-    
+    return server.ORM.Execute({ app_id:parameters.app_id, 
+                                object:'OpenApi',
+                                dml:'UPDATE', 
+                                update:{resource_id:null, 
+                                        data_app_id:null, 
+                                        data:OpenApi}})
+            .then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
+                    if (result.AffectedRows>0){
+                        server.ORM.OpenApiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
+                        return {result:result, type:'JSON'};
+                    }
+                    else
+                        return server.ORM.getError(parameters.app_id, 404);
+                });
 };
 /**
  * @name updateConfig

@@ -5,6 +5,9 @@
     /**
      * @import {server} from '../../../../server/types.js';
      */
+
+    const {server} = await import('../../../../server/server.js');
+
     /**
      * @name template
      * @description Template
@@ -117,7 +120,6 @@
     *                      ip:string, 
     *                      user_agent:string, 
     *                      accept_language:string,
-    *                      openApiConfig:server['ORM']['Object']['OpenApi']['components']['parameters']['config'],
     *                      basePathRESTAPI:string
     *                      },
     *        methods:      {
@@ -139,11 +141,11 @@
     const component = async props =>{
         
 
-        const common_app_id =                   props.methods.UtilNumberValue(props.data.openApiConfig.APP_COMMON_APP_ID.default)??1;
-        const admin_app_id =                    props.methods.UtilNumberValue(props.data.openApiConfig.APP_ADMIN_APP_ID.default)??1;
-        const start_app_id =                    props.data.app_id==admin_app_id?admin_app_id:props.methods.UtilNumberValue(props.data.openApiConfig.APP_START_APP_ID.default)??1;
-        const rest_resource_bff =               props.data.openApiConfig.SERVER_REST_RESOURCE_BFF.default;
-        const app_rest_api_version =            props.data.openApiConfig.SERVER_REST_API_VERSION.default;
+        const common_app_id =                   props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??1;
+        const admin_app_id =                    props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default)??1;
+        const start_app_id =                    props.data.app_id==admin_app_id?admin_app_id:props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_START_APP_ID.default)??1;
+        const rest_resource_bff =               server.ORM.OpenApiConfig.SERVER_REST_RESOURCE_BFF.default;
+        const app_rest_api_version =            server.ORM.OpenApiConfig.SERVER_REST_API_VERSION.default;
 
         /**
          * @description post data and return created values
@@ -152,18 +154,23 @@
          *                      secret: string}>}
          */
         const postInit = async () =>{
-            //save token in admin appid for admin or in commmon app id for users
-            const idToken = await props.methods.iamAuthorizeIdToken(props.data.app_id,props.data.ip, 'APP');
             const uuid  = props.methods.Security.securityUUIDCreate();
-            const secret= Buffer.from(JSON.stringify(await props.methods.Security.securityTransportCreateSecrets()),'utf-8')
+            //save token in admin appid for admin or in commmon app id for users
+            const [idToken, secrets] = await Promise.all([props.methods.iamAuthorizeIdToken(props.data.app_id,props.data.ip, 'APP'), 
+                                                         props.methods.Security.securityTransportCreateSecrets()
+            ])
+            const secret= Buffer.from(JSON.stringify(secrets),'utf-8')
                                 .toString('base64');
-            await props.methods.IamEncryption.post(props.data.app_id,
-                {AppId:common_app_id, Uuid:uuid, Secret:secret, IamAppIdTokenId:idToken.id??0, Type:'APP'});
-            return {
-                idToken:idToken,
-                uuid:uuid,
-                secret:secret
-            };
+
+            return  props.methods.IamEncryption.post(props.data.app_id,
+                    {AppId:common_app_id, Uuid:uuid, Secret:secret, IamAppIdTokenId:idToken.id??0, Type:'APP'})
+                .then(result=>{
+                    return {
+                        idToken:idToken,
+                        uuid:uuid,
+                        secret:secret
+                    };
+                })
         };
         
         /**
@@ -196,9 +203,9 @@
                                                                     user_agent:props.data.user_agent, 
                                                                     accept_language:props.data.accept_language});
             const postData = await postInit();
-            const app_toolbar_button_start =  props.methods.UtilNumberValue(props.data.openApiConfig.APP_TOOLBAR_BUTTON_START.default)??1;
-            const app_toolbar_button_framework = props.methods.UtilNumberValue(props.data.openApiConfig.APP_TOOLBAR_BUTTON_FRAMEWORK.default)??1;
-            const app_framework = props.methods.UtilNumberValue(props.data.openApiConfig.APP_FRAMEWORK.default)??1;
+            const app_toolbar_button_start =  props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_TOOLBAR_BUTTON_START.default)??1;
+            const app_toolbar_button_framework = props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_TOOLBAR_BUTTON_FRAMEWORK.default)??1;
+            const app_framework = props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_FRAMEWORK.default)??1;
             const app_fonts_ui = `@font-face {
                                         font-family: "Font Awesome 6 Free";
                                         font-style: normal;
@@ -246,12 +253,12 @@
                                 app_toolbar_button_start:       app_toolbar_button_start,
                                 app_toolbar_button_framework:   app_toolbar_button_framework,
                                 app_framework:                  app_framework,
-                                app_framework_messages:         props.methods.UtilNumberValue(props.data.openApiConfig.APP_FRAMEWORK_MESSAGES.default)??1,
+                                app_framework_messages:         props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_FRAMEWORK_MESSAGES.default)??1,
                                 admin_only:                     admin_only?1:0,
                                 admin_first_time:               count_user==0?1:0,
-                                app_request_tries:              props.methods.UtilNumberValue(props.data.openApiConfig.APP_REQUEST_TRIES.default)??5,
-                                app_requesttimeout_seconds:     props.methods.UtilNumberValue(props.data.openApiConfig.APP_REQUESTTIMEOUT_SECONDS.default)??5,
-                                app_requesttimeout_admin_minutes:props.methods.UtilNumberValue(props.data.openApiConfig.APP_REQUESTTIMEOUT_ADMIN_MINUTES.default)??60,
+                                app_request_tries:              props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_REQUEST_TRIES.default)??5,
+                                app_requesttimeout_seconds:     props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_REQUESTTIMEOUT_SECONDS.default)??5,
+                                app_requesttimeout_admin_minutes:props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_REQUESTTIMEOUT_ADMIN_MINUTES.default)??60,
                                 //font css split by '@font-face' in array, unicode fonts only, ui fonts applied at start
                                 app_fonts:                      (await props.methods.commonResourceFile({ 
                                                                         app_id:props.data.app_id, 

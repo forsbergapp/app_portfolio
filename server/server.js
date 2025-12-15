@@ -81,8 +81,6 @@ class serverClass {
      * @returns {Promise.<*>}
      */
     request = async (req, res)=>{
-        /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-        const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
         const read_body = async () =>{
             return new Promise((resolve,reject)=>{
                 if (req.headers['content-type'] ==this.CONTENT_TYPE_JSON){
@@ -139,8 +137,8 @@ class serverClass {
         res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
         
-        if (openapiConfig.IAM_CONTENT_SECURITY_POLICY_ENABLE.default == '1'){
-            res.setHeader('content-security-policy', openapiConfig.IAM_CONTENT_SECURITY_POLICY.default);
+        if (server.ORM.OpenApiConfig.IAM_CONTENT_SECURITY_POLICY_ENABLE.default == '1'){
+            res.setHeader('content-security-policy', server.ORM.OpenApiConfig.IAM_CONTENT_SECURITY_POLICY.default);
         }
         res.setHeader('cross-origin-opener-policy','same-origin');
         res.setHeader('cross-origin-resource-policy',	'same-origin');
@@ -175,7 +173,7 @@ class serverClass {
          * @param {server['server']['response']['type']} type
          */
         const setType = async type => {
-            const app_cache_control =  server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'APP_CACHE_CONTROL'}}).result;
+            const app_cache_control =  server.ORM.OpenApiConfig.APP_CACHE_CONTROL.default;
             switch (type){
                 case 'JSON':{
                     if (app_cache_control !='')
@@ -397,7 +395,7 @@ class serverClass {
      */
     postServer = () =>{
         /**@type{string} */
-        const NETWORK_INTERFACE = server.ORM.db.OpenApi.getViewConfig({app_id:0,data:{}}).result.SERVER_NETWORK_INTERFACE.default;
+        const NETWORK_INTERFACE = server.ORM.OpenApiConfig.SERVER_NETWORK_INTERFACE.default;
         /**@type{string} */
         const PORT_APP = server.ORM.db.OpenApi.getViewServers({app_id:0,data:{pathType:'APP'}}).result[0].variables.port.default;
         /**@type{string} */
@@ -504,15 +502,13 @@ let server;
 class serverCircuitBreakerClass {
 
     constructor() {
-        /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-        const openapiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
         /**@type{[index:any][*]} */
         this.states = {};
                                                         
-        this.requestTimeout =       openapiConfig.SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS.default ?? 20;
-        this.requestTimeoutAdmin =  openapiConfig.SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES.default ?? 60;
-        this.failureThreshold =     openapiConfig.SERVER_CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS.default ?? 5;
-        this.cooldownPeriod =       openapiConfig.SERVER_CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS.default ?? 10;
+        this.requestTimeout =       server.ORM.OpenApiConfig.SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS.default ?? 20;
+        this.requestTimeoutAdmin =  server.ORM.OpenApiConfig.SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES.default ?? 60;
+        this.failureThreshold =     server.ORM.OpenApiConfig.SERVER_CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS.default ?? 5;
+        this.cooldownPeriod =       server.ORM.OpenApiConfig.SERVER_CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS.default ?? 10;
 
     }
     /**
@@ -677,7 +673,7 @@ const serverStart = async () =>{
         //Startup functions
     
         //Update secrets
-        if (server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{parameter:'IAM_SERVER_UPDATE_SECRETS_START'}}).result=='1')
+        if (server.ORM.OpenApiConfig.IAM_SERVER_UPDATE_SECRETS_START.default=='1')
             await server.installation.updateConfigSecrets();
 
         //common font css contain many font urls, return css file with each url replaced with a secure url
