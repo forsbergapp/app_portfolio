@@ -1275,8 +1275,7 @@ const commonRegistryAppModule = (app_id, parameters) => server.ORM.db.AppModule.
 */
 const commonGeodata = async parameters =>{
     const result_gps = getIP({ app_id:parameters.app_id,
-                                        data:{ip:parameters.ip, locale:parameters.accept_language},
-                                        ip:parameters.ip
+                                        data:{ip:parameters.ip, locale:parameters.accept_language}
                                     }).result;
     const result_geodata = {};
     if (result_gps){
@@ -1316,8 +1315,7 @@ const commonGeodata = async parameters =>{
 */
 const commonGeodataUser = async (app_id, ip) =>{
    const result_geodata = getIP({ app_id:app_id,
-                                    data:{ip:ip, locale:'en'},
-                                    ip:ip,
+                                    data:{ip:ip, locale:'en'}
                                 }).result;   
    const place = result_geodata?result_geodata.place:'';
    return {latitude:result_geodata?result_geodata.latitude ?? '':'',
